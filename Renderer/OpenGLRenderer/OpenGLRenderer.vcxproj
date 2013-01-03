@@ -1,0 +1,403 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_Dynamic|Win32">
+      <Configuration>Debug_Dynamic</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_Static|Win32">
+      <Configuration>Debug_Static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Dynamic|Win32">
+      <Configuration>Release_Dynamic</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Static|Win32">
+      <Configuration>Release_Static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\OpenGLRenderer\CgRuntimeLinking.h" />
+    <ClInclude Include="include\OpenGLRenderer\Extensions.h" />
+    <ClInclude Include="include\OpenGLRenderer\FragmentShader.h" />
+    <ClInclude Include="include\OpenGLRenderer\FragmentShaderCg.h" />
+    <ClInclude Include="include\OpenGLRenderer\FragmentShaderGlsl.h" />
+    <ClInclude Include="include\OpenGLRenderer\Framebuffer.h" />
+    <ClInclude Include="include\OpenGLRenderer\FramebufferBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\FramebufferDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\GeometryShader.h" />
+    <ClInclude Include="include\OpenGLRenderer\GeometryShaderCg.h" />
+    <ClInclude Include="include\OpenGLRenderer\GeometryShaderGlsl.h" />
+    <ClInclude Include="include\OpenGLRenderer\IContext.h" />
+    <ClInclude Include="include\OpenGLRenderer\IndexBuffer.h" />
+    <ClInclude Include="include\OpenGLRenderer\IndexBufferBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\IndexBufferDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\Mapping.h" />
+    <ClInclude Include="include\OpenGLRenderer\OpenGLDebug.h" />
+    <ClInclude Include="include\OpenGLRenderer\OpenGLRuntimeLinking.h" />
+    <ClInclude Include="include\OpenGLRenderer\Program.h" />
+    <ClInclude Include="include\OpenGLRenderer\ProgramCg.h" />
+    <ClInclude Include="include\OpenGLRenderer\ProgramGlsl.h" />
+    <ClInclude Include="include\OpenGLRenderer\ProgramGlslDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\OpenGLRenderer.h" />
+    <ClInclude Include="include\OpenGLRenderer\BlendState.h" />
+    <ClInclude Include="include\OpenGLRenderer\DepthStencilState.h" />
+    <ClInclude Include="include\OpenGLRenderer\RasterizerState.h" />
+    <ClInclude Include="include\OpenGLRenderer\SamplerState.h" />
+    <ClInclude Include="include\OpenGLRenderer\SamplerStateBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\SamplerStateCollection.h" />
+    <ClInclude Include="include\OpenGLRenderer\SamplerStateDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\SamplerStateSo.h" />
+    <ClInclude Include="include\OpenGLRenderer\ShaderLanguage.h" />
+    <ClInclude Include="include\OpenGLRenderer\ShaderLanguageCg.h" />
+    <ClInclude Include="include\OpenGLRenderer\ShaderLanguageGlsl.h" />
+    <ClInclude Include="include\OpenGLRenderer\SwapChain.h" />
+    <ClInclude Include="include\OpenGLRenderer\TessellationControlShader.h" />
+    <ClInclude Include="include\OpenGLRenderer\TessellationControlShaderCg.h" />
+    <ClInclude Include="include\OpenGLRenderer\TessellationControlShaderGlsl.h" />
+    <ClInclude Include="include\OpenGLRenderer\TessellationEvaluationShader.h" />
+    <ClInclude Include="include\OpenGLRenderer\TessellationEvaluationShaderCg.h" />
+    <ClInclude Include="include\OpenGLRenderer\TessellationEvaluationShaderGlsl.h" />
+    <ClInclude Include="include\OpenGLRenderer\Texture2D.h" />
+    <ClInclude Include="include\OpenGLRenderer\Texture2DArray.h" />
+    <ClInclude Include="include\OpenGLRenderer\Texture2DArrayBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\Texture2DArrayDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\Texture2DBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\Texture2DDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\TextureBuffer.h" />
+    <ClInclude Include="include\OpenGLRenderer\TextureBufferBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\TextureBufferDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\TextureCollection.h" />
+    <ClInclude Include="include\OpenGLRenderer\UniformBuffer.h" />
+    <ClInclude Include="include\OpenGLRenderer\UniformBufferCg.h" />
+    <ClInclude Include="include\OpenGLRenderer\UniformBufferGlsl.h" />
+    <ClInclude Include="include\OpenGLRenderer\UniformBufferGlslBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\UniformBufferGlslDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\VertexArray.h" />
+    <ClInclude Include="include\OpenGLRenderer\VertexArrayCg.h" />
+    <ClInclude Include="include\OpenGLRenderer\VertexArrayNoVao.h" />
+    <ClInclude Include="include\OpenGLRenderer\VertexArrayVao.h" />
+    <ClInclude Include="include\OpenGLRenderer\VertexArrayVaoBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\VertexArrayVaoDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\VertexBuffer.h" />
+    <ClInclude Include="include\OpenGLRenderer\VertexBufferBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\VertexBufferDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\VertexShader.h" />
+    <ClInclude Include="include\OpenGLRenderer\VertexShaderCg.h" />
+    <ClInclude Include="include\OpenGLRenderer\VertexShaderGlsl.h" />
+    <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\CgRuntimeLinking.cpp" />
+    <ClCompile Include="src\Extensions.cpp" />
+    <ClCompile Include="src\FragmentShader.cpp" />
+    <ClCompile Include="src\FragmentShaderCg.cpp" />
+    <ClCompile Include="src\FragmentShaderGlsl.cpp" />
+    <ClCompile Include="src\Framebuffer.cpp" />
+    <ClCompile Include="src\FramebufferBind.cpp" />
+    <ClCompile Include="src\FramebufferDsa.cpp" />
+    <ClCompile Include="src\GeometryShader.cpp" />
+    <ClCompile Include="src\GeometryShaderCg.cpp" />
+    <ClCompile Include="src\GeometryShaderGlsl.cpp" />
+    <ClCompile Include="src\IContext.cpp" />
+    <ClCompile Include="src\IndexBuffer.cpp" />
+    <ClCompile Include="src\IndexBufferBind.cpp" />
+    <ClCompile Include="src\IndexBufferDsa.cpp" />
+    <ClCompile Include="src\Mapping.cpp" />
+    <ClCompile Include="src\OpenGLRuntimeLinking.cpp" />
+    <ClCompile Include="src\Program.cpp" />
+    <ClCompile Include="src\ProgramCg.cpp" />
+    <ClCompile Include="src\ProgramGlsl.cpp" />
+    <ClCompile Include="src\ProgramGlslDsa.cpp" />
+    <ClCompile Include="src\OpenGLRenderer.cpp" />
+    <ClCompile Include="src\BlendState.cpp" />
+    <ClCompile Include="src\DepthStencilState.cpp" />
+    <ClCompile Include="src\RasterizerState.cpp" />
+    <ClCompile Include="src\SamplerState.cpp" />
+    <ClCompile Include="src\SamplerStateBind.cpp" />
+    <ClCompile Include="src\SamplerStateCollection.cpp" />
+    <ClCompile Include="src\SamplerStateDsa.cpp" />
+    <ClCompile Include="src\SamplerStateSo.cpp" />
+    <ClCompile Include="src\ShaderLanguage.cpp" />
+    <ClCompile Include="src\ShaderLanguageCg.cpp" />
+    <ClCompile Include="src\ShaderLanguageGlsl.cpp" />
+    <ClCompile Include="src\SwapChain.cpp" />
+    <ClCompile Include="src\TessellationControlShader.cpp" />
+    <ClCompile Include="src\TessellationControlShaderCg.cpp" />
+    <ClCompile Include="src\TessellationControlShaderGlsl.cpp" />
+    <ClCompile Include="src\TessellationEvaluationShader.cpp" />
+    <ClCompile Include="src\TessellationEvaluationShaderCg.cpp" />
+    <ClCompile Include="src\TessellationEvaluationShaderGlsl.cpp" />
+    <ClCompile Include="src\Texture2D.cpp" />
+    <ClCompile Include="src\Texture2DArray.cpp" />
+    <ClCompile Include="src\Texture2DArrayBind.cpp" />
+    <ClCompile Include="src\Texture2DArrayDsa.cpp" />
+    <ClCompile Include="src\Texture2DBind.cpp" />
+    <ClCompile Include="src\Texture2DDsa.cpp" />
+    <ClCompile Include="src\TextureBuffer.cpp" />
+    <ClCompile Include="src\TextureBufferBind.cpp" />
+    <ClCompile Include="src\TextureBufferDsa.cpp" />
+    <ClCompile Include="src\TextureCollection.cpp" />
+    <ClCompile Include="src\UniformBuffer.cpp" />
+    <ClCompile Include="src\UniformBufferCg.cpp" />
+    <ClCompile Include="src\UniformBufferGlsl.cpp" />
+    <ClCompile Include="src\UniformBufferGlslBind.cpp" />
+    <ClCompile Include="src\UniformBufferGlslDsa.cpp" />
+    <ClCompile Include="src\VertexArray.cpp" />
+    <ClCompile Include="src\VertexArrayCg.cpp" />
+    <ClCompile Include="src\VertexArrayNoVao.cpp" />
+    <ClCompile Include="src\VertexArrayVao.cpp" />
+    <ClCompile Include="src\VertexArrayVaoBind.cpp" />
+    <ClCompile Include="src\VertexArrayVaoDsa.cpp" />
+    <ClCompile Include="src\VertexBuffer.cpp" />
+    <ClCompile Include="src\VertexBufferBind.cpp" />
+    <ClCompile Include="src\VertexBufferDsa.cpp" />
+    <ClCompile Include="src\VertexShader.cpp" />
+    <ClCompile Include="src\VertexShaderCg.cpp" />
+    <ClCompile Include="src\VertexShaderGlsl.cpp" />
+    <ClCompile Include="src\Windows\ContextWindows.cpp" />
+    <ClCompile Include="src\Windows\ExtensionsWindows.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CMakeLists.txt" />
+    <None Include="include\OpenGLRenderer\FragmentShaderCg.inl" />
+    <None Include="include\OpenGLRenderer\FragmentShaderGlsl.inl" />
+    <None Include="include\OpenGLRenderer\Framebuffer.inl" />
+    <None Include="include\OpenGLRenderer\GeometryShaderCg.inl" />
+    <None Include="include\OpenGLRenderer\GeometryShaderGlsl.inl" />
+    <None Include="include\OpenGLRenderer\IContext.inl" />
+    <None Include="include\OpenGLRenderer\IndexBuffer.inl" />
+    <None Include="include\OpenGLRenderer\Program.inl" />
+    <None Include="include\OpenGLRenderer\ProgramCg.inl" />
+    <None Include="include\OpenGLRenderer\ProgramGlsl.inl" />
+    <None Include="include\OpenGLRenderer\RasterizerState.inl" />
+    <None Include="include\OpenGLRenderer\OpenGLRenderer.inl" />
+    <None Include="include\OpenGLRenderer\SamplerStateCollection.inl" />
+    <None Include="include\OpenGLRenderer\SamplerStateSo.inl" />
+    <None Include="include\OpenGLRenderer\SwapChain.inl" />
+    <None Include="include\OpenGLRenderer\TessellationControlShaderCg.inl" />
+    <None Include="include\OpenGLRenderer\TessellationControlShaderGlsl.inl" />
+    <None Include="include\OpenGLRenderer\TessellationEvaluationShaderCg.inl" />
+    <None Include="include\OpenGLRenderer\TessellationEvaluationShaderGlsl.inl" />
+    <None Include="include\OpenGLRenderer\Texture2D.inl" />
+    <None Include="include\OpenGLRenderer\Texture2DArray.inl" />
+    <None Include="include\OpenGLRenderer\TextureBuffer.inl" />
+    <None Include="include\OpenGLRenderer\TextureCollection.inl" />
+    <None Include="include\OpenGLRenderer\UniformBuffer.inl" />
+    <None Include="include\OpenGLRenderer\UniformBufferCg.inl" />
+    <None Include="include\OpenGLRenderer\UniformBufferGlsl.inl" />
+    <None Include="include\OpenGLRenderer\VertexArray.inl" />
+    <None Include="include\OpenGLRenderer\VertexArrayVao.inl" />
+    <None Include="include\OpenGLRenderer\VertexBuffer.inl" />
+    <None Include="include\OpenGLRenderer\VertexShaderCg.inl" />
+    <None Include="include\OpenGLRenderer\VertexShaderGlsl.inl" />
+    <None Include="include\OpenGLRenderer\Windows\ContextWindows.inl" />
+    <None Include="Readme.txt" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{47156869-4788-4729-9B24-6B883DA2EB24}</ProjectGuid>
+    <RootNamespace>OpenGLRenderer</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+    <TargetName>$(ProjectName)StaticD</TargetName>
+    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+    <TargetName>$(ProjectName)D</TargetName>
+    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <TargetName>$(ProjectName)Static</TargetName>
+    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\OpenGL\include\;..\..\External\Cg\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;OPENGLRENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>md "..\..\lib\$(PlatformTarget)d_static\"
+copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
+md "..\..\include\Renderer\Internal\$(ProjectName)\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\OpenGL\include\;..\..\External\Cg\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_USRDLL;OPENGLRENDERER_EXPORTS;OPENGLRENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>md "..\..\lib\$(PlatformTarget)d_dynamic\"
+copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_dynamic\
+md "..\..\bin\$(PlatformTarget)d_dynamic\"
+copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
+md "..\..\include\Renderer\Internal\$(ProjectName)\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\OpenGL\include\;..\..\External\Cg\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;OPENGLRENDERER_NO_STATE_CLEANUP;OPENGLRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CompileAsManaged>false</CompileAsManaged>
+      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>md "..\..\lib\$(PlatformTarget)_static\"
+copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_static\
+md "..\..\include\Renderer\Internal\$(ProjectName)\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\OpenGL\include\;..\..\External\Cg\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_USRDLL;OPENGLRENDERER_EXPORTS;OPENGLRENDERER_NO_STATE_CLEANUP;OPENGLRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CompileAsManaged>false</CompileAsManaged>
+      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>md "..\..\lib\$(PlatformTarget)_dynamic\"
+copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_dynamic\
+md "..\..\bin\$(PlatformTarget)_dynamic\"
+copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
+md "..\..\include\Renderer\Internal\$(ProjectName)\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

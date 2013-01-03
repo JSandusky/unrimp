@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Renderer\IRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ITexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ITexture2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IIndexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IVertexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IProgram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ITexture2DArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IBlendState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IRasterizerState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IDepthStencilState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IUniformBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Capabilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IShaderLanguage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ITessellationControlShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ITessellationEvaluationShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IVertexShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IFragmentShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IGeometryShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ITextureBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IVertexArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ISamplerState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\RefCount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\SmartRefCount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\PlatformTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\SamplerStateTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\BlendStateTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\DepthStencilStateTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\RasterizerStateTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\TextureTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IndexBufferTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\BufferTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\VertexArrayTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\RendererTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\GeometryShaderTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ResourceTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Statistics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ICollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ITextureCollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ISamplerStateCollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\WindowsHeader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IFramebuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ISwapChain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IRenderTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\Renderer\IResource.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\Capabilities.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IRenderer.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IShaderLanguage.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\RefCount.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\SmartRefCount.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IFragmentShader.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IVertexShader.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IGeometryShader.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\ITessellationControlShader.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\ITessellationEvaluationShader.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IShader.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IBlendState.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IDepthStencilState.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IRasterizerState.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\ISamplerState.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IState.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\ITextureBuffer.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\ITexture.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\ITexture2D.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\ITexture2DArray.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IVertexBuffer.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IBuffer.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IIndexBuffer.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IUniformBuffer.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IVertexArray.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IProgram.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\Statistics.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="Readme.txt" />
+    <None Include="CMakeLists.txt" />
+    <None Include="include\Renderer\ICollection.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\ITextureCollection.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\ISamplerStateCollection.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IFramebuffer.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\ISwapChain.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IRenderTarget.inl">
+      <Filter>Header Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

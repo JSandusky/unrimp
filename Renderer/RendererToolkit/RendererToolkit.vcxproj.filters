@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Readme.txt" />
+    <None Include="CMakeLists.txt" />
+    <None Include="include\RendererToolkit\FontGlyphTextureFreeType.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\RendererToolkit\FontTextureFreeType.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\RendererToolkit\FreeTypeContext.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\RendererToolkit\IFont.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\RendererToolkit\IFontGlyph.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\RendererToolkit\IFontGlyphTexture.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\RendererToolkit\IFontTexture.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\RendererToolkit\IRendererToolkit.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\RendererToolkit\RendererToolkitImpl.inl">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Font_HLSL_D3D9.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Font_HLSL_D3D10_D3D11.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Font_Null.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Font_Cg.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Font_GLSL_ES2.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\FontGlyphTextureFreeType.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\FontTextureFreeType.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\FreeTypeContext.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\IFont.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\IFontGlyph.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\IFontGlyphTexture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\IFontTexture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\IRendererToolkit.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\RendererToolkit.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\RendererToolkitImpl.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Font_GLSL_110.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\RendererToolkitImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FontGlyphTextureFreeType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FontTextureFreeType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FreeTypeContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

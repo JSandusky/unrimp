@@ -1,0 +1,325 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_Dynamic|Win32">
+      <Configuration>Debug_Dynamic</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_Static|Win32">
+      <Configuration>Debug_Static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Dynamic|Win32">
+      <Configuration>Release_Dynamic</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Static|Win32">
+      <Configuration>Release_Static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\BlendState.cpp" />
+    <ClCompile Include="src\CgRuntimeLinking.cpp" />
+    <ClCompile Include="src\DepthStencilState.cpp" />
+    <ClCompile Include="src\Direct3D10RuntimeLinking.cpp" />
+    <ClCompile Include="src\Direct3D9RuntimeLinking.cpp" />
+    <ClCompile Include="src\FragmentShader.cpp" />
+    <ClCompile Include="src\FragmentShaderCg.cpp" />
+    <ClCompile Include="src\FragmentShaderHlsl.cpp" />
+    <ClCompile Include="src\Framebuffer.cpp" />
+    <ClCompile Include="src\GeometryShader.cpp" />
+    <ClCompile Include="src\GeometryShaderCg.cpp" />
+    <ClCompile Include="src\GeometryShaderHlsl.cpp" />
+    <ClCompile Include="src\Guid.cpp" />
+    <ClCompile Include="src\IndexBuffer.cpp" />
+    <ClCompile Include="src\Mapping.cpp" />
+    <ClCompile Include="src\Program.cpp" />
+    <ClCompile Include="src\ProgramCg.cpp" />
+    <ClCompile Include="src\ProgramHlsl.cpp" />
+    <ClCompile Include="src\RasterizerState.cpp" />
+    <ClCompile Include="src\Direct3D10Renderer.cpp" />
+    <ClCompile Include="src\SamplerState.cpp" />
+    <ClCompile Include="src\SamplerStateCollection.cpp" />
+    <ClCompile Include="src\ShaderLanguage.cpp" />
+    <ClCompile Include="src\ShaderLanguageCg.cpp" />
+    <ClCompile Include="src\ShaderLanguageHlsl.cpp" />
+    <ClCompile Include="src\SwapChain.cpp" />
+    <ClCompile Include="src\Texture2D.cpp" />
+    <ClCompile Include="src\Texture2DArray.cpp" />
+    <ClCompile Include="src\TextureBuffer.cpp" />
+    <ClCompile Include="src\TextureCollection.cpp" />
+    <ClCompile Include="src\UniformBuffer.cpp" />
+    <ClCompile Include="src\VertexArray.cpp" />
+    <ClCompile Include="src\VertexBuffer.cpp" />
+    <ClCompile Include="src\VertexShader.cpp" />
+    <ClCompile Include="src\VertexShaderCg.cpp" />
+    <ClCompile Include="src\VertexShaderHlsl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Direct3D10Renderer\BlendState.h" />
+    <ClInclude Include="include\Direct3D10Renderer\CgRuntimeLinking.h" />
+    <ClInclude Include="include\Direct3D10Renderer\D3D10.h" />
+    <ClInclude Include="include\Direct3D10Renderer\D3D10_1.h" />
+    <ClInclude Include="include\Direct3D10Renderer\DepthStencilState.h" />
+    <ClInclude Include="include\Direct3D10Renderer\Direct3D10Debug.h" />
+    <ClInclude Include="include\Direct3D10Renderer\Direct3D10RuntimeLinking.h" />
+    <ClInclude Include="include\Direct3D10Renderer\Direct3D9RuntimeLinking.h" />
+    <ClInclude Include="include\Direct3D10Renderer\FragmentShader.h" />
+    <ClInclude Include="include\Direct3D10Renderer\FragmentShaderCg.h" />
+    <ClInclude Include="include\Direct3D10Renderer\FragmentShaderHlsl.h" />
+    <ClInclude Include="include\Direct3D10Renderer\Framebuffer.h" />
+    <ClInclude Include="include\Direct3D10Renderer\GeometryShader.h" />
+    <ClInclude Include="include\Direct3D10Renderer\GeometryShaderCg.h" />
+    <ClInclude Include="include\Direct3D10Renderer\GeometryShaderHlsl.h" />
+    <ClInclude Include="include\Direct3D10Renderer\Guid.h" />
+    <ClInclude Include="include\Direct3D10Renderer\IndexBuffer.h" />
+    <ClInclude Include="include\Direct3D10Renderer\Mapping.h" />
+    <ClInclude Include="include\Direct3D10Renderer\Program.h" />
+    <ClInclude Include="include\Direct3D10Renderer\ProgramCg.h" />
+    <ClInclude Include="include\Direct3D10Renderer\ProgramHlsl.h" />
+    <ClInclude Include="include\Direct3D10Renderer\RasterizerState.h" />
+    <ClInclude Include="include\Direct3D10Renderer\Direct3D10Renderer.h" />
+    <ClInclude Include="include\Direct3D10Renderer\SamplerState.h" />
+    <ClInclude Include="include\Direct3D10Renderer\SamplerStateCollection.h" />
+    <ClInclude Include="include\Direct3D10Renderer\ShaderLanguage.h" />
+    <ClInclude Include="include\Direct3D10Renderer\ShaderLanguageCg.h" />
+    <ClInclude Include="include\Direct3D10Renderer\ShaderLanguageHlsl.h" />
+    <ClInclude Include="include\Direct3D10Renderer\SwapChain.h" />
+    <ClInclude Include="include\Direct3D10Renderer\Texture2D.h" />
+    <ClInclude Include="include\Direct3D10Renderer\Texture2DArray.h" />
+    <ClInclude Include="include\Direct3D10Renderer\TextureBuffer.h" />
+    <ClInclude Include="include\Direct3D10Renderer\TextureCollection.h" />
+    <ClInclude Include="include\Direct3D10Renderer\UniformBuffer.h" />
+    <ClInclude Include="include\Direct3D10Renderer\VertexArray.h" />
+    <ClInclude Include="include\Direct3D10Renderer\VertexBuffer.h" />
+    <ClInclude Include="include\Direct3D10Renderer\VertexShader.h" />
+    <ClInclude Include="include\Direct3D10Renderer\VertexShaderCg.h" />
+    <ClInclude Include="include\Direct3D10Renderer\VertexShaderHlsl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CMakeLists.txt" />
+    <None Include="include\Direct3D10Renderer\BlendState.inl" />
+    <None Include="include\Direct3D10Renderer\DepthStencilState.inl" />
+    <None Include="include\Direct3D10Renderer\FragmentShaderCg.inl" />
+    <None Include="include\Direct3D10Renderer\FragmentShaderHlsl.inl" />
+    <None Include="include\Direct3D10Renderer\Framebuffer.inl" />
+    <None Include="include\Direct3D10Renderer\GeometryShaderCg.inl" />
+    <None Include="include\Direct3D10Renderer\GeometryShaderHlsl.inl" />
+    <None Include="include\Direct3D10Renderer\IndexBuffer.inl" />
+    <None Include="include\Direct3D10Renderer\Program.inl" />
+    <None Include="include\Direct3D10Renderer\ProgramCg.inl" />
+    <None Include="include\Direct3D10Renderer\ProgramHlsl.inl" />
+    <None Include="include\Direct3D10Renderer\RasterizerState.inl" />
+    <None Include="include\Direct3D10Renderer\Direct3D10Renderer.inl" />
+    <None Include="include\Direct3D10Renderer\SamplerState.inl" />
+    <None Include="include\Direct3D10Renderer\SamplerStateCollection.inl" />
+    <None Include="include\Direct3D10Renderer\SwapChain.inl" />
+    <None Include="include\Direct3D10Renderer\Texture2D.inl" />
+    <None Include="include\Direct3D10Renderer\Texture2DArray.inl" />
+    <None Include="include\Direct3D10Renderer\TextureBuffer.inl" />
+    <None Include="include\Direct3D10Renderer\TextureCollection.inl" />
+    <None Include="include\Direct3D10Renderer\UniformBuffer.inl" />
+    <None Include="include\Direct3D10Renderer\VertexArray.inl" />
+    <None Include="include\Direct3D10Renderer\VertexBuffer.inl" />
+    <None Include="include\Direct3D10Renderer\VertexShaderCg.inl" />
+    <None Include="include\Direct3D10Renderer\VertexShaderHlsl.inl" />
+    <None Include="Readme.txt" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4ABD8DC7-83B5-4C00-ABF5-0BA77EB141C6}</ProjectGuid>
+    <RootNamespace>Direct3D10Renderer</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <TargetName>$(ProjectName)StaticD</TargetName>
+    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <TargetName>$(ProjectName)D</TargetName>
+    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <TargetName>$(ProjectName)Static</TargetName>
+    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include\;include\Direct3D10Renderer\;..\Renderer\include\;..\..\External\Cg\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>md "..\..\lib\$(PlatformTarget)d_static\"
+copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
+md "..\..\include\Renderer\Internal\$(ProjectName)d_static\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include\;include\Direct3D10Renderer\;..\Renderer\include\;..\..\External\Cg\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_USRDLL;DIRECT3D10RENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>md "..\..\lib\$(PlatformTarget)d_dynamic\"
+copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_dynamic\
+md "..\..\bin\$(PlatformTarget)d_dynamic\"
+copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
+md "..\..\include\Renderer\Internal\$(ProjectName)\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>include\;include\Direct3D10Renderer\;..\Renderer\include\;..\..\External\Cg\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;DIRECT3D10RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CompileAsManaged>false</CompileAsManaged>
+      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PostBuildEvent>
+      <Command>md "..\..\lib\$(PlatformTarget)_static\"
+copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_static\
+md "..\..\include\Renderer\Internal\$(ProjectName)\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>include\;include\Direct3D10Renderer\;..\Renderer\include\;..\..\External\Cg\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_USRDLL;DIRECT3D10RENDERER_EXPORTS;DIRECT3D10RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CompileAsManaged>false</CompileAsManaged>
+      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PostBuildEvent>
+      <Command>md "..\..\lib\$(PlatformTarget)_dynamic\"
+copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_dynamic\
+md "..\..\bin\$(PlatformTarget)_dynamic\"
+copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
+md "..\..\include\Renderer\Internal\$(ProjectName)\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

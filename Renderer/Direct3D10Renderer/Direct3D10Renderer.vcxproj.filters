@@ -1,0 +1,317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\GeometryShaderCg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GeometryShaderHlsl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IndexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Program.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProgramCg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ProgramHlsl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RasterizerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Direct3D10Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SamplerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderLanguage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderLanguageCg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderLanguageHlsl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture2DArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UniformBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexShaderCg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexShaderHlsl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BlendState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DepthStencilState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FragmentShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FragmentShaderCg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FragmentShaderHlsl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GeometryShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mapping.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CgRuntimeLinking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Direct3D10RuntimeLinking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SamplerStateCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Direct3D9RuntimeLinking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SwapChain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Guid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Direct3D10Renderer\BlendState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\CgRuntimeLinking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\D3D10.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\D3D10_1.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\DepthStencilState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\Direct3D10Debug.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\Direct3D10RuntimeLinking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\Direct3D9RuntimeLinking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\FragmentShader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\FragmentShaderCg.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\FragmentShaderHlsl.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\Framebuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\GeometryShader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\GeometryShaderCg.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\GeometryShaderHlsl.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\Guid.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\IndexBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\Mapping.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\Program.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\ProgramCg.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\ProgramHlsl.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\RasterizerState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\Direct3D10Renderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\SamplerState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\SamplerStateCollection.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\ShaderLanguage.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\ShaderLanguageCg.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\ShaderLanguageHlsl.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\SwapChain.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\Texture2D.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\Texture2DArray.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\TextureBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\TextureCollection.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\UniformBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\VertexArray.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\VertexBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\VertexShader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\VertexShaderCg.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\VertexShaderHlsl.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Readme.txt" />
+    <None Include="CMakeLists.txt" />
+    <None Include="include\Direct3D10Renderer\BlendState.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\DepthStencilState.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\FragmentShaderCg.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\FragmentShaderHlsl.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\Framebuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\GeometryShaderCg.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\GeometryShaderHlsl.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\IndexBuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\Program.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\ProgramCg.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\ProgramHlsl.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\RasterizerState.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\Direct3D10Renderer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\SamplerState.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\SamplerStateCollection.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\SwapChain.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\Texture2D.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\Texture2DArray.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\TextureBuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\TextureCollection.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\UniformBuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\VertexArray.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\VertexBuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\VertexShaderCg.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\VertexShaderHlsl.inl">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

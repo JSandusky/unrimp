@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_Dynamic|Win32">
+      <Configuration>Debug_Dynamic</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_Static|Win32">
+      <Configuration>Debug_Static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Dynamic|Win32">
+      <Configuration>Release_Dynamic</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Static|Win32">
+      <Configuration>Release_Static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Renderer\BlendStateTypes.h" />
+    <ClInclude Include="include\Renderer\BufferTypes.h" />
+    <ClInclude Include="include\Renderer\Capabilities.h" />
+    <ClInclude Include="include\Renderer\DepthStencilStateTypes.h" />
+    <ClInclude Include="include\Renderer\GeometryShaderTypes.h" />
+    <ClInclude Include="include\Renderer\IBuffer.h" />
+    <ClInclude Include="include\Renderer\ICollection.h" />
+    <ClInclude Include="include\Renderer\IFragmentShader.h" />
+    <ClInclude Include="include\Renderer\IFramebuffer.h" />
+    <ClInclude Include="include\Renderer\IGeometryShader.h" />
+    <ClInclude Include="include\Renderer\IIndexBuffer.h" />
+    <ClInclude Include="include\Renderer\IndexBufferTypes.h" />
+    <ClInclude Include="include\Renderer\IProgram.h" />
+    <ClInclude Include="include\Renderer\IRenderer.h" />
+    <ClInclude Include="include\Renderer\IRenderTarget.h" />
+    <ClInclude Include="include\Renderer\IResource.h" />
+    <ClInclude Include="include\Renderer\ISamplerState.h" />
+    <ClInclude Include="include\Renderer\ISamplerStateCollection.h" />
+    <ClInclude Include="include\Renderer\IShader.h" />
+    <ClInclude Include="include\Renderer\IShaderLanguage.h" />
+    <ClInclude Include="include\Renderer\IState.h" />
+    <ClInclude Include="include\Renderer\IBlendState.h" />
+    <ClInclude Include="include\Renderer\IDepthStencilState.h" />
+    <ClInclude Include="include\Renderer\IRasterizerState.h" />
+    <ClInclude Include="include\Renderer\ISwapChain.h" />
+    <ClInclude Include="include\Renderer\ITessellationControlShader.h" />
+    <ClInclude Include="include\Renderer\ITessellationEvaluationShader.h" />
+    <ClInclude Include="include\Renderer\ITexture.h" />
+    <ClInclude Include="include\Renderer\ITexture2D.h" />
+    <ClInclude Include="include\Renderer\ITexture2DArray.h" />
+    <ClInclude Include="include\Renderer\ITextureBuffer.h" />
+    <ClInclude Include="include\Renderer\ITextureCollection.h" />
+    <ClInclude Include="include\Renderer\IUniformBuffer.h" />
+    <ClInclude Include="include\Renderer\IVertexArray.h" />
+    <ClInclude Include="include\Renderer\IVertexBuffer.h" />
+    <ClInclude Include="include\Renderer\IVertexShader.h" />
+    <ClInclude Include="include\Renderer\PlatformTypes.h" />
+    <ClInclude Include="include\Renderer\RasterizerStateTypes.h" />
+    <ClInclude Include="include\Renderer\RefCount.h" />
+    <ClInclude Include="include\Renderer\Renderer.h" />
+    <ClInclude Include="include\Renderer\RendererTypes.h" />
+    <ClInclude Include="include\Renderer\ResourceTypes.h" />
+    <ClInclude Include="include\Renderer\SamplerStateTypes.h" />
+    <ClInclude Include="include\Renderer\SmartRefCount.h" />
+    <ClInclude Include="include\Renderer\Statistics.h" />
+    <ClInclude Include="include\Renderer\TextureTypes.h" />
+    <ClInclude Include="include\Renderer\VertexArrayTypes.h" />
+    <ClInclude Include="include\Renderer\WindowsHeader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CMakeLists.txt" />
+    <None Include="include\Renderer\Capabilities.inl" />
+    <None Include="include\Renderer\IBlendState.inl" />
+    <None Include="include\Renderer\IBuffer.inl" />
+    <None Include="include\Renderer\ICollection.inl" />
+    <None Include="include\Renderer\IDepthStencilState.inl" />
+    <None Include="include\Renderer\IFragmentShader.inl" />
+    <None Include="include\Renderer\IFramebuffer.inl" />
+    <None Include="include\Renderer\IGeometryShader.inl" />
+    <None Include="include\Renderer\IIndexBuffer.inl" />
+    <None Include="include\Renderer\IProgram.inl" />
+    <None Include="include\Renderer\IRasterizerState.inl" />
+    <None Include="include\Renderer\IRenderer.inl" />
+    <None Include="include\Renderer\IRenderTarget.inl" />
+    <None Include="include\Renderer\IResource.inl" />
+    <None Include="include\Renderer\ISamplerState.inl" />
+    <None Include="include\Renderer\ISamplerStateCollection.inl" />
+    <None Include="include\Renderer\IShader.inl" />
+    <None Include="include\Renderer\IShaderLanguage.inl" />
+    <None Include="include\Renderer\IState.inl" />
+    <None Include="include\Renderer\ISwapChain.inl" />
+    <None Include="include\Renderer\ITessellationControlShader.inl" />
+    <None Include="include\Renderer\ITessellationEvaluationShader.inl" />
+    <None Include="include\Renderer\ITexture.inl" />
+    <None Include="include\Renderer\ITexture2D.inl" />
+    <None Include="include\Renderer\ITexture2DArray.inl" />
+    <None Include="include\Renderer\ITextureBuffer.inl" />
+    <None Include="include\Renderer\ITextureCollection.inl" />
+    <None Include="include\Renderer\IUniformBuffer.inl" />
+    <None Include="include\Renderer\IVertexArray.inl" />
+    <None Include="include\Renderer\IVertexBuffer.inl" />
+    <None Include="include\Renderer\IVertexShader.inl" />
+    <None Include="include\Renderer\RefCount.inl" />
+    <None Include="include\Renderer\SmartRefCount.inl" />
+    <None Include="include\Renderer\Statistics.inl" />
+    <None Include="Readme.txt" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{625483C5-43B6-47AB-BD4F-099A0B091768}</ProjectGuid>
+    <RootNamespace>Renderer</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <TargetName>$(ProjectName)StaticD</TargetName>
+    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <TargetName>$(ProjectName)D</TargetName>
+    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <TargetName>$(ProjectName)Static</TargetName>
+    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalOptions>/wd 4514</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>md "..\..\include\Renderer\Internal\$(ProjectName)\"
+copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalOptions>/wd 4514</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>md "..\..\include\Renderer\Internal\$(ProjectName)\"
+copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CompileAsManaged>false</CompileAsManaged>
+      <AdditionalOptions>/wd 4514</AdditionalOptions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PostBuildEvent>
+      <Command>md "..\..\include\Renderer\Internal\$(ProjectName)\"
+copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>false</ExceptionHandling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CompileAsManaged>false</CompileAsManaged>
+      <AdditionalOptions>/wd 4514</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <PostBuildEvent>
+      <Command>md "..\..\include\Renderer\Internal\$(ProjectName)\"
+copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
