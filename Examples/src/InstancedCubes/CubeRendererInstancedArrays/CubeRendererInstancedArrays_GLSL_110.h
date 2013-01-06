@@ -22,7 +22,7 @@
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
 #ifndef RENDERER_NO_OPENGL
-if (0 == strcmp(mRenderer->getName(), "OpenGL") && !mRenderer->getCapabilities().uniformBuffer)
+if (0 == strcmp(mRenderer->getName(), "OpenGL") /*&& !mRenderer->getCapabilities().uniformBuffer*/)
 {
 
 
@@ -127,9 +127,9 @@ void main()
 		float xa = r.x * position.x;
 		float yb = r.y * position.y;
 		float zc = r.z * position.z;
-		position.xyz = vec3(position.x * ( x2 - y2 - z2 + w2) + 2 * (r.w * (r.y * position.z - r.z * position.y) + r.x * (yb + zc)),
-							position.y * (-x2 + y2 - z2 + w2) + 2 * (r.w * (r.z * position.x - r.x * position.z) + r.y * (xa + zc)),
-							position.z * (-x2 - y2 + z2 + w2) + 2 * (r.w * (r.x * position.y - r.y * position.x) + r.z * (xa + yb)));
+		position.xyz = vec3(position.x * ( x2 - y2 - z2 + w2) + 2.0 * (r.w * (r.y * position.z - r.z * position.y) + r.x * (yb + zc)),
+							position.y * (-x2 + y2 - z2 + w2) + 2.0 * (r.w * (r.z * position.x - r.x * position.z) + r.y * (xa + zc)),
+							position.z * (-x2 - y2 + z2 + w2) + 2.0 * (r.w * (r.x * position.y - r.y * position.x) + r.z * (xa + yb)));
 	}
 
 	// Apply global scale and per instance scale
@@ -180,7 +180,7 @@ void main()
 	float lighting = clamp(dot(NormalVs, normalize(LightPosition - WorldPositionVs)), 0.0, 0.8);
 
 	// Calculate the final fragment color
-	gl_FragColor = (vec4(0.2, 0.2, 0.2, 1.0) + lighting) * texture(DiffuseMap, TexCoordVs);
+	gl_FragColor = (vec4(0.2, 0.2, 0.2, 1.0) + lighting) * texture2D(DiffuseMap, TexCoordVs);
 	gl_FragColor.a = 0.8;
 }
 );	// STRINGIFY
