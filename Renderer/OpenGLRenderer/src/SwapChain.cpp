@@ -25,6 +25,9 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #ifdef WIN32
 	#include "OpenGLRenderer/Windows/ContextWindows.h"
+#elif defined LINUX
+	#include "OpenGLRenderer/Linux/ContextLinux.h"
+	#include "OpenGLRenderer/OpenGLRuntimeLinking.h" // for glxSwapBuffers
 #endif
 
 
@@ -98,9 +101,24 @@ namespace OpenGLRenderer
 				height = static_cast<UINT>(swapChainHeight);
 			}
 			else
+		#elif defined LINUX
+			if (NULL_HANDLE != mNativeWindowHandle)
+			{
+				OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
+				Display* display = static_cast<const ContextLinux&>(openGLRenderer.getContext()).getDisplay();
+				
+				::Window nRootWindow = 0;
+				int nPositionX = 0, nPositionY = 0;
+				unsigned int nWidth = 0, nHeight = 0, nBorder = 0, nDepth = 0;
+				XGetGeometry(display, mNativeWindowHandle, &nRootWindow, &nPositionX, &nPositionY, &nWidth, &nHeight, &nBorder, &nDepth);
+				width = nWidth;
+				height = nHeight;
+			}
+			else
 		#else
 			#error "Unsupported platform"
 		#endif
+			
 		{
 			// Set known default return values
 			width  = 0;
@@ -123,6 +141,8 @@ namespace OpenGLRenderer
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		#ifdef WIN32
 			SwapBuffers(static_cast<const ContextWindows&>(openGLRenderer.getContext()).getDeviceContext());
+		#elif defined LINUX
+			glXSwapBuffers(static_cast<const ContextLinux&>(openGLRenderer.getContext()).getDisplay(), mNativeWindowHandle);
 		#else
 			#error "Unsupported platform"
 		#endif

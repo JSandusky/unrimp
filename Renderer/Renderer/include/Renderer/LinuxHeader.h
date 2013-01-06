@@ -19,45 +19,25 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+#ifndef __RENDERER_LINUXHEADER_H__
+#define __RENDERER_LINUXHEADER_H__
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/Stopwatch.h"
-#ifdef WIN32
-	#include "Framework/WindowsHeader.h"
-#elif defined LINUX
-	#include <sys/time.h>
-#endif
+#include <X11/Xlib.h>
+#include <string.h>
+#include <GL/glx.h>
+#include <GL/glxext.h>
+
+#define NULL_HANDLE 0
 
 
 //[-------------------------------------------------------]
-//[ Private methods                                       ]
+//[ Header guard                                          ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Retrieve the number of microseconds since the stopwatch was started
-*/
-unsigned int Stopwatch::getSystemMicroseconds() const
-{
-	#ifdef WIN32
-		// Frequency of the performance counter
-		LARGE_INTEGER performanceFrequency;
-		::QueryPerformanceFrequency(&performanceFrequency);
-
-		// Get past time
-		LARGE_INTEGER curTime;
-		::QueryPerformanceCounter(&curTime);
-		double newTicks = static_cast<double>(curTime.QuadPart);
-
-		// Scale by 1000000 in order to get microsecond precision
-		newTicks *= static_cast<double>(1000000.0)/static_cast<double>(performanceFrequency.QuadPart);
-
-		// Return past time
-		return static_cast<unsigned int>(newTicks);
-	#elif defined LINUX
-		struct timeval now;
-		gettimeofday(&now, nullptr);
-		return static_cast<unsigned int>(now.tv_sec*1000000 + now.tv_usec);
-	#else
-		#error "Unsupported platform"
-	#endif
-}
+#endif // __RENDERER_LINUXHEADER_H__

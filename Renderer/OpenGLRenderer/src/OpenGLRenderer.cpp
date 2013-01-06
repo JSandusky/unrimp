@@ -54,6 +54,8 @@
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #ifdef WIN32
 	#include "OpenGLRenderer/Windows/ContextWindows.h"
+#elif defined LINUX
+	#include "OpenGLRenderer/Linux//ContextLinux.h"
 #endif
 #ifndef OPENGLRENDERER_NO_CG
 	#include "OpenGLRenderer/ProgramCg.h"
@@ -97,6 +99,8 @@ namespace OpenGLRenderer
 	OpenGLRenderer::OpenGLRenderer(handle nativeWindowHandle) :
 		#ifdef WIN32
 			mContext(new ContextWindows(nativeWindowHandle)),
+		#elif defined LINUX
+			mContext(new ContextLinux(nativeWindowHandle)),
 		#else
 			#error "Unsupported platform"
 		#endif
@@ -1572,6 +1576,13 @@ namespace OpenGLRenderer
 				{
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
+					#ifdef LINUX
+						// TODO(sw) put this handling into Context? (e.g. Context::makeCurrent(Renderer::ISwapChain::getNativeWindowHandle()))
+						ContextLinux *context = static_cast<ContextLinux*>(mContext);
+						Display *display = context->getDisplay();
+						Renderer::ISwapChain *chain = static_cast<Renderer::ISwapChain*>(mRenderTarget);
+						glXMakeCurrent(context->getDisplay(), chain->getNativeWindowHandle(), context->getRenderContext());
+					#endif
 						// TODO(co) Implement me
 						break;
 					}

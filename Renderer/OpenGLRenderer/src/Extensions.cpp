@@ -27,6 +27,10 @@
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 #include <Renderer/PlatformTypes.h>	// For "RENDERER_OUTPUT_DEBUG_PRINTF()"
+#ifdef LINUX
+	#include <Renderer/LinuxHeader.h>
+	#include "OpenGLRenderer/Linux/ContextLinux.h"
+#endif
 
 
 //[-------------------------------------------------------]
@@ -246,11 +250,11 @@ namespace OpenGLRenderer
 						{
 							if (2 == i)
 							{
-								extensions = static_cast<const char*>(glXQueryExtensionsString(display, XDefaultScreen(pDisplay)));
+								extensions = static_cast<const char*>(glXQueryExtensionsString(display, XDefaultScreen(display)));
 							}
 							else
 							{
-								extensions = static_cast<const char*>(glXGetClientString(pDisplay, GLX_EXTENSIONS));
+								extensions = static_cast<const char*>(glXGetClientString(display, GLX_EXTENSIONS));
 							}
 						}
 					#endif
@@ -438,7 +442,7 @@ namespace OpenGLRenderer
 		#elif LINUX
 			typedef void (*GLfunction)();
 			#define IMPORT_FUNC(funcName)																													\
-				if (besult)																																	\
+				if (result)																																	\
 				{																																			\
 					GLfunction symbol = glXGetProcAddressARB(reinterpret_cast<const GLubyte*>(#funcName));													\
 					if (nullptr != symbol)																													\

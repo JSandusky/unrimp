@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the ï¿½Softwareï¿½), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED ï¿½AS ISï¿½, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -70,14 +70,14 @@ void IcosahedronTessellation::onInitialization()
 	// -> Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
 	// -> Geometry shaders supported?
 	// -> Tessellation control and tessellation evaluation shaders supported?
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && renderer->getCapabilities().uniformBuffer && renderer->getCapabilities().maximumNumberOfGsOutputVertices > 0 && renderer->getCapabilities().maximumNumberOfPatchVertices > 0)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
 		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
-		Renderer::IShaderLanguagePtr shaderLanguage = renderer->getShaderLanguage();
+		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
 			// Create uniform buffers and fill the static buffers at once
@@ -151,7 +151,7 @@ void IcosahedronTessellation::onInitialization()
 					 0.724f, -0.526f, -0.447f,	// 10
 					 0.000f,  0.000f, -1.000f	// 11
 				};
-				Renderer::IVertexBufferPtr vertexBuffer = renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW);
+				Renderer::IVertexBufferPtr vertexBuffer (renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 				// Create the index buffer object (IBO)
 				// -> Geometry is from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")
@@ -234,7 +234,7 @@ void IcosahedronTessellation::onDeinitialization()
 void IcosahedronTessellation::onDraw()
 {
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && nullptr != mProgram)
 	{
 		// Begin debug event

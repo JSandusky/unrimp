@@ -26,11 +26,15 @@
 	// Dynamically linked libraries
 	#ifdef WIN32
 		#include "Framework/WindowsHeader.h"
-
-		#include <stdio.h>
+	#elif defined LINUX
+		#include "Framework/LinuxHeader.h"
+		#include <dlfcn.h>
+		#include <iostream>
 	#else
 		#error "Unsupported platform"
 	#endif
+	
+	#include <stdio.h>
 #endif
 
 #include <string.h>
@@ -99,6 +103,12 @@ void IApplicationRenderer::onDeinitialization()
 				::FreeLibrary(static_cast<HMODULE>(mRendererSharedLibrary));
 				mRendererSharedLibrary = nullptr;
 			}
+		#elif defined LINUX
+			if (nullptr != mRendererSharedLibrary)
+			{
+				dlclose(mRendererSharedLibrary);
+				mRendererSharedLibrary = nullptr;
+			}
 		#else
 			#error "Unsupported platform"
 		#endif
@@ -162,7 +172,7 @@ void IApplicationRenderer::onDrawRequest()
 	if (nullptr != mRenderer)
 	{
 		// Get the main swap chain and ensure there's one
-		Renderer::ISwapChainPtr swapChain = mRenderer->getMainSwapChain();
+		Renderer::ISwapChainPtr swapChain(mRenderer->getMainSwapChain());
 		if (nullptr != swapChain)
 		{
 			// Begin debug event
@@ -256,6 +266,42 @@ Renderer::IRenderer *IApplicationRenderer::createRendererInstance(const char *re
 				}
 				else
 				{
+					OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", rendererFilename)
+				}
+			#elif defined LINUX
+				// Load in the dll
+				char rendererFilename[128];
+				#ifdef _DEBUG
+					sprintf(rendererFilename, "%sRendererD.so", rendererName);
+				#else
+					sprintf(rendererFilename, "lib%sRenderer.so", rendererName);
+				#endif
+				mRendererSharedLibrary = ::dlopen(rendererFilename, RTLD_NOW);
+				if (nullptr != mRendererSharedLibrary)
+				{
+					// Get the "CreateRendererInstance()" function pointer
+					char functionName[128];
+					sprintf(functionName, "create%sRendererInstance", rendererName);
+					void *symbol = ::dlsym(mRendererSharedLibrary, functionName);
+					if (nullptr != symbol)
+					{
+						// "createRendererInstance()" signature
+						typedef Renderer::IRenderer *(*createRendererInstance)(Renderer::handle);
+
+						// Create the renderer instance
+						
+						renderer = (reinterpret_cast<createRendererInstance>(symbol))(getNativeWindowHandle());
+					}
+					else
+					{
+						// Error!
+						std::cerr<<"Failed to locate the entry point \""<<functionName<<"\" within the renderer shared library \""<<rendererFilename<<"\"\n";
+						OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"%s\" within the renderer shared library \"%s\"", functionName, rendererFilename)
+					}
+				}
+				else
+				{
+					std::cerr<<"Failed to load in the shared library \""<<rendererFilename<<"\"\nReason:"<<dlerror()<<"\n";
 					OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", rendererFilename)
 				}
 			#else

@@ -101,6 +101,22 @@ namespace OpenGLES2Renderer
 				height = static_cast<UINT>(swapChainHeight);
 			}
 			else
+		#elif defined LINUX
+			if (mNativeWindowHandle)
+			{
+				Display *display;
+				// [TODO] resue X11 display from "Frontend"
+				display = XOpenDisplay(0);
+				
+				::Window nRootWindow = 0;
+				int nPositionX = 0, nPositionY = 0;
+				unsigned int nWidth = 0, nHeight = 0, nBorder = 0, nDepth = 0;
+				XGetGeometry(display, mNativeWindowHandle, &nRootWindow, &nPositionX, &nPositionY, &nWidth, &nHeight, &nBorder, &nDepth);
+				XCloseDisplay(display);
+				width = nWidth;
+				height = nHeight;
+			}
+			else
 		#else
 			#error "Unsupported platform"
 		#endif

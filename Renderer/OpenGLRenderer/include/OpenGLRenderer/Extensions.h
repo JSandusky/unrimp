@@ -38,6 +38,10 @@
 		#include <GL/wglext.h>	// Requires definitions from "gl.h"
 	__pragma(warning(pop))
 #else
+	#ifdef LINUX
+		#include <GL/glx.h>
+		#include <GL/glxext.h>
+	#endif
 	#include <GL/gl.h>
 	#include <GL/glext.h>	// Requires definitions from "gl.h"
 #endif
@@ -410,6 +414,15 @@ namespace OpenGLRenderer
 		// WGL_ARB_make_current_read
 		FNDEF_EX(wglMakeContextCurrentARB,	PFNWGLMAKECONTEXTCURRENTARBPROC);
 		FNDEF_EX(wglGetCurrentReadDCARB,	PFNWGLGETCURRENTREADDCARBPROC);
+	#endif
+
+
+	//[-------------------------------------------------------]
+	//[ GLX (Linux only)                                      ]
+	//[-------------------------------------------------------]
+	#if defined(LINUX) && !defined(APPLE)
+		// GLX_SGI_swap_control
+		FNDEF_EX(glXSwapIntervalSGI,	PFNGLXSWAPINTERVALSGIPROC);
 	#endif
 
 

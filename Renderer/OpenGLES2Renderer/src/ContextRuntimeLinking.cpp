@@ -25,6 +25,10 @@
 
 #include "OpenGLES2Renderer/ContextRuntimeLinking.h"
 #include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"
+#ifdef LINUX
+	#include <dlfcn.h> // for dlopen, dlclose and co
+	#include <link.h> // for getting the path to the library (for the error message)
+#endif
 
 
 //[-------------------------------------------------------]
@@ -97,6 +101,15 @@ namespace OpenGLES2Renderer
 			if (nullptr != mGLESSharedLibrary)
 			{
 				::FreeLibrary(static_cast<HMODULE>(mGLESSharedLibrary));
+			}
+		#elif defined LINUX
+			if (nullptr != mEGLSharedLibrary)
+			{
+				::dlclose(mEGLSharedLibrary);
+			}
+			if (nullptr != mGLESSharedLibrary)
+			{
+				::dlclose(mGLESSharedLibrary);
 			}
 		#else
 			#error "Unsupported platform"
@@ -240,6 +253,33 @@ namespace OpenGLES2Renderer
 					}
 				}
 			}
+		#elif defined LINUX
+			// First "libGL.so": The closed source drivers doesn't provide separate libraries for GLES and EGL (at least the drivers from AMD)
+			// but the separate EGL/GLES2 libs might be present on the system
+			mEGLSharedLibrary = ::dlopen("libGL.so", RTLD_LAZY);
+			if (nullptr != mEGLSharedLibrary)
+			{
+				// Try finding the eglGetProcAddress to determine if this library contains EGL/GLES support.
+				// This check is needed because only the closed source drivers have the EGL/GLES support in "libGL.so".
+				// The open source drivers (mesa) have separate libraries for this and they can be present on the system even the closed source drivers are used.
+				void *pSymbol = dlsym(mEGLSharedLibrary, "eglGetProcAddress");
+				if (pSymbol)
+					mGLESSharedLibrary = ::dlopen("libGL.so", RTLD_LAZY);
+				else {
+					// Unload the library
+					::dlclose(mEGLSharedLibrary);
+					mEGLSharedLibrary = nullptr;
+				}
+			}
+			if (nullptr == mEGLSharedLibrary)
+			{
+				// Then we try the separate libs for EGL and GLES (provided either by an emulator or native from mesa)
+				mEGLSharedLibrary = ::dlopen("libEGL.so", RTLD_LAZY);
+				if (nullptr != mEGLSharedLibrary)
+				{
+					mGLESSharedLibrary = ::dlopen("libGLESv2.so", RTLD_LAZY);
+				}
+			}
 		#else
 			#error "Unsupported platform"
 		#endif
@@ -284,9 +324,40 @@ namespace OpenGLES2Renderer
 						result = false;																																				\
 					}																																								\
 				}
+		#elif defined LINUX
+			#define IMPORT_FUNC(funcName)																																			\
+				if (result)																																							\
+				{																																									\
+					void *symbol = ::dlsym(mEGLSharedLibrary, #funcName);																			\
+					if (nullptr == symbol)																																			\
+					{																																								\
+						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 2 on desktop PC by using a					\
+						   native OpenGL ES 2 capable graphics driver under Linux (tested with "AMD Catalyst 11.8"), only this way will work */										\
+						if (nullptr != eglGetProcAddress)																															\
+						{																																							\
+							symbol = eglGetProcAddress(#funcName);																													\
+						}																																							\
+					}																																								\
+					if (nullptr != symbol)																																			\
+					{																																								\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
+					}																																								\
+					else																																							\
+					{																																								\
+						link_map *LinkMap = nullptr; \
+						const char* libName = "unknown"; \
+						if (dlinfo(mEGLSharedLibrary, RTLD_DI_LINKMAP, &LinkMap)) \
+						{ \
+							libName = LinkMap->l_name; \
+						} \
+						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: Failed to locate the entry point \"%s\" within the EGL shared library \"%s\"", #funcName, libName)	\
+						result = false;																																				\
+					}																																								\
+				}
 		#else
 			#error "Unsupported platform"
 		#endif
+
 
 		// Load the entry points
 		IMPORT_FUNC(eglGetProcAddress);

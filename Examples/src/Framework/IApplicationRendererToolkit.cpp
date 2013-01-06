@@ -33,10 +33,13 @@
 	#ifdef WIN32
 		#include "Framework/WindowsHeader.h"
 
-		#include <stdio.h>
+	#elif defined LINUX
+		#include "Framework/LinuxHeader.h"
+		#include <dlfcn.h>
 	#else
 		#error "Unsupported platform"
 	#endif
+	#include <stdio.h>
 #endif
 
 #include <string.h>
@@ -84,6 +87,12 @@ void IApplicationRendererToolkit::onDeinitialization()
 			if (nullptr != mRendererToolkitSharedLibrary)
 			{
 				::FreeLibrary(static_cast<HMODULE>(mRendererToolkitSharedLibrary));
+				mRendererToolkitSharedLibrary = nullptr;
+			}
+		#elif defined LINUX
+			if (nullptr != mRendererToolkitSharedLibrary)
+			{
+				::dlclose(mRendererToolkitSharedLibrary);
 				mRendererToolkitSharedLibrary = nullptr;
 			}
 		#else
@@ -138,6 +147,36 @@ RendererToolkit::IRendererToolkit *IApplicationRendererToolkit::createRendererTo
 
 					// Create the renderer toolkit instance
 					return static_cast<createRendererToolkitInstance>(symbol)(renderer);
+				}
+				else
+				{
+					// Error!
+					OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"createRendererToolkitInstance\" within the renderer toolkit shared library \"%s\"", RENDERER_TOOLKIT_FILENAME)
+				}
+			}
+			else
+			{
+				OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", RENDERER_TOOLKIT_FILENAME)
+			}
+		#elif defined LINUX
+			// Load in the dll
+			#ifdef _DEBUG
+				static const char RENDERER_TOOLKIT_FILENAME[] = "RendererToolkitD.so";
+			#else
+				static const char RENDERER_TOOLKIT_FILENAME[] = "RendererToolkit.so";
+			#endif
+			mRendererToolkitSharedLibrary = dlopen(RENDERER_TOOLKIT_FILENAME, RTLD_NOW);
+			if (nullptr != mRendererToolkitSharedLibrary)
+			{
+				// Get the "createRendererToolkitInstance()" function pointer
+				void *symbol = dlsym(mRendererToolkitSharedLibrary, "createRendererToolkitInstance");
+				if (nullptr != symbol)
+				{
+					// "createRendererToolkitInstance()" signature
+					typedef RendererToolkit::IRendererToolkit *(*createRendererToolkitInstance)(Renderer::IRenderer &renderer);
+
+					// Create the renderer toolkit instance
+					return reinterpret_cast<createRendererToolkitInstance>(symbol)(renderer);
 				}
 				else
 				{

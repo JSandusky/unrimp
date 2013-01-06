@@ -114,12 +114,26 @@
 
 	// To export classes, methods and variables
 	#if defined(HAVE_VISIBILITY_ATTR)
-		#define GENERIC_API_EXPORT __attribute__ ((visibility("default")))
+		#define GENERIC_API_EXPORT	extern "C" __attribute__ ((visibility("default")))
 	#else
-		#define GENERIC_API_EXPORT
+		#define GENERIC_API_EXPORT	extern "C"
 	#endif
 #else
 	#error "Unsupported platform"
+#endif
+
+
+//[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+#ifdef LINUX
+	#include <strings.h>
+	#define stricmp(a, b)		strcasecmp(a, b)
+	
+	// "override"-definition, see e.g. http://www2.research.att.com/~bs/C++0xFAQ.html#override (C++11 keyword is introduced in GCC 4.7 or clang 2.9)
+	#if ((__GNUC__ < 4 || __GNUC_MINOR__ < 7) && !defined(__clang__))
+		#define override
+	#endif
 #endif
 
 

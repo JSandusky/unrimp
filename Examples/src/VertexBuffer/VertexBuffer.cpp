@@ -60,14 +60,14 @@ void VertexBuffer::onInitialization()
 	IApplicationRenderer::onInitialization();
 
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
 		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
-		Renderer::IShaderLanguagePtr shaderLanguage = renderer->getShaderLanguage();
+		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
 			{ // Create the program
@@ -106,7 +106,7 @@ void VertexBuffer::onInitialization()
 						 1.0f, 0.0f,	0.0f, 1.0f, 0.0f,	// 1			   .   .
 						-0.5f, 0.0f,	0.0f, 0.0f, 1.0f	// 2			  2.......1
 					};
-					Renderer::IVertexBufferPtr vertexBufferPositionColor = renderer->createVertexBuffer(sizeof(VERTEX_POSITION_COLOR), VERTEX_POSITION_COLOR, Renderer::BufferUsage::STATIC_DRAW);
+					Renderer::IVertexBufferPtr vertexBufferPositionColor(renderer->createVertexBuffer(sizeof(VERTEX_POSITION_COLOR), VERTEX_POSITION_COLOR, Renderer::BufferUsage::STATIC_DRAW));
 
 					// Create vertex array object (VAO)
 					const Renderer::VertexArrayAttribute vertexArray[] =
@@ -150,7 +150,7 @@ void VertexBuffer::onInitialization()
 						 1.0f,  0.0f,	// 1			   .   .
 						 0.0f, -1.0f	// 2			  	2
 					};
-					Renderer::IVertexBufferPtr vertexBufferPosition = renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW);
+					Renderer::IVertexBufferPtr vertexBufferPosition(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 					// Create the vertex buffer object (VBO) holding color data
 					// -> Traditional normalized RGB vertex colors
@@ -160,7 +160,7 @@ void VertexBuffer::onInitialization()
 						0.0f, 1.0f, 0.0f,	// 1			   .   .
 						0.0f, 0.0f, 1.0f	// 2			  	2
 					};
-					Renderer::IVertexBufferPtr vertexBufferColor = renderer->createVertexBuffer(sizeof(VERTEX_COLOR), VERTEX_COLOR, Renderer::BufferUsage::STATIC_DRAW);
+					Renderer::IVertexBufferPtr vertexBufferColor(renderer->createVertexBuffer(sizeof(VERTEX_COLOR), VERTEX_COLOR, Renderer::BufferUsage::STATIC_DRAW));
 
 					// Create vertex array object (VAO)
 					const Renderer::VertexArrayAttribute vertexArray[] =
@@ -222,7 +222,7 @@ void VertexBuffer::onDeinitialization()
 void VertexBuffer::onDraw()
 {
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && nullptr != mProgram)
 	{
 		// Begin debug event

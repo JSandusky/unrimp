@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the ï¿½Softwareï¿½), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED ï¿½AS ISï¿½, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -61,7 +61,7 @@ void FirstMultipleRenderTargets::onInitialization()
 	IApplicationRenderer::onInitialization();
 
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
 		// Begin debug event
@@ -98,7 +98,7 @@ void FirstMultipleRenderTargets::onInitialization()
 			}
 
 			// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
-			Renderer::IShaderLanguagePtr shaderLanguage = renderer->getShaderLanguage();
+			Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 			if (nullptr != shaderLanguage)
 			{
 				{ // Create the programs
@@ -117,7 +117,7 @@ void FirstMultipleRenderTargets::onInitialization()
 					// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
 					//    the unused texture coordinate might get optimized out
 					// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-					Renderer::IVertexShaderPtr vertexShader = shaderLanguage->createVertexShader(vertexShaderSourceCode);
+					Renderer::IVertexShaderPtr vertexShader (shaderLanguage->createVertexShader(vertexShaderSourceCode));
 					mProgramMultipleRenderTargets = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShader(fragmentShaderSourceCode_MultipleRenderTargets));
 					mProgram = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShader(fragmentShaderSourceCode));
 				}
@@ -133,7 +133,7 @@ void FirstMultipleRenderTargets::onInitialization()
 						 1.0f, 0.0f,	// 1			   .   .
 						-0.5f, 0.0f		// 2			  2.......1
 					};
-					Renderer::IVertexBufferPtr vertexBuffer = renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW);
+					Renderer::IVertexBufferPtr vertexBuffer (renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 					// Create vertex array object (VAO)
 					// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -198,7 +198,7 @@ void FirstMultipleRenderTargets::onDeinitialization()
 void FirstMultipleRenderTargets::onDraw()
 {
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && nullptr != mProgramMultipleRenderTargets && nullptr != mProgram)
 	{
 		// Begin debug event
@@ -225,7 +225,7 @@ void FirstMultipleRenderTargets::onDraw()
 			}
 
 			// Backup the currently used render target
-			Renderer::IRenderTargetPtr renderTarget = renderer->omGetRenderTarget();
+			Renderer::IRenderTargetPtr renderTarget(renderer->omGetRenderTarget());
 
 			// Set the render target to render into
 			renderer->omSetRenderTarget(mFramebuffer);

@@ -22,35 +22,29 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERTOOLKIT_IRENDERERTOOLKIT_H__
-#define __RENDERERTOOLKIT_IRENDERERTOOLKIT_H__
+#ifndef __OPENGLRENDERER_CONTEXTLINUX_H__
+#define __OPENGLRENDERER_CONTEXTLINUX_H__
 
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/SmartRefCount.h>
+#include "OpenGLRenderer/IContext.h"
 #include <Renderer/PlatformTypes.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderer;
-}
-namespace RendererToolkit
-{
-	class IFont;
-}
+#include <Renderer/LinuxHeader.h>
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace OpenGLRenderer
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Forward declarations                                  ]
+	//[-------------------------------------------------------]
+	class OpenGLRuntimeLinking;
 
 
 	//[-------------------------------------------------------]
@@ -58,9 +52,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract renderer toolkit interface
+	*    Linux OpenGL context class
 	*/
-	class IRendererToolkit : public Renderer::RefCount<IRendererToolkit>
+	class ContextLinux : public IContext
 	{
 
 
@@ -70,102 +64,113 @@ namespace RendererToolkit
 	public:
 		/**
 		*  @brief
+		*    Constructor
+		*
+		*  @param[in] nativeWindowHandle
+		*    Optional native main window handle, can be a null handle
+		*/
+		explicit ContextLinux(handle nativeWindowHandle);
+
+		/**
+		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IRendererToolkit();
+		virtual ~ContextLinux();
 
 		/**
 		*  @brief
-		*    Return the used renderer instance
+		*    Return the primary device context
 		*
 		*  @return
-		*    The used renderer instance, do not release the returned instance unless you added an own reference to it
+		*    The primary device context, null pointer on error
 		*/
-		inline Renderer::IRenderer &getRenderer() const;
+		inline Display *getDisplay() const;
+
+		/**
+		*  @brief
+		*    Return the primary render context
+		*
+		*  @return
+		*    The primary render context, null pointer on error
+		*/
+		inline GLXContext getRenderContext() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual IRendererToolkit methods               ]
+	//[ Public virtual OpenGLRenderer::IContext methods       ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Create a texture font instance
-		*
-		*  @param[in] filename
-		*    The ASCII font filename, if null pointer or empty string a null pointer will be returned
-		*  @param[in] size
-		*    Nominal font size in points, for example 12 (72 points per inch)
-		*  @param[in] resolution
-		*    The horizontal and vertical resolution in DPI, for example 96
-		*
-		*  @return
-		*    The created texture font instance, a null pointer on error. Release the returned instance if you no longer need it.
-		*/
-		virtual IFont *createFontTexture(const char *filename, unsigned int size = 12, unsigned int resolution = 96) = 0;
+		inline virtual bool isInitialized() const override;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
-	protected:
+	private:
 		/**
 		*  @brief
-		*    Default constructor
-		*/
-		inline IRendererToolkit();
-
-		/**
-		*  @brief
-		*    Copy constructor
+		*    Debug message callback function called by the "GL_ARB_debug_output"-extension
 		*
 		*  @param[in] source
-		*    Source to copy from
+		*    Source of the debug message
+		*  @param[in] type
+		*    Type of the debug message
+		*  @param[in] id
+		*    ID of the debug message
+		*  @param[in] severity
+		*    Severity of the debug message
+		*  @param[in] length
+		*    Length of the debug message
+		*  @param[in] message
+		*    The debug message
+		*  @param[in] userParam
+		*    Additional user parameter of the debug message
 		*/
-		inline explicit IRendererToolkit(const IRendererToolkit &source);
+		static void debugMessageCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char *message, void *userParam);
 
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
 		/**
 		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
+		*    Create a OpenGL context
 		*
 		*  @return
-		*    Reference to this instance
+		*    The created OpenGL context, null pointer on error
 		*/
-		inline IRendererToolkit &operator =(const IRendererToolkit &source);
+		GLXContext createOpenGLContext();
 
 
 	//[-------------------------------------------------------]
-	//[ Protected data                                        ]
+	//[ Private data                                          ]
 	//[-------------------------------------------------------]
-	protected:
-		Renderer::IRenderer *mRenderer;	/**< The used renderer instance (we keep a reference to it), always valid */
+	private:
+		OpenGLRuntimeLinking *mOpenGLRuntimeLinking;	/**< OpenGL runtime linking instance, always valid */
+		handle				  mNativeWindowHandle;		/**< OpenGL window, can be a null pointer (HWND) */
+		handle				  mDummyWindow;				/**< OpenGL dummy window, can be a null pointer (HWND) */
+		Display				 *mDisplay;					/**< The device context of the OpenGL dummy window, can be a null pointer */
+		XVisualInfo 		 *m_pDummyVisualInfo;
+		GLXContext			  mWindowRenderContext;		/**< The render context of the OpenGL dummy window, can be a null pointer */
 
 
 	};
 
 
-	//[-------------------------------------------------------]
-	//[ Type definitions                                      ]
-	//[-------------------------------------------------------]
-	typedef Renderer::SmartRefCount<IRendererToolkit> IRendererToolkitPtr;
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererToolkit
+} // OpenGLRenderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/IRendererToolkit.inl"
+#include "OpenGLRenderer/Linux/ContextLinux.inl"
 
 
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
-#endif // __RENDERERTOOLKIT_IRENDERERTOOLKIT_H__
+#endif // __OPENGLRENDERER_CONTEXTLINUX_H__

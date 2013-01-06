@@ -60,14 +60,14 @@ void FirstTriangle::onInitialization()
 	IApplicationRenderer::onInitialization();
 
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
 		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
-		Renderer::IShaderLanguagePtr shaderLanguage = renderer->getShaderLanguage();
+		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
 			{ // Create the program
@@ -104,7 +104,7 @@ void FirstTriangle::onInitialization()
 					 1.0f, 0.0f,	// 1			   .   .
 					-0.5f, 0.0f		// 2			  2.......1
 				};
-				Renderer::IVertexBufferPtr vertexBuffer = renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW);
+				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 				RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Triangle VBO")
 
 				// Create vertex array object (VAO)
@@ -158,7 +158,7 @@ void FirstTriangle::onDeinitialization()
 void FirstTriangle::onDraw()
 {
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && nullptr != mProgram)
 	{
 		// Begin debug event

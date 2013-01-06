@@ -24,6 +24,9 @@
 #define EXTENSIONS_DEFINERUNTIMELINKING
 
 #include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"
+#ifdef LINUX
+	#include <string.h>
+#endif
 
 
 //[-------------------------------------------------------]

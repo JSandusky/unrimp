@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the ï¿½Softwareï¿½), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED ï¿½AS ISï¿½, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -61,14 +61,14 @@ void FirstGeometryShader::onInitialization()
 
 	// Get and check the renderer instance
 	// -> Geometry shaders supported?
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && renderer->getCapabilities().maximumNumberOfGsOutputVertices)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
 		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
-		Renderer::IShaderLanguagePtr shaderLanguage = renderer->getShaderLanguage();
+		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
 			{ // Create the program
@@ -98,7 +98,7 @@ void FirstGeometryShader::onInitialization()
 				{			// Vertex ID
 					42.0f	// 0
 				};
-				Renderer::IVertexBufferPtr vertexBuffer = renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW);
+				Renderer::IVertexBufferPtr vertexBuffer (renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 				// Create vertex array object (VAO)
 				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -150,7 +150,7 @@ void FirstGeometryShader::onDeinitialization()
 void FirstGeometryShader::onDraw()
 {
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && nullptr != mProgram)
 	{
 		// Begin debug event

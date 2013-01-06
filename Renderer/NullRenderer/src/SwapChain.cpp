@@ -26,6 +26,8 @@
 
 #ifdef WIN32
 	#include <Renderer/WindowsHeader.h>
+#elif LINUX
+	#include <Renderer/LinuxHeader.h>
 #endif
 
 
@@ -97,6 +99,22 @@ namespace NullRenderer
 				// Write out the width and height
 				width  = static_cast<UINT>(swapChainWidth);
 				height = static_cast<UINT>(swapChainHeight);
+			}
+			else
+		#elif defined LINUX
+			if (mNativeWindowHandle)
+			{
+				Display *display;
+				// [TODO] resue X11 display from "Frontend"
+				display = XOpenDisplay(0);
+				
+				::Window nRootWindow = 0;
+				int nPositionX = 0, nPositionY = 0;
+				unsigned int nWidth = 0, nHeight = 0, nBorder = 0, nDepth = 0;
+				XGetGeometry(display, mNativeWindowHandle, &nRootWindow, &nPositionX, &nPositionY, &nWidth, &nHeight, &nBorder, &nDepth);
+				XCloseDisplay(display);
+				width = nWidth;
+				height = nHeight;
 			}
 			else
 		#else

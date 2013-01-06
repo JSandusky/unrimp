@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the ï¿½Softwareï¿½), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED ï¿½AS ISï¿½, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -187,7 +187,7 @@ void FirstGpgpu::onInitialization()
 	}
 
 	// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
-	Renderer::IShaderLanguagePtr shaderLanguage = mRenderer->getShaderLanguage();
+	Renderer::IShaderLanguagePtr shaderLanguage(mRenderer->getShaderLanguage());
 	if (nullptr != shaderLanguage)
 	{
 		{ // Create the programs
@@ -206,7 +206,7 @@ void FirstGpgpu::onInitialization()
 			// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
 			//    the unused texture coordinate might get optimized out
 			// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-			Renderer::IVertexShaderPtr vertexShader = shaderLanguage->createVertexShader(vertexShaderSourceCode);
+			Renderer::IVertexShaderPtr vertexShader (shaderLanguage->createVertexShader(vertexShaderSourceCode));
 			mProgramContentGeneration = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShader(fragmentShaderSourceCode_ContentGeneration));
 			mProgramContentProcessing = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShader(fragmentShaderSourceCode_ContentProcessing));
 		}
@@ -222,7 +222,7 @@ void FirstGpgpu::onInitialization()
 				 1.0f, 0.0f,	// 1			   .   .
 				-0.5f, 0.0f		// 2			  2.......1
 			};
-			Renderer::IVertexBufferPtr vertexBuffer = mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW);
+			Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -261,7 +261,7 @@ void FirstGpgpu::onInitialization()
 				 1.0f, -1.0f,	// 2			  0.......2
 				 1.0f,  1.0f	// 3
 			};
-			Renderer::IVertexBufferPtr vertexBuffer = mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW);
+			Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -374,7 +374,7 @@ void FirstGpgpu::generate2DTextureContent()
 		mRenderer->fsSetTexture(mProgramContentProcessing->setTextureUnit(mProgramContentProcessing->getUniformHandle("ContentMap"), 0), nullptr);
 
 		// Backup the currently used render target
-		Renderer::IRenderTargetPtr renderTarget = mRenderer->omGetRenderTarget();
+		Renderer::IRenderTargetPtr renderTarget(mRenderer->omGetRenderTarget());
 
 		// Set the render target to render into
 		mRenderer->omSetRenderTarget(mFramebuffer[0]);
@@ -451,7 +451,7 @@ void FirstGpgpu::contentProcessing()
 		RENDERER_BEGIN_DEBUG_EVENT(mRenderer, L"Content processing")
 
 		// Backup the currently used render target
-		Renderer::IRenderTargetPtr renderTarget = mRenderer->omGetRenderTarget();
+		Renderer::IRenderTargetPtr renderTarget(mRenderer->omGetRenderTarget());
 
 		// Set the render target to render into
 		mRenderer->omSetRenderTarget(mFramebuffer[1]);

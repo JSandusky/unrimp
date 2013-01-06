@@ -20,6 +20,8 @@
 
 cmake_minimum_required(VERSION 2.8.8)
 
+find_package(Freetype REQUIRED)
+
 
 ##################################################
 ## Preprocessor definitions
@@ -34,6 +36,7 @@ endif()
 ##################################################
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${FREETYPE_INCLUDE_DIRS})
 
 
 ##################################################
@@ -41,7 +44,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
-	src/RendererToolkit
+	src/FontGlyphTextureFreeType.cpp
+	src/FontTextureFreeType.cpp
+	src/FreeTypeContext.cpp
+	src/RendererToolkitImpl.cpp
 )
 
 
@@ -54,6 +60,9 @@ endif()
 if(SHARED_LIBRARY)
 	add_library(RendererToolkit SHARED ${SOURCE_CODES})
 	set_target_properties(RendererToolkit PROPERTIES COMPILE_FLAGS "-D_USRDLL -DRENDERERTOOLKIT_EXPORTS")
+	if(UNIX)
+		target_link_libraries(RendererToolkit X11 dl ${FREETYPE_LIBRARY})
+	endif()
 endif()
 
 
@@ -76,4 +85,18 @@ if(SHARED_LIBRARY)
 			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/RendererToolkit.lib" ${OUTPUT_LIB_DIR}
 		)
 	endif()
+endif()
+
+##################################################
+## Post build
+##################################################
+# Copy header
+if(SHARED_LIBRARY)
+	add_custom_command(TARGET RendererToolkit
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererToolkit/RendererToolkit.h" ${OUTPUT_INCLUDE_DIR}
+	)
+elseif(STATIC_LIBRARY)
+	add_custom_command(TARGET RendererToolkitStatic
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/include/RendererToolkit/RendererToolkit.h" ${OUTPUT_INCLUDE_DIR}
+	)
 endif()

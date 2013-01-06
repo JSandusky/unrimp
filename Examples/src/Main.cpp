@@ -74,12 +74,14 @@ int programEntryPoint()
 	#elif RENDERER_ONLY_DIRECT3D11
 		rendererName = "Direct3D11";
 	#endif
+		
+	rendererName = "OpenGL";
 
 	// Create an instance of our application on the C runtime stack
 	// Basics
 //	result = FirstTriangle(rendererName).run();					// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
 //	result = VertexBuffer(rendererName).run();					// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-//	result = FirstTexture(rendererName).run();					// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
+	result = FirstTexture(rendererName).run();					// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
 //	result = FirstRenderToTexture(rendererName).run();			// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
 //	result = FirstMultipleRenderTargets(rendererName).run();	// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
 //	result = FirstMultipleSwapChains(rendererName).run();		// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
@@ -99,7 +101,7 @@ int programEntryPoint()
 	#ifndef NO_ASSIMP
 		// Assimp
 //		result = FirstAssimp(rendererName).run();				// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-		result = AssimpMesh(rendererName).run();				// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
+//		result = AssimpMesh(rendererName).run();				// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
 	#endif
 
 	// Done

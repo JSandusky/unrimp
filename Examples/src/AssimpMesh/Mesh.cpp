@@ -74,7 +74,7 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 
 		{ // Create vertex array object (VAO)
 			// Create the vertex buffer object (VBO)
-			Renderer::IVertexBufferPtr vertexBuffer = renderer.createVertexBuffer(sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX * mNumberOfVertices, vertexBufferData, Renderer::BufferUsage::STATIC_DRAW);
+			Renderer::IVertexBufferPtr vertexBuffer(renderer.createVertexBuffer(sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX * mNumberOfVertices, vertexBufferData, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create the index buffer object (IBO)
 			Renderer::IIndexBuffer *indexBuffer = renderer.createIndexBuffer(sizeof(unsigned short) * mNumberOfIndices, Renderer::IndexBufferFormat::UNSIGNED_SHORT, indexBufferData, Renderer::BufferUsage::STATIC_DRAW);

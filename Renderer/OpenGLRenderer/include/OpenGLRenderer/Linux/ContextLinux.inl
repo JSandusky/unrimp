@@ -19,45 +19,44 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-#include "Framework/Stopwatch.h"
-#ifdef WIN32
-	#include "Framework/WindowsHeader.h"
-#elif defined LINUX
-	#include <sys/time.h>
-#endif
-
-
-//[-------------------------------------------------------]
-//[ Private methods                                       ]
-//[-------------------------------------------------------]
-/**
-*  @brief
-*    Retrieve the number of microseconds since the stopwatch was started
-*/
-unsigned int Stopwatch::getSystemMicroseconds() const
+namespace OpenGLRenderer
 {
-	#ifdef WIN32
-		// Frequency of the performance counter
-		LARGE_INTEGER performanceFrequency;
-		::QueryPerformanceFrequency(&performanceFrequency);
 
-		// Get past time
-		LARGE_INTEGER curTime;
-		::QueryPerformanceCounter(&curTime);
-		double newTicks = static_cast<double>(curTime.QuadPart);
 
-		// Scale by 1000000 in order to get microsecond precision
-		newTicks *= static_cast<double>(1000000.0)/static_cast<double>(performanceFrequency.QuadPart);
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Return the primary device context
+	*/
+	inline Display *ContextLinux::getDisplay() const
+	{
+		return mDisplay;
+	}
 
-		// Return past time
-		return static_cast<unsigned int>(newTicks);
-	#elif defined LINUX
-		struct timeval now;
-		gettimeofday(&now, nullptr);
-		return static_cast<unsigned int>(now.tv_sec*1000000 + now.tv_usec);
-	#else
-		#error "Unsupported platform"
-	#endif
-}
+	/**
+	*  @brief
+	*    Return the primary render context
+	*/
+	inline GLXContext ContextLinux::getRenderContext() const
+	{
+		return mWindowRenderContext;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual OpenGLRenderer::IContext methods       ]
+	//[-------------------------------------------------------]
+	inline bool ContextLinux::isInitialized() const
+	{
+		return (nullptr != mWindowRenderContext);
+	}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // OpenGLRenderer

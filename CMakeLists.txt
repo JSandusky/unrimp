@@ -22,6 +22,12 @@ cmake_minimum_required(VERSION 2.8.8)
 
 
 ##################################################
+## Project
+##################################################
+project(PLRenderer2)
+
+
+##################################################
 ## Platform
 ##################################################
 # Check which architecture has the host system
@@ -43,25 +49,27 @@ endif()
 # Operation system + architecture
 if(WIN32)
 	set(OS_ARCHITECTURE "Windows_${ARCHITECTURE}")
+elseif(UNIX)
+	set(OS_ARCHITECTURE "Linux_${ARCHITECTURE}")
 else()
 	message("Unsupported operation system")
 endif()
-message(STATUS "Operation system + architecture: "${OS_ARCHITECTURE})
+message(STATUS "Operation system + architecture: ${OS_ARCHITECTURE}")
 
 # Ouput paths and create the directories
 set(OUTPUT_BIN_DIR "${CMAKE_SOURCE_DIR}/bin/${OS_ARCHITECTURE}")
 message(STATUS "Output binary directory: "${OUTPUT_BIN_DIR})
 file(MAKE_DIRECTORY ${OUTPUT_BIN_DIR})
 set(OUTPUT_LIB_DIR "${CMAKE_SOURCE_DIR}/lib/${OS_ARCHITECTURE}")
-message(STATUS "Output library directory: "${OUTPUT_LIB_DIR})
+message(STATUS "Output library directory: ${OUTPUT_LIB_DIR}")
 file(MAKE_DIRECTORY ${OUTPUT_LIB_DIR})
 set(OUTPUT_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include/Renderer")
-message(STATUS "Output include directory: "${OUTPUT_INCLUDE_DIR})
+message(STATUS "Output include directory: ${OUTPUT_INCLUDE_DIR}")
 file(MAKE_DIRECTORY ${OUTPUT_INCLUDE_DIR})
 set(OUTPUT_EXTERNAL_DIR "${CMAKE_SOURCE_DIR}/External")
-message(STATUS "External directory: "${OUTPUT_EXTERNAL_DIR})
+message(STATUS "External directory: ${OUTPUT_EXTERNAL_DIR}")
 set(OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR "${OUTPUT_EXTERNAL_DIR}/${OS_ARCHITECTURE}")
-message(STATUS "External OS architecture directory: "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR})
+message(STATUS "External OS architecture directory: ${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}")
 
 
 ##################################################
@@ -111,11 +119,15 @@ set(EXAMPLES				"1"	CACHE BOOL "Build examples?")
 	mark_as_advanced(EXAMPLES_ASSIMP)
 
 
-##################################################
-## Project
-##################################################
-project(PLRenderer2)
-
+# We need c++0x/c++11 support:
+if(${CMAKE_COMPILER_IS_GNUCXX})
+	message(STATUS "enable c++11 support")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+endif()
+# At first we treat UNIX = Linux
+if(UNIX)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -DRENDERER_NO_DEBUG")
+endif()
 
 ##################################################
 ## Subdirectories

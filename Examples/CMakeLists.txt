@@ -94,8 +94,10 @@ set(SOURCE_CODES
 		# "InstancedCubes" source codes
 			src/InstancedCubes/InstancedCubes.cpp
 			src/InstancedCubes/ICubeRenderer.cpp
-			src/InstancedCubes/CubeRendererInstancing/Batch.cpp
-			src/InstancedCubes/CubeRendererInstancing/CubeRendererInstancing.cpp
+			src/InstancedCubes/CubeRendererDrawInstanced/BatchDrawInstanced.cpp
+			src/InstancedCubes/CubeRendererDrawInstanced/CubeRendererDrawInstanced.cpp
+			src/InstancedCubes/CubeRendererInstancedArrays/BatchInstancedArrays.cpp
+			src/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.cpp
 		# "IcosahedronTessellation" source codes
 			src/IcosahedronTessellation/IcosahedronTessellation.cpp
 )
@@ -104,6 +106,12 @@ if(WIN32)
 	set(SOURCE_CODES
 		${SOURCE_CODES}
 		src/Framework/ApplicationImplWindows.cpp
+	)
+elseif(UNIX)
+	# Windows source codes
+	set(SOURCE_CODES
+		${SOURCE_CODES}
+		src/Framework/ApplicationImplLinux.cpp
 	)
 endif()
 if(RENDERER_TOOLKIT)
@@ -134,11 +142,35 @@ if(STATIC_LIBRARY)
 	if(WIN32)
 		add_executable(ExamplesStatic WIN32 ${SOURCE_CODES})
 	else()
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRENDERER_NO_DIRECT3D9 -DRENDERER_NO_DIRECT3D10 -DRENDERER_NO_DIRECT3D11")
 		add_executable(ExamplesStatic ${SOURCE_CODES})
 	endif()
-	set(LIBRARIES NullRendererStatic OpenGLRendererStatic OpenGLES2RendererStatic Direct3D9RendererStatic Direct3D10RendererStatic Direct3D11RendererStatic)
+	
+	set(LIBRARIES NullRendererStatic)
+	if(RENDERER_OPENGL)
+		set(LIBRARIES ${LIBRARIES} OpenGLRendererStatic)
+		if(UNIX)
+			set(LIBRARIES ${LIBRARIES} X11)
+		endif()
+	else()
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRENDERER_NO_OPENGL")
+	endif()
+	if(RENDERER_OPENGLES2)
+		set(LIBRARIES ${LIBRARIES} OpenGLES2RendererStatic)
+		if(UNIX)
+			set(LIBRARIES ${LIBRARIES} X11)
+		endif()
+	else()
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRENDERER_NO_OPENGLES2")
+	endif()
+	if(WIN32)
+		set(LIBRARIES ${LIBRARIES} Direct3D9RendererStatic Direct3D10RendererStatic Direct3D11RendererStatic)
+	endif()
 	if(RENDERER_TOOLKIT)
-		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}RendererToolkit${CMAKE_STATIC_LIBRARY_SUFFIX})
+		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}RendererToolkitStatic${CMAKE_STATIC_LIBRARY_SUFFIX})
+		if(UNIX)
+			set(LIBRARIES ${LIBRARIES} dl ${FREETYPE_LIBRARY})
+		endif()
 	endif()
 	if(EXAMPLES_ASSIMP)
 		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX} zlibStatic.lib)
@@ -157,7 +189,7 @@ if(SHARED_LIBRARY)
 		if(WIN32)
 			target_link_libraries(Examples RendererToolkit.lib)
 		else()
-			target_link_libraries(Examples ${CMAKE_SHARED_LIBRARY_PREFIX}RendererToolkit{CMAKE_SHARED_LIBRARY_SUFFIX})
+			target_link_libraries(Examples RendererToolkit)
 		endif()
 	endif()
 	if(EXAMPLES_ASSIMP)
@@ -186,11 +218,12 @@ if(SHARED_LIBRARY)
 	add_custom_command(TARGET Examples
 		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/Examples${CMAKE_EXECUTABLE_SUFFIX}" ${OUTPUT_BIN_DIR}
 	)
-
+if(WIN32)
 	# Copy Visual Studio shared library
 	add_custom_command(TARGET Examples
 		COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/VisualStudio/bin/${CMAKE_SHARED_LIBRARY_PREFIX}msvcr110${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
 	)
+endif()
 
 	# Copy ASSIMP shared library
 	if(WIN32 AND EXAMPLES_ASSIMP)

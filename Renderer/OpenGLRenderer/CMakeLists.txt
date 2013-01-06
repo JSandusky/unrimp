@@ -134,6 +134,14 @@ if(WIN32)
 		src/Windows/ExtensionsWindows.cpp
 	)
 endif()
+if(UNIX)
+	# Linux source codes
+	set(SOURCE_CODES
+		${SOURCE_CODES}
+		src/Linux/ContextLinux.cpp
+		src/Linux/ExtensionsLinux.cpp
+	)
+endif()
 
 
 ##################################################

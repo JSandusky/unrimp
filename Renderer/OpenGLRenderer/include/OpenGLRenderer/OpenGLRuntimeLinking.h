@@ -36,6 +36,10 @@
 		#include <GL/gl.h>
 	__pragma(warning(pop))
 #else
+	#ifdef LINUX
+ 		#include <GL/glx.h>
+		#include <X11/Xlib.h>
+	#endif
 	#include <GL/gl.h>
 #endif
 
@@ -167,6 +171,18 @@ namespace OpenGLRenderer
 		FNDEF_GL(HGLRC,	wglCreateContext,	(HDC));
 		FNDEF_GL(BOOL,	wglDeleteContext,	(HGLRC));
 		FNDEF_GL(BOOL,	wglMakeCurrent,		(HDC, HGLRC));
+	#elif LINUX
+		FNDEF_GL(Bool, glXMakeCurrent, (Display*, GLXDrawable	,GLXContext));
+		FNDEF_GL(XVisualInfo*, glXChooseVisual, ( Display*, int, int* ));
+		FNDEF_GL(GLXContext, glXCreateContext, ( Display*, XVisualInfo*, GLXContext, int ));
+		FNDEF_GL(void, glXDestroyContext, ( Display*, GLXContext ));
+		FNDEF_GL(GLXContext, glXGetCurrentContext, ( void ));
+		FNDEF_GL(const char*, glXQueryExtensionsString, ( Display*, int));
+		FNDEF_GL(__GLXextFuncPtr, glXGetProcAddress, (const GLubyte *));
+		FNDEF_GL(__GLXextFuncPtr, glXGetProcAddressARB, (const GLubyte *));
+		FNDEF_GL(GLXFBConfig*, glXChooseFBConfig, ( Display*, int, const int *, int *));
+		FNDEF_GL(void, glXSwapBuffers, ( Display *, GLXDrawable ));
+		FNDEF_GL(const char*, glXGetClientString, ( Display *, int));
 	#endif
 
 
@@ -220,6 +236,18 @@ namespace OpenGLRenderer
 		#define wglCreateContext	FNPTR(wglCreateContext)
 		#define wglDeleteContext	FNPTR(wglDeleteContext)
 		#define wglMakeCurrent		FNPTR(wglMakeCurrent)
+	#elif LINUX
+		#define glXMakeCurrent				FNPTR(glXMakeCurrent)
+		#define glXGetProcAddress			FNPTR(glXGetProcAddress)
+		#define glXGetProcAddressARB		FNPTR(glXGetProcAddressARB)
+		#define glXChooseVisual				FNPTR(glXChooseVisual)
+		#define glXCreateContext			FNPTR(glXCreateContext)
+		#define glXDestroyContext			FNPTR(glXDestroyContext)
+		#define glXGetCurrentContext		FNPTR(glXGetCurrentContext)
+		#define glXQueryExtensionsString	FNPTR(glXQueryExtensionsString)
+		#define glXChooseFBConfig			FNPTR(glXChooseFBConfig)
+		#define glXSwapBuffers				FNPTR(glXSwapBuffers)
+		#define glXGetClientString			FNPTR(glXGetClientString)
 	#endif
 
 

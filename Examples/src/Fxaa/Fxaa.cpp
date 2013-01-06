@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the ï¿½Softwareï¿½), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED ï¿½AS ISï¿½, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -61,7 +61,7 @@ void Fxaa::onInitialization()
 	IApplicationRenderer::onInitialization();
 
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
 		// Begin debug event
@@ -95,7 +95,7 @@ void Fxaa::onInitialization()
 		}
 
 		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
-		Renderer::IShaderLanguagePtr shaderLanguage = renderer->getShaderLanguage();
+		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
 			{ // Create the program for scene rendering
@@ -123,7 +123,7 @@ void Fxaa::onInitialization()
 					 1.0f, 0.0f,	// 1			   .   .
 					-0.5f, 0.0f		// 2			  2.......1
 				};
-				Renderer::IVertexBufferPtr vertexBuffer = renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW);
+				Renderer::IVertexBufferPtr vertexBuffer (renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 				// Create vertex array object (VAO)
 				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -165,7 +165,7 @@ void Fxaa::onInitialization()
 					 1.0f, -1.0f,	// 2			  0.......2
 					 1.0f,  1.0f	// 3
 				};
-				Renderer::IVertexBufferPtr vertexBuffer = renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW);
+				Renderer::IVertexBufferPtr vertexBuffer (renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 				// Create vertex array object (VAO)
 				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -241,7 +241,7 @@ void Fxaa::onResize()
 void Fxaa::onDraw()
 {
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
 		// Begin debug event
@@ -269,7 +269,7 @@ void Fxaa::onDraw()
 void Fxaa::recreateFramebuffer()
 {
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
 		// Begin debug event
@@ -303,14 +303,14 @@ void Fxaa::recreateFramebuffer()
 void Fxaa::recreatePostProcessingProgram()
 {
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
 		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
-		Renderer::IShaderLanguagePtr shaderLanguage = renderer->getShaderLanguage();
+		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
 			// Get the shader source code (outsourced to keep an overview)
@@ -388,7 +388,7 @@ void Fxaa::recreatePostProcessingProgram()
 void Fxaa::sceneRendering()
 {
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && nullptr != mProgramSceneRendering && nullptr != mProgramPostProcessing)
 	{
 		// Begin debug event
@@ -406,7 +406,7 @@ void Fxaa::sceneRendering()
 		renderer->fsSetTexture(mProgramPostProcessing->setTextureUnit(mProgramPostProcessing->getUniformHandle("DiffuseMap"), 0), nullptr);
 
 		// Backup the currently used render target
-		Renderer::IRenderTargetPtr renderTarget = renderer->omGetRenderTarget();
+		Renderer::IRenderTargetPtr renderTarget(renderer->omGetRenderTarget());
 
 		// Set the render target to render into
 		renderer->omSetRenderTarget(mFramebuffer);
@@ -454,7 +454,7 @@ void Fxaa::sceneRendering()
 void Fxaa::postProcessing()
 {
 	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer = getRenderer();
+	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && mProgramPostProcessing)
 	{
 		// Begin debug event
