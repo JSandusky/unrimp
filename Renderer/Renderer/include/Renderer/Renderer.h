@@ -968,6 +968,7 @@ namespace Renderer
 		}
 		inline Statistics &operator =(const Statistics &)
 		{
+			return *this;
 		}
 	};
 	#endif
