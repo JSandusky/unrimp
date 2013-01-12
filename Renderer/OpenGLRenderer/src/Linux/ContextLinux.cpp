@@ -104,6 +104,7 @@ namespace OpenGLRenderer
 							// Make the OpenGL context to the current one
 							int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, mWindowRenderContext);
 							std::cout<<"make new context current: "<<result<<"\n";
+							std::cout<<"supported extensions: "<<glGetString(GL_EXTENSIONS)<<"\n";
 						}
 						
 					} else {
@@ -282,6 +283,12 @@ namespace OpenGLRenderer
 	}
 
 
+	static bool ctxErrorOccurred = false;
+	static int ctxErrorHandler( Display *dpy, XErrorEvent *ev )
+	{
+		ctxErrorOccurred = true;
+		return 0;
+	}
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
@@ -304,9 +311,12 @@ namespace OpenGLRenderer
 			GLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribsARB = reinterpret_cast<GLXCREATECONTEXTATTRIBSARBPROC>(glXGetProcAddress((const GLubyte*)"glXCreateContextAttribsARB"));
 			if (nullptr != glXCreateContextAttribsARB)
 			{
+				ctxErrorOccurred = false;
+				int (*oldHandler)(Display*, XErrorEvent*) = XSetErrorHandler(&ctxErrorHandler);
+				
 				// OpenGL 3.1 - required for "gl_InstanceID" within shaders
 				// Create the OpenGL context
-				static const int ATTRIBUTES[] =
+				int ATTRIBUTES[] =
 				{
 					// We want an OpenGL context
 					GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
@@ -335,7 +345,30 @@ namespace OpenGLRenderer
 				};
 				GLXFBConfig *fbc = glXChooseFBConfig(mDisplay, DefaultScreen(mDisplay), visual_attribs, &nelements);
 				std::cout<<"Renderer: Got "<<nelements<<" of FBCOnfig\n";
-				const GLXContext glxContext = glXCreateContextAttribsARB(mDisplay, *fbc, 0, true, ATTRIBUTES);
+				GLXContext glxContext = glXCreateContextAttribsARB(mDisplay, *fbc, 0, true, ATTRIBUTES);
+				
+				XSync( mDisplay, False );
+				
+				// TODO(sw) make this fallback optional (via an option)
+				if (ctxErrorOccurred)
+				{
+					std::cerr<<"could not create opengl 3+ context try creating pre 3+ context\n";
+					ctxErrorOccurred = false;
+					
+					// GLX_CONTEXT_MAJOR_VERSION_ARB = 1
+					ATTRIBUTES[1] = 1;
+					// GLX_CONTEXT_MINOR_VERSION_ARB = 0
+					ATTRIBUTES[3] = 0;
+					glxContext = glXCreateContextAttribsARB(mDisplay, *fbc, 0, true, ATTRIBUTES);
+					
+					// Sync to ensure any errors generated are processed.
+					XSync( mDisplay, False );
+					
+					// Restore the original error handler
+					XSetErrorHandler( oldHandler );
+				}
+				
+				
 				if (nullptr != glxContext)
 				{
 					std::cout<<"Renderer: OGL Context with glXCreateContextAttribsARB created\n";

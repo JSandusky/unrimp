@@ -112,6 +112,8 @@ elseif(UNIX)
 	set(SOURCE_CODES
 		${SOURCE_CODES}
 		src/Framework/ApplicationImplLinux.cpp
+		src/Framework/X11Window.cpp
+		src/Framework/X11Application.cpp
 	)
 endif()
 if(RENDERER_TOOLKIT)

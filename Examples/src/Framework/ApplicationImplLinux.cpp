@@ -23,7 +23,52 @@
 //[-------------------------------------------------------]
 #include "Framework/ApplicationImplLinux.h"
 #include "Framework/IApplication.h"
+#include "Framework/X11Application.h"
 
+class ApplicationWindow: public X11Window
+{
+	public:
+		ApplicationWindow(IApplication &application)
+			: mApplication(application)
+		{
+			
+		}
+		virtual bool HandleEvent(XEvent &event)
+		{
+			X11Window::HandleEvent(event);
+			
+			switch (event.type) {
+				case Expose:
+				// There could be more then one Expose event currently in the event loop.
+				// To avoid too many redraw calls, call OnDraw only when the current processed Expose event is the last one.
+				if (!event.xexpose.count)
+				{
+					mApplication.onDrawRequest();
+				}
+				break;
+				// Window configuration changed
+				case ConfigureNotify:
+					mApplication.onResize();
+				break;
+				
+				case KeyPress:
+				{
+					const unsigned int nKey = XLookupKeysym(&event.xkey, 0);
+					mApplication.onKeyDown(nKey);
+				}
+					break;
+				case KeyRelease:
+				{
+					const unsigned int nKey = XLookupKeysym(&event.xkey, 0);
+					mApplication.onKeyUp(nKey);
+				}
+					break;
+			}
+			return false;
+		}
+private:
+	IApplication &mApplication;
+};
 
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
@@ -34,8 +79,7 @@
 */
 ApplicationImplLinux::ApplicationImplLinux(IApplication &application, const char *windowTitle) :
 	mApplication(&application),
-	mNativeWindowHandle(NULL_HANDLE),
-	mDisplay(0)
+	mX11EventLoop(0)
 {
 	// Copy the given window title
 	if (nullptr != windowTitle)
@@ -54,8 +98,6 @@ ApplicationImplLinux::ApplicationImplLinux(IApplication &application, const char
 */
 ApplicationImplLinux::~ApplicationImplLinux()
 {
-	// Nothing to do in here
-	// mNativeWindowHandle is destroyed within onDeinitialization()
 }
 
 
@@ -64,139 +106,44 @@ ApplicationImplLinux::~ApplicationImplLinux()
 //[-------------------------------------------------------]
 void ApplicationImplLinux::onInitialization()
 {
-	mDisplay = XOpenDisplay(0);
+	mX11EventLoop = new X11Application();
+	mMainWindow = new ApplicationWindow(*mApplication);
 	
-	// Atoms
-	WM_DELETE_WINDOW	= XInternAtom(mDisplay, "WM_DELETE_WINDOW",	 True);
-	UTF8_STRING			= XInternAtom(mDisplay, "UTF8_STRING",			 False);
-	WM_NAME				= XInternAtom(mDisplay, "WM_NAME",				 False);
-	_NET_WM_NAME		= XInternAtom(mDisplay, "_NET_WM_NAME",		 False);
-	_NET_WM_VISIBLE_NAME = XInternAtom(mDisplay, "_NET_WM_VISIBLE_NAME", False);
+	mMainWindow->setTitle(mWindowTitle);
+	mMainWindow->show();
 	
-	const unsigned int  nWidth  = 640;
-	const unsigned int  nHeight = 480;
-	const int           nScreen = DefaultScreen(mDisplay);
-	Visual             *pVisual = DefaultVisual(mDisplay, nScreen);
-	const int           nDepth  = DefaultDepth(mDisplay, nScreen);
-
-	// Create the native OS window instance with a black background (else we will see trash if nothing has been drawn, yet)
-	XSetWindowAttributes sXSetWindowAttributes;
-	sXSetWindowAttributes.background_pixel = 0;
-	sXSetWindowAttributes.event_mask = ExposureMask | StructureNotifyMask | EnterWindowMask | LeaveWindowMask | FocusChangeMask | VisibilityChangeMask | KeyPressMask | MotionNotify;
-	mNativeWindowHandle = XCreateWindow(mDisplay, XRootWindow(mDisplay, nScreen), 0, 0, nWidth, nHeight, 0, nDepth, InputOutput, pVisual, CWBackPixel | CWEventMask, &sXSetWindowAttributes);
-	XSetWMProtocols(mDisplay, mNativeWindowHandle, &WM_DELETE_WINDOW, 1);
-
-// 	// Set icon
-// 	Atom wmIcon = XInternAtom(mDisplay, "_NET_WM_ICON", False);
-// 	Atom wmCardinal = XInternAtom(mDisplay, "CARDINAL", False);
-// 	XChangeProperty(mDisplay, mNativeWindowHandle, wmIcon, wmCardinal, 32,
-// 					PropModeReplace, reinterpret_cast<const unsigned char*>(pl_icon), pl_icon_length);
-
-	const int nNumOfElements = strlen(mWindowTitle);
-	const unsigned char* windowTitle = reinterpret_cast<unsigned char*>(mWindowTitle);
-	XChangeProperty(mDisplay, mNativeWindowHandle, WM_NAME,				 UTF8_STRING, 8, PropModeReplace, windowTitle, nNumOfElements);
-	XChangeProperty(mDisplay, mNativeWindowHandle, _NET_WM_NAME,		 UTF8_STRING, 8, PropModeReplace, windowTitle, nNumOfElements);
-	XChangeProperty(mDisplay, mNativeWindowHandle, _NET_WM_VISIBLE_NAME, UTF8_STRING, 8, PropModeReplace, windowTitle, nNumOfElements);
-	
-	XMapRaised(mDisplay, mNativeWindowHandle);
-	
-	XSync(mDisplay, False);
+	XSync(X11Application::instance()->getDisplay(), False);
 }
 
 void ApplicationImplLinux::onDeinitialization()
 {
 	// Destroy the OS window instance, in case there's one
-	if (NULL_HANDLE != mNativeWindowHandle)
+	if (nullptr != mMainWindow)
+		
 	{
 		// Destroy the OpenGL dummy window
-		::XDestroyWindow(mDisplay, mNativeWindowHandle);
-		mNativeWindowHandle = NULL_HANDLE;
+		delete mMainWindow;
+		mMainWindow = nullptr;
 	}
 	
-	XCloseDisplay(mDisplay);
-	mDisplay = 0;
+	if (nullptr != mX11EventLoop)
+	{
+		delete mX11EventLoop;
+		mX11EventLoop = nullptr;
+	}
 }
 
 bool ApplicationImplLinux::processMessages()
 {
-	// By default, do not shut down the application
-	bool quit = false;
-
-	// Look if messages are waiting (non-blocking)
-	while (XPending(mDisplay) > 0) {
-		// Get the waiting message
-		XEvent sXEvent;
-		XNextEvent(mDisplay, &sXEvent);
-
-		// Process message
-		switch (sXEvent.type) {
-			case Expose:
-				// There could be more then one Expose event currently in the event loop.
-				// To avoid too many redraw calls, call OnDraw only when the current processed Expose event is the last one.
-				if (!sXEvent.xexpose.count)
-					mApplication->onDrawRequest();
-				break;
-
-			case DestroyNotify:
-				// Mark window destroyed
-				mNativeWindowHandle = 0;
-				quit = true;
-				break;
-
-			// Window configuration changed
-			case ConfigureNotify:
-				mApplication->onResize();
-				break;
-
-			case ClientMessage:
-				// When the "WM_DELETE_WINDOW" client message is send, no "DestroyNotify"-message is generated because the
-				// application itself should destroy/close the window to which the "WM_DELETE_WINDOW" client message was send to.
-				// In this case, we will leave the event loop after this message was processed and no other messages are in the queue.
-				// -> No "DestroyNotify"-message can be received
-				if (sXEvent.xclient.data.l[0] == WM_DELETE_WINDOW)
-					quit = true;
-				break;
-
-			case KeyPress:
-// 				// Is it allowed to toggle the fullscreen mode using hotkeys? (Alt-Return or AltGr-Return)
-// 				if (m_pFrontendOS->GetToggleFullscreenMode()) {
-// 					// It's allowed, toggle fullscreen right now?
-// 					const unsigned int nKey = XLookupKeysym(&sXEvent.xkey, 0);
-// 					if (nKey == XK_Return && ((sXEvent.xkey.state & Mod1Mask) || (sXEvent.xkey.state & Mod2Mask))) {
-// 						// Toggle fullscreen mode
-// 						m_pFrontendOS->SetFullscreen(!m_pFrontendOS->IsFullscreen());
-// 					}
-// 				}
-			{
-				const unsigned int nKey = XLookupKeysym(&sXEvent.xkey, 0);
-				mApplication->onKeyDown(nKey);
-			}
-				break;
-			case KeyRelease:
-			{
-				const unsigned int nKey = XLookupKeysym(&sXEvent.xkey, 0);
-				mApplication->onKeyUp(nKey);
-			}
-				break;
-		}
-	}
-
-	// Done, tell the caller whether or not to shut down the application
-	return quit;
+	return mX11EventLoop->handlePendingEvents();
 }
 
 void ApplicationImplLinux::getWindowSize(int &width, int &height) const
 {
 	// Is there a valid OS window?
-	if (NULL_HANDLE != mNativeWindowHandle)
+	if (nullptr != mMainWindow)
 	{
-		// Get X window geometry information
-		::Window nRootWindow = 0;
-		int nPositionX = 0, nPositionY = 0;
-		unsigned int nWidth = 0, nHeight = 0, nBorder = 0, nDepth = 0;
-		XGetGeometry(mDisplay, mNativeWindowHandle, &nRootWindow, &nPositionX, &nPositionY, &nWidth, &nHeight, &nBorder, &nDepth);
-		width = nWidth;
-		height = nHeight;
+		mMainWindow->getWindowSize(width, height);
 	}
 	else
 	{
@@ -208,22 +155,14 @@ void ApplicationImplLinux::getWindowSize(int &width, int &height) const
 
 handle ApplicationImplLinux::getNativeWindowHandle() const
 {
-	return mNativeWindowHandle;
+	return mMainWindow->winId();
 }
 
 void ApplicationImplLinux::redraw()
 {
 	// Is there a valid OS window?
-	if (NULL_HANDLE != mNativeWindowHandle)
+	if (nullptr != mMainWindow)
 	{
-		// Send expose event
-		XEvent sEvent;
-		sEvent.type			 = Expose;
-		sEvent.xany.window	 = mNativeWindowHandle;
-		sEvent.xexpose.count = 0;
-		XSendEvent(mDisplay, mNativeWindowHandle, False, 0, &sEvent);
-
-		// Do it!
-		XSync(mDisplay, False);
+		mMainWindow->refresh();
 	}
 }

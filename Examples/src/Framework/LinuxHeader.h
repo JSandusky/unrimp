@@ -31,6 +31,7 @@
 //[-------------------------------------------------------]
 #include <X11/Xlib.h>
 #include <string.h>
+#include "Framework/X11Window.h"
 
 
 #define NULL_HANDLE  0

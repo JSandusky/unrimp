@@ -29,6 +29,7 @@
 #elif defined LINUX
 	// This is only a simple and close-to-the-metal example, don't use OS stuff directly in more complex projects
 	#include "Framework/LinuxHeader.h"
+	#include "Framework/X11Application.h"
 #include <iostream>
 #endif
 
@@ -70,7 +71,38 @@
 		}
 	}
 #elif defined LINUX
-	Display *mDisplay = 0;
+	class SwapChainWindow: public X11Window
+	{
+		public:
+			SwapChainWindow()
+				: mSwapChain(0)
+			{
+				
+			}
+			void setSwapChain(Renderer::ISwapChain *swapChain)
+			{
+				mSwapChain = swapChain;
+			}
+			
+			virtual bool HandleEvent(XEvent &event)
+			{
+				X11Window::HandleEvent(event);
+				std::cout<<"Handle Event in SwapChainWindow\n";
+				
+				switch (event.type) {
+					// Window configuration changed
+					case ConfigureNotify:
+						if (mSwapChain)
+							mSwapChain->resizeBuffers();
+					break;
+				}
+				return false;
+			}
+	private:
+		Renderer::ISwapChain *mSwapChain;
+	};
+
+	SwapChainWindow *swapChainWindow = nullptr;
 #endif
 
 
@@ -204,37 +236,13 @@ void FirstMultipleSwapChains::onInitialization()
 					::ShowWindow(hWnd, SW_SHOWDEFAULT);
 				}
 			#elif defined LINUX
-				Display *display = XOpenDisplay(0);
-				mDisplay = display;
-				const unsigned int  nWidth  = 640;
-				const unsigned int  nHeight = 480;
-				const int           nScreen = DefaultScreen(display);
-				Visual             *pVisual = DefaultVisual(display, nScreen);
-				const int           nDepth  = DefaultDepth(display, nScreen);
+				swapChainWindow = new SwapChainWindow();
+				swapChainWindow->setTitle("Another window");
 				
-				XSetWindowAttributes sXSetWindowAttributes;
-				sXSetWindowAttributes.background_pixel = 0;
-				sXSetWindowAttributes.event_mask = ExposureMask | StructureNotifyMask | EnterWindowMask | LeaveWindowMask | FocusChangeMask | VisibilityChangeMask | KeyPressMask | MotionNotify;
-				Window window = XCreateWindow(display, XRootWindow(display, nScreen), 0, 0, nWidth, nHeight, 0, nDepth, InputOutput, pVisual, CWBackPixel | CWEventMask, &sXSetWindowAttributes);
-				
-				nativeWindowHandle = window;
-				
-				Atom UTF8_STRING			= XInternAtom(display, "UTF8_STRING",			 False);
-				Atom WM_NAME				= XInternAtom(display, "WM_NAME",				 False);
-				Atom _NET_WM_NAME		= XInternAtom(display, "_NET_WM_NAME",		 False);
-				Atom _NET_WM_VISIBLE_NAME = XInternAtom(display, "_NET_WM_VISIBLE_NAME", False);
-				
-				const char* title = "Another window";
-				const int nNumOfElements = strlen(title);
-				const unsigned char* windowTitle = reinterpret_cast<const unsigned char*>(title);
-				XChangeProperty(display, window, WM_NAME,				 UTF8_STRING, 8, PropModeReplace, windowTitle, nNumOfElements);
-				XChangeProperty(display, window, _NET_WM_NAME,		 UTF8_STRING, 8, PropModeReplace, windowTitle, nNumOfElements);
-				XChangeProperty(display, window, _NET_WM_VISIBLE_NAME, UTF8_STRING, 8, PropModeReplace, windowTitle, nNumOfElements);
-				
-				XMapRaised(display, window);
+				swapChainWindow->show();
 	
-				XSync(display, False);
-				// [TODO] event handling
+				XSync(X11Application::instance()->getDisplay(), False);
+				nativeWindowHandle = swapChainWindow->winId();
 				
 			#else
 				#error "Unsupported platform"
@@ -265,13 +273,13 @@ void FirstMultipleSwapChains::onInitialization()
 				}
 			#elif defined LINUX
 				// Is there a valid OS native window instance?
-				if (NULL_HANDLE != window)
+				if (NULL_HANDLE != nativeWindowHandle)
 				{
 					// In case of an error, destroy the OS native window instance at once
 					if (nullptr == mSwapChain)
 					{
 						// Destroy the native OS window instance
-						::XDestroyWindow(display, window);
+						delete swapChainWindow;
 					}
 				}
 			#endif
@@ -302,18 +310,8 @@ void FirstMultipleSwapChains::onDeinitialization()
 			// Unregister the window class for this example window
 			::UnregisterClass(TEXT("FirstMultipleSwapChains"), ::GetModuleHandle(nullptr));
 		#elif defined LINUX
-			const Window window = mSwapChain->getNativeWindowHandle();
-			// Is there a valid OS native window instance?
-			if (NULL_HANDLE != window)
-			{
-				// In case of an error, destroy the OS native window instance at once
-				if (nullptr == mSwapChain)
-				{
-					// Destroy the native OS window instance
-					::XDestroyWindow(mDisplay, window);
-				}
-			}
-			XCloseDisplay(mDisplay);
+			if(swapChainWindow)
+				delete swapChainWindow;
 		#endif
 
 		// Release the swap chain

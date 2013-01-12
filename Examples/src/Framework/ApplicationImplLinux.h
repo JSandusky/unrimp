@@ -37,6 +37,8 @@
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 class IApplication;
+class X11Application;
+class X11Window;
 
 
 //[-------------------------------------------------------]
@@ -89,13 +91,8 @@ public:
 private:
 	IApplication *mApplication;			/**< The owner application instance, always valid */
 	char		  mWindowTitle[64];		/**< ASCII window title */
-	Window		  mNativeWindowHandle;	/**< OS window handle, can be a null handler */
-	Display*	  mDisplay;				/**< Display connection to the X11 server */
-	::Atom					 WM_DELETE_WINDOW;		/**< System atom for delete */
-	::Atom					 UTF8_STRING;			/**< Atom for the type of a window title */
-	::Atom 					 WM_NAME;				/**< Window title (old?) */
-	::Atom 					 _NET_WM_NAME;			/**< Window title */
-	::Atom 					 _NET_WM_VISIBLE_NAME;	/**< Window title (visible title, can be different) */
+	X11Application *mX11EventLoop;
+	X11Window		*mMainWindow;
 
 };
 
