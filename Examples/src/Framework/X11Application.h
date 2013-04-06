@@ -1,49 +1,125 @@
-#ifndef APPLICATION_H
-#define APPLICATION_H
+/*********************************************************\
+ * Copyright (c) 2012-2013 Christian Ofenberg
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
 
+
+//[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+#ifndef __X11APPLICATION_H__
+#define __X11APPLICATION_H__
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
 #include <X11/Xlib.h>
+
 #include <map>
 
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
 class X11Window;
 typedef Window WindowHandle;
 
+
+//[-------------------------------------------------------]
+//[ Classes                                               ]
+//[-------------------------------------------------------]
+/**
+*  @brief
+*    X11 application
+*
+*  @todo
+*    - TODO(co) Code style cleanup and documentation
+*/
 class X11Application
 {
+
+
+//[-------------------------------------------------------]
+//[ Friends                                               ]
+//[-------------------------------------------------------]
 	friend class X11Window;
 
-public:
-	static X11Application* instance() {return _self;}
 
+//[-------------------------------------------------------]
+//[ Public static methods                                 ]
+//[-------------------------------------------------------]
 public:
-    X11Application();
+	static X11Application *instance() {return _self;}
+
+
+//[-------------------------------------------------------]
+//[ Public methods                                        ]
+//[-------------------------------------------------------]
+public:
+	X11Application();
 	~X11Application();
 	int run();
 	bool handlePendingEvents();
-	
 	Display *getDisplay() { return mDisplay; }
 
+
+//[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
 private:
-	bool HandleEvent(XEvent& event);
-	
+	bool HandleEvent(XEvent &event);
 	void AddWindowToEventLoop(X11Window &window);
 	void RemoveWindowFromEventLoop(const X11Window &window);
-	
-    X11Application(const X11Application& other);
-    virtual X11Application& operator=(const X11Application& other);
-	
+	X11Application(const X11Application &other);
+	virtual X11Application& operator=(const X11Application &other);
+
+
+//[-------------------------------------------------------]
+//[ Public static data                                    ]
+//[-------------------------------------------------------]
 private:
-	static X11Application	*_self;
-	
+	static X11Application *_self;
+
+
+//[-------------------------------------------------------]
+//[ Private definitions                                   ]
+//[-------------------------------------------------------]
 private:
 	struct WindowEntry
 	{
 		WindowHandle window;
 		X11Window *x11Window;
 	};
-	
+
+
+//[-------------------------------------------------------]
+//[ Private data                                          ]
+//[-------------------------------------------------------]
 private:
 	Display *mDisplay;
 	std::map<WindowHandle, WindowEntry> mWindows;
+
+
 };
 
-#endif // APPLICATION_H
+
+//[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#endif // __X11APPLICATION_H__

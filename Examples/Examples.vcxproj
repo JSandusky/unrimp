@@ -331,6 +331,8 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
     <ClInclude Include="src\Framework\Stopwatch.h" />
     <ClInclude Include="src\Framework\TGALoader.h" />
     <ClInclude Include="src\Framework\WindowsHeader.h" />
+    <ClInclude Include="src\Framework\X11Application.h" />
+    <ClInclude Include="src\Framework\X11Window.h" />
     <ClInclude Include="src\Fxaa\Fxaa.h" />
     <ClInclude Include="src\Fxaa\Fxaa_PostProcessing.h" />
     <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_Cg.h" />
@@ -394,6 +396,18 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
     <ClCompile Include="src\Framework\IApplicationRendererToolkit.cpp" />
     <ClCompile Include="src\Framework\Stopwatch.cpp" />
     <ClCompile Include="src\Framework\TGALoader.cpp" />
+    <ClCompile Include="src\Framework\X11Application.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\Framework\X11Window.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\Fxaa\Fxaa.cpp" />
     <ClCompile Include="src\IcosahedronTessellation\IcosahedronTessellation.cpp" />
     <ClCompile Include="src\InstancedCubes\CubeRendererDrawInstanced\BatchDrawInstanced.cpp" />
