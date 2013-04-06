@@ -25,61 +25,66 @@
 #include "Framework/IApplication.h"
 #include "Framework/X11Application.h"
 
-class ApplicationWindow: public X11Window
+
+//[-------------------------------------------------------]
+//[ Classes                                               ]
+//[-------------------------------------------------------]
+class ApplicationWindow : public X11Window
 {
-	public:
-		ApplicationWindow(IApplication &application)
-			: mApplication(application)
+public:
+	ApplicationWindow(IApplication &application) :
+		mApplication(application)
+	{
+		// Nothing to do in here
+	}
+
+	virtual bool HandleEvent(XEvent &event)
+	{
+		X11Window::HandleEvent(event);
+		switch (event.type)
 		{
-			
-		}
-		virtual bool HandleEvent(XEvent &event)
-		{
-			X11Window::HandleEvent(event);
-			
-			switch (event.type) {
-				case Expose:
-				// There could be more then one Expose event currently in the event loop.
-				// To avoid too many redraw calls, call OnDraw only when the current processed Expose event is the last one.
+			case Expose:
+				// There could be more then one expose event currently in the event loop.
+				// To avoid too many redraw calls, call onDrawRequest only when the current processed expose event is the last one.
 				if (!event.xexpose.count)
 				{
 					mApplication.onDrawRequest();
 				}
+			break;
+
+			// Window configuration changed
+			case ConfigureNotify:
+				mApplication.onResize();
 				break;
-				// Window configuration changed
-				case ConfigureNotify:
-					mApplication.onResize();
+
+			case KeyPress:
+			{
+				const unsigned int key = XLookupKeysym(&event.xkey, 0);
+				mApplication.onKeyDown(key);
 				break;
-				
-				case KeyPress:
-				{
-					const unsigned int nKey = XLookupKeysym(&event.xkey, 0);
-					mApplication.onKeyDown(nKey);
-				}
-					break;
-				case KeyRelease:
-				{
-					const unsigned int nKey = XLookupKeysym(&event.xkey, 0);
-					mApplication.onKeyUp(nKey);
-				}
-					break;
 			}
-			return false;
+
+			case KeyRelease:
+			{
+				const unsigned int key = XLookupKeysym(&event.xkey, 0);
+				mApplication.onKeyUp(key);
+				break;
+			}
 		}
+		return false;
+	}
 private:
 	IApplication &mApplication;
 };
 
+
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Default constructor
-*/
 ApplicationImplLinux::ApplicationImplLinux(IApplication &application, const char *windowTitle) :
 	mApplication(&application),
-	mX11EventLoop(0)
+	mX11EventLoop(nullptr),
+	mMainWindow(nullptr)
 {
 	// Copy the given window title
 	if (nullptr != windowTitle)
@@ -92,12 +97,9 @@ ApplicationImplLinux::ApplicationImplLinux(IApplication &application, const char
 	}
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 ApplicationImplLinux::~ApplicationImplLinux()
 {
+	// Nothing to do in here
 }
 
 
@@ -108,10 +110,10 @@ void ApplicationImplLinux::onInitialization()
 {
 	mX11EventLoop = new X11Application();
 	mMainWindow = new ApplicationWindow(*mApplication);
-	
+
 	mMainWindow->setTitle(mWindowTitle);
 	mMainWindow->show();
-	
+
 	XSync(X11Application::instance()->getDisplay(), False);
 }
 
@@ -119,13 +121,12 @@ void ApplicationImplLinux::onDeinitialization()
 {
 	// Destroy the OS window instance, in case there's one
 	if (nullptr != mMainWindow)
-		
 	{
 		// Destroy the OpenGL dummy window
 		delete mMainWindow;
 		mMainWindow = nullptr;
 	}
-	
+
 	if (nullptr != mX11EventLoop)
 	{
 		delete mX11EventLoop;

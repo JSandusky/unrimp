@@ -71,38 +71,41 @@
 		}
 	}
 #elif defined LINUX
-	class SwapChainWindow: public X11Window
+	class SwapChainWindow : public X11Window
 	{
-		public:
-			SwapChainWindow()
-				: mSwapChain(0)
+	public:
+		SwapChainWindow() :
+			mSwapChain(nullptr)
+		{
+			// Nothing to do in here
+		}
+
+		void setSwapChain(Renderer::ISwapChain *swapChain)
+		{
+			mSwapChain = swapChain;
+		}
+
+		virtual bool HandleEvent(XEvent &event)
+		{
+			X11Window::HandleEvent(event);
+			OUTPUT_DEBUG_STRING("Handle Event in SwapChainWindow\n")
+			switch (event.type)
 			{
-				
+				// Window configuration changed
+				case ConfigureNotify:
+					if (nullptr != mSwapChain)
+					{
+						mSwapChain->resizeBuffers();
+					}
+				break;
 			}
-			void setSwapChain(Renderer::ISwapChain *swapChain)
-			{
-				mSwapChain = swapChain;
-			}
-			
-			virtual bool HandleEvent(XEvent &event)
-			{
-				X11Window::HandleEvent(event);
-				std::cout<<"Handle Event in SwapChainWindow\n";
-				
-				switch (event.type) {
-					// Window configuration changed
-					case ConfigureNotify:
-						if (mSwapChain)
-							mSwapChain->resizeBuffers();
-					break;
-				}
-				return false;
-			}
+			return false;
+		}
 	private:
 		Renderer::ISwapChain *mSwapChain;
 	};
-
-	SwapChainWindow *swapChainWindow = nullptr;
+	// TODO(co) Even inside an example, we might not want to use global variables
+	SwapChainWindow *gSwapChainWindow = nullptr;
 #endif
 
 
@@ -228,14 +231,11 @@ void FirstMultipleSwapChains::onInitialization()
 					::ShowWindow(hWnd, SW_SHOWDEFAULT);
 				}
 			#elif defined LINUX
-				swapChainWindow = new SwapChainWindow();
-				swapChainWindow->setTitle("Another window");
-				
-				swapChainWindow->show();
-	
+				gSwapChainWindow = new SwapChainWindow();
+				gSwapChainWindow->setTitle("Another window");
+				gSwapChainWindow->show();
 				XSync(X11Application::instance()->getDisplay(), False);
-				nativeWindowHandle = swapChainWindow->winId();
-				
+				nativeWindowHandle = gSwapChainWindow->winId();
 			#else
 				#error "Unsupported platform"
 			#endif
@@ -271,7 +271,8 @@ void FirstMultipleSwapChains::onInitialization()
 					if (nullptr == mSwapChain)
 					{
 						// Destroy the native OS window instance
-						delete swapChainWindow;
+						delete gSwapChainWindow;
+						gSwapChainWindow = nullptr;
 					}
 				}
 			#endif
@@ -302,8 +303,11 @@ void FirstMultipleSwapChains::onDeinitialization()
 			// Unregister the window class for this example window
 			::UnregisterClass(TEXT("FirstMultipleSwapChains"), ::GetModuleHandle(nullptr));
 		#elif defined LINUX
-			if(swapChainWindow)
-				delete swapChainWindow;
+			if (nullptr != gSwapChainWindow)
+			{
+				delete gSwapChainWindow;
+				gSwapChainWindow = nullptr;
+			}
 		#endif
 
 		// Release the swap chain

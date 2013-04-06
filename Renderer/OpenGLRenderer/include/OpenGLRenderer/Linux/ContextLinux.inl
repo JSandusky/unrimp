@@ -28,19 +28,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the primary device context
-	*/
 	inline Display *ContextLinux::getDisplay() const
 	{
 		return mDisplay;
 	}
 
-	/**
-	*  @brief
-	*    Return the primary render context
-	*/
 	inline GLXContext ContextLinux::getRenderContext() const
 	{
 		return mWindowRenderContext;

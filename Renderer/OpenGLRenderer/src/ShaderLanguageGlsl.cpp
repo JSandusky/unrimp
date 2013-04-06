@@ -34,7 +34,6 @@
 #include "OpenGLRenderer/FragmentShaderGlsl.h"
 #include "OpenGLRenderer/TessellationControlShaderGlsl.h"
 #include "OpenGLRenderer/TessellationEvaluationShaderGlsl.h"
-#include <iostream>
 
 
 //[-------------------------------------------------------]
@@ -69,7 +68,6 @@ namespace OpenGLRenderer
 		glGetObjectParameterivARB(openGLShader, GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
 		if (GL_TRUE == compiled)
 		{
-			std::cout<<"shader compiled: "<<shaderType<<"\n";
 			// All went fine, return the shader
 			return openGLShader;
 		}
@@ -77,7 +75,6 @@ namespace OpenGLRenderer
 		{
 			// Error, failed to compile the shader!
 			#ifdef RENDERER_OUTPUT_DEBUG
-				std::cout<<"shader compile failed: "<<shaderType<<"\n";
 				// Get the length of the information
 				GLint informationLength = 0;
 				glGetObjectParameterivARB(openGLShader, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);

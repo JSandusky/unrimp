@@ -29,11 +29,17 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <X11/Xlib.h>
-#include <string.h>
 #include "Framework/X11Window.h"
 
+#include <X11/Xlib.h>
 
+#include <string.h>
+
+
+//[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+// TODO(co) This is already defined inside "PlatformTypes.h", remove the definition in here
 #define NULL_HANDLE  0
 
 

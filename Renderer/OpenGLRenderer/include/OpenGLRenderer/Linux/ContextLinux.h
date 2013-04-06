@@ -30,6 +30,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/IContext.h"
+
 #include <Renderer/PlatformTypes.h>
 #include <Renderer/LinuxHeader.h>
 
@@ -147,12 +148,12 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		OpenGLRuntimeLinking *mOpenGLRuntimeLinking;	/**< OpenGL runtime linking instance, always valid */
-		handle				  mNativeWindowHandle;		/**< OpenGL window, can be a null pointer (HWND) */
-		handle				  mDummyWindow;				/**< OpenGL dummy window, can be a null pointer (HWND) */
-		Display				 *mDisplay;					/**< The device context of the OpenGL dummy window, can be a null pointer */
+		OpenGLRuntimeLinking *mOpenGLRuntimeLinking;	///< OpenGL runtime linking instance, always valid
+		handle				  mNativeWindowHandle;		///< OpenGL window, can be a null pointer (Window)
+		handle				  mDummyWindow;				///< OpenGL dummy window, can be a null pointer (Window)
+		Display				 *mDisplay;					///< The device context of the OpenGL dummy window, can be a null pointer
 		XVisualInfo 		 *m_pDummyVisualInfo;
-		GLXContext			  mWindowRenderContext;		/**< The render context of the OpenGL dummy window, can be a null pointer */
+		GLXContext			  mWindowRenderContext;		///< The render context of the OpenGL dummy window, can be a null pointer
 
 
 	};

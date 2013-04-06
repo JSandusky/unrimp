@@ -30,6 +30,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/IContext.h"
+
 #include <Renderer/PlatformTypes.h>
 #include <Renderer/WindowsHeader.h>
 

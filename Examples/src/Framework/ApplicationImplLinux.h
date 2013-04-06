@@ -36,9 +36,9 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+class X11Window;
 class IApplication;
 class X11Application;
-class X11Window;
 
 
 //[-------------------------------------------------------]
@@ -85,14 +85,16 @@ public:
 	virtual handle getNativeWindowHandle() const override;
 	virtual void redraw() override;
 
+
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	IApplication *mApplication;			/**< The owner application instance, always valid */
-	char		  mWindowTitle[64];		/**< ASCII window title */
-	X11Application *mX11EventLoop;
-	X11Window		*mMainWindow;
+	IApplication   *mApplication;		///< The owner application instance, always valid
+	char			mWindowTitle[64];	///< ASCII window title
+	X11Application *mX11EventLoop;		///< X11 event loop application, can be a null pointer, destroy the instance in case you no longer need it
+	X11Window	   *mMainWindow;		///< X11 window, can be a null pointer, destroy the instance in case you no longer need it
+
 
 };
 
