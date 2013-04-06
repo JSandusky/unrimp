@@ -35,10 +35,12 @@
 
 	#elif defined LINUX
 		#include "Framework/LinuxHeader.h"
+
 		#include <dlfcn.h>
 	#else
 		#error "Unsupported platform"
 	#endif
+
 	#include <stdio.h>
 #endif
 
@@ -147,7 +149,7 @@ RendererToolkit::IRendererToolkit *IApplicationRendererToolkit::createRendererTo
 				OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", RENDERER_TOOLKIT_FILENAME)
 			}
 		#elif defined LINUX
-			// Load in the dll
+			// Load in the shared library
 			#ifdef _DEBUG
 				static const char RENDERER_TOOLKIT_FILENAME[] = "RendererToolkitD.so";
 			#else

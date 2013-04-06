@@ -26,8 +26,8 @@
 #include "OpenGLES2Renderer/ContextRuntimeLinking.h"
 #include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"
 #ifdef LINUX
-	#include <dlfcn.h> // for dlopen, dlclose and co
-	#include <link.h> // for getting the path to the library (for the error message)
+	#include <dlfcn.h>	// For "dlopen()", "dlclose()" and so on
+	#include <link.h>	// For getting the path to the library (for the error message)
 #endif
 
 
@@ -250,10 +250,13 @@ namespace OpenGLES2Renderer
 				// Try finding the eglGetProcAddress to determine if this library contains EGL/GLES support.
 				// This check is needed because only the closed source drivers have the EGL/GLES support in "libGL.so".
 				// The open source drivers (mesa) have separate libraries for this and they can be present on the system even the closed source drivers are used.
-				void *pSymbol = dlsym(mEGLSharedLibrary, "eglGetProcAddress");
-				if (pSymbol)
+				void *symbol = ::dlsym(mEGLSharedLibrary, "eglGetProcAddress");
+				if (nullptr != symbol)
+				{
 					mGLESSharedLibrary = ::dlopen("libGL.so", RTLD_LAZY);
-				else {
+				}
+				else
+				{
 					// Unload the library
 					::dlclose(mEGLSharedLibrary);
 					mEGLSharedLibrary = nullptr;
@@ -312,7 +315,7 @@ namespace OpenGLES2Renderer
 			#define IMPORT_FUNC(funcName)																																			\
 				if (result)																																							\
 				{																																									\
-					void *symbol = ::dlsym(mEGLSharedLibrary, #funcName);																			\
+					void *symbol = ::dlsym(mEGLSharedLibrary, #funcName);																											\
 					if (nullptr == symbol)																																			\
 					{																																								\
 						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 2 on desktop PC by using a					\
@@ -328,20 +331,19 @@ namespace OpenGLES2Renderer
 					}																																								\
 					else																																							\
 					{																																								\
-						link_map *LinkMap = nullptr; \
-						const char* libName = "unknown"; \
-						if (dlinfo(mEGLSharedLibrary, RTLD_DI_LINKMAP, &LinkMap)) \
-						{ \
-							libName = LinkMap->l_name; \
-						} \
-						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: Failed to locate the entry point \"%s\" within the EGL shared library \"%s\"", #funcName, libName)	\
+						link_map *linkMap = nullptr;																																\
+						const char* libraryName = "unknown";																														\
+						if (dlinfo(mEGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																									\
+						{																																							\
+							libraryName = linkMap->l_name;																															\
+						}																																							\
+						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: Failed to locate the entry point \"%s\" within the EGL shared library \"%s\"", #funcName, libraryName)		\
 						result = false;																																				\
 					}																																								\
 				}
 		#else
 			#error "Unsupported platform"
 		#endif
-
 
 		// Load the entry points
 		IMPORT_FUNC(eglGetProcAddress);

@@ -28,12 +28,13 @@
 		#include "Framework/WindowsHeader.h"
 	#elif defined LINUX
 		#include "Framework/LinuxHeader.h"
+
 		#include <dlfcn.h>
 		#include <iostream>
 	#else
 		#error "Unsupported platform"
 	#endif
-	
+
 	#include <stdio.h>
 #endif
 
@@ -257,7 +258,7 @@ Renderer::IRenderer *IApplicationRenderer::createRendererInstance(const char *re
 					OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", rendererFilename)
 				}
 			#elif defined LINUX
-				// Load in the dll
+				// Load in the shared library
 				char rendererFilename[128];
 				#ifdef _DEBUG
 					sprintf(rendererFilename, "%sRendererD.so", rendererName);
@@ -277,19 +278,18 @@ Renderer::IRenderer *IApplicationRenderer::createRendererInstance(const char *re
 						typedef Renderer::IRenderer *(*createRendererInstance)(Renderer::handle);
 
 						// Create the renderer instance
-						
 						renderer = (reinterpret_cast<createRendererInstance>(symbol))(getNativeWindowHandle());
 					}
 					else
 					{
 						// Error!
-						std::cerr<<"Failed to locate the entry point \""<<functionName<<"\" within the renderer shared library \""<<rendererFilename<<"\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+						std::cerr<<"Failed to locate the entry point \""<<functionName<<"\" within the renderer shared library \""<<rendererFilename<<"\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead... as seen below, why the additional output?
 						OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"%s\" within the renderer shared library \"%s\"", functionName, rendererFilename)
 					}
 				}
 				else
 				{
-					std::cerr<<"Failed to load in the shared library \""<<rendererFilename<<"\"\nReason:"<<dlerror()<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+					std::cerr<<"Failed to load in the shared library \""<<rendererFilename<<"\"\nReason:"<<dlerror()<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead... as seen below, why the additional output?
 					OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", rendererFilename)
 				}
 			#else

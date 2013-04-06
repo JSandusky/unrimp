@@ -41,17 +41,17 @@ X11Window::X11Window() :
 	_NET_WM_NAME		 = XInternAtom(display, "_NET_WM_NAME",			False);
 	_NET_WM_VISIBLE_NAME = XInternAtom(display, "_NET_WM_VISIBLE_NAME",	False);
 
-	const unsigned int  nWidth  = 640;
-	const unsigned int  nHeight = 480;
-	const int           nScreen = DefaultScreen(display);
-	Visual             *pVisual = DefaultVisual(display, nScreen);
-	const int           nDepth  = DefaultDepth(display, nScreen);
+	const unsigned int  width  = 640;
+	const unsigned int  height = 480;
+	const int           screen = DefaultScreen(display);
+	Visual             *visual = DefaultVisual(display, screen);
+	const int           depth  = DefaultDepth(display, screen);
 
 	// Create the native OS window instance with a black background (else we will see trash if nothing has been drawn, yet)
 	XSetWindowAttributes sXSetWindowAttributes;
 	sXSetWindowAttributes.background_pixel = 0;
 	sXSetWindowAttributes.event_mask = ExposureMask | StructureNotifyMask | EnterWindowMask | LeaveWindowMask | FocusChangeMask | VisibilityChangeMask | KeyPressMask | MotionNotify;
-	mWindowId = XCreateWindow(display, XRootWindow(display, nScreen), 0, 0, nWidth, nHeight, 0, nDepth, InputOutput, pVisual, CWBackPixel | CWEventMask, &sXSetWindowAttributes);
+	mWindowId = XCreateWindow(display, XRootWindow(display, screen), 0, 0, width, height, 0, depth, InputOutput, visual, CWBackPixel | CWEventMask, &sXSetWindowAttributes);
 	XSetWMProtocols(display, mWindowId, &WM_DELETE_WINDOW, 1);
 
 	X11Application::instance()->AddWindowToEventLoop(*this);
@@ -121,10 +121,10 @@ void X11Window::getWindowSize(int &width, int &height) const
 		// Get X window geometry information
 		::Window rootWindow = 0;
 		int positionX = 0, positionY = 0;
-		unsigned int nWidth = 0, nHeight = 0, nBorder = 0, nDepth = 0;
-		XGetGeometry(X11Application::instance()->getDisplay(), mWindowId, &rootWindow, &positionX, &positionY, &nWidth, &nHeight, &nBorder, &nDepth);
-		width = nWidth;
-		height = nHeight;
+		unsigned int unsignedWidth = 0, unsignedHeight = 0, border = 0, depth = 0;
+		XGetGeometry(X11Application::instance()->getDisplay(), mWindowId, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
+		width = unsignedWidth;
+		height = unsignedHeight;
 	}
 	else
 	{

@@ -108,7 +108,7 @@ if(WIN32)
 		src/Framework/ApplicationImplWindows.cpp
 	)
 elseif(UNIX)
-	# Windows source codes
+	# Linux source codes
 	set(SOURCE_CODES
 		${SOURCE_CODES}
 		src/Framework/ApplicationImplLinux.cpp

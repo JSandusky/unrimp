@@ -30,6 +30,7 @@
 	#include <Renderer/WindowsHeader.h>
 #elif defined LINUX
 	#include <Renderer/LinuxHeader.h>
+
 	#include <dlfcn.h>
 	#include <link.h>
 	#include <iostream>
@@ -148,20 +149,20 @@ namespace OpenGLRenderer
 			#define IMPORT_FUNC(funcName)																																			\
 				if (result)																																							\
 				{																																									\
-					void *symbol = ::dlsym(mOpenGLSharedLibrary, #funcName);																			\
+					void *symbol = ::dlsym(mOpenGLSharedLibrary, #funcName);																										\
 					if (nullptr != symbol)																																			\
 					{																																								\
 						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
 					}																																								\
 					else																																							\
 					{																																								\
-						link_map *linkMap = nullptr; \
-						const char* libraryName = "unknown"; \
-						if (dlinfo(mOpenGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap)) \
-						{ \
-							libraryName = linkMap->l_name; \
-						} \
-						std::cout<<"OpenGL error: Failed to locate the entry point \""<<#funcName<<"\" within the OpenGL shared library \""<<libraryName<<"\"\n";	\	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+						link_map *linkMap = nullptr;																																\
+						const char* libraryName = "unknown";																														\
+						if (dlinfo(mOpenGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																								\
+						{																																							\
+							libraryName = linkMap->l_name;																															\
+						}																																							\
+						std::cout<<"OpenGL error: Failed to locate the entry point \""<<#funcName<<"\" within the OpenGL shared library \""<<libraryName<<"\"\n";					\	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 						result = false;																																				\
 					}																																								\
 				}

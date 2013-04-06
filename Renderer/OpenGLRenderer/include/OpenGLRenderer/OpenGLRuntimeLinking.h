@@ -37,7 +37,7 @@
 	__pragma(warning(pop))
 #else
 	#ifdef LINUX
- 		#include <GL/glx.h>
+		#include <GL/glx.h>
 		#include <X11/Xlib.h>
 	#endif
 	#include <GL/gl.h>

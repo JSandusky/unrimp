@@ -190,7 +190,7 @@ void FirstGpgpu::onInitialization()
 			// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
 			//    the unused texture coordinate might get optimized out
 			// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-			Renderer::IVertexShaderPtr vertexShader (shaderLanguage->createVertexShader(vertexShaderSourceCode));
+			Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShader(vertexShaderSourceCode));
 			mProgramContentGeneration = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShader(fragmentShaderSourceCode_ContentGeneration));
 			mProgramContentProcessing = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShader(fragmentShaderSourceCode_ContentProcessing));
 		}

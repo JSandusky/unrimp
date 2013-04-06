@@ -110,7 +110,7 @@ void FirstInstancing::onInitialization()
 					{
 						 0.0f, 1.0f
 					};
-					Renderer::IVertexBufferPtr vertexBufferInstanceID(renderer->createVertexBuffer(sizeof(INSTANCE_ID), INSTANCE_ID, Renderer::BufferUsage::STATIC_DRAW));
+					Renderer::IVertexBufferPtr vertexBufferInstanceId(renderer->createVertexBuffer(sizeof(INSTANCE_ID), INSTANCE_ID, Renderer::BufferUsage::STATIC_DRAW));
 
 					// Create the index buffer object (IBO)
 					// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
@@ -150,7 +150,7 @@ void FirstInstancing::onInitialization()
 							"TEXCOORD",								// semantic[64] (char)
 							0,										// semanticIndex (unsigned int)
 							// Data source
-							vertexBufferInstanceID,					// vertexBuffer (Renderer::IVertexBuffer *)
+							vertexBufferInstanceId,					// vertexBuffer (Renderer::IVertexBuffer *)
 							0,										// offset (unsigned int)
 							sizeof(float),							// stride (unsigned int)
 							// Data source, instancing part
@@ -190,7 +190,7 @@ void FirstInstancing::onInitialization()
 						 1.0f, 0.0f,	// 1			  .    .
 						 0.0f, 0.0f		// 2			  2.......1
 					};
-					Renderer::IVertexBufferPtr vertexBuffer (renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+					Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 					// Create vertex array object (VAO)
 					// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)

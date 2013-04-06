@@ -30,7 +30,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/SmartRefCount.h>
-#include <Renderer/PlatformTypes.h>
+#include <Renderer/PlatformTypes.h>	// TODO(co) Include was added during Linux port, is this include really required? Why?
 
 
 //[-------------------------------------------------------]

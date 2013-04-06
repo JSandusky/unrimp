@@ -27,7 +27,7 @@
 	#include "OpenGLRenderer/Windows/ContextWindows.h"
 #elif defined LINUX
 	#include "OpenGLRenderer/Linux/ContextLinux.h"
-	#include "OpenGLRenderer/OpenGLRuntimeLinking.h" // for glxSwapBuffers
+	#include "OpenGLRenderer/OpenGLRuntimeLinking.h" // For "glxSwapBuffers()"
 #endif
 
 
@@ -97,20 +97,19 @@ namespace OpenGLRenderer
 			if (NULL_HANDLE != mNativeWindowHandle)
 			{
 				OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-				Display* display = static_cast<const ContextLinux&>(openGLRenderer.getContext()).getDisplay();
-				
-				::Window nRootWindow = 0;
-				int nPositionX = 0, nPositionY = 0;
-				unsigned int nWidth = 0, nHeight = 0, nBorder = 0, nDepth = 0;
-				XGetGeometry(display, mNativeWindowHandle, &nRootWindow, &nPositionX, &nPositionY, &nWidth, &nHeight, &nBorder, &nDepth);
-				width = nWidth;
-				height = nHeight;
+				Display *display = static_cast<const ContextLinux&>(openGLRenderer.getContext()).getDisplay();
+
+				::Window rootWindow = 0;
+				int positionX = 0, positionY = 0;
+				unsigned int unsignedWidth = 0, unsignedHeight = 0, border = 0, depth = 0;
+				XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
+				width = unsignedWidth;
+				height = unsignedHeight;
 			}
 			else
 		#else
 			#error "Unsupported platform"
 		#endif
-			
 		{
 			// Set known default return values
 			width  = 0;

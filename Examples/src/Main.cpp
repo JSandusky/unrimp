@@ -74,8 +74,10 @@ int programEntryPoint()
 	#elif RENDERER_ONLY_DIRECT3D11
 		rendererName = "Direct3D11";
 	#endif
-		
-	rendererName = "OpenGL";
+	#ifdef LINUX
+		// On Linux, only the OpenGL renderer is supported
+		rendererName = "OpenGL";
+	#endif
 
 	// Create an instance of our application on the C runtime stack
 	// Basics

@@ -30,13 +30,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/ShaderLanguage.h"
-// [TODO] put in common header used by all
-#ifdef LINUX
-	// "override"-definition, see e.g. http://www2.research.att.com/~bs/C++0xFAQ.html#override (C++11 keyword is introduced in GCC 4.7 or clang 2.9)
-	#if ((__GNUC__ < 4 || __GNUC_MINOR__ < 7) && !defined(__clang__))
-		#define override
-	#endif
-#endif
+
+#include <Renderer/PlatformTypes.h>	// For "override"
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

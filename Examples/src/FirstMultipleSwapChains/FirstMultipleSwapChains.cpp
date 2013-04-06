@@ -30,7 +30,6 @@
 	// This is only a simple and close-to-the-metal example, don't use OS stuff directly in more complex projects
 	#include "Framework/LinuxHeader.h"
 	#include "Framework/X11Application.h"
-#include <iostream>
 #endif
 
 #include <string.h>
@@ -171,7 +170,7 @@ void FirstMultipleSwapChains::onInitialization()
 					 1.0f, 0.0f,	// 1			   .   .
 					-0.5f, 0.0f		// 2			  2.......1
 				};
-				Renderer::IVertexBufferPtr vertexBuffer (renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 				// Create vertex array object (VAO)
 				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -435,7 +434,6 @@ void FirstMultipleSwapChains::onDraw()
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)
 	}
-	
 }
 
 

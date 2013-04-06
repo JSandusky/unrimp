@@ -143,7 +143,7 @@ void IcosahedronTessellation::onInitialization()
 					 0.724f, -0.526f, -0.447f,	// 10
 					 0.000f,  0.000f, -1.000f	// 11
 				};
-				Renderer::IVertexBufferPtr vertexBuffer (renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 				// Create the index buffer object (IBO)
 				// -> Geometry is from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")

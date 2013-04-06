@@ -20,7 +20,7 @@
 
 cmake_minimum_required(VERSION 2.8.8)
 
-find_package(Freetype REQUIRED)
+find_package(Freetype REQUIRED) # TODO(co) Remove this, the Unrimp repository comes with a FreeType version which we can guarantee that we're compatible with (which is not the case for system installed library versions)
 
 
 ##################################################

@@ -105,7 +105,7 @@ void FirstPostProcessing::onInitialization()
 				// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
 				//    the unused texture coordinate might get optimized out
 				// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-				Renderer::IVertexShaderPtr vertexShader (shaderLanguage->createVertexShader(vertexShaderSourceCode));
+				Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShader(vertexShaderSourceCode));
 				mProgramSceneRendering = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShader(fragmentShaderSourceCode_SceneRendering));
 				mProgramPostProcessing = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShader(fragmentShaderSourceCode_PostProcessing));
 			}
@@ -121,7 +121,7 @@ void FirstPostProcessing::onInitialization()
 					 1.0f, 0.0f,	// 1			   .   .
 					-0.5f, 0.0f		// 2			  2.......1
 				};
-				Renderer::IVertexBufferPtr vertexBuffer (renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 				// Create vertex array object (VAO)
 				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -160,7 +160,7 @@ void FirstPostProcessing::onInitialization()
 					 1.0f, -1.0f,	// 2			  0.......2
 					 1.0f,  1.0f	// 3
 				};
-				Renderer::IVertexBufferPtr vertexBuffer (renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 				// Create vertex array object (VAO)
 				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
