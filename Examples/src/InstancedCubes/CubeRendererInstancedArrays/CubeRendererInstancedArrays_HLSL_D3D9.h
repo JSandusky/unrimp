@@ -132,9 +132,9 @@ VS_OUTPUT main(VS_INPUT Input)
 		float xa = r.x * position.x;
 		float yb = r.y * position.y;
 		float zc = r.z * position.z;
-		position.xyz = float3(position.x * ( x2 - y2 - z2 + w2) + 2 * (r.w * (r.y * position.z - r.z * position.y) + r.x * (yb + zc)),
-							  position.y * (-x2 + y2 - z2 + w2) + 2 * (r.w * (r.z * position.x - r.x * position.z) + r.y * (xa + zc)),
-							  position.z * (-x2 - y2 + z2 + w2) + 2 * (r.w * (r.x * position.y - r.y * position.x) + r.z * (xa + yb)));
+		position.xyz = float3(position.x * ( x2 - y2 - z2 + w2) + 2.0 * (r.w * (r.y * position.z - r.z * position.y) + r.x * (yb + zc)),
+							  position.y * (-x2 + y2 - z2 + w2) + 2.0 * (r.w * (r.z * position.x - r.x * position.z) + r.y * (xa + zc)),
+							  position.z * (-x2 - y2 + z2 + w2) + 2.0 * (r.w * (r.x * position.y - r.y * position.x) + r.z * (xa + yb)));
 	}
 
 	// Apply global scale and per instance scale

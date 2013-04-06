@@ -111,7 +111,7 @@ namespace OpenGLRenderer
 			mOpenGLSharedLibrary = ::dlopen("libGL.so", RTLD_NOW);
 			if (nullptr == mOpenGLSharedLibrary)
 			{
-				std::cout<<"OpenGL error: Failed to load in the shared library \"libGL.so\"\n";
+				std::cout<<"OpenGL error: Failed to load in the shared library \"libGL.so\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 			}
 		#else
 			#error "Unsupported platform"
@@ -155,13 +155,13 @@ namespace OpenGLRenderer
 					}																																								\
 					else																																							\
 					{																																								\
-						link_map *LinkMap = nullptr; \
-						const char* libName = "unknown"; \
-						if (dlinfo(mOpenGLSharedLibrary, RTLD_DI_LINKMAP, &LinkMap)) \
+						link_map *linkMap = nullptr; \
+						const char* libraryName = "unknown"; \
+						if (dlinfo(mOpenGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap)) \
 						{ \
-							libName = LinkMap->l_name; \
+							libraryName = linkMap->l_name; \
 						} \
-						std::cout<<"OpenGL error: Failed to locate the entry point \""<<#funcName<<"\" within the OpenGL shared library \""<<libName<<"\"\n";	\
+						std::cout<<"OpenGL error: Failed to locate the entry point \""<<#funcName<<"\" within the OpenGL shared library \""<<libraryName<<"\"\n";	\	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 						result = false;																																				\
 					}																																								\
 				}
