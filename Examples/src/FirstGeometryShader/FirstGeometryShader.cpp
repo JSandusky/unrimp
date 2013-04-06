@@ -24,6 +24,8 @@
 #include "FirstGeometryShader/FirstGeometryShader.h"
 #include "Framework/Color4.h"
 
+#include <string> // Required in static build
+
 
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
