@@ -36,10 +36,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IUniformBuffer::~IUniformBuffer()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -52,10 +48,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline IUniformBuffer::IUniformBuffer(IRenderer &renderer) :
 		IBuffer(ResourceType::UNIFORM_BUFFER, renderer)
 	{
@@ -66,10 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IUniformBuffer::IUniformBuffer(const IUniformBuffer &source) :
 		IBuffer(source)
 	{
@@ -81,10 +69,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IUniformBuffer &IUniformBuffer::operator =(const IUniformBuffer &)
 	{
 		// Not supported

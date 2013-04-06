@@ -34,10 +34,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	GeometryShader::~GeometryShader()
 	{
 		// Nothing to do in here
@@ -47,10 +43,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	GeometryShader::GeometryShader(Direct3D10Renderer &direct3D10Renderer) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(direct3D10Renderer))
 	{

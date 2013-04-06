@@ -35,10 +35,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	IContext::~IContext()
 	{
 		// Destroy the extensions instance
@@ -49,10 +45,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	IContext::IContext() :
 		mExtensions(nullptr)
 	{
@@ -60,19 +52,11 @@ namespace OpenGLRenderer
 		mExtensions = new Extensions(*this);
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	IContext::IContext(const IContext &)
 	{
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	IContext &IContext::operator =(const IContext &)
 	{
 		// Not supported

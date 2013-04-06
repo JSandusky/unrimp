@@ -28,19 +28,11 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL ES 2 framebuffer
-	*/
 	inline unsigned int Framebuffer::getOpenGLES2Framebuffer() const
 	{
 		return mOpenGLES2Framebuffer;
 	}
 
-	/**
-	*  @brief
-	*    Return the number of color render target textures
-	*/
 	inline unsigned int Framebuffer::getNumberOfColorTextures() const
 	{
 		return mNumberOfColorTextures;

@@ -21,10 +21,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Return the renderer toolkit instance
-*/
 inline RendererToolkit::IRendererToolkit *IApplicationRendererToolkit::getRendererToolkit() const
 {
 	return mRendererToolkit;

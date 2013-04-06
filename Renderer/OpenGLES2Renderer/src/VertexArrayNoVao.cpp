@@ -43,10 +43,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexArrayNoVao::VertexArrayNoVao(Program &program, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		VertexArray(program.getRenderer(), indexBuffer),
 		mNumberOfAttributes(numberOfAttributes),
@@ -76,10 +72,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexArrayNoVao::~VertexArrayNoVao()
 	{
 		// Destroy the vertex array attributes
@@ -103,10 +95,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Enable OpenGL ES 2 vertex attribute arrays
-	*/
 	void VertexArrayNoVao::enableOpenGLES2VertexAttribArrays()
 	{
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
@@ -148,10 +136,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Disable OpenGL ES 2 vertex attribute arrays
-	*/
 	void VertexArrayNoVao::disableOpenGLES2VertexAttribArrays()
 	{
 		// No previous bound OpenGL element array buffer restore, there's not really a point in it

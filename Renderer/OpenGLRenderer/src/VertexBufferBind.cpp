@@ -36,10 +36,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexBufferBind::VertexBufferBind(OpenGLRenderer &openGLRenderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		VertexBuffer(openGLRenderer)
 	{
@@ -60,10 +56,6 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexBufferBind::~VertexBufferBind()
 	{
 		// Nothing to do in here

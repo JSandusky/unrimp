@@ -37,10 +37,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode) :
 		FragmentShader(direct3D9Renderer),
 		mDirect3DPixelShader9(nullptr),
@@ -58,10 +54,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	FragmentShaderHlsl::~FragmentShaderHlsl()
 	{
 		// Release the Direct3D 9 constant table

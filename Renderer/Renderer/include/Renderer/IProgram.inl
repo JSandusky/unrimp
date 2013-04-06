@@ -36,10 +36,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IProgram::~IProgram()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -69,10 +65,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline IProgram::IProgram(IRenderer &renderer) :
 		IResource(ResourceType::PROGRAM, renderer)
 	{
@@ -83,10 +75,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IProgram::IProgram(const IProgram &source) :
 		IResource(source)
 	{
@@ -98,10 +86,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IProgram &IProgram::operator =(const IProgram &)
 	{
 		// Not supported

@@ -78,10 +78,6 @@ class ApplicationRenderer : public IApplicationRenderer
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 FirstGpgpu::FirstGpgpu(const char *rendererName)
 {
 	// Copy the given renderer name
@@ -95,20 +91,12 @@ FirstGpgpu::FirstGpgpu(const char *rendererName)
 	}
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 FirstGpgpu::~FirstGpgpu()
 {
 	// The resources are released within "onDeinitialization()"
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Run the application
-*/
 int FirstGpgpu::run()
 {
 	// Create an instance of a renderer application on the C runtime stack
@@ -140,10 +128,6 @@ int FirstGpgpu::run()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Called on application initialization
-*/
 void FirstGpgpu::onInitialization()
 {
 	// Begin debug event
@@ -293,10 +277,6 @@ void FirstGpgpu::onInitialization()
 	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
-/**
-*  @brief
-*    Called on application de-initialization
-*/
 void FirstGpgpu::onDeinitialization()
 {
 	// Begin debug event
@@ -319,10 +299,6 @@ void FirstGpgpu::onDeinitialization()
 	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
-/**
-*  @brief
-*    Called on application should to it's job
-*/
 void FirstGpgpu::onDoJob()
 {
 	// Begin debug event
@@ -354,10 +330,6 @@ void FirstGpgpu::onDoJob()
 	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
-/**
-*  @brief
-*    Generate the content of the 2D texture to process later on
-*/
 void FirstGpgpu::generate2DTextureContent()
 {
 	// Get and check the program instances
@@ -438,10 +410,6 @@ void FirstGpgpu::generate2DTextureContent()
 	}
 }
 
-/**
-*  @brief
-*    Content processing
-*/
 void FirstGpgpu::contentProcessing()
 {
 	// Get and check the program instance

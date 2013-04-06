@@ -28,46 +28,26 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the handle of a native OS window which is valid as long as the renderer instance exists
-	*/
 	inline handle IContext::getNativeWindowHandle() const
 	{
 		return mNativeWindowHandle;
 	}
 
-	/**
-	*  @brief
-	*    Return the used EGL display
-	*/
 	inline EGLDisplay IContext::getEGLDisplay() const
 	{
 		return mDisplay;
 	}
 
-	/**
-	*  @brief
-	*    Return the used EGL config
-	*/
 	inline EGLConfig IContext::getEGLConfig() const
 	{
 		return mConfig;
 	}
 
-	/**
-	*  @brief
-	*    Return the used EGL context
-	*/
 	inline EGLContext IContext::getEGLContext() const
 	{
 		return mContext;
 	}
 
-	/**
-	*  @brief
-	*    Return the used EGL dummy surface
-	*/
 	inline EGLSurface IContext::getEGLDummySurface() const
 	{
 		return mDummySurface;

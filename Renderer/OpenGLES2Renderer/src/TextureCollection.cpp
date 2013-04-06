@@ -37,10 +37,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TextureCollection::TextureCollection(OpenGLES2Renderer &openGLES2Renderer, unsigned int numberOfTextures, Renderer::ITexture **textures) :
 		Renderer::ITextureCollection(openGLES2Renderer),
 		mNumberOfTextures(numberOfTextures),
@@ -69,10 +65,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TextureCollection::~TextureCollection()
 	{
 		// Release the allocated memory

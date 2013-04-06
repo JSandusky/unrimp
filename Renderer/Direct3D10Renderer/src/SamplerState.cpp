@@ -37,10 +37,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SamplerState::SamplerState(Direct3D10Renderer &direct3D10Renderer, const Renderer::SamplerState &samplerState) :
 		ISamplerState(direct3D10Renderer),
 		mD3D10SamplerState(nullptr)
@@ -55,10 +51,6 @@ namespace Direct3D10Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SamplerState::~SamplerState()
 	{
 		// Release the Direct3D 10 sampler state

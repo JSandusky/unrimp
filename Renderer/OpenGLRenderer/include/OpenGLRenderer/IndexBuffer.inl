@@ -28,19 +28,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL element array buffer
-	*/
 	inline unsigned int IndexBuffer::getOpenGLElementArrayBuffer() const
 	{
 		return mOpenGLElementArrayBuffer;
 	}
 
-	/**
-	*  @brief
-	*    Return the OpenGL element array buffer data type
-	*/
 	inline unsigned int IndexBuffer::getOpenGLType() const
 	{
 		return mOpenGLType;

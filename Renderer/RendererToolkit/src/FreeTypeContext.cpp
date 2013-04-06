@@ -39,10 +39,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	FreeTypeContext::FreeTypeContext(Renderer::IRenderer &renderer) :
 		mRenderer(&renderer),
 		mFTLibrary(new FT_Library)
@@ -60,10 +56,6 @@ namespace RendererToolkit
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	FreeTypeContext::~FreeTypeContext()
 	{
 		// Destroy the FreeType library object

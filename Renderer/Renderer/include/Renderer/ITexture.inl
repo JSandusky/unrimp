@@ -28,10 +28,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Calculate the number of mipmaps
-	*/
 	inline unsigned int ITexture::getNumberOfMipmaps(unsigned int width, unsigned int height)
 	{
 		#define MAX(a, b) (a > b) ? a : b
@@ -52,10 +48,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline ITexture::~ITexture()
 	{
 		// Nothing to do in here
@@ -65,30 +57,18 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline ITexture::ITexture(ResourceType::Enum resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline ITexture::ITexture(const ITexture &source) :
 		IResource(source)
 	{
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline ITexture &ITexture::operator =(const ITexture &)
 	{
 		// Not supported

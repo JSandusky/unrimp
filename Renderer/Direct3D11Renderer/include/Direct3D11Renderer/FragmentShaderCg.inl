@@ -28,10 +28,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Cg program
-	*/
 	_CGprogram *FragmentShaderCg::getCgProgram() const
 	{
 		return mCgProgram;

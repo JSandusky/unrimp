@@ -38,10 +38,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TessellationEvaluationShaderHlsl::TessellationEvaluationShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
 		TessellationEvaluationShader(direct3D11Renderer),
 		mD3D11DomainShader(nullptr)
@@ -60,10 +56,6 @@ namespace Direct3D11Renderer
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 11 automatically sets a decent default name
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TessellationEvaluationShaderHlsl::~TessellationEvaluationShaderHlsl()
 	{
 		// Release the Direct3D 11 domain shader

@@ -36,10 +36,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TessellationControlShaderGlsl::TessellationControlShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		TessellationControlShader(openGLRenderer),
 		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_TESS_CONTROL_SHADER, sourceCode))
@@ -47,10 +43,6 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TessellationControlShaderGlsl::~TessellationControlShaderGlsl()
 	{
 		// Destroy the OpenGL shader

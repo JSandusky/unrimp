@@ -36,10 +36,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline ISamplerStateCollection::~ISamplerStateCollection()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -52,10 +48,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline ISamplerStateCollection::ISamplerStateCollection(IRenderer &renderer) :
 		ICollection(ResourceType::SAMPLER_STATE_COLLECTION, renderer)
 	{
@@ -66,10 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline ISamplerStateCollection::ISamplerStateCollection(const ISamplerStateCollection &source) :
 		ICollection(source)
 	{
@@ -81,10 +69,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline ISamplerStateCollection &ISamplerStateCollection::operator =(const ISamplerStateCollection &)
 	{
 		// Not supported

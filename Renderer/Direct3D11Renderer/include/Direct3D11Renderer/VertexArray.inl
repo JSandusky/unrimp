@@ -28,10 +28,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 11 input layout
-	*/
 	inline ID3D11InputLayout *VertexArray::getD3D11InputLayout() const
 	{
 		return mD3D11InputLayout;

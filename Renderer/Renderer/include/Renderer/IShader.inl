@@ -28,10 +28,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IShader::~IShader()
 	{
 		// Nothing to do in here
@@ -41,30 +37,18 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline IShader::IShader(ResourceType::Enum resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IShader::IShader(const IShader &source) :
 		IResource(source)
 	{
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IShader &IShader::operator =(const IShader &)
 	{
 		// Not supported

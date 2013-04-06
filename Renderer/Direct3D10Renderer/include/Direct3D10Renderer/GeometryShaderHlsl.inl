@@ -28,10 +28,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 10 geometry shader
-	*/
 	inline ID3D10GeometryShader *GeometryShaderHlsl::getD3D10GeometryShader() const
 	{
 		return mD3D10GeometryShader;

@@ -34,10 +34,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TessellationControlShader::~TessellationControlShader()
 	{
 		// Nothing to do in here
@@ -47,10 +43,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TessellationControlShader::TessellationControlShader(OpenGLRenderer &openGLRenderer) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer))
 	{

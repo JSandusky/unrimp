@@ -28,10 +28,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 10 blend state
-	*/
 	inline ID3D10BlendState *BlendState::getD3D10BlendState() const
 	{
 		return mD3D10BlendState;

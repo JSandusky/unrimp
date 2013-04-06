@@ -34,20 +34,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	UniformBufferCg::UniformBufferCg(OpenGLRenderer &openGLRenderer, unsigned int, const void *, Renderer::BufferUsage::Enum) :
 		UniformBuffer(openGLRenderer, InternalResourceType::CG)
 	{
 		// TODO(co)
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	UniformBufferCg::~UniformBufferCg()
 	{
 		// TODO(co)

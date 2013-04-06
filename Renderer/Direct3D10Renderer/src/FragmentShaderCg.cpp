@@ -38,10 +38,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	FragmentShaderCg::FragmentShaderCg(Direct3D10Renderer &direct3D10Renderer, _CGcontext &cgContext, const char *sourceCode) :
 		FragmentShader(direct3D10Renderer),
 		mCgProgram(nullptr)
@@ -81,10 +77,6 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	FragmentShaderCg::~FragmentShaderCg()
 	{
 		// Destroy the Cg program

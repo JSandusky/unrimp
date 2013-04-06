@@ -43,10 +43,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	Direct3D10RuntimeLinking::Direct3D10RuntimeLinking() :
 		mD3D10SharedLibrary(nullptr),
 		mD3DX10SharedLibrary(nullptr),
@@ -56,10 +52,6 @@ namespace Direct3D10Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Direct3D10RuntimeLinking::~Direct3D10RuntimeLinking()
 	{
 		// Destroy the shared library instances
@@ -77,10 +69,6 @@ namespace Direct3D10Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Return whether or not Direct3D 10 is available
-	*/
 	bool Direct3D10RuntimeLinking::isDirect3D10Avaiable()
 	{
 		// Already initialized?
@@ -105,10 +93,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Load the shared libraries
-	*/
 	bool Direct3D10RuntimeLinking::loadSharedLibraries()
 	{
 		// Load the shared library
@@ -134,10 +118,6 @@ namespace Direct3D10Renderer
 		return (nullptr != mD3D10SharedLibrary && nullptr != mD3DX10SharedLibrary);
 	}
 
-	/**
-	*  @brief
-	*    Load the D3D10 entry points
-	*/
 	bool Direct3D10RuntimeLinking::loadD3D10EntryPoints()
 	{
 		bool result = true;	// Success by default
@@ -175,10 +155,6 @@ namespace Direct3D10Renderer
 		return result;
 	}
 
-	/**
-	*  @brief
-	*    Load the D3DX10 entry points
-	*/
 	bool Direct3D10RuntimeLinking::loadD3DX10EntryPoints()
 	{
 		bool result = true;	// Success by default

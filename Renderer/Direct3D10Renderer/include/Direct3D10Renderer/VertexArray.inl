@@ -28,10 +28,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 10 input layout
-	*/
 	inline ID3D10InputLayout *VertexArray::getD3D10InputLayout() const
 	{
 		return mD3D10InputLayout;

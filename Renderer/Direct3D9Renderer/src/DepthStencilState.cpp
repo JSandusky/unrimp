@@ -35,10 +35,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	DepthStencilState::DepthStencilState(Direct3D9Renderer &direct3D9Renderer, const Renderer::DepthStencilState &depthStencilState) :
 		IDepthStencilState(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer)),
 		mDepthStencilState(depthStencilState)
@@ -46,19 +42,11 @@ namespace Direct3D9Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	DepthStencilState::~DepthStencilState()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Set the Direct3D 9 depth stencil states
-	*/
 	void DepthStencilState::setDirect3D9DepthStencilStates(IDirect3DDevice9 &direct3DDevice9) const
 	{
 		// Renderer::DepthStencilState::depthEnable

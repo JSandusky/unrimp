@@ -28,19 +28,11 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL ES 2 element array buffer
-	*/
 	inline unsigned int IndexBuffer::getOpenGLES2ElementArrayBuffer() const
 	{
 		return mOpenGLES2ElementArrayBuffer;
 	}
 
-	/**
-	*  @brief
-	*    Return the OpenGL ES 2 element array buffer data type
-	*/
 	inline unsigned int IndexBuffer::getOpenGLES2Type() const
 	{
 		return mOpenGLES2Type;

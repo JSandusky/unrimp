@@ -40,10 +40,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexArray::VertexArray(Direct3D11Renderer &direct3D11Renderer, ID3DBlob &d3dBlob, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D11Renderer),
 		mD3D11DeviceContext(direct3D11Renderer.getD3D11DeviceContext()),
@@ -187,10 +183,6 @@ namespace Direct3D11Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexArray::~VertexArray()
 	{
 		// Release the index buffer reference
@@ -231,10 +223,6 @@ namespace Direct3D11Renderer
 		mD3D11DeviceContext->Release();
 	}
 
-	/**
-	*  @brief
-	*    Set the Direct3D 11 vertex declaration and stream source
-	*/
 	void VertexArray::setDirect3DIASetInputLayoutAndStreamSource() const
 	{
 		// Valid Direct3D 11 input layout?

@@ -38,10 +38,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TextureCollection::TextureCollection(Direct3D11Renderer &direct3D11Renderer, unsigned int numberOfTextures, Renderer::ITexture **textures) :
 		Renderer::ITextureCollection(direct3D11Renderer),
 		mNumberOfD3D11ShaderResourceViews(numberOfTextures),
@@ -112,10 +108,6 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TextureCollection::~TextureCollection()
 	{
 		// Release the allocated memory

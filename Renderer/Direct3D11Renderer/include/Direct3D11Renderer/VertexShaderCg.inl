@@ -28,19 +28,11 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Cg program
-	*/
 	_CGprogram *VertexShaderCg::getCgProgram() const
 	{
 		return mCgProgram;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 11 vertex shader blob
-	*/
 	inline ID3DBlob *VertexShaderCg::getD3DBlobVertexShader() const
 	{
 		return mD3DBlobVertexShader;

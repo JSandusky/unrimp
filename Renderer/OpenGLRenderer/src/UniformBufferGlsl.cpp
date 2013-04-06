@@ -35,10 +35,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	UniformBufferGlsl::~UniformBufferGlsl()
 	{
 		// Destroy the OpenGL uniform buffer
@@ -50,10 +46,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	UniformBufferGlsl::UniformBufferGlsl(OpenGLRenderer &openGLRenderer) :
 		UniformBuffer(openGLRenderer, InternalResourceType::GLSL),
 		mOpenGLUniformBuffer(0)

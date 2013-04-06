@@ -28,37 +28,21 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL shader
-	*/
 	inline unsigned int GeometryShaderGlsl::getOpenGLShader() const
 	{
 		return mOpenGLShader;
 	}
 
-	/**
-	*  @brief
-	*    Return the OpenGL geometry shader input primitive topology
-	*/
 	int GeometryShaderGlsl::getOpenGLGsInputPrimitiveTopology() const
 	{
 		return mOpenGLGsInputPrimitiveTopology;
 	}
 
-	/**
-	*  @brief
-	*    Return the OpenGL geometry shader output primitive topology
-	*/
 	int GeometryShaderGlsl::getOpenGLGsOutputPrimitiveTopology() const
 	{
 		return mOpenGLGsOutputPrimitiveTopology;
 	}
 
-	/**
-	*  @brief
-	*    Return the number of output vertices
-	*/
 	unsigned int GeometryShaderGlsl::getNumberOfOutputVertices() const
 	{
 		return mNumberOfOutputVertices;

@@ -36,10 +36,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IFramebuffer::~IFramebuffer()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -52,10 +48,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline IFramebuffer::IFramebuffer(IRenderer &renderer) :
 		IRenderTarget(ResourceType::FRAMEBUFFER, renderer)
 	{
@@ -66,10 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IFramebuffer::IFramebuffer(const IFramebuffer &source) :
 		IRenderTarget(source)
 	{
@@ -81,10 +69,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IFramebuffer &IFramebuffer::operator =(const IFramebuffer &)
 	{
 		// Not supported

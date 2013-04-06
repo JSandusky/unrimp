@@ -37,10 +37,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode) :
 		VertexShader(direct3D9Renderer),
 		mDirect3DVertexShader9(nullptr),
@@ -58,10 +54,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexShaderHlsl::~VertexShaderHlsl()
 	{
 		// Release the Direct3D 9 constant table

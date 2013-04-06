@@ -41,10 +41,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexArray::VertexArray(Direct3D9Renderer &direct3D9Renderer, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D9Renderer),
 		mDirect3DDevice9(direct3D9Renderer.getDirect3DDevice9()),
@@ -196,10 +192,6 @@ namespace Direct3D9Renderer
 		delete [] direct3DVertexBuffer9AtSlot;
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexArray::~VertexArray()
 	{
 		// Release the index buffer reference
@@ -240,10 +232,6 @@ namespace Direct3D9Renderer
 		mDirect3DDevice9->Release();
 	}
 
-	/**
-	*  @brief
-	*    Enable the Direct3D 9 vertex declaration and stream source
-	*/
 	void VertexArray::enableDirect3DVertexDeclarationAndStreamSource() const
 	{
 		// Valid Direct3D 9 vertex declaration?

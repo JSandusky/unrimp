@@ -34,10 +34,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Program::~Program()
 	{
 		// Nothing to do in here
@@ -58,10 +54,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Program::Program(Direct3D10Renderer &direct3D10Renderer, InternalResourceType::Enum internalResourceType) :
 		IProgram(reinterpret_cast<Renderer::IRenderer&>(direct3D10Renderer)),
 		mInternalResourceType(internalResourceType)

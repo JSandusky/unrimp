@@ -37,10 +37,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the default blend state
-	*/
 	inline const BlendState &IBlendState::getDefaultBlendState()
 	{
 		// As default values, the one of Direct3D 11 and Direct 10 were chosen in order to make it easier for those renderer implementations
@@ -140,10 +136,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IBlendState::~IBlendState()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -156,10 +148,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline IBlendState::IBlendState(IRenderer &renderer) :
 		IState(ResourceType::BLEND_STATE, renderer)
 	{
@@ -170,10 +158,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IBlendState::IBlendState(const IBlendState &source) :
 		IState(source)
 	{
@@ -185,10 +169,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IBlendState &IBlendState::operator =(const IBlendState &)
 	{
 		// Not supported

@@ -43,10 +43,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	CgRuntimeLinking::CgRuntimeLinking() :
 		mCgSharedLibrary(nullptr),
 		mCgGLSharedLibrary(nullptr),
@@ -56,10 +52,6 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	CgRuntimeLinking::~CgRuntimeLinking()
 	{
 		// Destroy the shared library instances
@@ -77,10 +69,6 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Return whether or not Cg is available
-	*/
 	bool CgRuntimeLinking::isCgAvaiable()
 	{
 		// Already initialized?
@@ -105,10 +93,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Load the shared libraries
-	*/
 	bool CgRuntimeLinking::loadSharedLibraries()
 	{
 		// Load the shared library
@@ -134,10 +118,6 @@ namespace OpenGLRenderer
 		return (nullptr != mCgSharedLibrary && nullptr != mCgGLSharedLibrary);
 	}
 
-	/**
-	*  @brief
-	*    Load the Cg entry points
-	*/
 	bool CgRuntimeLinking::loadCgEntryPoints()
 	{
 		bool result = true;	// Success by default
@@ -194,10 +174,6 @@ namespace OpenGLRenderer
 		return result;
 	}
 
-	/**
-	*  @brief
-	*    Load the Cg OpenGL entry points
-	*/
 	bool CgRuntimeLinking::loadCgGLEntryPoints()
 	{
 		bool result = true;	// Success by default

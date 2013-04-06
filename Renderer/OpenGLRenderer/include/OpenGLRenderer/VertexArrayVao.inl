@@ -28,10 +28,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL vertex array
-	*/
 	inline unsigned int VertexArrayVao::getOpenGLVertexArray() const
 	{
 		return mOpenGLVertexArray;

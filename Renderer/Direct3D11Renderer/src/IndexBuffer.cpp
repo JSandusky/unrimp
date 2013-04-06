@@ -38,10 +38,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	IndexBuffer::IndexBuffer(Direct3D11Renderer &direct3D11Renderer, unsigned int numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		IIndexBuffer(direct3D11Renderer),
 		mD3D11Buffer(nullptr),
@@ -91,10 +87,6 @@ namespace Direct3D11Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	IndexBuffer::~IndexBuffer()
 	{
 		if (nullptr != mD3D11Buffer)

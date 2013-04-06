@@ -45,10 +45,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Creates, loads and compiles a shader
-	*/
 	ID3DXBuffer *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint, ID3DXConstantTable **d3dXConstantTable)
 	{
 		// TODO(co) Error handling
@@ -76,10 +72,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D9Renderer &direct3D9Renderer) :
 		ShaderLanguage(direct3D9Renderer),
 		mDirect3D9Renderer(&direct3D9Renderer)
@@ -87,10 +79,6 @@ namespace Direct3D9Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguageHlsl::~ShaderLanguageHlsl()
 	{
 		// Nothing to do in here

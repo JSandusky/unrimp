@@ -28,10 +28,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Cg program
-	*/
 	inline _CGprogram *ProgramCg::getCgProgram() const
 	{
 		return mCgProgram;

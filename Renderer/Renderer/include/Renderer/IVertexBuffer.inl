@@ -36,10 +36,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IVertexBuffer::~IVertexBuffer()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -52,10 +48,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline IVertexBuffer::IVertexBuffer(IRenderer &renderer) :
 		IBuffer(ResourceType::VERTEX_BUFFER, renderer)
 	{
@@ -66,10 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IVertexBuffer::IVertexBuffer(const IVertexBuffer &source) :
 		IBuffer(source)
 	{
@@ -81,10 +69,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IVertexBuffer &IVertexBuffer::operator =(const IVertexBuffer &)
 	{
 		// Not supported

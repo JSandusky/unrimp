@@ -28,10 +28,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the rasterizer state
-	*/
 	inline const Renderer::RasterizerState &RasterizerState::getRasterizerState() const
 	{
 		return mRasterizerState;

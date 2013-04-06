@@ -86,10 +86,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Direct3D11Renderer::Direct3D11Renderer(handle nativeWindowHandle) :
 		mDirect3D9RuntimeLinking(nullptr),
 		mDirect3D11RuntimeLinking(new Direct3D11RuntimeLinking()),
@@ -187,10 +183,6 @@ namespace Direct3D11Renderer
 		RENDERER_END_DEBUG_EVENT(this)
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Direct3D11Renderer::~Direct3D11Renderer()
 	{
 		// Begin debug event
@@ -1929,10 +1921,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Initialize the capabilities
-	*/
 	void Direct3D11Renderer::initializeCapabilities()
 	{
 		// There are no Direct3D 11 device capabilities we could query on runtime, they depend on the chosen feature level

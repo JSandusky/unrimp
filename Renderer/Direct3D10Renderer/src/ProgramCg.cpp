@@ -43,10 +43,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ProgramCg::ProgramCg(Direct3D10Renderer &direct3D10Renderer, VertexShaderCg *vertexShaderCg, GeometryShaderCg *geometryShaderCg, FragmentShaderCg *fragmentShaderCg) :
 		Program(direct3D10Renderer, InternalResourceType::CG),
 		mDirect3D10Renderer(&direct3D10Renderer),
@@ -69,10 +65,6 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ProgramCg::~ProgramCg()
 	{
 		// Release the shader references

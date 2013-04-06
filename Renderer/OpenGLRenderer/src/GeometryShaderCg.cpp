@@ -38,10 +38,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	GeometryShaderCg::GeometryShaderCg(OpenGLRenderer &openGLRenderer, _CGcontext &cgContext, const char *sourceCode, const char *profile) :
 		GeometryShader(openGLRenderer),
 		mCgProgram(nullptr)
@@ -72,10 +68,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	GeometryShaderCg::~GeometryShaderCg()
 	{
 		// Destroy the Cg program

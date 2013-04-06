@@ -36,10 +36,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline ISwapChain::~ISwapChain()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -52,10 +48,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline ISwapChain::ISwapChain(IRenderer &renderer) :
 		IRenderTarget(ResourceType::SWAP_CHAIN, renderer)
 	{
@@ -66,10 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline ISwapChain::ISwapChain(const ISwapChain &source) :
 		IRenderTarget(source)
 	{
@@ -81,10 +69,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline ISwapChain &ISwapChain::operator =(const ISwapChain &)
 	{
 		// Not supported

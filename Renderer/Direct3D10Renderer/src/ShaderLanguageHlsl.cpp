@@ -47,10 +47,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Creates, loads and compiles a shader
-	*/
 	ID3DBlob *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint)
 	{
 		DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
@@ -87,20 +83,12 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D10Renderer &direct3D10Renderer) :
 		ShaderLanguage(direct3D10Renderer)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguageHlsl::~ShaderLanguageHlsl()
 	{
 		// Nothing to do in here

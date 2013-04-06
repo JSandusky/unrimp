@@ -39,10 +39,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Texture2DArrayDsa::Texture2DArrayDsa(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags) :
 		Texture2DArray(openGLRenderer, width, height, numberOfSlices)
 	{
@@ -76,10 +72,6 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Texture2DArrayDsa::~Texture2DArrayDsa()
 	{
 		// Nothing to do in here

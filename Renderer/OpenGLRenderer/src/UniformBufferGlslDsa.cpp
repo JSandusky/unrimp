@@ -35,10 +35,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	UniformBufferGlslDsa::UniformBufferGlslDsa(OpenGLRenderer &openGLRenderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		UniformBufferGlsl(openGLRenderer)
 	{
@@ -47,10 +43,6 @@ namespace OpenGLRenderer
 		glNamedBufferDataEXT(mOpenGLUniformBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, bufferUsage);
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	UniformBufferGlslDsa::~UniformBufferGlslDsa()
 	{
 		// Nothing to do in here

@@ -34,20 +34,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexArray::VertexArray(NullRenderer &nullRenderer) :
 		IVertexArray(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexArray::~VertexArray()
 	{
 		// Nothing to do in here

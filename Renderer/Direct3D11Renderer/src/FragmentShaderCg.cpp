@@ -38,10 +38,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	FragmentShaderCg::FragmentShaderCg(Direct3D11Renderer &direct3D11Renderer, _CGcontext &cgContext, const char *sourceCode) :
 		FragmentShader(direct3D11Renderer),
 		mCgProgram(nullptr)
@@ -81,10 +77,6 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	FragmentShaderCg::~FragmentShaderCg()
 	{
 		// Destroy the Cg program

@@ -53,10 +53,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Creates, loads and compiles a shader
-	*/
 	unsigned int ShaderLanguageGlsl::loadShader(unsigned int shaderType, const char *shaderSource)
 	{
 		// Create the shader object
@@ -114,20 +110,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguageGlsl::ShaderLanguageGlsl(OpenGLRenderer &openGLRenderer) :
 		ShaderLanguage(openGLRenderer)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguageGlsl::~ShaderLanguageGlsl()
 	{
 		// Nothing to do in here

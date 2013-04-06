@@ -28,19 +28,11 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 9 instance
-	*/
 	inline IDirect3D9 *Direct3D9Renderer::getDirect3D9() const
 	{
 		return mDirect3D9;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 9 device instance
-	*/
 	inline IDirect3DDevice9 *Direct3D9Renderer::getDirect3DDevice9() const
 	{
 		return mDirect3DDevice9;

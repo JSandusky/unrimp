@@ -36,10 +36,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SamplerStateCollection::SamplerStateCollection(OpenGLES2Renderer &openGLES2Renderer, unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates) :
 		Renderer::ISamplerStateCollection(openGLES2Renderer),
 		mNumberOfSamplerStates(numberOfSamplerStates),
@@ -68,10 +64,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SamplerStateCollection::~SamplerStateCollection()
 	{
 		// Release the allocated memory

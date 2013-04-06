@@ -35,20 +35,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TessellationControlShader::TessellationControlShader(NullRenderer &nullRenderer) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TessellationControlShader::~TessellationControlShader()
 	{
 		// Nothing to do in here

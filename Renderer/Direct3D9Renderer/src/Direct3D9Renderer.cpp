@@ -76,10 +76,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Direct3D9Renderer::Direct3D9Renderer(handle nativeWindowHandle) :
 		mDirect3D9RuntimeLinking(new Direct3D9RuntimeLinking()),
 		mDirect3D9(nullptr),
@@ -195,10 +191,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Direct3D9Renderer::~Direct3D9Renderer()
 	{
 		// Begin debug event
@@ -2144,10 +2136,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Initialize the capabilities
-	*/
 	void Direct3D9Renderer::initializeCapabilities()
 	{
 		// Get Direct3D 9 device capabilities

@@ -35,20 +35,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	GeometryShader::GeometryShader(NullRenderer &nullRenderer) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	GeometryShader::~GeometryShader()
 	{
 		// Nothing to do in here

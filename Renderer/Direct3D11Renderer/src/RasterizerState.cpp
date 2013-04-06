@@ -39,10 +39,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	RasterizerState::RasterizerState(Direct3D11Renderer &direct3D11Renderer, const Renderer::RasterizerState &rasterizerState) :
 		IRasterizerState(direct3D11Renderer),
 		mD3D11RasterizerState(nullptr)
@@ -57,10 +53,6 @@ namespace Direct3D11Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	RasterizerState::~RasterizerState()
 	{
 		// Release the Direct3D 11 rasterizer state

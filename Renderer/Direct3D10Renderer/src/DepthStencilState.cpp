@@ -39,10 +39,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	DepthStencilState::DepthStencilState(Direct3D10Renderer &direct3D10Renderer, const Renderer::DepthStencilState &depthStencilState) :
 		IDepthStencilState(direct3D10Renderer),
 		mD3D10DepthStencilState(nullptr)
@@ -57,10 +53,6 @@ namespace Direct3D10Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	DepthStencilState::~DepthStencilState()
 	{
 		// Release the Direct3D 10 depth stencil state

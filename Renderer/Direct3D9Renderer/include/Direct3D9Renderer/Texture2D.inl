@@ -28,10 +28,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D texture instance
-	*/
 	inline IDirect3DTexture9 *Texture2D::getDirect3DTexture9() const
 	{
 		return mDirect3DTexture9;

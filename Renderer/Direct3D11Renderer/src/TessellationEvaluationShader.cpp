@@ -34,10 +34,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TessellationEvaluationShader::~TessellationEvaluationShader()
 	{
 		// Nothing to do in here
@@ -47,10 +43,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TessellationEvaluationShader::TessellationEvaluationShader(Direct3D11Renderer &direct3D11Renderer) :
 		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(direct3D11Renderer))
 	{

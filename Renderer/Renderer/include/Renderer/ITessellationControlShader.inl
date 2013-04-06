@@ -36,10 +36,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline ITessellationControlShader::~ITessellationControlShader()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -52,10 +48,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline ITessellationControlShader::ITessellationControlShader(IRenderer &renderer) :
 		IShader(ResourceType::TESSELLATION_CONTROL_SHADER, renderer)
 	{
@@ -66,10 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline ITessellationControlShader::ITessellationControlShader(const ITessellationControlShader &source) :
 		IShader(source)
 	{
@@ -81,10 +69,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline ITessellationControlShader &ITessellationControlShader::operator =(const ITessellationControlShader &)
 	{
 		// Not supported

@@ -31,20 +31,12 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 FirstMultipleRenderTargets::FirstMultipleRenderTargets(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 FirstMultipleRenderTargets::~FirstMultipleRenderTargets()
 {
 	// The resources are released within "onDeinitialization()"

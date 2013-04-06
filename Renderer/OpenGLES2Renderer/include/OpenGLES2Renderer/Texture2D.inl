@@ -28,10 +28,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL ES 2 texture
-	*/
 	inline unsigned int Texture2D::getOpenGLES2Texture() const
 	{
 		return mOpenGLES2Texture;

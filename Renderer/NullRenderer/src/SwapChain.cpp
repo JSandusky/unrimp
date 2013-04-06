@@ -41,10 +41,6 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SwapChain::SwapChain(NullRenderer &nullRenderer, handle nativeWindowHandle) :
 		ISwapChain(nullRenderer),
 		mNativeWindowHandle(nativeWindowHandle)
@@ -52,10 +48,6 @@ namespace NullRenderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SwapChain::~SwapChain()
 	{
 		// Nothing to do in here

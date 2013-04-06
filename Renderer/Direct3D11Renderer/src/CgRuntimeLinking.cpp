@@ -43,10 +43,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	CgRuntimeLinking::CgRuntimeLinking() :
 		mCgSharedLibrary(nullptr),
 		mCgD3D11SharedLibrary(nullptr),
@@ -56,10 +52,6 @@ namespace Direct3D11Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	CgRuntimeLinking::~CgRuntimeLinking()
 	{
 		// Destroy the shared library instances
@@ -77,10 +69,6 @@ namespace Direct3D11Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Return whether or not Cg is available
-	*/
 	bool CgRuntimeLinking::isCgAvaiable()
 	{
 		// Already initialized?
@@ -105,10 +93,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Load the shared libraries
-	*/
 	bool CgRuntimeLinking::loadSharedLibraries()
 	{
 		// Load the shared library
@@ -134,10 +118,6 @@ namespace Direct3D11Renderer
 		return (nullptr != mCgSharedLibrary && nullptr != mCgD3D11SharedLibrary);
 	}
 
-	/**
-	*  @brief
-	*    Load the Cg entry points
-	*/
 	bool CgRuntimeLinking::loadCgEntryPoints()
 	{
 		bool result = true;	// Success by default
@@ -193,10 +173,6 @@ namespace Direct3D11Renderer
 		return result;
 	}
 
-	/**
-	*  @brief
-	*    Load the Cg Direct3D 11 entry points
-	*/
 	bool CgRuntimeLinking::loadCgD3D11EntryPoints()
 	{
 		bool result = true;	// Success by default

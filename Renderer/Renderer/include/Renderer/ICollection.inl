@@ -28,10 +28,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline ICollection::~ICollection()
 	{
 		// Nothing to do in here
@@ -41,30 +37,18 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline ICollection::ICollection(ResourceType::Enum resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline ICollection::ICollection(const ICollection &source) :
 		IResource(source)
 	{
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline ICollection &ICollection::operator =(const ICollection &)
 	{
 		// Not supported

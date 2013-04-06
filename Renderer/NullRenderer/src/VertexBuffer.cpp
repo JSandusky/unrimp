@@ -34,20 +34,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexBuffer::VertexBuffer(NullRenderer &nullRenderer) :
 		IVertexBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexBuffer::~VertexBuffer()
 	{
 		// Nothing to do in here

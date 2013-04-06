@@ -34,10 +34,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	IExtensions::~IExtensions()
 	{
 		// Nothing to do in here
@@ -47,28 +43,16 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	IExtensions::IExtensions()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	IExtensions::IExtensions(const IExtensions &)
 	{
 		// No implementation because the copy constructor is never used
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	IExtensions &IExtensions::operator =(const IExtensions &)
 	{
 		// No implementation because the copy operator is never used

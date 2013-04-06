@@ -37,10 +37,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the default depth stencil state
-	*/
 	inline const DepthStencilState &IDepthStencilState::getDefaultDepthStencilState()
 	{
 		// As default values, the one of Direct3D 11 and Direct 10 were chosen in order to make it easier for those renderer implementations
@@ -81,10 +77,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IDepthStencilState::~IDepthStencilState()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -97,10 +89,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline IDepthStencilState::IDepthStencilState(IRenderer &renderer) :
 		IState(ResourceType::DEPTH_STENCIL_STATE, renderer)
 	{
@@ -111,10 +99,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IDepthStencilState::IDepthStencilState(const IDepthStencilState &source) :
 		IState(source)
 	{
@@ -126,10 +110,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IDepthStencilState &IDepthStencilState::operator =(const IDepthStencilState &)
 	{
 		// Not supported

@@ -38,10 +38,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexBuffer::VertexBuffer(Direct3D10Renderer &direct3D10Renderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		IVertexBuffer(direct3D10Renderer),
 		mD3D10Buffer(nullptr)
@@ -78,10 +74,6 @@ namespace Direct3D10Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexBuffer::~VertexBuffer()
 	{
 		if (nullptr != mD3D10Buffer)

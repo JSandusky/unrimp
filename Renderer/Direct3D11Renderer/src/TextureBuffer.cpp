@@ -38,10 +38,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TextureBuffer::TextureBuffer(Direct3D11Renderer &direct3D11Renderer, unsigned int numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		ITextureBuffer(direct3D11Renderer),
 		mD3D11Buffer(nullptr),
@@ -95,10 +91,6 @@ namespace Direct3D11Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TextureBuffer::~TextureBuffer()
 	{
 		// Release the used resources

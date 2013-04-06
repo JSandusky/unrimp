@@ -37,10 +37,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	FragmentShaderCg::FragmentShaderCg(OpenGLES2Renderer &openGLES2Renderer, const char *sourceCode) :
 		FragmentShader(openGLES2Renderer),
 		mOpenGLES2Shader(ShaderLanguage::loadShader(GL_CG_FRAGMENT_SHADER_EXT, sourceCode))
@@ -48,10 +44,6 @@ namespace OpenGLES2Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	FragmentShaderCg::~FragmentShaderCg()
 	{
 		// Destroy the OpenGL ES 2 shader

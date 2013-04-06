@@ -35,10 +35,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	FragmentShader::~FragmentShader()
 	{
 		// Nothing to do in here
@@ -48,10 +44,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	FragmentShader::FragmentShader(OpenGLES2Renderer &openGLES2Renderer) :
 		IFragmentShader(openGLES2Renderer)
 	{

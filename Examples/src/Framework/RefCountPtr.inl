@@ -21,10 +21,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 template <class AType>
 RefCountPtr<AType>::RefCountPtr(AType *pointer) :
 	mPointer(pointer)
@@ -32,10 +28,6 @@ RefCountPtr<AType>::RefCountPtr(AType *pointer) :
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 template <class AType>
 RefCountPtr<AType>::~RefCountPtr()
 {
@@ -46,10 +38,6 @@ RefCountPtr<AType>::~RefCountPtr()
 	}
 }
 
-/**
-*  @brief
-*    Get a pointer to the object
-*/
 template <class AType>
 const AType *RefCountPtr<AType>::getPointer() const
 {

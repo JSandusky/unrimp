@@ -28,46 +28,26 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Cg vertex shader the program is using
-	*/
 	inline VertexShaderCg *ProgramCg::getVertexShaderCg() const
 	{
 		return mVertexShaderCg;
 	}
 
-	/**
-	*  @brief
-	*    Return the Cg tessellation control shader the program is using
-	*/
 	inline TessellationControlShaderCg *ProgramCg::getTessellationControlShaderCg() const
 	{
 		return mTessellationControlShaderCg;
 	}
 
-	/**
-	*  @brief
-	*    Return the Cg tessellation evaluation shader the program is using
-	*/
 	inline TessellationEvaluationShaderCg *ProgramCg::getTessellationEvaluationShaderCg() const
 	{
 		return mTessellationEvaluationShaderCg;
 	}
 
-	/**
-	*  @brief
-	*    Return the Cg geometry shader the program is using
-	*/
 	inline GeometryShaderCg *ProgramCg::getGeometryShaderCg() const
 	{
 		return mGeometryShaderCg;
 	}
 
-	/**
-	*  @brief
-	*    Return the Cg fragment shader the program is using
-	*/
 	inline FragmentShaderCg *ProgramCg::getFragmentShaderCg() const
 	{
 		return mFragmentShaderCg;

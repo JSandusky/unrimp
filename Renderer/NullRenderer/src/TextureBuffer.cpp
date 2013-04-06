@@ -34,20 +34,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TextureBuffer::TextureBuffer(NullRenderer &nullRenderer) :
 		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TextureBuffer::~TextureBuffer()
 	{
 		// Nothing to do in here

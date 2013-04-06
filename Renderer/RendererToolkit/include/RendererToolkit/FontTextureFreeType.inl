@@ -28,19 +28,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the FreeType library face object (aka "The Font")
-	*/
 	inline FT_Face *FontTextureFreeType::getFTFace() const
 	{
 		return mFTFace;
 	}
 
-	/**
-	*  @brief
-	*    Return the size of the glyph texture atlas (in pixel)
-	*/
 	inline void FontTextureFreeType::getGlyphTextureAtlasSize(unsigned int &glyphTextureAtlasSizeX, unsigned int &glyphTextureAtlasSizeY) const
 	{
 		glyphTextureAtlasSizeX = mGlyphTextureAtlasSizeX;
@@ -60,10 +52,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	inline FontTextureFreeType::FontTextureFreeType() :
 		mRendererToolkitImpl(nullptr),
 		mFontFileSize(0),

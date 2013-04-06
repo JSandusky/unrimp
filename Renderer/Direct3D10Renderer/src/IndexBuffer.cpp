@@ -38,10 +38,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	IndexBuffer::IndexBuffer(Direct3D10Renderer &direct3D10Renderer, unsigned int numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		IIndexBuffer(direct3D10Renderer),
 		mD3D10Buffer(nullptr),
@@ -90,10 +86,6 @@ namespace Direct3D10Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	IndexBuffer::~IndexBuffer()
 	{
 		if (nullptr != mD3D10Buffer)

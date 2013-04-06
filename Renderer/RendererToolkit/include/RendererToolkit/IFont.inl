@@ -28,46 +28,26 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IFont::~IFont()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the font size in points (72 points per inch)
-	*/
 	inline unsigned int IFont::getSize() const
 	{
 		return mSize;
 	}
 
-	/**
-	*  @brief
-	*    Return the horizontal and vertical resolution in DPI
-	*/
 	inline unsigned int IFont::getResolution() const
 	{
 		return mResolution;
 	}
 
-	/**
-	*  @brief
-	*    Return the font size in pixels
-	*/
 	inline unsigned int IFont::getSizeInPixels() const
 	{
 		return static_cast<unsigned int>(mSize / 72.0f * mResolution);
 	}
 
-	/**
-	*  @brief
-	*    Return the font height in pixels
-	*/
 	inline unsigned int IFont::getHeightInPixels() const
 	{
 		return static_cast<unsigned int>(getHeight() / 72.0f * mResolution);
@@ -77,28 +57,16 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	inline IFont::IFont()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IFont::IFont(const IFont &)
 	{
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IFont &IFont::operator =(const IFont &)
 	{
 		// Not supported

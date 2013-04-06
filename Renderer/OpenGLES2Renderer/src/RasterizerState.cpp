@@ -36,10 +36,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	RasterizerState::RasterizerState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::RasterizerState &rasterizerState) :
 		IRasterizerState(openGLES2Renderer),
 		mRasterizerState(rasterizerState)
@@ -47,19 +43,11 @@ namespace OpenGLES2Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	RasterizerState::~RasterizerState()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Set the OpenGL ES 2 rasterizer states
-	*/
 	void RasterizerState::setOpenGLES2RasterizerStates() const
 	{
 		// Renderer::RasterizerState::fillMode

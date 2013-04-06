@@ -70,10 +70,6 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	NullRenderer::NullRenderer(handle nativeWindowHandle) :
 		mShaderLanguage(nullptr),
 		mMainSwapChain(nullptr),
@@ -95,10 +91,6 @@ namespace NullRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	NullRenderer::~NullRenderer()
 	{
 		// Release instances
@@ -808,10 +800,6 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Initialize the capabilities
-	*/
 	void NullRenderer::initializeCapabilities()
 	{
 		// Maximum number of viewports (always at least 1)

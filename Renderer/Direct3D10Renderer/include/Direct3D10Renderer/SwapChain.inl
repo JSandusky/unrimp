@@ -28,28 +28,16 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the DXGI swap chain instance
-	*/
 	inline IDXGISwapChain *SwapChain::getDXGISwapChain() const
 	{
 		return mDxgiSwapChain;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 10 render target view instance
-	*/
 	inline ID3D10RenderTargetView *SwapChain::getD3D10RenderTargetView() const
 	{
 		return mD3D10RenderTargetView;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 10 depth stencil view instance
-	*/
 	inline ID3D10DepthStencilView *SwapChain::getD3D10DepthStencilView() const
 	{
 		return mD3D10DepthStencilView;

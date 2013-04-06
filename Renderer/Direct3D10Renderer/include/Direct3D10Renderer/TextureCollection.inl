@@ -28,19 +28,11 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the number of Direct3D shader resource view instances
-	*/
 	inline unsigned int TextureCollection::getNumberOfD3D10ShaderResourceViews() const
 	{
 		return mNumberOfD3D10ShaderResourceViews;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D shader resource view instances
-	*/
 	inline ID3D10ShaderResourceView **TextureCollection::getD3D10ShaderResourceViews() const
 	{
 		return mD3D10ShaderResourceViews;

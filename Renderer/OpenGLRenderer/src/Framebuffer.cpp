@@ -38,10 +38,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Framebuffer::~Framebuffer()
 	{
 		// Destroy the OpenGL framebuffer
@@ -78,10 +74,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Framebuffer::Framebuffer(OpenGLRenderer &openGLRenderer, unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
 		IFramebuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLFramebuffer(0),

@@ -38,10 +38,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexBuffer::VertexBuffer(Direct3D9Renderer &direct3D9Renderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		IVertexBuffer(direct3D9Renderer),
 		mDirect3DVertexBuffer9(nullptr)
@@ -63,10 +59,6 @@ namespace Direct3D9Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexBuffer::~VertexBuffer()
 	{
 		if (nullptr != mDirect3DVertexBuffer9)

@@ -34,10 +34,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexShader::~VertexShader()
 	{
 		// Nothing to do in here
@@ -47,10 +43,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexShader::VertexShader(OpenGLRenderer &openGLRenderer) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer))
 	{

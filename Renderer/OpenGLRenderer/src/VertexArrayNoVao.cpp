@@ -45,10 +45,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexArrayNoVao::VertexArrayNoVao(Program &program, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		VertexArray(static_cast<OpenGLRenderer&>(program.getRenderer()), indexBuffer, InternalResourceType::NO_VAO),
 		mNumberOfAttributes(numberOfAttributes),
@@ -79,10 +75,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexArrayNoVao::~VertexArrayNoVao()
 	{
 		// Destroy the vertex array attributes
@@ -106,10 +98,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Enable OpenGL vertex attribute arrays
-	*/
 	void VertexArrayNoVao::enableOpenGLVertexAttribArrays()
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
@@ -158,10 +146,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Disable OpenGL vertex attribute arrays
-	*/
 	void VertexArrayNoVao::disableOpenGLVertexAttribArrays()
 	{
 		// No previous bound OpenGL element array buffer restore, there's not really a point in it

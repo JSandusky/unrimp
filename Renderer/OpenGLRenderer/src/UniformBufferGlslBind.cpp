@@ -36,10 +36,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	UniformBufferGlslBind::UniformBufferGlslBind(OpenGLRenderer &openGLRenderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		UniformBufferGlsl(openGLRenderer)
 	{
@@ -60,10 +56,6 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	UniformBufferGlslBind::~UniformBufferGlslBind()
 	{
 		// Nothing to do in here

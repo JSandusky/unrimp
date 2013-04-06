@@ -28,28 +28,16 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the number of Direct3D 11 render target views
-	*/
 	inline unsigned int Framebuffer::getNumberOfD3D11RenderTargetViews() const
 	{
 		return mNumberOfColorTextures;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 11 render target views
-	*/
 	inline ID3D11RenderTargetView **Framebuffer::getD3D11RenderTargetViews() const
 	{
 		return mD3D11RenderTargetViews;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 11 depth stencil view
-	*/
 	inline ID3D11DepthStencilView *Framebuffer::getD3D11DepthStencilView() const
 	{
 		return mD3D11DepthStencilView;

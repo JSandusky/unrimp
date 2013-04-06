@@ -34,20 +34,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Texture2D::Texture2D(NullRenderer &nullRenderer, unsigned int width, unsigned int height) :
 		ITexture2D(reinterpret_cast<Renderer::IRenderer&>(nullRenderer), width, height)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Texture2D::~Texture2D()
 	{
 		// Nothing to do in here

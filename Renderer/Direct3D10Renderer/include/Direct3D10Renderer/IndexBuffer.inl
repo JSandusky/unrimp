@@ -28,19 +28,11 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D index buffer instance
-	*/
 	inline ID3D10Buffer *IndexBuffer::getD3D10Buffer() const
 	{
 		return mD3D10Buffer;
 	}
 
-	/**
-	*  @brief
-	*    Return the DXGI index buffer data format
-	*/
 	inline unsigned int IndexBuffer::getDXGIFormat() const
 	{
 		return mDXGIFormat;

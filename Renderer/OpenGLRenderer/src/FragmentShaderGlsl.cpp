@@ -36,10 +36,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		FragmentShader(openGLRenderer),
 		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_FRAGMENT_SHADER_ARB, sourceCode))
@@ -47,10 +43,6 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	FragmentShaderGlsl::~FragmentShaderGlsl()
 	{
 		// Destroy the OpenGL shader

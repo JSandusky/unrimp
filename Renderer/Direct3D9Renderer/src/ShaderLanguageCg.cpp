@@ -47,10 +47,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguageCg::ShaderLanguageCg(Direct3D9Renderer &direct3D9Renderer) :
 		ShaderLanguage(direct3D9Renderer),
 		mDirect3D9Renderer(&direct3D9Renderer),
@@ -67,10 +63,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguageCg::~ShaderLanguageCg()
 	{
 		// Is there a valid Cg context?
@@ -187,10 +179,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Private static Cg callback functions                  ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Internal Cg error callback function
-	*/
 	void ShaderLanguageCg::cgErrorCallback()
 	{
 		const CGerror lastCgError = cgGetError();

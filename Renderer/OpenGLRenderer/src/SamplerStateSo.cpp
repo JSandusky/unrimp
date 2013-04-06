@@ -36,10 +36,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SamplerStateSo::SamplerStateSo(OpenGLRenderer &openGLRenderer, const Renderer::SamplerState &samplerState) :
 		SamplerState(openGLRenderer),
 		mOpenGLSampler(0)
@@ -83,10 +79,6 @@ namespace OpenGLRenderer
 		glSamplerParameterf(mOpenGLSampler, GL_TEXTURE_MAX_LOD, samplerState.maxLOD);
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SamplerStateSo::~SamplerStateSo()
 	{
 		// Destroy the OpenGL sampler

@@ -28,10 +28,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IRenderTarget::~IRenderTarget()
 	{
 		// Nothing to do in here
@@ -41,30 +37,18 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline IRenderTarget::IRenderTarget(ResourceType::Enum resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IRenderTarget::IRenderTarget(const IRenderTarget &source) :
 		IResource(source)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IRenderTarget &IRenderTarget::operator =(const IRenderTarget &)
 	{
 		// Not supported

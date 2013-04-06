@@ -36,10 +36,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexShaderGlsl::VertexShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		VertexShader(openGLRenderer),
 		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_VERTEX_SHADER_ARB, sourceCode))
@@ -47,10 +43,6 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexShaderGlsl::~VertexShaderGlsl()
 	{
 		// Destroy the OpenGL shader

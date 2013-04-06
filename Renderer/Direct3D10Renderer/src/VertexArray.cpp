@@ -40,10 +40,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexArray::VertexArray(Direct3D10Renderer &direct3D10Renderer, ID3DBlob &d3dBlob, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D10Renderer),
 		mD3D10Device(direct3D10Renderer.getD3D10Device()),
@@ -187,10 +183,6 @@ namespace Direct3D10Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexArray::~VertexArray()
 	{
 		// Release the index buffer reference
@@ -231,10 +223,6 @@ namespace Direct3D10Renderer
 		mD3D10Device->Release();
 	}
 
-	/**
-	*  @brief
-	*    Set the Direct3D 10 vertex declaration and stream source
-	*/
 	void VertexArray::setDirect3DIASetInputLayoutAndStreamSource() const
 	{
 		// Valid Direct3D 10 input layout?

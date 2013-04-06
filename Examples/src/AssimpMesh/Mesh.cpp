@@ -38,10 +38,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 	mNumberOfVertices(0),
 	mNumberOfIndices(0)
@@ -171,20 +167,12 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 	}
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 Mesh::~Mesh()
 {
 	// The renderer resource pointers are released automatically
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Draw the mesh
-*/
 void Mesh::draw()
 {
 	// Valid mesh?
@@ -210,10 +198,6 @@ void Mesh::draw()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Get the total number of vertices and indices by using a given Assimp node
-*/
 void Mesh::getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, unsigned int &numberOfVertices, unsigned int &numberOfIndices)
 {
 	// Loop through all meshes this node is using
@@ -239,10 +223,6 @@ void Mesh::getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, co
 	}
 }
 
-/**
-*  @brief
-*    Fill the mesh data recursively
-*/
 void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, unsigned short *indexBuffer, const aiMatrix4x4 &assimpTransformation, unsigned int &numberOfVertices, unsigned int &numberOfIndices)
 {
 	// Get the absolute transformation matrix of this Assimp node

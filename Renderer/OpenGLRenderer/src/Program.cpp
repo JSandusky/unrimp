@@ -34,10 +34,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Program::~Program()
 	{
 		// Nothing to do in here
@@ -47,10 +43,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Program::Program(OpenGLRenderer &openGLRenderer, InternalResourceType::Enum internalResourceType) :
 		IProgram(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mInternalResourceType(internalResourceType)

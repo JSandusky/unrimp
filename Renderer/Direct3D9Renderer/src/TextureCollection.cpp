@@ -37,10 +37,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TextureCollection::TextureCollection(Direct3D9Renderer &direct3D9Renderer, unsigned int numberOfTextures, Renderer::ITexture **textures) :
 		Renderer::ITextureCollection(direct3D9Renderer),
 		mNumberOfTextures(numberOfTextures),
@@ -69,10 +65,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TextureCollection::~TextureCollection()
 	{
 		// Release the allocated memory

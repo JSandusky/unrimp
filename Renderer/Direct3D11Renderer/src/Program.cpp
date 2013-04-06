@@ -34,19 +34,11 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Program::~Program()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the owner Direct3D 11 renderer instance
-	*/
 	Direct3D11Renderer &Program::getDirect3D11Renderer() const
 	{
 		return reinterpret_cast<Direct3D11Renderer&>(getRenderer());
@@ -67,10 +59,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Program::Program(Direct3D11Renderer &direct3D11Renderer, InternalResourceType::Enum internalResourceType) :
 		IProgram(reinterpret_cast<Renderer::IRenderer&>(direct3D11Renderer)),
 		mInternalResourceType(internalResourceType)

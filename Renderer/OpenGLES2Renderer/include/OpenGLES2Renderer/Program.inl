@@ -28,10 +28,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL ES 2 program
-	*/
 	inline unsigned int Program::getOpenGLES2Program() const
 	{
 		return mOpenGLES2Program;

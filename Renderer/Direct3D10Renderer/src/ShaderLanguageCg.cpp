@@ -52,10 +52,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguageCg::ShaderLanguageCg(Direct3D10Renderer &direct3D10Renderer) :
 		ShaderLanguage(direct3D10Renderer),
 		mCgContext(cgCreateContext())
@@ -71,10 +67,6 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguageCg::~ShaderLanguageCg()
 	{
 		// Is there a valid Cg context?
@@ -200,10 +192,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Private static Cg callback functions                  ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Internal Cg error callback function
-	*/
 	void ShaderLanguageCg::cgErrorCallback()
 	{
 		const CGerror lastCgError = cgGetError();

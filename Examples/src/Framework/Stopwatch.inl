@@ -21,10 +21,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Default constructor
-*/
 inline Stopwatch::Stopwatch() :
 	mRunning(false),
 	mStart(0),
@@ -33,10 +29,6 @@ inline Stopwatch::Stopwatch() :
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Constructor
-*/
 inline Stopwatch::Stopwatch(bool startAtOnce) :
 	mRunning(false),
 	mStart(0),
@@ -48,29 +40,17 @@ inline Stopwatch::Stopwatch(bool startAtOnce) :
 	}
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 inline Stopwatch::~Stopwatch()
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Start the stopwatch
-*/
 inline void Stopwatch::start()
 {
 	mRunning = true;
 	mStart   = getSystemMicroseconds();
 }
 
-/**
-*  @brief
-*    Stop the stopwatch
-*/
 inline unsigned long Stopwatch::stop()
 {
 	// Is the stopwatch currently running?
@@ -86,64 +66,36 @@ inline unsigned long Stopwatch::stop()
 	}
 }
 
-/**
-*  @brief
-*    Return the number of weeks since the stopwatch was started
-*/
 inline float Stopwatch::getWeeks() const
 {
 	return getDays() / 7.0f;
 }
 
-/**
-*  @brief
-*    Return the number of days since the stopwatch was started
-*/
 inline float Stopwatch::getDays() const
 {
 	return getHours() / 24.0f;
 }
 
-/**
-*  @brief
-*    Return the number of hours since the stopwatch was started
-*/
 inline float Stopwatch::getHours() const
 {
 	return getMinutes() / 60.0f;
 }
 
-/**
-*  @brief
-*    Return the number of minutes since the stopwatch was started
-*/
 inline float Stopwatch::getMinutes() const
 {
 	return getSeconds() / 60.0f;
 }
 
-/**
-*  @brief
-*    Return the number of seconds since the stopwatch was started
-*/
 inline float Stopwatch::getSeconds() const
 {
 	return getMilliseconds() / 1000.0f;
 }
 
-/**
-*  @brief
-*    Return the number of milliseconds since the stopwatch was started
-*/
 inline float Stopwatch::getMilliseconds() const
 {
 	return getMicroseconds() / 1000.0f;
 }
 
-/**
-*  @brief
-*    Retrieve the number of microseconds since the stopwatch was started
-*/
 inline unsigned long Stopwatch::getMicroseconds() const
 {
 	return mRunning ? (getSystemMicroseconds() - mStart) : (mStop - mStart);

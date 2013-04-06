@@ -36,10 +36,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline ITexture2DArray::~ITexture2DArray()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -48,28 +44,16 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Return the width of the texture
-	*/
 	inline unsigned int ITexture2DArray::getWidth() const
 	{
 		return mWidth;
 	}
 
-	/**
-	*  @brief
-	*    Return the height of the texture
-	*/
 	inline unsigned int ITexture2DArray::getHeight() const
 	{
 		return mHeight;
 	}
 
-	/**
-	*  @brief
-	*    Return the number of slices
-	*/
 	inline unsigned int ITexture2DArray::getNumberOfSlices() const
 	{
 		return mNumberOfSlices;
@@ -79,10 +63,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline ITexture2DArray::ITexture2DArray(IRenderer &renderer, unsigned int width, unsigned int height, unsigned int numberOfSlices) :
 		ITexture(ResourceType::TEXTURE_2D_ARRAY, renderer),
 		mWidth(width),
@@ -96,10 +76,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline ITexture2DArray::ITexture2DArray(const ITexture2DArray &source) :
 		ITexture(source),
 		mWidth(source.getWidth()),
@@ -114,10 +90,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline ITexture2DArray &ITexture2DArray::operator =(const ITexture2DArray &)
 	{
 		// Not supported

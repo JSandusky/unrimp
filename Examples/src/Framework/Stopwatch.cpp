@@ -32,10 +32,6 @@
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Retrieve the number of microseconds since the stopwatch was started
-*/
 unsigned int Stopwatch::getSystemMicroseconds() const
 {
 	#ifdef WIN32

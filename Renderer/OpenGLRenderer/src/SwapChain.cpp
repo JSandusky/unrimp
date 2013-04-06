@@ -41,10 +41,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SwapChain::SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle) :
 		ISwapChain(openGLRenderer),
 		mNativeWindowHandle(nativeWindowHandle)
@@ -52,10 +48,6 @@ namespace OpenGLRenderer
 		// TODO(co) Implement me
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SwapChain::~SwapChain()
 	{
 		// TODO(co) Implement me

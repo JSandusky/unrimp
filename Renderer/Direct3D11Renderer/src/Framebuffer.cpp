@@ -40,10 +40,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Framebuffer::Framebuffer(Direct3D11Renderer &direct3D11Renderer, unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
 		IFramebuffer(direct3D11Renderer),
 		mNumberOfColorTextures(numberOfColorTextures),
@@ -230,10 +226,6 @@ namespace Direct3D11Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Framebuffer::~Framebuffer()
 	{
 		// Release the reference to the used color textures

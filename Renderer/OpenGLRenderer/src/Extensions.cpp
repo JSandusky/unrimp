@@ -43,10 +43,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Extensions::Extensions(IContext &context) :
 		mContext(&context),
 		mInitialized(false)
@@ -55,19 +51,11 @@ namespace OpenGLRenderer
 		resetExtensions();
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Extensions::~Extensions()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Returns whether the extensions are initialized or not
-	*/
 	bool Extensions::isInitialized() const
 	{
 		return mInitialized;
@@ -178,10 +166,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Checks whether an extension is supported by the given hardware or not
-	*/
 	bool Extensions::isSupported(const char *extension) const
 	{
 		// Check whether or not the given extension string pointer is valid
@@ -199,10 +183,6 @@ namespace OpenGLRenderer
 		return false;
 	}
 
-	/**
-	*  @brief
-	*    Checks whether an extension is supported by the given hardware or not
-	*/
 	bool Extensions::checkExtension(const char *extension) const
 	{
 		// Check whether or not the given extension string pointer is valid
@@ -293,10 +273,6 @@ namespace OpenGLRenderer
 		return false;
 	}
 
-	/**
-	*  @brief
-	*    Resets the extensions
-	*/
 	void Extensions::resetExtensions()
 	{
 		mInitialized = false;
@@ -396,10 +372,6 @@ namespace OpenGLRenderer
 		mGL_MAX_ELEMENTS_VERTICES_EXT = mGL_MAX_ELEMENTS_INDICES_EXT = 0;
 	}
 
-	/**
-	*  @brief
-	*    Initialize the supported universal extensions
-	*/
 	bool Extensions::initializeUniversal()
 	{
 		// Define a platform dependent helper macro

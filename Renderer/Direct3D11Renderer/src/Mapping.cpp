@@ -35,10 +35,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    "Renderer::VertexArrayFormat" to Direct3D 11 format
-	*/
 	unsigned int Mapping::getDirect3D11Format(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
 	{
 		// DXGI_FORMAT
@@ -52,10 +48,6 @@ namespace Direct3D11Renderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::BufferUsage" to Direct3D 11 usage and CPU access flags
-	*/
 	unsigned int Mapping::getDirect3D11UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum bufferUsage, unsigned int &cpuAccessFlags)
 	{
 		// Direct3D 11 only supports a subset of the OpenGL usage indications
@@ -86,10 +78,6 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::IndexBufferFormat" to Direct3D 11 format
-	*/
 	unsigned int Mapping::getDirect3D11Format(Renderer::IndexBufferFormat::Enum indexBufferFormat)
 	{
 		// DXGI_FORMAT
@@ -102,10 +90,6 @@ namespace Direct3D11Renderer
 		return MAPPING[indexBufferFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureFormat" to Direct3D 11 size (in bytes)
-	*/
 	unsigned int Mapping::getDirect3D11Size(Renderer::TextureFormat::Enum textureFormat)
 	{
 		static const unsigned int MAPPING[] =
@@ -119,10 +103,6 @@ namespace Direct3D11Renderer
 		return MAPPING[textureFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureFormat" to Direct3D 11 format
-	*/
 	unsigned int Mapping::getDirect3D11Format(Renderer::TextureFormat::Enum textureFormat)
 	{
 		// DXGI_FORMAT

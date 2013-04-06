@@ -28,10 +28,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 11 constant buffer instance
-	*/
 	inline ID3D11Buffer *UniformBuffer::getD3D11Buffer() const
 	{
 		return mD3D11Buffer;

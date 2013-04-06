@@ -28,28 +28,16 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IRenderer::~IRenderer()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the capabilities of the renderer instance
-	*/
 	inline const Capabilities &IRenderer::getCapabilities() const
 	{
 		return mCapabilities;
 	}
 
-	/**
-	*  @brief
-	*    Return the statistics of the renderer instance
-	*/
 	inline const Statistics &IRenderer::getStatistics() const
 	{
 		return mStatistics;
@@ -59,38 +47,22 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	inline IRenderer::IRenderer()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IRenderer::IRenderer(const IRenderer &)
 	{
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IRenderer &IRenderer::operator =(const IRenderer &)
 	{
 		// Not supported
 		return *this;
 	}
 
-	/**
-	*  @brief
-	*    Return the statistics of the renderer instance
-	*/
 	inline Statistics &IRenderer::getStatistics()
 	{
 		return mStatistics;

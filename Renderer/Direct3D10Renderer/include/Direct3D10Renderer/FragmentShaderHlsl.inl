@@ -28,10 +28,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 10 pixel shader
-	*/
 	inline ID3D10PixelShader *FragmentShaderHlsl::getD3D10PixelShader() const
 	{
 		return mD3D10PixelShader;

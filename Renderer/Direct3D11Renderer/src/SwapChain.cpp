@@ -37,10 +37,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SwapChain::SwapChain(Direct3D11Renderer &direct3D11Renderer, handle nativeWindowHandle) :
 		ISwapChain(direct3D11Renderer),
 		mDxgiSwapChain(nullptr),
@@ -120,10 +116,6 @@ namespace Direct3D11Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SwapChain::~SwapChain()
 	{
 		// "DXGI Overview - Destroying a Swap Chain" at MSDN http://msdn.microsoft.com/en-us/library/bb205075.aspx states
@@ -348,10 +340,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the swap chain width and height
-	*/
 	void SwapChain::getSafeWidthAndHeight(unsigned int &width, unsigned int &height) const
 	{
 		// Get the Direct3D 11 swap chain description
@@ -381,10 +369,6 @@ namespace Direct3D11Renderer
 		height = static_cast<UINT>(swapChainHeight);
 	}
 
-	/**
-	*  @brief
-	*    Create the Direct3D 11 views
-	*/
 	void SwapChain::createDirect3D11Views()
 	{
 		// Create a render target view

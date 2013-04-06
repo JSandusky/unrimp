@@ -37,10 +37,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	IndexBuffer::IndexBuffer(OpenGLES2Renderer &openGLES2Renderer, unsigned int numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		IIndexBuffer(openGLES2Renderer),
 		mOpenGLES2ElementArrayBuffer(0),
@@ -76,10 +72,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	IndexBuffer::~IndexBuffer()
 	{
 		// Destroy the OpenGL ES 2 element array buffer

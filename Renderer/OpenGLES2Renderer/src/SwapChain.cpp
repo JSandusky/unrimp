@@ -36,10 +36,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SwapChain::SwapChain(OpenGLES2Renderer &openGLES2Renderer, handle nativeWindowHandle) :
 		ISwapChain(openGLES2Renderer),
 		mNativeWindowHandle(nativeWindowHandle)
@@ -47,10 +43,6 @@ namespace OpenGLES2Renderer
 		// TODO(co) Implement me
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SwapChain::~SwapChain()
 	{
 		// TODO(co) Implement me

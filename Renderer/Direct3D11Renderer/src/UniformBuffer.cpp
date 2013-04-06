@@ -38,10 +38,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	UniformBuffer::UniformBuffer(Direct3D11Renderer &direct3D11Renderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		Renderer::IUniformBuffer(direct3D11Renderer),
 		mD3D11Buffer(nullptr)
@@ -90,10 +86,6 @@ namespace Direct3D11Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	UniformBuffer::~UniformBuffer()
 	{
 		// Release the Direct3D 11 constant buffer

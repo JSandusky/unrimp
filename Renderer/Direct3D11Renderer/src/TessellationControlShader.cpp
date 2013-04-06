@@ -34,10 +34,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TessellationControlShader::~TessellationControlShader()
 	{
 		// Nothing to do in here
@@ -47,10 +43,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TessellationControlShader::TessellationControlShader(Direct3D11Renderer &direct3D11Renderer) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(direct3D11Renderer))
 	{

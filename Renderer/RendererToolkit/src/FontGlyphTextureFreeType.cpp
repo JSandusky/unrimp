@@ -39,10 +39,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Initialize the glyph
-	*/
 	void FontGlyphTextureFreeType::initialize(FontTextureFreeType &fontTextureFreeType, unsigned long characterCode, unsigned int positionOffsetX, unsigned int positionOffsetY, unsigned char *glyphTextureAtlasData)
 	{
 		// Get the FreeType library face object (aka "The Font")

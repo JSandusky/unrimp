@@ -27,10 +27,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Destructor
-*/
 IApplicationImpl::~IApplicationImpl()
 {
 	// Nothing to do in here
@@ -40,28 +36,16 @@ IApplicationImpl::~IApplicationImpl()
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Default constructor
-*/
 IApplicationImpl::IApplicationImpl()
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Copy constructor
-*/
 IApplicationImpl::IApplicationImpl(const IApplicationImpl &)
 {
 	// Not supported
 }
 
-/**
-*  @brief
-*    Copy operator
-*/
 IApplicationImpl &IApplicationImpl::operator =(const IApplicationImpl &)
 {
 	// Not supported

@@ -31,29 +31,17 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Default constructor
-*/
 BatchDrawInstanced::BatchDrawInstanced() :
 	mNumberOfCubeInstances(0)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 BatchDrawInstanced::~BatchDrawInstanced()
 {
 	// The renderer resource pointers are released automatically
 }
 
-/**
-*  @brief
-*    Initialize the batch
-*/
 void BatchDrawInstanced::initialize(Renderer::IRenderer &renderer, unsigned int numberOfCubeInstances, bool alphaBlending, unsigned int numberOfTextures, unsigned int sceneRadius)
 {
 	// Begin debug event
@@ -136,10 +124,6 @@ void BatchDrawInstanced::initialize(Renderer::IRenderer &renderer, unsigned int 
 	RENDERER_END_DEBUG_EVENT(&renderer)
 }
 
-/**
-*  @brief
-*    Draw the batch
-*/
 void BatchDrawInstanced::draw()
 {
 	// Is there a valid renderer owner instance?
@@ -167,19 +151,11 @@ void BatchDrawInstanced::draw()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Copy constructor
-*/
 BatchDrawInstanced::BatchDrawInstanced(const BatchDrawInstanced &)
 {
 	// Not supported
 }
 
-/**
-*  @brief
-*    Copy operator
-*/
 BatchDrawInstanced &BatchDrawInstanced::operator =(const BatchDrawInstanced &)
 {
 	// Not supported

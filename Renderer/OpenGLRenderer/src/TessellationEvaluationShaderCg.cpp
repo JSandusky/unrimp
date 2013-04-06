@@ -38,10 +38,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TessellationEvaluationShaderCg::TessellationEvaluationShaderCg(OpenGLRenderer &openGLRenderer, _CGcontext &cgContext, const char *sourceCode, const char *profile) :
 		TessellationEvaluationShader(openGLRenderer),
 		mCgProgram(nullptr)
@@ -73,10 +69,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TessellationEvaluationShaderCg::~TessellationEvaluationShaderCg()
 	{
 		// Destroy the Cg program

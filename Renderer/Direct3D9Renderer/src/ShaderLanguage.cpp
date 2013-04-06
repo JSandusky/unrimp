@@ -34,19 +34,11 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguage::~ShaderLanguage()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the owner Direct3D 9 renderer instance
-	*/
 	Direct3D9Renderer &ShaderLanguage::getDirect3D9Renderer() const
 	{
 		return reinterpret_cast<Direct3D9Renderer&>(getRenderer());
@@ -56,10 +48,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguage::ShaderLanguage(Direct3D9Renderer &direct3D9Renderer) :
 		IShaderLanguage(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer))
 	{

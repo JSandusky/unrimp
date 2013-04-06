@@ -35,10 +35,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	BlendState::BlendState(Direct3D9Renderer &direct3D9Renderer, const Renderer::BlendState &blendState) :
 		IBlendState(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer)),
 		mBlendState(blendState)
@@ -46,19 +42,11 @@ namespace Direct3D9Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	BlendState::~BlendState()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Set the Direct3D 9 blend states
-	*/
 	void BlendState::setDirect3D9BlendStates(IDirect3DDevice9 &direct3DDevice9) const
 	{
 		direct3DDevice9.SetRenderState(D3DRS_ALPHABLENDENABLE, static_cast<DWORD>(mBlendState.renderTarget[0].blendEnable));

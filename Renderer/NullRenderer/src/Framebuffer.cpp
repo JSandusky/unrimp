@@ -34,20 +34,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Framebuffer::Framebuffer(NullRenderer &nullRenderer) :
 		IFramebuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Framebuffer::~Framebuffer()
 	{
 		// Nothing to do in here

@@ -30,20 +30,12 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 FirstPostProcessing::FirstPostProcessing(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 FirstPostProcessing::~FirstPostProcessing()
 {
 	// The resources are released within "onDeinitialization()"
@@ -262,10 +254,6 @@ void FirstPostProcessing::onDraw()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Create/recreate the framebuffer object (FBO) instance by using the current window size
-*/
 void FirstPostProcessing::recreateFramebuffer()
 {
 	// Get and check the renderer instance
@@ -296,10 +284,6 @@ void FirstPostProcessing::recreateFramebuffer()
 	}
 }
 
-/**
-*  @brief
-*    Scene rendering
-*/
 void FirstPostProcessing::sceneRendering()
 {
 	// Get and check the renderer instance
@@ -362,10 +346,6 @@ void FirstPostProcessing::sceneRendering()
 	}
 }
 
-/**
-*  @brief
-*    Post-processing
-*/
 void FirstPostProcessing::postProcessing()
 {
 	// Get and check the renderer instance

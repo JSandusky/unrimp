@@ -36,10 +36,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	DepthStencilState::DepthStencilState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::DepthStencilState &depthStencilState) :
 		IDepthStencilState(openGLES2Renderer),
 		mDepthStencilState(depthStencilState)
@@ -47,19 +43,11 @@ namespace OpenGLES2Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	DepthStencilState::~DepthStencilState()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Set the OpenGL ES 2 depth stencil states
-	*/
 	void DepthStencilState::setOpenGLES2DepthStencilStates() const
 	{
 		// Renderer::DepthStencilState::depthEnable

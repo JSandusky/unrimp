@@ -28,19 +28,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the primary device context
-	*/
 	inline HDC ContextWindows::getDeviceContext() const
 	{
 		return mWindowDeviceContext;
 	}
 
-	/**
-	*  @brief
-	*    Return the primary render context
-	*/
 	inline HGLRC ContextWindows::getRenderContext() const
 	{
 		return mWindowRenderContext;

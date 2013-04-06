@@ -49,10 +49,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Creates, loads and compiles a shader
-	*/
 	ID3DBlob *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint)
 	{
 		// TODO(co) Cleanup
@@ -90,20 +86,12 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D11Renderer &direct3D11Renderer) :
 		ShaderLanguage(direct3D11Renderer)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguageHlsl::~ShaderLanguageHlsl()
 	{
 		// Nothing to do in here

@@ -34,10 +34,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	FragmentShader::~FragmentShader()
 	{
 		// Nothing to do in here
@@ -47,10 +43,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	FragmentShader::FragmentShader(OpenGLRenderer &openGLRenderer) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer))
 	{

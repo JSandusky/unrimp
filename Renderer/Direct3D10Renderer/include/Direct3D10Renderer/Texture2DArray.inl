@@ -28,10 +28,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D shader resource view instance
-	*/
 	inline ID3D10ShaderResourceView *Texture2DArray::getD3D10ShaderResourceView() const
 	{
 		return mD3D10ShaderResourceViewTexture;

@@ -36,10 +36,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline ITexture2D::~ITexture2D()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -48,19 +44,11 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Return the width of the texture
-	*/
 	inline unsigned int ITexture2D::getWidth() const
 	{
 		return mWidth;
 	}
 
-	/**
-	*  @brief
-	*    Return the height of the texture
-	*/
 	inline unsigned int ITexture2D::getHeight() const
 	{
 		return mHeight;
@@ -70,10 +58,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline ITexture2D::ITexture2D(IRenderer &renderer, unsigned int width, unsigned int height) :
 		ITexture(ResourceType::TEXTURE_2D, renderer),
 		mWidth(width),
@@ -86,10 +70,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline ITexture2D::ITexture2D(const ITexture2D &source) :
 		ITexture(source),
 		mWidth(source.getWidth()),
@@ -103,10 +83,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline ITexture2D &ITexture2D::operator =(const ITexture2D &)
 	{
 		// Not supported

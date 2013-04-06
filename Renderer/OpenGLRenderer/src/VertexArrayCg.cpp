@@ -44,10 +44,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexArrayCg::VertexArrayCg(ProgramCg &programCg, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		VertexArray(static_cast<OpenGLRenderer&>(programCg.getRenderer()), indexBuffer, InternalResourceType::CG),
 		mProgramCg(&programCg),
@@ -84,10 +80,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexArrayCg::~VertexArrayCg()
 	{
 		// Destroy the vertex array attributes
@@ -114,10 +106,6 @@ namespace OpenGLRenderer
 		mProgramCg->release();
 	}
 
-	/**
-	*  @brief
-	*    Enable OpenGL Cg vertex attribute arrays
-	*/
 	void VertexArrayCg::enableOpenGLVertexAttribArrays()
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
@@ -162,10 +150,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Disable OpenGL Cg vertex attribute arrays
-	*/
 	void VertexArrayCg::disableOpenGLVertexAttribArrays()
 	{
 		// No previous bound OpenGL element array buffer restore, there's not really a point in it

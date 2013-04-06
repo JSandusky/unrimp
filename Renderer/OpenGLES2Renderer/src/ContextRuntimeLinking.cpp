@@ -41,10 +41,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ContextRuntimeLinking::ContextRuntimeLinking(handle nativeWindowHandle) :
 		IContext(nativeWindowHandle),
 		mEGLSharedLibrary(nullptr),
@@ -80,10 +76,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ContextRuntimeLinking::~ContextRuntimeLinking()
 	{
 		// De-initialize the context while we still can
@@ -219,10 +211,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Loads the EGL shared library
-	*/
 	bool ContextRuntimeLinking::loadSharedLibraries()
 	{
 		// We don't need to check m_pEGLSharedLibrary and m_pGLESSharedLibrary at this point because we know they must contain a null pointer
@@ -288,10 +276,6 @@ namespace OpenGLES2Renderer
 		return (nullptr != mEGLSharedLibrary && nullptr != mGLESSharedLibrary);
 	}
 
-	/**
-	*  @brief
-	*    Loads the EGL entry points
-	*/
 	bool ContextRuntimeLinking::loadEGLEntryPoints()
 	{
 		bool result = true;	// Success by default
@@ -399,10 +383,6 @@ namespace OpenGLES2Renderer
 		return result;
 	}
 
-	/**
-	*  @brief
-	*    Loads the OpenGL ES 2 entry points
-	*/
 	bool ContextRuntimeLinking::loadGLESEntryPoints()
 	{
 		bool result = true;	// Success by default

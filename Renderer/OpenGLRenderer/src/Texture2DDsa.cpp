@@ -39,10 +39,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Texture2DDsa::Texture2DDsa(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags) :
 		Texture2D(openGLRenderer, width, height)
 	{
@@ -76,10 +72,6 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Texture2DDsa::~Texture2DDsa()
 	{
 		// Nothing to do in here

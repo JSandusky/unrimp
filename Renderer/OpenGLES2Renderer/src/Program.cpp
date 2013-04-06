@@ -40,10 +40,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Program::~Program()
 	{
 		// Destroy the OpenGL ES 2 program
@@ -55,10 +51,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Program::Program(OpenGLES2Renderer &openGLES2Renderer) :
 		IProgram(openGLES2Renderer),
 		mOpenGLES2Program(0)

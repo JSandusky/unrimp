@@ -35,10 +35,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Initialize the supported extensions
-	*/
 	bool Extensions::initialize(bool useExtensions)
 	{
 		// Disable the following warning, we can't do anything to resolve this warning

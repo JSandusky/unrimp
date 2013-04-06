@@ -28,10 +28,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL texture
-	*/
 	inline unsigned int Texture2DArray::getOpenGLTexture() const
 	{
 		return mOpenGLTexture;

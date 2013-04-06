@@ -36,10 +36,6 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SamplerStateCollection::SamplerStateCollection(NullRenderer &nullRenderer, unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates) :
 		Renderer::ISamplerStateCollection(nullRenderer),
 		mNumberOfSamplerStates(numberOfSamplerStates),
@@ -68,10 +64,6 @@ namespace NullRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SamplerStateCollection::~SamplerStateCollection()
 	{
 		// Release the allocated memory

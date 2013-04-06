@@ -37,10 +37,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the default rasterizer state
-	*/
 	inline const RasterizerState &IRasterizerState::getDefaultRasterizerState()
 	{
 		// As default values, the one of Direct3D 11 and Direct 10 were chosen in order to make it easier for those renderer implementations
@@ -75,10 +71,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IRasterizerState::~IRasterizerState()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -91,10 +83,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline IRasterizerState::IRasterizerState(IRenderer &renderer) :
 		IState(ResourceType::RASTERIZER_STATE, renderer)
 	{
@@ -105,10 +93,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IRasterizerState::IRasterizerState(const IRasterizerState &source) :
 		IState(source)
 	{
@@ -120,10 +104,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IRasterizerState &IRasterizerState::operator =(const IRasterizerState &)
 	{
 		// Not supported

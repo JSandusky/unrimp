@@ -30,20 +30,12 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 VertexBuffer::VertexBuffer(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 VertexBuffer::~VertexBuffer()
 {
 	// The resources are released within "onDeinitialization()"

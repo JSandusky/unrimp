@@ -37,10 +37,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Framebuffer::Framebuffer(Direct3D9Renderer &direct3D9Renderer, unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
 		IFramebuffer(direct3D9Renderer),
 		mNumberOfColorTextures(numberOfColorTextures),
@@ -191,10 +187,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Framebuffer::~Framebuffer()
 	{
 		// Release the reference to the used color textures

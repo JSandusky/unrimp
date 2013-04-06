@@ -28,10 +28,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D vertex buffer instance
-	*/
 	inline ID3D10Buffer *VertexBuffer::getD3D10Buffer() const
 	{
 		return mD3D10Buffer;

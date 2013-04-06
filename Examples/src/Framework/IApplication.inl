@@ -27,28 +27,16 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Return the window size
-*/
 inline void IApplication::getWindowSize(int &width, int &height) const
 {
 	return mApplicationImpl->getWindowSize(width, height);
 }
 
-/**
-*  @brief
-*    Return the OS dependent window handle
-*/
 inline handle IApplication::getNativeWindowHandle() const
 {
 	return mApplicationImpl->getNativeWindowHandle();
 }
 
-/**
-*  @brief
-*    Redraw request
-*/
 inline void IApplication::redraw()
 {
 	mApplicationImpl->redraw();

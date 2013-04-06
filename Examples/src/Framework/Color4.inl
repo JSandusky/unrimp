@@ -21,10 +21,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Default constructor
-*/
 inline Color4::Color4() :
 	r(0.0f),
 	g(0.0f),
@@ -34,10 +30,6 @@ inline Color4::Color4() :
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Copy constructor
-*/
 inline Color4::Color4(const Color4 &source) :
 	r(source.r),
 	g(source.g),
@@ -47,10 +39,6 @@ inline Color4::Color4(const Color4 &source) :
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Constructor
-*/
 inline Color4::Color4(float _r, float _g, float _b, float _a) :
 	r(_r),
 	g(_g),
@@ -60,19 +48,11 @@ inline Color4::Color4(float _r, float _g, float _b, float _a) :
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 inline Color4::~Color4()
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Copy operator
-*/
 inline Color4 &Color4::operator =(const Color4 &source)
 {
 	r = source.r;

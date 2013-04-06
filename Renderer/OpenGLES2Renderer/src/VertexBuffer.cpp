@@ -37,10 +37,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexBuffer::VertexBuffer(OpenGLES2Renderer &openGLES2Renderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		IVertexBuffer(openGLES2Renderer),
 		mOpenGLES2ArrayBuffer(0)
@@ -64,10 +60,6 @@ namespace OpenGLES2Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexBuffer::~VertexBuffer()
 	{
 		// Destroy the OpenGL ES 2 array buffer

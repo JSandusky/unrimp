@@ -38,10 +38,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 FirstAssimp::FirstAssimp(const char *rendererName) :
 	IApplicationRenderer(rendererName),
 	mMesh(nullptr),
@@ -50,10 +46,6 @@ FirstAssimp::FirstAssimp(const char *rendererName) :
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 FirstAssimp::~FirstAssimp()
 {
 	// The resources are released within "onDeinitialization()"

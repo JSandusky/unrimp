@@ -45,10 +45,6 @@ static const float FLOAT_EPSILON = 1.192092896e-07f; // Smallest such that 1.0f 
 //[-------------------------------------------------------]
 //[ Public static functions                               ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Sets a rotation quaternion by using three given Euler angles
-*/
 void EulerAngles::toQuaternion(float angleX, float angleY, float angleZ, Quaternion &rotation, EOrder order)
 {
 	int i, j, k, n, s, f;
@@ -103,10 +99,6 @@ void EulerAngles::toQuaternion(float angleX, float angleY, float angleZ, Quatern
 	rotation.z = static_cast<float>(a[2]);
 }
 
-/**
-*  @brief
-*    Return the Euler angles from a rotation quaternion
-*/
 void EulerAngles::fromQuaternion(const Quaternion &q, float &angleX, float &angleY, float &angleZ, EOrder order)
 {
 	// Construct 3x3 matrix

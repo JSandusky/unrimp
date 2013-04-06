@@ -38,10 +38,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexArrayVao::~VertexArrayVao()
 	{
 		// Destroy the OpenGL vertex array
@@ -67,10 +63,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexArrayVao::VertexArrayVao(OpenGLRenderer &openGLRenderer, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		VertexArray(openGLRenderer, indexBuffer, InternalResourceType::VAO),
 		mOpenGLVertexArray(0),

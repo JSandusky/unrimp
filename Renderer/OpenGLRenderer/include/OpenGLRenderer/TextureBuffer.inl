@@ -28,19 +28,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL texture buffer instance
-	*/
 	inline unsigned int TextureBuffer::getOpenGLTextureBuffer() const
 	{
 		return mOpenGLTextureBuffer;
 	}
 
-	/**
-	*  @brief
-	*    Return the OpenGL texture instance
-	*/
 	inline unsigned int TextureBuffer::getOpenGLTexture() const
 	{
 		return mOpenGLTexture;

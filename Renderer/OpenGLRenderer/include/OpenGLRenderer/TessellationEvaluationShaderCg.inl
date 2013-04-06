@@ -28,10 +28,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Cg program
-	*/
 	_CGprogram *TessellationEvaluationShaderCg::getCgProgram() const
 	{
 		return mCgProgram;

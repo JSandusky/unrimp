@@ -28,10 +28,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL uniform buffer instance
-	*/
 			// TODO(co)
 	//inline GLuint UniformBufferCg::getOpenGLUniformBuffer() const
 	//{

@@ -35,10 +35,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 IcosahedronTessellation::IcosahedronTessellation(const char *rendererName) :
 	IApplicationRenderer(rendererName),
 	mTessellationLevelOuter(2.0f),
@@ -47,10 +43,6 @@ IcosahedronTessellation::IcosahedronTessellation(const char *rendererName) :
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 IcosahedronTessellation::~IcosahedronTessellation()
 {
 	// The resources are released within "onDeinitialization()"

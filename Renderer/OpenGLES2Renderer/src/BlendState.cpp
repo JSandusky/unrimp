@@ -36,10 +36,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	BlendState::BlendState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::BlendState &blendState) :
 		IBlendState(openGLES2Renderer),
 		mBlendState(blendState)
@@ -47,19 +43,11 @@ namespace OpenGLES2Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	BlendState::~BlendState()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Set the OpenGL ES 2 blend states
-	*/
 	void BlendState::setOpenGLES2BlendStates() const
 	{
 		if (mBlendState.renderTarget[0].blendEnable)

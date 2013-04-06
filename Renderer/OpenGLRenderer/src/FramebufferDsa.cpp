@@ -37,10 +37,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	FramebufferDsa::FramebufferDsa(OpenGLRenderer &openGLRenderer, unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
 		Framebuffer(openGLRenderer, numberOfColorTextures, colorTextures, depthStencilTexture)
 	{
@@ -150,10 +146,6 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	FramebufferDsa::~FramebufferDsa()
 	{
 		// Texture reference handling is done within the base class "Framebuffer"

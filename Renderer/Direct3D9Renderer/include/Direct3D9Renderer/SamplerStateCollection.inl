@@ -28,19 +28,11 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the number of sampler state instances
-	*/
 	inline unsigned int SamplerStateCollection::getNumberOfSamplerStates() const
 	{
 		return mNumberOfSamplerStates;
 	}
 
-	/**
-	*  @brief
-	*    Return the sampler state instances
-	*/
 	inline Renderer::ISamplerState **SamplerStateCollection::getSamplerStates() const
 	{
 		return mSamplerStates;

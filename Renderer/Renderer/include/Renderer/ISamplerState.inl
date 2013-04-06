@@ -37,10 +37,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the default sampler state
-	*/
 	inline const SamplerState &ISamplerState::getDefaultSamplerState()
 	{
 		// As default values, the one of Direct3D 11 and Direct 10 were chosen in order to make it easier for those renderer implementations
@@ -83,10 +79,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline ISamplerState::~ISamplerState()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -99,10 +91,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline ISamplerState::ISamplerState(IRenderer &renderer) :
 		IState(ResourceType::SAMPLER_STATE, renderer)
 	{
@@ -113,10 +101,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline ISamplerState::ISamplerState(const ISamplerState &source) :
 		IState(source)
 	{
@@ -128,10 +112,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline ISamplerState &ISamplerState::operator =(const ISamplerState &)
 	{
 		// Not supported

@@ -37,10 +37,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexArray::~VertexArray()
 	{
 		// Release the index buffer reference
@@ -54,10 +50,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexArray::VertexArray(OpenGLRenderer &openGLRenderer, IndexBuffer *indexBuffer, InternalResourceType::Enum internalResourceType) :
 		IVertexArray(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mIndexBuffer(indexBuffer),

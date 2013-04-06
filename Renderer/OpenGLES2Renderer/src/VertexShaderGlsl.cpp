@@ -37,10 +37,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexShaderGlsl::VertexShaderGlsl(OpenGLES2Renderer &openGLES2Renderer, const char *sourceCode) :
 		VertexShader(openGLES2Renderer),
 		mOpenGLES2Shader(ShaderLanguage::loadShader(GL_VERTEX_SHADER, sourceCode))
@@ -48,10 +44,6 @@ namespace OpenGLES2Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexShaderGlsl::~VertexShaderGlsl()
 	{
 		// Destroy the OpenGL ES 2 shader

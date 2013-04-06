@@ -34,19 +34,11 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguage::~ShaderLanguage()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the owner Direct3D 10 renderer instance
-	*/
 	Direct3D10Renderer &ShaderLanguage::getDirect3D10Renderer() const
 	{
 		return reinterpret_cast<Direct3D10Renderer&>(getRenderer());
@@ -56,10 +48,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguage::ShaderLanguage(Direct3D10Renderer &direct3D10Renderer) :
 		IShaderLanguage(reinterpret_cast<Renderer::IRenderer&>(direct3D10Renderer))
 	{

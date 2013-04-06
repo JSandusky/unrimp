@@ -28,19 +28,11 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Cg program
-	*/
 	_CGprogram *VertexShaderCg::getCgProgram() const
 	{
 		return mCgProgram;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 10 vertex shader blob
-	*/
 	inline ID3DBlob *VertexShaderCg::getD3DBlobVertexShader() const
 	{
 		return mD3DBlobVertexShader;

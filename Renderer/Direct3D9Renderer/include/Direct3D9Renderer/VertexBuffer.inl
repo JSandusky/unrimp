@@ -28,10 +28,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D vertex buffer instance
-	*/
 	inline IDirect3DVertexBuffer9 *VertexBuffer::getDirect3DVertexBuffer9() const
 	{
 		return mDirect3DVertexBuffer9;

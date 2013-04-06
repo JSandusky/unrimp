@@ -21,10 +21,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Default constructor setting an identity quaternion
-*/
 inline Quaternion::Quaternion() :
 	w(1.0f),
 	x(0.0f),

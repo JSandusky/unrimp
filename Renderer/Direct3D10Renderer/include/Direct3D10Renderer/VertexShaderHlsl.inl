@@ -28,19 +28,11 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 10 vertex shader blob
-	*/
 	inline ID3DBlob *VertexShaderHlsl::getD3DBlobVertexShader() const
 	{
 		return mD3DBlobVertexShader;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 10 vertex shader
-	*/
 	inline ID3D10VertexShader *VertexShaderHlsl::getD3D10VertexShader() const
 	{
 		return mD3D10VertexShader;

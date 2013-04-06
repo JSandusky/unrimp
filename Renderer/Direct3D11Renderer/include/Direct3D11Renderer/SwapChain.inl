@@ -28,28 +28,16 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the DXGI swap chain instance
-	*/
 	inline IDXGISwapChain *SwapChain::getDxgiSwapChain() const
 	{
 		return mDxgiSwapChain;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 11 render target view instance
-	*/
 	inline ID3D11RenderTargetView *SwapChain::getD3D11RenderTargetView() const
 	{
 		return mD3D11RenderTargetView;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 11 depth stencil view instance
-	*/
 	inline ID3D11DepthStencilView *SwapChain::getD3D11DepthStencilView() const
 	{
 		return mD3D11DepthStencilView;

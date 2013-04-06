@@ -28,10 +28,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 11 blend state
-	*/
 	inline ID3D11BlendState *BlendState::getD3D11BlendState() const
 	{
 		return mD3D11BlendState;

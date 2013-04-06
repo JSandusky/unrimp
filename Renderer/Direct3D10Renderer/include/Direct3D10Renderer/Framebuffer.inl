@@ -28,28 +28,16 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the number of Direct3D 10 render target views
-	*/
 	inline unsigned int Framebuffer::getNumberOfD3D10RenderTargetViews() const
 	{
 		return mNumberOfColorTextures;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 10 render target views
-	*/
 	inline ID3D10RenderTargetView **Framebuffer::getD3D10RenderTargetViews() const
 	{
 		return mD3D10RenderTargetViews;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 10 depth stencil view
-	*/
 	inline ID3D10DepthStencilView *Framebuffer::getD3D10DepthStencilView() const
 	{
 		return mD3D10DepthStencilView;

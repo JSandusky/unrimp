@@ -28,10 +28,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL context instance
-	*/
 	inline const IContext &OpenGLRenderer::getContext() const
 	{
 		return *mContext;

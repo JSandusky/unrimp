@@ -38,10 +38,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TextureCollection::TextureCollection(Direct3D10Renderer &direct3D10Renderer, unsigned int numberOfTextures, Renderer::ITexture **textures) :
 		Renderer::ITextureCollection(direct3D10Renderer),
 		mNumberOfD3D10ShaderResourceViews(numberOfTextures),
@@ -112,10 +108,6 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TextureCollection::~TextureCollection()
 	{
 		// Release the allocated memory

@@ -37,10 +37,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SwapChain::SwapChain(Direct3D9Renderer &direct3D9Renderer, handle nativeWindowHandle) :
 		ISwapChain(direct3D9Renderer),
 		mDirect3DSwapChain9(nullptr),
@@ -108,10 +104,6 @@ namespace Direct3D9Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SwapChain::~SwapChain()
 	{
 		// Release the used resources
@@ -332,10 +324,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the swap chain width and height
-	*/
 	void SwapChain::getSafeWidthAndHeight(unsigned int &width, unsigned int &height) const
 	{
 		// Get the Direct3D 9 present parameters

@@ -28,19 +28,11 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Cg vertex shader the program is using
-	*/
 	inline VertexShaderCg *ProgramCg::getVertexShaderCg() const
 	{
 		return mVertexShaderCg;
 	}
 
-	/**
-	*  @brief
-	*    Return the Cg fragment shader the program is using
-	*/
 	inline FragmentShaderCg *ProgramCg::getFragmentShaderCg() const
 	{
 		return mFragmentShaderCg;

@@ -82,10 +82,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Direct3D10Renderer::Direct3D10Renderer(handle nativeWindowHandle) :
 		mDirect3D10RuntimeLinking(new Direct3D10RuntimeLinking()),
 		mD3D10Device(nullptr),
@@ -172,10 +168,6 @@ namespace Direct3D10Renderer
 		RENDERER_END_DEBUG_EVENT(this)
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Direct3D10Renderer::~Direct3D10Renderer()
 	{
 		// Begin debug event
@@ -1812,10 +1804,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Initialize the capabilities
-	*/
 	void Direct3D10Renderer::initializeCapabilities()
 	{
 		// There are no Direct3D 10 device capabilities we could query on runtime

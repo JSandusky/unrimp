@@ -39,10 +39,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Texture2DArrayBind::Texture2DArrayBind(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags) :
 		Texture2DArray(openGLRenderer, width, height, numberOfSlices)
 	{
@@ -86,10 +82,6 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Texture2DArrayBind::~Texture2DArrayBind()
 	{
 		// Nothign to do in here

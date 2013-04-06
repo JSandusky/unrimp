@@ -32,20 +32,12 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Destructor
-*/
 IApplication::~IApplication()
 {
 	// Destroy the application instance
 	delete mApplicationImpl;
 }
 
-/**
-*  @brief
-*    Run the application
-*/
 int IApplication::run()
 {
 	// Call application implementation initialization method
@@ -74,82 +66,46 @@ int IApplication::run()
 //[-------------------------------------------------------]
 //[ Public virtual IApplication methods                   ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Called on application initialization
-*/
 void IApplication::onInitialization()
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Called on application de-initialization
-*/
 void IApplication::onDeinitialization()
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Called in case the window size changed
-*/
 void IApplication::onResize()
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Called in case the fullscreen state should be toggled
-*/
 void IApplication::onToggleFullscreenState()
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Called in case a key is now pressed
-*/
 void IApplication::onKeyDown(unsigned int)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Called in case a key was releaed
-*/
 void IApplication::onKeyUp(unsigned int)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Update the logic
-*/
 void IApplication::onUpdate()
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Draw request method
-*/
 void IApplication::onDrawRequest()
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Draw method
-*/
 void IApplication::onDraw()
 {
 	// Nothing to do in here
@@ -159,10 +115,6 @@ void IApplication::onDraw()
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 IApplication::IApplication(const char *windowTitle) :
 	mApplicationImpl(nullptr)
 {
@@ -176,19 +128,11 @@ IApplication::IApplication(const char *windowTitle) :
 	#endif
 }
 
-/**
-*  @brief
-*    Copy constructor
-*/
 IApplication::IApplication(const IApplication &)
 {
 	// Not supported
 }
 
-/**
-*  @brief
-*    Copy operator
-*/
 IApplication &IApplication::operator =(const IApplication &)
 {
 	// Not supported

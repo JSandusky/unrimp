@@ -38,10 +38,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
 		TessellationControlShader(direct3D11Renderer),
 		mD3D11HullShader(nullptr)
@@ -60,10 +56,6 @@ namespace Direct3D11Renderer
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 11 automatically sets a decent default name
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TessellationControlShaderHlsl::~TessellationControlShaderHlsl()
 	{
 		// Release the Direct3D 11 hull shader

@@ -64,10 +64,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Donstructor
-	*/
 	RendererToolkitImpl::RendererToolkitImpl(Renderer::IRenderer &renderer) :
 		mFreeTypeContext(nullptr),
 		mFontProgram(nullptr),
@@ -84,10 +80,6 @@ namespace RendererToolkit
 		mRenderer->addReference();
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	RendererToolkitImpl::~RendererToolkitImpl()
 	{
 		// Release the font blend state instance
@@ -136,10 +128,6 @@ namespace RendererToolkit
 		mRenderer->release();
 	}
 
-	/**
-	*  @brief
-	*    Return the FreeType context instance
-	*/
 	FreeTypeContext &RendererToolkitImpl::getFreeTypeContext()
 	{
 		// Create the FreeType context instance right now?
@@ -153,10 +141,6 @@ namespace RendererToolkit
 		return *mFreeTypeContext;
 	}
 
-	/**
-	*  @brief
-	*    Return the font program
-	*/
 	Renderer::IProgram *RendererToolkitImpl::getFontProgram()
 	{
 		// Create the font program instance right now?
@@ -192,10 +176,6 @@ namespace RendererToolkit
 		return mFontProgram;
 	}
 
-	/**
-	*  @brief
-	*    Return the font vertex shader uniform buffer
-	*/
 	Renderer::IUniformBuffer *RendererToolkitImpl::getFontVertexShaderUniformBuffer()
 	{
 		// Create the font vertex shader uniform buffer instance right now?
@@ -221,10 +201,6 @@ namespace RendererToolkit
 		return mFontVertexShaderUniformBuffer;
 	}
 
-	/**
-	*  @brief
-	*    Return the font fragment shader uniform buffer
-	*/
 	Renderer::IUniformBuffer *RendererToolkitImpl::getFontFragmentShaderUniformBuffer()
 	{
 		// Create the font fragment shader uniform buffer instance right now?
@@ -250,10 +226,6 @@ namespace RendererToolkit
 		return mFontFragmentShaderUniformBuffer;
 	}
 
-	/**
-	*  @brief
-	*    Return the font vertex array
-	*/
 	Renderer::IVertexArray *RendererToolkitImpl::getVertexArray()
 	{
 		// Create the font vertex array instance right now?
@@ -309,10 +281,6 @@ namespace RendererToolkit
 		return mFontVertexArray;
 	}
 
-	/**
-	*  @brief
-	*    Return the font sampler state
-	*/
 	Renderer::ISamplerState *RendererToolkitImpl::getFontSamplerState()
 	{
 		// Create the font sampler state instance right now?
@@ -332,10 +300,6 @@ namespace RendererToolkit
 		return mFontSamplerState;
 	}
 
-	/**
-	*  @brief
-	*    Return the font blend state
-	*/
 	Renderer::IBlendState *RendererToolkitImpl::getFontBlendState()
 	{
 		// Create the font blend state instance right now?

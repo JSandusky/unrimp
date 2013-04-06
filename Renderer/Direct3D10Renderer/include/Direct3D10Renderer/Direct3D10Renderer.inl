@@ -28,10 +28,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 10 device
-	*/
 	inline ID3D10Device *Direct3D10Renderer::getD3D10Device() const
 	{
 		return mD3D10Device;

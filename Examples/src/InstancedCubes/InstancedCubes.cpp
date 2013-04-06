@@ -37,10 +37,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 InstancedCubes::InstancedCubes(const char *rendererName) :
 	IApplicationRendererToolkit(rendererName),
 	mCubeRenderer(nullptr),
@@ -55,10 +51,6 @@ InstancedCubes::InstancedCubes(const char *rendererName) :
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 InstancedCubes::~InstancedCubes()
 {
 	// The resources are released within "onDeinitialization()"

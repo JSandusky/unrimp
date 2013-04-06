@@ -31,29 +31,17 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Default constructor
-*/
 BatchInstancedArrays::BatchInstancedArrays() :
 	mNumberOfCubeInstances(0)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 BatchInstancedArrays::~BatchInstancedArrays()
 {
 	// The renderer resource pointers are released automatically
 }
 
-/**
-*  @brief
-*    Initialize the batch
-*/
 void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, unsigned int numberOfCubeInstances, bool alphaBlending, unsigned int numberOfTextures, unsigned int sceneRadius)
 {
 	// Begin debug event
@@ -216,10 +204,6 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 	RENDERER_END_DEBUG_EVENT(&program.getRenderer())
 }
 
-/**
-*  @brief
-*    Draw the batch
-*/
 void BatchInstancedArrays::draw()
 {
 	// Is there a valid renderer owner instance?
@@ -249,19 +233,11 @@ void BatchInstancedArrays::draw()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Copy constructor
-*/
 BatchInstancedArrays::BatchInstancedArrays(const BatchInstancedArrays &)
 {
 	// Not supported
 }
 
-/**
-*  @brief
-*    Copy operator
-*/
 BatchInstancedArrays &BatchInstancedArrays::operator =(const BatchInstancedArrays &)
 {
 	// Not supported

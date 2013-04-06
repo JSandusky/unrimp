@@ -36,10 +36,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SamplerStateCollection::SamplerStateCollection(Direct3D11Renderer &direct3D11Renderer, unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates) :
 		Renderer::ISamplerStateCollection(direct3D11Renderer),
 		mNumberOfD3D11SamplerStates(numberOfSamplerStates),
@@ -75,10 +71,6 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SamplerStateCollection::~SamplerStateCollection()
 	{
 		// Release the allocated memory

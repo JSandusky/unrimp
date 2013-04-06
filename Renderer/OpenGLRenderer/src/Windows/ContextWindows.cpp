@@ -36,10 +36,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ContextWindows::ContextWindows(handle nativeWindowHandle) :
 		mOpenGLRuntimeLinking(new OpenGLRuntimeLinking()),
 		mNativeWindowHandle(nativeWindowHandle),
@@ -181,10 +177,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ContextWindows::~ContextWindows()
 	{
 		// Release the device context of the OpenGL window
@@ -227,10 +219,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Debug message callback function called by the "GL_ARB_debug_output"-extension
-	*/
 	void ContextWindows::debugMessageCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int, const char *message, void *)
 	{
 		// Source to string
@@ -334,10 +322,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Create a OpenGL context
-	*/
 	HGLRC ContextWindows::createOpenGLContext()
 	{
 		// Disable the following warning, we can't do anything to resolve this warning

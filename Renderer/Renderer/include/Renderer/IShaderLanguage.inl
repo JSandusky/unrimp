@@ -28,46 +28,26 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IShaderLanguage::~IShaderLanguage()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the owner renderer instance
-	*/
 	inline IRenderer &IShaderLanguage::getRenderer() const
 	{
 		return *mRenderer;
 	}
 
-	/**
-	*  @brief
-	*    Create a program and assigns a vertex and fragment shader to it
-	*/
 	inline IProgram *IShaderLanguage::createProgram(IVertexShader *vertexShader, IFragmentShader *fragmentShader)
 	{
 		return createProgram(vertexShader, nullptr, nullptr, nullptr, fragmentShader);
 	}
 
-	/**
-	*  @brief
-	*    Create a program and assigns a vertex, geometry and fragment shader to it
-	*/
 	inline IProgram *IShaderLanguage::createProgram(IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader)
 	{
 		return createProgram(vertexShader, nullptr, nullptr, geometryShader, fragmentShader);
 	}
 
-	/**
-	*  @brief
-	*    Create a program and assigns a vertex, tessellation control, tessellation evaluation and fragment shader to it
-	*/
 	inline IProgram *IShaderLanguage::createProgram(IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader)
 	{
 		return createProgram(vertexShader, tessellationControlShader, tessellationEvaluationShader, nullptr, fragmentShader);
@@ -77,30 +57,18 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline IShaderLanguage::IShaderLanguage(IRenderer &renderer) :
 		mRenderer(&renderer)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IShaderLanguage::IShaderLanguage(const IShaderLanguage &source) :
 		mRenderer(&source.getRenderer())
 	{
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IShaderLanguage &IShaderLanguage::operator =(const IShaderLanguage &)
 	{
 		// Not supported

@@ -35,10 +35,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	RasterizerState::RasterizerState(Direct3D9Renderer &direct3D9Renderer, const Renderer::RasterizerState &rasterizerState) :
 		IRasterizerState(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer)),
 		mDirect3DFillMode(0),	// Set below
@@ -86,19 +82,11 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	RasterizerState::~RasterizerState()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Set the Direct3D 9 rasterizer states
-	*/
 	void RasterizerState::setDirect3D9RasterizerStates(IDirect3DDevice9 &direct3DDevice9) const
 	{
 		// Renderer::RasterizerState::fillMode

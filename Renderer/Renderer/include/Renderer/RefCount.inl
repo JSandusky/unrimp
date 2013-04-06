@@ -28,10 +28,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	template <class AType>
 	inline RefCount<AType>::RefCount() :
 		mRefCount(0)
@@ -39,40 +35,24 @@ namespace Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	template <class AType>
 	inline RefCount<AType>::~RefCount()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Get a pointer to the object
-	*/
 	template <class AType>
 	inline const AType *RefCount<AType>::getPointer() const
 	{
 		return static_cast<const AType*>(this);
 	}
 
-	/**
-	*  @brief
-	*    Get a pointer to the object
-	*/
 	template <class AType>
 	inline AType *RefCount<AType>::getPointer()
 	{
 		return static_cast<AType*>(this);
 	}
 
-	/**
-	*  @brief
-	*    Increases the reference count
-	*/
 	template <class AType>
 	inline unsigned int RefCount<AType>::addReference()
 	{
@@ -83,10 +63,6 @@ namespace Renderer
 		return mRefCount;
 	}
 
-	/**
-	*  @brief
-	*    Decreases the reference count
-	*/
 	template <class AType>
 	inline unsigned int RefCount<AType>::release()
 	{
@@ -109,10 +85,6 @@ namespace Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Gets the current reference count
-	*/
 	template <class AType>
 	inline unsigned int RefCount<AType>::getRefCount() const
 	{

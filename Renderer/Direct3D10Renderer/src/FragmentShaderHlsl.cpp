@@ -38,10 +38,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode) :
 		FragmentShader(direct3D10Renderer),
 		mD3D10PixelShader(nullptr)
@@ -60,10 +56,6 @@ namespace Direct3D10Renderer
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 10 automatically sets a decent default name
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	FragmentShaderHlsl::~FragmentShaderHlsl()
 	{
 		// Release the Direct3D 10 pixel shader

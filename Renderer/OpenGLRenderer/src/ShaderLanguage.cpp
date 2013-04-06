@@ -34,19 +34,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguage::~ShaderLanguage()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the owner OpenGL renderer instance
-	*/
 	OpenGLRenderer &ShaderLanguage::getOpenGLRenderer() const
 	{
 		return reinterpret_cast<OpenGLRenderer&>(getRenderer());
@@ -56,10 +48,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguage::ShaderLanguage(OpenGLRenderer &openGLRenderer) :
 		IShaderLanguage(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer))
 	{

@@ -28,10 +28,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 11 hull shader
-	*/
 	inline ID3D11HullShader *TessellationControlShaderHlsl::getD3D11HullShader() const
 	{
 		return mD3D11HullShader;

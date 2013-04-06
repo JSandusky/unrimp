@@ -38,10 +38,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	UniformBuffer::UniformBuffer(Direct3D10Renderer &direct3D10Renderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		Renderer::IUniformBuffer(direct3D10Renderer),
 		mD3D10Buffer(nullptr)
@@ -89,10 +85,6 @@ namespace Direct3D10Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	UniformBuffer::~UniformBuffer()
 	{
 		// Release the Direct3D 10 constant buffer

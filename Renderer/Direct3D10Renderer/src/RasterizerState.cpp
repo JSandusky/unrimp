@@ -39,10 +39,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	RasterizerState::RasterizerState(Direct3D10Renderer &direct3D10Renderer, const Renderer::RasterizerState &rasterizerState) :
 		IRasterizerState(direct3D10Renderer),
 		mD3D10RasterizerState(nullptr)
@@ -57,10 +53,6 @@ namespace Direct3D10Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	RasterizerState::~RasterizerState()
 	{
 		// Release the Direct3D 10 rasterizer state

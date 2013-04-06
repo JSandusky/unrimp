@@ -28,10 +28,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline RendererToolkitImpl::RendererToolkitImpl(const RendererToolkitImpl &) :
 		mFreeTypeContext(nullptr),
 		mFontProgram(nullptr),
@@ -41,10 +37,6 @@ namespace RendererToolkit
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline RendererToolkitImpl &RendererToolkitImpl::operator =(const RendererToolkitImpl &)
 	{
 		// Not supported

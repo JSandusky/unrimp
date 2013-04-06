@@ -28,10 +28,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	inline Capabilities::Capabilities() :
 		maximumNumberOfViewports(0),
 		maximumNumberOfSimultaneousRenderTargets(0),
@@ -50,10 +46,6 @@ namespace Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline Capabilities::~Capabilities()
 	{
 		// Nothing to do in here
@@ -63,10 +55,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline Capabilities::Capabilities(const Capabilities &) :
 		maximumNumberOfViewports(0),
 		maximumNumberOfSimultaneousRenderTargets(0),
@@ -85,10 +73,6 @@ namespace Renderer
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline Capabilities &Capabilities::operator =(const Capabilities &)
 	{
 		// Not supported

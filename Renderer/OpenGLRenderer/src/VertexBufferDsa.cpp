@@ -35,10 +35,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexBufferDsa::VertexBufferDsa(OpenGLRenderer &openGLRenderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		VertexBuffer(openGLRenderer)
 	{
@@ -47,10 +43,6 @@ namespace OpenGLRenderer
 		glNamedBufferDataEXT(mOpenGLArrayBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, bufferUsage);
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexBufferDsa::~VertexBufferDsa()
 	{
 		// Nothing to do in here

@@ -28,19 +28,11 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the number of texture instances
-	*/
 	inline unsigned int TextureCollection::getNumberOfTextures() const
 	{
 		return mNumberOfTextures;
 	}
 
-	/**
-	*  @brief
-	*    Return the texture instances
-	*/
 	inline Renderer::ITexture **TextureCollection::getTextures() const
 	{
 		return mTextures;

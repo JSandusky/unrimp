@@ -48,10 +48,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Destructor
-*/
 IApplicationRendererToolkit::~IApplicationRendererToolkit()
 {
 	// Nothing to do in here
@@ -105,10 +101,6 @@ void IApplicationRendererToolkit::onDeinitialization()
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 IApplicationRendererToolkit::IApplicationRendererToolkit(const char *rendererName) :
 	IApplicationRenderer(rendererName),
 	mRendererToolkitSharedLibrary(nullptr)
@@ -120,10 +112,6 @@ IApplicationRendererToolkit::IApplicationRendererToolkit(const char *rendererNam
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Create a renderer toolkit instance
-*/
 RendererToolkit::IRendererToolkit *IApplicationRendererToolkit::createRendererToolkitInstance(Renderer::IRenderer &renderer)
 {
 	#ifdef SHARED_LIBRARIES

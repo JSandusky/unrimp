@@ -28,10 +28,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL ES 2 array buffer
-	*/
 	inline unsigned int VertexBuffer::getOpenGLES2ArrayBuffer() const
 	{
 		return mOpenGLES2ArrayBuffer;

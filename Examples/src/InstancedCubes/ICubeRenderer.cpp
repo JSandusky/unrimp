@@ -27,10 +27,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Destructor
-*/
 ICubeRenderer::~ICubeRenderer()
 {
 	// Nothing to do in here
@@ -40,28 +36,16 @@ ICubeRenderer::~ICubeRenderer()
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Default constructor
-*/
 ICubeRenderer::ICubeRenderer()
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Copy constructor
-*/
 ICubeRenderer::ICubeRenderer(const ICubeRenderer &)
 {
 	// Not supported
 }
 
-/**
-*  @brief
-*    Copy operator
-*/
 ICubeRenderer &ICubeRenderer::operator =(const ICubeRenderer &)
 {
 	// Not supported

@@ -28,39 +28,23 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IFontGlyph::~IFontGlyph()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the width and height (both in pixel) of the glyph
-	*/
 	inline void IFontGlyph::getWidthAndHeight(int &width, int &height) const
 	{
 		width  = mWidth;
 		height = mHeight;
 	}
 
-	/**
-	*  @brief
-	*    Returns the distance (in pixel) from the current pen position to the glyph bitmap
-	*/
 	inline void IFontGlyph::getCorner(float &cornerX, float &cornerY) const
 	{
 		cornerX = mCornerX;
 		cornerY = mCornerY;
 	}
 
-	/**
-	*  @brief
-	*    Return the object space pen advance
-	*/
 	inline void IFontGlyph::getPenAdvance(float &penAdvanceX, float &penAdvanceY) const
 	{
 		penAdvanceX = mPenAdvanceX;
@@ -71,10 +55,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	inline IFontGlyph::IFontGlyph() :
 		mWidth(0),
 		mHeight(0),
@@ -86,19 +66,11 @@ namespace RendererToolkit
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IFontGlyph::IFontGlyph(const IFontGlyph &)
 	{
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IFontGlyph &IFontGlyph::operator =(const IFontGlyph &)
 	{
 		// Not supported

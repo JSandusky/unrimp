@@ -39,10 +39,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ProgramCg::ProgramCg(Direct3D9Renderer &direct3D9Renderer, VertexShaderCg *vertexShaderCg, FragmentShaderCg *fragmentShaderCg) :
 		Program(direct3D9Renderer, InternalResourceType::CG),
 		mDirect3D9Renderer(&direct3D9Renderer),
@@ -60,10 +56,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ProgramCg::~ProgramCg()
 	{
 		// Release the shader references

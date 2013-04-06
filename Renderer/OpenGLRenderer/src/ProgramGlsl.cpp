@@ -46,10 +46,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ProgramGlsl::ProgramGlsl(OpenGLRenderer &openGLRenderer, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
 		Program(openGLRenderer, InternalResourceType::GLSL),
 		mOpenGLProgram(glCreateProgramObjectARB())
@@ -137,10 +133,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ProgramGlsl::~ProgramGlsl()
 	{
 		// Destroy the OpenGL program

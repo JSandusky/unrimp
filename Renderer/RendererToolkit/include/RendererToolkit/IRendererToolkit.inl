@@ -28,19 +28,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IRendererToolkit::~IRendererToolkit()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the used renderer instance
-	*/
 	inline Renderer::IRenderer &IRendererToolkit::getRenderer() const
 	{
 		return *mRenderer;
@@ -50,30 +42,18 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	inline IRendererToolkit::IRendererToolkit() :
 		mRenderer(nullptr)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IRendererToolkit::IRendererToolkit(const IRendererToolkit &) :
 		mRenderer(nullptr)
 	{
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IRendererToolkit &IRendererToolkit::operator =(const IRendererToolkit &)
 	{
 		// Not supported

@@ -28,10 +28,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 10 constant buffer instance
-	*/
 	inline ID3D10Buffer *UniformBuffer::getD3D10Buffer() const
 	{
 		return mD3D10Buffer;

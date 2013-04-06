@@ -36,10 +36,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SamplerStateBind::SamplerStateBind(OpenGLRenderer &openGLRenderer, const Renderer::SamplerState &samplerState) :
 		SamplerState(openGLRenderer),
 		mOpenGLMagFilterMode(Mapping::getOpenGLMagFilterMode(samplerState.filter)),
@@ -61,19 +57,11 @@ namespace OpenGLRenderer
 		mBorderColor[3] = samplerState.borderColor[3];
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SamplerStateBind::~SamplerStateBind()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Set the OpenGL sampler states
-	*/
 	void SamplerStateBind::setOpenGLSamplerStates() const
 	{
 		// TODO(co) Support other targets, not just "GL_TEXTURE_2D"

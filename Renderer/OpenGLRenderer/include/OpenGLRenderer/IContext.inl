@@ -28,19 +28,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the available extensions
-	*/
 	inline const Extensions &IContext::getExtensions() const
 	{
 		return *mExtensions;
 	}
 
-	/**
-	*  @brief
-	*    Return the available extensions
-	*/
 	inline Extensions &IContext::getExtensions()
 	{
 		return *mExtensions;

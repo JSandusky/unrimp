@@ -36,10 +36,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline ITessellationEvaluationShader::~ITessellationEvaluationShader()
 	{
 		#ifndef RENDERER_NO_STATISTICS
@@ -52,10 +48,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline ITessellationEvaluationShader::ITessellationEvaluationShader(IRenderer &renderer) :
 		IShader(ResourceType::TESSELLATION_EVALUATION_SHADER, renderer)
 	{
@@ -66,10 +58,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline ITessellationEvaluationShader::ITessellationEvaluationShader(const ITessellationEvaluationShader &source) :
 		IShader(source)
 	{
@@ -81,10 +69,6 @@ namespace Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline ITessellationEvaluationShader &ITessellationEvaluationShader::operator =(const ITessellationEvaluationShader &)
 	{
 		// Not supported

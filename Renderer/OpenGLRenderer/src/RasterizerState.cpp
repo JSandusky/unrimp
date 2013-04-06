@@ -35,10 +35,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	RasterizerState::RasterizerState(OpenGLRenderer &openGLRenderer, const Renderer::RasterizerState &rasterizerState) :
 		IRasterizerState(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mRasterizerState(rasterizerState)
@@ -46,19 +42,11 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	RasterizerState::~RasterizerState()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Set the OpenGL rasterizer states
-	*/
 	void RasterizerState::setOpenGLRasterizerStates() const
 	{
 		// Renderer::RasterizerState::fillMode

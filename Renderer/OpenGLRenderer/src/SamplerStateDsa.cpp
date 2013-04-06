@@ -34,10 +34,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SamplerStateDsa::SamplerStateDsa(OpenGLRenderer &openGLRenderer, const Renderer::SamplerState &samplerState) :
 		SamplerState(openGLRenderer),
 		mSamplerState(samplerState)
@@ -45,19 +41,11 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SamplerStateDsa::~SamplerStateDsa()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Set the OpenGL sampler states
-	*/
 	void SamplerStateDsa::setOpenGLSamplerStates() const
 	{
 		// TODO(co) Implement me

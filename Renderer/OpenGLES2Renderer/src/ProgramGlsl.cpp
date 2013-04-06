@@ -37,10 +37,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ProgramGlsl::ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
 		Program(openGLES2Renderer)
 	{
@@ -93,10 +89,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ProgramGlsl::~ProgramGlsl()
 	{
 		// Nothing to do in here

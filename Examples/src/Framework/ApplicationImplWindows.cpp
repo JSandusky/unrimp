@@ -28,10 +28,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Default constructor
-*/
 ApplicationImplWindows::ApplicationImplWindows(IApplication &application, const char *windowTitle) :
 	mApplication(&application),
 	mNativeWindowHandle(NULL_HANDLE)
@@ -47,10 +43,6 @@ ApplicationImplWindows::ApplicationImplWindows(IApplication &application, const 
 	}
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 ApplicationImplWindows::~ApplicationImplWindows()
 {
 	// Nothing to do in here

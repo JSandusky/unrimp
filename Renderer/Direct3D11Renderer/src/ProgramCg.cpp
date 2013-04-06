@@ -45,10 +45,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ProgramCg::ProgramCg(Direct3D11Renderer &direct3D11Renderer, VertexShaderCg *vertexShaderCg, TessellationControlShaderCg *tessellationControlShaderCg, TessellationEvaluationShaderCg *tessellationEvaluationShaderCg, GeometryShaderCg *geometryShaderCg, FragmentShaderCg *fragmentShaderCg) :
 		Program(direct3D11Renderer, InternalResourceType::CG),
 		mVertexShaderCg(vertexShaderCg),
@@ -80,10 +76,6 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ProgramCg::~ProgramCg()
 	{
 		// Release the shader references

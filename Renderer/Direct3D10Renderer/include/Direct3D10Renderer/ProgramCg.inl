@@ -28,28 +28,16 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Cg vertex shader the program is using
-	*/
 	inline VertexShaderCg *ProgramCg::getVertexShaderCg() const
 	{
 		return mVertexShaderCg;
 	}
 
-	/**
-	*  @brief
-	*    Return the Cg geometry shader the program is using
-	*/
 	inline GeometryShaderCg *ProgramCg::getGeometryShaderCg() const
 	{
 		return mGeometryShaderCg;
 	}
 
-	/**
-	*  @brief
-	*    Return the Cg fragment shader the program is using
-	*/
 	inline FragmentShaderCg *ProgramCg::getFragmentShaderCg() const
 	{
 		return mFragmentShaderCg;

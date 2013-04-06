@@ -39,10 +39,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 AssimpMesh::AssimpMesh(const char *rendererName) :
 	IApplicationRenderer(rendererName),
 	mMesh(nullptr),
@@ -54,10 +50,6 @@ AssimpMesh::AssimpMesh(const char *rendererName) :
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 AssimpMesh::~AssimpMesh()
 {
 	// The resources are released within "onDeinitialization()"

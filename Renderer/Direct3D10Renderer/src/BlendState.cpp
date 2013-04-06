@@ -39,10 +39,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	BlendState::BlendState(Direct3D10Renderer &direct3D10Renderer, const Renderer::BlendState &blendState) :
 		IBlendState(direct3D10Renderer),
 		mD3D10BlendState(nullptr)
@@ -82,10 +78,6 @@ namespace Direct3D10Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	BlendState::~BlendState()
 	{
 		// Release the Direct3D 10 blend state

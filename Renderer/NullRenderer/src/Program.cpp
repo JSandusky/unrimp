@@ -44,10 +44,6 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Program::Program(NullRenderer &nullRenderer, VertexShader *vertexShader, TessellationControlShader *tessellationControlShader, TessellationEvaluationShader *tessellationEvaluationShader, GeometryShader *geometryShader, FragmentShader *fragmentShader) :
 		IProgram(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
@@ -80,12 +76,9 @@ namespace NullRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Program::~Program()
 	{
+		// Nothing to do in here
 	}
 
 

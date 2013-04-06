@@ -37,10 +37,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SwapChain::SwapChain(Direct3D10Renderer &direct3D10Renderer, handle nativeWindowHandle) :
 		ISwapChain(direct3D10Renderer),
 		mDxgiSwapChain(nullptr),
@@ -120,10 +116,6 @@ namespace Direct3D10Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SwapChain::~SwapChain()
 	{
 		// "DXGI Overview - Destroying a Swap Chain" at MSDN http://msdn.microsoft.com/en-us/library/bb205075.aspx states
@@ -349,10 +341,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the swap chain width and height
-	*/
 	void SwapChain::getSafeWidthAndHeight(unsigned int &width, unsigned int &height) const
 	{
 		// Get the Direct3D 10 swap chain description
@@ -382,10 +370,6 @@ namespace Direct3D10Renderer
 		height = static_cast<UINT>(swapChainHeight);
 	}
 
-	/**
-	*  @brief
-	*    Create the Direct3D 10 views
-	*/
 	void SwapChain::createDirect3D10Views()
 	{
 		// Create a render target view

@@ -28,10 +28,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 9 vertex declaration instance
-	*/
 	inline IDirect3DVertexDeclaration9 *VertexArray::getDirect3DVertexDeclaration9() const
 	{
 		return mDirect3DVertexDeclaration9;

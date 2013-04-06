@@ -28,10 +28,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 11 domain shader
-	*/
 	inline ID3D11DomainShader *TessellationEvaluationShaderHlsl::getD3D11DomainShader() const
 	{
 		return mD3D11DomainShader;

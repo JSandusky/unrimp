@@ -28,22 +28,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the used renderer instance
-	*/
 	inline Renderer::IRenderer &FreeTypeContext::getRenderer() const
 	{
 		return *mRenderer;
 	}
 
-	/**
-	*  @brief
-	*    Return the FreeType library object
-	*
-	*  @return
-	*    The FreeType library object, a null pointer on error (in case of an terrible error), do not delete the instance!
-	*/
 	inline FT_Library *FreeTypeContext::getFTLibrary() const
 	{
 		return mFTLibrary;
@@ -53,10 +42,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	inline FreeTypeContext::FreeTypeContext() :
 		mRenderer(nullptr),
 		mFTLibrary(nullptr)
@@ -64,10 +49,6 @@ namespace RendererToolkit
 		// Nothing do to in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline FreeTypeContext::FreeTypeContext(const FreeTypeContext &) :
 		mRenderer(nullptr),
 		mFTLibrary(nullptr)
@@ -75,10 +56,6 @@ namespace RendererToolkit
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline FreeTypeContext &FreeTypeContext::operator =(const FreeTypeContext &)
 	{
 		// Not supported

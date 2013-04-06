@@ -35,10 +35,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	IndexBufferDsa::IndexBufferDsa(OpenGLRenderer &openGLRenderer, unsigned int numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		IndexBuffer(openGLRenderer, indexBufferFormat)
 	{
@@ -47,10 +43,6 @@ namespace OpenGLRenderer
 		glNamedBufferDataEXT(mOpenGLElementArrayBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, bufferUsage);
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	IndexBufferDsa::~IndexBufferDsa()
 	{
 		// Nothing to do in here

@@ -37,20 +37,12 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 FirstFont::FirstFont(const char *rendererName) :
 	IApplicationRendererToolkit(rendererName)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 FirstFont::~FirstFont()
 {
 	// The resources are released within "onDeinitialization()"

@@ -56,10 +56,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguageCg::ShaderLanguageCg(OpenGLRenderer &openGLRenderer) :
 		ShaderLanguage(openGLRenderer),
 		mCgContext(cgCreateContext())
@@ -72,10 +68,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguageCg::~ShaderLanguageCg()
 	{
 		// Is there a valid Cg context?
@@ -222,10 +214,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private static Cg callback functions                  ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Internal Cg error callback function
-	*/
 	void ShaderLanguageCg::cgErrorCallback()
 	{
 		const CGerror lastCgError = cgGetError();

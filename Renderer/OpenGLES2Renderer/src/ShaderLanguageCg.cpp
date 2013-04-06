@@ -44,20 +44,12 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguageCg::ShaderLanguageCg(OpenGLES2Renderer &openGLES2Renderer) :
 		ShaderLanguage(openGLES2Renderer)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguageCg::~ShaderLanguageCg()
 	{
 		// Nothing to do in here

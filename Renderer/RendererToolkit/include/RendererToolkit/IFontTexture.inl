@@ -28,10 +28,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IFontTexture::~IFontTexture()
 	{
 		// Nothing to do in here
@@ -41,28 +37,16 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	inline IFontTexture::IFontTexture()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IFontTexture::IFontTexture(const IFontTexture &)
 	{
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IFontTexture &IFontTexture::operator =(const IFontTexture &)
 	{
 		// Not supported

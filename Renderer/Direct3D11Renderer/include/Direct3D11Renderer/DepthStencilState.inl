@@ -28,10 +28,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 11 depth stencil state
-	*/
 	inline ID3D11DepthStencilState *DepthStencilState::getD3D11DepthStencilState() const
 	{
 		return mD3D11DepthStencilState;

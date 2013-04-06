@@ -38,10 +38,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TessellationEvaluationShaderCg::TessellationEvaluationShaderCg(Direct3D11Renderer &direct3D11Renderer, _CGcontext &cgContext, const char *sourceCode) :
 		TessellationEvaluationShader(direct3D11Renderer),
 		mCgProgram(nullptr)
@@ -81,10 +77,6 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TessellationEvaluationShaderCg::~TessellationEvaluationShaderCg()
 	{
 		// Destroy the Cg program

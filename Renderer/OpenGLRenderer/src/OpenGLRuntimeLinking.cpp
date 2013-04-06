@@ -48,10 +48,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	OpenGLRuntimeLinking::OpenGLRuntimeLinking() :
 		mOpenGLSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
@@ -60,10 +56,6 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	OpenGLRuntimeLinking::~OpenGLRuntimeLinking()
 	{
 		// Destroy the shared library instances
@@ -82,10 +74,6 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Return whether or not OpenGL is available
-	*/
 	bool OpenGLRuntimeLinking::isOpenGLAvaiable()
 	{
 		// Already initialized?
@@ -110,10 +98,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Load the shared libraries
-	*/
 	bool OpenGLRuntimeLinking::loadSharedLibraries()
 	{
 		// Load the shared library
@@ -137,10 +121,6 @@ namespace OpenGLRenderer
 		return (nullptr != mOpenGLSharedLibrary);
 	}
 
-	/**
-	*  @brief
-	*    Load the OpenGL entry points
-	*/
 	bool OpenGLRuntimeLinking::loadOpenGLEntryPoints()
 	{
 		bool result = true;	// Success by default

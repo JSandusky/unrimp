@@ -38,10 +38,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Texture2D::Texture2D(Direct3D9Renderer &direct3D9Renderer, unsigned int width, unsigned int height, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags, Renderer::TextureUsage::Enum textureUsage) :
 		ITexture2D(direct3D9Renderer, width, height),
 		mDirect3DTexture9(nullptr)
@@ -105,10 +101,6 @@ namespace Direct3D9Renderer
 		RENDERER_END_DEBUG_EVENT(&direct3D9Renderer)
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Texture2D::~Texture2D()
 	{
 		if (nullptr != mDirect3DTexture9)

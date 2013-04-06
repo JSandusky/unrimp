@@ -38,10 +38,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexShaderCg::VertexShaderCg(Direct3D10Renderer &direct3D10Renderer, _CGcontext &cgContext, const char *sourceCode) :
 		VertexShader(direct3D10Renderer),
 		mCgProgram(nullptr),
@@ -82,10 +78,6 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexShaderCg::~VertexShaderCg()
 	{
 		// The "cgD3D10GetCompiledProgram()"-documentation does not state whether or not we have to release

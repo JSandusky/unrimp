@@ -28,10 +28,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	inline FontGlyphTextureFreeType::FontGlyphTextureFreeType() :
 		mTexCoordMinX(0.0f),
 		mTexCoordMinY(0.0f),
@@ -41,29 +37,17 @@ namespace RendererToolkit
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline FontGlyphTextureFreeType::~FontGlyphTextureFreeType()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the normalized minimum glyph texture coordinate inside the glyph texture atlas
-	*/
 	inline void FontGlyphTextureFreeType::getTexCoordMin(float &texCoordMinX, float &texCoordMinY) const
 	{
 		texCoordMinX = mTexCoordMinX;
 		texCoordMinY = mTexCoordMinY;
 	}
 
-	/**
-	*  @brief
-	*    Return the normalized maximum glyph texture coordinate inside the glyph texture atlas
-	*/
 	inline void FontGlyphTextureFreeType::getTexCoordMax(float &texCoordMaxX, float &texCoordMaxY) const
 	{
 		texCoordMaxX = mTexCoordMaxX;

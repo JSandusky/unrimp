@@ -28,10 +28,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the internal resource type
-	*/
 	inline Program::InternalResourceType::Enum Program::getInternalResourceType() const
 	{
 		return mInternalResourceType;

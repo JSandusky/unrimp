@@ -109,20 +109,12 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 FirstMultipleSwapChains::FirstMultipleSwapChains(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 FirstMultipleSwapChains::~FirstMultipleSwapChains()
 {
 	// The resources are released within "onDeinitialization()"
@@ -446,10 +438,6 @@ void FirstMultipleSwapChains::onDraw()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Draw
-*/
 void FirstMultipleSwapChains::draw(const float color[4])
 {
 	// Get and check the renderer instance

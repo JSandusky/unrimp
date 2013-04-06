@@ -39,10 +39,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	ExtensionsRuntimeLinking::ExtensionsRuntimeLinking() :
 		// EXT
 		mGL_EXT_texture_compression_s3tc(false),
@@ -74,19 +70,11 @@ namespace OpenGLES2Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ExtensionsRuntimeLinking::~ExtensionsRuntimeLinking()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Initialize the supported extensions
-	*/
 	void ExtensionsRuntimeLinking::initialize()
 	{
 		// Define a helper macro

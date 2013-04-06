@@ -28,19 +28,11 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 11 vertex shader blob
-	*/
 	inline ID3DBlob *VertexShaderHlsl::getD3DBlobVertexShader() const
 	{
 		return mD3DBlobVertexShader;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 11 vertex shader
-	*/
 	inline ID3D11VertexShader *VertexShaderHlsl::getD3D11VertexShader() const
 	{
 		return mD3D11VertexShader;

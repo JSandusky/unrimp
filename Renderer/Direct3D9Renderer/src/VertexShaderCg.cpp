@@ -38,10 +38,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexShaderCg::VertexShaderCg(Direct3D9Renderer &direct3D9Renderer, _CGcontext &cgContext, const char *sourceCode) :
 		VertexShader(direct3D9Renderer),
 		mCgProgram(nullptr)
@@ -77,10 +73,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexShaderCg::~VertexShaderCg()
 	{
 		// Destroy the Cg program

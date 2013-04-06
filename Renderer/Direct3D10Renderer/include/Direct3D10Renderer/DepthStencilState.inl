@@ -28,10 +28,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 10 depth stencil state
-	*/
 	inline ID3D10DepthStencilState *DepthStencilState::getD3D10DepthStencilState() const
 	{
 		return mD3D10DepthStencilState;

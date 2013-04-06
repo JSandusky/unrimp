@@ -92,10 +92,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	OpenGLRenderer::OpenGLRenderer(handle nativeWindowHandle) :
 		#ifdef WIN32
 			mContext(new ContextWindows(nativeWindowHandle)),
@@ -170,10 +166,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	OpenGLRenderer::~OpenGLRenderer()
 	{
 		// Set no vertex array reference, in case we have one
@@ -1967,10 +1959,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Initialize the capabilities
-	*/
 	void OpenGLRenderer::initializeCapabilities()
 	{
 		GLint openGLValue = 0;
@@ -2065,10 +2053,6 @@ namespace OpenGLRenderer
 		mCapabilities.fragmentShader = mContext->getExtensions().isGL_ARB_fragment_shader();
 	}
 
-	/**
-	*  @brief
-	*    Unset the currently used vertex array
-	*/
 	void OpenGLRenderer::iaUnsetVertexArray()
 	{
 		// Release the currently used vertex array reference, in case we have one

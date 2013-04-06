@@ -28,10 +28,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D shader resource view instance
-	*/
 	inline ID3D11ShaderResourceView *Texture2D::getD3D11ShaderResourceView() const
 	{
 		return mD3D11ShaderResourceViewTexture;

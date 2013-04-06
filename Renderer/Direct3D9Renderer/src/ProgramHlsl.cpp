@@ -40,10 +40,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ProgramHlsl::ProgramHlsl(Direct3D9Renderer &direct3D9Renderer, VertexShaderHlsl *vertexShaderHlsl, FragmentShaderHlsl *fragmentShaderHlsl) :
 		Program(direct3D9Renderer, InternalResourceType::HLSL),
 		mDirect3D9Renderer(&direct3D9Renderer),
@@ -100,10 +96,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ProgramHlsl::~ProgramHlsl()
 	{
 		// Release the Direct3D 9 constant table

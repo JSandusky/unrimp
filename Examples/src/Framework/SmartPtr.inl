@@ -27,10 +27,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Default constructor
-*/
 template <class AType>
 SmartPtr<AType>::SmartPtr() :
 	mPtr(nullptr)
@@ -38,10 +34,6 @@ SmartPtr<AType>::SmartPtr() :
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Constructor
-*/
 template <class AType>
 SmartPtr<AType>::SmartPtr(AType *ptr) :
 	mPtr(nullptr)
@@ -49,10 +41,6 @@ SmartPtr<AType>::SmartPtr(AType *ptr) :
 	setPtr(ptr);
 }
 
-/**
-*  @brief
-*    Constructor
-*/
 template <class AType>
 SmartPtr<AType>::SmartPtr(const SmartPtr<AType> &ptr) :
 	mPtr(nullptr)
@@ -60,20 +48,12 @@ SmartPtr<AType>::SmartPtr(const SmartPtr<AType> &ptr) :
 	setPtr(ptr.getPtr());
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 template <class AType>
 SmartPtr<AType>::~SmartPtr()
 {
 	setPtr(static_cast<RefCount<AType>*>(nullptr));
 }
 
-/**
-*  @brief
-*    Assign a pointer
-*/
 template <class AType>
 SmartPtr<AType> &SmartPtr<AType>::operator =(AType *ptr)
 {
@@ -84,10 +64,6 @@ SmartPtr<AType> &SmartPtr<AType>::operator =(AType *ptr)
 	return *this;
 }
 
-/**
-*  @brief
-*    Assign a smart pointer
-*/
 template <class AType>
 SmartPtr<AType> &SmartPtr<AType>::operator =(const SmartPtr<AType> &ptr)
 {
@@ -98,80 +74,48 @@ SmartPtr<AType> &SmartPtr<AType>::operator =(const SmartPtr<AType> &ptr)
 	return *this;
 }
 
-/**
-*  @brief
-*    Get a direct pointer to the object
-*/
 template <class AType>
 AType *SmartPtr<AType>::getPointer() const
 {
 	return mPtr ? mPtr->getPointer() : nullptr;
 }
 
-/**
-*  @brief
-*    Get a pointer to access the object
-*/
 template <class AType>
 AType *SmartPtr<AType>::operator ->() const
 {
 	return getPointer();
 }
 
-/**
-*  @brief
-*    Cast to a pointer to the object
-*/
 template <class AType>
 SmartPtr<AType>::operator AType*() const
 {
 	return getPointer();
 }
 
-/**
-*  @brief
-*    Check if the pointer is not a null pointer
-*/
 template <class AType>
 bool SmartPtr<AType>::operator !() const
 {
 	return (getPointer() == nullptr);
 }
 
-/**
-*  @brief
-*    Check for equality
-*/
 template <class AType>
 bool SmartPtr<AType>::operator ==(AType *ptr) const
 {
 	return (getPointer() == ptr);
 }
 
-/**
-*  @brief
-*    Check for equality
-*/
 template <class AType>
 bool SmartPtr<AType>::operator ==(const SmartPtr<AType> &ptr) const
 {
 	return (getPointer() == ptr.getPointer());
 }
 
-/**
-*  @brief
-*    Check for equality
-*/
 template <class AType>
 bool SmartPtr<AType>::operator !=(AType *ptr) const
 {
 	return (getPointer() != ptr);
 }
 
-/**
-*  @brief
-*    Check for equality
-*/
 template <class AType>
 bool SmartPtr<AType>::operator !=(const SmartPtr<AType> &ptr) const
 {
@@ -182,10 +126,6 @@ bool SmartPtr<AType>::operator !=(const SmartPtr<AType> &ptr) const
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Assign a pointer to an object that does not implement RefCount
-*/
 template <class AType>
 void SmartPtr<AType>::setPtr(void *ptr)
 {
@@ -193,10 +133,6 @@ void SmartPtr<AType>::setPtr(void *ptr)
 	setPtr(ptr ? new RefCountPtr<AType>(static_cast<AType*>(ptr)) : static_cast<RefCount<AType>*>(nullptr));
 }
 
-/**
-*  @brief
-*    Assign a pointer to an object that implements RefCount
-*/
 template <class AType>
 void SmartPtr<AType>::setPtr(RefCount<AType> *ptr)
 {
@@ -214,10 +150,6 @@ void SmartPtr<AType>::setPtr(RefCount<AType> *ptr)
 	mPtr = ptr;
 }
 
-/**
-*  @brief
-*    Get pointer to the reference counted object
-*/
 template <class AType>
 RefCount<AType> *SmartPtr<AType>::getPtr() const
 {

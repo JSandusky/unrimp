@@ -34,20 +34,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Texture2DArray::Texture2DArray(NullRenderer &nullRenderer, unsigned int width, unsigned int height, unsigned int numberOfSlices) :
 		ITexture2DArray(reinterpret_cast<Renderer::IRenderer&>(nullRenderer), width, height, numberOfSlices)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Texture2DArray::~Texture2DArray()
 	{
 		// Nothing to do in here

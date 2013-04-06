@@ -28,46 +28,26 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the HLSL vertex shader the program is using
-	*/
 	inline VertexShaderHlsl *ProgramHlsl::getVertexShaderHlsl() const
 	{
 		return mVertexShaderHlsl;
 	}
 
-	/**
-	*  @brief
-	*    Return the HLSL tessellation control shader the program is using
-	*/
 	inline TessellationControlShaderHlsl *ProgramHlsl::getTessellationControlShaderHlsl() const
 	{
 		return mTessellationControlShaderHlsl;
 	}
 
-	/**
-	*  @brief
-	*    Return the HLSL tessellation evaluation shader the program is using
-	*/
 	inline TessellationEvaluationShaderHlsl *ProgramHlsl::getTessellationEvaluationShaderHlsl() const
 	{
 		return mTessellationEvaluationShaderHlsl;
 	}
 
-	/**
-	*  @brief
-	*    Return the HLSL geometry shader the program is using
-	*/
 	inline GeometryShaderHlsl *ProgramHlsl::getGeometryShaderHlsl() const
 	{
 		return mGeometryShaderHlsl;
 	}
 
-	/**
-	*  @brief
-	*    Return the HLSL fragment shader the program is using
-	*/
 	inline FragmentShaderHlsl *ProgramHlsl::getFragmentShaderHlsl() const
 	{
 		return mFragmentShaderHlsl;

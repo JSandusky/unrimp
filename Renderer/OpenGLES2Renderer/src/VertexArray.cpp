@@ -35,10 +35,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexArray::~VertexArray()
 	{
 		// Release the index buffer reference
@@ -52,10 +48,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexArray::VertexArray(Renderer::IRenderer &renderer, IndexBuffer *indexBuffer) :
 		IVertexArray(renderer),
 		mIndexBuffer(indexBuffer)

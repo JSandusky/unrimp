@@ -31,20 +31,12 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 Fxaa::Fxaa(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 Fxaa::~Fxaa()
 {
 	// The resources are released within "onDeinitialization()"
@@ -262,10 +254,6 @@ void Fxaa::onDraw()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Create/recreate the framebuffer object (FBO) instance by using the current window size
-*/
 void Fxaa::recreateFramebuffer()
 {
 	// Get and check the renderer instance
@@ -296,10 +284,6 @@ void Fxaa::recreateFramebuffer()
 	}
 }
 
-/**
-*  @brief
-*    Create/recreate the post-processing program instance by using the current window size
-*/
 void Fxaa::recreatePostProcessingProgram()
 {
 	// Get and check the renderer instance
@@ -381,10 +365,6 @@ void Fxaa::recreatePostProcessingProgram()
 	}
 }
 
-/**
-*  @brief
-*    Scene rendering
-*/
 void Fxaa::sceneRendering()
 {
 	// Get and check the renderer instance
@@ -447,10 +427,6 @@ void Fxaa::sceneRendering()
 	}
 }
 
-/**
-*  @brief
-*    Post-processing
-*/
 void Fxaa::postProcessing()
 {
 	// Get and check the renderer instance

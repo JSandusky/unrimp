@@ -43,10 +43,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Destructor
-*/
 IApplicationRenderer::~IApplicationRenderer()
 {
 	// Nothing to do in here
@@ -197,10 +193,6 @@ void IApplicationRenderer::onDrawRequest()
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 IApplicationRenderer::IApplicationRenderer(const char *rendererName) :
 	IApplication(rendererName),
 	mRendererSharedLibrary(nullptr)
@@ -220,10 +212,6 @@ IApplicationRenderer::IApplicationRenderer(const char *rendererName) :
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Create a renderer instance
-*/
 Renderer::IRenderer *IApplicationRenderer::createRendererInstance(const char *rendererName)
 {
 	Renderer::IRenderer *renderer = nullptr;

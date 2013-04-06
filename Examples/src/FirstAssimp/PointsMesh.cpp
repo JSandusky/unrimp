@@ -38,10 +38,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 PointsMesh::PointsMesh(Renderer::IProgram &program, const char *filename) :
 	mNumberOfVertices(0)
 {
@@ -101,20 +97,12 @@ PointsMesh::PointsMesh(Renderer::IProgram &program, const char *filename) :
 	}
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 PointsMesh::~PointsMesh()
 {
 	// The renderer resource pointers are released automatically
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Draw the mesh
-*/
 void PointsMesh::draw()
 {
 	// Valid mesh?
@@ -140,10 +128,6 @@ void PointsMesh::draw()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Get the total number of vertices by using a given Assimp node
-*/
 void PointsMesh::getNumberOfVerticesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, unsigned int &numberOfVertices)
 {
 	// Loop through all meshes this node is using
@@ -163,10 +147,6 @@ void PointsMesh::getNumberOfVerticesRecursive(const aiScene &assimpScene, const 
 	}
 }
 
-/**
-*  @brief
-*    Fill the mesh data recursively
-*/
 void PointsMesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, const aiMatrix4x4 &assimpTransformation, unsigned int &numberOfVertices)
 {
 	// Get the absolute transformation matrix of this Assimp node

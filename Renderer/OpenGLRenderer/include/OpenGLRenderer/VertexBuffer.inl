@@ -28,10 +28,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL array buffer
-	*/
 	inline unsigned int VertexBuffer::getOpenGLArrayBuffer() const
 	{
 		return mOpenGLArrayBuffer;

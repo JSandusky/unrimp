@@ -34,10 +34,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Program::~Program()
 	{
 		// Nothing to do in here
@@ -58,10 +54,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Program::Program(Direct3D9Renderer &direct3D9Renderer, InternalResourceType::Enum internalResourceType) :
 		IProgram(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer)),
 		mInternalResourceType(internalResourceType)

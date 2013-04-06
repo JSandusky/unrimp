@@ -28,10 +28,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the context instance
-	*/
 	inline IContext &OpenGLES2Renderer::getContext() const
 	{
 		return *mContext;

@@ -28,19 +28,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL framebuffer
-	*/
 	inline unsigned int Framebuffer::getOpenGLFramebuffer() const
 	{
 		return mOpenGLFramebuffer;
 	}
 
-	/**
-	*  @brief
-	*    Return the number of color render target textures
-	*/
 	inline unsigned int Framebuffer::getNumberOfColorTextures() const
 	{
 		return mNumberOfColorTextures;

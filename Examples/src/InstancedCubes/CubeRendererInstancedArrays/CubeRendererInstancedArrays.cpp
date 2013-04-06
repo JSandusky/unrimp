@@ -34,10 +34,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &renderer, unsigned int numberOfTextures, unsigned int sceneRadius) :
 	mRenderer(&renderer),
 	mNumberOfTextures(numberOfTextures),
@@ -224,10 +220,6 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 	RENDERER_END_DEBUG_EVENT(&renderer)
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 CubeRendererInstancedArrays::~CubeRendererInstancedArrays()
 {
 	// The renderer resource pointers are released automatically

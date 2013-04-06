@@ -36,10 +36,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SamplerState::SamplerState(Direct3D9Renderer &direct3D9Renderer, const Renderer::SamplerState &samplerState) :
 		ISamplerState(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer)),
 		mDirect3D9MagFilterMode(Mapping::getDirect3D9MagFilterMode(samplerState.filter)),
@@ -77,19 +73,11 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SamplerState::~SamplerState()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Set the Direct3D 9 sampler states
-	*/
 	void SamplerState::setDirect3D9SamplerStates(unsigned int sampler, IDirect3DDevice9 &direct3DDevice9) const
 	{
 		// "IDirect3DDevice9::SetSamplerState()"-documentation: "D3DSAMPLERSTATETYPE Enumerated Type" at MSDN http://msdn.microsoft.com/en-us/library/windows/desktop/bb172602%28v=vs.85%29.aspx

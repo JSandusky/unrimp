@@ -28,19 +28,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the used index buffer
-	*/
 	inline IndexBuffer *VertexArray::getIndexBuffer() const
 	{
 		return mIndexBuffer;
 	}
 
-	/**
-	*  @brief
-	*    Return the internal resource type
-	*/
 	inline VertexArray::InternalResourceType::Enum VertexArray::getInternalResourceType() const
 	{
 		return mInternalResourceType;

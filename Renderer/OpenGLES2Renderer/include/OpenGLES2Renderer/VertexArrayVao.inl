@@ -28,10 +28,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL ES 2 vertex array
-	*/
 	inline unsigned int VertexArrayVao::getOpenGLES2VertexArray() const
 	{
 		return mOpenGLES2VertexArray;

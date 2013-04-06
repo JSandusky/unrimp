@@ -35,10 +35,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexShader::~VertexShader()
 	{
 		// Nothing to do in here
@@ -48,10 +44,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexShader::VertexShader(OpenGLES2Renderer &openGLES2Renderer) :
 		IVertexShader(openGLES2Renderer)
 	{

@@ -35,10 +35,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    "Renderer::FilterMode" to Direct3D 9 magnification filter mode
-	*/
 	unsigned int Mapping::getDirect3D9MagFilterMode(Renderer::FilterMode::Enum filterMode)
 	{
 		switch (filterMode)
@@ -102,10 +98,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::FilterMode" to Direct3D 9 minification filter mode
-	*/
 	unsigned int Mapping::getDirect3D9MinFilterMode(Renderer::FilterMode::Enum filterMode)
 	{
 		switch (filterMode)
@@ -169,10 +161,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::FilterMode" to Direct3D 9 mipmapping filter mode
-	*/
 	unsigned int Mapping::getDirect3D9MipFilterMode(Renderer::FilterMode::Enum filterMode)
 	{
 		switch (filterMode)
@@ -236,10 +224,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureAddressMode" to Direct3D 9 texture address mode
-	*/
 	unsigned int Mapping::getDirect3D9TextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode)
 	{
 		static const unsigned int MAPPING[] =
@@ -253,10 +237,6 @@ namespace Direct3D9Renderer
 		return MAPPING[textureAddressMode - 1];	// Lookout! The "Renderer::TextureAddressMode::Enum"-values start with 1, not 0
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::ComparisonFunc" to Direct3D 9 comparison function
-	*/
 	/*TODO(co)
 	GLint Mapping::getDirect3D9ComparisonFunc(Renderer::ComparisonFunc::Enum comparisonFunc)
 	{
@@ -274,10 +254,6 @@ namespace Direct3D9Renderer
 		return MAPPING[comparisonFunc];
 	}*/
 
-	/**
-	*  @brief
-	*    "Renderer::VertexArrayFormat" to Direct3D 9 type
-	*/
 	unsigned char Mapping::getDirect3D9Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
 	{
 		// BYTE
@@ -291,10 +267,6 @@ namespace Direct3D9Renderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Semantic as string" to Direct3D 9 semantic
-	*/
 	unsigned int Mapping::getDirect3D9Semantic(const char *semantic)
 	{
 		BYTE direct3D9Semantic = D3DDECLUSAGE_POSITION;
@@ -357,10 +329,6 @@ namespace Direct3D9Renderer
 		return direct3D9Semantic;
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::BufferUsage" to Direct3D 9 usage
-	*/
 	unsigned int Mapping::getDirect3D9Usage(Renderer::BufferUsage::Enum bufferUsage)
 	{
 		// Direct3D 9 only supports a subset of the OpenGL usage indications
@@ -387,10 +355,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::IndexBufferFormat" to Direct3D 9 format
-	*/
 	unsigned int Mapping::getDirect3D9Format(Renderer::IndexBufferFormat::Enum indexBufferFormat)
 	{
 		// D3DFORMAT
@@ -403,10 +367,6 @@ namespace Direct3D9Renderer
 		return MAPPING[indexBufferFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureFormat" to Direct3D 9 size (in bytes)
-	*/
 	unsigned int Mapping::getDirect3D9Size(Renderer::TextureFormat::Enum textureFormat)
 	{
 		// UINT
@@ -421,10 +381,6 @@ namespace Direct3D9Renderer
 		return MAPPING[textureFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureFormat" to Direct3D 9 format
-	*/
 	unsigned int Mapping::getDirect3D9Format(Renderer::TextureFormat::Enum textureFormat)
 	{
 		// D3DFORMAT

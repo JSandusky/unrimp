@@ -35,10 +35,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	BlendState::BlendState(OpenGLRenderer &openGLRenderer, const Renderer::BlendState &blendState) :
 		IBlendState(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mBlendState(blendState)
@@ -46,19 +42,11 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	BlendState::~BlendState()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Set the OpenGL blend states
-	*/
 	void BlendState::setOpenGLBlendStates() const
 	{
 		if (mBlendState.renderTarget[0].blendEnable)

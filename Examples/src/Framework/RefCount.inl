@@ -21,10 +21,6 @@
 //[-------------------------------------------------------]
 //[ Public functions                                      ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Default constructor
-*/
 template <class AType>
 RefCount<AType>::RefCount() :
 	mRefCount(0)
@@ -32,20 +28,12 @@ RefCount<AType>::RefCount() :
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 template <class AType>
 RefCount<AType>::~RefCount()
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Get a pointer to the object
-*/
 template <class AType>
 const AType *RefCount<AType>::getPointer() const
 {
@@ -58,10 +46,6 @@ AType *RefCount<AType>::getPointer()
 	return reinterpret_cast<AType*>(this);
 }
 
-/**
-*  @brief
-*    Increases the reference count
-*/
 template <class AType>
 unsigned int RefCount<AType>::addReference()
 {
@@ -72,10 +56,6 @@ unsigned int RefCount<AType>::addReference()
 	return mRefCount;
 }
 
-/**
-*  @brief
-*    Decreases the reference count
-*/
 template <class AType>
 unsigned int RefCount<AType>::release()
 {
@@ -98,10 +78,6 @@ unsigned int RefCount<AType>::release()
 	}
 }
 
-/**
-*  @brief
-*    Gets the current reference count
-*/
 template <class AType>
 unsigned int RefCount<AType>::getRefCount() const
 {

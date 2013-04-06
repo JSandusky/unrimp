@@ -37,10 +37,6 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TextureCollection::TextureCollection(NullRenderer &nullRenderer, unsigned int numberOfTextures, Renderer::ITexture **textures) :
 		Renderer::ITextureCollection(nullRenderer),
 		mNumberOfTextures(numberOfTextures),
@@ -69,10 +65,6 @@ namespace NullRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TextureCollection::~TextureCollection()
 	{
 		// Release the allocated memory

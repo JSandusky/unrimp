@@ -73,10 +73,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	OpenGLES2Renderer::OpenGLES2Renderer(handle nativeWindowHandle) :
 		mContext(new ContextRuntimeLinking(nativeWindowHandle)),
 		mShaderLanguageGlsl(nullptr),
@@ -144,10 +140,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	OpenGLES2Renderer::~OpenGLES2Renderer()
 	{
 		// Release instances
@@ -1528,10 +1520,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Initialize the capabilities
-	*/
 	void OpenGLES2Renderer::initializeCapabilities()
 	{
 		GLint openGLValue = 0;

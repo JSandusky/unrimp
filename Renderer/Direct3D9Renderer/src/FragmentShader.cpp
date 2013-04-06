@@ -34,10 +34,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	FragmentShader::~FragmentShader()
 	{
 		// Nothing to do in here
@@ -47,10 +43,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	FragmentShader::FragmentShader(Direct3D9Renderer &direct3D9Renderer) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer))
 	{

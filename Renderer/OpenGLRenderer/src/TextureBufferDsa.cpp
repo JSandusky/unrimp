@@ -37,10 +37,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TextureBufferDsa::TextureBufferDsa(OpenGLRenderer &openGLRenderer, unsigned int numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		TextureBuffer(openGLRenderer)
 	{
@@ -71,10 +67,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TextureBufferDsa::~TextureBufferDsa()
 	{
 		// Nothing to do in here

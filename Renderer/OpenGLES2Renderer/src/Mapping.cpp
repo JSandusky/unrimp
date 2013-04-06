@@ -36,10 +36,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    "Renderer::FilterMode" to OpenGL ES 2 magnification filter mode
-	*/
 	int Mapping::getOpenGLES2MagFilterMode(Renderer::FilterMode::Enum filterMode)
 	{
 		switch (filterMode)
@@ -103,10 +99,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::FilterMode" to OpenGL ES 2 minification filter mode
-	*/
 	int Mapping::getOpenGLES2MinFilterMode(Renderer::FilterMode::Enum filterMode)
 	{
 		switch (filterMode)
@@ -170,20 +162,12 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::FilterMode" to OpenGL ES 2 compare mode
-	*/
 	int Mapping::getOpenGLES2CompareMode(Renderer::FilterMode::Enum)
 	{
 		// "GL_COMPARE_REF_TO_TEXTURE" is not supported by OpenGL ES 2
 		return GL_NONE;
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureAddressMode" to OpenGL ES 2 texture address mode
-	*/
 	int Mapping::getOpenGLES2TextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode)
 	{
 		static const GLint MAPPING[] =
@@ -197,10 +181,6 @@ namespace OpenGLES2Renderer
 		return MAPPING[textureAddressMode - 1];	// Lookout! The "Renderer::TextureAddressMode::Enum"-values start with 1, not 0
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::ComparisonFunc" to OpenGL ES 2 comparison function
-	*/
 	int Mapping::getOpenGLES2ComparisonFunc(Renderer::ComparisonFunc::Enum comparisonFunc)
 	{
 		static const GLint MAPPING[] =
@@ -217,10 +197,6 @@ namespace OpenGLES2Renderer
 		return MAPPING[comparisonFunc - 1];	// Lookout! The "Renderer::ComparisonFunc::Enum"-values start with 1, not 0
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::VertexArrayFormat" to OpenGL ES 2 size (number of elements)
-	*/
 	int Mapping::getOpenGLES2Size(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
 	{
 		static const GLint MAPPING[] =
@@ -233,10 +209,6 @@ namespace OpenGLES2Renderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::VertexArrayFormat" to OpenGL ES 2 type
-	*/
 	unsigned int Mapping::getOpenGLES2Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
 	{
 		static const GLenum MAPPING[] =
@@ -249,10 +221,6 @@ namespace OpenGLES2Renderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::BufferUsage" to OpenGL ES 2 usage
-	*/
 	unsigned int Mapping::getOpenGLES2Type(Renderer::BufferUsage::Enum bufferUsage)
 	{
 		// OpenGL ES 2 only supports: "STREAM_DRAW", "STATIC_DRAW" and "DYNAMIC_DRAW"
@@ -279,10 +247,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::IndexBufferFormat" to OpenGL ES 2 type
-	*/
 	unsigned int Mapping::getOpenGLES2Type(Renderer::IndexBufferFormat::Enum indexBufferFormat)
 	{
 		static const GLenum MAPPING[] =
@@ -294,10 +258,6 @@ namespace OpenGLES2Renderer
 		return MAPPING[indexBufferFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureFormat" to OpenGL ES 2 internal format
-	*/
 	unsigned int Mapping::getOpenGLES2InternalFormat(Renderer::TextureFormat::Enum textureFormat)
 	{
 		static const unsigned int MAPPING[] =
@@ -311,10 +271,6 @@ namespace OpenGLES2Renderer
 		return MAPPING[textureFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureFormat" to OpenGL ES 2 format
-	*/
 	unsigned int Mapping::getOpenGLES2Format(Renderer::TextureFormat::Enum textureFormat)
 	{
 		static const unsigned int MAPPING[] =
@@ -328,10 +284,6 @@ namespace OpenGLES2Renderer
 		return MAPPING[textureFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureFormat" to OpenGL ES 2 type
-	*/
 	unsigned int Mapping::getOpenGLES2Type(Renderer::TextureFormat::Enum textureFormat)
 	{
 		static const GLenum MAPPING[] =
@@ -345,10 +297,6 @@ namespace OpenGLES2Renderer
 		return MAPPING[textureFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::PrimitiveTopology" to OpenGL ES 2 type
-	*/
 	unsigned int Mapping::getOpenGLES2Type(Renderer::PrimitiveTopology::Enum prmitive)
 	{
 		static const GLenum MAPPING[] =

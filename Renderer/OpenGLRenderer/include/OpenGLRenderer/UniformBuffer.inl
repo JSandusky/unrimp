@@ -28,10 +28,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the internal resource type
-	*/
 	inline UniformBuffer::InternalResourceType::Enum UniformBuffer::getInternalResourceType() const
 	{
 		return mInternalResourceType;

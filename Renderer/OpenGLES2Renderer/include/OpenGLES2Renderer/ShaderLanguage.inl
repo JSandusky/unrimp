@@ -28,10 +28,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the owner OpenGL ES 2 renderer instance
-	*/
 	inline OpenGLES2Renderer &ShaderLanguage::getOpenGLES2Renderer() const
 	{
 		return static_cast<OpenGLES2Renderer&>(getRenderer());

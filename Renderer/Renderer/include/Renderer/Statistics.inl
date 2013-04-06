@@ -34,10 +34,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	inline Statistics::Statistics() :
 		currentNumberOfPrograms(0),
 		numberOfCreatedPrograms(0),
@@ -91,19 +87,11 @@ namespace Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline Statistics::~Statistics()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the number of current resource instances
-	*/
 	inline unsigned int Statistics::getNumberOfCurrentResources() const
 	{
 		// Calculate the current number of resource instances
@@ -136,10 +124,6 @@ namespace Renderer
 				currentNumberOfSamplerStateCollections;
 	}
 
-	/**
-	*  @brief
-	*    Use debug output to show the current number of resource instances
-	*/
 	inline void Statistics::debugOutputCurrentResouces() const
 	{
 		// Start
@@ -188,10 +172,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline Statistics::Statistics(const Statistics &) :
 		currentNumberOfPrograms(0),
 		numberOfCreatedPrograms(0),
@@ -245,10 +225,6 @@ namespace Renderer
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline Statistics &Statistics::operator =(const Statistics &)
 	{
 		// Not supported

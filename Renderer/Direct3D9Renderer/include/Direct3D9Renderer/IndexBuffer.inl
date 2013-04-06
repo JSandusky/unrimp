@@ -28,10 +28,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D index buffer instance
-	*/
 	inline IDirect3DIndexBuffer9 *IndexBuffer::getDirect3DIndexBuffer9() const
 	{
 		return mDirect3DIndexBuffer9;

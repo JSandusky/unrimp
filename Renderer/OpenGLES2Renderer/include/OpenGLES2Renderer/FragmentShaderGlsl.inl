@@ -28,10 +28,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL ES 2 shader
-	*/
 	inline unsigned int FragmentShaderGlsl::getOpenGLES2Shader() const
 	{
 		return mOpenGLES2Shader;

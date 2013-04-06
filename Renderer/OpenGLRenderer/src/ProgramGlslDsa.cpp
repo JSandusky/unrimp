@@ -35,20 +35,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ProgramGlslDsa::ProgramGlslDsa(OpenGLRenderer &openGLRenderer, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
 		ProgramGlsl(openGLRenderer, vertexShaderGlsl, tessellationControlShaderGlsl, tessellationEvaluationShaderGlsl, geometryShaderGlsl, fragmentShaderGlsl)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ProgramGlslDsa::~ProgramGlslDsa()
 	{
 		// Nothing to do in here

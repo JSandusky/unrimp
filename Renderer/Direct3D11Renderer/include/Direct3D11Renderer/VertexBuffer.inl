@@ -28,10 +28,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D vertex buffer instance
-	*/
 	inline ID3D11Buffer *VertexBuffer::getD3D11Buffer() const
 	{
 		return mD3D11Buffer;

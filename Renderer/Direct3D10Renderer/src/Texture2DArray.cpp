@@ -38,10 +38,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Texture2DArray::Texture2DArray(Direct3D10Renderer &direct3D10Renderer, unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags, Renderer::TextureUsage::Enum textureUsage) :
 		ITexture2DArray(direct3D10Renderer, width, height, numberOfSlices),
 		mD3D10ShaderResourceViewTexture(nullptr)
@@ -126,10 +122,6 @@ namespace Direct3D10Renderer
 		RENDERER_END_DEBUG_EVENT(&direct3D10Renderer)
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Texture2DArray::~Texture2DArray()
 	{
 		if (nullptr != mD3D10ShaderResourceViewTexture)

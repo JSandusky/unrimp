@@ -34,10 +34,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexShader::~VertexShader()
 	{
 		// Nothing to do in here
@@ -47,10 +43,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexShader::VertexShader(Direct3D9Renderer &direct3D9Renderer) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer))
 	{

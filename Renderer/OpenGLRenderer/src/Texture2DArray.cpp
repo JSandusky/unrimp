@@ -35,10 +35,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Texture2DArray::~Texture2DArray()
 	{
 		// Destroy the OpenGL texture instance
@@ -50,10 +46,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Texture2DArray::Texture2DArray(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height, unsigned int numberOfSlices) :
 		ITexture2DArray(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width, height, numberOfSlices),
 		mOpenGLTexture(0)

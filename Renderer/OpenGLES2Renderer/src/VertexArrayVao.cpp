@@ -39,10 +39,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	VertexArrayVao::VertexArrayVao(Program &program, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		VertexArray(program.getRenderer(), indexBuffer),
 		mOpenGLES2VertexArray(0),
@@ -119,10 +115,6 @@ namespace OpenGLES2Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	VertexArrayVao::~VertexArrayVao()
 	{
 		// Destroy the OpenGL ES 2 vertex array

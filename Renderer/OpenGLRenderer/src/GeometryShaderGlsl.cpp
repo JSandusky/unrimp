@@ -36,10 +36,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	GeometryShaderGlsl::GeometryShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, unsigned int numberOfOutputVertices) :
 		GeometryShader(openGLRenderer),
 		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_GEOMETRY_SHADER_ARB, sourceCode)),
@@ -50,10 +46,6 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	GeometryShaderGlsl::~GeometryShaderGlsl()
 	{
 		// Destroy the OpenGL shader

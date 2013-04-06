@@ -28,19 +28,11 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 11 device
-	*/
 	inline ID3D11Device *Direct3D11Renderer::getD3D11Device() const
 	{
 		return mD3D11Device;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 11 device context instance
-	*/
 	inline ID3D11DeviceContext *Direct3D11Renderer::getD3D11DeviceContext() const
 	{
 		return mD3D11DeviceContext;

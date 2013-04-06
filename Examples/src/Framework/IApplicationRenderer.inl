@@ -21,10 +21,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Return the renderer instance
-*/
 inline Renderer::IRenderer *IApplicationRenderer::getRenderer() const
 {
 	return mRenderer;

@@ -112,10 +112,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	FontTextureFreeType::FontTextureFreeType(RendererToolkitImpl &rendererToolkitImpl, const char *filename) :
 		mRendererToolkitImpl(&rendererToolkitImpl),
 		mFontFileSize(0),
@@ -169,10 +165,6 @@ namespace RendererToolkit
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	FontTextureFreeType::~FontTextureFreeType()
 	{
 		// Destroy the glyph texture atlas
@@ -451,10 +443,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Calculate the glyph texture atlas size using the current glyph settings and hardware capabilities
-	*/
 	void FontTextureFreeType::calculateGlyphTextureAtlasSize(unsigned int &glyphTextureAtlasSizeX, unsigned int &glyphTextureAtlasSizeY)
 	{
 		// Get the maximum supported renderer texture size
@@ -492,10 +480,6 @@ namespace RendererToolkit
 		}
 	}
 
-	/**
-	*  @brief
-	*    Create the glyph texture atlas
-	*/
 	void FontTextureFreeType::createGlyphTextureAtlas()
 	{
 		// Destroy the previous glyph texture atlas
@@ -559,10 +543,6 @@ namespace RendererToolkit
 		}
 	}
 
-	/**
-	*  @brief
-	*    Return the number of bytes the glyph texture atlas allocates
-	*/
 	unsigned int FontTextureFreeType::getGlyphTextureAtlasNumberOfBytes(bool includeMipmaps) const
 	{
 		// Include mipmaps?
@@ -604,10 +584,6 @@ namespace RendererToolkit
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destroy the glyph texture atlas
-	*/
 	void FontTextureFreeType::destroyGlyphTextureAtlas()
 	{
 		// Release the glyph texture atlas

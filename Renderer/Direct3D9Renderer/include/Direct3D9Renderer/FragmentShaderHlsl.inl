@@ -28,19 +28,11 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D 9 pixel shader
-	*/
 	inline IDirect3DPixelShader9 *FragmentShaderHlsl::getDirect3DPixelShader9() const
 	{
 		return mDirect3DPixelShader9;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 9 constant table
-	*/
 	inline ID3DXConstantTable *FragmentShaderHlsl::getD3DXConstantTable() const
 	{
 		return mD3DXConstantTable;

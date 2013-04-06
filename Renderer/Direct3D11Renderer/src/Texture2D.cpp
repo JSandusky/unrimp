@@ -38,10 +38,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Texture2D::Texture2D(Direct3D11Renderer &direct3D11Renderer, unsigned int width, unsigned int height, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags, Renderer::TextureUsage::Enum textureUsage) :
 		ITexture2D(direct3D11Renderer, width, height),
 		mD3D11ShaderResourceViewTexture(nullptr)
@@ -121,10 +117,6 @@ namespace Direct3D11Renderer
 		RENDERER_END_DEBUG_EVENT(&direct3D11Renderer)
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Texture2D::~Texture2D()
 	{
 		if (nullptr != mD3D11ShaderResourceViewTexture)

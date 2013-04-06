@@ -37,10 +37,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Texture2DArray::Texture2DArray(OpenGLES2Renderer &openGLES2Renderer, unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags) :
 		ITexture2DArray(openGLES2Renderer, width, height, numberOfSlices),
 		mOpenGLES2Texture(0)
@@ -88,10 +84,6 @@ namespace OpenGLES2Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Texture2DArray::~Texture2DArray()
 	{
 		// Destroy the OpenGL ES 2 texture instance

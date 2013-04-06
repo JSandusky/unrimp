@@ -28,20 +28,12 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 FirstGeometryShader::FirstGeometryShader(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 FirstGeometryShader::~FirstGeometryShader()
 {
 	// The resources are released within "onDeinitialization()"

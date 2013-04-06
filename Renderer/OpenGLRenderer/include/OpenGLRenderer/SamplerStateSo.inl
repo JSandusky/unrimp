@@ -28,10 +28,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL sampler
-	*/
 	inline unsigned int SamplerStateSo::getOpenGLSampler() const
 	{
 		return mOpenGLSampler;

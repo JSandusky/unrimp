@@ -39,10 +39,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SamplerState::SamplerState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::SamplerState &samplerState) :
 		ISamplerState(openGLES2Renderer),
 		mOpenGLMagFilterMode(Mapping::getOpenGLES2MagFilterMode(samplerState.filter)),
@@ -63,19 +59,11 @@ namespace OpenGLES2Renderer
 		// TODO(co)  "GL_CLAMP_TO_BORDER" is not supported by OpenGL ES 2, check/inform the user?
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SamplerState::~SamplerState()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Set the OpenGL ES 2 sampler states
-	*/
 	void SamplerState::setOpenGLES2SamplerStates() const
 	{
 		// TODO(co) Support other targets, not just "GL_TEXTURE_2D"

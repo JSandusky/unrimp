@@ -28,10 +28,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the OpenGL program
-	*/
 	inline unsigned int ProgramGlsl::getOpenGLProgram() const
 	{
 		return mOpenGLProgram;

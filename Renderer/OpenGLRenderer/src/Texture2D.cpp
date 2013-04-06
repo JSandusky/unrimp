@@ -35,10 +35,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Texture2D::~Texture2D()
 	{
 		// Destroy the OpenGL texture instance
@@ -50,10 +46,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Texture2D::Texture2D(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height) :
 		ITexture2D(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width, height),
 		mOpenGLTexture(0)

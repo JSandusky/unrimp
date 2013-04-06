@@ -37,10 +37,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Texture2D::Texture2D(OpenGLES2Renderer &openGLES2Renderer, unsigned int width, unsigned int height, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags) :
 		ITexture2D(openGLES2Renderer, width, height),
 		mOpenGLES2Texture(0)
@@ -88,10 +84,6 @@ namespace OpenGLES2Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Texture2D::~Texture2D()
 	{
 		// Destroy the OpenGL ES 2 texture instance

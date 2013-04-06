@@ -36,10 +36,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Creates, loads and compiles a shader
-	*/
 	unsigned int ShaderLanguage::loadShader(unsigned int shaderType, const char *shaderSource)
 	{
 		// Create the shader object
@@ -95,10 +91,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguage::~ShaderLanguage()
 	{
 		// Nothing to do in here
@@ -108,10 +100,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguage::ShaderLanguage(OpenGLES2Renderer &openGLES2Renderer) :
 		IShaderLanguage(openGLES2Renderer)
 	{

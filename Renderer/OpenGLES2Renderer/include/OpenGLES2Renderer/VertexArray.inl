@@ -28,10 +28,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the used index buffer
-	*/
 	inline IndexBuffer *VertexArray::getIndexBuffer() const
 	{
 		return mIndexBuffer;

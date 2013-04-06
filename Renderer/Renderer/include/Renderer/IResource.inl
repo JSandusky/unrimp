@@ -28,28 +28,16 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	inline IResource::~IResource()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the resource type
-	*/
 	inline ResourceType::Enum IResource::getResourceType() const
 	{
 		return mResourceType;
 	}
 
-	/**
-	*  @brief
-	*    Return the owner renderer instance
-	*/
 	inline IRenderer &IResource::getRenderer() const
 	{
 		return *mRenderer;
@@ -59,10 +47,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual IResource methods                      ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Assign a name to the resource for debugging purposes
-	*/
 	inline void IResource::setDebugName(const char *)
 	{
 		// Nothing to do by default
@@ -72,10 +56,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	inline IResource::IResource(ResourceType::Enum resourceType, IRenderer &renderer) :
 		mResourceType(resourceType),
 		mRenderer(&renderer)
@@ -83,10 +63,6 @@ namespace Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	inline IResource::IResource(const IResource &source) :
 		mResourceType(source.getResourceType()),
 		mRenderer(&source.getRenderer())
@@ -94,10 +70,6 @@ namespace Renderer
 		// Not supported
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	inline IResource &IResource::operator =(const IResource &)
 	{
 		// Not supported

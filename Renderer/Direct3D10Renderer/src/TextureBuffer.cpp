@@ -38,10 +38,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	TextureBuffer::TextureBuffer(Direct3D10Renderer &direct3D10Renderer, unsigned int numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		ITextureBuffer(direct3D10Renderer),
 		mD3D10Buffer(nullptr),
@@ -94,10 +90,6 @@ namespace Direct3D10Renderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	TextureBuffer::~TextureBuffer()
 	{
 		// Release the used resources

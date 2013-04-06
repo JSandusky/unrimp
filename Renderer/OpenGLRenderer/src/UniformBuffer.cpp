@@ -34,10 +34,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	UniformBuffer::~UniformBuffer()
 	{
 		// Nothing to do in here
@@ -47,10 +43,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	UniformBuffer::UniformBuffer(OpenGLRenderer &openGLRenderer, InternalResourceType::Enum internalResourceType) :
 		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mInternalResourceType(internalResourceType)

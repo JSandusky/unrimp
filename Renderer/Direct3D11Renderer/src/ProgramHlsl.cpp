@@ -45,10 +45,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ProgramHlsl::ProgramHlsl(Direct3D11Renderer &direct3D11Renderer, VertexShaderHlsl *vertexShaderHlsl, TessellationControlShaderHlsl *tessellationControlShaderHlsl, TessellationEvaluationShaderHlsl *tessellationEvaluationShaderHlsl, GeometryShaderHlsl *geometryShaderHlsl, FragmentShaderHlsl *fragmentShaderHlsl) :
 		Program(direct3D11Renderer, InternalResourceType::HLSL),
 		mVertexShaderHlsl(vertexShaderHlsl),
@@ -80,10 +76,6 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ProgramHlsl::~ProgramHlsl()
 	{
 		// Release the shader references

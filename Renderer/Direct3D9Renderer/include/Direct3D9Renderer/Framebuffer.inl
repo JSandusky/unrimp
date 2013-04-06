@@ -28,28 +28,16 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the number of Direct3D 9 render target surfaces
-	*/
 	inline unsigned int Framebuffer::getNumberOfDirect3DSurface9Colors() const
 	{
 		return mNumberOfColorTextures;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 9 render target surfaces
-	*/
 	inline IDirect3DSurface9 **Framebuffer::getDirect3DSurface9Colors() const
 	{
 		return mDirect3D9ColorSurfaces;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D 9 depth stencil surface
-	*/
 	inline IDirect3DSurface9 *Framebuffer::getDirect3DSurface9DepthStencil() const
 	{
 		return mDirect3D9DepthStencilSurface;

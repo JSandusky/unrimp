@@ -46,10 +46,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ProgramCg::ProgramCg(OpenGLRenderer &openGLRenderer, VertexShaderCg *vertexShaderCg, TessellationControlShaderCg *tessellationControlShaderCg, TessellationEvaluationShaderCg *tessellationEvaluationShaderCg, GeometryShaderCg *geometryShaderCg, FragmentShaderCg *fragmentShaderCg) :
 		Program(openGLRenderer, InternalResourceType::CG),
 		mCgProgram(nullptr)
@@ -129,10 +125,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ProgramCg::~ProgramCg()
 	{
 		// Destroy the Cg program

@@ -34,19 +34,11 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguage::~ShaderLanguage()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Return the owner Direct3D 11 renderer instance
-	*/
 	Direct3D11Renderer &ShaderLanguage::getDirect3D11Renderer() const
 	{
 		return reinterpret_cast<Direct3D11Renderer&>(getRenderer());
@@ -56,10 +48,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguage::ShaderLanguage(Direct3D11Renderer &direct3D11Renderer) :
 		IShaderLanguage(reinterpret_cast<Renderer::IRenderer&>(direct3D11Renderer))
 	{

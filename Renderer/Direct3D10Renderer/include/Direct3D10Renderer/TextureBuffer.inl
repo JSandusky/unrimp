@@ -28,19 +28,11 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the Direct3D texture buffer instance
-	*/
 	inline ID3D10Buffer *TextureBuffer::getD3D10Buffer() const
 	{
 		return mD3D10Buffer;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D shader resource view instance
-	*/
 	inline ID3D10ShaderResourceView *TextureBuffer::getD3D10ShaderResourceView() const
 	{
 		return mD3D10ShaderResourceViewTexture;

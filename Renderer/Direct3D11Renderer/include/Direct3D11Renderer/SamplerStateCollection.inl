@@ -28,19 +28,11 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Return the number of Direct3D sampler state instances
-	*/
 	inline unsigned int SamplerStateCollection::getNumberOfD3D11SamplerStates() const
 	{
 		return mNumberOfD3D11SamplerStates;
 	}
 
-	/**
-	*  @brief
-	*    Return the Direct3D sampler state instances
-	*/
 	inline ID3D11SamplerState **SamplerStateCollection::getD3D11SamplerStates() const
 	{
 		return mD3D11SamplerStates;
