@@ -95,9 +95,9 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	IApplication *mApplication;			/**< The owner application instance, always valid */
-	char		  mWindowTitle[64];		/**< ASCII window title */
-	HWND		  mNativeWindowHandle;	/**< OS window handle, can be a null handler */
+	IApplication *mApplication;			///< The owner application instance, always valid
+	char		  mWindowTitle[64];		///< ASCII window title
+	HWND		  mNativeWindowHandle;	///< OS window handle, can be a null handler
 
 
 };

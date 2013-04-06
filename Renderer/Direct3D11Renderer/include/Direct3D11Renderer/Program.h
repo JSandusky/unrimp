@@ -69,8 +69,8 @@ namespace Direct3D11Renderer
 			public:
 			enum Enum
 			{
-				HLSL = 0,	/**< HLSL */
-				CG	 = 1	/**< Cg */
+				HLSL = 0,	///< HLSL
+				CG	 = 1	///< Cg
 			};
 		};
 
@@ -134,7 +134,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		InternalResourceType::Enum mInternalResourceType;	/**< Internal resource type */
+		InternalResourceType::Enum mInternalResourceType;	///< Internal resource type
 
 
 	};

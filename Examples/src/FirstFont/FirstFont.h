@@ -81,7 +81,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererToolkit::IFontPtr mFont;	/**< Font, can be a null pointer */
+	RendererToolkit::IFontPtr mFont;	///< Font, can be a null pointer
 
 
 };

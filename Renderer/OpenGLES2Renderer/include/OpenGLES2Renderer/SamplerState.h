@@ -89,17 +89,17 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	private:
 		// "Renderer::SamplerState" translated into OpenGL ES 2
-		int   mOpenGLMagFilterMode;			/**< Renderer::SamplerState::filter (type "GLint" not used in here in order to keep the header slim) */
-		int   mOpenGLMinFilterMode;			/**< Renderer::SamplerState::filter (type "GLint" not used in here in order to keep the header slim) */
-		int   mOpenGLTextureAddressModeS;	/**< Renderer::SamplerState::addressU (type "GLint" not used in here in order to keep the header slim) */
-		int   mOpenGLTextureAddressModeT;	/**< Renderer::SamplerState::addressV (type "GLint" not used in here in order to keep the header slim) */
-		int   mOpenGLTextureAddressModeR;	/**< Renderer::SamplerState::addressW (type "GLint" not used in here in order to keep the header slim) */
-		float mMipLODBias;					/**< Renderer::SamplerState::mipLODBias */
-		float mMaxAnisotropy;				/**< Renderer::SamplerState::maxAnisotropy */
-		int   mOpenGLCompareMode;			/**< Renderer::SamplerState::comparisonFunc (type "GLint" not used in here in order to keep the header slim) */
-		int   mOpenGLComparisonFunc;		/**< Renderer::SamplerState::comparisonFunc (type "GLint" not used in here in order to keep the header slim) */
-		float mMinLOD;						/**< Renderer::SamplerState::minLOD */
-		float mMaxLOD;						/**< Renderer::SamplerState::maxLOD */
+		int   mOpenGLMagFilterMode;			///< Renderer::SamplerState::filter (type "GLint" not used in here in order to keep the header slim)
+		int   mOpenGLMinFilterMode;			///< Renderer::SamplerState::filter (type "GLint" not used in here in order to keep the header slim)
+		int   mOpenGLTextureAddressModeS;	///< Renderer::SamplerState::addressU (type "GLint" not used in here in order to keep the header slim)
+		int   mOpenGLTextureAddressModeT;	///< Renderer::SamplerState::addressV (type "GLint" not used in here in order to keep the header slim)
+		int   mOpenGLTextureAddressModeR;	///< Renderer::SamplerState::addressW (type "GLint" not used in here in order to keep the header slim)
+		float mMipLODBias;					///< Renderer::SamplerState::mipLODBias
+		float mMaxAnisotropy;				///< Renderer::SamplerState::maxAnisotropy
+		int   mOpenGLCompareMode;			///< Renderer::SamplerState::comparisonFunc (type "GLint" not used in here in order to keep the header slim)
+		int   mOpenGLComparisonFunc;		///< Renderer::SamplerState::comparisonFunc (type "GLint" not used in here in order to keep the header slim)
+		float mMinLOD;						///< Renderer::SamplerState::minLOD
+		float mMaxLOD;						///< Renderer::SamplerState::maxLOD
 
 
 	};

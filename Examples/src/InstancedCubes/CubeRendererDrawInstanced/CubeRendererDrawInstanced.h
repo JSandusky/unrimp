@@ -93,19 +93,19 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IRendererPtr		  mRenderer;							/**< Renderer instance to use, always valid */
-	unsigned int				  mNumberOfTextures;					/**< Number of textures */
-	unsigned int				  mSceneRadius;							/**< Scene radius */
-	unsigned int				  mMaximumNumberOfInstancesPerBatch;	/**< Maximum number of instances per batch */
-	Renderer::ITexture2DArrayPtr  mTexture2DArray;						/**< 2D texture array, can be a null pointer */
-	Renderer::ISamplerStatePtr	  mSamplerState;						/**< Sampler state, can be a null pointer */
-	Renderer::IUniformBufferPtr	  mUniformBufferStaticVs;				/**< Static vertex shader uniform buffer object (UBO), can be a null pointer */
-	Renderer::IUniformBufferPtr	  mUniformBufferDynamicVs;				/**< Dynamic vertex shader uniform buffer object (UBO), can be a null pointer */
-	Renderer::IUniformBufferPtr	  mUniformBufferDynamicFs;				/**< Dynamic fragment shader uniform buffer object (UBO), can be a null pointer */
-	Renderer::IProgramPtr		  mProgram;								/**< Program, can be a null pointer */
-	Renderer::IVertexArrayPtr	  mVertexArray;							/**< Vertex array object (VAO), can be a null pointer */
-	unsigned int				  mNumberOfBatches;						/**< Current number of batches */
-	BatchDrawInstanced			 *mBatches;								/**< Batches, can be a null pointer */
+	Renderer::IRendererPtr		  mRenderer;							///< Renderer instance to use, always valid
+	unsigned int				  mNumberOfTextures;					///< Number of textures
+	unsigned int				  mSceneRadius;							///< Scene radius
+	unsigned int				  mMaximumNumberOfInstancesPerBatch;	///< Maximum number of instances per batch
+	Renderer::ITexture2DArrayPtr  mTexture2DArray;						///< 2D texture array, can be a null pointer
+	Renderer::ISamplerStatePtr	  mSamplerState;						///< Sampler state, can be a null pointer
+	Renderer::IUniformBufferPtr	  mUniformBufferStaticVs;				///< Static vertex shader uniform buffer object (UBO), can be a null pointer
+	Renderer::IUniformBufferPtr	  mUniformBufferDynamicVs;				///< Dynamic vertex shader uniform buffer object (UBO), can be a null pointer
+	Renderer::IUniformBufferPtr	  mUniformBufferDynamicFs;				///< Dynamic fragment shader uniform buffer object (UBO), can be a null pointer
+	Renderer::IProgramPtr		  mProgram;								///< Program, can be a null pointer
+	Renderer::IVertexArrayPtr	  mVertexArray;							///< Vertex array object (VAO), can be a null pointer
+	unsigned int				  mNumberOfBatches;						///< Current number of batches
+	BatchDrawInstanced			 *mBatches;								///< Batches, can be a null pointer
 
 
 };

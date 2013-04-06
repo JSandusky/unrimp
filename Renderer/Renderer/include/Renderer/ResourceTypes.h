@@ -44,33 +44,33 @@ namespace Renderer
 	{
 		enum Enum
 		{
-			PROGRAM						   = 0,		/**< Program */
-			VERTEX_ARRAY				   = 1,		/**< Vertex array object (VAO, input-assembler (IA) stage) */
+			PROGRAM						   = 0,		///< Program
+			VERTEX_ARRAY				   = 1,		///< Vertex array object (VAO, input-assembler (IA) stage)
 			// IRenderTarget
-			SWAP_CHAIN					   = 2,		/**< Swap chain */
-			FRAMEBUFFER					   = 3,		/**< Framebuffer object (FBO) */
+			SWAP_CHAIN					   = 2,		///< Swap chain
+			FRAMEBUFFER					   = 3,		///< Framebuffer object (FBO)
 			// IBuffer
-			INDEX_BUFFER				   = 4,		/**< Index buffer object (IBO, input-assembler (IA) stage) */
-			VERTEX_BUFFER				   = 5,		/**< Vertex buffer object (VBO, input-assembler (IA) stage) */
-			UNIFORM_BUFFER				   = 6,		/**< Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) */
+			INDEX_BUFFER				   = 4,		///< Index buffer object (IBO, input-assembler (IA) stage)
+			VERTEX_BUFFER				   = 5,		///< Vertex buffer object (VBO, input-assembler (IA) stage)
+			UNIFORM_BUFFER				   = 6,		///< Uniform buffer object (UBO, "constant buffer" in Direct3D terminology)
 			// ITexture
-			TEXTURE_BUFFER				   = 7,		/**< Texture buffer object (TBO) */
-			TEXTURE_2D					   = 8,		/**< Texture 2D */
-			TEXTURE_2D_ARRAY			   = 9,		/**< Texture 2D array */
+			TEXTURE_BUFFER				   = 7,		///< Texture buffer object (TBO)
+			TEXTURE_2D					   = 8,		///< Texture 2D
+			TEXTURE_2D_ARRAY			   = 9,		///< Texture 2D array
 			// IState
-			RASTERIZER_STATE			   = 10,	/**< Rasterizer state (rasterizer stage (RS)) */
-			DEPTH_STENCIL_STATE			   = 11,	/**< Depth stencil state (output-merger (OM) stage) */
-			BLEND_STATE					   = 12,	/**< Blend state (output-merger (OM) stage) */
-			SAMPLER_STATE				   = 13,	/**< Sampler state */
+			RASTERIZER_STATE			   = 10,	///< Rasterizer state (rasterizer stage (RS))
+			DEPTH_STENCIL_STATE			   = 11,	///< Depth stencil state (output-merger (OM) stage)
+			BLEND_STATE					   = 12,	///< Blend state (output-merger (OM) stage)
+			SAMPLER_STATE				   = 13,	///< Sampler state
 			// IShader
-			VERTEX_SHADER				   = 14,	/**< Vertex shader (VS) */
-			TESSELLATION_CONTROL_SHADER	   = 15,	/**< Tessellation control shader (TCS, "hull shader" in Direct3D terminology) */
-			TESSELLATION_EVALUATION_SHADER = 16,	/**< Tessellation evaluation shader (TES, "domain shader" in Direct3D terminology) */
-			GEOMETRY_SHADER				   = 17,	/**< Geometry shader (GS) */
-			FRAGMENT_SHADER				   = 18,	/**< Fragment shader (FS, "pixel shader" in Direct3D terminology) */
+			VERTEX_SHADER				   = 14,	///< Vertex shader (VS)
+			TESSELLATION_CONTROL_SHADER	   = 15,	///< Tessellation control shader (TCS, "hull shader" in Direct3D terminology)
+			TESSELLATION_EVALUATION_SHADER = 16,	///< Tessellation evaluation shader (TES, "domain shader" in Direct3D terminology)
+			GEOMETRY_SHADER				   = 17,	///< Geometry shader (GS)
+			FRAGMENT_SHADER				   = 18,	///< Fragment shader (FS, "pixel shader" in Direct3D terminology)
 			// ICollection
-			TEXTURE_COLLECTION			   = 19,	/**< Texture collection */
-			SAMPLER_STATE_COLLECTION	   = 20		/**< Sampler state collection */
+			TEXTURE_COLLECTION			   = 19,	///< Texture collection
+			SAMPLER_STATE_COLLECTION	   = 20		///< Sampler state collection
 		};
 	};
 

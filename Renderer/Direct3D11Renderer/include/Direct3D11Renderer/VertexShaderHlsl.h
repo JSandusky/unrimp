@@ -116,8 +116,8 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3DBlob		   *mD3DBlobVertexShader;	/**< Direct3D 11 vertex shader blob, can be a null pointer */
-		ID3D11VertexShader *mD3D11VertexShader;		/**< Direct3D 11 vertex shader, can be a null pointer */
+		ID3DBlob		   *mD3DBlobVertexShader;	///< Direct3D 11 vertex shader blob, can be a null pointer
+		ID3D11VertexShader *mD3D11VertexShader;		///< Direct3D 11 vertex shader, can be a null pointer
 
 
 	};

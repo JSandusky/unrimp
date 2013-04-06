@@ -105,7 +105,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11HullShader *mD3D11HullShader;	/**< Direct3D 11 hull shader, can be a null pointer */
+		ID3D11HullShader *mD3D11HullShader;	///< Direct3D 11 hull shader, can be a null pointer
 
 
 	};

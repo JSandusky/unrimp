@@ -108,8 +108,8 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mOpenGLES2ElementArrayBuffer;	/**< OpenGL ES 2 element array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim) */
-		unsigned int mOpenGLES2Type;				/**< OpenGL ES 2 element array buffer data type (type "GLenum" not used in here in order to keep the header slim) */
+		unsigned int mOpenGLES2ElementArrayBuffer;	///< OpenGL ES 2 element array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		unsigned int mOpenGLES2Type;				///< OpenGL ES 2 element array buffer data type (type "GLenum" not used in here in order to keep the header slim)
 
 
 	};

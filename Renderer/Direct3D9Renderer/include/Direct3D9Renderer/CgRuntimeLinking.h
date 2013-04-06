@@ -112,10 +112,10 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void *mCgSharedLibrary;			/**< Cg shared library, can be a null pointer */
-		void *mCgD3D9SharedLibrary;		/**< Cg D3D9 shared library, can be a null pointer */
-		bool  mEntryPointsRegistered;	/**< Entry points successfully registered? */
-		bool  mInitialized;				/**< Already initialized? */
+		void *mCgSharedLibrary;			///< Cg shared library, can be a null pointer
+		void *mCgD3D9SharedLibrary;		///< Cg D3D9 shared library, can be a null pointer
+		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
+		bool  mInitialized;				///< Already initialized?
 
 
 	};

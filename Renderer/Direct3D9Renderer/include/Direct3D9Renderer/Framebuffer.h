@@ -140,14 +140,14 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	private:
 		// Generic part
-		unsigned int		 mNumberOfColorTextures;	/**< Number of color render target textures */
-		Renderer::ITexture **mColorTextures;			/**< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers */
-		Renderer::ITexture  *mDepthStencilTexture;		/**< The depth stencil render target texture (we keep a reference to it), can be a null pointer */
-		unsigned int		 mWidth;					/**< The framebuffer width */
-		unsigned int		 mHeight;					/**< The framebuffer height */
+		unsigned int		 mNumberOfColorTextures;	///< Number of color render target textures
+		Renderer::ITexture **mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
+		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
+		unsigned int		 mWidth;					///< The framebuffer width
+		unsigned int		 mHeight;					///< The framebuffer height
 		// Direct3D 9 part
-		IDirect3DSurface9 **mDirect3D9ColorSurfaces;		/**< The Direct3D 9 color render target surfaces (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers */
-		IDirect3DSurface9  *mDirect3D9DepthStencilSurface;	/**< The Direct3D 9 depth stencil render target surface (we keep a reference to it), can be a null pointer */
+		IDirect3DSurface9 **mDirect3D9ColorSurfaces;		///< The Direct3D 9 color render target surfaces (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
+		IDirect3DSurface9  *mDirect3D9DepthStencilSurface;	///< The Direct3D 9 depth stencil render target surface (we keep a reference to it), can be a null pointer
 
 
 	};

@@ -112,16 +112,16 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::ITexture2DPtr			mTexture2D;			/**< 2D texture, can be a null pointer */
-	Renderer::IFramebufferPtr		mFramebuffer;		/**< Framebuffer object (FBO), can be a null pointer */
-	Renderer::ISamplerStatePtr		mSamplerState;		/**< Sampler state, can be a null pointer */
-	Renderer::IDepthStencilStatePtr	mDepthStencilState;	/**< Depth stencil state, can be a null pointer */
+	Renderer::ITexture2DPtr			mTexture2D;			///< 2D texture, can be a null pointer
+	Renderer::IFramebufferPtr		mFramebuffer;		///< Framebuffer object (FBO), can be a null pointer
+	Renderer::ISamplerStatePtr		mSamplerState;		///< Sampler state, can be a null pointer
+	Renderer::IDepthStencilStatePtr	mDepthStencilState;	///< Depth stencil state, can be a null pointer
 	// Scene rendering
-	Renderer::IProgramPtr	   mProgramSceneRendering;		/**< Program for scene rendering, can be a null pointer */
-	Renderer::IVertexArrayPtr  mVertexArraySceneRendering;	/**< Vertex array object (VAO) for scene rendering, can be a null pointer */
+	Renderer::IProgramPtr	   mProgramSceneRendering;		///< Program for scene rendering, can be a null pointer
+	Renderer::IVertexArrayPtr  mVertexArraySceneRendering;	///< Vertex array object (VAO) for scene rendering, can be a null pointer
 	// Post-processing
-	Renderer::IProgramPtr	   mProgramPostProcessing;		/**< Program for post-processing, can be a null pointer */
-	Renderer::IVertexArrayPtr  mVertexArrayPostProcessing;	/**< Vertex array object (VAO) for post-processing, can be a null pointer */
+	Renderer::IProgramPtr	   mProgramPostProcessing;		///< Program for post-processing, can be a null pointer
+	Renderer::IVertexArrayPtr  mVertexArrayPostProcessing;	///< Vertex array object (VAO) for post-processing, can be a null pointer
 
 
 };

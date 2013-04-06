@@ -108,9 +108,9 @@ namespace OpenGLRenderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int   mOpenGLVertexArray;		/**< OpenGL vertex array, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim) */
-		unsigned int   mNumberOfVertexBuffers;	/**< Number of vertex buffers */
-		VertexBuffer **mVertexBuffers;			/**< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer */
+		unsigned int   mOpenGLVertexArray;		///< OpenGL vertex array, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		unsigned int   mNumberOfVertexBuffers;	///< Number of vertex buffers
+		VertexBuffer **mVertexBuffers;			///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
 
 
 	};

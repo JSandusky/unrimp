@@ -120,8 +120,8 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	unsigned int			  mNumberOfVertices;	/**< Number of vertices */
-	Renderer::IVertexArrayPtr mVertexArray;			/**< Vertex array object (VAO), can be a null pointer */
+	unsigned int			  mNumberOfVertices;	///< Number of vertices
+	Renderer::IVertexArrayPtr mVertexArray;			///< Vertex array object (VAO), can be a null pointer
 
 
 };

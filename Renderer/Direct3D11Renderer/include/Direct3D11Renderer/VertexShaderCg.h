@@ -112,8 +112,8 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		_CGprogram *mCgProgram;				/**< Cg program, can be a null pointer */
-		ID3DBlob   *mD3DBlobVertexShader;	/**< Direct3D 11 vertex shader blob, can be a null pointer */
+		_CGprogram *mCgProgram;				///< Cg program, can be a null pointer
+		ID3DBlob   *mD3DBlobVertexShader;	///< Direct3D 11 vertex shader blob, can be a null pointer
 
 
 	};

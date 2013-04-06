@@ -208,7 +208,7 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	AType *mPtr; /**< Pointer to reference counter, can be a null pointer */
+	AType *mPtr; ///< Pointer to reference counter, can be a null pointer
 
 
 };

@@ -105,9 +105,9 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int					mNumberOfAttributes;	/**< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid */
-		Renderer::VertexArrayAttribute *mAttributes;			/**< At least "mNumberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes */
-		int							   *mAttributeLocations;	/**< Attribute locations, can be a null pointer in case there are zero attributes */
+		unsigned int					mNumberOfAttributes;	///< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
+		Renderer::VertexArrayAttribute *mAttributes;			///< At least "mNumberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes
+		int							   *mAttributeLocations;	///< Attribute locations, can be a null pointer in case there are zero attributes
 
 
 	};

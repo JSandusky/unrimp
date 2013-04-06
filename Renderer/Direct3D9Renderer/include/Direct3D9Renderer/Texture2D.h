@@ -113,7 +113,7 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDirect3DTexture9 *mDirect3DTexture9;	/**< Direct3D 9 texture instance, can be a null pointer */
+		IDirect3DTexture9 *mDirect3DTexture9;	///< Direct3D 9 texture instance, can be a null pointer
 
 
 	};

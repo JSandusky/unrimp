@@ -44,9 +44,9 @@ namespace Renderer
 	{
 		enum Enum
 		{
-			UNSIGNED_CHAR  = 0,	/**< One byte per element, unsigned char (may not be supported by each API, primarily for mobile devices) */
-			UNSIGNED_SHORT = 1,	/**< Two bytes per element, unsigned short (best support across multiple renderer APIs) */
-			UNSIGNED_INT   = 2	/**< Four bytes per element, unsigned int (may not be supported by each API) */
+			UNSIGNED_CHAR  = 0,	///< One byte per element, unsigned char (may not be supported by each API, primarily for mobile devices)
+			UNSIGNED_SHORT = 1,	///< Two bytes per element, unsigned short (best support across multiple renderer APIs)
+			UNSIGNED_INT   = 2	///< Four bytes per element, unsigned int (may not be supported by each API)
 		};
 	};
 

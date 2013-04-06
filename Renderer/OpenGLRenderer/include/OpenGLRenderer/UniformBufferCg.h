@@ -100,7 +100,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	protected:
 	// TODO(co)
-	//	GLuint mOpenGLUniformBuffer;	/**< OpenGL uniform buffer, can be zero if no resource is allocated */
+	//	GLuint mOpenGLUniformBuffer;	///< OpenGL uniform buffer, can be zero if no resource is allocated
 
 
 	};

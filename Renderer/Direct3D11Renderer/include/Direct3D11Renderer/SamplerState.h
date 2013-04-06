@@ -106,7 +106,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11SamplerState *mD3D11SamplerState;	/**< Direct3D 11 sampler state, can be a null pointer */
+		ID3D11SamplerState *mD3D11SamplerState;	///< Direct3D 11 sampler state, can be a null pointer
 
 
 	};

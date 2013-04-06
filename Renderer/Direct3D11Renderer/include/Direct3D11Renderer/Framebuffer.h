@@ -141,14 +141,14 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	private:
 		// Generic part
-		unsigned int		 mNumberOfColorTextures;	/**< Number of color render target textures */
-		Renderer::ITexture **mColorTextures;			/**< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "m_nNumberOfColorTextures" textures in the provided C-array of pointers */
-		Renderer::ITexture  *mDepthStencilTexture;		/**< The depth stencil render target texture (we keep a reference to it), can be a null pointer */
-		unsigned int		 mWidth;					/**< The framebuffer width */
-		unsigned int		 mHeight;					/**< The framebuffer height */
+		unsigned int		 mNumberOfColorTextures;	///< Number of color render target textures
+		Renderer::ITexture **mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "m_nNumberOfColorTextures" textures in the provided C-array of pointers
+		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
+		unsigned int		 mWidth;					///< The framebuffer width
+		unsigned int		 mHeight;					///< The framebuffer height
 		// Direct3D 11 part
-		ID3D11RenderTargetView **mD3D11RenderTargetViews;	/**< The Direct3D 11 render target views (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "m_nNumberOfColorTextures" views in the provided C-array of pointers */
-		ID3D11DepthStencilView  *mD3D11DepthStencilView;	/**< The Direct3D 11 depth stencil view (we keep a reference to it), can be a null pointer */
+		ID3D11RenderTargetView **mD3D11RenderTargetViews;	///< The Direct3D 11 render target views (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "m_nNumberOfColorTextures" views in the provided C-array of pointers
+		ID3D11DepthStencilView  *mD3D11DepthStencilView;	///< The Direct3D 11 depth stencil view (we keep a reference to it), can be a null pointer
 
 
 	};

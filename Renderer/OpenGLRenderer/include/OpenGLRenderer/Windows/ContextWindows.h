@@ -147,11 +147,11 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		OpenGLRuntimeLinking *mOpenGLRuntimeLinking;	/**< OpenGL runtime linking instance, always valid */
-		handle				  mNativeWindowHandle;		/**< OpenGL window, can be a null pointer (HWND) */
-		handle				  mDummyWindow;				/**< OpenGL dummy window, can be a null pointer (HWND) */
-		HDC					  mWindowDeviceContext;		/**< The device context of the OpenGL dummy window, can be a null pointer */
-		HGLRC				  mWindowRenderContext;		/**< The render context of the OpenGL dummy window, can be a null pointer */
+		OpenGLRuntimeLinking *mOpenGLRuntimeLinking;	///< OpenGL runtime linking instance, always valid 
+		handle				  mNativeWindowHandle;		///< OpenGL window, can be a null pointer (HWND)
+		handle				  mDummyWindow;				///< OpenGL dummy window, can be a null pointer (HWND)
+		HDC					  mWindowDeviceContext;		///< The device context of the OpenGL dummy window, can be a null pointer
+		HGLRC				  mWindowRenderContext;		///< The render context of the OpenGL dummy window, can be a null pointer
 
 
 	};

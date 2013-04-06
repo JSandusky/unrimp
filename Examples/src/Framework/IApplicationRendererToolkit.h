@@ -112,8 +112,8 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	void								  *mRendererToolkitSharedLibrary;	/**< Renderer toolkit shared library, can be a null pointer */
-	RendererToolkit::IRendererToolkitPtr   mRendererToolkit;				/**< Renderer toolkit instance, can be a null pointer */
+	void								  *mRendererToolkitSharedLibrary;	///< Renderer toolkit shared library, can be a null pointer
+	RendererToolkit::IRendererToolkitPtr   mRendererToolkit;				///< Renderer toolkit instance, can be a null pointer
 
 
 };

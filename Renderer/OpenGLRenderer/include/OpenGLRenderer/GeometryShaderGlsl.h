@@ -126,10 +126,10 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mOpenGLShader;						/**< OpenGL shader, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim) */
-		int			 mOpenGLGsInputPrimitiveTopology;	/**< OpenGL geometry shader input primitive topology (type "GLint" not used in here in order to keep the header slim) */
-		int			 mOpenGLGsOutputPrimitiveTopology;	/**< OpenGL geometry shader output primitive topology (type "GLint" not used in here in order to keep the header slim) */
-		unsigned int mNumberOfOutputVertices;			/**< Number of output vertices */
+		unsigned int mOpenGLShader;						///< OpenGL shader, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		int			 mOpenGLGsInputPrimitiveTopology;	///< OpenGL geometry shader input primitive topology (type "GLint" not used in here in order to keep the header slim)
+		int			 mOpenGLGsOutputPrimitiveTopology;	///< OpenGL geometry shader output primitive topology (type "GLint" not used in here in order to keep the header slim)
+		unsigned int mNumberOfOutputVertices;			///< Number of output vertices
 
 
 	};

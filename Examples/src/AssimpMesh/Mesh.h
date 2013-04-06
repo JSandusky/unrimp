@@ -85,7 +85,7 @@ public:
 //[ Private definitions                                   ]
 //[-------------------------------------------------------]
 private:
-	static const unsigned int NUMBER_OF_COMPONENTS_PER_VERTEX = 14;	/**< Number of components per vertex (3 position, 2 texture coordinate, 3 tangent, 3 binormal, 3 normal) */
+	static const unsigned int NUMBER_OF_COMPONENTS_PER_VERTEX = 14;	///< Number of components per vertex (3 position, 2 texture coordinate, 3 tangent, 3 binormal, 3 normal)
 
 
 //[-------------------------------------------------------]
@@ -133,9 +133,9 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	unsigned int			  mNumberOfVertices;	/**< Number of vertices */
-	unsigned int			  mNumberOfIndices;		/**< Number of indices */
-	Renderer::IVertexArrayPtr mVertexArray;			/**< Vertex array object (VAO), can be a null pointer */
+	unsigned int			  mNumberOfVertices;	///< Number of vertices
+	unsigned int			  mNumberOfIndices;		///< Number of indices
+	Renderer::IVertexArrayPtr mVertexArray;			///< Vertex array object (VAO), can be a null pointer
 
 
 };

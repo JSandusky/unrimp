@@ -60,7 +60,7 @@ namespace Direct3D9Renderer
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const char *NAME;	/**< ASCII name of this shader language, always valid (do not free the memory the returned pointer is pointing to) */
+		static const char *NAME;	///< ASCII name of this shader language, always valid (do not free the memory the returned pointer is pointing to)
 
 
 	//[-------------------------------------------------------]
@@ -112,8 +112,8 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D9Renderer *mDirect3D9Renderer;	/**< Owner Direct3D 9 renderer instance, always valid */
-		_CGcontext		  *mCGcontext;			/**< Cg context instance, can be a null pointer */
+		Direct3D9Renderer *mDirect3D9Renderer;	///< Owner Direct3D 9 renderer instance, always valid
+		_CGcontext		  *mCGcontext;			///< Cg context instance, can be a null pointer
 
 
 	};

@@ -97,10 +97,10 @@ namespace Renderer
 	// TODO(co) Renderer::DepthStencilState, document
 	struct DepthStencilOpDesc
 	{
-		StencilOp::Enum		 stencilFailOp;			/**< Default: "Renderer::StencilOp::KEEP" */
-		StencilOp::Enum		 stencilDepthFailOp;	/**< Default: "Renderer::StencilOp::KEEP" */
-		StencilOp::Enum		 stencilPassOp;			/**< Default: "Renderer::StencilOp::KEEP" */
-		ComparisonFunc::Enum stencilFunc;			/**< Default: "Renderer::ComparisonFunc::ALWAYS" */
+		StencilOp::Enum		 stencilFailOp;			///< Default: "Renderer::StencilOp::KEEP"
+		StencilOp::Enum		 stencilDepthFailOp;	///< Default: "Renderer::StencilOp::KEEP"
+		StencilOp::Enum		 stencilPassOp;			///< Default: "Renderer::StencilOp::KEEP"
+		ComparisonFunc::Enum stencilFunc;			///< Default: "Renderer::ComparisonFunc::ALWAYS"
 	};
 
 	/**
@@ -115,14 +115,14 @@ namespace Renderer
 	// TODO(co) Renderer::DepthStencilState, document
 	struct DepthStencilState
 	{
-		int					 depthEnable;		/**< Default: "true" */
-		DepthWriteMask::Enum depthWriteMask;	/**< Default: "Renderer::DepthWriteMask::ALL" */
-		ComparisonFunc::Enum depthFunc;			/**< Default: "Renderer::ComparisonFunc::LESS" */
-		int					 stencilEnable;		/**< Default: "false" */
-		unsigned char		 stencilReadMask;	/**< Default: "0xff" */
-		unsigned char		 stencilWriteMask;	/**< Default: "0xff" */
-		DepthStencilOpDesc	 frontFace;			/**< Default: See "Renderer::DepthStencilOpDesc" */
-		DepthStencilOpDesc	 backFace;			/**< Default: See "Renderer::DepthStencilOpDesc" */
+		int					 depthEnable;		///< Default: "true"
+		DepthWriteMask::Enum depthWriteMask;	///< Default: "Renderer::DepthWriteMask::ALL"
+		ComparisonFunc::Enum depthFunc;			///< Default: "Renderer::ComparisonFunc::LESS"
+		int					 stencilEnable;		///< Default: "false"
+		unsigned char		 stencilReadMask;	///< Default: "0xff"
+		unsigned char		 stencilWriteMask;	///< Default: "0xff"
+		DepthStencilOpDesc	 frontFace;			///< Default: See "Renderer::DepthStencilOpDesc"
+		DepthStencilOpDesc	 backFace;			///< Default: See "Renderer::DepthStencilOpDesc"
 	};
 
 

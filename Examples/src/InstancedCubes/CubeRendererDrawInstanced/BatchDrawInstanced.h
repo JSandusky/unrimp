@@ -113,10 +113,10 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IRendererPtr		mRenderer;						/**< Owner renderer instance, can be a null pointer */
-	unsigned int				mNumberOfCubeInstances;			/**< Number of cube instances */
-	Renderer::ITextureBufferPtr	mTextureBufferPerInstanceData;	/**< Texture buffer with per instance data (used via vertex texture fetch), each entry can contain a null pointer */
-	Renderer::IBlendStatePtr	mBlendState;					/**< Blend state, can be a null pointer */
+	Renderer::IRendererPtr		mRenderer;						///< Owner renderer instance, can be a null pointer
+	unsigned int				mNumberOfCubeInstances;			///< Number of cube instances
+	Renderer::ITextureBufferPtr	mTextureBufferPerInstanceData;	///< Texture buffer with per instance data (used via vertex texture fetch), each entry can contain a null pointer
+	Renderer::IBlendStatePtr	mBlendState;					///< Blend state, can be a null pointer
 
 
 };

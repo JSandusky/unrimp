@@ -278,8 +278,8 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IContext  *mContext;		/**< Owner context, always valid! */
-		bool 	   mInitialized;	/**< Are the extensions initialized? */
+		IContext  *mContext;		///< Owner context, always valid!
+		bool 	   mInitialized;	///< Are the extensions initialized?
 
 		// Supported extensions
 		// WGL (Windows only)

@@ -107,7 +107,7 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10Buffer *mD3D10Buffer;	/**< Direct3D vertex buffer instance, can be a null pointer */
+		ID3D10Buffer *mD3D10Buffer;	///< Direct3D vertex buffer instance, can be a null pointer
 
 
 	};

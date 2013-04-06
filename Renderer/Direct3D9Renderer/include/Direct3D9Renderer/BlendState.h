@@ -103,7 +103,7 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::BlendState mBlendState;	/**< Blend state */
+		Renderer::BlendState mBlendState;	///< Blend state
 
 
 	};

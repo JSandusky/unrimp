@@ -101,7 +101,7 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		_CGprogram *mCgProgram;	/**< Cg program, can be a null pointer */
+		_CGprogram *mCgProgram;	///< Cg program, can be a null pointer
 
 
 	};

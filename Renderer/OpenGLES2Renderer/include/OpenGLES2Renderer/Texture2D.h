@@ -99,7 +99,7 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mOpenGLES2Texture;	/**< OpenGL ES 2 texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim) */
+		unsigned int mOpenGLES2Texture;	///< OpenGL ES 2 texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

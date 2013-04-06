@@ -85,7 +85,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mOpenGLSampler;	/**< OpenGL sampler, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim) */
+		unsigned int mOpenGLSampler;	///< OpenGL sampler, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

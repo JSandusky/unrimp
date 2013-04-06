@@ -83,7 +83,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::SamplerState mSamplerState;	/**< Sampler state */
+		Renderer::SamplerState mSamplerState;	///< Sampler state
 
 
 	};

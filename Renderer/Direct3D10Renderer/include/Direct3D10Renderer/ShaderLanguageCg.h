@@ -65,7 +65,7 @@ namespace Direct3D10Renderer
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const char *NAME;	/**< ASCII name of this shader language, always valid (do not free the memory the returned pointer is pointing to) */
+		static const char *NAME;	///< ASCII name of this shader language, always valid (do not free the memory the returned pointer is pointing to)
 
 
 	//[-------------------------------------------------------]
@@ -117,7 +117,7 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		_CGcontext *mCgContext;	/**< Cg context instance, can be a null pointer */
+		_CGcontext *mCgContext;	///< Cg context instance, can be a null pointer
 
 
 	};

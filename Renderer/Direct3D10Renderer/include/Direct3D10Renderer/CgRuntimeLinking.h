@@ -115,10 +115,10 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void *mCgSharedLibrary;			/**< Cg shared library, can be a null pointer */
-		void *mCgD3D10SharedLibrary;	/**< Cg D3D10 shared library, can be a null pointer */
-		bool  mEntryPointsRegistered;	/**< Entry points successfully registered? */
-		bool  mInitialized;				/**< Already initialized? */
+		void *mCgSharedLibrary;			///< Cg shared library, can be a null pointer
+		void *mCgD3D10SharedLibrary;	///< Cg D3D10 shared library, can be a null pointer
+		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
+		bool  mInitialized;				///< Already initialized?
 
 
 	};

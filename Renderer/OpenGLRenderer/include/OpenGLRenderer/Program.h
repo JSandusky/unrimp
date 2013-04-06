@@ -69,8 +69,8 @@ namespace OpenGLRenderer
 			public:
 			enum Enum
 			{
-				GLSL = 0,	/**< GLSL */
-				CG	 = 1	/**< Cg */
+				GLSL = 0,	///< GLSL
+				CG	 = 1	///< Cg
 			};
 		};
 
@@ -115,7 +115,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		InternalResourceType::Enum mInternalResourceType;	/**< Internal resource type */
+		InternalResourceType::Enum mInternalResourceType;	///< Internal resource type
 
 
 	};

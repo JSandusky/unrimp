@@ -47,8 +47,8 @@ namespace Renderer
 	{
 		enum Enum
 		{
-			WIREFRAME = 2,	/**< Wireframe */
-			SOLID     = 3	/**< Solid */
+			WIREFRAME = 2,	///< Wireframe
+			SOLID     = 3	///< Solid
 		};
 	};
 
@@ -63,9 +63,9 @@ namespace Renderer
 	{
 		enum Enum
 		{
-			NONE  = 1,	/**< No culling */
-			FRONT = 2,	/**< Do not draw triangles that are front-facing */
-			BACK  = 3	/**< Do not draw triangles that are back-facing */
+			NONE  = 1,	///< No culling
+			FRONT = 2,	///< Do not draw triangles that are front-facing
+			BACK  = 3	///< Do not draw triangles that are back-facing
 		};
 	};
 
@@ -85,16 +85,16 @@ namespace Renderer
 	// TODO(co) Renderer::RasterizerState, documentation
 	struct RasterizerState
 	{
-		FillMode::Enum fillMode;				/**< Default: "Renderer::FillMode::SOLID" */
-		CullMode::Enum cullMode;				/**< Default: "Renderer::CullMode::BACK" */
-		int			   frontCounterClockwise;	/**< Select counter-clockwise polygons as front-facing? Default: "false" */
-		int			   depthBias;				/**< Default: "0" */
-		float		   depthBiasClamp;			/**< Default: "0.0f" */
-		float		   slopeScaledDepthBias;	/**< Default: "0.0f" */
-		int			   depthClipEnable;			/**< Default: "true" */
-		int			   scissorEnable;			/**< Default: "false" */
-		int			   multisampleEnable;		/**< Default: "false" */
-		int			   antialiasedLineEnable;	/**< Default: "false" */
+		FillMode::Enum fillMode;				///< Default: "Renderer::FillMode::SOLID"
+		CullMode::Enum cullMode;				///< Default: "Renderer::CullMode::BACK"
+		int			   frontCounterClockwise;	///< Select counter-clockwise polygons as front-facing? Default: "false"
+		int			   depthBias;				///< Default: "0"
+		float		   depthBiasClamp;			///< Default: "0.0f"
+		float		   slopeScaledDepthBias;	///< Default: "0.0f"
+		int			   depthClipEnable;			///< Default: "true"
+		int			   scissorEnable;			///< Default: "false"
+		int			   multisampleEnable;		///< Default: "false"
+		int			   antialiasedLineEnable;	///< Default: "false"
 	};
 
 

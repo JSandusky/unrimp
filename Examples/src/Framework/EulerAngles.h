@@ -64,31 +64,31 @@ public:
 	enum EOrder
 	{
 		// Static axes (takes axes from initial static frame)
-		XYZs = 0,	/**< XYZ static axis */
-		XYXs = 2,	/**< XYX static axis */
-		XZYs = 4,	/**< XZY static axis */
-		XZXs = 6,	/**< XZX static axis */
-		YZXs = 8,	/**< YZX static axis */
-		YZYs = 10,	/**< YZY static axis */
-		YXZs = 12,	/**< YXZ static axis */
-		YXYs = 14,	/**< YXY static axis */
-		ZXYs = 16,	/**< ZXY static axis */
-		ZXZs = 18,	/**< ZXZ static axis */
-		ZYXs = 20,	/**< ZYX static axis */
-		ZYZs = 22,	/**< ZYZ static axis */
+		XYZs = 0,	///< XYZ static axis
+		XYXs = 2,	///< XYX static axis
+		XZYs = 4,	///< XZY static axis
+		XZXs = 6,	///< XZX static axis
+		YZXs = 8,	///< YZX static axis
+		YZYs = 10,	///< YZY static axis
+		YXZs = 12,	///< YXZ static axis
+		YXYs = 14,	///< YXY static axis
+		ZXYs = 16,	///< ZXY static axis
+		ZXZs = 18,	///< ZXZ static axis
+		ZYXs = 20,	///< ZYX static axis
+		ZYZs = 22,	///< ZYZ static axis
 		// Rotating axes
-		ZYXr = 1,	/**< ZYX rotating axis */
-		XYXr = 3,	/**< XYX rotating axis */
-		YZXr = 5,	/**< YZX rotating axis */
-		XZXr = 7,	/**< XZX rotating axis */
-		XZYr = 9,	/**< XZY rotating axis */
-		YZYr = 11,	/**< YZY rotating axis */
-		ZXYr = 13,	/**< ZXY rotating axis */
-		YXYr = 15,	/**< YXY rotating axis */
-		YXZr = 17,	/**< YXZ rotating axis */
-		ZXZr = 19,	/**< ZXZ rotating axis */
-		XYZr = 21,	/**< XYZ rotating axis */
-		ZYZr = 23	/**< ZYZ rotating axis */
+		ZYXr = 1,	///< ZYX rotating axis
+		XYXr = 3,	///< XYX rotating axis
+		YZXr = 5,	///< YZX rotating axis
+		XZXr = 7,	///< XZX rotating axis
+		XZYr = 9,	///< XZY rotating axis
+		YZYr = 11,	///< YZY rotating axis
+		ZXYr = 13,	///< ZXY rotating axis
+		YXYr = 15,	///< YXY rotating axis
+		YXZr = 17,	///< YXZ rotating axis
+		ZXZr = 19,	///< ZXZ rotating axis
+		XYZr = 21,	///< XYZ rotating axis
+		ZYZr = 23	///< ZYZ rotating axis
 	};
 
 

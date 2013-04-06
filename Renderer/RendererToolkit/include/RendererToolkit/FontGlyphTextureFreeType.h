@@ -116,10 +116,10 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		float mTexCoordMinX;	/**< X coordinate of the normalized minimum glyph texture coordinate inside the glyph texture atlas */
-		float mTexCoordMinY;	/**< Y coordinate of the normalized minimum glyph texture coordinate inside the glyph texture atlas */
-		float mTexCoordMaxX;	/**< X coordinate of the normalized maximum glyph texture coordinate inside the glyph texture atlas */
-		float mTexCoordMaxY;	/**< Y coordinate of the normalized maximum glyph texture coordinate inside the glyph texture atlas */
+		float mTexCoordMinX;	///< X coordinate of the normalized minimum glyph texture coordinate inside the glyph texture atlas
+		float mTexCoordMinY;	///< Y coordinate of the normalized minimum glyph texture coordinate inside the glyph texture atlas
+		float mTexCoordMaxX;	///< X coordinate of the normalized maximum glyph texture coordinate inside the glyph texture atlas
+		float mTexCoordMaxY;	///< Y coordinate of the normalized maximum glyph texture coordinate inside the glyph texture atlas
 
 
 	};

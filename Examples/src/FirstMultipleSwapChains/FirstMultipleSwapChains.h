@@ -102,9 +102,9 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IProgramPtr	  mProgram;		/**< Program, can be a null pointer */
-	Renderer::IVertexArrayPtr mVertexArray;	/**< Vertex array object (VAO), can be a null pointer */
-	Renderer::ISwapChainPtr   mSwapChain;	/**< Swap chain, can be a null pointer */
+	Renderer::IProgramPtr	  mProgram;		///< Program, can be a null pointer
+	Renderer::IVertexArrayPtr mVertexArray;	///< Vertex array object (VAO), can be a null pointer
+	Renderer::ISwapChainPtr   mSwapChain;	///< Swap chain, can be a null pointer
 
 
 };

@@ -133,9 +133,9 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mWidth;			/**< The width of the texture */
-		unsigned int mHeight;			/**< The height of the texture */
-		unsigned int mNumberOfSlices;	/**< The number of slices */
+		unsigned int mWidth;			///< The width of the texture
+		unsigned int mHeight;			///< The height of the texture
+		unsigned int mNumberOfSlices;	///< The number of slices
 
 
 	};

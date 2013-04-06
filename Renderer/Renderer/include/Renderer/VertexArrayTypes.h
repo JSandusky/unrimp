@@ -50,10 +50,10 @@ namespace Renderer
 	{
 		enum Enum
 		{
-			FLOAT_1 = 0,	/**< Float 1 (one component per element, 32 bit floating point per component) */
-			FLOAT_2 = 1,	/**< Float 2 (two components per element, 32 bit floating point per component) */
-			FLOAT_3 = 2,	/**< Float 3 (three components per element, 32 bit floating point per component) */
-			FLOAT_4 = 3		/**< Float 4 (four components per element, 32 bit floating point per component) */
+			FLOAT_1 = 0,	///< Float 1 (one component per element, 32 bit floating point per component)
+			FLOAT_2 = 1,	///< Float 2 (two components per element, 32 bit floating point per component)
+			FLOAT_3 = 2,	///< Float 3 (three components per element, 32 bit floating point per component)
+			FLOAT_4 = 3		///< Float 4 (four components per element, 32 bit floating point per component)
 		};
 	};
 
@@ -71,14 +71,14 @@ namespace Renderer
 	struct VertexArrayAttribute
 	{
 		// Data destination
-		VertexArrayFormat::Enum  vertexArrayFormat;		/**< Vertex attribute format */
-		char					 name[64];				/**< Vertex attribute name */
-		char					 semantic[64];			/**< Vertex attribute semantic */
-		unsigned int			 semanticIndex;			/**< Vertex attribute semantic index */
+		VertexArrayFormat::Enum  vertexArrayFormat;		///< Vertex attribute format
+		char					 name[64];				///< Vertex attribute name
+		char					 semantic[64];			///< Vertex attribute semantic
+		unsigned int			 semanticIndex;			///< Vertex attribute semantic index
 		// Data source
-		IVertexBuffer			*vertexBuffer;			/**< Vertex buffer used at this vertex input slot (vertex array instances keep a reference to the vertex buffers used by the vertex array attributes, see "Renderer::IProgram::createVertexArray()" for details) */
-		unsigned int			 offset;				/**< Offset (in bytes) from the start of the vertex to this certain attribute */
-		unsigned int			 stride;				/**< Number of bytes to the next vertex element */
+		IVertexBuffer			*vertexBuffer;			///< Vertex buffer used at this vertex input slot (vertex array instances keep a reference to the vertex buffers used by the vertex array attributes, see "Renderer::IProgram::createVertexArray()" for details)
+		unsigned int			 offset;				///< Offset (in bytes) from the start of the vertex to this certain attribute
+		unsigned int			 stride;				///< Number of bytes to the next vertex element
 		// Data source, instancing part
 		unsigned int			 instancesPerElement;	/**< Number of instances to draw with the same data before advancing in the buffer by one element.
 															 0 for no instancing meaning the data is per-vertex instead of per-instance, 1 for drawing one

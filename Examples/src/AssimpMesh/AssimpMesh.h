@@ -101,18 +101,18 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IUniformBufferPtr			  mUniformBuffer;			/**< Uniform buffer object (UBO), can be a null pointer */
-	Renderer::IProgramPtr				  mProgram;					/**< Program, can be a null pointer */
-	Mesh								 *mMesh;					/**< Mesh instance, can be a null pointer */
-	Renderer::ITextureCollectionPtr		  mTextureCollection;		/**< Texture collection, can be a null pointer */
-	Renderer::ISamplerStateCollectionPtr  mSamplerStateCollection;	/**< Sampler state collection, can be a null pointer */
+	Renderer::IUniformBufferPtr			  mUniformBuffer;			///< Uniform buffer object (UBO), can be a null pointer
+	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
+	Mesh								 *mMesh;					///< Mesh instance, can be a null pointer
+	Renderer::ITextureCollectionPtr		  mTextureCollection;		///< Texture collection, can be a null pointer
+	Renderer::ISamplerStateCollectionPtr  mSamplerStateCollection;	///< Sampler state collection, can be a null pointer
 	// Optimization: Cache data to not bother the renderer API to much
-	unsigned int mUniformBlockIndex;							/**< Uniform block index */
-	handle		 mObjectSpaceToClipSpaceMatrixUniformHandle;	/**< Object space to clip space matrix uniform handle, can be NULL_HANDLE */
-	handle		 mObjectSpaceToViewSpaceMatrixUniformHandle;	/**< Object space to view space matrix uniform handle, can be NULL_HANDLE */
+	unsigned int mUniformBlockIndex;							///< Uniform block index
+	handle		 mObjectSpaceToClipSpaceMatrixUniformHandle;	///< Object space to clip space matrix uniform handle, can be NULL_HANDLE
+	handle		 mObjectSpaceToViewSpaceMatrixUniformHandle;	///< Object space to view space matrix uniform handle, can be NULL_HANDLE
 	// For timing
-	Stopwatch mStopwatch;	/**< Stopwatch instance */
-	float	  mGlobalTimer;	/**< Global timer */
+	Stopwatch mStopwatch;	///< Stopwatch instance
+	float	  mGlobalTimer;	///< Global timer
 
 
 };

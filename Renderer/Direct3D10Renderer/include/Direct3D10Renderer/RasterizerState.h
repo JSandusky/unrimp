@@ -106,7 +106,7 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10RasterizerState *mD3D10RasterizerState;	/**< Direct3D 10 rasterizer state, can be a null pointer */
+		ID3D10RasterizerState *mD3D10RasterizerState;	///< Direct3D 10 rasterizer state, can be a null pointer
 
 
 	};

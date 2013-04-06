@@ -70,9 +70,9 @@ namespace OpenGLRenderer
 			public:
 			enum Enum
 			{
-				NO_VAO = 0,	/**< No vertex array object */
-				CG	   = 1,	/**< Cg vertex array object */
-				VAO    = 2	/**< Vertex array object */
+				NO_VAO = 0,	///< No vertex array object
+				CG	   = 1,	///< Cg vertex array object
+				VAO    = 2	///< Vertex array object
 			};
 		};
 
@@ -128,8 +128,8 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IndexBuffer				   *mIndexBuffer;			/**< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer */
-		InternalResourceType::Enum  mInternalResourceType;	/**< Internal resource type */
+		IndexBuffer				   *mIndexBuffer;			///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
+		InternalResourceType::Enum  mInternalResourceType;	///< Internal resource type
 
 
 	};

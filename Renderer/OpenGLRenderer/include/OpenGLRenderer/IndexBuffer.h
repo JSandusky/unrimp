@@ -106,8 +106,8 @@ namespace OpenGLRenderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int mOpenGLElementArrayBuffer;	/**< OpenGL element array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim) */
-		unsigned int mOpenGLType;				/**< OpenGL element array buffer data type (type "GLenum" not used in here in order to keep the header slim) */
+		unsigned int mOpenGLElementArrayBuffer;	///< OpenGL element array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		unsigned int mOpenGLType;				///< OpenGL element array buffer data type (type "GLenum" not used in here in order to keep the header slim)
 
 
 	};

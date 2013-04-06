@@ -137,8 +137,8 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IRenderer *mRenderer;		/**< The used renderer instance (we keep a reference to it), always valid */
-		FT_Library			*mFTLibrary;	/**< FreeType library object, a null pointer on error (in case of an terrible error) */
+		Renderer::IRenderer *mRenderer;		///< The used renderer instance (we keep a reference to it), always valid
+		FT_Library			*mFTLibrary;	///< FreeType library object, a null pointer on error (in case of an terrible error)
 
 
 	};

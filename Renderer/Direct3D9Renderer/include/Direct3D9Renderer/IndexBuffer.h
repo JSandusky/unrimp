@@ -110,7 +110,7 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDirect3DIndexBuffer9 *mDirect3DIndexBuffer9;	/**< Direct3D index buffer instance, can be a null pointer */
+		IDirect3DIndexBuffer9 *mDirect3DIndexBuffer9;	///< Direct3D index buffer instance, can be a null pointer
 
 
 	};

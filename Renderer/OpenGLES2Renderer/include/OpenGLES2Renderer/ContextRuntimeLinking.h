@@ -150,10 +150,10 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void					 *mEGLSharedLibrary;		/**< EGL shared library, can be a null pointer */
-		void					 *mGLESSharedLibrary;		/**< OpenGL ES 2 shared library, can be a null pointer */
-		bool					  mEntryPointsRegistered;	/**< Entry points successfully registered? */
-		ExtensionsRuntimeLinking *mExtensions;				/**< Extensions instance, always valid! */
+		void					 *mEGLSharedLibrary;		///< EGL shared library, can be a null pointer
+		void					 *mGLESSharedLibrary;		///< OpenGL ES 2 shared library, can be a null pointer
+		bool					  mEntryPointsRegistered;	///< Entry points successfully registered?
+		ExtensionsRuntimeLinking *mExtensions;				///< Extensions instance, always valid!
 
 
 	};

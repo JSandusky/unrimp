@@ -141,7 +141,7 @@ namespace RendererToolkit
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		Renderer::IRenderer *mRenderer;	/**< The used renderer instance (we keep a reference to it), always valid */
+		Renderer::IRenderer *mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
 
 
 	};

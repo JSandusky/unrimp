@@ -83,7 +83,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	AType *mPointer; /**< Pointer to the referenced object, can be a null pointer */
+	AType *mPointer; ///< Pointer to the referenced object, can be a null pointer
 
 
 };

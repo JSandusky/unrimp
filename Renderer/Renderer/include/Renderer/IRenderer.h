@@ -1192,14 +1192,14 @@ namespace Renderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		Capabilities mCapabilities;	/**< Capabilities */
+		Capabilities mCapabilities;	///< Capabilities
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Statistics mStatistics;	/**< Statistics */
+		Statistics mStatistics;	///< Statistics
 
 
 	};

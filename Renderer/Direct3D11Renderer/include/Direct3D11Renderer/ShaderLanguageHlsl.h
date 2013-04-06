@@ -61,7 +61,7 @@ namespace Direct3D11Renderer
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const char *NAME;	/**< ASCII name of this shader language, always valid (do not free the memory the returned pointer is pointing to) */
+		static const char *NAME;	///< ASCII name of this shader language, always valid (do not free the memory the returned pointer is pointing to)
 
 
 	//[-------------------------------------------------------]
@@ -123,7 +123,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D11Renderer *mDirect3D11Renderer;	/**< Owner Direct3D 11 renderer instance, always valid */
+		Direct3D11Renderer *mDirect3D11Renderer;	///< Owner Direct3D 11 renderer instance, always valid
 
 
 	};

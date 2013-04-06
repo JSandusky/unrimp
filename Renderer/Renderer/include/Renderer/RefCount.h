@@ -117,7 +117,7 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mRefCount; /**< Reference count */
+		unsigned int mRefCount; ///< Reference count
 
 
 	};

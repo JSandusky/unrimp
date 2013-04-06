@@ -80,10 +80,10 @@ namespace RendererToolkit
 		*/
 		enum EDrawFlags
 		{
-			CENTER_TEXT    = 1<<0,	/**< Center the text */
-			UNDERLINE_TEXT = 1<<1,	/**< Underline the text */
-			CROSSOUT_TEXT  = 1<<2,	/**< Cross out the text */
-			MIPMAPPING     = 1<<3	/**< Use mipmapping (may blur the font in an ugly way) */
+			CENTER_TEXT    = 1<<0,	///< Center the text
+			UNDERLINE_TEXT = 1<<1,	///< Underline the text
+			CROSSOUT_TEXT  = 1<<2,	///< Cross out the text
+			MIPMAPPING     = 1<<3	///< Use mipmapping (may blur the font in an ugly way)
 		};
 
 
@@ -270,8 +270,8 @@ namespace RendererToolkit
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int mSize;			/**< Font size in points, for example 12 (72 points per inch) */
-		unsigned int mResolution;	/**< The horizontal and vertical resolution in DPI, for example 96 */
+		unsigned int mSize;			///< Font size in points, for example 12 (72 points per inch)
+		unsigned int mResolution;	///< The horizontal and vertical resolution in DPI, for example 96
 
 
 	};

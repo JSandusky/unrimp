@@ -115,8 +115,8 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDirect3DVertexShader9 *mDirect3DVertexShader9;	/**< Direct3D 9 vertex shader, can be a null pointer */
-		ID3DXConstantTable	   *mD3DXConstantTable;		/**< Constant table, can be a null pointer */
+		IDirect3DVertexShader9 *mDirect3DVertexShader9;	///< Direct3D 9 vertex shader, can be a null pointer
+		ID3DXConstantTable	   *mD3DXConstantTable;		///< Constant table, can be a null pointer
 
 
 	};

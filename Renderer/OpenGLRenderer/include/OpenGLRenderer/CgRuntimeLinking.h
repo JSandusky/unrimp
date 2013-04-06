@@ -112,10 +112,10 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void *mCgSharedLibrary;			/**< Cg shared library, can be a null pointer */
-		void *mCgGLSharedLibrary;		/**< Cg GL shared library, can be a null pointer */
-		bool  mEntryPointsRegistered;	/**< Entry points successfully registered? */
-		bool  mInitialized;				/**< Already initialized? */
+		void *mCgSharedLibrary;			///< Cg shared library, can be a null pointer
+		void *mCgGLSharedLibrary;		///< Cg GL shared library, can be a null pointer
+		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
+		bool  mInitialized;				///< Already initialized?
 
 
 	};

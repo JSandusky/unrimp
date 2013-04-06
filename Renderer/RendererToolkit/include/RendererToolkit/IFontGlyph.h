@@ -124,12 +124,12 @@ namespace RendererToolkit
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		int   mWidth;		/**< The width (in pixel) of the glyph */
-		int   mHeight;		/**< The height (in pixel) of the glyph */
-		float mCornerX;		/**< The X distance (in pixel) from the current pen position to the glyph bitmap */
-		float mCornerY;		/**< The Y distance (in pixel) from the current pen position to the glyph bitmap */
-		float mPenAdvanceX;	/**< The object space pen X advance */
-		float mPenAdvanceY;	/**< The object space pen Y advance */
+		int   mWidth;		///< The width (in pixel) of the glyph
+		int   mHeight;		///< The height (in pixel) of the glyph
+		float mCornerX;		///< The X distance (in pixel) from the current pen position to the glyph bitmap
+		float mCornerY;		///< The Y distance (in pixel) from the current pen position to the glyph bitmap
+		float mPenAdvanceX;	///< The object space pen X advance
+		float mPenAdvanceY;	///< The object space pen Y advance
 
 
 	};

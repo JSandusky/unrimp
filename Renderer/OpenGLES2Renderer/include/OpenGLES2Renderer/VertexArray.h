@@ -96,7 +96,7 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IndexBuffer *mIndexBuffer; /**< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer */
+		IndexBuffer *mIndexBuffer; ///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 
 
 	};

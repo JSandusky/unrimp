@@ -89,7 +89,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::DepthStencilState mDepthStencilState;	/**< Depth stencil state */
+		Renderer::DepthStencilState mDepthStencilState;	///< Depth stencil state
 
 
 	};

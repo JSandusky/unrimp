@@ -132,7 +132,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Extensions *mExtensions;	/**< Extensions instance, always valid */
+		Extensions *mExtensions;	///< Extensions instance, always valid
 
 
 	};

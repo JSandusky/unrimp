@@ -110,14 +110,14 @@ namespace Renderer
 	// TODO(co) Renderer::RasterizerState, documentation
 	struct RenderTargetBlendDesc
 	{
-		int			  blendEnable;				/**< Default: "false" */
-		Blend::Enum	  srcBlend;					/**< Default: "Renderer::Blend::ONE" */
-		Blend::Enum	  destBlend;				/**< Default: "Renderer::Blend::ZERO" */
-		BlendOp::Enum blendOp;					/**< Default: "Renderer::BlendOp::ADD" */
-		Blend::Enum	  srcBlendAlpha;			/**< Default: "Renderer::Blend::ONE" */
-		Blend::Enum	  destBlendAlpha;			/**< Default: "Renderer::Blend::ZERO" */
-		BlendOp::Enum blendOpAlpha;				/**< Default: "Renderer::BlendOp::ADD" */
-		unsigned char renderTargetWriteMask;	/**< Combination of "Renderer::ColorWriteEnable"-flags. Default: "Renderer::ColorWriteEnable::ALL" */
+		int			  blendEnable;				///< Default: "false"
+		Blend::Enum	  srcBlend;					///< Default: "Renderer::Blend::ONE"
+		Blend::Enum	  destBlend;				///< Default: "Renderer::Blend::ZERO"
+		BlendOp::Enum blendOp;					///< Default: "Renderer::BlendOp::ADD"
+		Blend::Enum	  srcBlendAlpha;			///< Default: "Renderer::Blend::ONE"
+		Blend::Enum	  destBlendAlpha;			///< Default: "Renderer::Blend::ZERO"
+		BlendOp::Enum blendOpAlpha;				///< Default: "Renderer::BlendOp::ADD"
+		unsigned char renderTargetWriteMask;	///< Combination of "Renderer::ColorWriteEnable"-flags. Default: "Renderer::ColorWriteEnable::ALL"
 	};
 
 	/**
@@ -132,9 +132,9 @@ namespace Renderer
 	// TODO(co) Renderer::BlendState, document
 	struct BlendState
 	{
-		int					  alphaToCoverageEnable;	/**< Default: "false" */
-		int					  independentBlendEnable;	/**< Default: "false" */
-		RenderTargetBlendDesc renderTarget[8];			/**< Default: See "Renderer::RenderTargetBlendDesc" */
+		int					  alphaToCoverageEnable;	///< Default: "false"
+		int					  independentBlendEnable;	///< Default: "false"
+		RenderTargetBlendDesc renderTarget[8];			///< Default: See "Renderer::RenderTargetBlendDesc"
 	};
 
 

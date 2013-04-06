@@ -85,9 +85,9 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IProgramPtr	  mProgram;			/**< Program, can be a null pointer */
-	Renderer::IVertexArrayPtr mVertexArrayVBO;	/**< Vertex array object (VAO) using one vertex buffer object (VBO), can be a null pointer */
-	Renderer::IVertexArrayPtr mVertexArrayVBOs;	/**< Vertex array object (VAO) using multiple vertex buffer objects (VBO), can be a null pointer */
+	Renderer::IProgramPtr	  mProgram;			///< Program, can be a null pointer
+	Renderer::IVertexArrayPtr mVertexArrayVBO;	///< Vertex array object (VAO) using one vertex buffer object (VBO), can be a null pointer
+	Renderer::IVertexArrayPtr mVertexArrayVBOs;	///< Vertex array object (VAO) using multiple vertex buffer objects (VBO), can be a null pointer
 
 
 };

@@ -117,10 +117,10 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ProgramCg						*mProgramCg;			/**< Cg program to use this vertex array for (we keep a reference to it), always valid */
-		unsigned int					 mNumberOfAttributes;	/**< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid */
-		Renderer::VertexArrayAttribute  *mAttributes;			/**< At least nNumberOfAttributes instances of vertex array attributes, can be a null pointer in case there are zero attributes */
-		_CGparameter 				   **mCgParameters;			/**< Cg parameters, can be a null pointer in case there are zero attributes */
+		ProgramCg						*mProgramCg;			///< Cg program to use this vertex array for (we keep a reference to it), always valid
+		unsigned int					 mNumberOfAttributes;	///< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
+		Renderer::VertexArrayAttribute  *mAttributes;			///< At least nNumberOfAttributes instances of vertex array attributes, can be a null pointer in case there are zero attributes
+		_CGparameter 				   **mCgParameters;			///< Cg parameters, can be a null pointer in case there are zero attributes
 
 
 	};

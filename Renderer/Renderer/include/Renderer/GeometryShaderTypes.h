@@ -47,11 +47,11 @@ namespace Renderer
 	{
 		enum Enum
 		{
-			POINTS			    = 0x0000,	/**< List of point primitives */
-			LINES			    = 0x0001,	/**< List of line or line strip primitives */
-			LINES_ADJACENCY	    = 0x000A,	/**< List of line with adjacency or line strip with adjacency primitives */
-			TRIANGLES		    = 0x0004,	/**< List of triangle or triangle strip primitives */
-			TRIANGLES_ADJACENCY = 0x000C	/**< List of triangle with adjacency or triangle strip with adjacency primitives */
+			POINTS			    = 0x0000,	///< List of point primitives
+			LINES			    = 0x0001,	///< List of line or line strip primitives
+			LINES_ADJACENCY	    = 0x000A,	///< List of line with adjacency or line strip with adjacency primitives
+			TRIANGLES		    = 0x0004,	///< List of triangle or triangle strip primitives
+			TRIANGLES_ADJACENCY = 0x000C	///< List of triangle with adjacency or triangle strip with adjacency primitives
 		};
 	};
 
@@ -66,9 +66,9 @@ namespace Renderer
 	{
 		enum Enum
 		{
-			POINTS			=  0x0000,	/**< A list of of point primitives */
-			LINES			=  0x0001,	/**< A list of line primitives */
-			TRIANGLES_STRIP	=  0x0005	/**< A triangle strip primitives */
+			POINTS			=  0x0000,	///< A list of of point primitives
+			LINES			=  0x0001,	///< A list of line primitives
+			TRIANGLES_STRIP	=  0x0005	///< A triangle strip primitives
 		};
 	};
 

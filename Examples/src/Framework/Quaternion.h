@@ -44,8 +44,8 @@ class Quaternion
 //[ Public static data                                    ]
 //[-------------------------------------------------------]
 public:
-	static const Quaternion ZERO;		/**< 0.0, 0.0, 0.0, 0.0 */
-	static const Quaternion IDENTITY;	/**< 1.0, 0.0, 0.0, 0.0 */
+	static const Quaternion ZERO;		///< 0.0, 0.0, 0.0, 0.0
+	static const Quaternion IDENTITY;	///< 1.0, 0.0, 0.0, 0.0
 
 
 //[-------------------------------------------------------]

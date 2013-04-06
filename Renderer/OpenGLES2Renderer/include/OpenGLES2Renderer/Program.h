@@ -112,7 +112,7 @@ namespace OpenGLES2Renderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int mOpenGLES2Program;	/**< OpenGL ES 2 program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim) */
+		unsigned int mOpenGLES2Program;	///< OpenGL ES 2 program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

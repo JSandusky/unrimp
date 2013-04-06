@@ -113,8 +113,8 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int		 mNumberOfTextures;	/**< The number of texture instances */
-		Renderer::ITexture **mTextures;			/**< Texture instances (we keep a reference to it), can be a null pointer */
+		unsigned int		 mNumberOfTextures;	///< The number of texture instances
+		Renderer::ITexture **mTextures;			///< Texture instances (we keep a reference to it), can be a null pointer
 
 
 	};

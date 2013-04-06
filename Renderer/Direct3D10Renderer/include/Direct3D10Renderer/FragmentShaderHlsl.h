@@ -105,7 +105,7 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10PixelShader *mD3D10PixelShader;	/**< Direct3D 10 pixel shader, can be a null pointer */
+		ID3D10PixelShader *mD3D10PixelShader;	///< Direct3D 10 pixel shader, can be a null pointer
 
 
 	};

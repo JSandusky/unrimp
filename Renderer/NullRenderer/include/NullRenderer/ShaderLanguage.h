@@ -67,7 +67,7 @@ namespace NullRenderer
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const char *NAME;	/**< ASCII name of this shader language, always valid (do not free the memory the returned pointer is pointing to) */
+		static const char *NAME;	///< ASCII name of this shader language, always valid (do not free the memory the returned pointer is pointing to)
 
 
 	//[-------------------------------------------------------]

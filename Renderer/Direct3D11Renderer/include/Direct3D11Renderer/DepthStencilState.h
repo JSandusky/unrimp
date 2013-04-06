@@ -106,7 +106,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11DepthStencilState *mD3D11DepthStencilState;	/**< Direct3D 11 depth stencil state, can be a null pointer */
+		ID3D11DepthStencilState *mD3D11DepthStencilState;	///< Direct3D 11 depth stencil state, can be a null pointer
 
 
 	};

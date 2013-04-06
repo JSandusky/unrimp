@@ -127,8 +127,8 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10Buffer			 *mD3D10Buffer;						/**< Direct3D texture buffer instance, can be a null pointer */
-		ID3D10ShaderResourceView *mD3D10ShaderResourceViewTexture;	/**< Direct3D 10 shader resource view, can be a null pointer */
+		ID3D10Buffer			 *mD3D10Buffer;						///< Direct3D texture buffer instance, can be a null pointer
+		ID3D10ShaderResourceView *mD3D10ShaderResourceViewTexture;	///< Direct3D 10 shader resource view, can be a null pointer
 
 
 	};

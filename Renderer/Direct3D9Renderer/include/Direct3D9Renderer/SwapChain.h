@@ -174,9 +174,9 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDirect3DSwapChain9	*mDirect3DSwapChain9;			/**< The Direct3D 9 swap chain instance, null pointer on error */
-		IDirect3DSurface9	*mDirect3DSurface9RenderTarget;	/**< The Direct3D 9 render target surface instance, null pointer on error */
-		IDirect3DSurface9	*mDirect3DSurface9DepthStencil;	/**< The Direct3D 9 depth stencil surface instance, null pointer on error */
+		IDirect3DSwapChain9	*mDirect3DSwapChain9;			///< The Direct3D 9 swap chain instance, null pointer on error
+		IDirect3DSurface9	*mDirect3DSurface9RenderTarget;	///< The Direct3D 9 render target surface instance, null pointer on error
+		IDirect3DSurface9	*mDirect3DSurface9DepthStencil;	///< The Direct3D 9 depth stencil surface instance, null pointer on error
 
 
 	};

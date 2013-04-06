@@ -84,9 +84,9 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IProgramPtr		  mProgram;			/**< Program, can be a null pointer */
-	Renderer::IVertexArrayPtr	  mVertexArray;		/**< Vertex array object (VAO), can be a null pointer */
-	Renderer::IRasterizerStatePtr mRasterizerState;	/**< Rasterizer state, can be a null pointer */
+	Renderer::IProgramPtr		  mProgram;			///< Program, can be a null pointer
+	Renderer::IVertexArrayPtr	  mVertexArray;		///< Vertex array object (VAO), can be a null pointer
+	Renderer::IRasterizerStatePtr mRasterizerState;	///< Rasterizer state, can be a null pointer
 
 
 };

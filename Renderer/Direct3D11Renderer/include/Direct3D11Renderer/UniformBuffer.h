@@ -114,7 +114,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11Buffer *mD3D11Buffer;	/**< Direct3D 11 constant buffer instance, can be a null pointer */
+		ID3D11Buffer *mD3D11Buffer;	///< Direct3D 11 constant buffer instance, can be a null pointer
 
 
 	};

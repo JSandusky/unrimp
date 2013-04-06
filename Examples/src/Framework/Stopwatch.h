@@ -178,9 +178,9 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	bool          mRunning;	/**< Is the stopwatch currently running? */
-	unsigned long mStart;	/**< Stopwatch start time (microseconds) */
-	unsigned long mStop;	/**< Stopwatch stop time (microseconds) */
+	bool          mRunning;	///< Is the stopwatch currently running?
+	unsigned long mStart;	///< Stopwatch start time (microseconds)
+	unsigned long mStop;	///< Stopwatch stop time (microseconds)
 
 
 };

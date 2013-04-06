@@ -85,14 +85,14 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IUniformBufferPtr	mUniformBufferDynamicTcs;	/**< Dynamic tessellation control shader uniform buffer object (UBO), can be a null pointer */
-	Renderer::IUniformBufferPtr	mUniformBufferStaticTes;	/**< Static tessellation evaluation shader uniform buffer object (UBO), can be a null pointer */
-	Renderer::IUniformBufferPtr	mUniformBufferStaticGs;		/**< Static geometry shader uniform buffer object (UBO), can be a null pointer */
-	Renderer::IUniformBufferPtr	mUniformBufferStaticFs;		/**< Static fragment shader uniform buffer object (UBO), can be a null pointer */
-	Renderer::IProgramPtr		mProgram;					/**< Program, can be a null pointer */
-	Renderer::IVertexArrayPtr	mVertexArray;				/**< Vertex array object (VAO), can be a null pointer */
-	float						mTessellationLevelOuter;	/**< Outer tessellation level */
-	float						mTessellationLevelInner;	/**< Inner tessellation level */
+	Renderer::IUniformBufferPtr	mUniformBufferDynamicTcs;	///< Dynamic tessellation control shader uniform buffer object (UBO), can be a null pointer
+	Renderer::IUniformBufferPtr	mUniformBufferStaticTes;	///< Static tessellation evaluation shader uniform buffer object (UBO), can be a null pointer
+	Renderer::IUniformBufferPtr	mUniformBufferStaticGs;		///< Static geometry shader uniform buffer object (UBO), can be a null pointer
+	Renderer::IUniformBufferPtr	mUniformBufferStaticFs;		///< Static fragment shader uniform buffer object (UBO), can be a null pointer
+	Renderer::IProgramPtr		mProgram;					///< Program, can be a null pointer
+	Renderer::IVertexArrayPtr	mVertexArray;				///< Vertex array object (VAO), can be a null pointer
+	float						mTessellationLevelOuter;	///< Outer tessellation level
+	float						mTessellationLevelInner;	///< Inner tessellation level
 
 
 };

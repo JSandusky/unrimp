@@ -102,13 +102,13 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned long mDirect3DFillMode;				/**< Direct3D 9 fill mode (type DWORD not used in here in order to keep the header slim) */
-		unsigned long mDirect3DCullMode;				/**< Direct3D 9 cull mode (type DWORD not used in here in order to keep the header slim) */
-		unsigned long mDirect3DDepthBias;				/**< Direct3D 9 depth bias (type DWORD not used in here in order to keep the header slim) */
-		unsigned long mDirect3DSlopeScaledDepthBias;	/**< Direct3D 9 slope scaled depth bias (type DWORD not used in here in order to keep the header slim) */
-		unsigned long mDirect3DScissorEnable;			/**< Direct3D 9 scissor enable (type DWORD not used in here in order to keep the header slim) */
-		unsigned long mDirect3DMultisampleEnable;		/**< Direct3D 9 multisample enable (type DWORD not used in here in order to keep the header slim) */
-		unsigned long mDirect3DAntialiasedLineEnable;	/**< Direct3D 9 antialiased line enable (type DWORD not used in here in order to keep the header slim) */
+		unsigned long mDirect3DFillMode;				///< Direct3D 9 fill mode (type DWORD not used in here in order to keep the header slim)
+		unsigned long mDirect3DCullMode;				///< Direct3D 9 cull mode (type DWORD not used in here in order to keep the header slim)
+		unsigned long mDirect3DDepthBias;				///< Direct3D 9 depth bias (type DWORD not used in here in order to keep the header slim)
+		unsigned long mDirect3DSlopeScaledDepthBias;	///< Direct3D 9 slope scaled depth bias (type DWORD not used in here in order to keep the header slim)
+		unsigned long mDirect3DScissorEnable;			///< Direct3D 9 scissor enable (type DWORD not used in here in order to keep the header slim)
+		unsigned long mDirect3DMultisampleEnable;		///< Direct3D 9 multisample enable (type DWORD not used in here in order to keep the header slim)
+		unsigned long mDirect3DAntialiasedLineEnable;	///< Direct3D 9 antialiased line enable (type DWORD not used in here in order to keep the header slim)
 
 
 	};

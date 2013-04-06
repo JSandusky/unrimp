@@ -115,8 +115,8 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDirect3DPixelShader9 *mDirect3DPixelShader9;	/**< Direct3D 9 pixel shader, can be a null pointer */
-		ID3DXConstantTable	  *mD3DXConstantTable;		/**< Constant table, can be a null pointer */
+		IDirect3DPixelShader9 *mDirect3DPixelShader9;	///< Direct3D 9 pixel shader, can be a null pointer
+		ID3DXConstantTable	  *mD3DXConstantTable;		///< Constant table, can be a null pointer
 
 
 	};

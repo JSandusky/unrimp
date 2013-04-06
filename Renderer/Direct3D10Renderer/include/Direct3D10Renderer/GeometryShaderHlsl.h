@@ -105,7 +105,7 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10GeometryShader *mD3D10GeometryShader;	/**< Direct3D 10 geometry shader, can be a null pointer */
+		ID3D10GeometryShader *mD3D10GeometryShader;	///< Direct3D 10 geometry shader, can be a null pointer
 
 
 	};

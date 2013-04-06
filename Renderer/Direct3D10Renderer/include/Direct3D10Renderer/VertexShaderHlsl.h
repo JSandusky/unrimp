@@ -116,8 +116,8 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3DBlob		   *mD3DBlobVertexShader;	/**< Direct3D 10 vertex shader blob, can be a null pointer */
-		ID3D10VertexShader *mD3D10VertexShader;		/**< Direct3D 10 vertex shader, can be a null pointer */
+		ID3DBlob		   *mD3DBlobVertexShader;	///< Direct3D 10 vertex shader blob, can be a null pointer
+		ID3D10VertexShader *mD3D10VertexShader;		///< Direct3D 10 vertex shader, can be a null pointer
 
 
 	};

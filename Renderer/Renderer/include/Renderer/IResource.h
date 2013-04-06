@@ -147,8 +147,8 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ResourceType::Enum  mResourceType;	/**< The resource type */
-		IRenderer		   *mRenderer;		/**< The owner renderer instance, always valid */
+		ResourceType::Enum  mResourceType;	///< The resource type
+		IRenderer		   *mRenderer;		///< The owner renderer instance, always valid
 
 
 	};

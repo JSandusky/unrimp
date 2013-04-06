@@ -226,7 +226,7 @@ protected:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	IApplicationImpl *mApplicationImpl;	/**< Application implementation instance, always valid */
+	IApplicationImpl *mApplicationImpl;	///< Application implementation instance, always valid
 
 
 };

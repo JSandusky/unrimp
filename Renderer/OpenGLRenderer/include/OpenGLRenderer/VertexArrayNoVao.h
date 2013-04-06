@@ -106,10 +106,10 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int					mNumberOfAttributes;		/**< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid */
-		Renderer::VertexArrayAttribute *mAttributes;				/**< At least "numberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes */
-		int							   *mAttributeLocations;		/**< Attribute locations, can be a null pointer in case there are zero attributes */
-		bool							mIsGL_ARB_instanced_arrays;	/**< Is the "GL_ARB_instanced_arrays"-extension supported? */
+		unsigned int					mNumberOfAttributes;		///< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
+		Renderer::VertexArrayAttribute *mAttributes;				///< At least "numberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes
+		int							   *mAttributeLocations;		///< Attribute locations, can be a null pointer in case there are zero attributes
+		bool							mIsGL_ARB_instanced_arrays;	///< Is the "GL_ARB_instanced_arrays"-extension supported?
 
 
 	};

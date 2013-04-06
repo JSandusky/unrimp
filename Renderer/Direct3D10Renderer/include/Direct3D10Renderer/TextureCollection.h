@@ -121,9 +121,9 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int			   mNumberOfD3D10ShaderResourceViews;	/**< The number of Direct3D shader resource view instances */
-		ID3D10ShaderResourceView **mD3D10ShaderResourceViews;			/**< The Direct3D shader resource view instances, can be a null pointer */
-		Renderer::ITexture		 **mTextures;							/**< Texture instances (we keep a reference to it), can be a null pointer */
+		unsigned int			   mNumberOfD3D10ShaderResourceViews;	///< The number of Direct3D shader resource view instances
+		ID3D10ShaderResourceView **mD3D10ShaderResourceViews;			///< The Direct3D shader resource view instances, can be a null pointer
+		Renderer::ITexture		 **mTextures;							///< Texture instances (we keep a reference to it), can be a null pointer
 
 
 	};

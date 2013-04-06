@@ -158,11 +158,11 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		VertexShaderCg				   *mVertexShaderCg;					/**< Cg vertex shader the program is using (we keep a reference to it), can be a null pointer */
-		TessellationControlShaderCg	   *mTessellationControlShaderCg;		/**< Cg tessellation control shader the program is using (we keep a reference to it), can be a null pointer */
-		TessellationEvaluationShaderCg *mTessellationEvaluationShaderCg;	/**< Cg tessellation evaluation shader the program is using (we keep a reference to it), can be a null pointer */
-		GeometryShaderCg			   *mGeometryShaderCg;					/**< Cg geometry shader the program is using (we keep a reference to it), can be a null pointer */
-		FragmentShaderCg			   *mFragmentShaderCg;					/**< Cg gragment shader the program is using (we keep a reference to it), can be a null pointer */
+		VertexShaderCg				   *mVertexShaderCg;					///< Cg vertex shader the program is using (we keep a reference to it), can be a null pointer
+		TessellationControlShaderCg	   *mTessellationControlShaderCg;		///< Cg tessellation control shader the program is using (we keep a reference to it), can be a null pointer
+		TessellationEvaluationShaderCg *mTessellationEvaluationShaderCg;	///< Cg tessellation evaluation shader the program is using (we keep a reference to it), can be a null pointer
+		GeometryShaderCg			   *mGeometryShaderCg;					///< Cg geometry shader the program is using (we keep a reference to it), can be a null pointer
+		FragmentShaderCg			   *mFragmentShaderCg;					///< Cg gragment shader the program is using (we keep a reference to it), can be a null pointer
 
 
 	};

@@ -98,7 +98,7 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::RasterizerState mRasterizerState;	/**< Rasterizer state */
+		Renderer::RasterizerState mRasterizerState;	///< Rasterizer state
 
 
 	};

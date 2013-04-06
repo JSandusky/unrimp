@@ -89,7 +89,7 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::BlendState mBlendState;	/**< Blend state */
+		Renderer::BlendState mBlendState;	///< Blend state
 
 
 	};

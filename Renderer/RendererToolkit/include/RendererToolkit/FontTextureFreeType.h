@@ -180,16 +180,16 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		RendererToolkitImpl		 *mRendererToolkitImpl;			/**< The used renderer toolkit implementation instance (we keep a reference to it), always valid */
-		unsigned int			  mFontFileSize;				/**< Font file size in bytes */
-		unsigned char			 *mFontFileData;				/**< Font file data, can be a null pointer */
-		FT_Face					 *mFTFace;						/**< FreeType library face (aka "The Font"), a null pointer on error */
-		unsigned int			  mGlyphTextureAtlasPadding;	/**< Glyph texture atlas gab between glyphs in pixel */
-		unsigned int			  mGlyphTextureAtlasSizeX;		/**< X component of the glyph texture atlas size */
-		unsigned int			  mGlyphTextureAtlasSizeY;		/**< Y component of the glyph texture atlas size */
-		unsigned int			  mNumberOfFontGlyphs;			/**< Number of currently active glyphs */
-		FontGlyphTextureFreeType *mFontGlyphs;					/**< Array of currently active glyphs ("character code -> glyph instance"), can be a null pointer, but only if "mNumberOfFontGlyphs" is zero */
-		Renderer::ITexture2D	 *mTexture2D;					/**< The glyph texture atlas (we keep a reference to it), can be a null pointer */
+		RendererToolkitImpl		 *mRendererToolkitImpl;			///< The used renderer toolkit implementation instance (we keep a reference to it), always valid
+		unsigned int			  mFontFileSize;				///< Font file size in bytes
+		unsigned char			 *mFontFileData;				///< Font file data, can be a null pointer
+		FT_Face					 *mFTFace;						///< FreeType library face (aka "The Font"), a null pointer on error
+		unsigned int			  mGlyphTextureAtlasPadding;	///< Glyph texture atlas gab between glyphs in pixel
+		unsigned int			  mGlyphTextureAtlasSizeX;		///< X component of the glyph texture atlas size
+		unsigned int			  mGlyphTextureAtlasSizeY;		///< Y component of the glyph texture atlas size
+		unsigned int			  mNumberOfFontGlyphs;			///< Number of currently active glyphs
+		FontGlyphTextureFreeType *mFontGlyphs;					///< Array of currently active glyphs ("character code -> glyph instance"), can be a null pointer, but only if "mNumberOfFontGlyphs" is zero
+		Renderer::ITexture2D	 *mTexture2D;					///< The glyph texture atlas (we keep a reference to it), can be a null pointer
 
 
 	};

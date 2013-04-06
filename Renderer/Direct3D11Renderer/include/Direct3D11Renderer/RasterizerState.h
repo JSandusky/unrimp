@@ -106,7 +106,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11RasterizerState *mD3D11RasterizerState;	/**< Direct3D 11 rasterizer state, can be a null pointer */
+		ID3D11RasterizerState *mD3D11RasterizerState;	///< Direct3D 11 rasterizer state, can be a null pointer
 
 
 	};

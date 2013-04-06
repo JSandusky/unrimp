@@ -103,7 +103,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle mNativeWindowHandle;	/**< Native window handle window, can be a null handle */
+		handle mNativeWindowHandle;	///< Native window handle window, can be a null handle
 
 
 	};

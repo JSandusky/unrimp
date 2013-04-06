@@ -119,8 +119,8 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11Buffer *mD3D11Buffer;	/**< Direct3D index buffer instance, can be a null pointer */
-		unsigned int  mDXGIFormat;	/**< DXGI index buffer data format (type "DXGI_FORMAT" not used in here in order to keep the header slim) */
+		ID3D11Buffer *mD3D11Buffer;	///< Direct3D index buffer instance, can be a null pointer
+		unsigned int  mDXGIFormat;	///< DXGI index buffer data format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 
 
 	};

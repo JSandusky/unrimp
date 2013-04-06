@@ -119,7 +119,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11ShaderResourceView *mD3D11ShaderResourceViewTexture;	/**< Direct3D 11 shader resource view, can be a null pointer */
+		ID3D11ShaderResourceView *mD3D11ShaderResourceViewTexture;	///< Direct3D 11 shader resource view, can be a null pointer
 
 
 	};

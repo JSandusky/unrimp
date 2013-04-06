@@ -112,10 +112,10 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void *mD3D11SharedLibrary;		/**< D3D11 shared library, can be a null pointer */
-		void *mD3DX11SharedLibrary;		/**< D3DX11 shared library, can be a null pointer */
-		bool  mEntryPointsRegistered;	/**< Entry points successfully registered? */
-		bool  mInitialized;				/**< Already initialized? */
+		void *mD3D11SharedLibrary;		///< D3D11 shared library, can be a null pointer
+		void *mD3DX11SharedLibrary;		///< D3DX11 shared library, can be a null pointer
+		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
+		bool  mInitialized;				///< Already initialized?
 
 
 	};

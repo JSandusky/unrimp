@@ -438,7 +438,7 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRenderer *mRenderer;	/**< The owner renderer instance, always valid */
+		IRenderer *mRenderer;	///< The owner renderer instance, always valid
 
 
 	};

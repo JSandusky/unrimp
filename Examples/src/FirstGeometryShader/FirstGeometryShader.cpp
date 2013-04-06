@@ -24,8 +24,6 @@
 #include "FirstGeometryShader/FirstGeometryShader.h"
 #include "Framework/Color4.h"
 
-#include <string.h>
-
 
 //[-------------------------------------------------------]
 //[ Public methods                                        ]

@@ -211,13 +211,13 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		FreeTypeContext			 *mFreeTypeContext;					/**< FreeType context instance (we keep a reference to it), can be a null pointer, do only access it by using "getFreeTypeContext()" */
-		Renderer::IProgram		 *mFontProgram;						/**< Font program (we keep a reference to it), can be a null pointer, do only access it by using "getFontProgram()" */
-		Renderer::IUniformBuffer *mFontVertexShaderUniformBuffer;	/**< Font vertex shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexShaderUniformBuffer()" */
-		Renderer::IUniformBuffer *mFontFragmentShaderUniformBuffer;	/**< Font fragment shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontFragmentShaderUniformBuffer()" */
-		Renderer::IVertexArray	 *mFontVertexArray;					/**< Vertex array object (VAO, we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexArray()" */
-		Renderer::ISamplerState	 *mFontSamplerState;				/**< Font sampler state (we keep a reference to it), can be a null pointer, do only access it by using "getFontSamplerState()" */
-		Renderer::IBlendState	 *mFontBlendState;					/**< Font blend state state (we keep a reference to it), can be a null pointer, do only access it by using "getFontBlendState()" */
+		FreeTypeContext			 *mFreeTypeContext;					///< FreeType context instance (we keep a reference to it), can be a null pointer, do only access it by using "getFreeTypeContext()"
+		Renderer::IProgram		 *mFontProgram;						///< Font program (we keep a reference to it), can be a null pointer, do only access it by using "getFontProgram()"
+		Renderer::IUniformBuffer *mFontVertexShaderUniformBuffer;	///< Font vertex shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexShaderUniformBuffer()"
+		Renderer::IUniformBuffer *mFontFragmentShaderUniformBuffer;	///< Font fragment shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontFragmentShaderUniformBuffer()"
+		Renderer::IVertexArray	 *mFontVertexArray;					///< Vertex array object (VAO, we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexArray()"
+		Renderer::ISamplerState	 *mFontSamplerState;				///< Font sampler state (we keep a reference to it), can be a null pointer, do only access it by using "getFontSamplerState()"
+		Renderer::IBlendState	 *mFontBlendState;					///< Font blend state state (we keep a reference to it), can be a null pointer, do only access it by using "getFontBlendState()"
 
 
 	};

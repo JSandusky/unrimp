@@ -106,7 +106,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11BlendState *mD3D11BlendState;	/**< Direct3D 11 blend state, can be a null pointer */
+		ID3D11BlendState *mD3D11BlendState;	///< Direct3D 11 blend state, can be a null pointer
 
 
 	};

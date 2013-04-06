@@ -223,7 +223,7 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RefCount<AType> *mPtr; /**< Pointer to reference counter, can be a null pointer */
+	RefCount<AType> *mPtr; ///< Pointer to reference counter, can be a null pointer
 
 
 };

@@ -92,7 +92,7 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mOpenGLES2Shader;	/**< OpenGL ES 2 shader, can be zero if no resource is allocated */
+		unsigned int mOpenGLES2Shader;	///< OpenGL ES 2 shader, can be zero if no resource is allocated
 
 
 	};

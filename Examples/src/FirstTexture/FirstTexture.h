@@ -85,10 +85,10 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::ITexture2DPtr	   mTexture2D;		/**< 2D texture, can be a null pointer */
-	Renderer::ISamplerStatePtr mSamplerState;	/**< Sampler state, can be a null pointer */
-	Renderer::IProgramPtr	   mProgram;		/**< Program, can be a null pointer */
-	Renderer::IVertexArrayPtr  mVertexArray;	/**< Vertex array object (VAO), can be a null pointer */
+	Renderer::ITexture2DPtr	   mTexture2D;		///< 2D texture, can be a null pointer
+	Renderer::ISamplerStatePtr mSamplerState;	///< Sampler state, can be a null pointer
+	Renderer::IProgramPtr	   mProgram;		///< Program, can be a null pointer
+	Renderer::IVertexArrayPtr  mVertexArray;	///< Vertex array object (VAO), can be a null pointer
 
 
 };

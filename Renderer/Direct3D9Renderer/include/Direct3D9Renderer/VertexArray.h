@@ -120,17 +120,17 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDirect3DDevice9			 *mDirect3DDevice9;				/**< The Direct3D 9 device instance (we keep a reference to it), null pointer on horrible error (so we don't check) */
-		IndexBuffer					 *mIndexBuffer;					/**< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer */
-		IDirect3DVertexDeclaration9	 *mDirect3DVertexDeclaration9;	/**< Direct3D 9 vertex declaration instance, can be a null pointer */
+		IDirect3DDevice9			 *mDirect3DDevice9;				///< The Direct3D 9 device instance (we keep a reference to it), null pointer on horrible error (so we don't check)
+		IndexBuffer					 *mIndexBuffer;					///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
+		IDirect3DVertexDeclaration9	 *mDirect3DVertexDeclaration9;	///< Direct3D 9 vertex declaration instance, can be a null pointer
 		// Direct3D 9 input slots
-		unsigned int				  mNumberOfSlots;				/**< Number of used Direct3D 9 input slots */
-		IDirect3DVertexBuffer9		**mDirect3DVertexBuffer9;		/**< Direct3D 9 vertex buffers, if "mDirect3DVertexDeclaration9" is no null pointer this is no null pointer as well */
-		unsigned int				 *mStrides;						/**< Strides in bytes, if "mDirect3DVertexBuffer9" is no null pointer this is no null pointer as well */
-		unsigned int				 *mInstancesPerElement;			/**< Instances per element, if "mDirect3DVertexBuffer9" is no null pointer this is no null pointer as well */
+		unsigned int				  mNumberOfSlots;				///< Number of used Direct3D 9 input slots
+		IDirect3DVertexBuffer9		**mDirect3DVertexBuffer9;		///< Direct3D 9 vertex buffers, if "mDirect3DVertexDeclaration9" is no null pointer this is no null pointer as well
+		unsigned int				 *mStrides;						///< Strides in bytes, if "mDirect3DVertexBuffer9" is no null pointer this is no null pointer as well
+		unsigned int				 *mInstancesPerElement;			///< Instances per element, if "mDirect3DVertexBuffer9" is no null pointer this is no null pointer as well
 		// For proper vertex buffer reference counter behaviour
-		unsigned int				  mNumberOfVertexBuffers;		/**< Number of vertex buffers */
-		VertexBuffer				**mVertexBuffers;				/**< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer */
+		unsigned int				  mNumberOfVertexBuffers;		///< Number of vertex buffers
+		VertexBuffer				**mVertexBuffers;				///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
 
 
 	};

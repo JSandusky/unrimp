@@ -124,7 +124,7 @@ namespace OpenGLRenderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int mOpenGLProgram;	/**< OpenGL program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim) */
+		unsigned int mOpenGLProgram;	///< OpenGL program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

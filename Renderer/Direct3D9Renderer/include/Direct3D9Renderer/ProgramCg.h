@@ -122,9 +122,9 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D9Renderer *mDirect3D9Renderer;	/**< Owner Direct3D 9 renderer instance, always valid */
-		VertexShaderCg	  *mVertexShaderCg;		/**< Cg vertex shader the program is using (we keep a reference to it), can be a null pointer */
-		FragmentShaderCg  *mFragmentShaderCg;	/**< Cg gragment shader the program is using (we keep a reference to it), can be a null pointer */
+		Direct3D9Renderer *mDirect3D9Renderer;	///< Owner Direct3D 9 renderer instance, always valid
+		VertexShaderCg	  *mVertexShaderCg;		///< Cg vertex shader the program is using (we keep a reference to it), can be a null pointer
+		FragmentShaderCg  *mFragmentShaderCg;	///< Cg gragment shader the program is using (we keep a reference to it), can be a null pointer
 
 
 	};

@@ -121,9 +121,9 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int			  mNumberOfD3D10SamplerStates;	/**< The number of Direct3D sampler state instances */
-		ID3D10SamplerState		**mD3D10SamplerStates;			/**< The Direct3D sampler state instances, can be a null pointer */
-		Renderer::ISamplerState **mSamplerStates;				/**< Sampler state instances (we keep a reference to it), can be a null pointer */
+		unsigned int			  mNumberOfD3D10SamplerStates;	///< The number of Direct3D sampler state instances
+		ID3D10SamplerState		**mD3D10SamplerStates;			///< The Direct3D sampler state instances, can be a null pointer
+		Renderer::ISamplerState **mSamplerStates;				///< Sampler state instances (we keep a reference to it), can be a null pointer
 
 
 	};

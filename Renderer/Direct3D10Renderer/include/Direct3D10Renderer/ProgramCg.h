@@ -134,10 +134,10 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D10Renderer *mDirect3D10Renderer;	/**< Owner Direct3D 10 renderer instance, always valid */
-		VertexShaderCg	   *mVertexShaderCg;		/**< Cg vertex shader the program is using (we keep a reference to it), can be a null pointer */
-		GeometryShaderCg   *mGeometryShaderCg;		/**< Cg geometry shader the program is using (we keep a reference to it), can be a null pointer */
-		FragmentShaderCg   *mFragmentShaderCg;		/**< Cg gragment shader the program is using (we keep a reference to it), can be a null pointer */
+		Direct3D10Renderer *mDirect3D10Renderer;	///< Owner Direct3D 10 renderer instance, always valid
+		VertexShaderCg	   *mVertexShaderCg;		///< Cg vertex shader the program is using (we keep a reference to it), can be a null pointer
+		GeometryShaderCg   *mGeometryShaderCg;		///< Cg geometry shader the program is using (we keep a reference to it), can be a null pointer
+		FragmentShaderCg   *mFragmentShaderCg;		///< Cg gragment shader the program is using (we keep a reference to it), can be a null pointer
 
 
 	};

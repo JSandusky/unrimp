@@ -231,7 +231,7 @@ namespace OpenGLES2Renderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		handle				mNativeWindowHandle;	/**< Handle of a native OS window which is valid as long as the renderer instance exists, "NULL_HANDLE" if there's no such window */
+		handle				mNativeWindowHandle;	///< Handle of a native OS window which is valid as long as the renderer instance exists, "NULL_HANDLE" if there's no such window
 		// X11
 		#if (defined(LINUX) && !defined(ANDROID))
 			::Display	   *mX11Display;
@@ -241,7 +241,7 @@ namespace OpenGLES2Renderer
 		// EGL
 		EGLConfig			mConfig;
 		EGLContext			mContext;
-		EGLNativeWindowType	mDummyNativeWindow;	/**< Native dummy window handle, can be identical to "mNativeWindowHandle" if it's in fact no dummy at all, can be "NULL_HANDLE" */
+		EGLNativeWindowType	mDummyNativeWindow;	///< Native dummy window handle, can be identical to "mNativeWindowHandle" if it's in fact no dummy at all, can be "NULL_HANDLE"
 		EGLSurface			mDummySurface;
 
 

@@ -115,7 +115,7 @@ protected:
 //[ Protected static data                                 ]
 //[-------------------------------------------------------]
 protected:
-	static const unsigned int MAXIMUM_NUMBER_OF_TEXTURES = 8;	/**< Maximum number of textures */
+	static const unsigned int MAXIMUM_NUMBER_OF_TEXTURES = 8;	///< Maximum number of textures
 
 
 };

@@ -93,12 +93,12 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IUniformBufferPtr  mUniformBuffer;	/**< Uniform buffer object (UBO), can be a null pointer */
-	Renderer::IProgramPtr		 mProgram;			/**< Program, can be a null pointer */
-	PointsMesh					*mMesh;				/**< Mesh instance, can be a null pointer */
+	Renderer::IUniformBufferPtr  mUniformBuffer;	///< Uniform buffer object (UBO), can be a null pointer
+	Renderer::IProgramPtr		 mProgram;			///< Program, can be a null pointer
+	PointsMesh					*mMesh;				///< Mesh instance, can be a null pointer
 	// For timing
-	Stopwatch mStopwatch;	/**< Stopwatch instance */
-	float	  mGlobalTimer;	/**< Global timer */
+	Stopwatch mStopwatch;	///< Stopwatch instance
+	float	  mGlobalTimer;	///< Global timer
 
 
 };

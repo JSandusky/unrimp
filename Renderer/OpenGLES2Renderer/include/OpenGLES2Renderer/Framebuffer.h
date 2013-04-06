@@ -122,12 +122,12 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int		 mOpenGLES2Framebuffer;		/**< OpenGL ES 2 framebuffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim) */
-		unsigned int		 mNumberOfColorTextures;	/**< Number of color render target textures */
-		Renderer::ITexture **mColorTextures;			/**< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers */
-		Renderer::ITexture  *mDepthStencilTexture;		/**< The depth stencil render target texture (we keep a reference to it), can be a null pointer */
-		unsigned int		 mWidth;					/**< The framebuffer width */
-		unsigned int		 mHeight;					/**< The framebuffer height */
+		unsigned int		 mOpenGLES2Framebuffer;		///< OpenGL ES 2 framebuffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		unsigned int		 mNumberOfColorTextures;	///< Number of color render target textures
+		Renderer::ITexture **mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
+		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
+		unsigned int		 mWidth;					///< The framebuffer width
+		unsigned int		 mHeight;					///< The framebuffer height
 
 
 	};
