@@ -33,21 +33,24 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace NullRenderer
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Forward declarations                                  ]
-	//[-------------------------------------------------------]
 	class NullRenderer;
 	class VertexShader;
 	class GeometryShader;
 	class FragmentShader;
 	class TessellationControlShader;
 	class TessellationEvaluationShader;
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace NullRenderer
+{
 
 
 	//[-------------------------------------------------------]

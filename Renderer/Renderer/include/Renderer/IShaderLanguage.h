@@ -35,15 +35,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace Renderer
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Forward declarations                                  ]
-	//[-------------------------------------------------------]
 	class IBuffer;
 	class IProgram;
 	class IRenderer;
@@ -53,6 +48,14 @@ namespace Renderer
 	class IFragmentShader;
 	class ITessellationControlShader;
 	class ITessellationEvaluationShader;
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
 
 
 	//[-------------------------------------------------------]

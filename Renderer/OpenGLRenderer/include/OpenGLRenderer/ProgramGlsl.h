@@ -33,20 +33,23 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Forward declarations                                  ]
-	//[-------------------------------------------------------]
 	class VertexShaderGlsl;
 	class GeometryShaderGlsl;
 	class FragmentShaderGlsl;
 	class TessellationControlShaderGlsl;
 	class TessellationEvaluationShaderGlsl;
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace OpenGLRenderer
+{
 
 
 	//[-------------------------------------------------------]

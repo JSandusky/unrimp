@@ -33,18 +33,21 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Direct3D10Renderer
+{
+	class VertexShaderHlsl;
+	class GeometryShaderHlsl;
+	class FragmentShaderHlsl;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Direct3D10Renderer
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Forward declarations                                  ]
-	//[-------------------------------------------------------]
-	class VertexShaderHlsl;
-	class GeometryShaderHlsl;
-	class FragmentShaderHlsl;
 
 
 	//[-------------------------------------------------------]

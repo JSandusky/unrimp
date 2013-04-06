@@ -30,15 +30,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace Renderer
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Forward declarations                                  ]
-	//[-------------------------------------------------------]
 	class IRenderer;
 	class IShaderLanguage;
 	class IResource;
@@ -69,6 +64,14 @@ namespace Renderer
 		class ICollection;
 			class ITextureCollection;
 			class ISamplerStateCollection;
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
 
 
 	//[-------------------------------------------------------]

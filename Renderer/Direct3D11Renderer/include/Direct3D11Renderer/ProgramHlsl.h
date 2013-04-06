@@ -33,20 +33,23 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace Direct3D11Renderer
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Forward declarations                                  ]
-	//[-------------------------------------------------------]
 	class VertexShaderHlsl;
 	class GeometryShaderHlsl;
 	class FragmentShaderHlsl;
 	class TessellationControlShaderHlsl;
 	class TessellationEvaluationShaderHlsl;
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace Direct3D11Renderer
+{
 
 
 	//[-------------------------------------------------------]

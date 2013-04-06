@@ -40,15 +40,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace Renderer
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Forward declarations                                  ]
-	//[-------------------------------------------------------]
 	class ITexture;
 	class IProgram;
 	class IResource;
@@ -75,6 +70,14 @@ namespace Renderer
 	struct DepthStencilState;
 	class ITextureCollection;
 	class ISamplerStateCollection;
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
 
 
 	//[-------------------------------------------------------]
