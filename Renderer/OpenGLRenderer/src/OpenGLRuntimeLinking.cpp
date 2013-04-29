@@ -162,7 +162,7 @@ namespace OpenGLRenderer
 						{																																							\
 							libraryName = linkMap->l_name;																															\
 						}																																							\
-						std::cout<<"OpenGL error: Failed to locate the entry point \""<<#funcName<<"\" within the OpenGL shared library \""<<libraryName<<"\"\n";					\	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+						std::cout<<"OpenGL error: Failed to locate the entry point \""<<#funcName<<"\" within the OpenGL shared library \""<<libraryName<<"\"\n";						/* TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead*/ \
 						result = false;																																				\
 					}																																								\
 				}

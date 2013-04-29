@@ -65,7 +65,7 @@ namespace OpenGLRenderer
 					0	// = "None"
 				};
 
-				m_pDummyVisualInfo = glXChooseVisual(mDisplay, DefaultScreen(mDisplay), nAttributeList);
+				m_pDummyVisualInfo = glXChooseVisual(mDisplay, DefaultScreen(mDisplay), attributeList);
 				if (nullptr != m_pDummyVisualInfo)
 				{
 					if (NULL_HANDLE == mNativeWindowHandle)

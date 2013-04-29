@@ -25,6 +25,7 @@
 #include "Framework/Color4.h"
 
 #include <string> // Required in static build
+#include <string.h> // for strcmp()
 
 
 //[-------------------------------------------------------]
