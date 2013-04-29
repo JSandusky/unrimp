@@ -101,7 +101,7 @@ uniform vec4	  Color;	// Text color
 void main()
 {
 	// Fetch the texel at the given texture coordinate and return it's color
-	gl_FragColor = vec4(Color.r, Color.g, Color.b, texture2D(GlyphMap, TexCoord).a * Color.a);
+	gl_FragColor = vec4(Color.r, Color.g, Color.b, texture2D(GlyphMap, TexCoord).r * Color.a);
 }
 );	// STRINGIFY
 
