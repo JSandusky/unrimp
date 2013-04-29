@@ -34,6 +34,7 @@
     <ClInclude Include="include\OpenGLRenderer\IndexBuffer.h" />
     <ClInclude Include="include\OpenGLRenderer\IndexBufferBind.h" />
     <ClInclude Include="include\OpenGLRenderer\IndexBufferDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\Linux\ContextLinux.h" />
     <ClInclude Include="include\OpenGLRenderer\Mapping.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLDebug.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLRuntimeLinking.h" />
@@ -105,6 +106,18 @@
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\IndexBufferBind.cpp" />
     <ClCompile Include="src\IndexBufferDsa.cpp" />
+    <ClCompile Include="src\Linux\ContextLinux.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\OpenGLRuntimeLinking.cpp" />
     <ClCompile Include="src\Program.cpp" />
@@ -169,6 +182,7 @@
     <None Include="include\OpenGLRenderer\GeometryShaderGlsl.inl" />
     <None Include="include\OpenGLRenderer\IContext.inl" />
     <None Include="include\OpenGLRenderer\IndexBuffer.inl" />
+    <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl" />
     <None Include="include\OpenGLRenderer\Program.inl" />
     <None Include="include\OpenGLRenderer\ProgramCg.inl" />
     <None Include="include\OpenGLRenderer\ProgramGlsl.inl" />

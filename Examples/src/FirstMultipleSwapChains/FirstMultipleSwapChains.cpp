@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the �Software�), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED �AS IS�, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -30,7 +30,6 @@
 	// This is only a simple and close-to-the-metal example, don't use OS stuff directly in more complex projects
 	#include "Framework/LinuxHeader.h"
 	#include "Framework/X11Application.h"
-#include <iostream>
 #endif
 
 #include <string.h>
@@ -71,58 +70,53 @@
 		}
 	}
 #elif defined LINUX
-	class SwapChainWindow: public X11Window
+	class SwapChainWindow : public X11Window
 	{
-		public:
-			SwapChainWindow()
-				: mSwapChain(0)
+	public:
+		SwapChainWindow() :
+			mSwapChain(nullptr)
+		{
+			// Nothing to do in here
+		}
+
+		void setSwapChain(Renderer::ISwapChain *swapChain)
+		{
+			mSwapChain = swapChain;
+		}
+
+		virtual bool HandleEvent(XEvent &event)
+		{
+			X11Window::HandleEvent(event);
+			OUTPUT_DEBUG_STRING("Handle Event in SwapChainWindow\n")
+			switch (event.type)
 			{
-				
+				// Window configuration changed
+				case ConfigureNotify:
+					if (nullptr != mSwapChain)
+					{
+						mSwapChain->resizeBuffers();
+					}
+				break;
 			}
-			void setSwapChain(Renderer::ISwapChain *swapChain)
-			{
-				mSwapChain = swapChain;
-			}
-			
-			virtual bool HandleEvent(XEvent &event)
-			{
-				X11Window::HandleEvent(event);
-				std::cout<<"Handle Event in SwapChainWindow\n";
-				
-				switch (event.type) {
-					// Window configuration changed
-					case ConfigureNotify:
-						if (mSwapChain)
-							mSwapChain->resizeBuffers();
-					break;
-				}
-				return false;
-			}
+			return false;
+		}
 	private:
 		Renderer::ISwapChain *mSwapChain;
 	};
-
-	SwapChainWindow *swapChainWindow = nullptr;
+	// TODO(co) Even inside an example, we might not want to use global variables
+	SwapChainWindow *gSwapChainWindow = nullptr;
 #endif
 
 
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 FirstMultipleSwapChains::FirstMultipleSwapChains(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 FirstMultipleSwapChains::~FirstMultipleSwapChains()
 {
 	// The resources are released within "onDeinitialization()"
@@ -176,7 +170,7 @@ void FirstMultipleSwapChains::onInitialization()
 					 1.0f, 0.0f,	// 1			   .   .
 					-0.5f, 0.0f		// 2			  2.......1
 				};
-				Renderer::IVertexBufferPtr vertexBuffer (renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 				// Create vertex array object (VAO)
 				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -236,14 +230,11 @@ void FirstMultipleSwapChains::onInitialization()
 					::ShowWindow(hWnd, SW_SHOWDEFAULT);
 				}
 			#elif defined LINUX
-				swapChainWindow = new SwapChainWindow();
-				swapChainWindow->setTitle("Another window");
-				
-				swapChainWindow->show();
-	
+				gSwapChainWindow = new SwapChainWindow();
+				gSwapChainWindow->setTitle("Another window");
+				gSwapChainWindow->show();
 				XSync(X11Application::instance()->getDisplay(), False);
-				nativeWindowHandle = swapChainWindow->winId();
-				
+				nativeWindowHandle = gSwapChainWindow->winId();
 			#else
 				#error "Unsupported platform"
 			#endif
@@ -279,7 +270,8 @@ void FirstMultipleSwapChains::onInitialization()
 					if (nullptr == mSwapChain)
 					{
 						// Destroy the native OS window instance
-						delete swapChainWindow;
+						delete gSwapChainWindow;
+						gSwapChainWindow = nullptr;
 					}
 				}
 			#endif
@@ -310,8 +302,11 @@ void FirstMultipleSwapChains::onDeinitialization()
 			// Unregister the window class for this example window
 			::UnregisterClass(TEXT("FirstMultipleSwapChains"), ::GetModuleHandle(nullptr));
 		#elif defined LINUX
-			if(swapChainWindow)
-				delete swapChainWindow;
+			if (nullptr != gSwapChainWindow)
+			{
+				delete gSwapChainWindow;
+				gSwapChainWindow = nullptr;
+			}
 		#endif
 
 		// Release the swap chain
@@ -439,17 +434,12 @@ void FirstMultipleSwapChains::onDraw()
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)
 	}
-	
 }
 
 
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Draw
-*/
 void FirstMultipleSwapChains::draw(const float color[4])
 {
 	// Get and check the renderer instance

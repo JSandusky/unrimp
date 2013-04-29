@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the �Software�), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED �AS IS�, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -78,10 +78,6 @@ class ApplicationRenderer : public IApplicationRenderer
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 FirstGpgpu::FirstGpgpu(const char *rendererName)
 {
 	// Copy the given renderer name
@@ -95,20 +91,12 @@ FirstGpgpu::FirstGpgpu(const char *rendererName)
 	}
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 FirstGpgpu::~FirstGpgpu()
 {
 	// The resources are released within "onDeinitialization()"
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Run the application
-*/
 int FirstGpgpu::run()
 {
 	// Create an instance of a renderer application on the C runtime stack
@@ -140,10 +128,6 @@ int FirstGpgpu::run()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Called on application initialization
-*/
 void FirstGpgpu::onInitialization()
 {
 	// Begin debug event
@@ -206,7 +190,7 @@ void FirstGpgpu::onInitialization()
 			// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
 			//    the unused texture coordinate might get optimized out
 			// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-			Renderer::IVertexShaderPtr vertexShader (shaderLanguage->createVertexShader(vertexShaderSourceCode));
+			Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShader(vertexShaderSourceCode));
 			mProgramContentGeneration = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShader(fragmentShaderSourceCode_ContentGeneration));
 			mProgramContentProcessing = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShader(fragmentShaderSourceCode_ContentProcessing));
 		}
@@ -293,10 +277,6 @@ void FirstGpgpu::onInitialization()
 	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
-/**
-*  @brief
-*    Called on application de-initialization
-*/
 void FirstGpgpu::onDeinitialization()
 {
 	// Begin debug event
@@ -319,10 +299,6 @@ void FirstGpgpu::onDeinitialization()
 	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
-/**
-*  @brief
-*    Called on application should to it's job
-*/
 void FirstGpgpu::onDoJob()
 {
 	// Begin debug event
@@ -354,10 +330,6 @@ void FirstGpgpu::onDoJob()
 	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
-/**
-*  @brief
-*    Generate the content of the 2D texture to process later on
-*/
 void FirstGpgpu::generate2DTextureContent()
 {
 	// Get and check the program instances
@@ -438,10 +410,6 @@ void FirstGpgpu::generate2DTextureContent()
 	}
 }
 
-/**
-*  @brief
-*    Content processing
-*/
 void FirstGpgpu::contentProcessing()
 {
 	// Get and check the program instance

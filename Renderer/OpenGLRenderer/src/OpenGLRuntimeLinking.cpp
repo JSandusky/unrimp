@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -30,6 +30,7 @@
 	#include <Renderer/WindowsHeader.h>
 #elif defined LINUX
 	#include <Renderer/LinuxHeader.h>
+
 	#include <dlfcn.h>
 	#include <link.h>
 	#include <iostream>
@@ -48,10 +49,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Default constructor
-	*/
 	OpenGLRuntimeLinking::OpenGLRuntimeLinking() :
 		mOpenGLSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
@@ -60,10 +57,6 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	OpenGLRuntimeLinking::~OpenGLRuntimeLinking()
 	{
 		// Destroy the shared library instances
@@ -82,10 +75,6 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	/**
-	*  @brief
-	*    Return whether or not OpenGL is available
-	*/
 	bool OpenGLRuntimeLinking::isOpenGLAvaiable()
 	{
 		// Already initialized?
@@ -110,10 +99,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Load the shared libraries
-	*/
 	bool OpenGLRuntimeLinking::loadSharedLibraries()
 	{
 		// Load the shared library
@@ -127,7 +112,7 @@ namespace OpenGLRenderer
 			mOpenGLSharedLibrary = ::dlopen("libGL.so", RTLD_NOW);
 			if (nullptr == mOpenGLSharedLibrary)
 			{
-				std::cout<<"OpenGL error: Failed to load in the shared library \"libGL.so\"\n";
+				std::cout<<"OpenGL error: Failed to load in the shared library \"libGL.so\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 			}
 		#else
 			#error "Unsupported platform"
@@ -137,10 +122,6 @@ namespace OpenGLRenderer
 		return (nullptr != mOpenGLSharedLibrary);
 	}
 
-	/**
-	*  @brief
-	*    Load the OpenGL entry points
-	*/
 	bool OpenGLRuntimeLinking::loadOpenGLEntryPoints()
 	{
 		bool result = true;	// Success by default
@@ -168,20 +149,20 @@ namespace OpenGLRenderer
 			#define IMPORT_FUNC(funcName)																																			\
 				if (result)																																							\
 				{																																									\
-					void *symbol = ::dlsym(mOpenGLSharedLibrary, #funcName);																			\
+					void *symbol = ::dlsym(mOpenGLSharedLibrary, #funcName);																										\
 					if (nullptr != symbol)																																			\
 					{																																								\
 						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
 					}																																								\
 					else																																							\
 					{																																								\
-						link_map *LinkMap = nullptr; \
-						const char* libName = "unknown"; \
-						if (dlinfo(mOpenGLSharedLibrary, RTLD_DI_LINKMAP, &LinkMap)) \
-						{ \
-							libName = LinkMap->l_name; \
-						} \
-						std::cout<<"OpenGL error: Failed to locate the entry point \""<<#funcName<<"\" within the OpenGL shared library \""<<libName<<"\"\n";	\
+						link_map *linkMap = nullptr;																																\
+						const char* libraryName = "unknown";																														\
+						if (dlinfo(mOpenGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																								\
+						{																																							\
+							libraryName = linkMap->l_name;																															\
+						}																																							\
+						std::cout<<"OpenGL error: Failed to locate the entry point \""<<#funcName<<"\" within the OpenGL shared library \""<<libraryName<<"\"\n";					\	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 						result = false;																																				\
 					}																																								\
 				}

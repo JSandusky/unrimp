@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -35,10 +35,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    "Renderer::FilterMode" to OpenGL magnification filter mode
-	*/
 	int Mapping::getOpenGLMagFilterMode(Renderer::FilterMode::Enum filterMode)
 	{
 		switch (filterMode)
@@ -102,10 +98,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::FilterMode" to OpenGL minification filter mode
-	*/
 	int Mapping::getOpenGLMinFilterMode(Renderer::FilterMode::Enum filterMode)
 	{
 		switch (filterMode)
@@ -169,10 +161,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::FilterMode" to OpenGL compare mode
-	*/
 	int Mapping::getOpenGLCompareMode(Renderer::FilterMode::Enum filterMode)
 	{
 		switch (filterMode)
@@ -204,10 +192,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureAddressMode" to OpenGL texture address mode
-	*/
 	int Mapping::getOpenGLTextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode)
 	{
 		static const GLint MAPPING[] =
@@ -221,10 +205,6 @@ namespace OpenGLRenderer
 		return MAPPING[textureAddressMode - 1];	// Lookout! The "Renderer::TextureAddressMode::Enum"-values start with 1, not 0
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::ComparisonFunc" to OpenGL comparison function
-	*/
 	int Mapping::getOpenGLComparisonFunc(Renderer::ComparisonFunc::Enum comparisonFunc)
 	{
 		static const GLint MAPPING[] =
@@ -241,10 +221,6 @@ namespace OpenGLRenderer
 		return MAPPING[comparisonFunc - 1];	// Lookout! The "Renderer::ComparisonFunc::Enum"-values start with 1, not 0
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::VertexArrayFormat" to OpenGL size (number of elements)
-	*/
 	int Mapping::getOpenGLSize(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
 	{
 		static const GLint MAPPING[] =
@@ -257,10 +233,6 @@ namespace OpenGLRenderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::VertexArrayFormat" to OpenGL type
-	*/
 	unsigned int Mapping::getOpenGLType(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
 	{
 		static const GLenum MAPPING[] =
@@ -273,10 +245,6 @@ namespace OpenGLRenderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::IndexBufferFormat" to OpenGL type
-	*/
 	unsigned int Mapping::getOpenGLType(Renderer::IndexBufferFormat::Enum indexBufferFormat)
 	{
 		static const GLenum MAPPING[] =
@@ -288,10 +256,6 @@ namespace OpenGLRenderer
 		return MAPPING[indexBufferFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureFormat" to OpenGL internal format
-	*/
 	unsigned int Mapping::getOpenGLInternalFormat(Renderer::TextureFormat::Enum indexBufferFormat)
 	{
 		static const GLuint MAPPING[] =
@@ -305,10 +269,6 @@ namespace OpenGLRenderer
 		return MAPPING[indexBufferFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureFormat" to OpenGL format
-	*/
 	unsigned int Mapping::getOpenGLFormat(Renderer::TextureFormat::Enum textureFormat)
 	{
 		static const GLuint MAPPING[] =
@@ -322,10 +282,6 @@ namespace OpenGLRenderer
 		return MAPPING[textureFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::TextureFormat" to OpenGL type
-	*/
 	unsigned int Mapping::getOpenGLType(Renderer::TextureFormat::Enum textureFormat)
 	{
 		static const GLenum MAPPING[] =
@@ -339,10 +295,6 @@ namespace OpenGLRenderer
 		return MAPPING[textureFormat];
 	}
 
-	/**
-	*  @brief
-	*    "Renderer::PrimitiveTopology" to OpenGL type
-	*/
 	unsigned int Mapping::getOpenGLType(Renderer::PrimitiveTopology::Enum primitive)
 	{
 		static const GLenum MAPPING[] =

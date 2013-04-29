@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -26,8 +26,8 @@
 #include "OpenGLES2Renderer/ContextRuntimeLinking.h"
 #include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"
 #ifdef LINUX
-	#include <dlfcn.h> // for dlopen, dlclose and co
-	#include <link.h> // for getting the path to the library (for the error message)
+	#include <dlfcn.h>	// For "dlopen()", "dlclose()" and so on
+	#include <link.h>	// For getting the path to the library (for the error message)
 #endif
 
 
@@ -41,10 +41,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ContextRuntimeLinking::ContextRuntimeLinking(handle nativeWindowHandle) :
 		IContext(nativeWindowHandle),
 		mEGLSharedLibrary(nullptr),
@@ -80,10 +76,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ContextRuntimeLinking::~ContextRuntimeLinking()
 	{
 		// De-initialize the context while we still can
@@ -219,10 +211,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Loads the EGL shared library
-	*/
 	bool ContextRuntimeLinking::loadSharedLibraries()
 	{
 		// We don't need to check m_pEGLSharedLibrary and m_pGLESSharedLibrary at this point because we know they must contain a null pointer
@@ -262,10 +250,13 @@ namespace OpenGLES2Renderer
 				// Try finding the eglGetProcAddress to determine if this library contains EGL/GLES support.
 				// This check is needed because only the closed source drivers have the EGL/GLES support in "libGL.so".
 				// The open source drivers (mesa) have separate libraries for this and they can be present on the system even the closed source drivers are used.
-				void *pSymbol = dlsym(mEGLSharedLibrary, "eglGetProcAddress");
-				if (pSymbol)
+				void *symbol = ::dlsym(mEGLSharedLibrary, "eglGetProcAddress");
+				if (nullptr != symbol)
+				{
 					mGLESSharedLibrary = ::dlopen("libGL.so", RTLD_LAZY);
-				else {
+				}
+				else
+				{
 					// Unload the library
 					::dlclose(mEGLSharedLibrary);
 					mEGLSharedLibrary = nullptr;
@@ -288,10 +279,6 @@ namespace OpenGLES2Renderer
 		return (nullptr != mEGLSharedLibrary && nullptr != mGLESSharedLibrary);
 	}
 
-	/**
-	*  @brief
-	*    Loads the EGL entry points
-	*/
 	bool ContextRuntimeLinking::loadEGLEntryPoints()
 	{
 		bool result = true;	// Success by default
@@ -328,7 +315,7 @@ namespace OpenGLES2Renderer
 			#define IMPORT_FUNC(funcName)																																			\
 				if (result)																																							\
 				{																																									\
-					void *symbol = ::dlsym(mEGLSharedLibrary, #funcName);																			\
+					void *symbol = ::dlsym(mEGLSharedLibrary, #funcName);																											\
 					if (nullptr == symbol)																																			\
 					{																																								\
 						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 2 on desktop PC by using a					\
@@ -344,20 +331,19 @@ namespace OpenGLES2Renderer
 					}																																								\
 					else																																							\
 					{																																								\
-						link_map *LinkMap = nullptr; \
-						const char* libName = "unknown"; \
-						if (dlinfo(mEGLSharedLibrary, RTLD_DI_LINKMAP, &LinkMap)) \
-						{ \
-							libName = LinkMap->l_name; \
-						} \
-						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: Failed to locate the entry point \"%s\" within the EGL shared library \"%s\"", #funcName, libName)	\
+						link_map *linkMap = nullptr;																																\
+						const char* libraryName = "unknown";																														\
+						if (dlinfo(mEGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																									\
+						{																																							\
+							libraryName = linkMap->l_name;																															\
+						}																																							\
+						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 error: Failed to locate the entry point \"%s\" within the EGL shared library \"%s\"", #funcName, libraryName)		\
 						result = false;																																				\
 					}																																								\
 				}
 		#else
 			#error "Unsupported platform"
 		#endif
-
 
 		// Load the entry points
 		IMPORT_FUNC(eglGetProcAddress);
@@ -399,10 +385,6 @@ namespace OpenGLES2Renderer
 		return result;
 	}
 
-	/**
-	*  @brief
-	*    Loads the OpenGL ES 2 entry points
-	*/
 	bool ContextRuntimeLinking::loadGLESEntryPoints()
 	{
 		bool result = true;	// Success by default

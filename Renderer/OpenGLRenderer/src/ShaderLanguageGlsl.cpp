@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -34,7 +34,6 @@
 #include "OpenGLRenderer/FragmentShaderGlsl.h"
 #include "OpenGLRenderer/TessellationControlShaderGlsl.h"
 #include "OpenGLRenderer/TessellationEvaluationShaderGlsl.h"
-#include <iostream>
 
 
 //[-------------------------------------------------------]
@@ -53,10 +52,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Creates, loads and compiles a shader
-	*/
 	unsigned int ShaderLanguageGlsl::loadShader(unsigned int shaderType, const char *shaderSource)
 	{
 		// Create the shader object
@@ -73,7 +68,6 @@ namespace OpenGLRenderer
 		glGetObjectParameterivARB(openGLShader, GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
 		if (GL_TRUE == compiled)
 		{
-			std::cout<<"shader compiled: "<<shaderType<<"\n";
 			// All went fine, return the shader
 			return openGLShader;
 		}
@@ -81,7 +75,6 @@ namespace OpenGLRenderer
 		{
 			// Error, failed to compile the shader!
 			#ifdef RENDERER_OUTPUT_DEBUG
-				std::cout<<"shader compile failed: "<<shaderType<<"\n";
 				// Get the length of the information
 				GLint informationLength = 0;
 				glGetObjectParameterivARB(openGLShader, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
@@ -114,20 +107,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ShaderLanguageGlsl::ShaderLanguageGlsl(OpenGLRenderer &openGLRenderer) :
 		ShaderLanguage(openGLRenderer)
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ShaderLanguageGlsl::~ShaderLanguageGlsl()
 	{
 		// Nothing to do in here

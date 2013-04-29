@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -34,20 +34,12 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	IContext::~IContext()
 	{
 		// Everything must be done in "deinitialize()" because when we're in here, the shared libraries
 		// are already unloaded and we are no longer allowed to use EGL or OpenGL ES 2 functions
 	}
 
-	/**
-	*  @brief
-	*    Makes a given EGL surface to the currently used one
-	*/
 	EGLBoolean IContext::makeCurrent(EGLSurface eglSurface)
 	{
 		// Use the EGL dummy surface?
@@ -64,10 +56,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual OpenGLES2Renderer::IContext methods    ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Initialize the context
-	*/
 	bool IContext::initialize(unsigned int multisampleAntialiasingSamples)
 	{
 		// Get display
@@ -180,10 +168,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	IContext::IContext(handle nativeWindowHandle) :
 		mNativeWindowHandle(nativeWindowHandle),
 		#if (defined(LINUX) && !defined(ANDROID))
@@ -198,10 +182,6 @@ namespace OpenGLES2Renderer
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Copy constructor
-	*/
 	IContext::IContext(const IContext &) :
 		mNativeWindowHandle(NULL_HANDLE),
 		#if (defined(LINUX) && !defined(ANDROID))
@@ -216,10 +196,6 @@ namespace OpenGLES2Renderer
 		// No implementation because the copy constructor is never used
 	}
 
-	/**
-	*  @brief
-	*    De-initialize the context
-	*/
 	void IContext::deinitialize()
 	{
 		// Don't touch anything in case we don't have a display
@@ -289,10 +265,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Copy operator
-	*/
 	IContext &IContext::operator =(const IContext &)
 	{
 		// No implementation because the copy operator is never used
@@ -303,10 +275,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Protected virtual OpenGLES2Renderer::IContext methods ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Chooses a EGL config
-	*/
 	EGLConfig IContext::chooseConfig(unsigned int multisampleAntialiasingSamples) const
 	{
 		// Try to find a working EGL configuration

@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -31,29 +31,17 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Default constructor
-*/
 BatchDrawInstanced::BatchDrawInstanced() :
 	mNumberOfCubeInstances(0)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 BatchDrawInstanced::~BatchDrawInstanced()
 {
 	// The renderer resource pointers are released automatically
 }
 
-/**
-*  @brief
-*    Initialize the batch
-*/
 void BatchDrawInstanced::initialize(Renderer::IRenderer &renderer, unsigned int numberOfCubeInstances, bool alphaBlending, unsigned int numberOfTextures, unsigned int sceneRadius)
 {
 	// Begin debug event
@@ -86,13 +74,13 @@ void BatchDrawInstanced::initialize(Renderer::IRenderer &renderer, unsigned int 
 		{
 			{ // Position
 				// r=x
-				*dataCurrent = -static_cast<int>(sceneRadius) + 2 * sceneRadius * (rand() % 65536) / 65536.0f;
+				*dataCurrent = -static_cast<int>(sceneRadius) + 2.0f * sceneRadius * (rand() % 65536) / 65536.0f;
 				++dataCurrent;
 				// g=y
-				*dataCurrent = -static_cast<int>(sceneRadius) + 2 * sceneRadius * (rand() % 65536) / 65536.0f;
+				*dataCurrent = -static_cast<int>(sceneRadius) + 2.0f * sceneRadius * (rand() % 65536) / 65536.0f;
 				++dataCurrent;
 				// b=z
-				*dataCurrent = -static_cast<int>(sceneRadius) + 2 * sceneRadius * (rand() % 65536) / 65536.0f;
+				*dataCurrent = -static_cast<int>(sceneRadius) + 2.0f * sceneRadius * (rand() % 65536) / 65536.0f;
 				++dataCurrent;
 				// a=Slice of the 2D texture array to use
 				*dataCurrent = static_cast<float>(rand() % numberOfTextures); // Choose a random texture
@@ -100,7 +88,7 @@ void BatchDrawInstanced::initialize(Renderer::IRenderer &renderer, unsigned int 
 			}
 
 			{ // Rotation
-				EulerAngles::toQuaternion((rand() % 65536) / 65536.0f, (rand() % 65536) / 65536.0f * 2, (rand() % 65536) / 65536.0f * 3, quaternion);
+				EulerAngles::toQuaternion((rand() % 65536) / 65536.0f, (rand() % 65536) / 65536.0f * 2.0f, (rand() % 65536) / 65536.0f * 3.0f, quaternion);
 
 				// r=x
 				*dataCurrent = quaternion.x;
@@ -136,10 +124,6 @@ void BatchDrawInstanced::initialize(Renderer::IRenderer &renderer, unsigned int 
 	RENDERER_END_DEBUG_EVENT(&renderer)
 }
 
-/**
-*  @brief
-*    Draw the batch
-*/
 void BatchDrawInstanced::draw()
 {
 	// Is there a valid renderer owner instance?
@@ -167,19 +151,11 @@ void BatchDrawInstanced::draw()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Copy constructor
-*/
 BatchDrawInstanced::BatchDrawInstanced(const BatchDrawInstanced &)
 {
 	// Not supported
 }
 
-/**
-*  @brief
-*    Copy operator
-*/
 BatchDrawInstanced &BatchDrawInstanced::operator =(const BatchDrawInstanced &)
 {
 	// Not supported

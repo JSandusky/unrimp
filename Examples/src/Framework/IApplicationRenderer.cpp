@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -28,12 +28,13 @@
 		#include "Framework/WindowsHeader.h"
 	#elif defined LINUX
 		#include "Framework/LinuxHeader.h"
+
 		#include <dlfcn.h>
 		#include <iostream>
 	#else
 		#error "Unsupported platform"
 	#endif
-	
+
 	#include <stdio.h>
 #endif
 
@@ -43,10 +44,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Destructor
-*/
 IApplicationRenderer::~IApplicationRenderer()
 {
 	// Nothing to do in here
@@ -197,10 +194,6 @@ void IApplicationRenderer::onDrawRequest()
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 IApplicationRenderer::IApplicationRenderer(const char *rendererName) :
 	IApplication(rendererName),
 	mRendererSharedLibrary(nullptr)
@@ -220,10 +213,6 @@ IApplicationRenderer::IApplicationRenderer(const char *rendererName) :
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Create a renderer instance
-*/
 Renderer::IRenderer *IApplicationRenderer::createRendererInstance(const char *rendererName)
 {
 	Renderer::IRenderer *renderer = nullptr;
@@ -269,7 +258,7 @@ Renderer::IRenderer *IApplicationRenderer::createRendererInstance(const char *re
 					OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", rendererFilename)
 				}
 			#elif defined LINUX
-				// Load in the dll
+				// Load in the shared library
 				char rendererFilename[128];
 				#ifdef _DEBUG
 					sprintf(rendererFilename, "%sRendererD.so", rendererName);
@@ -289,19 +278,18 @@ Renderer::IRenderer *IApplicationRenderer::createRendererInstance(const char *re
 						typedef Renderer::IRenderer *(*createRendererInstance)(Renderer::handle);
 
 						// Create the renderer instance
-						
 						renderer = (reinterpret_cast<createRendererInstance>(symbol))(getNativeWindowHandle());
 					}
 					else
 					{
 						// Error!
-						std::cerr<<"Failed to locate the entry point \""<<functionName<<"\" within the renderer shared library \""<<rendererFilename<<"\"\n";
+						std::cerr<<"Failed to locate the entry point \""<<functionName<<"\" within the renderer shared library \""<<rendererFilename<<"\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead... as seen below, why the additional output?
 						OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"%s\" within the renderer shared library \"%s\"", functionName, rendererFilename)
 					}
 				}
 				else
 				{
-					std::cerr<<"Failed to load in the shared library \""<<rendererFilename<<"\"\nReason:"<<dlerror()<<"\n";
+					std::cerr<<"Failed to load in the shared library \""<<rendererFilename<<"\"\nReason:"<<dlerror()<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead... as seen below, why the additional output?
 					OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", rendererFilename)
 				}
 			#else

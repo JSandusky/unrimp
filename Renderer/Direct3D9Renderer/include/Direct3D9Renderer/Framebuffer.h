@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -140,14 +140,14 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	private:
 		// Generic part
-		unsigned int		 mNumberOfColorTextures;	/**< Number of color render target textures */
-		Renderer::ITexture **mColorTextures;			/**< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers */
-		Renderer::ITexture  *mDepthStencilTexture;		/**< The depth stencil render target texture (we keep a reference to it), can be a null pointer */
-		unsigned int		 mWidth;					/**< The framebuffer width */
-		unsigned int		 mHeight;					/**< The framebuffer height */
+		unsigned int		 mNumberOfColorTextures;	///< Number of color render target textures
+		Renderer::ITexture **mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
+		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
+		unsigned int		 mWidth;					///< The framebuffer width
+		unsigned int		 mHeight;					///< The framebuffer height
 		// Direct3D 9 part
-		IDirect3DSurface9 **mDirect3D9ColorSurfaces;		/**< The Direct3D 9 color render target surfaces (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers */
-		IDirect3DSurface9  *mDirect3D9DepthStencilSurface;	/**< The Direct3D 9 depth stencil render target surface (we keep a reference to it), can be a null pointer */
+		IDirect3DSurface9 **mDirect3D9ColorSurfaces;		///< The Direct3D 9 color render target surfaces (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
+		IDirect3DSurface9  *mDirect3D9DepthStencilSurface;	///< The Direct3D 9 depth stencil render target surface (we keep a reference to it), can be a null pointer
 
 
 	};

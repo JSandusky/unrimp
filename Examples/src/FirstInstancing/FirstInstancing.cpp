@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the �Software�), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED �AS IS�, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -30,20 +30,12 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 FirstInstancing::FirstInstancing(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 FirstInstancing::~FirstInstancing()
 {
 	// The resources are released within "onDeinitialization()"
@@ -118,7 +110,7 @@ void FirstInstancing::onInitialization()
 					{
 						 0.0f, 1.0f
 					};
-					Renderer::IVertexBufferPtr vertexBufferInstanceID(renderer->createVertexBuffer(sizeof(INSTANCE_ID), INSTANCE_ID, Renderer::BufferUsage::STATIC_DRAW));
+					Renderer::IVertexBufferPtr vertexBufferInstanceId(renderer->createVertexBuffer(sizeof(INSTANCE_ID), INSTANCE_ID, Renderer::BufferUsage::STATIC_DRAW));
 
 					// Create the index buffer object (IBO)
 					// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
@@ -158,7 +150,7 @@ void FirstInstancing::onInitialization()
 							"TEXCOORD",								// semantic[64] (char)
 							0,										// semanticIndex (unsigned int)
 							// Data source
-							vertexBufferInstanceID,					// vertexBuffer (Renderer::IVertexBuffer *)
+							vertexBufferInstanceId,					// vertexBuffer (Renderer::IVertexBuffer *)
 							0,										// offset (unsigned int)
 							sizeof(float),							// stride (unsigned int)
 							// Data source, instancing part
@@ -198,7 +190,7 @@ void FirstInstancing::onInitialization()
 						 1.0f, 0.0f,	// 1			  .    .
 						 0.0f, 0.0f		// 2			  2.......1
 					};
-					Renderer::IVertexBufferPtr vertexBuffer (renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+					Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 					// Create vertex array object (VAO)
 					// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)

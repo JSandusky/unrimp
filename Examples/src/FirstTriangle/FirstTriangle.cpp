@@ -30,20 +30,12 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 FirstTriangle::FirstTriangle(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 FirstTriangle::~FirstTriangle()
 {
 	// The resources are released within "onDeinitialization()"

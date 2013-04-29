@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -38,10 +38,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 PointsMesh::PointsMesh(Renderer::IProgram &program, const char *filename) :
 	mNumberOfVertices(0)
 {
@@ -101,20 +97,12 @@ PointsMesh::PointsMesh(Renderer::IProgram &program, const char *filename) :
 	}
 }
 
-/**
-*  @brief
-*    Destructor
-*/
 PointsMesh::~PointsMesh()
 {
 	// The renderer resource pointers are released automatically
 	// Nothing to do in here
 }
 
-/**
-*  @brief
-*    Draw the mesh
-*/
 void PointsMesh::draw()
 {
 	// Valid mesh?
@@ -140,10 +128,6 @@ void PointsMesh::draw()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Get the total number of vertices by using a given Assimp node
-*/
 void PointsMesh::getNumberOfVerticesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, unsigned int &numberOfVertices)
 {
 	// Loop through all meshes this node is using
@@ -163,10 +147,6 @@ void PointsMesh::getNumberOfVerticesRecursive(const aiScene &assimpScene, const 
 	}
 }
 
-/**
-*  @brief
-*    Fill the mesh data recursively
-*/
 void PointsMesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, const aiMatrix4x4 &assimpTransformation, unsigned int &numberOfVertices)
 {
 	// Get the absolute transformation matrix of this Assimp node

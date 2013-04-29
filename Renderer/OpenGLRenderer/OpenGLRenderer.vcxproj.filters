@@ -8,6 +8,9 @@
     <Filter Include="Source Files\Windows">
       <UniqueIdentifier>{21963b69-5a44-449d-b6dc-d9c36f42db44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Linux">
+      <UniqueIdentifier>{81395ef8-6832-484a-93e1-9d63d39f4e46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\OpenGLRenderer\BlendState.h">
@@ -216,6 +219,9 @@
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h">
       <Filter>Source Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Linux\ContextLinux.h">
+      <Filter>Source Files\Linux</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -426,6 +432,12 @@
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Linux\ContextLinux.cpp">
+      <Filter>Source Files\Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
+      <Filter>Source Files\Linux</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -525,6 +537,9 @@
     </None>
     <None Include="include\OpenGLRenderer\Windows\ContextWindows.inl">
       <Filter>Source Files\Windows</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl">
+      <Filter>Source Files\Linux</Filter>
     </None>
   </ItemGroup>
 </Project>

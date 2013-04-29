@@ -468,6 +468,18 @@
     <ClInclude Include="src\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_140.h">
       <Filter>InstancedCubes\CubeRendererInstancedArrays</Filter>
     </ClInclude>
+    <ClInclude Include="src\Framework\X11Window.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Framework\X11Application.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Framework\ApplicationImplLinux.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Framework\LinuxHeader.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -569,6 +581,15 @@
     </ClCompile>
     <ClCompile Include="src\FirstFont\FirstFont.cpp">
       <Filter>FirstFont</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Framework\X11Window.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Framework\X11Application.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Framework\ApplicationImplLinux.cpp">
+      <Filter>Framework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

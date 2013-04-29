@@ -16,12 +16,12 @@
 
 
 #ifdef WIN32
-	#include "Framework/WindowsHeader.h"					// Standard windows header
+	#include "Framework/WindowsHeader.h"				// Standard header
 #elif defined LINUX
-	#include "Framework/LinuxHeader.h"					// Standard windows header
-//[TODO]
-#define MessageBox(x,x1,x2,x3)
-#define MB_OK
+	#include "Framework/LinuxHeader.h"					// Standard header
+	// TODO(sw)
+	#define MessageBox(x,x1,x2,x3)
+	#define MB_OK
 #endif
 #include <stdio.h>										// Standard I/O header 
 #include <malloc.h>										// Standard malloc header 

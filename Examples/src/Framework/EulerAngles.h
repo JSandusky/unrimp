@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -64,31 +64,31 @@ public:
 	enum EOrder
 	{
 		// Static axes (takes axes from initial static frame)
-		XYZs = 0,	/**< XYZ static axis */
-		XYXs = 2,	/**< XYX static axis */
-		XZYs = 4,	/**< XZY static axis */
-		XZXs = 6,	/**< XZX static axis */
-		YZXs = 8,	/**< YZX static axis */
-		YZYs = 10,	/**< YZY static axis */
-		YXZs = 12,	/**< YXZ static axis */
-		YXYs = 14,	/**< YXY static axis */
-		ZXYs = 16,	/**< ZXY static axis */
-		ZXZs = 18,	/**< ZXZ static axis */
-		ZYXs = 20,	/**< ZYX static axis */
-		ZYZs = 22,	/**< ZYZ static axis */
+		XYZs = 0,	///< XYZ static axis
+		XYXs = 2,	///< XYX static axis
+		XZYs = 4,	///< XZY static axis
+		XZXs = 6,	///< XZX static axis
+		YZXs = 8,	///< YZX static axis
+		YZYs = 10,	///< YZY static axis
+		YXZs = 12,	///< YXZ static axis
+		YXYs = 14,	///< YXY static axis
+		ZXYs = 16,	///< ZXY static axis
+		ZXZs = 18,	///< ZXZ static axis
+		ZYXs = 20,	///< ZYX static axis
+		ZYZs = 22,	///< ZYZ static axis
 		// Rotating axes
-		ZYXr = 1,	/**< ZYX rotating axis */
-		XYXr = 3,	/**< XYX rotating axis */
-		YZXr = 5,	/**< YZX rotating axis */
-		XZXr = 7,	/**< XZX rotating axis */
-		XZYr = 9,	/**< XZY rotating axis */
-		YZYr = 11,	/**< YZY rotating axis */
-		ZXYr = 13,	/**< ZXY rotating axis */
-		YXYr = 15,	/**< YXY rotating axis */
-		YXZr = 17,	/**< YXZ rotating axis */
-		ZXZr = 19,	/**< ZXZ rotating axis */
-		XYZr = 21,	/**< XYZ rotating axis */
-		ZYZr = 23	/**< ZYZ rotating axis */
+		ZYXr = 1,	///< ZYX rotating axis
+		XYXr = 3,	///< XYX rotating axis
+		YZXr = 5,	///< YZX rotating axis
+		XZXr = 7,	///< XZX rotating axis
+		XZYr = 9,	///< XZY rotating axis
+		YZYr = 11,	///< YZY rotating axis
+		ZXYr = 13,	///< ZXY rotating axis
+		YXYr = 15,	///< YXY rotating axis
+		YXZr = 17,	///< YXZ rotating axis
+		ZXZr = 19,	///< ZXZ rotating axis
+		XYZr = 21,	///< XYZ rotating axis
+		ZYZr = 23	///< ZYZ rotating axis
 	};
 
 

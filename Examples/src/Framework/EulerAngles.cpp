@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -45,10 +45,6 @@ static const float FLOAT_EPSILON = 1.192092896e-07f; // Smallest such that 1.0f 
 //[-------------------------------------------------------]
 //[ Public static functions                               ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Sets a rotation quaternion by using three given Euler angles
-*/
 void EulerAngles::toQuaternion(float angleX, float angleY, float angleZ, Quaternion &rotation, EOrder order)
 {
 	int i, j, k, n, s, f;
@@ -103,10 +99,6 @@ void EulerAngles::toQuaternion(float angleX, float angleY, float angleZ, Quatern
 	rotation.z = static_cast<float>(a[2]);
 }
 
-/**
-*  @brief
-*    Return the Euler angles from a rotation quaternion
-*/
 void EulerAngles::fromQuaternion(const Quaternion &q, float &angleX, float &angleY, float &angleZ, EOrder order)
 {
 	// Construct 3x3 matrix

@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -138,18 +138,18 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	char							mRendererName[64];	/**< Case sensitive ASCII name of the renderer to instance */
-	Renderer::IRendererPtr			mRenderer;			/**< Renderer instance, can be a null pointer */
-	Renderer::ITexture2DPtr			mTexture2D[2];		/**< 2D texture, can be a null pointer */
-	Renderer::IFramebufferPtr		mFramebuffer[2];	/**< Framebuffer object (FBO), can be a null pointer */
-	Renderer::ISamplerStatePtr		mSamplerState;		/**< Sampler state, can be a null pointer */
-	Renderer::IDepthStencilStatePtr	mDepthStencilState;	/**< Depth stencil state, can be a null pointer */
+	char							mRendererName[64];	///< Case sensitive ASCII name of the renderer to instance
+	Renderer::IRendererPtr			mRenderer;			///< Renderer instance, can be a null pointer
+	Renderer::ITexture2DPtr			mTexture2D[2];		///< 2D texture, can be a null pointer
+	Renderer::IFramebufferPtr		mFramebuffer[2];	///< Framebuffer object (FBO), can be a null pointer
+	Renderer::ISamplerStatePtr		mSamplerState;		///< Sampler state, can be a null pointer
+	Renderer::IDepthStencilStatePtr	mDepthStencilState;	///< Depth stencil state, can be a null pointer
 	// Content generation
-	Renderer::IProgramPtr	   mProgramContentGeneration;		/**< Program for content generation, can be a null pointer */
-	Renderer::IVertexArrayPtr  mVertexArrayContentGeneration;	/**< Vertex array object (VAO) for content generation, can be a null pointer */
+	Renderer::IProgramPtr	   mProgramContentGeneration;		///< Program for content generation, can be a null pointer
+	Renderer::IVertexArrayPtr  mVertexArrayContentGeneration;	///< Vertex array object (VAO) for content generation, can be a null pointer
 	// Content processing
-	Renderer::IProgramPtr	   mProgramContentProcessing;		/**< Program for content processing, can be a null pointer */
-	Renderer::IVertexArrayPtr  mVertexArrayContentProcessing;	/**< Vertex array object (VAO) for content processing, can be a null pointer */
+	Renderer::IProgramPtr	   mProgramContentProcessing;		///< Program for content processing, can be a null pointer
+	Renderer::IVertexArrayPtr  mVertexArrayContentProcessing;	///< Vertex array object (VAO) for content processing, can be a null pointer
 
 
 };

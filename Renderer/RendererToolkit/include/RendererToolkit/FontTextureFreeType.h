@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -30,13 +30,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/IFontTexture.h"
-// [TODO] put in common header used by all
-#ifdef LINUX
-	// "override"-definition, see e.g. http://www2.research.att.com/~bs/C++0xFAQ.html#override (C++11 keyword is introduced in GCC 4.7 or clang 2.9)
-	#if ((__GNUC__ < 4 || __GNUC_MINOR__ < 7) && !defined(__clang__))
-		#define override
-	#endif
-#endif
+
+#include <Renderer/PlatformTypes.h>	// For "override"
 
 
 //[-------------------------------------------------------]
@@ -180,16 +175,16 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		RendererToolkitImpl		 *mRendererToolkitImpl;			/**< The used renderer toolkit implementation instance (we keep a reference to it), always valid */
-		unsigned int			  mFontFileSize;				/**< Font file size in bytes */
-		unsigned char			 *mFontFileData;				/**< Font file data, can be a null pointer */
-		FT_Face					 *mFTFace;						/**< FreeType library face (aka "The Font"), a null pointer on error */
-		unsigned int			  mGlyphTextureAtlasPadding;	/**< Glyph texture atlas gab between glyphs in pixel */
-		unsigned int			  mGlyphTextureAtlasSizeX;		/**< X component of the glyph texture atlas size */
-		unsigned int			  mGlyphTextureAtlasSizeY;		/**< Y component of the glyph texture atlas size */
-		unsigned int			  mNumberOfFontGlyphs;			/**< Number of currently active glyphs */
-		FontGlyphTextureFreeType *mFontGlyphs;					/**< Array of currently active glyphs ("character code -> glyph instance"), can be a null pointer, but only if "mNumberOfFontGlyphs" is zero */
-		Renderer::ITexture2D	 *mTexture2D;					/**< The glyph texture atlas (we keep a reference to it), can be a null pointer */
+		RendererToolkitImpl		 *mRendererToolkitImpl;			///< The used renderer toolkit implementation instance (we keep a reference to it), always valid
+		unsigned int			  mFontFileSize;				///< Font file size in bytes
+		unsigned char			 *mFontFileData;				///< Font file data, can be a null pointer
+		FT_Face					 *mFTFace;						///< FreeType library face (aka "The Font"), a null pointer on error
+		unsigned int			  mGlyphTextureAtlasPadding;	///< Glyph texture atlas gab between glyphs in pixel
+		unsigned int			  mGlyphTextureAtlasSizeX;		///< X component of the glyph texture atlas size
+		unsigned int			  mGlyphTextureAtlasSizeY;		///< Y component of the glyph texture atlas size
+		unsigned int			  mNumberOfFontGlyphs;			///< Number of currently active glyphs
+		FontGlyphTextureFreeType *mFontGlyphs;					///< Array of currently active glyphs ("character code -> glyph instance"), can be a null pointer, but only if "mNumberOfFontGlyphs" is zero
+		Renderer::ITexture2D	 *mTexture2D;					///< The glyph texture atlas (we keep a reference to it), can be a null pointer
 
 
 	};

@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -35,10 +35,12 @@
 
 	#elif defined LINUX
 		#include "Framework/LinuxHeader.h"
+
 		#include <dlfcn.h>
 	#else
 		#error "Unsupported platform"
 	#endif
+
 	#include <stdio.h>
 #endif
 
@@ -48,10 +50,6 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Destructor
-*/
 IApplicationRendererToolkit::~IApplicationRendererToolkit()
 {
 	// Nothing to do in here
@@ -105,10 +103,6 @@ void IApplicationRendererToolkit::onDeinitialization()
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Constructor
-*/
 IApplicationRendererToolkit::IApplicationRendererToolkit(const char *rendererName) :
 	IApplicationRenderer(rendererName),
 	mRendererToolkitSharedLibrary(nullptr)
@@ -120,10 +114,6 @@ IApplicationRendererToolkit::IApplicationRendererToolkit(const char *rendererNam
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-/**
-*  @brief
-*    Create a renderer toolkit instance
-*/
 RendererToolkit::IRendererToolkit *IApplicationRendererToolkit::createRendererToolkitInstance(Renderer::IRenderer &renderer)
 {
 	#ifdef SHARED_LIBRARIES
@@ -159,7 +149,7 @@ RendererToolkit::IRendererToolkit *IApplicationRendererToolkit::createRendererTo
 				OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", RENDERER_TOOLKIT_FILENAME)
 			}
 		#elif defined LINUX
-			// Load in the dll
+			// Load in the shared library
 			#ifdef _DEBUG
 				static const char RENDERER_TOOLKIT_FILENAME[] = "RendererToolkitD.so";
 			#else

@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -252,34 +252,34 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D9RuntimeLinking		  *mDirect3D9RuntimeLinking;	/**< Direct3D 9 runtime linking instance, always valid */
-		IDirect3D9					  *mDirect3D9;					/**< Instance of the Direct3D 9 object, can be a null pointer (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!) */
-		IDirect3DDevice9			  *mDirect3DDevice9;			/**< Direct3D 9 rendering device, can be a null pointer (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!) */
-		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			/**< HLSL shader language instance (we keep a reference to it), can be a null pointer */
+		Direct3D9RuntimeLinking		  *mDirect3D9RuntimeLinking;	///< Direct3D 9 runtime linking instance, always valid
+		IDirect3D9					  *mDirect3D9;					///< Instance of the Direct3D 9 object, can be a null pointer (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
+		IDirect3DDevice9			  *mDirect3DDevice9;			///< Direct3D 9 rendering device, can be a null pointer (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
+		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
 		#ifndef DIRECT3D9RENDERER_NO_CG
-			CgRuntimeLinking		  *mCgRuntimeLinking;			/**< Cg runtime linking instance, always valid */
-			Renderer::IShaderLanguage *mShaderLanguageCg;			/**< Cg shader language instance (we keep a reference to it), can be a null pointer */
+			CgRuntimeLinking		  *mCgRuntimeLinking;			///< Cg runtime linking instance, always valid
+			Renderer::IShaderLanguage *mShaderLanguageCg;			///< Cg shader language instance (we keep a reference to it), can be a null pointer
 		#endif
-		IDirect3DQuery9				  *mDirect3DQuery9Flush;		/**< Direct3D 9 query used for flush, can be a null pointer */
-		Renderer::ISamplerState		  *mDefaultSamplerState;		/**< Default rasterizer state (we keep a reference to it), can be a null pointer */
+		IDirect3DQuery9				  *mDirect3DQuery9Flush;		///< Direct3D 9 query used for flush, can be a null pointer
+		Renderer::ISamplerState		  *mDefaultSamplerState;		///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
-		Renderer::PrimitiveTopology::Enum mPrimitiveTopology;		/**< Primitive topology describing the type of primitive to render */
+		Renderer::PrimitiveTopology::Enum mPrimitiveTopology;		///< Primitive topology describing the type of primitive to render
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
 		//[-------------------------------------------------------]
-		Renderer::IRasterizerState *mDefaultRasterizerState;		/**< Default rasterizer state (we keep a reference to it), can be a null pointer */
-		RasterizerState			   *mRasterizerState;				/**< Currently set rasterizer state (we keep a reference to it), can be a null pointer */
+		Renderer::IRasterizerState *mDefaultRasterizerState;		///< Default rasterizer state (we keep a reference to it), can be a null pointer
+		RasterizerState			   *mRasterizerState;				///< Currently set rasterizer state (we keep a reference to it), can be a null pointer
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
-		SwapChain					 *mMainSwapChain;				/**< In case the optional native main window handle within the "Direct3D9Renderer::Direct3D9Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer */
-		Renderer::IRenderTarget		 *mRenderTarget;				/**< Currently set render target (we keep a reference to it), can be a null pointer */
-		Renderer::IDepthStencilState *mDefaultDepthStencilState;	/**< Default depth stencil state (we keep a reference to it), can be a null pointer */
-		DepthStencilState			 *mDepthStencilState;			/**< Currently set depth stencil state (we keep a reference to it), can be a null pointer */
-		Renderer::IBlendState		 *mDefaultBlendState;			/**< Default blend state (we keep a reference to it), can be a null pointer */
-		BlendState					 *mBlendState;					/**< Currently set blend state (we keep a reference to it), can be a null pointer */
+		SwapChain					 *mMainSwapChain;				///< In case the optional native main window handle within the "Direct3D9Renderer::Direct3D9Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
+		Renderer::IRenderTarget		 *mRenderTarget;				///< Currently set render target (we keep a reference to it), can be a null pointer
+		Renderer::IDepthStencilState *mDefaultDepthStencilState;	///< Default depth stencil state (we keep a reference to it), can be a null pointer
+		DepthStencilState			 *mDepthStencilState;			///< Currently set depth stencil state (we keep a reference to it), can be a null pointer
+		Renderer::IBlendState		 *mDefaultBlendState;			///< Default blend state (we keep a reference to it), can be a null pointer
+		BlendState					 *mBlendState;					///< Currently set blend state (we keep a reference to it), can be a null pointer
 
 
 	};

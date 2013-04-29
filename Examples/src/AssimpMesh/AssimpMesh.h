@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -101,18 +101,18 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IUniformBufferPtr			  mUniformBuffer;			/**< Uniform buffer object (UBO), can be a null pointer */
-	Renderer::IProgramPtr				  mProgram;					/**< Program, can be a null pointer */
-	Mesh								 *mMesh;					/**< Mesh instance, can be a null pointer */
-	Renderer::ITextureCollectionPtr		  mTextureCollection;		/**< Texture collection, can be a null pointer */
-	Renderer::ISamplerStateCollectionPtr  mSamplerStateCollection;	/**< Sampler state collection, can be a null pointer */
+	Renderer::IUniformBufferPtr			  mUniformBuffer;			///< Uniform buffer object (UBO), can be a null pointer
+	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
+	Mesh								 *mMesh;					///< Mesh instance, can be a null pointer
+	Renderer::ITextureCollectionPtr		  mTextureCollection;		///< Texture collection, can be a null pointer
+	Renderer::ISamplerStateCollectionPtr  mSamplerStateCollection;	///< Sampler state collection, can be a null pointer
 	// Optimization: Cache data to not bother the renderer API to much
-	unsigned int mUniformBlockIndex;							/**< Uniform block index */
-	handle		 mObjectSpaceToClipSpaceMatrixUniformHandle;	/**< Object space to clip space matrix uniform handle, can be NULL_HANDLE */
-	handle		 mObjectSpaceToViewSpaceMatrixUniformHandle;	/**< Object space to view space matrix uniform handle, can be NULL_HANDLE */
+	unsigned int mUniformBlockIndex;							///< Uniform block index
+	handle		 mObjectSpaceToClipSpaceMatrixUniformHandle;	///< Object space to clip space matrix uniform handle, can be NULL_HANDLE
+	handle		 mObjectSpaceToViewSpaceMatrixUniformHandle;	///< Object space to view space matrix uniform handle, can be NULL_HANDLE
 	// For timing
-	Stopwatch mStopwatch;	/**< Stopwatch instance */
-	float	  mGlobalTimer;	/**< Global timer */
+	Stopwatch mStopwatch;	///< Stopwatch instance
+	float	  mGlobalTimer;	///< Global timer
 
 
 };

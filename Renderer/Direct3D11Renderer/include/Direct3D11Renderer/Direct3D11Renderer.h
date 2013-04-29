@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -250,21 +250,21 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D9RuntimeLinking		  *mDirect3D9RuntimeLinking;	/**< Direct3D 9 runtime linking instance, can be a null pointer */
-		Direct3D11RuntimeLinking	  *mDirect3D11RuntimeLinking;	/**< Direct3D 11 runtime linking instance, always valid */
-		ID3D11Device				  *mD3D11Device;				/**< The Direct3D 11 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!) */
-		ID3D11DeviceContext			  *mD3D11DeviceContext;			/**< The Direct3D 11 device context instance, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!) */
-		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			/**< HLSL shader language instance (we keep a reference to it), can be a null pointer */
+		Direct3D9RuntimeLinking		  *mDirect3D9RuntimeLinking;	///< Direct3D 9 runtime linking instance, can be a null pointer
+		Direct3D11RuntimeLinking	  *mDirect3D11RuntimeLinking;	///< Direct3D 11 runtime linking instance, always valid
+		ID3D11Device				  *mD3D11Device;				///< The Direct3D 11 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
+		ID3D11DeviceContext			  *mD3D11DeviceContext;			///< The Direct3D 11 device context instance, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
+		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
 		#ifndef DIRECT3D11RENDERER_NO_CG
-			CgRuntimeLinking		  *mCgRuntimeLinking;			/**< Cg runtime linking instance, always valid */
-			Renderer::IShaderLanguage *mShaderLanguageCg;			/**< Cg shader language instance (we keep a reference to it), can be a null pointer */
+			CgRuntimeLinking		  *mCgRuntimeLinking;			///< Cg runtime linking instance, always valid
+			Renderer::IShaderLanguage *mShaderLanguageCg;			///< Cg shader language instance (we keep a reference to it), can be a null pointer
 		#endif
-		ID3D11Query					  *mD3D11QueryFlush;			/**< Direct3D 11 query used for flush, can be a null pointer */
+		ID3D11Query					  *mD3D11QueryFlush;			///< Direct3D 11 query used for flush, can be a null pointer
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
-		SwapChain				*mMainSwapChain;	/**< In case the optional native main window handle within the "Direct3D11Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer */
-		Renderer::IRenderTarget *mRenderTarget;		/**< Currently set render target (we keep a reference to it), can be a null pointer */
+		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "Direct3D11Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
+		Renderer::IRenderTarget *mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
 
 
 	};

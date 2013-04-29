@@ -314,6 +314,7 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
     <ClInclude Include="src\FirstTriangle\FirstTriangle_GLSL_ES2.h" />
     <ClInclude Include="src\FirstTriangle\FirstTriangle_HLSL_D3D9_D3D10_D3D11.h" />
     <ClInclude Include="src\FirstTriangle\FirstTriangle_Null.h" />
+    <ClInclude Include="src\Framework\ApplicationImplLinux.h" />
     <ClInclude Include="src\Framework\ApplicationImplWindows.h" />
     <ClInclude Include="src\Framework\Color4.h" />
     <ClInclude Include="src\Framework\EulerAngles.h" />
@@ -321,6 +322,7 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
     <ClInclude Include="src\Framework\IApplicationImpl.h" />
     <ClInclude Include="src\Framework\IApplicationRenderer.h" />
     <ClInclude Include="src\Framework\IApplicationRendererToolkit.h" />
+    <ClInclude Include="src\Framework\LinuxHeader.h" />
     <ClInclude Include="src\Framework\Main.h" />
     <ClInclude Include="src\Framework\PlatformTypes.h" />
     <ClInclude Include="src\Framework\Quaternion.h" />
@@ -331,6 +333,8 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
     <ClInclude Include="src\Framework\Stopwatch.h" />
     <ClInclude Include="src\Framework\TGALoader.h" />
     <ClInclude Include="src\Framework\WindowsHeader.h" />
+    <ClInclude Include="src\Framework\X11Application.h" />
+    <ClInclude Include="src\Framework\X11Window.h" />
     <ClInclude Include="src\Fxaa\Fxaa.h" />
     <ClInclude Include="src\Fxaa\Fxaa_PostProcessing.h" />
     <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_Cg.h" />
@@ -385,6 +389,12 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
     <ClCompile Include="src\FirstTessellation\FirstTessellation.cpp" />
     <ClCompile Include="src\FirstTexture\FirstTexture.cpp" />
     <ClCompile Include="src\FirstTriangle\FirstTriangle.cpp" />
+    <ClCompile Include="src\Framework\ApplicationImplLinux.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\Framework\ApplicationImplWindows.cpp" />
     <ClCompile Include="src\Framework\Color4.cpp" />
     <ClCompile Include="src\Framework\EulerAngles.cpp" />
@@ -394,6 +404,18 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
     <ClCompile Include="src\Framework\IApplicationRendererToolkit.cpp" />
     <ClCompile Include="src\Framework\Stopwatch.cpp" />
     <ClCompile Include="src\Framework\TGALoader.cpp" />
+    <ClCompile Include="src\Framework\X11Application.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\Framework\X11Window.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\Fxaa\Fxaa.cpp" />
     <ClCompile Include="src\IcosahedronTessellation\IcosahedronTessellation.cpp" />
     <ClCompile Include="src\InstancedCubes\CubeRendererDrawInstanced\BatchDrawInstanced.cpp" />

@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -24,8 +24,8 @@
 #include "OpenGLRenderer/Linux/ContextLinux.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
-#include <iostream>
 
+#include <iostream>	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 
 
 //[-------------------------------------------------------]
@@ -38,10 +38,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	ContextLinux::ContextLinux(handle nativeWindowHandle) :
 		mOpenGLRuntimeLinking(new OpenGLRuntimeLinking()),
 		mNativeWindowHandle(nativeWindowHandle),
@@ -55,41 +51,46 @@ namespace OpenGLRenderer
 		{
 			// Get X server display connection
 			mDisplay = XOpenDisplay(nullptr);
-			if (mDisplay) {
+			if (nullptr != mDisplay)
+			{
 				// Get an appropriate visual
-				int nAttributeList[] = {
+				int attributeList[] =
+				{
 					GLX_RGBA,
 					GLX_DOUBLEBUFFER,
 					GLX_RED_SIZE,	4,
 					GLX_GREEN_SIZE,	4,
 					GLX_BLUE_SIZE,	4,
 					GLX_DEPTH_SIZE,	16,
-					0 };	// = "None"
+					0	// = "None"
+				};
 
 				m_pDummyVisualInfo = glXChooseVisual(mDisplay, DefaultScreen(mDisplay), nAttributeList);
-				if (m_pDummyVisualInfo) {
-					
-					if (NULL_HANDLE == mNativeWindowHandle) {
+				if (nullptr != m_pDummyVisualInfo)
+				{
+					if (NULL_HANDLE == mNativeWindowHandle)
+					{
 						// Create a color map
-						XSetWindowAttributes sSetWindowAttributes;
-						sSetWindowAttributes.colormap = XCreateColormap(mDisplay, RootWindow(mDisplay, m_pDummyVisualInfo->screen), m_pDummyVisualInfo->visual, AllocNone);
+						XSetWindowAttributes setWindowAttributes;
+						setWindowAttributes.colormap = XCreateColormap(mDisplay, RootWindow(mDisplay, m_pDummyVisualInfo->screen), m_pDummyVisualInfo->visual, AllocNone);
 
 						// Create a window
-						sSetWindowAttributes.border_pixel = 0;
-						sSetWindowAttributes.event_mask = 0;
+						setWindowAttributes.border_pixel = 0;
+						setWindowAttributes.event_mask = 0;
 						mNativeWindowHandle = mDummyWindow = XCreateWindow(mDisplay, RootWindow(mDisplay, m_pDummyVisualInfo->screen), 0, 0, 300,
-															300, 0, m_pDummyVisualInfo->depth, InputOutput, m_pDummyVisualInfo->visual,
-															CWBorderPixel|CWColormap|CWEventMask, &sSetWindowAttributes);
-						std::cout<<"Create dummy window\n";
+																		   300, 0, m_pDummyVisualInfo->depth, InputOutput, m_pDummyVisualInfo->visual,
+																		   CWBorderPixel | CWColormap | CWEventMask, &setWindowAttributes);
+						std::cout<<"Create dummy window\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 					}
-					
+
 					// Create a GLX context
 					GLXContext legacyRenderContext = glXCreateContext(mDisplay, m_pDummyVisualInfo, 0, GL_TRUE);
-					if (legacyRenderContext) {
+					if (nullptr != legacyRenderContext)
+					{
 						// Make the internal dummy to the current render target
-						int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, legacyRenderContext);
-						std::cout<<"make legacy context current: "<<result<<"\n";
-						
+						const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, legacyRenderContext);
+						std::cout<<"Make legacy context current: "<<result<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+
 						// Create the render context of the OpenGL window
 						mWindowRenderContext = createOpenGLContext();
 
@@ -100,20 +101,24 @@ namespace OpenGLRenderer
 						// If there's an OpenGL context, do some final initialization steps
 						if (NULL_HANDLE != mWindowRenderContext)
 						{
-							
 							// Make the OpenGL context to the current one
-							int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, mWindowRenderContext);
-							std::cout<<"make new context current: "<<result<<"\n";
-							std::cout<<"supported extensions: "<<glGetString(GL_EXTENSIONS)<<"\n";
+							const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, mWindowRenderContext);
+							std::cout<<"Make new context current: "<<result<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+							std::cout<<"Supported extensions: "<<glGetString(GL_EXTENSIONS)<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 						}
-						
-					} else {
+					}
+					else
+					{
 						// Error, failed to create a GLX context!
 					}
-				} else {
+				}
+				else
+				{
 					// Error, failed to get an appropriate visual!
 				}
-			} else {
+			}
+			else
+			{
 				// Error, failed to get display!
 			}
 
@@ -142,14 +147,10 @@ namespace OpenGLRenderer
 		}
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	ContextLinux::~ContextLinux()
 	{
 		// Release the device context of the OpenGL window
-		if (mDisplay)
+		if (nullptr != mDisplay)
 		{
 			// Is the device context of the OpenGL window is the currently active OpenGL device context?
 			if (glXGetCurrentContext() == mWindowRenderContext)
@@ -179,10 +180,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Debug message callback function called by the "GL_ARB_debug_output"-extension
-	*/
 	void ContextLinux::debugMessageCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int, const char *message, void *)
 	{
 		// Source to string
@@ -283,37 +280,38 @@ namespace OpenGLRenderer
 	}
 
 
+	// TODO(co) Cleanup
 	static bool ctxErrorOccurred = false;
-	static int ctxErrorHandler( Display *dpy, XErrorEvent *ev )
+	static int ctxErrorHandler(Display *dpy, XErrorEvent *ev)
 	{
 		ctxErrorOccurred = true;
 		return 0;
 	}
+
+
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Create a OpenGL context
-	*/
 	GLXContext ContextLinux::createOpenGLContext()
 	{
-		#define GLX_CONTEXT_MAJOR_VERSION_ARB		0x2091
-		#define GLX_CONTEXT_MINOR_VERSION_ARB		0x2092
+		#define GLX_CONTEXT_MAJOR_VERSION_ARB	0x2091
+		#define GLX_CONTEXT_MINOR_VERSION_ARB	0x2092
+
 		// Get the available GLX extensions as string
 		const char *extensions = glXQueryExtensionsString(mDisplay, XDefaultScreen(mDisplay));
 
 		// Check whether or not "GLX_ARB_create_context" is a substring of the GLX extension string meaning that this OpenGL extension is supported
 		if (nullptr != strstr(extensions, "GLX_ARB_create_context"))
 		{
-			typedef GLXContext (*GLXCREATECONTEXTATTRIBSARBPROC)(Display*, GLXFBConfig, GLXContext, Bool, const int*);
 			// Get the OpenGL extension "glXCreateContextAttribsARB" function pointer
+			typedef GLXContext (*GLXCREATECONTEXTATTRIBSARBPROC)(Display*, GLXFBConfig, GLXContext, Bool, const int*);
 			GLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribsARB = reinterpret_cast<GLXCREATECONTEXTATTRIBSARBPROC>(glXGetProcAddress((const GLubyte*)"glXCreateContextAttribsARB"));
 			if (nullptr != glXCreateContextAttribsARB)
 			{
+				// TODO(co) Cleanup
 				ctxErrorOccurred = false;
 				int (*oldHandler)(Display*, XErrorEvent*) = XSetErrorHandler(&ctxErrorHandler);
-				
+
 				// OpenGL 3.1 - required for "gl_InstanceID" within shaders
 				// Create the OpenGL context
 				int ATTRIBUTES[] =
@@ -332,9 +330,9 @@ namespace OpenGLRenderer
 					// Done
 					0
 				};
-				
-				int nelements;
-				int visual_attribs[] =
+
+				int numberOfElements = 0;
+				int visualAttributes[] =
 				{
 					GLX_RENDER_TYPE, GLX_RGBA_BIT,
 					GLX_DOUBLEBUFFER, true,
@@ -343,58 +341,60 @@ namespace OpenGLRenderer
 					GLX_BLUE_SIZE, 1,
 					None
 				};
-				GLXFBConfig *fbc = glXChooseFBConfig(mDisplay, DefaultScreen(mDisplay), visual_attribs, &nelements);
-				std::cout<<"Renderer: Got "<<nelements<<" of FBCOnfig\n";
+				GLXFBConfig *fbc = glXChooseFBConfig(mDisplay, DefaultScreen(mDisplay), visualAttributes, &numberOfElements);
+				std::cout<<"Renderer: Got "<<numberOfElements<<" of FBCOnfig\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 				GLXContext glxContext = glXCreateContextAttribsARB(mDisplay, *fbc, 0, true, ATTRIBUTES);
-				
-				XSync( mDisplay, False );
-				
+
+				XSync(mDisplay, False);
+
 				// TODO(sw) make this fallback optional (via an option)
 				if (ctxErrorOccurred)
 				{
-					std::cerr<<"could not create opengl 3+ context try creating pre 3+ context\n";
+					std::cerr<<"could not create opengl 3+ context try creating pre 3+ context\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 					ctxErrorOccurred = false;
-					
+
 					// GLX_CONTEXT_MAJOR_VERSION_ARB = 1
 					ATTRIBUTES[1] = 1;
 					// GLX_CONTEXT_MINOR_VERSION_ARB = 0
 					ATTRIBUTES[3] = 0;
 					glxContext = glXCreateContextAttribsARB(mDisplay, *fbc, 0, true, ATTRIBUTES);
-					
-					// Sync to ensure any errors generated are processed.
-					XSync( mDisplay, False );
-					
+
+					// Synchronize to ensure any errors generated are processed
+					XSync(mDisplay, False);
+
 					// Restore the original error handler
-					XSetErrorHandler( oldHandler );
+					XSetErrorHandler(oldHandler);
 				}
-				
-				
+
 				if (nullptr != glxContext)
 				{
-					std::cout<<"Renderer: OGL Context with glXCreateContextAttribsARB created\n";
 					// Done
+					std::cout<<"Renderer: OGL Context with glXCreateContextAttribsARB created\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead, do we really need messages on success?
 					return glxContext;
 				}
 				else
 				{
-					std::cerr<<"Renderer: Could not create OGL Context with glXCreateContextAttribsARB\n";
 					// Error, context creation failed!
+					std::cerr<<"Renderer: Could not create OGL Context with glXCreateContextAttribsARB\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 					return NULL_HANDLE;
 				}
 			}
 			else
 			{
-				std::cerr<<"Renderer: could not found glXCreateContextAttribsARB\n";
 				// Error, failed to obtain the "GLX_ARB_create_context" function pointer (wow, something went terrible wrong!)
+				std::cerr<<"Renderer: could not found glXCreateContextAttribsARB\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 				return NULL_HANDLE;
 			}
 		}
 		else
 		{
-			std::cerr<<"Renderer: GLX_ARB_create_context not supported\n";
 			// Error, the OpenGL extension "GLX_ARB_create_context" is not supported... as a result we can't create an OpenGL context!
+			std::cerr<<"Renderer: GLX_ARB_create_context not supported\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 			return NULL_HANDLE;
 		}
+
+		#undef GLX_CONTEXT_MAJOR_VERSION_ARB
+		#undef GLX_CONTEXT_MINOR_VERSION_ARB
 	}
 
 

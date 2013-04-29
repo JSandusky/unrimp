@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -36,10 +36,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	SwapChain::SwapChain(OpenGLES2Renderer &openGLES2Renderer, handle nativeWindowHandle) :
 		ISwapChain(openGLES2Renderer),
 		mNativeWindowHandle(nativeWindowHandle)
@@ -47,10 +43,6 @@ namespace OpenGLES2Renderer
 		// TODO(co) Implement me
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	SwapChain::~SwapChain()
 	{
 		// TODO(co) Implement me
@@ -104,17 +96,15 @@ namespace OpenGLES2Renderer
 		#elif defined LINUX
 			if (mNativeWindowHandle)
 			{
-				Display *display;
-				// [TODO] resue X11 display from "Frontend"
-				display = XOpenDisplay(0);
-				
-				::Window nRootWindow = 0;
-				int nPositionX = 0, nPositionY = 0;
-				unsigned int nWidth = 0, nHeight = 0, nBorder = 0, nDepth = 0;
-				XGetGeometry(display, mNativeWindowHandle, &nRootWindow, &nPositionX, &nPositionY, &nWidth, &nHeight, &nBorder, &nDepth);
+				// TODO(sw) Resue X11 display from "Frontend"
+				Display *display = XOpenDisplay(0);
+				::Window rootWindow = 0;
+				int positionX = 0, positionY = 0;
+				unsigned int unsignedWidth = 0, unsignedHeight = 0, border = 0, depth = 0;
+				XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
 				XCloseDisplay(display);
-				width = nWidth;
-				height = nHeight;
+				width = unsignedWidth;
+				height = unsignedHeight;
 			}
 			else
 		#else

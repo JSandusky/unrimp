@@ -2,7 +2,7 @@
  * Copyright (c) 2012-2013 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
- * and associated documentation files (the “Software”), to deal in the Software without
+ * and associated documentation files (the "Software"), to deal in the Software without
  * restriction, including without limitation the rights to use, copy, modify, merge, publish,
  * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
@@ -10,7 +10,7 @@
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
  * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
  * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
@@ -43,10 +43,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Constructor
-	*/
 	Extensions::Extensions(IContext &context) :
 		mContext(&context),
 		mInitialized(false)
@@ -55,19 +51,11 @@ namespace OpenGLRenderer
 		resetExtensions();
 	}
 
-	/**
-	*  @brief
-	*    Destructor
-	*/
 	Extensions::~Extensions()
 	{
 		// Nothing to do in here
 	}
 
-	/**
-	*  @brief
-	*    Returns whether the extensions are initialized or not
-	*/
 	bool Extensions::isInitialized() const
 	{
 		return mInitialized;
@@ -178,10 +166,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Checks whether an extension is supported by the given hardware or not
-	*/
 	bool Extensions::isSupported(const char *extension) const
 	{
 		// Check whether or not the given extension string pointer is valid
@@ -199,10 +183,6 @@ namespace OpenGLRenderer
 		return false;
 	}
 
-	/**
-	*  @brief
-	*    Checks whether an extension is supported by the given hardware or not
-	*/
 	bool Extensions::checkExtension(const char *extension) const
 	{
 		// Check whether or not the given extension string pointer is valid
@@ -293,10 +273,6 @@ namespace OpenGLRenderer
 		return false;
 	}
 
-	/**
-	*  @brief
-	*    Resets the extensions
-	*/
 	void Extensions::resetExtensions()
 	{
 		mInitialized = false;
@@ -396,10 +372,6 @@ namespace OpenGLRenderer
 		mGL_MAX_ELEMENTS_VERTICES_EXT = mGL_MAX_ELEMENTS_INDICES_EXT = 0;
 	}
 
-	/**
-	*  @brief
-	*    Initialize the supported universal extensions
-	*/
 	bool Extensions::initializeUniversal()
 	{
 		// Define a platform dependent helper macro
