@@ -46,14 +46,61 @@
 	#include "AssimpMesh/AssimpMesh.h"
 #endif
 
+#include <map>
+#include <iostream>
+
+typedef std::map<std::string, int(*)(const char*)> KnownExamplesMap;
+
+static void printUsage(const KnownExamplesMap &knownExamples) {
+	std::cout<<"Invalid argument!\n";
+	std::cout<<"Usage: ./Examples <exampleName>\nAvailable Examples:\n";
+	for (KnownExamplesMap::const_iterator it=knownExamples.cbegin(); it!=knownExamples.cend(); ++it)
+		std::cout <<"\t"<< it->first<< '\n';
+}
+
+template <class ExampleClass>
+int RunExample(const char* rendererName)
+{
+	return ExampleClass(rendererName).run();
+}
+
 
 //[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
-int programEntryPoint()
+int programEntryPoint(CmdLineArgs &args)
 {
 	// Program result
 	int result = 0;
+
+	// create list of available examples
+	KnownExamplesMap knownExamples({
+		 // Basics
+		 { "FirstTriangle", 				&RunExample<FirstTriangle> }
+		,{ "VertexBuffer", 					&RunExample<VertexBuffer> }
+		,{ "FirstTexture", 					&RunExample<FirstTexture> }
+		,{ "FirstRenderToTexture",			&RunExample<FirstRenderToTexture> }
+		,{ "FirstMultipleRenderTargets",	&RunExample<FirstMultipleRenderTargets> }
+		,{ "FirstMultipleSwapChains", 		&RunExample<FirstMultipleSwapChains> }
+		,{ "FirstInstancing", 				&RunExample<FirstInstancing> }
+		,{ "FirstGeometryShader", 			&RunExample<FirstGeometryShader> }
+		,{ "FirstTessellation", 			&RunExample<FirstTessellation> }
+		// Advanced
+		,{ "FirstPostProcessing", 			&RunExample<FirstPostProcessing> }
+		,{ "Fxaa", 							&RunExample<Fxaa> }
+		,{ "FirstGpgpu", 					&RunExample<FirstGpgpu> }
+		,{ "InstancedCubes", 				&RunExample<InstancedCubes> }
+		,{ "IcosahedronTessellation", 		&RunExample<IcosahedronTessellation> }
+		#ifndef RENDERER_NO_TOOLKIT
+		,{ "FirstFont", 					&RunExample<FirstFont> }
+		#endif
+		#ifndef NO_ASSIMP
+		// Assimp
+		,{ "FirstAssimp", 					&RunExample<InstancedCubes> }
+		,{ "AssimpMesh", 					&RunExample<IcosahedronTessellation> }
+		#endif
+	}
+	);
 
 	// Case sensitive name of the renderer to instance, might be ignored in case e.g. "RENDERER_ONLY_DIRECT3D11" was set as preprocessor definition
 	// -> Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
@@ -79,32 +126,18 @@ int programEntryPoint()
 		rendererName = "OpenGL";
 	#endif
 
-	// Create an instance of our application on the C runtime stack
-	// Basics
-//	result = FirstTriangle(rendererName).run();					// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-//	result = VertexBuffer(rendererName).run();					// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-	result = FirstTexture(rendererName).run();					// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-//	result = FirstRenderToTexture(rendererName).run();			// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-//	result = FirstMultipleRenderTargets(rendererName).run();	// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-//	result = FirstMultipleSwapChains(rendererName).run();		// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-//	result = FirstInstancing(rendererName).run();				// Works with: "Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11"
-//	result = FirstGeometryShader(rendererName).run();			// Works with: "Null", "OpenGL" (shader model 4), "Direct3D10", "Direct3D11"
-//	result = FirstTessellation(rendererName).run();				// Works with: "Null", "OpenGL" (shader model 5), "Direct3D11"
-	// Advanced
-//	result = FirstPostProcessing(rendererName).run();			// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-//	result = Fxaa(rendererName).run();							// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-//	result = FirstGpgpu(rendererName).run();					// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-//	result = InstancedCubes(rendererName).run();				// Works with: "Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11"
-//	result = IcosahedronTessellation(rendererName).run();		// Works with: "Null", "OpenGL" (shader model 5), "Direct3D11"
-	#ifndef RENDERER_NO_TOOLKIT
-		// Renderer toolkit
-//		result = FirstFont(rendererName).run();					// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-	#endif
-	#ifndef NO_ASSIMP
-		// Assimp
-//		result = FirstAssimp(rendererName).run();				// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-//		result = AssimpMesh(rendererName).run();				// Works with: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-	#endif
+	// Check if the given example is known
+	   KnownExamplesMap::iterator example = knownExamples.find(args.GetArg(0));
+	if(knownExamples.end() == example)
+	{
+		// print usage
+		printUsage(knownExamples);
+	}
+	else
+	{
+		// run example
+		result = example->second(rendererName);
+	}
 
 	// Done
 	return result;

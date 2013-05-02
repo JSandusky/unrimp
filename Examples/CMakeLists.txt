@@ -45,6 +45,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/${OS_ARCHITECTURE})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/glm/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/utf8cpp)
 if(EXAMPLES_ASSIMP)
 	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/Assimp/include)
 	link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/${OS_ARCHITECTURE}/Assimp/lib)
@@ -58,6 +59,7 @@ endif()
 set(SOURCE_CODES
 	# Cross-platform source codes
 	src/Main.cpp
+	src/Framework/CmdLineArgs.cpp
 	src/Framework/Color4.cpp
 	src/Framework/EulerAngles.cpp
 	src/Framework/IApplication.cpp

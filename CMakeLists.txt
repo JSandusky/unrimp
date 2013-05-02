@@ -129,6 +129,21 @@ if(UNIX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -DRENDERER_NO_DEBUG")
 endif()
 
+# Check for c++ lamda support
+INCLUDE(CheckCXXSourceCompiles)
+CHECK_CXX_SOURCE_COMPILES("
+	int main()
+	{
+		auto lam = [](const char* tt) { return 42; };
+		lam(\"df\");
+		return 0;
+	}
+"  HAVE_LAMDA_SUPPORT
+)
+if(HAVE_LAMDA_SUPPORT)
+	add_definitions("-DHAVE_LAMDA_SUPPORT")
+endif()
+
 ##################################################
 ## Subdirectories
 ##################################################
