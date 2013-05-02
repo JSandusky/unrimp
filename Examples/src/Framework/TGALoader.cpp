@@ -14,7 +14,7 @@
 #include "Framework/TGALoader.h"
 
 
-
+#include "Framework/PlatformTypes.h"
 #ifdef WIN32
 	#include "Framework/WindowsHeader.h"				// Standard header
 #elif defined LINUX

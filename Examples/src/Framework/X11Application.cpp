@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "X11Application.h"
 #include "X11Window.h"
-
+#include "Framework/PlatformTypes.h"
 
 //[-------------------------------------------------------]
 //[ Public static data                                    ]

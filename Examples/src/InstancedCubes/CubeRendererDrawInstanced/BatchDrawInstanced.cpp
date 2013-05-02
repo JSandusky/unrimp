@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "InstancedCubes/CubeRendererDrawInstanced/BatchDrawInstanced.h"
+#include "Framework/PlatformTypes.h"
 #include "Framework/Quaternion.h"
 #include "Framework/EulerAngles.h"
 

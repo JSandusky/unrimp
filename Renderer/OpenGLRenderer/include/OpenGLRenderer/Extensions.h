@@ -45,6 +45,7 @@
 	#include <GL/gl.h>
 	#include <GL/glext.h>	// Requires definitions from "gl.h"
 #endif
+#include "Renderer/PlatformTypes.h"
 
 
 //[-------------------------------------------------------]
