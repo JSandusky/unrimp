@@ -213,7 +213,7 @@
       <Command>md "..\..\lib\$(PlatformTarget)d_static\"
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
 md "..\..\include\Renderer\Internal\$(ProjectName)d_static\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
+copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)d_static\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

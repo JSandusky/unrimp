@@ -316,6 +316,7 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
     <ClInclude Include="src\FirstTriangle\FirstTriangle_Null.h" />
     <ClInclude Include="src\Framework\ApplicationImplLinux.h" />
     <ClInclude Include="src\Framework\ApplicationImplWindows.h" />
+    <ClInclude Include="src\Framework\CmdLineArgs.h" />
     <ClInclude Include="src\Framework\Color4.h" />
     <ClInclude Include="src\Framework\EulerAngles.h" />
     <ClInclude Include="src\Framework\IApplication.h" />
@@ -396,6 +397,7 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\Framework\ApplicationImplWindows.cpp" />
+    <ClCompile Include="src\Framework\CmdLineArgs.cpp" />
     <ClCompile Include="src\Framework\Color4.cpp" />
     <ClCompile Include="src\Framework\EulerAngles.cpp" />
     <ClCompile Include="src\Framework\IApplication.cpp" />

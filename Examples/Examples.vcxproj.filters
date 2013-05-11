@@ -480,6 +480,9 @@
     <ClInclude Include="src\Framework\LinuxHeader.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="src\Framework\CmdLineArgs.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -589,6 +592,9 @@
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="src\Framework\ApplicationImplLinux.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Framework\CmdLineArgs.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
   </ItemGroup>
