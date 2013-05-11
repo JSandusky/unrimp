@@ -47,16 +47,9 @@
 #endif
 
 #include <map>
+#include <set>
 #include <iostream>
 
-typedef std::map<std::string, int(*)(const char*)> KnownExamplesMap;
-
-static void printUsage(const KnownExamplesMap &knownExamples) {
-	std::cout<<"Invalid argument!\n";
-	std::cout<<"Usage: ./Examples <exampleName>\nAvailable Examples:\n";
-	for (KnownExamplesMap::const_iterator it=knownExamples.cbegin(); it!=knownExamples.cend(); ++it)
-		std::cout <<"\t"<< it->first<< '\n';
-}
 
 template <class ExampleClass>
 int RunExample(const char* rendererName)
@@ -64,81 +57,171 @@ int RunExample(const char* rendererName)
 	return ExampleClass(rendererName).run();
 }
 
+class ExampleRunner
+{
+public:
+	virtual int run(const CmdLineArgs &args) = 0;
+
+protected:
+	typedef std::map<std::string, int(*)(const char*)> AvailableExamplesMap;
+	typedef std::set<std::string> AvailableRendererMap;
+	
+	ExampleRunner()
+		: m_availableExamples({
+			 // Basics
+			 { "FirstTriangle", 				&RunExample<FirstTriangle> }
+			,{ "VertexBuffer", 					&RunExample<VertexBuffer> }
+			,{ "FirstTexture", 					&RunExample<FirstTexture> }
+			,{ "FirstRenderToTexture",			&RunExample<FirstRenderToTexture> }
+			,{ "FirstMultipleRenderTargets",	&RunExample<FirstMultipleRenderTargets> }
+			,{ "FirstMultipleSwapChains", 		&RunExample<FirstMultipleSwapChains> }
+			,{ "FirstInstancing", 				&RunExample<FirstInstancing> }
+			,{ "FirstGeometryShader", 			&RunExample<FirstGeometryShader> }
+			,{ "FirstTessellation", 			&RunExample<FirstTessellation> }
+			 // Advanced
+			,{ "FirstPostProcessing", 			&RunExample<FirstPostProcessing> }
+			,{ "Fxaa", 							&RunExample<Fxaa> }
+			,{ "FirstGpgpu", 					&RunExample<FirstGpgpu> }
+			,{ "InstancedCubes", 				&RunExample<InstancedCubes> }
+			,{ "IcosahedronTessellation", 		&RunExample<IcosahedronTessellation> }
+			#ifndef RENDERER_NO_TOOLKIT
+			,{ "FirstFont", 					&RunExample<FirstFont> }
+			#endif
+			#ifndef NO_ASSIMP
+			// Assimp
+			,{ "FirstAssimp", 					&RunExample<InstancedCubes> }
+			,{ "AssimpMesh", 					&RunExample<IcosahedronTessellation> }
+			#endif
+		})
+		, m_availableRenderer({
+			#ifndef RENDERER_NO_NULL
+			"Null"
+			#endif
+			#ifdef WIN32
+				#ifndef RENDERER_NO_DIRECT3D9
+				, "Direct3D9"
+				#endif
+				#ifndef RENDERER_NO_DIRECT3D10
+				, "Direct3D10"
+				#endif
+				#ifndef RENDERER_NO_DIRECT3D11
+				, "Direct3D11"
+				#endif
+			#endif
+			#ifndef RENDERER_NO_OPENGL
+			, "OpenGL"
+			#endif
+			#ifndef RENDERER_NO_OPENGLES2
+			, "OpenGLES2"
+			#endif
+		})
+		// Case sensitive name of the renderer to instance, might be ignored in case e.g. "RENDERER_ONLY_DIRECT3D11" was set as preprocessor definition
+		// -> Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
+		// -> In case the graphics driver supports it, the OpenGL ES 2 renderer can automatically also run on a desktop PC without an emulator (perfect for testing/debugging)
+		, m_defaultRendererName(
+			#ifdef RENDERER_ONLY_NULL
+			"Null"
+			#elif defined(RENDERER_ONLY_OPENGL) || defined(LINUX)
+			"OpenGL"
+			#elif RENDERER_ONLY_OPENGLES2
+			"OpenGLES2"
+			#elif WIN32
+				#ifdef RENDERER_ONLY_DIRECT3D9
+				"Direct3D9"
+				#elif RENDERER_ONLY_DIRECT3D10
+				"Direct3D10"
+				#else 
+				"Direct3D11"
+				#endif
+			#endif
+		)
+	{}
+	
+	virtual void printUsage(const AvailableExamplesMap &knownExamples, const AvailableRendererMap &availableRenderer) = 0;
+	virtual void showError(const std::string errorMsg) = 0;
+	
+	int runExample(const std::string rendererName, const std::string exampleName) {
+		AvailableExamplesMap::iterator example = m_availableExamples.find(exampleName);
+		AvailableRendererMap::iterator renderer = m_availableRenderer.find(rendererName);
+		if(m_availableExamples.end() == example || m_availableRenderer.end() == renderer)
+		{
+			if (m_availableExamples.end() == example)
+				showError("no or unknown example given");
+			if	(m_availableRenderer.end() == renderer)
+				showError("unkown renderer: \""+rendererName+"\"");
+				
+			// print usage
+			printUsage(m_availableExamples, m_availableRenderer);
+			return 0;
+		}
+		else
+		{
+			// run example
+			return example->second(rendererName.c_str());
+		}
+	}
+	
+protected:
+	AvailableExamplesMap m_availableExamples;
+	AvailableRendererMap m_availableRenderer;
+	const std::string m_defaultRendererName;
+};
+
+class ConsoleExampleRunner: public ExampleRunner {
+public:
+	virtual int run(const CmdLineArgs &args) override {
+		parseArgs(args);
+		return runExample(m_rendererName.c_str(), m_exampleName.c_str());
+	}
+
+protected:
+	virtual void printUsage(const AvailableExamplesMap &knownExamples, const AvailableRendererMap &availableRenderer) override {
+		std::cout<<"Usage: ./Examples <exampleName> [-r <rendererName>]\n";
+		std::cout<<"Available Examples:\n";
+		for (AvailableExamplesMap::const_iterator it=knownExamples.cbegin(); it!=knownExamples.cend(); ++it)
+			std::cout <<"\t"<< it->first<< '\n';
+		std::cout<<"Available Renderer:\n";
+		for (AvailableRendererMap::const_iterator it=availableRenderer.cbegin(); it!=availableRenderer.cend(); ++it)
+			std::cout <<"\t"<< *it<< '\n';
+	}
+	virtual void showError(const std::string errorMsg) override {
+		std::cout<<errorMsg<<"\n";
+	}
+private:
+	void parseArgs(const CmdLineArgs &args) {
+		int length = args.GetCount();
+		for(int i = 0; i < length; ++i) {
+			std::string arg = args.GetArg(i); 
+			if (arg != "-r") {
+				m_exampleName = arg;
+			}
+			else {
+				if (i+1 < length) {
+					++i;
+					m_rendererName = args.GetArg(i);
+				}
+				else
+				{
+					showError("missing argument for parameter -r");
+					return;
+				}
+			}
+			
+		}
+		
+		if (m_rendererName.empty())
+			m_rendererName = m_defaultRendererName;
+	}
+private:
+	std::string m_rendererName;
+	std::string m_exampleName;
+};
+
 
 //[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
 int programEntryPoint(CmdLineArgs &args)
 {
-	// Program result
-	int result = 0;
-
-	// create list of available examples
-	KnownExamplesMap knownExamples({
-		 // Basics
-		 { "FirstTriangle", 				&RunExample<FirstTriangle> }
-		,{ "VertexBuffer", 					&RunExample<VertexBuffer> }
-		,{ "FirstTexture", 					&RunExample<FirstTexture> }
-		,{ "FirstRenderToTexture",			&RunExample<FirstRenderToTexture> }
-		,{ "FirstMultipleRenderTargets",	&RunExample<FirstMultipleRenderTargets> }
-		,{ "FirstMultipleSwapChains", 		&RunExample<FirstMultipleSwapChains> }
-		,{ "FirstInstancing", 				&RunExample<FirstInstancing> }
-		,{ "FirstGeometryShader", 			&RunExample<FirstGeometryShader> }
-		,{ "FirstTessellation", 			&RunExample<FirstTessellation> }
-		// Advanced
-		,{ "FirstPostProcessing", 			&RunExample<FirstPostProcessing> }
-		,{ "Fxaa", 							&RunExample<Fxaa> }
-		,{ "FirstGpgpu", 					&RunExample<FirstGpgpu> }
-		,{ "InstancedCubes", 				&RunExample<InstancedCubes> }
-		,{ "IcosahedronTessellation", 		&RunExample<IcosahedronTessellation> }
-		#ifndef RENDERER_NO_TOOLKIT
-		,{ "FirstFont", 					&RunExample<FirstFont> }
-		#endif
-		#ifndef NO_ASSIMP
-		// Assimp
-		,{ "FirstAssimp", 					&RunExample<InstancedCubes> }
-		,{ "AssimpMesh", 					&RunExample<IcosahedronTessellation> }
-		#endif
-	}
-	);
-
-	// Case sensitive name of the renderer to instance, might be ignored in case e.g. "RENDERER_ONLY_DIRECT3D11" was set as preprocessor definition
-	// -> Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-	// -> In case the graphics driver supports it, the OpenGL ES 2 renderer can automatically also run on a desktop PC without an emulator (perfect for testing/debugging)
-	const char *rendererName = "Direct3D11";
-
-	// Enforce a certain renderer via preprocessor definition?
-	#ifdef RENDERER_ONLY_NULL
-		rendererName = "Null";
-	#elif RENDERER_ONLY_OPENGL
-		rendererName = "OpenGL";
-	#elif RENDERER_ONLY_OPENGLES2
-		rendererName = "OpenGLES2";
-	#elif RENDERER_ONLY_DIRECT3D9
-		rendererName = "Direct3D9";
-	#elif RENDERER_ONLY_Direct3D10
-		rendererName = "Direct3D10";
-	#elif RENDERER_ONLY_DIRECT3D11
-		rendererName = "Direct3D11";
-	#endif
-	#ifdef LINUX
-		// On Linux, only the OpenGL renderer is supported
-		rendererName = "OpenGL";
-	#endif
-
-	// Check if the given example is known
-	   KnownExamplesMap::iterator example = knownExamples.find(args.GetArg(0));
-	if(knownExamples.end() == example)
-	{
-		// print usage
-		printUsage(knownExamples);
-	}
-	else
-	{
-		// run example
-		result = example->second(rendererName);
-	}
-
-	// Done
-	return result;
+	return ConsoleExampleRunner().run(args);
 }

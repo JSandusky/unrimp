@@ -77,7 +77,7 @@ public:
 	*  @return
 	*    The amount of arguments hold by this instance
 	*/
-	int GetCount() {
+	int GetCount() const {
 		return m_args.size();
 	}
 	
@@ -91,7 +91,7 @@ public:
 	*  @return
 	*    The argument at the given index or an empty string when index is out of range
 	*/
-	std::string GetArg(int index) {
+	std::string GetArg(int index) const{
 		if (index < 0 || index >= m_args.size())
 			return "";
 		return m_args[index];

@@ -37,13 +37,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Definitions                                           ]
-//[-------------------------------------------------------]
-// TODO(co) This is already defined inside "PlatformTypes.h", remove the definition in here
-#define NULL_HANDLE  0
-
-
-//[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #endif // __LINUXHEADER_H__
