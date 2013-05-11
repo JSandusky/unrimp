@@ -58,18 +58,20 @@ int programEntryPoint(CmdLineArgs &args);
 			int main(int argc, char **argv)
 		#endif
 			{
-				// uses internaly GetCommandlineW to fetch the commandline arguments
-				CmdLineArgs arguments;
-				// Call the platform independent program entry point
-				const int result = programEntryPoint(arguments);
-
+				int result;
+				{
+					// uses internaly GetCommandline to fetch the commandline arguments
+					CmdLineArgs arguments;
+					// Call the platform independent program entry point
+					result = programEntryPoint(arguments);
+				}
 				// For memory leak detection
 				#ifdef _DEBUG
 					_CrtDumpMemoryLeaks();
 				#endif
 
 				// Done
-				return nResult;
+				return result;
 			}
 	#else
 		#include "Framework/WindowsHeader.h"
@@ -79,10 +81,13 @@ int programEntryPoint(CmdLineArgs &args);
 			int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		#endif
 			{
-				// uses internaly GetCommandlineW to fetch the commandline arguments
-				CmdLineArgs arguments;
-				// Call the platform independent program entry point
-				const int result = programEntryPoint(arguments);
+				int result;
+				{
+					// uses internaly GetCommandline to fetch the commandline arguments
+					CmdLineArgs arguments;
+					// Call the platform independent program entry point
+					result = programEntryPoint(arguments);
+				}
 
 				// For memory leak detection
 				#ifdef _DEBUG

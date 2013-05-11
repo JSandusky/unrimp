@@ -24,7 +24,13 @@
 #include "CmdLineArgs.h"
 #ifdef WIN32
 	#include <windows.h>
+#ifdef UNICODE
 	#include "utf8/utf8.h" // to convert utf16 strings to utf8
+#else
+	#include <sstream>
+	#include <algorithm>
+	#include <iterator>
+#endif
 #endif
 
 
@@ -34,13 +40,34 @@
 CmdLineArgs::CmdLineArgs()
 {
 #if WIN32
-	int wargc;
-	wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(),&wargc);
-	if (wargc > 0) {
-		m_args.reserve(wargc);
-		utf8::utf16to8(wargv, wargv+wargc, back_inserter(m_args));
-	}
-	LocalFree(wargv);
+	#ifdef UNICODE
+		int wargc;
+		wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(),&wargc);
+		if (wargc > 0) {			
+			// argv[0] is the path+name of the programm
+			// -> ignore it
+			m_args.reserve(wargc-1);
+			std::vector<std::wstring> lines(wargv+1, wargv+wargc);
+			for(std::vector<std::wstring>::iterator wit = lines.begin(); wit != lines.end(); ++wit)
+			{
+				std::string utf8line; 
+				utf8::utf16to8((*wit).begin(), (*wit).end(), std::back_inserter(utf8line));
+				m_args.push_back(utf8line);
+			}
+			
+		}
+		LocalFree(wargv);
+	#else
+		std::string cmdLine(GetCommandLineA());
+		std::istringstream ss(cmdLine);
+		std::istream_iterator<std::string> iss(ss);
+		// the first token is the path+name of the programm
+		// -> ignore it
+		iss++;
+		std::copy(iss,
+			 std::istream_iterator<std::string>(),
+			 std::back_inserter<std::vector<std::string> >(m_args));
+	#endif
 #endif
 }
 

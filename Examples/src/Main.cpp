@@ -67,7 +67,9 @@ protected:
 	typedef std::set<std::string> AvailableRendererMap;
 	
 	ExampleRunner()
-		: m_availableExamples({
+		:
+#ifndef WIN32 // VS2012 doesn't support initializer lists for std::map and std::set (even after update 2) :(
+		 m_availableExamples({
 			 // Basics
 			 { "FirstTriangle", 				&RunExample<FirstTriangle> }
 			,{ "VertexBuffer", 					&RunExample<VertexBuffer> }
@@ -114,11 +116,12 @@ protected:
 			#ifndef RENDERER_NO_OPENGLES2
 			, "OpenGLES2"
 			#endif
-		})
+		}) ,
+#endif
 		// Case sensitive name of the renderer to instance, might be ignored in case e.g. "RENDERER_ONLY_DIRECT3D11" was set as preprocessor definition
 		// -> Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
 		// -> In case the graphics driver supports it, the OpenGL ES 2 renderer can automatically also run on a desktop PC without an emulator (perfect for testing/debugging)
-		, m_defaultRendererName(
+		m_defaultRendererName(
 			#ifdef RENDERER_ONLY_NULL
 			"Null"
 			#elif defined(RENDERER_ONLY_OPENGL) || defined(LINUX)
@@ -135,7 +138,53 @@ protected:
 				#endif
 			#endif
 		)
-	{}
+	{
+		#ifdef WIN32
+			 // Basics
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("FirstTriangle", 				&RunExample<FirstTriangle>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("VertexBuffer", 					&RunExample<VertexBuffer>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("FirstTexture", 					&RunExample<FirstTexture>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("FirstRenderToTexture",			&RunExample<FirstRenderToTexture>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("FirstMultipleRenderTargets",	&RunExample<FirstMultipleRenderTargets>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("FirstMultipleSwapChains", 		&RunExample<FirstMultipleSwapChains>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("FirstInstancing", 				&RunExample<FirstInstancing>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("FirstGeometryShader", 			&RunExample<FirstGeometryShader>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("FirstTessellation", 			&RunExample<FirstTessellation>));
+			 // Advanced
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("FirstPostProcessing", 			&RunExample<FirstPostProcessing>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("Fxaa", 							&RunExample<Fxaa>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("FirstGpgpu", 					&RunExample<FirstGpgpu>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("InstancedCubes", 				&RunExample<InstancedCubes>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("IcosahedronTessellation", 		&RunExample<IcosahedronTessellation>));
+			#ifndef RENDERER_NO_TOOLKIT
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("FirstFont", 					&RunExample<FirstFont>));
+			#endif
+			#ifndef NO_ASSIMP
+			// Assimp
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("FirstAssimp", 					&RunExample<InstancedCubes>));
+			m_availableExamples.insert(std::pair<std::string,int(*)(const char*)>("AssimpMesh", 					&RunExample<IcosahedronTessellation>));
+			#endif
+
+			#ifndef RENDERER_NO_NULL
+			m_availableRenderer.insert("Null");
+			#endif
+			#ifndef RENDERER_NO_DIRECT3D9
+			m_availableRenderer.insert("Direct3D9");
+			#endif
+			#ifndef RENDERER_NO_DIRECT3D10
+			m_availableRenderer.insert("Direct3D10");
+			#endif
+			#ifndef RENDERER_NO_DIRECT3D11
+			m_availableRenderer.insert("Direct3D11");
+			#endif
+			#ifndef RENDERER_NO_OPENGL
+			m_availableRenderer.insert("OpenGL");
+			#endif
+			#ifndef RENDERER_NO_OPENGLES2
+			m_availableRenderer.insert("OpenGLES2");
+			#endif
+#endif
+	}
 	
 	virtual void printUsage(const AvailableExamplesMap &knownExamples, const AvailableRendererMap &availableRenderer) = 0;
 	virtual void showError(const std::string errorMsg) = 0;
