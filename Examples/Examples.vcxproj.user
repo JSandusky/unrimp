@@ -19,5 +19,6 @@
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)d_static\ExamplesStaticD.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)\bin\$(PlatformTarget)d_static\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>FirstTriangle</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

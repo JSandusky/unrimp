@@ -53,8 +53,8 @@ int ConsoleExampleRunner::run(const CmdLineArgs& args)
 }
 
 bool ConsoleExampleRunner::parseArgs(const CmdLineArgs &args) {
-	int length = args.GetCount();
-	for(int i = 0; i < length; ++i) {
+	unsigned int length = args.GetCount();
+	for(unsigned int i = 0; i < length; ++i) {
 		std::string arg = args.GetArg(i); 
 		if (arg != "-r") {
 			m_exampleName = arg;

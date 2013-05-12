@@ -318,7 +318,9 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
     <ClInclude Include="src\Framework\ApplicationImplWindows.h" />
     <ClInclude Include="src\Framework\CmdLineArgs.h" />
     <ClInclude Include="src\Framework\Color4.h" />
+    <ClInclude Include="src\Framework\ConsoleExampleRunner.h" />
     <ClInclude Include="src\Framework\EulerAngles.h" />
+    <ClInclude Include="src\Framework\ExampleRunner.h" />
     <ClInclude Include="src\Framework\IApplication.h" />
     <ClInclude Include="src\Framework\IApplicationImpl.h" />
     <ClInclude Include="src\Framework\IApplicationRenderer.h" />
@@ -399,7 +401,9 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
     <ClCompile Include="src\Framework\ApplicationImplWindows.cpp" />
     <ClCompile Include="src\Framework\CmdLineArgs.cpp" />
     <ClCompile Include="src\Framework\Color4.cpp" />
+    <ClCompile Include="src\Framework\ConsoleExampleRunner.cpp" />
     <ClCompile Include="src\Framework\EulerAngles.cpp" />
+    <ClCompile Include="src\Framework\ExampleRunner.cpp" />
     <ClCompile Include="src\Framework\IApplication.cpp" />
     <ClCompile Include="src\Framework\IApplicationImpl.cpp" />
     <ClCompile Include="src\Framework\IApplicationRenderer.cpp" />

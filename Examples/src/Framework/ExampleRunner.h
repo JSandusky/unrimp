@@ -34,6 +34,7 @@ class ExampleRunner
 {
 public:
 	virtual int run(const CmdLineArgs &args) = 0;
+	virtual ~ExampleRunner();
 
 protected:
 	typedef int(*RunnerMethod)(const char*);
@@ -49,7 +50,8 @@ protected:
 	int runExample(const std::string rendererName, const std::string exampleName);
 
 private:
-	void addExample(const std::string& name, RunnerMethod runnerMethod, std::initializer_list<std::string> supportedRenderer);
+	template<typename T>
+	void addExample(const std::string& name, RunnerMethod runnerMethod, T const &supportedRendererList);
 
 protected:
 	AvailableExamplesMap 			m_availableExamples;
