@@ -67,6 +67,8 @@ set(SOURCE_CODES
 	src/Framework/IApplicationRenderer.cpp
 	src/Framework/Stopwatch.cpp
 	src/Framework/TGALoader.cpp
+	src/Framework/ExampleRunner.cpp
+	src/Framework/ConsoleExampleRunner.cpp
 	# Basics
 		# "FirstTriangle" source codes
 			src/FirstTriangle/FirstTriangle.cpp

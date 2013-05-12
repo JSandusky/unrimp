@@ -101,6 +101,7 @@ int programEntryPoint(CmdLineArgs &args);
 
 // Linux implementation
 #elif LINUX
+	#include "Framework/PlatformTypes.h"
 	int main(int argc, char **argv)
 	{
 		CmdLineArgs arguments(argc, argv);

@@ -1,5 +1,5 @@
 /*********************************************************\
- * Copyright (c) 2012-2013 Christian Ofenberg
+ * Copyright (c) 2013-2013 Stephan Wezel
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without
@@ -18,17 +18,32 @@
 \*********************************************************/
 
 
+#ifndef CONSOLEEXAMPLERUNNER_H
+#define CONSOLEEXAMPLERUNNER_H
+#pragma once
+
+
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/Main.h"
-#include "Framework/ConsoleExampleRunner.h"
+#include "ExampleRunner.h"
 
 
-//[-------------------------------------------------------]
-//[ Platform independent program entry point              ]
-//[-------------------------------------------------------]
-int programEntryPoint(CmdLineArgs &args)
+class ConsoleExampleRunner :  ExampleRunner
 {
-	return ConsoleExampleRunner().run(args);
-}
+public:
+    virtual int run(const CmdLineArgs& args) override;
+
+protected:
+    virtual void showError(const std::string errorMsg) override;
+    virtual void printUsage(const ExampleRunner::AvailableExamplesMap& knownExamples, const ExampleRunner::AvailableRendererMap& availableRenderer) override;
+
+private:
+	bool parseArgs(const CmdLineArgs &args);
+
+private:
+	std::string m_rendererName;
+	std::string m_exampleName;
+};
+
+#endif // CONSOLEEXAMPLERUNNER_H

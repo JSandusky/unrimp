@@ -1,5 +1,5 @@
 /*********************************************************\
- * Copyright (c) 2012-2013 Christian Ofenberg
+ * Copyright (c) 2013-2013 Stephan Wezel
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without
@@ -17,18 +17,39 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 \*********************************************************/
 
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "Framework/Main.h"
-#include "Framework/ConsoleExampleRunner.h"
+#ifndef EXAMPLERUNNER_H
+#define EXAMPLERUNNER_H
+#pragma once
 
 
-//[-------------------------------------------------------]
-//[ Platform independent program entry point              ]
-//[-------------------------------------------------------]
-int programEntryPoint(CmdLineArgs &args)
+#include <map>
+#include <set>
+#include <string>
+
+
+class CmdLineArgs;
+
+class ExampleRunner
 {
-	return ConsoleExampleRunner().run(args);
-}
+public:
+	virtual int run(const CmdLineArgs &args) = 0;
+
+protected:
+	typedef int(*RunnerMethod)(const char*);
+	typedef std::map<std::string, RunnerMethod> AvailableExamplesMap;
+	typedef std::set<std::string> AvailableRendererMap;
+	
+	ExampleRunner();
+	
+	virtual void printUsage(const AvailableExamplesMap &knownExamples, const AvailableRendererMap &availableRenderer) = 0;
+	virtual void showError(const std::string errorMsg) = 0;
+	
+	int runExample(const std::string rendererName, const std::string exampleName);
+	
+protected:
+	AvailableExamplesMap m_availableExamples;
+	AvailableRendererMap m_availableRenderer;
+	const std::string m_defaultRendererName;
+};
+
+#endif // EXAMPLERUNNER_H
