@@ -61,14 +61,14 @@ int X11Application::run()
 bool X11Application::handlePendingEvents()
 {
 	XEvent event;
-
 	while (!mWindows.empty() && XPending(mDisplay) > 0)
 	{
 		XNextEvent(mDisplay, &event);
-		HandleEvent(event);
+		if (!HandleEvent(event))
+			return false;
 	}
 
-	mWindows.empty();
+	return true;
 }
 
 

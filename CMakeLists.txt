@@ -120,7 +120,7 @@ set(EXAMPLES				"1"	CACHE BOOL "Build examples?")
 
 
 # We need c++0x/c++11 support:
-if(${CMAKE_COMPILER_IS_GNUCXX})
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	message(STATUS "enable c++11 support")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 endif()
@@ -129,20 +129,6 @@ if(UNIX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -DRENDERER_NO_DEBUG")
 endif()
 
-# Check for c++ lamda support
-INCLUDE(CheckCXXSourceCompiles)
-CHECK_CXX_SOURCE_COMPILES("
-	int main()
-	{
-		auto lam = [](const char* tt) { return 42; };
-		lam(\"df\");
-		return 0;
-	}
-"  HAVE_LAMDA_SUPPORT
-)
-if(HAVE_LAMDA_SUPPORT)
-	add_definitions("-DHAVE_LAMDA_SUPPORT")
-endif()
 
 ##################################################
 ## Subdirectories
