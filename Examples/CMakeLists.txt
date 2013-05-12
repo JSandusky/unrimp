@@ -21,6 +21,19 @@
 cmake_minimum_required(VERSION 2.8.8)
 
 
+find_package(Qt4 COMPONENTS QtCore QtGui)
+
+if (QT4_FOUND AND QT_QTGUI_FOUND)
+	set(EXAMPLE_RUNNER_QT4 "0" CACHE BOOL "use Qt Gui Runner")
+else()
+	unset(EXAMPLE_RUNNER_QT4 CACHE)
+endif()
+
+if (EXAMPLE_RUNNER_QT4)
+	INCLUDE(${QT_USE_FILE})
+endif()
+
+
 ##################################################
 ## Preprocessor definitions
 ##################################################
@@ -35,6 +48,10 @@ if(NOT RENDERER_TOOLKIT)
 endif()
 if(NOT EXAMPLES_ASSIMP)
 	add_definitions(-DNO_ASSIMP)
+endif()
+if(EXAMPLE_RUNNER_QT4)
+	add_definitions(-DEXAMPLE_RUNNER_QT4)
+	ADD_DEFINITIONS(${QT_DEFINITIONS})
 endif()
 
 
@@ -139,6 +156,14 @@ if(EXAMPLES_ASSIMP)
 	)
 endif()
 
+if(EXAMPLE_RUNNER_QT4)
+	# Qt runner source codes
+	set(SOURCE_CODES
+		${SOURCE_CODES}
+		src/Framework/QtRunner/ExampleRunnerQt4.cpp
+	)
+endif()
+
 
 ##################################################
 ## Executables
@@ -150,6 +175,9 @@ if(STATIC_LIBRARY)
 	else()
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRENDERER_NO_DIRECT3D9 -DRENDERER_NO_DIRECT3D10 -DRENDERER_NO_DIRECT3D11")
 		add_executable(ExamplesStatic ${SOURCE_CODES})
+		if(EXAMPLE_RUNNER_QT4)
+			TARGET_LINK_LIBRARIES(ExamplesStatic ${QT_LIBRARIES})
+		endif()
 	endif()
 	
 	set(LIBRARIES NullRendererStatic)
@@ -204,6 +232,9 @@ if(SHARED_LIBRARY)
 		else()
 			target_link_libraries(Examples ${CMAKE_SHARED_LIBRARY_PREFIX}assimpStatic${CMAKE_SHARED_LIBRARY_SUFFIX})
 		endif()
+	endif()
+	if(EXAMPLE_RUNNER_QT4)
+		TARGET_LINK_LIBRARIES(Examples ${QT_LIBRARIES})
 	endif()
 	set_target_properties(Examples PROPERTIES COMPILE_FLAGS -DSHARED_LIBRARIES)
 	add_dependencies(Examples Renderer)

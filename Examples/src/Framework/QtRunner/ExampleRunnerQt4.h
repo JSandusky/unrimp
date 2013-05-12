@@ -17,9 +17,8 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 \*********************************************************/
 
-
-#ifndef CONSOLEEXAMPLERUNNER_H
-#define CONSOLEEXAMPLERUNNER_H
+#ifndef EXAMPLERUNNERQT_H
+#define EXAMPLERUNNERQT_H
 #pragma once
 
 
@@ -28,8 +27,7 @@
 //[-------------------------------------------------------]
 #include "Framework/ExampleRunner.h"
 
-
-class ConsoleExampleRunner :  ExampleRunner
+class ExampleRunnerQt4 :  ExampleRunner
 {
 public:
     virtual int run(const CmdLineArgs& args) override;
@@ -44,6 +42,7 @@ private:
 private:
 	std::string m_rendererName;
 	std::string m_exampleName;
+
 };
 
-#endif // CONSOLEEXAMPLERUNNER_H
+#endif // EXAMPLERUNNERQT_H
