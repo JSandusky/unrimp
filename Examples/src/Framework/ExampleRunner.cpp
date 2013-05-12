@@ -166,7 +166,7 @@ void ExampleRunner::addExample(const std::string& name, RunnerMethod runnerMetho
 	std::vector<std::string> supportedRenderer;
 	// VS2012 doesn't support initializer_list for std container such as vector (even with Update 2 :()
 	// -> we have to do it by hand
-	for(auto renderer : supportedRendererList)
-		supportedRenderer.push_back(renderer);
+	for(auto renderer = supportedRendererList.begin(); renderer != supportedRendererList.end(); ++renderer)
+			supportedRenderer.push_back(*renderer);
 	m_supportedRendererForExample.insert(std::pair<std::string, std::vector<std::string>>(name, std::move(supportedRenderer)));
 }
