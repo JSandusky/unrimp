@@ -25,6 +25,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <vector>
 
 
 class CmdLineArgs;
@@ -38,6 +39,7 @@ protected:
 	typedef int(*RunnerMethod)(const char*);
 	typedef std::map<std::string, RunnerMethod> AvailableExamplesMap;
 	typedef std::set<std::string> AvailableRendererMap;
+	typedef std::map<std::string, std::vector<std::string>> ExampleToSupportedRendererMap;
 	
 	ExampleRunner();
 	
@@ -45,11 +47,15 @@ protected:
 	virtual void showError(const std::string errorMsg) = 0;
 	
 	int runExample(const std::string rendererName, const std::string exampleName);
-	
+
+private:
+	void addExample(const std::string& name, RunnerMethod runnerMethod, std::initializer_list<std::string> supportedRenderer);
+
 protected:
-	AvailableExamplesMap m_availableExamples;
-	AvailableRendererMap m_availableRenderer;
-	const std::string m_defaultRendererName;
+	AvailableExamplesMap 			m_availableExamples;
+	AvailableRendererMap 			m_availableRenderer;
+	ExampleToSupportedRendererMap	m_supportedRendererForExample;
+	const std::string				m_defaultRendererName;
 };
 
 #endif // EXAMPLERUNNER_H

@@ -47,6 +47,7 @@
 	#include "FirstAssimp/FirstAssimp.h"
 	#include "AssimpMesh/AssimpMesh.h"
 #endif
+#include <algorithm>
 
 
 //[-------------------------------------------------------]
@@ -82,28 +83,28 @@ ExampleRunner::ExampleRunner()
 	)
 {
 	// Basics
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("FirstTriangle", 				&RunExample<FirstTriangle>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("VertexBuffer", 					&RunExample<VertexBuffer>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("FirstTexture", 					&RunExample<FirstTexture>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("FirstRenderToTexture",			&RunExample<FirstRenderToTexture>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("FirstMultipleRenderTargets",	&RunExample<FirstMultipleRenderTargets>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("FirstMultipleSwapChains", 		&RunExample<FirstMultipleSwapChains>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("FirstInstancing", 				&RunExample<FirstInstancing>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("FirstGeometryShader", 			&RunExample<FirstGeometryShader>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("FirstTessellation", 			&RunExample<FirstTessellation>));
+	addExample("FirstTriangle", 				&RunExample<FirstTriangle>,					{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"});
+	addExample("VertexBuffer", 					&RunExample<VertexBuffer>,					{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"});
+	addExample("FirstTexture", 					&RunExample<FirstTexture>,					{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"});
+	addExample("FirstRenderToTexture",			&RunExample<FirstRenderToTexture>,			{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"});
+	addExample("FirstMultipleRenderTargets",	&RunExample<FirstMultipleRenderTargets>,	{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"});
+	addExample("FirstMultipleSwapChains", 		&RunExample<FirstMultipleSwapChains>,		{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"});
+	addExample("FirstInstancing", 				&RunExample<FirstInstancing>,				{"Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11"});
+	addExample("FirstGeometryShader", 			&RunExample<FirstGeometryShader>,			{"Null", "OpenGL", "Direct3D10", "Direct3D11"});
+	addExample("FirstTessellation", 			&RunExample<FirstTessellation>,				{"Null", "OpenGL", "Direct3D11"});
 	// Advanced
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("FirstPostProcessing", 			&RunExample<FirstPostProcessing>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("Fxaa", 							&RunExample<Fxaa>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("FirstGpgpu", 					&RunExample<FirstGpgpu>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("InstancedCubes", 				&RunExample<InstancedCubes>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("IcosahedronTessellation", 		&RunExample<IcosahedronTessellation>));
+	addExample("FirstPostProcessing", 			&RunExample<FirstPostProcessing>,			{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"});
+	addExample("Fxaa", 							&RunExample<Fxaa>,							{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"});
+	addExample("FirstGpgpu", 					&RunExample<FirstGpgpu>,					{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"});
+	addExample("InstancedCubes", 				&RunExample<InstancedCubes>,				{"Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11"});
+	addExample("IcosahedronTessellation", 		&RunExample<IcosahedronTessellation>,		{"Null", "OpenGL", "Direct3D11"});
 	#ifndef RENDERER_NO_TOOLKIT
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("FirstFont", 					&RunExample<FirstFont>));
+	addExample("FirstFont", 					&RunExample<FirstFont>,						{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"});
 	#endif
 	#ifndef NO_ASSIMP
 	// Assimp
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("FirstAssimp", 					&RunExample<InstancedCubes>));
-	m_availableExamples.insert(std::pair<std::string,RunnerMethod>("AssimpMesh", 					&RunExample<IcosahedronTessellation>));
+	addExample("FirstAssimp", 					&RunExample<InstancedCubes>,				{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"});
+	addExample("AssimpMesh", 					&RunExample<IcosahedronTessellation>,		{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"});
 	#endif
 
 	#ifndef RENDERER_NO_NULL
@@ -131,12 +132,22 @@ ExampleRunner::ExampleRunner()
 int ExampleRunner::runExample(const std::string rendererName, const std::string exampleName) {
 	AvailableExamplesMap::iterator example = m_availableExamples.find(exampleName);
 	AvailableRendererMap::iterator renderer = m_availableRenderer.find(rendererName);
-	if(m_availableExamples.end() == example || m_availableRenderer.end() == renderer)
+	ExampleToSupportedRendererMap::iterator supportedRenderer = m_supportedRendererForExample.find(exampleName);
+	bool rendererNotSupportedByExample = false;
+	if (m_supportedRendererForExample.end() != supportedRenderer)
+	{
+		auto supportedRendererList = supportedRenderer->second;
+		rendererNotSupportedByExample =  std::find(supportedRendererList.begin(), supportedRendererList.end(), rendererName) == supportedRendererList.end();
+	}
+	
+	if(m_availableExamples.end() == example || m_availableRenderer.end() == renderer || rendererNotSupportedByExample)
 	{
 		if (m_availableExamples.end() == example)
 			showError("no or unknown example given");
-		if	(m_availableRenderer.end() == renderer)
+		if (m_availableRenderer.end() == renderer)
 			showError("unkown renderer: \""+rendererName+"\"");
+		if (rendererNotSupportedByExample) 
+			showError("the example \""+exampleName+"\" doesn't support renderer: \""+rendererName+"\"");
 			
 		// print usage
 		printUsage(m_availableExamples, m_availableRenderer);
@@ -147,4 +158,15 @@ int ExampleRunner::runExample(const std::string rendererName, const std::string 
 		// run example
 		return example->second(rendererName.c_str());
 	}
+}
+
+void ExampleRunner::addExample(const std::string& name, RunnerMethod runnerMethod, std::initializer_list<std::string> supportedRendererList)
+{
+	m_availableExamples.insert(std::pair<std::string,RunnerMethod>(name, runnerMethod));
+	std::vector<std::string> supportedRenderer;
+	// VS2012 doesn't support initializer_list for std container such as vector (even with Update 2 :()
+	// -> we have to do it by hand
+	for(auto renderer : supportedRendererList)
+		supportedRenderer.push_back(renderer);
+	m_supportedRendererForExample.insert(std::pair<std::string, std::vector<std::string>>(name, std::move(supportedRenderer)));
 }
