@@ -99,9 +99,13 @@ int ExampleRunnerQt4::run(const CmdLineArgs& args)
 	if (result == 1) {
 		m_rendererName = rendererBox->currentText().toUtf8().data();
 		m_exampleName = box->currentText().toUtf8().data();
-		runExample(m_rendererName, m_exampleName);
+		result = runExample(m_rendererName, m_exampleName);
 	}
-	return -1;
+	else
+	{
+		result = -1;
+	}
+	return result;
 }
 
 bool ExampleRunnerQt4::parseArgs(const CmdLineArgs &args) {
