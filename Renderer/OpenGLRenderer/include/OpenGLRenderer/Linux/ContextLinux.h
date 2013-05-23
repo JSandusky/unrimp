@@ -72,8 +72,11 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
+		*
+		*  @param[in] useExternalContext
+		*    When true an own opengl context won't be created
 		*/
-		explicit ContextLinux(handle nativeWindowHandle);
+		explicit ContextLinux(handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
@@ -157,6 +160,7 @@ namespace OpenGLRenderer
 		Display				 *mDisplay;					///< The device context of the OpenGL dummy window, can be a null pointer
 		XVisualInfo 		 *m_pDummyVisualInfo;
 		GLXContext			  mWindowRenderContext;		///< The render context of the OpenGL dummy window, can be a null pointer
+		bool				  mUseExternalContext;
 
 
 	};

@@ -38,19 +38,21 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ContextLinux::ContextLinux(handle nativeWindowHandle) :
+	ContextLinux::ContextLinux(handle nativeWindowHandle, bool useExternalContext) :
 		mOpenGLRuntimeLinking(new OpenGLRuntimeLinking()),
 		mNativeWindowHandle(nativeWindowHandle),
 		mDummyWindow(NULL_HANDLE),
 		mDisplay(nullptr),
 		m_pDummyVisualInfo(nullptr),
-		mWindowRenderContext(NULL_HANDLE)
+		mWindowRenderContext(NULL_HANDLE),
+		mUseExternalContext(useExternalContext)
 	{
 		// Is OpenGL available?
 		if (mOpenGLRuntimeLinking->isOpenGLAvaiable())
 		{
 			// Get X server display connection
-			mDisplay = XOpenDisplay(nullptr);
+			if (!mUseExternalContext)
+				mDisplay = XOpenDisplay(nullptr);
 			if (nullptr != mDisplay)
 			{
 				// Get an appropriate visual
@@ -123,7 +125,7 @@ namespace OpenGLRenderer
 			}
 
 			// Is there a valid render context?
-			if (nullptr != mWindowRenderContext)
+			if (nullptr != mWindowRenderContext || mUseExternalContext)
 			{
 				// Initialize the OpenGL extensions
 				getExtensions().initialize();

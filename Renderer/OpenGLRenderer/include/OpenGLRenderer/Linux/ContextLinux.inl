@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	inline bool ContextLinux::isInitialized() const
 	{
-		return (nullptr != mWindowRenderContext);
+		return (nullptr != mWindowRenderContext) || mUseExternalContext;
 	}
 
 
