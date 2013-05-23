@@ -77,7 +77,7 @@ namespace Renderer
 		*  @param[in] ptr
 		*    Smart pointer to initialize with
 		*/
-		inline explicit SmartRefCount(const SmartRefCount<AType> &ptr);
+		inline SmartRefCount(const SmartRefCount<AType> &ptr);
 
 		/**
 		*  @brief

@@ -674,12 +674,12 @@ namespace Renderer
 				mPtr(nullptr)
 			{
 			}
-			SmartRefCount(AType *ptr) :
+			explicit SmartRefCount(AType *ptr) :
 				mPtr(nullptr)
 			{
 				setPtr(ptr);
 			}
-			explicit SmartRefCount(const SmartRefCount<AType> &ptr) :
+			SmartRefCount(const SmartRefCount<AType> &ptr) :
 				mPtr(nullptr)
 			{
 				setPtr(ptr.getPtr());
