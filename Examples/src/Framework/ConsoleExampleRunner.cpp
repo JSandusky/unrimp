@@ -49,7 +49,7 @@ int ConsoleExampleRunner::run(const CmdLineArgs& args)
 		printUsage(m_availableExamples, m_availableRenderer);
 		return -1;
 	}
-	return runExample(m_rendererName.c_str(), m_exampleName.c_str());
+	return runExample(m_rendererName, m_exampleName);
 }
 
 bool ConsoleExampleRunner::parseArgs(const CmdLineArgs &args) {

@@ -55,7 +55,7 @@
 #ifdef WIN32
 	#include "OpenGLRenderer/Windows/ContextWindows.h"
 #elif defined LINUX
-	#include "OpenGLRenderer/Linux//ContextLinux.h"
+	#include "OpenGLRenderer/Linux/ContextLinux.h"
 #endif
 #ifndef OPENGLRENDERER_NO_CG
 	#include "OpenGLRenderer/ProgramCg.h"
@@ -75,10 +75,16 @@
 #else
 	#define OPENGLRENDERER_API_EXPORT
 #endif
+OPENGLRENDERER_API_EXPORT Renderer::IRenderer *createOpenGLRendererInstance2(handle nativeWindowHandle, bool externalContext)
+{
+	return new OpenGLRenderer::OpenGLRenderer(nativeWindowHandle, externalContext);
+}
+
 OPENGLRENDERER_API_EXPORT Renderer::IRenderer *createOpenGLRendererInstance(handle nativeWindowHandle)
 {
-	return new OpenGLRenderer::OpenGLRenderer(nativeWindowHandle);
+	return createOpenGLRendererInstance2(nativeWindowHandle, false);
 }
+
 #undef OPENGLRENDERER_API_EXPORT
 
 
@@ -92,11 +98,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	OpenGLRenderer::OpenGLRenderer(handle nativeWindowHandle) :
+	OpenGLRenderer::OpenGLRenderer(handle nativeWindowHandle, bool useExternalContext) :
 		#ifdef WIN32
 			mContext(new ContextWindows(nativeWindowHandle)),
 		#elif defined LINUX
-			mContext(new ContextLinux(nativeWindowHandle)),
+			mContext(new ContextLinux(nativeWindowHandle, useExternalContext)),
 		#else
 			#error "Unsupported platform"
 		#endif
