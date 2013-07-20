@@ -27,6 +27,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <Renderer/PlatformTypes.h>
+
+
+//[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -97,6 +103,15 @@ namespace OpenGLRenderer
 		*    "true" if the context is initialized, else "false"
 		*/
 		virtual bool isInitialized() const = 0;
+
+		/**
+		*  @brief
+		*    make the context current to the given window handle
+		*
+		*  @param[in] nativeWindowHandle
+		*    Optional native main window handle, can be a null handle (to unbind the context from any window)
+		*/
+		virtual void makeCurrent(handle nativeWindowHandle) const = 0;
 
 
 	//[-------------------------------------------------------]

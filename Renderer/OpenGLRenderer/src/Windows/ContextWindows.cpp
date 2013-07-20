@@ -217,6 +217,17 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual OpenGLRenderer::IContext methods       ]
+	//[-------------------------------------------------------]
+	void ContextWindows::makeCurrent(handle nativeWindowHandle)
+	{
+		// [TODO] (co) check if working properly
+		HDC hDC = GetDC(nativeWindowHandle);
+		wglMakeCurrent(hDC, mWindowRenderContext);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
 	void ContextWindows::debugMessageCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int, const char *message, void *)

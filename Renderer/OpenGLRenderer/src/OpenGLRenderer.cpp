@@ -1574,14 +1574,8 @@ namespace OpenGLRenderer
 				{
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
-					#ifdef LINUX
-						// TODO(sw) put this handling into Context? (e.g. Context::makeCurrent(Renderer::ISwapChain::getNativeWindowHandle()))
-						ContextLinux *context = static_cast<ContextLinux*>(mContext);
-						Display *display = context->getDisplay();
 						Renderer::ISwapChain *chain = static_cast<Renderer::ISwapChain*>(mRenderTarget);
-						glXMakeCurrent(context->getDisplay(), chain->getNativeWindowHandle(), context->getRenderContext());
-					#endif
-						// TODO(co) Implement me
+						mContext->makeCurrent(chain->getNativeWindowHandle());
 						break;
 					}
 
