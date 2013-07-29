@@ -24,6 +24,7 @@
 #include "Framework/PlatformTypes.h"
 #include "Framework/QtRunner/ExampleRunnerQt4.h"
 #include "Framework/CmdLineArgs.h"
+#include "Framework/CLocaleChanger.h"
 
 #include <iostream>
 #include <QMessageBox>
@@ -55,6 +56,9 @@ int ExampleRunnerQt4::run(const CmdLineArgs& args)
 {
 	int nu = 0;
 	QApplication app(nu, nullptr);
+	
+	// activate the 'C' locale
+	CLocaleChanger cLocale;
 	
 	if(!parseArgs(args)) {
 		printUsage(m_availableExamples, m_availableRenderer);
