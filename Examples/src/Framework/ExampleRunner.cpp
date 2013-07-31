@@ -110,7 +110,7 @@ ExampleRunner::ExampleRunner()
 	#endif
 	#ifndef NO_ASSIMP
 	// Assimp
-	addExample("FirstAssimp", 					&RunExample<InstancedCubes>,				supportsAllRenderer);
+	addExample("FirstAssimp", 					&RunExample<FirstAssimp>,					supportsAllRenderer);
 	addExample("AssimpMesh", 					&RunExample<IcosahedronTessellation>,		supportsAllRenderer);
 	#endif
 

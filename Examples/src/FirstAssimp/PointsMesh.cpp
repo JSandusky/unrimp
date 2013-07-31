@@ -52,16 +52,16 @@ PointsMesh::PointsMesh(Renderer::IProgram &program, const char *filename) :
 		getNumberOfVerticesRecursive(*assimpScene, *assimpScene->mRootNode, mNumberOfVertices);
 
 		// Allocate memory for the local vertex buffer data
-		float *vertexBuffer = new float[mNumberOfVertices * 3];
+		float *vertexBufferData = new float[mNumberOfVertices * 3];
 
 		{ // Fill the mesh data recursively
 			unsigned int numberOfFilledVertices = 0;
-			fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, vertexBuffer, aiMatrix4x4(), numberOfFilledVertices);
+			fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, vertexBufferData, aiMatrix4x4(), numberOfFilledVertices);
 		}
 
 		{ // Create vertex array object (VAO)
 			// Create the vertex buffer object (VBO)
-			Renderer::IVertexBufferPtr vertexBuffer(program.getRenderer().createVertexBuffer(sizeof(float) * 3 * mNumberOfVertices, vertexBuffer, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IVertexBufferPtr vertexBuffer(program.getRenderer().createVertexBuffer(sizeof(float) * 3 * mNumberOfVertices, vertexBufferData, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -89,7 +89,7 @@ PointsMesh::PointsMesh(Renderer::IProgram &program, const char *filename) :
 		}
 
 		// Destroy local vertex and input buffer data
-		delete [] vertexBuffer;
+		delete [] vertexBufferData;
 	}
 	else
 	{

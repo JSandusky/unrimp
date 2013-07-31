@@ -69,7 +69,7 @@ void FirstAssimp::onInitialization()
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
 		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
-		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage("Cg"));
+		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
 			// Create uniform buffers
