@@ -111,7 +111,7 @@ ExampleRunner::ExampleRunner()
 	#ifndef NO_ASSIMP
 	// Assimp
 	addExample("FirstAssimp", 					&RunExample<FirstAssimp>,					supportsAllRenderer);
-	addExample("AssimpMesh", 					&RunExample<IcosahedronTessellation>,		supportsAllRenderer);
+	addExample("AssimpMesh", 					&RunExample<AssimpMesh>,					supportsAllRenderer);
 	#endif
 
 	#ifndef RENDERER_NO_NULL
