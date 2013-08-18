@@ -133,6 +133,10 @@ if(UNIX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DLINUX -DRENDERER_NO_DEBUG")
 endif()
 
+if (${ARCHITECTURE_X64})
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DX64_ARCHITECTURE")
+endif()
+
 
 ##################################################
 ## Subdirectories
