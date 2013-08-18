@@ -511,7 +511,7 @@ namespace OpenGLRenderer
 	FNDEF_EX(glNamedFramebufferTexture2DEXT,		PFNGLNAMEDFRAMEBUFFERTEXTURE2DEXTPROC);
 	FNDEF_EX(glCheckNamedFramebufferStatusEXT,		PFNGLCHECKNAMEDFRAMEBUFFERSTATUSEXTPROC);
 	FNDEF_EX(glNamedRenderbufferStorageEXT,			PFNGLNAMEDRENDERBUFFERSTORAGEEXTPROC);	
-	FNDEF_EX(glNamedFramebufferRenderbuffer,		PFNGLNAMEDFRAMEBUFFERRENDERBUFFEREXTPROC);
+	FNDEF_EX(glNamedFramebufferRenderbufferEXT,		PFNGLNAMEDFRAMEBUFFERRENDERBUFFEREXTPROC);
 
 
 	//[-------------------------------------------------------]

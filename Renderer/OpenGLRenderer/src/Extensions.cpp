@@ -636,7 +636,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glNamedFramebufferTexture2DEXT)
 			IMPORT_FUNC(glCheckNamedFramebufferStatusEXT)
 			IMPORT_FUNC(glNamedRenderbufferStorageEXT);
-			IMPORT_FUNC(glNamedFramebufferRenderbuffer);
+			IMPORT_FUNC(glNamedFramebufferRenderbufferEXT);
 			mGL_EXT_direct_state_access = result;
 		}
 
