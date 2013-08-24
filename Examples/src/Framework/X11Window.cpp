@@ -88,7 +88,7 @@ bool X11Window::HandleEvent(XEvent &event)
 			// application itself should destroy/close the window to which the "WM_DELETE_WINDOW" client message was send to.
 			// In this case, we will leave the event loop after this message was processed and no other messages are in the queue.
 			// -> No "DestroyNotify"-message can be received
-			if (WM_DELETE_WINDOW == event.xclient.data.l[0])
+			if (WM_DELETE_WINDOW == static_cast<Atom>(event.xclient.data.l[0]))
 			{
 				XDestroyWindow(event.xany.display, mWindowId);
 				mDestroyed = true;
