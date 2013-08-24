@@ -85,10 +85,10 @@ ExampleRunner::ExampleRunner()
 		#endif
 	)
 {
-	std::array<std::string, 6> supportsAllRenderer = {"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"};
-	std::array<std::string, 5> doesnotSupportOpenGLES2 = {"Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11"};
-	std::array<std::string, 4> onlyShaderModel4Plus = {"Null", "OpenGL", "Direct3D10", "Direct3D11"};
-	std::array<std::string, 3> onlyShaderModel5Plus = {"Null", "OpenGL", "Direct3D11"};
+	std::array<std::string, 6> supportsAllRenderer = {{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"}};
+	std::array<std::string, 5> doesnotSupportOpenGLES2 = {{"Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11"}};
+	std::array<std::string, 4> onlyShaderModel4Plus = {{"Null", "OpenGL", "Direct3D10", "Direct3D11"}};
+	std::array<std::string, 3> onlyShaderModel5Plus = {{"Null", "OpenGL", "Direct3D11"}};
 	// Basics
 	addExample("FirstTriangle", 				&RunExample<FirstTriangle>,					supportsAllRenderer);
 	addExample("VertexBuffer", 					&RunExample<VertexBuffer>,					supportsAllRenderer);
