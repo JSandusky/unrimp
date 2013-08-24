@@ -658,8 +658,8 @@ namespace OpenGLRenderer
 					}
 					break;
 
-				#ifndef OPENGLRENDERER_NO_CG
 					case Program::InternalResourceType::CG:
+				#ifndef OPENGLRENDERER_NO_CG
 					{
 						// Get the Cg program
 						const CGprogram cgProgram = static_cast<ProgramCg*>(program)->getCgProgram();
@@ -677,9 +677,9 @@ namespace OpenGLRenderer
 							// Enable the profile
 							cgGLEnableProfile(cgGetProgramDomainProfile(cgProgram, i));
 						}
-						break;
 					}
 				#endif
+					break;
 			}
 		}
 		else
@@ -727,12 +727,12 @@ namespace OpenGLRenderer
 						static_cast<VertexArrayNoVao*>(mVertexArray)->enableOpenGLVertexAttribArrays();
 						break;
 
+					case VertexArray::InternalResourceType::CG:
 					#ifndef OPENGLRENDERER_NO_CG
-						case VertexArray::InternalResourceType::CG:
 							// Enable OpenGL vertex attribute arrays
 							static_cast<VertexArrayCg*>(mVertexArray)->enableOpenGLVertexAttribArrays();
-							break;
 					#endif
+						break;
 
 					case VertexArray::InternalResourceType::VAO:
 						// Bind OpenGL vertex array
@@ -1508,8 +1508,8 @@ namespace OpenGLRenderer
 					}
 					break;
 
-				#ifndef OPENGLRENDERER_NO_CG
 					case UniformBuffer::InternalResourceType::CG:
+				#ifndef OPENGLRENDERER_NO_CG
 						// Attach the buffer to the given UBO binding point
 						// -> Explicit binding points ("layout(binding=0)" in GLSL shader) requires OpenGL 4.2
 						// -> Direct3D 10 and Direct3D 11 have explicit binding points
@@ -1521,8 +1521,8 @@ namespace OpenGLRenderer
 
 						// Associate the uniform block with the given binding point
 						glUniformBlockBinding(mOpenGLProgram, slot, slot);
-						break;
 				#endif
+						break;
 			}
 		}
 		else
@@ -2066,12 +2066,12 @@ namespace OpenGLRenderer
 					static_cast<VertexArrayNoVao*>(mVertexArray)->disableOpenGLVertexAttribArrays();
 					break;
 
-				#ifndef OPENGLRENDERER_NO_CG
 					case VertexArray::InternalResourceType::CG:
+				#ifndef OPENGLRENDERER_NO_CG
 						// Disable OpenGL Cg vertex attribute arrays
 						static_cast<VertexArrayCg*>(mVertexArray)->disableOpenGLVertexAttribArrays();
-						break;
 				#endif
+						break;
 
 				case VertexArray::InternalResourceType::VAO:
 					// Unbind OpenGL vertex array
