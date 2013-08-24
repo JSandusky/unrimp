@@ -37,8 +37,8 @@ static const float FLOAT_EPSILON = 1.192092896e-07f; // Smallest such that 1.0f 
 #define EulGetOrd(ord,i,j,k,n,s,f) {int o=ord;f=o&1;o>>=1;s=o&1;o>>=1;\
     n=o&1;o>>=1;i=EulSafe[o&3];j=EulNext[i+n];k=EulNext[i+1-n];}
 // Original code was
-// #define EulGetOrd(ord,i,j,k,h,n,s,f) {unsigned o=ord;f=o&1;o>>=1;s=o&1;o>>=1;\
-//    n=o&1;o>>=1;i=EulSafe[o&3];j=EulNext[i+n];k=EulNext[i+1-n];h=s?k:i;}
+/* #define EulGetOrd(ord,i,j,k,h,n,s,f) {unsigned o=ord;f=o&1;o>>=1;s=o&1;o>>=1;\
+    n=o&1;o>>=1;i=EulSafe[o&3];j=EulNext[i+n];k=EulNext[i+1-n];h=s?k:i;} */
 // but we don't need "h", so it was removed to spare the compiler the work *g*
 
 

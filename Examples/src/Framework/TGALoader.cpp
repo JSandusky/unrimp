@@ -3,14 +3,14 @@
 // -> Do never ever use this in producive code, use a decent image library. When for instance using this as a new PixelLight renderer, use PLGraphics.
 
 
-/********************************************************************************
-/Name:		TGA.cpp																*
-/Header:	tga.h																*
-/Purpose:	Load Compressed and Uncompressed TGA files							*
-/Functions:	LoadTGA(Texture * texture, char * filename)							*
-/			LoadCompressedTGA(Texture * texture, char * filename, FILE * fTGA)	*
-/			LoadUncompressedTGA(Texture * texture, char * filename, FILE * fTGA)*	
-/*******************************************************************************/
+//********************************************************************************
+//Name:		TGA.cpp																*
+//Header:	tga.h																*
+//Purpose:	Load Compressed and Uncompressed TGA files							*
+//Functions:	LoadTGA(Texture * texture, char * filename)							*
+//			LoadCompressedTGA(Texture * texture, char * filename, FILE * fTGA)	*
+//			LoadUncompressedTGA(Texture * texture, char * filename, FILE * fTGA)*
+//*******************************************************************************
 #include "Framework/TGALoader.h"
 
 
@@ -118,12 +118,12 @@ Renderer::ITexture2D *loadTGATexture(Renderer::IRenderer &renderer, const char *
 
 
 
-/********************************************************************************
-/name :		LoadTGA(Texture * texture, char * filename)							*
-/function:  Open and test the file to make sure it is a valid TGA file			*	
-/parems:	texture, pointer to a Texture structure								*
-/			filename, string pointing to file to open							*
-/********************************************************************************/
+//********************************************************************************
+//name :		LoadTGA(Texture * texture, char * filename)						*
+//function:  Open and test the file to make sure it is a valid TGA file			*
+//parems:	texture, pointer to a Texture structure								*
+//			filename, string pointing to file to open							*
+//********************************************************************************
 
 bool LoadTGA(Texture * texture, char * filename)				// Load a TGA file
 {
