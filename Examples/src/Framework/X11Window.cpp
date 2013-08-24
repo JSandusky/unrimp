@@ -155,12 +155,12 @@ void X11Window::refresh()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-X11Window::X11Window(const X11Window &other)
+X11Window::X11Window(const X11Window &)
 {
 	// Nothing to do in here
 }
 
-X11Window& X11Window::operator=(const X11Window &other)
+X11Window& X11Window::operator=(const X11Window &)
 {
 	return *this;
 }

@@ -101,13 +101,13 @@ void X11Application::RemoveWindowFromEventLoop(const X11Window &window)
 	}
 }
 
-X11Application::X11Application(const X11Application &other) :
+X11Application::X11Application(const X11Application &) :
 	mDisplay(nullptr)
 {
 	// Nothing to do in here
 }
 
-X11Application& X11Application::operator=(const X11Application &other)
+X11Application& X11Application::operator=(const X11Application &)
 {
 	return *this;
 }
