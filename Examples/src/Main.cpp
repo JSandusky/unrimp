@@ -27,6 +27,7 @@
 	#include "Framework/QtRunner/ExampleRunnerQt4.h"
 #endif
 
+
 //[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]

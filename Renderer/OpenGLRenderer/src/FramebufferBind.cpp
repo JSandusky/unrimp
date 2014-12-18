@@ -104,12 +104,12 @@ namespace OpenGLRenderer
 		}
 
 		// TODO(co) Depth texture support
-			glBindRenderbuffer(GL_RENDERBUFFER, mDepthRenderbuffer);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, mWidth, mHeight);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-			
-			// attach a renderbuffer to depth attachment point
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthRenderbuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, mDepthRenderbuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, static_cast<GLsizei>(mWidth), static_cast<GLsizei>(mHeight));
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+		// Attach a render buffer to depth attachment point
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthRenderbuffer);
 
 		#ifdef RENDERER_OUTPUT_DEBUG
 			// Check the status of the OpenGL framebuffer

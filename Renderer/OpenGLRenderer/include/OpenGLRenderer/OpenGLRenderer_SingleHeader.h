@@ -19,6 +19,7 @@
 
 
 // Comfort header putting some items together within a single header without any additional header inclusion which might be useful for an user of unrimp 
+// TODO(co) Review whether or not we really need and want such a header. Was added by SW. Will get hard to mantain it. The one and only point of "Renderer.h" was, to have a single header to access the complete API (no backend related information).
 
 
 //[-------------------------------------------------------]

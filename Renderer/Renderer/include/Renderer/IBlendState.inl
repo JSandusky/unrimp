@@ -53,9 +53,9 @@ namespace Renderer
 		// Return default values
 		// TODO(co) Finish default state comments
 		static const Renderer::BlendState BLEND_STATE =
-		{																																	//	Direct3D 11	Direct3D 10	Direct3D 9				OpenGL
-			false,									// alphaToCoverageEnable (int)																"false"			"false"
-			false,									// independentBlendEnable (int)																"false"			"false"
+		{																											//	Direct3D 11	Direct3D 10	Direct3D 9			OpenGL
+			false,										// alphaToCoverageEnable (int)																"false"			"false"
+			false,										// independentBlendEnable (int)																"false"			"false"
 			
 			{ // renderTarget[8]
 				// renderTarget[0]

@@ -106,7 +106,7 @@ namespace OpenGLRenderer
 
 		/**
 		*  @brief
-		*    make the context current to the given window handle
+		*    Make the context current to the given window handle
 		*
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle (to unbind the context from any window)

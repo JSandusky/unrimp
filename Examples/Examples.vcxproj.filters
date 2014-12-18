@@ -489,6 +489,9 @@
     <ClInclude Include="src\Framework\ExampleRunner.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="src\Framework\CLocaleChanger.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">

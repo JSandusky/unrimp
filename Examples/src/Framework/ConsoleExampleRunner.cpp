@@ -27,9 +27,9 @@
 #include <iostream>
 
 
-void ConsoleExampleRunner::showError(const std::string errorMsg)
+void ConsoleExampleRunner::showError(const std::string& errorMessage)
 {
-	std::cout<<errorMsg<<"\n";
+	std::cout << errorMessage << "\n";
 }
 
 void ConsoleExampleRunner::printUsage(const ExampleRunner::AvailableExamplesMap& knownExamples, const ExampleRunner::AvailableRendererMap& availableRenderer)

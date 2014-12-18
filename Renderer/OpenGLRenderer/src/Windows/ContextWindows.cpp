@@ -219,10 +219,10 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual OpenGLRenderer::IContext methods       ]
 	//[-------------------------------------------------------]
-	void ContextWindows::makeCurrent(handle nativeWindowHandle)
+	void ContextWindows::makeCurrent(handle nativeWindowHandle) const
 	{
-		// [TODO] (co) check if working properly
-		HDC hDC = GetDC(nativeWindowHandle);
+		// TODO(sw) Check if working properly
+		HDC hDC = ::GetDC(reinterpret_cast<HWND>(nativeWindowHandle));
 		wglMakeCurrent(hDC, mWindowRenderContext);
 	}
 

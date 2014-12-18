@@ -66,10 +66,10 @@ namespace Renderer
 			16,											// maxAnisotropy (unsigned int)							"16"							"16"							"1"						"1"
 			Renderer::ComparisonFunc::NEVER,			// comparisonFunc (Renderer::ComparisonFunc::Enum)		"NEVER"							"NEVER"							<unsupported>			"LESS_EQUAL"
 			{
-				0.0f,										// borderColor[0] (float)								"0.0f"							"0.0f"							"0.0f"					"0.0f"
-				0.0f,										// borderColor[1] (float)								"0.0f"							"0.0f"							"0.0f"					"0.0f"
-				0.0f,										// borderColor[2] (float)								"0.0f"							"0.0f"							"0.0f"					"0.0f"
-				0.0f										// borderColor[3] (float)								"0.0f"							"0.0f"							"0.0f"					"0.0f"
+				0.0f,									// borderColor[0] (float)								"0.0f"							"0.0f"							"0.0f"					"0.0f"
+				0.0f,									// borderColor[1] (float)								"0.0f"							"0.0f"							"0.0f"					"0.0f"
+				0.0f,									// borderColor[2] (float)								"0.0f"							"0.0f"							"0.0f"					"0.0f"
+				0.0f									// borderColor[3] (float)								"0.0f"							"0.0f"							"0.0f"					"0.0f"
 			},
 			-3.402823466e+38f,							// minLOD (float) - Default: -FLT_MAX					"-3.402823466e+38F (-FLT_MAX)"	"-3.402823466e+38F (-FLT_MAX)"	<unsupported>			"-1000.0f"
 			3.402823466e+38f							// maxLOD (float) - Default: FLT_MAX					"3.402823466e+38F (FLT_MAX)"	"3.402823466e+38F (FLT_MAX)"	"0.0f"					"1000.0f"

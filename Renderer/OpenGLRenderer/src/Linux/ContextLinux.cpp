@@ -52,7 +52,9 @@ namespace OpenGLRenderer
 		{
 			// Get X server display connection
 			if (!mUseExternalContext)
+			{
 				mDisplay = XOpenDisplay(nullptr);
+			}
 			if (nullptr != mDisplay)
 			{
 				// Get an appropriate visual

@@ -69,18 +69,18 @@ ExampleRunner::ExampleRunner()
 	// -> In case the graphics driver supports it, the OpenGL ES 2 renderer can automatically also run on a desktop PC without an emulator (perfect for testing/debugging)
 	m_defaultRendererName(
 		#ifdef RENDERER_ONLY_NULL
-		"Null"
+			"Null"
 		#elif defined(RENDERER_ONLY_OPENGL) || defined(LINUX)
-		"OpenGL"
+			"OpenGL"
 		#elif RENDERER_ONLY_OPENGLES2
-		"OpenGLES2"
+			"OpenGLES2"
 		#elif WIN32
 			#ifdef RENDERER_ONLY_DIRECT3D9
-			"Direct3D9"
+				"Direct3D9"
 			#elif RENDERER_ONLY_DIRECT3D10
-			"Direct3D10"
+				"Direct3D10"
 			#else 
-			"Direct3D11"
+				"Direct3D11"
 			#endif
 		#endif
 	)
@@ -115,28 +115,29 @@ ExampleRunner::ExampleRunner()
 	#endif
 
 	#ifndef RENDERER_NO_NULL
-	m_availableRenderer.insert("Null");
+		m_availableRenderer.insert("Null");
 	#endif
 	#ifdef WIN32
 		#ifndef RENDERER_NO_DIRECT3D9
-		m_availableRenderer.insert("Direct3D9");
+			m_availableRenderer.insert("Direct3D9");
 		#endif
 		#ifndef RENDERER_NO_DIRECT3D10
-		m_availableRenderer.insert("Direct3D10");
+			m_availableRenderer.insert("Direct3D10");
 		#endif
 		#ifndef RENDERER_NO_DIRECT3D11
-		m_availableRenderer.insert("Direct3D11");
+			m_availableRenderer.insert("Direct3D11");
 		#endif
 	#endif
 	#ifndef RENDERER_NO_OPENGL
-	m_availableRenderer.insert("OpenGL");
+		m_availableRenderer.insert("OpenGL");
 	#endif
 	#ifndef RENDERER_NO_OPENGLES2
-	m_availableRenderer.insert("OpenGLES2");
+		m_availableRenderer.insert("OpenGLES2");
 	#endif
 }
 
-int ExampleRunner::runExample(const std::string rendererName, const std::string exampleName) {
+int ExampleRunner::runExample(const std::string& rendererName, const std::string& exampleName)
+{
 	AvailableExamplesMap::iterator example = m_availableExamples.find(exampleName);
 	AvailableRendererMap::iterator renderer = m_availableRenderer.find(rendererName);
 	ExampleToSupportedRendererMap::iterator supportedRenderer = m_supportedRendererForExample.find(exampleName);
@@ -147,22 +148,22 @@ int ExampleRunner::runExample(const std::string rendererName, const std::string 
 		rendererNotSupportedByExample =  std::find(supportedRendererList.begin(), supportedRendererList.end(), rendererName) == supportedRendererList.end();
 	}
 	
-	if(m_availableExamples.end() == example || m_availableRenderer.end() == renderer || rendererNotSupportedByExample)
+	if (m_availableExamples.end() == example || m_availableRenderer.end() == renderer || rendererNotSupportedByExample)
 	{
 		if (m_availableExamples.end() == example)
 			showError("no or unknown example given");
 		if (m_availableRenderer.end() == renderer)
-			showError("unkown renderer: \""+rendererName+"\"");
+			showError("unkown renderer: \"" + rendererName + "\"");
 		if (rendererNotSupportedByExample) 
-			showError("the example \""+exampleName+"\" doesn't support renderer: \""+rendererName+"\"");
-			
-		// print usage
+			showError("the example \"" + exampleName + "\" doesn't support renderer: \"" + rendererName + "\"");
+
+		// Print usage
 		printUsage(m_availableExamples, m_availableRenderer);
 		return 0;
 	}
 	else
 	{
-		// run example
+		// Run example
 		return example->second(rendererName.c_str());
 	}
 }
@@ -172,7 +173,7 @@ void ExampleRunner::addExample(const std::string& name, RunnerMethod runnerMetho
 {
 	m_availableExamples.insert(std::pair<std::string,RunnerMethod>(name, runnerMethod));
 	std::vector<std::string> supportedRenderer;
-	for(auto renderer = supportedRendererList.begin(); renderer != supportedRendererList.end(); ++renderer)
-			supportedRenderer.push_back(*renderer);
+	for (auto renderer = supportedRendererList.begin(); renderer != supportedRendererList.end(); ++renderer)
+		supportedRenderer.push_back(*renderer);
 	m_supportedRendererForExample.insert(std::pair<std::string, std::vector<std::string>>(name, std::move(supportedRenderer)));
 }

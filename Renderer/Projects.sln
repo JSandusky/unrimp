@@ -33,7 +33,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Direct3D11Renderer", "Direc
 		{625483C5-43B6-47AB-BD4F-099A0B091768} = {625483C5-43B6-47AB-BD4F-099A0B091768}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RendererToolkit", "RendererToolkit\RendererToolkit.vcxproj", "{F58C205E-813E-484A-BACE-CCE0E30AD4CE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RendererToolkit", "RendererToolkit\RendererToolkit.vcxproj", "{92C1761F-2670-4E3F-B26B-F317740CABA0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{625483C5-43B6-47AB-BD4F-099A0B091768} = {625483C5-43B6-47AB-BD4F-099A0B091768}
 	EndProjectSection
@@ -102,14 +102,14 @@ Global
 		{0B573645-7F00-43D8-B109-07BFA0E56155}.Release_Dynamic|Win32.Build.0 = Release_Dynamic|Win32
 		{0B573645-7F00-43D8-B109-07BFA0E56155}.Release_Static|Win32.ActiveCfg = Release_Static|Win32
 		{0B573645-7F00-43D8-B109-07BFA0E56155}.Release_Static|Win32.Build.0 = Release_Static|Win32
-		{F58C205E-813E-484A-BACE-CCE0E30AD4CE}.Debug_Dynamic|Win32.ActiveCfg = Debug_Dynamic|Win32
-		{F58C205E-813E-484A-BACE-CCE0E30AD4CE}.Debug_Dynamic|Win32.Build.0 = Debug_Dynamic|Win32
-		{F58C205E-813E-484A-BACE-CCE0E30AD4CE}.Debug_Static|Win32.ActiveCfg = Debug_Static|Win32
-		{F58C205E-813E-484A-BACE-CCE0E30AD4CE}.Debug_Static|Win32.Build.0 = Debug_Static|Win32
-		{F58C205E-813E-484A-BACE-CCE0E30AD4CE}.Release_Dynamic|Win32.ActiveCfg = Release_Dynamic|Win32
-		{F58C205E-813E-484A-BACE-CCE0E30AD4CE}.Release_Dynamic|Win32.Build.0 = Release_Dynamic|Win32
-		{F58C205E-813E-484A-BACE-CCE0E30AD4CE}.Release_Static|Win32.ActiveCfg = Release_Static|Win32
-		{F58C205E-813E-484A-BACE-CCE0E30AD4CE}.Release_Static|Win32.Build.0 = Release_Static|Win32
+		{92C1761F-2670-4E3F-B26B-F317740CABA0}.Debug_Dynamic|Win32.ActiveCfg = Debug_Dynamic|Win32
+		{92C1761F-2670-4E3F-B26B-F317740CABA0}.Debug_Dynamic|Win32.Build.0 = Debug_Dynamic|Win32
+		{92C1761F-2670-4E3F-B26B-F317740CABA0}.Debug_Static|Win32.ActiveCfg = Debug_Static|Win32
+		{92C1761F-2670-4E3F-B26B-F317740CABA0}.Debug_Static|Win32.Build.0 = Debug_Static|Win32
+		{92C1761F-2670-4E3F-B26B-F317740CABA0}.Release_Dynamic|Win32.ActiveCfg = Release_Dynamic|Win32
+		{92C1761F-2670-4E3F-B26B-F317740CABA0}.Release_Dynamic|Win32.Build.0 = Release_Dynamic|Win32
+		{92C1761F-2670-4E3F-B26B-F317740CABA0}.Release_Static|Win32.ActiveCfg = Release_Static|Win32
+		{92C1761F-2670-4E3F-B26B-F317740CABA0}.Release_Static|Win32.Build.0 = Release_Static|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

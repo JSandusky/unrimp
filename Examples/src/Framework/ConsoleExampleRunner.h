@@ -35,7 +35,7 @@ public:
     virtual int run(const CmdLineArgs& args) override;
 
 protected:
-    virtual void showError(const std::string errorMsg) override;
+    virtual void showError(const std::string& errorMsg) override;
     virtual void printUsage(const ExampleRunner::AvailableExamplesMap& knownExamples, const ExampleRunner::AvailableRendererMap& availableRenderer) override;
 
 private:

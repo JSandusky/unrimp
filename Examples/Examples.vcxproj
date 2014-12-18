@@ -316,6 +316,7 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
     <ClInclude Include="src\FirstTriangle\FirstTriangle_Null.h" />
     <ClInclude Include="src\Framework\ApplicationImplLinux.h" />
     <ClInclude Include="src\Framework\ApplicationImplWindows.h" />
+    <ClInclude Include="src\Framework\CLocaleChanger.h" />
     <ClInclude Include="src\Framework\CmdLineArgs.h" />
     <ClInclude Include="src\Framework\Color4.h" />
     <ClInclude Include="src\Framework\ConsoleExampleRunner.h" />

@@ -72,9 +72,8 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
-		*
 		*  @param[in] useExternalContext
-		*    When true an own opengl context won't be created
+		*    When true an own OpenGL context won't be created
 		*/
 		explicit ContextLinux(handle nativeWindowHandle, bool useExternalContext);
 

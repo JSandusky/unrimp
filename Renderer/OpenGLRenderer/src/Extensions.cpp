@@ -211,7 +211,7 @@ namespace OpenGLRenderer
 				}
 
 				// Advanced extensions
-				// [TODO] move the query for advanced extensions (via platfrom specific methods) to the Context?
+				// TODO(sw) Move the query for advanced extensions (via platfrom specific methods) to the context?
 				if (i > 0)
 				{
 					#ifdef WIN32

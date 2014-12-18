@@ -37,6 +37,7 @@
     <ClInclude Include="include\OpenGLRenderer\Linux\ContextLinux.h" />
     <ClInclude Include="include\OpenGLRenderer\Mapping.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLDebug.h" />
+    <ClInclude Include="include\OpenGLRenderer\OpenGLRenderer_SingleHeader.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLRuntimeLinking.h" />
     <ClInclude Include="include\OpenGLRenderer\Program.h" />
     <ClInclude Include="include\OpenGLRenderer\ProgramCg.h" />

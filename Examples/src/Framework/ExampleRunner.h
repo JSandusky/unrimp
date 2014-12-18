@@ -45,9 +45,9 @@ protected:
 	ExampleRunner();
 	
 	virtual void printUsage(const AvailableExamplesMap &knownExamples, const AvailableRendererMap &availableRenderer) = 0;
-	virtual void showError(const std::string errorMsg) = 0;
+	virtual void showError(const std::string& errorMessage) = 0;
 	
-	int runExample(const std::string rendererName, const std::string exampleName);
+	int runExample(const std::string &rendererName, const std::string &exampleName);
 
 private:
 	template<typename T>
@@ -57,7 +57,7 @@ protected:
 	AvailableExamplesMap 			m_availableExamples;
 	AvailableRendererMap 			m_availableRenderer;
 	ExampleToSupportedRendererMap	m_supportedRendererForExample;
-	const std::string				m_defaultRendererName;
+	std::string						m_defaultRendererName;
 };
 
 #endif // EXAMPLERUNNER_H

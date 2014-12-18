@@ -18,6 +18,9 @@
 \*********************************************************/
 
 
+// TODO(co) "CmdLineArgs.h" sounds pretty cryptic, "CommandLineArguments.h" would be easier to pronounce
+
+
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
