@@ -144,7 +144,7 @@ void FirstAssimp::onUpdate()
 	mStopwatch.stop();
 
 	// Update the global timer (FPS independent movement)
-	mGlobalTimer += mStopwatch.getMilliseconds() * 0.01f;
+	mGlobalTimer += mStopwatch.getMilliseconds() * 0.0005f;
 
 	// Start the stopwatch
 	mStopwatch.start();
