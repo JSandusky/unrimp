@@ -131,7 +131,7 @@ namespace OpenGLRenderer
 		*  @param[in] userParam
 		*    Additional user parameter of the debug message
 		*/
-		static void CALLBACK debugMessageCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char *message, void *userParam);
+		static void CALLBACK debugMessageCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int length, const char *message, const void *userParam);
 
 
 	//[-------------------------------------------------------]

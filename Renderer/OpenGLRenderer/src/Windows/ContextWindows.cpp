@@ -230,7 +230,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
-	void ContextWindows::debugMessageCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int, const char *message, void *)
+	void ContextWindows::debugMessageCallback(unsigned int source, unsigned int type, unsigned int id, unsigned int severity, int, const char *message, const void *)
 	{
 		// Source to string
 		char debugSource[16];
