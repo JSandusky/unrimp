@@ -1,65 +1,77 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="FirstTriangle">
-      <UniqueIdentifier>{2706d2a3-d3f6-483c-85cb-3eac3b577d0c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FirstTexture">
-      <UniqueIdentifier>{c75c09f0-49a0-4f27-a6d3-7867ae906c9f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FirstGeometryShader">
-      <UniqueIdentifier>{aeb3cc1a-0239-47e5-b2bd-d195509466b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="VertexBuffer">
-      <UniqueIdentifier>{54fa43c1-c78b-46c4-a982-874780d3b1a4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FirstInstancing">
-      <UniqueIdentifier>{295a5f6b-9173-4ce0-8f84-f833c21c4573}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FirstTessellation">
-      <UniqueIdentifier>{a7a44793-244e-4b97-8f17-87177fd4b96e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="InstancedCubes">
-      <UniqueIdentifier>{c4ce24c2-902b-42fe-a71a-8af450f18a46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework">
       <UniqueIdentifier>{0155a710-fed7-48f4-99b9-818da75bec83}</UniqueIdentifier>
     </Filter>
-    <Filter Include="IcosahedronTessellation">
-      <UniqueIdentifier>{cd93f499-9d6d-4a3d-baea-1d6fce95bc53}</UniqueIdentifier>
+    <Filter Include="Basics">
+      <UniqueIdentifier>{4b9f5515-00df-452e-b103-2145ad031276}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AssimpMesh">
+    <Filter Include="Advanced">
+      <UniqueIdentifier>{fa6b67fd-14b4-4d42-a8e8-b957af5ab981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assimp">
+      <UniqueIdentifier>{61764e1d-ef07-4152-8a72-d3f74d1d7d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Toolkit">
+      <UniqueIdentifier>{6eb322fb-d156-4346-81ef-17f96b0bf544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assimp\AssimpMesh">
       <UniqueIdentifier>{5739f023-df8a-4b6c-837b-8bb966a143cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FirstAssimp">
+    <Filter Include="Assimp\FirstAssimp">
       <UniqueIdentifier>{ee6a6b72-0a97-45a3-83e9-45085937d964}</UniqueIdentifier>
     </Filter>
-    <Filter Include="InstancedCubes\CubeRendereDrawInstanced">
+    <Filter Include="Toolkit\FirstFont">
+      <UniqueIdentifier>{882cb982-67ee-458b-b665-b7d577094716}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Advanced\IcosahedronTessellation">
+      <UniqueIdentifier>{cd93f499-9d6d-4a3d-baea-1d6fce95bc53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Advanced\InstancedCubes">
+      <UniqueIdentifier>{c4ce24c2-902b-42fe-a71a-8af450f18a46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Advanced\InstancedCubes\CubeRendereDrawInstanced">
       <UniqueIdentifier>{b4d847a3-0c07-4950-a8fe-ab317ccc8b93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="InstancedCubes\CubeRendererInstancedArrays">
+    <Filter Include="Advanced\InstancedCubes\CubeRendererInstancedArrays">
       <UniqueIdentifier>{941758c6-fb92-4f75-9ab3-1eeb034462e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FirstRenderToTexture">
-      <UniqueIdentifier>{8eea77d1-cf36-478a-90e8-e0bee33e4cd6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FirstMultipleRenderTargets">
-      <UniqueIdentifier>{a049aaa7-f927-442b-bad1-e2fc26076f80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fxaa">
+    <Filter Include="Advanced\Fxaa">
       <UniqueIdentifier>{c367cf4a-5fc9-4e95-a255-8c0588fb6847}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FirstPostProcessing">
-      <UniqueIdentifier>{2110a6fd-1981-462d-8618-8655f0d0062e}</UniqueIdentifier>
+    <Filter Include="Basics\FirstGeometryShader">
+      <UniqueIdentifier>{aeb3cc1a-0239-47e5-b2bd-d195509466b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FirstMultipleSwapChains">
+    <Filter Include="Basics\FirstInstancing">
+      <UniqueIdentifier>{295a5f6b-9173-4ce0-8f84-f833c21c4573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Basics\FirstMultipleRenderTargets">
+      <UniqueIdentifier>{a049aaa7-f927-442b-bad1-e2fc26076f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Basics\FirstMultipleSwapChains">
       <UniqueIdentifier>{4e2800b0-b816-4881-9232-14ba5784ae4e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FirstGpgpu">
+    <Filter Include="Basics\FirstRenderToTexture">
+      <UniqueIdentifier>{8eea77d1-cf36-478a-90e8-e0bee33e4cd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Basics\FirstTessellation">
+      <UniqueIdentifier>{a7a44793-244e-4b97-8f17-87177fd4b96e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Basics\FirstTexture">
+      <UniqueIdentifier>{c75c09f0-49a0-4f27-a6d3-7867ae906c9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Basics\FirstTriangle">
+      <UniqueIdentifier>{2706d2a3-d3f6-483c-85cb-3eac3b577d0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Basics\VertexBuffer">
+      <UniqueIdentifier>{54fa43c1-c78b-46c4-a982-874780d3b1a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Advanced\FirstGpgpu">
       <UniqueIdentifier>{85b032da-a251-4708-91d6-d23bc4ca2cb4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="FirstFont">
-      <UniqueIdentifier>{882cb982-67ee-458b-b665-b7d577094716}</UniqueIdentifier>
+    <Filter Include="Advanced\FirstPostProcessing">
+      <UniqueIdentifier>{2110a6fd-1981-462d-8618-8655f0d0062e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -99,332 +111,20 @@
     <ClInclude Include="src\Framework\EulerAngles.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="src\FirstTriangle\FirstTriangle_HLSL_D3D9_D3D10_D3D11.h">
-      <Filter>FirstTriangle</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTriangle\FirstTriangle.h">
-      <Filter>FirstTriangle</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTexture\FirstTexture_HLSL_D3D9.h">
-      <Filter>FirstTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTexture\FirstTexture_HLSL_D3D10_D3D11.h">
-      <Filter>FirstTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTexture\FirstTexture.h">
-      <Filter>FirstTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstGeometryShader\FirstGeometryShader.h">
-      <Filter>FirstGeometryShader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstGeometryShader\FirstGeometryShader_HLSL_D3D10_D3D11.h">
-      <Filter>FirstGeometryShader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VertexBuffer\VertexBuffer_HLSL_D3D9_D3D10_D3D11.h">
-      <Filter>VertexBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VertexBuffer\VertexBuffer.h">
-      <Filter>VertexBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstInstancing\FirstInstancing.h">
-      <Filter>FirstInstancing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTessellation\FirstTessellation_HLSL_D3D11.h">
-      <Filter>FirstTessellation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTessellation\FirstTessellation.h">
-      <Filter>FirstTessellation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\InstancedCubes.h">
-      <Filter>InstancedCubes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\ICubeRenderer.h">
-      <Filter>InstancedCubes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IcosahedronTessellation\IcosahedronTessellation_HLSL_D3D11.h">
-      <Filter>IcosahedronTessellation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IcosahedronTessellation\IcosahedronTessellation.h">
-      <Filter>IcosahedronTessellation</Filter>
-    </ClInclude>
     <ClInclude Include="src\Framework\Main.h">
       <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VertexBuffer\VertexBuffer_Null.h">
-      <Filter>VertexBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTriangle\FirstTriangle_Null.h">
-      <Filter>FirstTriangle</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTexture\FirstTexture_Null.h">
-      <Filter>FirstTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstGeometryShader\FirstGeometryShader_Null.h">
-      <Filter>FirstGeometryShader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTessellation\FirstTessellation_Null.h">
-      <Filter>FirstTessellation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IcosahedronTessellation\IcosahedronTessellation_Null.h">
-      <Filter>IcosahedronTessellation</Filter>
     </ClInclude>
     <ClInclude Include="src\Framework\ApplicationImplWindows.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="src\AssimpMesh\AssimpMesh_Null.h">
-      <Filter>AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssimpMesh\AssimpMesh.h">
-      <Filter>AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssimpMesh\AssimpMesh_HLSL_D3D10_D3D11.h">
-      <Filter>AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssimpMesh\AssimpMesh_HLSL_D3D9.h">
-      <Filter>AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstAssimp\FirstAssimp.h">
-      <Filter>FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstAssimp\FirstAssimp_HLSL_D3D10_D3D11.h">
-      <Filter>FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstAssimp\FirstAssimp_HLSL_D3D9.h">
-      <Filter>FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstAssimp\FirstAssimp_Null.h">
-      <Filter>FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssimpMesh\Mesh.h">
-      <Filter>AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstAssimp\PointsMesh.h">
-      <Filter>FirstAssimp</Filter>
-    </ClInclude>
     <ClInclude Include="src\Framework\TGALoader.h">
       <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTriangle\FirstTriangle_GLSL_ES2.h">
-      <Filter>FirstTriangle</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTexture\FirstTexture_GLSL_ES2.h">
-      <Filter>FirstTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VertexBuffer\VertexBuffer_GLSL_ES2.h">
-      <Filter>VertexBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssimpMesh\AssimpMesh_GLSL_ES2.h">
-      <Filter>AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstAssimp\FirstAssimp_GLSL_ES2.h">
-      <Filter>FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstInstancing\FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11.h">
-      <Filter>FirstInstancing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstInstancing\FirstInstancing_DrawInstanced_Null.h">
-      <Filter>FirstInstancing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstInstancing\FirstInstancing_InstancedArrays_Null.h">
-      <Filter>FirstInstancing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstInstancing\FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11.h">
-      <Filter>FirstInstancing</Filter>
     </ClInclude>
     <ClInclude Include="src\Framework\WindowsHeader.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="src\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced.h">
-      <Filter>InstancedCubes\CubeRendereDrawInstanced</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_HLSL_D3D10_D3D11.h">
-      <Filter>InstancedCubes\CubeRendereDrawInstanced</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_Null.h">
-      <Filter>InstancedCubes\CubeRendereDrawInstanced</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays.h">
-      <Filter>InstancedCubes\CubeRendererInstancedArrays</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_HLSL_D3D10_D3D11.h">
-      <Filter>InstancedCubes\CubeRendererInstancedArrays</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_Null.h">
-      <Filter>InstancedCubes\CubeRendererInstancedArrays</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\CubeRendererInstancedArrays\BatchInstancedArrays.h">
-      <Filter>InstancedCubes\CubeRendererInstancedArrays</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\CubeRendererDrawInstanced\BatchDrawInstanced.h">
-      <Filter>InstancedCubes\CubeRendereDrawInstanced</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_HLSL_D3D9.h">
-      <Filter>InstancedCubes\CubeRendererInstancedArrays</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture_GLSL_ES2.h">
-      <Filter>FirstRenderToTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D9.h">
-      <Filter>FirstRenderToTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D10_D3D11.h">
-      <Filter>FirstRenderToTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture_Null.h">
-      <Filter>FirstRenderToTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture.h">
-      <Filter>FirstRenderToTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_ES2.h">
-      <Filter>FirstMultipleRenderTargets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D9.h">
-      <Filter>FirstMultipleRenderTargets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D10_D3D11.h">
-      <Filter>FirstMultipleRenderTargets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_Null.h">
-      <Filter>FirstMultipleRenderTargets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets.h">
-      <Filter>FirstMultipleRenderTargets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_GLSL_ES2.h">
-      <Filter>FirstPostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_HLSL_D3D9.h">
-      <Filter>FirstPostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_HLSL_D3D10_D3D11.h">
-      <Filter>FirstPostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_Null.h">
-      <Filter>FirstPostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing.h">
-      <Filter>FirstPostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_Null.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa_SceneRendering_GLSL_ES2.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa_SceneRendering_Null.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_GLSL_ES2.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_HLSL_D3D9.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_HLSL_D3D10_D3D11.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa_PostProcessing.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa_SceneRendering_HLSL_D3D9_D3D10_D3D11.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains.h">
-      <Filter>FirstMultipleSwapChains</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_ES2.h">
-      <Filter>FirstMultipleSwapChains</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains_HLSL_D3D9_D3D10_D3D11.h">
-      <Filter>FirstMultipleSwapChains</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains_Null.h">
-      <Filter>FirstMultipleSwapChains</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstGpgpu\FirstGpgpu.h">
-      <Filter>FirstGpgpu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstGpgpu\FirstGpgpu_GLSL_ES2.h">
-      <Filter>FirstGpgpu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstGpgpu\FirstGpgpu_HLSL_D3D9.h">
-      <Filter>FirstGpgpu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstGpgpu\FirstGpgpu_HLSL_D3D10_D3D11.h">
-      <Filter>FirstGpgpu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstGpgpu\FirstGpgpu_Null.h">
-      <Filter>FirstGpgpu</Filter>
-    </ClInclude>
     <ClInclude Include="src\Framework\IApplicationRendererToolkit.h">
       <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstFont\FirstFont.h">
-      <Filter>FirstFont</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AssimpMesh\AssimpMesh_GLSL_110.h">
-      <Filter>AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstAssimp\FirstAssimp_GLSL_110.h">
-      <Filter>FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstGeometryShader\FirstGeometryShader_GLSL_330.h">
-      <Filter>FirstGeometryShader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstGpgpu\FirstGpgpu_GLSL_110.h">
-      <Filter>FirstGpgpu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_140.h">
-      <Filter>FirstInstancing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_110.h">
-      <Filter>FirstInstancing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_110.h">
-      <Filter>FirstMultipleRenderTargets</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_110.h">
-      <Filter>FirstMultipleSwapChains</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_GLSL_110.h">
-      <Filter>FirstPostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture_GLSL_110.h">
-      <Filter>FirstRenderToTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTessellation\FirstTessellation_GLSL_400.h">
-      <Filter>FirstTessellation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTexture\FirstTexture_GLSL_110.h">
-      <Filter>FirstTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTriangle\FirstTriangle_GLSL_110.h">
-      <Filter>FirstTriangle</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_GLSL_120.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa_SceneRendering_GLSL_120.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IcosahedronTessellation\IcosahedronTessellation_GLSL_400.h">
-      <Filter>IcosahedronTessellation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_GLSL_140.h">
-      <Filter>InstancedCubes\CubeRendereDrawInstanced</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_110.h">
-      <Filter>InstancedCubes\CubeRendererInstancedArrays</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VertexBuffer\VertexBuffer_GLSL_110.h">
-      <Filter>VertexBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_140.h">
-      <Filter>InstancedCubes\CubeRendererInstancedArrays</Filter>
     </ClInclude>
     <ClInclude Include="src\Framework\X11Window.h">
       <Filter>Framework</Filter>
@@ -450,6 +150,318 @@
     <ClInclude Include="src\Framework\CLocaleChanger.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader.h">
+      <Filter>Basics\FirstGeometryShader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_GLSL_330.h">
+      <Filter>Basics\FirstGeometryShader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_HLSL_D3D10_D3D11.h">
+      <Filter>Basics\FirstGeometryShader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_Null.h">
+      <Filter>Basics\FirstGeometryShader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_Null.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_110.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_Null.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_140.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_ES2.h">
+      <Filter>Basics\FirstMultipleRenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D9.h">
+      <Filter>Basics\FirstMultipleRenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D10_D3D11.h">
+      <Filter>Basics\FirstMultipleRenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_Null.h">
+      <Filter>Basics\FirstMultipleRenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets.h">
+      <Filter>Basics\FirstMultipleRenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_110.h">
+      <Filter>Basics\FirstMultipleRenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_ES2.h">
+      <Filter>Basics\FirstMultipleSwapChains</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_HLSL_D3D9_D3D10_D3D11.h">
+      <Filter>Basics\FirstMultipleSwapChains</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_Null.h">
+      <Filter>Basics\FirstMultipleSwapChains</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains.h">
+      <Filter>Basics\FirstMultipleSwapChains</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_110.h">
+      <Filter>Basics\FirstMultipleSwapChains</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_110.h">
+      <Filter>Basics\FirstRenderToTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_ES2.h">
+      <Filter>Basics\FirstRenderToTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D9.h">
+      <Filter>Basics\FirstRenderToTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D10_D3D11.h">
+      <Filter>Basics\FirstRenderToTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_Null.h">
+      <Filter>Basics\FirstRenderToTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture.h">
+      <Filter>Basics\FirstRenderToTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation.h">
+      <Filter>Basics\FirstTessellation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_GLSL_400.h">
+      <Filter>Basics\FirstTessellation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_HLSL_D3D11.h">
+      <Filter>Basics\FirstTessellation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_Null.h">
+      <Filter>Basics\FirstTessellation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_GLSL_110.h">
+      <Filter>Basics\FirstTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_GLSL_ES2.h">
+      <Filter>Basics\FirstTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_HLSL_D3D9.h">
+      <Filter>Basics\FirstTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_HLSL_D3D10_D3D11.h">
+      <Filter>Basics\FirstTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_Null.h">
+      <Filter>Basics\FirstTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTexture\FirstTexture.h">
+      <Filter>Basics\FirstTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_ES2.h">
+      <Filter>Basics\FirstTriangle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_HLSL_D3D9_D3D10_D3D11.h">
+      <Filter>Basics\FirstTriangle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_Null.h">
+      <Filter>Basics\FirstTriangle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle.h">
+      <Filter>Basics\FirstTriangle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_110.h">
+      <Filter>Basics\FirstTriangle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_110.h">
+      <Filter>Basics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_ES2.h">
+      <Filter>Basics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_HLSL_D3D9_D3D10_D3D11.h">
+      <Filter>Basics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_Null.h">
+      <Filter>Basics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer.h">
+      <Filter>Basics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_GLSL_ES2.h">
+      <Filter>Advanced\FirstGpgpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_HLSL_D3D9.h">
+      <Filter>Advanced\FirstGpgpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_HLSL_D3D10_D3D11.h">
+      <Filter>Advanced\FirstGpgpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_Null.h">
+      <Filter>Advanced\FirstGpgpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu.h">
+      <Filter>Advanced\FirstGpgpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_GLSL_110.h">
+      <Filter>Advanced\FirstGpgpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_GLSL_110.h">
+      <Filter>Advanced\FirstPostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_GLSL_ES2.h">
+      <Filter>Advanced\FirstPostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_HLSL_D3D9.h">
+      <Filter>Advanced\FirstPostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_HLSL_D3D10_D3D11.h">
+      <Filter>Advanced\FirstPostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_Null.h">
+      <Filter>Advanced\FirstPostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing.h">
+      <Filter>Advanced\FirstPostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_GLSL_ES2.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_HLSL_D3D9.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_HLSL_D3D10_D3D11.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_Null.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_120.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_ES2.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_HLSL_D3D9_D3D10_D3D11.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_Null.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_GLSL_120.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_GLSL_400.h">
+      <Filter>Advanced\IcosahedronTessellation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_HLSL_D3D11.h">
+      <Filter>Advanced\IcosahedronTessellation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_Null.h">
+      <Filter>Advanced\IcosahedronTessellation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation.h">
+      <Filter>Advanced\IcosahedronTessellation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced.h">
+      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_GLSL_140.h">
+      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_HLSL_D3D10_D3D11.h">
+      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_Null.h">
+      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\BatchDrawInstanced.h">
+      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_110.h">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_140.h">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_HLSL_D3D9.h">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_HLSL_D3D10_D3D11.h">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_Null.h">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\BatchInstancedArrays.h">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays.h">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\ICubeRenderer.h">
+      <Filter>Advanced\InstancedCubes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\InstancedCubes.h">
+      <Filter>Advanced\InstancedCubes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\AssimpMesh\AssimpMesh_GLSL_110.h">
+      <Filter>Assimp\AssimpMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\AssimpMesh\AssimpMesh_GLSL_ES2.h">
+      <Filter>Assimp\AssimpMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\AssimpMesh\AssimpMesh_HLSL_D3D9.h">
+      <Filter>Assimp\AssimpMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\AssimpMesh\AssimpMesh_HLSL_D3D10_D3D11.h">
+      <Filter>Assimp\AssimpMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\AssimpMesh\AssimpMesh_Null.h">
+      <Filter>Assimp\AssimpMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\AssimpMesh\Mesh.h">
+      <Filter>Assimp\AssimpMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\AssimpMesh\AssimpMesh.h">
+      <Filter>Assimp\AssimpMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp_GLSL_ES2.h">
+      <Filter>Assimp\FirstAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp_HLSL_D3D9.h">
+      <Filter>Assimp\FirstAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp_HLSL_D3D10_D3D11.h">
+      <Filter>Assimp\FirstAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp_Null.h">
+      <Filter>Assimp\FirstAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\FirstAssimp\PointsMesh.h">
+      <Filter>Assimp\FirstAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp.h">
+      <Filter>Assimp\FirstAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp_GLSL_110.h">
+      <Filter>Assimp\FirstAssimp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Toolkit\FirstFont\FirstFont.h">
+      <Filter>Toolkit\FirstFont</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -470,87 +482,15 @@
     <ClCompile Include="src\Framework\EulerAngles.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="src\FirstTriangle\FirstTriangle.cpp">
-      <Filter>FirstTriangle</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FirstTexture\FirstTexture.cpp">
-      <Filter>FirstTexture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FirstGeometryShader\FirstGeometryShader.cpp">
-      <Filter>FirstGeometryShader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBuffer\VertexBuffer.cpp">
-      <Filter>VertexBuffer</Filter>
-    </ClCompile>
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\FirstInstancing\FirstInstancing.cpp">
-      <Filter>FirstInstancing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FirstTessellation\FirstTessellation.cpp">
-      <Filter>FirstTessellation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InstancedCubes\InstancedCubes.cpp">
-      <Filter>InstancedCubes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InstancedCubes\ICubeRenderer.cpp">
-      <Filter>InstancedCubes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IcosahedronTessellation\IcosahedronTessellation.cpp">
-      <Filter>IcosahedronTessellation</Filter>
-    </ClCompile>
     <ClCompile Include="src\Framework\ApplicationImplWindows.cpp">
       <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AssimpMesh\AssimpMesh.cpp">
-      <Filter>AssimpMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FirstAssimp\FirstAssimp.cpp">
-      <Filter>FirstAssimp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AssimpMesh\Mesh.cpp">
-      <Filter>AssimpMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FirstAssimp\PointsMesh.cpp">
-      <Filter>FirstAssimp</Filter>
     </ClCompile>
     <ClCompile Include="src\Framework\TGALoader.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="src\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced.cpp">
-      <Filter>InstancedCubes\CubeRendereDrawInstanced</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays.cpp">
-      <Filter>InstancedCubes\CubeRendererInstancedArrays</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InstancedCubes\CubeRendererInstancedArrays\BatchInstancedArrays.cpp">
-      <Filter>InstancedCubes\CubeRendererInstancedArrays</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InstancedCubes\CubeRendererDrawInstanced\BatchDrawInstanced.cpp">
-      <Filter>InstancedCubes\CubeRendereDrawInstanced</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FirstRenderToTexture\FirstRenderToTexture.cpp">
-      <Filter>FirstRenderToTexture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets.cpp">
-      <Filter>FirstMultipleRenderTargets</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Fxaa\Fxaa.cpp">
-      <Filter>Fxaa</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FirstPostProcessing\FirstPostProcessing.cpp">
-      <Filter>FirstPostProcessing</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains.cpp">
-      <Filter>FirstMultipleSwapChains</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FirstGpgpu\FirstGpgpu.cpp">
-      <Filter>FirstGpgpu</Filter>
-    </ClCompile>
     <ClCompile Include="src\Framework\IApplicationRendererToolkit.cpp">
       <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FirstFont\FirstFont.cpp">
-      <Filter>FirstFont</Filter>
     </ClCompile>
     <ClCompile Include="src\Framework\X11Window.cpp">
       <Filter>Framework</Filter>
@@ -569,6 +509,78 @@
     </ClCompile>
     <ClCompile Include="src\Framework\ExampleRunner.cpp">
       <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Basics\FirstGeometryShader\FirstGeometryShader.cpp">
+      <Filter>Basics\FirstGeometryShader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Basics\FirstInstancing\FirstInstancing.cpp">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets.cpp">
+      <Filter>Basics\FirstMultipleRenderTargets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains.cpp">
+      <Filter>Basics\FirstMultipleSwapChains</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture.cpp">
+      <Filter>Basics\FirstRenderToTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Basics\FirstTessellation\FirstTessellation.cpp">
+      <Filter>Basics\FirstTessellation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Basics\FirstTexture\FirstTexture.cpp">
+      <Filter>Basics\FirstTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Basics\FirstTriangle\FirstTriangle.cpp">
+      <Filter>Basics\FirstTriangle</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Basics\VertexBuffer\VertexBuffer.cpp">
+      <Filter>Basics\VertexBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Advanced\FirstGpgpu\FirstGpgpu.cpp">
+      <Filter>Advanced\FirstGpgpu</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Advanced\FirstPostProcessing\FirstPostProcessing.cpp">
+      <Filter>Advanced\FirstPostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Advanced\Fxaa\Fxaa.cpp">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation.cpp">
+      <Filter>Advanced\IcosahedronTessellation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\BatchDrawInstanced.cpp">
+      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced.cpp">
+      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\BatchInstancedArrays.cpp">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays.cpp">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Advanced\InstancedCubes\InstancedCubes.cpp">
+      <Filter>Advanced\InstancedCubes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Advanced\InstancedCubes\ICubeRenderer.cpp">
+      <Filter>Advanced\InstancedCubes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Assimp\AssimpMesh\Mesh.cpp">
+      <Filter>Assimp\AssimpMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Assimp\AssimpMesh\AssimpMesh.cpp">
+      <Filter>Assimp\AssimpMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Assimp\FirstAssimp\PointsMesh.cpp">
+      <Filter>Assimp\FirstAssimp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Assimp\FirstAssimp\FirstAssimp.cpp">
+      <Filter>Assimp\FirstAssimp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Toolkit\FirstFont\FirstFont.cpp">
+      <Filter>Toolkit\FirstFont</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

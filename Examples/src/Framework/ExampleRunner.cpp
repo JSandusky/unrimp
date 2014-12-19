@@ -25,27 +25,27 @@
 #include "ExampleRunner.h"
 #include "CmdLineArgs.h"
 // Basics
-#include "FirstTriangle/FirstTriangle.h"
-#include "VertexBuffer/VertexBuffer.h"
-#include "FirstTexture/FirstTexture.h"
-#include "FirstRenderToTexture/FirstRenderToTexture.h"
-#include "FirstMultipleRenderTargets/FirstMultipleRenderTargets.h"
-#include "FirstMultipleSwapChains/FirstMultipleSwapChains.h"
-#include "FirstInstancing/FirstInstancing.h"
-#include "FirstGeometryShader/FirstGeometryShader.h"
-#include "FirstTessellation/FirstTessellation.h"
+#include "Basics/FirstTriangle/FirstTriangle.h"
+#include "Basics/VertexBuffer/VertexBuffer.h"
+#include "Basics/FirstTexture/FirstTexture.h"
+#include "Basics/FirstRenderToTexture/FirstRenderToTexture.h"
+#include "Basics/FirstMultipleRenderTargets/FirstMultipleRenderTargets.h"
+#include "Basics/FirstMultipleSwapChains/FirstMultipleSwapChains.h"
+#include "Basics/FirstInstancing/FirstInstancing.h"
+#include "Basics/FirstGeometryShader/FirstGeometryShader.h"
+#include "Basics/FirstTessellation/FirstTessellation.h"
 // Advanced
-#include "FirstPostProcessing/FirstPostProcessing.h"
-#include "Fxaa/Fxaa.h"
-#include "FirstGpgpu/FirstGpgpu.h"
-#include "InstancedCubes/InstancedCubes.h"
-#include "IcosahedronTessellation/IcosahedronTessellation.h"
+#include "Advanced/FirstPostProcessing/FirstPostProcessing.h"
+#include "Advanced/Fxaa/Fxaa.h"
+#include "Advanced/FirstGpgpu/FirstGpgpu.h"
+#include "Advanced/InstancedCubes/InstancedCubes.h"
+#include "Advanced/IcosahedronTessellation/IcosahedronTessellation.h"
 #ifndef RENDERER_NO_TOOLKIT
-	#include "FirstFont/FirstFont.h"
+	#include "Toolkit/FirstFont/FirstFont.h"
 #endif
 #ifndef NO_ASSIMP
-	#include "FirstAssimp/FirstAssimp.h"
-	#include "AssimpMesh/AssimpMesh.h"
+	#include "Assimp/FirstAssimp/FirstAssimp.h"
+	#include "Assimp/AssimpMesh/AssimpMesh.h"
 #endif
 #include <algorithm>
 #include <array>
