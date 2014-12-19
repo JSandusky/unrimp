@@ -37,8 +37,13 @@ unsigned int Stopwatch::getSystemMicroseconds() const
 {
 	#ifdef WIN32
 		// Frequency of the performance counter
-		LARGE_INTEGER performanceFrequency;
-		::QueryPerformanceFrequency(&performanceFrequency);
+		static LARGE_INTEGER performanceFrequency;
+		static bool performanceFrequencyInitialized = false;
+		if (!performanceFrequencyInitialized)
+		{
+			::QueryPerformanceFrequency(&performanceFrequency);
+			performanceFrequencyInitialized = true;
+		}
 
 		// Get past time
 		LARGE_INTEGER curTime;
