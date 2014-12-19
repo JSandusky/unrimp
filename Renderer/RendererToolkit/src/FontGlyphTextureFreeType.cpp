@@ -26,7 +26,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include <freetype/ftglyph.h>
+#include <ftglyph.h>
 
 
 //[-------------------------------------------------------]
@@ -60,8 +60,8 @@ namespace RendererToolkit
 					const FT_Bitmap &ftBitmap = ftBitmapGlyph->bitmap;
 
 					// Get the size (in pixel) of the glyph
-					mWidth  = ftBitmap.width;
-					mHeight = ftBitmap.rows;
+					mWidth  = static_cast<int>(ftBitmap.width);
+					mHeight = static_cast<int>(ftBitmap.rows);
 
 					{ // Copy the glyph bitmap into the glyph texture atlas
 						// Get the X component of the glyph texture atlas size (in pixel)
