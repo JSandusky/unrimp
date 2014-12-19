@@ -72,7 +72,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 magnification filter mode
 		*/
-		static unsigned int getDirect3D9MagFilterMode(Renderer::FilterMode::Enum filterMode);
+		static uint32_t getDirect3D9MagFilterMode(Renderer::FilterMode::Enum filterMode);
 
 		/**
 		*  @brief
@@ -84,7 +84,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 minification filter mode
 		*/
-		static unsigned int getDirect3D9MinFilterMode(Renderer::FilterMode::Enum filterMode);
+		static uint32_t getDirect3D9MinFilterMode(Renderer::FilterMode::Enum filterMode);
 
 		/**
 		*  @brief
@@ -96,7 +96,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 mipmapping filter mode
 		*/
-		static unsigned int getDirect3D9MipFilterMode(Renderer::FilterMode::Enum filterMode);
+		static uint32_t getDirect3D9MipFilterMode(Renderer::FilterMode::Enum filterMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureAddressMode                          ]
@@ -111,7 +111,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 texture address mode
 		*/
-		static unsigned int getDirect3D9TextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode);
+		static uint32_t getDirect3D9TextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::ComparisonFunc                              ]
@@ -142,7 +142,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 type (type "BYTE" not used in here in order to keep the header slim)
 		*/
-		static unsigned char getDirect3D9Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
+		static uint8_t getDirect3D9Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
 
 		/**
 		*  @brief
@@ -154,7 +154,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 semantic, "D3DDECLUSAGE_POSITION" as fallback if no match was found (type "BYTE" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getDirect3D9Semantic(const char *semantic);
+		static uint32_t getDirect3D9Semantic(const char *semantic);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]
@@ -169,7 +169,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 usage
 		*/
-		static unsigned int getDirect3D9Usage(Renderer::BufferUsage::Enum bufferUsage);
+		static uint32_t getDirect3D9Usage(Renderer::BufferUsage::Enum bufferUsage);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]
@@ -184,7 +184,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 format (type "D3DFORMAT" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getDirect3D9Format(Renderer::IndexBufferFormat::Enum indexBufferFormat);
+		static uint32_t getDirect3D9Format(Renderer::IndexBufferFormat::Enum indexBufferFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureFormat                               ]
@@ -199,7 +199,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 size (in bytes, type "UINT" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getDirect3D9Size(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getDirect3D9Size(Renderer::TextureFormat::Enum textureFormat);
 
 		/**
 		*  @brief
@@ -211,7 +211,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 format (type "D3DFORMAT" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getDirect3D9Format(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getDirect3D9Format(Renderer::TextureFormat::Enum textureFormat);
 
 
 	};

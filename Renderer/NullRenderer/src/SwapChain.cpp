@@ -57,7 +57,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void SwapChain::getWidthAndHeight(unsigned int &width, unsigned int &height) const
+	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
 	{
 		#ifdef WIN32
 			// Is there a valid native OS window?

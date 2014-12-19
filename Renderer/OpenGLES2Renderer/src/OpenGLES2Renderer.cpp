@@ -246,12 +246,12 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Shader language                                       ]
 	//[-------------------------------------------------------]
-	unsigned int OpenGLES2Renderer::getNumberOfShaderLanguages() const
+	uint32_t OpenGLES2Renderer::getNumberOfShaderLanguages() const
 	{
 		return 1;
 	}
 
-	const char *OpenGLES2Renderer::getShaderLanguageName(unsigned int index) const
+	const char *OpenGLES2Renderer::getShaderLanguageName(uint32_t index) const
 	{
 		// Evaluate the provided index
 		switch (index)
@@ -301,29 +301,29 @@ namespace OpenGLES2Renderer
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *OpenGLES2Renderer::createFramebuffer(unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	Renderer::IFramebuffer *OpenGLES2Renderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
 	{
 		// Validation is done inside the framebuffer implementation
 		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
 	}
 
-	Renderer::IVertexBuffer *OpenGLES2Renderer::createVertexBuffer(unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IVertexBuffer *OpenGLES2Renderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		return new VertexBuffer(*this, numberOfBytes, data, bufferUsage);
 	}
 
-	Renderer::IIndexBuffer *OpenGLES2Renderer::createIndexBuffer(unsigned int numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IIndexBuffer *OpenGLES2Renderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		return new IndexBuffer(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
 	}
 
-	Renderer::ITextureBuffer *OpenGLES2Renderer::createTextureBuffer(unsigned int, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage::Enum)
+	Renderer::ITextureBuffer *OpenGLES2Renderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage::Enum)
 	{
 		// OpenGL ES 2 has no texture buffer support
 		return nullptr;
 	}
 
-	Renderer::ITexture2D *OpenGLES2Renderer::createTexture2D(unsigned int width, unsigned int height, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags, Renderer::TextureUsage::Enum)
+	Renderer::ITexture2D *OpenGLES2Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 2 has no texture usage indication
 
@@ -338,7 +338,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	Renderer::ITexture2DArray *OpenGLES2Renderer::createTexture2DArray(unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags, Renderer::TextureUsage::Enum)
+	Renderer::ITexture2DArray *OpenGLES2Renderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 2 has no texture usage indication
 
@@ -373,12 +373,12 @@ namespace OpenGLES2Renderer
 		return new SamplerState(*this, samplerState);
 	}
 
-	Renderer::ITextureCollection *OpenGLES2Renderer::createTextureCollection(unsigned int numberOfTextures, Renderer::ITexture **textures)
+	Renderer::ITextureCollection *OpenGLES2Renderer::createTextureCollection(uint32_t numberOfTextures, Renderer::ITexture **textures)
 	{
 		return new TextureCollection(*this, numberOfTextures, textures);
 	}
 
-	Renderer::ISamplerStateCollection *OpenGLES2Renderer::createSamplerStateCollection(unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
+	Renderer::ISamplerStateCollection *OpenGLES2Renderer::createSamplerStateCollection(uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
 	{
 		return new SamplerStateCollection(*this, numberOfSamplerStates, samplerStates);
 	}
@@ -387,13 +387,13 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool OpenGLES2Renderer::map(Renderer::IResource &, unsigned int, Renderer::MapType::Enum, unsigned int, Renderer::MappedSubresource &)
+	bool OpenGLES2Renderer::map(Renderer::IResource &, uint32_t, Renderer::MapType::Enum, uint32_t, Renderer::MappedSubresource &)
 	{
 		// TODO(co) Implement me
 		return false;
 	}
 
-	void OpenGLES2Renderer::unmap(Renderer::IResource &, unsigned int)
+	void OpenGLES2Renderer::unmap(Renderer::IResource &, uint32_t)
 	{
 		// TODO(co) Implement me
 	}
@@ -512,31 +512,31 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::vsSetTexture(unsigned int unit, Renderer::ITexture *texture)
+	void OpenGLES2Renderer::vsSetTexture(uint32_t unit, Renderer::ITexture *texture)
 	{
 		// In OpenGL ES 2, all shaders share the same texture units
 		fsSetTexture(unit, texture);
 	}
 
-	void OpenGLES2Renderer::vsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection)
+	void OpenGLES2Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// In OpenGL ES 2, all shaders share the same texture units
 		fsSetTextureCollection(startUnit, textureCollection);
 	}
 
-	void OpenGLES2Renderer::vsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState)
+	void OpenGLES2Renderer::vsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
 	{
 		// In OpenGL ES 2, all shaders share the same texture units
 		fsSetSamplerState(unit, samplerState);
 	}
 
-	void OpenGLES2Renderer::vsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLES2Renderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// In OpenGL ES 2, all shaders share the same texture units
 		fsSetSamplerStateCollection(startUnit, samplerStateCollection);
 	}
 
-	void OpenGLES2Renderer::vsSetUniformBuffer(unsigned int, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLES2Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// OpenGL ES 2 has no uniform buffer support
 
@@ -548,7 +548,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::tcsSetTexture(unsigned int, Renderer::ITexture *texture)
+	void OpenGLES2Renderer::tcsSetTexture(uint32_t, Renderer::ITexture *texture)
 	{
 		// OpenGL ES 2 has no tessellation control shader support
 
@@ -560,7 +560,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::tcsSetTextureCollection(unsigned int, Renderer::ITextureCollection *textureCollection)
+	void OpenGLES2Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
 	{
 		// OpenGL ES 2 has no tessellation control shader support
 
@@ -572,7 +572,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::tcsSetSamplerState(unsigned int, Renderer::ISamplerState *samplerState)
+	void OpenGLES2Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
 	{
 		// OpenGL ES 2 has no tessellation control shader support
 
@@ -584,7 +584,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::tcsSetSamplerStateCollection(unsigned int, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLES2Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// OpenGL ES 2 has no tessellation control shader support
 
@@ -596,7 +596,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::tcsSetUniformBuffer(unsigned int, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLES2Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// OpenGL ES 2 has no tessellation control shader support
 		// OpenGL ES 2 has no uniform buffer support
@@ -609,7 +609,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::tesSetTexture(unsigned int, Renderer::ITexture *texture)
+	void OpenGLES2Renderer::tesSetTexture(uint32_t, Renderer::ITexture *texture)
 	{
 		// OpenGL ES 2 has no tessellation evaluation shader support
 
@@ -621,7 +621,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::tesSetTextureCollection(unsigned int, Renderer::ITextureCollection *textureCollection)
+	void OpenGLES2Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
 	{
 		// OpenGL ES 2 has no tessellation evaluation shader support
 
@@ -633,7 +633,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::tesSetSamplerState(unsigned int, Renderer::ISamplerState *samplerState)
+	void OpenGLES2Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
 	{
 		// OpenGL ES 2 has no tessellation evaluation shader support
 
@@ -645,7 +645,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::tesSetSamplerStateCollection(unsigned int, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLES2Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// OpenGL ES 2 has no tessellation evaluation shader support
 
@@ -657,7 +657,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::tesSetUniformBuffer(unsigned int, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLES2Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// OpenGL ES 2 has no tessellation evaluation shader support
 		// OpenGL ES 2 has no uniform buffer support
@@ -670,7 +670,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::gsSetTexture(unsigned int, Renderer::ITexture *texture)
+	void OpenGLES2Renderer::gsSetTexture(uint32_t, Renderer::ITexture *texture)
 	{
 		// OpenGL ES 2 has no geometry shader support
 
@@ -682,7 +682,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::gsSetTextureCollection(unsigned int, Renderer::ITextureCollection *textureCollection)
+	void OpenGLES2Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
 	{
 		// OpenGL ES 2 has no geometry shader support
 
@@ -694,7 +694,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::gsSetSamplerState(unsigned int, Renderer::ISamplerState *samplerState)
+	void OpenGLES2Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
 	{
 		// OpenGL ES 2 has no geometry shader support
 
@@ -706,7 +706,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::gsSetSamplerStateCollection(unsigned int, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLES2Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// OpenGL ES 2 has no geometry shader support
 
@@ -718,7 +718,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::gsSetUniformBuffer(unsigned int, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLES2Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// OpenGL ES 2 has no geometry shader support
 		// OpenGL ES 2 has no uniform buffer support
@@ -731,7 +731,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::rsSetViewports(unsigned int numberOfViewports, const Renderer::Viewport *viewports)
+	void OpenGLES2Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
 	{
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
@@ -740,8 +740,8 @@ namespace OpenGLES2Renderer
 			// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			unsigned int renderTargetWidth =  0;
-			unsigned int renderTargetHeight = 0;
+			uint32_t renderTargetWidth =  0;
+			uint32_t renderTargetHeight = 0;
 			if (nullptr != mRenderTarget)
 			{
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
@@ -760,7 +760,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::rsSetScissorRectangles(unsigned int numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
+	void OpenGLES2Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
 	{
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
@@ -769,8 +769,8 @@ namespace OpenGLES2Renderer
 			// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			unsigned int renderTargetWidth =  0;
-			unsigned int renderTargetHeight = 0;
+			uint32_t renderTargetWidth =  0;
+			uint32_t renderTargetHeight = 0;
 			if (nullptr != mRenderTarget)
 			{
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
@@ -841,7 +841,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::fsSetTexture(unsigned int unit, Renderer::ITexture *texture)
+	void OpenGLES2Renderer::fsSetTexture(uint32_t unit, Renderer::ITexture *texture)
 	{
 		// Set a texture at that unit?
 		if (nullptr != texture)
@@ -920,7 +920,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::fsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection)
+	void OpenGLES2Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
 		if (nullptr != textureCollection)
@@ -938,7 +938,7 @@ namespace OpenGLES2Renderer
 			// -> "GL_TEXTURE0" is the first texture unit, while nUnit we received is zero based
 			Renderer::ITexture **currentTexture = static_cast<TextureCollection*>(textureCollection)->getTextures();
 			Renderer::ITexture **textureEnd	    = currentTexture + static_cast<TextureCollection*>(textureCollection)->getNumberOfTextures();
-			for (unsigned int unit = static_cast<GLenum>(GL_TEXTURE0 + startUnit); currentTexture < textureEnd; ++currentTexture, ++unit)
+			for (uint32_t unit = static_cast<GLenum>(GL_TEXTURE0 + startUnit); currentTexture < textureEnd; ++currentTexture, ++unit)
 			{
 				// Get the current texture
 				Renderer::ITexture *texture = *currentTexture;
@@ -1002,7 +1002,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::fsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState)
+	void OpenGLES2Renderer::fsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
 	{
 		// Set a sampler state at that unit?
 		if (nullptr != samplerState)
@@ -1043,7 +1043,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::fsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLES2Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
 		if (nullptr != samplerStateCollection)
@@ -1060,7 +1060,7 @@ namespace OpenGLES2Renderer
 			// Loop through all sampler states within the given sampler state collection
 			Renderer::ISamplerState **currentSamplerState = static_cast<SamplerStateCollection*>(samplerStateCollection)->getSamplerStates();
 			Renderer::ISamplerState **samplerStateEnd	  = currentSamplerState + static_cast<SamplerStateCollection*>(samplerStateCollection)->getNumberOfSamplerStates();
-			for (unsigned int unit = startUnit; currentSamplerState < samplerStateEnd; ++currentSamplerState, ++unit)
+			for (uint32_t unit = startUnit; currentSamplerState < samplerStateEnd; ++currentSamplerState, ++unit)
 			{
 				// Get the current sampler state
 				Renderer::ISamplerState *samplerState = *currentSamplerState;
@@ -1101,7 +1101,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::fsSetUniformBuffer(unsigned int, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLES2Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// OpenGL ES 2 has no uniform buffer support
 
@@ -1325,10 +1325,10 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::clear(unsigned int flags, const float color[4], float z, unsigned int stencil)
+	void OpenGLES2Renderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
 	{
 		// Get API flags
-		unsigned int flagsAPI = 0;
+		uint32_t flagsAPI = 0;
 		if (flags & Renderer::ClearFlag::COLOR)
 		{
 			flagsAPI |= GL_COLOR_BUFFER_BIT;
@@ -1396,7 +1396,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::draw(unsigned int startVertexLocation, unsigned int numberOfVertices)
+	void OpenGLES2Renderer::draw(uint32_t startVertexLocation, uint32_t numberOfVertices)
 	{
 		// Is currently a vertex array set?
 		if (nullptr != mVertexArray)
@@ -1406,12 +1406,12 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::drawInstanced(unsigned int, unsigned int, unsigned int)
+	void OpenGLES2Renderer::drawInstanced(uint32_t, uint32_t, uint32_t)
 	{
 		// Error! OpenGL ES 2 has no instancing support!
 	}
 
-	void OpenGLES2Renderer::drawIndexed(unsigned int startIndexLocation, unsigned int numberOfIndices, unsigned int, unsigned int, unsigned int)
+	void OpenGLES2Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t, uint32_t, uint32_t)
 	{
 		// Is currently an vertex array?
 		if (nullptr != mVertexArray)
@@ -1429,7 +1429,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::drawIndexedInstanced(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)
+	void OpenGLES2Renderer::drawIndexedInstanced(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
 	{
 		// OpenGL ES 2 has no "GL_ARB_draw_elements_base_vertex" equivalent, so, we can't support "baseVertexLocation" in here
 		// Error! OpenGL ES 2 has no instancing support!
@@ -1491,7 +1491,7 @@ namespace OpenGLES2Renderer
 		if (mContext->getExtensions().isGL_NV_draw_buffers())
 		{
 			glGetIntegerv(GL_MAX_DRAW_BUFFERS_NV, &openGLValue);
-			mCapabilities.maximumNumberOfSimultaneousRenderTargets = static_cast<unsigned int>(openGLValue);
+			mCapabilities.maximumNumberOfSimultaneousRenderTargets = static_cast<uint32_t>(openGLValue);
 		}
 		else
 		{
@@ -1501,13 +1501,13 @@ namespace OpenGLES2Renderer
 		// Maximum texture dimension
 		openGLValue = 0;
 		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &openGLValue);
-		mCapabilities.maximumTextureDimension = static_cast<unsigned int>(openGLValue);
+		mCapabilities.maximumTextureDimension = static_cast<uint32_t>(openGLValue);
 
 		// Maximum number of 2D texture array slices (usually 512, in case there's no support for 2D texture arrays it's 0)
 		if (mContext->getExtensions().isGL_EXT_texture_array())
 		{
 			glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS_EXT, &openGLValue);
-			mCapabilities.maximumNumberOf2DTextureArraySlices = static_cast<unsigned int>(openGLValue);
+			mCapabilities.maximumNumberOf2DTextureArraySlices = static_cast<uint32_t>(openGLValue);
 		}
 		else
 		{

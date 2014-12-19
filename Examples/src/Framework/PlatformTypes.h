@@ -29,9 +29,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#ifdef LINUX
-	#include <inttypes.h> // for uint64_t
-#endif
+#include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
 //[-------------------------------------------------------]
@@ -138,9 +136,9 @@
 	#endif
 #elif LINUX
 	#if X64_ARCHITECTURE
-		typedef uint64_t     handle;
+		typedef uint64_t handle;
 	#else
-		typedef unsigned int handle;
+		typedef uint32_t handle;
 	#endif
 	#ifndef NULL_HANDLE
 		#define NULL_HANDLE 0

@@ -27,6 +27,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "Renderer/PlatformTypes.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -196,9 +202,9 @@ namespace Renderer
 	// TODO(co) Comments
 	struct MappedSubresource
 	{
-		void		 *data;
-		unsigned int  rowPitch;
-		unsigned int  depthPitch;
+		void	 *data;
+		uint32_t  rowPitch;
+		uint32_t  depthPitch;
 	};
 
 	/**

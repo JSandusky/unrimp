@@ -157,7 +157,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void SwapChain::getWidthAndHeight(unsigned int &width, unsigned int &height) const
+	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
 	{
 		// Is there a valid swap chain?
 		if (nullptr != mDirect3DSwapChain9)
@@ -324,7 +324,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void SwapChain::getSafeWidthAndHeight(unsigned int &width, unsigned int &height) const
+	void SwapChain::getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const
 	{
 		// Get the Direct3D 9 present parameters
 		D3DPRESENT_PARAMETERS d3dPresentParameters;

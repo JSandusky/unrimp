@@ -37,7 +37,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBufferBind::TextureBufferBind(OpenGLRenderer &openGLRenderer, unsigned int numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	TextureBufferBind::TextureBufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		TextureBuffer(openGLRenderer)
 	{
 		{ // Buffer part
@@ -87,7 +87,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
-	void TextureBufferBind::copyDataFrom(unsigned int numberOfBytes, const void *data)
+	void TextureBufferBind::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL texture buffer

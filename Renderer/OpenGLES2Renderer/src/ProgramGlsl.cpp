@@ -74,7 +74,7 @@ namespace OpenGLES2Renderer
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
-					char *informationLog = new char[static_cast<unsigned int>(informationLength)];
+					char *informationLog = new char[static_cast<uint32_t>(informationLength)];
 
 					// Get the information
 					glGetProgramInfoLog(mOpenGLES2Program, informationLength, nullptr, informationLog);

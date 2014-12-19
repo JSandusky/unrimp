@@ -77,7 +77,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		VertexBuffer(OpenGLES2Renderer &openGLES2Renderer, unsigned int numberOfBytes, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		VertexBuffer(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -92,14 +92,14 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    The OpenGL ES 2 array buffer, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLES2ArrayBuffer() const;
+		inline uint32_t getOpenGLES2ArrayBuffer() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mOpenGLES2ArrayBuffer;	///< OpenGL ES 2 array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES2ArrayBuffer;	///< OpenGL ES 2 array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

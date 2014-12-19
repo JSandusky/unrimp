@@ -109,20 +109,20 @@ namespace RendererToolkit
 		*  @param[out] glyphTextureAtlasSizeY
 		*    Receives the Y component of the glyph texture atlas size
 		*/
-		inline void getGlyphTextureAtlasSize(unsigned int &glyphTextureAtlasSizeX, unsigned int &glyphTextureAtlasSizeY) const;
+		inline void getGlyphTextureAtlasSize(uint32_t &glyphTextureAtlasSizeX, uint32_t &glyphTextureAtlasSizeY) const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IFont methods         ]
 	//[-------------------------------------------------------]
 	public:
-		virtual bool setSize(unsigned int size = 12, unsigned int resolution = 96) override;
+		virtual bool setSize(uint32_t size = 12, uint32_t resolution = 96) override;
 		inline virtual bool isValid() const override;
 		virtual float getAscender() const override;
 		virtual float getDescender() const override;
 		virtual float getHeight() const override;
 		virtual float getTextWidth(const char *text) override;
-		virtual void drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX = 1.0f, float scaleY = 1.0f, float biasX = 0.0f, float biasY = 0.0f, unsigned int flags = 0) override;
+		virtual void drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX = 1.0f, float scaleY = 1.0f, float biasX = 0.0f, float biasY = 0.0f, uint32_t flags = 0) override;
 
 
 	//[-------------------------------------------------------]
@@ -144,7 +144,7 @@ namespace RendererToolkit
 		*  @param[out] glyphTextureAtlasSizeY
 		*    Receives the Y component of the glyph texture atlas size
 		*/
-		void calculateGlyphTextureAtlasSize(unsigned int &glyphTextureAtlasSizeX, unsigned int &glyphTextureAtlasSizeY);
+		void calculateGlyphTextureAtlasSize(uint32_t &glyphTextureAtlasSizeX, uint32_t &glyphTextureAtlasSizeY);
 
 		/**
 		*  @brief
@@ -162,7 +162,7 @@ namespace RendererToolkit
 		*  @return
 		*    The number of bytes the glyph texture atlas allocates
 		*/
-		unsigned int getGlyphTextureAtlasNumberOfBytes(bool includeMipmaps) const;
+		uint32_t getGlyphTextureAtlasNumberOfBytes(bool includeMipmaps) const;
 
 		/**
 		*  @brief
@@ -176,13 +176,13 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	private:
 		RendererToolkitImpl		 *mRendererToolkitImpl;			///< The used renderer toolkit implementation instance (we keep a reference to it), always valid
-		unsigned int			  mFontFileSize;				///< Font file size in bytes
-		unsigned char			 *mFontFileData;				///< Font file data, can be a null pointer
+		uint32_t				  mFontFileSize;				///< Font file size in bytes
+		uint8_t					 *mFontFileData;				///< Font file data, can be a null pointer
 		FT_Face					 *mFTFace;						///< FreeType library face (aka "The Font"), a null pointer on error
-		unsigned int			  mGlyphTextureAtlasPadding;	///< Glyph texture atlas gab between glyphs in pixel
-		unsigned int			  mGlyphTextureAtlasSizeX;		///< X component of the glyph texture atlas size
-		unsigned int			  mGlyphTextureAtlasSizeY;		///< Y component of the glyph texture atlas size
-		unsigned int			  mNumberOfFontGlyphs;			///< Number of currently active glyphs
+		uint32_t				  mGlyphTextureAtlasPadding;	///< Glyph texture atlas gab between glyphs in pixel
+		uint32_t				  mGlyphTextureAtlasSizeX;		///< X component of the glyph texture atlas size
+		uint32_t				  mGlyphTextureAtlasSizeY;		///< Y component of the glyph texture atlas size
+		uint32_t				  mNumberOfFontGlyphs;			///< Number of currently active glyphs
 		FontGlyphTextureFreeType *mFontGlyphs;					///< Array of currently active glyphs ("character code -> glyph instance"), can be a null pointer, but only if "mNumberOfFontGlyphs" is zero
 		Renderer::ITexture2D	 *mTexture2D;					///< The glyph texture atlas (we keep a reference to it), can be a null pointer
 

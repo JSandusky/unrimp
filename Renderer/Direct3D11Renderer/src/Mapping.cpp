@@ -35,10 +35,10 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	unsigned int Mapping::getDirect3D11Format(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
+	uint32_t Mapping::getDirect3D11Format(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
 	{
 		// DXGI_FORMAT
-		static const unsigned int MAPPING[] =
+		static const uint32_t MAPPING[] =
 		{
 			DXGI_FORMAT_R32_FLOAT,			// Renderer::VertexArrayFormat::FLOAT_1
 			DXGI_FORMAT_R32G32_FLOAT,		// Renderer::VertexArrayFormat::FLOAT_2
@@ -48,7 +48,7 @@ namespace Direct3D11Renderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	unsigned int Mapping::getDirect3D11UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum bufferUsage, unsigned int &cpuAccessFlags)
+	uint32_t Mapping::getDirect3D11UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum bufferUsage, uint32_t &cpuAccessFlags)
 	{
 		// Direct3D 11 only supports a subset of the OpenGL usage indications
 		// -> See "D3D11_USAGE enumeration "-documentation at http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259%28v=vs.85%29.aspx
@@ -78,35 +78,35 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	unsigned int Mapping::getDirect3D11Format(Renderer::IndexBufferFormat::Enum indexBufferFormat)
+	uint32_t Mapping::getDirect3D11Format(Renderer::IndexBufferFormat::Enum indexBufferFormat)
 	{
 		// DXGI_FORMAT
-		static const unsigned int MAPPING[] =
+		static const uint32_t MAPPING[] =
 		{
-			DXGI_FORMAT_R32_UINT,	// Renderer::IndexBufferFormat::UNSIGNED_CHAR  - One byte per element, unsigned char (may not be supported by each API) - Not supported by Direct3D 11
-			DXGI_FORMAT_R16_UINT,	// Renderer::IndexBufferFormat::UNSIGNED_SHORT - Two bytes per element, unsigned short
-			DXGI_FORMAT_R32_UINT	// Renderer::IndexBufferFormat::UNSIGNED_INT   - Four bytes per element, unsigned int (may not be supported by each API)
+			DXGI_FORMAT_R32_UINT,	// Renderer::IndexBufferFormat::UNSIGNED_CHAR  - One byte per element, uint8_t (may not be supported by each API) - Not supported by Direct3D 11
+			DXGI_FORMAT_R16_UINT,	// Renderer::IndexBufferFormat::UNSIGNED_SHORT - Two bytes per element, uint16_t
+			DXGI_FORMAT_R32_UINT	// Renderer::IndexBufferFormat::UNSIGNED_INT   - Four bytes per element, uint32_t (may not be supported by each API)
 		};
 		return MAPPING[indexBufferFormat];
 	}
 
-	unsigned int Mapping::getDirect3D11Size(Renderer::TextureFormat::Enum textureFormat)
+	uint32_t Mapping::getDirect3D11Size(Renderer::TextureFormat::Enum textureFormat)
 	{
-		static const unsigned int MAPPING[] =
+		static const uint32_t MAPPING[] =
 		{
-			sizeof(unsigned char),		// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
-			sizeof(unsigned char) * 4,	// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
-			sizeof(unsigned char) * 4,	// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
-			sizeof(float) * 2,			// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
-			sizeof(float) * 4			// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
+			sizeof(uint8_t),		// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
+			sizeof(uint8_t) * 4,	// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
+			sizeof(uint8_t) * 4,	// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
+			sizeof(float) * 2,		// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
+			sizeof(float) * 4		// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
 		};
 		return MAPPING[textureFormat];
 	}
 
-	unsigned int Mapping::getDirect3D11Format(Renderer::TextureFormat::Enum textureFormat)
+	uint32_t Mapping::getDirect3D11Format(Renderer::TextureFormat::Enum textureFormat)
 	{
 		// DXGI_FORMAT
-		static const unsigned int MAPPING[] =
+		static const uint32_t MAPPING[] =
 		{
 			DXGI_FORMAT_A8_UNORM,			// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
 			DXGI_FORMAT_B8G8R8X8_UNORM,		// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue

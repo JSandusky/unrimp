@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL texture, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLTexture() const;
+		inline uint32_t getOpenGLTexture() const;
 
 
 	//[-------------------------------------------------------]
@@ -94,14 +94,14 @@ namespace OpenGLRenderer
 		*  @param[in] height
 		*    The height of the texture
 		*/
-		Texture2D(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height);
+		Texture2D(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height);
 
 
 	//[-------------------------------------------------------]
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int mOpenGLTexture;	///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLTexture;	///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

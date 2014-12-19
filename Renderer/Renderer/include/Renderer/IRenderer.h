@@ -35,7 +35,6 @@
 #include "Renderer/TextureTypes.h"
 #include "Renderer/RendererTypes.h"
 #include "Renderer/SmartRefCount.h"
-#include "Renderer/PlatformTypes.h"
 #include "Renderer/IndexBufferTypes.h"
 
 
@@ -205,7 +204,7 @@ namespace Renderer
 		*  @return
 		*    The number of supported shader languages
 		*/
-		virtual unsigned int getNumberOfShaderLanguages() const = 0;
+		virtual uint32_t getNumberOfShaderLanguages() const = 0;
 
 		/**
 		*  @brief
@@ -221,7 +220,7 @@ namespace Renderer
 		*    - Do not free the memory the returned pointer is pointing to
 		*    - The default shader language is always at index 0
 		*/
-		virtual const char *getShaderLanguageName(unsigned int index) const = 0;
+		virtual const char *getShaderLanguageName(uint32_t index) const = 0;
 
 		/**
 		*  @brief
@@ -273,7 +272,7 @@ namespace Renderer
 		*    - Depending on the used graphics API and feature set, there might be the requirement that all provided textures have the same size
 		*      (in order to be on the save side, ensure that all provided textures have the same size)
 		*/
-		virtual IFramebuffer *createFramebuffer(unsigned int numberOfColorTextures, ITexture **colorTextures, ITexture *depthStencilTexture = nullptr) = 0;
+		virtual IFramebuffer *createFramebuffer(uint32_t numberOfColorTextures, ITexture **colorTextures, ITexture *depthStencilTexture = nullptr) = 0;
 
 		/**
 		*  @brief
@@ -292,7 +291,7 @@ namespace Renderer
 		*  @note
 		*    - Vertex array instances are created by using "Renderer::IProgram::createVertexArray()"
 		*/
-		virtual IVertexBuffer *createVertexBuffer(unsigned int numberOfBytes, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+		virtual IVertexBuffer *createVertexBuffer(uint32_t numberOfBytes, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 
 		/**
 		*  @brief
@@ -310,7 +309,7 @@ namespace Renderer
 		*  @return
 		*    The created IBO instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual IIndexBuffer *createIndexBuffer(unsigned int numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+		virtual IIndexBuffer *createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 
 		/**
 		*  @brief
@@ -331,7 +330,7 @@ namespace Renderer
 		*  @note
 		*    - Only supported if "Renderer::Capabilities::maximumTextureBufferSize" is not 0
 		*/
-		virtual ITextureBuffer *createTextureBuffer(unsigned int numberOfBytes, TextureFormat::Enum textureFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+		virtual ITextureBuffer *createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 
 		/**
 		*  @brief
@@ -356,7 +355,7 @@ namespace Renderer
 		*  @note
 		*    - Only supported if "Renderer::Capabilities::maximumNumberOf2DTextureArraySlices" is not 0
 		*/
-		virtual ITexture2D *createTexture2D(unsigned int width, unsigned int height, TextureFormat::Enum textureFormat, void *data = nullptr, unsigned int flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
+		virtual ITexture2D *createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
 
 		/**
 		*  @brief
@@ -380,7 +379,7 @@ namespace Renderer
 		*  @return
 		*    The created 2D array texture instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual ITexture2DArray *createTexture2DArray(unsigned int width, unsigned int height, unsigned int numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, unsigned int flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
+		virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
 
 		/**
 		*  @brief
@@ -446,7 +445,7 @@ namespace Renderer
 		*  @note
 		*    - The texture collection keeps a reference to the provided texture instances
 		*/
-		virtual ITextureCollection *createTextureCollection(unsigned int numberOfTextures, ITexture **textures) = 0;
+		virtual ITextureCollection *createTextureCollection(uint32_t numberOfTextures, ITexture **textures) = 0;
 
 		/**
 		*  @brief
@@ -464,7 +463,7 @@ namespace Renderer
 		*  @note
 		*    - The sampler state collection keeps a reference to the provided sampler state instances
 		*/
-		virtual ISamplerStateCollection *createSamplerStateCollection(unsigned int numberOfSamplerStates, ISamplerState **samplerStates) = 0;
+		virtual ISamplerStateCollection *createSamplerStateCollection(uint32_t numberOfSamplerStates, ISamplerState **samplerStates) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Resource handling                                     ]
@@ -487,7 +486,7 @@ namespace Renderer
 		*  @return
 		*    "true" if all went fine, else "false"
 		*/
-		virtual bool map(IResource &resource, unsigned int subresource, MapType::Enum mapType, unsigned int mapFlags, MappedSubresource &mappedSubresource) = 0;
+		virtual bool map(IResource &resource, uint32_t subresource, MapType::Enum mapType, uint32_t mapFlags, MappedSubresource &mappedSubresource) = 0;
 
 		/**
 		*  @brief
@@ -498,7 +497,7 @@ namespace Renderer
 		*  @param[in] subresource
 		*    Subresource
 		*/
-		virtual void unmap(IResource &resource, unsigned int subresource) = 0;
+		virtual void unmap(IResource &resource, uint32_t subresource) = 0;
 
 		//[-------------------------------------------------------]
 		//[ States                                                ]
@@ -551,7 +550,7 @@ namespace Renderer
 		*  @param[in] texture
 		*    Texture to use, can be an null pointer (default: "nullptr")
 		*/
-		virtual void vsSetTexture(unsigned int unit, ITexture *texture) = 0;
+		virtual void vsSetTexture(uint32_t unit, ITexture *texture) = 0;
 
 		/**
 		*  @brief
@@ -562,7 +561,7 @@ namespace Renderer
 		*  @param[in] textureCollection
 		*    Texture collection to use, can be an null pointer
 		*/
-		virtual void vsSetTextureCollection(unsigned int startUnit, ITextureCollection *textureCollection) = 0;
+		virtual void vsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
 
 		/**
 		*  @brief
@@ -573,7 +572,7 @@ namespace Renderer
 		*  @param[in] samplerState
 		*    Sampler state, can be a null pointer (default: "nullptr", see "Renderer::SamplerState" for the default values used in this case)
 		*/
-		virtual void vsSetSamplerState(unsigned int unit, ISamplerState *samplerState) = 0;
+		virtual void vsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
 
 		/**
 		*  @brief
@@ -584,7 +583,7 @@ namespace Renderer
 		*  @param[in] samplerStateCollection
 		*    Sampler state collection to use, can be an null pointer
 		*/
-		virtual void vsSetSamplerStateCollection(unsigned int startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
+		virtual void vsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
 
 		/**
 		*  @brief
@@ -599,7 +598,7 @@ namespace Renderer
 		*    - Uniform buffer instances are created by using "Renderer::IShaderLanguage::createUniformBuffer()"
 		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
 		*/
-		virtual void vsSetUniformBuffer(unsigned int slot, IUniformBuffer *uniformBuffer) = 0;
+		virtual void vsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Tessellation-control-shader (TCS) stage               ]
@@ -613,7 +612,7 @@ namespace Renderer
 		*  @param[in] texture
 		*    Texture to use, can be an null pointer (default: "nullptr")
 		*/
-		virtual void tcsSetTexture(unsigned int unit, ITexture *texture) = 0;
+		virtual void tcsSetTexture(uint32_t unit, ITexture *texture) = 0;
 
 		/**
 		*  @brief
@@ -624,7 +623,7 @@ namespace Renderer
 		*  @param[in] textureCollection
 		*    Texture collection to use, can be an null pointer
 		*/
-		virtual void tcsSetTextureCollection(unsigned int startUnit, ITextureCollection *textureCollection) = 0;
+		virtual void tcsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
 
 		/**
 		*  @brief
@@ -635,7 +634,7 @@ namespace Renderer
 		*  @param[in] samplerState
 		*    Sampler state, can be a null pointer (default: "nullptr", see "Renderer::SamplerState" for the default values used in this case)
 		*/
-		virtual void tcsSetSamplerState(unsigned int unit, ISamplerState *samplerState) = 0;
+		virtual void tcsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
 
 		/**
 		*  @brief
@@ -646,7 +645,7 @@ namespace Renderer
 		*  @param[in] samplerStateCollection
 		*    Sampler state collection to use, can be an null pointer
 		*/
-		virtual void tcsSetSamplerStateCollection(unsigned int startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
+		virtual void tcsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
 
 		/**
 		*  @brief
@@ -661,7 +660,7 @@ namespace Renderer
 		*    - Uniform buffer instances are created by using "Renderer::IShaderLanguage::createUniformBuffer()"
 		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
 		*/
-		virtual void tcsSetUniformBuffer(unsigned int slot, IUniformBuffer *uniformBuffer) = 0;
+		virtual void tcsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Tessellation-evaluation-shader (TES) stage            ]
@@ -675,7 +674,7 @@ namespace Renderer
 		*  @param[in] texture
 		*    Texture to use, can be an null pointer (default: "nullptr")
 		*/
-		virtual void tesSetTexture(unsigned int unit, ITexture *texture) = 0;
+		virtual void tesSetTexture(uint32_t unit, ITexture *texture) = 0;
 
 		/**
 		*  @brief
@@ -686,7 +685,7 @@ namespace Renderer
 		*  @param[in] textureCollection
 		*    Texture collection to use, can be an null pointer
 		*/
-		virtual void tesSetTextureCollection(unsigned int startUnit, ITextureCollection *textureCollection) = 0;
+		virtual void tesSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
 
 		/**
 		*  @brief
@@ -697,7 +696,7 @@ namespace Renderer
 		*  @param[in] samplerState
 		*    Sampler state, can be a null pointer (default: "nullptr", see "Renderer::SamplerState" for the default values used in this case)
 		*/
-		virtual void tesSetSamplerState(unsigned int unit, ISamplerState *samplerState) = 0;
+		virtual void tesSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
 
 		/**
 		*  @brief
@@ -708,7 +707,7 @@ namespace Renderer
 		*  @param[in] samplerStateCollection
 		*    Sampler state collection to use, can be an null pointer
 		*/
-		virtual void tesSetSamplerStateCollection(unsigned int startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
+		virtual void tesSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
 
 		/**
 		*  @brief
@@ -723,7 +722,7 @@ namespace Renderer
 		*    - Uniform buffer instances are created by using "Renderer::IShaderLanguage::createUniformBuffer()"
 		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
 		*/
-		virtual void tesSetUniformBuffer(unsigned int slot, IUniformBuffer *uniformBuffer) = 0;
+		virtual void tesSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Geometry-shader (GS) stage                            ]
@@ -737,7 +736,7 @@ namespace Renderer
 		*  @param[in] texture
 		*    Texture to use, can be an null pointer (default: "nullptr")
 		*/
-		virtual void gsSetTexture(unsigned int unit, ITexture *texture) = 0;
+		virtual void gsSetTexture(uint32_t unit, ITexture *texture) = 0;
 
 		/**
 		*  @brief
@@ -748,7 +747,7 @@ namespace Renderer
 		*  @param[in] textureCollection
 		*    Texture collection to use, can be an null pointer
 		*/
-		virtual void gsSetTextureCollection(unsigned int startUnit, ITextureCollection *textureCollection) = 0;
+		virtual void gsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
 
 		/**
 		*  @brief
@@ -759,7 +758,7 @@ namespace Renderer
 		*  @param[in] samplerState
 		*    Sampler state, can be a null pointer (default: "nullptr", see "Renderer::SamplerState" for the default values used in this case)
 		*/
-		virtual void gsSetSamplerState(unsigned int unit, ISamplerState *samplerState) = 0;
+		virtual void gsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
 
 		/**
 		*  @brief
@@ -770,7 +769,7 @@ namespace Renderer
 		*  @param[in] samplerStateCollection
 		*    Sampler state collection to use, can be an null pointer
 		*/
-		virtual void gsSetSamplerStateCollection(unsigned int startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
+		virtual void gsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
 
 		/**
 		*  @brief
@@ -785,7 +784,7 @@ namespace Renderer
 		*    - Uniform buffer instances are created by using "Renderer::IShaderLanguage::createUniformBuffer()"
 		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
 		*/
-		virtual void gsSetUniformBuffer(unsigned int slot, IUniformBuffer *uniformBuffer) = 0;
+		virtual void gsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
@@ -802,7 +801,7 @@ namespace Renderer
 		*  @note
 		*    - The current viewport(s) does not affect the clear operation
 		*/
-		virtual void rsSetViewports(unsigned int numberOfViewports, const Viewport *viewports) = 0;
+		virtual void rsSetViewports(uint32_t numberOfViewports, const Viewport *viewports) = 0;
 
 		/**
 		*  @brief
@@ -817,7 +816,7 @@ namespace Renderer
 		*    - Scissor rectangles are only used when "Renderer::RasterizerState::scissorEnable" is true
 		*    - The current scissor rectangle(s) does not affect the clear operation
 		*/
-		virtual void rsSetScissorRectangles(unsigned int numberOfScissorRectangles, const ScissorRectangle *scissorRectangles) = 0;
+		virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const ScissorRectangle *scissorRectangles) = 0;
 
 		/**
 		*  @brief
@@ -840,7 +839,7 @@ namespace Renderer
 		*  @param[in] texture
 		*    Texture to use, can be an null pointer (default: "nullptr")
 		*/
-		virtual void fsSetTexture(unsigned int unit, ITexture *texture) = 0;
+		virtual void fsSetTexture(uint32_t unit, ITexture *texture) = 0;
 
 		/**
 		*  @brief
@@ -851,7 +850,7 @@ namespace Renderer
 		*  @param[in] textureCollection
 		*    Texture collection to use, can be an null pointer
 		*/
-		virtual void fsSetTextureCollection(unsigned int startUnit, ITextureCollection *textureCollection) = 0;
+		virtual void fsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
 
 		/**
 		*  @brief
@@ -862,7 +861,7 @@ namespace Renderer
 		*  @param[in] samplerState
 		*    Sampler state, can be a null pointer (default: "nullptr", see "Renderer::SamplerState" for the default values used in this case)
 		*/
-		virtual void fsSetSamplerState(unsigned int unit, ISamplerState *samplerState) = 0;
+		virtual void fsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
 
 		/**
 		*  @brief
@@ -873,7 +872,7 @@ namespace Renderer
 		*  @param[in] samplerStateCollection
 		*    Sampler state collection to use, can be an null pointer
 		*/
-		virtual void fsSetSamplerStateCollection(unsigned int startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
+		virtual void fsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
 
 		/**
 		*  @brief
@@ -888,7 +887,7 @@ namespace Renderer
 		*    - Uniform buffer instances are created by using "Renderer::IShaderLanguage::createUniformBuffer()"
 		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
 		*/
-		virtual void fsSetUniformBuffer(unsigned int slot, IUniformBuffer *uniformBuffer) = 0;
+		virtual void fsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
@@ -956,7 +955,7 @@ namespace Renderer
 		*    - The current scissor rectangle(s) (see "Renderer::IRenderer::rsSetScissorRectangles()") does not affect the clear operation
 		*    - In case there are multiple active render targets, all render targets are cleared
 		*/
-		virtual void clear(unsigned int flags, const float color[4], float z, unsigned int stencil) = 0;
+		virtual void clear(uint32_t flags, const float color[4], float z, uint32_t stencil) = 0;
 
 		/**
 		*  @brief
@@ -994,7 +993,7 @@ namespace Renderer
 		*  @note
 		*    - Fails if no vertex array is set
 		*/
-		virtual void draw(unsigned int startVertexLocation, unsigned int numberOfVertices) = 0;
+		virtual void draw(uint32_t startVertexLocation, uint32_t numberOfVertices) = 0;
 
 		/**
 		*  @brief
@@ -1013,7 +1012,7 @@ namespace Renderer
 		*      "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
 		*    - Fails if no vertex array is set
 		*/
-		virtual void drawInstanced(unsigned int startVertexLocation, unsigned int numberOfVertices, unsigned int numberOfInstances) = 0;
+		virtual void drawInstanced(uint32_t startVertexLocation, uint32_t numberOfVertices, uint32_t numberOfInstances) = 0;
 
 		/**
 		*  @brief
@@ -1034,7 +1033,7 @@ namespace Renderer
 		*    - This method draws indexed primitives from the current set of data input streams
 		*    - Fails if no index and/or vertex array is set
 		*/
-		virtual void drawIndexed(unsigned int startIndexLocation, unsigned int numberOfIndices, unsigned int baseVertexLocation, unsigned int minimumIndex, unsigned int numberOfVertices) = 0;
+		virtual void drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices) = 0;
 
 		/**
 		*  @brief
@@ -1059,7 +1058,7 @@ namespace Renderer
 		*    - This method draws indexed primitives from the current set of data input streams
 		*    - Fails if no index and/or vertex array is set
 		*/
-		virtual void drawIndexedInstanced(unsigned int startIndexLocation, unsigned int numberOfIndices, unsigned int baseVertexLocation, unsigned int minimumIndex, unsigned int numberOfVertices, unsigned int numberOfInstances) = 0;
+		virtual void drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices, uint32_t numberOfInstances) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Synchronization                                       ]

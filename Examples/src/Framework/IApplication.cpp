@@ -86,12 +86,12 @@ void IApplication::onToggleFullscreenState()
 	// Nothing to do in here
 }
 
-void IApplication::onKeyDown(unsigned int)
+void IApplication::onKeyDown(uint32_t)
 {
 	// Nothing to do in here
 }
 
-void IApplication::onKeyUp(unsigned int)
+void IApplication::onKeyUp(uint32_t)
 {
 	// Nothing to do in here
 }

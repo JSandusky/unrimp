@@ -27,6 +27,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "Framework/PlatformTypes.h"
+
+
+//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 /**
@@ -171,7 +177,7 @@ private:
 	*  @return
 	*    Number of microseconds elapsed since the system was started
 	*/
-	unsigned int getSystemMicroseconds() const;
+	uint32_t getSystemMicroseconds() const;
 
 
 //[-------------------------------------------------------]

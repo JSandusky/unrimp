@@ -72,7 +72,7 @@ public:
 	*  @param[in] sceneRadius
 	*    Scene radius
 	*/
-	CubeRendererDrawInstanced(Renderer::IRenderer &renderer, unsigned int numberOfTextures, unsigned int sceneRadius);
+	CubeRendererDrawInstanced(Renderer::IRenderer &renderer, uint32_t numberOfTextures, uint32_t sceneRadius);
 
 	/**
 	*  @brief
@@ -85,7 +85,7 @@ public:
 //[ Public virtual ICubeRenderer methods                  ]
 //[-------------------------------------------------------]
 public:
-	virtual void setNumberOfCubes(unsigned int numberOfCubes) override;
+	virtual void setNumberOfCubes(uint32_t numberOfCubes) override;
 	virtual void draw(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ) override;
 
 
@@ -94,9 +94,9 @@ public:
 //[-------------------------------------------------------]
 private:
 	Renderer::IRendererPtr		  mRenderer;							///< Renderer instance to use, always valid
-	unsigned int				  mNumberOfTextures;					///< Number of textures
-	unsigned int				  mSceneRadius;							///< Scene radius
-	unsigned int				  mMaximumNumberOfInstancesPerBatch;	///< Maximum number of instances per batch
+	uint32_t					  mNumberOfTextures;					///< Number of textures
+	uint32_t					  mSceneRadius;							///< Scene radius
+	uint32_t					  mMaximumNumberOfInstancesPerBatch;	///< Maximum number of instances per batch
 	Renderer::ITexture2DArrayPtr  mTexture2DArray;						///< 2D texture array, can be a null pointer
 	Renderer::ISamplerStatePtr	  mSamplerState;						///< Sampler state, can be a null pointer
 	Renderer::IUniformBufferPtr	  mUniformBufferStaticVs;				///< Static vertex shader uniform buffer object (UBO), can be a null pointer
@@ -104,7 +104,7 @@ private:
 	Renderer::IUniformBufferPtr	  mUniformBufferDynamicFs;				///< Dynamic fragment shader uniform buffer object (UBO), can be a null pointer
 	Renderer::IProgramPtr		  mProgram;								///< Program, can be a null pointer
 	Renderer::IVertexArrayPtr	  mVertexArray;							///< Vertex array object (VAO), can be a null pointer
-	unsigned int				  mNumberOfBatches;						///< Current number of batches
+	uint32_t					  mNumberOfBatches;						///< Current number of batches
 	BatchDrawInstanced			 *mBatches;								///< Batches, can be a null pointer
 
 

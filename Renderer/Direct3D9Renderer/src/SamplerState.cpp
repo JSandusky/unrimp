@@ -78,7 +78,7 @@ namespace Direct3D9Renderer
 		// Nothing to do in here
 	}
 
-	void SamplerState::setDirect3D9SamplerStates(unsigned int sampler, IDirect3DDevice9 &direct3DDevice9) const
+	void SamplerState::setDirect3D9SamplerStates(uint32_t sampler, IDirect3DDevice9 &direct3DDevice9) const
 	{
 		// "IDirect3DDevice9::SetSamplerState()"-documentation: "D3DSAMPLERSTATETYPE Enumerated Type" at MSDN http://msdn.microsoft.com/en-us/library/windows/desktop/bb172602%28v=vs.85%29.aspx
 

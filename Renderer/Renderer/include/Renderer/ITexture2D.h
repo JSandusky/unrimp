@@ -67,7 +67,7 @@ namespace Renderer
 		*  @return
 		*    The width of the texture
 		*/
-		inline unsigned int getWidth() const;
+		inline uint32_t getWidth() const;
 
 		/**
 		*  @brief
@@ -76,7 +76,7 @@ namespace Renderer
 		*  @return
 		*    The height of the texture
 		*/
-		inline unsigned int getHeight() const;
+		inline uint32_t getHeight() const;
 
 
 	//[-------------------------------------------------------]
@@ -94,7 +94,7 @@ namespace Renderer
 		*  @param[in] height
 		*    The height of the texture
 		*/
-		inline ITexture2D(IRenderer &renderer, unsigned int width, unsigned int height);
+		inline ITexture2D(IRenderer &renderer, uint32_t width, uint32_t height);
 
 		/**
 		*  @brief
@@ -122,8 +122,8 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mWidth;	///< The width of the texture
-		unsigned int mHeight;	///< The height of the texture
+		uint32_t mWidth;	///< The width of the texture
+		uint32_t mHeight;	///< The height of the texture
 
 
 	};

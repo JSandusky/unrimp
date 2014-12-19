@@ -28,7 +28,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int FragmentShaderGlsl::getOpenGLShader() const
+	inline uint32_t FragmentShaderGlsl::getOpenGLShader() const
 	{
 		return mOpenGLShader;
 	}

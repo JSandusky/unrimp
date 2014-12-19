@@ -58,7 +58,7 @@ namespace RendererToolkit
 	*    "true" if the number is a power of 2, else "false"
 	*/
 	// TODO(co) "isPowerOfTwo()" is an generic helper function, move it elsewhere
-	bool isPowerOfTwo(unsigned int number)
+	bool isPowerOfTwo(uint32_t number)
 	{
 		// 0 is not a power of 2, so we need to perform an additional test to catch this special case
 		return (0 == number) ? false : (0 == (number & (number - 1)));
@@ -77,7 +77,7 @@ namespace RendererToolkit
 	*    The nearest power of 2, if it couldn't be found "number"
 	*/
 	// TODO(co) "getNearestPowerOfTwo()" is an generic helper function, move it elsewhere
-	unsigned int getNearestPowerOfTwo(unsigned int number, bool lower = true)
+	uint32_t getNearestPowerOfTwo(uint32_t number, bool lower = true)
 	{
 		// 0 is not a power of 2, so we need to perform an additional test to catch this special case
 		if (0 == number)
@@ -91,10 +91,10 @@ namespace RendererToolkit
 			if (!isPowerOfTwo(number))
 			{
 				// 2^31 is our upper limit
-				unsigned int previousNumber = 1;
-				for (unsigned int i = 1; i < 32; ++i)
+				uint32_t previousNumber = 1;
+				for (uint32_t i = 1; i < 32; ++i)
 				{
-					const unsigned int currentNumber = static_cast<unsigned int>(powf(2.0f, static_cast<float>(i)));
+					const uint32_t currentNumber = static_cast<uint32_t>(powf(2.0f, static_cast<float>(i)));
 					if (number < currentNumber)
 					{
 						return lower ? previousNumber : currentNumber;
@@ -135,13 +135,13 @@ namespace RendererToolkit
 			{ // Get the file size
 				const long position = ftell(file);
 				fseek(file, 0, SEEK_END);
-				mFontFileSize = static_cast<unsigned int>(ftell(file));
+				mFontFileSize = static_cast<uint32_t>(ftell(file));
 				fseek(file, position, SEEK_SET);
 			}
 
 			// Read in the whole file
-			mFontFileData = new unsigned char[mFontFileSize];
-			fread(mFontFileData, sizeof(unsigned char), mFontFileSize, file);
+			mFontFileData = new uint8_t[mFontFileSize];
+			fread(mFontFileData, sizeof(uint8_t), mFontFileSize, file);
 
 			// Close the file
 			fclose(file);
@@ -191,7 +191,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IFont methods         ]
 	//[-------------------------------------------------------]
-	bool FontTextureFreeType::setSize(unsigned int size, unsigned int resolution)
+	bool FontTextureFreeType::setSize(uint32_t size, uint32_t resolution)
 	{
 		// Destroy the glyph texture atlas - it's now dirty
 		destroyGlyphTextureAtlas();
@@ -258,7 +258,7 @@ namespace RendererToolkit
 				for (size_t i = 0; i < textLength; ++i, ++text)
 				{
 					// Get the character code
-					const unsigned char characterCode = static_cast<unsigned char>(*text);
+					const uint8_t characterCode = static_cast<uint8_t>(*text);
 
 					// Get the glyph instance of the current character
 					if (characterCode < mNumberOfFontGlyphs)
@@ -275,7 +275,7 @@ namespace RendererToolkit
 		return width;
 	}
 
-	void FontTextureFreeType::drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX, float scaleY, float biasX, float biasY, unsigned int flags)
+	void FontTextureFreeType::drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX, float scaleY, float biasX, float biasY, uint32_t flags)
 	{
 		// Are the text and the text color valid?
 		if (nullptr != text && '\0' != text[0] && nullptr != color)
@@ -334,7 +334,7 @@ namespace RendererToolkit
 					// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
 					//    to use is usually defined directly within the shader by using the "register"-keyword
 					// TODO(co) This should only be done once during initialization
-					const unsigned int unit = program->setTextureUnit(program->getUniformHandle("GlyphMap"), 0);
+					const uint32_t unit = program->setTextureUnit(program->getUniformHandle("GlyphMap"), 0);
 
 					// Set the used texture at the texture unit
 					renderer.fsSetTexture(unit, mTexture2D);
@@ -364,7 +364,7 @@ namespace RendererToolkit
 				for (; currentText < textEnd; ++currentText)
 				{
 					// Get the character code
-					const unsigned char characterCode = static_cast<unsigned char>(*currentText);
+					const uint8_t characterCode = static_cast<uint8_t>(*currentText);
 
 					// Get the glyph instance of the current character
 					if (characterCode < mNumberOfFontGlyphs)
@@ -443,14 +443,14 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void FontTextureFreeType::calculateGlyphTextureAtlasSize(unsigned int &glyphTextureAtlasSizeX, unsigned int &glyphTextureAtlasSizeY)
+	void FontTextureFreeType::calculateGlyphTextureAtlasSize(uint32_t &glyphTextureAtlasSizeX, uint32_t &glyphTextureAtlasSizeY)
 	{
 		// Get the maximum supported renderer texture size
-		const unsigned int maximumTextureDimension = mRendererToolkitImpl->getFreeTypeContext().getRenderer().getCapabilities().maximumTextureDimension;
+		const uint32_t maximumTextureDimension = mRendererToolkitImpl->getFreeTypeContext().getRenderer().getCapabilities().maximumTextureDimension;
 		if (maximumTextureDimension > 0)
 		{
 			// Get the font height in pixels
-			const unsigned int fontHeight = getHeightInPixels();
+			const uint32_t fontHeight = getHeightInPixels();
 			if (fontHeight > 0)
 			{
 				// We've got 256 glyphs, this means there are 16 glyphs per row within the glyph texture atlas
@@ -495,24 +495,24 @@ namespace RendererToolkit
 			if (mGlyphTextureAtlasSizeX > 0 && mGlyphTextureAtlasSizeY > 0 )
 			{
 				// Allocate memory for the glyph texture atlas and initialize it with zero to avoid sampling artefacts later on
-				const unsigned int totalNumberOfBytes = getGlyphTextureAtlasNumberOfBytes(false);
-				unsigned char *glyphTextureAtlasData = new unsigned char[totalNumberOfBytes];
+				const uint32_t totalNumberOfBytes = getGlyphTextureAtlasNumberOfBytes(false);
+				uint8_t *glyphTextureAtlasData = new uint8_t[totalNumberOfBytes];
 				memset(glyphTextureAtlasData, 0, totalNumberOfBytes);
 
 				// Get the font height in pixels (if we're here, we already now that it's valid!)
-				const unsigned int fontHeight = getHeightInPixels();
+				const uint32_t fontHeight = getHeightInPixels();
 
 				{ // Fill the glyph texture atlas - We've got 256 glyphs, this means there are 16 glyphs per row within the glyph texture atlas
-					const unsigned int numberOfGlyphs		= 256;
-					const unsigned int glyphsPerRow			= 16;
-					const unsigned int glyphsPerColumn		= 16;
-					const unsigned int xDistanceToNextGlyph = fontHeight + mGlyphTextureAtlasPadding;
-					const unsigned int yDistanceToNextGlyph = fontHeight + mGlyphTextureAtlasPadding;
+					const uint32_t numberOfGlyphs		= 256;
+					const uint32_t glyphsPerRow			= 16;
+					const uint32_t glyphsPerColumn		= 16;
+					const uint32_t xDistanceToNextGlyph = fontHeight + mGlyphTextureAtlasPadding;
+					const uint32_t yDistanceToNextGlyph = fontHeight + mGlyphTextureAtlasPadding;
 					mFontGlyphs = new FontGlyphTextureFreeType[numberOfGlyphs];
 					FontGlyphTextureFreeType *currentFontGlyphs = mFontGlyphs;
-					for (unsigned int y = 0, i = 0; y < glyphsPerRow; ++y)
+					for (uint32_t y = 0, i = 0; y < glyphsPerRow; ++y)
 					{
-						for (unsigned int x = 0; x < glyphsPerColumn; ++x, ++i, ++currentFontGlyphs)
+						for (uint32_t x = 0; x < glyphsPerColumn; ++x, ++i, ++currentFontGlyphs)
 						{
 							// Initialize the texture glyph
 							currentFontGlyphs->initialize(*this, i, mGlyphTextureAtlasPadding + x * xDistanceToNextGlyph, mGlyphTextureAtlasPadding + y * yDistanceToNextGlyph, glyphTextureAtlasData);
@@ -543,14 +543,14 @@ namespace RendererToolkit
 		}
 	}
 
-	unsigned int FontTextureFreeType::getGlyphTextureAtlasNumberOfBytes(bool includeMipmaps) const
+	uint32_t FontTextureFreeType::getGlyphTextureAtlasNumberOfBytes(bool includeMipmaps) const
 	{
 		// Include mipmaps?
 		if (includeMipmaps)
 		{
-			unsigned int glyphTextureAtlasSizeX = mGlyphTextureAtlasSizeX;
-			unsigned int glyphTextureAtlasSizeY = mGlyphTextureAtlasSizeY;
-			unsigned int totalNumOfBytes = 0;
+			uint32_t glyphTextureAtlasSizeX = mGlyphTextureAtlasSizeX;
+			uint32_t glyphTextureAtlasSizeY = mGlyphTextureAtlasSizeY;
+			uint32_t totalNumOfBytes = 0;
 
 			// Go down the mipmap chain
 			while (glyphTextureAtlasSizeX > 1 || glyphTextureAtlasSizeY > 1)

@@ -88,7 +88,7 @@ namespace Renderer
 		*  @param[in] data
 		*    Texture buffer data, can be a null pointer (nothing happens)
 		*/
-		virtual void copyDataFrom(unsigned int numberOfBytes, const void *data) = 0;
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) = 0;
 
 
 	//[-------------------------------------------------------]

@@ -27,6 +27,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "Renderer/PlatformTypes.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -55,54 +61,54 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		//[ Resources                                             ]
 		//[-------------------------------------------------------]
-		unsigned int currentNumberOfPrograms;						///< Current number of program instances
-		unsigned int numberOfCreatedPrograms;						///< Number of created program instances
-		unsigned int currentNumberOfVertexArrays;					///< Current number of vertex array object (VAO, input-assembler (IA) stage) instances
-		unsigned int numberOfCreatedVertexArrays;					///< Number of created vertex array object (VAO, input-assembler (IA) stage) instances
+		uint32_t currentNumberOfPrograms;						///< Current number of program instances
+		uint32_t numberOfCreatedPrograms;						///< Number of created program instances
+		uint32_t currentNumberOfVertexArrays;					///< Current number of vertex array object (VAO, input-assembler (IA) stage) instances
+		uint32_t numberOfCreatedVertexArrays;					///< Number of created vertex array object (VAO, input-assembler (IA) stage) instances
 		// IRenderTarget
-		unsigned int currentNumberOfSwapChains;						///< Current number of swap chain instances
-		unsigned int numberOfCreatedSwapChains;						///< Number of created swap chain instances
-		unsigned int currentNumberOfFramebuffers;					///< Current number of framebuffer object (FBO) instances
-		unsigned int numberOfCreatedFramebuffers;					///< Number of created framebuffer object (FBO) instances
+		uint32_t currentNumberOfSwapChains;						///< Current number of swap chain instances
+		uint32_t numberOfCreatedSwapChains;						///< Number of created swap chain instances
+		uint32_t currentNumberOfFramebuffers;					///< Current number of framebuffer object (FBO) instances
+		uint32_t numberOfCreatedFramebuffers;					///< Number of created framebuffer object (FBO) instances
 		// IBuffer
-		unsigned int currentNumberOfIndexBuffers;					///< Current number of index buffer object (IBO, input-assembler (IA) stage) instances
-		unsigned int numberOfCreatedIndexBuffers;					///< Number of created index buffer object (IBO, input-assembler (IA) stage) instances
-		unsigned int currentNumberOfVertexBuffers;					///< Current number of vertex buffer object (VBO, input-assembler (IA) stage) instances
-		unsigned int numberOfCreatedVertexBuffers;					///< Number of created vertex buffer object (VBO, input-assembler (IA) stage) instances
-		unsigned int currentNumberOfUniformBuffers;					///< Current number of uniform buffer object (UBO, "constant buffer" in Direct3D terminology) instances
-		unsigned int numberOfCreatedUniformBuffers;					///< Number of created uniform buffer object (UBO, "constant buffer" in Direct3D terminology) instances
+		uint32_t currentNumberOfIndexBuffers;					///< Current number of index buffer object (IBO, input-assembler (IA) stage) instances
+		uint32_t numberOfCreatedIndexBuffers;					///< Number of created index buffer object (IBO, input-assembler (IA) stage) instances
+		uint32_t currentNumberOfVertexBuffers;					///< Current number of vertex buffer object (VBO, input-assembler (IA) stage) instances
+		uint32_t numberOfCreatedVertexBuffers;					///< Number of created vertex buffer object (VBO, input-assembler (IA) stage) instances
+		uint32_t currentNumberOfUniformBuffers;					///< Current number of uniform buffer object (UBO, "constant buffer" in Direct3D terminology) instances
+		uint32_t numberOfCreatedUniformBuffers;					///< Number of created uniform buffer object (UBO, "constant buffer" in Direct3D terminology) instances
 		// ITexture
-		unsigned int currentNumberOfTextureBuffers;					///< Current number of texture buffer object (TBO) instances
-		unsigned int numberOfCreatedTextureBuffers;					///< Number of created texture buffer object (TBO) instances
-		unsigned int currentNumberOfTexture2Ds;						///< Current number of texture 2D instances
-		unsigned int numberOfCreatedTexture2Ds;						///< Number of created texture 2D instances
-		unsigned int currentNumberOfTexture2DArrays;				///< Current number of texture 2D array instances
-		unsigned int numberOfCreatedTexture2DArrays;				///< Number of created texture 2D array instances
+		uint32_t currentNumberOfTextureBuffers;					///< Current number of texture buffer object (TBO) instances
+		uint32_t numberOfCreatedTextureBuffers;					///< Number of created texture buffer object (TBO) instances
+		uint32_t currentNumberOfTexture2Ds;						///< Current number of texture 2D instances
+		uint32_t numberOfCreatedTexture2Ds;						///< Number of created texture 2D instances
+		uint32_t currentNumberOfTexture2DArrays;				///< Current number of texture 2D array instances
+		uint32_t numberOfCreatedTexture2DArrays;				///< Number of created texture 2D array instances
 		// IState
-		unsigned int currentNumberOfRasterizerStates;				///< Current number of rasterizer state (rasterizer stage (RS)) instances
-		unsigned int numberOfCreatedRasterizerStates;				///< Number of created rasterizer state (rasterizer stage (RS)) instances
-		unsigned int currentNumberOfDepthStencilStates;				///< Current number of depth stencil state (output-merger (OM) stage) instances
-		unsigned int numberOfCreatedDepthStencilStates;				///< Number of created depth stencil state (output-merger (OM) stage) instances
-		unsigned int currentNumberOfBlendStates;					///< Current number of blend state (output-merger (OM) stage) instances
-		unsigned int numberOfCreatedBlendStates;					///< Number of created blend state (output-merger (OM) stage) instances
-		unsigned int currentNumberOfSamplerStates;					///< Current number of sampler state instances
-		unsigned int numberOfCreatedSamplerStates;					///< Number of created sampler state instances
+		uint32_t currentNumberOfRasterizerStates;				///< Current number of rasterizer state (rasterizer stage (RS)) instances
+		uint32_t numberOfCreatedRasterizerStates;				///< Number of created rasterizer state (rasterizer stage (RS)) instances
+		uint32_t currentNumberOfDepthStencilStates;				///< Current number of depth stencil state (output-merger (OM) stage) instances
+		uint32_t numberOfCreatedDepthStencilStates;				///< Number of created depth stencil state (output-merger (OM) stage) instances
+		uint32_t currentNumberOfBlendStates;					///< Current number of blend state (output-merger (OM) stage) instances
+		uint32_t numberOfCreatedBlendStates;					///< Number of created blend state (output-merger (OM) stage) instances
+		uint32_t currentNumberOfSamplerStates;					///< Current number of sampler state instances
+		uint32_t numberOfCreatedSamplerStates;					///< Number of created sampler state instances
 		// IShader
-		unsigned int currentNumberOfVertexShaders;					///< Current number of vertex shader (VS) instances
-		unsigned int numberOfCreatedVertexShaders;					///< Number of created vertex shader (VS) instances
-		unsigned int currentNumberOfTessellationControlShaders;		///< Current number of tessellation control shader (TCS, "hull shader" in Direct3D terminology) instances
-		unsigned int numberOfCreatedTessellationControlShaders;		///< Number of created tessellation control shader (TCS, "hull shader" in Direct3D terminology) instances
-		unsigned int currentNumberOfTessellationEvaluationShaders;	///< Current number of tessellation evaluation shader (TES, "domain shader" in Direct3D terminology) instances
-		unsigned int numberOfCreatedTessellationEvaluationShaders;	///< Number of created tessellation evaluation shader (TES, "domain shader" in Direct3D terminology) instances
-		unsigned int currentNumberOfGeometryShaders;				///< Current number of geometry shader (GS) instances
-		unsigned int numberOfCreatedGeometryShaders;				///< Number of created geometry shader (GS) instances
-		unsigned int currentNumberOfFragmentShaders;				///< Current number of gragment shader (FS, "pixel shader" in Direct3D terminology) instances
-		unsigned int numberOfCreatedFragmentShaders;				///< Number of created gragment shader (FS, "pixel shader" in Direct3D terminology) instances
+		uint32_t currentNumberOfVertexShaders;					///< Current number of vertex shader (VS) instances
+		uint32_t numberOfCreatedVertexShaders;					///< Number of created vertex shader (VS) instances
+		uint32_t currentNumberOfTessellationControlShaders;		///< Current number of tessellation control shader (TCS, "hull shader" in Direct3D terminology) instances
+		uint32_t numberOfCreatedTessellationControlShaders;		///< Number of created tessellation control shader (TCS, "hull shader" in Direct3D terminology) instances
+		uint32_t currentNumberOfTessellationEvaluationShaders;	///< Current number of tessellation evaluation shader (TES, "domain shader" in Direct3D terminology) instances
+		uint32_t numberOfCreatedTessellationEvaluationShaders;	///< Number of created tessellation evaluation shader (TES, "domain shader" in Direct3D terminology) instances
+		uint32_t currentNumberOfGeometryShaders;				///< Current number of geometry shader (GS) instances
+		uint32_t numberOfCreatedGeometryShaders;				///< Number of created geometry shader (GS) instances
+		uint32_t currentNumberOfFragmentShaders;				///< Current number of gragment shader (FS, "pixel shader" in Direct3D terminology) instances
+		uint32_t numberOfCreatedFragmentShaders;				///< Number of created gragment shader (FS, "pixel shader" in Direct3D terminology) instances
 		// ICollection
-		unsigned int currentNumberOfTextureCollections;				///< Current number of texture collection instances
-		unsigned int numberOfCreatedTextureCollections;				///< Number of created texture collection instances
-		unsigned int currentNumberOfSamplerStateCollections;		///< Current number of sampler state collection instances
-		unsigned int numberOfCreatedSamplerStateCollections;		///< Number of created sampler state collection instances
+		uint32_t currentNumberOfTextureCollections;				///< Current number of texture collection instances
+		uint32_t numberOfCreatedTextureCollections;				///< Number of created texture collection instances
+		uint32_t currentNumberOfSamplerStateCollections;		///< Current number of sampler state collection instances
+		uint32_t numberOfCreatedSamplerStateCollections;		///< Number of created sampler state collection instances
 
 
 	//[-------------------------------------------------------]
@@ -133,7 +139,7 @@ namespace Renderer
 		*    - Not for the public "Renderer.h"-interface
 		*    - The result is calculated by using the current statistics, do only call this method if you have to
 		*/
-		inline unsigned int getNumberOfCurrentResources() const;
+		inline uint32_t getNumberOfCurrentResources() const;
 
 		/**
 		*  @brief

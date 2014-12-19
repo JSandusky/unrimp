@@ -124,13 +124,13 @@ void FirstRenderToTexture::onInitialization()
 						Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 						"Position",								// name[64] (char)
 						"POSITION",								// semantic[64] (char)
-						0,										// semanticIndex (unsigned int)
+						0,										// semanticIndex (uint32_t)
 						// Data source
 						vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-						0,										// offset (unsigned int)
-						sizeof(float) * 2,						// stride (unsigned int)
+						0,										// offset (uint32_t)
+						sizeof(float) * 2,						// stride (uint32_t)
 						// Data source, instancing part
-						0										// instancesPerElement (unsigned int)
+						0										// instancesPerElement (uint32_t)
 					}
 				};
 				mVertexArray = mProgram->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
@@ -233,7 +233,7 @@ void FirstRenderToTexture::onDraw()
 					//    to use is usually defined directly within the shader by using the "register"-keyword
 					// -> Usually, this should only be done once during initialization, this example does this
 					//    every frame to keep it local for better overview
-					const unsigned int unit = mProgram->setTextureUnit(mProgram->getUniformHandle("DiffuseMap"), 0);
+					const uint32_t unit = mProgram->setTextureUnit(mProgram->getUniformHandle("DiffuseMap"), 0);
 
 					// Set the used texture at the texture unit
 					renderer->fsSetTexture(unit, mTexture2D);

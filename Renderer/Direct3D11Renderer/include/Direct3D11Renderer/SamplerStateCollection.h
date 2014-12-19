@@ -83,7 +83,7 @@ namespace Direct3D11Renderer
 		*  @note
 		*    - The sampler state collection keeps a reference to the provided sampler state instances
 		*/
-		SamplerStateCollection(Direct3D11Renderer &direct3D11Renderer, unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates);
+		SamplerStateCollection(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates);
 
 		/**
 		*  @brief
@@ -98,7 +98,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The number of Direct3D sampler state instances
 		*/
-		inline unsigned int getNumberOfD3D11SamplerStates() const;
+		inline uint32_t getNumberOfD3D11SamplerStates() const;
 
 		/**
 		*  @brief
@@ -121,7 +121,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int			  mNumberOfD3D11SamplerStates;	///< The number of Direct3D sampler state instances
+		uint32_t				  mNumberOfD3D11SamplerStates;	///< The number of Direct3D sampler state instances
 		ID3D11SamplerState		**mD3D11SamplerStates;			///< The Direct3D sampler state instances, can be a null pointer
 		Renderer::ISamplerState **mSamplerStates;				///< Sampler state instances (we keep a reference to it), can be a null pointer
 

@@ -117,7 +117,7 @@ namespace Renderer
 		Blend::Enum	  srcBlendAlpha;			///< Default: "Renderer::Blend::ONE"
 		Blend::Enum	  destBlendAlpha;			///< Default: "Renderer::Blend::ZERO"
 		BlendOp::Enum blendOpAlpha;				///< Default: "Renderer::BlendOp::ADD"
-		unsigned char renderTargetWriteMask;	///< Combination of "Renderer::ColorWriteEnable"-flags. Default: "Renderer::ColorWriteEnable::ALL"
+		uint8_t		  renderTargetWriteMask;	///< Combination of "Renderer::ColorWriteEnable"-flags. Default: "Renderer::ColorWriteEnable::ALL"
 	};
 
 	/**

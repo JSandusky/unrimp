@@ -28,7 +28,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int TextureCollection::getNumberOfD3D10ShaderResourceViews() const
+	inline uint32_t TextureCollection::getNumberOfD3D10ShaderResourceViews() const
 	{
 		return mNumberOfD3D10ShaderResourceViews;
 	}

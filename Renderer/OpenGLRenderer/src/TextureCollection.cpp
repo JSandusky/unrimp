@@ -37,7 +37,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCollection::TextureCollection(OpenGLRenderer &openGLRenderer, unsigned int numberOfTextures, Renderer::ITexture **textures) :
+	TextureCollection::TextureCollection(OpenGLRenderer &openGLRenderer, uint32_t numberOfTextures, Renderer::ITexture **textures) :
 		Renderer::ITextureCollection(openGLRenderer),
 		mNumberOfTextures(numberOfTextures),
 		mTextures((numberOfTextures > 0) ? new Renderer::ITexture*[numberOfTextures] : nullptr)

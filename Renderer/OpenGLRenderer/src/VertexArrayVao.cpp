@@ -63,7 +63,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	VertexArrayVao::VertexArrayVao(OpenGLRenderer &openGLRenderer, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
+	VertexArrayVao::VertexArrayVao(OpenGLRenderer &openGLRenderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		VertexArray(openGLRenderer, indexBuffer, InternalResourceType::VAO),
 		mOpenGLVertexArray(0),
 		mNumberOfVertexBuffers(numberOfAttributes),

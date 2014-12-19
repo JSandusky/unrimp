@@ -74,7 +74,7 @@ namespace NullRenderer
 		*  @param[in] height
 		*    The height of the texture
 		*/
-		Texture2D(NullRenderer &nullRenderer, unsigned int width, unsigned int height);
+		Texture2D(NullRenderer &nullRenderer, uint32_t width, uint32_t height);
 
 		/**
 		*  @brief

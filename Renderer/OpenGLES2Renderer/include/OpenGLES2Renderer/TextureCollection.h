@@ -82,7 +82,7 @@ namespace OpenGLES2Renderer
 		*  @note
 		*    - The texture collection keeps a reference to the provided texture instances
 		*/
-		TextureCollection(OpenGLES2Renderer &openGLES2Renderer, unsigned int numberOfTextures, Renderer::ITexture **textures);
+		TextureCollection(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfTextures, Renderer::ITexture **textures);
 
 		/**
 		*  @brief
@@ -97,7 +97,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    The number of texture instances
 		*/
-		inline unsigned int getNumberOfTextures() const;
+		inline uint32_t getNumberOfTextures() const;
 
 		/**
 		*  @brief
@@ -113,7 +113,7 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int		 mNumberOfTextures;	///< The number of texture instances
+		uint32_t			 mNumberOfTextures;	///< The number of texture instances
 		Renderer::ITexture **mTextures;			///< Texture instances (we keep a reference to it), can be a null pointer
 
 

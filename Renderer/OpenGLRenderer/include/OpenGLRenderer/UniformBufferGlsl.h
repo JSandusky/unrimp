@@ -67,7 +67,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL uniform buffer instance, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLUniformBuffer() const;
+		inline uint32_t getOpenGLUniformBuffer() const;
 
 
 	//[-------------------------------------------------------]
@@ -88,7 +88,7 @@ namespace OpenGLRenderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int mOpenGLUniformBuffer;	///< OpenGL uniform buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLUniformBuffer;	///< OpenGL uniform buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

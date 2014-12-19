@@ -145,9 +145,9 @@ namespace Direct3D11Renderer
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	public:
-		virtual Renderer::IVertexArray *createVertexArray(unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer = nullptr) override;
+		virtual Renderer::IVertexArray *createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer = nullptr) override;
 		virtual int getAttributeLocation(const char *attributeName) override;
-		virtual unsigned int getUniformBlockIndex(const char *uniformBlockName, unsigned int defaultIndex) override;
+		virtual uint32_t getUniformBlockIndex(const char *uniformBlockName, uint32_t defaultIndex) override;
 		virtual handle getUniformHandle(const char *uniformName) override;
 		virtual void setUniform1f(handle uniformHandle, float value) override;
 		virtual void setUniform2fv(handle uniformHandle, const float *value) override;

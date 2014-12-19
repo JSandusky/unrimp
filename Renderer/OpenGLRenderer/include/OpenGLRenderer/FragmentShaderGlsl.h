@@ -78,7 +78,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL shader, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLShader() const;
+		inline uint32_t getOpenGLShader() const;
 
 
 	//[-------------------------------------------------------]
@@ -92,7 +92,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mOpenGLShader;	///< OpenGL shader, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLShader;	///< OpenGL shader, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

@@ -28,12 +28,12 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int Framebuffer::getOpenGLES2Framebuffer() const
+	inline uint32_t Framebuffer::getOpenGLES2Framebuffer() const
 	{
 		return mOpenGLES2Framebuffer;
 	}
 
-	inline unsigned int Framebuffer::getNumberOfColorTextures() const
+	inline uint32_t Framebuffer::getNumberOfColorTextures() const
 	{
 		return mNumberOfColorTextures;
 	}

@@ -28,7 +28,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int SamplerStateCollection::getNumberOfD3D11SamplerStates() const
+	inline uint32_t SamplerStateCollection::getNumberOfD3D11SamplerStates() const
 	{
 		return mNumberOfD3D11SamplerStates;
 	}

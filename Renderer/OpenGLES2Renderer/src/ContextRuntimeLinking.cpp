@@ -112,7 +112,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual OpenGLES2Renderer::IContext methods    ]
 	//[-------------------------------------------------------]
-	bool ContextRuntimeLinking::initialize(unsigned int multisampleAntialiasingSamples)
+	bool ContextRuntimeLinking::initialize(uint32_t multisampleAntialiasingSamples)
 	{
 		// Entry points successfully registered?
 		if (mEntryPointsRegistered)
@@ -141,7 +141,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Protected virtual OpenGLES2Renderer::IContext methods ]
 	//[-------------------------------------------------------]
-	EGLConfig ContextRuntimeLinking::chooseConfig(unsigned int multisampleAntialiasingSamples) const
+	EGLConfig ContextRuntimeLinking::chooseConfig(uint32_t multisampleAntialiasingSamples) const
 	{
 		// Try to find a working EGL configuration
 		EGLConfig eglConfig = nullptr;

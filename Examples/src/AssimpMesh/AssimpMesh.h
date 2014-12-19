@@ -107,9 +107,9 @@ private:
 	Renderer::ITextureCollectionPtr		  mTextureCollection;		///< Texture collection, can be a null pointer
 	Renderer::ISamplerStateCollectionPtr  mSamplerStateCollection;	///< Sampler state collection, can be a null pointer
 	// Optimization: Cache data to not bother the renderer API to much
-	unsigned int mUniformBlockIndex;							///< Uniform block index
-	handle		 mObjectSpaceToClipSpaceMatrixUniformHandle;	///< Object space to clip space matrix uniform handle, can be NULL_HANDLE
-	handle		 mObjectSpaceToViewSpaceMatrixUniformHandle;	///< Object space to view space matrix uniform handle, can be NULL_HANDLE
+	uint32_t mUniformBlockIndex;							///< Uniform block index
+	handle	 mObjectSpaceToClipSpaceMatrixUniformHandle;	///< Object space to clip space matrix uniform handle, can be NULL_HANDLE
+	handle	 mObjectSpaceToViewSpaceMatrixUniformHandle;	///< Object space to view space matrix uniform handle, can be NULL_HANDLE
 	// For timing
 	Stopwatch mStopwatch;	///< Stopwatch instance
 	float	  mGlobalTimer;	///< Global timer

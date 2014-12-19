@@ -28,7 +28,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int UniformBufferGlsl::getOpenGLUniformBuffer() const
+	inline uint32_t UniformBufferGlsl::getOpenGLUniformBuffer() const
 	{
 		return mOpenGLUniformBuffer;
 	}

@@ -55,7 +55,7 @@ PointsMesh::PointsMesh(Renderer::IProgram &program, const char *filename) :
 		float *vertexBufferData = new float[mNumberOfVertices * 3];
 
 		{ // Fill the mesh data recursively
-			unsigned int numberOfFilledVertices = 0;
+			uint32_t numberOfFilledVertices = 0;
 			fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, vertexBufferData, aiMatrix4x4(), numberOfFilledVertices);
 		}
 
@@ -76,13 +76,13 @@ PointsMesh::PointsMesh(Renderer::IProgram &program, const char *filename) :
 					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Position",								// nName[64] (char)
 					"POSITION",								// semantic[64] (char)
-					0,										// semanticIndex (unsigned int)
+					0,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-					0,										// offset (unsigned int)
-					sizeof(float) * 3,						// stride (unsigned int)
+					0,										// offset (uint32_t)
+					sizeof(float) * 3,						// stride (uint32_t)
 					// Data source, instancing part
-					0										// instancesPerElement (unsigned int)
+					0										// instancesPerElement (uint32_t)
 				}
 			};
 			mVertexArray = program.createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
@@ -128,10 +128,10 @@ void PointsMesh::draw()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-void PointsMesh::getNumberOfVerticesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, unsigned int &numberOfVertices)
+void PointsMesh::getNumberOfVerticesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint32_t &numberOfVertices)
 {
 	// Loop through all meshes this node is using
-	for (unsigned int i = 0; i < assimpNode.mNumMeshes; ++i)
+	for (uint32_t i = 0; i < assimpNode.mNumMeshes; ++i)
 	{
 		// Get the used mesh
 		const aiMesh &assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
@@ -141,26 +141,26 @@ void PointsMesh::getNumberOfVerticesRecursive(const aiScene &assimpScene, const 
 	}
 
 	// Loop through all child nodes recursively
-	for (unsigned int j = 0; j < assimpNode.mNumChildren; ++j)
+	for (uint32_t j = 0; j < assimpNode.mNumChildren; ++j)
 	{
 		getNumberOfVerticesRecursive(assimpScene, *assimpNode.mChildren[j], numberOfVertices);
 	}
 }
 
-void PointsMesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, const aiMatrix4x4 &assimpTransformation, unsigned int &numberOfVertices)
+void PointsMesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices)
 {
 	// Get the absolute transformation matrix of this Assimp node
 	const aiMatrix4x4 currentAssimpTransformation = assimpTransformation * assimpNode.mTransformation;
 
 	// Loop through all meshes this node is using
-	for (unsigned int i = 0; i < assimpNode.mNumMeshes; ++i)
+	for (uint32_t i = 0; i < assimpNode.mNumMeshes; ++i)
 	{
 		// Get the used mesh
 		const aiMesh &assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
 
 		// Loop through the Assimp mesh vertices
 		float *currentVertexBuffer = vertexBuffer + numberOfVertices * 3;
-		for (unsigned int j = 0; j < assimpMesh.mNumVertices; ++j)
+		for (uint32_t j = 0; j < assimpMesh.mNumVertices; ++j)
 		{
 			// Get the Assimp mesh vertex position
 			aiVector3D assimpVertex = assimpMesh.mVertices[j];
@@ -180,7 +180,7 @@ void PointsMesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &ass
 	}
 
 	// Loop through all child nodes recursively
-	for (unsigned int i = 0; i < assimpNode.mNumChildren; ++i)
+	for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
 	{
 		fillMeshRecursive(assimpScene, *assimpNode.mChildren[i], vertexBuffer, currentAssimpTransformation, numberOfVertices);
 	}

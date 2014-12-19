@@ -220,13 +220,13 @@ void FirstGpgpu::onInitialization()
 					Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Position",								// name[64] (char)
 					"POSITION",								// semantic[64] (char)
-					0,										// semanticIndex (unsigned int)
+					0,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-					0,										// offset (unsigned int)
-					sizeof(float) * 2,						// stride (unsigned int)
+					0,										// offset (uint32_t)
+					sizeof(float) * 2,						// stride (uint32_t)
 					// Data source, instancing part
-					0										// instancesPerElement (unsigned int)
+					0										// instancesPerElement (uint32_t)
 				}
 			};
 			mVertexArrayContentGeneration = mProgramContentGeneration->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
@@ -259,13 +259,13 @@ void FirstGpgpu::onInitialization()
 					Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Position",								// name[64] (char)
 					"POSITION",								// semantic[64] (char)
-					0,										// semanticIndex (unsigned int)
+					0,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-					0,										// offset (unsigned int)
-					sizeof(float) * 2,						// stride (unsigned int)
+					0,										// offset (uint32_t)
+					sizeof(float) * 2,						// stride (uint32_t)
 					// Data source, instancing part
-					0										// instancesPerElement (unsigned int)
+					0										// instancesPerElement (uint32_t)
 				}
 			};
 			mVertexArrayContentProcessing = mProgramContentGeneration->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
@@ -317,7 +317,7 @@ void FirstGpgpu::onDoJob()
 	if (mRenderer->map(*mTexture2D[1], 0, Renderer::MapType::READ, 0, mappedSubresource))
 	{
 		// Get the processed content pointer
-//		const unsigned char *data = static_cast<unsigned char*>(mappedSubresource.data);
+//		const uint8_t *data = static_cast<uint8_t*>(mappedSubresource.data);
 
 		// TODO(co) Write it out as image?
 
@@ -360,8 +360,8 @@ void FirstGpgpu::generate2DTextureContent()
 		{
 			{ // Set the viewport
 				// Get the render target with and height
-				unsigned int width  = 1;
-				unsigned int height = 1;
+				uint32_t width  = 1;
+				uint32_t height = 1;
 				Renderer::IRenderTarget *renderTarget = mRenderer->omGetRenderTarget();
 				if (nullptr != renderTarget)
 				{
@@ -450,7 +450,7 @@ void FirstGpgpu::contentProcessing()
 				//    to use is usually defined directly within the shader by using the "register"-keyword
 				// -> Usually, this should only be done once during initialization, this example does this
 				//    every frame to keep it local for better overview
-				const unsigned int unit = mProgramContentProcessing->setTextureUnit(mProgramContentProcessing->getUniformHandle("ContentMap"), 0);
+				const uint32_t unit = mProgramContentProcessing->setTextureUnit(mProgramContentProcessing->getUniformHandle("ContentMap"), 0);
 
 				// Set the used texture at the texture unit
 				mRenderer->fsSetTexture(unit, mTexture2D[0]);

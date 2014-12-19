@@ -28,7 +28,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int TessellationControlShaderGlsl::getOpenGLShader() const
+	inline uint32_t TessellationControlShaderGlsl::getOpenGLShader() const
 	{
 		return mOpenGLShader;
 	}

@@ -70,7 +70,7 @@ namespace OpenGLRenderer
 		*  @param[in] numberOfOutputVertices
 		*    Number of output vertices
 		*/
-		GeometryShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, unsigned int numberOfOutputVertices);
+		GeometryShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
 
 		/**
 		*  @brief
@@ -85,7 +85,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL shader, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLShader() const;
+		inline uint32_t getOpenGLShader() const;
 
 		/**
 		*  @brief
@@ -112,7 +112,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The number of output vertices
 		*/
-		inline unsigned int getNumberOfOutputVertices() const;
+		inline uint32_t getNumberOfOutputVertices() const;
 
 
 	//[-------------------------------------------------------]
@@ -126,10 +126,10 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mOpenGLShader;						///< OpenGL shader, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		int			 mOpenGLGsInputPrimitiveTopology;	///< OpenGL geometry shader input primitive topology (type "GLint" not used in here in order to keep the header slim)
-		int			 mOpenGLGsOutputPrimitiveTopology;	///< OpenGL geometry shader output primitive topology (type "GLint" not used in here in order to keep the header slim)
-		unsigned int mNumberOfOutputVertices;			///< Number of output vertices
+		uint32_t mOpenGLShader;						///< OpenGL shader, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		int		 mOpenGLGsInputPrimitiveTopology;	///< OpenGL geometry shader input primitive topology (type "GLint" not used in here in order to keep the header slim)
+		int		 mOpenGLGsOutputPrimitiveTopology;	///< OpenGL geometry shader output primitive topology (type "GLint" not used in here in order to keep the header slim)
+		uint32_t mNumberOfOutputVertices;			///< Number of output vertices
 
 
 	};

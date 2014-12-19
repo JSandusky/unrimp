@@ -124,7 +124,7 @@ namespace Renderer
 		TextureAddressMode::Enum addressV;			///< (also known as "T"), Default: "Renderer::TextureAddressMode::CLAMP"
 		TextureAddressMode::Enum addressW;			///< (also known as "R"), Default: "Renderer::TextureAddressMode::CLAMP"
 		float					 mipLODBias;		///< Default: "0.0f"
-		unsigned int			 maxAnisotropy;		///< Default: "16"
+		uint32_t				 maxAnisotropy;		///< Default: "16"
 		ComparisonFunc::Enum	 comparisonFunc;	///< Default: "Renderer::ComparisonFunc::NEVER"
 		float					 borderColor[4];	///< Default: 0.0f, 0.0f, 0.0f, 0.0f
 		float					 minLOD;			///< Default: -3.402823466e+38f (-FLT_MAX)

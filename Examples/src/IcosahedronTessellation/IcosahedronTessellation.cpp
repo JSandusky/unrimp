@@ -147,7 +147,7 @@ void IcosahedronTessellation::onInitialization()
 
 				// Create the index buffer object (IBO)
 				// -> Geometry is from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")
-				static const unsigned short INDICES[] =
+				static const uint16_t INDICES[] =
 				{				// Triangle ID
 					 2,  1,  0,	// 0
 					 3,  2,  0,	// 1
@@ -185,13 +185,13 @@ void IcosahedronTessellation::onInitialization()
 						Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 						"Position",								// name[64] (char)
 						"POSITION",								// semantic[64] (char)
-						0,										// semanticIndex (unsigned int)
+						0,										// semanticIndex (uint32_t)
 						// Data source
 						vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-						0,										// offset (unsigned int)
-						sizeof(float) * 3,						// stride (unsigned int)
+						0,										// offset (uint32_t)
+						sizeof(float) * 3,						// stride (uint32_t)
 						// Data source, instancing part
-						0										// instancesPerElement (unsigned int)
+						0										// instancesPerElement (uint32_t)
 					}
 				};
 				mVertexArray = mProgram->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray, indexBuffer);

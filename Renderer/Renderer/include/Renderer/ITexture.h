@@ -69,7 +69,7 @@ namespace Renderer
 		*  @note
 		*    - Do not add this within the public "Renderer/Renderer.h"-header, it's for the internal implementation only
 		*/
-		static inline unsigned int getNumberOfMipmaps(unsigned int width, unsigned int height);
+		static inline uint32_t getNumberOfMipmaps(uint32_t width, uint32_t height);
 
 
 	//[-------------------------------------------------------]

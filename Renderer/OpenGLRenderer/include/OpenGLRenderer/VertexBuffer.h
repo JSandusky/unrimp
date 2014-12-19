@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL array buffer, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLArrayBuffer() const;
+		inline uint32_t getOpenGLArrayBuffer() const;
 
 
 	//[-------------------------------------------------------]
@@ -97,7 +97,7 @@ namespace OpenGLRenderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int mOpenGLArrayBuffer;	///< OpenGL array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLArrayBuffer;	///< OpenGL array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

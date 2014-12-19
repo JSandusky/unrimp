@@ -40,7 +40,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D10Renderer &direct3D10Renderer, ID3DBlob &d3dBlob, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D10Renderer &direct3D10Renderer, ID3DBlob &d3dBlob, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D10Renderer),
 		mD3D10Device(direct3D10Renderer.getD3D10Device()),
 		mIndexBuffer(indexBuffer),
@@ -78,7 +78,7 @@ namespace Direct3D10Renderer
 		}
 
 		// Vertex buffer at slot
-		unsigned int numberOfUsedSlots = 0;
+		uint32_t numberOfUsedSlots = 0;
 		ID3D10Buffer *d3d10BufferAtSlot[D3D10_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT];
 		memset(d3d10BufferAtSlot, 0, sizeof(ID3D10Buffer*) * D3D10_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT);
 		UINT strideAtSlot[D3D10_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT];
@@ -98,7 +98,7 @@ namespace Direct3D10Renderer
 			ID3D10Buffer **currentD3D10BufferAtSlot = d3d10BufferAtSlot;
 			UINT *currentStrideAtSlot = strideAtSlot;
 			int slotToUse = -1;
-			for (unsigned int slot = 0; slot < numberOfUsedSlots; ++slot, ++currentD3D10BufferAtSlot, ++currentStrideAtSlot)
+			for (uint32_t slot = 0; slot < numberOfUsedSlots; ++slot, ++currentD3D10BufferAtSlot, ++currentStrideAtSlot)
 			{
 				// Vertex buffer and stride match?
 				if (*currentD3D10BufferAtSlot == static_cast<VertexBuffer*>(attributes->vertexBuffer)->getD3D10Buffer() && *currentStrideAtSlot == attributes->stride)

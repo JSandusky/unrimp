@@ -61,25 +61,25 @@ void FirstTexture::onInitialization()
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
 		{ // Create the texture
-			static const unsigned int TEXTURE_WIDTH   = 128;
-			static const unsigned int TEXTURE_HEIGHT  = 128;
-			static const unsigned int NUMBER_OF_BYTES = TEXTURE_WIDTH * TEXTURE_HEIGHT * 4;
+			static const uint32_t TEXTURE_WIDTH   = 128;
+			static const uint32_t TEXTURE_HEIGHT  = 128;
+			static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH * TEXTURE_HEIGHT * 4;
 
 			// Allocate memory for the texture
-			unsigned char *data = new unsigned char[NUMBER_OF_BYTES];
+			uint8_t *data = new uint8_t[NUMBER_OF_BYTES];
 
 			// TODO(co) Be a little bit more creative while filling the texture data
 			// Random content
-			unsigned char *dataCurrent = data;
-			for (unsigned int i = 0; i < TEXTURE_WIDTH * TEXTURE_HEIGHT; ++i)
+			uint8_t *dataCurrent = data;
+			for (uint32_t i = 0; i < TEXTURE_WIDTH * TEXTURE_HEIGHT; ++i)
 			{
-				*dataCurrent = static_cast<unsigned char>(rand() % 255);
+				*dataCurrent = static_cast<uint8_t>(rand() % 255);
 				++dataCurrent;
-				*dataCurrent = static_cast<unsigned char>(rand() % 255);
+				*dataCurrent = static_cast<uint8_t>(rand() % 255);
 				++dataCurrent;
-				*dataCurrent = static_cast<unsigned char>(rand() % 255);
+				*dataCurrent = static_cast<uint8_t>(rand() % 255);
 				++dataCurrent;
-				*dataCurrent = static_cast<unsigned char>(rand() % 255);
+				*dataCurrent = static_cast<uint8_t>(rand() % 255);
 				++dataCurrent;
 			}
 
@@ -143,13 +143,13 @@ void FirstTexture::onInitialization()
 						Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 						"Position",								// name[64] (char)
 						"POSITION",								// semantic[64] (char)
-						0,										// semanticIndex (unsigned int)
+						0,										// semanticIndex (uint32_t)
 						// Data source
 						vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-						0,										// offset (unsigned int)
-						sizeof(float) * 2,						// stride (unsigned int)
+						0,										// offset (uint32_t)
+						sizeof(float) * 2,						// stride (uint32_t)
 						// Data source, instancing part
-						0										// instancesPerElement (unsigned int)
+						0										// instancesPerElement (uint32_t)
 					}
 				};
 				mVertexArray = mProgram->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
@@ -216,7 +216,7 @@ void FirstTexture::onDraw()
 				//    to use is usually defined directly within the shader by using the "register"-keyword
 				// -> Usually, this should only be done once during initialization, this example does this
 				//    every frame to keep it local for better overview
-				const unsigned int unit = mProgram->setTextureUnit(mProgram->getUniformHandle("DiffuseMap"), 0);
+				const uint32_t unit = mProgram->setTextureUnit(mProgram->getUniformHandle("DiffuseMap"), 0);
 
 				// Set the used texture at the texture unit
 				renderer->fsSetTexture(unit, mTexture2D);

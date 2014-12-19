@@ -27,6 +27,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "Framework/PlatformTypes.h"
+
+
+//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 /**
@@ -59,7 +65,7 @@ public:
 	*  @param[in] numberOfCubes
 	*    Number of cubes
 	*/
-	virtual void setNumberOfCubes(unsigned int numberOfCubes) = 0;
+	virtual void setNumberOfCubes(uint32_t numberOfCubes) = 0;
 
 	/**
 	*  @brief
@@ -115,7 +121,7 @@ protected:
 //[ Protected static data                                 ]
 //[-------------------------------------------------------]
 protected:
-	static const unsigned int MAXIMUM_NUMBER_OF_TEXTURES = 8;	///< Maximum number of textures
+	static const uint32_t MAXIMUM_NUMBER_OF_TEXTURES = 8;	///< Maximum number of textures
 
 
 };

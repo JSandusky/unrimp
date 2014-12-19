@@ -56,7 +56,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual OpenGLES2Renderer::IContext methods    ]
 	//[-------------------------------------------------------]
-	bool IContext::initialize(unsigned int multisampleAntialiasingSamples)
+	bool IContext::initialize(uint32_t multisampleAntialiasingSamples)
 	{
 		// Get display
 		#if (defined(LINUX) && !defined(ANDROID))
@@ -275,7 +275,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Protected virtual OpenGLES2Renderer::IContext methods ]
 	//[-------------------------------------------------------]
-	EGLConfig IContext::chooseConfig(unsigned int multisampleAntialiasingSamples) const
+	EGLConfig IContext::chooseConfig(uint32_t multisampleAntialiasingSamples) const
 	{
 		// Try to find a working EGL configuration
 		EGLConfig eglConfig = nullptr;

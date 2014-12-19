@@ -47,7 +47,7 @@ namespace OpenGLES2Renderer
 		mOpenGLTextureAddressModeT(Mapping::getOpenGLES2TextureAddressMode(samplerState.addressV)),
 		mOpenGLTextureAddressModeR(Mapping::getOpenGLES2TextureAddressMode(samplerState.addressW)),
 		mMipLODBias(samplerState.mipLODBias),
-		mMaxAnisotropy(static_cast<float>(samplerState.maxAnisotropy)),	// Maximum anisotropy is "unsigned int" in Direct3D 10 & 11
+		mMaxAnisotropy(static_cast<float>(samplerState.maxAnisotropy)),	// Maximum anisotropy is "uint32_t" in Direct3D 10 & 11
 		mOpenGLCompareMode(Mapping::getOpenGLES2CompareMode(samplerState.filter)),
 		mOpenGLComparisonFunc(Mapping::getOpenGLES2ComparisonFunc(samplerState.comparisonFunc)),
 		mMinLOD(samplerState.minLOD),

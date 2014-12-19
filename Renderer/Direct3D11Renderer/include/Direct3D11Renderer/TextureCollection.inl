@@ -28,7 +28,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int TextureCollection::getNumberOfD3D11ShaderResourceViews() const
+	inline uint32_t TextureCollection::getNumberOfD3D11ShaderResourceViews() const
 	{
 		return mNumberOfD3D11ShaderResourceViews;
 	}

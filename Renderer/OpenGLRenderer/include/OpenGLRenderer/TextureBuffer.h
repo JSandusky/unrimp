@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL texture buffer instance, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLTextureBuffer() const;
+		inline uint32_t getOpenGLTextureBuffer() const;
 
 		/**
 		*  @brief
@@ -85,7 +85,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL texture instance, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLTexture() const;
+		inline uint32_t getOpenGLTexture() const;
 
 
 	//[-------------------------------------------------------]
@@ -106,8 +106,8 @@ namespace OpenGLRenderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int mOpenGLTextureBuffer;	///< OpenGL texture buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		unsigned int mOpenGLTexture;		///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLTextureBuffer;	///< OpenGL texture buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLTexture;		///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

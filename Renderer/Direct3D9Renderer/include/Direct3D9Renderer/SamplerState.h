@@ -90,7 +90,7 @@ namespace Direct3D9Renderer
 		*  @param[in] direct3DDevice9
 		*    Direct3D 9 device instance to use
 		*/
-		void setDirect3D9SamplerStates(unsigned int sampler, IDirect3DDevice9 &direct3DDevice9) const;
+		void setDirect3D9SamplerStates(uint32_t sampler, IDirect3DDevice9 &direct3DDevice9) const;
 
 
 	//[-------------------------------------------------------]

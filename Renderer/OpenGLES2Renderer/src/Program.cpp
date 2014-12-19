@@ -62,7 +62,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *Program::createVertexArray(unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
+	Renderer::IVertexArray *Program::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
 	{
 		// Is "GL_OES_vertex_array_object" there?
 		if (static_cast<OpenGLES2Renderer&>(getRenderer()).getContext().getExtensions().isGL_OES_vertex_array_object())
@@ -84,7 +84,7 @@ namespace OpenGLES2Renderer
 		return glGetAttribLocation(mOpenGLES2Program, attributeName);
 	}
 
-	unsigned int Program::getUniformBlockIndex(const char *, unsigned int defaultIndex)
+	uint32_t Program::getUniformBlockIndex(const char *, uint32_t defaultIndex)
 	{
 		// OpenGL ES 2 has no uniform buffer support
 		return defaultIndex;
@@ -95,7 +95,7 @@ namespace OpenGLES2Renderer
 		return static_cast<handle>(glGetUniformLocation(mOpenGLES2Program, uniformName));
 	}
 
-	unsigned int Program::setTextureUnit(handle uniformHandle, unsigned int unit)
+	uint32_t Program::setTextureUnit(handle uniformHandle, uint32_t unit)
 	{
 		// OpenGL ES 2/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
 		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP

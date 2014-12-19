@@ -28,7 +28,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int VertexBuffer::getOpenGLES2ArrayBuffer() const
+	inline uint32_t VertexBuffer::getOpenGLES2ArrayBuffer() const
 	{
 		return mOpenGLES2ArrayBuffer;
 	}

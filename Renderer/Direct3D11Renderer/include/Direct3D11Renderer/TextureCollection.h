@@ -83,7 +83,7 @@ namespace Direct3D11Renderer
 		*  @note
 		*    - The texture collection keeps a reference to the provided texture instances
 		*/
-		TextureCollection(Direct3D11Renderer &direct3D11Renderer, unsigned int numberOfTextures, Renderer::ITexture **textures);
+		TextureCollection(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfTextures, Renderer::ITexture **textures);
 
 		/**
 		*  @brief
@@ -98,7 +98,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    The number of Direct3D shader resource view instances
 		*/
-		inline unsigned int getNumberOfD3D11ShaderResourceViews() const;
+		inline uint32_t getNumberOfD3D11ShaderResourceViews() const;
 
 		/**
 		*  @brief
@@ -121,7 +121,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int			   mNumberOfD3D11ShaderResourceViews;	///< The number of Direct3D shader resource view instances
+		uint32_t				   mNumberOfD3D11ShaderResourceViews;	///< The number of Direct3D shader resource view instances
 		ID3D11ShaderResourceView **mD3D11ShaderResourceViews;			///< The Direct3D shader resource view instances, can be a null pointer
 		Renderer::ITexture		 **mTextures;							///< Texture instances (we keep a reference to it), can be a null pointer
 

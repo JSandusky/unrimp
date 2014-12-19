@@ -39,7 +39,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void FontGlyphTextureFreeType::initialize(FontTextureFreeType &fontTextureFreeType, unsigned long characterCode, unsigned int positionOffsetX, unsigned int positionOffsetY, unsigned char *glyphTextureAtlasData)
+	void FontGlyphTextureFreeType::initialize(FontTextureFreeType &fontTextureFreeType, unsigned long characterCode, uint32_t positionOffsetX, uint32_t positionOffsetY, uint8_t *glyphTextureAtlasData)
 	{
 		// Get the FreeType library face object (aka "The Font")
 		FT_Face *ftFace = fontTextureFreeType.getFTFace();
@@ -65,14 +65,14 @@ namespace RendererToolkit
 
 					{ // Copy the glyph bitmap into the glyph texture atlas
 						// Get the X component of the glyph texture atlas size (in pixel)
-						unsigned int numberOfBytesPerRow    = 0;
-						unsigned int glyphTextureAtlasSizeY = 0;
+						uint32_t numberOfBytesPerRow    = 0;
+						uint32_t glyphTextureAtlasSizeY = 0;
 						fontTextureFreeType.getGlyphTextureAtlasSize(numberOfBytesPerRow, glyphTextureAtlasSizeY);
 
 						// Copy all rows (one byte per texel)
-						unsigned char *currentGlyphTextureAtlasData = glyphTextureAtlasData + positionOffsetX + numberOfBytesPerRow * positionOffsetY;
-						unsigned char *endGlyphTextureAtlasData		= currentGlyphTextureAtlasData + numberOfBytesPerRow * mHeight;
-						unsigned char *currentFTBitmapBuffer		= ftBitmap.buffer;
+						uint8_t *currentGlyphTextureAtlasData = glyphTextureAtlasData + positionOffsetX + numberOfBytesPerRow * positionOffsetY;
+						uint8_t *endGlyphTextureAtlasData	  = currentGlyphTextureAtlasData + numberOfBytesPerRow * mHeight;
+						uint8_t *currentFTBitmapBuffer		  = ftBitmap.buffer;
 						for (; currentGlyphTextureAtlasData < endGlyphTextureAtlasData; currentGlyphTextureAtlasData += numberOfBytesPerRow, currentFTBitmapBuffer += mWidth)
 						{
 							// Copy the current row part
@@ -89,8 +89,8 @@ namespace RendererToolkit
 					mPenAdvanceY = static_cast<float>((*ftFace)->glyph->advance.y) / 64.0f;
 
 					// Get the size of the glyph texture atlas
-					unsigned int glyphTextureAtlasSizeX = 0;
-					unsigned int glyphTextureAtlasSizeY = 0;
+					uint32_t glyphTextureAtlasSizeX = 0;
+					uint32_t glyphTextureAtlasSizeY = 0;
 					fontTextureFreeType.getGlyphTextureAtlasSize(glyphTextureAtlasSizeX, glyphTextureAtlasSizeY);
 
 					// Calculate the normalized minimum glyph texture coordinate inside the glyph texture atlas

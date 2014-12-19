@@ -75,7 +75,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    The OpenGL ES 2 shader, 0 on error, destroy the returned resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		static unsigned int loadShader(unsigned int shaderType, const char *shaderSource);
+		static uint32_t loadShader(uint32_t shaderType, const char *shaderSource);
 
 
 	//[-------------------------------------------------------]

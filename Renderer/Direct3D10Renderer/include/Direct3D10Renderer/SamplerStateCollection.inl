@@ -28,7 +28,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int SamplerStateCollection::getNumberOfD3D10SamplerStates() const
+	inline uint32_t SamplerStateCollection::getNumberOfD3D10SamplerStates() const
 	{
 		return mNumberOfD3D10SamplerStates;
 	}

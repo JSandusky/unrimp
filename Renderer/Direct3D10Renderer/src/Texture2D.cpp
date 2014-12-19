@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D10Renderer &direct3D10Renderer, unsigned int width, unsigned int height, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags, Renderer::TextureUsage::Enum textureUsage) :
+	Texture2D::Texture2D(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage) :
 		ITexture2D(direct3D10Renderer, width, height),
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{
@@ -75,14 +75,14 @@ namespace Direct3D10Renderer
 		if (nullptr != d3d10Texture2D)
 		{
 			// Calculate the number of mipmaps
-			const unsigned int numberOfMipmaps = mipmaps ? getNumberOfMipmaps(width, height) : 1;
+			const uint32_t numberOfMipmaps = mipmaps ? getNumberOfMipmaps(width, height) : 1;
 
 			// Data given?
 			if (nullptr != data)
 			{
 				{ // Update Direct3D 10 subresource data of the base-map
-					const unsigned int bytesPerRow   = width * Mapping::getDirect3D10Size(textureFormat);
-					const unsigned int bytesPerSlice = bytesPerRow * height;
+					const uint32_t bytesPerRow   = width * Mapping::getDirect3D10Size(textureFormat);
+					const uint32_t bytesPerSlice = bytesPerRow * height;
 					direct3D10Renderer.getD3D10Device()->UpdateSubresource(d3d10Texture2D, 0, nullptr, data, bytesPerRow, bytesPerSlice);
 				}
 

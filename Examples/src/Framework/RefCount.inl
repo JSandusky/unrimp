@@ -47,7 +47,7 @@ AType *RefCount<AType>::getPointer()
 }
 
 template <class AType>
-unsigned int RefCount<AType>::addReference()
+uint32_t RefCount<AType>::addReference()
 {
 	// Increment reference count
 	++mRefCount;
@@ -57,7 +57,7 @@ unsigned int RefCount<AType>::addReference()
 }
 
 template <class AType>
-unsigned int RefCount<AType>::release()
+uint32_t RefCount<AType>::release()
 {
 	// Decrement reference count
 	if (mRefCount > 1)
@@ -79,7 +79,7 @@ unsigned int RefCount<AType>::release()
 }
 
 template <class AType>
-unsigned int RefCount<AType>::getRefCount() const
+uint32_t RefCount<AType>::getRefCount() const
 {
 	// Return current reference count
 	return mRefCount;

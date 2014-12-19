@@ -33,7 +33,7 @@ namespace Direct3D10Renderer
 		return mD3D10Buffer;
 	}
 
-	inline unsigned int IndexBuffer::getDXGIFormat() const
+	inline uint32_t IndexBuffer::getDXGIFormat() const
 	{
 		return mDXGIFormat;
 	}

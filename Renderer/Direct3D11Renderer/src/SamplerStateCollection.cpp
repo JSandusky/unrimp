@@ -36,7 +36,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerStateCollection::SamplerStateCollection(Direct3D11Renderer &direct3D11Renderer, unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates) :
+	SamplerStateCollection::SamplerStateCollection(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates) :
 		Renderer::ISamplerStateCollection(direct3D11Renderer),
 		mNumberOfD3D11SamplerStates(numberOfSamplerStates),
 		mD3D11SamplerStates((numberOfSamplerStates > 0) ? new ID3D11SamplerState*[numberOfSamplerStates] : nullptr),

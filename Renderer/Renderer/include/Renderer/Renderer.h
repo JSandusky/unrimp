@@ -32,9 +32,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#ifdef LINUX
-	#include <inttypes.h> // for uint64_t
-#endif
+#include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
 //[-------------------------------------------------------]
@@ -124,9 +122,9 @@ namespace Renderer
 				#define override
 			#endif
 			#if X64_ARCHITECTURE
-				typedef uint64_t     handle;
+				typedef uint64_t handle;
 			#else
-				typedef unsigned int handle;
+				typedef uint32_t handle;
 			#endif
 			#ifndef NULL_HANDLE
 				#define NULL_HANDLE 0
@@ -256,9 +254,9 @@ namespace Renderer
 		};
 		struct MappedSubresource
 		{
-			void		 *data;
-			unsigned int  rowPitch;
-			unsigned int  depthPitch;
+			void	 *data;
+			uint32_t  rowPitch;
+			uint32_t  depthPitch;
 		};
 		struct Viewport
 		{
@@ -410,7 +408,7 @@ namespace Renderer
 			Blend::Enum	  srcBlendAlpha;
 			Blend::Enum	  destBlendAlpha;
 			BlendOp::Enum blendOpAlpha;
-			unsigned char renderTargetWriteMask;
+			uint8_t		  renderTargetWriteMask;
 		};
 		struct BlendState
 		{
@@ -438,11 +436,11 @@ namespace Renderer
 			VertexArrayFormat::Enum  vertexArrayFormat;
 			char					 name[64];
 			char					 semantic[64];
-			unsigned int			 semanticIndex;
+			uint32_t				 semanticIndex;
 			IVertexBuffer			*vertexBuffer;
-			unsigned int			 offset;
-			unsigned int			 stride;
-			unsigned int			 instancesPerElement;
+			uint32_t				 offset;
+			uint32_t				 stride;
+			uint32_t				 instancesPerElement;
 		};
 	#endif
 
@@ -505,7 +503,7 @@ namespace Renderer
 			TextureAddressMode::Enum addressV;
 			TextureAddressMode::Enum addressW;
 			float					 mipLODBias;
-			unsigned int			 maxAnisotropy;
+			uint32_t				 maxAnisotropy;
 			ComparisonFunc::Enum	 comparisonFunc;
 			float					 borderColor[4];
 			float					 minLOD;
@@ -586,8 +584,8 @@ namespace Renderer
 			DepthWriteMask::Enum depthWriteMask;
 			ComparisonFunc::Enum depthFunc;
 			int					 stencilEnable;
-			unsigned char		 stencilReadMask;
-			unsigned char		 stencilWriteMask;
+			uint8_t				 stencilReadMask;
+			uint8_t				 stencilWriteMask;
 			DepthStencilOpDesc	 frontFace;
 			DepthStencilOpDesc	 backFace;
 		};
@@ -644,12 +642,12 @@ namespace Renderer
 			{
 				return static_cast<AType*>(this);
 			}
-			unsigned int addReference()
+			uint32_t addReference()
 			{
 				++mRefCount;
 				return mRefCount;
 			}
-			unsigned int release()
+			uint32_t release()
 			{
 				if (mRefCount > 1)
 				{
@@ -662,12 +660,12 @@ namespace Renderer
 					return 0;
 				}
 			}
-			unsigned int getRefCount() const
+			uint32_t getRefCount() const
 			{
 				return mRefCount;
 			}
 		private:
-			unsigned int mRefCount;
+			uint32_t mRefCount;
 		};
 	#endif
 
@@ -776,20 +774,20 @@ namespace Renderer
 		class Capabilities
 		{
 		public:
-			unsigned int maximumNumberOfViewports;
-			unsigned int maximumNumberOfSimultaneousRenderTargets;
-			unsigned int maximumTextureDimension;
-			unsigned int maximumNumberOf2DTextureArraySlices;
-			bool		 uniformBuffer;
-			unsigned int maximumTextureBufferSize;
-			bool		 individualUniforms;
-			bool		 instancedArrays;
-			bool		 drawInstanced;
-			bool		 baseVertex;
-			bool		 vertexShader;
-			unsigned int maximumNumberOfPatchVertices;
-			unsigned int maximumNumberOfGsOutputVertices;
-			bool		 fragmentShader;
+			uint32_t maximumNumberOfViewports;
+			uint32_t maximumNumberOfSimultaneousRenderTargets;
+			uint32_t maximumTextureDimension;
+			uint32_t maximumNumberOf2DTextureArraySlices;
+			bool	 uniformBuffer;
+			uint32_t maximumTextureBufferSize;
+			bool	 individualUniforms;
+			bool	 instancedArrays;
+			bool	 drawInstanced;
+			bool	 baseVertex;
+			bool	 vertexShader;
+			uint32_t maximumNumberOfPatchVertices;
+			uint32_t maximumNumberOfGsOutputVertices;
+			bool	 fragmentShader;
 		public:
 			inline Capabilities() :
 				maximumNumberOfViewports(0),
@@ -840,48 +838,48 @@ namespace Renderer
 	class Statistics
 	{
 	public:
-		unsigned int currentNumberOfPrograms;
-		unsigned int numberOfCreatedPrograms;
-		unsigned int currentNumberOfVertexArrays;
-		unsigned int numberOfCreatedVertexArrays;
-		unsigned int currentNumberOfSwapChains;
-		unsigned int numberOfCreatedSwapChains;
-		unsigned int currentNumberOfFramebuffers;
-		unsigned int numberOfCreatedFramebuffers;
-		unsigned int currentNumberOfIndexBuffers;
-		unsigned int numberOfCreatedIndexBuffers;
-		unsigned int currentNumberOfVertexBuffers;
-		unsigned int numberOfCreatedVertexBuffers;
-		unsigned int currentNumberOfUniformBuffers;
-		unsigned int numberOfCreatedUniformBuffers;
-		unsigned int currentNumberOfTextureBuffers;
-		unsigned int numberOfCreatedTextureBuffers;
-		unsigned int currentNumberOfTexture2Ds;
-		unsigned int numberOfCreatedTexture2Ds;
-		unsigned int currentNumberOfTexture2DArrays;
-		unsigned int numberOfCreatedTexture2DArrays;
-		unsigned int currentNumberOfRasterizerStates;
-		unsigned int numberOfCreatedRasterizerStates;
-		unsigned int currentNumberOfDepthStencilStates;
-		unsigned int numberOfCreatedDepthStencilStates;
-		unsigned int currentNumberOfBlendStates;
-		unsigned int numberOfCreatedBlendStates;
-		unsigned int currentNumberOfSamplerStates;
-		unsigned int numberOfCreatedSamplerStates;
-		unsigned int currentNumberOfVertexShaders;
-		unsigned int numberOfCreatedVertexShaders;
-		unsigned int currentNumberOfTessellationControlShaders;
-		unsigned int numberOfCreatedTessellationControlShaders;
-		unsigned int currentNumberOfTessellationEvaluationShaders;
-		unsigned int numberOfCreatedTessellationEvaluationShaders;
-		unsigned int currentNumberOfGeometryShaders;
-		unsigned int numberOfCreatedGeometryShaders;
-		unsigned int currentNumberOfFragmentShaders;
-		unsigned int numberOfCreatedFragmentShaders;
-		unsigned int currentNumberOfTextureCollections;
-		unsigned int numberOfCreatedTextureCollections;
-		unsigned int currentNumberOfSamplerStateCollections;
-		unsigned int numberOfCreatedSamplerStateCollections;
+		uint32_t currentNumberOfPrograms;
+		uint32_t numberOfCreatedPrograms;
+		uint32_t currentNumberOfVertexArrays;
+		uint32_t numberOfCreatedVertexArrays;
+		uint32_t currentNumberOfSwapChains;
+		uint32_t numberOfCreatedSwapChains;
+		uint32_t currentNumberOfFramebuffers;
+		uint32_t numberOfCreatedFramebuffers;
+		uint32_t currentNumberOfIndexBuffers;
+		uint32_t numberOfCreatedIndexBuffers;
+		uint32_t currentNumberOfVertexBuffers;
+		uint32_t numberOfCreatedVertexBuffers;
+		uint32_t currentNumberOfUniformBuffers;
+		uint32_t numberOfCreatedUniformBuffers;
+		uint32_t currentNumberOfTextureBuffers;
+		uint32_t numberOfCreatedTextureBuffers;
+		uint32_t currentNumberOfTexture2Ds;
+		uint32_t numberOfCreatedTexture2Ds;
+		uint32_t currentNumberOfTexture2DArrays;
+		uint32_t numberOfCreatedTexture2DArrays;
+		uint32_t currentNumberOfRasterizerStates;
+		uint32_t numberOfCreatedRasterizerStates;
+		uint32_t currentNumberOfDepthStencilStates;
+		uint32_t numberOfCreatedDepthStencilStates;
+		uint32_t currentNumberOfBlendStates;
+		uint32_t numberOfCreatedBlendStates;
+		uint32_t currentNumberOfSamplerStates;
+		uint32_t numberOfCreatedSamplerStates;
+		uint32_t currentNumberOfVertexShaders;
+		uint32_t numberOfCreatedVertexShaders;
+		uint32_t currentNumberOfTessellationControlShaders;
+		uint32_t numberOfCreatedTessellationControlShaders;
+		uint32_t currentNumberOfTessellationEvaluationShaders;
+		uint32_t numberOfCreatedTessellationEvaluationShaders;
+		uint32_t currentNumberOfGeometryShaders;
+		uint32_t numberOfCreatedGeometryShaders;
+		uint32_t currentNumberOfFragmentShaders;
+		uint32_t numberOfCreatedFragmentShaders;
+		uint32_t currentNumberOfTextureCollections;
+		uint32_t numberOfCreatedTextureCollections;
+		uint32_t currentNumberOfSamplerStateCollections;
+		uint32_t numberOfCreatedSamplerStateCollections;
 	public:
 		inline Statistics() :
 			currentNumberOfPrograms(0),
@@ -1007,66 +1005,66 @@ namespace Renderer
 			virtual const char *getName() const = 0;
 			virtual bool isInitialized() const = 0;
 			virtual ISwapChain *getMainSwapChain() const = 0;
-			virtual unsigned int getNumberOfShaderLanguages() const = 0;
-			virtual const char *getShaderLanguageName(unsigned int index) const = 0;
+			virtual uint32_t getNumberOfShaderLanguages() const = 0;
+			virtual const char *getShaderLanguageName(uint32_t index) const = 0;
 			virtual IShaderLanguage *getShaderLanguage(const char *shaderLanguageName = nullptr) = 0;
 			virtual ISwapChain *createSwapChain(handle nativeWindowHandle) = 0;
-			virtual IFramebuffer *createFramebuffer(unsigned int numberOfColorTextures, ITexture **colorTextures, ITexture *depthStencilTexture = nullptr) = 0;
-			virtual IVertexBuffer *createVertexBuffer(unsigned int numberOfBytes, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-			virtual IIndexBuffer *createIndexBuffer(unsigned int numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-			virtual ITextureBuffer *createTextureBuffer(unsigned int numberOfBytes, TextureFormat::Enum textureFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-			virtual ITexture2D *createTexture2D(unsigned int width, unsigned int height, TextureFormat::Enum textureFormat, void *data = nullptr, unsigned int flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
-			virtual ITexture2DArray *createTexture2DArray(unsigned int width, unsigned int height, unsigned int numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, unsigned int flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
+			virtual IFramebuffer *createFramebuffer(uint32_t numberOfColorTextures, ITexture **colorTextures, ITexture *depthStencilTexture = nullptr) = 0;
+			virtual IVertexBuffer *createVertexBuffer(uint32_t numberOfBytes, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IIndexBuffer *createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual ITextureBuffer *createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual ITexture2D *createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
+			virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
 			virtual IRasterizerState *createRasterizerState(const RasterizerState &rasterizerState) = 0;
 			virtual IDepthStencilState *createDepthStencilState(const DepthStencilState &depthStencilState) = 0;
 			virtual IBlendState *createBlendState(const BlendState &blendState) = 0;
 			virtual ISamplerState *createSamplerState(const SamplerState &samplerState) = 0;
-			virtual ITextureCollection *createTextureCollection(unsigned int numberOfTextures, ITexture **textures) = 0;
-			virtual ISamplerStateCollection *createSamplerStateCollection(unsigned int numberOfSamplerStates, ISamplerState **samplerStates) = 0;
-			virtual bool map(IResource &resource, unsigned int subresource, MapType::Enum mapType, unsigned int mapFlags, MappedSubresource &mappedSubresource) = 0;
-			virtual void unmap(IResource &resource, unsigned int subresource) = 0;
+			virtual ITextureCollection *createTextureCollection(uint32_t numberOfTextures, ITexture **textures) = 0;
+			virtual ISamplerStateCollection *createSamplerStateCollection(uint32_t numberOfSamplerStates, ISamplerState **samplerStates) = 0;
+			virtual bool map(IResource &resource, uint32_t subresource, MapType::Enum mapType, uint32_t mapFlags, MappedSubresource &mappedSubresource) = 0;
+			virtual void unmap(IResource &resource, uint32_t subresource) = 0;
 			virtual void setProgram(IProgram *program) = 0;
 			virtual void iaSetVertexArray(IVertexArray *vertexArray) = 0;
 			virtual void iaSetPrimitiveTopology(PrimitiveTopology::Enum primitiveTopology) = 0;
-			virtual void vsSetTexture(unsigned int unit, ITexture *texture) = 0;
-			virtual void vsSetTextureCollection(unsigned int startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void vsSetSamplerState(unsigned int unit, ISamplerState *samplerState) = 0;
-			virtual void vsSetSamplerStateCollection(unsigned int startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void vsSetUniformBuffer(unsigned int slot, IUniformBuffer *uniformBuffer) = 0;
-			virtual void tcsSetTexture(unsigned int unit, ITexture *texture) = 0;
-			virtual void tcsSetTextureCollection(unsigned int startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void tcsSetSamplerState(unsigned int unit, ISamplerState *samplerState) = 0;
-			virtual void tcsSetSamplerStateCollection(unsigned int startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void tcsSetUniformBuffer(unsigned int slot, IUniformBuffer *uniformBuffer) = 0;
-			virtual void tesSetTexture(unsigned int unit, ITexture *texture) = 0;
-			virtual void tesSetTextureCollection(unsigned int startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void tesSetSamplerState(unsigned int unit, ISamplerState *samplerState) = 0;
-			virtual void tesSetSamplerStateCollection(unsigned int startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void tesSetUniformBuffer(unsigned int slot, IUniformBuffer *uniformBuffer) = 0;
-			virtual void gsSetTexture(unsigned int unit, ITexture *texture) = 0;
-			virtual void gsSetTextureCollection(unsigned int startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void gsSetSamplerState(unsigned int unit, ISamplerState *samplerState) = 0;
-			virtual void gsSetSamplerStateCollection(unsigned int startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void gsSetUniformBuffer(unsigned int slot, IUniformBuffer *uniformBuffer) = 0;
-			virtual void rsSetViewports(unsigned int numberOfViewports, const Viewport *viewports) = 0;
-			virtual void rsSetScissorRectangles(unsigned int numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles) = 0;
+			virtual void vsSetTexture(uint32_t unit, ITexture *texture) = 0;
+			virtual void vsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
+			virtual void vsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
+			virtual void vsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
+			virtual void vsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
+			virtual void tcsSetTexture(uint32_t unit, ITexture *texture) = 0;
+			virtual void tcsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
+			virtual void tcsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
+			virtual void tcsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
+			virtual void tcsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
+			virtual void tesSetTexture(uint32_t unit, ITexture *texture) = 0;
+			virtual void tesSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
+			virtual void tesSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
+			virtual void tesSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
+			virtual void tesSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
+			virtual void gsSetTexture(uint32_t unit, ITexture *texture) = 0;
+			virtual void gsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
+			virtual void gsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
+			virtual void gsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
+			virtual void gsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
+			virtual void rsSetViewports(uint32_t numberOfViewports, const Viewport *viewports) = 0;
+			virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles) = 0;
 			virtual void rsSetState(IRasterizerState *rasterizerState) = 0;
-			virtual void fsSetTexture(unsigned int unit, ITexture *texture) = 0;
-			virtual void fsSetTextureCollection(unsigned int startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void fsSetSamplerState(unsigned int unit, ISamplerState *samplerState) = 0;
-			virtual void fsSetSamplerStateCollection(unsigned int startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void fsSetUniformBuffer(unsigned int slot, IUniformBuffer *uniformBuffer) = 0;
+			virtual void fsSetTexture(uint32_t unit, ITexture *texture) = 0;
+			virtual void fsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
+			virtual void fsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
+			virtual void fsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
+			virtual void fsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
 			virtual IRenderTarget *omGetRenderTarget() = 0;
 			virtual void omSetRenderTarget(IRenderTarget *renderTarget) = 0;
 			virtual void omSetDepthStencilState(IDepthStencilState *depthStencilState) = 0;
 			virtual void omSetBlendState(IBlendState *blendState) = 0;
-			virtual void clear(unsigned int flags, const float color[4], float z, unsigned int stencil) = 0;
+			virtual void clear(uint32_t flags, const float color[4], float z, uint32_t stencil) = 0;
 			virtual bool beginScene() = 0;
 			virtual void endScene() = 0;
-			virtual void draw(unsigned int startVertexLocation, unsigned int numberOfVertices) = 0;
-			virtual void drawInstanced(unsigned int startVertexLocation, unsigned int numberOfVertices, unsigned int numberOfInstances) = 0;
-			virtual void drawIndexed(unsigned int startIndexLocation, unsigned int numberOfIndices, unsigned int baseVertexLocation, unsigned int minimumIndex, unsigned int numberOfVertices) = 0;
-			virtual void drawIndexedInstanced(unsigned int startIndexLocation, unsigned int numberOfIndices, unsigned int baseVertexLocation, unsigned int minimumIndex, unsigned int numberOfVertices, unsigned int numberOfInstances) = 0;
+			virtual void draw(uint32_t startVertexLocation, uint32_t numberOfVertices) = 0;
+			virtual void drawInstanced(uint32_t startVertexLocation, uint32_t numberOfVertices, uint32_t numberOfInstances) = 0;
+			virtual void drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices) = 0;
+			virtual void drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices, uint32_t numberOfInstances) = 0;
 			virtual void flush() = 0;
 			virtual void finish() = 0;
 			virtual bool isDebugEnabled() = 0;
@@ -1113,10 +1111,10 @@ namespace Renderer
 			virtual IVertexShader *createVertexShader(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
 			virtual ITessellationControlShader *createTessellationControlShader(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
 			virtual ITessellationEvaluationShader *createTessellationEvaluationShader(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
-			virtual IGeometryShader *createGeometryShader(const char *sourceCode, GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, unsigned int numberOfOutputVertices, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
+			virtual IGeometryShader *createGeometryShader(const char *sourceCode, GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
 			virtual IFragmentShader *createFragmentShader(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
 			virtual IProgram *createProgram(IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader) = 0;
-			virtual IUniformBuffer *createUniformBuffer(unsigned int numberOfBytes, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IUniformBuffer *createUniformBuffer(uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
 		protected:
 			explicit IShaderLanguage(IRenderer &renderer);
 			explicit IShaderLanguage(const IShaderLanguage &source);
@@ -1163,11 +1161,11 @@ namespace Renderer
 		public:
 			virtual ~IProgram();
 		public:
-			virtual IVertexArray *createVertexArray(unsigned int numberOfAttributes, const VertexArrayAttribute *attributes, IIndexBuffer *indexBuffer = nullptr) = 0;
+			virtual IVertexArray *createVertexArray(uint32_t numberOfAttributes, const VertexArrayAttribute *attributes, IIndexBuffer *indexBuffer = nullptr) = 0;
 			virtual int getAttributeLocation(const char *attributeName) = 0;
-			virtual unsigned int getUniformBlockIndex(const char *uniformBlockName, unsigned int defaultIndex) = 0;
+			virtual uint32_t getUniformBlockIndex(const char *uniformBlockName, uint32_t defaultIndex) = 0;
 			virtual handle getUniformHandle(const char *uniformName) = 0;
-			virtual unsigned int setTextureUnit(handle uniformHandle, unsigned int unit) = 0;
+			virtual uint32_t setTextureUnit(handle uniformHandle, uint32_t unit) = 0;
 			virtual void setUniform1i(handle uniformHandle, int value) = 0;
 			virtual void setUniform1f(handle uniformHandle, float value) = 0;
 			virtual void setUniform2fv(handle uniformHandle, const float *value) = 0;
@@ -1206,7 +1204,7 @@ namespace Renderer
 		public:
 			virtual ~IRenderTarget();
 		public:
-			virtual void getWidthAndHeight(unsigned int &width, unsigned int &height) const = 0;
+			virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const = 0;
 		protected:
 			IRenderTarget(ResourceType::Enum resourceType, IRenderer &renderer);
 			explicit IRenderTarget(const IRenderTarget &source);
@@ -1304,7 +1302,7 @@ namespace Renderer
 		public:
 			virtual ~IUniformBuffer();
 		public:
-			virtual void copyDataFrom(unsigned int numberOfBytes, const void *data) = 0;
+			virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) = 0;
 		protected:
 			explicit IUniformBuffer(IRenderer &renderer);
 			explicit IUniformBuffer(const IUniformBuffer &source);
@@ -1336,7 +1334,7 @@ namespace Renderer
 		public:
 			virtual ~ITextureBuffer();
 		public:
-			virtual void copyDataFrom(unsigned int numberOfBytes, const void *data) = 0;
+			virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) = 0;
 		protected:
 			explicit ITextureBuffer(IRenderer &renderer);
 			explicit ITextureBuffer(const ITextureBuffer &source);
@@ -1352,21 +1350,21 @@ namespace Renderer
 		{
 		public:
 			virtual ~ITexture2D();
-			inline unsigned int getWidth() const
+			inline uint32_t getWidth() const
 			{
 				return mWidth;
 			}
-			inline unsigned int getHeight() const
+			inline uint32_t getHeight() const
 			{
 				return mHeight;
 			}
 		protected:
-			ITexture2D(IRenderer &renderer, unsigned int width, unsigned int height);
+			ITexture2D(IRenderer &renderer, uint32_t width, uint32_t height);
 			explicit ITexture2D(const ITexture2D &source);
 			ITexture2D &operator =(const ITexture2D &source);
 		private:
-			unsigned int mWidth;
-			unsigned int mHeight;
+			uint32_t mWidth;
+			uint32_t mHeight;
 		};
 		typedef SmartRefCount<ITexture2D> ITexture2DPtr;
 	#endif
@@ -1378,26 +1376,26 @@ namespace Renderer
 		{
 		public:
 			virtual ~ITexture2DArray();
-			inline unsigned int getWidth() const
+			inline uint32_t getWidth() const
 			{
 				return mWidth;
 			}
-			inline unsigned int getHeight() const
+			inline uint32_t getHeight() const
 			{
 				return mHeight;
 			}
-			inline unsigned int getNumberOfSlices() const
+			inline uint32_t getNumberOfSlices() const
 			{
 				return mNumberOfSlices;
 			}
 		protected:
-			ITexture2DArray(IRenderer &renderer, unsigned int width, unsigned int height, unsigned int numberOfSlices);
+			ITexture2DArray(IRenderer &renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices);
 			explicit ITexture2DArray(const ITexture2DArray &source);
 			ITexture2DArray &operator =(const ITexture2DArray &source);
 		private:
-			unsigned int mWidth;
-			unsigned int mHeight;
-			unsigned int mNumberOfSlices;
+			uint32_t mWidth;
+			uint32_t mHeight;
+			uint32_t mNumberOfSlices;
 		};
 		typedef SmartRefCount<ITexture2DArray> ITexture2DArrayPtr;
 	#endif

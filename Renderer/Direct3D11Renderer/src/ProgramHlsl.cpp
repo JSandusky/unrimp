@@ -105,7 +105,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *ProgramHlsl::createVertexArray(unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
+	Renderer::IVertexArray *ProgramHlsl::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
 	{
 		// There must be a compiled vertex shader BLOB
 		if (nullptr != mVertexShaderHlsl && nullptr != mVertexShaderHlsl->getD3DBlobVertexShader())
@@ -139,7 +139,7 @@ namespace Direct3D11Renderer
 		return -1;
 	}
 
-	unsigned int ProgramHlsl::getUniformBlockIndex(const char *, unsigned int defaultIndex)
+	uint32_t ProgramHlsl::getUniformBlockIndex(const char *, uint32_t defaultIndex)
 	{
 		// Not supported by Direct3D 11
 		return defaultIndex;

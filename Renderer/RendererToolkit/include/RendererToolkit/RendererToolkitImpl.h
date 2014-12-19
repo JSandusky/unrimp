@@ -178,7 +178,7 @@ namespace RendererToolkit
 	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual IFont *createFontTexture(const char *filename, unsigned int size = 12, unsigned int resolution = 96) override;
+		virtual IFont *createFontTexture(const char *filename, uint32_t size = 12, uint32_t resolution = 96) override;
 
 
 	//[-------------------------------------------------------]

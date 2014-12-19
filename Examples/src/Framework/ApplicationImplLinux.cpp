@@ -59,14 +59,14 @@ public:
 
 			case KeyPress:
 			{
-				const unsigned int key = XLookupKeysym(&event.xkey, 0);
+				const uint32_t key = XLookupKeysym(&event.xkey, 0);
 				mApplication.onKeyDown(key);
 				break;
 			}
 
 			case KeyRelease:
 			{
-				const unsigned int key = XLookupKeysym(&event.xkey, 0);
+				const uint32_t key = XLookupKeysym(&event.xkey, 0);
 				mApplication.onKeyUp(key);
 				break;
 			}

@@ -49,7 +49,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBuffer::copyDataFrom(unsigned int, const void *)
+	void UniformBuffer::copyDataFrom(uint32_t, const void *)
 	{
 		// Nothing to do in here
 	}

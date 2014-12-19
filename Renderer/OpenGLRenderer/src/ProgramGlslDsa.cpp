@@ -50,7 +50,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	unsigned int ProgramGlslDsa::setTextureUnit(handle uniformHandle, unsigned int unit)
+	uint32_t ProgramGlslDsa::setTextureUnit(handle uniformHandle, uint32_t unit)
 	{
 		// OpenGL/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
 		// -> Explicit binding points ("layout(binding=0)" in GLSL shader) requires OpenGL 4.2

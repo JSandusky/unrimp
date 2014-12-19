@@ -44,12 +44,12 @@ namespace Renderer
 		#endif
 	}
 
-	inline unsigned int ITexture2D::getWidth() const
+	inline uint32_t ITexture2D::getWidth() const
 	{
 		return mWidth;
 	}
 
-	inline unsigned int ITexture2D::getHeight() const
+	inline uint32_t ITexture2D::getHeight() const
 	{
 		return mHeight;
 	}
@@ -58,7 +58,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITexture2D::ITexture2D(IRenderer &renderer, unsigned int width, unsigned int height) :
+	inline ITexture2D::ITexture2D(IRenderer &renderer, uint32_t width, uint32_t height) :
 		ITexture(ResourceType::TEXTURE_2D, renderer),
 		mWidth(width),
 		mHeight(height)

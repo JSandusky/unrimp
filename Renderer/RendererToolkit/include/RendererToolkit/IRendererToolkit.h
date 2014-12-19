@@ -102,7 +102,7 @@ namespace RendererToolkit
 		*  @return
 		*    The created texture font instance, a null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual IFont *createFontTexture(const char *filename, unsigned int size = 12, unsigned int resolution = 96) = 0;
+		virtual IFont *createFontTexture(const char *filename, uint32_t size = 12, uint32_t resolution = 96) = 0;
 
 
 	//[-------------------------------------------------------]

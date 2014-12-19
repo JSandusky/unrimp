@@ -55,11 +55,11 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 
 		// Allocate memory for the local vertex and index buffer data
 		float *vertexBufferData = new float[mNumberOfVertices * NUMBER_OF_COMPONENTS_PER_VERTEX];
-		unsigned short *indexBufferData = new unsigned short[mNumberOfIndices];
+		uint16_t *indexBufferData = new uint16_t[mNumberOfIndices];
 
 		{ // Fill the mesh data recursively
-			unsigned int numberOfFilledVertices = 0;
-			unsigned int numberOfFilledIndices  = 0;
+			uint32_t numberOfFilledVertices = 0;
+			uint32_t numberOfFilledIndices  = 0;
 			fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, vertexBufferData, indexBufferData, aiMatrix4x4(), numberOfFilledVertices, numberOfFilledIndices);
 			mNumberOfVertices = numberOfFilledVertices;
 			mNumberOfIndices  = numberOfFilledIndices;
@@ -73,7 +73,7 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 			Renderer::IVertexBufferPtr vertexBuffer(renderer.createVertexBuffer(sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX * mNumberOfVertices, vertexBufferData, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create the index buffer object (IBO)
-			Renderer::IIndexBuffer *indexBuffer = renderer.createIndexBuffer(sizeof(unsigned short) * mNumberOfIndices, Renderer::IndexBufferFormat::UNSIGNED_SHORT, indexBufferData, Renderer::BufferUsage::STATIC_DRAW);
+			Renderer::IIndexBuffer *indexBuffer = renderer.createIndexBuffer(sizeof(uint16_t) * mNumberOfIndices, Renderer::IndexBufferFormat::UNSIGNED_SHORT, indexBufferData, Renderer::BufferUsage::STATIC_DRAW);
 
 			// Please note: Storing fully featured normal, tangent and binormal is inefficient
 			// -> Normal vectors are considered to be normalized, so, we don't need to store all three components as fully featured float
@@ -95,65 +95,65 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 					Renderer::VertexArrayFormat::FLOAT_3,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Position",											// name[64] (char)
 					"POSITION",											// semantic[64] (char)
-					0,													// semanticIndex (unsigned int)
+					0,													// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
-					0,													// offset (unsigned int)
-					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (unsigned int)
+					0,													// offset (uint32_t)
+					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (uint32_t)
 					// Data source, instancing part
-					0													// instancesPerElement (unsigned int)
+					0													// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 1
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_2,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"TexCoord",											// name[64] (char)
 					"TEXCOORD",											// semantic[64] (char)
-					0,													// semanticIndex (unsigned int)
+					0,													// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 3,									// offset (unsigned int)
-					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (unsigned int)
+					sizeof(float) * 3,									// offset (uint32_t)
+					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (uint32_t)
 					// Data source, instancing part
-					0													// instancesPerElement (unsigned int)
+					0													// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 2
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Tangent",											// name[64] (char)
 					"TANGENT",											// semantic[64] (char)
-					0,													// semanticIndex (unsigned int)
+					0,													// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 5,									// offset (unsigned int)
-					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (unsigned int)
+					sizeof(float) * 5,									// offset (uint32_t)
+					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (uint32_t)
 					// Data source, instancing part
-					0													// instancesPerElement (unsigned int)
+					0													// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 3
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Binormal",											// name[64] (char)
 					"BINORMAL",											// semantic[64] (char)
-					0,													// semanticIndex (unsigned int)
+					0,													// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 8,									// offset (unsigned int)
-					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (unsigned int)
+					sizeof(float) * 8,									// offset (uint32_t)
+					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (uint32_t)
 					// Data source, instancing part
-					0													// instancesPerElement (unsigned int)
+					0													// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 4
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Normal",											// name[64] (char)
 					"NORMAL",											// semantic[64] (char)
-					0,													// semanticIndex (unsigned int)
+					0,													// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 11,									// offset (unsigned int)
-					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (unsigned int)
+					sizeof(float) * 11,									// offset (uint32_t)
+					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (uint32_t)
 					// Data source, instancing part
-					0													// instancesPerElement (unsigned int)
+					0													// instancesPerElement (uint32_t)
 				}
 			};
 			mVertexArray = program.createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray, indexBuffer);
@@ -200,10 +200,10 @@ void Mesh::draw()
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-void Mesh::getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, unsigned int &numberOfVertices, unsigned int &numberOfIndices)
+void Mesh::getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
 {
 	// Loop through all meshes this node is using
-	for (unsigned int i = 0; i < assimpNode.mNumMeshes; ++i)
+	for (uint32_t i = 0; i < assimpNode.mNumMeshes; ++i)
 	{
 		// Get the used mesh
 		const aiMesh &assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
@@ -212,37 +212,37 @@ void Mesh::getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, co
 		numberOfVertices += assimpMesh.mNumVertices;
 
 		// Loop through all mesh faces and update the number of indices
-		for (unsigned int j = 0; j < assimpMesh.mNumFaces; ++j)
+		for (uint32_t j = 0; j < assimpMesh.mNumFaces; ++j)
 		{
 			numberOfIndices += assimpMesh.mFaces[j].mNumIndices;
 		}
 	}
 
 	// Loop through all child nodes recursively
-	for (unsigned int i = 0; i < assimpNode.mNumChildren; ++i)
+	for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
 	{
 		getNumberOfVerticesAndIndicesRecursive(assimpScene, *assimpNode.mChildren[i], numberOfVertices, numberOfIndices);
 	}
 }
 
-void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, unsigned short *indexBuffer, const aiMatrix4x4 &assimpTransformation, unsigned int &numberOfVertices, unsigned int &numberOfIndices)
+void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
 {
 	// Get the absolute transformation matrix of this Assimp node
 	const aiMatrix4x4 currentAssimpTransformation = assimpTransformation * assimpNode.mTransformation;
 	const aiMatrix3x3 currentAssimpNormalTransformation = aiMatrix3x3(currentAssimpTransformation);
 
 	// Loop through all meshes this node is using
-	for (unsigned int i = 0; i < assimpNode.mNumMeshes; ++i)
+	for (uint32_t i = 0; i < assimpNode.mNumMeshes; ++i)
 	{
 		// Get the used mesh
 		const aiMesh &assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
 
 		// Get the start vertex inside the our vertex buffer
-		const unsigned int starVertex = numberOfVertices;
+		const uint32_t starVertex = numberOfVertices;
 
 		// Loop through the Assimp mesh vertices
 		float *currentVertexBuffer = vertexBuffer + numberOfVertices * NUMBER_OF_COMPONENTS_PER_VERTEX;
-		for (unsigned int j = 0; j < assimpMesh.mNumVertices; ++j)
+		for (uint32_t j = 0; j < assimpMesh.mNumVertices; ++j)
 		{
 			{ // Position
 				// Get the Assimp mesh vertex position
@@ -322,17 +322,17 @@ void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNod
 		numberOfVertices += assimpMesh.mNumVertices;
 
 		// Loop through all Assimp mesh faces
-		unsigned short *currentIndexBuffer = indexBuffer + numberOfIndices;
-		for (unsigned int j = 0; j < assimpMesh.mNumFaces; ++j)
+		uint16_t *currentIndexBuffer = indexBuffer + numberOfIndices;
+		for (uint32_t j = 0; j < assimpMesh.mNumFaces; ++j)
 		{
 			// Get the Assimp face
 			const aiFace &assimpFace = assimpMesh.mFaces[j];
 
 			// Loop through all indices of the Assimp face and set our indices
-			for (unsigned int assimpIndex = 0; assimpIndex < assimpFace.mNumIndices; ++assimpIndex, ++currentIndexBuffer)
+			for (uint32_t assimpIndex = 0; assimpIndex < assimpFace.mNumIndices; ++assimpIndex, ++currentIndexBuffer)
 			{
-				//					  Assimp mesh vertex inde	  x									 Where the Assimp mesh starts within the our vertex buffer
-				*currentIndexBuffer = static_cast<unsigned short>(assimpFace.mIndices[assimpIndex] + starVertex);
+				//					  Assimp mesh vertex inde	 								 Where the Assimp mesh starts within the our vertex buffer
+				*currentIndexBuffer = static_cast<uint16_t>(assimpFace.mIndices[assimpIndex] + starVertex);
 			}
 
 			// Update the number if processed indices
@@ -341,7 +341,7 @@ void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNod
 	}
 
 	// Loop through all child nodes recursively
-	for (unsigned int assimpChild = 0; assimpChild < assimpNode.mNumChildren; ++assimpChild)
+	for (uint32_t assimpChild = 0; assimpChild < assimpNode.mNumChildren; ++assimpChild)
 	{
 		fillMeshRecursive(assimpScene, *assimpNode.mChildren[assimpChild], vertexBuffer, indexBuffer, currentAssimpTransformation, numberOfVertices, numberOfIndices);
 	}

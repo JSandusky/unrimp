@@ -28,12 +28,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int IndexBuffer::getOpenGLElementArrayBuffer() const
+	inline uint32_t IndexBuffer::getOpenGLElementArrayBuffer() const
 	{
 		return mOpenGLElementArrayBuffer;
 	}
 
-	inline unsigned int IndexBuffer::getOpenGLType() const
+	inline uint32_t IndexBuffer::getOpenGLType() const
 	{
 		return mOpenGLType;
 	}

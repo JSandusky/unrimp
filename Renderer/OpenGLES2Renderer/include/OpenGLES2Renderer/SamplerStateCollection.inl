@@ -28,7 +28,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int SamplerStateCollection::getNumberOfSamplerStates() const
+	inline uint32_t SamplerStateCollection::getNumberOfSamplerStates() const
 	{
 		return mNumberOfSamplerStates;
 	}

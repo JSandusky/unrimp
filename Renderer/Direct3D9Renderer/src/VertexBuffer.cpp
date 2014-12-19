@@ -38,7 +38,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(Direct3D9Renderer &direct3D9Renderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	VertexBuffer::VertexBuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		IVertexBuffer(direct3D9Renderer),
 		mDirect3DVertexBuffer9(nullptr)
 	{

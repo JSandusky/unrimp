@@ -28,7 +28,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int VertexShaderGlsl::getOpenGLShader() const
+	inline uint32_t VertexShaderGlsl::getOpenGLShader() const
 	{
 		return mOpenGLShader;
 	}

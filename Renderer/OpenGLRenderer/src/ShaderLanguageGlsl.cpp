@@ -52,7 +52,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	unsigned int ShaderLanguageGlsl::loadShader(unsigned int shaderType, const char *shaderSource)
+	uint32_t ShaderLanguageGlsl::loadShader(uint32_t shaderType, const char *shaderSource)
 	{
 		// Create the shader object
 		const GLuint openGLShader = glCreateShaderObjectARB(shaderType);
@@ -81,7 +81,7 @@ namespace OpenGLRenderer
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
-					GLchar *informationLog = new GLchar[static_cast<unsigned int>(informationLength)];
+					GLchar *informationLog = new GLchar[static_cast<uint32_t>(informationLength)];
 
 					// Get the information
 					glGetInfoLogARB(openGLShader, informationLength, nullptr, informationLog);
@@ -172,7 +172,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShader(const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, unsigned int numberOfOutputVertices, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShader(const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *, const char *, const char *)
 	{
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
@@ -279,7 +279,7 @@ namespace OpenGLRenderer
 		return nullptr;
 	}
 
-	Renderer::IUniformBuffer *ShaderLanguageGlsl::createUniformBuffer(unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IUniformBuffer *ShaderLanguageGlsl::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		// "GL_ARB_uniform_buffer_object" required
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();

@@ -28,7 +28,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int Framebuffer::getNumberOfD3D10RenderTargetViews() const
+	inline uint32_t Framebuffer::getNumberOfD3D10RenderTargetViews() const
 	{
 		return mNumberOfColorTextures;
 	}

@@ -81,7 +81,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL vertex array, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLVertexArray() const;
+		inline uint32_t getOpenGLVertexArray() const;
 
 
 	//[-------------------------------------------------------]
@@ -101,15 +101,15 @@ namespace OpenGLRenderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArrayVao(OpenGLRenderer &openGLRenderer, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer);
+		VertexArrayVao(OpenGLRenderer &openGLRenderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer);
 
 
 	//[-------------------------------------------------------]
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int   mOpenGLVertexArray;		///< OpenGL vertex array, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		unsigned int   mNumberOfVertexBuffers;	///< Number of vertex buffers
+		uint32_t	   mOpenGLVertexArray;		///< OpenGL vertex array, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t	   mNumberOfVertexBuffers;	///< Number of vertex buffers
 		VertexBuffer **mVertexBuffers;			///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
 
 

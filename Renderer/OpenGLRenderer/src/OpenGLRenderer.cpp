@@ -274,9 +274,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Shader language                                       ]
 	//[-------------------------------------------------------]
-	unsigned int OpenGLRenderer::getNumberOfShaderLanguages() const
+	uint32_t OpenGLRenderer::getNumberOfShaderLanguages() const
 	{
-		unsigned int numberOfShaderLanguages = 0;
+		uint32_t numberOfShaderLanguages = 0;
 
 		// "GL_ARB_shader_objects" required
 		if (mContext->getExtensions().isGL_ARB_shader_objects())
@@ -289,9 +289,9 @@ namespace OpenGLRenderer
 		return numberOfShaderLanguages;
 	}
 
-	const char *OpenGLRenderer::getShaderLanguageName(unsigned int index) const
+	const char *OpenGLRenderer::getShaderLanguageName(uint32_t index) const
 	{
-		unsigned int currentIndex = 0;
+		uint32_t currentIndex = 0;
 
 		// "GL_ARB_shader_objects" required
 		if (mContext->getExtensions().isGL_ARB_shader_objects())
@@ -355,7 +355,7 @@ namespace OpenGLRenderer
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *OpenGLRenderer::createFramebuffer(unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	Renderer::IFramebuffer *OpenGLRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
 	{
 		// "GL_ARB_framebuffer_object" required
 		if (mContext->getExtensions().isGL_ARB_framebuffer_object())
@@ -381,7 +381,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IVertexBuffer *OpenGLRenderer::createVertexBuffer(unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IVertexBuffer *OpenGLRenderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		// "GL_ARB_vertex_buffer_object" required
 		if (mContext->getExtensions().isGL_ARB_vertex_buffer_object())
@@ -405,7 +405,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IIndexBuffer *OpenGLRenderer::createIndexBuffer(unsigned int numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IIndexBuffer *OpenGLRenderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		// "GL_ARB_vertex_buffer_object" required
 		if (mContext->getExtensions().isGL_ARB_vertex_buffer_object())
@@ -429,7 +429,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITextureBuffer *OpenGLRenderer::createTextureBuffer(unsigned int numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::ITextureBuffer *OpenGLRenderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		// "GL_ARB_texture_buffer_object" required
 		if (mContext->getExtensions().isGL_ARB_texture_buffer_object())
@@ -453,7 +453,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITexture2D *OpenGLRenderer::createTexture2D(unsigned int width, unsigned int height, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags, Renderer::TextureUsage::Enum)
+	Renderer::ITexture2D *OpenGLRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
 
@@ -478,7 +478,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITexture2DArray *OpenGLRenderer::createTexture2DArray(unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags, Renderer::TextureUsage::Enum)
+	Renderer::ITexture2DArray *OpenGLRenderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
 
@@ -542,12 +542,12 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITextureCollection *OpenGLRenderer::createTextureCollection(unsigned int numberOfTextures, Renderer::ITexture **textures)
+	Renderer::ITextureCollection *OpenGLRenderer::createTextureCollection(uint32_t numberOfTextures, Renderer::ITexture **textures)
 	{
 		return new TextureCollection(*this, numberOfTextures, textures);
 	}
 
-	Renderer::ISamplerStateCollection *OpenGLRenderer::createSamplerStateCollection(unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
+	Renderer::ISamplerStateCollection *OpenGLRenderer::createSamplerStateCollection(uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
 	{
 		return new SamplerStateCollection(*this, numberOfSamplerStates, samplerStates);
 	}
@@ -556,13 +556,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool OpenGLRenderer::map(Renderer::IResource &, unsigned int, Renderer::MapType::Enum, unsigned int, Renderer::MappedSubresource &)
+	bool OpenGLRenderer::map(Renderer::IResource &, uint32_t, Renderer::MapType::Enum, uint32_t, Renderer::MappedSubresource &)
 	{
 		// TODO(co) Implement me
 		return false;
 	}
 
-	void OpenGLRenderer::unmap(Renderer::IResource &, unsigned int)
+	void OpenGLRenderer::unmap(Renderer::IResource &, uint32_t)
 	{
 		// TODO(co) Implement me
 	}
@@ -693,31 +693,31 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::vsSetTexture(unsigned int unit, Renderer::ITexture *texture)
+	void OpenGLRenderer::vsSetTexture(uint32_t unit, Renderer::ITexture *texture)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetTexture(unit, texture);
 	}
 
-	void OpenGLRenderer::vsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection)
+	void OpenGLRenderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetTextureCollection(startUnit, textureCollection);
 	}
 
-	void OpenGLRenderer::vsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState)
+	void OpenGLRenderer::vsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetSamplerState(unit, samplerState);
 	}
 
-	void OpenGLRenderer::vsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLRenderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetSamplerStateCollection(startUnit, samplerStateCollection);
 	}
 
-	void OpenGLRenderer::vsSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLRenderer::vsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// In OpenGL a single program is set instead of individual shaders
 		// -> This means that there are uniform binding slots per program, not slots per shader as in e.g. Direct3D 10
@@ -729,31 +729,31 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::tcsSetTexture(unsigned int unit, Renderer::ITexture *texture)
+	void OpenGLRenderer::tcsSetTexture(uint32_t unit, Renderer::ITexture *texture)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetTexture(unit, texture);
 	}
 
-	void OpenGLRenderer::tcsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection)
+	void OpenGLRenderer::tcsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetTextureCollection(startUnit, textureCollection);
 	}
 
-	void OpenGLRenderer::tcsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState)
+	void OpenGLRenderer::tcsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetSamplerState(unit, samplerState);
 	}
 
-	void OpenGLRenderer::tcsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLRenderer::tcsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetSamplerStateCollection(startUnit, samplerStateCollection);
 	}
 
-	void OpenGLRenderer::tcsSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLRenderer::tcsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// In OpenGL a single program is set instead of individual shaders
 		// -> This means that there are uniform binding slots per program, not slots per shader as in e.g. Direct3D 10
@@ -765,31 +765,31 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::tesSetTexture(unsigned int unit, Renderer::ITexture *texture)
+	void OpenGLRenderer::tesSetTexture(uint32_t unit, Renderer::ITexture *texture)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetTexture(unit, texture);
 	}
 
-	void OpenGLRenderer::tesSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection)
+	void OpenGLRenderer::tesSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetTextureCollection(startUnit, textureCollection);
 	}
 
-	void OpenGLRenderer::tesSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState)
+	void OpenGLRenderer::tesSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetSamplerState(unit, samplerState);
 	}
 
-	void OpenGLRenderer::tesSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLRenderer::tesSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetSamplerStateCollection(startUnit, samplerStateCollection);
 	}
 
-	void OpenGLRenderer::tesSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLRenderer::tesSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// In OpenGL a single program is set instead of individual shaders
 		// -> This means that there are uniform binding slots per program, not slots per shader as in e.g. Direct3D 10
@@ -801,31 +801,31 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::gsSetTexture(unsigned int unit, Renderer::ITexture *texture)
+	void OpenGLRenderer::gsSetTexture(uint32_t unit, Renderer::ITexture *texture)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetTexture(unit, texture);
 	}
 
-	void OpenGLRenderer::gsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection)
+	void OpenGLRenderer::gsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetTextureCollection(startUnit, textureCollection);
 	}
 
-	void OpenGLRenderer::gsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState)
+	void OpenGLRenderer::gsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetSamplerState(unit, samplerState);
 	}
 
-	void OpenGLRenderer::gsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLRenderer::gsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// In OpenGL, all shaders share the same texture units
 		fsSetSamplerStateCollection(startUnit, samplerStateCollection);
 	}
 
-	void OpenGLRenderer::gsSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLRenderer::gsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// In OpenGL a single program is set instead of individual shaders
 		// -> This means that there are uniform binding slots per program, not slots per shader as in e.g. Direct3D 10
@@ -837,7 +837,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::rsSetViewports(unsigned int numberOfViewports, const Renderer::Viewport *viewports)
+	void OpenGLRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
 	{
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
@@ -846,8 +846,8 @@ namespace OpenGLRenderer
 			// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			unsigned int renderTargetWidth =  0;
-			unsigned int renderTargetHeight = 0;
+			uint32_t renderTargetWidth =  0;
+			uint32_t renderTargetHeight = 0;
 			if (nullptr != mRenderTarget)
 			{
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
@@ -867,7 +867,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::rsSetScissorRectangles(unsigned int numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
+	void OpenGLRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
 	{
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
@@ -876,8 +876,8 @@ namespace OpenGLRenderer
 			// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
 			// Get the width and height of the current render target
-			unsigned int renderTargetWidth =  0;
-			unsigned int renderTargetHeight = 0;
+			uint32_t renderTargetWidth =  0;
+			uint32_t renderTargetHeight = 0;
 			if (nullptr != mRenderTarget)
 			{
 				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
@@ -950,7 +950,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::fsSetTexture(unsigned int unit, Renderer::ITexture *texture)
+	void OpenGLRenderer::fsSetTexture(uint32_t unit, Renderer::ITexture *texture)
 	{
 		// Is "GL_EXT_direct_state_access" there?
 		if (mContext->getExtensions().isGL_EXT_direct_state_access())
@@ -1103,7 +1103,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::fsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection)
+	void OpenGLRenderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
 		if (nullptr != textureCollection)
@@ -1264,7 +1264,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::fsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState)
+	void OpenGLRenderer::fsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
 	{
 		// Set a sampler state at that unit?
 		if (nullptr != samplerState)
@@ -1320,7 +1320,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::fsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLRenderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
 		if (nullptr != samplerStateCollection)
@@ -1336,7 +1336,7 @@ namespace OpenGLRenderer
 				// Loop through all sampler states within the given sampler state collection
 				Renderer::ISamplerState **currentSamplerState = static_cast<SamplerStateCollection*>(samplerStateCollection)->getSamplerStates();
 				Renderer::ISamplerState **samplerStateEnd	  = currentSamplerState + static_cast<SamplerStateCollection*>(samplerStateCollection)->getNumberOfSamplerStates();
-				for (unsigned int unit = startUnit; currentSamplerState < samplerStateEnd; ++currentSamplerState, ++unit)
+				for (uint32_t unit = startUnit; currentSamplerState < samplerStateEnd; ++currentSamplerState, ++unit)
 				{
 					// Get the current sampler state
 					Renderer::ISamplerState *samplerState = *currentSamplerState;
@@ -1350,7 +1350,7 @@ namespace OpenGLRenderer
 				// Loop through all sampler states within the given sampler state collection
 				Renderer::ISamplerState **currentSamplerState = static_cast<SamplerStateCollection*>(samplerStateCollection)->getSamplerStates();
 				Renderer::ISamplerState **samplerStateEnd	  = currentSamplerState + static_cast<SamplerStateCollection*>(samplerStateCollection)->getNumberOfSamplerStates();
-				for (unsigned int unit = startUnit; currentSamplerState < samplerStateEnd; ++currentSamplerState, ++unit)
+				for (uint32_t unit = startUnit; currentSamplerState < samplerStateEnd; ++currentSamplerState, ++unit)
 				{
 					// Get the current sampler state
 					Renderer::ISamplerState *samplerState = *currentSamplerState;
@@ -1391,7 +1391,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::fsSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLRenderer::fsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// Set a uniform buffer at that unit?
 		if (nullptr != uniformBuffer)
@@ -1640,10 +1640,10 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::clear(unsigned int flags, const float color[4], float z, unsigned int stencil)
+	void OpenGLRenderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
 	{
 		// Get API flags
-		unsigned int flagsApi = 0;
+		uint32_t flagsApi = 0;
 		if (flags & Renderer::ClearFlag::COLOR)
 		{
 			flagsApi |= GL_COLOR_BUFFER_BIT;
@@ -1711,7 +1711,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::draw(unsigned int startVertexLocation, unsigned int numberOfVertices)
+	void OpenGLRenderer::draw(uint32_t startVertexLocation, uint32_t numberOfVertices)
 	{
 		// Tessellation support: "glPatchParameteri()" is called within "OpenGLRenderer::iaSetPrimitiveTopology()"
 
@@ -1723,7 +1723,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::drawInstanced(unsigned int startVertexLocation, unsigned int numberOfVertices, unsigned int numberOfInstances)
+	void OpenGLRenderer::drawInstanced(uint32_t startVertexLocation, uint32_t numberOfVertices, uint32_t numberOfInstances)
 	{
 		// Tessellation support: "glPatchParameteri()" is called within "OpenGLRenderer::iaSetPrimitiveTopology()"
 
@@ -1735,7 +1735,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::drawIndexed(unsigned int startIndexLocation, unsigned int numberOfIndices, unsigned int baseVertexLocation, unsigned int, unsigned int)
+	void OpenGLRenderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t)
 	{
 		// Tessellation support: "glPatchParameteri()" is called within "OpenGLRenderer::iaSetPrimitiveTopology()"
 
@@ -1771,7 +1771,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::drawIndexedInstanced(unsigned int startIndexLocation, unsigned int numberOfIndices, unsigned int baseVertexLocation, unsigned int, unsigned int, unsigned int numberOfInstances)
+	void OpenGLRenderer::drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t, uint32_t numberOfInstances)
 	{
 		// Tessellation support: "glPatchParameteri()" is called within "OpenGLRenderer::iaSetPrimitiveTopology()"
 
@@ -1864,24 +1864,24 @@ namespace OpenGLRenderer
 		if (mContext->getExtensions().isGL_ARB_draw_buffers())
 		{
 			glGetIntegerv(GL_MAX_DRAW_BUFFERS_ARB, &openGLValue);
-			mCapabilities.maximumNumberOfSimultaneousRenderTargets = static_cast<unsigned int>(openGLValue);
+			mCapabilities.maximumNumberOfSimultaneousRenderTargets = static_cast<uint32_t>(openGLValue);
 		}
 		else
 		{
 			// "GL_ARB_framebuffer_object"-extension for render to texture required
-			mCapabilities.maximumNumberOfSimultaneousRenderTargets = static_cast<unsigned int>(mContext->getExtensions().isGL_ARB_framebuffer_object());
+			mCapabilities.maximumNumberOfSimultaneousRenderTargets = static_cast<uint32_t>(mContext->getExtensions().isGL_ARB_framebuffer_object());
 		}
 
 		// Maximum texture dimension
 		openGLValue = 0;
 		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &openGLValue);
-		mCapabilities.maximumTextureDimension = static_cast<unsigned int>(openGLValue);
+		mCapabilities.maximumTextureDimension = static_cast<uint32_t>(openGLValue);
 
 		// Maximum number of 2D texture array slices (usually 512, in case there's no support for 2D texture arrays it's 0)
 		if (mContext->getExtensions().isGL_EXT_texture_array())
 		{
 			glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS_EXT, &openGLValue);
-			mCapabilities.maximumNumberOf2DTextureArraySlices = static_cast<unsigned int>(openGLValue);
+			mCapabilities.maximumNumberOf2DTextureArraySlices = static_cast<uint32_t>(openGLValue);
 		}
 		else
 		{
@@ -1895,7 +1895,7 @@ namespace OpenGLRenderer
 		if (mContext->getExtensions().isGL_ARB_texture_buffer_object())
 		{
 			glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE_EXT, &openGLValue);
-			mCapabilities.maximumTextureBufferSize = static_cast<unsigned int>(openGLValue);
+			mCapabilities.maximumTextureBufferSize = static_cast<uint32_t>(openGLValue);
 		}
 		else
 		{
@@ -1924,7 +1924,7 @@ namespace OpenGLRenderer
 		if (mContext->getExtensions().isGL_ARB_tessellation_shader())
 		{
 			glGetIntegerv(GL_MAX_PATCH_VERTICES, &openGLValue);
-			mCapabilities.maximumNumberOfPatchVertices = static_cast<unsigned int>(openGLValue);
+			mCapabilities.maximumNumberOfPatchVertices = static_cast<uint32_t>(openGLValue);
 		}
 		else
 		{
@@ -1935,7 +1935,7 @@ namespace OpenGLRenderer
 		if (mContext->getExtensions().isGL_ARB_geometry_shader4())
 		{
 			glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_ARB, &openGLValue);
-			mCapabilities.maximumNumberOfGsOutputVertices = static_cast<unsigned int>(openGLValue);
+			mCapabilities.maximumNumberOfGsOutputVertices = static_cast<uint32_t>(openGLValue);
 		}
 		else
 		{

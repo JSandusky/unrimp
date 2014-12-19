@@ -84,7 +84,7 @@ namespace OpenGLES2Renderer
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		Framebuffer(OpenGLES2Renderer &openGLES2Renderer, unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
+		Framebuffer(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
 
 		/**
 		*  @brief
@@ -99,7 +99,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    The OpenGL ES 2 framebuffer, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLES2Framebuffer() const;
+		inline uint32_t getOpenGLES2Framebuffer() const;
 
 		/**
 		*  @brief
@@ -108,26 +108,26 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    The number of color render target textures
 		*/
-		inline unsigned int getNumberOfColorTextures() const;
+		inline uint32_t getNumberOfColorTextures() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(unsigned int &width, unsigned int &height) const override;
+		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int		 mOpenGLES2Framebuffer;		///< OpenGL ES 2 framebuffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		unsigned int		 mNumberOfColorTextures;	///< Number of color render target textures
+		uint32_t			 mOpenGLES2Framebuffer;		///< OpenGL ES 2 framebuffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t			 mNumberOfColorTextures;	///< Number of color render target textures
 		Renderer::ITexture **mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
 		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
-		unsigned int		 mWidth;					///< The framebuffer width
-		unsigned int		 mHeight;					///< The framebuffer height
+		uint32_t			 mWidth;					///< The framebuffer width
+		uint32_t			 mHeight;					///< The framebuffer height
 
 
 	};

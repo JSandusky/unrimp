@@ -35,7 +35,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBufferGlslDsa::UniformBufferGlslDsa(OpenGLRenderer &openGLRenderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	UniformBufferGlslDsa::UniformBufferGlslDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		UniformBufferGlsl(openGLRenderer)
 	{
 		// Upload the data
@@ -52,7 +52,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBufferGlslDsa::copyDataFrom(unsigned int numberOfBytes, const void *data)
+	void UniformBufferGlslDsa::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
 		// Upload the data
 		glNamedBufferSubDataEXT(mOpenGLUniformBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);

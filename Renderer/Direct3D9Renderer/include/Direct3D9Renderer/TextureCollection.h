@@ -82,7 +82,7 @@ namespace Direct3D9Renderer
 		*  @note
 		*    - The texture collection keeps a reference to the provided texture instances
 		*/
-		TextureCollection(Direct3D9Renderer &direct3D9Renderer, unsigned int numberOfTextures, Renderer::ITexture **textures);
+		TextureCollection(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfTextures, Renderer::ITexture **textures);
 
 		/**
 		*  @brief
@@ -97,7 +97,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    The number of texture instances
 		*/
-		inline unsigned int getNumberOfTextures() const;
+		inline uint32_t getNumberOfTextures() const;
 
 		/**
 		*  @brief
@@ -120,7 +120,7 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int		 mNumberOfTextures;	///< The number of texture instances
+		uint32_t			 mNumberOfTextures;	///< The number of texture instances
 		Renderer::ITexture **mTextures;			///< Texture instances (we keep a reference to it), can be a null pointer
 
 

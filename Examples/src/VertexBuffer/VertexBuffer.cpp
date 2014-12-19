@@ -107,26 +107,26 @@ void VertexBuffer::onInitialization()
 							Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 							"Position",								// name[64] (char)
 							"POSITION",								// semantic[64] (char)
-							0,										// semanticIndex (unsigned int)
+							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBufferPositionColor,				// vertexBuffer (Renderer::IVertexBuffer *)
-							0,										// offset (unsigned int)
-							sizeof(float) * (2 + 3),				// stride (unsigned int)
+							0,										// offset (uint32_t)
+							sizeof(float) * (2 + 3),				// stride (uint32_t)
 							// Data source, instancing part
-							0										// instancesPerElement (unsigned int)
+							0										// instancesPerElement (uint32_t)
 						},
 						{ // Attribute 1
 							// Data destination
 							Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 							"Color",								// name[64] (char)
 							"COLOR",								// semantic[64] (char)
-							0,										// semanticIndex (unsigned int)
+							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBufferPositionColor,				// vertexBuffer (Renderer::IVertexBuffer *)
-							sizeof(float) * 2,						// offset (unsigned int)
-							sizeof(float) * (2 + 3),				// stride (unsigned int)
+							sizeof(float) * 2,						// offset (uint32_t)
+							sizeof(float) * (2 + 3),				// stride (uint32_t)
 							// Data source, instancing part
-							0										// instancesPerElement (unsigned int)
+							0										// instancesPerElement (uint32_t)
 						}
 					};
 					mVertexArrayVBO = mProgram->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
@@ -161,26 +161,26 @@ void VertexBuffer::onInitialization()
 							Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 							"Position",								// name[64] (char)
 							"POSITION",								// semantic[64] (char)
-							0,										// semanticIndex (unsigned int)
+							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBufferPosition,					// vertexBuffer (Renderer::IVertexBuffer *)
-							0,										// offset (unsigned int)
-							sizeof(float) * 2,						// stride (unsigned int)
+							0,										// offset (uint32_t)
+							sizeof(float) * 2,						// stride (uint32_t)
 							// Data source, instancing part
-							0										// instancesPerElement (unsigned int)
+							0										// instancesPerElement (uint32_t)
 						},
 						{ // Attribute 1
 							// Data destination
 							Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 							"Color",								// name[64] (char)
 							"COLOR",								// semantic[64] (char)
-							0,										// semanticIndex (unsigned int)
+							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBufferColor,						// vertexBuffer (Renderer::IVertexBuffer *)
-							0,										// offset (unsigned int)
-							sizeof(float) * 3,						// stride (unsigned int)
+							0,										// offset (uint32_t)
+							sizeof(float) * 3,						// stride (uint32_t)
 							// Data source, instancing part
-							0										// instancesPerElement (unsigned int)
+							0										// instancesPerElement (uint32_t)
 						}
 					};
 					mVertexArrayVBOs = mProgram->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);

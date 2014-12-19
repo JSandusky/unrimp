@@ -28,7 +28,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int ProgramGlsl::getOpenGLProgram() const
+	inline uint32_t ProgramGlsl::getOpenGLProgram() const
 	{
 		return mOpenGLProgram;
 	}

@@ -145,7 +145,7 @@ public:
 	*  @note
 	*    - The base implementation is empty
 	*/
-	virtual void onKeyDown(unsigned int key);
+	virtual void onKeyDown(uint32_t key);
 
 	/**
 	*  @brief
@@ -157,7 +157,7 @@ public:
 	*  @note
 	*    - The base implementation is empty
 	*/
-	virtual void onKeyUp(unsigned int key);
+	virtual void onKeyUp(uint32_t key);
 
 	/**
 	*  @brief

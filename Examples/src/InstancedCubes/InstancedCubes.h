@@ -94,7 +94,7 @@ public:
 public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
-	virtual void onKeyDown(unsigned int key) override;
+	virtual void onKeyDown(uint32_t key) override;
 	virtual void onUpdate() override;
 	virtual void onDraw() override;
 
@@ -103,9 +103,9 @@ public:
 //[ Private static data                                   ]
 //[-------------------------------------------------------]
 private:
-	static const unsigned int NUMBER_OF_CHANGED_CUBES = 10000;	///< Number of changed cubes on key interaction
-	static const unsigned int NUMBER_OF_TEXTURES	  = 8;		///< Number of textures
-	static const unsigned int SCENE_RADIUS			  = 10;		///< Scene radius
+	static const uint32_t NUMBER_OF_CHANGED_CUBES = 10000;	///< Number of changed cubes on key interaction
+	static const uint32_t NUMBER_OF_TEXTURES	  = 8;		///< Number of textures
+	static const uint32_t SCENE_RADIUS			  = 10;		///< Scene radius
 
 
 //[-------------------------------------------------------]
@@ -114,7 +114,7 @@ private:
 private:
 	RendererToolkit::IFontPtr  mFont;					///< Font, can be a null pointer
 	ICubeRenderer			  *mCubeRenderer;			///< Cube renderer instance, can be a null pointer
-	unsigned int			   mNumberOfCubeInstances;	///< Number of cube instances
+	uint32_t				   mNumberOfCubeInstances;	///< Number of cube instances
 	// The rest is for timing and statistics
 	Stopwatch mStopwatch;			///< Stopwatch instance
 	float	  mGlobalTimer;			///< Global timer

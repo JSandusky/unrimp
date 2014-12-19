@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-unsigned int Stopwatch::getSystemMicroseconds() const
+uint32_t Stopwatch::getSystemMicroseconds() const
 {
 	#ifdef WIN32
 		// Frequency of the performance counter
@@ -54,11 +54,11 @@ unsigned int Stopwatch::getSystemMicroseconds() const
 		newTicks *= static_cast<double>(1000000.0)/static_cast<double>(performanceFrequency.QuadPart);
 
 		// Return past time
-		return static_cast<unsigned int>(newTicks);
+		return static_cast<uint32_t>(newTicks);
 	#elif defined LINUX
 		struct timeval now;
 		gettimeofday(&now, nullptr);
-		return static_cast<unsigned int>(now.tv_sec*1000000 + now.tv_usec);
+		return static_cast<uint32_t>(now.tv_sec*1000000 + now.tv_usec);
 	#else
 		#error "Unsupported platform"
 	#endif

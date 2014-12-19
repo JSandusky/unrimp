@@ -28,12 +28,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int TextureBuffer::getOpenGLTextureBuffer() const
+	inline uint32_t TextureBuffer::getOpenGLTextureBuffer() const
 	{
 		return mOpenGLTextureBuffer;
 	}
 
-	inline unsigned int TextureBuffer::getOpenGLTexture() const
+	inline uint32_t TextureBuffer::getOpenGLTexture() const
 	{
 		return mOpenGLTexture;
 	}

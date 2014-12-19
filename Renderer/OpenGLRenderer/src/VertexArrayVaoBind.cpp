@@ -42,7 +42,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayVaoBind::VertexArrayVaoBind(Program &program, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
+	VertexArrayVaoBind::VertexArrayVaoBind(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		VertexArrayVao(static_cast<OpenGLRenderer&>(program.getRenderer()), numberOfAttributes, attributes, indexBuffer)
 	{
 		// Vertex buffer reference handling is done within the base class "VertexArrayVao"

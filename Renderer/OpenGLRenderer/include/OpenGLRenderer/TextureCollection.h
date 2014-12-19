@@ -82,7 +82,7 @@ namespace OpenGLRenderer
 		*  @note
 		*    - The texture collection keeps a reference to the provided texture instances
 		*/
-		TextureCollection(OpenGLRenderer &openGLRenderer, unsigned int numberOfTextures, Renderer::ITexture **textures);
+		TextureCollection(OpenGLRenderer &openGLRenderer, uint32_t numberOfTextures, Renderer::ITexture **textures);
 
 		/**
 		*  @brief
@@ -97,7 +97,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The number of texture instances
 		*/
-		inline unsigned int getNumberOfTextures() const;
+		inline uint32_t getNumberOfTextures() const;
 
 		/**
 		*  @brief
@@ -113,7 +113,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int		 mNumberOfTextures;	///< The number of texture instances
+		uint32_t			 mNumberOfTextures;	///< The number of texture instances
 		Renderer::ITexture **mTextures;			///< Texture instances (we keep a reference to it), can be a null pointer
 
 

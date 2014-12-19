@@ -28,15 +28,15 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	inline unsigned int ITexture::getNumberOfMipmaps(unsigned int width, unsigned int height)
+	inline uint32_t ITexture::getNumberOfMipmaps(uint32_t width, uint32_t height)
 	{
 		#define MAX(a, b) (a > b) ? a : b
 
-		unsigned int numberOfMipmaps = 1;
+		uint32_t numberOfMipmaps = 1;
 		while ((width > 1) && (height > 1))
 		{
-			width  = MAX(width / 2,  static_cast<unsigned int>(1));
-			height = MAX(height / 2, static_cast<unsigned int>(1));
+			width  = MAX(width / 2,  static_cast<uint32_t>(1));
+			height = MAX(height / 2, static_cast<uint32_t>(1));
 			++numberOfMipmaps;
 		}
 		return numberOfMipmaps;

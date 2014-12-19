@@ -41,7 +41,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D9Renderer &direct3D9Renderer, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D9Renderer),
 		mDirect3DDevice9(direct3D9Renderer.getDirect3DDevice9()),
 		mIndexBuffer(indexBuffer),
@@ -79,7 +79,7 @@ namespace Direct3D9Renderer
 		}
 
 		// Get the maximum number of supported streams
-		unsigned int maximumNumberOfStreams = 0;
+		uint32_t maximumNumberOfStreams = 0;
 		{
 			// TODO(co) Optimization: Read this information only once and then backup the result
 			// Get Direct3D 9 device capabilities and read the required information
@@ -89,13 +89,13 @@ namespace Direct3D9Renderer
 		}
 
 		// Vertex buffer at slot
-		unsigned int numberOfUsedSlots = 0;
+		uint32_t numberOfUsedSlots = 0;
 		IDirect3DVertexBuffer9 **direct3DVertexBuffer9AtSlot = new IDirect3DVertexBuffer9*[maximumNumberOfStreams];
 		memset(direct3DVertexBuffer9AtSlot, 0, sizeof(IDirect3DVertexBuffer9*) * maximumNumberOfStreams);
-		unsigned int *strideAtSlot = new unsigned int[maximumNumberOfStreams];
-		memset(strideAtSlot, 0, sizeof(unsigned int) * maximumNumberOfStreams);
-		unsigned int *instancesPerElementAtSlot = new unsigned int[maximumNumberOfStreams];
-		memset(instancesPerElementAtSlot, 0, sizeof(unsigned int) * maximumNumberOfStreams);
+		uint32_t *strideAtSlot = new uint32_t[maximumNumberOfStreams];
+		memset(strideAtSlot, 0, sizeof(uint32_t) * maximumNumberOfStreams);
+		uint32_t *instancesPerElementAtSlot = new uint32_t[maximumNumberOfStreams];
+		memset(instancesPerElementAtSlot, 0, sizeof(uint32_t) * maximumNumberOfStreams);
 
 		// Create Direct3D 9 vertex elements
 		// -> While doing so, collect the per slot vertex buffer, stride and instances per element information
@@ -109,7 +109,7 @@ namespace Direct3D9Renderer
 			UINT *currentStrideAtSlot = strideAtSlot;
 			UINT *currentInstancesPerElementAtSlot = instancesPerElementAtSlot;
 			int slotToUse = -1;
-			for (unsigned int slot = 0; slot < numberOfUsedSlots; ++slot, ++currentDirect3DVertexBuffer9AtSlot, ++currentStrideAtSlot, ++currentInstancesPerElementAtSlot)
+			for (uint32_t slot = 0; slot < numberOfUsedSlots; ++slot, ++currentDirect3DVertexBuffer9AtSlot, ++currentStrideAtSlot, ++currentInstancesPerElementAtSlot)
 			{
 				// Vertex buffer, stride and instances per element match?
 				if (*currentDirect3DVertexBuffer9AtSlot == static_cast<VertexBuffer*>(attributes->vertexBuffer)->getDirect3DVertexBuffer9() &&
@@ -178,12 +178,12 @@ namespace Direct3D9Renderer
 			memcpy(mDirect3DVertexBuffer9, direct3DVertexBuffer9AtSlot, sizeof(IDirect3DVertexBuffer9*) * mNumberOfSlots);
 
 			// Strides
-			mStrides = new unsigned int[mNumberOfSlots];
-			memcpy(mStrides, strideAtSlot, sizeof(unsigned int) * mNumberOfSlots);
+			mStrides = new uint32_t[mNumberOfSlots];
+			memcpy(mStrides, strideAtSlot, sizeof(uint32_t) * mNumberOfSlots);
 
 			// Instances per element
-			mInstancesPerElement = new unsigned int[mNumberOfSlots];
-			memcpy(mInstancesPerElement, instancesPerElementAtSlot, sizeof(unsigned int) * mNumberOfSlots);
+			mInstancesPerElement = new uint32_t[mNumberOfSlots];
+			memcpy(mInstancesPerElement, instancesPerElementAtSlot, sizeof(uint32_t) * mNumberOfSlots);
 		}
 
 		// Cleanup
@@ -242,9 +242,9 @@ namespace Direct3D9Renderer
 
 			// Set the Direct3D 9 stream sources
 			IDirect3DVertexBuffer9 **currentDirect3DVertexBuffer9AtSlot = mDirect3DVertexBuffer9;
-			unsigned int *currentStrideAtSlot = mStrides;
-			unsigned int *currentInstancesPerElementAtSlot = mInstancesPerElement;
-			for (unsigned int slot = 0; slot < mNumberOfSlots; ++slot, ++currentDirect3DVertexBuffer9AtSlot, ++currentStrideAtSlot, ++currentInstancesPerElementAtSlot)
+			uint32_t *currentStrideAtSlot = mStrides;
+			uint32_t *currentInstancesPerElementAtSlot = mInstancesPerElement;
+			for (uint32_t slot = 0; slot < mNumberOfSlots; ++slot, ++currentDirect3DVertexBuffer9AtSlot, ++currentStrideAtSlot, ++currentInstancesPerElementAtSlot)
 			{
 				mDirect3DDevice9->SetStreamSource(slot, *currentDirect3DVertexBuffer9AtSlot, 0, *currentStrideAtSlot);
 

@@ -89,7 +89,7 @@ namespace Direct3D11Renderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArray(Direct3D11Renderer &direct3D11Renderer, ID3DBlob &d3dBlob, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer);
+		VertexArray(Direct3D11Renderer &direct3D11Renderer, ID3DBlob &d3dBlob, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief
@@ -128,12 +128,12 @@ namespace Direct3D11Renderer
 		IndexBuffer			 *mIndexBuffer;				///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		ID3D11InputLayout	 *mD3D11InputLayout;		///< Direct3D 11 input layout, can be a null pointer
 		// Direct3D 11 input slots
-		unsigned int		  mNumberOfSlots;			///< Number of used Direct3D 11 input slots (type "UINT" not used in here in order to keep the header slim)
+		uint32_t			  mNumberOfSlots;			///< Number of used Direct3D 11 input slots (type "UINT" not used in here in order to keep the header slim)
 		ID3D11Buffer		**mD3D11Buffers;			///< Direct3D 11 vertex buffers, if "mD3D11InputLayout" is no null pointer this is no null pointer as well
-		unsigned int		 *mStrides;					///< Strides in bytes, if "mD3D11Buffers" is no null pointer this is no null pointer as well (type "UINT" not used in here in order to keep the header slim)
-		unsigned int		 *mOffsets;					///< Offsets in bytes, if "mD3D11Buffers" is no null pointer this is no null pointer as well (type "UINT" not used in here in order to keep the header slim)
+		uint32_t			 *mStrides;					///< Strides in bytes, if "mD3D11Buffers" is no null pointer this is no null pointer as well (type "UINT" not used in here in order to keep the header slim)
+		uint32_t			 *mOffsets;					///< Offsets in bytes, if "mD3D11Buffers" is no null pointer this is no null pointer as well (type "UINT" not used in here in order to keep the header slim)
 		// For proper vertex buffer reference counter behaviour
-		unsigned int		  mNumberOfVertexBuffers;	///< Number of vertex buffers
+		uint32_t			  mNumberOfVertexBuffers;	///< Number of vertex buffers
 		VertexBuffer		**mVertexBuffers;			///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
 
 

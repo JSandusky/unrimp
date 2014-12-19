@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DArrayBind::Texture2DArrayBind(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags) :
+	Texture2DArrayBind::Texture2DArrayBind(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags) :
 		Texture2DArray(openGLRenderer, width, height, numberOfSlices)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP

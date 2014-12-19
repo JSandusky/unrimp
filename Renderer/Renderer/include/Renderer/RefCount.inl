@@ -54,7 +54,7 @@ namespace Renderer
 	}
 
 	template <class AType>
-	inline unsigned int RefCount<AType>::addReference()
+	inline uint32_t RefCount<AType>::addReference()
 	{
 		// Increment reference count
 		++mRefCount;
@@ -64,7 +64,7 @@ namespace Renderer
 	}
 
 	template <class AType>
-	inline unsigned int RefCount<AType>::release()
+	inline uint32_t RefCount<AType>::release()
 	{
 		// Decrement reference count
 		if (mRefCount > 1)
@@ -86,7 +86,7 @@ namespace Renderer
 	}
 
 	template <class AType>
-	inline unsigned int RefCount<AType>::getRefCount() const
+	inline uint32_t RefCount<AType>::getRefCount() const
 	{
 		// Return current reference count
 		return mRefCount;

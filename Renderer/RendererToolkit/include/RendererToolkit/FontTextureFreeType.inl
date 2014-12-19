@@ -33,7 +33,7 @@ namespace RendererToolkit
 		return mFTFace;
 	}
 
-	inline void FontTextureFreeType::getGlyphTextureAtlasSize(unsigned int &glyphTextureAtlasSizeX, unsigned int &glyphTextureAtlasSizeY) const
+	inline void FontTextureFreeType::getGlyphTextureAtlasSize(uint32_t &glyphTextureAtlasSizeX, uint32_t &glyphTextureAtlasSizeY) const
 	{
 		glyphTextureAtlasSizeX = mGlyphTextureAtlasSizeX;
 		glyphTextureAtlasSizeY = mGlyphTextureAtlasSizeY;

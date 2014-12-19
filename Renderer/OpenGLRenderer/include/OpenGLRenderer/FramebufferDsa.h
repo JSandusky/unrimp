@@ -71,7 +71,7 @@ namespace OpenGLRenderer
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		FramebufferDsa(OpenGLRenderer &openGLRenderer, unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
+		FramebufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
 
 		/**
 		*  @brief

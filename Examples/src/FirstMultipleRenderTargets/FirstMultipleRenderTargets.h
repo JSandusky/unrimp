@@ -87,8 +87,8 @@ public:
 //[ Private definitions                                   ]
 //[-------------------------------------------------------]
 private:
-	static const unsigned int TEXTURE_SIZE		 = 16;	///< Texture size
-	static const unsigned int NUMBER_OF_TEXTURES = 2;	///< Number of textures
+	static const uint32_t TEXTURE_SIZE		 = 16;	///< Texture size
+	static const uint32_t NUMBER_OF_TEXTURES = 2;	///< Number of textures
 
 
 //[-------------------------------------------------------]

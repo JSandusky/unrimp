@@ -31,6 +31,8 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/IFontGlyphTexture.h"
 
+#include <Renderer/PlatformTypes.h>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -84,7 +86,7 @@ namespace RendererToolkit
 		*  @param[out] glyphTextureAtlasData
 		*    Pointer to the glyph texture atlas data to fill, must be valid! (data is not destroyed or cached inside this method)
 		*/
-		void initialize(FontTextureFreeType &fontTextureFreeType, unsigned long characterCode, unsigned int positionOffsetX, unsigned int positionOffsetY, unsigned char *glyphTextureAtlasData);
+		void initialize(FontTextureFreeType &fontTextureFreeType, unsigned long characterCode, uint32_t positionOffsetX, uint32_t positionOffsetY, uint8_t *glyphTextureAtlasData);
 
 		/**
 		*  @brief

@@ -80,7 +80,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL framebuffer, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLFramebuffer() const;
+		inline uint32_t getOpenGLFramebuffer() const;
 
 		/**
 		*  @brief
@@ -89,14 +89,14 @@ namespace OpenGLRenderer
 		*  @return
 		*    The number of color render target textures
 		*/
-		inline unsigned int getNumberOfColorTextures() const;
+		inline uint32_t getNumberOfColorTextures() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(unsigned int &width, unsigned int &height) const override;
+		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
 
 
 	//[-------------------------------------------------------]
@@ -120,20 +120,20 @@ namespace OpenGLRenderer
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		Framebuffer(OpenGLRenderer &openGLRenderer, unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
+		Framebuffer(OpenGLRenderer &openGLRenderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
 
 
 	//[-------------------------------------------------------]
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int		 mOpenGLFramebuffer;		///< OpenGL framebuffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		unsigned int		 mDepthRenderbuffer;		///< OpenGL render buffer for the depth component, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		unsigned int		 mNumberOfColorTextures;	///< Number of color render target textures
+		uint32_t			 mOpenGLFramebuffer;		///< OpenGL framebuffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t			 mDepthRenderbuffer;		///< OpenGL render buffer for the depth component, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t			 mNumberOfColorTextures;	///< Number of color render target textures
 		Renderer::ITexture **mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
 		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
-		unsigned int		 mWidth;					///< The framebuffer width
-		unsigned int		 mHeight;					///< The framebuffer height
+		uint32_t			 mWidth;					///< The framebuffer width
+		uint32_t			 mHeight;					///< The framebuffer height
 
 
 	};

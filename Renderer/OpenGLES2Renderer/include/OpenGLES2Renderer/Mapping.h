@@ -153,7 +153,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLES2Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
+		static uint32_t getOpenGLES2Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]
@@ -168,7 +168,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 usage (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLES2Type(Renderer::BufferUsage::Enum bufferUsage);
+		static uint32_t getOpenGLES2Type(Renderer::BufferUsage::Enum bufferUsage);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]
@@ -183,7 +183,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLES2Type(Renderer::IndexBufferFormat::Enum indexBufferFormat);
+		static uint32_t getOpenGLES2Type(Renderer::IndexBufferFormat::Enum indexBufferFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureFormat                               ]
@@ -198,7 +198,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 internal format (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLES2InternalFormat(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getOpenGLES2InternalFormat(Renderer::TextureFormat::Enum textureFormat);
 
 		/**
 		*  @brief
@@ -210,7 +210,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 format (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLES2Format(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getOpenGLES2Format(Renderer::TextureFormat::Enum textureFormat);
 
 		/**
 		*  @brief
@@ -222,7 +222,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLES2Type(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getOpenGLES2Type(Renderer::TextureFormat::Enum textureFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::PrimitiveTopology                           ]
@@ -237,7 +237,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLES2Type(Renderer::PrimitiveTopology::Enum primitive);
+		static uint32_t getOpenGLES2Type(Renderer::PrimitiveTopology::Enum primitive);
 
 
 	};

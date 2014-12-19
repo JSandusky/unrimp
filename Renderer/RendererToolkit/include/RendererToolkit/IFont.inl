@@ -33,24 +33,24 @@ namespace RendererToolkit
 		// Nothing to do in here
 	}
 
-	inline unsigned int IFont::getSize() const
+	inline uint32_t IFont::getSize() const
 	{
 		return mSize;
 	}
 
-	inline unsigned int IFont::getResolution() const
+	inline uint32_t IFont::getResolution() const
 	{
 		return mResolution;
 	}
 
-	inline unsigned int IFont::getSizeInPixels() const
+	inline uint32_t IFont::getSizeInPixels() const
 	{
-		return static_cast<unsigned int>(mSize / 72.0f * mResolution);
+		return static_cast<uint32_t>(mSize / 72.0f * mResolution);
 	}
 
-	inline unsigned int IFont::getHeightInPixels() const
+	inline uint32_t IFont::getHeightInPixels() const
 	{
-		return static_cast<unsigned int>(getHeight() / 72.0f * mResolution);
+		return static_cast<uint32_t>(getHeight() / 72.0f * mResolution);
 	}
 
 

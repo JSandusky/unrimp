@@ -34,7 +34,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &renderer, unsigned int numberOfTextures, unsigned int sceneRadius) :
+CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &renderer, uint32_t numberOfTextures, uint32_t sceneRadius) :
 	mRenderer(&renderer),
 	mNumberOfTextures(numberOfTextures),
 	mSceneRadius(sceneRadius),
@@ -61,16 +61,16 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 	mMaximumNumberOfInstancesPerBatch = mRenderer->getCapabilities().maximumTextureBufferSize / 2;
 
 	{ // Create the textures
-		static const unsigned int TEXTURE_WIDTH   = 128;
-		static const unsigned int TEXTURE_HEIGHT  = 128;
-		static const unsigned int NUMBER_OF_BYTES = TEXTURE_WIDTH * TEXTURE_HEIGHT * 4;
+		static const uint32_t TEXTURE_WIDTH   = 128;
+		static const uint32_t TEXTURE_HEIGHT  = 128;
+		static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH * TEXTURE_HEIGHT * 4;
 
 		// Allocate memory for the 2D texture array
-		unsigned char *data = new unsigned char[NUMBER_OF_BYTES * mNumberOfTextures];
+		uint8_t *data = new uint8_t[NUMBER_OF_BYTES * mNumberOfTextures];
 
 		{ // Fill the texture content
 			// TODO(co) Be a little bit more creative while filling the texture data
-			unsigned char *dataCurrent = data;
+			uint8_t *dataCurrent = data;
 			const float colors[][MAXIMUM_NUMBER_OF_TEXTURES] =
 			{
 				{ 1.0f, 0.0f, 0.0f},
@@ -82,16 +82,16 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 				{ 0.2f, 0.5f, 0.5f},
 				{ 0.1f, 0.8f, 0.2f}
 			};
-			for (unsigned int j = 0; j < mNumberOfTextures; ++j)
+			for (uint32_t j = 0; j < mNumberOfTextures; ++j)
 			{
 				// Random content
-				for (unsigned int i = 0; i < TEXTURE_WIDTH * TEXTURE_HEIGHT; ++i)
+				for (uint32_t i = 0; i < TEXTURE_WIDTH * TEXTURE_HEIGHT; ++i)
 				{
-					*dataCurrent = static_cast<unsigned char>((rand() % 255) * colors[j][0]);
+					*dataCurrent = static_cast<uint8_t>((rand() % 255) * colors[j][0]);
 					++dataCurrent;
-					*dataCurrent = static_cast<unsigned char>((rand() % 255) * colors[j][1]);
+					*dataCurrent = static_cast<uint8_t>((rand() % 255) * colors[j][1]);
 					++dataCurrent;
-					*dataCurrent = static_cast<unsigned char>((rand() % 255) * colors[j][2]);
+					*dataCurrent = static_cast<uint8_t>((rand() % 255) * colors[j][2]);
 					++dataCurrent;
 					*dataCurrent = 255;
 					++dataCurrent;
@@ -193,7 +193,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 			Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create the index buffer object (IBO)
-			static const unsigned short INDICES[] =
+			static const uint16_t INDICES[] =
 			{
 				// Front face	Triangle ID
 				 1,  0,  2,		// 0
@@ -229,39 +229,39 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Position",								// name[64] (char)
 					"POSITION",								// semantic[64] (char)
-					0,										// semanticIndex (unsigned int)
+					0,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-					0,										// offset (unsigned int)
-					sizeof(float) * (3 + 2 + 3),			// stride (unsigned int)
+					0,										// offset (uint32_t)
+					sizeof(float) * (3 + 2 + 3),			// stride (uint32_t)
 					// Data source, instancing part
-					0										// instancesPerElement (unsigned int)
+					0										// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 1
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"TexCoord",								// name[64] (char)
 					"TEXCOORD",								// semantic[64] (char)
-					0,										// semanticIndex (unsigned int)
+					0,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 3,						// offset (unsigned int)
-					sizeof(float) * (3 + 2 + 3),			// stride (unsigned int)
+					sizeof(float) * 3,						// offset (uint32_t)
+					sizeof(float) * (3 + 2 + 3),			// stride (uint32_t)
 					// Data source, instancing part
-					0										// instancesPerElement (unsigned int)
+					0										// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 2
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Normal",								// name[64] (char)
 					"NORMAL",								// semantic[64] (char)
-					0,										// semanticIndex (unsigned int)
+					0,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,							// pertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * (3 + 2),				// offset (unsigned int)
-					sizeof(float) * (3 + 2 + 3),			// stride (unsigned int)
+					sizeof(float) * (3 + 2),				// offset (uint32_t)
+					sizeof(float) * (3 + 2 + 3),			// stride (uint32_t)
 					// Data source, instancing part
-					0										// instancesPerElement (unsigned int)
+					0										// instancesPerElement (uint32_t)
 				}
 			};
 			mVertexArray = mProgram->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray, indexBuffer);
@@ -287,7 +287,7 @@ CubeRendererDrawInstanced::~CubeRendererDrawInstanced()
 //[-------------------------------------------------------]
 //[ Public virtual ICubeRenderer methods                  ]
 //[-------------------------------------------------------]
-void CubeRendererDrawInstanced::setNumberOfCubes(unsigned int numberOfCubes)
+void CubeRendererDrawInstanced::setNumberOfCubes(uint32_t numberOfCubes)
 {
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
@@ -301,13 +301,13 @@ void CubeRendererDrawInstanced::setNumberOfCubes(unsigned int numberOfCubes)
 	}
 
 	// A third of the cubes should be rendered using alpha blending
-	const unsigned int numberOfTransparentCubes = numberOfCubes / 3;
-	const unsigned int numberOfSolidCubes       = numberOfCubes - numberOfTransparentCubes;
+	const uint32_t numberOfTransparentCubes = numberOfCubes / 3;
+	const uint32_t numberOfSolidCubes       = numberOfCubes - numberOfTransparentCubes;
 
 	// There's a limitation how many instances can be created per draw call
 	// -> If required, create multiple batches
-	const unsigned int numberOfSolidBatches       = static_cast<unsigned int>(ceil(static_cast<float>(numberOfSolidCubes)       / mMaximumNumberOfInstancesPerBatch));
-	const unsigned int numberOfTransparentBatches = static_cast<unsigned int>(ceil(static_cast<float>(numberOfTransparentCubes) / mMaximumNumberOfInstancesPerBatch));
+	const uint32_t numberOfSolidBatches       = static_cast<uint32_t>(ceil(static_cast<float>(numberOfSolidCubes)       / mMaximumNumberOfInstancesPerBatch));
+	const uint32_t numberOfTransparentBatches = static_cast<uint32_t>(ceil(static_cast<float>(numberOfTransparentCubes) / mMaximumNumberOfInstancesPerBatch));
 
 	// Create a batch instances
 	mNumberOfBatches = numberOfSolidBatches + numberOfTransparentBatches;
@@ -318,7 +318,7 @@ void CubeRendererDrawInstanced::setNumberOfCubes(unsigned int numberOfCubes)
 	BatchDrawInstanced *lastBatch = mBatches + numberOfSolidBatches;
 	for (int remaningNumberOfCubes = static_cast<int>(numberOfSolidCubes); batch < lastBatch; ++batch, remaningNumberOfCubes -= mMaximumNumberOfInstancesPerBatch)
 	{
-		const unsigned int currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
+		const uint32_t currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
 		batch->initialize(*mRenderer, currentNumberOfCubes, false, mNumberOfTextures, mSceneRadius);
 	}
 
@@ -327,7 +327,7 @@ void CubeRendererDrawInstanced::setNumberOfCubes(unsigned int numberOfCubes)
 	lastBatch = batch + numberOfTransparentBatches;
 	for (int remaningNumberOfCubes = static_cast<int>(numberOfTransparentCubes); batch < lastBatch; ++batch, remaningNumberOfCubes -= mMaximumNumberOfInstancesPerBatch)
 	{
-		const unsigned int currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
+		const uint32_t currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
 		batch->initialize(*mRenderer, currentNumberOfCubes, true, mNumberOfTextures, mSceneRadius);
 	}
 

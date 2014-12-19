@@ -74,7 +74,7 @@ public:
 	*  @param[in] sceneRadius
 	*    Scene radius
 	*/
-	void initialize(Renderer::IRenderer &renderer, unsigned int numberOfCubeInstances, bool alphaBlending, unsigned int numberOfTextures, unsigned int sceneRadius);
+	void initialize(Renderer::IRenderer &renderer, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius);
 
 	/**
 	*  @brief
@@ -114,7 +114,7 @@ private:
 //[-------------------------------------------------------]
 private:
 	Renderer::IRendererPtr		mRenderer;						///< Owner renderer instance, can be a null pointer
-	unsigned int				mNumberOfCubeInstances;			///< Number of cube instances
+	uint32_t					mNumberOfCubeInstances;			///< Number of cube instances
 	Renderer::ITextureBufferPtr	mTextureBufferPerInstanceData;	///< Texture buffer with per instance data (used via vertex texture fetch), each entry can contain a null pointer
 	Renderer::IBlendStatePtr	mBlendState;					///< Blend state, can be a null pointer
 

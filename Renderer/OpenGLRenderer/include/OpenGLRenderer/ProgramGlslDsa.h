@@ -87,7 +87,7 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	public:
-		virtual unsigned int setTextureUnit(handle uniformHandle, unsigned int unit) override;
+		virtual uint32_t setTextureUnit(handle uniformHandle, uint32_t unit) override;
 		virtual void setUniform1f(handle uniformHandle, float value) override;
 		virtual void setUniform2fv(handle uniformHandle, const float *value) override;
 		virtual void setUniform3fv(handle uniformHandle, const float *value) override;

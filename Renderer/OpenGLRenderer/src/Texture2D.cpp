@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height) :
+	Texture2D::Texture2D(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height) :
 		ITexture2D(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width, height),
 		mOpenGLTexture(0)
 	{

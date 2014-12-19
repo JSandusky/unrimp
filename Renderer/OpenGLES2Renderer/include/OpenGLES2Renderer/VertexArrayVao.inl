@@ -28,7 +28,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int VertexArrayVao::getOpenGLES2VertexArray() const
+	inline uint32_t VertexArrayVao::getOpenGLES2VertexArray() const
 	{
 		return mOpenGLES2VertexArray;
 	}

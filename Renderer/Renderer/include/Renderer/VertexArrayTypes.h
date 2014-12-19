@@ -27,6 +27,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "Renderer/PlatformTypes.h"
+
+
+//[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -77,13 +83,13 @@ namespace Renderer
 		VertexArrayFormat::Enum  vertexArrayFormat;		///< Vertex attribute format
 		char					 name[64];				///< Vertex attribute name
 		char					 semantic[64];			///< Vertex attribute semantic
-		unsigned int			 semanticIndex;			///< Vertex attribute semantic index
+		uint32_t				 semanticIndex;			///< Vertex attribute semantic index
 		// Data source
 		IVertexBuffer			*vertexBuffer;			///< Vertex buffer used at this vertex input slot (vertex array instances keep a reference to the vertex buffers used by the vertex array attributes, see "Renderer::IProgram::createVertexArray()" for details)
-		unsigned int			 offset;				///< Offset (in bytes) from the start of the vertex to this certain attribute
-		unsigned int			 stride;				///< Number of bytes to the next vertex element
+		uint32_t				 offset;				///< Offset (in bytes) from the start of the vertex to this certain attribute
+		uint32_t				 stride;				///< Number of bytes to the next vertex element
 		// Data source, instancing part
-		unsigned int			 instancesPerElement;	/**< Number of instances to draw with the same data before advancing in the buffer by one element.
+		uint32_t				 instancesPerElement;	/**< Number of instances to draw with the same data before advancing in the buffer by one element.
 															 0 for no instancing meaning the data is per-vertex instead of per-instance, 1 for drawing one
 															 instance with the same data, 2 for drawing two instances with the same data and so on.
 															 Instanced arrays is a shader model 3 feature, only supported if "Renderer::Capabilities::instancedArrays" is true.

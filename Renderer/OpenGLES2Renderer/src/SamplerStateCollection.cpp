@@ -36,7 +36,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerStateCollection::SamplerStateCollection(OpenGLES2Renderer &openGLES2Renderer, unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates) :
+	SamplerStateCollection::SamplerStateCollection(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates) :
 		Renderer::ISamplerStateCollection(openGLES2Renderer),
 		mNumberOfSamplerStates(numberOfSamplerStates),
 		mSamplerStates((numberOfSamplerStates > 0) ? new Renderer::ISamplerState*[numberOfSamplerStates] : nullptr)

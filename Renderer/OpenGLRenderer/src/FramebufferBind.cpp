@@ -38,7 +38,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FramebufferBind::FramebufferBind(OpenGLRenderer &openGLRenderer, unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
+	FramebufferBind::FramebufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
 		Framebuffer(openGLRenderer, numberOfColorTextures, colorTextures, depthStencilTexture)
 	{
 		// Texture reference handling is done within the base class "Framebuffer"

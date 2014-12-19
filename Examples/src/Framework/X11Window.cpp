@@ -41,11 +41,11 @@ X11Window::X11Window() :
 	_NET_WM_NAME		 = XInternAtom(display, "_NET_WM_NAME",			False);
 	_NET_WM_VISIBLE_NAME = XInternAtom(display, "_NET_WM_VISIBLE_NAME",	False);
 
-	const unsigned int  width  = 640;
-	const unsigned int  height = 480;
-	const int           screen = DefaultScreen(display);
-	Visual             *visual = DefaultVisual(display, screen);
-	const int           depth  = DefaultDepth(display, screen);
+	const uint32_t  width  = 640;
+	const uint32_t  height = 480;
+	const int       screen = DefaultScreen(display);
+	Visual         *visual = DefaultVisual(display, screen);
+	const int       depth  = DefaultDepth(display, screen);
 
 	// Create the native OS window instance with a black background (else we will see trash if nothing has been drawn, yet)
 	XSetWindowAttributes sXSetWindowAttributes;

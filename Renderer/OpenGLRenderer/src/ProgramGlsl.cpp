@@ -118,7 +118,7 @@ namespace OpenGLRenderer
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
-					char *informationLog = new char[static_cast<unsigned int>(informationLength)];
+					char *informationLog = new char[static_cast<uint32_t>(informationLength)];
 
 					// Get the information
 					glGetInfoLogARB(mOpenGLProgram, informationLength, nullptr, informationLog);
@@ -144,7 +144,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *ProgramGlsl::createVertexArray(unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
+	Renderer::IVertexArray *ProgramGlsl::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
 	{
 		// Get the extensions instance
 		const Extensions &extensions = static_cast<OpenGLRenderer&>(getRenderer()).getContext().getExtensions();
@@ -181,7 +181,7 @@ namespace OpenGLRenderer
 		return glGetAttribLocationARB(mOpenGLProgram, attributeName);
 	}
 
-	unsigned int ProgramGlsl::getUniformBlockIndex(const char *uniformBlockName, unsigned int)
+	uint32_t ProgramGlsl::getUniformBlockIndex(const char *uniformBlockName, uint32_t)
 	{
 		// Explicit binding points ("layout(binding=0)" in GLSL shader) requires OpenGL 4.2, for backward compatibility, ask for the uniform block index
 		return glGetUniformBlockIndex(mOpenGLProgram, uniformBlockName);
@@ -192,7 +192,7 @@ namespace OpenGLRenderer
 		return static_cast<handle>(glGetUniformLocationARB(mOpenGLProgram, uniformName));
 	}
 
-	unsigned int ProgramGlsl::setTextureUnit(handle uniformHandle, unsigned int unit)
+	uint32_t ProgramGlsl::setTextureUnit(handle uniformHandle, uint32_t unit)
 	{
 		// OpenGL/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
 		// -> Explicit binding points ("layout(binding=0)" in GLSL shader) requires OpenGL 4.2

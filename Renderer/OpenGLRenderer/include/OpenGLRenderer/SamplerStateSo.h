@@ -78,14 +78,14 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL sampler, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLSampler() const;
+		inline uint32_t getOpenGLSampler() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mOpenGLSampler;	///< OpenGL sampler, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLSampler;	///< OpenGL sampler, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

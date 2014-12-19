@@ -82,7 +82,7 @@ namespace NullRenderer
 		*  @note
 		*    - The texture collection keeps a reference to the provided texture instances
 		*/
-		TextureCollection(NullRenderer &nullRenderer, unsigned int numberOfTextures, Renderer::ITexture **textures);
+		TextureCollection(NullRenderer &nullRenderer, uint32_t numberOfTextures, Renderer::ITexture **textures);
 
 		/**
 		*  @brief
@@ -95,7 +95,7 @@ namespace NullRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int		 mNumberOfTextures;	///< The number of texture instances
+		uint32_t			 mNumberOfTextures;	///< The number of texture instances
 		Renderer::ITexture **mTextures;			///< Texture instances (we keep a reference to it), can be a null pointer
 
 

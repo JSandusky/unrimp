@@ -28,7 +28,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int SamplerStateSo::getOpenGLSampler() const
+	inline uint32_t SamplerStateSo::getOpenGLSampler() const
 	{
 		return mOpenGLSampler;
 	}

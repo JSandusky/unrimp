@@ -111,7 +111,7 @@ namespace Direct3D9Renderer
 		return nullptr;
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShader(const char *, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, unsigned int, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShader(const char *, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
 	{
 		// Error! Direct3D 9 has no geometry shader support.
 		return nullptr;
@@ -172,7 +172,7 @@ namespace Direct3D9Renderer
 		return nullptr;
 	}
 
-	Renderer::IUniformBuffer *ShaderLanguageHlsl::createUniformBuffer(unsigned int, const void *, Renderer::BufferUsage::Enum)
+	Renderer::IUniformBuffer *ShaderLanguageHlsl::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage::Enum)
 	{
 		// Error! Direct3D 9 has no uniform buffer support.
 		return nullptr;

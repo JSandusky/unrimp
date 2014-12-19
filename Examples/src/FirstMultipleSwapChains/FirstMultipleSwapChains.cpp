@@ -184,13 +184,13 @@ void FirstMultipleSwapChains::onInitialization()
 						Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 						"Position",								// name[64] (char)
 						"POSITION",								// semantic[64] (char)
-						0,										// semanticIndex (unsigned int)
+						0,										// semanticIndex (uint32_t)
 						// Data source
 						vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-						0,										// offset (unsigned int)
-						sizeof(float) * 2,						// stride (unsigned int)
+						0,										// offset (uint32_t)
+						sizeof(float) * 2,						// stride (uint32_t)
 						// Data source, instancing part
-						0										// instancesPerElement (unsigned int)
+						0										// instancesPerElement (uint32_t)
 					}
 				};
 				mVertexArray = mProgram->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
@@ -366,8 +366,8 @@ void FirstMultipleSwapChains::onDraw()
 				//    in case the the viewport is inside the bounds of the currently used render target
 
 				// Get the render target with and height
-				unsigned int width  = 1;
-				unsigned int height = 1;
+				uint32_t width  = 1;
+				uint32_t height = 1;
 				mSwapChain->getWidthAndHeight(width, height);
 
 				// Set the viewport
@@ -402,8 +402,8 @@ void FirstMultipleSwapChains::onDraw()
 
 			{ // Set the viewport
 				// Get the render target with and height
-				unsigned int width  = 1;
-				unsigned int height = 1;
+				uint32_t width  = 1;
+				uint32_t height = 1;
 				Renderer::IRenderTarget *renderTarget = renderer->omGetRenderTarget();
 				if (nullptr != renderTarget)
 				{

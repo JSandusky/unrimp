@@ -28,12 +28,12 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int IndexBuffer::getOpenGLES2ElementArrayBuffer() const
+	inline uint32_t IndexBuffer::getOpenGLES2ElementArrayBuffer() const
 	{
 		return mOpenGLES2ElementArrayBuffer;
 	}
 
-	inline unsigned int IndexBuffer::getOpenGLES2Type() const
+	inline uint32_t IndexBuffer::getOpenGLES2Type() const
 	{
 		return mOpenGLES2Type;
 	}

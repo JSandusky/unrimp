@@ -86,7 +86,7 @@ namespace Direct3D10Renderer
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		Framebuffer(Direct3D10Renderer &direct3D10Renderer, unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
+		Framebuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
 
 		/**
 		*  @brief
@@ -101,7 +101,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The number of Direct3D 10 render target views
 		*/
-		inline unsigned int getNumberOfD3D10RenderTargetViews() const;
+		inline uint32_t getNumberOfD3D10RenderTargetViews() const;
 
 		/**
 		*  @brief
@@ -133,7 +133,7 @@ namespace Direct3D10Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(unsigned int &width, unsigned int &height) const override;
+		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
 
 
 	//[-------------------------------------------------------]
@@ -141,11 +141,11 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	private:
 		// Generic part
-		unsigned int		 mNumberOfColorTextures;	///< Number of color render target textures
+		uint32_t			 mNumberOfColorTextures;	///< Number of color render target textures
 		Renderer::ITexture **mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
 		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
-		unsigned int		 mWidth;					///< The framebuffer width
-		unsigned int		 mHeight;					///< The framebuffer height
+		uint32_t			 mWidth;					///< The framebuffer width
+		uint32_t			 mHeight;					///< The framebuffer height
 		// Direct3D 10 part
 		ID3D10RenderTargetView **mD3D10RenderTargetViews;	///< The Direct3D 10 render target views (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" views in the provided C-array of pointers
 		ID3D10DepthStencilView  *mD3D10DepthStencilView;	///< The Direct3D 10 depth stencil view (we keep a reference to it), can be a null pointer

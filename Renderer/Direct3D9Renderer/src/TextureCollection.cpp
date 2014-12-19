@@ -37,7 +37,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCollection::TextureCollection(Direct3D9Renderer &direct3D9Renderer, unsigned int numberOfTextures, Renderer::ITexture **textures) :
+	TextureCollection::TextureCollection(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfTextures, Renderer::ITexture **textures) :
 		Renderer::ITextureCollection(direct3D9Renderer),
 		mNumberOfTextures(numberOfTextures),
 		mTextures((numberOfTextures > 0) ? new Renderer::ITexture*[numberOfTextures] : nullptr)

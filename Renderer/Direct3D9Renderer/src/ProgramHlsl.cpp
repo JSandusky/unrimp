@@ -125,7 +125,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *ProgramHlsl::createVertexArray(unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
+	Renderer::IVertexArray *ProgramHlsl::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
 	{
 		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 		return new VertexArray(*mDirect3D9Renderer, numberOfAttributes, attributes, static_cast<IndexBuffer*>(indexBuffer));
@@ -137,7 +137,7 @@ namespace Direct3D9Renderer
 		return -1;
 	}
 
-	unsigned int ProgramHlsl::getUniformBlockIndex(const char *, unsigned int defaultIndex)
+	uint32_t ProgramHlsl::getUniformBlockIndex(const char *, uint32_t defaultIndex)
 	{
 		// Not supported by Direct3D 9
 		return defaultIndex;
@@ -169,7 +169,7 @@ namespace Direct3D9Renderer
 		return NULL_HANDLE;
 	}
 
-	unsigned int ProgramHlsl::setTextureUnit(handle uniformHandle, unsigned int)
+	uint32_t ProgramHlsl::setTextureUnit(handle uniformHandle, uint32_t)
 	{
 		// Usually, binding a sampler to a particular register by using ": register(<name>)" within HLSL should be fine
 		// -> But safe is safe

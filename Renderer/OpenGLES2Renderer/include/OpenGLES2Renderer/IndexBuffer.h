@@ -80,7 +80,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		IndexBuffer(OpenGLES2Renderer &openGLES2Renderer, unsigned int numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		IndexBuffer(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -95,7 +95,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    The OpenGL ES 2 element array buffer, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLES2ElementArrayBuffer() const;
+		inline uint32_t getOpenGLES2ElementArrayBuffer() const;
 
 		/**
 		*  @brief
@@ -104,15 +104,15 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    The OpenGL ES 2 element array buffer data type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLES2Type() const;
+		inline uint32_t getOpenGLES2Type() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mOpenGLES2ElementArrayBuffer;	///< OpenGL ES 2 element array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		unsigned int mOpenGLES2Type;				///< OpenGL ES 2 element array buffer data type (type "GLenum" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES2ElementArrayBuffer;	///< OpenGL ES 2 element array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES2Type;				///< OpenGL ES 2 element array buffer data type (type "GLenum" not used in here in order to keep the header slim)
 
 
 	};

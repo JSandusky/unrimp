@@ -81,7 +81,7 @@ namespace Direct3D10Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		IndexBuffer(Direct3D10Renderer &direct3D10Renderer, unsigned int numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		IndexBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -105,7 +105,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The DXGI index buffer data format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getDXGIFormat() const;
+		inline uint32_t getDXGIFormat() const;
 
 
 	//[-------------------------------------------------------]
@@ -120,7 +120,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	private:
 		ID3D10Buffer *mD3D10Buffer;	///< Direct3D index buffer instance, can be a null pointer
-		unsigned int  mDXGIFormat;	///< DXGI index buffer data format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
+		uint32_t	  mDXGIFormat;	///< DXGI index buffer data format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 
 
 	};

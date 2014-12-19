@@ -165,8 +165,8 @@ void FirstAssimp::onDraw()
 		float aspectRatio = 4.0f / 3.0f;
 		{
 			// Get the render target with and height
-			unsigned int width  = 1;
-			unsigned int height = 1;
+			uint32_t width  = 1;
+			uint32_t height = 1;
 			Renderer::IRenderTarget *renderTarget = renderer->omGetRenderTarget();
 			if (nullptr != renderTarget)
 			{

@@ -75,7 +75,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(OpenGLRenderer &openGLRenderer, unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
+	Framebuffer::Framebuffer(OpenGLRenderer &openGLRenderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
 		IFramebuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLFramebuffer(0),
 		mDepthRenderbuffer(0),
@@ -224,7 +224,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void Framebuffer::getWidthAndHeight(unsigned int &width, unsigned int &height) const
+	void Framebuffer::getWidthAndHeight(uint32_t &width, uint32_t &height) const
 	{
 		// No fancy implementation in here, just copy over the internal information
 		width  = mWidth;

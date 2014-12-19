@@ -36,7 +36,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerStateCollection::SamplerStateCollection(Direct3D9Renderer &direct3D9Renderer, unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates) :
+	SamplerStateCollection::SamplerStateCollection(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates) :
 		Renderer::ISamplerStateCollection(direct3D9Renderer),
 		mNumberOfSamplerStates(numberOfSamplerStates),
 		mSamplerStates((numberOfSamplerStates > 0) ? new Renderer::ISamplerState*[numberOfSamplerStates] : nullptr)

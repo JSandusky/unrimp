@@ -157,7 +157,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    "true" if all went fine, else "false"
 		*/
-		virtual bool initialize(unsigned int multisampleAntialiasingSamples);
+		virtual bool initialize(uint32_t multisampleAntialiasingSamples);
 
 		/**
 		*  @brief
@@ -227,7 +227,7 @@ namespace OpenGLES2Renderer
 		*  @note
 		*    - Automatically tries to find fallback configurations
 		*/
-		virtual EGLConfig chooseConfig(unsigned int multisampleAntialiasingSamples) const;
+		virtual EGLConfig chooseConfig(uint32_t multisampleAntialiasingSamples) const;
 
 
 	//[-------------------------------------------------------]

@@ -44,17 +44,17 @@ namespace Renderer
 		#endif
 	}
 
-	inline unsigned int ITexture2DArray::getWidth() const
+	inline uint32_t ITexture2DArray::getWidth() const
 	{
 		return mWidth;
 	}
 
-	inline unsigned int ITexture2DArray::getHeight() const
+	inline uint32_t ITexture2DArray::getHeight() const
 	{
 		return mHeight;
 	}
 
-	inline unsigned int ITexture2DArray::getNumberOfSlices() const
+	inline uint32_t ITexture2DArray::getNumberOfSlices() const
 	{
 		return mNumberOfSlices;
 	}
@@ -63,7 +63,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITexture2DArray::ITexture2DArray(IRenderer &renderer, unsigned int width, unsigned int height, unsigned int numberOfSlices) :
+	inline ITexture2DArray::ITexture2DArray(IRenderer &renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices) :
 		ITexture(ResourceType::TEXTURE_2D_ARRAY, renderer),
 		mWidth(width),
 		mHeight(height),

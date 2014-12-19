@@ -96,7 +96,7 @@ private:
 	*  @param[out] numberOfVertices
 	*    Receives the number of vertices
 	*/
-	void getNumberOfVerticesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, unsigned int &numberOfVertices);
+	void getNumberOfVerticesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint32_t &numberOfVertices);
 
 	/**
 	*  @brief
@@ -113,14 +113,14 @@ private:
 	*  @param[out] numberOfVertices
 	*    Receives the number of processed vertices
 	*/
-	void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, const aiMatrix4x4 &assimpTransformation, unsigned int &numberOfVertices);
+	void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices);
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	unsigned int			  mNumberOfVertices;	///< Number of vertices
+	uint32_t				  mNumberOfVertices;	///< Number of vertices
 	Renderer::IVertexArrayPtr mVertexArray;			///< Vertex array object (VAO), can be a null pointer
 
 

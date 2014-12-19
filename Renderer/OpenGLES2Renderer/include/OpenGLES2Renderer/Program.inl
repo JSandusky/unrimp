@@ -28,7 +28,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int Program::getOpenGLES2Program() const
+	inline uint32_t Program::getOpenGLES2Program() const
 	{
 		return mOpenGLES2Program;
 	}

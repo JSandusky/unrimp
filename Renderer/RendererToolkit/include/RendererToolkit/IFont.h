@@ -104,7 +104,7 @@ namespace RendererToolkit
 		*  @return
 		*    The nominal font size in points, for example 12
 		*/
-		inline unsigned int getSize() const;
+		inline uint32_t getSize() const;
 
 		/**
 		*  @brief
@@ -113,7 +113,7 @@ namespace RendererToolkit
 		*  @return
 		*    The horizontal and vertical resolution in DPI, for example 96
 		*/
-		inline unsigned int getResolution() const;
+		inline uint32_t getResolution() const;
 
 		/**
 		*  @brief
@@ -129,7 +129,7 @@ namespace RendererToolkit
 		*    Font size in pixels = ------------------- × 96 dpi = ---- × 96 = 16 pixels
 		*                          72 points per inch              72
 		*/
-		inline unsigned int getSizeInPixels() const;
+		inline uint32_t getSizeInPixels() const;
 
 		/**
 		*  @brief
@@ -141,7 +141,7 @@ namespace RendererToolkit
 		*  @see
 		*    - "getSizeInPixels()"
 		*/
-		inline unsigned int getHeightInPixels() const;
+		inline uint32_t getHeightInPixels() const;
 
 
 	//[-------------------------------------------------------]
@@ -160,7 +160,7 @@ namespace RendererToolkit
 		*  @return
 		*    "true" if all went fine, else "false"
 		*/
-		virtual bool setSize(unsigned int size = 12, unsigned int resolution = 96) = 0;
+		virtual bool setSize(uint32_t size = 12, uint32_t resolution = 96) = 0;
 
 		/**
 		*  @brief
@@ -231,7 +231,7 @@ namespace RendererToolkit
 		*  @param[in] flags
 		*    Draw flags, see "RendererToolkit::IFont::EDrawFlags"
 		*/
-		virtual void drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX = 1.0f, float scaleY = 1.0f, float biasX = 0.0f, float biasY = 0.0f, unsigned int flags = 0) = 0;
+		virtual void drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX = 1.0f, float scaleY = 1.0f, float biasX = 0.0f, float biasY = 0.0f, uint32_t flags = 0) = 0;
 
 
 	//[-------------------------------------------------------]
@@ -270,8 +270,8 @@ namespace RendererToolkit
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int mSize;			///< Font size in points, for example 12 (72 points per inch)
-		unsigned int mResolution;	///< The horizontal and vertical resolution in DPI, for example 96
+		uint32_t mSize;			///< Font size in points, for example 12 (72 points per inch)
+		uint32_t mResolution;	///< The horizontal and vertical resolution in DPI, for example 96
 
 
 	};

@@ -37,7 +37,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCollection::TextureCollection(NullRenderer &nullRenderer, unsigned int numberOfTextures, Renderer::ITexture **textures) :
+	TextureCollection::TextureCollection(NullRenderer &nullRenderer, uint32_t numberOfTextures, Renderer::ITexture **textures) :
 		Renderer::ITextureCollection(nullRenderer),
 		mNumberOfTextures(numberOfTextures),
 		mTextures((numberOfTextures > 0) ? new Renderer::ITexture*[numberOfTextures] : nullptr)

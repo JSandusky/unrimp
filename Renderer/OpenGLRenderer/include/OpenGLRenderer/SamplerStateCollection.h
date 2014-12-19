@@ -82,7 +82,7 @@ namespace OpenGLRenderer
 		*  @note
 		*    - The sampler state collection keeps a reference to the provided sampler state instances
 		*/
-		SamplerStateCollection(OpenGLRenderer &openGLRenderer, unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates);
+		SamplerStateCollection(OpenGLRenderer &openGLRenderer, uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates);
 
 		/**
 		*  @brief
@@ -97,7 +97,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The number of sampler state instances
 		*/
-		inline unsigned int getNumberOfSamplerStates() const;
+		inline uint32_t getNumberOfSamplerStates() const;
 
 		/**
 		*  @brief
@@ -113,7 +113,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int			  mNumberOfSamplerStates;	///< The number of sampler state instances
+		uint32_t				  mNumberOfSamplerStates;	///< The number of sampler state instances
 		Renderer::ISamplerState **mSamplerStates;			///< Sampler state instances (we keep a reference to it), can be a null pointer
 
 

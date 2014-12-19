@@ -233,7 +233,7 @@ namespace OpenGLRenderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	unsigned int Mapping::getOpenGLType(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
+	uint32_t Mapping::getOpenGLType(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -245,18 +245,18 @@ namespace OpenGLRenderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	unsigned int Mapping::getOpenGLType(Renderer::IndexBufferFormat::Enum indexBufferFormat)
+	uint32_t Mapping::getOpenGLType(Renderer::IndexBufferFormat::Enum indexBufferFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
-			GL_UNSIGNED_BYTE,	// Renderer::IndexBufferFormat::UNSIGNED_CHAR  - One byte per element, unsigned char (may not be supported by each API)
-			GL_UNSIGNED_SHORT,	// Renderer::IndexBufferFormat::UNSIGNED_SHORT - Two bytes per element, unsigned short
-			GL_UNSIGNED_INT		// Renderer::IndexBufferFormat::UNSIGNED_INT   - Four bytes per element, unsigned int (may not be supported by each API)
+			GL_UNSIGNED_BYTE,	// Renderer::IndexBufferFormat::UNSIGNED_CHAR  - One byte per element, uint8_t (may not be supported by each API)
+			GL_UNSIGNED_SHORT,	// Renderer::IndexBufferFormat::UNSIGNED_SHORT - Two bytes per element, uint16_t
+			GL_UNSIGNED_INT		// Renderer::IndexBufferFormat::UNSIGNED_INT   - Four bytes per element, uint32_t (may not be supported by each API)
 		};
 		return MAPPING[indexBufferFormat];
 	}
 
-	unsigned int Mapping::getOpenGLInternalFormat(Renderer::TextureFormat::Enum indexBufferFormat)
+	uint32_t Mapping::getOpenGLInternalFormat(Renderer::TextureFormat::Enum indexBufferFormat)
 	{
 		static const GLuint MAPPING[] =
 		{
@@ -269,7 +269,7 @@ namespace OpenGLRenderer
 		return MAPPING[indexBufferFormat];
 	}
 
-	unsigned int Mapping::getOpenGLFormat(Renderer::TextureFormat::Enum textureFormat)
+	uint32_t Mapping::getOpenGLFormat(Renderer::TextureFormat::Enum textureFormat)
 	{
 		static const GLuint MAPPING[] =
 		{
@@ -282,7 +282,7 @@ namespace OpenGLRenderer
 		return MAPPING[textureFormat];
 	}
 
-	unsigned int Mapping::getOpenGLType(Renderer::TextureFormat::Enum textureFormat)
+	uint32_t Mapping::getOpenGLType(Renderer::TextureFormat::Enum textureFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -295,7 +295,7 @@ namespace OpenGLRenderer
 		return MAPPING[textureFormat];
 	}
 
-	unsigned int Mapping::getOpenGLType(Renderer::PrimitiveTopology::Enum primitive)
+	uint32_t Mapping::getOpenGLType(Renderer::PrimitiveTopology::Enum primitive)
 	{
 		static const GLenum MAPPING[] =
 		{

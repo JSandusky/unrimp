@@ -209,7 +209,7 @@ namespace OpenGLES2Renderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	unsigned int Mapping::getOpenGLES2Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
+	uint32_t Mapping::getOpenGLES2Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -221,7 +221,7 @@ namespace OpenGLES2Renderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	unsigned int Mapping::getOpenGLES2Type(Renderer::BufferUsage::Enum bufferUsage)
+	uint32_t Mapping::getOpenGLES2Type(Renderer::BufferUsage::Enum bufferUsage)
 	{
 		// OpenGL ES 2 only supports: "STREAM_DRAW", "STATIC_DRAW" and "DYNAMIC_DRAW"
 
@@ -247,20 +247,20 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	unsigned int Mapping::getOpenGLES2Type(Renderer::IndexBufferFormat::Enum indexBufferFormat)
+	uint32_t Mapping::getOpenGLES2Type(Renderer::IndexBufferFormat::Enum indexBufferFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
-			GL_UNSIGNED_BYTE,	// Renderer::IndexBufferFormat::UNSIGNED_CHAR  - One byte per element, unsigned char (may not be supported by each API)
-			GL_UNSIGNED_SHORT,	// Renderer::IndexBufferFormat::UNSIGNED_SHORT - Two bytes per element, unsigned short
-			GL_UNSIGNED_INT		// Renderer::IndexBufferFormat::UNSIGNED_INT   - Four bytes per element, unsigned int (may not be supported by each API)
+			GL_UNSIGNED_BYTE,	// Renderer::IndexBufferFormat::UNSIGNED_CHAR  - One byte per element, uint8_t (may not be supported by each API)
+			GL_UNSIGNED_SHORT,	// Renderer::IndexBufferFormat::UNSIGNED_SHORT - Two bytes per element, uint16_t
+			GL_UNSIGNED_INT		// Renderer::IndexBufferFormat::UNSIGNED_INT   - Four bytes per element, uint32_t (may not be supported by each API)
 		};
 		return MAPPING[indexBufferFormat];
 	}
 
-	unsigned int Mapping::getOpenGLES2InternalFormat(Renderer::TextureFormat::Enum textureFormat)
+	uint32_t Mapping::getOpenGLES2InternalFormat(Renderer::TextureFormat::Enum textureFormat)
 	{
-		static const unsigned int MAPPING[] =
+		static const uint32_t MAPPING[] =
 		{
 			GL_ALPHA,	// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
 			GL_RGB,		// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
@@ -271,9 +271,9 @@ namespace OpenGLES2Renderer
 		return MAPPING[textureFormat];
 	}
 
-	unsigned int Mapping::getOpenGLES2Format(Renderer::TextureFormat::Enum textureFormat)
+	uint32_t Mapping::getOpenGLES2Format(Renderer::TextureFormat::Enum textureFormat)
 	{
-		static const unsigned int MAPPING[] =
+		static const uint32_t MAPPING[] =
 		{
 			GL_ALPHA,	// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
 			GL_RGB,		// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
@@ -284,7 +284,7 @@ namespace OpenGLES2Renderer
 		return MAPPING[textureFormat];
 	}
 
-	unsigned int Mapping::getOpenGLES2Type(Renderer::TextureFormat::Enum textureFormat)
+	uint32_t Mapping::getOpenGLES2Type(Renderer::TextureFormat::Enum textureFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -297,7 +297,7 @@ namespace OpenGLES2Renderer
 		return MAPPING[textureFormat];
 	}
 
-	unsigned int Mapping::getOpenGLES2Type(Renderer::PrimitiveTopology::Enum prmitive)
+	uint32_t Mapping::getOpenGLES2Type(Renderer::PrimitiveTopology::Enum prmitive)
 	{
 		static const GLenum MAPPING[] =
 		{

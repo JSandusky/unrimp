@@ -258,13 +258,13 @@ namespace RendererToolkit
 						Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 						"Position",								// name[64] (char)
 						"POSITION",								// semantic[64] (char)
-						0,										// semanticIndex (unsigned int)
+						0,										// semanticIndex (uint32_t)
 						// Data source
 						vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-						0,										// offset (unsigned int)
-						sizeof(float) * 3,						// stride (unsigned int)
+						0,										// offset (uint32_t)
+						sizeof(float) * 3,						// stride (uint32_t)
 						// Data source, instancing part
-						0										// instancesPerElement (unsigned int)
+						0										// instancesPerElement (uint32_t)
 					}
 				};
 				mFontVertexArray = program->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
@@ -323,7 +323,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
 	//[-------------------------------------------------------]
-	IFont *RendererToolkitImpl::createFontTexture(const char *filename, unsigned int size, unsigned int resolution)
+	IFont *RendererToolkitImpl::createFontTexture(const char *filename, uint32_t size, uint32_t resolution)
 	{
 		IFont *font = nullptr;
 

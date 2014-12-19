@@ -70,7 +70,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    Direct3D 11 format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getDirect3D11Format(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
+		static uint32_t getDirect3D11Format(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]
@@ -87,7 +87,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    Direct3D 11 usage (type "D3D11_USAGE" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getDirect3D11UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum bufferUsage, unsigned int &cpuAccessFlags);
+		static uint32_t getDirect3D11UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum bufferUsage, uint32_t &cpuAccessFlags);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]
@@ -102,7 +102,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    Direct3D 11 format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getDirect3D11Format(Renderer::IndexBufferFormat::Enum indexBufferFormat);
+		static uint32_t getDirect3D11Format(Renderer::IndexBufferFormat::Enum indexBufferFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureFormat                               ]
@@ -117,7 +117,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    Direct3D 11 size (in bytes)
 		*/
-		static unsigned int getDirect3D11Size(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getDirect3D11Size(Renderer::TextureFormat::Enum textureFormat);
 
 		/**
 		*  @brief
@@ -129,7 +129,7 @@ namespace Direct3D11Renderer
 		*  @return
 		*    Direct3D 11 format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getDirect3D11Format(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getDirect3D11Format(Renderer::TextureFormat::Enum textureFormat);
 
 
 	};

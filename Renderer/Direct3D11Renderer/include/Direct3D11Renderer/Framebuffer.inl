@@ -28,7 +28,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int Framebuffer::getNumberOfD3D11RenderTargetViews() const
+	inline uint32_t Framebuffer::getNumberOfD3D11RenderTargetViews() const
 	{
 		return mNumberOfColorTextures;
 	}

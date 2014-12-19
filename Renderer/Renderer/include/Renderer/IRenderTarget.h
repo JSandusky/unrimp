@@ -74,7 +74,7 @@ namespace Renderer
 		*  @param[out] height
 		*    Receives the height of the render target
 		*/
-		virtual void getWidthAndHeight(unsigned int &width, unsigned int &height) const = 0;
+		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const = 0;
 
 
 	//[-------------------------------------------------------]

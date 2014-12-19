@@ -82,7 +82,7 @@ namespace NullRenderer
 		*  @note
 		*    - The sampler state collection keeps a reference to the provided sampler state instances
 		*/
-		SamplerStateCollection(NullRenderer &nullRenderer, unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates);
+		SamplerStateCollection(NullRenderer &nullRenderer, uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates);
 
 		/**
 		*  @brief
@@ -95,7 +95,7 @@ namespace NullRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int			  mNumberOfSamplerStates;	///< The number of sampler state instances
+		uint32_t				  mNumberOfSamplerStates;	///< The number of sampler state instances
 		Renderer::ISamplerState **mSamplerStates;			///< Sampler state instances (we keep a reference to it), can be a null pointer
 
 

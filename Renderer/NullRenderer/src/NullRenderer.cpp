@@ -155,13 +155,13 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Shader language                                       ]
 	//[-------------------------------------------------------]
-	unsigned int NullRenderer::getNumberOfShaderLanguages() const
+	uint32_t NullRenderer::getNumberOfShaderLanguages() const
 	{
 		// Only one shader language supported in here
 		return 1;
 	}
 
-	const char *NullRenderer::getShaderLanguageName(unsigned int index) const
+	const char *NullRenderer::getShaderLanguageName(uint32_t index) const
 	{
 		// Only one shader language supported in here
 		if (0 == index)
@@ -213,7 +213,7 @@ namespace NullRenderer
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *NullRenderer::createFramebuffer(unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	Renderer::IFramebuffer *NullRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
 	{
 		// We don't keep a reference to the provided textures in here
 		// -> Ensure a correct reference counter behaviour
@@ -246,27 +246,27 @@ namespace NullRenderer
 		return new Framebuffer(*this);
 	}
 
-	Renderer::IVertexBuffer *NullRenderer::createVertexBuffer(unsigned int, const void *, Renderer::BufferUsage::Enum)
+	Renderer::IVertexBuffer *NullRenderer::createVertexBuffer(uint32_t, const void *, Renderer::BufferUsage::Enum)
 	{
 		return new VertexBuffer(*this);
 	}
 
-	Renderer::IIndexBuffer *NullRenderer::createIndexBuffer(unsigned int, Renderer::IndexBufferFormat::Enum, const void *, Renderer::BufferUsage::Enum)
+	Renderer::IIndexBuffer *NullRenderer::createIndexBuffer(uint32_t, Renderer::IndexBufferFormat::Enum, const void *, Renderer::BufferUsage::Enum)
 	{
 		return new IndexBuffer(*this);
 	}
 
-	Renderer::ITextureBuffer *NullRenderer::createTextureBuffer(unsigned int, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage::Enum)
+	Renderer::ITextureBuffer *NullRenderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage::Enum)
 	{
 		return new TextureBuffer(*this);
 	}
 
-	Renderer::ITexture2D *NullRenderer::createTexture2D(unsigned int width, unsigned int height, Renderer::TextureFormat::Enum, void *, unsigned int, Renderer::TextureUsage::Enum)
+	Renderer::ITexture2D *NullRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage::Enum)
 	{
 		return new Texture2D(*this, width, height);
 	}
 
-	Renderer::ITexture2DArray *NullRenderer::createTexture2DArray(unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum, void *, unsigned int, Renderer::TextureUsage::Enum)
+	Renderer::ITexture2DArray *NullRenderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage::Enum)
 	{
 		return new Texture2DArray(*this, width, height, numberOfSlices);
 	}
@@ -291,12 +291,12 @@ namespace NullRenderer
 		return new SamplerState(*this);
 	}
 
-	Renderer::ITextureCollection *NullRenderer::createTextureCollection(unsigned int numberOfTextures, Renderer::ITexture **textures)
+	Renderer::ITextureCollection *NullRenderer::createTextureCollection(uint32_t numberOfTextures, Renderer::ITexture **textures)
 	{
 		return new TextureCollection(*this, numberOfTextures, textures);
 	}
 
-	Renderer::ISamplerStateCollection *NullRenderer::createSamplerStateCollection(unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
+	Renderer::ISamplerStateCollection *NullRenderer::createSamplerStateCollection(uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
 	{
 		return new SamplerStateCollection(*this, numberOfSamplerStates, samplerStates);
 	}
@@ -305,13 +305,13 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool NullRenderer::map(Renderer::IResource &, unsigned int, Renderer::MapType::Enum, unsigned int, Renderer::MappedSubresource &)
+	bool NullRenderer::map(Renderer::IResource &, uint32_t, Renderer::MapType::Enum, uint32_t, Renderer::MappedSubresource &)
 	{
 		// Not supported by the null renderer
 		return false;
 	}
 
-	void NullRenderer::unmap(Renderer::IResource &, unsigned int)
+	void NullRenderer::unmap(Renderer::IResource &, uint32_t)
 	{
 		// Nothing to do in here
 	}
@@ -353,7 +353,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void NullRenderer::vsSetTexture(unsigned int, Renderer::ITexture *texture)
+	void NullRenderer::vsSetTexture(uint32_t, Renderer::ITexture *texture)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != texture)
@@ -363,7 +363,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::vsSetTextureCollection(unsigned int, Renderer::ITextureCollection *textureCollection)
+	void NullRenderer::vsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != textureCollection)
@@ -373,7 +373,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::vsSetSamplerState(unsigned int, Renderer::ISamplerState *samplerState)
+	void NullRenderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != samplerState)
@@ -383,7 +383,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::vsSetSamplerStateCollection(unsigned int, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void NullRenderer::vsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != samplerStateCollection)
@@ -393,7 +393,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::vsSetUniformBuffer(unsigned int, Renderer::IUniformBuffer *uniformBuffer)
+	void NullRenderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != uniformBuffer)
@@ -407,7 +407,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void NullRenderer::tcsSetTexture(unsigned int, Renderer::ITexture *texture)
+	void NullRenderer::tcsSetTexture(uint32_t, Renderer::ITexture *texture)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != texture)
@@ -417,7 +417,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::tcsSetTextureCollection(unsigned int, Renderer::ITextureCollection *textureCollection)
+	void NullRenderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != textureCollection)
@@ -427,7 +427,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::tcsSetSamplerState(unsigned int, Renderer::ISamplerState *samplerState)
+	void NullRenderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != samplerState)
@@ -437,7 +437,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::tcsSetSamplerStateCollection(unsigned int, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void NullRenderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != samplerStateCollection)
@@ -447,7 +447,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::tcsSetUniformBuffer(unsigned int, Renderer::IUniformBuffer *uniformBuffer)
+	void NullRenderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != uniformBuffer)
@@ -461,7 +461,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void NullRenderer::tesSetTexture(unsigned int, Renderer::ITexture *texture)
+	void NullRenderer::tesSetTexture(uint32_t, Renderer::ITexture *texture)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != texture)
@@ -471,7 +471,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::tesSetTextureCollection(unsigned int, Renderer::ITextureCollection *textureCollection)
+	void NullRenderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != textureCollection)
@@ -481,7 +481,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::tesSetSamplerState(unsigned int, Renderer::ISamplerState *samplerState)
+	void NullRenderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != samplerState)
@@ -491,7 +491,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::tesSetSamplerStateCollection(unsigned int, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void NullRenderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != samplerStateCollection)
@@ -501,7 +501,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::tesSetUniformBuffer(unsigned int, Renderer::IUniformBuffer *uniformBuffer)
+	void NullRenderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != uniformBuffer)
@@ -515,7 +515,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void NullRenderer::gsSetTexture(unsigned int, Renderer::ITexture *texture)
+	void NullRenderer::gsSetTexture(uint32_t, Renderer::ITexture *texture)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != texture)
@@ -525,7 +525,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::gsSetTextureCollection(unsigned int, Renderer::ITextureCollection *textureCollection)
+	void NullRenderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != textureCollection)
@@ -535,7 +535,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::gsSetSamplerState(unsigned int, Renderer::ISamplerState *samplerState)
+	void NullRenderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != samplerState)
@@ -545,7 +545,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::gsSetSamplerStateCollection(unsigned int, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void NullRenderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != samplerStateCollection)
@@ -555,7 +555,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::gsSetUniformBuffer(unsigned int, Renderer::IUniformBuffer *uniformBuffer)
+	void NullRenderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != uniformBuffer)
@@ -569,12 +569,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void NullRenderer::rsSetViewports(unsigned int, const Renderer::Viewport *)
+	void NullRenderer::rsSetViewports(uint32_t, const Renderer::Viewport *)
 	{
 		// Nothing to do in here
 	}
 
-	void NullRenderer::rsSetScissorRectangles(unsigned int, const Renderer::ScissorRectangle *)
+	void NullRenderer::rsSetScissorRectangles(uint32_t, const Renderer::ScissorRectangle *)
 	{
 		// Nothing to do in here
 	}
@@ -593,7 +593,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void NullRenderer::fsSetTexture(unsigned int, Renderer::ITexture *texture)
+	void NullRenderer::fsSetTexture(uint32_t, Renderer::ITexture *texture)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != texture)
@@ -603,7 +603,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::fsSetTextureCollection(unsigned int, Renderer::ITextureCollection *textureCollection)
+	void NullRenderer::fsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != textureCollection)
@@ -613,7 +613,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::fsSetSamplerState(unsigned int, Renderer::ISamplerState *samplerState)
+	void NullRenderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != samplerState)
@@ -623,7 +623,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::fsSetSamplerStateCollection(unsigned int, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void NullRenderer::fsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != samplerStateCollection)
@@ -633,7 +633,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::fsSetUniformBuffer(unsigned int, Renderer::IUniformBuffer *uniformBuffer)
+	void NullRenderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// Nothing to do in here, the following is just for debugging
 		if (nullptr != uniformBuffer)
@@ -713,7 +713,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
-	void NullRenderer::clear(unsigned int, const float [4], float, unsigned int)
+	void NullRenderer::clear(uint32_t, const float [4], float, uint32_t)
 	{
 		// Nothing to do in here
 	}
@@ -735,22 +735,22 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void NullRenderer::draw(unsigned int, unsigned int)
+	void NullRenderer::draw(uint32_t, uint32_t)
 	{
 		// Nothing to do in here
 	}
 
-	void NullRenderer::drawInstanced(unsigned int, unsigned int, unsigned int)
+	void NullRenderer::drawInstanced(uint32_t, uint32_t, uint32_t)
 	{
 		// Nothing to do in here
 	}
 
-	void NullRenderer::drawIndexed(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)
+	void NullRenderer::drawIndexed(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
 	{
 		// Nothing to do in here
 	}
 
-	void NullRenderer::drawIndexedInstanced(unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int)
+	void NullRenderer::drawIndexedInstanced(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
 	{
 		// Nothing to do in here
 	}

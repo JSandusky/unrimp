@@ -43,7 +43,7 @@ BatchInstancedArrays::~BatchInstancedArrays()
 	// The renderer resource pointers are released automatically
 }
 
-void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, unsigned int numberOfCubeInstances, bool alphaBlending, unsigned int numberOfTextures, unsigned int sceneRadius)
+void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
 {
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&program.getRenderer())
@@ -60,7 +60,7 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 
 	{ // Create the texture buffer instance
 		// Allocate the local per instance data
-		const unsigned int numberOfElements = mNumberOfCubeInstances * 2 * 4;
+		const uint32_t numberOfElements = mNumberOfCubeInstances * 2 * 4;
 		float *data = new float[numberOfElements];
 		float *dataCurrent = data;
 
@@ -71,7 +71,7 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 		//      -> We don't need to store the w component of the quaternion. It's normalized and storing
 		//         three components while recomputing the fourths component is be sufficient.
 		Quaternion quaternion;	// Identity rotation quaternion
-		for (unsigned int i = 0; i < mNumberOfCubeInstances; ++i)
+		for (uint32_t i = 0; i < mNumberOfCubeInstances; ++i)
 		{
 			{ // Position
 				// r=x
@@ -123,39 +123,39 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Position",								// name[64] (char)
 					"POSITION",								// semantic[64] (char)
-					0,										// semanticIndex (unsigned int)
+					0,										// semanticIndex (uint32_t)
 					// Data source
 					&vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-					0,										// offset (unsigned int)
-					sizeof(float) * (3 + 2 + 3),			// stride (unsigned int)
+					0,										// offset (uint32_t)
+					sizeof(float) * (3 + 2 + 3),			// stride (uint32_t)
 					// Data source, instancing part
-					0										// instancesPerElement (unsigned int)
+					0										// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 1
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"TexCoord",								// name[64] (char)
 					"TEXCOORD",								// semantic[64] (char)
-					0,										// semanticIndex (unsigned int)
+					0,										// semanticIndex (uint32_t)
 					// Data source
 					&vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 3,						// offset (unsigned int)
-					sizeof(float) * (3 + 2 + 3),			// stride (unsigned int)
+					sizeof(float) * 3,						// offset (uint32_t)
+					sizeof(float) * (3 + 2 + 3),			// stride (uint32_t)
 					// Data source, instancing part
-					0										// instancesPerElement (unsigned int)
+					0										// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 2
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Normal",								// name[64] (char)
 					"NORMAL",								// semantic[64] (char)
-					0,										// semanticIndex (unsigned int)
+					0,										// semanticIndex (uint32_t)
 					// Data source
 					&vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * (3 + 2),				// offset (unsigned int)
-					sizeof(float) * (3 + 2 + 3),			// stride (unsigned int)
+					sizeof(float) * (3 + 2),				// offset (uint32_t)
+					sizeof(float) * (3 + 2 + 3),			// stride (uint32_t)
 					// Data source, instancing part
-					0										// instancesPerElement (unsigned int)
+					0										// instancesPerElement (uint32_t)
 				},
 
 				// Per-instance data
@@ -164,26 +164,26 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 					Renderer::VertexArrayFormat::FLOAT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"PerInstancePositionTexture",			// name[64] (char)
 					"TEXCOORD",								// semantic[64] (char)
-					1,										// semanticIndex (unsigned int)
+					1,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBufferPerInstanceData,			// vertexBuffer (Renderer::IVertexBuffer *)
-					0,										// offset (unsigned int)
-					sizeof(float) * 4 * 2,					// stride (unsigned int)
+					0,										// offset (uint32_t)
+					sizeof(float) * 4 * 2,					// stride (uint32_t)
 					// Data source, instancing part
-					1										// instancesPerElement (unsigned int)
+					1										// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 4
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"PerInstanceRotationScale",				// name[64] (char)
 					"TEXCOORD",								// semantic[64] (char)
-					2,										// semanticIndex (unsigned int)
+					2,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBufferPerInstanceData,			// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 4,						// offset (unsigned int)
-					sizeof(float) * 4 * 2,					// stride (unsigned int)
+					sizeof(float) * 4,						// offset (uint32_t)
+					sizeof(float) * 4 * 2,					// stride (uint32_t)
 					// Data source, instancing part
-					1										// instancesPerElement (unsigned int)
+					1										// instancesPerElement (uint32_t)
 				}
 			};
 			mVertexArray = program.createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray, &indexBuffer);

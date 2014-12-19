@@ -67,7 +67,7 @@ void FirstMultipleRenderTargets::onInitialization()
 			// -> Required for Direct3D 9, Direct3D 10 and Direct3D 11
 			// -> Not required for OpenGL and OpenGL ES 2
 			Renderer::ITexture *texture2D[NUMBER_OF_TEXTURES];
-			for (unsigned int i = 0; i < NUMBER_OF_TEXTURES; ++i)
+			for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 			{
 				texture2D[i] = mTexture2D[i] = renderer->createTexture2D(TEXTURE_SIZE, TEXTURE_SIZE, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET);
 			}
@@ -139,13 +139,13 @@ void FirstMultipleRenderTargets::onInitialization()
 							Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 							"Position",								// name[64] (char)
 							"POSITION",								// semantic[64] (char)
-							0,										// semanticIndex (unsigned int)
+							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-							0,										// offset (unsigned int)
-							sizeof(float) * 2,						// stride (unsigned int)
+							0,										// offset (uint32_t)
+							sizeof(float) * 2,						// stride (uint32_t)
 							// Data source, instancing part
-							0										// instancesPerElement (unsigned int)
+							0										// instancesPerElement (uint32_t)
 						}
 					};
 					mVertexArray = mProgram->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
@@ -174,7 +174,7 @@ void FirstMultipleRenderTargets::onDeinitialization()
 	mProgram = nullptr;
 	mSamplerState = nullptr;
 	mFramebuffer = nullptr;
-	for (unsigned int i = 0; i < NUMBER_OF_TEXTURES; ++i)
+	for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 	{
 		mTexture2D[i] = nullptr;
 	}
@@ -208,7 +208,7 @@ void FirstMultipleRenderTargets::onDraw()
 			// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
 			//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
 			//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
-			for (unsigned int i = 0; i < NUMBER_OF_TEXTURES; ++i)
+			for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 			{
 				char uniformName[16];
 				sprintf(uniformName, "DiffuseMap%d", i);
@@ -277,8 +277,8 @@ void FirstMultipleRenderTargets::onDraw()
 
 			{ // Set the viewport
 				// Get the render target with and height
-				unsigned int width  = 1;
-				unsigned int height = 1;
+				uint32_t width  = 1;
+				uint32_t height = 1;
 				Renderer::IRenderTarget *renderTarget = renderer->omGetRenderTarget();
 				if (nullptr != renderTarget)
 				{
@@ -315,7 +315,7 @@ void FirstMultipleRenderTargets::onDraw()
 				}
 
 				// Set the diffuse maps
-				for (unsigned int i = 0; i < NUMBER_OF_TEXTURES; ++i)
+				for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 				{
 					// Set diffuse map i (texture unit i by default)
 					char uniformName[16];
@@ -329,7 +329,7 @@ void FirstMultipleRenderTargets::onDraw()
 					//    to use is usually defined directly within the shader by using the "register"-keyword
 					// -> Usually, this should only be done once during initialization, this example does this
 					//    every frame to keep it local for better overview
-					const unsigned int unit = mProgram->setTextureUnit(mProgram->getUniformHandle(uniformName), i);
+					const uint32_t unit = mProgram->setTextureUnit(mProgram->getUniformHandle(uniformName), i);
 
 					// Set the used texture at the texture unit
 					renderer->fsSetTexture(unit, mTexture2D[i]);

@@ -36,7 +36,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerStateCollection::SamplerStateCollection(NullRenderer &nullRenderer, unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates) :
+	SamplerStateCollection::SamplerStateCollection(NullRenderer &nullRenderer, uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates) :
 		Renderer::ISamplerStateCollection(nullRenderer),
 		mNumberOfSamplerStates(numberOfSamplerStates),
 		mSamplerStates((numberOfSamplerStates > 0) ? new Renderer::ISamplerState*[numberOfSamplerStates] : nullptr)

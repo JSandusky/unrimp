@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBufferGlslBind::UniformBufferGlslBind(OpenGLRenderer &openGLRenderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	UniformBufferGlslBind::UniformBufferGlslBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		UniformBufferGlsl(openGLRenderer)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
@@ -65,7 +65,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBufferGlslBind::copyDataFrom(unsigned int numberOfBytes, const void *data)
+	void UniformBufferGlslBind::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL uniform buffer

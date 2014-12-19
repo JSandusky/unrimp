@@ -152,7 +152,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLType(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
+		static uint32_t getOpenGLType(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]
@@ -167,7 +167,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLType(Renderer::IndexBufferFormat::Enum indexBufferFormat);
+		static uint32_t getOpenGLType(Renderer::IndexBufferFormat::Enum indexBufferFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureFormat                               ]
@@ -182,7 +182,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL internal format (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLInternalFormat(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getOpenGLInternalFormat(Renderer::TextureFormat::Enum textureFormat);
 
 		/**
 		*  @brief
@@ -194,7 +194,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL format (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLFormat(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getOpenGLFormat(Renderer::TextureFormat::Enum textureFormat);
 
 		/**
 		*  @brief
@@ -206,7 +206,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLType(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getOpenGLType(Renderer::TextureFormat::Enum textureFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::PrimitiveTopology                           ]
@@ -221,7 +221,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getOpenGLType(Renderer::PrimitiveTopology::Enum prmitive);
+		static uint32_t getOpenGLType(Renderer::PrimitiveTopology::Enum prmitive);
 
 
 	};

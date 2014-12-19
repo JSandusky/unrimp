@@ -70,7 +70,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    Direct3D 10 format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getDirect3D10Format(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
+		static uint32_t getDirect3D10Format(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]
@@ -87,7 +87,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    Direct3D 10 usage (type "D3D10_USAGE" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getDirect3D10UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum bufferUsage, unsigned int &cpuAccessFlags);
+		static uint32_t getDirect3D10UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum bufferUsage, uint32_t &cpuAccessFlags);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]
@@ -102,7 +102,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    Direct3D 10 format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getDirect3D10Format(Renderer::IndexBufferFormat::Enum indexBufferFormat);
+		static uint32_t getDirect3D10Format(Renderer::IndexBufferFormat::Enum indexBufferFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureFormat                               ]
@@ -117,7 +117,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    Direct3D 10 size (in bytes)
 		*/
-		static unsigned int getDirect3D10Size(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getDirect3D10Size(Renderer::TextureFormat::Enum textureFormat);
 
 		/**
 		*  @brief
@@ -129,7 +129,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    Direct3D 10 format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 		*/
-		static unsigned int getDirect3D10Format(Renderer::TextureFormat::Enum textureFormat);
+		static uint32_t getDirect3D10Format(Renderer::TextureFormat::Enum textureFormat);
 
 
 	};

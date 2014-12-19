@@ -135,13 +135,13 @@ void FirstPostProcessing::onInitialization()
 						Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 						"Position",								// name[64] (char)
 						"POSITION",								// semantic[64] (char)
-						0,										// semanticIndex (unsigned int)
+						0,										// semanticIndex (uint32_t)
 						// Data source
 						vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-						0,										// offset (unsigned int)
-						sizeof(float) * 2,						// stride (unsigned int)
+						0,										// offset (uint32_t)
+						sizeof(float) * 2,						// stride (uint32_t)
 						// Data source, instancing part
-						0										// instancesPerElement (unsigned int)
+						0										// instancesPerElement (uint32_t)
 					}
 				};
 				mVertexArraySceneRendering = mProgramSceneRendering->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
@@ -174,13 +174,13 @@ void FirstPostProcessing::onInitialization()
 						Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 						"Position",								// name[64] (char)
 						"POSITION",								// semantic[64] (char)
-						0,										// semanticIndex (unsigned int)
+						0,										// semanticIndex (uint32_t)
 						// Data source
 						vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-						0,										// offset (unsigned int)
-						sizeof(float) * 2,						// stride (unsigned int)
+						0,										// offset (uint32_t)
+						sizeof(float) * 2,						// stride (uint32_t)
 						// Data source, instancing part
-						0										// instancesPerElement (unsigned int)
+						0										// instancesPerElement (uint32_t)
 					}
 				};
 				mVertexArrayPostProcessing = mProgramSceneRendering->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
@@ -273,7 +273,7 @@ void FirstPostProcessing::recreateFramebuffer()
 		// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
 		// -> Required for Direct3D 9, Direct3D 10 and Direct3D 11
 		// -> Not required for OpenGL and OpenGL ES 2
-		Renderer::ITexture *texture2D = mTexture2D = renderer->createTexture2D(static_cast<unsigned int>(width), static_cast<unsigned int>(height), Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+		Renderer::ITexture *texture2D = mTexture2D = renderer->createTexture2D(static_cast<uint32_t>(width), static_cast<uint32_t>(height), Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET);
 
 		// Create the framebuffer object (FBO) instance
 		mFramebuffer = renderer->createFramebuffer(1, &texture2D);
@@ -381,7 +381,7 @@ void FirstPostProcessing::postProcessing()
 				//    to use is usually defined directly within the shader by using the "register"-keyword
 				// -> Usually, this should only be done once during initialization, this example does this
 				//    every frame to keep it local for better overview
-				const unsigned int unit = mProgramPostProcessing->setTextureUnit(mProgramPostProcessing->getUniformHandle("DiffuseMap"), 0);
+				const uint32_t unit = mProgramPostProcessing->setTextureUnit(mProgramPostProcessing->getUniformHandle("DiffuseMap"), 0);
 
 				// Set the used texture at the texture unit
 				renderer->fsSetTexture(unit, mTexture2D);

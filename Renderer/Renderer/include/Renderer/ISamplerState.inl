@@ -63,7 +63,7 @@ namespace Renderer
 			Renderer::TextureAddressMode::CLAMP,		// addressV (Renderer::TextureAddressMode::Enum)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
 			Renderer::TextureAddressMode::CLAMP,		// addressW (Renderer::TextureAddressMode::Enum)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
 			0.0f,										// mipLODBias (float)									"0.0f"							"0.0f"							"0.0f"					"0.0f"
-			16,											// maxAnisotropy (unsigned int)							"16"							"16"							"1"						"1"
+			16,											// maxAnisotropy (uint32_t)								"16"							"16"							"1"						"1"
 			Renderer::ComparisonFunc::NEVER,			// comparisonFunc (Renderer::ComparisonFunc::Enum)		"NEVER"							"NEVER"							<unsupported>			"LESS_EQUAL"
 			{
 				0.0f,									// borderColor[0] (float)								"0.0f"							"0.0f"							"0.0f"					"0.0f"

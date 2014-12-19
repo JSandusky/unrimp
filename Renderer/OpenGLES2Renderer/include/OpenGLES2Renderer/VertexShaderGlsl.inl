@@ -28,7 +28,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int VertexShaderGlsl::getOpenGLES2Shader() const
+	inline uint32_t VertexShaderGlsl::getOpenGLES2Shader() const
 	{
 		return mOpenGLES2Shader;
 	}

@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShaderGlsl::GeometryShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, unsigned int numberOfOutputVertices) :
+	GeometryShaderGlsl::GeometryShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) :
 		GeometryShader(openGLRenderer),
 		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_GEOMETRY_SHADER_ARB, sourceCode)),
 		mOpenGLGsInputPrimitiveTopology(gsInputPrimitiveTopology),	// The "Renderer::GsInputPrimitiveTopology::Enum" values directly map to OpenGL constants, do not change them

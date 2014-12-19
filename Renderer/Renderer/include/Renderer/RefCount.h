@@ -89,7 +89,7 @@ namespace Renderer
 		*  @return
 		*    Current reference count
 		*/
-		inline unsigned int addReference();
+		inline uint32_t addReference();
 
 		/**
 		*  @brief
@@ -101,7 +101,7 @@ namespace Renderer
 		*  @note
 		*    - When the last reference was released, the instance is destroyed automatically
 		*/
-		inline unsigned int release();
+		inline uint32_t release();
 
 		/**
 		*  @brief
@@ -110,14 +110,14 @@ namespace Renderer
 		*  @return
 		*    Current reference count
 		*/
-		inline unsigned int getRefCount() const;
+		inline uint32_t getRefCount() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mRefCount; ///< Reference count
+		uint32_t mRefCount; ///< Reference count
 
 
 	};

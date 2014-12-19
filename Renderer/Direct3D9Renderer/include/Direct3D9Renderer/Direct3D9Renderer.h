@@ -121,30 +121,30 @@ namespace Direct3D9Renderer
 		//[-------------------------------------------------------]
 		//[ Shader language                                       ]
 		//[-------------------------------------------------------]
-		virtual unsigned int getNumberOfShaderLanguages() const override;
-		virtual const char *getShaderLanguageName(unsigned int index) const override;
+		virtual uint32_t getNumberOfShaderLanguages() const override;
+		virtual const char *getShaderLanguageName(uint32_t index) const override;
 		virtual Renderer::IShaderLanguage *getShaderLanguage(const char *shaderLanguageName = nullptr) override;
 		//[-------------------------------------------------------]
 		//[ Resource creation                                     ]
 		//[-------------------------------------------------------]
 		virtual Renderer::ISwapChain *createSwapChain(handle nativeWindowHandle) override;
-		virtual Renderer::IFramebuffer *createFramebuffer(unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture = nullptr) override;
-		virtual Renderer::IVertexBuffer *createVertexBuffer(unsigned int numberOfBytes, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
-		virtual Renderer::IIndexBuffer *createIndexBuffer(unsigned int numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
-		virtual Renderer::ITextureBuffer *createTextureBuffer(unsigned int numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
-		virtual Renderer::ITexture2D *createTexture2D(unsigned int width, unsigned int height, Renderer::TextureFormat::Enum textureFormat, void *data = nullptr, unsigned int flags = 0, Renderer::TextureUsage::Enum textureUsage = Renderer::TextureUsage::DEFAULT) override;
-		virtual Renderer::ITexture2DArray *createTexture2DArray(unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data = nullptr, unsigned int flags = 0, Renderer::TextureUsage::Enum textureUsage = Renderer::TextureUsage::DEFAULT) override;
+		virtual Renderer::IFramebuffer *createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture = nullptr) override;
+		virtual Renderer::IVertexBuffer *createVertexBuffer(uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
+		virtual Renderer::IIndexBuffer *createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
+		virtual Renderer::ITextureBuffer *createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
+		virtual Renderer::ITexture2D *createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, Renderer::TextureUsage::Enum textureUsage = Renderer::TextureUsage::DEFAULT) override;
+		virtual Renderer::ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, Renderer::TextureUsage::Enum textureUsage = Renderer::TextureUsage::DEFAULT) override;
 		virtual Renderer::IRasterizerState *createRasterizerState(const Renderer::RasterizerState &rasterizerState) override;
 		virtual Renderer::IDepthStencilState *createDepthStencilState(const Renderer::DepthStencilState &depthStencilState) override;
 		virtual Renderer::IBlendState *createBlendState(const Renderer::BlendState &blendState) override;
 		virtual Renderer::ISamplerState *createSamplerState(const Renderer::SamplerState &samplerState) override;
-		virtual Renderer::ITextureCollection *createTextureCollection(unsigned int numberOfTextures, Renderer::ITexture **textures) override;
-		virtual Renderer::ISamplerStateCollection *createSamplerStateCollection(unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates) override;
+		virtual Renderer::ITextureCollection *createTextureCollection(uint32_t numberOfTextures, Renderer::ITexture **textures) override;
+		virtual Renderer::ISamplerStateCollection *createSamplerStateCollection(uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates) override;
 		//[-------------------------------------------------------]
 		//[ Resource handling                                     ]
 		//[-------------------------------------------------------]
-		virtual bool map(Renderer::IResource &resource, unsigned int subresource, Renderer::MapType::Enum mapType, unsigned int mapFlags, Renderer::MappedSubresource &mappedSubresource) override;
-		virtual void unmap(Renderer::IResource &resource, unsigned int subresource) override;
+		virtual bool map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType::Enum mapType, uint32_t mapFlags, Renderer::MappedSubresource &mappedSubresource) override;
+		virtual void unmap(Renderer::IResource &resource, uint32_t subresource) override;
 		//[-------------------------------------------------------]
 		//[ States                                                ]
 		//[-------------------------------------------------------]
@@ -157,49 +157,49 @@ namespace Direct3D9Renderer
 		//[-------------------------------------------------------]
 		//[ Vertex-shader (VS) stage                              ]
 		//[-------------------------------------------------------]
-		virtual void vsSetTexture(unsigned int unit, Renderer::ITexture *texture) override;
-		virtual void vsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void vsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState) override;
-		virtual void vsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		virtual void vsSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer) override;
+		virtual void vsSetTexture(uint32_t unit, Renderer::ITexture *texture) override;
+		virtual void vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
+		virtual void vsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState) override;
+		virtual void vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
+		virtual void vsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer) override;
 		//[-------------------------------------------------------]
 		//[ Tessellation-control-shader (TCS) stage               ]
 		//[-------------------------------------------------------]
-		virtual void tcsSetTexture(unsigned int unit, Renderer::ITexture *texture) override;
-		virtual void tcsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void tcsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState) override;
-		virtual void tcsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		virtual void tcsSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer) override;
+		virtual void tcsSetTexture(uint32_t unit, Renderer::ITexture *texture) override;
+		virtual void tcsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
+		virtual void tcsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState) override;
+		virtual void tcsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
+		virtual void tcsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer) override;
 		//[-------------------------------------------------------]
 		//[ Tessellation-evaluation-shader (TES) stage            ]
 		//[-------------------------------------------------------]
-		virtual void tesSetTexture(unsigned int unit, Renderer::ITexture *texture) override;
-		virtual void tesSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void tesSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState) override;
-		virtual void tesSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		virtual void tesSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer) override;
+		virtual void tesSetTexture(uint32_t unit, Renderer::ITexture *texture) override;
+		virtual void tesSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
+		virtual void tesSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState) override;
+		virtual void tesSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
+		virtual void tesSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer) override;
 		//[-------------------------------------------------------]
 		//[ Geometry-shader (GS) stage                            ]
 		//[-------------------------------------------------------]
-		virtual void gsSetTexture(unsigned int unit, Renderer::ITexture *texture) override;
-		virtual void gsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void gsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState) override;
-		virtual void gsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		virtual void gsSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer) override;
+		virtual void gsSetTexture(uint32_t unit, Renderer::ITexture *texture) override;
+		virtual void gsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
+		virtual void gsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState) override;
+		virtual void gsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
+		virtual void gsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer) override;
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
 		//[-------------------------------------------------------]
-		virtual void rsSetViewports(unsigned int numberOfViewports, const Renderer::Viewport *viewports) override;
-		virtual void rsSetScissorRectangles(unsigned int numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles) override;
+		virtual void rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports) override;
+		virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles) override;
 		virtual void rsSetState(Renderer::IRasterizerState *rasterizerState) override;
 		//[-------------------------------------------------------]
 		//[ Fragment-shader (FS) stage                            ]
 		//[-------------------------------------------------------]
-		virtual void fsSetTexture(unsigned int unit, Renderer::ITexture *texture) override;
-		virtual void fsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void fsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState) override;
-		virtual void fsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		virtual void fsSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer) override;
+		virtual void fsSetTexture(uint32_t unit, Renderer::ITexture *texture) override;
+		virtual void fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
+		virtual void fsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState) override;
+		virtual void fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
+		virtual void fsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer) override;
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
@@ -210,16 +210,16 @@ namespace Direct3D9Renderer
 		//[-------------------------------------------------------]
 		//[ Operations                                            ]
 		//[-------------------------------------------------------]
-		virtual void clear(unsigned int flags, const float color[4], float z, unsigned int stencil) override;
+		virtual void clear(uint32_t flags, const float color[4], float z, uint32_t stencil) override;
 		virtual bool beginScene() override;
 		virtual void endScene() override;
 		//[-------------------------------------------------------]
 		//[ Draw call                                             ]
 		//[-------------------------------------------------------]
-		virtual void draw(unsigned int startVertexLocation, unsigned int numberOfVertices) override;
-		virtual void drawInstanced(unsigned int startVertexLocation, unsigned int numberOfVertices, unsigned int numberOfInstances) override;
-		virtual void drawIndexed(unsigned int startIndexLocation, unsigned int numberOfIndices, unsigned int baseVertexLocation, unsigned int minimumIndex, unsigned int numberOfVertices) override;
-		virtual void drawIndexedInstanced(unsigned int startIndexLocation, unsigned int numberOfIndices, unsigned int baseVertexLocation, unsigned int minimumIndex, unsigned int numberOfVertices, unsigned int numberOfInstances) override;
+		virtual void draw(uint32_t startVertexLocation, uint32_t numberOfVertices) override;
+		virtual void drawInstanced(uint32_t startVertexLocation, uint32_t numberOfVertices, uint32_t numberOfInstances) override;
+		virtual void drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices) override;
+		virtual void drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t minimumIndex, uint32_t numberOfVertices, uint32_t numberOfInstances) override;
 		//[-------------------------------------------------------]
 		//[ Synchronization                                       ]
 		//[-------------------------------------------------------]

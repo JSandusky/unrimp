@@ -28,7 +28,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int Framebuffer::getNumberOfDirect3DSurface9Colors() const
+	inline uint32_t Framebuffer::getNumberOfDirect3DSurface9Colors() const
 	{
 		return mNumberOfColorTextures;
 	}

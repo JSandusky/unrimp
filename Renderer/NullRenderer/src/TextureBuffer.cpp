@@ -49,7 +49,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
-	void TextureBuffer::copyDataFrom(unsigned int, const void *)
+	void TextureBuffer::copyDataFrom(uint32_t, const void *)
 	{
 		// Nothing to do in here
 	}

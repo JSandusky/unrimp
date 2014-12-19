@@ -129,7 +129,7 @@ namespace Direct3D11Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(unsigned int &width, unsigned int &height) const override;
+		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
 
 
 	//[-------------------------------------------------------]
@@ -169,7 +169,7 @@ namespace Direct3D11Renderer
 		*  @note
 		*    - "mDxgiSwapChain" must be valid when calling this method
 		*/
-		void getSafeWidthAndHeight(unsigned int &width, unsigned int &height) const;
+		void getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const;
 
 		/**
 		*  @brief

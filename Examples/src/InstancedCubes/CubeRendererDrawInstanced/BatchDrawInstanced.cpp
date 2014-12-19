@@ -43,7 +43,7 @@ BatchDrawInstanced::~BatchDrawInstanced()
 	// The renderer resource pointers are released automatically
 }
 
-void BatchDrawInstanced::initialize(Renderer::IRenderer &renderer, unsigned int numberOfCubeInstances, bool alphaBlending, unsigned int numberOfTextures, unsigned int sceneRadius)
+void BatchDrawInstanced::initialize(Renderer::IRenderer &renderer, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
 {
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
@@ -60,7 +60,7 @@ void BatchDrawInstanced::initialize(Renderer::IRenderer &renderer, unsigned int 
 
 	{ // Create the texture buffer instance
 		// Allocate the local per instance data
-		const unsigned int numberOfElements = mNumberOfCubeInstances * 2 * 4;
+		const uint32_t numberOfElements = mNumberOfCubeInstances * 2 * 4;
 		float *data = new float[numberOfElements];
 		float *dataCurrent = data;
 
@@ -71,7 +71,7 @@ void BatchDrawInstanced::initialize(Renderer::IRenderer &renderer, unsigned int 
 		//      -> We don't need to store the w component of the quaternion. It's normalized and storing
 		//         three components while recomputing the fourths component is be sufficient.
 		Quaternion quaternion;	// Identity rotation quaternion
-		for (unsigned int i = 0; i < mNumberOfCubeInstances; ++i)
+		for (uint32_t i = 0; i < mNumberOfCubeInstances; ++i)
 		{
 			{ // Position
 				// r=x

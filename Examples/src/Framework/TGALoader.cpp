@@ -32,8 +32,8 @@
 #include <malloc.h>										// Standard malloc header 
 
 
-typedef unsigned char GLubyte;
-typedef unsigned int GLuint;
+typedef uint8_t GLubyte;
+typedef uint32_t GLuint;
 #define GL_RGB                            0x1907
 #define GL_RGBA                           0x1908
 
@@ -90,10 +90,10 @@ Renderer::ITexture2D *loadTGATexture(Renderer::IRenderer &renderer, const char *
 		if (24 == texture.bpp)
 		{
 			// Create the texture instance
-			unsigned char *temp = new unsigned char[texture.width * texture.height * 4];
-			unsigned char *imageCurrent = texture.imageData;
-			unsigned char *tempCurrent = temp;
-			for (unsigned int i = 0; i < texture.width * texture.height; ++i)
+			uint8_t *temp = new uint8_t[texture.width * texture.height * 4];
+			uint8_t *imageCurrent = texture.imageData;
+			uint8_t *tempCurrent = temp;
+			for (uint32_t i = 0; i < texture.width * texture.height; ++i)
 			{
 				tempCurrent[0] = imageCurrent[0];
 				tempCurrent[1] = imageCurrent[1];

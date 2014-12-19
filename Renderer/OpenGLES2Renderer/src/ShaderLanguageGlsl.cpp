@@ -82,7 +82,7 @@ namespace OpenGLES2Renderer
 		return nullptr;
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShader(const char *, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, unsigned int, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShader(const char *, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
 	{
 		// Error! OpenGL ES 2 has no geometry shader support.
 		return nullptr;
@@ -143,7 +143,7 @@ namespace OpenGLES2Renderer
 		return nullptr;
 	}
 
-	Renderer::IUniformBuffer *ShaderLanguageGlsl::createUniformBuffer(unsigned int, const void *, Renderer::BufferUsage::Enum)
+	Renderer::IUniformBuffer *ShaderLanguageGlsl::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage::Enum)
 	{
 		// Error! OpenGL ES 2 has no uniform buffer support.
 		return nullptr;

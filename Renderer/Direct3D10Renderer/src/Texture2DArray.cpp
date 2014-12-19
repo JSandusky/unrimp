@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DArray::Texture2DArray(Direct3D10Renderer &direct3D10Renderer, unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags, Renderer::TextureUsage::Enum textureUsage) :
+	Texture2DArray::Texture2DArray(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage) :
 		ITexture2DArray(direct3D10Renderer, width, height, numberOfSlices),
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{
@@ -75,16 +75,16 @@ namespace Direct3D10Renderer
 		if (nullptr != d3d10Texture2D)
 		{
 			// Calculate the number of mipmaps
-			const unsigned int numberOfMipmaps = mipmaps ? getNumberOfMipmaps(width, height) : 1;
+			const uint32_t numberOfMipmaps = mipmaps ? getNumberOfMipmaps(width, height) : 1;
 
 			// Data given?
 			if (nullptr != data)
 			{
 				{ // Update Direct3D 10 subresource data of the base-map
-					const unsigned int   bytesPerRow   = width * Mapping::getDirect3D10Size(textureFormat);
-					const unsigned int   bytesPerSlice = bytesPerRow * height;
-					const unsigned char *dataCurrent   = static_cast<unsigned char*>(data);
-					for (unsigned int arraySlice = 0; arraySlice < numberOfSlices; ++arraySlice, dataCurrent += bytesPerSlice)
+					const uint32_t  bytesPerRow   = width * Mapping::getDirect3D10Size(textureFormat);
+					const uint32_t  bytesPerSlice = bytesPerRow * height;
+					const uint8_t  *dataCurrent   = static_cast<uint8_t*>(data);
+					for (uint32_t arraySlice = 0; arraySlice < numberOfSlices; ++arraySlice, dataCurrent += bytesPerSlice)
 					{
 						direct3D10Renderer.getD3D10Device()->UpdateSubresource(d3d10Texture2D, D3D10CalcSubresource(0, arraySlice, numberOfMipmaps), nullptr, dataCurrent, bytesPerRow, bytesPerSlice);
 					}

@@ -85,7 +85,7 @@ namespace Direct3D9Renderer
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		Framebuffer(Direct3D9Renderer &direct3D9Renderer, unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
+		Framebuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture);
 
 		/**
 		*  @brief
@@ -100,7 +100,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    The number of Direct3D 9 render target surfaces
 		*/
-		inline unsigned int getNumberOfDirect3DSurface9Colors() const;
+		inline uint32_t getNumberOfDirect3DSurface9Colors() const;
 
 		/**
 		*  @brief
@@ -132,7 +132,7 @@ namespace Direct3D9Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(unsigned int &width, unsigned int &height) const override;
+		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
 
 
 	//[-------------------------------------------------------]
@@ -140,11 +140,11 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	private:
 		// Generic part
-		unsigned int		 mNumberOfColorTextures;	///< Number of color render target textures
+		uint32_t			 mNumberOfColorTextures;	///< Number of color render target textures
 		Renderer::ITexture **mColorTextures;			///< The color render target textures (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
 		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
-		unsigned int		 mWidth;					///< The framebuffer width
-		unsigned int		 mHeight;					///< The framebuffer height
+		uint32_t			 mWidth;					///< The framebuffer width
+		uint32_t			 mHeight;					///< The framebuffer height
 		// Direct3D 9 part
 		IDirect3DSurface9 **mDirect3D9ColorSurfaces;		///< The Direct3D 9 color render target surfaces (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "mNumberOfColorTextures" textures in the provided C-array of pointers
 		IDirect3DSurface9  *mDirect3D9DepthStencilSurface;	///< The Direct3D 9 depth stencil render target surface (we keep a reference to it), can be a null pointer

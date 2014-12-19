@@ -100,7 +100,7 @@ namespace OpenGLES2Renderer
 	//[ Public virtual OpenGLES2Renderer::IContext methods    ]
 	//[-------------------------------------------------------]
 	public:
-		virtual bool initialize(unsigned int multisampleAntialiasingSamples) override;
+		virtual bool initialize(uint32_t multisampleAntialiasingSamples) override;
 		virtual const IExtensions &getExtensions() const override;
 
 
@@ -108,7 +108,7 @@ namespace OpenGLES2Renderer
 	//[ Protected virtual OpenGLES2Renderer::IContext methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual EGLConfig chooseConfig(unsigned int multisampleAntialiasingSamples) const override;
+		virtual EGLConfig chooseConfig(uint32_t multisampleAntialiasingSamples) const override;
 
 
 	//[-------------------------------------------------------]

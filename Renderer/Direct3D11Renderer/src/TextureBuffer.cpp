@@ -38,7 +38,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(Direct3D11Renderer &direct3D11Renderer, unsigned int numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	TextureBuffer::TextureBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		ITextureBuffer(direct3D11Renderer),
 		mD3D11Buffer(nullptr),
 		mD3D11ShaderResourceViewTexture(nullptr)
@@ -137,7 +137,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
-	void TextureBuffer::copyDataFrom(unsigned int numberOfBytes, const void *data)
+	void TextureBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
 		// Check resource pointers
 		if (nullptr != mD3D11Buffer && nullptr != data)

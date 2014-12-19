@@ -130,7 +130,7 @@ void InstancedCubes::onDeinitialization()
 	IApplicationRendererToolkit::onDeinitialization();
 }
 
-void InstancedCubes::onKeyDown(unsigned int key)
+void InstancedCubes::onKeyDown(uint32_t key)
 {
 	// Evaluate the key
 	switch (key)
@@ -265,7 +265,7 @@ void InstancedCubes::onDraw()
 				// Cubes per second
 				// -> In every frame we draw n-cubes...
 				// -> TODO(co) This number can get huge... had over 1 million cubes with >25 FPS... million cubes at ~2.4 FPS...
-				sprintf(text, "Cubes per second: %u", static_cast<unsigned int>(mFramesPerSecond) * mNumberOfCubeInstances);
+				sprintf(text, "Cubes per second: %u", static_cast<uint32_t>(mFramesPerSecond) * mNumberOfCubeInstances);
 				mFont->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.8f, 0.0f))), 0.0025f, 0.0025f);
 			}
 			else

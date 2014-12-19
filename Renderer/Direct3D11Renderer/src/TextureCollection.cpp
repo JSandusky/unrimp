@@ -38,7 +38,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCollection::TextureCollection(Direct3D11Renderer &direct3D11Renderer, unsigned int numberOfTextures, Renderer::ITexture **textures) :
+	TextureCollection::TextureCollection(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfTextures, Renderer::ITexture **textures) :
 		Renderer::ITextureCollection(direct3D11Renderer),
 		mNumberOfD3D11ShaderResourceViews(numberOfTextures),
 		mD3D11ShaderResourceViews((numberOfTextures > 0) ? new ID3D11ShaderResourceView*[numberOfTextures] : nullptr),

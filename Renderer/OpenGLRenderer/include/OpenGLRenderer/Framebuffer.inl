@@ -28,12 +28,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int Framebuffer::getOpenGLFramebuffer() const
+	inline uint32_t Framebuffer::getOpenGLFramebuffer() const
 	{
 		return mOpenGLFramebuffer;
 	}
 
-	inline unsigned int Framebuffer::getNumberOfColorTextures() const
+	inline uint32_t Framebuffer::getNumberOfColorTextures() const
 	{
 		return mNumberOfColorTextures;
 	}

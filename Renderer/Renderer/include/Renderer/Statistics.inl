@@ -92,7 +92,7 @@ namespace Renderer
 		// Nothing to do in here
 	}
 
-	inline unsigned int Statistics::getNumberOfCurrentResources() const
+	inline uint32_t Statistics::getNumberOfCurrentResources() const
 	{
 		// Calculate the current number of resource instances
 		return	currentNumberOfPrograms +

@@ -119,8 +119,8 @@ namespace Renderer
 		DepthWriteMask::Enum depthWriteMask;	///< Default: "Renderer::DepthWriteMask::ALL"
 		ComparisonFunc::Enum depthFunc;			///< Default: "Renderer::ComparisonFunc::LESS"
 		int					 stencilEnable;		///< Default: "false"
-		unsigned char		 stencilReadMask;	///< Default: "0xff"
-		unsigned char		 stencilWriteMask;	///< Default: "0xff"
+		uint8_t				 stencilReadMask;	///< Default: "0xff"
+		uint8_t				 stencilWriteMask;	///< Default: "0xff"
 		DepthStencilOpDesc	 frontFace;			///< Default: See "Renderer::DepthStencilOpDesc"
 		DepthStencilOpDesc	 backFace;			///< Default: See "Renderer::DepthStencilOpDesc"
 	};

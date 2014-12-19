@@ -28,7 +28,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int VertexBuffer::getOpenGLArrayBuffer() const
+	inline uint32_t VertexBuffer::getOpenGLArrayBuffer() const
 	{
 		return mOpenGLArrayBuffer;
 	}

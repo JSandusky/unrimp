@@ -115,7 +115,7 @@ void FirstInstancing::onInitialization()
 					// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
 					// -> In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
 					//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
-					static const unsigned short INDICES[] =
+					static const uint16_t INDICES[] =
 					{
 						0, 1, 2
 					};
@@ -134,26 +134,26 @@ void FirstInstancing::onInitialization()
 							Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 							"Position",								// name[64] (char)
 							"POSITION",								// semantic[64] (char)
-							0,										// semanticIndex (unsigned int)
+							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBufferPosition,					// vertexBuffer (Renderer::IVertexBuffer *)
-							0,										// offset (unsigned int)
-							sizeof(float) * 2,						// stride (unsigned int)
+							0,										// offset (uint32_t)
+							sizeof(float) * 2,						// stride (uint32_t)
 							// Data source, instancing part
-							0										// instancesPerElement (unsigned int)
+							0										// instancesPerElement (uint32_t)
 						},
 						{ // Attribute 1
 							// Data destination
 							Renderer::VertexArrayFormat::FLOAT_1,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 							"InstanceID",							// name[64] (char)
 							"TEXCOORD",								// semantic[64] (char)
-							0,										// semanticIndex (unsigned int)
+							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBufferInstanceId,					// vertexBuffer (Renderer::IVertexBuffer *)
-							0,										// offset (unsigned int)
-							sizeof(float),							// stride (unsigned int)
+							0,										// offset (uint32_t)
+							sizeof(float),							// stride (uint32_t)
 							// Data source, instancing part
-							1										// instancesPerElement (unsigned int)
+							1										// instancesPerElement (uint32_t)
 						}
 					};
 					mVertexArrayInstancedArrays = mProgramInstancedArrays->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray, indexBufferInstancedArrays);
@@ -203,13 +203,13 @@ void FirstInstancing::onInitialization()
 							Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 							"Position",								// name[64] (char)
 							"POSITION",								// semantic[64] (char)
-							0,										// semanticIndex (unsigned int)
+							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-							0,										// offset (unsigned int)
-							sizeof(float) * 2,						// stride (unsigned int)
+							0,										// offset (uint32_t)
+							sizeof(float) * 2,						// stride (uint32_t)
 							// Data source, instancing part
-							0										// instancesPerElement (unsigned int)
+							0										// instancesPerElement (uint32_t)
 						}
 					};
 					mVertexArrayDrawInstanced = mProgramDrawInstanced->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);

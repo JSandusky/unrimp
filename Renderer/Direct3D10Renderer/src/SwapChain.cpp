@@ -185,7 +185,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void SwapChain::getWidthAndHeight(unsigned int &width, unsigned int &height) const
+	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
 	{
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain)
@@ -341,7 +341,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void SwapChain::getSafeWidthAndHeight(unsigned int &width, unsigned int &height) const
+	void SwapChain::getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const
 	{
 		// Get the Direct3D 10 swap chain description
 		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;

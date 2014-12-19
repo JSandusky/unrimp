@@ -238,17 +238,17 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Shader language                                       ]
 	//[-------------------------------------------------------]
-	unsigned int Direct3D10Renderer::getNumberOfShaderLanguages() const
+	uint32_t Direct3D10Renderer::getNumberOfShaderLanguages() const
 	{
-		unsigned int numberOfShaderLanguages = 1;	// HLSL support is always there
+		uint32_t numberOfShaderLanguages = 1;	// HLSL support is always there
 
 		// Done, return the number of supported shader languages
 		return numberOfShaderLanguages;
 	}
 
-	const char *Direct3D10Renderer::getShaderLanguageName(unsigned int index) const
+	const char *Direct3D10Renderer::getShaderLanguageName(uint32_t index) const
 	{
-		unsigned int currentIndex = 0;
+		uint32_t currentIndex = 0;
 
 		// HLSL supported
 		if (currentIndex == index)
@@ -298,33 +298,33 @@ namespace Direct3D10Renderer
 		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
 	}
 
-	Renderer::IFramebuffer *Direct3D10Renderer::createFramebuffer(unsigned int numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
+	Renderer::IFramebuffer *Direct3D10Renderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
 	{
 		// Validation is done inside the framebuffer implementation
 		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
 	}
 
-	Renderer::IVertexBuffer *Direct3D10Renderer::createVertexBuffer(unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IVertexBuffer *Direct3D10Renderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		return new VertexBuffer(*this, numberOfBytes, data, bufferUsage);
 	}
 
-	Renderer::IIndexBuffer *Direct3D10Renderer::createIndexBuffer(unsigned int numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IIndexBuffer *Direct3D10Renderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		return new IndexBuffer(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
 	}
 
-	Renderer::ITextureBuffer *Direct3D10Renderer::createTextureBuffer(unsigned int numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::ITextureBuffer *Direct3D10Renderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		return new TextureBuffer(*this, numberOfBytes, textureFormat, data, bufferUsage);
 	}
 
-	Renderer::ITexture2D *Direct3D10Renderer::createTexture2D(unsigned int width, unsigned int height, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags, Renderer::TextureUsage::Enum textureUsage)
+	Renderer::ITexture2D *Direct3D10Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage)
 	{
 		return new Texture2D(*this, width, height, textureFormat, data, flags, textureUsage);
 	}
 
-	Renderer::ITexture2DArray *Direct3D10Renderer::createTexture2DArray(unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags, Renderer::TextureUsage::Enum textureUsage)
+	Renderer::ITexture2DArray *Direct3D10Renderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage)
 	{
 		return new Texture2DArray(*this, width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
 	}
@@ -349,12 +349,12 @@ namespace Direct3D10Renderer
 		return new SamplerState(*this, samplerState);
 	}
 
-	Renderer::ITextureCollection *Direct3D10Renderer::createTextureCollection(unsigned int numberOfTextures, Renderer::ITexture **textures)
+	Renderer::ITextureCollection *Direct3D10Renderer::createTextureCollection(uint32_t numberOfTextures, Renderer::ITexture **textures)
 	{
 		return new TextureCollection(*this, numberOfTextures, textures);
 	}
 
-	Renderer::ISamplerStateCollection *Direct3D10Renderer::createSamplerStateCollection(unsigned int numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
+	Renderer::ISamplerStateCollection *Direct3D10Renderer::createSamplerStateCollection(uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
 	{
 		return new SamplerStateCollection(*this, numberOfSamplerStates, samplerStates);
 	}
@@ -363,7 +363,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool Direct3D10Renderer::map(Renderer::IResource &resource, unsigned int subresource, Renderer::MapType::Enum mapType, unsigned int mapFlags, Renderer::MappedSubresource &mappedSubresource)
+	bool Direct3D10Renderer::map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType::Enum mapType, uint32_t mapFlags, Renderer::MappedSubresource &mappedSubresource)
 	{
 		// The "Renderer::MapType::Enum" values directly map to Direct3D 10 & 11 constants, do not change them
 		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 11, do not change it
@@ -515,7 +515,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::unmap(Renderer::IResource &resource, unsigned int subresource)
+	void Direct3D10Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
 	{
 		// Evaluate the resource type
 		switch (resource.getResourceType())
@@ -688,7 +688,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::vsSetTexture(unsigned int unit, Renderer::ITexture *texture)
+	void Direct3D10Renderer::vsSetTexture(uint32_t unit, Renderer::ITexture *texture)
 	{
 		// Set a texture at that unit?
 		if (nullptr != texture)
@@ -753,7 +753,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::vsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection)
+	void Direct3D10Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
 		if (nullptr != textureCollection)
@@ -768,7 +768,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::vsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState)
+	void Direct3D10Renderer::vsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
 	{
 		// Set a sampler state at that unit?
 		if (nullptr != samplerState)
@@ -791,7 +791,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::vsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D10Renderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
 		if (nullptr != samplerStateCollection)
@@ -806,7 +806,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::vsSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D10Renderer::vsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// Is the given uniform buffer valid?
 		if (nullptr != uniformBuffer)
@@ -824,7 +824,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::tcsSetTexture(unsigned int, Renderer::ITexture *texture)
+	void Direct3D10Renderer::tcsSetTexture(uint32_t, Renderer::ITexture *texture)
 	{
 		// Direct3D 10 has no tessellation control shader support ("hull shader" in Direct3D terminology)
 
@@ -836,7 +836,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::tcsSetTextureCollection(unsigned int, Renderer::ITextureCollection *textureCollection)
+	void Direct3D10Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
 	{
 		// Direct3D 10 has no tessellation control shader support ("hull shader" in Direct3D terminology)
 
@@ -848,7 +848,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::tcsSetSamplerState(unsigned int, Renderer::ISamplerState *samplerState)
+	void Direct3D10Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
 	{
 		// Direct3D 10 has no tessellation control shader support ("hull shader" in Direct3D terminology)
 
@@ -860,7 +860,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::tcsSetSamplerStateCollection(unsigned int, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D10Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Direct3D 10 has no tessellation control shader support ("hull shader" in Direct3D terminology)
 
@@ -872,7 +872,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::tcsSetUniformBuffer(unsigned int, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D10Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// Direct3D 10 has no tessellation control shader support ("hull shader" in Direct3D terminology)
 
@@ -888,7 +888,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::tesSetTexture(unsigned int, Renderer::ITexture *texture)
+	void Direct3D10Renderer::tesSetTexture(uint32_t, Renderer::ITexture *texture)
 	{
 		// Direct3D 10 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
 
@@ -900,7 +900,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::tesSetTextureCollection(unsigned int, Renderer::ITextureCollection *textureCollection)
+	void Direct3D10Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
 	{
 		// Direct3D 10 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
 
@@ -912,7 +912,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::tesSetSamplerState(unsigned int, Renderer::ISamplerState *samplerState)
+	void Direct3D10Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
 	{
 		// Direct3D 10 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
 
@@ -924,7 +924,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::tesSetSamplerStateCollection(unsigned int, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D10Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Direct3D 10 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
 
@@ -936,7 +936,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::tesSetUniformBuffer(unsigned int, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D10Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// Direct3D 10 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
 
@@ -952,7 +952,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::gsSetTexture(unsigned int unit, Renderer::ITexture *texture)
+	void Direct3D10Renderer::gsSetTexture(uint32_t unit, Renderer::ITexture *texture)
 	{
 		// Set a texture at that unit?
 		if (nullptr != texture)
@@ -1017,7 +1017,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::gsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection)
+	void Direct3D10Renderer::gsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
 		if (nullptr != textureCollection)
@@ -1032,7 +1032,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::gsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState)
+	void Direct3D10Renderer::gsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
 	{
 		// Set a sampler state at that unit?
 		if (nullptr != samplerState)
@@ -1055,7 +1055,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::gsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D10Renderer::gsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
 		if (nullptr != samplerStateCollection)
@@ -1070,7 +1070,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::gsSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D10Renderer::gsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// Is the given uniform buffer valid?
 		if (nullptr != uniformBuffer)
@@ -1089,7 +1089,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::rsSetViewports(unsigned int numberOfViewports, const Renderer::Viewport *viewports)
+	void Direct3D10Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
 	{
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
@@ -1106,7 +1106,7 @@ namespace Direct3D10Renderer
 			// Set the Direct3D 10 viewports
 			D3D10_VIEWPORT d3dViewports[D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX];
 			D3D10_VIEWPORT *d3dViewport = d3dViewports;
-			for (unsigned int i = 0; i < numberOfViewports; ++i, ++d3dViewport, ++viewports)
+			for (uint32_t i = 0; i < numberOfViewports; ++i, ++d3dViewport, ++viewports)
 			{
 				d3dViewport->TopLeftX = static_cast<INT> (viewports->topLeftX);
 				d3dViewport->TopLeftY = static_cast<INT> (viewports->topLeftY);
@@ -1119,7 +1119,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::rsSetScissorRectangles(unsigned int numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
+	void Direct3D10Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
 	{
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
@@ -1155,7 +1155,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::fsSetTexture(unsigned int unit, Renderer::ITexture *texture)
+	void Direct3D10Renderer::fsSetTexture(uint32_t unit, Renderer::ITexture *texture)
 	{
 		// "pixel shader" in Direct3D terminology
 
@@ -1222,7 +1222,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::fsSetTextureCollection(unsigned int startUnit, Renderer::ITextureCollection *textureCollection)
+	void Direct3D10Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
 		if (nullptr != textureCollection)
@@ -1237,7 +1237,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::fsSetSamplerState(unsigned int unit, Renderer::ISamplerState *samplerState)
+	void Direct3D10Renderer::fsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
 	{
 		// "pixel shader" in Direct3D terminology
 
@@ -1262,7 +1262,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::fsSetSamplerStateCollection(unsigned int startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D10Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
 		if (nullptr != samplerStateCollection)
@@ -1277,7 +1277,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::fsSetUniformBuffer(unsigned int slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D10Renderer::fsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
 	{
 		// "pixel shader" in Direct3D terminology
 
@@ -1427,7 +1427,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::clear(unsigned int flags, const float color[4], float z, unsigned int stencil)
+	void Direct3D10Renderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
 	{
 		// Unlike Direct3D 9, OpenGL or OpenGL ES 2, Direct3D 10 clears a given render target view and not the currently bound
 
@@ -1557,7 +1557,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::draw(unsigned int startVertexLocation, unsigned int numberOfVertices)
+	void Direct3D10Renderer::draw(uint32_t startVertexLocation, uint32_t numberOfVertices)
 	{
 		mD3D10Device->Draw(
 			numberOfVertices,	// Vertex count (UINT)
@@ -1565,7 +1565,7 @@ namespace Direct3D10Renderer
 		);
 	}
 
-	void Direct3D10Renderer::drawInstanced(unsigned int startVertexLocation, unsigned int numberOfVertices, unsigned int numberOfInstances)
+	void Direct3D10Renderer::drawInstanced(uint32_t startVertexLocation, uint32_t numberOfVertices, uint32_t numberOfInstances)
 	{
 		mD3D10Device->DrawInstanced(
 			numberOfVertices,		// Vertex count per instance (UINT)
@@ -1575,7 +1575,7 @@ namespace Direct3D10Renderer
 		);
 	}
 
-	void Direct3D10Renderer::drawIndexed(unsigned int startIndexLocation, unsigned int numberOfIndices, unsigned int baseVertexLocation, unsigned int, unsigned int)
+	void Direct3D10Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t)
 	{
 		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 10
 
@@ -1587,7 +1587,7 @@ namespace Direct3D10Renderer
 		);
 	}
 
-	void Direct3D10Renderer::drawIndexedInstanced(unsigned int startIndexLocation, unsigned int numberOfIndices, unsigned int baseVertexLocation, unsigned int, unsigned int, unsigned int numberOfInstances)
+	void Direct3D10Renderer::drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t, uint32_t numberOfInstances)
 	{
 		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 10
 

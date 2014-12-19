@@ -38,7 +38,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(Direct3D11Renderer &direct3D11Renderer, unsigned int numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	UniformBuffer::UniformBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
 		Renderer::IUniformBuffer(direct3D11Renderer),
 		mD3D11Buffer(nullptr)
 	{
@@ -46,7 +46,7 @@ namespace Direct3D11Renderer
 		// Check the given number of bytes, if we don't do this we might get told
 		//   "... the ByteWidth (value = <x>) must be a multiple of 16 and be less than or equal to 65536"
 		// by Direct3D 11
-		const unsigned int leftOverBytes = (numberOfBytes % 16);
+		const uint32_t leftOverBytes = (numberOfBytes % 16);
 		if (0 != leftOverBytes)
 		{
 			// Fix the byte alignment
@@ -117,7 +117,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBuffer::copyDataFrom(unsigned int numberOfBytes, const void *data)
+	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
 		// Check resource pointers
 		if (nullptr != mD3D11Buffer && nullptr != data)

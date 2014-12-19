@@ -96,13 +96,13 @@ namespace Renderer
 		*    - It's valid that a vertex array implementation is adding a reference and releasing it again at once
 		*      (this means that in the case of not having any more references, a vertex buffer might get destroyed when calling this method)
 		*/
-		virtual IVertexArray *createVertexArray(unsigned int numberOfAttributes, const VertexArrayAttribute *attributes, IIndexBuffer *indexBuffer = nullptr) = 0;
+		virtual IVertexArray *createVertexArray(uint32_t numberOfAttributes, const VertexArrayAttribute *attributes, IIndexBuffer *indexBuffer = nullptr) = 0;
 
 		// TODO(co) Cleanup
 		inline virtual int getAttributeLocation(const char *attributeName);
-		inline virtual unsigned int getUniformBlockIndex(const char *uniformBlockName, unsigned int defaultIndex);
+		inline virtual uint32_t getUniformBlockIndex(const char *uniformBlockName, uint32_t defaultIndex);
 		inline virtual handle getUniformHandle(const char *uniformName);
-		inline virtual unsigned int setTextureUnit(handle uniformHandle, unsigned int unit);
+		inline virtual uint32_t setTextureUnit(handle uniformHandle, uint32_t unit);
 		inline virtual void setUniform1i(handle uniformHandle, int value);
 		inline virtual void setUniform1f(handle uniformHandle, float value);
 		inline virtual void setUniform2fv(handle uniformHandle, const float *value);

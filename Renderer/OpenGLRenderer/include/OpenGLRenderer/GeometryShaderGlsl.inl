@@ -28,7 +28,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int GeometryShaderGlsl::getOpenGLShader() const
+	inline uint32_t GeometryShaderGlsl::getOpenGLShader() const
 	{
 		return mOpenGLShader;
 	}
@@ -43,7 +43,7 @@ namespace OpenGLRenderer
 		return mOpenGLGsOutputPrimitiveTopology;
 	}
 
-	unsigned int GeometryShaderGlsl::getNumberOfOutputVertices() const
+	uint32_t GeometryShaderGlsl::getNumberOfOutputVertices() const
 	{
 		return mNumberOfOutputVertices;
 	}

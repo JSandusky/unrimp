@@ -78,7 +78,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    The OpenGL ES 2 shader, can be zero if no resource is allocated, do not destroy the returned resource
 		*/
-		inline unsigned int getOpenGLES2Shader() const;
+		inline uint32_t getOpenGLES2Shader() const;
 
 
 	//[-------------------------------------------------------]
@@ -92,7 +92,7 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int mOpenGLES2Shader;	///< OpenGL ES 2 shader, can be zero if no resource is allocated
+		uint32_t mOpenGLES2Shader;	///< OpenGL ES 2 shader, can be zero if no resource is allocated
 
 
 	};

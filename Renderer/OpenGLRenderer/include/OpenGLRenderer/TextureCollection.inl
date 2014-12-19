@@ -28,7 +28,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int TextureCollection::getNumberOfTextures() const
+	inline uint32_t TextureCollection::getNumberOfTextures() const
 	{
 		return mNumberOfTextures;
 	}

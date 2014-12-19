@@ -74,7 +74,7 @@ public:
 	*  @return
 	*    Current reference count
 	*/
-	unsigned int addReference();
+	uint32_t addReference();
 
 	/**
 	*  @brief
@@ -86,7 +86,7 @@ public:
 	*  @note
 	*    - When the last reference was released, the instance is destroyed automatically
 	*/
-	unsigned int release();
+	uint32_t release();
 
 	/**
 	*  @brief
@@ -95,14 +95,14 @@ public:
 	*  @return
 	*    Current reference count
 	*/
-	unsigned int getRefCount() const;
+	uint32_t getRefCount() const;
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	unsigned int mRefCount; ///< Reference count
+	uint32_t mRefCount; ///< Reference count
 
 
 };

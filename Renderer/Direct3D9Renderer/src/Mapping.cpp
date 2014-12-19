@@ -35,7 +35,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	unsigned int Mapping::getDirect3D9MagFilterMode(Renderer::FilterMode::Enum filterMode)
+	uint32_t Mapping::getDirect3D9MagFilterMode(Renderer::FilterMode::Enum filterMode)
 	{
 		switch (filterMode)
 		{
@@ -98,7 +98,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	unsigned int Mapping::getDirect3D9MinFilterMode(Renderer::FilterMode::Enum filterMode)
+	uint32_t Mapping::getDirect3D9MinFilterMode(Renderer::FilterMode::Enum filterMode)
 	{
 		switch (filterMode)
 		{
@@ -161,7 +161,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	unsigned int Mapping::getDirect3D9MipFilterMode(Renderer::FilterMode::Enum filterMode)
+	uint32_t Mapping::getDirect3D9MipFilterMode(Renderer::FilterMode::Enum filterMode)
 	{
 		switch (filterMode)
 		{
@@ -224,9 +224,9 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	unsigned int Mapping::getDirect3D9TextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode)
+	uint32_t Mapping::getDirect3D9TextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode)
 	{
-		static const unsigned int MAPPING[] =
+		static const uint32_t MAPPING[] =
 		{
 			D3DTADDRESS_WRAP,		// Renderer::TextureAddressMode::WRAP
 			D3DTADDRESS_MIRROR,		// Renderer::TextureAddressMode::MIRROR
@@ -254,10 +254,10 @@ namespace Direct3D9Renderer
 		return MAPPING[comparisonFunc];
 	}*/
 
-	unsigned char Mapping::getDirect3D9Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
+	uint8_t Mapping::getDirect3D9Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
 	{
 		// BYTE
-		static const unsigned char MAPPING[] =
+		static const uint8_t MAPPING[] =
 		{
 			D3DDECLTYPE_FLOAT1,	// Renderer::VertexArrayFormat::FLOAT_1
 			D3DDECLTYPE_FLOAT2,	// Renderer::VertexArrayFormat::FLOAT_2
@@ -267,7 +267,7 @@ namespace Direct3D9Renderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	unsigned int Mapping::getDirect3D9Semantic(const char *semantic)
+	uint32_t Mapping::getDirect3D9Semantic(const char *semantic)
 	{
 		BYTE direct3D9Semantic = D3DDECLUSAGE_POSITION;
 		if (0 == stricmp("POSITION", semantic))
@@ -329,7 +329,7 @@ namespace Direct3D9Renderer
 		return direct3D9Semantic;
 	}
 
-	unsigned int Mapping::getDirect3D9Usage(Renderer::BufferUsage::Enum bufferUsage)
+	uint32_t Mapping::getDirect3D9Usage(Renderer::BufferUsage::Enum bufferUsage)
 	{
 		// Direct3D 9 only supports a subset of the OpenGL usage indications
 		// -> See "D3DUSAGE"-documentation at http://msdn.microsoft.com/en-us/library/windows/desktop/bb172625%28v=vs.85%29.aspx
@@ -355,22 +355,22 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	unsigned int Mapping::getDirect3D9Format(Renderer::IndexBufferFormat::Enum indexBufferFormat)
+	uint32_t Mapping::getDirect3D9Format(Renderer::IndexBufferFormat::Enum indexBufferFormat)
 	{
 		// D3DFORMAT
-		static const unsigned int MAPPING[] =
+		static const uint32_t MAPPING[] =
 		{
-			D3DFMT_INDEX32,	// Renderer::IndexBufferFormat::UNSIGNED_CHAR  - One byte per element, unsigned char (may not be supported by each API) - Not supported by Direct3D 9
-			D3DFMT_INDEX16,	// Renderer::IndexBufferFormat::UNSIGNED_SHORT - Two bytes per element, unsigned short
-			D3DFMT_INDEX32	// Renderer::IndexBufferFormat::UNSIGNED_INT   - Four bytes per element, unsigned int (may not be supported by each API)
+			D3DFMT_INDEX32,	// Renderer::IndexBufferFormat::UNSIGNED_CHAR  - One byte per element, uint8_t (may not be supported by each API) - Not supported by Direct3D 9
+			D3DFMT_INDEX16,	// Renderer::IndexBufferFormat::UNSIGNED_SHORT - Two bytes per element, uint16_t
+			D3DFMT_INDEX32	// Renderer::IndexBufferFormat::UNSIGNED_INT   - Four bytes per element, uint32_t (may not be supported by each API)
 		};
 		return MAPPING[indexBufferFormat];
 	}
 
-	unsigned int Mapping::getDirect3D9Size(Renderer::TextureFormat::Enum textureFormat)
+	uint32_t Mapping::getDirect3D9Size(Renderer::TextureFormat::Enum textureFormat)
 	{
 		// UINT
-		static const unsigned int MAPPING[] =
+		static const uint32_t MAPPING[] =
 		{
 			1,	// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
 			4,	// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
@@ -381,10 +381,10 @@ namespace Direct3D9Renderer
 		return MAPPING[textureFormat];
 	}
 
-	unsigned int Mapping::getDirect3D9Format(Renderer::TextureFormat::Enum textureFormat)
+	uint32_t Mapping::getDirect3D9Format(Renderer::TextureFormat::Enum textureFormat)
 	{
 		// D3DFORMAT
-		static const unsigned int MAPPING[] =
+		static const uint32_t MAPPING[] =
 		{
 			D3DFMT_A8,				// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
 			D3DFMT_X8R8G8B8,		// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue - "D3DFMT_R8G8B8" is usually not supported

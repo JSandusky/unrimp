@@ -85,7 +85,7 @@ public:
 //[ Private definitions                                   ]
 //[-------------------------------------------------------]
 private:
-	static const unsigned int NUMBER_OF_COMPONENTS_PER_VERTEX = 14;	///< Number of components per vertex (3 position, 2 texture coordinate, 3 tangent, 3 binormal, 3 normal)
+	static const uint32_t NUMBER_OF_COMPONENTS_PER_VERTEX = 14;	///< Number of components per vertex (3 position, 2 texture coordinate, 3 tangent, 3 binormal, 3 normal)
 
 
 //[-------------------------------------------------------]
@@ -105,7 +105,7 @@ private:
 	*  @param[out] numberOfIndices
 	*    Receives the number of indices
 	*/
-	void getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, unsigned int &numberOfVertices, unsigned int &numberOfIndices);
+	void getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint32_t &numberOfVertices, uint32_t &numberOfIndices);
 
 	/**
 	*  @brief
@@ -126,15 +126,15 @@ private:
 	*  @param[out] numberOfIndices
 	*    Receives the number of processed indices
 	*/
-	void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, unsigned short *indexBuffer, const aiMatrix4x4 &assimpTransformation, unsigned int &numberOfVertices, unsigned int &numberOfIndices);
+	void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices);
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	unsigned int			  mNumberOfVertices;	///< Number of vertices
-	unsigned int			  mNumberOfIndices;		///< Number of indices
+	uint32_t				  mNumberOfVertices;	///< Number of vertices
+	uint32_t				  mNumberOfIndices;		///< Number of indices
 	Renderer::IVertexArrayPtr mVertexArray;			///< Vertex array object (VAO), can be a null pointer
 
 

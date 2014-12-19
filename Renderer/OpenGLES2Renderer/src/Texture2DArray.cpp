@@ -37,7 +37,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DArray::Texture2DArray(OpenGLES2Renderer &openGLES2Renderer, unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags) :
+	Texture2DArray::Texture2DArray(OpenGLES2Renderer &openGLES2Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags) :
 		ITexture2DArray(openGLES2Renderer, width, height, numberOfSlices),
 		mOpenGLES2Texture(0)
 	{

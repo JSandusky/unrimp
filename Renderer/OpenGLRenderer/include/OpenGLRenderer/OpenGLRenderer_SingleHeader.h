@@ -90,7 +90,7 @@ namespace OpenGLRenderer
 		*  @note
 		*    - The texture collection keeps a reference to the provided texture instances
 		*/
-		TextureCollection(OpenGLRenderer &openGLRenderer, unsigned int numberOfTextures, Renderer::ITexture **textures);
+		TextureCollection(OpenGLRenderer &openGLRenderer, uint32_t numberOfTextures, Renderer::ITexture **textures);
 
 		/**
 		*  @brief
@@ -105,7 +105,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The number of texture instances
 		*/
-		inline unsigned int getNumberOfTextures() const;
+		inline uint32_t getNumberOfTextures() const;
 
 		/**
 		*  @brief
@@ -121,7 +121,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int		 mNumberOfTextures;	///< The number of texture instances
+		uint32_t			 mNumberOfTextures;	///< The number of texture instances
 		Renderer::ITexture **mTextures;			///< Texture instances (we keep a reference to it), can be a null pointer
 
 
@@ -145,7 +145,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int TextureCollection::getNumberOfTextures() const
+	inline uint32_t TextureCollection::getNumberOfTextures() const
 	{
 		return mNumberOfTextures;
 	}
@@ -220,7 +220,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL texture buffer instance, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLTextureBuffer() const;
+		inline uint32_t getOpenGLTextureBuffer() const;
 
 		/**
 		*  @brief
@@ -229,7 +229,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL texture instance, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLTexture() const;
+		inline uint32_t getOpenGLTexture() const;
 
 
 	//[-------------------------------------------------------]
@@ -250,8 +250,8 @@ namespace OpenGLRenderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int mOpenGLTextureBuffer;	///< OpenGL texture buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		unsigned int mOpenGLTexture;		///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLTextureBuffer;	///< OpenGL texture buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLTexture;		///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};
@@ -274,12 +274,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int TextureBuffer::getOpenGLTextureBuffer() const
+	inline uint32_t TextureBuffer::getOpenGLTextureBuffer() const
 	{
 		return mOpenGLTextureBuffer;
 	}
 
-	inline unsigned int TextureBuffer::getOpenGLTexture() const
+	inline uint32_t TextureBuffer::getOpenGLTexture() const
 	{
 		return mOpenGLTexture;
 	}
@@ -338,7 +338,7 @@ namespace OpenGLRenderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		TextureBufferDsa(OpenGLRenderer &openGLRenderer, unsigned int numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		TextureBufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -351,7 +351,7 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void copyDataFrom(unsigned int numberOfBytes, const void *data) override;
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
 
 
 	};
@@ -410,7 +410,7 @@ namespace OpenGLRenderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		TextureBufferBind(OpenGLRenderer &openGLRenderer, unsigned int numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		TextureBufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -423,7 +423,7 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void copyDataFrom(unsigned int numberOfBytes, const void *data) override;
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
 
 
 	};
@@ -493,7 +493,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL texture, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLTexture() const;
+		inline uint32_t getOpenGLTexture() const;
 
 
 	//[-------------------------------------------------------]
@@ -511,14 +511,14 @@ namespace OpenGLRenderer
 		*  @param[in] height
 		*    The height of the texture
 		*/
-		Texture2D(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height);
+		Texture2D(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height);
 
 
 	//[-------------------------------------------------------]
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int mOpenGLTexture;	///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLTexture;	///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};
@@ -541,7 +541,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int Texture2D::getOpenGLTexture() const
+	inline uint32_t Texture2D::getOpenGLTexture() const
 	{
 		return mOpenGLTexture;
 	}
@@ -601,7 +601,7 @@ namespace OpenGLRenderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*/
-		Texture2DDsa(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags);
+		Texture2DDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags);
 
 		/**
 		*  @brief
@@ -667,7 +667,7 @@ namespace OpenGLRenderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*/
-		Texture2DBind(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags);
+		Texture2DBind(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags);
 
 		/**
 		*  @brief
@@ -743,7 +743,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL texture, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLTexture() const;
+		inline uint32_t getOpenGLTexture() const;
 
 
 	//[-------------------------------------------------------]
@@ -763,14 +763,14 @@ namespace OpenGLRenderer
 		*  @param[in] numberOfSlices
 		*    The number of slices
 		*/
-		Texture2DArray(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height, unsigned int numberOfSlices);
+		Texture2DArray(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices);
 
 
 	//[-------------------------------------------------------]
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		unsigned int mOpenGLTexture;	///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLTexture;	///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};
@@ -793,7 +793,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline unsigned int Texture2DArray::getOpenGLTexture() const
+	inline uint32_t Texture2DArray::getOpenGLTexture() const
 	{
 		return mOpenGLTexture;
 	}
@@ -855,7 +855,7 @@ namespace OpenGLRenderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*/
-		Texture2DArrayDsa(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags);
+		Texture2DArrayDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags);
 
 		/**
 		*  @brief
@@ -923,7 +923,7 @@ namespace OpenGLRenderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*/
-		Texture2DArrayBind(OpenGLRenderer &openGLRenderer, unsigned int width, unsigned int height, unsigned int numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, unsigned int flags);
+		Texture2DArrayBind(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags);
 
 		/**
 		*  @brief

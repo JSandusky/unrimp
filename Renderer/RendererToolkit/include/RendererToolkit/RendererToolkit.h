@@ -65,7 +65,7 @@ namespace RendererToolkit
 			return *mRenderer;
 		}
 	public:
-		virtual IFont *createFontTexture(const char *filename, unsigned int size = 12, unsigned int resolution = 96) = 0;
+		virtual IFont *createFontTexture(const char *filename, uint32_t size = 12, uint32_t resolution = 96) = 0;
 	protected:
 		IRendererToolkit();
 		explicit IRendererToolkit(const IRendererToolkit &source);
@@ -88,37 +88,37 @@ namespace RendererToolkit
 		};
 	public:
 		virtual ~IFont();
-		inline unsigned int getSize() const
+		inline uint32_t getSize() const
 		{
 			return mSize;
 		}
-		inline unsigned int getResolution() const
+		inline uint32_t getResolution() const
 		{
 			return mResolution;
 		}
-		inline unsigned int getSizeInPixels() const
+		inline uint32_t getSizeInPixels() const
 		{
-			return static_cast<unsigned int>(mSize / 72.0f * mResolution);
+			return static_cast<uint32_t>(mSize / 72.0f * mResolution);
 		}
-		inline unsigned int getHeightInPixels() const
+		inline uint32_t getHeightInPixels() const
 		{
-			return static_cast<unsigned int>(getHeight() / 72.0f * mResolution);
+			return static_cast<uint32_t>(getHeight() / 72.0f * mResolution);
 		}
 	public:
-		virtual bool setSize(unsigned int size = 12, unsigned int resolution = 96) = 0;
+		virtual bool setSize(uint32_t size = 12, uint32_t resolution = 96) = 0;
 		virtual bool isValid() const = 0;
 		virtual float getAscender() const = 0;
 		virtual float getDescender() const = 0;
 		virtual float getHeight() const = 0;
 		virtual float getTextWidth(const char *text) = 0;
-		virtual void drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX = 1.0f, float scaleY = 1.0f, float biasX = 0.0f, float biasY = 0.0f, unsigned int flags = 0) = 0;
+		virtual void drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX = 1.0f, float scaleY = 1.0f, float biasX = 0.0f, float biasY = 0.0f, uint32_t flags = 0) = 0;
 	protected:
 		IFont();
 		explicit IFont(const IFont &source);
 		IFont &operator =(const IFont &source);
 	protected:
-		unsigned int mSize;
-		unsigned int mResolution;
+		uint32_t mSize;
+		uint32_t mResolution;
 	};
 	typedef Renderer::SmartRefCount<IFont> IFontPtr;
 

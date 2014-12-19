@@ -80,7 +80,7 @@ public:
 	*  @return
 	*    The amount of arguments hold by this instance
 	*/
-	unsigned int GetCount() const {
+	uint32_t GetCount() const {
 		return m_args.size();
 	}
 	
@@ -94,7 +94,7 @@ public:
 	*  @return
 	*    The argument at the given index or an empty string when index is out of range
 	*/
-	std::string GetArg(unsigned int index) const{
+	std::string GetArg(uint32_t index) const{
 		if (index >= m_args.size())
 			return "";
 		return m_args[index];

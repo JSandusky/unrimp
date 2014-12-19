@@ -36,7 +36,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	unsigned int ShaderLanguage::loadShader(unsigned int shaderType, const char *shaderSource)
+	uint32_t ShaderLanguage::loadShader(uint32_t shaderType, const char *shaderSource)
 	{
 		// Create the shader object
 		const GLuint openGLES2Shader = glCreateShader(shaderType);
@@ -65,7 +65,7 @@ namespace OpenGLES2Renderer
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
-					GLchar *informationLog = new GLchar[static_cast<unsigned int>(informationLength)];
+					GLchar *informationLog = new GLchar[static_cast<uint32_t>(informationLength)];
 
 					// Get the information
 					glGetShaderInfoLog(openGLES2Shader, informationLength, nullptr, informationLog);

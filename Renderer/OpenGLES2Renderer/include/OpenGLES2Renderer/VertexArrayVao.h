@@ -81,7 +81,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArrayVao(Program &program, unsigned int numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer);
+		VertexArrayVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief
@@ -96,15 +96,15 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    The OpenGL ES 2 vertex array, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline unsigned int getOpenGLES2VertexArray() const;
+		inline uint32_t getOpenGLES2VertexArray() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		unsigned int   mOpenGLES2VertexArray;	///< OpenGL ES 2 vertex array, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		unsigned int   mNumberOfVertexBuffers;	///< Number of vertex buffers
+		uint32_t	   mOpenGLES2VertexArray;	///< OpenGL ES 2 vertex array, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t	   mNumberOfVertexBuffers;	///< Number of vertex buffers
 		VertexBuffer **mVertexBuffers;			///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
 
 
