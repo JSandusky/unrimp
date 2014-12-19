@@ -52,7 +52,7 @@ namespace OpenGLRenderer
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
-		glTextureImage3DEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT, 0, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
+		glTextureImage3DEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT, 0, static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat)), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
 
 		// Build mipmaps automatically on the GPU?
 		if (flags & Renderer::TextureFlag::MIPMAPS)
