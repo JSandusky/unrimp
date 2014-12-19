@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug_Dynamic|Win32">
       <Configuration>Debug_Dynamic</Configuration>
@@ -27,27 +27,27 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -90,7 +90,7 @@
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>src\;..\include\;..\External\glm\include\;..\External\Assimp\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_HAS_ITERATOR_DEBUGGING=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -102,6 +102,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\lib\$(PlatformTarget)d_static\;..\External\Windows_x86\Assimp\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>NullRendererStaticD.lib;OpenGLRendererStaticD.lib;OpenGLES2RendererStaticD.lib;Direct3D9RendererStaticD.lib;Direct3D10RendererStaticD.lib;Direct3D11RendererStaticD.lib;RendererToolkitStaticD.lib;assimpStaticD.lib;zlibStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMT</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>md "..\bin\$(PlatformTarget)d_static\"
@@ -141,8 +142,12 @@ copy "..\External\Windows_x86\Cg\bin\cgD3D9.dll" "..\bin\$(PlatformTarget)d_dyna
 copy "..\External\Windows_x86\Cg\bin\cgD3D10.dll" "..\bin\$(PlatformTarget)d_dynamic\"
 copy "..\External\Windows_x86\Cg\bin\cgD3D11.dll" "..\bin\$(PlatformTarget)d_dynamic\"
 copy "..\External\Windows_x86\Assimp\bin\assimp.dll" "..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\External\Windows_x86\VisualStudio\bin\msvcr110.dll" "..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformTarget)d_dynamic\"</Command>
+copy "..\External\Windows_x86\VisualStudio\bin\msvcp140.dll" "..\bin\$(PlatformTarget)d_dynamic\"
+copy "..\External\Windows_x86\VisualStudio\bin\vcruntime140.dll" "..\bin\$(PlatformTarget)d_dynamic\"
+copy "..\External\Windows_x86\VisualStudio\bin\appcrt140.dll" "..\bin\$(PlatformTarget)d_dynamic\"
+copy "..\External\Windows_x86\VisualStudio\bin\desktopcrt140.dll" "..\bin\$(PlatformTarget)d_dynamic\"
+copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(PlatformTarget)d_dynamic\"
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
@@ -175,6 +180,7 @@ copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformT
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\lib\$(PlatformTarget)_static\;..\External\Windows_x86\Assimp\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>NullRendererStatic.lib;OpenGLRendererStatic.lib;OpenGLES2RendererStatic.lib;Direct3D9RendererStatic.lib;Direct3D10RendererStatic.lib;Direct3D11RendererStatic.lib;RendererToolkitStatic.lib;assimpStatic.lib;zlibStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>md "..\bin\$(PlatformTarget)_static\"
@@ -227,8 +233,11 @@ copy "..\External\Windows_x86\Cg\bin\cgD3D9.dll" "..\bin\$(PlatformTarget)_dynam
 copy "..\External\Windows_x86\Cg\bin\cgD3D10.dll" "..\bin\$(PlatformTarget)_dynamic\"
 copy "..\External\Windows_x86\Cg\bin\cgD3D11.dll" "..\bin\$(PlatformTarget)_dynamic\"
 copy "..\External\Windows_x86\Assimp\bin\assimp.dll" "..\bin\$(PlatformTarget)_dynamic\"
-copy "..\External\Windows_x86\VisualStudio\bin\msvcr110.dll" "..\bin\$(PlatformTarget)_dynamic\"
-copy "..\External\Windows_x86\VisualStudio\bin\msvcp110.dll" "..\bin\$(PlatformTarget)_dynamic\"
+copy "..\External\Windows_x86\VisualStudio\bin\msvcp140.dll" "..\bin\$(PlatformTarget)_dynamic\"
+copy "..\External\Windows_x86\VisualStudio\bin\vcruntime140.dll" "..\bin\$(PlatformTarget)_dynamic\"
+copy "..\External\Windows_x86\VisualStudio\bin\appcrt140.dll" "..\bin\$(PlatformTarget)_dynamic\"
+copy "..\External\Windows_x86\VisualStudio\bin\desktopcrt140.dll" "..\bin\$(PlatformTarget)_dynamic\"
+copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(PlatformTarget)_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
