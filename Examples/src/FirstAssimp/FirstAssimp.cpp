@@ -68,7 +68,7 @@ void FirstAssimp::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
+		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
@@ -76,7 +76,7 @@ void FirstAssimp::onInitialization()
 			// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
 			// -> Direct3D 10 and Direct3D 11 do not support individual uniforms
 			// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
-			if (0 != strcmp(shaderLanguage->getShaderLanguageName(), "Cg") && (0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11")))
+			if ((0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11")))
 			{
 				// Allocate enough memory for a 4x4 floating point matrix
 				mUniformBuffer = shaderLanguage->createUniformBuffer(sizeof(float) * 4 * 4, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
@@ -86,7 +86,6 @@ void FirstAssimp::onInitialization()
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "FirstAssimp_Cg.h"
 				#include "FirstAssimp_GLSL_110.h"
 				#include "FirstAssimp_GLSL_ES2.h"
 				#include "FirstAssimp_HLSL_D3D9.h"

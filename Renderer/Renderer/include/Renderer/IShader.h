@@ -70,7 +70,7 @@ namespace Renderer
 		*    Return the name of the shader language the shader is using
 		*
 		*  @return
-		*    The ASCII name of the shader language the shader is using (for example "GLSL", "HLSL" or "Cg"), always valid
+		*    The ASCII name of the shader language the shader is using (for example "GLSL" or "HLSL"), always valid
 		*
 		*  @note
 		*    - Do not free the memory the returned pointer is pointing to
@@ -108,7 +108,7 @@ namespace Renderer
 		*    Return the optional shader compiler arguments the shader is using
 		*
 		*  @return
-		*    The optional shader compiler ASCII arguments the shader is using (for example "version=150" when using Cg and a "glslv"/"glslg"/"glslf" profile), always valid
+		*    The optional shader compiler ASCII arguments the shader is using, always valid
 		*
 		*  @note
 		*    - Do not free the memory the returned pointer is pointing to

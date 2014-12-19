@@ -164,7 +164,7 @@ namespace Renderer
 		*    Return the name of the shader language
 		*
 		*  @return
-		*    The ASCII name of the shader language (for example "GLSL", "HLSL" or "Cg"), never a null pointer
+		*    The ASCII name of the shader language (for example "GLSL" or "HLSL"), never a null pointer
 		*
 		*  @note
 		*    - Do not free the memory the returned pointer is pointing to
@@ -181,7 +181,7 @@ namespace Renderer
 		*    Shader ASCII profile to use, if null pointer or empty string, a default profile will be used which usually
 		*    tries to use the best available profile that runs on most hardware (Examples: "glslv", "arbvp1", "vs_3_0")
 		*  @param[in] arguments
-		*    Optional shader compiler ASCII arguments, e.g. "version=150" when using Cg and a "glslv" profile, can be a null pointer or empty string
+		*    Optional shader compiler ASCII arguments, can be a null pointer or empty string
 		*  @param[in] entry
 		*    ASCII entry point, if null pointer or empty string, "main" is used as default
 		*
@@ -192,15 +192,12 @@ namespace Renderer
 		*    "profile" is not supported by each shader-API and is in general shader-API dependent. GLSL doesn't have such
 		*    profiles, just something named "version" - one has to directly write into the shader. But even when this information
 		*    is not used for compiling the GLSL shader, we highly recommend to provide GLSL version information in the form of e.g.
-		*    "130" for OpenGL 3.0 shaders ("#version 130"). Within Cg, a basic vertex profile may be "arbvp1" and a basic
-		*    fragment profile "arbfp1". Cg also provides GLSL profiles: "glslv" for vertex shader, "glslg" for geometry shader and
-		*    "glslf" for fragment shader.
+		*    "130" for OpenGL 3.0 shaders ("#version 130").
 		*    Please note that the profile is just a hint, if necessary, the implementation is free to choose another profile.
-		*    In general, be carefully when explicitly setting a profile - when using Cg, and one of the shaders, a GPU program
-		*    is composed of, is a GLSL profile like "glslv", all other shaders must use GLSL profiles as well!
+		*    In general, be carefully when explicitly setting a profile.
 		*
 		*   "entry" is not supported by each shader-API. GLSL doesn't have such an user defined entry point and the main
-		*   function must always be "main". Cg supports entry points with names other than "main".
+		*   function must always be "main".
 		*
 		*   Look out! When working with shaders you have to be prepared that a shader may work on one system, but fails to even
 		*   compile on another one. Sadly, even if there are e.g. official GLSL specifications, you can't be sure that every
@@ -233,10 +230,6 @@ namespace Renderer
 		*  you get the error message "error(#105) #version must occur before any other statement in the program" when breaking specification,
 		*  NVIDIA just accepts it without any error.
 		*
-		*  Enough on GLSL - now to Cg. Sadly, in general Cg is on AMD/ATI GPU's just poor due to the lack of modern profiles. When using Cg on none NVIDIA
-		*  GPU's you have virtually no other change then using the GLSL profiles in order to write shaders using modern features. While the concept of Cg is
-		*  fantastic, this lack of modern none NVIDIA profiles destroys many of Cg's advantages...
-		*
 		*  @note
 		*    - Only supported if "Renderer::Capabilities::vertexShader" is "true"
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
@@ -253,7 +246,7 @@ namespace Renderer
 		*    Shader ASCII profile to use, if null pointer or empty string, a default profile will be used which usually
 		*    tries to use the best available profile that runs on most hardware (Example: "hs_5_0")
 		*  @param[in] arguments
-		*    Optional shader compiler ASCII arguments ("February 2012 version of Cg 3.1": No GLSL tessellation control shader support, at least one that's not using special NVIDIA-only extensions), can be a null pointer or empty string
+		*    Optional shader compiler ASCII arguments, can be a null pointer or empty string
 		*  @param[in] entry
 		*    ASCII entry point, if null pointer or empty string, "main" is used as default
 		*
@@ -279,7 +272,7 @@ namespace Renderer
 		*    Shader ASCII profile to use, if null pointer or empty string, a default profile will be used which usually
 		*    tries to use the best available profile that runs on most hardware (Example: "ds_5_0")
 		*  @param[in] arguments
-		*    Optional shader compiler ASCII arguments ("February 2012 version of Cg 3.1": No GLSL tessellation evaluation shader support, at least one that's not using special NVIDIA-only extensions), can be a null pointer or empty string
+		*    Optional shader compiler ASCII arguments, can be a null pointer or empty string
 		*  @param[in] entry
 		*    ASCII entry point, if null pointer or empty string, "main" is used as default
 		*
@@ -311,7 +304,7 @@ namespace Renderer
 		*    Geometry shader ASCII profile to use, if null pointer or empty string, a default profile will be used which usually
 		*    tries to use the best available profile that runs on most hardware (Examples: "glslg", "gs_4_0")
 		*  @param[in] arguments
-		*    Optional shader compiler ASCII arguments, e.g. "version=150" when using Cg and a "glslg" profile, can be a null pointer or empty string
+		*    Optional shader compiler ASCII arguments, can be a null pointer or empty string
 		*  @param[in] entry
 		*    ASCII entry point, if null pointer or empty string, "main" is used as default
 		*
@@ -323,7 +316,7 @@ namespace Renderer
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*    - Please note that not each internal implementation may actually need information like "gsInputPrimitiveTopology", but it's
 		*      highly recommended to provide this information anyway to be able to switch the internal implementation (e.g. using
-		*      OpenGL instead of Direct3D and/or Cg instead of HLSL/GLSL)
+		*      OpenGL instead of Direct3D)
 		*
 		*  @see
 		*    - "Renderer::IShaderLanguage::createVertexShader()" for more information
@@ -340,7 +333,7 @@ namespace Renderer
 		*    Shader ASCII profile to use, if null pointer or empty string, a default profile will be used which usually
 		*    tries to use the best available profile that runs on most hardware (Examples: "glslf", "arbfp1", "ps_3_0")
 		*  @param[in] arguments
-		*    Optional shader compiler ASCII arguments, e.g. "version=150" when using Cg and a "glslf" profile, can be a null pointer or empty string
+		*    Optional shader compiler ASCII arguments, can be a null pointer or empty string
 		*  @param[in] entry
 		*    ASCII entry point, if null pointer or empty string, "main" is used as default
 		*

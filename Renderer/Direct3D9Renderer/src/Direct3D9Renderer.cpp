@@ -41,13 +41,6 @@
 #include "Direct3D9Renderer/TextureCollection.h"
 #include "Direct3D9Renderer/SamplerStateCollection.h"
 #include "Direct3D9Renderer/FragmentShaderHlsl.h"
-#ifndef DIRECT3D9RENDERER_NO_CG
-	#include "Direct3D9Renderer/ProgramCg.h"
-	#include "Direct3D9Renderer/VertexShaderCg.h"
-	#include "Direct3D9Renderer/CgRuntimeLinking.h"
-	#include "Direct3D9Renderer/ShaderLanguageCg.h"
-	#include "Direct3D9Renderer/FragmentShaderCg.h"
-#endif
 
 
 //[-------------------------------------------------------]
@@ -81,10 +74,6 @@ namespace Direct3D9Renderer
 		mDirect3D9(nullptr),
 		mDirect3DDevice9(nullptr),
 		mShaderLanguageHlsl(nullptr),
-		#ifndef DIRECT3D9RENDERER_NO_CG
-			mCgRuntimeLinking(new CgRuntimeLinking()),
-			mShaderLanguageCg(nullptr),
-		#endif
 		mDirect3DQuery9Flush(nullptr),
 		mDefaultSamplerState(nullptr),
 		mPrimitiveTopology(Renderer::PrimitiveTopology::UNKNOWN),
@@ -278,17 +267,6 @@ namespace Direct3D9Renderer
 			mShaderLanguageHlsl->release();
 		}
 
-		#ifndef DIRECT3D9RENDERER_NO_CG
-			// Release the Cg shader language instance, in case we have one
-			if (nullptr != mShaderLanguageCg)
-			{
-				mShaderLanguageCg->release();
-			}
-
-			// Destroy the Cg runtime linking instance
-			delete mCgRuntimeLinking;
-		#endif
-
 		// Release the Direct3D 9 device we've created
 		if (nullptr != mDirect3DDevice9)
 		{
@@ -325,15 +303,6 @@ namespace Direct3D9Renderer
 	{
 		unsigned int numberOfShaderLanguages = 1;	// HLSL support is always there
 
-		#ifndef DIRECT3D9RENDERER_NO_CG
-			// Dynamically check on runtime whether or not Cg is available
-			if (mCgRuntimeLinking->isCgAvaiable())
-			{
-				// Cg supported
-				++numberOfShaderLanguages;
-			}
-		#endif
-
 		// Done, return the number of supported shader languages
 		return numberOfShaderLanguages;
 	}
@@ -348,19 +317,6 @@ namespace Direct3D9Renderer
 			return ShaderLanguageHlsl::NAME;
 		}
 		++currentIndex;
-
-		#ifndef DIRECT3D9RENDERER_NO_CG
-			// Dynamically check on runtime whether or not Cg is available
-			if (mCgRuntimeLinking->isCgAvaiable())
-			{
-				// Cg supported
-				if (currentIndex == index)
-				{
-					return ShaderLanguageCg::NAME;
-				}
-				// ++currentIndex; // Not required
-			}
-		#endif
 
 		// Error!
 		return nullptr;
@@ -384,24 +340,6 @@ namespace Direct3D9Renderer
 				// Return the shader language instance
 				return mShaderLanguageHlsl;
 			}
-			#ifndef DIRECT3D9RENDERER_NO_CG
-				else if (ShaderLanguageCg::NAME == shaderLanguageName || !stricmp(shaderLanguageName, ShaderLanguageCg::NAME))
-				{
-					// Dynamically check on runtime whether or not Cg is available
-					if (mCgRuntimeLinking->isCgAvaiable())
-					{
-						// If required, create the Cg shader language instance right now
-						if (nullptr == mShaderLanguageCg)
-						{
-							mShaderLanguageCg = new ShaderLanguageCg(*this);
-							mShaderLanguageCg->addReference();	// Internal renderer reference
-						}
-
-						// Return the shader language instance
-						return mShaderLanguageCg;
-					}
-				}
-			#endif
 
 			// Error!
 			return nullptr;
@@ -707,7 +645,7 @@ namespace Direct3D9Renderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
-			// TODO(co) HLSL/Cg buffer settings, unset previous program
+			// TODO(co) HLSL buffer settings, unset previous program
 
 			// Evaluate the internal program type of the new program to set
 			switch (static_cast<Program*>(program)->getInternalResourceType())
@@ -724,35 +662,11 @@ namespace Direct3D9Renderer
 					mDirect3DDevice9->SetPixelShader(fragmentShaderHlsl ? fragmentShaderHlsl->getDirect3DPixelShader9() : nullptr);
 					break;
 				}
-
-				#ifndef DIRECT3D9RENDERER_NO_CG
-					case Program::InternalResourceType::CG:
-					{
-						// Get shaders
-						const ProgramCg		   *programCg		 = static_cast<ProgramCg*>(program);
-						const VertexShaderCg   *vertexShaderCg	 = programCg->getVertexShaderCg();
-						const FragmentShaderCg *fragmentShaderCg = programCg->getFragmentShaderCg();
-
-						// Set shaders
-						// -> We're only allowed to call "cgD3D9BindProgram()" with valid handles,
-						//    else Cg throws the error "Invalid program handle." at us
-						if (nullptr != vertexShaderCg && nullptr != vertexShaderCg->getCgProgram())
-						{
-							cgD3D9BindProgram(vertexShaderCg->getCgProgram());
-						}
-						if (nullptr != fragmentShaderCg && nullptr != fragmentShaderCg->getCgProgram())
-						{
-							cgD3D9BindProgram(fragmentShaderCg->getCgProgram());
-						}
-						break;
-					}
-				#endif
 			}
 		}
 		else
 		{
-			// TODO(co) HLSL/Cg buffer settings
-			//void cgD3D9UnbindProgram( CGprogram Program );
+			// TODO(co) HLSL buffer settings
 			mDirect3DDevice9->SetVertexShader(nullptr);
 			mDirect3DDevice9->SetPixelShader(nullptr);
 		}

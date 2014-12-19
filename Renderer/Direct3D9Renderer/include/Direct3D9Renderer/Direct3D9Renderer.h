@@ -48,9 +48,6 @@ namespace Direct3D9Renderer
 	class BlendState;
 	class RasterizerState;
 	class DepthStencilState;
-	#ifndef DIRECT3D9RENDERER_NO_CG
-		class CgRuntimeLinking;
-	#endif
 	class Direct3D9RuntimeLinking;
 }
 
@@ -256,10 +253,6 @@ namespace Direct3D9Renderer
 		IDirect3D9					  *mDirect3D9;					///< Instance of the Direct3D 9 object, can be a null pointer (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
 		IDirect3DDevice9			  *mDirect3DDevice9;			///< Direct3D 9 rendering device, can be a null pointer (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
 		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
-		#ifndef DIRECT3D9RENDERER_NO_CG
-			CgRuntimeLinking		  *mCgRuntimeLinking;			///< Cg runtime linking instance, always valid
-			Renderer::IShaderLanguage *mShaderLanguageCg;			///< Cg shader language instance (we keep a reference to it), can be a null pointer
-		#endif
 		IDirect3DQuery9				  *mDirect3DQuery9Flush;		///< Direct3D 9 query used for flush, can be a null pointer
 		Renderer::ISamplerState		  *mDefaultSamplerState;		///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		//[-------------------------------------------------------]

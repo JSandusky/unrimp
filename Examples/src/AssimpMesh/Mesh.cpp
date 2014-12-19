@@ -86,6 +86,8 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+			// -> The vertex layout is kept simple for renderer API demonstration purposes. In a real-world use-case you might want to use vertex-packing
+			//    (QTangents, half precision for positions, short for texture coordinates etc, ) instead of a fat vertex layout.
 			const Renderer::VertexArrayAttribute vertexArray[] =
 			{
 				{ // Attribute 0
@@ -118,8 +120,8 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Tangent",											// name[64] (char)
-					"TEXCOORD",											// semantic[64] (char) - "TEXCOORD1" instead of "TANGENT" to make it also work with Cg
-					1,													// semanticIndex (unsigned int)
+					"TANGENT",											// semantic[64] (char)
+					0,													// semanticIndex (unsigned int)
 					// Data source
 					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
 					sizeof(float) * 5,									// offset (unsigned int)
@@ -131,8 +133,8 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Binormal",											// name[64] (char)
-					"TEXCOORD",											// semantic[64] (char) - "TEXCOORD2" instead of "BINORMAL" to make it also work with Cg
-					2,													// semanticIndex (unsigned int)
+					"BINORMAL",											// semantic[64] (char)
+					0,													// semanticIndex (unsigned int)
 					// Data source
 					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
 					sizeof(float) * 8,									// offset (unsigned int)

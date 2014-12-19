@@ -10,9 +10,6 @@
     <ClInclude Include="include\Direct3D11Renderer\BlendState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\CgRuntimeLinking.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\D3D11.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -31,9 +28,6 @@
     <ClInclude Include="include\Direct3D11Renderer\FragmentShader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\FragmentShaderCg.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\FragmentShaderHlsl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -41,9 +35,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\GeometryShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\GeometryShaderCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\GeometryShaderHlsl.h">
@@ -59,9 +50,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Program.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\ProgramCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\ProgramHlsl.h">
@@ -82,9 +70,6 @@
     <ClInclude Include="include\Direct3D11Renderer\ShaderLanguage.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\ShaderLanguageCg.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\ShaderLanguageHlsl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -94,16 +79,10 @@
     <ClInclude Include="include\Direct3D11Renderer\TessellationControlShader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\TessellationControlShaderCg.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\TessellationControlShaderHlsl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\TessellationEvaluationShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\TessellationEvaluationShaderCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\TessellationEvaluationShaderHlsl.h">
@@ -131,9 +110,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\VertexShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\VertexShaderCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\VertexShaderHlsl.h">
@@ -174,16 +150,10 @@
     <ClCompile Include="src\SamplerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\VertexShaderCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\VertexShaderHlsl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FragmentShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FragmentShaderCg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FragmentShaderHlsl.cpp">
@@ -192,16 +162,10 @@
     <ClCompile Include="src\GeometryShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GeometryShaderCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\GeometryShaderHlsl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Program.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProgramCg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProgramHlsl.cpp">
@@ -210,25 +174,16 @@
     <ClCompile Include="src\ShaderLanguage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ShaderLanguageCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ShaderLanguageHlsl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TessellationControlShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\TessellationControlShaderCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\TessellationControlShaderHlsl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TessellationEvaluationShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TessellationEvaluationShaderCg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TessellationEvaluationShaderHlsl.cpp">
@@ -241,9 +196,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CgRuntimeLinking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Direct3D11RuntimeLinking.cpp">
@@ -277,16 +229,10 @@
     <None Include="include\Direct3D11Renderer\DepthStencilState.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\FragmentShaderCg.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D11Renderer\FragmentShaderHlsl.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\Framebuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\GeometryShaderCg.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\GeometryShaderHlsl.inl">
@@ -296,9 +242,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\Program.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\ProgramCg.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\ProgramHlsl.inl">
@@ -319,13 +262,7 @@
     <None Include="include\Direct3D11Renderer\SwapChain.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\TessellationControlShaderCg.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D11Renderer\TessellationControlShaderHlsl.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\TessellationEvaluationShaderCg.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\TessellationEvaluationShaderHlsl.inl">
@@ -350,9 +287,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\VertexBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\VertexShaderCg.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\VertexShaderHlsl.inl">

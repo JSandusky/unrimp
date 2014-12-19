@@ -46,14 +46,6 @@
 #include "Direct3D10Renderer/SamplerStateCollection.h"
 #include "Direct3D10Renderer/GeometryShaderHlsl.h"
 #include "Direct3D10Renderer/FragmentShaderHlsl.h"
-#ifndef DIRECT3D10RENDERER_NO_CG
-	#include "Direct3D10Renderer/ProgramCg.h"
-	#include "Direct3D10Renderer/VertexShaderCg.h"
-	#include "Direct3D10Renderer/GeometryShaderCg.h"
-	#include "Direct3D10Renderer/FragmentShaderCg.h"
-	#include "Direct3D10Renderer/CgRuntimeLinking.h"
-	#include "Direct3D10Renderer/ShaderLanguageCg.h"
-#endif
 
 
 //[-------------------------------------------------------]
@@ -87,10 +79,6 @@ namespace Direct3D10Renderer
 		mD3D10Device(nullptr),
 		mDirect3D9RuntimeLinking(nullptr),
 		mShaderLanguageHlsl(nullptr),
-		#ifndef DIRECT3D10RENDERER_NO_CG
-			mCgRuntimeLinking(new CgRuntimeLinking()),
-			mShaderLanguageCg(nullptr),
-		#endif
 		mD3D10QueryFlush(nullptr),
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr)
@@ -217,17 +205,6 @@ namespace Direct3D10Renderer
 			mShaderLanguageHlsl->release();
 		}
 
-		#ifndef DIRECT3D10RENDERER_NO_CG
-			// Release the Cg shader language instance, in case we have one
-			if (nullptr != mShaderLanguageCg)
-			{
-				mShaderLanguageCg->release();
-			}
-
-			// Destroy the Cg runtime linking instance
-			delete mCgRuntimeLinking;
-		#endif
-
 		// Release the Direct3D 10 we've created
 		if (nullptr != mD3D10Device)
 		{
@@ -265,15 +242,6 @@ namespace Direct3D10Renderer
 	{
 		unsigned int numberOfShaderLanguages = 1;	// HLSL support is always there
 
-		#ifndef DIRECT3D10RENDERER_NO_CG
-			// Dynamically check on runtime whether or not Cg is available
-			if (mCgRuntimeLinking->isCgAvaiable())
-			{
-				// Cg supported
-				++numberOfShaderLanguages;
-			}
-		#endif
-
 		// Done, return the number of supported shader languages
 		return numberOfShaderLanguages;
 	}
@@ -288,19 +256,6 @@ namespace Direct3D10Renderer
 			return ShaderLanguageHlsl::NAME;
 		}
 		++currentIndex;
-
-		#ifndef DIRECT3D10RENDERER_NO_CG
-			// Dynamically check on runtime whether or not Cg is available
-			if (mCgRuntimeLinking->isCgAvaiable())
-			{
-				// Cg supported
-				if (currentIndex == index)
-				{
-					return ShaderLanguageCg::NAME;
-				}
-				// ++currentIndex; // Not required
-			}
-		#endif
 
 		// Error!
 		return nullptr;
@@ -324,24 +279,6 @@ namespace Direct3D10Renderer
 				// Return the shader language instance
 				return mShaderLanguageHlsl;
 			}
-			#ifndef DIRECT3D10RENDERER_NO_CG
-				else if (ShaderLanguageCg::NAME == shaderLanguageName || !stricmp(shaderLanguageName, ShaderLanguageCg::NAME))
-				{
-					// Dynamically check on runtime whether or not Cg is available
-					if (mCgRuntimeLinking->isCgAvaiable())
-					{
-						// If required, create the Cg shader language instance right now
-						if (nullptr == mShaderLanguageCg)
-						{
-							mShaderLanguageCg = new ShaderLanguageCg(*this);
-							mShaderLanguageCg->addReference();	// Internal renderer reference
-						}
-
-						// Return the shader language instance
-						return mShaderLanguageCg;
-					}
-				}
-			#endif
 
 			// Error!
 			return nullptr;
@@ -682,7 +619,7 @@ namespace Direct3D10Renderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
-			// TODO(co) HLSL/Cg buffer settings, unset previous program
+			// TODO(co) HLSL buffer settings, unset previous program
 
 			// Evaluate the internal program type of the new program to set
 			switch (static_cast<Program*>(program)->getInternalResourceType())
@@ -701,40 +638,11 @@ namespace Direct3D10Renderer
 					mD3D10Device->PSSetShader(fragmentShaderHlsl ? fragmentShaderHlsl->getD3D10PixelShader()	: nullptr);
 					break;
 				}
-
-				#ifndef DIRECT3D10RENDERER_NO_CG
-					case Program::InternalResourceType::CG:
-					{
-						// Get shaders
-						const ProgramCg		   *programCg		 = static_cast<ProgramCg*>(program);
-						const VertexShaderCg   *vertexShaderCg	 = programCg->getVertexShaderCg();
-						const GeometryShaderCg *geometryShaderCg = programCg->getGeometryShaderCg();
-						const FragmentShaderCg *fragmentShaderCg = programCg->getFragmentShaderCg();
-
-						// Set shaders
-						// -> We're only allowed to call "cgD3D10BindProgram()" with valid handles,
-						//    else Cg throws the error "Invalid program handle." at us
-						if (nullptr != vertexShaderCg && nullptr != vertexShaderCg->getCgProgram())
-						{
-							cgD3D10BindProgram(vertexShaderCg->getCgProgram());
-						}
-						if (nullptr != geometryShaderCg && nullptr != geometryShaderCg->getCgProgram())
-						{
-							cgD3D10BindProgram(geometryShaderCg->getCgProgram());
-						}
-						if (nullptr != fragmentShaderCg && nullptr != fragmentShaderCg->getCgProgram())
-						{
-							cgD3D10BindProgram(fragmentShaderCg->getCgProgram());
-						}
-						break;
-					}
-				#endif
 			}
 		}
 		else
 		{
-			// TODO(co) HLSL/Cg buffer settings
-			//void cgD3D10UnbindProgram( CGprogram Program );
+			// TODO(co) HLSL buffer settings
 			mD3D10Device->VSSetShader(nullptr);
 			mD3D10Device->GSSetShader(nullptr);
 			mD3D10Device->PSSetShader(nullptr);

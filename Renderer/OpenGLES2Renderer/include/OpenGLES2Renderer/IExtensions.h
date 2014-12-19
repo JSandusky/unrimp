@@ -71,7 +71,6 @@ namespace OpenGLES2Renderer
 		virtual bool isGL_EXT_texture_compression_latc() const = 0;
 		virtual bool isGL_EXT_texture_filter_anisotropic() const = 0;
 		virtual bool isGL_EXT_texture_array() const = 0;
-		virtual bool isGL_EXT_Cg_shader() const = 0;
 		// AMD
 		virtual bool isGL_AMD_compressed_3DC_texture() const = 0;
 		// NV

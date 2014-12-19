@@ -30,9 +30,6 @@ endif()
 if(NOT RENDERER_DIRECT3D9_DEBUG)
 	add_definitions(-DRENDERER_DIRECT3D9_NO_DEBUG)
 endif()
-if(NOT CG_SUPPORT)
-	add_definitions(-DDIRECT3D9RENDERER_NO_CG)
-endif()
 
 
 ##################################################
@@ -40,10 +37,6 @@ endif()
 ##################################################
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-if(CG_SUPPORT)
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/Direct3D9Renderer)	# Required, enables the Cg Direct3D 9 header to find our "d3d9.h" & "d3dx9.h"
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/Cg/include)
-endif()
 
 
 ##################################################
@@ -76,17 +69,6 @@ set(SOURCE_CODES
 	src/VertexShader.cpp
 	src/VertexShaderHlsl.cpp
 )
-if(CG_SUPPORT)
-	# Cg support source codes
-	set(SOURCE_CODES
-		${SOURCE_CODES}
-		src/CgRuntimeLinking.cpp
-		src/ShaderLanguageCg.cpp
-		src/VertexShaderCg.cpp
-		src/FragmentShaderCg.cpp
-		src/ProgramCg.cpp
-	)
-endif()
 
 
 ##################################################
@@ -109,15 +91,6 @@ if(STATIC_LIBRARY)
 	add_custom_command(TARGET Direct3D9RendererStatic
 		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Direct3D9RendererStatic${CMAKE_STATIC_LIBRARY_SUFFIX}" ${OUTPUT_LIB_DIR}
 	)
-	if(CG_SUPPORT)
-		# Copy Cg shared libraries
-		add_custom_command(TARGET Direct3D9RendererStatic
-			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/Cg/bin/${CMAKE_SHARED_LIBRARY_PREFIX}cg${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
-		)
-		add_custom_command(TARGET Direct3D9RendererStatic
-			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/Cg/bin/${CMAKE_SHARED_LIBRARY_PREFIX}cgD3D9${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
-		)
-	endif()
 endif()
 if(SHARED_LIBRARY)
 	# Copy shared library
@@ -127,15 +100,6 @@ if(SHARED_LIBRARY)
 	if(WIN32)
 		add_custom_command(TARGET Direct3D9Renderer
 			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/Direct3D9Renderer.lib" ${OUTPUT_LIB_DIR}
-		)
-	endif()
-	if(CG_SUPPORT)
-		# Copy Cg shared libraries
-		add_custom_command(TARGET Direct3D9Renderer
-			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/Cg/bin/${CMAKE_SHARED_LIBRARY_PREFIX}cg${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
-		)
-		add_custom_command(TARGET Direct3D9Renderer
-			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/Cg/bin/${CMAKE_SHARED_LIBRARY_PREFIX}cgD3D9${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
 		)
 	endif()
 endif()

@@ -52,16 +52,10 @@
     <ClCompile Include="src\Mapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\VertexShaderCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\VertexShaderGlsl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FragmentShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FragmentShaderCg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FragmentShaderGlsl.cpp">
@@ -70,16 +64,10 @@
     <ClCompile Include="src\Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ProgramCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ProgramGlsl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ShaderLanguage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderLanguageCg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ShaderLanguageGlsl.cpp">
@@ -117,9 +105,6 @@
     <ClInclude Include="include\OpenGLES2Renderer\FragmentShader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\FragmentShaderCg.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\FragmentShaderGlsl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -144,9 +129,6 @@
     <ClInclude Include="include\OpenGLES2Renderer\Program.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\ProgramCg.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\ProgramGlsl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -163,9 +145,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\ShaderLanguage.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\ShaderLanguageCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\ShaderLanguageGlsl.h">
@@ -198,9 +177,6 @@
     <ClInclude Include="include\OpenGLES2Renderer\VertexShader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\VertexShaderCg.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\VertexShaderGlsl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -208,9 +184,6 @@
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\OpenGLES2Renderer\FragmentShaderCg.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\OpenGLES2Renderer\FragmentShaderGlsl.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -257,9 +230,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLES2Renderer\VertexBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\VertexShaderCg.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLES2Renderer\VertexShaderGlsl.inl">

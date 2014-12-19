@@ -74,8 +74,7 @@ namespace OpenGLRenderer
 			enum Enum
 			{
 				NO_VAO = 0,	///< No vertex array object
-				CG	   = 1,	///< Cg vertex array object
-				VAO    = 2	///< Vertex array object
+				VAO    = 1	///< Vertex array object
 			};
 		};
 

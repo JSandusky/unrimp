@@ -27,9 +27,6 @@ cmake_minimum_required(VERSION 2.8.8)
 if(NOT RENDERER_DEBUG)
 	add_definitions(-DRENDERER_NO_DEBUG)
 endif()
-if(NOT CG_SUPPORT)
-	add_definitions(-DOPENGLRENDERER_NO_CG)
-endif()
 if(RENDERER_OPENGL_NO_STATE_CLEANUP)
 	add_definitions(-DOPENGLRENDERER_NO_STATE_CLEANUP)
 endif()
@@ -44,7 +41,6 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenGL/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/Cg/include)
 
 
 ##################################################
@@ -110,22 +106,6 @@ set(SOURCE_CODES
 	src/VertexShader.cpp
 	src/VertexShaderGlsl.cpp
 )
-if(CG_SUPPORT)
-	# Cg support source codes
-	set(SOURCE_CODES
-		${SOURCE_CODES}
-		src/CgRuntimeLinking.cpp
-		src/ShaderLanguageCg.cpp
-		src/VertexShaderCg.cpp
-		src/TessellationControlShaderCg.cpp
-		src/TessellationEvaluationShaderCg.cpp
-		src/GeometryShaderCg.cpp
-		src/FragmentShaderCg.cpp
-		src/ProgramCg.cpp
-		src/UniformBufferCg.cpp
-		src/VertexArrayCg.cpp
-	)
-endif()
 if(WIN32)
 	# Windows source codes
 	set(SOURCE_CODES
@@ -164,15 +144,6 @@ if(STATIC_LIBRARY)
 	add_custom_command(TARGET OpenGLRendererStatic
 		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}OpenGLRendererStatic${CMAKE_STATIC_LIBRARY_SUFFIX}" ${OUTPUT_LIB_DIR}
 	)
-	if(CG_SUPPORT)
-		# Copy Cg shared libraries
-		add_custom_command(TARGET OpenGLRendererStatic
-			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/Cg/bin/${CMAKE_SHARED_LIBRARY_PREFIX}cg${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
-		)
-		add_custom_command(TARGET OpenGLRendererStatic
-			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/Cg/bin/${CMAKE_SHARED_LIBRARY_PREFIX}cgGL${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
-		)
-	endif()
 endif()
 if(SHARED_LIBRARY)
 	# Copy shared library
@@ -182,15 +153,6 @@ if(SHARED_LIBRARY)
 	if(WIN32)
 		add_custom_command(TARGET OpenGLRenderer
 			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/OpenGLRenderer.lib" ${OUTPUT_LIB_DIR}
-		)
-	endif()
-	if(CG_SUPPORT)
-		# Copy Cg shared libraries
-		add_custom_command(TARGET OpenGLRenderer
-			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/Cg/bin/${CMAKE_SHARED_LIBRARY_PREFIX}cg${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
-		)
-		add_custom_command(TARGET OpenGLRenderer
-			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/Cg/bin/${CMAKE_SHARED_LIBRARY_PREFIX}cgGL${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
 		)
 	endif()
 endif()

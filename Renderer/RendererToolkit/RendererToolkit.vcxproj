@@ -42,7 +42,6 @@
     <ClInclude Include="include\RendererToolkit\IRendererToolkit.h" />
     <ClInclude Include="include\RendererToolkit\RendererToolkit.h" />
     <ClInclude Include="include\RendererToolkit\RendererToolkitImpl.h" />
-    <ClInclude Include="src\Font_Cg.h" />
     <ClInclude Include="src\Font_GLSL_110.h" />
     <ClInclude Include="src\Font_GLSL_ES2.h" />
     <ClInclude Include="src\Font_HLSL_D3D10_D3D11.h" />

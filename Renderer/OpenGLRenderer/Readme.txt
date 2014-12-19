@@ -30,5 +30,4 @@ OpenGL capable grahpics driver, nothing else.
 - Set "OPENGLRENDERER_EXPORTS" as preprocessor definition when building this library as shared library
 - If this renderer was compiled with "OPENGLRENDERER_NO_STATE_CLEANUP" set as preprocessor definition, the previous OpenGL state will not be restored after performing an operation (better performance, reduces the binary size slightly, but might result in unexpected behaviour when using OpenGL directly beside this renderer)
 - Set "OPENGLRENDERER_NO_RENDERERMATCHCHECK" as preprocessor definition when building this library to remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)
-- Set "OPENGLRENDERER_NO_CG" as preprocessor definition in order to disable Cg support (always linked at runtime, disabling Cg support just reduces the binary size slightly)
 - Do also have a look into the renderer readme file

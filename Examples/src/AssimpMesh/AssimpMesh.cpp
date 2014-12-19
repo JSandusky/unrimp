@@ -72,7 +72,7 @@ void AssimpMesh::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
+		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
@@ -80,7 +80,7 @@ void AssimpMesh::onInitialization()
 			// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
 			// -> Direct3D 10 and Direct3D 11 do not support individual uniforms
 			// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
-			if (0 != strcmp(shaderLanguage->getShaderLanguageName(), "Cg") && (0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11")))
+			if ((0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11")))
 			{
 				// Allocate enough memory for two 4x4 floating point matrices
 				mUniformBuffer = shaderLanguage->createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
@@ -92,7 +92,6 @@ void AssimpMesh::onInitialization()
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderProfile = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "AssimpMesh_Cg.h"
 				#include "AssimpMesh_GLSL_110.h"
 				#include "AssimpMesh_GLSL_ES2.h"
 				#include "AssimpMesh_HLSL_D3D9.h"
@@ -112,7 +111,7 @@ void AssimpMesh::onInitialization()
 				// -> When using OpenGL or OpenGL ES 2 this is required
 				// -> OpenGL 4.2 supports explicit binding points ("layout(binding=0)" in GLSL shader),
 				//    for backward compatibility we don't use it in here
-				// -> When using Direct3D 9, Direct3D 10, Direct3D 11 or the Cg shader language, the texture unit
+				// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
 				//    to use is usually defined directly within the shader by using the "register"-keyword
 				mProgram->setTextureUnit(mProgram->getUniformHandle("DiffuseMap"),  0);
 				mProgram->setTextureUnit(mProgram->getUniformHandle("EmissiveMap"), 1);

@@ -29,6 +29,5 @@ Direct3D 10 runtime and Direct3D 10 capable grahpics driver, nothing else.
 == Preprocessor Definitions ==
 - Set "DIRECT3D10RENDERER_EXPORTS" as preprocessor definition when building this library as shared library
 - Set "DIRECT3D10RENDERER_NO_RENDERERMATCHCHECK" as preprocessor definition when building this library to remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)
-- Set "DIRECT3D10RENDERER_NO_CG" as preprocessor definition in order to disable Cg support (always linked at runtime, disabling Cg support just reduces the binary size slightly)
 - Set "DIRECT3D10RENDERER_NO_DEBUG" as preprocessor definition in order to disable Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features (always linked at runtime, disabling support just reduces the binary size slightly but makes debugging more difficult)
 - Do also have a look into the renderer readme file

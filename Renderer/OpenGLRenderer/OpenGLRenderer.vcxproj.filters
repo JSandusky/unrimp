@@ -16,9 +16,6 @@
     <ClInclude Include="include\OpenGLRenderer\BlendState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\CgRuntimeLinking.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\DepthStencilState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -26,9 +23,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\FragmentShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\FragmentShaderCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\FragmentShaderGlsl.h">
@@ -44,9 +38,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\GeometryShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\GeometryShaderCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\GeometryShaderGlsl.h">
@@ -74,9 +65,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Program.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\ProgramCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\ProgramGlsl.h">
@@ -109,9 +97,6 @@
     <ClInclude Include="include\OpenGLRenderer\ShaderLanguage.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\ShaderLanguageCg.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\ShaderLanguageGlsl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -121,16 +106,10 @@
     <ClInclude Include="include\OpenGLRenderer\TessellationControlShader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\TessellationControlShaderCg.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\TessellationControlShaderGlsl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\TessellationEvaluationShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\TessellationEvaluationShaderCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\TessellationEvaluationShaderGlsl.h">
@@ -169,9 +148,6 @@
     <ClInclude Include="include\OpenGLRenderer\UniformBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\UniformBufferCg.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\UniformBufferGlsl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -182,9 +158,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\VertexArray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\VertexArrayCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\VertexArrayNoVao.h">
@@ -209,9 +182,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\VertexShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\VertexShaderCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\VertexShaderGlsl.h">
@@ -363,24 +333,6 @@
     <ClCompile Include="src\ShaderLanguage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\FragmentShaderCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GeometryShaderCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderLanguageCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TessellationControlShaderCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TessellationEvaluationShaderCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexShaderCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\UniformBufferGlslBind.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -393,9 +345,6 @@
     <ClCompile Include="src\UniformBufferGlsl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\UniformBufferCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ProgramGlslDsa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -403,15 +352,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProgramGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProgramCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CgRuntimeLinking.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArrayCg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenGLRuntimeLinking.cpp">
@@ -445,16 +385,10 @@
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\OpenGLRenderer\FragmentShaderCg.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\FragmentShaderGlsl.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Framebuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\GeometryShaderCg.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\GeometryShaderGlsl.inl">
@@ -467,9 +401,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Program.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\ProgramCg.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\ProgramGlsl.inl">
@@ -490,13 +421,7 @@
     <None Include="include\OpenGLRenderer\SwapChain.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\TessellationControlShaderCg.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\TessellationControlShaderGlsl.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\TessellationEvaluationShaderCg.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\TessellationEvaluationShaderGlsl.inl">
@@ -517,9 +442,6 @@
     <None Include="include\OpenGLRenderer\UniformBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\UniformBufferCg.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\UniformBufferGlsl.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -530,9 +452,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\VertexBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\VertexShaderCg.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\VertexShaderGlsl.inl">

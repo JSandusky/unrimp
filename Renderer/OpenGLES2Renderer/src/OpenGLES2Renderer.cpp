@@ -42,9 +42,6 @@
 #include "OpenGLES2Renderer/SamplerStateCollection.h"
 #include "OpenGLES2Renderer/ContextRuntimeLinking.h"
 #include "OpenGLES2Renderer/ShaderLanguageGlsl.h"
-#ifndef OPENGLES2RENDERER_NO_CG
-	#include "OpenGLES2Renderer/ShaderLanguageCg.h"
-#endif
 
 
 //[-------------------------------------------------------]
@@ -76,9 +73,6 @@ namespace OpenGLES2Renderer
 	OpenGLES2Renderer::OpenGLES2Renderer(handle nativeWindowHandle) :
 		mContext(new ContextRuntimeLinking(nativeWindowHandle)),
 		mShaderLanguageGlsl(nullptr),
-		#ifndef OPENGLES2RENDERER_NO_CG
-			mShaderLanguageCg(nullptr),
-		#endif
 		mDefaultSamplerState(nullptr),
 		mVertexArray(nullptr),
 		mOpenGLES2PrimitiveTopology(0xFFFF),	// Unknown default setting
@@ -218,14 +212,6 @@ namespace OpenGLES2Renderer
 			}
 		}
 
-		#ifndef OPENGLES2RENDERER_NO_CG
-			// Release the Cg shader language instance, in case we have one
-			if (nullptr != mShaderLanguageCg)
-			{
-				mShaderLanguageCg->release();
-			}
-		#endif
-
 		// Release the GLSL shader language instance, in case we have one
 		if (nullptr != mShaderLanguageGlsl)
 		{
@@ -262,12 +248,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	unsigned int OpenGLES2Renderer::getNumberOfShaderLanguages() const
 	{
-		#ifndef OPENGLES2RENDERER_NO_CG
-			// "GL_EXT_Cg_shader required" for Cg support
-			return mContext->getExtensions().isGL_EXT_Cg_shader() ? 2u : 1u;
-		#else
-			return 1;
-		#endif
+		return 1;
 	}
 
 	const char *OpenGLES2Renderer::getShaderLanguageName(unsigned int index) const
@@ -277,12 +258,6 @@ namespace OpenGLES2Renderer
 		{
 			case 0:
 				return ShaderLanguageGlsl::NAME;
-
-			#ifndef OPENGLES2RENDERER_NO_CG
-				case 1:
-					// "GL_EXT_Cg_shader" required for Cg support
-					return mContext->getExtensions().isGL_EXT_Cg_shader() ? ShaderLanguageCg::NAME : nullptr;
-			#endif
 		}
 
 		// Error!
@@ -307,21 +282,6 @@ namespace OpenGLES2Renderer
 				// Return the shader language instance
 				return mShaderLanguageGlsl;
 			}
-			#ifndef OPENGLES2RENDERER_NO_CG
-				else if (ShaderLanguageCg::NAME == shaderLanguageName || !stricmp(shaderLanguageName, ShaderLanguageCg::NAME))
-				{
-					// If required, create the Cg shader language instance right now
-					// -> "GL_EXT_Cg_shader" required for Cg support
-					if (nullptr == mShaderLanguageCg && mContext->getExtensions().isGL_EXT_Cg_shader())
-					{
-						mShaderLanguageCg = new ShaderLanguageCg(*this);
-						mShaderLanguageCg->addReference();	// Internal renderer reference
-					}
-
-					// Return the shader language instance
-					return mShaderLanguageCg;
-				}
-			#endif
 
 			// Error!
 			return nullptr;

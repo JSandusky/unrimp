@@ -45,9 +45,6 @@ namespace Renderer
 namespace Direct3D11Renderer
 {
 	class SwapChain;
-	#ifndef DIRECT3D11RENDERER_NO_CG
-		class CgRuntimeLinking;
-	#endif
 	class Direct3D9RuntimeLinking;
 	class Direct3D11RuntimeLinking;
 }
@@ -255,10 +252,6 @@ namespace Direct3D11Renderer
 		ID3D11Device				  *mD3D11Device;				///< The Direct3D 11 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
 		ID3D11DeviceContext			  *mD3D11DeviceContext;			///< The Direct3D 11 device context instance, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
 		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
-		#ifndef DIRECT3D11RENDERER_NO_CG
-			CgRuntimeLinking		  *mCgRuntimeLinking;			///< Cg runtime linking instance, always valid
-			Renderer::IShaderLanguage *mShaderLanguageCg;			///< Cg shader language instance (we keep a reference to it), can be a null pointer
-		#endif
 		ID3D11Query					  *mD3D11QueryFlush;			///< Direct3D 11 query used for flush, can be a null pointer
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]

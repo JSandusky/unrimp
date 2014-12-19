@@ -22,7 +22,6 @@
     <ClInclude Include="include\OpenGLES2Renderer\ContextRuntimeLinking.h" />
     <ClInclude Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.h" />
     <ClInclude Include="include\OpenGLES2Renderer\FragmentShader.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\FragmentShaderCg.h" />
     <ClInclude Include="include\OpenGLES2Renderer\FragmentShaderGlsl.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Framebuffer.h" />
     <ClInclude Include="include\OpenGLES2Renderer\IContext.h" />
@@ -31,7 +30,6 @@
     <ClInclude Include="include\OpenGLES2Renderer\Mapping.h" />
     <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Debug.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Program.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\ProgramCg.h" />
     <ClInclude Include="include\OpenGLES2Renderer\ProgramGlsl.h" />
     <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Renderer.h" />
     <ClInclude Include="include\OpenGLES2Renderer\BlendState.h" />
@@ -40,7 +38,6 @@
     <ClInclude Include="include\OpenGLES2Renderer\SamplerState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\SamplerStateCollection.h" />
     <ClInclude Include="include\OpenGLES2Renderer\ShaderLanguage.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\ShaderLanguageCg.h" />
     <ClInclude Include="include\OpenGLES2Renderer\ShaderLanguageGlsl.h" />
     <ClInclude Include="include\OpenGLES2Renderer\SwapChain.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Texture2D.h" />
@@ -51,14 +48,12 @@
     <ClInclude Include="include\OpenGLES2Renderer\VertexArrayVao.h" />
     <ClInclude Include="include\OpenGLES2Renderer\VertexBuffer.h" />
     <ClInclude Include="include\OpenGLES2Renderer\VertexShader.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\VertexShaderCg.h" />
     <ClInclude Include="include\OpenGLES2Renderer\VertexShaderGlsl.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ContextRuntimeLinking.cpp" />
     <ClCompile Include="src\ExtensionsRuntimeLinking.cpp" />
     <ClCompile Include="src\FragmentShader.cpp" />
-    <ClCompile Include="src\FragmentShaderCg.cpp" />
     <ClCompile Include="src\FragmentShaderGlsl.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\IContext.cpp" />
@@ -66,7 +61,6 @@
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\Program.cpp" />
-    <ClCompile Include="src\ProgramCg.cpp" />
     <ClCompile Include="src\ProgramGlsl.cpp" />
     <ClCompile Include="src\OpenGLES2Renderer.cpp" />
     <ClCompile Include="src\BlendState.cpp" />
@@ -75,7 +69,6 @@
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateCollection.cpp" />
     <ClCompile Include="src\ShaderLanguage.cpp" />
-    <ClCompile Include="src\ShaderLanguageCg.cpp" />
     <ClCompile Include="src\ShaderLanguageGlsl.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
@@ -86,13 +79,11 @@
     <ClCompile Include="src\VertexArrayVao.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
     <ClCompile Include="src\VertexShader.cpp" />
-    <ClCompile Include="src\VertexShaderCg.cpp" />
     <ClCompile Include="src\VertexShaderGlsl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
     <None Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.inl" />
-    <None Include="include\OpenGLES2Renderer\FragmentShaderCg.inl" />
     <None Include="include\OpenGLES2Renderer\FragmentShaderGlsl.inl" />
     <None Include="include\OpenGLES2Renderer\Framebuffer.inl" />
     <None Include="include\OpenGLES2Renderer\IContext.inl" />
@@ -109,7 +100,6 @@
     <None Include="include\OpenGLES2Renderer\VertexArray.inl" />
     <None Include="include\OpenGLES2Renderer\VertexArrayVao.inl" />
     <None Include="include\OpenGLES2Renderer\VertexBuffer.inl" />
-    <None Include="include\OpenGLES2Renderer\VertexShaderCg.inl" />
     <None Include="include\OpenGLES2Renderer\VertexShaderGlsl.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>

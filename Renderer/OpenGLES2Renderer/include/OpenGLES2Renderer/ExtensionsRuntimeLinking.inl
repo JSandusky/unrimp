@@ -54,11 +54,6 @@ namespace OpenGLES2Renderer
 		return mGL_EXT_texture_array;
 	}
 
-	inline bool ExtensionsRuntimeLinking::isGL_EXT_Cg_shader() const
-	{
-		return mGL_EXT_Cg_shader;
-	}
-
 	// AMD
 	inline bool ExtensionsRuntimeLinking::isGL_AMD_compressed_3DC_texture() const
 	{

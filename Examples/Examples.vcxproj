@@ -107,11 +107,6 @@
     <PostBuildEvent>
       <Command>md "..\bin\$(PlatformTarget)d_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\bin\$(PlatformTarget)d_static\"
-copy "..\External\Windows_x86\Cg\bin\cg.dll" "..\bin\$(PlatformTarget)d_static\"
-copy "..\External\Windows_x86\Cg\bin\cgGL.dll" "..\bin\$(PlatformTarget)d_static\"
-copy "..\External\Windows_x86\Cg\bin\cgD3D9.dll" "..\bin\$(PlatformTarget)d_static\"
-copy "..\External\Windows_x86\Cg\bin\cgD3D10.dll" "..\bin\$(PlatformTarget)d_static\"
-copy "..\External\Windows_x86\Cg\bin\cgD3D11.dll" "..\bin\$(PlatformTarget)d_static\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -136,11 +131,6 @@ copy "..\External\Windows_x86\Cg\bin\cgD3D11.dll" "..\bin\$(PlatformTarget)d_sta
     <PostBuildEvent>
       <Command>md "..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\External\Windows_x86\Cg\bin\cg.dll" "..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\External\Windows_x86\Cg\bin\cgGL.dll" "..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\External\Windows_x86\Cg\bin\cgD3D9.dll" "..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\External\Windows_x86\Cg\bin\cgD3D10.dll" "..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\External\Windows_x86\Cg\bin\cgD3D11.dll" "..\bin\$(PlatformTarget)d_dynamic\"
 copy "..\External\Windows_x86\Assimp\bin\assimp.dll" "..\bin\$(PlatformTarget)d_dynamic\"
 copy "..\External\Windows_x86\VisualStudio\bin\msvcp140.dll" "..\bin\$(PlatformTarget)d_dynamic\"
 copy "..\External\Windows_x86\VisualStudio\bin\vcruntime140.dll" "..\bin\$(PlatformTarget)d_dynamic\"
@@ -185,11 +175,6 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
     <PostBuildEvent>
       <Command>md "..\bin\$(PlatformTarget)_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\bin\$(PlatformTarget)_static\"
-copy "..\External\Windows_x86\Cg\bin\cg.dll" "..\bin\$(PlatformTarget)_static\"
-copy "..\External\Windows_x86\Cg\bin\cgGL.dll" "..\bin\$(PlatformTarget)_static\"
-copy "..\External\Windows_x86\Cg\bin\cgD3D9.dll" "..\bin\$(PlatformTarget)_static\"
-copy "..\External\Windows_x86\Cg\bin\cgD3D10.dll" "..\bin\$(PlatformTarget)_static\"
-copy "..\External\Windows_x86\Cg\bin\cgD3D11.dll" "..\bin\$(PlatformTarget)_static\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -227,11 +212,6 @@ copy "..\External\Windows_x86\Cg\bin\cgD3D11.dll" "..\bin\$(PlatformTarget)_stat
     <PostBuildEvent>
       <Command>md "..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\bin\$(PlatformTarget)_dynamic\"
-copy "..\External\Windows_x86\Cg\bin\cg.dll" "..\bin\$(PlatformTarget)_dynamic\"
-copy "..\External\Windows_x86\Cg\bin\cgGL.dll" "..\bin\$(PlatformTarget)_dynamic\"
-copy "..\External\Windows_x86\Cg\bin\cgD3D9.dll" "..\bin\$(PlatformTarget)_dynamic\"
-copy "..\External\Windows_x86\Cg\bin\cgD3D10.dll" "..\bin\$(PlatformTarget)_dynamic\"
-copy "..\External\Windows_x86\Cg\bin\cgD3D11.dll" "..\bin\$(PlatformTarget)_dynamic\"
 copy "..\External\Windows_x86\Assimp\bin\assimp.dll" "..\bin\$(PlatformTarget)_dynamic\"
 copy "..\External\Windows_x86\VisualStudio\bin\msvcp140.dll" "..\bin\$(PlatformTarget)_dynamic\"
 copy "..\External\Windows_x86\VisualStudio\bin\vcruntime140.dll" "..\bin\$(PlatformTarget)_dynamic\"
@@ -243,7 +223,6 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\AssimpMesh\AssimpMesh.h" />
-    <ClInclude Include="src\AssimpMesh\AssimpMesh_Cg.h" />
     <ClInclude Include="src\AssimpMesh\AssimpMesh_GLSL_110.h" />
     <ClInclude Include="src\AssimpMesh\AssimpMesh_GLSL_ES2.h" />
     <ClInclude Include="src\AssimpMesh\AssimpMesh_HLSL_D3D10_D3D11.h" />
@@ -251,7 +230,6 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
     <ClInclude Include="src\AssimpMesh\AssimpMesh_Null.h" />
     <ClInclude Include="src\AssimpMesh\Mesh.h" />
     <ClInclude Include="src\FirstAssimp\FirstAssimp.h" />
-    <ClInclude Include="src\FirstAssimp\FirstAssimp_Cg.h" />
     <ClInclude Include="src\FirstAssimp\FirstAssimp_GLSL_110.h" />
     <ClInclude Include="src\FirstAssimp\FirstAssimp_GLSL_ES2.h" />
     <ClInclude Include="src\FirstAssimp\FirstAssimp_HLSL_D3D10_D3D11.h" />
@@ -264,43 +242,36 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
     <ClInclude Include="src\FirstGeometryShader\FirstGeometryShader_HLSL_D3D10_D3D11.h" />
     <ClInclude Include="src\FirstGeometryShader\FirstGeometryShader_Null.h" />
     <ClInclude Include="src\FirstGpgpu\FirstGpgpu.h" />
-    <ClInclude Include="src\FirstGpgpu\FirstGpgpu_Cg.h" />
     <ClInclude Include="src\FirstGpgpu\FirstGpgpu_GLSL_110.h" />
     <ClInclude Include="src\FirstGpgpu\FirstGpgpu_GLSL_ES2.h" />
     <ClInclude Include="src\FirstGpgpu\FirstGpgpu_HLSL_D3D10_D3D11.h" />
     <ClInclude Include="src\FirstGpgpu\FirstGpgpu_HLSL_D3D9.h" />
     <ClInclude Include="src\FirstGpgpu\FirstGpgpu_Null.h" />
     <ClInclude Include="src\FirstInstancing\FirstInstancing.h" />
-    <ClInclude Include="src\FirstInstancing\FirstInstancing_DrawInstanced_Cg.h" />
     <ClInclude Include="src\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_140.h" />
     <ClInclude Include="src\FirstInstancing\FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11.h" />
     <ClInclude Include="src\FirstInstancing\FirstInstancing_DrawInstanced_Null.h" />
-    <ClInclude Include="src\FirstInstancing\FirstInstancing_InstancedArrays_Cg.h" />
     <ClInclude Include="src\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_110.h" />
     <ClInclude Include="src\FirstInstancing\FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11.h" />
     <ClInclude Include="src\FirstInstancing\FirstInstancing_InstancedArrays_Null.h" />
     <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets.h" />
-    <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_Cg.h" />
     <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_110.h" />
     <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_ES2.h" />
     <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D10_D3D11.h" />
     <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D9.h" />
     <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_Null.h" />
     <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains.h" />
-    <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains_Cg.h" />
     <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_110.h" />
     <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_ES2.h" />
     <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains_HLSL_D3D9_D3D10_D3D11.h" />
     <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains_Null.h" />
     <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing.h" />
-    <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_Cg.h" />
     <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_GLSL_110.h" />
     <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_GLSL_ES2.h" />
     <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_HLSL_D3D10_D3D11.h" />
     <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_HLSL_D3D9.h" />
     <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_Null.h" />
     <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture.h" />
-    <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture_Cg.h" />
     <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture_GLSL_110.h" />
     <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture_GLSL_ES2.h" />
     <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D10_D3D11.h" />
@@ -311,14 +282,12 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
     <ClInclude Include="src\FirstTessellation\FirstTessellation_HLSL_D3D11.h" />
     <ClInclude Include="src\FirstTessellation\FirstTessellation_Null.h" />
     <ClInclude Include="src\FirstTexture\FirstTexture.h" />
-    <ClInclude Include="src\FirstTexture\FirstTexture_Cg.h" />
     <ClInclude Include="src\FirstTexture\FirstTexture_GLSL_110.h" />
     <ClInclude Include="src\FirstTexture\FirstTexture_GLSL_ES2.h" />
     <ClInclude Include="src\FirstTexture\FirstTexture_HLSL_D3D10_D3D11.h" />
     <ClInclude Include="src\FirstTexture\FirstTexture_HLSL_D3D9.h" />
     <ClInclude Include="src\FirstTexture\FirstTexture_Null.h" />
     <ClInclude Include="src\FirstTriangle\FirstTriangle.h" />
-    <ClInclude Include="src\FirstTriangle\FirstTriangle_Cg.h" />
     <ClInclude Include="src\FirstTriangle\FirstTriangle_GLSL_110.h" />
     <ClInclude Include="src\FirstTriangle\FirstTriangle_GLSL_ES2.h" />
     <ClInclude Include="src\FirstTriangle\FirstTriangle_HLSL_D3D9_D3D10_D3D11.h" />
@@ -350,13 +319,11 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
     <ClInclude Include="src\Framework\X11Window.h" />
     <ClInclude Include="src\Fxaa\Fxaa.h" />
     <ClInclude Include="src\Fxaa\Fxaa_PostProcessing.h" />
-    <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_Cg.h" />
     <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_GLSL_120.h" />
     <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_GLSL_ES2.h" />
     <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_HLSL_D3D10_D3D11.h" />
     <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_HLSL_D3D9.h" />
     <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_Null.h" />
-    <ClInclude Include="src\Fxaa\Fxaa_SceneRendering_Cg.h" />
     <ClInclude Include="src\Fxaa\Fxaa_SceneRendering_GLSL_120.h" />
     <ClInclude Include="src\Fxaa\Fxaa_SceneRendering_GLSL_ES2.h" />
     <ClInclude Include="src\Fxaa\Fxaa_SceneRendering_HLSL_D3D9_D3D10_D3D11.h" />
@@ -380,7 +347,6 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
     <ClInclude Include="src\InstancedCubes\ICubeRenderer.h" />
     <ClInclude Include="src\InstancedCubes\InstancedCubes.h" />
     <ClInclude Include="src\VertexBuffer\VertexBuffer.h" />
-    <ClInclude Include="src\VertexBuffer\VertexBuffer_Cg.h" />
     <ClInclude Include="src\VertexBuffer\VertexBuffer_GLSL_110.h" />
     <ClInclude Include="src\VertexBuffer\VertexBuffer_GLSL_ES2.h" />
     <ClInclude Include="src\VertexBuffer\VertexBuffer_HLSL_D3D9_D3D10_D3D11.h" />

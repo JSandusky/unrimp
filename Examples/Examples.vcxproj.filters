@@ -99,9 +99,6 @@
     <ClInclude Include="src\Framework\EulerAngles.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="src\FirstTriangle\FirstTriangle_Cg.h">
-      <Filter>FirstTriangle</Filter>
-    </ClInclude>
     <ClInclude Include="src\FirstTriangle\FirstTriangle_HLSL_D3D9_D3D10_D3D11.h">
       <Filter>FirstTriangle</Filter>
     </ClInclude>
@@ -122,9 +119,6 @@
     </ClInclude>
     <ClInclude Include="src\FirstGeometryShader\FirstGeometryShader_HLSL_D3D10_D3D11.h">
       <Filter>FirstGeometryShader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VertexBuffer\VertexBuffer_Cg.h">
-      <Filter>VertexBuffer</Filter>
     </ClInclude>
     <ClInclude Include="src\VertexBuffer\VertexBuffer_HLSL_D3D9_D3D10_D3D11.h">
       <Filter>VertexBuffer</Filter>
@@ -183,9 +177,6 @@
     <ClInclude Include="src\AssimpMesh\AssimpMesh.h">
       <Filter>AssimpMesh</Filter>
     </ClInclude>
-    <ClInclude Include="src\AssimpMesh\AssimpMesh_Cg.h">
-      <Filter>AssimpMesh</Filter>
-    </ClInclude>
     <ClInclude Include="src\AssimpMesh\AssimpMesh_HLSL_D3D10_D3D11.h">
       <Filter>AssimpMesh</Filter>
     </ClInclude>
@@ -193,9 +184,6 @@
       <Filter>AssimpMesh</Filter>
     </ClInclude>
     <ClInclude Include="src\FirstAssimp\FirstAssimp.h">
-      <Filter>FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstAssimp\FirstAssimp_Cg.h">
       <Filter>FirstAssimp</Filter>
     </ClInclude>
     <ClInclude Include="src\FirstAssimp\FirstAssimp_HLSL_D3D10_D3D11.h">
@@ -215,9 +203,6 @@
     </ClInclude>
     <ClInclude Include="src\Framework\TGALoader.h">
       <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstTexture\FirstTexture_Cg.h">
-      <Filter>FirstTexture</Filter>
     </ClInclude>
     <ClInclude Include="src\FirstTriangle\FirstTriangle_GLSL_ES2.h">
       <Filter>FirstTriangle</Filter>
@@ -240,13 +225,7 @@
     <ClInclude Include="src\FirstInstancing\FirstInstancing_DrawInstanced_Null.h">
       <Filter>FirstInstancing</Filter>
     </ClInclude>
-    <ClInclude Include="src\FirstInstancing\FirstInstancing_DrawInstanced_Cg.h">
-      <Filter>FirstInstancing</Filter>
-    </ClInclude>
     <ClInclude Include="src\FirstInstancing\FirstInstancing_InstancedArrays_Null.h">
-      <Filter>FirstInstancing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstInstancing\FirstInstancing_InstancedArrays_Cg.h">
       <Filter>FirstInstancing</Filter>
     </ClInclude>
     <ClInclude Include="src\FirstInstancing\FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11.h">
@@ -297,12 +276,6 @@
     <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture.h">
       <Filter>FirstRenderToTexture</Filter>
     </ClInclude>
-    <ClInclude Include="src\FirstRenderToTexture\FirstRenderToTexture_Cg.h">
-      <Filter>FirstRenderToTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_Cg.h">
-      <Filter>FirstMultipleRenderTargets</Filter>
-    </ClInclude>
     <ClInclude Include="src\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_ES2.h">
       <Filter>FirstMultipleRenderTargets</Filter>
     </ClInclude>
@@ -320,9 +293,6 @@
     </ClInclude>
     <ClInclude Include="src\Fxaa\Fxaa.h">
       <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_Cg.h">
-      <Filter>FirstPostProcessing</Filter>
     </ClInclude>
     <ClInclude Include="src\FirstPostProcessing\FirstPostProcessing_GLSL_ES2.h">
       <Filter>FirstPostProcessing</Filter>
@@ -342,16 +312,10 @@
     <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_Null.h">
       <Filter>Fxaa</Filter>
     </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa_SceneRendering_Cg.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
     <ClInclude Include="src\Fxaa\Fxaa_SceneRendering_GLSL_ES2.h">
       <Filter>Fxaa</Filter>
     </ClInclude>
     <ClInclude Include="src\Fxaa\Fxaa_SceneRendering_Null.h">
-      <Filter>Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_Cg.h">
       <Filter>Fxaa</Filter>
     </ClInclude>
     <ClInclude Include="src\Fxaa\Fxaa_PostProcessing_GLSL_ES2.h">
@@ -372,9 +336,6 @@
     <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains.h">
       <Filter>FirstMultipleSwapChains</Filter>
     </ClInclude>
-    <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains_Cg.h">
-      <Filter>FirstMultipleSwapChains</Filter>
-    </ClInclude>
     <ClInclude Include="src\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_ES2.h">
       <Filter>FirstMultipleSwapChains</Filter>
     </ClInclude>
@@ -385,9 +346,6 @@
       <Filter>FirstMultipleSwapChains</Filter>
     </ClInclude>
     <ClInclude Include="src\FirstGpgpu\FirstGpgpu.h">
-      <Filter>FirstGpgpu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FirstGpgpu\FirstGpgpu_Cg.h">
       <Filter>FirstGpgpu</Filter>
     </ClInclude>
     <ClInclude Include="src\FirstGpgpu\FirstGpgpu_GLSL_ES2.h">

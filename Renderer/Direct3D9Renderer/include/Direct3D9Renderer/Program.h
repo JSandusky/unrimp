@@ -72,8 +72,7 @@ namespace Direct3D9Renderer
 			public:
 			enum Enum
 			{
-				HLSL = 0,	///< HLSL
-				CG	 = 1	///< Cg
+				HLSL = 0	///< HLSL
 			};
 		};
 

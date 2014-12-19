@@ -91,7 +91,6 @@ namespace OpenGLES2Renderer
 		inline virtual bool isGL_EXT_texture_compression_latc() const override;
 		inline virtual bool isGL_EXT_texture_filter_anisotropic() const override;
 		inline virtual bool isGL_EXT_texture_array() const override;
-		inline virtual bool isGL_EXT_Cg_shader() const override;
 		// AMD
 		inline virtual bool isGL_AMD_compressed_3DC_texture() const override;
 		// NV
@@ -123,7 +122,6 @@ namespace OpenGLES2Renderer
 		bool mGL_EXT_texture_compression_latc;
 		bool mGL_EXT_texture_filter_anisotropic;
 		bool mGL_EXT_texture_array;
-		bool mGL_EXT_Cg_shader;
 		// AMD
 		bool mGL_AMD_compressed_3DC_texture;
 		// NV
@@ -197,10 +195,6 @@ namespace OpenGLES2Renderer
 	#define GL_SAMPLER_2D_ARRAY_EXT						0x8DC1
 	#define GL_SAMPLER_1D_ARRAY_SHADOW_EXT				0x8DC3
 	#define GL_SAMPLER_2D_ARRAY_SHADOW_EXT				0x8DC4
-
-	// GL_EXT_Cg_shader
-	#define GL_CG_VERTEX_SHADER_EXT		0x890E
-	#define GL_CG_FRAGMENT_SHADER_EXT	0x890F
 
 
 	//[-------------------------------------------------------]

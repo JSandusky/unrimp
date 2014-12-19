@@ -72,8 +72,7 @@ namespace OpenGLRenderer
 			public:
 			enum Enum
 			{
-				GLSL = 0,	///< GLSL
-				CG	 = 1	///< Cg
+				GLSL = 0	///< GLSL
 			};
 		};
 

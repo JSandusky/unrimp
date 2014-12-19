@@ -46,7 +46,6 @@ namespace OpenGLES2Renderer
 		mGL_EXT_texture_compression_latc(false),
 		mGL_EXT_texture_filter_anisotropic(false),
 		mGL_EXT_texture_array(false),
-		mGL_EXT_Cg_shader(false),
 		// AMD
 		mGL_AMD_compressed_3DC_texture(false),
 		// NV
@@ -122,7 +121,6 @@ namespace OpenGLES2Renderer
 			IMPORT_FUNC(glFramebufferTexture3DOES)
 			mGL_EXT_texture_array = result;
 		}
-		mGL_EXT_Cg_shader = (nullptr != strstr(extensions, "GL_EXT_Cg_shader"));
 
 		//[-------------------------------------------------------]
 		//[ AMD                                                   ]

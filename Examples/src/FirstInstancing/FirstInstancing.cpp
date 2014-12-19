@@ -58,7 +58,7 @@ void FirstInstancing::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
+		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
@@ -80,7 +80,6 @@ void FirstInstancing::onInitialization()
 					// Get the shader source code (outsourced to keep an overview)
 					const char *vertexShaderSourceCode = nullptr;
 					const char *fragmentShaderSourceCode = nullptr;
-					#include "FirstInstancing_InstancedArrays_Cg.h"
 					#include "FirstInstancing_InstancedArrays_GLSL_110.h"
 					#include "FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11.h"
 					#include "FirstInstancing_InstancedArrays_Null.h"
@@ -168,7 +167,6 @@ void FirstInstancing::onInitialization()
 					// Get the shader source code (outsourced to keep an overview)
 					const char *vertexShaderSourceCode = nullptr;
 					const char *fragmentShaderSourceCode = nullptr;
-					#include "FirstInstancing_DrawInstanced_Cg.h"
 					#include "FirstInstancing_DrawInstanced_GLSL_140.h"
 					#include "FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11.h"
 					#include "FirstInstancing_DrawInstanced_Null.h"

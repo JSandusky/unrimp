@@ -29,9 +29,6 @@
     Do not include this header within headers which are usually used by users as well, do only
     use it inside cpp-files. It must still be possible that users of this renderer interface
     can use the Direct3D headers for features not covered by this renderer interface.
-
-    This header is included by "Cg/cgD3D9.h", redirect to the "Direct3D9Renderer/d3d9.h"-header
-    so that we don't have to manipulate the Cg-header.
 */
 
 

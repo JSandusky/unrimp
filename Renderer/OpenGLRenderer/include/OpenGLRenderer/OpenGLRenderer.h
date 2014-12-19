@@ -47,9 +47,6 @@ namespace OpenGLRenderer
 	class VertexArray;
 	class RasterizerState;
 	class DepthStencilState;
-	#ifndef OPENGLRENDERER_NO_CG
-		class CgRuntimeLinking;
-	#endif
 }
 
 
@@ -251,10 +248,6 @@ namespace OpenGLRenderer
 	private:
 		IContext					  *mContext;				///< OpenGL context instance, always valid
 		Renderer::IShaderLanguage	  *mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
-		#ifndef OPENGLRENDERER_NO_CG
-			CgRuntimeLinking		  *mCgRuntimeLinking;		///< Cg runtime linking instance, always valid
-			Renderer::IShaderLanguage *mShaderLanguageCg;		///< Cg shader language instance (we keep a reference to it), can be a null pointer
-		#endif
 		Renderer::ISamplerState		  *mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]

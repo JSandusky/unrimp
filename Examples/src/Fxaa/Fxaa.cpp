@@ -86,7 +86,7 @@ void Fxaa::onInitialization()
 			renderer->omSetDepthStencilState(mDepthStencilState);
 		}
 
-		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
+		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
@@ -94,7 +94,6 @@ void Fxaa::onInitialization()
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "Fxaa_SceneRendering_Cg.h"
 				#include "Fxaa_SceneRendering_GLSL_120.h"
 				#include "Fxaa_SceneRendering_GLSL_ES2.h"
 				#include "Fxaa_SceneRendering_HLSL_D3D9_D3D10_D3D11.h"
@@ -293,7 +292,7 @@ void Fxaa::recreatePostProcessingProgram()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
+		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
@@ -301,7 +300,6 @@ void Fxaa::recreatePostProcessingProgram()
 			const char *vertexShaderSourceCode = nullptr;
 			const char *fragmentShaderSourceCode_Definitions = nullptr;
 			const char *fragmentShaderSourceCode = nullptr;
-			#include "Fxaa_PostProcessing_Cg.h"
 			#include "Fxaa_PostProcessing_GLSL_120.h"
 			#include "Fxaa_PostProcessing_GLSL_ES2.h"
 			#include "Fxaa_PostProcessing_HLSL_D3D9.h"
@@ -317,7 +315,7 @@ void Fxaa::recreatePostProcessingProgram()
 			// The FXAA shader comments state: "RCPFRAME SHOULD PIXEL SHADER CONSTANTS"
 			char dynamicDefinition[256];
 			dynamicDefinition[0] = '\0';
-			if (0 == strcmp(shaderLanguage->getShaderLanguageName(), "Cg") || 0 == strcmp(renderer->getName(), "Direct3D9") || 0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11"))
+			if (0 == strcmp(renderer->getName(), "Direct3D9") || 0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11"))
 			{
 				sprintf(dynamicDefinition, "#define RCPFRAME float2(%ff, %ff)\n", 1.0f / width, 1.0f / height);
 			}
@@ -459,7 +457,7 @@ void Fxaa::postProcessing()
 				// -> When using OpenGL or OpenGL ES 2 this is required
 				// -> OpenGL 4.2 supports explicit binding points ("layout(binding=0)" in GLSL shader),
 				//    for backward compatibility we don't use it in here
-				// -> When using Direct3D 9, Direct3D 10, Direct3D 11 or the Cg shader language, the texture unit
+				// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
 				//    to use is usually defined directly within the shader by using the "register"-keyword
 				// -> Usually, this should only be done once during initialization, this example does this
 				//    every frame to keep it local for better overview

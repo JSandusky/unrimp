@@ -139,7 +139,7 @@ void FirstMultipleSwapChains::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
+		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
@@ -147,7 +147,6 @@ void FirstMultipleSwapChains::onInitialization()
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "FirstMultipleSwapChains_Cg.h"
 				#include "FirstMultipleSwapChains_GLSL_110.h"
 				#include "FirstMultipleSwapChains_GLSL_ES2.h"
 				#include "FirstMultipleSwapChains_HLSL_D3D9_D3D10_D3D11.h"

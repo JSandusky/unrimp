@@ -215,7 +215,7 @@ namespace Renderer
 		*    Index of the supported shader language to return the name from ([0, getNumberOfShaderLanguages()-1])
 		*
 		*  @return
-		*    The ASCII name (for example "GLSL", "HLSL" or "Cg") of the supported shader language at the provided index, can be a null pointer
+		*    The ASCII name (for example "GLSL" or "HLSL") of the supported shader language at the provided index, can be a null pointer
 		*
 		*  @note
 		*    - Do not free the memory the returned pointer is pointing to
@@ -228,7 +228,7 @@ namespace Renderer
 		*    Return a shader language instance
 		*
 		*  @param[in] shaderLanguageName
-		*    The ASCII name of the shader language (for example "GLSL", "HLSL" or "Cg"), if null pointer or empty string,
+		*    The ASCII name of the shader language (for example "GLSL" or "HLSL"), if null pointer or empty string,
 		*    the default renderer shader language is used (see "getShaderLanguageName(0)")
 		*
 		*  @return

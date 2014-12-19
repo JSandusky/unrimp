@@ -47,9 +47,6 @@
     <ClInclude Include="src\Font_Null.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Font_Cg.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Font_GLSL_ES2.h">
       <Filter>Source Files</Filter>
     </ClInclude>

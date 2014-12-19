@@ -48,16 +48,6 @@
 #include "Direct3D11Renderer/FragmentShaderHlsl.h"
 #include "Direct3D11Renderer/TessellationControlShaderHlsl.h"
 #include "Direct3D11Renderer/TessellationEvaluationShaderHlsl.h"
-#ifndef DIRECT3D11RENDERER_NO_CG
-	#include "Direct3D11Renderer/ProgramCg.h"
-	#include "Direct3D11Renderer/VertexShaderCg.h"
-	#include "Direct3D11Renderer/CgRuntimeLinking.h"
-	#include "Direct3D11Renderer/ShaderLanguageCg.h"
-	#include "Direct3D11Renderer/GeometryShaderCg.h"
-	#include "Direct3D11Renderer/FragmentShaderCg.h"
-	#include "Direct3D11Renderer/TessellationControlShaderCg.h"
-	#include "Direct3D11Renderer/TessellationEvaluationShaderCg.h"
-#endif
 
 
 //[-------------------------------------------------------]
@@ -92,10 +82,6 @@ namespace Direct3D11Renderer
 		mD3D11Device(nullptr),
 		mD3D11DeviceContext(nullptr),
 		mShaderLanguageHlsl(nullptr),
-		#ifndef DIRECT3D11RENDERER_NO_CG
-			mCgRuntimeLinking(new CgRuntimeLinking()),
-			mShaderLanguageCg(nullptr),
-		#endif
 		mD3D11QueryFlush(nullptr),
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr)
@@ -232,17 +218,6 @@ namespace Direct3D11Renderer
 			mShaderLanguageHlsl->release();
 		}
 
-		#ifndef DIRECT3D11RENDERER_NO_CG
-			// Release the Cg shader language instance, in case we have one
-			if (nullptr != mShaderLanguageCg)
-			{
-				mShaderLanguageCg->release();
-			}
-
-			// Destroy the Cg runtime linking instance
-			delete mCgRuntimeLinking;
-		#endif
-
 		// Release the Direct3D 11 device we've created
 		if (nullptr != mD3D11DeviceContext)
 		{
@@ -285,15 +260,6 @@ namespace Direct3D11Renderer
 	{
 		unsigned int numberOfShaderLanguages = 1;	// HLSL support is always there
 
-		#ifndef DIRECT3D11RENDERER_NO_CG
-			// Dynamically check on runtime whether or not Cg is available
-			if (mCgRuntimeLinking->isCgAvaiable())
-			{
-				// Cg supported
-				++numberOfShaderLanguages;
-			}
-		#endif
-
 		// Done, return the number of supported shader languages
 		return numberOfShaderLanguages;
 	}
@@ -308,19 +274,6 @@ namespace Direct3D11Renderer
 			return ShaderLanguageHlsl::NAME;
 		}
 		++currentIndex;
-
-		#ifndef DIRECT3D11RENDERER_NO_CG
-			// Dynamically check on runtime whether or not Cg is available
-			if (mCgRuntimeLinking->isCgAvaiable())
-			{
-				// Cg supported
-				if (currentIndex == index)
-				{
-					return ShaderLanguageCg::NAME;
-				}
-				// ++currentIndex; // Not required
-			}
-		#endif
 
 		// Error!
 		return nullptr;
@@ -344,24 +297,6 @@ namespace Direct3D11Renderer
 				// Return the shader language instance
 				return mShaderLanguageHlsl;
 			}
-			#ifndef DIRECT3D11RENDERER_NO_CG
-				else if (ShaderLanguageCg::NAME == shaderLanguageName || !stricmp(shaderLanguageName, ShaderLanguageCg::NAME))
-				{
-					// Dynamically check on runtime whether or not Cg is available
-					if (mCgRuntimeLinking->isCgAvaiable())
-					{
-						// If required, create the Cg shader language instance right now
-						if (nullptr == mShaderLanguageCg)
-						{
-							mShaderLanguageCg = new ShaderLanguageCg(*this);
-							mShaderLanguageCg->addReference();	// Internal renderer reference
-						}
-
-						// Return the shader language instance
-						return mShaderLanguageCg;
-					}
-				}
-			#endif
 
 			// Error!
 			return nullptr;
@@ -634,7 +569,7 @@ namespace Direct3D11Renderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
-			// TODO(co) HLSL/Cg buffer settings, unset previous program
+			// TODO(co) HLSL buffer settings, unset previous program
 
 			// Evaluate the internal program type of the new program to set
 			switch (static_cast<Program*>(program)->getInternalResourceType())
@@ -657,50 +592,11 @@ namespace Direct3D11Renderer
 					mD3D11DeviceContext->PSSetShader(fragmentShaderHlsl				  ? fragmentShaderHlsl->getD3D11PixelShader()				 : nullptr, nullptr, 0);
 					break;
 				}
-
-			#ifndef DIRECT3D11RENDERER_NO_CG
-				case Program::InternalResourceType::CG:
-				{
-					// Get shaders
-					const ProgramCg						 *programCg						 = static_cast<ProgramCg*>(program);
-					const VertexShaderCg				 *vertexShaderCg				 = programCg->getVertexShaderCg();
-					const TessellationControlShaderCg	 *tessellationControlShaderCg	 = programCg->getTessellationControlShaderCg();
-					const TessellationEvaluationShaderCg *tessellationEvaluationShaderCg = programCg->getTessellationEvaluationShaderCg();
-					const GeometryShaderCg				 *geometryShaderCg				 = programCg->getGeometryShaderCg();
-					const FragmentShaderCg				 *fragmentShaderCg				 = programCg->getFragmentShaderCg();
-
-					// Set shaders
-					// -> We're only allowed to call "cgD3D11BindProgram()" with valid handles,
-					//    else Cg throws the error "Invalid program handle." at us
-					if (nullptr != vertexShaderCg && nullptr != vertexShaderCg->getCgProgram())
-					{
-						cgD3D11BindProgram(vertexShaderCg->getCgProgram());
-					}
-					if (nullptr != tessellationControlShaderCg && nullptr != tessellationControlShaderCg->getCgProgram())
-					{
-						cgD3D11BindProgram(tessellationControlShaderCg->getCgProgram());
-					}
-					if (nullptr != tessellationEvaluationShaderCg && nullptr != tessellationEvaluationShaderCg->getCgProgram())
-					{
-						cgD3D11BindProgram(tessellationEvaluationShaderCg->getCgProgram());
-					}
-					if (nullptr != geometryShaderCg && nullptr != geometryShaderCg->getCgProgram())
-					{
-						cgD3D11BindProgram(geometryShaderCg->getCgProgram());
-					}
-					if (nullptr != fragmentShaderCg && nullptr != fragmentShaderCg->getCgProgram())
-					{
-						cgD3D11BindProgram(fragmentShaderCg->getCgProgram());
-					}
-					break;
-				}
-			#endif
 			}
 		}
 		else
 		{
-			// TODO(co) HLSL/Cg buffer settings
-			//void cgD3D11UnbindProgram( CGprogram Program );
+			// TODO(co) HLSL buffer settings
 			mD3D11DeviceContext->VSSetShader(nullptr, nullptr, 0);
 			mD3D11DeviceContext->HSSetShader(nullptr, nullptr, 0);
 			mD3D11DeviceContext->DSSetShader(nullptr, nullptr, 0);

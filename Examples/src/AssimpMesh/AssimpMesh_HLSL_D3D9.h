@@ -42,8 +42,8 @@ struct VS_INPUT
 {
 	float3 Position : POSITION;		// Object space vertex position
 	float2 TexCoord : TEXCOORD0;	// Texture coordinate
-	float3 Tangent  : TEXCOORD1;	// Object space to tangent space, x-axis
-	float3 Binormal : TEXCOORD2;	// Object space to tangent space, y-axis
+	float3 Tangent  : TANGENT;		// Object space to tangent space, x-axis
+	float3 Binormal : BINORMAL;		// Object space to tangent space, y-axis
 	float3 Normal   : NORMAL;		// Object space to tangent space, z-axis
 };
 struct VS_OUTPUT

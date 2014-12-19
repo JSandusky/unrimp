@@ -78,7 +78,7 @@ void FirstRenderToTexture::onInitialization()
 			mSamplerState = renderer->createSamplerState(samplerState);
 		}
 
-		// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
+		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
@@ -86,7 +86,6 @@ void FirstRenderToTexture::onInitialization()
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "FirstRenderToTexture_Cg.h"
 				#include "FirstRenderToTexture_GLSL_110.h"
 				#include "FirstRenderToTexture_GLSL_ES2.h"
 				#include "FirstRenderToTexture_HLSL_D3D9.h"
@@ -230,7 +229,7 @@ void FirstRenderToTexture::onDraw()
 					// -> When using OpenGL or OpenGL ES 2 this is required
 					// -> OpenGL 4.2 supports explicit binding points ("layout(binding=0)" in GLSL shader),
 					//    for backward compatibility we don't use it in here
-					// -> When using Direct3D 9, Direct3D 10, Direct3D 11 or the Cg shader language, the texture unit
+					// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
 					//    to use is usually defined directly within the shader by using the "register"-keyword
 					// -> Usually, this should only be done once during initialization, this example does this
 					//    every frame to keep it local for better overview

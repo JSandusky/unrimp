@@ -240,9 +240,6 @@ namespace OpenGLES2Renderer
 	private:
 		IContext					  *mContext;				///< Context instance, always valid
 		Renderer::IShaderLanguage	  *mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
-		#ifndef OPENGLES2RENDERER_NO_CG
-			Renderer::IShaderLanguage *mShaderLanguageCg;		///< Cg shader language instance (we keep a reference to it), can be a null pointer
-		#endif
 		Renderer::ISamplerState		  *mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]

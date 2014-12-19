@@ -57,13 +57,6 @@
 #elif defined LINUX
 	#include "OpenGLRenderer/Linux/ContextLinux.h"
 #endif
-#ifndef OPENGLRENDERER_NO_CG
-	#include "OpenGLRenderer/ProgramCg.h"
-	#include "OpenGLRenderer/VertexArrayCg.h"
-	#include "OpenGLRenderer/UniformBufferCg.h"
-	#include "OpenGLRenderer/CgRuntimeLinking.h"
-	#include "OpenGLRenderer/ShaderLanguageCg.h"
-#endif
 
 
 //[-------------------------------------------------------]
@@ -108,10 +101,6 @@ namespace OpenGLRenderer
 		#error "Unsupported platform"
 	#endif
 		mShaderLanguageGlsl(nullptr),
-		#ifndef OPENGLRENDERER_NO_CG
-			mCgRuntimeLinking(new CgRuntimeLinking()),
-			mShaderLanguageCg(nullptr),
-		#endif
 		mDefaultSamplerState(nullptr),
 		mVertexArray(nullptr),
 		mOpenGLPrimitiveTopology(0xFFFF),	// Unknown default setting
@@ -257,17 +246,6 @@ namespace OpenGLRenderer
 			mShaderLanguageGlsl->release();
 		}
 
-		#ifndef OPENGLRENDERER_NO_CG
-			// Release the Cg shader language instance, in case we have one
-			if (nullptr != mShaderLanguageCg)
-			{
-				mShaderLanguageCg->release();
-			}
-
-			// Destroy the Cg runtime linking instance
-			delete mCgRuntimeLinking;
-		#endif
-
 		// Destroy the OpenGL context instance
 		delete mContext;
 	}
@@ -307,15 +285,6 @@ namespace OpenGLRenderer
 			++numberOfShaderLanguages;
 		}
 
-		#ifndef OPENGLRENDERER_NO_CG
-			// Dynamically check on runtime whether or not Cg is available
-			if (mCgRuntimeLinking->isCgAvaiable())
-			{
-				// Cg supported
-				++numberOfShaderLanguages;
-			}
-		#endif
-
 		// Done, return the number of supported shader languages
 		return numberOfShaderLanguages;
 	}
@@ -334,19 +303,6 @@ namespace OpenGLRenderer
 			}
 			++currentIndex;
 		}
-
-		#ifndef OPENGLRENDERER_NO_CG
-			// Dynamically check on runtime whether or not Cg is available
-			if (mCgRuntimeLinking->isCgAvaiable())
-			{
-				// Cg supported
-				if (currentIndex == index)
-				{
-					return ShaderLanguageCg::NAME;
-				}
-				// ++currentIndex; // Not required
-			}
-		#endif
 
 		// Error!
 		return nullptr;
@@ -377,24 +333,6 @@ namespace OpenGLRenderer
 						return mShaderLanguageGlsl;
 					}
 				}
-				#ifndef OPENGLRENDERER_NO_CG
-					else if (shaderLanguageName == ShaderLanguageCg::NAME || !stricmp(shaderLanguageName, ShaderLanguageCg::NAME))
-					{
-						// Dynamically check on runtime whether or not Cg is available
-						if (mCgRuntimeLinking->isCgAvaiable())
-						{
-							// If required, create the Cg shader language instance right now
-							if (nullptr == mShaderLanguageCg)
-							{
-								mShaderLanguageCg = new ShaderLanguageCg(*this);
-								mShaderLanguageCg->addReference();	// Internal renderer reference
-							}
-
-							// Return the shader language instance
-							return mShaderLanguageCg;
-						}
-					}
-				#endif
 			}
 			else
 			{
@@ -642,7 +580,7 @@ namespace OpenGLRenderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
-			// TODO(co) GLSL/Cg buffer settings, unset previous program
+			// TODO(co) GLSL buffer settings, unset previous program
 
 			// Evaluate the internal program type of the new program to set
 			switch (static_cast<Program*>(program)->getInternalResourceType())
@@ -658,34 +596,11 @@ namespace OpenGLRenderer
 						glUseProgramObjectARB(mOpenGLProgram);
 					}
 					break;
-
-					case Program::InternalResourceType::CG:
-				#ifndef OPENGLRENDERER_NO_CG
-					{
-						// Get the Cg program
-						const CGprogram cgProgram = static_cast<ProgramCg*>(program)->getCgProgram();
-
-						// Backup OpenGL program identifier
-						mOpenGLProgram = cgGLGetProgramID(cgProgram);
-
-						// Bind the Cg combined program
-						cgGLBindProgram(cgProgram);
-
-						// Iterate through all Cg programs of the Cg combined program and enable all required profiles
-						const int numOfProgramDomains = cgGetNumProgramDomains(cgProgram);
-						for (int i = 0; i < numOfProgramDomains; ++i)
-						{
-							// Enable the profile
-							cgGLEnableProfile(cgGetProgramDomainProfile(cgProgram, i));
-						}
-					}
-				#endif
-					break;
 			}
 		}
 		else
 		{
-			// TODO(co) GLSL/Cg buffer settings
+			// TODO(co) GLSL buffer settings
 			// "GL_ARB_shader_objects" required
 			if (mContext->getExtensions().isGL_ARB_shader_objects())
 			{
@@ -726,13 +641,6 @@ namespace OpenGLRenderer
 					case VertexArray::InternalResourceType::NO_VAO:
 						// Enable OpenGL vertex attribute arrays
 						static_cast<VertexArrayNoVao*>(mVertexArray)->enableOpenGLVertexAttribArrays();
-						break;
-
-					case VertexArray::InternalResourceType::CG:
-					#ifndef OPENGLRENDERER_NO_CG
-							// Enable OpenGL vertex attribute arrays
-							static_cast<VertexArrayCg*>(mVertexArray)->enableOpenGLVertexAttribArrays();
-					#endif
 						break;
 
 					case VertexArray::InternalResourceType::VAO:
@@ -1508,22 +1416,6 @@ namespace OpenGLRenderer
 						glUniformBlockBinding(mOpenGLProgram, slot, slot);
 					}
 					break;
-
-					case UniformBuffer::InternalResourceType::CG:
-				#ifndef OPENGLRENDERER_NO_CG
-						// Attach the buffer to the given UBO binding point
-						// -> Explicit binding points ("layout(binding=0)" in GLSL shader) requires OpenGL 4.2
-						// -> Direct3D 10 and Direct3D 11 have explicit binding points
-						// -> TODO(co) For now, nStartSlot is set from outside to the uniform block index which is directly used as binding point - Review this, maybe there's a better cross-API solution
-
-						// TODO(co) GLSL/Cg buffer settings
-						//glBindBufferBaseEXT(GL_UNIFORM_BUFFER, slot, uniformBuffer ? static_cast<UniformBufferGlsl*>(uniformBuffer)->getOpenGLUniformBuffer() : 0);
-						// cgSetProgramBuffer(cgGetParameterProgram(mCgParameter), cgGetParameterBufferIndex(mCgParameter), static_cast<UniformBufferCg*>(uniformBuffer)->getCgBuffer());
-
-						// Associate the uniform block with the given binding point
-						glUniformBlockBinding(mOpenGLProgram, slot, slot);
-				#endif
-						break;
 			}
 		}
 		else
@@ -2066,13 +1958,6 @@ namespace OpenGLRenderer
 					// Disable OpenGL vertex attribute arrays
 					static_cast<VertexArrayNoVao*>(mVertexArray)->disableOpenGLVertexAttribArrays();
 					break;
-
-					case VertexArray::InternalResourceType::CG:
-				#ifndef OPENGLRENDERER_NO_CG
-						// Disable OpenGL Cg vertex attribute arrays
-						static_cast<VertexArrayCg*>(mVertexArray)->disableOpenGLVertexAttribArrays();
-				#endif
-						break;
 
 				case VertexArray::InternalResourceType::VAO:
 					// Unbind OpenGL vertex array

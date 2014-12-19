@@ -10,9 +10,6 @@
     <ClInclude Include="include\Direct3D9Renderer\BlendState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\CgRuntimeLinking.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\d3d9.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -23,9 +20,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\FragmentShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\FragmentShaderCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\FragmentShaderHlsl.h">
@@ -46,9 +40,6 @@
     <ClInclude Include="include\Direct3D9Renderer\Program.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\ProgramCg.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\ProgramHlsl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -62,9 +53,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\ShaderLanguage.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\ShaderLanguageCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\ShaderLanguageHlsl.h">
@@ -86,9 +74,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\VertexShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\VertexShaderCg.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\VertexShaderHlsl.h">
@@ -129,16 +114,10 @@
     <ClCompile Include="src\SamplerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ShaderLanguageCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ShaderLanguageHlsl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexShaderCg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexShaderHlsl.cpp">
@@ -147,16 +126,10 @@
     <ClCompile Include="src\FragmentShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\FragmentShaderCg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\FragmentShaderHlsl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Program.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProgramCg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ProgramHlsl.cpp">
@@ -166,9 +139,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CgRuntimeLinking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\SamplerStateCollection.cpp">
@@ -196,9 +166,6 @@
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\Direct3D9Renderer\FragmentShaderCg.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D9Renderer\FragmentShaderHlsl.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -209,9 +176,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D9Renderer\Program.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D9Renderer\ProgramCg.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D9Renderer\ProgramHlsl.inl">
@@ -233,9 +197,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D9Renderer\VertexBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D9Renderer\VertexShaderCg.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D9Renderer\VertexShaderHlsl.inl">

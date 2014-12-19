@@ -112,7 +112,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 	// Create sampler state
 	mSamplerState = mRenderer->createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
-	// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
+	// Decide which shader language should be used (for example "GLSL" or "HLSL")
 	Renderer::IShaderLanguagePtr shaderLanguage(mRenderer->getShaderLanguage());
 	if (nullptr != shaderLanguage)
 	{

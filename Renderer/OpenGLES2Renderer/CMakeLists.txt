@@ -27,9 +27,6 @@ cmake_minimum_required(VERSION 2.8.8)
 if(NOT RENDERER_DEBUG)
 	add_definitions(-DRENDERER_NO_DEBUG)
 endif()
-if(NOT CG_SUPPORT)
-	add_definitions(-DOPENGLES2RENDERER_NO_CG)
-endif()
 if(RENDERER_OPENGLES2_NO_STATE_CLEANUP)
 	add_definitions(-DOPENGLES2RENDERER_NO_STATE_CLEANUP)
 endif()
@@ -81,16 +78,6 @@ set(SOURCE_CODES
 	src/VertexShader.cpp
 	src/VertexShaderGlsl.cpp
 )
-if(CG_SUPPORT)
-	# Cg support source codes
-	set(SOURCE_CODES
-		${SOURCE_CODES}
-		src/ShaderLanguageCg.cpp
-		src/VertexShaderCg.cpp
-		src/FragmentShaderCg.cpp
-		src/ProgramCg.cpp
-	)
-endif()
 
 
 ##################################################

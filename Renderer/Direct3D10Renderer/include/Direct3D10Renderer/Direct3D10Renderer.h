@@ -45,9 +45,6 @@ namespace Direct3D10Renderer
 {
 	class SwapChain;
 	class Direct3D9RuntimeLinking;
-	#ifndef DIRECT3D10RENDERER_NO_CG
-		class CgRuntimeLinking;
-	#endif
 	class Direct3D10RuntimeLinking;
 }
 
@@ -244,10 +241,6 @@ namespace Direct3D10Renderer
 		ID3D10Device				  *mD3D10Device;				///< The Direct3D 10 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
 		Direct3D9RuntimeLinking		  *mDirect3D9RuntimeLinking;	///< Direct3D 9 runtime linking instance, can be a null pointer
 		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
-		#ifndef DIRECT3D10RENDERER_NO_CG
-			CgRuntimeLinking		  *mCgRuntimeLinking;			///< Cg runtime linking instance, always valid
-			Renderer::IShaderLanguage *mShaderLanguageCg;			///< Cg shader language instance (we keep a reference to it), can be a null pointer
-		#endif
 		ID3D10Query					  *mD3D10QueryFlush;			///< Direct3D 10 query used for flush, can be a null pointer
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]

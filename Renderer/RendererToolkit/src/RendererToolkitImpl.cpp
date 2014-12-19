@@ -146,14 +146,13 @@ namespace RendererToolkit
 		// Create the font program instance right now?
 		if (nullptr == mFontProgram)
 		{
-			// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
+			// Decide which shader language should be used (for example "GLSL" or "HLSL")
 			Renderer::IShaderLanguage *shaderLanguage = mRenderer->getShaderLanguage();
 			if (nullptr != shaderLanguage)
 			{
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "Font_Cg.h"
 				#include "Font_GLSL_110.h"
 				#include "Font_GLSL_ES2.h"
 				#include "Font_HLSL_D3D9.h"
@@ -181,7 +180,7 @@ namespace RendererToolkit
 		// Create the font vertex shader uniform buffer instance right now?
 		if (nullptr == mFontVertexShaderUniformBuffer)
 		{
-			// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
+			// Decide which shader language should be used (for example "GLSL" or "HLSL")
 			Renderer::IShaderLanguage *shaderLanguage = mRenderer->getShaderLanguage();
 			if (nullptr != shaderLanguage)
 			{
@@ -189,7 +188,7 @@ namespace RendererToolkit
 				// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
 				// -> Direct3D 10 and Direct3D 11 do not support individual uniforms
 				// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
-				if (0 != strcmp(shaderLanguage->getShaderLanguageName(), "Cg") && (0 == strcmp(mRenderer->getName(), "Direct3D10") || 0 == strcmp(mRenderer->getName(), "Direct3D11")))
+				if (0 == strcmp(mRenderer->getName(), "Direct3D10") || 0 == strcmp(mRenderer->getName(), "Direct3D11"))
 				{
 					// Allocate enough memory
 					mFontVertexShaderUniformBuffer = shaderLanguage->createUniformBuffer(sizeof(float) * 4 * 2 + sizeof(float) * 4 * 4, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
@@ -206,7 +205,7 @@ namespace RendererToolkit
 		// Create the font fragment shader uniform buffer instance right now?
 		if (nullptr == mFontFragmentShaderUniformBuffer)
 		{
-			// Decide which shader language should be used (for example "GLSL", "HLSL" or "Cg")
+			// Decide which shader language should be used (for example "GLSL" or "HLSL")
 			Renderer::IShaderLanguage *shaderLanguage = mRenderer->getShaderLanguage();
 			if (nullptr != shaderLanguage)
 			{
@@ -214,7 +213,7 @@ namespace RendererToolkit
 				// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
 				// -> Direct3D 10 and Direct3D 11 do not support individual uniforms
 				// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
-				if (0 != strcmp(shaderLanguage->getShaderLanguageName(), "Cg") && (0 == strcmp(mRenderer->getName(), "Direct3D10") || 0 == strcmp(mRenderer->getName(), "Direct3D11")))
+				if (0 == strcmp(mRenderer->getName(), "Direct3D10") || 0 == strcmp(mRenderer->getName(), "Direct3D11"))
 				{
 					// Allocate enough memory
 					mFontFragmentShaderUniformBuffer = shaderLanguage->createUniformBuffer(sizeof(float) * 4, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);

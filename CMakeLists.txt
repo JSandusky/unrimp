@@ -111,7 +111,6 @@ if(WIN32)
 		set(RENDERER_DIRECT3D11_DEBUG	"1"	CACHE BOOL "If false, the Direct3D 9 PIX functions (D3DPERF_* functions) debug features are disabled (disabling support just reduces the binary size slightly but makes debugging more difficult)")
 		mark_as_advanced(RENDERER_DIRECT3D11_DEBUG)
 endif()
-set(CG_SUPPORT				"1"	CACHE BOOL "Cg support?")
 set(STATIC_LIBRARY			"1"	CACHE BOOL "Build static library?")
 set(SHARED_LIBRARY			"1"	CACHE BOOL "Build shared library?")
 # Renderer toolkit
