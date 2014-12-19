@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Advanced/FirstGpgpu/FirstGpgpu.h"
 #include "Framework/Color4.h"
 #include "Framework/IApplicationRenderer.h"

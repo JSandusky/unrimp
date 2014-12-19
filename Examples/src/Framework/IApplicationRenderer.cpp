@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Framework/IApplicationRenderer.h"
 #ifdef SHARED_LIBRARIES
 	// Dynamically linked libraries

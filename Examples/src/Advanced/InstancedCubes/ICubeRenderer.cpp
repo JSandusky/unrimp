@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Advanced/InstancedCubes/ICubeRenderer.h"
 
 

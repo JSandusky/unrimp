@@ -21,8 +21,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "X11Window.h"
-#include "X11Application.h"
+#include "PrecompiledHeader.h"
+#include "Framework/X11Window.h"
+#include "Framework/X11Application.h"
 
 #include <cstring>
 

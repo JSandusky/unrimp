@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Basics/FirstTriangle/FirstTriangle.h"
 #include "Framework/Color4.h"
 

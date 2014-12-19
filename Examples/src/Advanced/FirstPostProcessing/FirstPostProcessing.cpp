@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Advanced/FirstPostProcessing/FirstPostProcessing.h"
 #include "Framework/Color4.h"
 

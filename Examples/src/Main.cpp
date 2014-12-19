@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Framework/Main.h"
 #include "Framework/ConsoleExampleRunner.h"
 #ifdef EXAMPLE_RUNNER_QT4

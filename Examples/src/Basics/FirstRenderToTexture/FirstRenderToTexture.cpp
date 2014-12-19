@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Basics/FirstRenderToTexture/FirstRenderToTexture.h"
 #include "Framework/Color4.h"
 

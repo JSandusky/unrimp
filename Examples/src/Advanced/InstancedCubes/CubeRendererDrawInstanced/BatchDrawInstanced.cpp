@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Advanced/InstancedCubes/CubeRendererDrawInstanced/BatchDrawInstanced.h"
 #include "Framework/PlatformTypes.h"
 #include "Framework/Quaternion.h"

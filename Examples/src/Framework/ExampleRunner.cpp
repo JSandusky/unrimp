@@ -21,9 +21,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
+#include "Framework/ExampleRunner.h"
 #include "Framework/PlatformTypes.h"
-#include "ExampleRunner.h"
-#include "CmdLineArgs.h"
+#include "Framework/CmdLineArgs.h"
 // Basics
 #include "Basics/FirstTriangle/FirstTriangle.h"
 #include "Basics/VertexBuffer/VertexBuffer.h"

@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Advanced/IcosahedronTessellation/IcosahedronTessellation.h"
 #include "Framework/Color4.h"
 

@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Framework/IApplication.h"
 #ifdef WIN32
 	#include "Framework/ApplicationImplWindows.h"

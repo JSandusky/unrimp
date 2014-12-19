@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Basics/FirstMultipleSwapChains/FirstMultipleSwapChains.h"
 #include "Framework/Color4.h"
 #ifdef WIN32

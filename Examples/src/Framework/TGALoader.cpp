@@ -11,6 +11,7 @@
 //			LoadCompressedTGA(Texture * texture, char * filename, FILE * fTGA)	*
 //			LoadUncompressedTGA(Texture * texture, char * filename, FILE * fTGA)*
 //*******************************************************************************
+#include "PrecompiledHeader.h"
 #include "Framework/TGALoader.h"
 
 

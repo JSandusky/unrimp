@@ -462,6 +462,7 @@
     <ClInclude Include="src\Toolkit\FirstFont\FirstFont.h">
       <Filter>Toolkit\FirstFont</Filter>
     </ClInclude>
+    <ClInclude Include="src\PrecompiledHeader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -582,6 +583,7 @@
     <ClCompile Include="src\Toolkit\FirstFont\FirstFont.cpp">
       <Filter>Toolkit\FirstFont</Filter>
     </ClCompile>
+    <ClCompile Include="src\PrecompiledHeader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Framework\IApplication.inl">

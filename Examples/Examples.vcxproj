@@ -97,6 +97,8 @@
       <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4201 /wd 4995 /wd 4668 /wd 4350</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>false</TreatWarningAsError>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -122,6 +124,8 @@ copy "$(OutDir)\$(TargetName).exe" "..\bin\$(PlatformTarget)d_static\"
       <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4201 /wd 4995 /wd 4668 /wd 4350</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -163,6 +167,8 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
       <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4201 /wd 4995 /wd 4668 /wd 4350 /wd 4711</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -201,6 +207,8 @@ copy "$(OutDir)\$(TargetName).exe" "..\bin\$(PlatformTarget)_static\"
       <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4201 /wd 4995 /wd 4668 /wd 4350 /wd 4711</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -350,6 +358,7 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
     <ClInclude Include="src\Framework\WindowsHeader.h" />
     <ClInclude Include="src\Framework\X11Application.h" />
     <ClInclude Include="src\Framework\X11Window.h" />
+    <ClInclude Include="src\PrecompiledHeader.h" />
     <ClInclude Include="src\Toolkit\FirstFont\FirstFont.h" />
   </ItemGroup>
   <ItemGroup>
@@ -407,6 +416,12 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\PrecompiledHeader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\Toolkit\FirstFont\FirstFont.cpp" />
   </ItemGroup>
   <ItemGroup>

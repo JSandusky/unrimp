@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "PrecompiledHeader.h"
 #include "Framework/PlatformTypes.h"
 #include "Framework/Stopwatch.h"
 #ifdef WIN32
