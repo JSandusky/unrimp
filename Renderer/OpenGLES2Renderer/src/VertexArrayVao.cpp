@@ -95,7 +95,6 @@ namespace OpenGLES2Renderer
 
 			// Get the used index buffer
 			// -> In case of no index buffer we don't bind buffer 0, there's not really a point in it
-			const IndexBuffer *indexBuffer = getIndexBuffer();
 			if (nullptr != indexBuffer)
 			{
 				// Bind OpenGL ES 2 element array buffer

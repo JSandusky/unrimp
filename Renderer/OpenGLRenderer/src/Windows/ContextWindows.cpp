@@ -340,11 +340,11 @@ namespace OpenGLRenderer
 		__pragma(warning(disable: 4191))	// warning C4191: 'reinterpret_cast' : unsafe conversion from 'PROC' to '<x>'
 
 		// Get the OpenGL extension wglGetExtensionsStringARB function pointer, we need it to check for further supported OpenGL extensions
-		PFNWGLGETEXTENSIONSSTRINGARBPROC wglGetExtensionsStringARB = reinterpret_cast<PFNWGLGETEXTENSIONSSTRINGARBPROC>(wglGetProcAddress("wglGetExtensionsStringARB"));
-		if (nullptr != wglGetExtensionsStringARB)
+		PFNWGLGETEXTENSIONSSTRINGARBPROC wglGetExtensionsStringARBLocal = reinterpret_cast<PFNWGLGETEXTENSIONSSTRINGARBPROC>(wglGetProcAddress("wglGetExtensionsStringARB"));
+		if (nullptr != wglGetExtensionsStringARBLocal)
 		{
 			// Get the available WGL extensions as string
-			const char *extensions = wglGetExtensionsStringARB(mWindowDeviceContext);
+			const char *extensions = wglGetExtensionsStringARBLocal(mWindowDeviceContext);
 
 			// Check whether or not "WGL_ARB_create_context" is a substring of the WGL extension string meaning that this OpenGL extension is supported
 			if (nullptr != strstr(extensions, "WGL_ARB_create_context"))

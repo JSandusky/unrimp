@@ -346,7 +346,7 @@ void FirstGpgpu::generate2DTextureContent()
 		mRenderer->fsSetTexture(mProgramContentProcessing->setTextureUnit(mProgramContentProcessing->getUniformHandle("ContentMap"), 0), nullptr);
 
 		// Backup the currently used render target
-		Renderer::IRenderTargetPtr renderTarget(mRenderer->omGetRenderTarget());
+		Renderer::IRenderTargetPtr previousRenderTarget(mRenderer->omGetRenderTarget());
 
 		// Set the render target to render into
 		mRenderer->omSetRenderTarget(mFramebuffer[0]);
@@ -403,7 +403,7 @@ void FirstGpgpu::generate2DTextureContent()
 		}
 
 		// Restore the previously set render target
-		mRenderer->omSetRenderTarget(renderTarget);
+		mRenderer->omSetRenderTarget(previousRenderTarget);
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(mRenderer)

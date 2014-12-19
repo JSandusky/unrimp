@@ -266,8 +266,8 @@ void CubeRendererInstancedArrays::setNumberOfCubes(unsigned int numberOfCubes)
 	BatchInstancedArrays *lastBatch = mBatches + numberOfSolidBatches;
 	for (int remaningNumberOfCubes = static_cast<int>(numberOfSolidCubes); batch < lastBatch; ++batch, remaningNumberOfCubes -= mMaximumNumberOfInstancesPerBatch)
 	{
-		const unsigned int numberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
-		batch->initialize(*mVertexBuffer, *mIndexBuffer, *mProgram, numberOfCubes, false, mNumberOfTextures, mSceneRadius);
+		const unsigned int currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
+		batch->initialize(*mVertexBuffer, *mIndexBuffer, *mProgram, currentNumberOfCubes, false, mNumberOfTextures, mSceneRadius);
 	}
 
 	// Initialize the transparent batches
@@ -275,8 +275,8 @@ void CubeRendererInstancedArrays::setNumberOfCubes(unsigned int numberOfCubes)
 	lastBatch = batch + numberOfTransparentBatches;
 	for (int remaningNumberOfCubes = static_cast<int>(numberOfTransparentCubes); batch < lastBatch; ++batch, remaningNumberOfCubes -= mMaximumNumberOfInstancesPerBatch)
 	{
-		const unsigned int numberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
-		batch->initialize(*mVertexBuffer, *mIndexBuffer, *mProgram, numberOfCubes, true, mNumberOfTextures, mSceneRadius);
+		const unsigned int currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
+		batch->initialize(*mVertexBuffer, *mIndexBuffer, *mProgram, currentNumberOfCubes, true, mNumberOfTextures, mSceneRadius);
 	}
 
 	// End debug event
