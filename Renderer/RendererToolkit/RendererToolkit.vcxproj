@@ -81,7 +81,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
@@ -171,6 +171,7 @@ del "..\..\include\Renderer\Internal\RendererToolkit\RendererToolkit.h"
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\..\External\Windows_x86\freetype\lib\</AdditionalLibraryDirectories>
       <AdditionalDependencies>freetype_MultiThreadedDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\lib\$(PlatformTarget)d_dynamic\"
@@ -261,6 +262,7 @@ del "..\..\include\Renderer\Internal\RendererToolkit\RendererToolkit.h"
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\External\Windows_x86\freetype\lib\</AdditionalLibraryDirectories>
       <AdditionalDependencies>freetype_MultiThreadedDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\lib\$(PlatformTarget)_dynamic\"

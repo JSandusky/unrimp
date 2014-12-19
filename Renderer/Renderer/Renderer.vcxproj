@@ -210,6 +210,7 @@ del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\include\Renderer\Internal\$(ProjectName)\"
@@ -282,6 +283,7 @@ del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\include\Renderer\Internal\$(ProjectName)\"

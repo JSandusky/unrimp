@@ -45,7 +45,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
@@ -84,6 +84,7 @@
     <OutDir>..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
     <IntDir>..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
     <ClCompile>
@@ -99,12 +100,15 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\lib\$(PlatformTarget)d_static\;..\External\Windows_x86\Assimp\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>NullRendererStaticD.lib;OpenGLRendererStaticD.lib;OpenGLES2RendererStaticD.lib;Direct3D9RendererStaticD.lib;Direct3D10RendererStaticD.lib;Direct3D11RendererStaticD.lib;RendererToolkitStaticD.lib;assimpStaticD.lib;zlibStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMT</IgnoreSpecificDefaultLibraries>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
       <Command>md "..\bin\$(PlatformTarget)d_static\"
@@ -126,11 +130,14 @@ copy "$(OutDir)\$(TargetName).exe" "..\bin\$(PlatformTarget)d_static\"
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\External\Windows_x86\Assimp\lib\</AdditionalLibraryDirectories>
       <AdditionalDependencies>assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
       <Command>md "..\bin\$(PlatformTarget)d_dynamic\"
@@ -169,6 +176,7 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -177,6 +185,7 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
       <AdditionalLibraryDirectories>..\lib\$(PlatformTarget)_static\;..\External\Windows_x86\Assimp\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>NullRendererStatic.lib;OpenGLRendererStatic.lib;OpenGLES2RendererStatic.lib;Direct3D9RendererStatic.lib;Direct3D10RendererStatic.lib;Direct3D11RendererStatic.lib;RendererToolkitStatic.lib;assimpStatic.lib;zlibStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
       <Command>md "..\bin\$(PlatformTarget)_static\"
@@ -209,6 +218,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\bin\$(PlatformTarget)_static\"
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PrecompiledHeader.h</PrecompiledHeaderFile>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -216,6 +226,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\bin\$(PlatformTarget)_static\"
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\External\Windows_x86\Assimp\lib\</AdditionalLibraryDirectories>
       <AdditionalDependencies>assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
       <Command>md "..\bin\$(PlatformTarget)_dynamic\"
