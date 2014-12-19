@@ -30,6 +30,19 @@
 
 
 //[-------------------------------------------------------]
+//[ Global variables                                      ]
+//[-------------------------------------------------------]
+// Force usage of NVidia GPU in case there is an integrated graphics unit as well, if we don't do this we risk getting the integrated graphics unit and hence a horrible performance
+// See "Enabling High Performance Graphics Rendering on Optimus Systems" http://developer.download.nvidia.com/devzone/devcenter/gamegraphics/files/OptimusRenderingPolicies.pdf
+#ifdef WIN32
+	extern "C"
+	{
+		_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+	}
+#endif // WIN32
+
+
+//[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
 int programEntryPoint(CmdLineArgs &args)
