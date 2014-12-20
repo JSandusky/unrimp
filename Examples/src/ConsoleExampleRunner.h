@@ -26,7 +26,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/ExampleRunner.h"
+#include "ExampleRunner.h"
 
 
 class ConsoleExampleRunner :  ExampleRunner

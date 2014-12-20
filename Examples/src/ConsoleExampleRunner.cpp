@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
-#include "Framework/ConsoleExampleRunner.h"
+#include "ConsoleExampleRunner.h"
 #include "Framework/PlatformTypes.h"
 #include "Framework/CmdLineArgs.h"
 

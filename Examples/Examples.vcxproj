@@ -344,14 +344,14 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_ES2.h" />
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_HLSL_D3D9_D3D10_D3D11.h" />
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_Null.h" />
+    <ClInclude Include="src\ConsoleExampleRunner.h" />
+    <ClInclude Include="src\ExampleRunner.h" />
     <ClInclude Include="src\Framework\ApplicationImplLinux.h" />
     <ClInclude Include="src\Framework\ApplicationImplWindows.h" />
     <ClInclude Include="src\Framework\CLocaleChanger.h" />
     <ClInclude Include="src\Framework\CmdLineArgs.h" />
     <ClInclude Include="src\Framework\Color4.h" />
-    <ClInclude Include="src\Framework\ConsoleExampleRunner.h" />
     <ClInclude Include="src\Framework\EulerAngles.h" />
-    <ClInclude Include="src\Framework\ExampleRunner.h" />
     <ClInclude Include="src\Framework\IApplication.h" />
     <ClInclude Include="src\Framework\IApplicationImpl.h" />
     <ClInclude Include="src\Framework\IApplicationRenderer.h" />
@@ -396,6 +396,8 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
     <ClCompile Include="src\Basics\FirstTexture\FirstTexture.cpp" />
     <ClCompile Include="src\Basics\FirstTriangle\FirstTriangle.cpp" />
     <ClCompile Include="src\Basics\VertexBuffer\VertexBuffer.cpp" />
+    <ClCompile Include="src\ConsoleExampleRunner.cpp" />
+    <ClCompile Include="src\ExampleRunner.cpp" />
     <ClCompile Include="src\Framework\ApplicationImplLinux.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
@@ -405,9 +407,7 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
     <ClCompile Include="src\Framework\ApplicationImplWindows.cpp" />
     <ClCompile Include="src\Framework\CmdLineArgs.cpp" />
     <ClCompile Include="src\Framework\Color4.cpp" />
-    <ClCompile Include="src\Framework\ConsoleExampleRunner.cpp" />
     <ClCompile Include="src\Framework\EulerAngles.cpp" />
-    <ClCompile Include="src\Framework\ExampleRunner.cpp" />
     <ClCompile Include="src\Framework\IApplication.cpp" />
     <ClCompile Include="src\Framework\IApplicationImpl.cpp" />
     <ClCompile Include="src\Framework\IApplicationRenderer.cpp" />

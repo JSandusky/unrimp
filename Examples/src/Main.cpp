@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 #include "Framework/Main.h"
-#include "Framework/ConsoleExampleRunner.h"
+#include "ConsoleExampleRunner.h"
 #ifdef EXAMPLE_RUNNER_QT4
 	#include "Framework/QtRunner/ExampleRunnerQt4.h"
 #endif

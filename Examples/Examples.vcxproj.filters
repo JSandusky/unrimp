@@ -141,12 +141,6 @@
     <ClInclude Include="src\Framework\CmdLineArgs.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="src\Framework\ConsoleExampleRunner.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Framework\ExampleRunner.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
     <ClInclude Include="src\Framework\CLocaleChanger.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -463,6 +457,8 @@
       <Filter>Toolkit\FirstFont</Filter>
     </ClInclude>
     <ClInclude Include="src\PrecompiledHeader.h" />
+    <ClInclude Include="src\ConsoleExampleRunner.h" />
+    <ClInclude Include="src\ExampleRunner.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -503,12 +499,6 @@
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="src\Framework\CmdLineArgs.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Framework\ConsoleExampleRunner.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Framework\ExampleRunner.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="src\Basics\FirstGeometryShader\FirstGeometryShader.cpp">
@@ -584,6 +574,8 @@
       <Filter>Toolkit\FirstFont</Filter>
     </ClCompile>
     <ClCompile Include="src\PrecompiledHeader.cpp" />
+    <ClCompile Include="src\ExampleRunner.cpp" />
+    <ClCompile Include="src\ConsoleExampleRunner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Framework\IApplication.inl">
