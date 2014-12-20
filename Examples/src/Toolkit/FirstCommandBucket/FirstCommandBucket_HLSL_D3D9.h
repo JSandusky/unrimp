@@ -19,82 +19,65 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
+//[ Shader start                                          ]
 //[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "Framework/IApplicationRendererToolkit.h"
-#include "CommandBucket.h"
-
-
-//[-------------------------------------------------------]
-//[ Classes                                               ]
-//[-------------------------------------------------------]
-/**
-*  @brief
-*    Shows how to use command buckets
-*
-*  @remarks
-*    Demonstrates:
-*    - Command buckets
-*
-*  @todo
-*    - TODO(co) Under construction
-*/
-class FirstCommandBucket : public IApplicationRendererToolkit
+#if !defined(RENDERER_NO_DIRECT3D9) || !defined(RENDERER_NO_DIRECT3D10) || !defined(RENDERER_NO_DIRECT3D11)
+if (0 == strcmp(renderer->getName(), "Direct3D9"))
 {
 
 
 //[-------------------------------------------------------]
-//[ Public methods                                        ]
+//[ Define helper macro                                   ]
 //[-------------------------------------------------------]
-public:
-	/**
-	*  @brief
-	*    Constructor
-	*
-	*  @param[in] rendererName
-	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-	*/
-	explicit FirstCommandBucket(const char *rendererName);
-
-	/**
-	*  @brief
-	*    Destructor
-	*/
-	virtual ~FirstCommandBucket();
+#define STRINGIFY(ME) #ME
 
 
 //[-------------------------------------------------------]
-//[ Public virtual IApplication methods                   ]
+//[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
-public:
-	virtual void onInitialization() override;
-	virtual void onDeinitialization() override;
-	virtual void onDraw() override;
-
-
-//[-------------------------------------------------------]
-//[ Private data                                          ]
-//[-------------------------------------------------------]
-private:
-	RendererToolkit::IFontPtr mFont;	///< Font, can be a null pointer
-	// Command buckets
-	RendererToolkit::CommandBucket<int> mSolidCommandBucket;
-	RendererToolkit::CommandBucket<int> mTransparentCommandBucket;
-	// Renderer resources
-	Renderer::IProgramPtr		mProgram;
-	Renderer::IUniformBufferPtr	mUniformBufferDynamicVs;
-	Renderer::IVertexArrayPtr	mSolidVertexArray;
-	Renderer::IVertexArrayPtr	mTransparentVertexArray;
-	// Materials
-	Material mSolidMaterial;
-	Material mTransparentMaterial;
-
-
+// One vertex shader invocation per vertex
+vertexShaderSourceCode = STRINGIFY(
+// Attribute input/output
+struct VS_OUTPUT
+{
+	float4 Position : SV_POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
 };
+
+// Programs
+VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+{
+	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
+	VS_OUTPUT output;
+	output.Position = float4(Position, 0.0f, 1.0f);
+	return output;
+}
+);	// STRINGIFY
+
+
+//[-------------------------------------------------------]
+//[ Fragment shader source code                           ]
+//[-------------------------------------------------------]
+// One fragment shader invocation per fragment
+// "pixel shader" in Direct3D terminology
+fragmentShaderSourceCode = STRINGIFY(
+// Programs
+float4 main(float4 Position : SV_POSITION) : SV_Target
+{
+	// Return white
+	return float4(1.0f, 1.0f, 1.0f, 1.0f);
+}
+);	// STRINGIFY
+
+
+//[-------------------------------------------------------]
+//[ Undefine helper macro                                 ]
+//[-------------------------------------------------------]
+#undef STRINGIFY
+
+
+//[-------------------------------------------------------]
+//[ Shader end                                            ]
+//[-------------------------------------------------------]
+}
+else
+#endif

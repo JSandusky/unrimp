@@ -19,82 +19,63 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
+//[ Shader start                                          ]
 //[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "Framework/IApplicationRendererToolkit.h"
-#include "CommandBucket.h"
-
-
-//[-------------------------------------------------------]
-//[ Classes                                               ]
-//[-------------------------------------------------------]
-/**
-*  @brief
-*    Shows how to use command buckets
-*
-*  @remarks
-*    Demonstrates:
-*    - Command buckets
-*
-*  @todo
-*    - TODO(co) Under construction
-*/
-class FirstCommandBucket : public IApplicationRendererToolkit
+#ifndef RENDERER_NO_OPENGL
+if (0 == strcmp(renderer->getName(), "OpenGL") && !renderer->getCapabilities().uniformBuffer)
 {
 
 
 //[-------------------------------------------------------]
-//[ Public methods                                        ]
+//[ Define helper macro                                   ]
 //[-------------------------------------------------------]
-public:
-	/**
-	*  @brief
-	*    Constructor
-	*
-	*  @param[in] rendererName
-	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-	*/
-	explicit FirstCommandBucket(const char *rendererName);
-
-	/**
-	*  @brief
-	*    Destructor
-	*/
-	virtual ~FirstCommandBucket();
+#define STRINGIFY(ME) #ME
 
 
 //[-------------------------------------------------------]
-//[ Public virtual IApplication methods                   ]
+//[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
-public:
-	virtual void onInitialization() override;
-	virtual void onDeinitialization() override;
-	virtual void onDraw() override;
+// One vertex shader invocation per vertex
+vertexShaderSourceCode =
+"#version 110\n"	// OpenGL 2.0
+STRINGIFY(
+// Attribute input/output
+attribute vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+
+// Programs
+void main()
+{
+	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
+	gl_Position = vec4(Position, 0.0, 1.0);
+}
+);	// STRINGIFY
 
 
 //[-------------------------------------------------------]
-//[ Private data                                          ]
+//[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
-private:
-	RendererToolkit::IFontPtr mFont;	///< Font, can be a null pointer
-	// Command buckets
-	RendererToolkit::CommandBucket<int> mSolidCommandBucket;
-	RendererToolkit::CommandBucket<int> mTransparentCommandBucket;
-	// Renderer resources
-	Renderer::IProgramPtr		mProgram;
-	Renderer::IUniformBufferPtr	mUniformBufferDynamicVs;
-	Renderer::IVertexArrayPtr	mSolidVertexArray;
-	Renderer::IVertexArrayPtr	mTransparentVertexArray;
-	// Materials
-	Material mSolidMaterial;
-	Material mTransparentMaterial;
+// One fragment shader invocation per fragment
+fragmentShaderSourceCode =
+"#version 110\n"	// OpenGL 2.0
+STRINGIFY(
+// Programs
+void main()
+{
+	// Return white
+	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+}
+);	// STRINGIFY
 
 
-};
+//[-------------------------------------------------------]
+//[ Undefine helper macro                                 ]
+//[-------------------------------------------------------]
+#undef STRINGIFY
+
+
+//[-------------------------------------------------------]
+//[ Shader end                                            ]
+//[-------------------------------------------------------]
+}
+else
+#endif

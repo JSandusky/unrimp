@@ -471,6 +471,30 @@
     <ClInclude Include="src\Toolkit\FirstCompositor\FirstCompositor.h">
       <Filter>Toolkit\FirstCompositor</Filter>
     </ClInclude>
+    <ClInclude Include="src\Toolkit\FirstCommandBucket\CommandBucket.h">
+      <Filter>Toolkit\FirstCommandBucket</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket_GLSL_ES2.h">
+      <Filter>Toolkit\FirstCommandBucket</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket_Null.h">
+      <Filter>Toolkit\FirstCommandBucket</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket_GLSL_110.h">
+      <Filter>Toolkit\FirstCommandBucket</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket_HLSL_D3D10_D3D11.h">
+      <Filter>Toolkit\FirstCommandBucket</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket_HLSL_D3D9.h">
+      <Filter>Toolkit\FirstCommandBucket</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Toolkit\FirstCommandBucket\Material.h">
+      <Filter>Toolkit\FirstCommandBucket</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket_GLSL_140.h">
+      <Filter>Toolkit\FirstCommandBucket</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">

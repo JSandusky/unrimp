@@ -11,6 +11,12 @@
     <Filter Include="Source Files\Public">
       <UniqueIdentifier>{5c89bd99-c16c-46cd-8799-19fb55e5d704}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Command">
+      <UniqueIdentifier>{7ce27996-466b-4990-87d2-4ac0aa7c0f7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Compositor">
+      <UniqueIdentifier>{327414da-9b92-4146-aba1-c22516e3703a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />

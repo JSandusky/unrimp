@@ -19,82 +19,73 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
+//[ Shader start                                          ]
 //[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "Framework/IApplicationRendererToolkit.h"
-#include "CommandBucket.h"
-
-
-//[-------------------------------------------------------]
-//[ Classes                                               ]
-//[-------------------------------------------------------]
-/**
-*  @brief
-*    Shows how to use command buckets
-*
-*  @remarks
-*    Demonstrates:
-*    - Command buckets
-*
-*  @todo
-*    - TODO(co) Under construction
-*/
-class FirstCommandBucket : public IApplicationRendererToolkit
+#ifndef RENDERER_NO_OPENGL
+if (0 == strcmp(renderer->getName(), "OpenGL") && renderer->getCapabilities().uniformBuffer)
 {
 
 
 //[-------------------------------------------------------]
-//[ Public methods                                        ]
+//[ Define helper macro                                   ]
 //[-------------------------------------------------------]
-public:
-	/**
-	*  @brief
-	*    Constructor
-	*
-	*  @param[in] rendererName
-	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-	*/
-	explicit FirstCommandBucket(const char *rendererName);
-
-	/**
-	*  @brief
-	*    Destructor
-	*/
-	virtual ~FirstCommandBucket();
+#define STRINGIFY(ME) #ME
 
 
 //[-------------------------------------------------------]
-//[ Public virtual IApplication methods                   ]
+//[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
-public:
-	virtual void onInitialization() override;
-	virtual void onDeinitialization() override;
-	virtual void onDraw() override;
+// One vertex shader invocation per vertex
+vertexShaderSourceCode =
+"#version 140\n"	// OpenGL 3.1
+STRINGIFY(
+// Attribute input/output
+in vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
 
-
-//[-------------------------------------------------------]
-//[ Private data                                          ]
-//[-------------------------------------------------------]
-private:
-	RendererToolkit::IFontPtr mFont;	///< Font, can be a null pointer
-	// Command buckets
-	RendererToolkit::CommandBucket<int> mSolidCommandBucket;
-	RendererToolkit::CommandBucket<int> mTransparentCommandBucket;
-	// Renderer resources
-	Renderer::IProgramPtr		mProgram;
-	Renderer::IUniformBufferPtr	mUniformBufferDynamicVs;
-	Renderer::IVertexArrayPtr	mSolidVertexArray;
-	Renderer::IVertexArrayPtr	mTransparentVertexArray;
-	// Materials
-	Material mSolidMaterial;
-	Material mTransparentMaterial;
-
-
+// Uniforms
+layout(std140) uniform UniformBlockDynamicVs	// Usage of "layout(binding=0)" would be nice, but requires OpenGL 4.2
+{
+	vec2 offset;	// xy offset
 };
+
+// Programs
+void main()
+{
+	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
+	gl_Position = vec4(Position + offset, 0.0, 1.0);
+}
+);	// STRINGIFY
+
+
+//[-------------------------------------------------------]
+//[ Fragment shader source code                           ]
+//[-------------------------------------------------------]
+// One fragment shader invocation per fragment
+fragmentShaderSourceCode =
+"#version 140\n"										// OpenGL 3.1
+"#extension GL_ARB_explicit_attrib_location : enable\n"	// Required for "layout(location = 0)" etc.
+STRINGIFY(
+// Attribute input/output
+layout(location = 0, index = 0) out vec4 Color0;
+
+// Programs
+void main()
+{
+	// Return white
+	Color0 = vec4(1.0, 0.5, 0.5, 1.0);
+}
+);	// STRINGIFY
+
+
+//[-------------------------------------------------------]
+//[ Undefine helper macro                                 ]
+//[-------------------------------------------------------]
+#undef STRINGIFY
+
+
+//[-------------------------------------------------------]
+//[ Shader end                                            ]
+//[-------------------------------------------------------]
+}
+else
+#endif
