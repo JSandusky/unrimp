@@ -25,8 +25,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef CMDLINEARGS_H
-#define CMDLINEARGS_H
 
 
 //[-------------------------------------------------------]
@@ -107,5 +105,3 @@ public:
 private:
 	std::vector<std::string> m_args; ///< list of arguments as utf-8 strings
 };
-
-#endif // CMDLINEARGS_H

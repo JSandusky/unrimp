@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __IAPPLICATION_RENDERERTOOLKIT_H__
-#define __IAPPLICATION_RENDERERTOOLKIT_H__
 
 
 //[-------------------------------------------------------]
@@ -123,9 +121,3 @@ private:
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "IApplicationRendererToolkit.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __IAPPLICATION_RENDERERTOOLKIT_H__

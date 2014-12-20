@@ -17,8 +17,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 \*********************************************************/
 
-#ifndef EXAMPLERUNNER_H
-#define EXAMPLERUNNER_H
 #pragma once
 
 
@@ -59,5 +57,3 @@ protected:
 	ExampleToSupportedRendererMap	m_supportedRendererForExample;
 	std::string						m_defaultRendererName;
 };
-
-#endif // EXAMPLERUNNER_H

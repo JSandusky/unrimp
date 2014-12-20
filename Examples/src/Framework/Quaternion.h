@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __QUATERNION_H__
-#define __QUATERNION_H__
 
 
 //[-------------------------------------------------------]
@@ -98,6 +96,3 @@ public:
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Quaternion.inl"
-
-
-#endif // __QUATERNION_H__

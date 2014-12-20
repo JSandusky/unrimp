@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __IAPPLICATION_RENDERER_H__
-#define __IAPPLICATION_RENDERER_H__
 
 
 //[-------------------------------------------------------]
@@ -167,9 +165,3 @@ private:
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "IApplicationRenderer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __IAPPLICATION_RENDERER_H__

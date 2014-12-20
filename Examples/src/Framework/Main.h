@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __MAIN_H__
-#define __MAIN_H__
 
 
 //[-------------------------------------------------------]
@@ -109,9 +107,3 @@ int programEntryPoint(CmdLineArgs &args);
 		return programEntryPoint(arguments);
 	}
 #endif
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __MAIN_H__

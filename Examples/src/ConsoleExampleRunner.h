@@ -18,8 +18,6 @@
 \*********************************************************/
 
 
-#ifndef CONSOLEEXAMPLERUNNER_H
-#define CONSOLEEXAMPLERUNNER_H
 #pragma once
 
 
@@ -45,5 +43,3 @@ private:
 	std::string m_rendererName;
 	std::string m_exampleName;
 };
-
-#endif // CONSOLEEXAMPLERUNNER_H

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __FIRSTMULTIPLERENDERTARGETS_H__
-#define __FIRSTMULTIPLERENDERTARGETS_H__
 
 
 //[-------------------------------------------------------]
@@ -104,9 +102,3 @@ private:
 
 
 };
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __FIRSTMULTIPLERENDERTARGETS_H__

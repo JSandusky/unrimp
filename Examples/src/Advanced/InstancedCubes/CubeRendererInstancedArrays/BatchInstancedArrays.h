@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __INSTANCEDCUBES_BATCH_INSTANCEDARRAYS_H__
-#define __INSTANCEDCUBES_BATCH_INSTANCEDARRAYS_H__
 
 
 //[-------------------------------------------------------]
@@ -124,9 +122,3 @@ private:
 
 
 };
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __INSTANCEDCUBES_BATCH_INSTANCEDARRAYS_H__

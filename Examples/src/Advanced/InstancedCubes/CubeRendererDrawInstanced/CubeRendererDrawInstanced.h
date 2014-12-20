@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __INSTANCEDCUBES_CUBERENDERER_DRAWINSTANCED_H__
-#define __INSTANCEDCUBES_CUBERENDERER_DRAWINSTANCED_H__
 
 
 //[-------------------------------------------------------]
@@ -109,9 +107,3 @@ private:
 
 
 };
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __INSTANCEDCUBES_CUBERENDERER_DRAWINSTANCED_H__

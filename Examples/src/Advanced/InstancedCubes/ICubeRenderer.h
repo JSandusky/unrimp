@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __INSTANCEDCUBES_ICUBERENDERER_H__
-#define __INSTANCEDCUBES_ICUBERENDERER_H__
 
 
 //[-------------------------------------------------------]
@@ -125,9 +123,3 @@ protected:
 
 
 };
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __INSTANCEDCUBES_ICUBERENDERER_H__

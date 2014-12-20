@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __INSTANCEDCUBES_CUBERENDERER_INSTANCEDARRAYS_H__
-#define __INSTANCEDCUBES_CUBERENDERER_INSTANCEDARRAYS_H__
 
 
 //[-------------------------------------------------------]
@@ -108,9 +106,3 @@ private:
 
 
 };
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __INSTANCEDCUBES_CUBERENDERER_INSTANCEDARRAYS_H__

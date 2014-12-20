@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __WINDOWSHEADER_H__
-#define __WINDOWSHEADER_H__
 
 
 //[-------------------------------------------------------]
@@ -110,9 +108,3 @@ __pragma(warning(disable: 4668))	// warning C4668: '<x>' is not defined as a pre
 	#include <windows.h>
 	#undef DrawText
 __pragma(warning(pop))
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __WINDOWSHEADER_H__

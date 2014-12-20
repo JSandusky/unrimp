@@ -23,9 +23,6 @@
 //[-------------------------------------------------------]
 #pragma once
 
-#ifndef CLOCALECHANGER_H
-#define CLOCALECHANGER_H
-
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
@@ -117,5 +114,3 @@ private:
 private:
 	std::string m_savedLocale;
 };
-
-#endif // CLOCALECHANGER_H
