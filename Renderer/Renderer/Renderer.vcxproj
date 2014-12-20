@@ -189,10 +189,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>md "..\..\include\Renderer\Internal\$(ProjectName)\"
+      <Command>md "..\..\include\Renderer\"
 copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
-del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -213,10 +211,8 @@ del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
-      <Command>md "..\..\include\Renderer\Internal\$(ProjectName)\"
+      <Command>md "..\..\include\Renderer\"
 copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
-del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -251,8 +247,6 @@ del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
     <PostBuildEvent>
       <Command>md "..\..\include\Renderer\Internal\$(ProjectName)\"
 copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
-del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -286,10 +280,8 @@ del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
-      <Command>md "..\..\include\Renderer\Internal\$(ProjectName)\"
+      <Command>md "..\..\include\Renderer\"
 copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
-del "..\..\include\Renderer\Internal\Renderer\Renderer.h"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

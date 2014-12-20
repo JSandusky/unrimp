@@ -209,8 +209,6 @@
     <PostBuildEvent>
       <Command>md "..\..\lib\$(PlatformTarget)d_static\"
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
-md "..\..\include\Renderer\Internal\$(ProjectName)\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -236,8 +234,6 @@ copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_dynamic\
 md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
-md "..\..\include\Renderer\Internal\$(ProjectName)\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -277,8 +273,6 @@ copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
     <PostBuildEvent>
       <Command>md "..\..\lib\$(PlatformTarget)_static\"
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_static\
-md "..\..\include\Renderer\Internal\$(ProjectName)\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -317,8 +311,6 @@ copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_dynamic\
 md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
-md "..\..\include\Renderer\Internal\$(ProjectName)\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

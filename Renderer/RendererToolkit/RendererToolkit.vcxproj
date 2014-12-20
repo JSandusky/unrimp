@@ -147,10 +147,8 @@
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
 md "..\..\include\Renderer\Internal\$(ProjectName)\"
 copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
-md "..\..\include\Renderer\Internal\$(ProjectName)\"
+md "..\..\include\Renderer\"
 copy "include\RendererToolkit\RendererToolkit.h" "..\..\include\Renderer\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
-del "..\..\include\Renderer\Internal\RendererToolkit\RendererToolkit.h"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -178,10 +176,8 @@ del "..\..\include\Renderer\Internal\RendererToolkit\RendererToolkit.h"
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_dynamic\
 md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
-md "..\..\include\Renderer\Internal\$(ProjectName)\"
+md "..\..\include\Renderer\"
 copy "include\RendererToolkit\RendererToolkit.h" "..\..\include\Renderer\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
-del "..\..\include\Renderer\Internal\RendererToolkit\RendererToolkit.h"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -219,10 +215,8 @@ del "..\..\include\Renderer\Internal\RendererToolkit\RendererToolkit.h"
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_static\
 md "..\..\include\Renderer\Internal\$(ProjectName)\"
 copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
-md "..\..\include\Renderer\Internal\$(ProjectName)\"
+md "..\..\include\Renderer\"
 copy "include\RendererToolkit\RendererToolkit.h" "..\..\include\Renderer\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
-del "..\..\include\Renderer\Internal\RendererToolkit\RendererToolkit.h"
 </Command>
     </PostBuildEvent>
     <Lib>
@@ -269,10 +263,8 @@ del "..\..\include\Renderer\Internal\RendererToolkit\RendererToolkit.h"
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_dynamic\
 md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
-md "..\..\include\Renderer\Internal\$(ProjectName)\"
+md "..\..\include\Renderer\"
 copy "include\RendererToolkit\RendererToolkit.h" "..\..\include\Renderer\"
-copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
-del "..\..\include\Renderer\Internal\RendererToolkit\RendererToolkit.h"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
