@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/IFontTexture.h"
+#include "RendererToolkit/Font/IFontTexture.h"
 
 #include <Renderer/PlatformTypes.h>	// For "override"
 
@@ -199,7 +199,7 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/FontTextureFreeType.inl"
+#include "RendererToolkit/Font/FontTextureFreeType.inl"
 
 
 //[-------------------------------------------------------]

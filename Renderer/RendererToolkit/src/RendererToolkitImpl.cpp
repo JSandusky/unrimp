@@ -22,8 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/RendererToolkitImpl.h"
-#include "RendererToolkit/FreeTypeContext.h"
-#include "RendererToolkit/FontTextureFreeType.h"
+#include "RendererToolkit/Font/FreeTypeContext.h"
+#include "RendererToolkit/Font/FontTextureFreeType.h"
 
 #include <Renderer/IProgram.h>
 #include <Renderer/IRenderer.h>
@@ -153,11 +153,11 @@ namespace RendererToolkit
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "Font_GLSL_110.h"
-				#include "Font_GLSL_ES2.h"
-				#include "Font_HLSL_D3D9.h"
-				#include "Font_HLSL_D3D10_D3D11.h"
-				#include "Font_Null.h"
+				#include "Font/Font_GLSL_110.h"
+				#include "Font/Font_GLSL_ES2.h"
+				#include "Font/Font_HLSL_D3D9.h"
+				#include "Font/Font_HLSL_D3D10_D3D11.h"
+				#include "Font/Font_Null.h"
 
 				// Create the program
 				mFontProgram = shaderLanguage->createProgram(

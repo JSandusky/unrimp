@@ -19,17 +19,14 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-#ifndef __RENDERERTOOLKIT_IFONTTEXTURE_H__
-#define __RENDERERTOOLKIT_IFONTTEXTURE_H__
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/IFont.h"
+#include "RendererToolkit/Font/FreeTypeContext.h"
+
+#include <Renderer/IRenderer.h>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 
 //[-------------------------------------------------------]
@@ -40,75 +37,40 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Abstract font texture interface
-	*/
-	class IFontTexture : public IFont
-	{
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~IFontTexture();
+	FreeTypeContext::FreeTypeContext(Renderer::IRenderer &renderer) :
+		mRenderer(&renderer),
+		mFTLibrary(new FT_Library)
+	{
+		// Add our renderer reference
+		mRenderer->addReference();
 
+		// Initialize the FreeType library object
+		const FT_Error ftError = FT_Init_FreeType(mFTLibrary);
+		if (0 != ftError)
+		{
+			// Error!
+			delete mFTLibrary;
+			mFTLibrary = nullptr;
+		}
+	}
 
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
-		inline IFontTexture();
+	FreeTypeContext::~FreeTypeContext()
+	{
+		// Destroy the FreeType library object
+		if (nullptr != mFTLibrary)
+		{
+			FT_Done_FreeType(*mFTLibrary);
+			delete mFTLibrary;
+		}
 
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IFontTexture(const IFontTexture &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IFontTexture &operator =(const IFontTexture &source);
-
-
-	};
+		// Release our renderer reference
+		mRenderer->release();
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererToolkit
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererToolkit/IFontTexture.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERERTOOLKIT_IFONTTEXTURE_H__

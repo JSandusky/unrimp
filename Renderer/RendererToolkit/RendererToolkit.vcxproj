@@ -20,38 +20,38 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\RendererToolkit\FontGlyphTextureFreeType.inl" />
-    <None Include="include\RendererToolkit\FontTextureFreeType.inl" />
-    <None Include="include\RendererToolkit\FreeTypeContext.inl" />
-    <None Include="include\RendererToolkit\IFont.inl" />
-    <None Include="include\RendererToolkit\IFontGlyph.inl" />
-    <None Include="include\RendererToolkit\IFontGlyphTexture.inl" />
-    <None Include="include\RendererToolkit\IFontTexture.inl" />
+    <None Include="include\RendererToolkit\Font\FontGlyphTextureFreeType.inl" />
+    <None Include="include\RendererToolkit\Font\FontTextureFreeType.inl" />
+    <None Include="include\RendererToolkit\Font\FreeTypeContext.inl" />
+    <None Include="include\RendererToolkit\Font\IFont.inl" />
+    <None Include="include\RendererToolkit\Font\IFontGlyph.inl" />
+    <None Include="include\RendererToolkit\Font\IFontGlyphTexture.inl" />
+    <None Include="include\RendererToolkit\Font\IFontTexture.inl" />
     <None Include="include\RendererToolkit\IRendererToolkit.inl" />
     <None Include="include\RendererToolkit\RendererToolkitImpl.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\RendererToolkit\FontGlyphTextureFreeType.h" />
-    <ClInclude Include="include\RendererToolkit\FontTextureFreeType.h" />
-    <ClInclude Include="include\RendererToolkit\FreeTypeContext.h" />
-    <ClInclude Include="include\RendererToolkit\IFont.h" />
-    <ClInclude Include="include\RendererToolkit\IFontGlyph.h" />
-    <ClInclude Include="include\RendererToolkit\IFontGlyphTexture.h" />
-    <ClInclude Include="include\RendererToolkit\IFontTexture.h" />
+    <ClInclude Include="include\RendererToolkit\Font\FontGlyphTextureFreeType.h" />
+    <ClInclude Include="include\RendererToolkit\Font\FontTextureFreeType.h" />
+    <ClInclude Include="include\RendererToolkit\Font\FreeTypeContext.h" />
+    <ClInclude Include="include\RendererToolkit\Font\IFont.h" />
+    <ClInclude Include="include\RendererToolkit\Font\IFontGlyph.h" />
+    <ClInclude Include="include\RendererToolkit\Font\IFontGlyphTexture.h" />
+    <ClInclude Include="include\RendererToolkit\Font\IFontTexture.h" />
     <ClInclude Include="include\RendererToolkit\IRendererToolkit.h" />
     <ClInclude Include="include\RendererToolkit\RendererToolkit.h" />
     <ClInclude Include="include\RendererToolkit\RendererToolkitImpl.h" />
-    <ClInclude Include="src\Font_GLSL_110.h" />
-    <ClInclude Include="src\Font_GLSL_ES2.h" />
-    <ClInclude Include="src\Font_HLSL_D3D10_D3D11.h" />
-    <ClInclude Include="src\Font_HLSL_D3D9.h" />
-    <ClInclude Include="src\Font_Null.h" />
+    <ClInclude Include="src\Font\Font_GLSL_110.h" />
+    <ClInclude Include="src\Font\Font_GLSL_ES2.h" />
+    <ClInclude Include="src\Font\Font_HLSL_D3D10_D3D11.h" />
+    <ClInclude Include="src\Font\Font_HLSL_D3D9.h" />
+    <ClInclude Include="src\Font\Font_Null.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\FontGlyphTextureFreeType.cpp" />
-    <ClCompile Include="src\FontTextureFreeType.cpp" />
-    <ClCompile Include="src\FreeTypeContext.cpp" />
+    <ClCompile Include="src\Font\FontGlyphTextureFreeType.cpp" />
+    <ClCompile Include="src\Font\FontTextureFreeType.cpp" />
+    <ClCompile Include="src\Font\FreeTypeContext.cpp" />
     <ClCompile Include="src\RendererToolkitImpl.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

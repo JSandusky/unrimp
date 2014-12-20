@@ -153,7 +153,7 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/FreeTypeContext.inl"
+#include "RendererToolkit/Font/FreeTypeContext.inl"
 
 
 //[-------------------------------------------------------]

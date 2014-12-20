@@ -21,10 +21,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/FontTextureFreeType.h"
-#include "RendererToolkit/FreeTypeContext.h"
+#include "RendererToolkit/Font/FontTextureFreeType.h"
+#include "RendererToolkit/Font/FreeTypeContext.h"
+#include "RendererToolkit/Font/FontGlyphTextureFreeType.h"
 #include "RendererToolkit/RendererToolkitImpl.h"
-#include "RendererToolkit/FontGlyphTextureFreeType.h"
 
 #include <Renderer/IProgram.h>
 #include <Renderer/IRenderer.h>

@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/IFontGlyphTexture.h"
+#include "RendererToolkit/Font/IFontGlyphTexture.h"
 
 #include <Renderer/PlatformTypes.h>
 
@@ -139,7 +139,7 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/FontGlyphTextureFreeType.inl"
+#include "RendererToolkit/Font/FontGlyphTextureFreeType.inl"
 
 
 //[-------------------------------------------------------]

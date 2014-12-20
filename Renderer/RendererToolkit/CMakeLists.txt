@@ -44,10 +44,11 @@ include_directories(${FREETYPE_INCLUDE_DIRS})
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
-	src/FontGlyphTextureFreeType.cpp
-	src/FontTextureFreeType.cpp
-	src/FreeTypeContext.cpp
 	src/RendererToolkitImpl.cpp
+	# Font
+	src/Font/FontGlyphTextureFreeType.cpp
+	src/Font/FontTextureFreeType.cpp
+	src/Font/FreeTypeContext.cpp
 )
 
 

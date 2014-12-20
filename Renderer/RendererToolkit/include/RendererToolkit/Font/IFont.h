@@ -292,7 +292,7 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/IFont.inl"
+#include "RendererToolkit/Font/IFont.inl"
 
 
 //[-------------------------------------------------------]

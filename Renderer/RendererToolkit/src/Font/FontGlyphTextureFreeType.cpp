@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/FontGlyphTextureFreeType.h"
-#include "RendererToolkit/FontTextureFreeType.h"
+#include "RendererToolkit/Font/FontGlyphTextureFreeType.h"
+#include "RendererToolkit/Font/FontTextureFreeType.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

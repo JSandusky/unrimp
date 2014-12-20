@@ -22,14 +22,14 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERTOOLKIT_IFONTGLYPHTEXTURE_H__
-#define __RENDERERTOOLKIT_IFONTGLYPHTEXTURE_H__
+#ifndef __RENDERERTOOLKIT_IFONTTEXTURE_H__
+#define __RENDERERTOOLKIT_IFONTTEXTURE_H__
 
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/IFontGlyph.h"
+#include "RendererToolkit/Font/IFont.h"
 
 
 //[-------------------------------------------------------]
@@ -44,9 +44,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract font glyph texture interface
+	*    Abstract font texture interface
 	*/
-	class IFontGlyphTexture : public IFontGlyph
+	class IFontTexture : public IFont
 	{
 
 
@@ -58,7 +58,7 @@ namespace RendererToolkit
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IFontGlyphTexture();
+		inline virtual ~IFontTexture();
 
 
 	//[-------------------------------------------------------]
@@ -69,7 +69,7 @@ namespace RendererToolkit
 		*  @brief
 		*    Default constructor
 		*/
-		inline IFontGlyphTexture();
+		inline IFontTexture();
 
 		/**
 		*  @brief
@@ -78,7 +78,7 @@ namespace RendererToolkit
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		inline explicit IFontGlyphTexture(const IFontGlyphTexture &source);
+		inline explicit IFontTexture(const IFontTexture &source);
 
 		/**
 		*  @brief
@@ -90,7 +90,7 @@ namespace RendererToolkit
 		*  @return
 		*    Reference to this instance
 		*/
-		inline IFontGlyphTexture &operator =(const IFontGlyphTexture &source);
+		inline IFontTexture &operator =(const IFontTexture &source);
 
 
 	};
@@ -105,10 +105,10 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/IFontGlyphTexture.inl"
+#include "RendererToolkit/Font/IFontTexture.inl"
 
 
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
-#endif // __RENDERERTOOLKIT_IFONTGLYPHTEXTURE_H__
+#endif // __RENDERERTOOLKIT_IFONTTEXTURE_H__

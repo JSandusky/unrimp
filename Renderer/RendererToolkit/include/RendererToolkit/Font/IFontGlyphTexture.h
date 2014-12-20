@@ -22,8 +22,14 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERTOOLKIT_IFONTGLYPH_H__
-#define __RENDERERTOOLKIT_IFONTGLYPH_H__
+#ifndef __RENDERERTOOLKIT_IFONTGLYPHTEXTURE_H__
+#define __RENDERERTOOLKIT_IFONTGLYPHTEXTURE_H__
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererToolkit/Font/IFontGlyph.h"
 
 
 //[-------------------------------------------------------]
@@ -38,9 +44,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract font glyph interface
+	*    Abstract font glyph texture interface
 	*/
-	class IFontGlyph
+	class IFontGlyphTexture : public IFontGlyph
 	{
 
 
@@ -52,40 +58,7 @@ namespace RendererToolkit
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IFontGlyph();
-
-		/**
-		*  @brief
-		*    Return the width and height (both in pixel) of the glyph
-		*
-		*  @param[out] width
-		*    Receives the width (in pixel) of the glyph
-		*  @param[out] height
-		*    Receives the height (in pixel) of the glyph
-		*/
-		inline void getWidthAndHeight(int &width, int &height) const;
-
-		/**
-		*  @brief
-		*    Return the distance (in pixel) from the current pen position to the glyph bitmap
-		*
-		*  @param[out] cornerX
-		*    Receives the X distance (in pixel) from the current pen position to the glyph bitmap
-		*  @param[out] cornerY
-		*    Receives the Y distance (in pixel) from the current pen position to the glyph bitmap
-		*/
-		inline void getCorner(float &cornerX, float &cornerY) const;
-
-		/**
-		*  @brief
-		*    Return the object space pen advance
-		*
-		*  @param[out] penAdvanceX
-		*    Receives the object space pen X advance
-		*  @param[out] penAdvanceY
-		*    Receives the object space pen Y advance
-		*/
-		inline void getPenAdvance(float &penAdvanceX, float &penAdvanceY) const;
+		inline virtual ~IFontGlyphTexture();
 
 
 	//[-------------------------------------------------------]
@@ -96,7 +69,7 @@ namespace RendererToolkit
 		*  @brief
 		*    Default constructor
 		*/
-		inline IFontGlyph();
+		inline IFontGlyphTexture();
 
 		/**
 		*  @brief
@@ -105,7 +78,7 @@ namespace RendererToolkit
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		inline explicit IFontGlyph(const IFontGlyph &source);
+		inline explicit IFontGlyphTexture(const IFontGlyphTexture &source);
 
 		/**
 		*  @brief
@@ -117,19 +90,7 @@ namespace RendererToolkit
 		*  @return
 		*    Reference to this instance
 		*/
-		inline IFontGlyph &operator =(const IFontGlyph &source);
-
-
-	//[-------------------------------------------------------]
-	//[ Protected data                                        ]
-	//[-------------------------------------------------------]
-	protected:
-		int   mWidth;		///< The width (in pixel) of the glyph
-		int   mHeight;		///< The height (in pixel) of the glyph
-		float mCornerX;		///< The X distance (in pixel) from the current pen position to the glyph bitmap
-		float mCornerY;		///< The Y distance (in pixel) from the current pen position to the glyph bitmap
-		float mPenAdvanceX;	///< The object space pen X advance
-		float mPenAdvanceY;	///< The object space pen Y advance
+		inline IFontGlyphTexture &operator =(const IFontGlyphTexture &source);
 
 
 	};
@@ -144,10 +105,10 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/IFontGlyph.inl"
+#include "RendererToolkit/Font/IFontGlyphTexture.inl"
 
 
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
-#endif // __RENDERERTOOLKIT_IFONTGLYPH_H__
+#endif // __RENDERERTOOLKIT_IFONTGLYPHTEXTURE_H__
