@@ -43,6 +43,8 @@
 #include "Advanced/IcosahedronTessellation/IcosahedronTessellation.h"
 #ifndef RENDERER_NO_TOOLKIT
 	#include "Toolkit/FirstFont/FirstFont.h"
+	#include "Toolkit/FirstCommandBucket/FirstCommandBucket.h"
+	#include "Toolkit/FirstCompositor/FirstCompositor.h"
 #endif
 #ifndef NO_ASSIMP
 	#include "Assimp/FirstAssimp/FirstAssimp.h"
@@ -91,28 +93,31 @@ ExampleRunner::ExampleRunner()
 	std::array<std::string, 4> onlyShaderModel4Plus = {{"Null", "OpenGL", "Direct3D10", "Direct3D11"}};
 	std::array<std::string, 3> onlyShaderModel5Plus = {{"Null", "OpenGL", "Direct3D11"}};
 	// Basics
-	addExample("FirstTriangle", 				&RunExample<FirstTriangle>,					supportsAllRenderer);
-	addExample("VertexBuffer", 					&RunExample<VertexBuffer>,					supportsAllRenderer);
-	addExample("FirstTexture", 					&RunExample<FirstTexture>,					supportsAllRenderer);
+	addExample("FirstTriangle",					&RunExample<FirstTriangle>,					supportsAllRenderer);
+	addExample("VertexBuffer",					&RunExample<VertexBuffer>,					supportsAllRenderer);
+	addExample("FirstTexture",					&RunExample<FirstTexture>,					supportsAllRenderer);
 	addExample("FirstRenderToTexture",			&RunExample<FirstRenderToTexture>,			supportsAllRenderer);
 	addExample("FirstMultipleRenderTargets",	&RunExample<FirstMultipleRenderTargets>,	supportsAllRenderer);
-	addExample("FirstMultipleSwapChains", 		&RunExample<FirstMultipleSwapChains>,		supportsAllRenderer);
-	addExample("FirstInstancing", 				&RunExample<FirstInstancing>,				doesnotSupportOpenGLES2);
-	addExample("FirstGeometryShader", 			&RunExample<FirstGeometryShader>,			onlyShaderModel4Plus);
-	addExample("FirstTessellation", 			&RunExample<FirstTessellation>,				onlyShaderModel5Plus);
+	addExample("FirstMultipleSwapChains",		&RunExample<FirstMultipleSwapChains>,		supportsAllRenderer);
+	addExample("FirstInstancing",				&RunExample<FirstInstancing>,				doesnotSupportOpenGLES2);
+	addExample("FirstGeometryShader",			&RunExample<FirstGeometryShader>,			onlyShaderModel4Plus);
+	addExample("FirstTessellation",				&RunExample<FirstTessellation>,				onlyShaderModel5Plus);
 	// Advanced
-	addExample("FirstPostProcessing", 			&RunExample<FirstPostProcessing>,			supportsAllRenderer);
-	addExample("Fxaa", 							&RunExample<Fxaa>,							supportsAllRenderer);
-	addExample("FirstGpgpu", 					&RunExample<FirstGpgpu>,					supportsAllRenderer);
-	addExample("InstancedCubes", 				&RunExample<InstancedCubes>,				doesnotSupportOpenGLES2);
-	addExample("IcosahedronTessellation", 		&RunExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
+	addExample("FirstPostProcessing",			&RunExample<FirstPostProcessing>,			supportsAllRenderer);
+	addExample("Fxaa",							&RunExample<Fxaa>,							supportsAllRenderer);
+	addExample("FirstGpgpu",					&RunExample<FirstGpgpu>,					supportsAllRenderer);
+	addExample("InstancedCubes",				&RunExample<InstancedCubes>,				doesnotSupportOpenGLES2);
+	addExample("IcosahedronTessellation",		&RunExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
 	#ifndef RENDERER_NO_TOOLKIT
-	addExample("FirstFont", 					&RunExample<FirstFont>,						supportsAllRenderer);
+		// Renderer toolkit
+		addExample("FirstFont",					&RunExample<FirstFont>,						supportsAllRenderer);
+		addExample("FirstCommandBucket",		&RunExample<FirstCommandBucket>,			supportsAllRenderer);
+		addExample("FirstCompositor",			&RunExample<FirstCompositor>,				supportsAllRenderer);
 	#endif
 	#ifndef NO_ASSIMP
-	// Assimp
-	addExample("FirstAssimp", 					&RunExample<FirstAssimp>,					supportsAllRenderer);
-	addExample("AssimpMesh", 					&RunExample<AssimpMesh>,					supportsAllRenderer);
+		// Assimp
+		addExample("FirstAssimp",				&RunExample<FirstAssimp>,					supportsAllRenderer);
+		addExample("AssimpMesh",				&RunExample<AssimpMesh>,					supportsAllRenderer);
 	#endif
 
 	#ifndef RENDERER_NO_NULL

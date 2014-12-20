@@ -370,6 +370,8 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
     <ClInclude Include="src\Framework\X11Application.h" />
     <ClInclude Include="src\Framework\X11Window.h" />
     <ClInclude Include="src\PrecompiledHeader.h" />
+    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket.h" />
+    <ClInclude Include="src\Toolkit\FirstCompositor\FirstCompositor.h" />
     <ClInclude Include="src\Toolkit\FirstFont\FirstFont.h" />
   </ItemGroup>
   <ItemGroup>
@@ -433,6 +435,8 @@ copy "..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\bin\$(Platform
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket.cpp" />
+    <ClCompile Include="src\Toolkit\FirstCompositor\FirstCompositor.cpp" />
     <ClCompile Include="src\Toolkit\FirstFont\FirstFont.cpp" />
   </ItemGroup>
   <ItemGroup>

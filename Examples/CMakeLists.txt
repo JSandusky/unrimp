@@ -140,6 +140,8 @@ if(RENDERER_TOOLKIT)
 		${SOURCE_CODES}
 		src/Framework/IApplicationRendererToolkit.cpp
 		src/FirstFont/FirstFont.cpp
+		src/FirstCommandBucket/FirstCommandBucket.cpp
+		src/FirstCompositor/FirstCompositor.cpp
 	)
 endif()
 if(EXAMPLES_ASSIMP)

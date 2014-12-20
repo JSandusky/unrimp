@@ -73,6 +73,12 @@
     <Filter Include="Advanced\FirstPostProcessing">
       <UniqueIdentifier>{2110a6fd-1981-462d-8618-8655f0d0062e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Toolkit\FirstCommandBucket">
+      <UniqueIdentifier>{18b46f74-e7bf-4dd3-ab5e-4b2f3fd66d50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Toolkit\FirstCompositor">
+      <UniqueIdentifier>{3e6f9886-5f21-4ffc-9771-cec656041522}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Framework\IApplication.h">
@@ -459,6 +465,12 @@
     <ClInclude Include="src\PrecompiledHeader.h" />
     <ClInclude Include="src\ConsoleExampleRunner.h" />
     <ClInclude Include="src\ExampleRunner.h" />
+    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket.h">
+      <Filter>Toolkit\FirstCommandBucket</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Toolkit\FirstCompositor\FirstCompositor.h">
+      <Filter>Toolkit\FirstCompositor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -576,6 +588,12 @@
     <ClCompile Include="src\PrecompiledHeader.cpp" />
     <ClCompile Include="src\ExampleRunner.cpp" />
     <ClCompile Include="src\ConsoleExampleRunner.cpp" />
+    <ClCompile Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket.cpp">
+      <Filter>Toolkit\FirstCommandBucket</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Toolkit\FirstCompositor\FirstCompositor.cpp">
+      <Filter>Toolkit\FirstCompositor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Framework\IApplication.inl">
