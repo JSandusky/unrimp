@@ -56,9 +56,9 @@
     <ClInclude Include="include\Renderer\IVertexBuffer.h" />
     <ClInclude Include="include\Renderer\IVertexShader.h" />
     <ClInclude Include="include\Renderer\PlatformTypes.h" />
+    <ClInclude Include="include\Renderer\Public\Renderer.h" />
     <ClInclude Include="include\Renderer\RasterizerStateTypes.h" />
     <ClInclude Include="include\Renderer\RefCount.h" />
-    <ClInclude Include="include\Renderer\Renderer.h" />
     <ClInclude Include="include\Renderer\RendererTypes.h" />
     <ClInclude Include="include\Renderer\ResourceTypes.h" />
     <ClInclude Include="include\Renderer\SamplerStateTypes.h" />
@@ -190,7 +190,7 @@
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\include\Renderer\"
-copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
+copy "include\Renderer\Public\Renderer.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -212,7 +212,7 @@ copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\include\Renderer\"
-copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
+copy "include\Renderer\Public\Renderer.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -246,7 +246,7 @@ copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\include\Renderer\Internal\$(ProjectName)\"
-copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
+copy "include\Renderer\Public\Renderer.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -281,7 +281,7 @@ copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\include\Renderer\"
-copy "include\Renderer\Renderer.h" "..\..\include\Renderer\"
+copy "include\Renderer\Public\Renderer.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

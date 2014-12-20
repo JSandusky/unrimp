@@ -40,7 +40,7 @@
     <ClInclude Include="include\RendererToolkit\Font\IFontGlyphTexture.h" />
     <ClInclude Include="include\RendererToolkit\Font\IFontTexture.h" />
     <ClInclude Include="include\RendererToolkit\IRendererToolkit.h" />
-    <ClInclude Include="include\RendererToolkit\RendererToolkit.h" />
+    <ClInclude Include="include\RendererToolkit\Public\RendererToolkit.h" />
     <ClInclude Include="include\RendererToolkit\RendererToolkitImpl.h" />
     <ClInclude Include="src\Font\Font_GLSL_110.h" />
     <ClInclude Include="src\Font\Font_GLSL_ES2.h" />
@@ -148,7 +148,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
 md "..\..\include\Renderer\Internal\$(ProjectName)\"
 copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
 md "..\..\include\Renderer\"
-copy "include\RendererToolkit\RendererToolkit.h" "..\..\include\Renderer\"
+copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -177,7 +177,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_dynamic\
 md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
 md "..\..\include\Renderer\"
-copy "include\RendererToolkit\RendererToolkit.h" "..\..\include\Renderer\"
+copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -216,7 +216,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_static\
 md "..\..\include\Renderer\Internal\$(ProjectName)\"
 copy "include\$(ProjectName)" "..\..\include\Renderer\Internal\$(ProjectName)\"
 md "..\..\include\Renderer\"
-copy "include\RendererToolkit\RendererToolkit.h" "..\..\include\Renderer\"
+copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>
     <Lib>
@@ -264,7 +264,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_dynamic\
 md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
 md "..\..\include\Renderer\"
-copy "include\RendererToolkit\RendererToolkit.h" "..\..\include\Renderer\"
+copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

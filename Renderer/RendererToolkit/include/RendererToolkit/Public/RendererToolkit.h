@@ -18,7 +18,7 @@
 \*********************************************************/
 
 
-// Comfort header putting everything within a single header, only includes the renderer header
+// Public comfort header putting everything within a single header
 
 
 //[-------------------------------------------------------]

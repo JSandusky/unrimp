@@ -18,7 +18,7 @@
 \*********************************************************/
 
 
-// Comfort header putting everything within a single header without any additional header inclusion
+// Public comfort header putting everything within a single header
 
 
 //[-------------------------------------------------------]

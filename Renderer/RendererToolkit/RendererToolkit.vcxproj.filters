@@ -8,6 +8,9 @@
     <Filter Include="Source Files\Font">
       <UniqueIdentifier>{30892413-e439-48c6-ab24-9ec5adc72df8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Public">
+      <UniqueIdentifier>{5c89bd99-c16c-46cd-8799-19fb55e5d704}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -41,9 +44,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\RendererToolkit\RendererToolkit.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererToolkit\Font\IFontGlyphTexture.h">
       <Filter>Source Files\Font</Filter>
     </ClInclude>
@@ -85,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererToolkit\IRendererToolkit.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Public\RendererToolkit.h">
+      <Filter>Source Files\Public</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
