@@ -26,11 +26,6 @@
 #include "RendererToolkit/Font/FontGlyphTextureFreeType.h"
 #include "RendererToolkit/RendererToolkitImpl.h"
 
-#include <Renderer/IProgram.h>
-#include <Renderer/IRenderer.h>
-#include <Renderer/ITexture2D.h>
-#include <Renderer/IUniformBuffer.h>
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 

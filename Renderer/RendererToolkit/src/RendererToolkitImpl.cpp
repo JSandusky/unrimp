@@ -22,18 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/RendererToolkitImpl.h"
+#include "RendererToolkit/PlatformTypes.h"
 #include "RendererToolkit/Font/FreeTypeContext.h"
 #include "RendererToolkit/Font/FontTextureFreeType.h"
-
-#include <Renderer/IProgram.h>
-#include <Renderer/IRenderer.h>
-#include <Renderer/IBlendState.h>
-#include <Renderer/IVertexArray.h>
-#include <Renderer/ISamplerState.h>
-#include <Renderer/IUniformBuffer.h>
-#include <Renderer/PlatformTypes.h>
-#include <Renderer/IShaderLanguage.h>
-#include <Renderer/VertexArrayTypes.h>
 
 #include <string.h>	// For "strcmp()"
 

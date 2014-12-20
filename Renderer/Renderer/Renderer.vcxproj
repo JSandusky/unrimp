@@ -245,7 +245,7 @@ copy "include\Renderer\Public\Renderer.h" "..\..\include\Renderer\"
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>md "..\..\include\Renderer\Internal\$(ProjectName)\"
+      <Command>md "..\..\include\Renderer\"
 copy "include\Renderer\Public\Renderer.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>

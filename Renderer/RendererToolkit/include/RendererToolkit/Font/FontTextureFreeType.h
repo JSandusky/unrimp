@@ -30,8 +30,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/Font/IFontTexture.h"
-
-#include <Renderer/PlatformTypes.h>	// For "override"
+#include "RendererToolkit/PlatformTypes.h"
 
 
 //[-------------------------------------------------------]

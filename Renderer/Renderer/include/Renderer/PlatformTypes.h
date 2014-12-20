@@ -107,6 +107,7 @@
 	#endif
 
 	// To export classes, methods and variables
+	// -> Do not add this within the public "Renderer/Renderer.h"-header, it's for the internal implementation only
 	#define GENERIC_API_EXPORT	extern "C" __declspec(dllexport)
 #elif LINUX
 	#if X64_ARCHITECTURE
@@ -119,6 +120,7 @@
 	#endif
 
 	// To export classes, methods and variables
+	// -> Do not add this within the public "Renderer/Renderer.h"-header, it's for the internal implementation only
 	#if defined(HAVE_VISIBILITY_ATTR)
 		#define GENERIC_API_EXPORT	extern "C" __attribute__ ((visibility("default")))
 	#else
@@ -204,7 +206,9 @@
 	*/
 	#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name)
 
-	// Debugging stuff is not supported
+	// OUTPUT_DEBUG_* macros
+	// -> Do not add this within the public "Renderer/Renderer.h"-header, it's for the internal implementation only
+	// -> Debugging stuff is not supported
 	#define RENDERER_OUTPUT_DEBUG_STRING(outputString)
 	#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...)
 #else

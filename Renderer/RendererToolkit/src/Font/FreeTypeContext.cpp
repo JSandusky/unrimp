@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Font/FreeTypeContext.h"
 
-#include <Renderer/IRenderer.h>
+#include <Renderer/Renderer.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H

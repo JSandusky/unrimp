@@ -31,7 +31,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Font/IFontGlyphTexture.h"
 
-#include <Renderer/PlatformTypes.h>
+#include <Renderer/Renderer.h>
 
 
 //[-------------------------------------------------------]
