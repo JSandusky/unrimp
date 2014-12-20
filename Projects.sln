@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.22310.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Examples", "Examples\Examples.vcxproj", "{8AC48118-9381-4BD5-A58A-717E7256FB05}"
 	ProjectSection(ProjectDependencies) = postProject
 		{92C1761F-2670-4E3F-B26B-F317740CABA0} = {92C1761F-2670-4E3F-B26B-F317740CABA0}
@@ -49,6 +51,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RendererToolkit", "Renderer
 	ProjectSection(ProjectDependencies) = postProject
 		{625483C5-43B6-47AB-BD4F-099A0B091768} = {625483C5-43B6-47AB-BD4F-099A0B091768}
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RendererBackend", "RendererBackend", "{A7092446-3AC9-4A5E-AF7D-3BD29C30D2B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,5 +137,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A9AF6BD9-276D-4AC3-82F0-3588799CF3A0} = {A7092446-3AC9-4A5E-AF7D-3BD29C30D2B2}
+		{47156869-4788-4729-9B24-6B883DA2EB24} = {A7092446-3AC9-4A5E-AF7D-3BD29C30D2B2}
+		{161E1929-E33D-4074-A059-54030DB947AA} = {A7092446-3AC9-4A5E-AF7D-3BD29C30D2B2}
+		{FBAF5E40-0077-4B00-A424-A7F169974A55} = {A7092446-3AC9-4A5E-AF7D-3BD29C30D2B2}
+		{4ABD8DC7-83B5-4C00-ABF5-0BA77EB141C6} = {A7092446-3AC9-4A5E-AF7D-3BD29C30D2B2}
+		{0B573645-7F00-43D8-B109-07BFA0E56155} = {A7092446-3AC9-4A5E-AF7D-3BD29C30D2B2}
 	EndGlobalSection
 EndGlobal
