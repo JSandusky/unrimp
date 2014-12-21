@@ -43,7 +43,7 @@ STRINGIFY(
 in vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
 
 // Uniforms
-layout(std140) uniform UniformBlockDynamicVs	// Usage of "layout(binding=0)" would be nice, but requires OpenGL 4.2
+layout(std140) uniform UniformBlockDynamicVs	// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	vec2 offset;	// xy offset
 };
@@ -63,7 +63,7 @@ void main()
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
 "#version 140\n"										// OpenGL 3.1
-"#extension GL_ARB_explicit_attrib_location : enable\n"	// Required for "layout(location = 0)" etc.
+"#extension GL_ARB_explicit_attrib_location : enable\n"	// Required for attribute "layout(location = 0)"
 STRINGIFY(
 // Attribute input/output
 layout(location = 0, index = 0) out vec4 Color0;

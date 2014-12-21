@@ -48,7 +48,7 @@ out vec3 TexCoordVs;	// z component = texture ID
 out vec3 NormalVs;
 
 // Uniforms
-uniform samplerBuffer PerInstanceDataMap;	// Texture buffer with per instanc data (used via vertex texture fetch) - Usage of "layout(binding=1)" would be nice, but requires OpenGL 4.2
+uniform samplerBuffer PerInstanceDataMap;	// Texture buffer with per instanc data (used via vertex texture fetch) - Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 											// -> Layout: [Position][Rotation][Position][Rotation]...
 											//    - Position: xyz=Position, w=Slice of the 2D texture array to use
 											//    - Rotation: Rotation quaternion (xyz) and scale (w)
@@ -176,17 +176,17 @@ out vec3 TexCoordVs;	// z component = texture ID
 out vec3 NormalVs;
 
 // Uniforms
-uniform samplerBuffer PerInstanceDataMap;	// Texture buffer with per instanc data (used via vertex texture fetch) - Usage of "layout(binding=1)" would be nice, but requires OpenGL 4.2
+uniform samplerBuffer PerInstanceDataMap;	// Texture buffer with per instanc data (used via vertex texture fetch) - Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 											// -> Layout: [Position][Rotation][Position][Rotation]...
 											//    - Position: xyz=Position, w=Slice of the 2D texture array to use
 											//    - Rotation: Rotation quaternion (xyz) and scale (w)
 											//      -> We don't need to store the w component of the quaternion. It's normalized and storing
 											//         three components while recomputing the fourths component is be sufficient.
-layout(std140) uniform UniformBlockStaticVs		// Usage of "layout(binding=0)" would be nice, but requires OpenGL 4.2
+layout(std140) uniform UniformBlockStaticVs		// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	mat4 MVP;
 };
-layout(std140) uniform UniformBlockDynamicVs	// Usage of "layout(binding=1)" would be nice, but requires OpenGL 4.2
+layout(std140) uniform UniformBlockDynamicVs	// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	vec2 TimerAndGlobalScale;	// x=Timer, y=Global scale
 };
@@ -312,7 +312,7 @@ in vec3 NormalVs;
 layout(location = 0, index = 0) out vec4 Color0;
 
 // Uniforms
-uniform sampler2DArray DiffuseMap;	// Usage of "layout(binding=1)" would be nice, but requires OpenGL 4.2
+uniform sampler2DArray DiffuseMap;	// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 uniform vec3 LightPosition;	// World space light position
 
 // Programs
@@ -341,8 +341,8 @@ in vec3 NormalVs;
 layout(location = 0, index = 0) out vec4 Color0;
 
 // Uniforms
-uniform sampler2DArray DiffuseMap;				// Usage of "layout(binding=1)" would be nice, but requires OpenGL 4.2
-layout(std140) uniform UniformBlockDynamicFs	// Usage of "layout(binding=0)" would be nice, but requires OpenGL 4.2
+uniform sampler2DArray DiffuseMap;				// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+layout(std140) uniform UniformBlockDynamicFs	// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	vec3 LightPosition;	// World space light position
 };

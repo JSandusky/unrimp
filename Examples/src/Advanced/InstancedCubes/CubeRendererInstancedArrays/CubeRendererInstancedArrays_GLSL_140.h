@@ -57,11 +57,11 @@ out vec2 TexCoordVs;
 out vec3 NormalVs;
 
 // Uniforms
-layout(std140) uniform UniformBlockStaticVs		// Usage of "layout(binding=0)" would be nice, but requires OpenGL 4.2
+layout(std140) uniform UniformBlockStaticVs		// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	mat4 MVP;
 };
-layout(std140) uniform UniformBlockDynamicVs	// Usage of "layout(binding=1)" would be nice, but requires OpenGL 4.2
+layout(std140) uniform UniformBlockDynamicVs	// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	vec2 TimerAndGlobalScale;	// x=Timer, y=Global scale
 };
@@ -179,8 +179,8 @@ in vec3 NormalVs;
 layout(location = 0, index = 0) out vec4 Color0;
 
 // Uniforms
-uniform sampler2D DiffuseMap;					// Usage of "layout(binding=1)" would be nice, but requires OpenGL 4.2
-layout(std140) uniform UniformBlockDynamicFs	// Usage of "layout(binding=0)" would be nice, but requires OpenGL 4.2
+uniform sampler2D DiffuseMap;					// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+layout(std140) uniform UniformBlockDynamicFs	// Usage of "layout(binding = 0)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	vec3 LightPosition;	// World space light position
 };

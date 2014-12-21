@@ -211,8 +211,8 @@ void FirstTexture::onDraw()
 			{ // Set diffuse map (texture unit 0 by default)
 				// Tell the renderer API which texture should be bound to which texture unit
 				// -> When using OpenGL or OpenGL ES 2 this is required
-				// -> OpenGL 4.2 supports explicit binding points ("layout(binding=0)" in GLSL shader),
-				//    for backward compatibility we don't use it in here
+				// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
+				//    in GLSL shader) , for backward compatibility we don't use it in here
 				// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
 				//    to use is usually defined directly within the shader by using the "register"-keyword
 				// -> Usually, this should only be done once during initialization, this example does this

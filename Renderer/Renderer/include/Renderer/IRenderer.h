@@ -590,7 +590,8 @@ namespace Renderer
 		*    Set the used vertex shader uniform buffer object (UBO, "constant buffer" in Direct3D terminology) at a certain slot
 		*
 		*  @param[in] slot
-		*    Slot
+		*    Slot which can either be searched by an uniform name via "Renderer::IProgram::getUniformBlockIndex()" (for performance reasons not recommended)
+		*    or fixed set inside the shader (in OpenGL the "GL_ARB_explicit_uniform_location"-extension is required for this)
 		*  @param[in] uniformBuffer
 		*    Uniform buffer, can be a null pointer (default: "nullptr")
 		*
@@ -652,7 +653,8 @@ namespace Renderer
 		*    Set the used tessellation control shader uniform buffer object (UBO, "constant buffer" in Direct3D terminology) at a certain slot
 		*
 		*  @param[in] slot
-		*    Slot
+		*    Slot which can either be searched by an uniform name via "Renderer::IProgram::getUniformBlockIndex()" (for performance reasons not recommended)
+		*    or fixed set inside the shader (in OpenGL the "GL_ARB_explicit_uniform_location"-extension is required for this)
 		*  @param[in] uniformBuffer
 		*    Uniform buffer, can be a null pointer (default: "nullptr")
 		*
@@ -714,7 +716,8 @@ namespace Renderer
 		*    Set the used tessellation evaluation shader uniform buffer object (UBO, "constant buffer" in Direct3D terminology) at a certain slot
 		*
 		*  @param[in] slot
-		*    Slot
+		*    Slot which can either be searched by an uniform name via "Renderer::IProgram::getUniformBlockIndex()" (for performance reasons not recommended)
+		*    or fixed set inside the shader (in OpenGL the "GL_ARB_explicit_uniform_location"-extension is required for this)
 		*  @param[in] uniformBuffer
 		*    Uniform buffer, can be a null pointer (default: "nullptr")
 		*
@@ -776,7 +779,8 @@ namespace Renderer
 		*    Set the used geometry shader uniform buffer object (UBO, "constant buffer" in Direct3D terminology) at a certain slot
 		*
 		*  @param[in] slot
-		*    Slot
+		*    Slot which can either be searched by an uniform name via "Renderer::IProgram::getUniformBlockIndex()" (for performance reasons not recommended)
+		*    or fixed set inside the shader (in OpenGL the "GL_ARB_explicit_uniform_location"-extension is required for this)
 		*  @param[in] uniformBuffer
 		*    Uniform buffer, can be a null pointer (default: "nullptr")
 		*
@@ -879,7 +883,8 @@ namespace Renderer
 		*    Set the used fragment shader uniform buffer object (UBO, "constant buffer" in Direct3D terminology) at a certain slot
 		*
 		*  @param[in] slot
-		*    Slot
+		*    Slot which can either be searched by an uniform name via "Renderer::IProgram::getUniformBlockIndex()" (for performance reasons not recommended)
+		*    or fixed set inside the shader (in OpenGL the "GL_ARB_explicit_uniform_location"-extension is required for this)
 		*  @param[in] uniformBuffer
 		*    Uniform buffer, can be a null pointer (default: "nullptr")
 		*

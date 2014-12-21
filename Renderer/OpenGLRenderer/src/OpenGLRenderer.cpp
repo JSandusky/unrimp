@@ -1407,7 +1407,7 @@ namespace OpenGLRenderer
 					if (mContext->getExtensions().isGL_ARB_uniform_buffer_object())
 					{
 						// Attach the buffer to the given UBO binding point
-						// -> Explicit binding points ("layout(binding=0)" in GLSL shader) requires OpenGL 4.2
+						// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 						// -> Direct3D 10 and Direct3D 11 have explicit binding points
 						// -> TODO(co) For now, nStartSlot is set from outside to the uniform block index which is directly used as binding point - Review this, maybe there's a better cross-API solution
 						glBindBufferBaseEXT(GL_UNIFORM_BUFFER, slot, uniformBuffer ? static_cast<UniformBufferGlsl*>(uniformBuffer)->getOpenGLUniformBuffer() : 0);

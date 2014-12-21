@@ -170,7 +170,7 @@ varying vec2 TexCoordVs;
 varying vec3 NormalVs;
 
 // Uniforms
-uniform sampler2D DiffuseMap;		// Usage of "layout(binding=1)" would be nice, but requires OpenGL 4.2
+uniform sampler2D DiffuseMap;		// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 uniform vec3      LightPosition;	// World space light position
 
 // Programs
