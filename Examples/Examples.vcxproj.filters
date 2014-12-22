@@ -13,7 +13,7 @@
     <Filter Include="Assimp">
       <UniqueIdentifier>{61764e1d-ef07-4152-8a72-d3f74d1d7d3d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Toolkit">
+    <Filter Include="Runtime">
       <UniqueIdentifier>{6eb322fb-d156-4346-81ef-17f96b0bf544}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assimp\AssimpMesh">
@@ -22,7 +22,7 @@
     <Filter Include="Assimp\FirstAssimp">
       <UniqueIdentifier>{ee6a6b72-0a97-45a3-83e9-45085937d964}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Toolkit\FirstFont">
+    <Filter Include="Runtime\FirstFont">
       <UniqueIdentifier>{882cb982-67ee-458b-b665-b7d577094716}</UniqueIdentifier>
     </Filter>
     <Filter Include="Advanced\IcosahedronTessellation">
@@ -73,10 +73,10 @@
     <Filter Include="Advanced\FirstPostProcessing">
       <UniqueIdentifier>{2110a6fd-1981-462d-8618-8655f0d0062e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Toolkit\FirstCommandBucket">
+    <Filter Include="Runtime\FirstCommandBucket">
       <UniqueIdentifier>{18b46f74-e7bf-4dd3-ab5e-4b2f3fd66d50}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Toolkit\FirstCompositor">
+    <Filter Include="Runtime\FirstCompositor">
       <UniqueIdentifier>{3e6f9886-5f21-4ffc-9771-cec656041522}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -129,7 +129,7 @@
     <ClInclude Include="src\Framework\WindowsHeader.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="src\Framework\IApplicationRendererToolkit.h">
+    <ClInclude Include="src\Framework\IApplicationRendererRuntime.h">
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="src\Framework\X11Window.h">
@@ -459,41 +459,41 @@
     <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp_GLSL_110.h">
       <Filter>Assimp\FirstAssimp</Filter>
     </ClInclude>
-    <ClInclude Include="src\Toolkit\FirstFont\FirstFont.h">
-      <Filter>Toolkit\FirstFont</Filter>
+    <ClInclude Include="src\Runtime\FirstFont\FirstFont.h">
+      <Filter>Runtime\FirstFont</Filter>
     </ClInclude>
     <ClInclude Include="src\PrecompiledHeader.h" />
     <ClInclude Include="src\ConsoleExampleRunner.h" />
     <ClInclude Include="src\ExampleRunner.h" />
-    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket.h">
-      <Filter>Toolkit\FirstCommandBucket</Filter>
+    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket.h">
+      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
-    <ClInclude Include="src\Toolkit\FirstCompositor\FirstCompositor.h">
-      <Filter>Toolkit\FirstCompositor</Filter>
+    <ClInclude Include="src\Runtime\FirstCompositor\FirstCompositor.h">
+      <Filter>Runtime\FirstCompositor</Filter>
     </ClInclude>
-    <ClInclude Include="src\Toolkit\FirstCommandBucket\CommandBucket.h">
-      <Filter>Toolkit\FirstCommandBucket</Filter>
+    <ClInclude Include="src\Runtime\FirstCommandBucket\CommandBucket.h">
+      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
-    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket_GLSL_ES2.h">
-      <Filter>Toolkit\FirstCommandBucket</Filter>
+    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_ES2.h">
+      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
-    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket_Null.h">
-      <Filter>Toolkit\FirstCommandBucket</Filter>
+    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_Null.h">
+      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
-    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket_GLSL_110.h">
-      <Filter>Toolkit\FirstCommandBucket</Filter>
+    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_110.h">
+      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
-    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket_HLSL_D3D10_D3D11.h">
-      <Filter>Toolkit\FirstCommandBucket</Filter>
+    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D10_D3D11.h">
+      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
-    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket_HLSL_D3D9.h">
-      <Filter>Toolkit\FirstCommandBucket</Filter>
+    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D9.h">
+      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
-    <ClInclude Include="src\Toolkit\FirstCommandBucket\Material.h">
-      <Filter>Toolkit\FirstCommandBucket</Filter>
+    <ClInclude Include="src\Runtime\FirstCommandBucket\Material.h">
+      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
-    <ClInclude Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket_GLSL_140.h">
-      <Filter>Toolkit\FirstCommandBucket</Filter>
+    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_140.h">
+      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -522,7 +522,7 @@
     <ClCompile Include="src\Framework\TGALoader.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="src\Framework\IApplicationRendererToolkit.cpp">
+    <ClCompile Include="src\Framework\IApplicationRendererRuntime.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="src\Framework\X11Window.cpp">
@@ -606,17 +606,17 @@
     <ClCompile Include="src\Assimp\FirstAssimp\FirstAssimp.cpp">
       <Filter>Assimp\FirstAssimp</Filter>
     </ClCompile>
-    <ClCompile Include="src\Toolkit\FirstFont\FirstFont.cpp">
-      <Filter>Toolkit\FirstFont</Filter>
+    <ClCompile Include="src\Runtime\FirstFont\FirstFont.cpp">
+      <Filter>Runtime\FirstFont</Filter>
     </ClCompile>
     <ClCompile Include="src\PrecompiledHeader.cpp" />
     <ClCompile Include="src\ExampleRunner.cpp" />
     <ClCompile Include="src\ConsoleExampleRunner.cpp" />
-    <ClCompile Include="src\Toolkit\FirstCommandBucket\FirstCommandBucket.cpp">
-      <Filter>Toolkit\FirstCommandBucket</Filter>
+    <ClCompile Include="src\Runtime\FirstCommandBucket\FirstCommandBucket.cpp">
+      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClCompile>
-    <ClCompile Include="src\Toolkit\FirstCompositor\FirstCompositor.cpp">
-      <Filter>Toolkit\FirstCompositor</Filter>
+    <ClCompile Include="src\Runtime\FirstCompositor\FirstCompositor.cpp">
+      <Filter>Runtime\FirstCompositor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -649,7 +649,7 @@
     </None>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="src\Framework\IApplicationRendererToolkit.inl">
+    <None Include="src\Framework\IApplicationRendererRuntime.inl">
       <Filter>Framework</Filter>
     </None>
   </ItemGroup>

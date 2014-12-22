@@ -41,10 +41,10 @@
 #include "Advanced/FirstGpgpu/FirstGpgpu.h"
 #include "Advanced/InstancedCubes/InstancedCubes.h"
 #include "Advanced/IcosahedronTessellation/IcosahedronTessellation.h"
-#ifndef RENDERER_NO_TOOLKIT
-	#include "Toolkit/FirstFont/FirstFont.h"
-	#include "Toolkit/FirstCommandBucket/FirstCommandBucket.h"
-	#include "Toolkit/FirstCompositor/FirstCompositor.h"
+#ifndef RENDERER_NO_RUNTIME
+	#include "Runtime/FirstFont/FirstFont.h"
+	#include "Runtime/FirstCommandBucket/FirstCommandBucket.h"
+	#include "Runtime/FirstCompositor/FirstCompositor.h"
 #endif
 #ifndef NO_ASSIMP
 	#include "Assimp/FirstAssimp/FirstAssimp.h"
@@ -108,8 +108,8 @@ ExampleRunner::ExampleRunner()
 	addExample("FirstGpgpu",					&RunExample<FirstGpgpu>,					supportsAllRenderer);
 	addExample("InstancedCubes",				&RunExample<InstancedCubes>,				doesnotSupportOpenGLES2);
 	addExample("IcosahedronTessellation",		&RunExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
-	#ifndef RENDERER_NO_TOOLKIT
-		// Renderer toolkit
+	#ifndef RENDERER_NO_RUNTIME
+		// Renderer runtime
 		addExample("FirstFont",					&RunExample<FirstFont>,						supportsAllRenderer);
 		addExample("FirstCommandBucket",		&RunExample<FirstCommandBucket>,			supportsAllRenderer);
 		addExample("FirstCompositor",			&RunExample<FirstCompositor>,				supportsAllRenderer);

@@ -27,13 +27,13 @@
 //[-------------------------------------------------------]
 //[ Preprocessor                                          ]
 //[-------------------------------------------------------]
-#ifndef RENDERER_NO_TOOLKIT
+#ifndef RENDERER_NO_RUNTIME
 
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Toolkit/FirstFont/FirstFont.h"
+#include "Runtime/FirstCompositor/FirstCompositor.h"
 #include "Framework/Color4.h"
 
 #include <glm/gtc/type_ptr.hpp> 
@@ -43,13 +43,13 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstFont::FirstFont(const char *rendererName) :
-	IApplicationRendererToolkit(rendererName)
+FirstCompositor::FirstCompositor(const char *rendererName) :
+	IApplicationRendererRuntime(rendererName)
 {
 	// Nothing to do in here
 }
 
-FirstFont::~FirstFont()
+FirstCompositor::~FirstCompositor()
 {
 	// The resources are released within "onDeinitialization()"
 	// Nothing to do in here
@@ -59,28 +59,28 @@ FirstFont::~FirstFont()
 //[-------------------------------------------------------]
 //[ Public virtual IApplication methods                   ]
 //[-------------------------------------------------------]
-void FirstFont::onInitialization()
+void FirstCompositor::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRendererToolkit::onInitialization();
+	IApplicationRendererRuntime::onInitialization();
 
-	// Get and check the renderer toolkit instance
-	RendererToolkit::IRendererToolkitPtr rendererToolkit(getRendererToolkit());
-	if (nullptr != rendererToolkit)
+	// Get and check the renderer runtime instance
+	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+	if (nullptr != rendererRuntime)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 		// Create the font instance
 		// -> In order to keep it simple, we use simple ASCII strings as filenames which are relative to the executable
-		mFont = rendererToolkit->createFontTexture("../Data/Font/LinBiolinum_R.otf");
+		mFont = rendererRuntime->createFontTexture("../Data/Font/LinBiolinum_R.otf");
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(getRenderer())
 	}
 }
 
-void FirstFont::onDeinitialization()
+void FirstCompositor::onDeinitialization()
 {
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
@@ -92,10 +92,10 @@ void FirstFont::onDeinitialization()
 	RENDERER_END_DEBUG_EVENT(getRenderer())
 
 	// Call the base implementation
-	IApplicationRendererToolkit::onDeinitialization();
+	IApplicationRendererRuntime::onDeinitialization();
 }
 
-void FirstFont::onDraw()
+void FirstCompositor::onDraw()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
@@ -130,4 +130,4 @@ void FirstFont::onDraw()
 //[-------------------------------------------------------]
 //[ Preprocessor                                          ]
 //[-------------------------------------------------------]
-#endif // RENDERER_NO_TOOLKIT
+#endif // RENDERER_NO_RUNTIME

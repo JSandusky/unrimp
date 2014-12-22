@@ -27,9 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRenderer.h"
-
-#include <Renderer/RendererToolkit.h>
+#include "Framework/IApplicationRendererRuntime.h"
+#include "CommandBucket.h"
 
 
 //[-------------------------------------------------------]
@@ -37,9 +36,16 @@
 //[-------------------------------------------------------]
 /**
 *  @brief
-*    Renderer toolkit application interface
+*    Shows how to use command buckets
+*
+*  @remarks
+*    Demonstrates:
+*    - Command buckets
+*
+*  @todo
+*    - TODO(co) Under construction
 */
-class IApplicationRendererToolkit : public IApplicationRenderer
+class FirstCommandBucket : public IApplicationRendererRuntime
 {
 
 
@@ -49,18 +55,19 @@ class IApplicationRendererToolkit : public IApplicationRenderer
 public:
 	/**
 	*  @brief
-	*    Destructor
+	*    Constructor
+	*
+	*  @param[in] rendererName
+	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
+	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
 	*/
-	virtual ~IApplicationRendererToolkit();
+	explicit FirstCommandBucket(const char *rendererName);
 
 	/**
 	*  @brief
-	*    Return the renderer toolkit instance
-	*
-	*  @remarks
-	*    The renderer toolkit instance, can be a null pointer
+	*    Destructor
 	*/
-	inline RendererToolkit::IRendererToolkit *getRendererToolkit() const;
+	virtual ~FirstCommandBucket();
 
 
 //[-------------------------------------------------------]
@@ -69,55 +76,25 @@ public:
 public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
-
-
-//[-------------------------------------------------------]
-//[ Protected methods                                     ]
-//[-------------------------------------------------------]
-protected:
-	/**
-	*  @brief
-	*    Constructor
-	*
-	*  @param[in] rendererName
-	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-	*/
-	explicit IApplicationRendererToolkit(const char *rendererName);
-
-
-//[-------------------------------------------------------]
-//[ Private methods                                       ]
-//[-------------------------------------------------------]
-private:
-	/**
-	*  @brief
-	*    Create a renderer toolkit instance
-	*
-	*  @param[in] renderer
-	*    Renderer instance to use
-	*
-	*  @return
-	*    The created renderer toolkit instance, null pointer on error
-	*
-	*  @note
-	*    - The renderer toolkit keeps a reference to the provided renderer instance
-	*/
-	RendererToolkit::IRendererToolkit *createRendererToolkitInstance(Renderer::IRenderer &renderer);
+	virtual void onDraw() override;
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	void								  *mRendererToolkitSharedLibrary;	///< Renderer toolkit shared library, can be a null pointer
-	RendererToolkit::IRendererToolkitPtr   mRendererToolkit;				///< Renderer toolkit instance, can be a null pointer
+	RendererRuntime::IFontPtr mFont;	///< Font, can be a null pointer
+	// Command buckets
+	RendererRuntime::CommandBucket<int> mSolidCommandBucket;
+	RendererRuntime::CommandBucket<int> mTransparentCommandBucket;
+	// Renderer resources
+	Renderer::IProgramPtr		mProgram;
+	Renderer::IUniformBufferPtr	mUniformBufferDynamicVs;
+	Renderer::IVertexArrayPtr	mSolidVertexArray;
+	Renderer::IVertexArrayPtr	mTransparentVertexArray;
+	// Materials
+	Material mSolidMaterial;
+	Material mTransparentMaterial;
 
 
 };
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "IApplicationRendererToolkit.inl"

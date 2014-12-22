@@ -31,7 +31,7 @@
 #include "Material.h"
 
 
-namespace RendererToolkit
+namespace RendererRuntime
 {
 
 	typedef void (*BackendDispatchFunction)(const void*, Renderer::IRenderer& renderer);

@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Framework/Stopwatch.h"
-#include "Framework/IApplicationRendererToolkit.h"
+#include "Framework/IApplicationRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -59,9 +59,9 @@ class ICubeRenderer;
 *    - Vertex shader (VS) and fragment shader (FS)
 *    - Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 *    - Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
-*    - Renderer toolkit fonts
+*    - Renderer runtime fonts
 */
-class InstancedCubes : public IApplicationRendererToolkit
+class InstancedCubes : public IApplicationRendererRuntime
 {
 
 
@@ -110,7 +110,7 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererToolkit::IFontPtr  mFont;					///< Font, can be a null pointer
+	RendererRuntime::IFontPtr  mFont;					///< Font, can be a null pointer
 	ICubeRenderer			  *mCubeRenderer;			///< Cube renderer instance, can be a null pointer
 	uint32_t				   mNumberOfCubeInstances;	///< Number of cube instances
 	// The rest is for timing and statistics

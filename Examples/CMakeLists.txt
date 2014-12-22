@@ -40,8 +40,8 @@ endif()
 if(NOT RENDERER_DEBUG)
 	add_definitions(-DRENDERER_NO_DEBUG)
 endif()
-if(NOT RENDERER_TOOLKIT)
-	add_definitions(-DRENDERER_NO_TOOLKIT)
+if(NOT RENDERER_RUNTIME)
+	add_definitions(-DRENDERER_NO_RUNTIME)
 endif()
 if(NOT EXAMPLES_ASSIMP)
 	add_definitions(-DNO_ASSIMP)
@@ -134,11 +134,11 @@ elseif(UNIX)
 		src/Framework/X11Application.cpp
 	)
 endif()
-if(RENDERER_TOOLKIT)
-	# Renderer toolkit example source codes
+if(RENDERER_RUNTIME)
+	# Renderer runtime example source codes
 	set(SOURCE_CODES
 		${SOURCE_CODES}
-		src/Framework/IApplicationRendererToolkit.cpp
+		src/Framework/IApplicationRendererRuntime.cpp
 		src/FirstFont/FirstFont.cpp
 		src/FirstCommandBucket/FirstCommandBucket.cpp
 		src/FirstCompositor/FirstCompositor.cpp
@@ -199,8 +199,8 @@ if(STATIC_LIBRARY)
 	if(WIN32)
 		set(LIBRARIES ${LIBRARIES} Direct3D9RendererStatic Direct3D10RendererStatic Direct3D11RendererStatic)
 	endif()
-	if(RENDERER_TOOLKIT)
-		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}RendererToolkitStatic${CMAKE_STATIC_LIBRARY_SUFFIX})
+	if(RENDERER_RUNTIME)
+		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}RendererRuntimeStatic${CMAKE_STATIC_LIBRARY_SUFFIX})
 		if(UNIX)
 			set(LIBRARIES ${LIBRARIES} dl ${FREETYPE_LIBRARY})
 		endif()
@@ -222,11 +222,11 @@ if(SHARED_LIBRARY)
 	else()
 		add_executable(Examples ${SOURCE_CODES})
 	endif()
-	if(RENDERER_TOOLKIT)
+	if(RENDERER_RUNTIME)
 		if(WIN32)
-			target_link_libraries(Examples RendererToolkit.lib)
+			target_link_libraries(Examples RendererRuntime.lib)
 		else()
-			target_link_libraries(Examples RendererToolkit)
+			target_link_libraries(Examples RendererRuntime)
 		endif()
 	endif()
 	if(EXAMPLES_ASSIMP)

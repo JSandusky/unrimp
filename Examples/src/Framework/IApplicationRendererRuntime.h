@@ -27,8 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRendererToolkit.h"
-#include "CommandBucket.h"
+#include "Framework/IApplicationRenderer.h"
+
+#include <Renderer/RendererRuntime.h>
 
 
 //[-------------------------------------------------------]
@@ -36,16 +37,9 @@
 //[-------------------------------------------------------]
 /**
 *  @brief
-*    Shows how to use command buckets
-*
-*  @remarks
-*    Demonstrates:
-*    - Command buckets
-*
-*  @todo
-*    - TODO(co) Under construction
+*    Renderer runtime application interface
 */
-class FirstCommandBucket : public IApplicationRendererToolkit
+class IApplicationRendererRuntime : public IApplicationRenderer
 {
 
 
@@ -55,19 +49,18 @@ class FirstCommandBucket : public IApplicationRendererToolkit
 public:
 	/**
 	*  @brief
-	*    Constructor
-	*
-	*  @param[in] rendererName
-	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
+	*    Destructor
 	*/
-	explicit FirstCommandBucket(const char *rendererName);
+	virtual ~IApplicationRendererRuntime();
 
 	/**
 	*  @brief
-	*    Destructor
+	*    Return the renderer runtime instance
+	*
+	*  @remarks
+	*    The renderer runtime instance, can be a null pointer
 	*/
-	virtual ~FirstCommandBucket();
+	inline RendererRuntime::IRendererRuntime *getRendererRuntime() const;
 
 
 //[-------------------------------------------------------]
@@ -76,25 +69,55 @@ public:
 public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
-	virtual void onDraw() override;
+
+
+//[-------------------------------------------------------]
+//[ Protected methods                                     ]
+//[-------------------------------------------------------]
+protected:
+	/**
+	*  @brief
+	*    Constructor
+	*
+	*  @param[in] rendererName
+	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
+	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
+	*/
+	explicit IApplicationRendererRuntime(const char *rendererName);
+
+
+//[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	/**
+	*  @brief
+	*    Create a renderer runtime instance
+	*
+	*  @param[in] renderer
+	*    Renderer instance to use
+	*
+	*  @return
+	*    The created renderer runtime instance, null pointer on error
+	*
+	*  @note
+	*    - The renderer runtime keeps a reference to the provided renderer instance
+	*/
+	RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer);
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererToolkit::IFontPtr mFont;	///< Font, can be a null pointer
-	// Command buckets
-	RendererToolkit::CommandBucket<int> mSolidCommandBucket;
-	RendererToolkit::CommandBucket<int> mTransparentCommandBucket;
-	// Renderer resources
-	Renderer::IProgramPtr		mProgram;
-	Renderer::IUniformBufferPtr	mUniformBufferDynamicVs;
-	Renderer::IVertexArrayPtr	mSolidVertexArray;
-	Renderer::IVertexArrayPtr	mTransparentVertexArray;
-	// Materials
-	Material mSolidMaterial;
-	Material mTransparentMaterial;
+	void								  *mRendererRuntimeSharedLibrary;	///< Renderer runtime shared library, can be a null pointer
+	RendererRuntime::IRendererRuntimePtr   mRendererRuntime;				///< Renderer runtime instance, can be a null pointer
 
 
 };
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "IApplicationRendererRuntime.inl"

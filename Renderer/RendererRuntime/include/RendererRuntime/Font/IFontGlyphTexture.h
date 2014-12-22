@@ -1,0 +1,114 @@
+/*********************************************************\
+ * Copyright (c) 2012-2014 Christian Ofenberg
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
+
+
+//[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+#ifndef __RENDERERRUNTIME_IFONTGLYPHTEXTURE_H__
+#define __RENDERERRUNTIME_IFONTGLYPHTEXTURE_H__
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Font/IFontGlyph.h"
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+
+
+	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Abstract font glyph texture interface
+	*/
+	class IFontGlyphTexture : public IFontGlyph
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~IFontGlyphTexture();
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		/**
+		*  @brief
+		*    Default constructor
+		*/
+		inline IFontGlyphTexture();
+
+		/**
+		*  @brief
+		*    Copy constructor
+		*
+		*  @param[in] source
+		*    Source to copy from
+		*/
+		inline explicit IFontGlyphTexture(const IFontGlyphTexture &source);
+
+		/**
+		*  @brief
+		*    Copy operator
+		*
+		*  @param[in] source
+		*    Source to copy from
+		*
+		*  @return
+		*    Reference to this instance
+		*/
+		inline IFontGlyphTexture &operator =(const IFontGlyphTexture &source);
+
+
+	};
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Font/IFontGlyphTexture.inl"
+
+
+//[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#endif // __RENDERERRUNTIME_IFONTGLYPHTEXTURE_H__

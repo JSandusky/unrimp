@@ -27,13 +27,13 @@
 //[-------------------------------------------------------]
 //[ Preprocessor                                          ]
 //[-------------------------------------------------------]
-#ifndef RENDERER_NO_TOOLKIT
+#ifndef RENDERER_NO_RUNTIME
 
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRendererToolkit.h"
+#include "Framework/IApplicationRendererRuntime.h"
 #ifdef SHARED_LIBRARIES
 	// Dynamically linked libraries
 	#ifdef WIN32
@@ -56,17 +56,17 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-IApplicationRendererToolkit::~IApplicationRendererToolkit()
+IApplicationRendererRuntime::~IApplicationRendererRuntime()
 {
 	// Nothing to do in here
-	// m_pRendererToolkit is destroyed within onDeinitialization()
+	// m_pRendererRuntime is destroyed within onDeinitialization()
 }
 
 
 //[-------------------------------------------------------]
 //[ Public virtual IApplication methods                   ]
 //[-------------------------------------------------------]
-void IApplicationRendererToolkit::onInitialization()
+void IApplicationRendererRuntime::onInitialization()
 {
 	// Call the base implementation
 	IApplicationRenderer::onInitialization();
@@ -75,29 +75,29 @@ void IApplicationRendererToolkit::onInitialization()
 	Renderer::IRenderer *renderer = getRenderer();
 	if (nullptr != renderer)
 	{
-		// Create the renderer toolkit instance
-		mRendererToolkit = createRendererToolkitInstance(*renderer);
+		// Create the renderer runtime instance
+		mRendererRuntime = createRendererRuntimeInstance(*renderer);
 	}
 }
 
-void IApplicationRendererToolkit::onDeinitialization()
+void IApplicationRendererRuntime::onDeinitialization()
 {
-	// Delete the renderer toolkit instance
-	mRendererToolkit = nullptr;
+	// Delete the renderer runtime instance
+	mRendererRuntime = nullptr;
 
 	// Destroy the shared library instance
 	#ifdef SHARED_LIBRARIES
 		#ifdef WIN32
-			if (nullptr != mRendererToolkitSharedLibrary)
+			if (nullptr != mRendererRuntimeSharedLibrary)
 			{
-				::FreeLibrary(static_cast<HMODULE>(mRendererToolkitSharedLibrary));
-				mRendererToolkitSharedLibrary = nullptr;
+				::FreeLibrary(static_cast<HMODULE>(mRendererRuntimeSharedLibrary));
+				mRendererRuntimeSharedLibrary = nullptr;
 			}
 		#elif defined LINUX
-			if (nullptr != mRendererToolkitSharedLibrary)
+			if (nullptr != mRendererRuntimeSharedLibrary)
 			{
-				::dlclose(mRendererToolkitSharedLibrary);
-				mRendererToolkitSharedLibrary = nullptr;
+				::dlclose(mRendererRuntimeSharedLibrary);
+				mRendererRuntimeSharedLibrary = nullptr;
 			}
 		#else
 			#error "Unsupported platform"
@@ -109,9 +109,9 @@ void IApplicationRendererToolkit::onDeinitialization()
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-IApplicationRendererToolkit::IApplicationRendererToolkit(const char *rendererName) :
+IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererName) :
 	IApplicationRenderer(rendererName),
-	mRendererToolkitSharedLibrary(nullptr)
+	mRendererRuntimeSharedLibrary(nullptr)
 {
 	// Nothing to do in here
 }
@@ -120,69 +120,69 @@ IApplicationRendererToolkit::IApplicationRendererToolkit(const char *rendererNam
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-RendererToolkit::IRendererToolkit *IApplicationRendererToolkit::createRendererToolkitInstance(Renderer::IRenderer &renderer)
+RendererRuntime::IRendererRuntime *IApplicationRendererRuntime::createRendererRuntimeInstance(Renderer::IRenderer &renderer)
 {
 	#ifdef SHARED_LIBRARIES
 		// Dynamically linked libraries
 		#ifdef WIN32
 			// Load in the dll
 			#ifdef _DEBUG
-				static const char RENDERER_TOOLKIT_FILENAME[] = "RendererToolkitD.dll";
+				static const char RENDERER_RUNTIME_FILENAME[] = "RendererRuntimeD.dll";
 			#else
-				static const char RENDERER_TOOLKIT_FILENAME[] = "RendererToolkit.dll";
+				static const char RENDERER_RUNTIME_FILENAME[] = "RendererRuntime.dll";
 			#endif
-			mRendererToolkitSharedLibrary = ::LoadLibraryExA(RENDERER_TOOLKIT_FILENAME, nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-			if (nullptr != mRendererToolkitSharedLibrary)
+			mRendererRuntimeSharedLibrary = ::LoadLibraryExA(RENDERER_RUNTIME_FILENAME, nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+			if (nullptr != mRendererRuntimeSharedLibrary)
 			{
-				// Get the "createRendererToolkitInstance()" function pointer
-				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mRendererToolkitSharedLibrary), "createRendererToolkitInstance");
+				// Get the "createRendererRuntimeInstance()" function pointer
+				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mRendererRuntimeSharedLibrary), "createRendererRuntimeInstance");
 				if (nullptr != symbol)
 				{
-					// "createRendererToolkitInstance()" signature
-					typedef RendererToolkit::IRendererToolkit *(__cdecl *createRendererToolkitInstance)(Renderer::IRenderer &renderer);
+					// "createRendererRuntimeInstance()" signature
+					typedef RendererRuntime::IRendererRuntime *(__cdecl *createRendererRuntimeInstance)(Renderer::IRenderer &renderer);
 
-					// Create the renderer toolkit instance
-					return static_cast<createRendererToolkitInstance>(symbol)(renderer);
+					// Create the renderer runtime instance
+					return static_cast<createRendererRuntimeInstance>(symbol)(renderer);
 				}
 				else
 				{
 					// Error!
-					OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"createRendererToolkitInstance\" within the renderer toolkit shared library \"%s\"", RENDERER_TOOLKIT_FILENAME)
+					OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"createRendererRuntimeInstance\" within the renderer runtime shared library \"%s\"", RENDERER_RUNTIME_FILENAME)
 				}
 			}
 			else
 			{
-				OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", RENDERER_TOOLKIT_FILENAME)
+				OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", RENDERER_RUNTIME_FILENAME)
 			}
 		#elif defined LINUX
 			// Load in the shared library
 			#ifdef _DEBUG
-				static const char RENDERER_TOOLKIT_FILENAME[] = "RendererToolkitD.so";
+				static const char RENDERER_RUNTIME_FILENAME[] = "RendererRuntimeD.so";
 			#else
-				static const char RENDERER_TOOLKIT_FILENAME[] = "RendererToolkit.so";
+				static const char RENDERER_RUNTIME_FILENAME[] = "RendererRuntime.so";
 			#endif
-			mRendererToolkitSharedLibrary = dlopen(RENDERER_TOOLKIT_FILENAME, RTLD_NOW);
-			if (nullptr != mRendererToolkitSharedLibrary)
+			mRendererRuntimeSharedLibrary = dlopen(RENDERER_RUNTIME_FILENAME, RTLD_NOW);
+			if (nullptr != mRendererRuntimeSharedLibrary)
 			{
-				// Get the "createRendererToolkitInstance()" function pointer
-				void *symbol = dlsym(mRendererToolkitSharedLibrary, "createRendererToolkitInstance");
+				// Get the "createRendererRuntimeInstance()" function pointer
+				void *symbol = dlsym(mRendererRuntimeSharedLibrary, "createRendererRuntimeInstance");
 				if (nullptr != symbol)
 				{
-					// "createRendererToolkitInstance()" signature
-					typedef RendererToolkit::IRendererToolkit *(*createRendererToolkitInstance)(Renderer::IRenderer &renderer);
+					// "createRendererRuntimeInstance()" signature
+					typedef RendererRuntime::IRendererRuntime *(*createRendererRuntimeInstance)(Renderer::IRenderer &renderer);
 
-					// Create the renderer toolkit instance
-					return reinterpret_cast<createRendererToolkitInstance>(symbol)(renderer);
+					// Create the renderer runtime instance
+					return reinterpret_cast<createRendererRuntimeInstance>(symbol)(renderer);
 				}
 				else
 				{
 					// Error!
-					OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"createRendererToolkitInstance\" within the renderer toolkit shared library \"%s\"", RENDERER_TOOLKIT_FILENAME)
+					OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"createRendererRuntimeInstance\" within the renderer runtime shared library \"%s\"", RENDERER_RUNTIME_FILENAME)
 				}
 			}
 			else
 			{
-				OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", RENDERER_TOOLKIT_FILENAME)
+				OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", RENDERER_RUNTIME_FILENAME)
 			}
 		#else
 			#error "Unsupported platform"
@@ -193,11 +193,11 @@ RendererToolkit::IRendererToolkit *IApplicationRendererToolkit::createRendererTo
 	#else
 		// Statically linked libraries
 
-		// "createRendererToolkitInstance()" signature
-		extern RendererToolkit::IRendererToolkit *createRendererToolkitInstance(Renderer::IRenderer &renderer);
+		// "createRendererRuntimeInstance()" signature
+		extern RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer);
 
-		// Create the renderer toolkit instance
-		return createRendererToolkitInstance(renderer);
+		// Create the renderer runtime instance
+		return createRendererRuntimeInstance(renderer);
 	#endif
 }
 
@@ -205,4 +205,4 @@ RendererToolkit::IRendererToolkit *IApplicationRendererToolkit::createRendererTo
 //[-------------------------------------------------------]
 //[ Preprocessor                                          ]
 //[-------------------------------------------------------]
-#endif // RENDERER_NO_TOOLKIT
+#endif // RENDERER_NO_RUNTIME

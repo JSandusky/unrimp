@@ -19,9 +19,42 @@
 
 
 //[-------------------------------------------------------]
-//[ Public methods                                        ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-inline RendererToolkit::IRendererToolkit *IApplicationRendererToolkit::getRendererToolkit() const
+namespace RendererRuntime
 {
-	return mRendererToolkit;
-}
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline IFontGlyphTexture::~IFontGlyphTexture()
+	{
+		// Nothing to do in here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline IFontGlyphTexture::IFontGlyphTexture()
+	{
+		// Nothing to do in here
+	}
+
+	inline IFontGlyphTexture::IFontGlyphTexture(const IFontGlyphTexture &)
+	{
+		// Not supported
+	}
+
+	inline IFontGlyphTexture &IFontGlyphTexture::operator =(const IFontGlyphTexture &)
+	{
+		// Not supported
+		return *this;
+	}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // RendererRuntime

@@ -27,13 +27,13 @@
 //[-------------------------------------------------------]
 //[ Preprocessor                                          ]
 //[-------------------------------------------------------]
-#ifndef RENDERER_NO_TOOLKIT
+#ifndef RENDERER_NO_RUNTIME
 
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Toolkit/FirstCommandBucket/FirstCommandBucket.h"
+#include "Runtime/FirstCommandBucket/FirstCommandBucket.h"
 #include "Framework/Color4.h"
 
 #include <glm/gtc/type_ptr.hpp> 
@@ -41,7 +41,7 @@
 
 
 
-namespace RendererToolkit
+namespace RendererRuntime
 {
 	namespace BackendDispatch
 	{
@@ -96,7 +96,7 @@ namespace RendererToolkit
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FirstCommandBucket::FirstCommandBucket(const char *rendererName) :
-	IApplicationRendererToolkit(rendererName),
+	IApplicationRendererRuntime(rendererName),
 	mSolidCommandBucket(4),
 	mTransparentCommandBucket(2)
 {
@@ -116,11 +116,11 @@ FirstCommandBucket::~FirstCommandBucket()
 void FirstCommandBucket::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRendererToolkit::onInitialization();
+	IApplicationRendererRuntime::onInitialization();
 
-	// Get and check the renderer toolkit instance
-	RendererToolkit::IRendererToolkitPtr rendererToolkit(getRendererToolkit());
-	if (nullptr != rendererToolkit)
+	// Get and check the renderer runtime instance
+	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+	if (nullptr != rendererRuntime)
 	{
 		// Get the renderer instance (at this point in time we know it must be valid)
 		Renderer::IRendererPtr renderer(getRenderer());
@@ -130,7 +130,7 @@ void FirstCommandBucket::onInitialization()
 
 		// Create the font instance
 		// -> In order to keep it simple, we use simple ASCII strings as filenames which are relative to the executable
-		mFont = rendererToolkit->createFontTexture("../Data/Font/LinBiolinum_R.otf");
+		mFont = rendererRuntime->createFontTexture("../Data/Font/LinBiolinum_R.otf");
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
@@ -261,7 +261,7 @@ void FirstCommandBucket::onDeinitialization()
 	RENDERER_END_DEBUG_EVENT(getRenderer())
 
 	// Call the base implementation
-	IApplicationRendererToolkit::onDeinitialization();
+	IApplicationRendererRuntime::onDeinitialization();
 }
 
 void FirstCommandBucket::onDraw()
@@ -296,14 +296,14 @@ void FirstCommandBucket::onDraw()
 			{ // Solid stuff
 				// Update uniform buffer content
 				const float offset[] = { 0.0f, 0.0f };
-				RendererToolkit::Command::CopyUniformBufferData *copyUniformBufferDataCommand = mSolidCommandBucket.addCommand<RendererToolkit::Command::CopyUniformBufferData>(42, sizeof(offset));
+				RendererRuntime::Command::CopyUniformBufferData *copyUniformBufferDataCommand = mSolidCommandBucket.addCommand<RendererRuntime::Command::CopyUniformBufferData>(42, sizeof(offset));
 				copyUniformBufferDataCommand->uniformBufferDynamicVs = mUniformBufferDynamicVs;
 				copyUniformBufferDataCommand->size = sizeof(offset);
-				copyUniformBufferDataCommand->data = RendererToolkit::commandPacket::GetAuxiliaryMemory(copyUniformBufferDataCommand);
+				copyUniformBufferDataCommand->data = RendererRuntime::commandPacket::GetAuxiliaryMemory(copyUniformBufferDataCommand);
 				memcpy(copyUniformBufferDataCommand->data, &offset, sizeof(offset));
 
 				// Draw call
-				RendererToolkit::Command::Draw *drawCommand = mSolidCommandBucket.appendCommand<RendererToolkit::Command::Draw>(copyUniformBufferDataCommand);
+				RendererRuntime::Command::Draw *drawCommand = mSolidCommandBucket.appendCommand<RendererRuntime::Command::Draw>(copyUniformBufferDataCommand);
 				drawCommand->iaVertexArray		 = mSolidVertexArray;
 				drawCommand->iaPrimitiveTopology = Renderer::PrimitiveTopology::TRIANGLE_LIST;
 				drawCommand->material			 = &mSolidMaterial;
@@ -315,14 +315,14 @@ void FirstCommandBucket::onDraw()
 			{
 				// Update uniform buffer content
 				const float offset[] = { 0.25f - i * 0.5f, 0.25f - i * 0.5f };
-				RendererToolkit::Command::CopyUniformBufferData *copyUniformBufferDataCommand = mTransparentCommandBucket.addCommand<RendererToolkit::Command::CopyUniformBufferData>(42 - i, sizeof(offset));
+				RendererRuntime::Command::CopyUniformBufferData *copyUniformBufferDataCommand = mTransparentCommandBucket.addCommand<RendererRuntime::Command::CopyUniformBufferData>(42 - i, sizeof(offset));
 				copyUniformBufferDataCommand->uniformBufferDynamicVs = mUniformBufferDynamicVs;
 				copyUniformBufferDataCommand->size = sizeof(offset);
-				copyUniformBufferDataCommand->data = RendererToolkit::commandPacket::GetAuxiliaryMemory(copyUniformBufferDataCommand);
+				copyUniformBufferDataCommand->data = RendererRuntime::commandPacket::GetAuxiliaryMemory(copyUniformBufferDataCommand);
 				memcpy(copyUniformBufferDataCommand->data, &offset, sizeof(offset));
 
 				// Draw call
-				RendererToolkit::Command::DrawIndexed *drawIndexedCommand = mTransparentCommandBucket.appendCommand<RendererToolkit::Command::DrawIndexed>(copyUniformBufferDataCommand);
+				RendererRuntime::Command::DrawIndexed *drawIndexedCommand = mTransparentCommandBucket.appendCommand<RendererRuntime::Command::DrawIndexed>(copyUniformBufferDataCommand);
 				drawIndexedCommand->iaVertexArray		= mTransparentVertexArray;
 				drawIndexedCommand->iaPrimitiveTopology = Renderer::PrimitiveTopology::TRIANGLE_LIST;
 				drawIndexedCommand->material			= &mTransparentMaterial;
@@ -354,4 +354,4 @@ void FirstCommandBucket::onDraw()
 //[-------------------------------------------------------]
 //[ Preprocessor                                          ]
 //[-------------------------------------------------------]
-#endif // RENDERER_NO_TOOLKIT
+#endif // RENDERER_NO_RUNTIME

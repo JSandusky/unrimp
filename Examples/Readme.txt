@@ -109,7 +109,9 @@ Standalone renderer examples.
 		- Depth stencil state object
 		- General Purpose Computation on Graphics Processing Unit (GPGPU) by using the renderer interface and shaders without having any output window
 	- "FirstFont" demonstrates:
-		- Renderer toolkit fonts
+		- Renderer runtime fonts
+		- Renderer runtime command buckets
+		- Renderer runtime compositor
 	- "InstancedCubes" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
@@ -124,7 +126,7 @@ Standalone renderer examples.
 		- Vertex shader (VS) and fragment shader (FS)
 		- Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 		- Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
-		- Renderer toolkit fonts
+		- Renderer runtime fonts
 	- "IcosahedronTessellation" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
@@ -176,5 +178,5 @@ Other
 - "X64_ARCHITECTURE":		Set this as preprocessor definition when building for x64 instead of x86
 - "SHARED_LIBRARIES":		Use renderers via shared libaries, if this is not defined, the renderers are statically linked
 - "RENDERER_NO_DEBUG":		Disable e.g. Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features (disabling support just reduces the binary size slightly but makes debugging more difficult)
-- "RENDERER_NO_TOOLKIT":	Disable renderer toolkit support
+- "RENDERER_NO_RUNTIME":	Disable renderer runtime support
 - "NO_ASSIMP":				When set, Open Asset Import Library (ASSIMP) support is disabled (Assimp will add approximately 2 MB to the executable size when statically linked)

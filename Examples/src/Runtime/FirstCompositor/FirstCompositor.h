@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRendererToolkit.h"
+#include "Framework/IApplicationRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -44,7 +44,7 @@
 *  @todo
 *    - TODO(co) Under construction
 */
-class FirstCompositor : public IApplicationRendererToolkit
+class FirstCompositor : public IApplicationRendererRuntime
 {
 
 
@@ -82,7 +82,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererToolkit::IFontPtr mFont;	///< Font, can be a null pointer
+	RendererRuntime::IFontPtr mFont;	///< Font, can be a null pointer
 
 
 };

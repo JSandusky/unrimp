@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/IApplicationRendererToolkit.h"
+#include "Framework/IApplicationRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -39,9 +39,9 @@
 *
 *  @remarks
 *    Demonstrates:
-*    - Renderer toolkit fonts
+*    - Renderer runtime fonts
 */
-class FirstFont : public IApplicationRendererToolkit
+class FirstFont : public IApplicationRendererRuntime
 {
 
 
@@ -79,7 +79,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererToolkit::IFontPtr mFont;	///< Font, can be a null pointer
+	RendererRuntime::IFontPtr mFont;	///< Font, can be a null pointer
 
 
 };
