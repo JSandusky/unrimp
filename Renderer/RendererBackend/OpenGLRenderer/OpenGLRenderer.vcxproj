@@ -233,29 +233,29 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
     <TargetName>$(ProjectName)StaticD</TargetName>
-    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
     <TargetName>$(ProjectName)D</TargetName>
-    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
-    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
-    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <OutDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
     <TargetName>$(ProjectName)Static</TargetName>
-    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
-    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <OutDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
-    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\OpenGL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;OPENGLRENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -271,8 +271,8 @@
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Lib>
     <PostBuildEvent>
-      <Command>md "..\..\lib\$(PlatformTarget)d_static\"
-copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
+      <Command>md "..\..\..\lib\$(PlatformTarget)d_static\"
+copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_static\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -280,7 +280,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\OpenGL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;OPENGLRENDERER_EXPORTS;OPENGLRENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -297,10 +297,10 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Lib>
     <PostBuildEvent>
-      <Command>md "..\..\lib\$(PlatformTarget)d_dynamic\"
-copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_dynamic\
-md "..\..\bin\$(PlatformTarget)d_dynamic\"
-copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
+      <Command>md "..\..\..\lib\$(PlatformTarget)d_dynamic\"
+copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_dynamic\
+md "..\..\..\bin\$(PlatformTarget)d_dynamic\"
+copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)d_dynamic\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -310,7 +310,7 @@ copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\OpenGL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;OPENGLRENDERER_NO_STATE_CLEANUP;OPENGLRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -335,8 +335,8 @@ copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>md "..\..\lib\$(PlatformTarget)_static\"
-copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_static\
+      <Command>md "..\..\..\lib\$(PlatformTarget)_static\"
+copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_static\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -346,7 +346,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_static\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\OpenGL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGL\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;OPENGLRENDERER_EXPORTS;OPENGLRENDERER_NO_STATE_CLEANUP;OPENGLRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -372,10 +372,10 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_static\
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
-      <Command>md "..\..\lib\$(PlatformTarget)_dynamic\"
-copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_dynamic\
-md "..\..\bin\$(PlatformTarget)_dynamic\"
-copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
+      <Command>md "..\..\..\lib\$(PlatformTarget)_dynamic\"
+copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_dynamic\
+md "..\..\..\bin\$(PlatformTarget)_dynamic\"
+copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)_dynamic\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

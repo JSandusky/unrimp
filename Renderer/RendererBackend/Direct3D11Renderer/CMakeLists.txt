@@ -27,20 +27,16 @@ cmake_minimum_required(VERSION 2.8.8)
 if(NOT RENDERER_DEBUG)
 	add_definitions(-DRENDERER_NO_DEBUG)
 endif()
-if(RENDERER_OPENGL_NO_STATE_CLEANUP)
-	add_definitions(-DOPENGLRENDERER_NO_STATE_CLEANUP)
-endif()
-if(RENDERER_OPENGL_NO_RENDERERMATCHCHECK)
-	add_definitions(-DOPENGLRENDERER_NO_RENDERERMATCHCHECK)
+if(NOT RENDERER_DIRECT3D11_DEBUG)
+	add_definitions(-DRENDERER_DIRECT3D11_NO_DEBUG)
 endif()
 
 
 ##################################################
 ## Includes
 ##################################################
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../Renderer/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenGL/include)
 
 
 ##################################################
@@ -50,76 +46,43 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenGL/include)
 set(SOURCE_CODES
 	src/BlendState.cpp
 	src/DepthStencilState.cpp
-	src/Extensions.cpp
+	src/Direct3D11RuntimeLinking.cpp
 	src/FragmentShader.cpp
-	src/FragmentShaderGlsl.cpp
+	src/FragmentShaderHlsl.cpp
 	src/Framebuffer.cpp
-	src/FramebufferDsa.cpp
-	src/FramebufferBind.cpp
 	src/GeometryShader.cpp
-	src/GeometryShaderGlsl.cpp
-	src/IContext.cpp
+	src/GeometryShaderHlsl.cpp
+	src/Guid.cpp
 	src/IndexBuffer.cpp
-	src/IndexBufferBind.cpp
-	src/IndexBufferDsa.cpp
 	src/Mapping.cpp
-	src/OpenGLRuntimeLinking.cpp
 	src/Program.cpp
-	src/ProgramGlsl.cpp
-	src/ProgramGlslDsa.cpp
+	src/ProgramHlsl.cpp
 	src/RasterizerState.cpp
-	src/OpenGLRenderer.cpp
+	src/Direct3D11Renderer.cpp
 	src/SamplerState.cpp
-	src/SamplerStateBind.cpp
-	src/SamplerStateDsa.cpp
-	src/SamplerStateSo.cpp
 	src/SamplerStateCollection.cpp
 	src/ShaderLanguage.cpp
-	src/ShaderLanguageGlsl.cpp
+	src/ShaderLanguageHlsl.cpp
 	src/SwapChain.cpp
 	src/TessellationControlShader.cpp
-	src/TessellationControlShaderGlsl.cpp
+	src/TessellationControlShaderHlsl.cpp
 	src/TessellationEvaluationShader.cpp
-	src/TessellationEvaluationShaderGlsl.cpp
+	src/TessellationEvaluationShaderHlsl.cpp
 	src/Texture2D.cpp
 	src/Texture2DArray.cpp
-	src/Texture2DArrayBind.cpp
-	src/Texture2DArrayDsa.cpp
-	src/Texture2DBind.cpp
-	src/Texture2DDsa.cpp
 	src/TextureBuffer.cpp
-	src/TextureBufferBind.cpp
-	src/TextureBufferDsa.cpp
 	src/TextureCollection.cpp
 	src/UniformBuffer.cpp
-	src/UniformBufferGlsl.cpp
-	src/UniformBufferGlslBind.cpp
-	src/UniformBufferGlslDsa.cpp
 	src/VertexArray.cpp
-	src/VertexArrayNoVao.cpp
-	src/VertexArrayVao.cpp
-	src/VertexArrayVaoBind.cpp
-	src/VertexArrayVaoDsa.cpp
 	src/VertexBuffer.cpp
-	src/VertexBufferBind.cpp
-	src/VertexBufferDsa.cpp
 	src/VertexShader.cpp
-	src/VertexShaderGlsl.cpp
+	src/VertexShaderHlsl.cpp
 )
-if(WIN32)
-	# Windows source codes
+if(NOT DIRECT3D11RENDERER_NO_DEBUG)
+	# Support Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features
 	set(SOURCE_CODES
 		${SOURCE_CODES}
-		src/Windows/ContextWindows.cpp
-		src/Windows/ExtensionsWindows.cpp
-	)
-endif()
-if(UNIX)
-	# Linux source codes
-	set(SOURCE_CODES
-		${SOURCE_CODES}
-		src/Linux/ContextLinux.cpp
-		src/Linux/ExtensionsLinux.cpp
+		src/Direct3D9RuntimeLinking.cpp
 	)
 endif()
 
@@ -128,11 +91,11 @@ endif()
 ## Libraries
 ##################################################
 if(STATIC_LIBRARY)
-	add_library(OpenGLRendererStatic STATIC ${SOURCE_CODES})
+	add_library(Direct3D11RendererStatic STATIC ${SOURCE_CODES})
 endif()
 if(SHARED_LIBRARY)
-	add_library(OpenGLRenderer SHARED ${SOURCE_CODES})
-	set_target_properties(OpenGLRenderer PROPERTIES COMPILE_FLAGS "-D_USRDLL -DOPENGLRENDERER_EXPORTS")
+	add_library(Direct3D11Renderer SHARED ${SOURCE_CODES})
+	set_target_properties(Direct3D11Renderer PROPERTIES COMPILE_FLAGS "-D_USRDLL -DDIRECT3D11RENDERER_EXPORTS")
 endif()
 
 
@@ -141,28 +104,18 @@ endif()
 ##################################################
 if(STATIC_LIBRARY)
 	# Copy static library
-	add_custom_command(TARGET OpenGLRendererStatic
-		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}OpenGLRendererStatic${CMAKE_STATIC_LIBRARY_SUFFIX}" ${OUTPUT_LIB_DIR}
+	add_custom_command(TARGET Direct3D11RendererStatic
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}Direct3D11RendererStatic${CMAKE_STATIC_LIBRARY_SUFFIX}" ${OUTPUT_LIB_DIR}
 	)
 endif()
 if(SHARED_LIBRARY)
 	# Copy shared library
-	add_custom_command(TARGET OpenGLRenderer
-		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}OpenGLRenderer${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
+	add_custom_command(TARGET Direct3D11Renderer
+		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Direct3D11Renderer${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
 	)
 	if(WIN32)
-		add_custom_command(TARGET OpenGLRenderer
-			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/OpenGLRenderer.lib" ${OUTPUT_LIB_DIR}
+		add_custom_command(TARGET Direct3D11Renderer
+			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/Direct3D11Renderer.lib" ${OUTPUT_LIB_DIR}
 		)
 	endif()
 endif()
-
-##################################################
-## Post build
-##################################################
-# Copy header
-file(MAKE_DIRECTORY ${OUTPUT_INCLUDE_DIR}/../OpenGLRenderer/)
-
-add_custom_command(TARGET OpenGLRenderer POST_BUILD
-                     COMMAND ${CMAKE_COMMAND} -E
-                         copy "${CMAKE_CURRENT_SOURCE_DIR}/include/OpenGLRenderer/OpenGLRenderer_SingleHeader.h" "${OUTPUT_INCLUDE_DIR}/../OpenGLRenderer/OpenGLRenderer.h")

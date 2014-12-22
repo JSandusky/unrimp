@@ -19,80 +19,93 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Direct3D9Renderer\d3d9.h" />
-    <ClInclude Include="include\Direct3D9Renderer\d3dx9.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Direct3D9Debug.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Direct3D9Renderer.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Direct3D9RuntimeLinking.h" />
-    <ClInclude Include="include\Direct3D9Renderer\FragmentShader.h" />
-    <ClInclude Include="include\Direct3D9Renderer\FragmentShaderHlsl.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Framebuffer.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Guid.h" />
-    <ClInclude Include="include\Direct3D9Renderer\IndexBuffer.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Mapping.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Program.h" />
-    <ClInclude Include="include\Direct3D9Renderer\ProgramHlsl.h" />
-    <ClInclude Include="include\Direct3D9Renderer\BlendState.h" />
-    <ClInclude Include="include\Direct3D9Renderer\DepthStencilState.h" />
-    <ClInclude Include="include\Direct3D9Renderer\RasterizerState.h" />
-    <ClInclude Include="include\Direct3D9Renderer\SamplerState.h" />
-    <ClInclude Include="include\Direct3D9Renderer\SamplerStateCollection.h" />
-    <ClInclude Include="include\Direct3D9Renderer\ShaderLanguage.h" />
-    <ClInclude Include="include\Direct3D9Renderer\ShaderLanguageHlsl.h" />
-    <ClInclude Include="include\Direct3D9Renderer\SwapChain.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Texture2D.h" />
-    <ClInclude Include="include\Direct3D9Renderer\TextureCollection.h" />
-    <ClInclude Include="include\Direct3D9Renderer\VertexArray.h" />
-    <ClInclude Include="include\Direct3D9Renderer\VertexBuffer.h" />
-    <ClInclude Include="include\Direct3D9Renderer\VertexShader.h" />
-    <ClInclude Include="include\Direct3D9Renderer\VertexShaderHlsl.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\ContextRuntimeLinking.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\FragmentShader.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\FragmentShaderGlsl.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\Framebuffer.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\IContext.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\IExtensions.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\IndexBuffer.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\Mapping.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Debug.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\Program.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\ProgramGlsl.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Renderer.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\BlendState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\DepthStencilState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\RasterizerState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\SamplerState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\SamplerStateCollection.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\ShaderLanguage.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\ShaderLanguageGlsl.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\SwapChain.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\Texture2D.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\Texture2DArray.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\TextureCollection.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\VertexArray.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\VertexArrayNoVao.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\VertexArrayVao.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\VertexBuffer.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\VertexShader.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\VertexShaderGlsl.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Direct3D9Renderer.cpp" />
-    <ClCompile Include="src\Direct3D9RuntimeLinking.cpp" />
+    <ClCompile Include="src\ContextRuntimeLinking.cpp" />
+    <ClCompile Include="src\ExtensionsRuntimeLinking.cpp" />
     <ClCompile Include="src\FragmentShader.cpp" />
-    <ClCompile Include="src\FragmentShaderHlsl.cpp" />
+    <ClCompile Include="src\FragmentShaderGlsl.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
-    <ClCompile Include="src\Guid.cpp" />
+    <ClCompile Include="src\IContext.cpp" />
+    <ClCompile Include="src\IExtensions.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\Program.cpp" />
-    <ClCompile Include="src\ProgramHlsl.cpp" />
+    <ClCompile Include="src\ProgramGlsl.cpp" />
+    <ClCompile Include="src\OpenGLES2Renderer.cpp" />
     <ClCompile Include="src\BlendState.cpp" />
     <ClCompile Include="src\DepthStencilState.cpp" />
     <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateCollection.cpp" />
     <ClCompile Include="src\ShaderLanguage.cpp" />
-    <ClCompile Include="src\ShaderLanguageHlsl.cpp" />
+    <ClCompile Include="src\ShaderLanguageGlsl.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
+    <ClCompile Include="src\Texture2DArray.cpp" />
     <ClCompile Include="src\TextureCollection.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
+    <ClCompile Include="src\VertexArrayNoVao.cpp" />
+    <ClCompile Include="src\VertexArrayVao.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
     <ClCompile Include="src\VertexShader.cpp" />
-    <ClCompile Include="src\VertexShaderHlsl.cpp" />
+    <ClCompile Include="src\VertexShaderGlsl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\Direct3D9Renderer\Direct3D9Renderer.inl" />
-    <None Include="include\Direct3D9Renderer\FragmentShaderHlsl.inl" />
-    <None Include="include\Direct3D9Renderer\Framebuffer.inl" />
-    <None Include="include\Direct3D9Renderer\IndexBuffer.inl" />
-    <None Include="include\Direct3D9Renderer\Program.inl" />
-    <None Include="include\Direct3D9Renderer\ProgramHlsl.inl" />
-    <None Include="include\Direct3D9Renderer\SamplerStateCollection.inl" />
-    <None Include="include\Direct3D9Renderer\SwapChain.inl" />
-    <None Include="include\Direct3D9Renderer\Texture2D.inl" />
-    <None Include="include\Direct3D9Renderer\TextureCollection.inl" />
-    <None Include="include\Direct3D9Renderer\VertexArray.inl" />
-    <None Include="include\Direct3D9Renderer\VertexBuffer.inl" />
-    <None Include="include\Direct3D9Renderer\VertexShaderHlsl.inl" />
+    <None Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.inl" />
+    <None Include="include\OpenGLES2Renderer\FragmentShaderGlsl.inl" />
+    <None Include="include\OpenGLES2Renderer\Framebuffer.inl" />
+    <None Include="include\OpenGLES2Renderer\IContext.inl" />
+    <None Include="include\OpenGLES2Renderer\IndexBuffer.inl" />
+    <None Include="include\OpenGLES2Renderer\Program.inl" />
+    <None Include="include\OpenGLES2Renderer\RasterizerState.inl" />
+    <None Include="include\OpenGLES2Renderer\OpenGLES2Renderer.inl" />
+    <None Include="include\OpenGLES2Renderer\SamplerStateCollection.inl" />
+    <None Include="include\OpenGLES2Renderer\ShaderLanguage.inl" />
+    <None Include="include\OpenGLES2Renderer\SwapChain.inl" />
+    <None Include="include\OpenGLES2Renderer\Texture2D.inl" />
+    <None Include="include\OpenGLES2Renderer\Texture2DArray.inl" />
+    <None Include="include\OpenGLES2Renderer\TextureCollection.inl" />
+    <None Include="include\OpenGLES2Renderer\VertexArray.inl" />
+    <None Include="include\OpenGLES2Renderer\VertexArrayVao.inl" />
+    <None Include="include\OpenGLES2Renderer\VertexBuffer.inl" />
+    <None Include="include\OpenGLES2Renderer\VertexShaderGlsl.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FBAF5E40-0077-4B00-A424-A7F169974A55}</ProjectGuid>
-    <RootNamespace>Direct3D9Renderer</RootNamespace>
+    <ProjectGuid>{161E1929-E33D-4074-A059-54030DB947AA}</ProjectGuid>
+    <RootNamespace>OpenGLES2Renderer</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'" Label="Configuration">
@@ -138,31 +151,31 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
-    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
     <TargetName>$(ProjectName)StaticD</TargetName>
-    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
-    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
     <TargetName>$(ProjectName)D</TargetName>
-    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
-    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <OutDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
     <TargetName>$(ProjectName)Static</TargetName>
-    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
-    <OutDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <OutDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
-    <IntDir>..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir>..\..\..\tmp\vc11\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;include\Direct3D9Renderer\;..\Renderer\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;D3D_DEBUG_INFO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGLES\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;OPENGLES2RENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -173,9 +186,12 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
     <PostBuildEvent>
-      <Command>md "..\..\lib\$(PlatformTarget)d_static\"
-copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
+      <Command>md "..\..\..\lib\$(PlatformTarget)d_static\"
+copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_static\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -183,8 +199,8 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;include\Direct3D9Renderer\;..\Renderer\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_USRDLL;D3D_DEBUG_INFO;DIRECT3D9RENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGLES\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_USRDLL;OPENGLES2RENDERER_EXPORTS;OPENGLES2RENDERER_NO_STATE_CLEANUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -196,11 +212,14 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
     <PostBuildEvent>
-      <Command>md "..\..\lib\$(PlatformTarget)d_dynamic\"
-copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_dynamic\
-md "..\..\bin\$(PlatformTarget)d_dynamic\"
-copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
+      <Command>md "..\..\..\lib\$(PlatformTarget)d_dynamic\"
+copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_dynamic\
+md "..\..\..\bin\$(PlatformTarget)d_dynamic\"
+copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)d_dynamic\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -210,8 +229,8 @@ copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;include\Direct3D9Renderer\;..\Renderer\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;DIRECT3D9RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGLES\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;OPENGLES2RENDERER_NO_STATE_CLEANUP;OPENGLES2RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -232,10 +251,11 @@ copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Command>md "..\..\lib\$(PlatformTarget)_static\"
-copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_static\
+      <Command>md "..\..\..\lib\$(PlatformTarget)_static\"
+copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_static\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -245,8 +265,8 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_static\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;include\Direct3D9Renderer\;..\Renderer\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_USRDLL;DIRECT3D9RENDERER_EXPORTS;DIRECT3D9RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\OpenGLES\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_USRDLL;OPENGLES2RENDERER_EXPORTS;OPENGLES2RENDERER_NO_STATE_CLEANUP;OPENGLES2RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -267,13 +287,14 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_static\
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
-      <Command>md "..\..\lib\$(PlatformTarget)_dynamic\"
-copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_dynamic\
-md "..\..\bin\$(PlatformTarget)_dynamic\"
-copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
+      <Command>md "..\..\..\lib\$(PlatformTarget)_dynamic\"
+copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_dynamic\
+md "..\..\..\bin\$(PlatformTarget)_dynamic\"
+copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)_dynamic\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
