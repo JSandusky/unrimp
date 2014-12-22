@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Runtime/FirstCompositor/FirstCompositor.h"
+#include "Runtime/FirstFont/FirstFont.h"
 #include "Framework/Color4.h"
 
 #include <glm/gtc/type_ptr.hpp> 
@@ -43,13 +43,13 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstCompositor::FirstCompositor(const char *rendererName) :
+FirstFont::FirstFont(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName)
 {
 	// Nothing to do in here
 }
 
-FirstCompositor::~FirstCompositor()
+FirstFont::~FirstFont()
 {
 	// The resources are released within "onDeinitialization()"
 	// Nothing to do in here
@@ -59,7 +59,7 @@ FirstCompositor::~FirstCompositor()
 //[-------------------------------------------------------]
 //[ Public virtual IApplication methods                   ]
 //[-------------------------------------------------------]
-void FirstCompositor::onInitialization()
+void FirstFont::onInitialization()
 {
 	// Call the base implementation
 	IApplicationRendererRuntime::onInitialization();
@@ -73,14 +73,14 @@ void FirstCompositor::onInitialization()
 
 		// Create the font instance
 		// -> In order to keep it simple, we use simple ASCII strings as filenames which are relative to the executable
-		mFont = rendererRuntime->createFontTexture("../Data/Font/LinBiolinum_R.otf");
+		mFont = rendererRuntime->createFontTexture("../DataSource/Font/LinBiolinum_R.otf");
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(getRenderer())
 	}
 }
 
-void FirstCompositor::onDeinitialization()
+void FirstFont::onDeinitialization()
 {
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
@@ -95,7 +95,7 @@ void FirstCompositor::onDeinitialization()
 	IApplicationRendererRuntime::onDeinitialization();
 }
 
-void FirstCompositor::onDraw()
+void FirstFont::onDraw()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
