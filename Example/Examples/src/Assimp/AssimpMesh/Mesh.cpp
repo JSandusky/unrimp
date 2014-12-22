@@ -84,7 +84,8 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 			// Please note: Storing fully featured normal, tangent and binormal is inefficient
 			// -> Normal vectors are considered to be normalized, so, we don't need to store all three components as fully featured float
 			// -> The binormal can be recalculated within a shader
-			// -> In order to keep this sample simple, we do it the classic way without mentioned optimizations
+			// -> In a real-world use-case you might want to use vertex-packing (QTangents, half precision for positions, short for texture coordinates etc, )
+			//    instead of a fat vertex layout. So here's an example.
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -92,8 +93,6 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-			// -> The vertex layout is kept simple for renderer API demonstration purposes. In a real-world use-case you might want to use vertex-packing
-			//    (QTangents, half precision for positions, short for texture coordinates etc, ) instead of a fat vertex layout.
 			const Renderer::VertexArrayAttribute vertexArray[] =
 			{
 				{ // Attribute 0
@@ -124,39 +123,13 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 				},
 				{ // Attribute 2
 					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_3,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"Tangent",											// name[64] (char)
-					"TANGENT",											// semantic[64] (char)
-					0,													// semanticIndex (uint32_t)
-					// Data source
-					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 5,									// offset (uint32_t)
-					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (uint32_t)
-					// Data source, instancing part
-					0													// instancesPerElement (uint32_t)
-				},
-				{ // Attribute 3
-					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_3,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"Binormal",											// name[64] (char)
-					"BINORMAL",											// semantic[64] (char)
-					0,													// semanticIndex (uint32_t)
-					// Data source
-					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 8,									// offset (uint32_t)
-					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (uint32_t)
-					// Data source, instancing part
-					0													// instancesPerElement (uint32_t)
-				},
-				{ // Attribute 4
-					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_3,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"Normal",											// name[64] (char)
+					Renderer::VertexArrayFormat::FLOAT_4,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+					"QTangent",											// name[64] (char)
 					"NORMAL",											// semantic[64] (char)
 					0,													// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 11,									// offset (uint32_t)
+					sizeof(float) * 5,									// offset (uint32_t)
 					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (uint32_t)
 					// Data source, instancing part
 					0													// instancesPerElement (uint32_t)
@@ -277,51 +250,63 @@ void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNod
 				++currentVertexBuffer;
 			}
 
-			{ // Tangent
-				// Get the Assimp mesh vertex tangent
-				aiVector3D assimpTangent = assimpMesh.mTangents[j];
+			{ // QTangent
+			  // - QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
+			  //   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
+				// Get the Assimp mesh vertex tangent, binormal and normal
+				aiVector3D tangent = assimpMesh.mTangents[j];
+				aiVector3D binormal = assimpMesh.mBitangents[j];
+				aiVector3D normal = assimpMesh.mNormals[j];
 
-				// Transform the Assimp mesh vertex tangent into global space
-				assimpTangent *= currentAssimpNormalTransformation;
+				// Transform the Assimp mesh vertex data into global space
+				tangent *= currentAssimpNormalTransformation;
+				binormal *= currentAssimpNormalTransformation;
+				normal *= currentAssimpNormalTransformation;
 
-				// Set our vertex buffer tangent
-				*currentVertexBuffer = assimpTangent.x;
-				++currentVertexBuffer;
-				*currentVertexBuffer = assimpTangent.y;
-				++currentVertexBuffer;
-				*currentVertexBuffer = assimpTangent.z;
-				++currentVertexBuffer;
-			}
+				// Generate tangent frame rotation matrix
+				glm::mat3 tangentFrame(
+					tangent.x,  tangent.y,  tangent.z,
+					binormal.x, binormal.y, binormal.z,
+					normal.x,   normal.y,   normal.z
+				);
 
-			{ // Binormal
-				// Get the Assimp mesh vertex binormal
-				aiVector3D assimpBinormal = assimpMesh.mBitangents[j];
+				// Flip y axis in case the tangent frame encodes a reflection
+				const float scale = (glm::determinant(tangentFrame) > 0) ? 1.0f : -1.0f;
+				tangentFrame[2][0] *= scale;
+				tangentFrame[2][1] *= scale;
+				tangentFrame[2][2] *= scale;
 
-				// Transform the Assimp mesh vertex binormal into global space
-				assimpBinormal *= currentAssimpNormalTransformation;
+				glm::quat tangentFrameQuaternion(tangentFrame);
 
-				// Set our vertex buffer binormal
-				*currentVertexBuffer = assimpBinormal.x;
-				++currentVertexBuffer;
-				*currentVertexBuffer = assimpBinormal.y;
-				++currentVertexBuffer;
-				*currentVertexBuffer = assimpBinormal.z;
-				++currentVertexBuffer;
-			}
+				{ // Make sure we don't end up with 0 as w component
+					const float threshold = 0.00001f;
+					const float renomalization = sqrt(1.0f - threshold * threshold);
 
-			{ // Normal
-				// Get the Assimp mesh vertex normal
-				aiVector3D assimpNormal = assimpMesh.mNormals[j];
+					if (abs(tangentFrameQuaternion.w) < threshold)
+					{
+						tangentFrameQuaternion.x *= renomalization;
+						tangentFrameQuaternion.y *= renomalization;
+						tangentFrameQuaternion.z *= renomalization;
+						tangentFrameQuaternion.w =  (tangentFrameQuaternion.w > 0) ? threshold : -threshold;
+					}
+				}
 
-				// Transform the Assimp mesh vertex normal into global space
-				assimpNormal *= currentAssimpNormalTransformation;
+				{ // Encode reflection into quaternion's w element by making sign of w negative if y axis needs to be flipped, positive otherwise
+					const float qs = (scale < 0.0f && tangentFrameQuaternion.w > 0.0f) || (scale > 0.0f && tangentFrameQuaternion.w < 0.0f) ? -1.0f : 1.0f;
+					tangentFrameQuaternion.x *= qs;
+					tangentFrameQuaternion.y *= qs;
+					tangentFrameQuaternion.z *= qs;
+					tangentFrameQuaternion.w *= qs;
+				}
 
-				// Set our vertex buffer normal
-				*currentVertexBuffer = assimpNormal.x;
+				// Set our vertex buffer qtangent
+				*currentVertexBuffer = tangentFrameQuaternion.x;
 				++currentVertexBuffer;
-				*currentVertexBuffer = assimpNormal.y;
+				*currentVertexBuffer = tangentFrameQuaternion.y;
 				++currentVertexBuffer;
-				*currentVertexBuffer = assimpNormal.z;
+				*currentVertexBuffer = tangentFrameQuaternion.z;
+				++currentVertexBuffer;
+				*currentVertexBuffer = tangentFrameQuaternion.w;
 				++currentVertexBuffer;
 			}
 		}

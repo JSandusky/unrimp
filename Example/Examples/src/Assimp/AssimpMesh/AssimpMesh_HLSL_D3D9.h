@@ -42,22 +42,40 @@ struct VS_INPUT
 {
 	float3 Position : POSITION;		// Object space vertex position
 	float2 TexCoord : TEXCOORD0;	// Texture coordinate
-	float3 Tangent  : TANGENT;		// Object space to tangent space, x-axis
-	float3 Binormal : BINORMAL;		// Object space to tangent space, y-axis
-	float3 Normal   : NORMAL;		// Object space to tangent space, z-axis
+	float4 QTangent : NORMAL;		// QTangent
 };
 struct VS_OUTPUT
 {
-	float4 Position : SV_POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
-	float2 TexCoord : TEXCOORD0;	// Texture coordinate
-	float3 Tangent  : TEXCOORD1;	// Tangent space to view space, x-axis
-	float3 Binormal : TEXCOORD2;	// Tangent space to view space, y-axis
-	float3 Normal   : TEXCOORD3;	// Tangent space to view space, z-axis
+	float4   Position     : SV_POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	float2   TexCoord     : TEXCOORD0;		// Texture coordinate
+	float3x3 TangentFrame : TEXCOORD1;		// Tangent frame
 };
 
 // Uniforms
 uniform float4x4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
 uniform float3x3 ObjectSpaceToViewSpaceMatrix;	// Object space to view space matrix
+
+// Functions
+float2x3 QuaternionToTangentBitangent(float4 q)
+{
+	return float2x3(
+		1 - 2*(q.y*q.y + q.z*q.z),	2*(q.x*q.y + q.w*q.z),		2*(q.x*q.z - q.w*q.y),
+		2*(q.x*q.y - q.w*q.z),		1 - 2*(q.x*q.x + q.z*q.z),	2*(q.y*q.z + q.w*q.x)
+	);
+}
+
+float3x3 GetTangentFrame(float3x3 objectSpaceToViewSpaceMatrix, float4 qtangent)
+{
+	float2x3 tBt = QuaternionToTangentBitangent(qtangent);
+	float3 t = mul(tBt[0], objectSpaceToViewSpaceMatrix);
+	float3 b = mul(tBt[1], objectSpaceToViewSpaceMatrix);
+
+	return float3x3(
+		t,
+		b,
+		cross(t, b) * (qtangent.w < 0 ? -1 : 1)
+	);
+}
 
 // Programs
 VS_OUTPUT main(VS_INPUT input)
@@ -71,9 +89,9 @@ VS_OUTPUT main(VS_INPUT input)
 	output.TexCoord = input.TexCoord;
 
 	// Calculate the tangent space to view space tangent, binormal and normal
-	output.Binormal = mul(input.Binormal, ObjectSpaceToViewSpaceMatrix);
-	output.Tangent  = mul(input.Tangent,  ObjectSpaceToViewSpaceMatrix);
-	output.Normal   = mul(input.Normal,   ObjectSpaceToViewSpaceMatrix);
+	// - QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
+	//   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
+	output.TangentFrame = GetTangentFrame(ObjectSpaceToViewSpaceMatrix, input.QTangent);
 
 	// Done
 	return output;
@@ -90,11 +108,9 @@ fragmentShaderSourceCode = STRINGIFY(
 // Attribute input/output
 struct VS_OUTPUT
 {
-	float4 Position : SV_POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
-	float2 TexCoord : TEXCOORD0;	// Texture coordinate
-	float3 Tangent  : TEXCOORD1;	// Tangent space to view space, x-axis
-	float3 Binormal : TEXCOORD2;	// Tangent space to view space, y-axis
-	float3 Normal   : TEXCOORD3;	// Tangent space to view space, z-axis
+	float4   Position     : SV_POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	float2   TexCoord     : TEXCOORD0;		// Texture coordinate
+	float3x3 TangentFrame : TEXCOORD1;		// Tangent frame
 };
 
 // Uniforms
@@ -117,7 +133,7 @@ float4 main(VS_OUTPUT input) : SV_Target
 	normal = (normal - 0.5f) * 2.0f;
 
 	// Transform the tangent space normal into view space
-	normal = normalize(normal.x * input.Tangent + normal.y * input.Binormal + normal.z * input.Normal);
+	normal = normalize(mul(normal, input.TangentFrame));
 
 	// Perform standard Blinn-Phong diffuse and specular lighting
 

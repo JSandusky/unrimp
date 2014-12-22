@@ -43,16 +43,32 @@ STRINGIFY(
 attribute vec3 Position;	// Object space vertex position
 attribute vec2 TexCoord;	// Texture coordinate
 varying   vec2 TexCoordVs;	// Texture coordinate
-attribute vec3 Tangent;		// Object space to tangent space, x-axis
+attribute vec4 QTangent;	// QTangent
 varying   vec3 TangentVs;	// Tangent space to view space, x-axis
-attribute vec3 Binormal;	// Object space to tangent space, y-axis
 varying   vec3 BinormalVs;	// Tangent space to view space, y-axis
-attribute vec3 Normal;		// Object space to tangent space, z-axis
 varying   vec3 NormalVs;	// Tangent space to view space, z-axis
+
 
 // Uniforms
 uniform mat4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
 uniform mat3 ObjectSpaceToViewSpaceMatrix;	// Object space to view space matrix
+
+// Functions
+mat3 GetTangentFrame(mat3 objectSpaceToViewSpaceMatrix, vec4 q)
+{
+	// Quaternion to tangent bitangent
+	vec3 tBt0 = vec3(1.0 - 2.0*(q.y*q.y + q.z*q.z),	2.0*(q.x*q.y + q.w*q.z),		2.0*(q.x*q.z - q.w*q.y));
+	vec3 tBt1 = vec3(2.0*(q.x*q.y - q.w*q.z),		1.0 - 2.0*(q.x*q.x + q.z*q.z),	2.0*(q.y*q.z + q.w*q.x));
+
+	vec3 t = objectSpaceToViewSpaceMatrix * tBt0;
+	vec3 b = objectSpaceToViewSpaceMatrix * tBt1;
+
+	return mat3(
+		t,
+		b,
+		cross(t, b) * ((q.w < 0.0) ? -1.0 : 1.0)
+	);
+}
 
 // Programs
 void main()
@@ -64,9 +80,12 @@ void main()
 	TexCoordVs = TexCoord;
 
 	// Calculate the tangent space to view space tangent, binormal and normal
-	TangentVs  = ObjectSpaceToViewSpaceMatrix * Tangent;
-	BinormalVs = ObjectSpaceToViewSpaceMatrix * Binormal;
-	NormalVs   = ObjectSpaceToViewSpaceMatrix * Normal;
+	// - QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
+	//   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
+	mat3 tangentFrame = GetTangentFrame(ObjectSpaceToViewSpaceMatrix, QTangent);
+	TangentVs = tangentFrame[0];
+	BinormalVs = tangentFrame[1];
+	NormalVs = tangentFrame[2];
 }
 );	// STRINGIFY
 

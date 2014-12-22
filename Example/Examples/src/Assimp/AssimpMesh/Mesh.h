@@ -83,7 +83,7 @@ public:
 //[ Private definitions                                   ]
 //[-------------------------------------------------------]
 private:
-	static const uint32_t NUMBER_OF_COMPONENTS_PER_VERTEX = 14;	///< Number of components per vertex (3 position, 2 texture coordinate, 3 tangent, 3 binormal, 3 normal)
+	static const uint32_t NUMBER_OF_COMPONENTS_PER_VERTEX = 9;	///< Number of components per vertex (3 position, 2 texture coordinate, 4 qtangent)
 
 
 //[-------------------------------------------------------]
