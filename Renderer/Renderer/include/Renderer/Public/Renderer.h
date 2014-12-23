@@ -425,10 +425,13 @@ namespace Renderer
 		{
 			enum Enum
 			{
-				FLOAT_1 = 0,
-				FLOAT_2 = 1,
-				FLOAT_3 = 2,
-				FLOAT_4 = 3
+				FLOAT_1			= 0,
+				FLOAT_2			= 1,
+				FLOAT_3			= 2,
+				FLOAT_4			= 3,
+				UNSIGNED_BYTE_4 = 4,
+				SHORT_2			= 5,
+				SHORT_4			= 6
 			};
 		};
 		struct VertexArrayAttribute

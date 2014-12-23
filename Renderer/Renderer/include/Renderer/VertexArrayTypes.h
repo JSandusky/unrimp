@@ -59,10 +59,13 @@ namespace Renderer
 	{
 		enum Enum
 		{
-			FLOAT_1 = 0,	///< Float 1 (one component per element, 32 bit floating point per component)
-			FLOAT_2 = 1,	///< Float 2 (two components per element, 32 bit floating point per component)
-			FLOAT_3 = 2,	///< Float 3 (three components per element, 32 bit floating point per component)
-			FLOAT_4 = 3		///< Float 4 (four components per element, 32 bit floating point per component)
+			FLOAT_1			= 0,	///< Float 1 (one component per element, 32 bit floating point per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
+			FLOAT_2			= 1,	///< Float 2 (two components per element, 32 bit floating point per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
+			FLOAT_3			= 2,	///< Float 3 (three components per element, 32 bit floating point per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
+			FLOAT_4			= 3,	///< Float 4 (four components per element, 32 bit floating point per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
+			UNSIGNED_BYTE_4 = 4,	///< Unsigned byte 4 (four components per element, 8 bit integer per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
+			SHORT_2			= 5,	///< Short 2 (two components per element, 16 bit integer per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
+			SHORT_4			= 6		///< Short 4 (four components per element, 16 bit integer per component), supported by DirectX 9, DirectX 10, DirectX 11, OpenGL and OpenGL ES 2
 		};
 	};
 

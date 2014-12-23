@@ -262,7 +262,10 @@ namespace Direct3D9Renderer
 			D3DDECLTYPE_FLOAT1,	// Renderer::VertexArrayFormat::FLOAT_1
 			D3DDECLTYPE_FLOAT2,	// Renderer::VertexArrayFormat::FLOAT_2
 			D3DDECLTYPE_FLOAT3,	// Renderer::VertexArrayFormat::FLOAT_3
-			D3DDECLTYPE_FLOAT4	// Renderer::VertexArrayFormat::FLOAT_4
+			D3DDECLTYPE_FLOAT4,	// Renderer::VertexArrayFormat::FLOAT_4
+			D3DDECLTYPE_UBYTE4,	// Renderer::VertexArrayFormat::UNSIGNED_BYTE_4
+			D3DDECLTYPE_SHORT2,	// Renderer::VertexArrayFormat::SHORT_2
+			D3DDECLTYPE_SHORT4	// Renderer::VertexArrayFormat::SHORT_4
 		};
 		return MAPPING[vertexArrayFormat];
 	}

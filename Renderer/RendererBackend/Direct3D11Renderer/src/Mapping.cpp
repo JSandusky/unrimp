@@ -43,7 +43,10 @@ namespace Direct3D11Renderer
 			DXGI_FORMAT_R32_FLOAT,			// Renderer::VertexArrayFormat::FLOAT_1
 			DXGI_FORMAT_R32G32_FLOAT,		// Renderer::VertexArrayFormat::FLOAT_2
 			DXGI_FORMAT_R32G32B32_FLOAT,	// Renderer::VertexArrayFormat::FLOAT_3
-			DXGI_FORMAT_R32G32B32A32_FLOAT	// Renderer::VertexArrayFormat::FLOAT_4
+			DXGI_FORMAT_R32G32B32A32_FLOAT,	// Renderer::VertexArrayFormat::FLOAT_4
+			DXGI_FORMAT_R8G8B8A8_UINT,		// Renderer::VertexArrayFormat::UNSIGNED_BYTE_4
+			DXGI_FORMAT_R16G16_SINT,		// Renderer::VertexArrayFormat::SHORT_2
+			DXGI_FORMAT_R16G16B16A16_SINT	// Renderer::VertexArrayFormat::SHORT_4
 		};
 		return MAPPING[vertexArrayFormat];
 	}

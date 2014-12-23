@@ -204,7 +204,10 @@ namespace OpenGLES2Renderer
 			1,	// Renderer::VertexArrayFormat::FLOAT_1
 			2,	// Renderer::VertexArrayFormat::FLOAT_2
 			3,	// Renderer::VertexArrayFormat::FLOAT_3
-			4	// Renderer::VertexArrayFormat::FLOAT_4
+			4,	// Renderer::VertexArrayFormat::FLOAT_4
+			4,	// Renderer::VertexArrayFormat::UNSIGNED_BYTE_4
+			2,	// Renderer::VertexArrayFormat::SHORT_2
+			4	// Renderer::VertexArrayFormat::SHORT_4
 		};
 		return MAPPING[vertexArrayFormat];
 	}
@@ -213,10 +216,13 @@ namespace OpenGLES2Renderer
 	{
 		static const GLenum MAPPING[] =
 		{
-			GL_FLOAT,	// Renderer::VertexArrayFormat::FLOAT_1
-			GL_FLOAT,	// Renderer::VertexArrayFormat::FLOAT_2
-			GL_FLOAT,	// Renderer::VertexArrayFormat::FLOAT_3
-			GL_FLOAT	// Renderer::VertexArrayFormat::FLOAT_4
+			GL_FLOAT,			// Renderer::VertexArrayFormat::FLOAT_1
+			GL_FLOAT,			// Renderer::VertexArrayFormat::FLOAT_2
+			GL_FLOAT,			// Renderer::VertexArrayFormat::FLOAT_3
+			GL_FLOAT,			// Renderer::VertexArrayFormat::FLOAT_4
+			GL_UNSIGNED_BYTE,	// Renderer::VertexArrayFormat::UNSIGNED_BYTE_4
+			GL_SHORT,			// Renderer::VertexArrayFormat::SHORT_2
+			GL_SHORT			// Renderer::VertexArrayFormat::SHORT_4
 		};
 		return MAPPING[vertexArrayFormat];
 	}
