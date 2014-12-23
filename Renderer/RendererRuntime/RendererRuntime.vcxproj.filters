@@ -35,6 +35,9 @@
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{90ad0410-66b6-4945-877c-8c6220003f5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{a0702f66-3b4a-4cdd-9a0b-12f5c5297843}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -144,6 +147,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h">
       <Filter>Source Files\Resource\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Scene\SceneManager.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Compositor\CompositorManager.h">
+      <Filter>Source Files\Compositor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Font\FreeTypeContext.cpp">
@@ -172,6 +181,12 @@
     </ClCompile>
     <ClCompile Include="src\Asset\AssetManager.cpp">
       <Filter>Source Files\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\SceneManager.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Compositor\CompositorManager.cpp">
+      <Filter>Source Files\Compositor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
