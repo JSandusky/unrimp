@@ -5,9 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Source Files\Font">
-      <UniqueIdentifier>{30892413-e439-48c6-ab24-9ec5adc72df8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Public">
       <UniqueIdentifier>{5c89bd99-c16c-46cd-8799-19fb55e5d704}</UniqueIdentifier>
     </Filter>
@@ -17,30 +14,51 @@
     <Filter Include="Source Files\Compositor">
       <UniqueIdentifier>{327414da-9b92-4146-aba1-c22516e3703a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Asset">
+      <UniqueIdentifier>{0cc18e3d-8c58-4844-a713-61deeab13a9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource">
+      <UniqueIdentifier>{5cae2858-4628-4956-a4c5-fb782e89a80f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\Texture">
+      <UniqueIdentifier>{5ee17e48-5a3d-4540-8401-0379b4c2d461}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\Mesh">
+      <UniqueIdentifier>{fd44e407-a350-4145-9b77-630646c35b10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\Font">
+      <UniqueIdentifier>{30892413-e439-48c6-ab24-9ec5adc72df8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\Material">
+      <UniqueIdentifier>{dd5ed779-d7f6-47fb-87b6-039c194bbc14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{90ad0410-66b6-4945-877c-8c6220003f5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
     <None Include="include\RendererRuntime\Font\IFontGlyphTexture.inl">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </None>
     <None Include="include\RendererRuntime\Font\IFontTexture.inl">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </None>
     <None Include="include\RendererRuntime\Font\FontGlyphTextureFreeType.inl">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </None>
     <None Include="include\RendererRuntime\Font\FontTextureFreeType.inl">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </None>
     <None Include="include\RendererRuntime\Font\FreeTypeContext.inl">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </None>
     <None Include="include\RendererRuntime\Font\IFont.inl">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </None>
     <None Include="include\RendererRuntime\Font\IFontGlyph.inl">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </None>
     <None Include="include\RendererRuntime\RendererRuntimeImpl.inl">
       <Filter>Source Files</Filter>
@@ -51,40 +69,40 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\Font\IFontGlyphTexture.h">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Font\IFontTexture.h">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Font\FontGlyphTextureFreeType.h">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Font\FontTextureFreeType.h">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Font\FreeTypeContext.h">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Font\IFont.h">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Font\IFontGlyph.h">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="src\Font\Font_GLSL_110.h">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="src\Font\Font_GLSL_ES2.h">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="src\Font\Font_HLSL_D3D9.h">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="src\Font\Font_HLSL_D3D10_D3D11.h">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="src\Font\Font_Null.h">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\RendererRuntimeImpl.h">
       <Filter>Source Files</Filter>
@@ -101,19 +119,59 @@
     <ClInclude Include="include\RendererRuntime\WindowsHeader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Manager.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Asset\AssetManager.h">
+      <Filter>Source Files\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ResourceManager.h">
+      <Filter>Source Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h">
+      <Filter>Source Files\Resource\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.h">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Font\FreeTypeContext.cpp">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClCompile>
     <ClCompile Include="src\Font\FontGlyphTextureFreeType.cpp">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClCompile>
     <ClCompile Include="src\Font\FontTextureFreeType.cpp">
-      <Filter>Source Files\Font</Filter>
+      <Filter>Source Files\Resource\Font</Filter>
     </ClCompile>
     <ClCompile Include="src\RendererRuntimeImpl.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Font\FontResourceManager.cpp">
+      <Filter>Source Files\Resource\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Asset\AssetManager.cpp">
+      <Filter>Source Files\Asset</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

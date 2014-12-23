@@ -32,6 +32,9 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\RendererRuntime\Asset\AssetManager.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Manager.h" />
+    <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h" />
     <ClInclude Include="include\RendererRuntime\Font\FontGlyphTextureFreeType.h" />
     <ClInclude Include="include\RendererRuntime\Font\FontTextureFreeType.h" />
     <ClInclude Include="include\RendererRuntime\Font\FreeTypeContext.h" />
@@ -43,7 +46,13 @@
     <ClInclude Include="include\RendererRuntime\PlatformTypes.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\RendererRuntimeImpl.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\ResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\WindowsHeader.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\Font\Font_GLSL_110.h" />
     <ClInclude Include="src\Font\Font_GLSL_ES2.h" />
     <ClInclude Include="src\Font\Font_HLSL_D3D10_D3D11.h" />
@@ -51,10 +60,15 @@
     <ClInclude Include="src\Font\Font_Null.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Asset\AssetManager.cpp" />
     <ClCompile Include="src\Font\FontGlyphTextureFreeType.cpp" />
     <ClCompile Include="src\Font\FontTextureFreeType.cpp" />
     <ClCompile Include="src\Font\FreeTypeContext.cpp" />
     <ClCompile Include="src\RendererRuntimeImpl.cpp" />
+    <ClCompile Include="src\Resource\Font\FontResourceManager.cpp" />
+    <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp" />
+    <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp" />
+    <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BC90A670-6608-479F-88A4-3F64CE7823E1}</ProjectGuid>
