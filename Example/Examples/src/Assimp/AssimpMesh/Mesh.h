@@ -83,7 +83,7 @@ public:
 //[ Private definitions                                   ]
 //[-------------------------------------------------------]
 private:
-	static const uint32_t NUMBER_OF_COMPONENTS_PER_VERTEX = 9;	///< Number of components per vertex (3 position, 2 texture coordinate, 4 qtangent)
+	static const uint32_t NUMBER_OF_BYTES_PER_VERTEX = 36;	///< Number of bytes per vertex (3 float position, 2 float texture coordinate, 4 float qtangent)
 
 
 //[-------------------------------------------------------]
@@ -124,7 +124,7 @@ private:
 	*  @param[out] numberOfIndices
 	*    Receives the number of processed indices
 	*/
-	void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices);
+	void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint8_t *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices);
 
 
 //[-------------------------------------------------------]

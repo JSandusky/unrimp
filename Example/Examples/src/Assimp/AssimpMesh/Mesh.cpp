@@ -60,7 +60,7 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 		getNumberOfVerticesAndIndicesRecursive(*assimpScene, *assimpScene->mRootNode, mNumberOfVertices, mNumberOfIndices);
 
 		// Allocate memory for the local vertex and index buffer data
-		float *vertexBufferData = new float[mNumberOfVertices * NUMBER_OF_COMPONENTS_PER_VERTEX];
+		uint8_t *vertexBufferData = new uint8_t[mNumberOfVertices * NUMBER_OF_BYTES_PER_VERTEX];
 		uint16_t *indexBufferData = new uint16_t[mNumberOfIndices];
 
 		{ // Fill the mesh data recursively
@@ -76,7 +76,7 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 
 		{ // Create vertex array object (VAO)
 			// Create the vertex buffer object (VBO)
-			Renderer::IVertexBufferPtr vertexBuffer(renderer.createVertexBuffer(sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX * mNumberOfVertices, vertexBufferData, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IVertexBufferPtr vertexBuffer(renderer.createVertexBuffer(NUMBER_OF_BYTES_PER_VERTEX * mNumberOfVertices, vertexBufferData, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create the index buffer object (IBO)
 			Renderer::IIndexBuffer *indexBuffer = renderer.createIndexBuffer(sizeof(uint16_t) * mNumberOfIndices, Renderer::IndexBufferFormat::UNSIGNED_SHORT, indexBufferData, Renderer::BufferUsage::STATIC_DRAW);
@@ -97,42 +97,42 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 			{
 				{ // Attribute 0
 					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_3,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"Position",											// name[32] (char)
-					"POSITION",											// semantic[32] (char)
-					0,													// semanticIndex (uint32_t)
+					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+					"Position",								// name[32] (char)
+					"POSITION",								// semantic[32] (char)
+					0,										// semanticIndex (uint32_t)
 					// Data source
-					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
-					0,													// offset (uint32_t)
-					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (uint32_t)
+					vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
+					0,										// offset (uint32_t)
+					NUMBER_OF_BYTES_PER_VERTEX,				// stride (uint32_t)
 					// Data source, instancing part
-					0													// instancesPerElement (uint32_t)
+					0										// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 1
 					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_2,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"TexCoord",											// name[32] (char)
-					"TEXCOORD",											// semantic[32] (char)
-					0,													// semanticIndex (uint32_t)
+					Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+					"TexCoord",								// name[32] (char)
+					"TEXCOORD",								// semantic[32] (char)
+					0,										// semanticIndex (uint32_t)
 					// Data source
-					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 3,									// offset (uint32_t)
-					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (uint32_t)
+					vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
+					sizeof(float) * 3,						// offset (uint32_t)
+					NUMBER_OF_BYTES_PER_VERTEX,				// stride (uint32_t)
 					// Data source, instancing part
-					0													// instancesPerElement (uint32_t)
+					0										// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 2
 					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_4,				// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"QTangent",											// name[32] (char)
-					"NORMAL",											// semantic[32] (char)
-					0,													// semanticIndex (uint32_t)
+					Renderer::VertexArrayFormat::FLOAT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+					"QTangent",								// name[32] (char)
+					"NORMAL",								// semantic[32] (char)
+					0,										// semanticIndex (uint32_t)
 					// Data source
-					vertexBuffer,										// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 5,									// offset (uint32_t)
-					sizeof(float) * NUMBER_OF_COMPONENTS_PER_VERTEX,	// stride (uint32_t)
+					vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
+					sizeof(float) * 3 + sizeof(float) * 2,	// offset (uint32_t)
+					NUMBER_OF_BYTES_PER_VERTEX,				// stride (uint32_t)
 					// Data source, instancing part
-					0													// instancesPerElement (uint32_t)
+					0										// instancesPerElement (uint32_t)
 				}
 			};
 			mVertexArray = program.createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray, indexBuffer);
@@ -204,7 +204,7 @@ void Mesh::getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, co
 	}
 }
 
-void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
+void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint8_t *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
 {
 	// Get the absolute transformation matrix of this Assimp node
 	const aiMatrix4x4 currentAssimpTransformation = assimpTransformation * assimpNode.mTransformation;
@@ -220,7 +220,7 @@ void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNod
 		const uint32_t starVertex = numberOfVertices;
 
 		// Loop through the Assimp mesh vertices
-		float *currentVertexBuffer = vertexBuffer + numberOfVertices * NUMBER_OF_COMPONENTS_PER_VERTEX;
+		uint8_t *currentVertexBuffer = vertexBuffer + numberOfVertices * NUMBER_OF_BYTES_PER_VERTEX;
 		for (uint32_t j = 0; j < assimpMesh.mNumVertices; ++j)
 		{
 			{ // Position
@@ -231,12 +231,13 @@ void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNod
 				assimpVertex *= currentAssimpTransformation;
 
 				// Set our vertex buffer position
-				*currentVertexBuffer = assimpVertex.x;
-				++currentVertexBuffer;
-				*currentVertexBuffer = assimpVertex.y;
-				++currentVertexBuffer;
-				*currentVertexBuffer = assimpVertex.z;
-				++currentVertexBuffer;
+				float *currentVertexBufferFloat = reinterpret_cast<float*>(currentVertexBuffer);
+				*currentVertexBufferFloat = assimpVertex.x;
+				++currentVertexBufferFloat;
+				*currentVertexBufferFloat = assimpVertex.y;
+				++currentVertexBufferFloat;
+				*currentVertexBufferFloat = assimpVertex.z;
+				currentVertexBuffer += sizeof(float) * 3;
 			}
 
 			{ // Texture coordinate
@@ -244,10 +245,11 @@ void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNod
 				aiVector3D assimpTexCoord = assimpMesh.mTextureCoords[0][j];
 
 				// Set our vertex buffer texture coordinate
-				*currentVertexBuffer = assimpTexCoord.x;
-				++currentVertexBuffer;
-				*currentVertexBuffer = assimpTexCoord.y;
-				++currentVertexBuffer;
+				float *currentVertexBufferFloat = reinterpret_cast<float*>(currentVertexBuffer);
+				*currentVertexBufferFloat = assimpTexCoord.x;
+				++currentVertexBufferFloat;
+				*currentVertexBufferFloat = assimpTexCoord.y;
+				currentVertexBuffer += sizeof(float) * 2;
 			}
 
 			{ // QTangent
@@ -300,14 +302,15 @@ void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNod
 				}
 
 				// Set our vertex buffer qtangent
-				*currentVertexBuffer = tangentFrameQuaternion.x;
-				++currentVertexBuffer;
-				*currentVertexBuffer = tangentFrameQuaternion.y;
-				++currentVertexBuffer;
-				*currentVertexBuffer = tangentFrameQuaternion.z;
-				++currentVertexBuffer;
-				*currentVertexBuffer = tangentFrameQuaternion.w;
-				++currentVertexBuffer;
+				float *currentVertexBufferFloat = reinterpret_cast<float*>(currentVertexBuffer);
+				*currentVertexBufferFloat = tangentFrameQuaternion.x;
+				++currentVertexBufferFloat;
+				*currentVertexBufferFloat = tangentFrameQuaternion.y;
+				++currentVertexBufferFloat;
+				*currentVertexBufferFloat = tangentFrameQuaternion.z;
+				++currentVertexBufferFloat;
+				*currentVertexBufferFloat = tangentFrameQuaternion.w;
+				currentVertexBuffer += sizeof(float) * 4;
 			}
 		}
 		numberOfVertices += assimpMesh.mNumVertices;
