@@ -122,8 +122,8 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 				{ // Attribute 0
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"Position",								// name[64] (char)
-					"POSITION",								// semantic[64] (char)
+					"Position",								// name[32] (char)
+					"POSITION",								// semantic[32] (char)
 					0,										// semanticIndex (uint32_t)
 					// Data source
 					&vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
@@ -135,8 +135,8 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 				{ // Attribute 1
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"TexCoord",								// name[64] (char)
-					"TEXCOORD",								// semantic[64] (char)
+					"TexCoord",								// name[32] (char)
+					"TEXCOORD",								// semantic[32] (char)
 					0,										// semanticIndex (uint32_t)
 					// Data source
 					&vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
@@ -148,8 +148,8 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 				{ // Attribute 2
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"Normal",								// name[64] (char)
-					"NORMAL",								// semantic[64] (char)
+					"Normal",								// name[32] (char)
+					"NORMAL",								// semantic[32] (char)
 					0,										// semanticIndex (uint32_t)
 					// Data source
 					&vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
@@ -163,8 +163,8 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 				{ // Attribute 3
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"PerInstancePositionTexture",			// name[64] (char)
-					"TEXCOORD",								// semantic[64] (char)
+					"PerInstancePositionTexture",			// name[32] (char)
+					"TEXCOORD",								// semantic[32] (char)
 					1,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBufferPerInstanceData,			// vertexBuffer (Renderer::IVertexBuffer *)
@@ -176,8 +176,8 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 				{ // Attribute 4
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"PerInstanceRotationScale",				// name[64] (char)
-					"TEXCOORD",								// semantic[64] (char)
+					"PerInstanceRotationScale",				// name[32] (char)
+					"TEXCOORD",								// semantic[32] (char)
 					2,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBufferPerInstanceData,			// vertexBuffer (Renderer::IVertexBuffer *)

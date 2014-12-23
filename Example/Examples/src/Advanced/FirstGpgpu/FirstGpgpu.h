@@ -136,7 +136,7 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	char							mRendererName[64];	///< Case sensitive ASCII name of the renderer to instance
+	char							mRendererName[32];	///< Case sensitive ASCII name of the renderer to instance
 	Renderer::IRendererPtr			mRenderer;			///< Renderer instance, can be a null pointer
 	Renderer::ITexture2DPtr			mTexture2D[2];		///< 2D texture, can be a null pointer
 	Renderer::IFramebufferPtr		mFramebuffer[2];	///< Framebuffer object (FBO), can be a null pointer

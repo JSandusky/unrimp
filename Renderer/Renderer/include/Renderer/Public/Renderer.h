@@ -434,8 +434,8 @@ namespace Renderer
 		struct VertexArrayAttribute
 		{
 			VertexArrayFormat::Enum  vertexArrayFormat;
-			char					 name[64];
-			char					 semantic[64];
+			char					 name[32];
+			char					 semantic[32];
 			uint32_t				 semanticIndex;
 			IVertexBuffer			*vertexBuffer;
 			uint32_t				 offset;

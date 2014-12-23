@@ -81,8 +81,8 @@ namespace Renderer
 	{
 		// Data destination
 		VertexArrayFormat::Enum  vertexArrayFormat;		///< Vertex attribute format
-		char					 name[64];				///< Vertex attribute name
-		char					 semantic[64];			///< Vertex attribute semantic
+		char					 name[32];				///< Vertex attribute name
+		char					 semantic[32];			///< Vertex attribute semantic
 		uint32_t				 semanticIndex;			///< Vertex attribute semantic index
 		// Data source
 		IVertexBuffer			*vertexBuffer;			///< Vertex buffer used at this vertex input slot (vertex array instances keep a reference to the vertex buffers used by the vertex array attributes, see "Renderer::IProgram::createVertexArray()" for details)

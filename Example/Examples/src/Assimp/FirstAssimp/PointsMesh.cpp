@@ -80,8 +80,8 @@ PointsMesh::PointsMesh(Renderer::IProgram &program, const char *filename) :
 				{ // Attribute 0
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"Position",								// nName[64] (char)
-					"POSITION",								// semantic[64] (char)
+					"Position",								// nname[32] (char)
+					"POSITION",								// semantic[32] (char)
 					0,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)

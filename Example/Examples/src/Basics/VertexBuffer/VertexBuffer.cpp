@@ -106,8 +106,8 @@ void VertexBuffer::onInitialization()
 						{ // Attribute 0
 							// Data destination
 							Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-							"Position",								// name[64] (char)
-							"POSITION",								// semantic[64] (char)
+							"Position",								// name[32] (char)
+							"POSITION",								// semantic[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBufferPositionColor,				// vertexBuffer (Renderer::IVertexBuffer *)
@@ -119,8 +119,8 @@ void VertexBuffer::onInitialization()
 						{ // Attribute 1
 							// Data destination
 							Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-							"Color",								// name[64] (char)
-							"COLOR",								// semantic[64] (char)
+							"Color",								// name[32] (char)
+							"COLOR",								// semantic[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBufferPositionColor,				// vertexBuffer (Renderer::IVertexBuffer *)
@@ -160,8 +160,8 @@ void VertexBuffer::onInitialization()
 						{ // Attribute 0
 							// Data destination
 							Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-							"Position",								// name[64] (char)
-							"POSITION",								// semantic[64] (char)
+							"Position",								// name[32] (char)
+							"POSITION",								// semantic[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBufferPosition,					// vertexBuffer (Renderer::IVertexBuffer *)
@@ -173,8 +173,8 @@ void VertexBuffer::onInitialization()
 						{ // Attribute 1
 							// Data destination
 							Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-							"Color",								// name[64] (char)
-							"COLOR",								// semantic[64] (char)
+							"Color",								// name[32] (char)
+							"COLOR",								// semantic[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBufferColor,						// vertexBuffer (Renderer::IVertexBuffer *)

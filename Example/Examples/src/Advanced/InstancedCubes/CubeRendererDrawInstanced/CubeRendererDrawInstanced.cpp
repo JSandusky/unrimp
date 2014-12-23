@@ -228,8 +228,8 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 				{ // Attribute 0
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"Position",								// name[64] (char)
-					"POSITION",								// semantic[64] (char)
+					"Position",								// name[32] (char)
+					"POSITION",								// semantic[32] (char)
 					0,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
@@ -241,8 +241,8 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 				{ // Attribute 1
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"TexCoord",								// name[64] (char)
-					"TEXCOORD",								// semantic[64] (char)
+					"TexCoord",								// name[32] (char)
+					"TEXCOORD",								// semantic[32] (char)
 					0,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
@@ -254,8 +254,8 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 				{ // Attribute 2
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"Normal",								// name[64] (char)
-					"NORMAL",								// semantic[64] (char)
+					"Normal",								// name[32] (char)
+					"NORMAL",								// semantic[32] (char)
 					0,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBuffer,							// pertexBuffer (Renderer::IVertexBuffer *)

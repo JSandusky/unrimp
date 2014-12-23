@@ -153,7 +153,7 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	char					mRendererName[64];		///< Case sensitive ASCII name of the renderer to instance
+	char					mRendererName[32];		///< Case sensitive ASCII name of the renderer to instance
 	void				   *mRendererSharedLibrary;	///< Renderer shared library, can be a null pointer
 	Renderer::IRendererPtr  mRenderer;				///< Renderer instance, can be a null pointer
 

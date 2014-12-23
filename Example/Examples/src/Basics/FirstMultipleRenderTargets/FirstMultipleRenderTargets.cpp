@@ -138,8 +138,8 @@ void FirstMultipleRenderTargets::onInitialization()
 						{ // Attribute 0
 							// Data destination
 							Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-							"Position",								// name[64] (char)
-							"POSITION",								// semantic[64] (char)
+							"Position",								// name[32] (char)
+							"POSITION",								// semantic[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
