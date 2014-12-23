@@ -83,7 +83,7 @@ public:
 //[ Private definitions                                   ]
 //[-------------------------------------------------------]
 private:
-	static const uint32_t NUMBER_OF_BYTES_PER_VERTEX = 32;	///< Number of bytes per vertex (3 float position, 2 short texture coordinate, 4 float qtangent)
+	static const uint32_t NUMBER_OF_BYTES_PER_VERTEX = 24;	///< Number of bytes per vertex (3 float position, 2 short texture coordinate, 4 short qtangent)
 
 
 //[-------------------------------------------------------]

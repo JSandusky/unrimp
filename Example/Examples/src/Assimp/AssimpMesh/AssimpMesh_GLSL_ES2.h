@@ -43,7 +43,7 @@ STRINGIFY(
 attribute highp vec3 Position;		// Object space vertex position
 attribute highp vec2 TexCoord;		// 16 bit texture coordinate
 varying   highp vec2 TexCoordVs;	// Texture coordinate
-attribute highp vec4 QTangent;		// QTangent
+attribute highp vec4 QTangent;		// 16 bit QTangent
 varying   vec3 TangentVs;			// Tangent space to view space, x-axis
 varying   vec3 BinormalVs;			// Tangent space to view space, y-axis
 varying   vec3 NormalVs;			// Tangent space to view space, z-axis
@@ -79,9 +79,9 @@ void main()
 	TexCoordVs = TexCoord / 32767.0;
 
 	// Calculate the tangent space to view space tangent, binormal and normal
-	// - QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
+	// - 16 bit QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 	//   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
-	mat3 tangentFrame = GetTangentFrame(ObjectSpaceToViewSpaceMatrix, QTangent);
+	mat3 tangentFrame = GetTangentFrame(ObjectSpaceToViewSpaceMatrix, QTangent / 32767.0);
 	TangentVs = tangentFrame[0];
 	BinormalVs = tangentFrame[1];
 	NormalVs = tangentFrame[2];

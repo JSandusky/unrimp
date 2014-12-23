@@ -152,7 +152,7 @@ Standalone renderer examples.
 		- Blinn-Phong shading
 		- Diffuse, normal, specular and emissive mapping
 		- Optimization: Cache data to not bother the renderer API to much
-		- Compact vertex format (16 bit texture coordinate, QTangent)
+		- Compact vertex format (16 bit texture coordinate, 16 bit QTangent, 56 bytes vs. 24 bytes per vertex)
 		- Open Asset Import Library (ASSIMP)
 
 

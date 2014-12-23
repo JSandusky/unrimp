@@ -42,7 +42,7 @@ struct VS_INPUT
 {
 	float3 Position : POSITION;		// Object space vertex position
 	float2 TexCoord : TEXCOORD0;	// 16 bit texture coordinate
-	float4 QTangent : NORMAL;		// QTangent
+	float4 QTangent : NORMAL;		// 16 bit QTangent
 };
 struct VS_OUTPUT
 {
@@ -89,9 +89,9 @@ VS_OUTPUT main(VS_INPUT input)
 	output.TexCoord = input.TexCoord / 32767.0f;
 
 	// Calculate the tangent space to view space tangent, binormal and normal
-	// - QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
+	// - 16 bit QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 	//   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
-	output.TangentFrame = GetTangentFrame(ObjectSpaceToViewSpaceMatrix, input.QTangent);
+	output.TangentFrame = GetTangentFrame(ObjectSpaceToViewSpaceMatrix, input.QTangent / 32767.0);
 
 	// Done
 	return output;

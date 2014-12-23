@@ -81,13 +81,16 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 			// Create the index buffer object (IBO)
 			Renderer::IIndexBuffer *indexBuffer = renderer.createIndexBuffer(sizeof(uint16_t) * mNumberOfIndices, Renderer::IndexBufferFormat::UNSIGNED_SHORT, indexBufferData, Renderer::BufferUsage::STATIC_DRAW);
 
-			// 16-bit unsigned normalized texture coordinates are usualy sufficient
-
-			// Please note: Storing fully featured normal, tangent and binormal is inefficient
-			// -> Normal vectors are considered to be normalized, so, we don't need to store all three components as fully featured float
-			// -> The binormal can be recalculated within a shader
-			// -> In a real-world use-case you might want to use vertex-packing (QTangents, half precision for positions, short for texture coordinates etc, )
-			//    instead of a fat vertex layout. So here's an example.
+			// Compact vertex format:
+			// - Position: We could use 16 bit positions, but then would have to make a distinction between small meshes were this is sufficient
+			//   and bigger meshes were this will introduce artifacts. We want to keep it simple, so we don't go there.
+			// - Texture coordinate: 16 bit unsigned normalized texture coordinates are usualy sufficient
+			// - Tangent space: Please note: Storing fully featured normal, tangent and binormal is inefficient
+			//   -> Normal vectors are considered to be normalized, so, we don't need to store all three components as fully featured float
+			//   -> The binormal can be recalculated within a shader
+			//   -> In a real-world use-case you might want to use vertex-packing (QTangents, half precision for positions, short for texture coordinates etc, )
+			//      instead of a fat vertex layout. So here's an example.
+			//   -> 16 bit QTangent is sufficient
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -125,7 +128,7 @@ Mesh::Mesh(Renderer::IProgram &program, const char *filename) :
 				},
 				{ // Attribute 2
 					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+					Renderer::VertexArrayFormat::SHORT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"QTangent",								// name[32] (char)
 					"NORMAL",								// semantic[32] (char)
 					0,										// semanticIndex (uint32_t)
@@ -225,7 +228,7 @@ void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNod
 		uint8_t *currentVertexBuffer = vertexBuffer + numberOfVertices * NUMBER_OF_BYTES_PER_VERTEX;
 		for (uint32_t j = 0; j < assimpMesh.mNumVertices; ++j)
 		{
-			{ // Position
+			{ // 32 bit position
 				// Get the Assimp mesh vertex position
 				aiVector3D assimpVertex = assimpMesh.mVertices[j];
 
@@ -242,7 +245,7 @@ void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNod
 				currentVertexBuffer += sizeof(float) * 3;
 			}
 
-			{ // Texture coordinate
+			{ // 16 bit texture coordinate
 				// Get the Assimp mesh vertex texture coordinate
 				aiVector3D assimpTexCoord = assimpMesh.mTextureCoords[0][j];
 
@@ -254,7 +257,7 @@ void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNod
 				currentVertexBuffer += sizeof(short) * 2;
 			}
 
-			{ // QTangent
+			{ // 16 bit QTangent
 			  // - QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 			  //   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
 				// Get the Assimp mesh vertex tangent, binormal and normal
@@ -283,7 +286,7 @@ void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNod
 				glm::quat tangentFrameQuaternion(tangentFrame);
 
 				{ // Make sure we don't end up with 0 as w component
-					const float threshold = 0.00001f;
+					const float threshold = 1.0f / SHRT_MAX; // 16 bit quantization QTangent
 					const float renomalization = sqrt(1.0f - threshold * threshold);
 
 					if (abs(tangentFrameQuaternion.w) < threshold)
@@ -303,16 +306,16 @@ void Mesh::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNod
 					tangentFrameQuaternion.w *= qs;
 				}
 
-				// Set our vertex buffer qtangent
-				float *currentVertexBufferFloat = reinterpret_cast<float*>(currentVertexBuffer);
-				*currentVertexBufferFloat = tangentFrameQuaternion.x;
-				++currentVertexBufferFloat;
-				*currentVertexBufferFloat = tangentFrameQuaternion.y;
-				++currentVertexBufferFloat;
-				*currentVertexBufferFloat = tangentFrameQuaternion.z;
-				++currentVertexBufferFloat;
-				*currentVertexBufferFloat = tangentFrameQuaternion.w;
-				currentVertexBuffer += sizeof(float) * 4;
+				// Set our vertex buffer 16 bit qtangent
+				short *currentVertexBufferShort = reinterpret_cast<short*>(currentVertexBuffer);
+				*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.x * SHRT_MAX);
+				++currentVertexBufferShort;
+				*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.y * SHRT_MAX);
+				++currentVertexBufferShort;
+				*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.z * SHRT_MAX);
+				++currentVertexBufferShort;
+				*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.w * SHRT_MAX);
+				currentVertexBuffer += sizeof(short) * 4;
 			}
 		}
 		numberOfVertices += assimpMesh.mNumVertices;
