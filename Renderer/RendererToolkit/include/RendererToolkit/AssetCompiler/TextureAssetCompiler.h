@@ -27,20 +27,20 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererToolkit/AssetCompiler/AssetCompiler.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace RendererToolkit
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class Manager : private NonCopyable
+	class TextureAssetCompiler : private AssetCompiler
 	{
 
 
@@ -48,8 +48,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline Manager() {}
-		inline ~Manager() {}
+		TextureAssetCompiler();
+		~TextureAssetCompiler();
 
 
 	};
@@ -58,4 +58,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+} // RendererToolkit

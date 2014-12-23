@@ -19,43 +19,31 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererToolkit/AssetCompiler/FontAssetCompiler.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace RendererToolkit
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class Manager : private NonCopyable
-	{
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	protected:
-		inline Manager() {}
-		inline ~Manager() {}
+	FontAssetCompiler::FontAssetCompiler()
+	{
+	}
 
-
-	};
+	FontAssetCompiler::~FontAssetCompiler()
+	{
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+} // RendererToolkit

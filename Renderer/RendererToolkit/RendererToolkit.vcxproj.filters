@@ -11,6 +11,9 @@
     <Filter Include="Source Files\Public">
       <UniqueIdentifier>{5c89bd99-c16c-46cd-8799-19fb55e5d704}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\AssetCompiler">
+      <UniqueIdentifier>{fbfa5ba9-8296-4cc7-895f-5985ce94fffa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -95,6 +98,21 @@
     <ClInclude Include="include\RendererToolkit\WindowsHeader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\AssetCompiler.h">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\MeshAssetCompiler.h">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\FontAssetCompiler.h">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialAssetCompiler.h">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Font\FreeTypeContext.cpp">
@@ -108,6 +126,18 @@
     </ClCompile>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetCompiler\TextureAssetCompiler.cpp">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetCompiler\FontAssetCompiler.cpp">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetCompiler\MaterialAssetCompiler.cpp">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp">
+      <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

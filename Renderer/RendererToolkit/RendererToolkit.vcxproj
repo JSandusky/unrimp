@@ -32,6 +32,11 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\AssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\FontAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\MeshAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\Font\FontGlyphTextureFreeType.h" />
     <ClInclude Include="include\RendererToolkit\Font\FontTextureFreeType.h" />
     <ClInclude Include="include\RendererToolkit\Font\FreeTypeContext.h" />
@@ -51,6 +56,10 @@
     <ClInclude Include="src\Font\Font_Null.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AssetCompiler\FontAssetCompiler.cpp" />
+    <ClCompile Include="src\AssetCompiler\MaterialAssetCompiler.cpp" />
+    <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp" />
+    <ClCompile Include="src\AssetCompiler\TextureAssetCompiler.cpp" />
     <ClCompile Include="src\Font\FontGlyphTextureFreeType.cpp" />
     <ClCompile Include="src\Font\FontTextureFreeType.cpp" />
     <ClCompile Include="src\Font\FreeTypeContext.cpp" />
@@ -127,7 +136,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\..\include\;..\..\External\freetype\include\freetype</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\RendererRuntime\include\;..\..\include\;..\..\External\freetype\include\freetype</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -156,7 +165,7 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\..\include\;..\..\External\freetype\include\freetype\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\RendererRuntime\include\;..\..\include\;..\..\External\freetype\include\freetype\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;RENDERERTOOLKIT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -187,7 +196,7 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\..\include\;..\..\External\freetype\include\freetype</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\RendererRuntime\include\;..\..\include\;..\..\External\freetype\include\freetype</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -230,7 +239,7 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\..\include\;..\..\External\freetype\include\freetype</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\RendererRuntime\include\;..\..\include\;..\..\External\freetype\include\freetype</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
