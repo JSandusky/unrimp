@@ -27,7 +27,13 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/AssetCompiler/AssetCompiler.h"
+#include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+typedef struct FT_LibraryRec_* FT_Library;
 
 
 //[-------------------------------------------------------]
@@ -40,16 +46,31 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class FontAssetCompiler : private AssetCompiler
+	// TODO(co) More dynamic glyphs generation to be able to support more languages
+	class FontAssetCompiler : public IAssetCompiler
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	protected:
+	public:
 		FontAssetCompiler();
-		~FontAssetCompiler();
+		virtual ~FontAssetCompiler();
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual bool compile(std::istream& istream, std::ostream& ostream, std::istream& jsonConfiguration) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		FT_Library* mFtLibrary;	///< FreeType library object, a null pointer on error (in case of an terrible error)
 
 
 	};

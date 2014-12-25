@@ -42,71 +42,23 @@
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\RendererRuntime\Font\IFontGlyphTexture.inl">
-      <Filter>Source Files\Resource\Font</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Font\IFontTexture.inl">
-      <Filter>Source Files\Resource\Font</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Font\FontGlyphTextureFreeType.inl">
-      <Filter>Source Files\Resource\Font</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Font\FontTextureFreeType.inl">
-      <Filter>Source Files\Resource\Font</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Font\FreeTypeContext.inl">
-      <Filter>Source Files\Resource\Font</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Font\IFont.inl">
-      <Filter>Source Files\Resource\Font</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Font\IFontGlyph.inl">
-      <Filter>Source Files\Resource\Font</Filter>
-    </None>
     <None Include="include\RendererRuntime\RendererRuntimeImpl.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\RendererRuntime\IRendererRuntime.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Font\IFont.inl">
+      <Filter>Source Files\Resource\Font</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Font\IFontTexture.inl">
+      <Filter>Source Files\Resource\Font</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Font\FontTextureFreeType.inl">
+      <Filter>Source Files\Resource\Font</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\RendererRuntime\Font\IFontGlyphTexture.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Font\IFontTexture.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Font\FontGlyphTextureFreeType.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Font\FontTextureFreeType.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Font\FreeTypeContext.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Font\IFont.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Font\IFontGlyph.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Font\Font_GLSL_110.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Font\Font_GLSL_ES2.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Font\Font_HLSL_D3D9.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Font\Font_HLSL_D3D10_D3D11.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Font\Font_Null.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\RendererRuntimeImpl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -135,9 +87,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\ResourceManager.h">
       <Filter>Source Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h">
       <Filter>Source Files\Resource\Material</Filter>
     </ClInclude>
@@ -153,22 +102,22 @@
     <ClInclude Include="include\RendererRuntime\Compositor\CompositorManager.h">
       <Filter>Source Files\Compositor</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Font\IFont.h">
+      <Filter>Source Files\Resource\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Font\IFontTexture.h">
+      <Filter>Source Files\Resource\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h">
+      <Filter>Source Files\Resource\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Font\FontTextureFreeType.h">
+      <Filter>Source Files\Resource\Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Font\FreeTypeContext.cpp">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Font\FontGlyphTextureFreeType.cpp">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Font\FontTextureFreeType.cpp">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClCompile>
     <ClCompile Include="src\RendererRuntimeImpl.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Font\FontResourceManager.cpp">
-      <Filter>Source Files\Resource\Font</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp">
       <Filter>Source Files\Resource\Material</Filter>
@@ -187,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="src\Compositor\CompositorManager.cpp">
       <Filter>Source Files\Compositor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Font\FontTexture.cpp">
+      <Filter>Source Files\Resource\Font</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

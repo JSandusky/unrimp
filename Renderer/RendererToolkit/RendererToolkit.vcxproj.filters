@@ -5,9 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Source Files\Font">
-      <UniqueIdentifier>{30892413-e439-48c6-ab24-9ec5adc72df8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Public">
       <UniqueIdentifier>{5c89bd99-c16c-46cd-8799-19fb55e5d704}</UniqueIdentifier>
     </Filter>
@@ -18,27 +15,6 @@
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\RendererToolkit\Font\IFontGlyphTexture.inl">
-      <Filter>Source Files\Font</Filter>
-    </None>
-    <None Include="include\RendererToolkit\Font\IFontTexture.inl">
-      <Filter>Source Files\Font</Filter>
-    </None>
-    <None Include="include\RendererToolkit\Font\FontGlyphTextureFreeType.inl">
-      <Filter>Source Files\Font</Filter>
-    </None>
-    <None Include="include\RendererToolkit\Font\FontTextureFreeType.inl">
-      <Filter>Source Files\Font</Filter>
-    </None>
-    <None Include="include\RendererToolkit\Font\FreeTypeContext.inl">
-      <Filter>Source Files\Font</Filter>
-    </None>
-    <None Include="include\RendererToolkit\Font\IFont.inl">
-      <Filter>Source Files\Font</Filter>
-    </None>
-    <None Include="include\RendererToolkit\Font\IFontGlyph.inl">
-      <Filter>Source Files\Font</Filter>
-    </None>
     <None Include="include\RendererToolkit\RendererToolkitImpl.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -47,42 +23,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\RendererToolkit\Font\IFontGlyphTexture.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererToolkit\Font\IFontTexture.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererToolkit\Font\FontGlyphTextureFreeType.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererToolkit\Font\FontTextureFreeType.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererToolkit\Font\FreeTypeContext.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererToolkit\Font\IFont.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererToolkit\Font\IFontGlyph.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Font\Font_GLSL_110.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Font\Font_GLSL_ES2.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Font\Font_HLSL_D3D9.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Font\Font_HLSL_D3D10_D3D11.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Font\Font_Null.h">
-      <Filter>Source Files\Font</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererToolkit\RendererToolkitImpl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -98,9 +38,6 @@
     <ClInclude Include="include\RendererToolkit\WindowsHeader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererToolkit\AssetCompiler\AssetCompiler.h">
-      <Filter>Source Files\AssetCompiler</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
@@ -113,17 +50,14 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\IAssetCompiler.h">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Public\RendererToolkitInstance.h">
+      <Filter>Source Files\Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Font\FreeTypeContext.cpp">
-      <Filter>Source Files\Font</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Font\FontGlyphTextureFreeType.cpp">
-      <Filter>Source Files\Font</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Font\FontTextureFreeType.cpp">
-      <Filter>Source Files\Font</Filter>
-    </ClCompile>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

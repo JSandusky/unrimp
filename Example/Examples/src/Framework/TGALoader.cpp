@@ -81,7 +81,7 @@ bool LoadCompressedTGA(Texture *, char *, FILE *);		// Load a Compressed file
 
 
 // [CHANGED] Added so the examples are not getting into contact with this messy code
-#include <Renderer/Renderer.h>
+#include <Renderer/Public/Renderer.h>
 Renderer::ITexture2D *loadTGATexture(Renderer::IRenderer &renderer, const char *filename)
 {
 	Texture texture;

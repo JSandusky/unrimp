@@ -43,10 +43,6 @@ namespace Renderer
 	class ISamplerState;
 	class IUniformBuffer;
 }
-namespace RendererRuntime
-{
-	class FreeTypeContext;
-}
 
 
 //[-------------------------------------------------------]
@@ -88,18 +84,6 @@ namespace RendererRuntime
 		*    Destructor
 		*/
 		virtual ~RendererRuntimeImpl();
-
-		/**
-		*  @brief
-		*    Return the FreeType context instance
-		*
-		*  @return
-		*    The FreeType context instance, do not release the returned instance unless you added an own reference to it
-		*
-		*  @note
-		*    - The FreeType context instance is created by using lazy evaluation, meaning that the instance is created the first time it's required
-		*/
-		FreeTypeContext &getFreeTypeContext();
 
 		/**
 		*  @brief
@@ -178,7 +162,7 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual IFont *createFontTexture(const char *filename, uint32_t size = 12, uint32_t resolution = 96) override;
+		virtual IFont *createFontTexture(const char *filename) override;
 
 
 	//[-------------------------------------------------------]
@@ -211,7 +195,6 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		FreeTypeContext			 *mFreeTypeContext;					///< FreeType context instance (we keep a reference to it), can be a null pointer, do only access it by using "getFreeTypeContext()"
 		Renderer::IProgram		 *mFontProgram;						///< Font program (we keep a reference to it), can be a null pointer, do only access it by using "getFontProgram()"
 		Renderer::IUniformBuffer *mFontVertexShaderUniformBuffer;	///< Font vertex shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexShaderUniformBuffer()"
 		Renderer::IUniformBuffer *mFontFragmentShaderUniformBuffer;	///< Font fragment shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontFragmentShaderUniformBuffer()"

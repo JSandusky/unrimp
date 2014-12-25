@@ -20,15 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\RendererRuntime\Font\FontGlyphTextureFreeType.inl" />
-    <None Include="include\RendererRuntime\Font\FontTextureFreeType.inl" />
-    <None Include="include\RendererRuntime\Font\FreeTypeContext.inl" />
-    <None Include="include\RendererRuntime\Font\IFont.inl" />
-    <None Include="include\RendererRuntime\Font\IFontGlyph.inl" />
-    <None Include="include\RendererRuntime\Font\IFontGlyphTexture.inl" />
-    <None Include="include\RendererRuntime\Font\IFontTexture.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
     <None Include="include\RendererRuntime\RendererRuntimeImpl.inl" />
+    <None Include="include\RendererRuntime\Resource\Font\FontTextureFreeType.inl" />
+    <None Include="include\RendererRuntime\Resource\Font\IFont.inl" />
+    <None Include="include\RendererRuntime\Resource\Font\IFontTexture.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -36,18 +32,14 @@
     <ClInclude Include="include\RendererRuntime\Compositor\CompositorManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Manager.h" />
     <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h" />
-    <ClInclude Include="include\RendererRuntime\Font\FontGlyphTextureFreeType.h" />
-    <ClInclude Include="include\RendererRuntime\Font\FontTextureFreeType.h" />
-    <ClInclude Include="include\RendererRuntime\Font\FreeTypeContext.h" />
-    <ClInclude Include="include\RendererRuntime\Font\IFont.h" />
-    <ClInclude Include="include\RendererRuntime\Font\IFontGlyph.h" />
-    <ClInclude Include="include\RendererRuntime\Font\IFontGlyphTexture.h" />
-    <ClInclude Include="include\RendererRuntime\Font\IFontTexture.h" />
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\PlatformTypes.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\RendererRuntimeImpl.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Font\FontTextureFreeType.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Font\IFont.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Font\IFontTexture.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ResourceManager.h" />
@@ -55,20 +47,12 @@
     <ClInclude Include="include\RendererRuntime\Scene\SceneManager.h" />
     <ClInclude Include="include\RendererRuntime\WindowsHeader.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="src\Font\Font_GLSL_110.h" />
-    <ClInclude Include="src\Font\Font_GLSL_ES2.h" />
-    <ClInclude Include="src\Font\Font_HLSL_D3D10_D3D11.h" />
-    <ClInclude Include="src\Font\Font_HLSL_D3D9.h" />
-    <ClInclude Include="src\Font\Font_Null.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Asset\AssetManager.cpp" />
     <ClCompile Include="src\Compositor\CompositorManager.cpp" />
-    <ClCompile Include="src\Font\FontGlyphTextureFreeType.cpp" />
-    <ClCompile Include="src\Font\FontTextureFreeType.cpp" />
-    <ClCompile Include="src\Font\FreeTypeContext.cpp" />
+    <ClCompile Include="src\Font\FontTexture.cpp" />
     <ClCompile Include="src\RendererRuntimeImpl.cpp" />
-    <ClCompile Include="src\Resource\Font\FontResourceManager.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp" />
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
@@ -145,7 +129,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\..\include\;..\..\External\freetype\include\freetype</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -159,8 +143,10 @@
     </Link>
     <PostBuildEvent />
     <Lib>
-      <AdditionalLibraryDirectories>..\..\External\Windows_x86\freetype\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype_MultiThreaded.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>md "..\..\lib\$(PlatformTarget)d_static\"
@@ -174,7 +160,7 @@ copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\..\include\;..\..\External\freetype\include\freetype\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;RENDERERRUNTIME_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -185,8 +171,9 @@ copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\External\Windows_x86\freetype\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype_MultiThreadedDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
@@ -205,7 +192,7 @@ copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\..\include\;..\..\External\freetype\include\freetype</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -236,10 +223,12 @@ copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\
 </Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>freetype_MultiThreaded.lib</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>..\..\External\Windows_x86\freetype\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
@@ -248,7 +237,7 @@ copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\..\include\;..\..\External\freetype\include\freetype</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -270,8 +259,9 @@ copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\External\Windows_x86\freetype\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype_MultiThreadedDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>

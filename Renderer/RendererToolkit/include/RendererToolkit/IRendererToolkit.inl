@@ -33,23 +33,16 @@ namespace RendererToolkit
 		// Nothing to do in here
 	}
 
-	inline Renderer::IRenderer &IRendererToolkit::getRenderer() const
-	{
-		return *mRenderer;
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IRendererToolkit::IRendererToolkit() :
-		mRenderer(nullptr)
+	inline IRendererToolkit::IRendererToolkit()
 	{
 		// Nothing to do in here
 	}
 
-	inline IRendererToolkit::IRendererToolkit(const IRendererToolkit &) :
-		mRenderer(nullptr)
+	inline IRendererToolkit::IRendererToolkit(const IRendererToolkit &)
 	{
 		// Not supported
 	}

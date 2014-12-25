@@ -23,8 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/RendererRuntimeImpl.h"
 #include "RendererRuntime/PlatformTypes.h"
-#include "RendererRuntime/Font/FreeTypeContext.h"
-#include "RendererRuntime/Font/FontTextureFreeType.h"
+#include "RendererRuntime/Resource/Font/FontTextureFreeType.h"
 
 #include <string.h>	// For "strcmp()"
 
@@ -56,7 +55,6 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	RendererRuntimeImpl::RendererRuntimeImpl(Renderer::IRenderer &renderer) :
-		mFreeTypeContext(nullptr),
 		mFontProgram(nullptr),
 		mFontVertexShaderUniformBuffer(nullptr),
 		mFontFragmentShaderUniformBuffer(nullptr),
@@ -109,27 +107,8 @@ namespace RendererRuntime
 			mFontProgram->release();
 		}
 
-		// Release the FreeType context instance
-		if (nullptr != mFreeTypeContext)
-		{
-			mFreeTypeContext->release();
-		}
-
 		// Release our renderer reference
 		mRenderer->release();
-	}
-
-	FreeTypeContext &RendererRuntimeImpl::getFreeTypeContext()
-	{
-		// Create the FreeType context instance right now?
-		if (nullptr == mFreeTypeContext)
-		{
-			mFreeTypeContext = new FreeTypeContext(*mRenderer);
-			mFreeTypeContext->addReference();	// Add our internal reference
-		}
-
-		// Return the FreeType context instance
-		return *mFreeTypeContext;
 	}
 
 	Renderer::IProgram *RendererRuntimeImpl::getFontProgram()
@@ -314,7 +293,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
 	//[-------------------------------------------------------]
-	IFont *RendererRuntimeImpl::createFontTexture(const char *filename, uint32_t size, uint32_t resolution)
+	IFont *RendererRuntimeImpl::createFontTexture(const char *filename)
 	{
 		IFont *font = nullptr;
 
@@ -322,14 +301,7 @@ namespace RendererRuntime
 		if (nullptr != filename && '\0' != filename[0])
 		{
 			// Create the font instance
-			font = new FontTextureFreeType(*this, filename);
-
-			// Is the font valid? If yes, should we set the font size and resolution right now?
-			if (font->isValid() && size > 0 && resolution > 0)
-			{
-				// Set the font size
-				font->setSize(size, resolution);
-			}
+			font = new FontTexture(*this, filename);
 		}
 
 		// Return the created font instance

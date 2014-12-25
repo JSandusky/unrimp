@@ -32,7 +32,7 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	MeshAssetCompiler::MeshAssetCompiler()
 	{
@@ -40,6 +40,15 @@ namespace RendererToolkit
 
 	MeshAssetCompiler::~MeshAssetCompiler()
 	{
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
+	//[-------------------------------------------------------]
+	bool MeshAssetCompiler::compile(std::istream&, std::ostream&, std::istream&)
+	{
+		return false;
 	}
 
 

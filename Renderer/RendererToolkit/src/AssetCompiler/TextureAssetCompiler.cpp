@@ -32,7 +32,7 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	TextureAssetCompiler::TextureAssetCompiler()
 	{
@@ -40,6 +40,15 @@ namespace RendererToolkit
 
 	TextureAssetCompiler::~TextureAssetCompiler()
 	{
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
+	//[-------------------------------------------------------]
+	bool TextureAssetCompiler::compile(std::istream&, std::ostream&, std::istream&)
+	{
+		return false;
 	}
 
 

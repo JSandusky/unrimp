@@ -73,7 +73,7 @@ void FirstFont::onInitialization()
 
 		// Create the font instance
 		// -> In order to keep it simple, we use simple ASCII strings as filenames which are relative to the executable
-		mFont = rendererRuntime->createFontTexture("../DataSource/Font/LinBiolinum_R.otf");
+		mFont = rendererRuntime->createFontTexture("../DataPc/TextureFont/LinBiolinum_R.font");
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(getRenderer())

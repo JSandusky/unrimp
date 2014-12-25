@@ -28,11 +28,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline RendererToolkitImpl::RendererToolkitImpl(const RendererToolkitImpl &) :
-		mFreeTypeContext(nullptr),
-		mFontProgram(nullptr),
-		mFontVertexArray(nullptr),
-		mFontSamplerState(nullptr)
+	inline RendererToolkitImpl::RendererToolkitImpl(const RendererToolkitImpl &)
 	{
 		// Not supported
 	}

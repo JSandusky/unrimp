@@ -29,19 +29,15 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Renderer.h>
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderer;
-}
 namespace RendererToolkit
 {
-	class IFont;
+	class IAssetCompiler;
 }
 
 
@@ -73,35 +69,18 @@ namespace RendererToolkit
 		*/
 		inline virtual ~IRendererToolkit();
 
-		/**
-		*  @brief
-		*    Return the used renderer instance
-		*
-		*  @return
-		*    The used renderer instance, do not release the returned instance unless you added an own reference to it
-		*/
-		inline Renderer::IRenderer &getRenderer() const;
-
 
 	//[-------------------------------------------------------]
-	//[ Public virtual IRendererToolkit methods               ]
+	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Create a texture font instance
-		*
-		*  @param[in] filename
-		*    The ASCII font filename, if null pointer or empty string a null pointer will be returned
-		*  @param[in] size
-		*    Nominal font size in points, for example 12 (72 points per inch)
-		*  @param[in] resolution
-		*    The horizontal and vertical resolution in DPI, for example 96
-		*
-		*  @return
-		*    The created texture font instance, a null pointer on error. Release the returned instance if you no longer need it.
-		*/
-		virtual IFont *createFontTexture(const char *filename, uint32_t size = 12, uint32_t resolution = 96) = 0;
+		//[-------------------------------------------------------]
+		//[ Asset compilers                                       ]
+		//[-------------------------------------------------------]
+		virtual IAssetCompiler* createFontAssetCompiler() = 0;
+		virtual IAssetCompiler* createTextureAssetCompiler() = 0;
+		virtual IAssetCompiler* createMaterialAssetCompiler() = 0;
+		virtual IAssetCompiler* createMeshAssetCompiler() = 0;
 
 
 	//[-------------------------------------------------------]
@@ -134,13 +113,6 @@ namespace RendererToolkit
 		*    Reference to this instance
 		*/
 		inline IRendererToolkit &operator =(const IRendererToolkit &source);
-
-
-	//[-------------------------------------------------------]
-	//[ Protected data                                        ]
-	//[-------------------------------------------------------]
-	protected:
-		Renderer::IRenderer *mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
 
 
 	};

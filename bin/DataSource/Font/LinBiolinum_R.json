@@ -1,0 +1,16 @@
+{
+	"Format":
+	{
+		"Type": "FontCompiler",
+		"Version": "1"
+	},
+	"Configuration":
+	{
+		"Size": "12",
+		"Resolution": "96",
+		"GlyphTextureAtlasPadding": "3",
+		"GlyphsPerRow": "16",
+		"GlyphsPerColumn": "16",
+		"NumberOfFontGlyphs": "256"
+	}
+}

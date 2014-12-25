@@ -34,7 +34,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 // Renderer (stable)
-#include <Renderer/Renderer.h>
+#include <Renderer/Public/Renderer.h>
 
 // GLM
 #include <glm/glm.hpp>

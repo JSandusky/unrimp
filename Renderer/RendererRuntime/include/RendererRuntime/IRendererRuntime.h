@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Renderer.h>
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
@@ -93,15 +93,11 @@ namespace RendererRuntime
 		*
 		*  @param[in] filename
 		*    The ASCII font filename, if null pointer or empty string a null pointer will be returned
-		*  @param[in] size
-		*    Nominal font size in points, for example 12 (72 points per inch)
-		*  @param[in] resolution
-		*    The horizontal and vertical resolution in DPI, for example 96
 		*
 		*  @return
 		*    The created texture font instance, a null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual IFont *createFontTexture(const char *filename, uint32_t size = 12, uint32_t resolution = 96) = 0;
+		virtual IFont *createFontTexture(const char *filename) = 0;
 
 
 	//[-------------------------------------------------------]

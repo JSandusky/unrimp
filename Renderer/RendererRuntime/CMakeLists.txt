@@ -20,8 +20,6 @@
 
 cmake_minimum_required(VERSION 2.8.8)
 
-find_package(Freetype REQUIRED) # TODO(co) Remove this, the Unrimp repository comes with a FreeType version which we can guarantee that we're compatible with (which is not the case for system installed library versions)
-
 
 ##################################################
 ## Preprocessor definitions
@@ -36,7 +34,6 @@ endif()
 ##################################################
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${FREETYPE_INCLUDE_DIRS})
 
 
 ##################################################
@@ -46,9 +43,7 @@ include_directories(${FREETYPE_INCLUDE_DIRS})
 set(SOURCE_CODES
 	src/RendererRuntimeImpl.cpp
 	# Font
-	src/Font/FontGlyphTextureFreeType.cpp
 	src/Font/FontTextureFreeType.cpp
-	src/Font/FreeTypeContext.cpp
 )
 
 
@@ -62,7 +57,7 @@ if(SHARED_LIBRARY)
 	add_library(RendererRuntime SHARED ${SOURCE_CODES})
 	set_target_properties(RendererRuntime PROPERTIES COMPILE_FLAGS "-D_USRDLL -DRENDERERRUNTIME_EXPORTS")
 	if(UNIX)
-		target_link_libraries(RendererRuntime X11 dl ${FREETYPE_LIBRARY})
+		target_link_libraries(RendererRuntime X11 dl)
 	endif()
 endif()
 

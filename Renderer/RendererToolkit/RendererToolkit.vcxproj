@@ -20,49 +20,28 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\RendererToolkit\Font\FontGlyphTextureFreeType.inl" />
-    <None Include="include\RendererToolkit\Font\FontTextureFreeType.inl" />
-    <None Include="include\RendererToolkit\Font\FreeTypeContext.inl" />
-    <None Include="include\RendererToolkit\Font\IFont.inl" />
-    <None Include="include\RendererToolkit\Font\IFontGlyph.inl" />
-    <None Include="include\RendererToolkit\Font\IFontGlyphTexture.inl" />
-    <None Include="include\RendererToolkit\Font\IFontTexture.inl" />
     <None Include="include\RendererToolkit\IRendererToolkit.inl" />
     <None Include="include\RendererToolkit\RendererToolkitImpl.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\RendererToolkit\AssetCompiler\AssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\FontAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\IAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MeshAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h" />
-    <ClInclude Include="include\RendererToolkit\Font\FontGlyphTextureFreeType.h" />
-    <ClInclude Include="include\RendererToolkit\Font\FontTextureFreeType.h" />
-    <ClInclude Include="include\RendererToolkit\Font\FreeTypeContext.h" />
-    <ClInclude Include="include\RendererToolkit\Font\IFont.h" />
-    <ClInclude Include="include\RendererToolkit\Font\IFontGlyph.h" />
-    <ClInclude Include="include\RendererToolkit\Font\IFontGlyphTexture.h" />
-    <ClInclude Include="include\RendererToolkit\Font\IFontTexture.h" />
     <ClInclude Include="include\RendererToolkit\IRendererToolkit.h" />
     <ClInclude Include="include\RendererToolkit\PlatformTypes.h" />
     <ClInclude Include="include\RendererToolkit\Public\RendererToolkit.h" />
+    <ClInclude Include="include\RendererToolkit\Public\RendererToolkitInstance.h" />
     <ClInclude Include="include\RendererToolkit\RendererToolkitImpl.h" />
     <ClInclude Include="include\RendererToolkit\WindowsHeader.h" />
-    <ClInclude Include="src\Font\Font_GLSL_110.h" />
-    <ClInclude Include="src\Font\Font_GLSL_ES2.h" />
-    <ClInclude Include="src\Font\Font_HLSL_D3D10_D3D11.h" />
-    <ClInclude Include="src\Font\Font_HLSL_D3D9.h" />
-    <ClInclude Include="src\Font\Font_Null.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetCompiler\FontAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MaterialAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\TextureAssetCompiler.cpp" />
-    <ClCompile Include="src\Font\FontGlyphTextureFreeType.cpp" />
-    <ClCompile Include="src\Font\FontTextureFreeType.cpp" />
-    <ClCompile Include="src\Font\FreeTypeContext.cpp" />
     <ClCompile Include="src\RendererToolkitImpl.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -136,7 +115,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\RendererRuntime\include\;..\..\include\;..\..\External\freetype\include\freetype</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -150,8 +129,10 @@
     </Link>
     <PostBuildEvent />
     <Lib>
-      <AdditionalLibraryDirectories>..\..\External\Windows_x86\freetype\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype_MultiThreaded.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
     <PostBuildEvent>
       <Command>md "..\..\lib\$(PlatformTarget)d_static\"
@@ -165,7 +146,7 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\RendererRuntime\include\;..\..\include\;..\..\External\freetype\include\freetype\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;RENDERERTOOLKIT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -176,8 +157,8 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\External\Windows_x86\freetype\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype_MultiThreadedDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>PocoFoundationd.lib;freetype_MultiThreadedDLLd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
@@ -196,14 +177,14 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\RendererRuntime\include\;..\..\include\;..\..\External\freetype\include\freetype</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
-      <ExceptionHandling>false</ExceptionHandling>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -227,10 +208,12 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
 </Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>freetype_MultiThreaded.lib</AdditionalDependencies>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>..\..\External\Windows_x86\freetype\lib\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
@@ -239,14 +222,14 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\RendererRuntime\include\;..\..\include\;..\..\External\freetype\include\freetype</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_USRDLL;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
-      <ExceptionHandling>false</ExceptionHandling>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -261,8 +244,8 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\External\Windows_x86\freetype\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>freetype_MultiThreadedDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>PocoFoundation.lib;freetype_MultiThreadedDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>

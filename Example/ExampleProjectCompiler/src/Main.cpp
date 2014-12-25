@@ -23,12 +23,108 @@
 //[-------------------------------------------------------]
 #include "Main.h"
 
+#include <RendererToolkit/Public/RendererToolkit.h>
+#include <RendererToolkit/Public/RendererToolkitInstance.h>
+
+#include <fstream>
+
 
 //[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
 int programEntryPoint()
 {
+	RendererToolkit::RendererToolkitInstance rendererToolkitInstance;
+	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
+	if (nullptr != rendererToolkit)
+	{
+		// TODO(co) Compressed output streams
+
+		// Font
+		try
+		{
+			// Input and output
+			std::ifstream ifstream("../DataSource/Font/LinBiolinum_R.otf", std::ios::binary);
+			std::ofstream ofstream("../DataPc/TextureFont/LinBiolinum_R.font", std::ios::binary);
+
+			// Asset compiler configuration
+			std::ifstream jsonConfiguration("../DataSource/Font/LinBiolinum_R.json", std::ios::binary);
+
+			// Compile asset
+			RendererToolkit::IAssetCompilerPtr fontAssetCompiler(rendererToolkit->createFontAssetCompiler());
+			fontAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+		}
+		catch (const std::exception& e)
+		{
+			const char* text = e.what();
+			int ii = 0;
+		}
+
+		// Texture
+		try
+		{
+			// Input and output
+			std::ifstream ifstream("../DataSource/Imrod/Imrod_Diffuse.tga", std::ios::binary);
+			std::ofstream ofstream("../DataPc/Texture/Imrod/Imrod_Diffuse.dds", std::ios::binary);
+
+			// Asset compiler configuration
+			std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_Diffuse.json", std::ios::binary);
+
+			// Compile asset
+			RendererToolkit::IAssetCompilerPtr textureAssetCompiler(rendererToolkit->createTextureAssetCompiler());
+			textureAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+		}
+		catch (const std::exception& e)
+		{
+			const char* text = e.what();
+			int ii = 0;
+		}
+
+		// Material
+		try
+		{
+			// Input and output
+			std::ifstream ifstream("../DataSource/Imrod/Imrod.material", std::ios::binary);
+			std::ofstream ofstream("../DataPc/Material/Character/Imrod.material", std::ios::binary);
+
+			// Asset compiler configuration
+			std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod.json", std::ios::binary);
+
+			// Compile asset
+			RendererToolkit::IAssetCompilerPtr materialAssetCompiler(rendererToolkit->createMaterialAssetCompiler());
+			materialAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+		}
+		catch (const std::exception& e)
+		{
+			const char* text = e.what();
+			int ii = 0;
+		}
+
+		// Mesh
+		try
+		{
+			// Input and output
+			std::ifstream ifstream("../DataSource/Imrod/ImrodLowPoly.obj", std::ios::binary);
+			std::ofstream ofstream("../DataPc/Mesh/Character/Imrod.mesh", std::ios::binary);
+
+			// Asset compiler configuration
+			std::ifstream jsonConfiguration("../DataSource/Imrod/ImrodLowPoly.json", std::ios::binary);
+
+			// Compile asset
+			RendererToolkit::IAssetCompilerPtr meshAssetCompiler(rendererToolkit->createMeshAssetCompiler());
+			meshAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+		}
+		catch (const std::exception& e)
+		{
+			const char* text = e.what();
+			int ii = 0;
+		}
+	}
+	
+
+//	RendererToolkit::FontAssetCompiler fontAssetCompiler;
+
+
 	// No error
 	return 0;
 }

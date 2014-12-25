@@ -158,6 +158,17 @@ void AssimpMesh::onInitialization()
 					loadTGATexture(*renderer, "../DataSource/Imrod/Imrod_norm.tga"),
 					loadTGATexture(*renderer, "../DataSource/Imrod/Imrod_spec.tga")
 				};
+				/*
+				// TODO(co)
+				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
+				Renderer::ITexture *textures[] =
+				{
+					textureResourceManager.loadByLocalAssetName("Example/Texture/Imrod/Imrod_Diffuse")
+					textureResourceManager.loadByLocalAssetName("Example/Texture/Imrod/Imrod_Illumination")
+					textureResourceManager.loadByLocalAssetName("Example/Texture/Imrod/Imrod_norm")
+					textureResourceManager.loadByLocalAssetName("Example/Texture/Imrod/Imrod_spec")
+				};
+				*/
 
 				// Create the texture collection
 				// -> The texture collection keeps a reference to the provided resources, so,

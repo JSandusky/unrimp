@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/AssetCompiler/AssetCompiler.h"
+#include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
 
 //[-------------------------------------------------------]
@@ -40,16 +40,23 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class TextureAssetCompiler : private AssetCompiler
+	class TextureAssetCompiler : public IAssetCompiler
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	protected:
+	public:
 		TextureAssetCompiler();
-		~TextureAssetCompiler();
+		virtual ~TextureAssetCompiler();
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual bool compile(std::istream& istream, std::ostream& ostream, std::istream& jsonConfiguration) override;
 
 
 	};

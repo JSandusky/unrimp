@@ -32,7 +32,7 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	MaterialAssetCompiler::MaterialAssetCompiler()
 	{
@@ -40,6 +40,15 @@ namespace RendererToolkit
 
 	MaterialAssetCompiler::~MaterialAssetCompiler()
 	{
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
+	//[-------------------------------------------------------]
+	bool MaterialAssetCompiler::compile(std::istream&, std::ostream&, std::istream&)
+	{
+		return false;
 	}
 
 

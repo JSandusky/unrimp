@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Renderer.h>
+#include <Renderer/Public/Renderer.h>
 
 #include <assimp/vector3.h>	// Required by "assimp/matrix4x4.h" below
 #include <assimp/matrix4x4.h>

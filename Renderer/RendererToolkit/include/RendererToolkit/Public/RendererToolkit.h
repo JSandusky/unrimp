@@ -32,7 +32,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Renderer.h>
+#include <Renderer/Public/Renderer.h>
+
+#include <iosfwd>
 
 
 //[-------------------------------------------------------]
@@ -40,7 +42,7 @@
 //[-------------------------------------------------------]
 namespace RendererToolkit
 {
-	class IFont;
+	class IAssetCompiler;
 	class IRendererToolkit;
 }
 
@@ -60,67 +62,31 @@ namespace RendererToolkit
 	{
 	public:
 		virtual ~IRendererToolkit();
-		inline Renderer::IRenderer &getRenderer() const
-		{
-			return *mRenderer;
-		}
 	public:
-		virtual IFont *createFontTexture(const char *filename, uint32_t size = 12, uint32_t resolution = 96) = 0;
+		virtual IAssetCompiler* createFontAssetCompiler() = 0;
+		virtual IAssetCompiler* createTextureAssetCompiler() = 0;
+		virtual IAssetCompiler* createMaterialAssetCompiler() = 0;
+		virtual IAssetCompiler* createMeshAssetCompiler() = 0;
 	protected:
 		IRendererToolkit();
 		explicit IRendererToolkit(const IRendererToolkit &source);
 		IRendererToolkit &operator =(const IRendererToolkit &source);
-	private:
-		Renderer::IRenderer *mRenderer;
 	};
 	typedef Renderer::SmartRefCount<IRendererToolkit> IRendererToolkitPtr;
 
-	// RendererToolkit/IFont.h
-	class IFont : public Renderer::RefCount<IFont>
+	// RendererToolkit/AssetCompiler/IAssetCompiler.h
+	class IAssetCompiler : public Renderer::RefCount<IAssetCompiler>
 	{
 	public:
-		enum EDrawFlags
-		{
-			CENTER_TEXT    = 1<<0,
-			UNDERLINE_TEXT = 1<<1,
-			CROSSOUT_TEXT  = 1<<2,
-			MIPMAPPING     = 1<<3
-		};
+		~IAssetCompiler() {};
 	public:
-		virtual ~IFont();
-		inline uint32_t getSize() const
-		{
-			return mSize;
-		}
-		inline uint32_t getResolution() const
-		{
-			return mResolution;
-		}
-		inline uint32_t getSizeInPixels() const
-		{
-			return static_cast<uint32_t>(mSize / 72.0f * mResolution);
-		}
-		inline uint32_t getHeightInPixels() const
-		{
-			return static_cast<uint32_t>(getHeight() / 72.0f * mResolution);
-		}
-	public:
-		virtual bool setSize(uint32_t size = 12, uint32_t resolution = 96) = 0;
-		virtual bool isValid() const = 0;
-		virtual float getAscender() const = 0;
-		virtual float getDescender() const = 0;
-		virtual float getHeight() const = 0;
-		virtual float getTextWidth(const char *text) = 0;
-		virtual void drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX = 1.0f, float scaleY = 1.0f, float biasX = 0.0f, float biasY = 0.0f, uint32_t flags = 0) = 0;
+		virtual bool compile(std::istream& istream, std::ostream& ostream, std::istream& jsonConfiguration) = 0;
 	protected:
-		IFont();
-		explicit IFont(const IFont &source);
-		IFont &operator =(const IFont &source);
-	protected:
-		uint32_t mSize;
-		uint32_t mResolution;
+		IAssetCompiler() {};
+		explicit IAssetCompiler(const IAssetCompiler &source);
+		IAssetCompiler &operator =(const IAssetCompiler &source);
 	};
-	typedef Renderer::SmartRefCount<IFont> IFontPtr;
+	typedef Renderer::SmartRefCount<IAssetCompiler> IAssetCompilerPtr;
 
 
 //[-------------------------------------------------------]

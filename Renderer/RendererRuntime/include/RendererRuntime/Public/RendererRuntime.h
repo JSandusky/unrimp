@@ -32,7 +32,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Renderer.h>
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
@@ -65,7 +65,7 @@ namespace RendererRuntime
 			return *mRenderer;
 		}
 	public:
-		virtual IFont *createFontTexture(const char *filename, uint32_t size = 12, uint32_t resolution = 96) = 0;
+		virtual IFont *createFontTexture(const char *filename) = 0;
 	protected:
 		IRendererRuntime();
 		explicit IRendererRuntime(const IRendererRuntime &source);
@@ -100,16 +100,24 @@ namespace RendererRuntime
 		{
 			return static_cast<uint32_t>(mSize / 72.0f * mResolution);
 		}
+		inline float getAscender() const
+		{
+			return mAscender;
+		}
+		inline float getDescender() const
+		{
+			return mDescender;
+		}
+		inline float getHeight() const
+		{
+			return mHeight;
+		}
 		inline uint32_t getHeightInPixels() const
 		{
 			return static_cast<uint32_t>(getHeight() / 72.0f * mResolution);
 		}
 	public:
-		virtual bool setSize(uint32_t size = 12, uint32_t resolution = 96) = 0;
 		virtual bool isValid() const = 0;
-		virtual float getAscender() const = 0;
-		virtual float getDescender() const = 0;
-		virtual float getHeight() const = 0;
 		virtual float getTextWidth(const char *text) = 0;
 		virtual void drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX = 1.0f, float scaleY = 1.0f, float biasX = 0.0f, float biasY = 0.0f, uint32_t flags = 0) = 0;
 	protected:
@@ -119,6 +127,9 @@ namespace RendererRuntime
 	protected:
 		uint32_t mSize;
 		uint32_t mResolution;
+		float	 mAscender;
+		float	 mDescender;
+		float	 mHeight;
 	};
 	typedef Renderer::SmartRefCount<IFont> IFontPtr;
 
