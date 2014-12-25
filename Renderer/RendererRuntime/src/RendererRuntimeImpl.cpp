@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/RendererRuntimeImpl.h"
 #include "RendererRuntime/PlatformTypes.h"
-#include "RendererRuntime/Resource/Font/FontTextureFreeType.h"
+#include "RendererRuntime/Resource/Font/FontImpl.h"
 
 #include <string.h>	// For "strcmp()"
 
@@ -123,11 +123,11 @@ namespace RendererRuntime
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "Font/Font_GLSL_110.h"
-				#include "Font/Font_GLSL_ES2.h"
-				#include "Font/Font_HLSL_D3D9.h"
-				#include "Font/Font_HLSL_D3D10_D3D11.h"
-				#include "Font/Font_Null.h"
+				#include "Resource/Font/Font_GLSL_110.h"
+				#include "Resource/Font/Font_GLSL_ES2.h"
+				#include "Resource/Font/Font_HLSL_D3D9.h"
+				#include "Resource/Font/Font_HLSL_D3D10_D3D11.h"
+				#include "Resource/Font/Font_Null.h"
 
 				// Create the program
 				mFontProgram = shaderLanguage->createProgram(
@@ -293,7 +293,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
 	//[-------------------------------------------------------]
-	IFont *RendererRuntimeImpl::createFontTexture(const char *filename)
+	IFont *RendererRuntimeImpl::createFont(const char *filename)
 	{
 		IFont *font = nullptr;
 
@@ -301,7 +301,7 @@ namespace RendererRuntime
 		if (nullptr != filename && '\0' != filename[0])
 		{
 			// Create the font instance
-			font = new FontTexture(*this, filename);
+			font = new FontImpl(*this, filename);
 		}
 
 		// Return the created font instance

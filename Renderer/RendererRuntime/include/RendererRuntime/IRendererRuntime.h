@@ -89,15 +89,15 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
-		*    Create a texture font instance
+		*    Create a font instance
 		*
 		*  @param[in] filename
 		*    The ASCII font filename, if null pointer or empty string a null pointer will be returned
 		*
 		*  @return
-		*    The created texture font instance, a null pointer on error. Release the returned instance if you no longer need it.
+		*    The created font instance, a null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual IFont *createFontTexture(const char *filename) = 0;
+		virtual IFont *createFont(const char *filename) = 0;
 
 
 	//[-------------------------------------------------------]

@@ -22,9 +22,8 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
     <None Include="include\RendererRuntime\RendererRuntimeImpl.inl" />
-    <None Include="include\RendererRuntime\Resource\Font\FontTextureFreeType.inl" />
+    <None Include="include\RendererRuntime\Resource\Font\FontImpl.inl" />
     <None Include="include\RendererRuntime\Resource\Font\IFont.inl" />
-    <None Include="include\RendererRuntime\Resource\Font\IFontTexture.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -37,9 +36,8 @@
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\RendererRuntimeImpl.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Font\FontTextureFreeType.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Font\FontImpl.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\IFont.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Font\IFontTexture.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ResourceManager.h" />
@@ -47,12 +45,18 @@
     <ClInclude Include="include\RendererRuntime\Scene\SceneManager.h" />
     <ClInclude Include="include\RendererRuntime\WindowsHeader.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="src\Resource\Font\Font_GLSL_110.h" />
+    <ClInclude Include="src\Resource\Font\Font_GLSL_ES2.h" />
+    <ClInclude Include="src\Resource\Font\Font_HLSL_D3D10_D3D11.h" />
+    <ClInclude Include="src\Resource\Font\Font_HLSL_D3D9.h" />
+    <ClInclude Include="src\Resource\Font\Font_Null.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Asset\AssetManager.cpp" />
     <ClCompile Include="src\Compositor\CompositorManager.cpp" />
-    <ClCompile Include="src\Font\FontTexture.cpp" />
     <ClCompile Include="src\RendererRuntimeImpl.cpp" />
+    <ClCompile Include="src\Resource\Font\FontResourceManager.cpp" />
+    <ClCompile Include="src\Resource\Font\FontImpl.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp" />
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />

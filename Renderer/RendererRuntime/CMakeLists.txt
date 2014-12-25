@@ -43,7 +43,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SOURCE_CODES
 	src/RendererRuntimeImpl.cpp
 	# Font
-	src/Font/FontTextureFreeType.cpp
+	src/Resource/Font/FontImpl.cpp
 )
 
 

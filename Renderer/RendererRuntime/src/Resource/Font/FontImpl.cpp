@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Font/FontTextureFreeType.h"
+#include "RendererRuntime/Resource/Font/FontImpl.h"
 #include "RendererRuntime/RendererRuntimeImpl.h"
 
 #include <stdio.h>
@@ -38,10 +38,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FontTexture::FontTexture(RendererRuntimeImpl &rendererRuntimeImpl, const char *filename) :
+	FontImpl::FontImpl(RendererRuntimeImpl &rendererRuntimeImpl, const char *filename) :
 		mRendererRuntimeImpl(&rendererRuntimeImpl),
-		mFontFileSize(0),
-		mFontFileData(nullptr),
 		mGlyphTextureAtlasPadding(3),
 		mGlyphTextureAtlasSizeX(0),
 		mGlyphTextureAtlasSizeY(0),
@@ -118,16 +116,10 @@ namespace RendererRuntime
 		}
 	}
 
-	FontTexture::~FontTexture()
+	FontImpl::~FontImpl()
 	{
 		// Destroy the glyph texture atlas
 		destroyGlyphTextureAtlas();
-
-		// Destroy the cached font file data
-		if (nullptr != mFontFileData)
-		{
-			delete [] mFontFileData;
-		}
 
 		// Release our renderer runtime implementation reference
 		mRendererRuntimeImpl->release();
@@ -137,7 +129,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IFont methods         ]
 	//[-------------------------------------------------------]
-	float FontTexture::getTextWidth(const char *text)
+	float FontImpl::getTextWidth(const char *text)
 	{
 		float width = 0.0f;
 
@@ -170,7 +162,7 @@ namespace RendererRuntime
 		return width;
 	}
 
-	void FontTexture::drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX, float scaleY, float biasX, float biasY, uint32_t flags)
+	void FontImpl::drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX, float scaleY, float biasX, float biasY, uint32_t flags)
 	{
 		// Are the text and the text color valid?
 		if (nullptr != text && '\0' != text[0] && nullptr != color)
@@ -330,7 +322,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void FontTexture::destroyGlyphTextureAtlas()
+	void FontImpl::destroyGlyphTextureAtlas()
 	{
 		// Release the glyph texture atlas
 		if (nullptr != mTexture2D)

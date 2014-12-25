@@ -22,14 +22,14 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERRUNTIME_FONTTEXTURE_H__
-#define __RENDERERRUNTIME_FONTTEXTURE_H__
+#ifndef __RENDERERRUNTIME_FONTIMPL_H__
+#define __RENDERERRUNTIME_FONTIMPL_H__
 
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Font/IFontTexture.h"
+#include "RendererRuntime/Resource/Font/IFont.h"
 #include "RendererRuntime/PlatformTypes.h"
 
 
@@ -58,9 +58,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Font texture class
+	*    Font implementation class
 	*/
-	class FontTexture : public IFontTexture
+	class FontImpl : public IFont
 	{
 
 
@@ -80,13 +80,13 @@ namespace RendererRuntime
 		*  @note
 		*    - The font instance keeps a reference to the provided renderer runtime implementation instance
 		*/
-		FontTexture(RendererRuntimeImpl &rendererRuntimeImpl, const char *filename);
+		FontImpl(RendererRuntimeImpl &rendererRuntimeImpl, const char *filename);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~FontTexture();
+		virtual ~FontImpl();
 
 		/**
 		*  @brief
@@ -117,7 +117,7 @@ namespace RendererRuntime
 		*  @brief
 		*    Default constructor
 		*/
-		inline FontTexture();
+		inline FontImpl();
 
 		/**
 		*  @brief
@@ -152,8 +152,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		RendererRuntimeImpl	 *mRendererRuntimeImpl;			///< The used renderer runtime implementation instance (we keep a reference to it), always valid
-		uint32_t			  mFontFileSize;				///< Font file size in bytes
-		uint8_t				 *mFontFileData;				///< Font file data, can be a null pointer
 		uint32_t			  mGlyphTextureAtlasPadding;	///< Glyph texture atlas gab between glyphs in pixel
 		uint32_t			  mGlyphTextureAtlasSizeX;		///< X component of the glyph texture atlas size
 		uint32_t			  mGlyphTextureAtlasSizeY;		///< Y component of the glyph texture atlas size
@@ -174,10 +172,10 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Font/FontTextureFreeType.inl"
+#include "RendererRuntime/Resource/Font/FontImpl.inl"
 
 
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
-#endif // __RENDERERRUNTIME_FONTTEXTURE_H__
+#endif // __RENDERERRUNTIME_FONTIMPL_H__

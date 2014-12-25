@@ -65,7 +65,7 @@ namespace RendererRuntime
 			return *mRenderer;
 		}
 	public:
-		virtual IFont *createFontTexture(const char *filename) = 0;
+		virtual IFont *createFont(const char *filename) = 0;
 	protected:
 		IRendererRuntime();
 		explicit IRendererRuntime(const IRendererRuntime &source);

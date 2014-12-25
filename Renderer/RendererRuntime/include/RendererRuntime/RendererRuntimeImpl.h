@@ -162,7 +162,7 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual IFont *createFontTexture(const char *filename) override;
+		virtual IFont *createFont(const char *filename) override;
 
 
 	//[-------------------------------------------------------]

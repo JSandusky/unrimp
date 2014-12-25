@@ -28,29 +28,35 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IFontTexture::~IFontTexture()
+	inline void FontImpl::getGlyphTextureAtlasSize(uint32_t &glyphTextureAtlasSizeX, uint32_t &glyphTextureAtlasSizeY) const
 	{
-		// Nothing to do in here
+		glyphTextureAtlasSizeX = mGlyphTextureAtlasSizeX;
+		glyphTextureAtlasSizeY = mGlyphTextureAtlasSizeY;
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public virtual RendererRuntime::IFont methods         ]
 	//[-------------------------------------------------------]
-	inline IFontTexture::IFontTexture()
+	inline bool FontImpl::isValid() const
+	{
+		return (0 != mNumberOfFontGlyphs);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline FontImpl::FontImpl() :
+		mRendererRuntimeImpl(nullptr),
+		mGlyphTextureAtlasPadding(3),
+		mGlyphTextureAtlasSizeX(0),
+		mGlyphTextureAtlasSizeY(0),
+		mNumberOfFontGlyphs(0),
+		mFontGlyphs(nullptr),
+		mTexture2D(nullptr)
 	{
 		// Nothing to do in here
-	}
-
-	inline IFontTexture::IFontTexture(const IFontTexture &)
-	{
-		// Not supported
-	}
-
-	inline IFontTexture &IFontTexture::operator =(const IFontTexture &)
-	{
-		// Not supported
-		return *this;
 	}
 
 
