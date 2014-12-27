@@ -137,7 +137,7 @@ namespace RendererRuntime
 		}
 		else
 		{
-			RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF("Failed to load in \"%s\"", filename)
+			RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF("Failed to load in \"%s\"", filename)
 		}
 	}
 

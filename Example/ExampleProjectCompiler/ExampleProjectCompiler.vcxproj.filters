@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="..\..\Renderer\RendererToolkit\src\AssetCompiler\tif_win32.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />

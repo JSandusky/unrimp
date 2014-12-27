@@ -60,19 +60,19 @@
 #ifdef RENDERER_NO_DEBUG
 	// Debugging stuff is not supported
 	// -> Do not add this within the public "RendererRuntime/RendererRuntime.h"-header, it's for the internal implementation only
-	#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString)
-	#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...)
+	#define RENDERERRUNTIME_OUTPUT_DEBUG_STRING(outputString)
+	#define RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF(outputString, ...)
 #else
 	// OUTPUT_DEBUG_* macros
 	// -> Do not add this within the public "RendererRuntime/RendererRuntime.h"-header, it's for the internal implementation only
 	#ifdef _DEBUG
 		#ifdef WIN32
-			#ifndef RENDERERTOOLKIT_OUTPUT_DEBUG
-				#define RENDERERTOOLKIT_OUTPUT_DEBUG
+			#ifndef RENDERERRUNTIME_OUTPUT_DEBUG
+				#define RENDERERRUNTIME_OUTPUT_DEBUG
 				#include "RendererRuntime/WindowsHeader.h"
 				#include <strsafe.h>	// For "StringCbVPrintf()"
-				#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString) OutputDebugString(TEXT(outputString));
-				inline void rendererToolkitOutputDebugPrintf(LPCTSTR outputString, ...)
+				#define RENDERERRUNTIME_OUTPUT_DEBUG_STRING(outputString) OutputDebugString(TEXT(outputString));
+				inline void rendererRuntimeOutputDebugPrintf(LPCTSTR outputString, ...)
 				{
 					va_list argptr;
 					va_start(argptr, outputString);
@@ -87,18 +87,18 @@
 						OutputDebugString(TEXT("\"StringCbVPrintf()\" error"));
 					}
 				}
-				#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...) rendererToolkitOutputDebugPrintf(outputString, __VA_ARGS__);
+				#define RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF(outputString, ...) rendererRuntimeOutputDebugPrintf(outputString, __VA_ARGS__);
 			#endif
 		#elif LINUX
 			// Debugging stuff is not supported
-			#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString)
-			#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...)
+			#define RENDERERRUNTIME_OUTPUT_DEBUG_STRING(outputString)
+			#define RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF(outputString, ...)
 		#else
 			#error "Unsupported platform"
 		#endif
 	#else
-		#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString)
-		#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...)
+		#define RENDERERRUNTIME_OUTPUT_DEBUG_STRING(outputString)
+		#define RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF(outputString, ...)
 	#endif
 #endif
 

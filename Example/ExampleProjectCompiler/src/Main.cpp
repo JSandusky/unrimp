@@ -65,7 +65,7 @@ int programEntryPoint()
 		{
 			// Input and output
 			std::ifstream ifstream("../DataSource/Imrod/Imrod_Diffuse.tga", std::ios::binary);
-			std::ofstream ofstream("../DataPc/Texture/Imrod/Imrod_Diffuse.dds", std::ios::binary);
+			std::ofstream ofstream("../DataPc/Texture/Character/Imrod_Diffuse.dds", std::ios::binary);
 
 			// Asset compiler configuration
 			std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_Diffuse.json", std::ios::binary);

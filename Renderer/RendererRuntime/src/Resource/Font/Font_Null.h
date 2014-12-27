@@ -27,5 +27,5 @@
 #endif
 {
 	// Error! (unsupported renderer)
-	RENDERERTOOLKIT_OUTPUT_DEBUG_STRING("Error: Unsupported renderer\n")
+	RENDERERRUNTIME_OUTPUT_DEBUG_STRING("Error: Unsupported renderer\n")
 }
