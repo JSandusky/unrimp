@@ -22,8 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/RendererRuntimeImpl.h"
-#include "RendererRuntime/PlatformTypes.h"
 #include "RendererRuntime/Resource/Font/FontImpl.h"
+#include "RendererRuntime/Export.h"
 
 #include <string.h>	// For "strcmp()"
 
@@ -32,16 +32,10 @@
 //[ Global functions                                      ]
 //[-------------------------------------------------------]
 // Export the instance creation function
-#ifdef RENDERERRUNTIME_EXPORTS
-	#define RENDERERRUNTIME_API_EXPORT GENERIC_API_EXPORT
-#else
-	#define RENDERERRUNTIME_API_EXPORT
-#endif
-RENDERERRUNTIME_API_EXPORT RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer)
+RENDERERRUNTIME_FUNCTION_EXPORT RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer)
 {
 	return new RendererRuntime::RendererRuntimeImpl(renderer);
 }
-#undef RENDERERRUNTIME_API_EXPORT
 
 
 //[-------------------------------------------------------]

@@ -37,6 +37,8 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${FREETYPE_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/Assimp/include)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/${OS_ARCHITECTURE}/Assimp/lib)
 
 
 ##################################################
@@ -57,12 +59,22 @@ set(SOURCE_CODES
 ##################################################
 if(STATIC_LIBRARY)
 	add_library(RendererToolkitStatic STATIC ${SOURCE_CODES})
+	if (WIN32)
+		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX} zlibStatic.lib)
+	elseif(UNIX)
+		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimp${CMAKE_STATIC_LIBRARY_SUFFIX} minizip)
+	endif()
 endif()
 if(SHARED_LIBRARY)
 	add_library(RendererToolkit SHARED ${SOURCE_CODES})
 	set_target_properties(RendererToolkit PROPERTIES COMPILE_FLAGS "-D_USRDLL -DRENDERERTOOLKIT_EXPORTS")
 	if(UNIX)
 		target_link_libraries(RendererToolkit X11 dl ${FREETYPE_LIBRARY})
+	endif()
+	if(WIN32)
+		target_link_libraries(Examples assimp.lib)
+	else()
+		target_link_libraries(Examples ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} minizip)
 	endif()
 endif()
 
@@ -84,6 +96,14 @@ if(SHARED_LIBRARY)
 	if(WIN32)
 		add_custom_command(TARGET RendererToolkit
 			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/RendererToolkit.lib" ${OUTPUT_LIB_DIR}
+		)
+	endif()
+	if(WIN32 AND EXAMPLES_ASSIMP)
+		add_custom_command(TARGET Examples
+			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/Assimp/bin/${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
+		)
+		add_custom_command(TARGET Examples
+			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/VisualStudio/bin/${CMAKE_SHARED_LIBRARY_PREFIX}msvcp110${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
 		)
 	endif()
 endif()

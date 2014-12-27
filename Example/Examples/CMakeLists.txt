@@ -43,9 +43,6 @@ endif()
 if(NOT RENDERER_RUNTIME)
 	add_definitions(-DRENDERER_NO_RUNTIME)
 endif()
-if(NOT EXAMPLES_ASSIMP)
-	add_definitions(-DNO_ASSIMP)
-endif()
 if(EXAMPLE_RUNNER_QT4)
 	add_definitions(-DEXAMPLE_RUNNER_QT4)
 	ADD_DEFINITIONS(${QT_DEFINITIONS})
@@ -60,10 +57,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib/${OS_ARCHITECTURE})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/glm/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/utf8cpp)
-if(EXAMPLES_ASSIMP)
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/Assimp/include)
-	link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/${OS_ARCHITECTURE}/Assimp/lib)
-endif()
 
 
 ##################################################
@@ -140,18 +133,9 @@ if(RENDERER_RUNTIME)
 		${SOURCE_CODES}
 		src/Framework/IApplicationRendererRuntime.cpp
 		src/FirstFont/FirstFont.cpp
+		src/FirstMesh/FirstMesh.cpp
 		src/FirstCommandBucket/FirstCommandBucket.cpp
 		src/FirstCompositor/FirstCompositor.cpp
-	)
-endif()
-if(EXAMPLES_ASSIMP)
-	# Assimp example source codes
-	set(SOURCE_CODES
-		${SOURCE_CODES}
-		src/FirstAssimp/FirstAssimp.cpp
-		src/FirstAssimp/PointsMesh.cpp
-		src/AssimpMesh/AssimpMesh.cpp
-		src/AssimpMesh/Mesh.cpp
 	)
 endif()
 
@@ -205,13 +189,6 @@ if(STATIC_LIBRARY)
 			set(LIBRARIES ${LIBRARIES} dl ${FREETYPE_LIBRARY})
 		endif()
 	endif()
-	if(EXAMPLES_ASSIMP)
-		if (WIN32)
-			set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX} zlibStatic.lib)
-		elseif(UNIX)
-			set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimp${CMAKE_STATIC_LIBRARY_SUFFIX} minizip)
-		endif()
-	endif()
 	target_link_libraries(ExamplesStatic ${LIBRARIES})
 	add_dependencies(ExamplesStatic Renderer NullRendererStatic OpenGLRendererStatic OpenGLES2RendererStatic Direct3D9RendererStatic Direct3D10RendererStatic Direct3D11RendererStatic)
 endif()
@@ -227,13 +204,6 @@ if(SHARED_LIBRARY)
 			target_link_libraries(Examples RendererRuntime.lib)
 		else()
 			target_link_libraries(Examples RendererRuntime)
-		endif()
-	endif()
-	if(EXAMPLES_ASSIMP)
-		if(WIN32)
-			target_link_libraries(Examples assimp.lib)
-		else()
-			target_link_libraries(Examples ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} minizip)
 		endif()
 	endif()
 	if(EXAMPLE_RUNNER_QT4)
@@ -258,20 +228,10 @@ if(SHARED_LIBRARY)
 	add_custom_command(TARGET Examples
 		COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/Examples${CMAKE_EXECUTABLE_SUFFIX}" ${OUTPUT_BIN_DIR}
 	)
-if(WIN32)
-	# Copy Visual Studio shared library
-	add_custom_command(TARGET Examples
-		COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/VisualStudio/bin/${CMAKE_SHARED_LIBRARY_PREFIX}msvcr110${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
-	)
-endif()
-
-	# Copy ASSIMP shared library
-	if(WIN32 AND EXAMPLES_ASSIMP)
+	if(WIN32)
+		# Copy Visual Studio shared library
 		add_custom_command(TARGET Examples
-			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/Assimp/bin/${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
-		)
-		add_custom_command(TARGET Examples
-			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/VisualStudio/bin/${CMAKE_SHARED_LIBRARY_PREFIX}msvcp110${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
+			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/VisualStudio/bin/${CMAKE_SHARED_LIBRARY_PREFIX}msvcr110${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
 		)
 	endif()
 endif()

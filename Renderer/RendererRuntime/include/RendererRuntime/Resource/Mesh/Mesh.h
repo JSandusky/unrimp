@@ -27,30 +27,26 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
+#include "RendererRuntime/Export.h"
 
-#include <assimp/vector3.h>	// Required by "assimp/matrix4x4.h" below
-#include <assimp/matrix4x4.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-struct aiNode;
-struct aiScene;
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace RendererRuntime
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MeshAssetCompiler : public IAssetCompiler
+	/**
+	*  @brief
+	*    Mesh class
+	*/
+	class Mesh
 	{
 
 
@@ -58,63 +54,37 @@ namespace RendererToolkit
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		MeshAssetCompiler();
-		virtual ~MeshAssetCompiler();
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
-	//[-------------------------------------------------------]
-	public:
-		virtual bool compile(std::istream& istream, std::ostream& ostream, std::istream& jsonConfiguration) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
 		/**
 		*  @brief
-		*    Get the total number of vertices and indices by using a given Assimp node
+		*    Constructor
 		*
-		*  @param[in]  assimpScene
-		*    Assimp scene
-		*  @param[in]  assimpNode
-		*    Assimp node to gather the data from
-		*  @param[out] numberOfVertices
-		*    Receives the number of vertices
-		*  @param[out] numberOfIndices
-		*    Receives the number of indices
+		*  @param[in] program
+		*    Program instance to use
+		*  @param[in] filename
+		*    ASCII filename of the mesh to load in, in case of a null pointer nothing is loaded
 		*/
-		void getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint32_t &numberOfVertices, uint32_t &numberOfIndices);
+		GENERIC_API_EXPORT Mesh(Renderer::IProgram &program, const char *filename);
 
 		/**
 		*  @brief
-		*    Fill the mesh data recursively
-		*
-		*  @param[in]  assimpScene
-		*    Assimp scene
-		*  @param[in]  assimpNode
-		*    Assimp node to gather the data from
-		*  @param[in]  vertexBuffer
-		*    Vertex buffer to fill
-		*  @param[in]  indexBuffer
-		*    Index buffer to fill
-		*  @param[in]  assimpTransformation
-		*    Current absolute Assimp transformation matrix (local to global space)
-		*  @param[out] numberOfVertices
-		*    Receives the number of processed vertices
-		*  @param[out] numberOfIndices
-		*    Receives the number of processed indices
+		*    Destructor
 		*/
-		void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint8_t *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices);
+		GENERIC_API_EXPORT virtual ~Mesh();
+
+		/**
+		*  @brief
+		*    Draw the mesh
+		*/
+		GENERIC_API_EXPORT void draw();
 
 
 	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
+	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		static const uint32_t NUMBER_OF_BYTES_PER_VERTEX = 24;	///< Number of bytes per vertex (3 float position, 2 short texture coordinate, 4 short qtangent)
+		uint32_t				  mNumberOfVertices;	///< Number of vertices
+		uint32_t				  mNumberOfIndices;		///< Number of indices
+		Renderer::IVertexArrayPtr mVertexArray;			///< Vertex array object (VAO), can be a null pointer
 
 
 	};
@@ -123,4 +93,4 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererToolkit
+} // RendererRuntime

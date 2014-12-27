@@ -22,21 +22,11 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
-
-
-//[-------------------------------------------------------]
-//[ Preprocessor                                          ]
-//[-------------------------------------------------------]
-#ifndef NO_ASSIMP
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "Assimp/AssimpMesh/AssimpMesh.h"
-#include "Assimp/AssimpMesh/Mesh.h"
+#include "Runtime/FirstMesh/FirstMesh.h"
 #include "Framework/Color4.h"
 #include "Framework/TGALoader.h"
+
+#include <RendererRuntime/Resource/Mesh/Mesh.h>
 
 #include <glm/gtc/type_ptr.hpp> 
 #include <glm/gtc/matrix_transform.hpp>
@@ -45,7 +35,7 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-AssimpMesh::AssimpMesh(const char *rendererName) :
+FirstMesh::FirstMesh(const char *rendererName) :
 	IApplicationRenderer(rendererName),
 	mMesh(nullptr),
 	mUniformBlockIndex(0),
@@ -56,7 +46,7 @@ AssimpMesh::AssimpMesh(const char *rendererName) :
 	// Nothing to do in here
 }
 
-AssimpMesh::~AssimpMesh()
+FirstMesh::~FirstMesh()
 {
 	// The resources are released within "onDeinitialization()"
 	// Nothing to do in here
@@ -66,7 +56,7 @@ AssimpMesh::~AssimpMesh()
 //[-------------------------------------------------------]
 //[ Public virtual IApplication methods                   ]
 //[-------------------------------------------------------]
-void AssimpMesh::onInitialization()
+void FirstMesh::onInitialization()
 {
 	// Call the base implementation
 	IApplicationRenderer::onInitialization();
@@ -98,11 +88,11 @@ void AssimpMesh::onInitialization()
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderProfile = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "AssimpMesh_GLSL_110.h"
-				#include "AssimpMesh_GLSL_ES2.h"
-				#include "AssimpMesh_HLSL_D3D9.h"
-				#include "AssimpMesh_HLSL_D3D10_D3D11.h"
-				#include "AssimpMesh_Null.h"
+				#include "FirstMesh_GLSL_110.h"
+				#include "FirstMesh_GLSL_ES2.h"
+				#include "FirstMesh_HLSL_D3D9.h"
+				#include "FirstMesh_HLSL_D3D10_D3D11.h"
+				#include "FirstMesh_Null.h"
 
 				// Create the program
 				mProgram = shaderLanguage->createProgram(
@@ -139,7 +129,7 @@ void AssimpMesh::onInitialization()
 				// -> In order to keep it simple, we use simple ASCII strings as filenames which are relative to the executable
 				// -> In order to keep it simple, we provide the mesh with the program, usually you want to use a mesh
 				//    with multiple programs and therefore using multiple vertex array objects (VAO)
-				mMesh = new Mesh(*mProgram, "../DataSource/Imrod/ImrodLowPoly.obj");
+				mMesh = new RendererRuntime::Mesh(*mProgram, "../DataPc/Mesh/Character/Imrod.mesh");
 			}
 
 			// Use texture collections when you want you exploit renderer API methods like
@@ -205,7 +195,7 @@ void AssimpMesh::onInitialization()
 	}
 }
 
-void AssimpMesh::onDeinitialization()
+void FirstMesh::onDeinitialization()
 {
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
@@ -232,7 +222,7 @@ void AssimpMesh::onDeinitialization()
 	IApplicationRenderer::onDeinitialization();
 }
 
-void AssimpMesh::onUpdate()
+void FirstMesh::onUpdate()
 {
 	// Stop the stopwatch
 	mStopwatch.stop();
@@ -244,7 +234,7 @@ void AssimpMesh::onUpdate()
 	mStopwatch.start();
 }
 
-void AssimpMesh::onDraw()
+void FirstMesh::onDraw()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
@@ -342,9 +332,3 @@ void AssimpMesh::onDraw()
 		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
-
-
-//[-------------------------------------------------------]
-//[ Preprocessor                                          ]
-//[-------------------------------------------------------]
-#endif // NO_ASSIMP

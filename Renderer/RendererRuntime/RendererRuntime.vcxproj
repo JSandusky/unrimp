@@ -31,6 +31,7 @@
     <ClInclude Include="include\RendererRuntime\Compositor\CompositorManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Manager.h" />
     <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h" />
+    <ClInclude Include="include\RendererRuntime\Export.h" />
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\PlatformTypes.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontImpl.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\IFont.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\Mesh.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h" />
@@ -58,6 +60,7 @@
     <ClCompile Include="src\Resource\Font\FontResourceManager.cpp" />
     <ClCompile Include="src\Resource\Font\FontImpl.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp" />
+    <ClCompile Include="src\Resource\Mesh\Mesh.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp" />
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />

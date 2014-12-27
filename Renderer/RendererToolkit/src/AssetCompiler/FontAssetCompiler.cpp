@@ -365,13 +365,14 @@ namespace RendererToolkit
 
 		// Fill the font header
 		// -> The FreeType library measures font size in terms of 1/64ths of pixels, so we have to adjust with /64
-		// -> Font file format:
-		//    - FontHeader
-		//    - FontHeader
+		// -> Font file format content:
+		//    - Font header
+		//    - Font glyph definitions
+		//    - Font data
 		struct FontHeader
 		{
 			uint32_t formatType;
-			uint32_t formatVersion;
+			uint16_t formatVersion;
 			uint32_t size;
 			uint32_t resolution;
 			float	 ascender;
@@ -396,7 +397,7 @@ namespace RendererToolkit
 		// Write down the font header
 		ostream.write(reinterpret_cast<const char*>(&fontHeader), sizeof(FontHeader));
 
-		{ // Fill the font data
+		{ // Fill the font glyphs and data
 			// Allocate memory for the glyph texture atlas and initialize it with zero to avoid sampling artefacts later on
 			const uint32_t totalNumberOfBytes = fontHeader.glyphTextureAtlasSizeX * fontHeader.glyphTextureAtlasSizeY; // Alpha, one byte
 			uint8_t* glyphTextureAtlasData = new uint8_t[totalNumberOfBytes];

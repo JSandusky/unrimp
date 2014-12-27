@@ -6,5 +6,6 @@
 	},
 	"Configuration":
 	{
+		"Test": "42"
 	}
 }

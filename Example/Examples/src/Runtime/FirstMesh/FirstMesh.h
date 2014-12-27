@@ -27,17 +27,17 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Public/Renderer.h>
-
-#include <assimp/vector3.h>	// Required by "assimp/matrix4x4.h" below
-#include <assimp/matrix4x4.h>
+#include "Framework/Stopwatch.h"
+#include "Framework/IApplicationRenderer.h"
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct aiNode;
-struct aiScene;
+namespace RendererRuntime
+{
+	class Mesh;
+}
 
 
 //[-------------------------------------------------------]
@@ -45,9 +45,25 @@ struct aiScene;
 //[-------------------------------------------------------]
 /**
 *  @brief
-*    Points mesh class
+*    First mesh examnple
+*
+*  @remarks
+*    Demonstrates:
+*    - Vertex buffer object (VBO)
+*    - Vertex array object (VAO)
+*    - Index buffer object (IBO)
+*    - Uniform buffer object (UBO)
+*    - Texture buffer object (TBO)
+*    - Sampler state object
+*    - Vertex shader (VS) and fragment shader (FS)
+*    - Texture collection
+*    - Sampler state collection
+*    - Blinn-Phong shading
+*    - Diffuse, normal, specular and emissive mapping
+*    - Optimization: Cache data to not bother the renderer API to much
+*    - Compact vertex format (16 bit texture coordinate, QTangent, 56 bytes vs. 24 bytes per vertex)
 */
-class PointsMesh
+class FirstMesh : public IApplicationRenderer
 {
 
 
@@ -59,67 +75,45 @@ public:
 	*  @brief
 	*    Constructor
 	*
-	*  @param[in] program
-	*    Program instance to use
-	*  @param[in] filename
-	*    ASCII filename of the mesh to load in, in case of a null pointer nothing is loaded
+	*  @param[in] rendererName
+	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
+	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
 	*/
-	PointsMesh(Renderer::IProgram &program, const char *filename);
+	explicit FirstMesh(const char *rendererName);
 
 	/**
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~PointsMesh();
-
-	/**
-	*  @brief
-	*    Draw the mesh
-	*/
-	void draw();
+	virtual ~FirstMesh();
 
 
 //[-------------------------------------------------------]
-//[ Private methods                                       ]
+//[ Public virtual IApplication methods                   ]
 //[-------------------------------------------------------]
-private:
-	/**
-	*  @brief
-	*    Get the total number of vertices by using a given Assimp node
-	*
-	*  @param[in]  assimpScene
-	*    Assimp scene
-	*  @param[in]  assimpNode
-	*    Assimp node to gather the data from
-	*  @param[out] numberOfVertices
-	*    Receives the number of vertices
-	*/
-	void getNumberOfVerticesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint32_t &numberOfVertices);
-
-	/**
-	*  @brief
-	*    Fill the mesh data recursively
-	*
-	*  @param[in]  assimpScene
-	*    Assimp scene
-	*  @param[in]  assimpNode
-	*    Assimp node to gather the data from
-	*  @param[in]  vertexBuffer
-	*    Vertex buffer to fill
-	*  @param[in]  assimpTransformation
-	*    Current absolute Assimp transformation matrix (local to global space)
-	*  @param[out] numberOfVertices
-	*    Receives the number of processed vertices
-	*/
-	void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, float *vertexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices);
+public:
+	virtual void onInitialization() override;
+	virtual void onDeinitialization() override;
+	virtual void onUpdate() override;
+	virtual void onDraw() override;
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	uint32_t				  mNumberOfVertices;	///< Number of vertices
-	Renderer::IVertexArrayPtr mVertexArray;			///< Vertex array object (VAO), can be a null pointer
+	Renderer::IUniformBufferPtr			  mUniformBuffer;			///< Uniform buffer object (UBO), can be a null pointer
+	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
+	RendererRuntime::Mesh				 *mMesh;					///< Mesh instance, can be a null pointer
+	Renderer::ITextureCollectionPtr		  mTextureCollection;		///< Texture collection, can be a null pointer
+	Renderer::ISamplerStateCollectionPtr  mSamplerStateCollection;	///< Sampler state collection, can be a null pointer
+	// Optimization: Cache data to not bother the renderer API to much
+	uint32_t mUniformBlockIndex;							///< Uniform block index
+	handle	 mObjectSpaceToClipSpaceMatrixUniformHandle;	///< Object space to clip space matrix uniform handle, can be NULL_HANDLE
+	handle	 mObjectSpaceToViewSpaceMatrixUniformHandle;	///< Object space to view space matrix uniform handle, can be NULL_HANDLE
+	// For timing
+	Stopwatch mStopwatch;	///< Stopwatch instance
+	float	  mGlobalTimer;	///< Global timer
 
 
 };

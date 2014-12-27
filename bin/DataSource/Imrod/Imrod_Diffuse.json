@@ -6,6 +6,7 @@
 	},
 	"Configuration":
 	{
+		"Test": "42",
 		"Format": "dds",
 		"Compression": "dxt5"
 	}

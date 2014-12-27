@@ -18,14 +18,35 @@
 \*********************************************************/
 
 
-#ifndef RENDERER_NO_NULL
-	if (0 == strcmp(renderer->getName(), "Null"))
-	{
-		vertexShaderSourceCode = fragmentShaderSourceCode = "42";
-	}
-	else
+//[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/PlatformTypes.h"
+
+
+//[-------------------------------------------------------]
+//[ Export/import                                         ]
+//[-------------------------------------------------------]
+// Is this project build as shared library?
+#ifdef _USRDLL
+	// Build as shared library
+	#ifdef RENDERERRUNTIME_EXPORTS
+		// Export
+		#define RENDERERRUNTIME_API_EXPORT		GENERIC_API_EXPORT
+		#define RENDERERRUNTIME_FUNCTION_EXPORT	GENERIC_FUNCTION_EXPORT
+	#else
+		// Import
+		#define RENDERERRUNTIME_API_EXPORT		GENERIC_API_EXPORT
+		#define RENDERERRUNTIME_FUNCTION_EXPORT	GENERIC_FUNCTION_EXPORT
+	#endif
+#else
+	// Build as static library
+	#define RENDERERRUNTIME_API_EXPORT
+	#define RENDERERRUNTIME_FUNCTION_EXPORT
 #endif
-{
-	// Error! (unsupported renderer)
-	OUTPUT_DEBUG_STRING("Error: Unsupported renderer\n")
-}

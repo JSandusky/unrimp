@@ -45,7 +45,7 @@ int programEntryPoint()
 		{
 			// Input and output
 			std::ifstream ifstream("../DataSource/Font/LinBiolinum_R.otf", std::ios::binary);
-			std::ofstream ofstream("../DataPc/TextureFont/LinBiolinum_R.font", std::ios::binary);
+			std::ofstream ofstream("../DataPc/Font/Default/LinBiolinum_R.font", std::ios::binary);
 
 			// Asset compiler configuration
 			std::ifstream jsonConfiguration("../DataSource/Font/LinBiolinum_R.json", std::ios::binary);

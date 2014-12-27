@@ -30,20 +30,24 @@
 
 
 //[-------------------------------------------------------]
-//[ Data types                                            ]
+//[ Project independent generic export                    ]
 //[-------------------------------------------------------]
 #ifdef WIN32
 	// To export classes, methods and variables
-	// -> Do not add this within the public "RendererRuntime/RendererRuntime.h"-header, it's for the internal implementation only
-	#define GENERIC_API_EXPORT	extern "C" __declspec(dllexport)
+	#define GENERIC_API_EXPORT	__declspec(dllexport)
+
+	// To export functions
+	#define GENERIC_FUNCTION_EXPORT	extern "C" __declspec(dllexport)
 #elif LINUX
 	// To export classes, methods and variables
-	// -> Do not add this within the public "RendererRuntime/RendererRuntime.h"-header, it's for the internal implementation only
 	#if defined(HAVE_VISIBILITY_ATTR)
-		#define GENERIC_API_EXPORT	extern "C" __attribute__ ((visibility("default")))
+		#define GENERIC_API_EXPORT __attribute__ ((visibility("default")))
 	#else
-		#define GENERIC_API_EXPORT	extern "C"
+		#define GENERIC_API_EXPORT
 	#endif
+
+	// To export functions
+	#define GENERIC_FUNCTION_EXPORT	__attribute__ ((visibility("default")))
 #else
 	#error "Unsupported platform"
 #endif
@@ -56,19 +60,19 @@
 #ifdef RENDERER_NO_DEBUG
 	// Debugging stuff is not supported
 	// -> Do not add this within the public "RendererRuntime/RendererRuntime.h"-header, it's for the internal implementation only
-	#define RENDERER_OUTPUT_DEBUG_STRING(outputString)
-	#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...)
+	#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString)
+	#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...)
 #else
 	// OUTPUT_DEBUG_* macros
 	// -> Do not add this within the public "RendererRuntime/RendererRuntime.h"-header, it's for the internal implementation only
 	#ifdef _DEBUG
 		#ifdef WIN32
-			#ifndef RENDERER_OUTPUT_DEBUG
-				#define RENDERER_OUTPUT_DEBUG
+			#ifndef RENDERERTOOLKIT_OUTPUT_DEBUG
+				#define RENDERERTOOLKIT_OUTPUT_DEBUG
 				#include "RendererRuntime/WindowsHeader.h"
 				#include <strsafe.h>	// For "StringCbVPrintf()"
-				#define RENDERER_OUTPUT_DEBUG_STRING(outputString) OutputDebugString(TEXT(outputString));
-				inline void outputDebugPrintf(LPCTSTR outputString, ...)
+				#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString) OutputDebugString(TEXT(outputString));
+				inline void rendererToolkitOutputDebugPrintf(LPCTSTR outputString, ...)
 				{
 					va_list argptr;
 					va_start(argptr, outputString);
@@ -83,18 +87,18 @@
 						OutputDebugString(TEXT("\"StringCbVPrintf()\" error"));
 					}
 				}
-				#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...) outputDebugPrintf(outputString, __VA_ARGS__);
+				#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...) rendererToolkitOutputDebugPrintf(outputString, __VA_ARGS__);
 			#endif
 		#elif LINUX
 			// Debugging stuff is not supported
-			#define RENDERER_OUTPUT_DEBUG_STRING(outputString)
-			#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...)
+			#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString)
+			#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...)
 		#else
 			#error "Unsupported platform"
 		#endif
 	#else
-		#define RENDERER_OUTPUT_DEBUG_STRING(outputString)
-		#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...)
+		#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString)
+		#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...)
 	#endif
 #endif
 

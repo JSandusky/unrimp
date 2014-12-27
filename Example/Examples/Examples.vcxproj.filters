@@ -10,17 +10,8 @@
     <Filter Include="Advanced">
       <UniqueIdentifier>{fa6b67fd-14b4-4d42-a8e8-b957af5ab981}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assimp">
-      <UniqueIdentifier>{61764e1d-ef07-4152-8a72-d3f74d1d7d3d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Runtime">
       <UniqueIdentifier>{6eb322fb-d156-4346-81ef-17f96b0bf544}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Assimp\AssimpMesh">
-      <UniqueIdentifier>{5739f023-df8a-4b6c-837b-8bb966a143cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Assimp\FirstAssimp">
-      <UniqueIdentifier>{ee6a6b72-0a97-45a3-83e9-45085937d964}</UniqueIdentifier>
     </Filter>
     <Filter Include="Runtime\FirstFont">
       <UniqueIdentifier>{882cb982-67ee-458b-b665-b7d577094716}</UniqueIdentifier>
@@ -78,6 +69,9 @@
     </Filter>
     <Filter Include="Runtime\FirstCompositor">
       <UniqueIdentifier>{3e6f9886-5f21-4ffc-9771-cec656041522}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Runtime\FirstMesh">
+      <UniqueIdentifier>{3a403f45-e8a0-447e-aaae-b8fc6a461cca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -417,48 +411,6 @@
     <ClInclude Include="src\Advanced\InstancedCubes\InstancedCubes.h">
       <Filter>Advanced\InstancedCubes</Filter>
     </ClInclude>
-    <ClInclude Include="src\Assimp\AssimpMesh\AssimpMesh_GLSL_110.h">
-      <Filter>Assimp\AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\AssimpMesh\AssimpMesh_GLSL_ES2.h">
-      <Filter>Assimp\AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\AssimpMesh\AssimpMesh_HLSL_D3D9.h">
-      <Filter>Assimp\AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\AssimpMesh\AssimpMesh_HLSL_D3D10_D3D11.h">
-      <Filter>Assimp\AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\AssimpMesh\AssimpMesh_Null.h">
-      <Filter>Assimp\AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\AssimpMesh\Mesh.h">
-      <Filter>Assimp\AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\AssimpMesh\AssimpMesh.h">
-      <Filter>Assimp\AssimpMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp_GLSL_ES2.h">
-      <Filter>Assimp\FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp_HLSL_D3D9.h">
-      <Filter>Assimp\FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp_HLSL_D3D10_D3D11.h">
-      <Filter>Assimp\FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp_Null.h">
-      <Filter>Assimp\FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\FirstAssimp\PointsMesh.h">
-      <Filter>Assimp\FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp.h">
-      <Filter>Assimp\FirstAssimp</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Assimp\FirstAssimp\FirstAssimp_GLSL_110.h">
-      <Filter>Assimp\FirstAssimp</Filter>
-    </ClInclude>
     <ClInclude Include="src\Runtime\FirstFont\FirstFont.h">
       <Filter>Runtime\FirstFont</Filter>
     </ClInclude>
@@ -494,6 +446,24 @@
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_140.h">
       <Filter>Runtime\FirstCommandBucket</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_ES2.h">
+      <Filter>Runtime\FirstMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_HLSL_D3D9.h">
+      <Filter>Runtime\FirstMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_HLSL_D3D10_D3D11.h">
+      <Filter>Runtime\FirstMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_Null.h">
+      <Filter>Runtime\FirstMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh.h">
+      <Filter>Runtime\FirstMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_110.h">
+      <Filter>Runtime\FirstMesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -594,18 +564,6 @@
     <ClCompile Include="src\Advanced\InstancedCubes\ICubeRenderer.cpp">
       <Filter>Advanced\InstancedCubes</Filter>
     </ClCompile>
-    <ClCompile Include="src\Assimp\AssimpMesh\Mesh.cpp">
-      <Filter>Assimp\AssimpMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Assimp\AssimpMesh\AssimpMesh.cpp">
-      <Filter>Assimp\AssimpMesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Assimp\FirstAssimp\PointsMesh.cpp">
-      <Filter>Assimp\FirstAssimp</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Assimp\FirstAssimp\FirstAssimp.cpp">
-      <Filter>Assimp\FirstAssimp</Filter>
-    </ClCompile>
     <ClCompile Include="src\Runtime\FirstFont\FirstFont.cpp">
       <Filter>Runtime\FirstFont</Filter>
     </ClCompile>
@@ -617,6 +575,9 @@
     </ClCompile>
     <ClCompile Include="src\Runtime\FirstCompositor\FirstCompositor.cpp">
       <Filter>Runtime\FirstCompositor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Runtime\FirstMesh\FirstMesh.cpp">
+      <Filter>Runtime\FirstMesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

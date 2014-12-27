@@ -59,7 +59,7 @@ namespace RendererRuntime
 			struct FontHeader
 			{
 				uint32_t formatType;
-				uint32_t formatVersion;
+				uint16_t formatVersion;
 				uint32_t size;
 				uint32_t resolution;
 				float	 ascender;
@@ -109,6 +109,9 @@ namespace RendererRuntime
 				// Free allocated memory
 				delete [] glyphTextureAtlasData;
 			}
+
+			// Close the file
+			fclose(file);
 		}
 		else
 		{

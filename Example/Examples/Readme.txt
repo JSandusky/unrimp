@@ -108,10 +108,6 @@ Standalone renderer examples.
 		- Framebuffer object (FBO) used for render to texture
 		- Depth stencil state object
 		- General Purpose Computation on Graphics Processing Unit (GPGPU) by using the renderer interface and shaders without having any output window
-	- "FirstFont" demonstrates:
-		- Renderer runtime fonts
-		- Renderer runtime command buckets
-		- Renderer runtime compositor
 	- "InstancedCubes" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
@@ -133,13 +129,12 @@ Standalone renderer examples.
 		- Index buffer object (IBO)
 		- Uniform buffer object (UBO)
 		- Vertex shader (VS), tessellation control shader (TCS), tessellation evaluation shader (TES), geometry shader (GS) and fragment shader (FS)
-	- "FirstAssimp" demonstrates:
-		- Vertex buffer object (VBO)
-		- Vertex array object (VAO)
-		- Uniform buffer object (UBO)
-		- Vertex shader (VS) and fragment shader (FS)
-		- Open Asset Import Library (ASSIMP)
-	- "AssimpMesh" demonstrates:
+- Runtime
+	- "FirstFont" demonstrates:
+		- Renderer runtime fonts
+		- Renderer runtime command buckets
+		- Renderer runtime compositor
+	- "FirstMesh" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
 		- Index buffer object (IBO)
@@ -153,7 +148,6 @@ Standalone renderer examples.
 		- Diffuse, normal, specular and emissive mapping
 		- Optimization: Cache data to not bother the renderer API to much
 		- Compact vertex format (16 bit texture coordinate, 16 bit QTangent, 56 bytes vs. 24 bytes per vertex)
-		- Open Asset Import Library (ASSIMP)
 
 
 == Preprocessor Definitions ==
@@ -180,4 +174,3 @@ Other
 - "SHARED_LIBRARIES":		Use renderers via shared libaries, if this is not defined, the renderers are statically linked
 - "RENDERER_NO_DEBUG":		Disable e.g. Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features (disabling support just reduces the binary size slightly but makes debugging more difficult)
 - "RENDERER_NO_RUNTIME":	Disable renderer runtime support
-- "NO_ASSIMP":				When set, Open Asset Import Library (ASSIMP) support is disabled (Assimp will add approximately 2 MB to the executable size when statically linked)

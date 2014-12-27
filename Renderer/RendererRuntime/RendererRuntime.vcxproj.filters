@@ -123,6 +123,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontImpl.h">
       <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\Mesh.h">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Export.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererRuntimeImpl.cpp">
@@ -151,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Font\FontImpl.cpp">
       <Filter>Source Files\Resource\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Mesh\Mesh.cpp">
+      <Filter>Source Files\Resource\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

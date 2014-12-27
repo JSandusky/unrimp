@@ -43,12 +43,9 @@
 #include "Advanced/IcosahedronTessellation/IcosahedronTessellation.h"
 #ifndef RENDERER_NO_RUNTIME
 	#include "Runtime/FirstFont/FirstFont.h"
+	#include "Runtime/FirstMesh/FirstMesh.h"
 	#include "Runtime/FirstCommandBucket/FirstCommandBucket.h"
 	#include "Runtime/FirstCompositor/FirstCompositor.h"
-#endif
-#ifndef NO_ASSIMP
-	#include "Assimp/FirstAssimp/FirstAssimp.h"
-	#include "Assimp/AssimpMesh/AssimpMesh.h"
 #endif
 #include <algorithm>
 #include <array>
@@ -111,13 +108,9 @@ ExampleRunner::ExampleRunner()
 	#ifndef RENDERER_NO_RUNTIME
 		// Renderer runtime
 		addExample("FirstFont",					&RunExample<FirstFont>,						supportsAllRenderer);
+		addExample("FirstMesh",					&RunExample<FirstMesh>,						supportsAllRenderer);
 		addExample("FirstCommandBucket",		&RunExample<FirstCommandBucket>,			supportsAllRenderer);
 		addExample("FirstCompositor",			&RunExample<FirstCompositor>,				supportsAllRenderer);
-	#endif
-	#ifndef NO_ASSIMP
-		// Assimp
-		addExample("FirstAssimp",				&RunExample<FirstAssimp>,					supportsAllRenderer);
-		addExample("AssimpMesh",				&RunExample<AssimpMesh>,					supportsAllRenderer);
 	#endif
 
 	#ifndef RENDERER_NO_NULL
