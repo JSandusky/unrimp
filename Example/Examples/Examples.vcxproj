@@ -349,7 +349,6 @@ copy "..\..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\..\bin\$(Pl
     <ClInclude Include="src\Framework\SmartPtr.h" />
     <ClInclude Include="src\Framework\SmartRefCount.h" />
     <ClInclude Include="src\Framework\Stopwatch.h" />
-    <ClInclude Include="src\Framework\TGALoader.h" />
     <ClInclude Include="src\Framework\WindowsHeader.h" />
     <ClInclude Include="src\Framework\X11Application.h" />
     <ClInclude Include="src\Framework\X11Window.h" />
@@ -409,7 +408,6 @@ copy "..\..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\..\bin\$(Pl
     <ClCompile Include="src\Framework\IApplicationRenderer.cpp" />
     <ClCompile Include="src\Framework\IApplicationRendererRuntime.cpp" />
     <ClCompile Include="src\Framework\Stopwatch.cpp" />
-    <ClCompile Include="src\Framework\TGALoader.cpp" />
     <ClCompile Include="src\Framework\X11Application.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>

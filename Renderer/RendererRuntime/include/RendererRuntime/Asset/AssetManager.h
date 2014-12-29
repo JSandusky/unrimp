@@ -50,6 +50,8 @@ namespace RendererRuntime
 	protected:
 		AssetManager();
 		~AssetManager();
+		AssetManager(const AssetManager&) = delete;
+		AssetManager& operator=(const AssetManager&) = delete;
 
 
 	};

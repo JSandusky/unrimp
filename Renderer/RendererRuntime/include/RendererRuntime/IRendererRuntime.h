@@ -42,6 +42,7 @@ namespace Renderer
 namespace RendererRuntime
 {
 	class IFont;
+	class TextureResourceManager;
 }
 
 
@@ -81,6 +82,18 @@ namespace RendererRuntime
 		*    The used renderer instance, do not release the returned instance unless you added an own reference to it
 		*/
 		inline Renderer::IRenderer &getRenderer() const;
+
+		//[-------------------------------------------------------]
+		//[ Resource managers                                     ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the texture resource manager instance
+		*
+		*  @return
+		*    The texture resource manager instance, do not release the returned instance
+		*/
+		inline TextureResourceManager &getTextureResourceManager() const;
 
 
 	//[-------------------------------------------------------]
@@ -136,7 +149,8 @@ namespace RendererRuntime
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		Renderer::IRenderer *mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
+		Renderer::IRenderer    *mRenderer;					///< The used renderer instance (we keep a reference to it), always valid
+		TextureResourceManager *mTextureResourceManager;	///< The texture resource manager instance, always valid, we have to destroy the instance if we no longer need it
 
 
 	};

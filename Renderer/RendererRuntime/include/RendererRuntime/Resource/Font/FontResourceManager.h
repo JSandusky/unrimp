@@ -50,6 +50,8 @@ namespace RendererRuntime
 	protected:
 		FontResourceManager();
 		~FontResourceManager();
+		FontResourceManager(const FontResourceManager&) = delete;
+		FontResourceManager& operator=(const FontResourceManager&) = delete;
 
 
 	};

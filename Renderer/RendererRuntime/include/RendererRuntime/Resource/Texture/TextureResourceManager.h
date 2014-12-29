@@ -27,7 +27,21 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/ResourceManager.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class ITexture;
+}
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+}
 
 
 //[-------------------------------------------------------]
@@ -45,11 +59,31 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-	protected:
-		TextureResourceManager();
+		friend class RendererRuntimeImpl;
+
+
+	// TODO(co) Work-in-progress
+	public:
+		GENERIC_API_EXPORT Renderer::ITexture* loadDdsTexture(const char* filename);
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		TextureResourceManager(IRendererRuntime& rendererRuntime);
 		~TextureResourceManager();
+		TextureResourceManager(const TextureResourceManager&) = delete;
+		TextureResourceManager& operator=(const TextureResourceManager&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 
 
 	};

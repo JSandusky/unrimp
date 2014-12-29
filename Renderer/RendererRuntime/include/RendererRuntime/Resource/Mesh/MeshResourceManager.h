@@ -50,6 +50,8 @@ namespace RendererRuntime
 	protected:
 		MeshResourceManager();
 		~MeshResourceManager();
+		MeshResourceManager(const MeshResourceManager&) = delete;
+		MeshResourceManager& operator=(const MeshResourceManager&) = delete;
 
 
 	};

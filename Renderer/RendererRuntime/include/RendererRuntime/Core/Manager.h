@@ -40,7 +40,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class Manager : private NonCopyable
+	class Manager : protected NonCopyable
 	{
 
 
@@ -50,6 +50,8 @@ namespace RendererRuntime
 	protected:
 		inline Manager() {}
 		inline ~Manager() {}
+		Manager(const Manager&) = delete;
+		Manager& operator=(const Manager&) = delete;
 
 
 	};

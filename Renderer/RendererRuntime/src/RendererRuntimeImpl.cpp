@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/RendererRuntimeImpl.h"
 #include "RendererRuntime/Resource/Font/FontImpl.h"
+#include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Export.h"
 
 #include <string.h>	// For "strcmp()"
@@ -61,6 +62,9 @@ namespace RendererRuntime
 
 		// Add our renderer reference
 		mRenderer->addReference();
+
+		// Create the texture resource manager instance
+		mTextureResourceManager = new TextureResourceManager(*this);
 	}
 
 	RendererRuntimeImpl::~RendererRuntimeImpl()
@@ -100,6 +104,9 @@ namespace RendererRuntime
 		{
 			mFontProgram->release();
 		}
+
+		// Destroy the texture resource manager instance
+		delete mTextureResourceManager;
 
 		// Release our renderer reference
 		mRenderer->release();

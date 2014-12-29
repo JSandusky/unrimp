@@ -44,8 +44,8 @@ namespace RendererRuntime
 	protected:
 		inline NonCopyable() {}
 		inline ~NonCopyable() {}
-		inline NonCopyable(const NonCopyable&) {};
-		inline NonCopyable& operator=(const NonCopyable&) { return *this; };
+		NonCopyable(const NonCopyable&) = delete;
+		NonCopyable& operator=(const NonCopyable&) = delete;
 
 
 	};

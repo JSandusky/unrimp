@@ -38,18 +38,25 @@ namespace RendererRuntime
 		return *mRenderer;
 	}
 
+	inline TextureResourceManager &IRendererRuntime::getTextureResourceManager() const
+	{
+		return *mTextureResourceManager;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline IRendererRuntime::IRendererRuntime() :
-		mRenderer(nullptr)
+		mRenderer(nullptr),
+		mTextureResourceManager(nullptr)
 	{
 		// Nothing to do in here
 	}
 
 	inline IRendererRuntime::IRendererRuntime(const IRendererRuntime &) :
-		mRenderer(nullptr)
+		mRenderer(nullptr),
+		mTextureResourceManager(nullptr)
 	{
 		// Not supported
 	}

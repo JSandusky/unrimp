@@ -50,6 +50,8 @@ namespace RendererRuntime
 	protected:
 		inline ResourceManager() {}
 		inline ~ResourceManager() {}
+		ResourceManager(const ResourceManager&) = delete;
+		ResourceManager& operator=(const ResourceManager&) = delete;
 
 
 	};

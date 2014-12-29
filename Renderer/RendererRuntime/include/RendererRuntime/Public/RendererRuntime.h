@@ -42,6 +42,7 @@ namespace RendererRuntime
 {
 	class IFont;
 	class IRendererRuntime;
+	class TextureResourceManager;
 }
 
 
@@ -64,6 +65,10 @@ namespace RendererRuntime
 		{
 			return *mRenderer;
 		}
+		inline TextureResourceManager &getTextureResourceManager() const
+		{
+			return *mTextureResourceManager;
+		}
 	public:
 		virtual IFont *createFont(const char *filename) = 0;
 	protected:
@@ -71,7 +76,8 @@ namespace RendererRuntime
 		explicit IRendererRuntime(const IRendererRuntime &source);
 		IRendererRuntime &operator =(const IRendererRuntime &source);
 	private:
-		Renderer::IRenderer *mRenderer;
+		Renderer::IRenderer    *mRenderer;
+		TextureResourceManager *mTextureResourceManager;
 	};
 	typedef Renderer::SmartRefCount<IRendererRuntime> IRendererRuntimePtr;
 

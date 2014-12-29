@@ -63,16 +63,40 @@ int programEntryPoint()
 		// Texture
 		try
 		{
-			// Input and output
-			std::ifstream ifstream("../DataSource/Imrod/Imrod_Diffuse.tga", std::ios::binary);
-			std::ofstream ofstream("../DataPc/Texture/Character/Imrod_Diffuse.dds", std::ios::binary);
+			{
+				// Input and output
+				std::ifstream ifstream("../DataSource/Imrod/Imrod_Diffuse.tga", std::ios::binary);
+				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_Diffuse.dds", std::ios::binary);
 
-			// Asset compiler configuration
-			std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_Diffuse.json", std::ios::binary);
+				// Asset compiler configuration
+				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_Diffuse.json", std::ios::binary);
 
-			// Compile asset
-			RendererToolkit::IAssetCompilerPtr textureAssetCompiler(rendererToolkit->createTextureAssetCompiler());
-			textureAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+				// Compile asset
+				RendererToolkit::IAssetCompilerPtr textureAssetCompiler(rendererToolkit->createTextureAssetCompiler());
+				textureAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+			}
+
+			{
+				std::ifstream ifstream("../DataSource/Imrod/Imrod_Illumination.tga", std::ios::binary);
+				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_Illumination.dds", std::ios::binary);
+				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_Illumination.json", std::ios::binary);
+				RendererToolkit::IAssetCompilerPtr textureAssetCompiler(rendererToolkit->createTextureAssetCompiler());
+				textureAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+			}
+			{
+				std::ifstream ifstream("../DataSource/Imrod/Imrod_norm.tga", std::ios::binary);
+				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_norm.dds", std::ios::binary);
+				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_norm.json", std::ios::binary);
+				RendererToolkit::IAssetCompilerPtr textureAssetCompiler(rendererToolkit->createTextureAssetCompiler());
+				textureAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+			}
+			{
+				std::ifstream ifstream("../DataSource/Imrod/Imrod_spec.tga", std::ios::binary);
+				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_spec.dds", std::ios::binary);
+				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_spec.json", std::ios::binary);
+				RendererToolkit::IAssetCompilerPtr textureAssetCompiler(rendererToolkit->createTextureAssetCompiler());
+				textureAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+			}
 		}
 		catch (const std::exception& e)
 		{

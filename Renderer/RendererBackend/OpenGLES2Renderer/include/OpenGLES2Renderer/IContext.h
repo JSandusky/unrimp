@@ -47,6 +47,9 @@
 	#include <EGL/egl.h>
 #endif
 
+// Get rid of some nasty OS macros
+#undef max
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]

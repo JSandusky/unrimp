@@ -1,0 +1,13 @@
+{
+	"Format":
+	{
+		"Type": "TextureCompiler",
+		"Version": "1"
+	},
+	"Configuration":
+	{
+		"Test": "42",
+		"Format": "dds",
+		"Compression": "dxt5"
+	}
+}

@@ -25,6 +25,7 @@
 // so it's acceptable to make an include in here
 #include <cmath>
 #include <algorithm>
+#include <inttypes.h>
 
 
 //[-------------------------------------------------------]

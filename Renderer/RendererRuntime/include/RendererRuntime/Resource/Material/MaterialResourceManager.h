@@ -50,6 +50,8 @@ namespace RendererRuntime
 	protected:
 		MaterialResourceManager();
 		~MaterialResourceManager();
+		MaterialResourceManager(const MaterialResourceManager&) = delete;
+		MaterialResourceManager& operator=(const MaterialResourceManager&) = delete;
 
 
 	};

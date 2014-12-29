@@ -24,9 +24,9 @@
 #include "PrecompiledHeader.h"
 #include "Runtime/FirstMesh/FirstMesh.h"
 #include "Framework/Color4.h"
-#include "Framework/TGALoader.h"
 
 #include <RendererRuntime/Resource/Mesh/Mesh.h>
+#include <RendererRuntime/Resource/Texture/TextureResourceManager.h>
 
 #include <glm/gtc/type_ptr.hpp> 
 #include <glm/gtc/matrix_transform.hpp>
@@ -36,7 +36,7 @@
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FirstMesh::FirstMesh(const char *rendererName) :
-	IApplicationRenderer(rendererName),
+	IApplicationRendererRuntime(rendererName),
 	mMesh(nullptr),
 	mUniformBlockIndex(0),
 	mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
@@ -59,12 +59,14 @@ FirstMesh::~FirstMesh()
 void FirstMesh::onInitialization()
 {
 	// Call the base implementation
-	IApplicationRenderer::onInitialization();
+	IApplicationRendererRuntime::onInitialization();
 
-	// Get and check the renderer instance
-	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer)
+	// Get and check the renderer runtime instance
+	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+	if (nullptr != rendererRuntime)
 	{
+		Renderer::IRendererPtr renderer(getRenderer());
+
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
@@ -138,27 +140,16 @@ void FirstMesh::onInitialization()
 			{
 				// Load in the diffuse, emissive, normal and specular texture
 				// -> In order to keep this sample simple, the texture management is quite primitive
-				// -> No texture compression used
 				// -> The tangent space normal map is stored with three components, two would be enought to recalculate the third component within the fragment shader
 				// -> The specular map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
-				Renderer::ITexture *textures[] =
-				{
-					loadTGATexture(*renderer, "../DataSource/Imrod/Imrod_Diffuse.tga"),
-					loadTGATexture(*renderer, "../DataSource/Imrod/Imrod_Illumination.tga"),
-					loadTGATexture(*renderer, "../DataSource/Imrod/Imrod_norm.tga"),
-					loadTGATexture(*renderer, "../DataSource/Imrod/Imrod_spec.tga")
-				};
-				/*
-				// TODO(co)
 				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
 				Renderer::ITexture *textures[] =
 				{
-					textureResourceManager.loadByLocalAssetName("Example/Texture/Imrod/Imrod_Diffuse")
-					textureResourceManager.loadByLocalAssetName("Example/Texture/Imrod/Imrod_Illumination")
-					textureResourceManager.loadByLocalAssetName("Example/Texture/Imrod/Imrod_norm")
-					textureResourceManager.loadByLocalAssetName("Example/Texture/Imrod/Imrod_spec")
+					textureResourceManager.loadDdsTexture("../DataPc/Texture/Character/Imrod_Diffuse.dds"),
+					textureResourceManager.loadDdsTexture("../DataPc/Texture/Character/Imrod_Illumination.dds"),
+					textureResourceManager.loadDdsTexture("../DataPc/Texture/Character/Imrod_norm.dds"),
+					textureResourceManager.loadDdsTexture("../DataPc/Texture/Character/Imrod_spec.dds")
 				};
-				*/
 
 				// Create the texture collection
 				// -> The texture collection keeps a reference to the provided resources, so,
@@ -219,7 +210,7 @@ void FirstMesh::onDeinitialization()
 	RENDERER_END_DEBUG_EVENT(getRenderer())
 
 	// Call the base implementation
-	IApplicationRenderer::onDeinitialization();
+	IApplicationRendererRuntime::onDeinitialization();
 }
 
 void FirstMesh::onUpdate()

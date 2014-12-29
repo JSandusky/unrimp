@@ -47,6 +47,9 @@
 #endif
 #include "Renderer/PlatformTypes.h"
 
+// Get rid of some nasty OS macros
+#undef max
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]

@@ -50,6 +50,8 @@ namespace RendererRuntime
 	protected:
 		CompositorManager();
 		~CompositorManager();
+		CompositorManager(const CompositorManager&) = delete;
+		CompositorManager& operator=(const CompositorManager&) = delete;
 
 
 	};
