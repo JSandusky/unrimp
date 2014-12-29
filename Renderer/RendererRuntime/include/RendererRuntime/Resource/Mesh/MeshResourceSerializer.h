@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/ResourceSerializer.h"
 
+#include <iosfwd>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -66,7 +68,7 @@ namespace RendererRuntime
 
 	// TODO(co) Work-in-progress
 	public:
-		Mesh* loadMesh(Renderer::IProgram& program, const char* filename);
+		Mesh* loadMesh(Renderer::IProgram& program, std::ifstream& ifstream);
 
 
 	//[-------------------------------------------------------]

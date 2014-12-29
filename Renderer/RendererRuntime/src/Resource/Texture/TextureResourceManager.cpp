@@ -30,6 +30,12 @@
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Texture/DdsTextureResourceSerializer.h"
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	#include <fstream>
+#pragma warning(pop)
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,7 +49,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	Renderer::ITexture* TextureResourceManager::loadDdsTexture(const char* filename)
 	{
-		return mDdsTextureResourceSerializer->loadDdsTexture(filename);
+		std::ifstream ifstream(filename, std::ios::binary);
+		return mDdsTextureResourceSerializer->loadDdsTexture(ifstream);
 	}
 
 

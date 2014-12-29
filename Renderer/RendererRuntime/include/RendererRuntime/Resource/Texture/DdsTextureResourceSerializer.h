@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Texture/TextureResourceSerializer.h"
 
+#include <iosfwd>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -65,7 +67,7 @@ namespace RendererRuntime
 
 	// TODO(co) Work-in-progress
 	public:
-		Renderer::ITexture* loadDdsTexture(const char* filename);
+		Renderer::ITexture* loadDdsTexture(std::ifstream& ifstream);
 
 
 	//[-------------------------------------------------------]

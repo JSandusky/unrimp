@@ -30,6 +30,12 @@
 #include "RendererRuntime/Resource/Font/FontResourceManager.h"
 #include "RendererRuntime/Resource/Font/FontResourceSerializer.h"
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	#include <fstream>
+#pragma warning(pop)
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -44,7 +50,8 @@ namespace RendererRuntime
 	// TODO(co) Work-in-progress
 	IFont* FontResourceManager::loadFont(const char* filename)
 	{
-		return mFontResourceSerializer->loadFont(filename);
+		std::ifstream ifstream(filename, std::ios::binary);
+		return mFontResourceSerializer->loadFont(ifstream);
 	}
 
 

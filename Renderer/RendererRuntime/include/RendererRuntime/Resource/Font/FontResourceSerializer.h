@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/ResourceSerializer.h"
 
+#include <iosfwd>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -62,7 +64,7 @@ namespace RendererRuntime
 
 	// TODO(co) Work-in-progress
 	public:
-		IFont* loadFont(const char* filename);
+		IFont* loadFont(std::ifstream& ifstream);
 
 
 	//[-------------------------------------------------------]

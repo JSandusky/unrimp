@@ -24,6 +24,8 @@
 #include "RendererRuntime/Resource/Font/FontImpl.h"
 #include "RendererRuntime/RendererRuntimeImpl.h"
 
+#include <cstring>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

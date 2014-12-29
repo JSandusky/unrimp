@@ -26,7 +26,11 @@
 
 #include <Renderer/Public/Renderer.h>
 
-#include <cstdio>
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	#include <fstream>
+#pragma warning(pop)
 
 
 //[-------------------------------------------------------]
@@ -36,92 +40,100 @@ namespace RendererRuntime
 {
 
 
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Definitions                                           ]
+		//[-------------------------------------------------------]
+		static const uint32_t DDSCAPS2_CUBEMAP = 0x00000200;
+		static const uint32_t DDS_FOURCC = 0x00000004;
+		static const uint32_t DDS_LUMINANCE = 0x00020000;
+		static const uint32_t DDS_ALPHAPIXELS = 0x00000001;
+		static const uint32_t DDS_LINEARSIZE = 0x00080000;
+		static const uint32_t DDS_PITCH = 0x00000008;
+		static const uint32_t DDSD_CAPS = 0x00000001;
+		static const uint32_t DDSD_PIXELFORMAT = 0x00001000;
+		static const uint32_t DDSD_HEIGHT = 0x00000002;
+		static const uint32_t DDSD_WIDTH = 0x00000004;
+		static const uint32_t DDSD_MIPMAPCOUNT = 0x00020000;
+		static const uint32_t DDSD_DEPTH = 0x00800000;
+		static const uint32_t DDPF_FOURCC = 0x00000004;
+		static const uint32_t DDSCAPS_TEXTURE = 0x00001000;
+		static const uint32_t DDSCAPS_MIPMAP = 0x00400000;
+		static const uint32_t DDSCAPS_COMPLEX = 0x00000008;
+		static const uint32_t DDSCAPS2_VOLUME = 0x00200000;
+		static const uint32_t DDSCAPS2_CUBEMAP_POSITIVEX = 0x00000400;
+		static const uint32_t DDSCAPS2_CUBEMAP_NEGATIVEX = 0x00000800;
+		static const uint32_t DDSCAPS2_CUBEMAP_POSITIVEY = 0x00001000;
+		static const uint32_t DDSCAPS2_CUBEMAP_NEGATIVEY = 0x00002000;
+		static const uint32_t DDSCAPS2_CUBEMAP_POSITIVEZ = 0x00004000;
+		static const uint32_t DDSCAPS2_CUBEMAP_NEGATIVEZ = 0x00008000;
+		static const uint32_t DDSCAPS2_CUBEMAP_ALL_FACES = (DDSCAPS2_CUBEMAP_POSITIVEX | DDSCAPS2_CUBEMAP_NEGATIVEX | DDSCAPS2_CUBEMAP_POSITIVEY | DDSCAPS2_CUBEMAP_NEGATIVEY | DDSCAPS2_CUBEMAP_POSITIVEZ | DDSCAPS2_CUBEMAP_NEGATIVEZ);
+
+
+		//[-------------------------------------------------------]
+		//[ Structures                                            ]
+		//[-------------------------------------------------------]
+		struct DdsHeader
+		{
+			uint8_t magic[4];
+			uint32_t size;
+			uint32_t flags;
+			uint32_t height;
+			uint32_t width;
+			uint32_t pitchOrLinearSize;
+			uint32_t depth;
+			uint32_t mipMapCount;
+			uint32_t reserved[11];
+			struct
+			{
+				uint32_t size;
+				uint32_t flags;
+				uint32_t fourCC;
+				uint32_t RGBBitCount;
+				uint32_t RBitMask;
+				uint32_t GBitMask;
+				uint32_t BBitMask;
+				uint32_t RGBAlphaBitMask;
+			} ddpfPixelFormat;
+			struct
+			{
+				uint32_t caps1;
+				uint32_t caps2;
+				uint32_t reserved[2];
+			} ddsCaps;
+			uint32_t reserved2;
+		};
+
+		struct DdsHeaderDX10
+		{
+			uint32_t DXGIFormat; // See http://msdn.microsoft.com/en-us/library/bb173059.aspx
+			uint32_t resourceDimension;
+			uint32_t miscFlag;
+			uint32_t arraySize;
+			uint32_t reserved;
+		};
+
+
+	}
+
+
+
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	//[-------------------------------------------------------]
-	//[ Definitions                                           ]
-	//[-------------------------------------------------------]
-	static const uint32_t DDSCAPS2_CUBEMAP = 0x00000200;
-	static const uint32_t DDS_FOURCC = 0x00000004;
-	static const uint32_t DDS_LUMINANCE = 0x00020000;
-	static const uint32_t DDS_ALPHAPIXELS = 0x00000001;
-	static const uint32_t DDS_LINEARSIZE = 0x00080000;
-	static const uint32_t DDS_PITCH = 0x00000008;
-	static const uint32_t DDSD_CAPS = 0x00000001;
-	static const uint32_t DDSD_PIXELFORMAT = 0x00001000;
-	static const uint32_t DDSD_HEIGHT = 0x00000002;
-	static const uint32_t DDSD_WIDTH = 0x00000004;
-	static const uint32_t DDSD_MIPMAPCOUNT = 0x00020000;
-	static const uint32_t DDSD_DEPTH = 0x00800000;
-	static const uint32_t DDPF_FOURCC = 0x00000004;
-	static const uint32_t DDSCAPS_TEXTURE = 0x00001000;
-	static const uint32_t DDSCAPS_MIPMAP = 0x00400000;
-	static const uint32_t DDSCAPS_COMPLEX = 0x00000008;
-	static const uint32_t DDSCAPS2_VOLUME = 0x00200000;
-	static const uint32_t DDSCAPS2_CUBEMAP_POSITIVEX = 0x00000400;
-	static const uint32_t DDSCAPS2_CUBEMAP_NEGATIVEX = 0x00000800;
-	static const uint32_t DDSCAPS2_CUBEMAP_POSITIVEY = 0x00001000;
-	static const uint32_t DDSCAPS2_CUBEMAP_NEGATIVEY = 0x00002000;
-	static const uint32_t DDSCAPS2_CUBEMAP_POSITIVEZ = 0x00004000;
-	static const uint32_t DDSCAPS2_CUBEMAP_NEGATIVEZ = 0x00008000;
-	static const uint32_t DDSCAPS2_CUBEMAP_ALL_FACES = (DDSCAPS2_CUBEMAP_POSITIVEX | DDSCAPS2_CUBEMAP_NEGATIVEX | DDSCAPS2_CUBEMAP_POSITIVEY | DDSCAPS2_CUBEMAP_NEGATIVEY | DDSCAPS2_CUBEMAP_POSITIVEZ | DDSCAPS2_CUBEMAP_NEGATIVEZ);
-
-
-	//[-------------------------------------------------------]
-	//[ Structures                                            ]
-	//[-------------------------------------------------------]
-	struct DdsHeader
-	{
-		uint8_t magic[4];
-		uint32_t size;
-		uint32_t flags;
-		uint32_t height;
-		uint32_t width;
-		uint32_t pitchOrLinearSize;
-		uint32_t depth;
-		uint32_t mipMapCount;
-		uint32_t reserved[11];
-		struct
-		{
-			uint32_t size;
-			uint32_t flags;
-			uint32_t fourCC;
-			uint32_t RGBBitCount;
-			uint32_t RBitMask;
-			uint32_t GBitMask;
-			uint32_t BBitMask;
-			uint32_t RGBAlphaBitMask;
-		} ddpfPixelFormat;
-		struct
-		{
-			uint32_t caps1;
-			uint32_t caps2;
-			uint32_t reserved[2];
-		} ddsCaps;
-		uint32_t reserved2;
-	};
-
-	struct DdsHeaderDX10
-	{
-		uint32_t DXGIFormat; // See http://msdn.microsoft.com/en-us/library/bb173059.aspx
-		uint32_t resourceDimension;
-		uint32_t miscFlag;
-		uint32_t arraySize;
-		uint32_t reserved;
-	};
-
-	Renderer::ITexture* DdsTextureResourceSerializer::loadDdsTexture(const char* filename)
+	Renderer::ITexture* DdsTextureResourceSerializer::loadDdsTexture(std::ifstream& ifstream)
 	{
 		Renderer::ITexture2D* texture2D = nullptr;
-		FILE* file = fopen(filename, "rb");
 
 		#define MCHAR4(a, b, c, d) (a | (b << 8) | (c << 16) | (d << 24))
 
 		// Read the header
-		DdsHeader ddsHeader;
-		fread(&ddsHeader, sizeof(DdsHeader), 1, file);
+		detail::DdsHeader ddsHeader;
+		ifstream.read(reinterpret_cast<char*>(&ddsHeader), sizeof(detail::DdsHeader));
 		if (ddsHeader.magic[0] == 'D' && ddsHeader.magic[1] == 'D' && ddsHeader.magic[2] == 'S' && ddsHeader.magic[3] == ' ' &&
 			// Note that if "size" is "DDS " this is not a valid dds file according
 			// to the file spec. Some broken tool out there seems to produce files
@@ -139,14 +151,14 @@ namespace RendererRuntime
 			const uint32_t depth = ddsHeader.depth ? ddsHeader.depth : 1;
 
 			// Is this image compressed?
-			if (ddsHeader.ddpfPixelFormat.flags & DDS_FOURCC)
+			if (ddsHeader.ddpfPixelFormat.flags & detail::DDS_FOURCC)
 			{
 				// The image is compressed
 				if (ddsHeader.ddpfPixelFormat.fourCC == MCHAR4('D', 'X', '1', '0'))
 				{
 					// Read the DX10 header
-					DdsHeaderDX10 ddsHeaderDX10;
-					fread(&ddsHeaderDX10, sizeof(DdsHeaderDX10), 1, file);
+					detail::DdsHeaderDX10 ddsHeaderDX10;
+					ifstream.read(reinterpret_cast<char*>(&ddsHeaderDX10), sizeof(detail::DdsHeaderDX10));
 
 					// Get the color format and compression
 					switch (ddsHeaderDX10.DXGIFormat)
@@ -404,9 +416,9 @@ namespace RendererRuntime
 			else
 			{
 				// The image is not compressed
-				if (ddsHeader.ddpfPixelFormat.flags & DDS_LUMINANCE)
+				if (ddsHeader.ddpfPixelFormat.flags & detail::DDS_LUMINANCE)
 				{
-					if (ddsHeader.ddpfPixelFormat.flags & DDS_ALPHAPIXELS)
+					if (ddsHeader.ddpfPixelFormat.flags & detail::DDS_ALPHAPIXELS)
 					{
 						// TODO(co)
 						// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
@@ -419,7 +431,7 @@ namespace RendererRuntime
 				}
 				else
 				{
-					if (ddsHeader.ddpfPixelFormat.flags & DDS_ALPHAPIXELS)
+					if (ddsHeader.ddpfPixelFormat.flags & detail::DDS_ALPHAPIXELS)
 					{
 						// Set color format, please not that all bit mask relevant stuff is done inside "DecompressRGBA()"
 						// TODO(co)
@@ -434,9 +446,9 @@ namespace RendererRuntime
 				}
 
 				// Microsoft bug, they're not following their own documentation
-				if (!(ddsHeader.ddpfPixelFormat.flags & (DDS_LINEARSIZE | DDS_PITCH)) || !ddsHeader.pitchOrLinearSize)
+				if (!(ddsHeader.ddpfPixelFormat.flags & (detail::DDS_LINEARSIZE | detail::DDS_PITCH)) || !ddsHeader.pitchOrLinearSize)
 				{
-					ddsHeader.ddpfPixelFormat.flags |= DDS_LINEARSIZE;
+					ddsHeader.ddpfPixelFormat.flags |= detail::DDS_LINEARSIZE;
 				}
 			}
 
@@ -444,7 +456,7 @@ namespace RendererRuntime
 			const uint32_t numberOfMipmaps = (!ddsHeader.mipMapCount) ? 1 : ddsHeader.mipMapCount;
 
 			// Cube map?
-			const uint32_t numberOfFaces = (ddsHeader.ddsCaps.caps2 & DDSCAPS2_CUBEMAP) ? 6u : 1u;
+			const uint32_t numberOfFaces = (ddsHeader.ddsCaps.caps2 & detail::DDSCAPS2_CUBEMAP) ? 6u : 1u;
 
 			{ // Loop through all faces
 				uint32_t width = ddsHeader.width;
@@ -467,7 +479,7 @@ namespace RendererRuntime
 				// TODO(co)
 				// A simple one: Just read in the whole compressed data
 				uint8_t* tempDataTest = new uint8_t[compressedSize];
-				fread(tempDataTest, 1, compressedSize, file);
+				ifstream.read(reinterpret_cast<char*>(tempDataTest), compressedSize);
 
 				// Create the texture instance
 				texture2D = mRendererRuntime.getRenderer().createTexture2D(ddsHeader.width, ddsHeader.height, Renderer::TextureFormat::BC1, tempDataTest, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
@@ -599,8 +611,6 @@ namespace RendererRuntime
 		}
 
 		#undef MCHAR4
-
-		fclose(file);
 
 		return texture2D;
 	}

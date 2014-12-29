@@ -30,6 +30,12 @@
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceSerializer.h"
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	#include <fstream>
+#pragma warning(pop)
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -44,7 +50,8 @@ namespace RendererRuntime
 	// TODO(co) Work-in-progress
 	Mesh* MeshResourceManager::loadMesh(Renderer::IProgram& program, const char* filename)
 	{
-		return mMeshResourceSerializer->loadMesh(program, filename);
+		std::ifstream ifstream(filename, std::ios::binary);
+		return mMeshResourceSerializer->loadMesh(program, ifstream);
 	}
 
 

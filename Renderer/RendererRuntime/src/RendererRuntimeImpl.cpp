@@ -30,6 +30,8 @@
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 
+#include <cstring>
+
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
