@@ -65,6 +65,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class FontResourceSerializer;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -74,13 +80,11 @@ namespace RendererRuntime
 		*
 		*  @param[in] rendererRuntimeImpl
 		*    Renderer runtime implementation instance to use
-		*  @param[in] filename
-		*    The ASCII font filename, must be valid
 		*
 		*  @note
 		*    - The font instance keeps a reference to the provided renderer runtime implementation instance
 		*/
-		FontImpl(RendererRuntimeImpl &rendererRuntimeImpl, const char *filename);
+		FontImpl(RendererRuntimeImpl &rendererRuntimeImpl);
 
 		/**
 		*  @brief

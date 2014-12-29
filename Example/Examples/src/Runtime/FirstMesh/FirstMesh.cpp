@@ -26,6 +26,7 @@
 #include "Framework/Color4.h"
 
 #include <RendererRuntime/Resource/Mesh/Mesh.h>
+#include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/Texture/TextureResourceManager.h>
 
 #include <glm/gtc/type_ptr.hpp> 
@@ -131,7 +132,7 @@ void FirstMesh::onInitialization()
 				// -> In order to keep it simple, we use simple ASCII strings as filenames which are relative to the executable
 				// -> In order to keep it simple, we provide the mesh with the program, usually you want to use a mesh
 				//    with multiple programs and therefore using multiple vertex array objects (VAO)
-				mMesh = new RendererRuntime::Mesh(*mProgram, "../DataPc/Mesh/Character/Imrod.mesh");
+				mMesh = rendererRuntime->getMeshResourceManager().loadMesh(*mProgram, "../DataPc/Mesh/Character/Imrod.mesh");
 			}
 
 			// Use texture collections when you want you exploit renderer API methods like

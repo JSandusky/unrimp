@@ -24,9 +24,6 @@
 #include "RendererRuntime/Resource/Font/FontImpl.h"
 #include "RendererRuntime/RendererRuntimeImpl.h"
 
-#include <stdio.h>
-#include <string.h>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -38,7 +35,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FontImpl::FontImpl(RendererRuntimeImpl &rendererRuntimeImpl, const char *filename) :
+	FontImpl::FontImpl(RendererRuntimeImpl &rendererRuntimeImpl) :
 		mRendererRuntimeImpl(&rendererRuntimeImpl),
 		mGlyphTextureAtlasPadding(3),
 		mGlyphTextureAtlasSizeX(0),
@@ -49,74 +46,6 @@ namespace RendererRuntime
 	{
 		// Add our renderer runtime implementation reference
 		mRendererRuntimeImpl->addReference();
-
-		// Open the file
-		// TODO(co) At the moment "fopen()" etc. are used directly
-		FILE *file = fopen(filename, "rb");
-		if (nullptr != file)
-		{
-			// Read in the font header
-			struct FontHeader
-			{
-				uint32_t formatType;
-				uint16_t formatVersion;
-				uint32_t size;
-				uint32_t resolution;
-				float	 ascender;
-				float	 descender;
-				float	 height;
-				uint32_t numberOfFontGlyphs;
-				uint32_t glyphTextureAtlasSizeX;
-				uint32_t glyphTextureAtlasSizeY;
-			};
-			FontHeader fontHeader;
-			fread(&fontHeader, sizeof(FontHeader), 1, file);
-			mSize					= fontHeader.size;
-			mResolution				= fontHeader.resolution;
-			mAscender				= fontHeader.ascender;
-			mDescender				= fontHeader.descender;
-			mHeight					= fontHeader.height;
-			mGlyphTextureAtlasSizeX	= fontHeader.glyphTextureAtlasSizeX;
-			mGlyphTextureAtlasSizeY	= fontHeader.glyphTextureAtlasSizeY;
-			mNumberOfFontGlyphs		= fontHeader.numberOfFontGlyphs;
-
-			// Read in the font glyphs
-			mFontGlyphs = new FontGlyphTexture[mNumberOfFontGlyphs];
-			fread(mFontGlyphs, sizeof(FontGlyphTexture), mNumberOfFontGlyphs, file);
-
-			{ // Read in the font data
-				// Allocate memory for the glyph texture atlas and read in the data
-				const uint32_t totalNumberOfBytes = fontHeader.glyphTextureAtlasSizeX * fontHeader.glyphTextureAtlasSizeY; // Alpha, one byte
-				uint8_t* glyphTextureAtlasData = new uint8_t[totalNumberOfBytes];
-				fread(glyphTextureAtlasData, sizeof(uint8_t), totalNumberOfBytes, file);
-
-				{ // Renderer related part
-					// Begin debug event
-					RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&mRendererRuntimeImpl->getRenderer())
-
-					// Create the glyph texture atlas and add our internal reference
-					mTexture2D = mRendererRuntimeImpl->getRenderer().createTexture2D(mGlyphTextureAtlasSizeX, mGlyphTextureAtlasSizeY, Renderer::TextureFormat::A8, glyphTextureAtlasData, Renderer::TextureFlag::GENERATE_MIPMAPS);
-					if (nullptr != mTexture2D)
-					{
-						RENDERER_SET_RESOURCE_DEBUG_NAME(mTexture2D, filename)
-						mTexture2D->addReference();
-					}
-
-					// End debug event
-					RENDERER_END_DEBUG_EVENT(&mRendererRuntimeImpl->getRenderer())
-				}
-
-				// Free allocated memory
-				delete [] glyphTextureAtlasData;
-			}
-
-			// Close the file
-			fclose(file);
-		}
-		else
-		{
-			// TODO(co) Error handling
-		}
 	}
 
 	FontImpl::~FontImpl()

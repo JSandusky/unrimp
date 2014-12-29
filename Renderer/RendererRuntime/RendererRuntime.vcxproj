@@ -23,7 +23,10 @@
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
     <None Include="include\RendererRuntime\RendererRuntimeImpl.inl" />
     <None Include="include\RendererRuntime\Resource\Font\FontImpl.inl" />
+    <None Include="include\RendererRuntime\Resource\Font\FontResourceSerializer.inl" />
     <None Include="include\RendererRuntime\Resource\Font\IFont.inl" />
+    <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceSerializer.inl" />
+    <None Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +34,7 @@
     <ClInclude Include="include\RendererRuntime\Compositor\CompositorManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Manager.h" />
     <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Serializer.h" />
     <ClInclude Include="include\RendererRuntime\Export.h" />
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\PlatformTypes.h" />
@@ -38,12 +42,18 @@
     <ClInclude Include="include\RendererRuntime\RendererRuntimeImpl.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontImpl.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\IFont.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Mesh.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\ResourceSerializer.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Scene\SceneManager.h" />
     <ClInclude Include="include\RendererRuntime\WindowsHeader.h" />
     <ClInclude Include="resource.h" />
@@ -59,9 +69,12 @@
     <ClCompile Include="src\RendererRuntimeImpl.cpp" />
     <ClCompile Include="src\Resource\Font\FontResourceManager.cpp" />
     <ClCompile Include="src\Resource\Font\FontImpl.cpp" />
+    <ClCompile Include="src\Resource\Font\FontResourceSerializer.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp" />
     <ClCompile Include="src\Resource\Mesh\Mesh.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp" />
+    <ClCompile Include="src\Resource\Mesh\MeshResourceSerializer.cpp" />
+    <ClCompile Include="src\Resource\Texture\DdsTextureResourceSerializer.cpp" />
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
   </ItemGroup>

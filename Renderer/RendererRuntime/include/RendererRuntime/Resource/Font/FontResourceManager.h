@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/ResourceManager.h"
 
 
@@ -35,7 +36,9 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class IRendererRuntime;
+	class IFont;
+	class RendererRuntimeImpl;
+	class FontResourceSerializer;
 }
 
 
@@ -59,11 +62,16 @@ namespace RendererRuntime
 		friend class RendererRuntimeImpl;
 
 
+	// TODO(co) Work-in-progress
+	public:
+		GENERIC_API_EXPORT IFont* loadFont(const char* filename);
+
+
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		FontResourceManager(IRendererRuntime& rendererRuntime);
+		FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl);
 		~FontResourceManager();
 		FontResourceManager(const FontResourceManager&) = delete;
 		FontResourceManager& operator=(const FontResourceManager&) = delete;
@@ -73,7 +81,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		RendererRuntimeImpl&	mRendererRuntimeImpl;		///< Renderer runtime implementation instance, do not destroy the instance
+		FontResourceSerializer* mFontResourceSerializer;	///< Font resource serializer, always valid, destroy the instance if you no longer need it
 
 
 	};

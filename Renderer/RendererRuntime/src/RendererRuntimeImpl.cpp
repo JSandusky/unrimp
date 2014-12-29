@@ -22,7 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/RendererRuntimeImpl.h"
-#include "RendererRuntime/Resource/Font/FontImpl.h"
 #include "RendererRuntime/asset/AssetManager.h"
 #include "RendererRuntime/scene/SceneManager.h"
 #include "RendererRuntime/compositor/CompositorManager.h"
@@ -30,10 +29,6 @@
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
-
-#include "RendererRuntime/Export.h"
-
-#include <string.h>	// For "strcmp()"
 
 
 //[-------------------------------------------------------]
@@ -311,25 +306,6 @@ namespace RendererRuntime
 
 		// Return the instance of the font blend state
 		return mFontBlendState;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
-	//[-------------------------------------------------------]
-	IFont *RendererRuntimeImpl::createFont(const char *filename)
-	{
-		IFont *font = nullptr;
-
-		// Is the given ASCII font filename valid?
-		if (nullptr != filename && '\0' != filename[0])
-		{
-			// Create the font instance
-			font = new FontImpl(*this, filename);
-		}
-
-		// Return the created font instance
-		return font;
 	}
 
 

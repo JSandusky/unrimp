@@ -27,8 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/ResourceManager.h"
+#include "RendererRuntime/Resource/ResourceSerializer.h"
 
 
 //[-------------------------------------------------------]
@@ -36,12 +35,12 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	class ITexture;
+	class IProgram;
 }
 namespace RendererRuntime
 {
+	class Mesh;
 	class IRendererRuntime;
-	class DdsTextureResourceSerializer;
 }
 
 
@@ -55,37 +54,36 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class TextureResourceManager : private ResourceManager
+	class MeshResourceSerializer : protected ResourceSerializer
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class RendererRuntimeImpl;
+		friend class MeshResourceManager;
 
 
 	// TODO(co) Work-in-progress
 	public:
-		GENERIC_API_EXPORT Renderer::ITexture* loadDdsTexture(const char* filename);
+		Mesh* loadMesh(Renderer::IProgram& program, const char* filename);
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		TextureResourceManager(IRendererRuntime& rendererRuntime);
-		~TextureResourceManager();
-		TextureResourceManager(const TextureResourceManager&) = delete;
-		TextureResourceManager& operator=(const TextureResourceManager&) = delete;
+		inline MeshResourceSerializer(IRendererRuntime& rendererRuntime);
+		inline ~MeshResourceSerializer();
+		MeshResourceSerializer(const MeshResourceSerializer&) = delete;
+		MeshResourceSerializer& operator=(const MeshResourceSerializer&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&			  mRendererRuntime;					///< Renderer runtime instance, do not destroy the instance
-		DdsTextureResourceSerializer* mDdsTextureResourceSerializer;	///< DDS texture resource serializer, always valid, destroy the instance if you no longer need it
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 
 
 	};
@@ -95,3 +93,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Mesh/MeshResourceSerializer.inl"

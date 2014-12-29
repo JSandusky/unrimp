@@ -19,9 +19,25 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Mesh/Mesh.h"
+#include "RendererRuntime/Resource/ResourceSerializer.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IFont;
+	class RendererRuntimeImpl;
+}
 
 
 //[-------------------------------------------------------]
@@ -32,44 +48,50 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	Mesh::Mesh() :
-		mNumberOfVertices(0),
-		mNumberOfIndices(0)
+	class FontResourceSerializer : protected ResourceSerializer
 	{
-		// Nothing here
-	}
 
-	Mesh::~Mesh()
-	{
-		// The renderer resource pointers are released automatically
-		// Nothing to do in here
-	}
 
-	void Mesh::draw()
-	{
-		// Valid mesh?
-		if (nullptr != mVertexArray)
-		{
-			// Get the used renderer instance
-			Renderer::IRenderer &renderer = mVertexArray->getRenderer();
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class FontResourceManager;
 
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer.iaSetVertexArray(mVertexArray);
 
-				// Set the primitive topology used for draw calls
-				renderer.iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
+	// TODO(co) Work-in-progress
+	public:
+		IFont* loadFont(const char* filename);
 
-			// Render the specified geometric primitive, based on indexing into an array of vertices
-			renderer.drawIndexed(0, mNumberOfIndices, 0, 0, mNumberOfVertices);
-		}
-	}
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		inline FontResourceSerializer(RendererRuntimeImpl& rendererRuntimeImpl);
+		inline ~FontResourceSerializer();
+		FontResourceSerializer(const FontResourceSerializer&) = delete;
+		FontResourceSerializer& operator=(const FontResourceSerializer&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		RendererRuntimeImpl& mRendererRuntimeImpl;	///< Renderer runtime implementation instance, do not destroy the instance
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Font/FontResourceSerializer.inl"

@@ -51,19 +51,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class MeshResourceSerializer;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
 		/**
 		*  @brief
-		*    Constructor
-		*
-		*  @param[in] program
-		*    Program instance to use
-		*  @param[in] filename
-		*    ASCII filename of the mesh to load in, in case of a null pointer nothing is loaded
+		*    Default constructor
 		*/
-		GENERIC_API_EXPORT Mesh(Renderer::IProgram &program, const char *filename);
+		Mesh();
 
 		/**
 		*  @brief

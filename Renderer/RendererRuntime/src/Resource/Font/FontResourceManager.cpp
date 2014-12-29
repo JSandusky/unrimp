@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Font/FontResourceManager.h"
+#include "RendererRuntime/Resource/Font/FontResourceSerializer.h"
 
 
 //[-------------------------------------------------------]
@@ -38,17 +39,28 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	// TODO(co) Work-in-progress
+	IFont* FontResourceManager::loadFont(const char* filename)
+	{
+		return mFontResourceSerializer->loadFont(filename);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	FontResourceManager::FontResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+	FontResourceManager::FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl) :
+		mRendererRuntimeImpl(rendererRuntimeImpl),
+		mFontResourceSerializer(new FontResourceSerializer(rendererRuntimeImpl))
 	{
 		// Nothing in here
 	}
 
 	FontResourceManager::~FontResourceManager()
 	{
-		// Nothing in here
+		delete mFontResourceSerializer;
 	}
 
 

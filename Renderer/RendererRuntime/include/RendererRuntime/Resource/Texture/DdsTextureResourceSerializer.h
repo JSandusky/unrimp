@@ -27,8 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/ResourceManager.h"
+#include "RendererRuntime/Resource/Texture/TextureResourceSerializer.h"
 
 
 //[-------------------------------------------------------]
@@ -41,7 +40,6 @@ namespace Renderer
 namespace RendererRuntime
 {
 	class IRendererRuntime;
-	class DdsTextureResourceSerializer;
 }
 
 
@@ -55,37 +53,36 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class TextureResourceManager : private ResourceManager
+	class DdsTextureResourceSerializer : protected TextureResourceSerializer
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class RendererRuntimeImpl;
+		friend class TextureResourceManager;
 
 
 	// TODO(co) Work-in-progress
 	public:
-		GENERIC_API_EXPORT Renderer::ITexture* loadDdsTexture(const char* filename);
+		Renderer::ITexture* loadDdsTexture(const char* filename);
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		TextureResourceManager(IRendererRuntime& rendererRuntime);
-		~TextureResourceManager();
-		TextureResourceManager(const TextureResourceManager&) = delete;
-		TextureResourceManager& operator=(const TextureResourceManager&) = delete;
+		inline DdsTextureResourceSerializer(IRendererRuntime& rendererRuntime);
+		inline ~DdsTextureResourceSerializer();
+		DdsTextureResourceSerializer(const DdsTextureResourceSerializer&) = delete;
+		DdsTextureResourceSerializer& operator=(const DdsTextureResourceSerializer&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&			  mRendererRuntime;					///< Renderer runtime instance, do not destroy the instance
-		DdsTextureResourceSerializer* mDdsTextureResourceSerializer;	///< DDS texture resource serializer, always valid, destroy the instance if you no longer need it
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 
 
 	};
@@ -95,3 +92,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Texture/DdsTextureResourceSerializer.inl"

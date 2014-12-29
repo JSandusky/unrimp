@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Mesh/Mesh.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,40 +26,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	Mesh::Mesh() :
-		mNumberOfVertices(0),
-		mNumberOfIndices(0)
+	inline FontResourceSerializer::FontResourceSerializer(RendererRuntimeImpl& rendererRuntimeImpl) :
+		mRendererRuntimeImpl(rendererRuntimeImpl)
 	{
 		// Nothing here
 	}
 
-	Mesh::~Mesh()
+	inline FontResourceSerializer::~FontResourceSerializer()
 	{
-		// The renderer resource pointers are released automatically
-		// Nothing to do in here
-	}
-
-	void Mesh::draw()
-	{
-		// Valid mesh?
-		if (nullptr != mVertexArray)
-		{
-			// Get the used renderer instance
-			Renderer::IRenderer &renderer = mVertexArray->getRenderer();
-
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer.iaSetVertexArray(mVertexArray);
-
-				// Set the primitive topology used for draw calls
-				renderer.iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
-
-			// Render the specified geometric primitive, based on indexing into an array of vertices
-			renderer.drawIndexed(0, mNumberOfIndices, 0, 0, mNumberOfVertices);
-		}
+		// Nothing here
 	}
 
 

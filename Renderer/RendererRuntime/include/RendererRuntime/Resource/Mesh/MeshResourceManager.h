@@ -27,15 +27,22 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/ResourceManager.h"
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class IProgram;
+}
 namespace RendererRuntime
 {
+	class Mesh;
 	class IRendererRuntime;
+	class MeshResourceSerializer;
 }
 
 
@@ -59,6 +66,11 @@ namespace RendererRuntime
 		friend class RendererRuntimeImpl;
 
 
+	// TODO(co) Work-in-progress
+	public:
+		GENERIC_API_EXPORT Mesh* loadMesh(Renderer::IProgram& program, const char* filename);
+
+
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
@@ -73,7 +85,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		IRendererRuntime&		mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
+		MeshResourceSerializer* mMeshResourceSerializer;	///< Mesh resource serializer, always valid, destroy the instance if you no longer need it
 
 
 	};

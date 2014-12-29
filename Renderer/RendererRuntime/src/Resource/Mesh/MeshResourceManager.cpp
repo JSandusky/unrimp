@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
+#include "RendererRuntime/Resource/Mesh/MeshResourceSerializer.h"
 
 
 //[-------------------------------------------------------]
@@ -38,17 +39,28 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	// TODO(co) Work-in-progress
+	Mesh* MeshResourceManager::loadMesh(Renderer::IProgram& program, const char* filename)
+	{
+		return mMeshResourceSerializer->loadMesh(program, filename);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	MeshResourceManager::MeshResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+		mRendererRuntime(rendererRuntime),
+		mMeshResourceSerializer(new MeshResourceSerializer(rendererRuntime))
 	{
 		// Nothing in here
 	}
 
 	MeshResourceManager::~MeshResourceManager()
 	{
-		// Nothing in here
+		delete mMeshResourceSerializer;
 	}
 
 

@@ -54,6 +54,15 @@
     <None Include="include\RendererRuntime\Resource\Font\IFont.inl">
       <Filter>Source Files\Resource\Font</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.inl">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceSerializer.inl">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Font\FontResourceSerializer.inl">
+      <Filter>Source Files\Resource\Font</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\RendererRuntimeImpl.h">
@@ -129,6 +138,27 @@
     <ClInclude Include="include\RendererRuntime\Export.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Serializer.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ResourceSerializer.h">
+      <Filter>Source Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceSerializer.h">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.h">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceSerializer.h">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceSerializer.h">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceSerializer.h">
+      <Filter>Source Files\Resource\Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererRuntimeImpl.cpp">
@@ -160,6 +190,15 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Mesh\Mesh.cpp">
       <Filter>Source Files\Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Texture\DdsTextureResourceSerializer.cpp">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Mesh\MeshResourceSerializer.cpp">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Font\FontResourceSerializer.cpp">
+      <Filter>Source Files\Resource\Font</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

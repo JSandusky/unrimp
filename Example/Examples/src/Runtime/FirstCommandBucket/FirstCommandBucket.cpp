@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 
+#include <RendererRuntime/Resource/Font/FontResourceManager.h>
+
 
 //[-------------------------------------------------------]
 //[ Preprocessor                                          ]
@@ -130,7 +132,7 @@ void FirstCommandBucket::onInitialization()
 
 		// Create the font instance
 		// -> In order to keep it simple, we use simple ASCII strings as filenames which are relative to the executable
-		mFont = rendererRuntime->createFont("../DataPc/Font/Default/LinBiolinum_R.font");
+		mFont = rendererRuntime->getFontResourceManager().loadFont("../DataPc/Font/Default/LinBiolinum_R.font");
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());

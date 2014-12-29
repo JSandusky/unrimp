@@ -41,7 +41,6 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
-	class IFont;
 	class AssetManager;
 	class SceneManager;
 	class IRendererRuntime;
@@ -158,23 +157,6 @@ namespace RendererRuntime
 		*    The mesh resource manager instance, do not release the returned instance
 		*/
 		inline MeshResourceManager& getMeshResourceManager() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual IRendererRuntime methods               ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Create a font instance
-		*
-		*  @param[in] filename
-		*    The ASCII font filename, if null pointer or empty string a null pointer will be returned
-		*
-		*  @return
-		*    The created font instance, a null pointer on error. Release the returned instance if you no longer need it.
-		*/
-		virtual IFont *createFont(const char *filename) = 0;
 
 
 	//[-------------------------------------------------------]

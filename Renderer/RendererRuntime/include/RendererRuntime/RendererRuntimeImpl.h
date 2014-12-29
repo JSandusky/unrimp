@@ -159,13 +159,6 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
-	//[-------------------------------------------------------]
-	public:
-		virtual IFont *createFont(const char *filename) override;
-
-
-	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:

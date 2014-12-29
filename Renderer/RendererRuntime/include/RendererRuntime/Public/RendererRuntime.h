@@ -99,8 +99,6 @@ namespace RendererRuntime
 		{
 			return *mMeshResourceManager;
 		}
-	public:
-		virtual IFont *createFont(const char *filename) = 0;
 	protected:
 		IRendererRuntime();
 		explicit IRendererRuntime(const IRendererRuntime &source);
