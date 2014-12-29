@@ -24,7 +24,7 @@
 #include "PrecompiledHeader.h"
 #include "CmdLineArgs.h"
 #ifdef WIN32
-	#include <windows.h>
+	#include "framework/WindowsHeader.h"
 #ifdef UNICODE
 	#include "utf8/utf8.h" // to convert utf16 strings to utf8
 #else

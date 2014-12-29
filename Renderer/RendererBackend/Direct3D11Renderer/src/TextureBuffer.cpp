@@ -75,11 +75,11 @@ namespace Direct3D11Renderer
 		{ // Shader resource view part
 			// Direct3D 11 shader resource view description
 			D3D11_SHADER_RESOURCE_VIEW_DESC d3d11ShaderResourceViewDesc;
-			::ZeroMemory(&d3d11ShaderResourceViewDesc, sizeof(d3d11ShaderResourceViewDesc));
+			::ZeroMemory(&d3d11ShaderResourceViewDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 			d3d11ShaderResourceViewDesc.Format				 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(textureFormat));
 			d3d11ShaderResourceViewDesc.ViewDimension		 = D3D11_SRV_DIMENSION_BUFFER;
 			d3d11ShaderResourceViewDesc.Buffer.ElementOffset = 0;
-			d3d11ShaderResourceViewDesc.Buffer.ElementWidth	 = numberOfBytes / Mapping::getDirect3D11Size(textureFormat);
+			d3d11ShaderResourceViewDesc.Buffer.ElementWidth	 = numberOfBytes / Renderer::TextureFormat::getNumberOfBytesPerElement(textureFormat);
 
 			// Create the Direct3D 11 shader resource view instance
 			direct3D11Renderer.getD3D11Device()->CreateShaderResourceView(mD3D11Buffer, &d3d11ShaderResourceViewDesc, &mD3D11ShaderResourceViewTexture);

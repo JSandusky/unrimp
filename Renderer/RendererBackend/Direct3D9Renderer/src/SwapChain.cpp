@@ -76,7 +76,7 @@ namespace Direct3D9Renderer
 		// Set up the structure used to create the Direct3D 9 swap chain instance
 		// -> It appears that receiving and manually accessing the automatic depth stencil surface instance is not possible, so, we don't use the automatic depth stencil thing
 		D3DPRESENT_PARAMETERS d3dPresentParameters;
-		::ZeroMemory(&d3dPresentParameters, sizeof(d3dPresentParameters));
+		::ZeroMemory(&d3dPresentParameters, sizeof(D3DPRESENT_PARAMETERS));
 		d3dPresentParameters.BackBufferWidth		= static_cast<UINT>(width);
 		d3dPresentParameters.BackBufferHeight		= static_cast<UINT>(height);
 		d3dPresentParameters.BackBufferCount		= 1;
@@ -284,7 +284,7 @@ namespace Direct3D9Renderer
 
 			// Set up the structure used to create the Direct3D 9 swap chain instance
 			// -> It appears that receiving and manually accessing the automatic depth stencil surface instance is not possible, so, we don't use the automatic depth stencil thing
-			::ZeroMemory(&d3dPresentParameters, sizeof(d3dPresentParameters));
+			::ZeroMemory(&d3dPresentParameters, sizeof(D3DPRESENT_PARAMETERS));
 			d3dPresentParameters.BackBufferWidth		= width;
 			d3dPresentParameters.BackBufferHeight		= height;
 			d3dPresentParameters.BackBufferCount		= 1;

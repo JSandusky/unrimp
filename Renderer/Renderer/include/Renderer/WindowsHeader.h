@@ -110,6 +110,9 @@ __pragma(warning(push))
 	#include <windows.h>
 __pragma(warning(pop))
 
+// Get rid of some nasty OS macros
+#undef max
+
 
 //[-------------------------------------------------------]
 //[ Header guard                                          ]

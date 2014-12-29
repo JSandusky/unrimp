@@ -67,7 +67,7 @@ namespace Renderer
 		*    Number of mipmaps
 		*
 		*  @note
-		*    - Do not add this within the public "Renderer/Renderer.h"-header, it's for the internal implementation only
+		*    - Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
 		*/
 		static inline uint32_t getNumberOfMipmaps(uint32_t width, uint32_t height);
 

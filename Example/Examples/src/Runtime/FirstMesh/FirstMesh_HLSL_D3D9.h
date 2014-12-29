@@ -127,7 +127,7 @@ float4 main(VS_OUTPUT input) : SV_Target
 	float3 ViewSpaceViewVector     = float3(0.0f, 0.0f, 1.0f);				// In view space, we always look along the positive z-axis
 
 	// Get the per fragment normal [0..1] by using a tangent space normal map
-	float3 normal = tex2D(NormalMap, input.TexCoord).bgr;	// Direct3D 9 is using BGR, the world is using RGB
+	float3 normal = tex2D(NormalMap, input.TexCoord).rgb;
 
 	// Transform the normal from [0..1] to [-1..1]
 	normal = (normal - 0.5f) * 2.0f;
@@ -145,10 +145,9 @@ float4 main(VS_OUTPUT input) : SV_Target
 	float specularLight = (diffuseLight > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
 
 	// Calculate the fragment color
-	// -> Direct3D 9 is using BGR, the world is using RGB
-	float4 color = diffuseLight * tex2D(DiffuseMap, input.TexCoord).bgra;	// Diffuse term
-	color.rgb += specularLight * tex2D(SpecularMap, input.TexCoord).bgr;	// Specular term
-	color.rgb += tex2D(EmissiveMap, input.TexCoord).bgr;					// Emissive term
+	float4 color = diffuseLight * tex2D(DiffuseMap, input.TexCoord).rgba;	// Diffuse term
+	color.rgb += specularLight * tex2D(SpecularMap, input.TexCoord).rgb;	// Specular term
+	color.rgb += tex2D(EmissiveMap, input.TexCoord).rgb;					// Emissive term
 
 	// Done
 	return min(color, float4(1.0f, 1.0f, 1.0f, 1.0f));

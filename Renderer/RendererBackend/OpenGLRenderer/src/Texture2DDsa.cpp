@@ -51,11 +51,70 @@ namespace OpenGLRenderer
 		// Set correct alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
-		glTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, 0, static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat)), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
+		// Upload the texture data
+		if (Renderer::TextureFormat::isCompressed(textureFormat))
+		{
+			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
+			if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
+			{
+				// Calculate the number of mipmaps
+				const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
 
-		// Build mipmaps automatically on the GPU?
-		if (flags & Renderer::TextureFlag::MIPMAPS)
+				// Upload all mipmaps
+				const uint32_t internalFormat = Mapping::getOpenGLInternalFormat(textureFormat);
+				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+				{
+					// Upload the current mipmap
+					const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
+					glCompressedTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, numberOfBytesPerSlice, data);
+
+					// Move on to the next mipmap
+					data = static_cast<uint8_t*>(data) + numberOfBytesPerSlice;
+					width = std::max(width >> 1, 1u);	// /= 2
+					height = std::max(height >> 1, 1u);	// /= 2
+				}
+			}
+			else
+			{
+				// The user only provided us with the base texture, no mipmaps
+				glCompressedTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, 0, Mapping::getOpenGLInternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height)), data);
+			}
+		}
+		else
+		{
+			// Texture format is not compressed
+
+			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
+			if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
+			{
+				// Calculate the number of mipmaps
+				const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
+
+				// Upload all mipmaps
+				const GLint internalFormat = static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat));
+				const uint32_t format = Mapping::getOpenGLFormat(textureFormat);
+				const uint32_t type = Mapping::getOpenGLType(textureFormat);
+				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+				{
+					// Upload the current mipmap
+					const GLsizei numberOfBytesPerSlice = static_cast<GLsizei>(Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height));
+					glTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, format, type, data);
+
+					// Move on to the next mipmap
+					data = static_cast<uint8_t*>(data) + numberOfBytesPerSlice;
+					width = std::max(width >> 1, 1u);	// /= 2
+					height = std::max(height >> 1, 1u);	// /= 2
+				}
+			}
+			else
+			{
+				// The user only provided us with the base texture, no mipmaps
+				glTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, 0, static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat)), static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
+			}
+		}
+
+		// Build mipmaps automatically on the GPU? (or GPU driver)
+		if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)
 		{
 			glGenerateTextureMipmapEXT(mOpenGLTexture, GL_TEXTURE_2D);
 			glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);

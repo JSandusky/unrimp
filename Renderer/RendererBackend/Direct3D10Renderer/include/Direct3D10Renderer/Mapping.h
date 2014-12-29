@@ -109,18 +109,6 @@ namespace Direct3D10Renderer
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    "Renderer::TextureFormat" to Direct3D 10 size (in bytes)
-		*
-		*  @param[in] textureFormat
-		*    "Renderer::TextureFormat" to map
-		*
-		*  @return
-		*    Direct3D 10 size (in bytes)
-		*/
-		static uint32_t getDirect3D10Size(Renderer::TextureFormat::Enum textureFormat);
-
-		/**
-		*  @brief
 		*    "Renderer::TextureFormat" to Direct3D 10 format
 		*
 		*  @param[in] textureFormat

@@ -104,6 +104,7 @@
     <None Include="include\Renderer\RefCount.inl" />
     <None Include="include\Renderer\SmartRefCount.inl" />
     <None Include="include\Renderer\Statistics.inl" />
+    <None Include="include\Renderer\TextureTypes.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

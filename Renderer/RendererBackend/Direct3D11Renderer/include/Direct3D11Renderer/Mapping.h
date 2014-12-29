@@ -109,18 +109,6 @@ namespace Direct3D11Renderer
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    "Renderer::TextureFormat" to Direct3D 11 size (in bytes)
-		*
-		*  @param[in] textureFormat
-		*    "Renderer::TextureFormat" to map
-		*
-		*  @return
-		*    Direct3D 11 size (in bytes)
-		*/
-		static uint32_t getDirect3D11Size(Renderer::TextureFormat::Enum textureFormat);
-
-		/**
-		*  @brief
 		*    "Renderer::TextureFormat" to Direct3D 11 format
 		*
 		*  @param[in] textureFormat

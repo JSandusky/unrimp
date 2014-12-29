@@ -63,8 +63,8 @@ namespace OpenGLES2Renderer
 		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
 		glTexImage3DOES(GL_TEXTURE_2D_ARRAY_EXT, 0, Mapping::getOpenGLES2InternalFormat(textureFormat), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLES2Format(textureFormat), Mapping::getOpenGLES2Type(textureFormat), data);
 
-		// Build mipmaps automatically on the GPU?
-		if (flags & Renderer::TextureFlag::MIPMAPS)
+		// Build mipmaps automatically on the GPU? (or GPU driver)
+		if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)
 		{
 			glGenerateMipmap(GL_TEXTURE_2D_ARRAY_EXT);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);

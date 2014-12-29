@@ -260,5 +260,8 @@
     <None Include="include\Renderer\IRenderTarget.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="include\Renderer\TextureTypes.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

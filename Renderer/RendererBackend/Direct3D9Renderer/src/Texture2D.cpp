@@ -46,7 +46,7 @@ namespace Direct3D9Renderer
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D9Renderer)
 
 		// Get the Direct3D 9 usage indication
-		DWORD direct3D9Usage = (flags & Renderer::TextureFlag::MIPMAPS) ? D3DUSAGE_AUTOGENMIPMAP : 0u;
+		DWORD direct3D9Usage = (flags & Renderer::TextureFlag::GENERATE_MIPMAPS) ? D3DUSAGE_AUTOGENMIPMAP : 0u;
 		switch (textureUsage)
 		{
 			case Renderer::TextureUsage::DYNAMIC:
@@ -71,12 +71,45 @@ namespace Direct3D9Renderer
 		// Get the DirextX 9 format
 		const D3DFORMAT d3dFormat = static_cast<D3DFORMAT>(Mapping::getDirect3D9Format(textureFormat));
 
-		// Create Direct3D 9 texture, let Direct3D create the mipmaps for us
-		if (direct3D9Renderer.getDirect3DDevice9()->CreateTexture(width, height, 0, direct3D9Usage, d3dFormat, D3DPOOL_DEFAULT, &mDirect3DTexture9, nullptr) == D3D_OK)
+		// Create Direct3D 9 texture, let Direct3D create the mipmaps for us if requested by the user
+		if (direct3D9Renderer.getDirect3DDevice9()->CreateTexture(width, height, 0, direct3D9Usage, d3dFormat, D3DPOOL_DEFAULT, &mDirect3DTexture9, nullptr) == D3D_OK && nullptr != data)
 		{
-			// Upload data?
-			if (nullptr != data)
+			// Upload the texture data
+
+			// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
+			if (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS)
 			{
+				// Calculate the number of mipmaps
+				const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
+
+				// Upload all mipmaps
+				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+				{
+					// Upload the current mipmap
+
+					// Get the surface
+					IDirect3DSurface9 *direct3DSurface9 = nullptr;
+					mDirect3DTexture9->GetSurfaceLevel(mipmap, &direct3DSurface9);
+					if (nullptr != direct3DSurface9)
+					{
+						// Upload the texture data
+						const RECT sourceRect[] = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
+						D3DXLoadSurfaceFromMemory(direct3DSurface9, nullptr, nullptr, data, d3dFormat, Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width), nullptr, sourceRect, D3DX_FILTER_NONE, 0);
+
+						// Release the surface
+						direct3DSurface9->Release();
+					}
+
+					// Move on to the next mipmap
+					data = static_cast<uint8_t*>(data) + Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+					width = std::max(width >> 1, 1u);	// /= 2
+					height = std::max(height >> 1, 1u);	// /= 2
+				}
+			}
+			else
+			{
+				// The user only provided us with the base texture, no mipmaps
+
 				// Get the surface
 				IDirect3DSurface9 *direct3DSurface9 = nullptr;
 				mDirect3DTexture9->GetSurfaceLevel(0, &direct3DSurface9);
@@ -84,7 +117,7 @@ namespace Direct3D9Renderer
 				{
 					// Upload the texture data
 					const RECT sourceRect[] = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
-					D3DXLoadSurfaceFromMemory(direct3DSurface9, nullptr, nullptr, data, d3dFormat, width * Mapping::getDirect3D9Size(textureFormat), nullptr, sourceRect, D3DX_FILTER_NONE, 0);
+					D3DXLoadSurfaceFromMemory(direct3DSurface9, nullptr, nullptr, data, d3dFormat, Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width), nullptr, sourceRect, D3DX_FILTER_NONE, 0);
 
 					// Release the surface
 					direct3DSurface9->Release();

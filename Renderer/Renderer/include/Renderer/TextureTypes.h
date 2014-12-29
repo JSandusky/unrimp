@@ -27,6 +27,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <inttypes.h>	// For uint32_t, uint64_t etc.
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -48,8 +54,75 @@ namespace Renderer
 			R8G8B8        = 1,	///< 24-bit pixel format, 8 bits for red, green and blue
 			R8G8B8A8      = 2,	///< 32-bit pixel format, 8 bits for red, green, blue and alpha
 			R16G16B16A16F = 3,	///< 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
-			R32G32B32A32F = 4	///< 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
+			R32G32B32A32F = 4,	///< 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
+			BC1           = 5,	///< DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block)
+			BC2           = 6,	///< DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
+			BC3           = 7,	///< DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
+			BC4           = 8,	///< 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
+			BC5           = 9	///< 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block)
 		};
+
+		/**
+		*  @brief
+		*    Return whether or not the given "Renderer::TextureFormat" is a compressed format
+		*
+		*  @param[in] textureFormat
+		*    "Renderer::TextureFormat" to check
+		*
+		*  @return
+		*    "true" if the given "Renderer::TextureFormat" is a compressed format, else "false"
+		*/
+		inline static bool isCompressed(Enum textureFormat);
+
+		/**
+		*  @brief
+		*    "Renderer::TextureFormat" to number of bytes per element
+		*
+		*  @param[in] textureFormat
+		*    "Renderer::TextureFormat" to map
+		*
+		*  @return
+		*    Number of bytes per element
+		*/
+		inline static uint32_t getNumberOfBytesPerElement(Enum textureFormat);
+
+		/**
+		*  @brief
+		*    "Renderer::TextureFormat" to number of bytes per row
+		*
+		*  @param[in] textureFormat
+		*    "Renderer::TextureFormat" to map
+		*  @param[in] width
+		*    Row width
+		*
+		*  @return
+		*    Number of bytes per row
+		*
+		*  @note
+		*    - Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
+		*/
+		inline static uint32_t getNumberOfBytesPerRow(Enum textureFormat, uint32_t width);
+
+		/**
+		*  @brief
+		*    "Renderer::TextureFormat" to number of bytes per slice
+		*
+		*  @param[in] textureFormat
+		*    "Renderer::TextureFormat" to map
+		*  @param[in] width
+		*    Slice width
+		*  @param[in] height
+		*    Slice height
+		*
+		*  @return
+		*    Number of bytes per slice
+		*
+		*  @note
+		*    - Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
+		*/
+		inline static uint32_t getNumberOfBytesPerSlice(Enum textureFormat, uint32_t width, uint32_t height);
+
+
 	};
 
 	/**
@@ -60,8 +133,9 @@ namespace Renderer
 	{
 		enum Enum
 		{
-			MIPMAPS       = 1<<0,	///< Use/create mipmaps
-			RENDER_TARGET = 1<<1	///< This texture can be used as render target
+			DATA_CONTAINS_MIPMAPS = 1<<0,	///< The user provided data containing mipmaps from 0-n down to 1x1 linearly in memory
+			GENERATE_MIPMAPS      = 1<<1,	///< Automatically generate mipmaps (avoid this if you can, will be ignored in case the "DATA_CONTAINS_MIPMAPS"-flag is set)
+			RENDER_TARGET         = 1<<2	///< This texture can be used as render target
 		};
 	};
 
@@ -90,6 +164,12 @@ namespace Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "Renderer/TextureTypes.inl"
 
 
 //[-------------------------------------------------------]

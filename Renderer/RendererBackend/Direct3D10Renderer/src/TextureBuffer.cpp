@@ -74,11 +74,11 @@ namespace Direct3D10Renderer
 		{ // Shader resource view part
 			// Direct3D 10 shader resource view description
 			D3D10_SHADER_RESOURCE_VIEW_DESC d3d10ShaderResourceViewDesc;
-			::ZeroMemory(&d3d10ShaderResourceViewDesc, sizeof(d3d10ShaderResourceViewDesc));
+			::ZeroMemory(&d3d10ShaderResourceViewDesc, sizeof(D3D10_SHADER_RESOURCE_VIEW_DESC));
 			d3d10ShaderResourceViewDesc.Format				 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(textureFormat));
 			d3d10ShaderResourceViewDesc.ViewDimension		 = D3D10_SRV_DIMENSION_BUFFER;
 			d3d10ShaderResourceViewDesc.Buffer.ElementOffset = 0;
-			d3d10ShaderResourceViewDesc.Buffer.ElementWidth	 = numberOfBytes / Mapping::getDirect3D10Size(textureFormat);
+			d3d10ShaderResourceViewDesc.Buffer.ElementWidth	 = numberOfBytes / Renderer::TextureFormat::getNumberOfBytesPerElement(textureFormat);
 
 			// Create the Direct3D 10 shader resource view instance
 			direct3D10Renderer.getD3D10Device()->CreateShaderResourceView(mD3D10Buffer, &d3d10ShaderResourceViewDesc, &mD3D10ShaderResourceViewTexture);

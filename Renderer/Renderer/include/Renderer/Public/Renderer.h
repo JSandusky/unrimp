@@ -339,15 +339,21 @@ namespace Renderer
 				R8G8B8        = 1,
 				R8G8B8A8      = 2,
 				R16G16B16A16F = 3,
-				R32G32B32A32F = 4
+				R32G32B32A32F = 4,
+				BC1           = 5,
+				BC2           = 6,
+				BC3           = 7,
+				BC4           = 8,
+				BC5           = 9
 			};
 		};
 		struct TextureFlag
 		{
 			enum Enum
 			{
-				MIPMAPS       = 1<<0,
-				RENDER_TARGET = 1<<1
+				DATA_CONTAINS_MIPMAPS = 1<<0,
+				GENERATE_MIPMAPS      = 1<<1,
+				RENDER_TARGET         = 1<<2
 			};
 		};
 		struct TextureUsage

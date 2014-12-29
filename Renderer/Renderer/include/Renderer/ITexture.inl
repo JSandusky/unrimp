@@ -19,6 +19,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Include                                               ]
+//[-------------------------------------------------------]
+// This is for the internal implementation only, other projects will use the public "Renderer/Public/Renderer.h"-header,
+// so it's acceptable to make an include in here
+#include <cmath>
+#include <algorithm>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -30,18 +39,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline uint32_t ITexture::getNumberOfMipmaps(uint32_t width, uint32_t height)
 	{
-		#define MAX(a, b) (a > b) ? a : b
-
-		uint32_t numberOfMipmaps = 1;
-		while ((width > 1) && (height > 1))
-		{
-			width  = MAX(width / 2,  static_cast<uint32_t>(1));
-			height = MAX(height / 2, static_cast<uint32_t>(1));
-			++numberOfMipmaps;
-		}
-		return numberOfMipmaps;
-
-		#undef MAX
+		return static_cast<uint32_t>(1 + std::floor(std::log2(std::max(width, height))));
 	}
 
 

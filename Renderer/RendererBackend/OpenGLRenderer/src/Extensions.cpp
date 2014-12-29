@@ -630,6 +630,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glTextureImage3DEXT)
 			IMPORT_FUNC(glTextureParameteriEXT)
 			IMPORT_FUNC(glGenerateTextureMipmapEXT)
+			IMPORT_FUNC(glCompressedTextureImage2DEXT)
 			IMPORT_FUNC(glVertexArrayVertexAttribOffsetEXT)
 			IMPORT_FUNC(glEnableVertexArrayAttribEXT)
 			IMPORT_FUNC(glBindMultiTextureEXT)

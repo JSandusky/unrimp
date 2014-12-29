@@ -54,8 +54,8 @@ namespace OpenGLRenderer
 		// Upload the base map of the texture (mipmaps are automatically created as soon as the base map is changed)
 		glTextureImage3DEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT, 0, static_cast<GLint>(Mapping::getOpenGLInternalFormat(textureFormat)), static_cast<GLsizei>(width), static_cast<GLsizei>(height), static_cast<GLsizei>(numberOfSlices), 0, Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), data);
 
-		// Build mipmaps automatically on the GPU?
-		if (flags & Renderer::TextureFlag::MIPMAPS)
+		// Build mipmaps automatically on the GPU? (or GPU driver)
+		if (flags & Renderer::TextureFlag::GENERATE_MIPMAPS)
 		{
 			glGenerateTextureMipmapEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT);
 			glTextureParameteriEXT(mOpenGLTexture, GL_TEXTURE_2D_ARRAY_EXT, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);

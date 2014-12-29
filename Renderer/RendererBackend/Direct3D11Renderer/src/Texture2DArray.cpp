@@ -46,7 +46,7 @@ namespace Direct3D11Renderer
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D11Renderer)
 
 		// Generate mipmaps?
-		const bool mipmaps = (flags & Renderer::TextureFlag::MIPMAPS);
+		const bool mipmaps = (flags & Renderer::TextureFlag::GENERATE_MIPMAPS) != 0;
 
 		// Direct3D 11 2D array texture description
 		D3D11_TEXTURE2D_DESC d3d11Texture2DDesc;
@@ -81,8 +81,8 @@ namespace Direct3D11Renderer
 			if (nullptr != data)
 			{
 				{ // Update Direct3D 11 subresource data of the base-map
-					const uint32_t  bytesPerRow   = width * Mapping::getDirect3D11Size(textureFormat);
-					const uint32_t  bytesPerSlice = bytesPerRow * height;
+					const uint32_t  bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
+					const uint32_t  bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
 					const uint8_t  *dataCurrent   = static_cast<uint8_t*>(data);
 					for (uint32_t arraySlice = 0; arraySlice < numberOfSlices; ++arraySlice, dataCurrent += bytesPerSlice)
 					{
@@ -99,7 +99,7 @@ namespace Direct3D11Renderer
 
 			// Direct3D 11 shader resource view description
 			D3D11_SHADER_RESOURCE_VIEW_DESC d3d11ShaderResourceViewDesc;
-			::ZeroMemory(&d3d11ShaderResourceViewDesc, sizeof(d3d11ShaderResourceViewDesc));
+			::ZeroMemory(&d3d11ShaderResourceViewDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 			d3d11ShaderResourceViewDesc.Format							= d3d11Texture2DDesc.Format;
 			d3d11ShaderResourceViewDesc.ViewDimension					= D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 			d3d11ShaderResourceViewDesc.Texture2DArray.MipLevels		= numberOfMipmaps;

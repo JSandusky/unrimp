@@ -112,6 +112,7 @@ namespace RendererToolkit
 			virtual ~NvttAssertHandler()
 			{
 				nv::debug::resetAssertHandler();
+				nv::debug::disableSigHandler();
 			}
 
 
@@ -372,6 +373,10 @@ namespace RendererToolkit
 		{
 			throw std::exception("Could not load input texture");
 		}
+
+		// DDS textures will be y-flipped
+		// -> We don't want to care about something like this during runtime, so take care of it during asset compile time
+		image.flipY();
 
 		// Setup compression options, use the highest quality which makes sense
 		// -> NVTT documentation says:

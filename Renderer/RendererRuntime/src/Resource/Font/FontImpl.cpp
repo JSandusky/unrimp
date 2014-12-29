@@ -95,7 +95,7 @@ namespace RendererRuntime
 					RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&mRendererRuntimeImpl->getRenderer())
 
 					// Create the glyph texture atlas and add our internal reference
-					mTexture2D = mRendererRuntimeImpl->getRenderer().createTexture2D(mGlyphTextureAtlasSizeX, mGlyphTextureAtlasSizeY, Renderer::TextureFormat::A8, glyphTextureAtlasData, Renderer::TextureFlag::MIPMAPS);
+					mTexture2D = mRendererRuntimeImpl->getRenderer().createTexture2D(mGlyphTextureAtlasSizeX, mGlyphTextureAtlasSizeY, Renderer::TextureFormat::A8, glyphTextureAtlasData, Renderer::TextureFlag::GENERATE_MIPMAPS);
 					if (nullptr != mTexture2D)
 					{
 						RENDERER_SET_RESOURCE_DEBUG_NAME(mTexture2D, filename)

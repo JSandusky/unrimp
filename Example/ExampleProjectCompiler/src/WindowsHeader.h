@@ -108,3 +108,6 @@ __pragma(warning(disable: 4668))	// warning C4668: '<x>' is not defined as a pre
 	#include <windows.h>
 	#undef DrawText
 __pragma(warning(pop))
+
+// Get rid of some nasty OS macros
+#undef max

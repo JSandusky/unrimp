@@ -191,18 +191,6 @@ namespace Direct3D9Renderer
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    "Renderer::TextureFormat" to Direct3D 9 size (in bytes)
-		*
-		*  @param[in] textureFormat
-		*    "Renderer::TextureFormat" to map
-		*
-		*  @return
-		*    Direct3D 9 size (in bytes, type "UINT" not used in here in order to keep the header slim)
-		*/
-		static uint32_t getDirect3D9Size(Renderer::TextureFormat::Enum textureFormat);
-
-		/**
-		*  @brief
 		*    "Renderer::TextureFormat" to Direct3D 9 format
 		*
 		*  @param[in] textureFormat

@@ -100,7 +100,7 @@ namespace Direct3D9Renderer
 				// Set up the structure used to create the D3DDevice instance
 				// -> It appears that receiving and manually accessing the automatic depth stencil surface instance is not possible, so, we don't use the automatic depth stencil thing
 				D3DPRESENT_PARAMETERS d3dPresentParameters;
-				::ZeroMemory(&d3dPresentParameters, sizeof(d3dPresentParameters));
+				::ZeroMemory(&d3dPresentParameters, sizeof(D3DPRESENT_PARAMETERS));
 				d3dPresentParameters.BackBufferWidth		= 1;
 				d3dPresentParameters.BackBufferHeight		= 1;
 				d3dPresentParameters.BackBufferCount		= 1;
