@@ -43,7 +43,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	IFont* FontResourceSerializer::loadFont(std::ifstream& ifstream)
+	IFont* FontResourceSerializer::loadFont(std::istream& istream)
 	{
 		FontImpl* fontImpl = new FontImpl(mRendererRuntimeImpl);
 
@@ -62,7 +62,7 @@ namespace RendererRuntime
 			uint32_t glyphTextureAtlasSizeY;
 		};
 		FontHeader fontHeader;
-		ifstream.read(reinterpret_cast<char*>(&fontHeader), sizeof(FontHeader));
+		istream.read(reinterpret_cast<char*>(&fontHeader), sizeof(FontHeader));
 		fontImpl->mSize						= fontHeader.size;
 		fontImpl->mResolution				= fontHeader.resolution;
 		fontImpl->mAscender					= fontHeader.ascender;
@@ -74,13 +74,13 @@ namespace RendererRuntime
 
 		// Read in the font glyphs
 		fontImpl->mFontGlyphs = new FontImpl::FontGlyphTexture[fontImpl->mNumberOfFontGlyphs];
-		ifstream.read(reinterpret_cast<char*>(fontImpl->mFontGlyphs), sizeof(FontImpl::FontGlyphTexture) * fontImpl->mNumberOfFontGlyphs);
+		istream.read(reinterpret_cast<char*>(fontImpl->mFontGlyphs), sizeof(FontImpl::FontGlyphTexture) * fontImpl->mNumberOfFontGlyphs);
 
 		{ // Read in the font data
 			// Allocate memory for the glyph texture atlas and read in the data
 			const uint32_t totalNumberOfBytes = fontHeader.glyphTextureAtlasSizeX * fontHeader.glyphTextureAtlasSizeY; // Alpha, one byte
 			uint8_t* glyphTextureAtlasData = new uint8_t[totalNumberOfBytes];
-			ifstream.read(reinterpret_cast<char*>(glyphTextureAtlasData), totalNumberOfBytes);
+			istream.read(reinterpret_cast<char*>(glyphTextureAtlasData), totalNumberOfBytes);
 
 			{ // Renderer related part
 				// Begin debug event

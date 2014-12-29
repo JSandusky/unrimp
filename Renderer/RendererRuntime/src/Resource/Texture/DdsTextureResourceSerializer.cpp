@@ -125,7 +125,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	Renderer::ITexture* DdsTextureResourceSerializer::loadDdsTexture(std::ifstream& ifstream)
+	Renderer::ITexture* DdsTextureResourceSerializer::loadDdsTexture(std::istream& istream)
 	{
 		Renderer::ITexture2D* texture2D = nullptr;
 
@@ -133,7 +133,7 @@ namespace RendererRuntime
 
 		// Read the header
 		detail::DdsHeader ddsHeader;
-		ifstream.read(reinterpret_cast<char*>(&ddsHeader), sizeof(detail::DdsHeader));
+		istream.read(reinterpret_cast<char*>(&ddsHeader), sizeof(detail::DdsHeader));
 		if (ddsHeader.magic[0] == 'D' && ddsHeader.magic[1] == 'D' && ddsHeader.magic[2] == 'S' && ddsHeader.magic[3] == ' ' &&
 			// Note that if "size" is "DDS " this is not a valid dds file according
 			// to the file spec. Some broken tool out there seems to produce files
@@ -158,7 +158,7 @@ namespace RendererRuntime
 				{
 					// Read the DX10 header
 					detail::DdsHeaderDX10 ddsHeaderDX10;
-					ifstream.read(reinterpret_cast<char*>(&ddsHeaderDX10), sizeof(detail::DdsHeaderDX10));
+					istream.read(reinterpret_cast<char*>(&ddsHeaderDX10), sizeof(detail::DdsHeaderDX10));
 
 					// Get the color format and compression
 					switch (ddsHeaderDX10.DXGIFormat)
@@ -479,7 +479,7 @@ namespace RendererRuntime
 				// TODO(co)
 				// A simple one: Just read in the whole compressed data
 				uint8_t* tempDataTest = new uint8_t[compressedSize];
-				ifstream.read(reinterpret_cast<char*>(tempDataTest), compressedSize);
+				istream.read(reinterpret_cast<char*>(tempDataTest), compressedSize);
 
 				// Create the texture instance
 				texture2D = mRendererRuntime.getRenderer().createTexture2D(ddsHeader.width, ddsHeader.height, Renderer::TextureFormat::BC1, tempDataTest, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);

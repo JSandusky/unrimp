@@ -48,7 +48,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	Mesh* MeshResourceSerializer::loadMesh(Renderer::IProgram& program, std::ifstream& ifstream)
+	Mesh* MeshResourceSerializer::loadMesh(Renderer::IProgram& program, std::istream& istream)
 	{
 		Mesh* mesh = new Mesh();
 
@@ -64,7 +64,7 @@ namespace RendererRuntime
 			uint8_t  numberOfVertexArrayAttributes;
 		};
 		MeshHeader meshHeader;
-		ifstream.read(reinterpret_cast<char*>(&meshHeader), sizeof(MeshHeader));
+		istream.read(reinterpret_cast<char*>(&meshHeader), sizeof(MeshHeader));
 		mesh->mNumberOfVertices = meshHeader.numberOfVertices;
 		mesh->mNumberOfIndices  = meshHeader.numberOfIndices;
 
@@ -73,8 +73,8 @@ namespace RendererRuntime
 		uint16_t *indexBufferData = new uint16_t[mesh->mNumberOfIndices];
 
 		// Read in the vertex and index buffer
-		ifstream.read(reinterpret_cast<char*>(vertexBufferData), meshHeader.numberOfBytesPerVertex * mesh->mNumberOfVertices);
-		ifstream.read(reinterpret_cast<char*>(indexBufferData), sizeof(uint16_t) * mesh->mNumberOfIndices);
+		istream.read(reinterpret_cast<char*>(vertexBufferData), meshHeader.numberOfBytesPerVertex * mesh->mNumberOfVertices);
+		istream.read(reinterpret_cast<char*>(indexBufferData), sizeof(uint16_t) * mesh->mNumberOfIndices);
 
 		{ // Create vertex array object (VAO)
 			// Get the used renderer instance
@@ -100,7 +100,7 @@ namespace RendererRuntime
 			// Read in the vertex array attributes
 			VertexArrayAttribute *vertexArrayFromFile = new VertexArrayAttribute[meshHeader.numberOfVertexArrayAttributes];
 			Renderer::VertexArrayAttribute *vertexArray = new Renderer::VertexArrayAttribute[meshHeader.numberOfVertexArrayAttributes];
-			ifstream.read(reinterpret_cast<char*>(vertexArrayFromFile), sizeof(VertexArrayAttribute) * meshHeader.numberOfVertexArrayAttributes);
+			istream.read(reinterpret_cast<char*>(vertexArrayFromFile), sizeof(VertexArrayAttribute) * meshHeader.numberOfVertexArrayAttributes);
 			for (uint32_t i = 0; i < meshHeader.numberOfVertexArrayAttributes; i++)
 			{
 				const VertexArrayAttribute &currentVertexArrayFromFile = vertexArrayFromFile[i];

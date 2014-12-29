@@ -67,7 +67,7 @@ namespace RendererRuntime
 
 	// TODO(co) Work-in-progress
 	public:
-		Renderer::ITexture* loadDdsTexture(std::ifstream& ifstream);
+		Renderer::ITexture* loadDdsTexture(std::istream& istream);
 
 
 	//[-------------------------------------------------------]

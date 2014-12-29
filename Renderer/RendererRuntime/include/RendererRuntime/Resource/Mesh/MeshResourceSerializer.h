@@ -68,7 +68,7 @@ namespace RendererRuntime
 
 	// TODO(co) Work-in-progress
 	public:
-		Mesh* loadMesh(Renderer::IProgram& program, std::ifstream& ifstream);
+		Mesh* loadMesh(Renderer::IProgram& program, std::istream& istream);
 
 
 	//[-------------------------------------------------------]

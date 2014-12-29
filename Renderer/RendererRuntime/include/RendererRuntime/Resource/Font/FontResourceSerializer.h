@@ -64,7 +64,7 @@ namespace RendererRuntime
 
 	// TODO(co) Work-in-progress
 	public:
-		IFont* loadFont(std::ifstream& ifstream);
+		IFont* loadFont(std::istream& istream);
 
 
 	//[-------------------------------------------------------]
