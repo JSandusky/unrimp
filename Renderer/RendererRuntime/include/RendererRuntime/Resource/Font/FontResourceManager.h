@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -45,13 +54,26 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-	protected:
-		FontResourceManager();
+		friend class RendererRuntimeImpl;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		FontResourceManager(IRendererRuntime& rendererRuntime);
 		~FontResourceManager();
 		FontResourceManager(const FontResourceManager&) = delete;
 		FontResourceManager& operator=(const FontResourceManager&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 
 
 	};

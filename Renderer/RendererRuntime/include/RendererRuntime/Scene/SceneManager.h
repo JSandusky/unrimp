@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -45,13 +54,26 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-	protected:
-		SceneManager();
+		friend class RendererRuntimeImpl;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		SceneManager(IRendererRuntime& rendererRuntime);
 		~SceneManager();
 		SceneManager(const SceneManager&) = delete;
 		SceneManager& operator=(const SceneManager&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 
 
 	};

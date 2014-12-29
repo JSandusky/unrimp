@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -45,13 +54,26 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-	protected:
-		MaterialResourceManager();
+		friend class RendererRuntimeImpl;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		MaterialResourceManager(IRendererRuntime& rendererRuntime);
 		~MaterialResourceManager();
 		MaterialResourceManager(const MaterialResourceManager&) = delete;
 		MaterialResourceManager& operator=(const MaterialResourceManager&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 
 
 	};

@@ -38,9 +38,10 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	MeshResourceManager::MeshResourceManager()
+	MeshResourceManager::MeshResourceManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing in here
 	}

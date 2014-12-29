@@ -38,9 +38,10 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	FontResourceManager::FontResourceManager()
+	FontResourceManager::FontResourceManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing in here
 	}

@@ -33,14 +33,44 @@ namespace RendererRuntime
 		// Nothing to do in here
 	}
 
-	inline Renderer::IRenderer &IRendererRuntime::getRenderer() const
+	inline Renderer::IRenderer& IRendererRuntime::getRenderer() const
 	{
 		return *mRenderer;
 	}
 
-	inline TextureResourceManager &IRendererRuntime::getTextureResourceManager() const
+	inline AssetManager& IRendererRuntime::getAssetManager() const
+	{
+		return *mAssetManager;
+	}
+
+	inline CompositorManager& IRendererRuntime::getCompositorManager() const
+	{
+		return *mCompositorManager;
+	}
+
+	inline SceneManager& IRendererRuntime::getSceneManager() const
+	{
+		return *mSceneManager;
+	}
+
+	inline FontResourceManager& IRendererRuntime::getFontResourceManager() const
+	{
+		return *mFontResourceManager;
+	}
+
+	inline TextureResourceManager& IRendererRuntime::getTextureResourceManager() const
 	{
 		return *mTextureResourceManager;
+	}
+
+	inline MaterialResourceManager& IRendererRuntime::getMaterialResourceManager() const
+	{
+		return *mMaterialResourceManager;
+	}
+
+	inline MeshResourceManager& IRendererRuntime::getMeshResourceManager() const
+	{
+		return *mMeshResourceManager;
 	}
 
 
@@ -49,14 +79,30 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline IRendererRuntime::IRendererRuntime() :
 		mRenderer(nullptr),
-		mTextureResourceManager(nullptr)
+		// Managers
+		mAssetManager(nullptr),
+		mCompositorManager(nullptr),
+		mSceneManager(nullptr),
+		// Resource managers
+		mFontResourceManager(nullptr),
+		mTextureResourceManager(nullptr),
+		mMaterialResourceManager(nullptr),
+		mMeshResourceManager(nullptr)
 	{
 		// Nothing to do in here
 	}
 
 	inline IRendererRuntime::IRendererRuntime(const IRendererRuntime &) :
 		mRenderer(nullptr),
-		mTextureResourceManager(nullptr)
+		// Managers
+		mAssetManager(nullptr),
+		mCompositorManager(nullptr),
+		mSceneManager(nullptr),
+		// Resource managers
+		mFontResourceManager(nullptr),
+		mTextureResourceManager(nullptr),
+		mMaterialResourceManager(nullptr),
+		mMeshResourceManager(nullptr)
 	{
 		// Not supported
 	}

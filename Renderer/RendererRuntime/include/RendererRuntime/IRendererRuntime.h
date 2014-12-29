@@ -42,7 +42,14 @@ namespace Renderer
 namespace RendererRuntime
 {
 	class IFont;
+	class AssetManager;
+	class SceneManager;
+	class IRendererRuntime;
+	class CompositorManager;
+	class FontResourceManager;
+	class MeshResourceManager;
 	class TextureResourceManager;
+	class MaterialResourceManager;
 }
 
 
@@ -81,11 +88,50 @@ namespace RendererRuntime
 		*  @return
 		*    The used renderer instance, do not release the returned instance unless you added an own reference to it
 		*/
-		inline Renderer::IRenderer &getRenderer() const;
+		inline Renderer::IRenderer& getRenderer() const;
+
+		//[-------------------------------------------------------]
+		//[ Managers                                              ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the asset manager instance
+		*
+		*  @return
+		*    The asset manager instance, do not release the returned instance
+		*/
+		inline AssetManager& getAssetManager() const;
+
+		/**
+		*  @brief
+		*    Return the compositor manager instance
+		*
+		*  @return
+		*    The compositor manager instance, do not release the returned instance
+		*/
+		inline CompositorManager& getCompositorManager() const;
+
+		/**
+		*  @brief
+		*    Return the scene manager instance
+		*
+		*  @return
+		*    The scene manager instance, do not release the returned instance
+		*/
+		inline SceneManager& getSceneManager() const;
 
 		//[-------------------------------------------------------]
 		//[ Resource managers                                     ]
 		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the font resource manager instance
+		*
+		*  @return
+		*    The font resource manager instance, do not release the returned instance
+		*/
+		inline FontResourceManager& getFontResourceManager() const;
+
 		/**
 		*  @brief
 		*    Return the texture resource manager instance
@@ -93,7 +139,25 @@ namespace RendererRuntime
 		*  @return
 		*    The texture resource manager instance, do not release the returned instance
 		*/
-		inline TextureResourceManager &getTextureResourceManager() const;
+		inline TextureResourceManager& getTextureResourceManager() const;
+
+		/**
+		*  @brief
+		*    Return the material resource manager instance
+		*
+		*  @return
+		*    The material resource manager instance, do not release the returned instance
+		*/
+		inline MaterialResourceManager& getMaterialResourceManager() const;
+
+		/**
+		*  @brief
+		*    Return the mesh resource manager instance
+		*
+		*  @return
+		*    The mesh resource manager instance, do not release the returned instance
+		*/
+		inline MeshResourceManager& getMeshResourceManager() const;
 
 
 	//[-------------------------------------------------------]
@@ -149,8 +213,16 @@ namespace RendererRuntime
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		Renderer::IRenderer    *mRenderer;					///< The used renderer instance (we keep a reference to it), always valid
-		TextureResourceManager *mTextureResourceManager;	///< The texture resource manager instance, always valid, we have to destroy the instance if we no longer need it
+		Renderer::IRenderer* mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
+		// Managers
+		AssetManager*	   mAssetManager;
+		CompositorManager* mCompositorManager;
+		SceneManager*	   mSceneManager;
+		// Resource managers
+		FontResourceManager*	 mFontResourceManager;
+		TextureResourceManager*	 mTextureResourceManager;
+		MaterialResourceManager* mMaterialResourceManager;
+		MeshResourceManager*	 mMeshResourceManager;
 
 
 	};

@@ -38,9 +38,10 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	CompositorManager::CompositorManager()
+	CompositorManager::CompositorManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing in here
 	}

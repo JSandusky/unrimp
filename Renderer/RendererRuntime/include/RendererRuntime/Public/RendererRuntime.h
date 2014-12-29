@@ -41,8 +41,14 @@
 namespace RendererRuntime
 {
 	class IFont;
+	class AssetManager;
+	class SceneManager;
 	class IRendererRuntime;
+	class CompositorManager;
+	class FontResourceManager;
+	class MeshResourceManager;
 	class TextureResourceManager;
+	class MaterialResourceManager;
 }
 
 
@@ -61,13 +67,37 @@ namespace RendererRuntime
 	{
 	public:
 		virtual ~IRendererRuntime();
-		inline Renderer::IRenderer &getRenderer() const
+		inline Renderer::IRenderer& getRenderer() const
 		{
 			return *mRenderer;
 		}
-		inline TextureResourceManager &getTextureResourceManager() const
+		inline AssetManager& getAssetManager() const
+		{
+			return *mAssetManager;
+		}
+		inline CompositorManager& getCompositorManager() const
+		{
+			return *mCompositorManager;
+		}
+		inline SceneManager& getSceneManager() const
+		{
+			return *mSceneManager;
+		}
+		inline FontResourceManager& getFontResourceManager() const
+		{
+			return *mFontResourceManager;
+		}
+		inline TextureResourceManager& getTextureResourceManager() const
 		{
 			return *mTextureResourceManager;
+		}
+		inline MaterialResourceManager& getMaterialResourceManager() const
+		{
+			return *mMaterialResourceManager;
+		}
+		inline MeshResourceManager& getMeshResourceManager() const
+		{
+			return *mMeshResourceManager;
 		}
 	public:
 		virtual IFont *createFont(const char *filename) = 0;
@@ -76,8 +106,14 @@ namespace RendererRuntime
 		explicit IRendererRuntime(const IRendererRuntime &source);
 		IRendererRuntime &operator =(const IRendererRuntime &source);
 	private:
-		Renderer::IRenderer    *mRenderer;
-		TextureResourceManager *mTextureResourceManager;
+		Renderer::IRenderer*	 mRenderer;
+		AssetManager*			 mAssetManager;
+		CompositorManager*		 mCompositorManager;
+		SceneManager*			 mSceneManager;
+		FontResourceManager*	 mFontResourceManager;
+		TextureResourceManager*	 mTextureResourceManager;
+		MaterialResourceManager* mMaterialResourceManager;
+		MeshResourceManager*	 mMeshResourceManager;
 	};
 	typedef Renderer::SmartRefCount<IRendererRuntime> IRendererRuntimePtr;
 

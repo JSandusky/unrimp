@@ -38,9 +38,10 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	MaterialResourceManager::MaterialResourceManager()
+	MaterialResourceManager::MaterialResourceManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing in here
 	}

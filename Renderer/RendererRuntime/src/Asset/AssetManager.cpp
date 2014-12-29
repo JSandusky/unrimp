@@ -40,7 +40,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	AssetManager::AssetManager()
+	AssetManager::AssetManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing in here
 	}

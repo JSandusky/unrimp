@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -45,13 +54,26 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-	protected:
-		CompositorManager();
+		friend class RendererRuntimeImpl;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		CompositorManager(IRendererRuntime& rendererRuntime);
 		~CompositorManager();
 		CompositorManager(const CompositorManager&) = delete;
 		CompositorManager& operator=(const CompositorManager&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 
 
 	};

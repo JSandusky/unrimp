@@ -23,7 +23,14 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/RendererRuntimeImpl.h"
 #include "RendererRuntime/Resource/Font/FontImpl.h"
+#include "RendererRuntime/asset/AssetManager.h"
+#include "RendererRuntime/scene/SceneManager.h"
+#include "RendererRuntime/compositor/CompositorManager.h"
+#include "RendererRuntime/Resource/Font/FontResourceManager.h"
+#include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+
 #include "RendererRuntime/Export.h"
 
 #include <string.h>	// For "strcmp()"
@@ -63,8 +70,16 @@ namespace RendererRuntime
 		// Add our renderer reference
 		mRenderer->addReference();
 
-		// Create the texture resource manager instance
+		// Create the manager instances
+		mAssetManager = new AssetManager(*this);
+		mCompositorManager = new CompositorManager(*this);
+		mSceneManager = new SceneManager(*this);
+
+		// Create the resource manager instances
+		mFontResourceManager = new FontResourceManager(*this);
 		mTextureResourceManager = new TextureResourceManager(*this);
+		mMaterialResourceManager = new MaterialResourceManager(*this);
+		mMeshResourceManager = new MeshResourceManager(*this);
 	}
 
 	RendererRuntimeImpl::~RendererRuntimeImpl()
@@ -105,8 +120,16 @@ namespace RendererRuntime
 			mFontProgram->release();
 		}
 
-		// Destroy the texture resource manager instance
+		// Destroy the manager instances
+		delete mAssetManager;
+		delete mCompositorManager;
+		delete mSceneManager;
+
+		// Destroy the resource manager instances
+		delete mFontResourceManager;
 		delete mTextureResourceManager;
+		delete mMaterialResourceManager;
+		delete mMeshResourceManager;
 
 		// Release our renderer reference
 		mRenderer->release();
