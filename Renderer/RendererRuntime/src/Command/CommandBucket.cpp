@@ -18,10 +18,13 @@
 \*********************************************************/
 
 
+// TODO(co) Work in progress
+
+
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Scene/SceneManager.h"
+#include "RendererRuntime/Command/CommandBucket.h"
 
 
 //[-------------------------------------------------------]
@@ -31,18 +34,51 @@ namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	SceneManager::SceneManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+	namespace BackendDispatch
 	{
-		// Nothing in here
-	}
+		void Draw(const void* data, Renderer::IRenderer& renderer)
+		{
+			const Command::Draw* realData = static_cast<const Command::Draw*>(data);
 
-	SceneManager::~SceneManager()
+			// Input-assembler (IA) stage
+			renderer.iaSetVertexArray(realData->iaVertexArray);
+			renderer.iaSetPrimitiveTopology(realData->iaPrimitiveTopology);
+
+			// Material
+			realData->material->bind(renderer);
+
+			// Draw call specific
+			renderer.draw(realData->startVertexLocation, realData->numberOfVertices);
+		}
+
+		void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
+		{
+			const Command::DrawIndexed* realData = static_cast<const Command::DrawIndexed*>(data);
+
+			// Input-assembler (IA) stage
+			renderer.iaSetVertexArray(realData->iaVertexArray);
+			renderer.iaSetPrimitiveTopology(realData->iaPrimitiveTopology);
+
+			// Material
+			realData->material->bind(renderer);
+
+			// Draw call specific
+			renderer.drawIndexed(realData->startIndexLocation, realData->numberOfIndices, realData->baseVertexLocation, 0, UINT32_MAX);
+		}
+
+		void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
+		{
+			const Command::CopyUniformBufferData* realData = static_cast<const Command::CopyUniformBufferData*>(data);
+
+			// Copy data into the uniform buffer
+			realData->uniformBufferDynamicVs->copyDataFrom(realData->size, realData->data);
+		}
+	}
+	namespace Command
 	{
-		// Nothing in here
+		const BackendDispatchFunction Draw::DISPATCH_FUNCTION = &BackendDispatch::Draw;
+		const BackendDispatchFunction DrawIndexed::DISPATCH_FUNCTION = &BackendDispatch::DrawIndexed;
+		const BackendDispatchFunction CopyUniformBufferData::DISPATCH_FUNCTION = &BackendDispatch::CopyUniformBufferData;
 	}
 
 

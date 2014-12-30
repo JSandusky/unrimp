@@ -245,15 +245,6 @@ copy "..\..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\..\bin\$(Pl
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Renderer\RendererToolkit\src\AssetCompiler\tif_win32.cpp">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level3</WarningLevel>
-      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">false</TreatWarningAsError>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level3</WarningLevel>
-      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">false</TreatWarningAsError>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level3</WarningLevel>
-      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">false</TreatWarningAsError>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level3</WarningLevel>
-    </ClCompile>
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>

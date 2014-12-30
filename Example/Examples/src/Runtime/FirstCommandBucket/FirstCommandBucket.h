@@ -28,7 +28,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRendererRuntime.h"
-#include "CommandBucket.h"
+
+#include <RendererRuntime/Command/CommandBucket.h>
 
 
 //[-------------------------------------------------------]
@@ -93,8 +94,8 @@ private:
 	Renderer::IVertexArrayPtr	mSolidVertexArray;
 	Renderer::IVertexArrayPtr	mTransparentVertexArray;
 	// Materials
-	Material mSolidMaterial;
-	Material mTransparentMaterial;
+	RendererRuntime::Material mSolidMaterial;
+	RendererRuntime::Material mTransparentMaterial;
 
 
 };

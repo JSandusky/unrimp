@@ -160,7 +160,7 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\;..\..\External\libtiff\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_USRDLL;RENDERERTOOLKIT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -236,7 +236,7 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\;..\..\External\libtiff\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_USRDLL;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

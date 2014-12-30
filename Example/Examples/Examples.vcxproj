@@ -353,7 +353,6 @@ copy "..\..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\..\bin\$(Pl
     <ClInclude Include="src\Framework\X11Application.h" />
     <ClInclude Include="src\Framework\X11Window.h" />
     <ClInclude Include="src\PrecompiledHeader.h" />
-    <ClInclude Include="src\Runtime\FirstCommandBucket\CommandBucket.h" />
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket.h" />
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_110.h" />
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_140.h" />
@@ -361,7 +360,6 @@ copy "..\..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\..\bin\$(Pl
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D10_D3D11.h" />
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D9.h" />
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_Null.h" />
-    <ClInclude Include="src\Runtime\FirstCommandBucket\Material.h" />
     <ClInclude Include="src\Runtime\FirstCompositor\FirstCompositor.h" />
     <ClInclude Include="src\Runtime\FirstFont\FirstFont.h" />
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh.h" />

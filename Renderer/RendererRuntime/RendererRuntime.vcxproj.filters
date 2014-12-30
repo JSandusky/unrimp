@@ -159,6 +159,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceSerializer.h">
       <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Command\CommandBucket.h">
+      <Filter>Source Files\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Command\Material.h">
+      <Filter>Source Files\Command</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererRuntimeImpl.cpp">
@@ -199,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Font\FontResourceSerializer.cpp">
       <Filter>Source Files\Resource\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Command\CommandBucket.cpp">
+      <Filter>Source Files\Command</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -67,7 +67,7 @@ namespace RendererRuntime
 
 	// TODO(co) Work-in-progress
 	public:
-		GENERIC_API_EXPORT Renderer::ITexture* loadDdsTexture(const char* filename);
+		RENDERERRUNTIME_API_EXPORT Renderer::ITexture* loadDdsTexture(const char* filename);
 
 
 	//[-------------------------------------------------------]

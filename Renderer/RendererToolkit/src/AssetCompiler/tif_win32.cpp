@@ -31,12 +31,11 @@
  * TIFF Library Win32-specific Routines.  Adapted from tif_unix.c 4/5/95 by
  * Scott Wagner (wagner@itek.com), Itek Graphix, Rochester, NY USA
  */
-// NOTE(co) Changed into
-#ifndef SHARED_LIBRARIES
-
-
 #include "RendererToolkit/WindowsHeader.h"
 
+#ifdef SHARED_LIBRARIES
+	#define BUILD_LIBTIFF_DLL
+#endif
 #include <libtiff/tiffiop.h>
 // Was
 // #include "tiffiop.h"
@@ -407,6 +406,3 @@ Win32ErrorHandler(const char* module, const char* fmt, va_list ap)
 TIFFErrorHandler _TIFFerrorHandler = Win32ErrorHandler;
 
 /* vim: set ts=8 sts=8 sw=8 noet: */
-
-
-#endif // SHARED_LIBRARIES

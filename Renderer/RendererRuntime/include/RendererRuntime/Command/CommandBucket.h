@@ -23,16 +23,23 @@
 
 // Basing on
 // http://molecularmusings.wordpress.com/2014/11/06/stateless-layered-multi-threaded-rendering-part-1/ - "Stateless, layered, multi-threaded rendering – Part 1"
-// http://molecularmusings.wordpress.com/2014/11/06/stateless-layered-multi-threaded-rendering-part-2/ - "Stateless, layered, multi-threaded rendering – Part 2"
-// http://molecularmusings.wordpress.com/2014/11/06/stateless-layered-multi-threaded-rendering-part-3/ - "Stateless, layered, multi-threaded rendering – Part 3"
+// http://molecularmusings.wordpress.com/2014/11/13/stateless-layered-multi-threaded-rendering-part-2-stateless-api-design/ - "Stateless, layered, multi-threaded rendering – Part 2"
+// http://molecularmusings.wordpress.com/2014/12/16/stateless-layered-multi-threaded-rendering-part-3-api-design-details/ - "Stateless, layered, multi-threaded rendering – Part 3"
 // http://realtimecollisiondetection.net/blog/?p=86 - "Order your graphics draw calls around!"
 
 
-#include "Material.h"
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Command/Material.h"
+
+#include <type_traits>
 
 
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
 
 	typedef void (*BackendDispatchFunction)(const void*, Renderer::IRenderer& renderer);
 
@@ -125,7 +132,7 @@ namespace RendererRuntime
 	{
 		struct Draw
 		{
-			static const BackendDispatchFunction DISPATCH_FUNCTION;
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 
 			// Input-assembler (IA) stage
 			Renderer::IVertexArray*			  iaVertexArray;
@@ -140,7 +147,7 @@ namespace RendererRuntime
 
 		struct DrawIndexed
 		{
-			static const BackendDispatchFunction DISPATCH_FUNCTION;
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 
 			// Input-assembler (IA) stage
 			Renderer::IVertexArray*			  iaVertexArray;
@@ -156,7 +163,7 @@ namespace RendererRuntime
 
 		struct CopyUniformBufferData
 		{
-			static const BackendDispatchFunction DISPATCH_FUNCTION;
+			RENDERERRUNTIME_API_EXPORT static const BackendDispatchFunction DISPATCH_FUNCTION;
 
 			Renderer::IUniformBuffer* uniformBufferDynamicVs;
 			uint32_t size;
@@ -269,4 +276,7 @@ namespace RendererRuntime
 
 
 
-}
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // RendererRuntime

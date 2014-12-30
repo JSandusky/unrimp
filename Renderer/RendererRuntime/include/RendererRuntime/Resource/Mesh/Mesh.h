@@ -70,13 +70,13 @@ namespace RendererRuntime
 		*  @brief
 		*    Destructor
 		*/
-		GENERIC_API_EXPORT virtual ~Mesh();
+		RENDERERRUNTIME_API_EXPORT virtual ~Mesh();
 
 		/**
 		*  @brief
 		*    Draw the mesh
 		*/
-		GENERIC_API_EXPORT void draw();
+		RENDERERRUNTIME_API_EXPORT void draw();
 
 
 	//[-------------------------------------------------------]

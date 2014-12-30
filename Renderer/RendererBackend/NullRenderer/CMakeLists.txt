@@ -75,7 +75,7 @@ if(STATIC_LIBRARY)
 endif()
 if(SHARED_LIBRARY)
 	add_library(NullRenderer SHARED ${SOURCE_CODES})
-	set_target_properties(NullRenderer PROPERTIES COMPILE_FLAGS "-D_USRDLL -DNULLRENDERER_EXPORTS")
+	set_target_properties(NullRenderer PROPERTIES COMPILE_FLAGS "-DSHARED_LIBRARIES -DNULLRENDERER_EXPORTS")
 endif()
 
 

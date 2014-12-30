@@ -42,58 +42,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-
-namespace RendererRuntime
-{
-	namespace BackendDispatch
-	{
-		void Draw(const void* data, Renderer::IRenderer& renderer)
-		{
-			const Command::Draw* realData = static_cast<const Command::Draw*>(data);
-
-			// Input-assembler (IA) stage
-			renderer.iaSetVertexArray(realData->iaVertexArray);
-			renderer.iaSetPrimitiveTopology(realData->iaPrimitiveTopology);
-
-			// Material
-			realData->material->bind(renderer);
-
-			// Draw call specific
-			renderer.draw(realData->startVertexLocation, realData->numberOfVertices);
-		}
-
-		void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
-		{
-			const Command::DrawIndexed* realData = static_cast<const Command::DrawIndexed*>(data);
-
-			// Input-assembler (IA) stage
-			renderer.iaSetVertexArray(realData->iaVertexArray);
-			renderer.iaSetPrimitiveTopology(realData->iaPrimitiveTopology);
-
-			// Material
-			realData->material->bind(renderer);
-
-			// Draw call specific
-			renderer.drawIndexed(realData->startIndexLocation, realData->numberOfIndices, realData->baseVertexLocation, 0, UINT32_MAX);
-		}
- 
-		void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
-		{
-			const Command::CopyUniformBufferData* realData = static_cast<const Command::CopyUniformBufferData*>(data);
-
-			// Copy data into the uniform buffer
-			realData->uniformBufferDynamicVs->copyDataFrom(realData->size, realData->data);
-		}
-	}
-	namespace Command
-	{
-		const BackendDispatchFunction Draw::DISPATCH_FUNCTION = &BackendDispatch::Draw;
-		const BackendDispatchFunction DrawIndexed::DISPATCH_FUNCTION = &BackendDispatch::DrawIndexed;
-		const BackendDispatchFunction CopyUniformBufferData::DISPATCH_FUNCTION = &BackendDispatch::CopyUniformBufferData;
-	}
-}
-
-
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
@@ -294,43 +242,45 @@ void FirstCommandBucket::onDraw()
 				renderer->vsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockDynamicVs", 0), mUniformBufferDynamicVs);
 			}
 
-			// Push draw calls into different command buckets (can be done in parallel)
-			{ // Solid stuff
-				// Update uniform buffer content
-				const float offset[] = { 0.0f, 0.0f };
-				RendererRuntime::Command::CopyUniformBufferData *copyUniformBufferDataCommand = mSolidCommandBucket.addCommand<RendererRuntime::Command::CopyUniformBufferData>(42, sizeof(offset));
-				copyUniformBufferDataCommand->uniformBufferDynamicVs = mUniformBufferDynamicVs;
-				copyUniformBufferDataCommand->size = sizeof(offset);
-				copyUniformBufferDataCommand->data = RendererRuntime::commandPacket::GetAuxiliaryMemory(copyUniformBufferDataCommand);
-				memcpy(copyUniformBufferDataCommand->data, &offset, sizeof(offset));
+			{ // Push draw calls into different command buckets (can be done in parallel)
+				{ // Solid stuff
+					// Update uniform buffer content
+					const float offset[] = { 0.0f, 0.0f };
+					RendererRuntime::Command::CopyUniformBufferData *copyUniformBufferDataCommand = mSolidCommandBucket.addCommand<RendererRuntime::Command::CopyUniformBufferData>(42, sizeof(offset));
+					copyUniformBufferDataCommand->uniformBufferDynamicVs = mUniformBufferDynamicVs;
+					copyUniformBufferDataCommand->size = sizeof(offset);
+					copyUniformBufferDataCommand->data = RendererRuntime::commandPacket::GetAuxiliaryMemory(copyUniformBufferDataCommand);
+					memcpy(copyUniformBufferDataCommand->data, &offset, sizeof(offset));
 
-				// Draw call
-				RendererRuntime::Command::Draw *drawCommand = mSolidCommandBucket.appendCommand<RendererRuntime::Command::Draw>(copyUniformBufferDataCommand);
-				drawCommand->iaVertexArray		 = mSolidVertexArray;
-				drawCommand->iaPrimitiveTopology = Renderer::PrimitiveTopology::TRIANGLE_LIST;
-				drawCommand->material			 = &mSolidMaterial;
-				drawCommand->startVertexLocation = 0;
-				drawCommand->numberOfVertices	 = 3;
-			}
-			// Transparent stuff
-			for (int i = 0; i < 2; ++i)
-			{
-				// Update uniform buffer content
-				const float offset[] = { 0.25f - i * 0.5f, 0.25f - i * 0.5f };
-				RendererRuntime::Command::CopyUniformBufferData *copyUniformBufferDataCommand = mTransparentCommandBucket.addCommand<RendererRuntime::Command::CopyUniformBufferData>(42 - i, sizeof(offset));
-				copyUniformBufferDataCommand->uniformBufferDynamicVs = mUniformBufferDynamicVs;
-				copyUniformBufferDataCommand->size = sizeof(offset);
-				copyUniformBufferDataCommand->data = RendererRuntime::commandPacket::GetAuxiliaryMemory(copyUniformBufferDataCommand);
-				memcpy(copyUniformBufferDataCommand->data, &offset, sizeof(offset));
+					// Draw call
+					RendererRuntime::Command::Draw *drawCommand = mSolidCommandBucket.appendCommand<RendererRuntime::Command::Draw>(copyUniformBufferDataCommand);
+					drawCommand->iaVertexArray		 = mSolidVertexArray;
+					drawCommand->iaPrimitiveTopology = Renderer::PrimitiveTopology::TRIANGLE_LIST;
+					drawCommand->material			 = &mSolidMaterial;
+					drawCommand->startVertexLocation = 0;
+					drawCommand->numberOfVertices	 = 3;
+				}
 
-				// Draw call
-				RendererRuntime::Command::DrawIndexed *drawIndexedCommand = mTransparentCommandBucket.appendCommand<RendererRuntime::Command::DrawIndexed>(copyUniformBufferDataCommand);
-				drawIndexedCommand->iaVertexArray		= mTransparentVertexArray;
-				drawIndexedCommand->iaPrimitiveTopology = Renderer::PrimitiveTopology::TRIANGLE_LIST;
-				drawIndexedCommand->material			= &mTransparentMaterial;
-				drawIndexedCommand->startIndexLocation  = 0;
-				drawIndexedCommand->numberOfIndices		= 3;
-				drawIndexedCommand->baseVertexLocation	= 0;
+				// Transparent stuff
+				for (int i = 0; i < 2; ++i)
+				{
+					// Update uniform buffer content
+					const float offset[] = { 0.25f - i * 0.5f, 0.25f - i * 0.5f };
+					RendererRuntime::Command::CopyUniformBufferData *copyUniformBufferDataCommand = mTransparentCommandBucket.addCommand<RendererRuntime::Command::CopyUniformBufferData>(42 - i, sizeof(offset));
+					copyUniformBufferDataCommand->uniformBufferDynamicVs = mUniformBufferDynamicVs;
+					copyUniformBufferDataCommand->size = sizeof(offset);
+					copyUniformBufferDataCommand->data = RendererRuntime::commandPacket::GetAuxiliaryMemory(copyUniformBufferDataCommand);
+					memcpy(copyUniformBufferDataCommand->data, &offset, sizeof(offset));
+
+					// Draw call
+					RendererRuntime::Command::DrawIndexed *drawIndexedCommand = mTransparentCommandBucket.appendCommand<RendererRuntime::Command::DrawIndexed>(copyUniformBufferDataCommand);
+					drawIndexedCommand->iaVertexArray		= mTransparentVertexArray;
+					drawIndexedCommand->iaPrimitiveTopology = Renderer::PrimitiveTopology::TRIANGLE_LIST;
+					drawIndexedCommand->material			= &mTransparentMaterial;
+					drawIndexedCommand->startIndexLocation  = 0;
+					drawIndexedCommand->numberOfIndices		= 3;
+					drawIndexedCommand->baseVertexLocation	= 0;
+				}
 			}
 
 			// Sort command buckets by command key (can be done in parallel)

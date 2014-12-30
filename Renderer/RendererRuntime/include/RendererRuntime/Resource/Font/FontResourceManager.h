@@ -64,7 +64,7 @@ namespace RendererRuntime
 
 	// TODO(co) Work-in-progress
 	public:
-		GENERIC_API_EXPORT IFont* loadFont(const char* filename);
+		RENDERERRUNTIME_API_EXPORT IFont* loadFont(const char* filename);
 
 
 	//[-------------------------------------------------------]

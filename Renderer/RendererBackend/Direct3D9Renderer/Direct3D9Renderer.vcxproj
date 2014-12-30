@@ -184,7 +184,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_static\
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>include\;include\Direct3D9Renderer\;..\..\Renderer\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_USRDLL;D3D_DEBUG_INFO;DIRECT3D9RENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;D3D_DEBUG_INFO;DIRECT3D9RENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -246,7 +246,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_static\
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;include\Direct3D9Renderer\;..\..\Renderer\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_USRDLL;DIRECT3D9RENDERER_EXPORTS;DIRECT3D9RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;DIRECT3D9RENDERER_EXPORTS;DIRECT3D9RENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

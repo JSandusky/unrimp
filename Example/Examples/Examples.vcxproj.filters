@@ -420,9 +420,6 @@
     <ClInclude Include="src\Runtime\FirstCompositor\FirstCompositor.h">
       <Filter>Runtime\FirstCompositor</Filter>
     </ClInclude>
-    <ClInclude Include="src\Runtime\FirstCommandBucket\CommandBucket.h">
-      <Filter>Runtime\FirstCommandBucket</Filter>
-    </ClInclude>
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_ES2.h">
       <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
@@ -436,9 +433,6 @@
       <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D9.h">
-      <Filter>Runtime\FirstCommandBucket</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Runtime\FirstCommandBucket\Material.h">
       <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_140.h">

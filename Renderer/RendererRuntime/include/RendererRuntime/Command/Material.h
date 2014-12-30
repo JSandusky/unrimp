@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Scene/SceneManager.h"
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
@@ -31,19 +31,30 @@ namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	SceneManager::SceneManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+	// TODO(co) Work in progress
+	struct Material
 	{
-		// Nothing in here
-	}
+		Renderer::IProgramPtr			program;
+		Renderer::IRasterizerStatePtr	rasterizerState;	///< Rasterizer state (rasterizer stage (RS))
+		Renderer::IDepthStencilStatePtr	depthStencilState;	///< Depth stencil state (output-merger (OM) stage)
+		Renderer::IBlendStatePtr		blendState;			///< Blend state (output-merger (OM) stage)
 
-	SceneManager::~SceneManager()
-	{
-		// Nothing in here
-	}
+		void clear()
+		{
+			program = nullptr;
+			rasterizerState = nullptr;
+			depthStencilState = nullptr;
+			blendState = nullptr;
+		}
+
+		void bind(Renderer::IRenderer& renderer)
+		{
+			renderer.setProgram(program);
+			renderer.rsSetState(rasterizerState);
+			renderer.omSetDepthStencilState(depthStencilState);
+			renderer.omSetBlendState(blendState);
+		}
+	};
 
 
 //[-------------------------------------------------------]

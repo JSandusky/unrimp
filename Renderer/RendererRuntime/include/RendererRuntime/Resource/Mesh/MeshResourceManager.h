@@ -68,7 +68,7 @@ namespace RendererRuntime
 
 	// TODO(co) Work-in-progress
 	public:
-		GENERIC_API_EXPORT Mesh* loadMesh(Renderer::IProgram& program, const char* filename);
+		RENDERERRUNTIME_API_EXPORT Mesh* loadMesh(Renderer::IProgram& program, const char* filename);
 
 
 	//[-------------------------------------------------------]
