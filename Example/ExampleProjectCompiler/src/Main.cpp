@@ -38,7 +38,38 @@ int programEntryPoint()
 	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
 	if (nullptr != rendererToolkit)
 	{
-		// TODO(co) Compressed output streams
+		// Shader
+		try
+		{
+			// Input and output
+			std::ifstream ifstream("../DataSource/Shader/FirstMesh/FirstMesh_vs.hlsl", std::ios::binary);
+			std::ofstream ofstream("../DataPc/Shader/FirstMesh/FirstMesh_vs.hlsl", std::ios::binary);
+
+			// Asset compiler configuration
+			std::ifstream jsonConfiguration("../DataSource/Shader/FirstMesh/FirstMesh_vs.json", std::ios::binary);
+
+			// Compile asset
+			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createShaderAssetCompiler());
+			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+		}
+		catch (const std::exception& e)
+		{
+			const char* text = e.what();
+			int ii = 0;
+		}
+		try
+		{
+			std::ifstream ifstream("../DataSource/Shader/FirstMesh/FirstMesh_fs.hlsl", std::ios::binary);
+			std::ofstream ofstream("../DataPc/Shader/FirstMesh/FirstMesh_fs.hlsl", std::ios::binary);
+			std::ifstream jsonConfiguration("../DataSource/Shader/FirstMesh/FirstMesh_fs.json", std::ios::binary);
+			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createShaderAssetCompiler());
+			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+		}
+		catch (const std::exception& e)
+		{
+			const char* text = e.what();
+			int ii = 0;
+		}
 
 		// Font
 		try
@@ -51,8 +82,8 @@ int programEntryPoint()
 			std::ifstream jsonConfiguration("../DataSource/Font/LinBiolinum_R.json", std::ios::binary);
 
 			// Compile asset
-			RendererToolkit::IAssetCompilerPtr fontAssetCompiler(rendererToolkit->createFontAssetCompiler());
-			fontAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createFontAssetCompiler());
+			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
 		}
 		catch (const std::exception& e)
 		{
@@ -72,30 +103,30 @@ int programEntryPoint()
 				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_Diffuse.json", std::ios::binary);
 
 				// Compile asset
-				RendererToolkit::IAssetCompilerPtr textureAssetCompiler(rendererToolkit->createTextureAssetCompiler());
-				textureAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+				RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createTextureAssetCompiler());
+				assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
 			}
 
 			{
 				std::ifstream ifstream("../DataSource/Imrod/Imrod_Illumination.tga", std::ios::binary);
 				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_Illumination.dds", std::ios::binary);
 				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_Illumination.json", std::ios::binary);
-				RendererToolkit::IAssetCompilerPtr textureAssetCompiler(rendererToolkit->createTextureAssetCompiler());
-				textureAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+				RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createTextureAssetCompiler());
+				assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
 			}
 			{
 				std::ifstream ifstream("../DataSource/Imrod/Imrod_norm.tga", std::ios::binary);
 				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_norm.dds", std::ios::binary);
 				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_norm.json", std::ios::binary);
-				RendererToolkit::IAssetCompilerPtr textureAssetCompiler(rendererToolkit->createTextureAssetCompiler());
-				textureAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+				RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createTextureAssetCompiler());
+				assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
 			}
 			{
 				std::ifstream ifstream("../DataSource/Imrod/Imrod_spec.tga", std::ios::binary);
 				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_spec.dds", std::ios::binary);
 				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_spec.json", std::ios::binary);
-				RendererToolkit::IAssetCompilerPtr textureAssetCompiler(rendererToolkit->createTextureAssetCompiler());
-				textureAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+				RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createTextureAssetCompiler());
+				assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
 			}
 		}
 		catch (const std::exception& e)
@@ -115,8 +146,8 @@ int programEntryPoint()
 			std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod.json", std::ios::binary);
 
 			// Compile asset
-			RendererToolkit::IAssetCompilerPtr materialAssetCompiler(rendererToolkit->createMaterialAssetCompiler());
-			materialAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createMaterialAssetCompiler());
+			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
 		}
 		catch (const std::exception& e)
 		{
@@ -135,8 +166,8 @@ int programEntryPoint()
 			std::ifstream jsonConfiguration("../DataSource/Imrod/ImrodLowPoly.json", std::ios::binary);
 
 			// Compile asset
-			RendererToolkit::IAssetCompilerPtr meshAssetCompiler(rendererToolkit->createMeshAssetCompiler());
-			meshAssetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createMeshAssetCompiler());
+			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
 		}
 		catch (const std::exception& e)
 		{
@@ -144,10 +175,6 @@ int programEntryPoint()
 			int ii = 0;
 		}
 	}
-	
-
-//	RendererToolkit::FontAssetCompiler fontAssetCompiler;
-
 
 	// No error
 	return 0;

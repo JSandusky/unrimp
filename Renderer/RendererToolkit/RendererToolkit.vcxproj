@@ -29,6 +29,7 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\IAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MeshAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\ShaderAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\IRendererToolkit.h" />
     <ClInclude Include="include\RendererToolkit\PlatformTypes.h" />
@@ -41,6 +42,7 @@
     <ClCompile Include="src\AssetCompiler\FontAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MaterialAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp" />
+    <ClCompile Include="src\AssetCompiler\ShaderAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\TextureAssetCompiler.cpp">
       <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">false</TreatWarningAsError>
       <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">false</TreatWarningAsError>

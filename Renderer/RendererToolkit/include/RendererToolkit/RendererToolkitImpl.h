@@ -77,6 +77,7 @@ namespace RendererToolkit
 		//[-------------------------------------------------------]
 		//[ Asset compilers                                       ]
 		//[-------------------------------------------------------]
+		virtual IAssetCompiler* createShaderAssetCompiler() override;
 		virtual IAssetCompiler* createFontAssetCompiler() override;
 		virtual IAssetCompiler* createTextureAssetCompiler() override;
 		virtual IAssetCompiler* createMaterialAssetCompiler() override;

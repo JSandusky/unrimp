@@ -1,7 +1,7 @@
 {
 	"Format":
 	{
-		"Type": "MeshAssetCompiler",
+		"Type": "ShaderAssetCompiler",
 		"Version": "1"
 	},
 	"Configuration":

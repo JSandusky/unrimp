@@ -344,7 +344,7 @@ namespace RendererToolkit
 		
 			{ // Check whether or not the configuration format matches
 				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-				if (jsonFormatObject->get("Type").convert<std::string>() != "TextureCompiler")
+				if (jsonFormatObject->get("Type").convert<std::string>() != "TextureAssetCompiler")
 				{
 					throw std::exception("Invalid JSON format type, must be \"TextureCompiler\"");
 				}

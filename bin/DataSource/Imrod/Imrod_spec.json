@@ -1,7 +1,7 @@
 {
 	"Format":
 	{
-		"Type": "TextureCompiler",
+		"Type": "TextureAssetCompiler",
 		"Version": "1"
 	},
 	"Configuration":

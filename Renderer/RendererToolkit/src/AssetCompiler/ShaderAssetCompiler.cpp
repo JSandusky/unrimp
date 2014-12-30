@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
+#include "RendererToolkit/AssetCompiler/ShaderAssetCompiler.h"
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -47,11 +47,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	MaterialAssetCompiler::MaterialAssetCompiler()
+	ShaderAssetCompiler::ShaderAssetCompiler()
 	{
 	}
 
-	MaterialAssetCompiler::~MaterialAssetCompiler()
+	ShaderAssetCompiler::~ShaderAssetCompiler()
 	{
 	}
 
@@ -59,7 +59,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
-	bool MaterialAssetCompiler::compile(std::istream&, std::ostream&, std::istream& jsonConfiguration)
+	bool ShaderAssetCompiler::compile(std::istream&, std::ostream&, std::istream& jsonConfiguration)
 	{
 		// Read configuration
 		// TODO(co) Add required properties
@@ -72,9 +72,9 @@ namespace RendererToolkit
 		
 			{ // Check whether or not the configuration format matches
 				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-				if (jsonFormatObject->get("Type").convert<std::string>() != "MaterialAssetCompiler")
+				if (jsonFormatObject->get("Type").convert<std::string>() != "ShaderAssetCompiler")
 				{
-					throw std::exception("Invalid JSON format type, must be \"MaterialCompiler\"");
+					throw std::exception("Invalid JSON format type, must be \"ShaderCompiler\"");
 				}
 				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
 				{

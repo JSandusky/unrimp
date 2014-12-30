@@ -22,23 +22,12 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERTOOLKIT_IRENDERERTOOLKIT_H__
-#define __RENDERERTOOLKIT_IRENDERERTOOLKIT_H__
 
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Public/Renderer.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererToolkit
-{
-	class IAssetCompiler;
-}
+#include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
 
 //[-------------------------------------------------------]
@@ -51,11 +40,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Abstract renderer toolkit interface
-	*/
-	class IRendererToolkit : public Renderer::RefCount<IRendererToolkit>
+	class ShaderAssetCompiler : public IAssetCompiler
 	{
 
 
@@ -63,81 +48,21 @@ namespace RendererToolkit
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~IRendererToolkit();
+		ShaderAssetCompiler();
+		virtual ~ShaderAssetCompiler();
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
+	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
 	public:
-		//[-------------------------------------------------------]
-		//[ Asset compilers                                       ]
-		//[-------------------------------------------------------]
-		virtual IAssetCompiler* createShaderAssetCompiler() = 0;
-		virtual IAssetCompiler* createFontAssetCompiler() = 0;
-		virtual IAssetCompiler* createTextureAssetCompiler() = 0;
-		virtual IAssetCompiler* createMaterialAssetCompiler() = 0;
-		virtual IAssetCompiler* createMeshAssetCompiler() = 0;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
-		inline IRendererToolkit();
-
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit IRendererToolkit(const IRendererToolkit &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline IRendererToolkit &operator =(const IRendererToolkit &source);
+		virtual bool compile(std::istream& istream, std::ostream& ostream, std::istream& jsonConfiguration) override;
 
 
 	};
-
-
-	//[-------------------------------------------------------]
-	//[ Type definitions                                      ]
-	//[-------------------------------------------------------]
-	typedef Renderer::SmartRefCount<IRendererToolkit> IRendererToolkitPtr;
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererToolkit
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererToolkit/IRendererToolkit.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERERTOOLKIT_IRENDERERTOOLKIT_H__

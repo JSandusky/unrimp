@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/RendererToolkitImpl.h"
 #include "RendererToolkit/PlatformTypes.h"
+#include "RendererToolkit/AssetCompiler/ShaderAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/FontAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
@@ -69,6 +70,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
 	//[-------------------------------------------------------]
+	IAssetCompiler* RendererToolkitImpl::createShaderAssetCompiler()
+	{
+		return new ShaderAssetCompiler();
+	}
+
 	IAssetCompiler* RendererToolkitImpl::createFontAssetCompiler()
 	{
 		return new FontAssetCompiler();

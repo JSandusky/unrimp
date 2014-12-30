@@ -63,6 +63,7 @@ namespace RendererToolkit
 	public:
 		virtual ~IRendererToolkit();
 	public:
+		virtual IAssetCompiler* createShaderAssetCompiler() = 0;
 		virtual IAssetCompiler* createFontAssetCompiler() = 0;
 		virtual IAssetCompiler* createTextureAssetCompiler() = 0;
 		virtual IAssetCompiler* createMaterialAssetCompiler() = 0;

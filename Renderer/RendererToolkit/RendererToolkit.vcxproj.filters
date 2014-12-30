@@ -56,6 +56,9 @@
     <ClInclude Include="include\RendererToolkit\Public\RendererToolkitInstance.h">
       <Filter>Source Files\Public</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\ShaderAssetCompiler.h">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -74,6 +77,9 @@
       <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\tif_win32.cpp">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetCompiler\ShaderAssetCompiler.cpp">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
   </ItemGroup>
