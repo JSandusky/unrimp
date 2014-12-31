@@ -95,8 +95,8 @@ void FirstRenderToTexture::onInitialization()
 
 				// Create the program
 				mProgram = shaderLanguage->createProgram(
-					shaderLanguage->createVertexShader(vertexShaderSourceCode),
-					shaderLanguage->createFragmentShader(fragmentShaderSourceCode));
+					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
 			// Is there a valid program?

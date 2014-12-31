@@ -101,7 +101,9 @@ void Fxaa::onInitialization()
 				#include "Fxaa_SceneRendering_Null.h"
 
 				// Create the program for scene rendering
-				mProgramSceneRendering = shaderLanguage->createProgram(shaderLanguage->createVertexShader(vertexShaderSourceCode), shaderLanguage->createFragmentShader(fragmentShaderSourceCode));
+				mProgramSceneRendering = shaderLanguage->createProgram(
+					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
 			// Is there a valid program for scene rendering?
@@ -353,7 +355,9 @@ void Fxaa::recreatePostProcessingProgram()
 			// Due to the usage of smart pointers there's no need to explicitly free the previous resources, this is done automatically
 
 			// Create the program for the FXAA post processing
-			mProgramPostProcessing = shaderLanguage->createProgram(shaderLanguage->createVertexShader(vertexShaderSourceCode), shaderLanguage->createFragmentShader(sourceCode));
+			mProgramPostProcessing = shaderLanguage->createProgram(
+				shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+				shaderLanguage->createFragmentShaderFromSourceCode(sourceCode));
 
 			// Free the memory
 			delete [] sourceCode;

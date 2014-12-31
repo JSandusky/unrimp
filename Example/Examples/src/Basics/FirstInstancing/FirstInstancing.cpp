@@ -87,8 +87,8 @@ void FirstInstancing::onInitialization()
 
 					// Create the program
 					mProgramInstancedArrays = shaderLanguage->createProgram(
-						shaderLanguage->createVertexShader(vertexShaderSourceCode),
-						shaderLanguage->createFragmentShader(fragmentShaderSourceCode));
+						shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+						shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 				}
 
 				// Is there a valid program?
@@ -174,8 +174,8 @@ void FirstInstancing::onInitialization()
 
 					// Create the program
 					mProgramDrawInstanced = shaderLanguage->createProgram(
-						shaderLanguage->createVertexShader(vertexShaderSourceCode),
-						shaderLanguage->createFragmentShader(fragmentShaderSourceCode));
+						shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+						shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 				}
 
 				// Is there a valid program?

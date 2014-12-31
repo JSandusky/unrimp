@@ -36,6 +36,14 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
+		FragmentShader(openGLRenderer),
+		mOpenGLShader(0)
+	{
+		// TODO(co) Implement me
+		// Nothing to do in here
+	}
+
 	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		FragmentShader(openGLRenderer),
 		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_FRAGMENT_SHADER_ARB, sourceCode))

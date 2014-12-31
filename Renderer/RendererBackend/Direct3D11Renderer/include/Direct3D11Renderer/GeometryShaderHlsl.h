@@ -62,7 +62,20 @@ namespace Direct3D11Renderer
 	public:
 		/**
 		*  @brief
-		*    Constructor
+		*    Constructor for creating a geometry shader from shader bytecode
+		*
+		*  @param[in] direct3D11Renderer
+		*    Owner Direct3D 11 renderer instance
+		*  @param[in] bytecode
+		*    Shader bytecode, must be valid
+		*  @param[in] numberOfBytes
+		*    Number of bytes in the bytecode
+		*/
+		GeometryShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+
+		/**
+		*  @brief
+		*    Constructor for creating a geometry shader from shader source code
 		*
 		*  @param[in] direct3D11Renderer
 		*    Owner Direct3D 11 renderer instance

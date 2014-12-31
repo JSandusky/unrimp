@@ -26,6 +26,7 @@
 #include "Direct3D10Renderer/D3D10.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 #include "Direct3D10Renderer/ShaderLanguageHlsl.h"
+#include "Direct3D10Renderer/Direct3D10RuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
@@ -38,6 +39,21 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	VertexShaderHlsl::VertexShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+		VertexShader(direct3D10Renderer),
+		mD3DBlobVertexShader(nullptr),
+		mD3D10VertexShader(nullptr)
+	{
+		// Backup the vertex shader bytecode
+		D3D10CreateBlob(numberOfBytes, &mD3DBlobVertexShader);
+		memcpy(mD3DBlobVertexShader->GetBufferPointer(), bytecode, numberOfBytes);
+
+		// Create the Direct3D 10 vertex shader
+		direct3D10Renderer.getD3D10Device()->CreateVertexShader(bytecode, numberOfBytes, &mD3D10VertexShader);
+
+		// Don't assign a default name to the resource for debugging purposes, Direct3D 10 automatically sets a decent default name
+	}
+
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode) :
 		VertexShader(direct3D10Renderer),
 		mD3DBlobVertexShader(nullptr),

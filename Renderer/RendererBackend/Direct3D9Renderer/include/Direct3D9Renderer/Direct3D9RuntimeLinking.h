@@ -150,6 +150,7 @@ namespace Direct3D9Renderer
 	#endif
 	FNDEF_D3DX9(HRESULT,	D3DXLoadSurfaceFromMemory,	(LPDIRECT3DSURFACE9, CONST PALETTEENTRY *, CONST RECT *, LPCVOID, D3DFORMAT, UINT, CONST PALETTEENTRY *, CONST RECT *, DWORD, D3DCOLOR));
 	FNDEF_D3DX9(HRESULT,	D3DXCompileShader,			(LPCSTR, UINT, CONST D3DXMACRO *, LPD3DXINCLUDE, LPCSTR, LPCSTR, DWORD, LPD3DXBUFFER *, LPD3DXBUFFER *, LPD3DXCONSTANTTABLE *));
+	FNDEF_D3DX9(HRESULT,	D3DXGetShaderConstantTable,	(const DWORD *, LPD3DXCONSTANTTABLE *));
 
 
 	//[-------------------------------------------------------]
@@ -175,6 +176,7 @@ namespace Direct3D9Renderer
 	// D3DX9
 	#define D3DXLoadSurfaceFromMemory	FNPTR(D3DXLoadSurfaceFromMemory)
 	#define D3DXCompileShader			FNPTR(D3DXCompileShader)
+	#define D3DXGetShaderConstantTable	FNPTR(D3DXGetShaderConstantTable)
 
 
 //[-------------------------------------------------------]

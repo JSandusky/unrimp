@@ -38,6 +38,16 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+		GeometryShader(direct3D11Renderer),
+		mD3D11GeometryShader(nullptr)
+	{
+		// Create the Direct3D 11 geometry shader
+		direct3D11Renderer.getD3D11Device()->CreateGeometryShader(bytecode, numberOfBytes, nullptr, &mD3D11GeometryShader);
+
+		// Don't assign a default name to the resource for debugging purposes, Direct3D 11 automatically sets a decent default name
+	}
+
 	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
 		GeometryShader(direct3D11Renderer),
 		mD3D11GeometryShader(nullptr)

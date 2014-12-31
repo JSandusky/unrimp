@@ -109,9 +109,9 @@ void FirstMultipleRenderTargets::onInitialization()
 					// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
 					//    the unused texture coordinate might get optimized out
 					// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-					Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShader(vertexShaderSourceCode));
-					mProgramMultipleRenderTargets = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShader(fragmentShaderSourceCode_MultipleRenderTargets));
-					mProgram = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShader(fragmentShaderSourceCode));
+					Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
+					mProgramMultipleRenderTargets = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_MultipleRenderTargets));
+					mProgram = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 				}
 
 				// Is there a valid program?

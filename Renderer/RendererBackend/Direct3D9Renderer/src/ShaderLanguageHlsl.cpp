@@ -93,31 +93,61 @@ namespace Direct3D9Renderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShader(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	{
+		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
+		return new VertexShaderHlsl(*mDirect3D9Renderer, bytecode, numberOfBytes);
+	}
+
+	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		return new VertexShaderHlsl(*mDirect3D9Renderer, sourceCode);
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShader(const char *, const char *, const char *, const char *)
+	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShaderFromBytecode(const uint8_t *, uint32_t)
 	{
 		// Error! Direct3D 9 has no tessellation control shader support.
 		return nullptr;
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageHlsl::createTessellationEvaluationShader(const char *, const char *, const char *, const char *)
+	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShaderFromSourceCode(const char *, const char *, const char *, const char *)
+	{
+		// Error! Direct3D 9 has no tessellation control shader support.
+		return nullptr;
+	}
+
+	Renderer::ITessellationEvaluationShader *ShaderLanguageHlsl::createTessellationEvaluationShaderFromBytecode(const uint8_t *, uint32_t)
 	{
 		// Error! Direct3D 9 has no tessellation evaluation shader support.
 		return nullptr;
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShader(const char *, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
+	Renderer::ITessellationEvaluationShader *ShaderLanguageHlsl::createTessellationEvaluationShaderFromSourceCode(const char *, const char *, const char *, const char *)
+	{
+		// Error! Direct3D 9 has no tessellation evaluation shader support.
+		return nullptr;
+	}
+
+	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromBytecode(const uint8_t *, uint32_t, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
 	{
 		// Error! Direct3D 9 has no geometry shader support.
 		return nullptr;
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShader(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromSourceCode(const char *, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
+	{
+		// Error! Direct3D 9 has no geometry shader support.
+		return nullptr;
+	}
+
+	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	{
+		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
+		return new FragmentShaderHlsl(*mDirect3D9Renderer, bytecode, numberOfBytes);
+	}
+
+	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
 		return new FragmentShaderHlsl(*mDirect3D9Renderer, sourceCode);

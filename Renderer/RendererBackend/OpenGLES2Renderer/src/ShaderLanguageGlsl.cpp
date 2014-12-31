@@ -64,31 +64,61 @@ namespace OpenGLES2Renderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShader(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	{
+		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
+		return new VertexShaderGlsl(getOpenGLES2Renderer(), bytecode, numberOfBytes);
+	}
+
+	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		return new VertexShaderGlsl(getOpenGLES2Renderer(), sourceCode);
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShader(const char *, const char *, const char *, const char *)
+	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const uint8_t *, uint32_t )
 	{
 		// Error! OpenGL ES 2 has no tessellation control shader support.
 		return nullptr;
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShader(const char *, const char *, const char *, const char *)
+	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromSourceCode(const char *, const char *, const char *, const char *)
+	{
+		// Error! OpenGL ES 2 has no tessellation control shader support.
+		return nullptr;
+	}
+
+	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromBytecode(const uint8_t *, uint32_t )
 	{
 		// Error! OpenGL ES 2 has no tessellation evaluation shader support.
 		return nullptr;
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShader(const char *, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
+	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromSourceCode(const char *, const char *, const char *, const char *)
+	{
+		// Error! OpenGL ES 2 has no tessellation evaluation shader support.
+		return nullptr;
+	}
+
+	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromBytecode(const uint8_t *, uint32_t, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
 	{
 		// Error! OpenGL ES 2 has no geometry shader support.
 		return nullptr;
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShader(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromSourceCode(const char *, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
+	{
+		// Error! OpenGL ES 2 has no geometry shader support.
+		return nullptr;
+	}
+
+	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	{
+		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
+		return new FragmentShaderGlsl(getOpenGLES2Renderer(), bytecode, numberOfBytes);
+	}
+
+	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
 		return new FragmentShaderGlsl(getOpenGLES2Renderer(), sourceCode);

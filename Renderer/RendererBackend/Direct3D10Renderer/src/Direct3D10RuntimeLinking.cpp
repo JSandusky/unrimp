@@ -147,6 +147,7 @@ namespace Direct3D10Renderer
 
 		// Load the entry points
 		IMPORT_FUNC(D3D10CreateDevice);
+		IMPORT_FUNC(D3D10CreateBlob);
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC

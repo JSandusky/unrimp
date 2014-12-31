@@ -192,6 +192,7 @@ namespace Direct3D9Renderer
 		// Load the entry points
 		IMPORT_FUNC(D3DXLoadSurfaceFromMemory);
 		IMPORT_FUNC(D3DXCompileShader);
+		IMPORT_FUNC(D3DXGetShaderConstantTable);
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC

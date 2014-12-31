@@ -48,7 +48,6 @@ varying   vec3 TangentVs;	// Tangent space to view space, x-axis
 varying   vec3 BinormalVs;	// Tangent space to view space, y-axis
 varying   vec3 NormalVs;	// Tangent space to view space, z-axis
 
-
 // Uniforms
 uniform mat4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
 uniform mat3 ObjectSpaceToViewSpaceMatrix;	// Object space to view space matrix

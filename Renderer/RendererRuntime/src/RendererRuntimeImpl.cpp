@@ -152,8 +152,8 @@ namespace RendererRuntime
 
 				// Create the program
 				mFontProgram = shaderLanguage->createProgram(
-					shaderLanguage->createVertexShader(vertexShaderSourceCode),
-					shaderLanguage->createFragmentShader(fragmentShaderSourceCode));
+					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 				if (nullptr != mFontProgram)
 				{
 					// Add our internal reference

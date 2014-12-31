@@ -107,15 +107,25 @@ namespace Direct3D11Renderer
 		*/
 		bool loadD3DX11EntryPoints();
 
+		/**
+		*  @brief
+		*    Load the D3DCompiler entry points
+		*
+		*  @return
+		*    "true" if all went fine, else "false"
+		*/
+		bool loadD3DCompilerEntryPoints();
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void *mD3D11SharedLibrary;		///< D3D11 shared library, can be a null pointer
-		void *mD3DX11SharedLibrary;		///< D3DX11 shared library, can be a null pointer
-		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
-		bool  mInitialized;				///< Already initialized?
+		void *mD3D11SharedLibrary;			///< D3D11 shared library, can be a null pointer
+		void *mD3DX11SharedLibrary;			///< D3DX11 shared library, can be a null pointer
+		void *mD3DCompilerSharedLibrary;	///< D3DCompiler shared library, can be a null pointer
+		bool  mEntryPointsRegistered;		///< Entry points successfully registered?
+		bool  mInitialized;					///< Already initialized?
 
 
 	};
@@ -145,6 +155,19 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ D3DCompiler functions                                 ]
+	//[-------------------------------------------------------]
+	#ifdef DIRECT3D11_DEFINERUNTIMELINKING
+		#define FNDEF_D3DX11(retType, funcName, args) retType (WINAPI *funcPtr_##funcName) args
+	#else
+		#define FNDEF_D3DX11(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
+	#endif
+	typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
+	typedef ID3D10Blob ID3DBlob;
+	FNDEF_D3DX11(HRESULT,	D3DCreateBlob,				(SIZE_T Size, ID3DBlob** ppBlob));
+
+
+	//[-------------------------------------------------------]
 	//[ Macros & definitions                                  ]
 	//[-------------------------------------------------------]
 	#ifndef FNPTR
@@ -159,6 +182,9 @@ namespace Direct3D11Renderer
 	// D3DX11
 	#define D3DX11CompileFromMemory	FNPTR(D3DX11CompileFromMemory)
 	#define D3DX11FilterTexture		FNPTR(D3DX11FilterTexture)
+
+	// D3DCompiler
+	#define D3DCreateBlob	FNPTR(D3DCreateBlob)
 
 
 //[-------------------------------------------------------]

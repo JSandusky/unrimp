@@ -67,31 +67,61 @@ namespace NullRenderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguage::createVertexShader(const char *, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguage::createVertexShaderFromBytecode(const uint8_t *, uint32_t)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		return new VertexShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguage::createTessellationControlShader(const char *, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguage::createVertexShaderFromSourceCode(const char *, const char *, const char *, const char *)
+	{
+		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
+		return new VertexShader(reinterpret_cast<NullRenderer&>(getRenderer()));
+	}
+
+	Renderer::ITessellationControlShader *ShaderLanguage::createTessellationControlShaderFromBytecode(const uint8_t *, uint32_t)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfPatchVertices", we know there's tessellation control shader support
 		return new TessellationControlShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguage::createTessellationEvaluationShader(const char *, const char *, const char *, const char *)
+	Renderer::ITessellationControlShader *ShaderLanguage::createTessellationControlShaderFromSourceCode(const char *, const char *, const char *, const char *)
+	{
+		// There's no need to check for "Renderer::Capabilities::maximumNumberOfPatchVertices", we know there's tessellation control shader support
+		return new TessellationControlShader(reinterpret_cast<NullRenderer&>(getRenderer()));
+	}
+
+	Renderer::ITessellationEvaluationShader *ShaderLanguage::createTessellationEvaluationShaderFromBytecode(const uint8_t *, uint32_t)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfPatchVertices", we know there's tessellation evaluation shader support
 		return new TessellationEvaluationShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::IGeometryShader *ShaderLanguage::createGeometryShader(const char *, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
+	Renderer::ITessellationEvaluationShader *ShaderLanguage::createTessellationEvaluationShaderFromSourceCode(const char *, const char *, const char *, const char *)
+	{
+		// There's no need to check for "Renderer::Capabilities::maximumNumberOfPatchVertices", we know there's tessellation evaluation shader support
+		return new TessellationEvaluationShader(reinterpret_cast<NullRenderer&>(getRenderer()));
+	}
+
+	Renderer::IGeometryShader *ShaderLanguage::createGeometryShaderFromBytecode(const uint8_t *, uint32_t, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfGsOutputVertices", we know there's geometry shader support
 		return new GeometryShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::IFragmentShader *ShaderLanguage::createFragmentShader(const char *, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguage::createGeometryShaderFromSourceCode(const char *, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
+	{
+		// There's no need to check for "Renderer::Capabilities::maximumNumberOfGsOutputVertices", we know there's geometry shader support
+		return new GeometryShader(reinterpret_cast<NullRenderer&>(getRenderer()));
+	}
+
+	Renderer::IFragmentShader *ShaderLanguage::createFragmentShaderFromBytecode(const uint8_t *, uint32_t)
+	{
+		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
+		return new FragmentShader(reinterpret_cast<NullRenderer&>(getRenderer()));
+	}
+
+	Renderer::IFragmentShader *ShaderLanguage::createFragmentShaderFromSourceCode(const char *, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
 		return new FragmentShader(reinterpret_cast<NullRenderer&>(getRenderer()));

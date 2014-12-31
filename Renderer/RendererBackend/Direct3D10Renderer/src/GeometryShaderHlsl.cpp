@@ -38,6 +38,16 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+		GeometryShader(direct3D10Renderer),
+		mD3D10GeometryShader(nullptr)
+	{
+		// Create the Direct3D 10 geometry shader
+		direct3D10Renderer.getD3D10Device()->CreateGeometryShader(bytecode, numberOfBytes, &mD3D10GeometryShader);
+
+		// Don't assign a default name to the resource for debugging purposes, Direct3D 10 automatically sets a decent default name
+	}
+
 	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode) :
 		GeometryShader(direct3D10Renderer),
 		mD3D10GeometryShader(nullptr)

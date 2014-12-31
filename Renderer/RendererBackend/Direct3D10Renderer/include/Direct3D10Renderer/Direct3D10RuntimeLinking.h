@@ -129,7 +129,10 @@ namespace Direct3D10Renderer
 	#else
 		#define FNDEF_D3D10(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
+	typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
+	typedef ID3D10Blob ID3DBlob;
 	FNDEF_D3D10(HRESULT,	D3D10CreateDevice,	(IDXGIAdapter *, D3D10_DRIVER_TYPE, HMODULE, UINT, UINT, ID3D10Device **));
+	FNDEF_D3D10(HRESULT,	D3D10CreateBlob,	(SIZE_T NumBytes, LPD3D10BLOB *ppBuffer));
 
 
 	//[-------------------------------------------------------]
@@ -155,6 +158,7 @@ namespace Direct3D10Renderer
 
 	// D3D10
 	#define D3D10CreateDevice	FNPTR(D3D10CreateDevice)
+	#define D3D10CreateBlob		FNPTR(D3D10CreateBlob)
 
 	// D3DX10
 	#define D3DX10CompileFromMemory	FNPTR(D3DX10CompileFromMemory)

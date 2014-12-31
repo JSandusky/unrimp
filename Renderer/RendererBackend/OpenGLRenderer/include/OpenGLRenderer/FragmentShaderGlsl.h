@@ -56,7 +56,20 @@ namespace OpenGLRenderer
 	public:
 		/**
 		*  @brief
-		*    Constructor
+		*    Constructor for creating a fragment shader from shader bytecode
+		*
+		*  @param[in] openGLRenderer
+		*    Owner OpenGL renderer instance
+		*  @param[in] bytecode
+		*    Shader bytecode, must be valid
+		*  @param[in] numberOfBytes
+		*    Number of bytes in the bytecode
+		*/
+		FragmentShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+
+		/**
+		*  @brief
+		*    Constructor for creating a fragment shader from shader source code
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance

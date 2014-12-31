@@ -62,7 +62,20 @@ namespace Direct3D10Renderer
 	public:
 		/**
 		*  @brief
-		*    Constructor
+		*    Constructor for creating a geometry shader from shader bytecode
+		*
+		*  @param[in] direct3D10Renderer
+		*    Owner Direct3D 10 renderer instance
+		*  @param[in] bytecode
+		*    Shader bytecode, must be valid
+		*  @param[in] numberOfBytes
+		*    Number of bytes in the bytecode
+		*/
+		GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+
+		/**
+		*  @brief
+		*    Constructor for creating a geometry shader from shader source code
 		*
 		*  @param[in] direct3D10Renderer
 		*    Owner Direct3D 10 renderer instance

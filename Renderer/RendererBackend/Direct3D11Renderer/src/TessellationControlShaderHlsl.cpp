@@ -38,6 +38,16 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+		TessellationControlShader(direct3D11Renderer),
+		mD3D11HullShader(nullptr)
+	{
+		// Create the Direct3D 11 hull shader
+		direct3D11Renderer.getD3D11Device()->CreateHullShader(bytecode, numberOfBytes, nullptr, &mD3D11HullShader);
+
+		// Don't assign a default name to the resource for debugging purposes, Direct3D 11 automatically sets a decent default name
+	}
+
 	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
 		TessellationControlShader(direct3D11Renderer),
 		mD3D11HullShader(nullptr)

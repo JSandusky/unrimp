@@ -38,6 +38,16 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	TessellationEvaluationShaderHlsl::TessellationEvaluationShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+		TessellationEvaluationShader(direct3D11Renderer),
+		mD3D11DomainShader(nullptr)
+	{
+		// Create the Direct3D 11 domain shader
+		direct3D11Renderer.getD3D11Device()->CreateDomainShader(bytecode, numberOfBytes, nullptr, &mD3D11DomainShader);
+
+		// Don't assign a default name to the resource for debugging purposes, Direct3D 11 automatically sets a decent default name
+	}
+
 	TessellationEvaluationShaderHlsl::TessellationEvaluationShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
 		TessellationEvaluationShader(direct3D11Renderer),
 		mD3D11DomainShader(nullptr)

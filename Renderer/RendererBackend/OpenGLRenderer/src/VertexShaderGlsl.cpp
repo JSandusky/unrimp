@@ -36,6 +36,14 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	VertexShaderGlsl::VertexShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
+		VertexShader(openGLRenderer),
+		mOpenGLShader(0)
+	{
+		// TODO(co) Implement me
+		// Nothing to do in here
+	}
+
 	VertexShaderGlsl::VertexShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		VertexShader(openGLRenderer),
 		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_VERTEX_SHADER_ARB, sourceCode))

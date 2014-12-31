@@ -117,11 +117,11 @@ void IcosahedronTessellation::onInitialization()
 
 				// Create the program
 				mProgram = shaderLanguage->createProgram(
-					shaderLanguage->createVertexShader(vertexShaderSourceCode),
-					shaderLanguage->createTessellationControlShader(tessellationControlShaderSourceCode),
-					shaderLanguage->createTessellationEvaluationShader(tessellationEvaluationShaderSourceCode),
-					shaderLanguage->createGeometryShader(geometryShaderSourceCode, Renderer::GsInputPrimitiveTopology::TRIANGLES, Renderer::GsOutputPrimitiveTopology::TRIANGLE_STRIP, 3),
-					shaderLanguage->createFragmentShader(fragmentShaderSourceCode));
+					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createTessellationControlShaderFromSourceCode(tessellationControlShaderSourceCode),
+					shaderLanguage->createTessellationEvaluationShaderFromSourceCode(tessellationEvaluationShaderSourceCode),
+					shaderLanguage->createGeometryShaderFromSourceCode(geometryShaderSourceCode, Renderer::GsInputPrimitiveTopology::TRIANGLES, Renderer::GsOutputPrimitiveTopology::TRIANGLE_STRIP, 3),
+					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
 			// Is there a valid program?

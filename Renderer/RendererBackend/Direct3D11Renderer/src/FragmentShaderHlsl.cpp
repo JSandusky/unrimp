@@ -38,6 +38,16 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+		FragmentShader(direct3D11Renderer),
+		mD3D11PixelShader(nullptr)
+	{
+		// Create the Direct3D 11 vertex shader
+		direct3D11Renderer.getD3D11Device()->CreatePixelShader(bytecode, numberOfBytes, nullptr, &mD3D11PixelShader);
+
+		// Don't assign a default name to the resource for debugging purposes, Direct3D 11 automatically sets a decent default name
+	}
+
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
 		FragmentShader(direct3D11Renderer),
 		mD3D11PixelShader(nullptr)

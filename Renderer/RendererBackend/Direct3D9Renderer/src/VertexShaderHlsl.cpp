@@ -25,6 +25,7 @@
 #include "Direct3D9Renderer/d3d9.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 #include "Direct3D9Renderer/ShaderLanguageHlsl.h"
+#include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
@@ -37,6 +38,16 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	VertexShaderHlsl::VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const uint8_t *bytecode, uint32_t) :
+		VertexShader(direct3D9Renderer),
+		mDirect3DVertexShader9(nullptr),
+		mD3DXConstantTable(nullptr)
+	{
+		// Create the Direct3D 9 vertex shader
+		direct3D9Renderer.getDirect3DDevice9()->CreateVertexShader(reinterpret_cast<const DWORD*>(bytecode), &mDirect3DVertexShader9);
+		D3DXGetShaderConstantTable(reinterpret_cast<const DWORD*>(bytecode), &mD3DXConstantTable);
+	}
+
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode) :
 		VertexShader(direct3D9Renderer),
 		mDirect3DVertexShader9(nullptr),

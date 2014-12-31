@@ -25,6 +25,7 @@
 #include "Direct3D9Renderer/d3d9.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 #include "Direct3D9Renderer/ShaderLanguageHlsl.h"
+#include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
@@ -37,6 +38,16 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const uint8_t *bytecode, uint32_t) :
+		FragmentShader(direct3D9Renderer),
+		mDirect3DPixelShader9(nullptr),
+		mD3DXConstantTable(nullptr)
+	{
+		// Create the Direct3D 9 pixel shader
+		direct3D9Renderer.getDirect3DDevice9()->CreatePixelShader(reinterpret_cast<const DWORD*>(bytecode), &mDirect3DPixelShader9);
+		D3DXGetShaderConstantTable(reinterpret_cast<const DWORD*>(bytecode), &mD3DXConstantTable);
+	}
+
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode) :
 		FragmentShader(direct3D9Renderer),
 		mDirect3DPixelShader9(nullptr),

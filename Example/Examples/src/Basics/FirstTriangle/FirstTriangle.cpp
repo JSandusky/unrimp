@@ -73,11 +73,11 @@ void FirstTriangle::onInitialization()
 				#include "FirstTriangle_Null.h"
 
 				// Create the vertex shader
-				Renderer::IVertexShader *vertexShader = shaderLanguage->createVertexShader(vertexShaderSourceCode);
+				Renderer::IVertexShader *vertexShader = shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(vertexShader, "Triangle VS")
 
 				// Create the fragment shader
-				Renderer::IFragmentShader *fragmentShader = shaderLanguage->createFragmentShader(fragmentShaderSourceCode);
+				Renderer::IFragmentShader *fragmentShader = shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(fragmentShader, "Triangle FS")
 
 				// Create the program

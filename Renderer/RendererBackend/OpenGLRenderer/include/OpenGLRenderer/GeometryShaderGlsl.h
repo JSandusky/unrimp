@@ -57,7 +57,26 @@ namespace OpenGLRenderer
 	public:
 		/**
 		*  @brief
-		*    Constructor
+		*    Constructor for creating a geometry shader from shader bytecode
+		*
+		*  @param[in] openGLRenderer
+		*    Owner OpenGL renderer instance
+		*  @param[in] bytecode
+		*    Shader bytecode, must be valid
+		*  @param[in] numberOfBytes
+		*    Number of bytes in the bytecode
+		*  @param[in] gsInputPrimitiveTopology
+		*    Geometry shader input primitive topology
+		*  @param[in] gsOutputPrimitiveTopology
+		*    Geometry shader output primitive topology
+		*  @param[in] numberOfOutputVertices
+		*    Number of output vertices
+		*/
+		GeometryShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
+
+		/**
+		*  @brief
+		*    Constructor for creating a geometry shader from shader source code
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance

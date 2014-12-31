@@ -36,6 +36,14 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	TessellationControlShaderGlsl::TessellationControlShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
+		TessellationControlShader(openGLRenderer),
+		mOpenGLShader(0)
+	{
+		// TODO(co) Implement me
+		// Nothing to do in here
+	}
+
 	TessellationControlShaderGlsl::TessellationControlShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		TessellationControlShader(openGLRenderer),
 		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_TESS_CONTROL_SHADER, sourceCode))

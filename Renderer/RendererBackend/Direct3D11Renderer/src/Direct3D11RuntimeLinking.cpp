@@ -46,6 +46,7 @@ namespace Direct3D11Renderer
 	Direct3D11RuntimeLinking::Direct3D11RuntimeLinking() :
 		mD3D11SharedLibrary(nullptr),
 		mD3DX11SharedLibrary(nullptr),
+		mD3DCompilerSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
 		mInitialized(false)
 	{
@@ -64,6 +65,11 @@ namespace Direct3D11Renderer
 			{
 				::FreeLibrary(static_cast<HMODULE>(mD3DX11SharedLibrary));
 			}
+			if (nullptr != mD3DCompilerSharedLibrary)
+			{
+				::FreeLibrary(static_cast<HMODULE>(mD3DCompilerSharedLibrary));
+			}
+		
 		#else
 			#error "Unsupported platform"
 		#endif
@@ -80,8 +86,8 @@ namespace Direct3D11Renderer
 			// Load the shared libraries
 			if (loadSharedLibraries())
 			{
-				// Load the D3D11 and D3DX11 entry points
-				mEntryPointsRegistered = (loadD3D11EntryPoints() && loadD3DX11EntryPoints());
+				// Load the D3D11, D3DX11 and D3DCompiler entry points
+				mEntryPointsRegistered = (loadD3D11EntryPoints() && loadD3DX11EntryPoints() && loadD3DCompilerEntryPoints());
 			}
 		}
 
@@ -101,7 +107,15 @@ namespace Direct3D11Renderer
 			if (nullptr != mD3D11SharedLibrary)
 			{
 				mD3DX11SharedLibrary = ::LoadLibraryExA("d3dx11_43.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-				if (nullptr == mD3DX11SharedLibrary)
+				if (nullptr != mD3DX11SharedLibrary)
+				{
+					mD3DCompilerSharedLibrary = ::LoadLibraryExA("D3DCompiler_47.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+					if (nullptr == mD3DCompilerSharedLibrary)
+					{
+						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Failed to load in the shared library \"D3DCompiler_47.dll\"\n")
+					}
+				}
+				else
 				{
 					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Failed to load in the shared library \"d3dx11_43.dll\"\n")
 				}
@@ -115,7 +129,7 @@ namespace Direct3D11Renderer
 		#endif
 
 		// Done
-		return (nullptr != mD3D11SharedLibrary && nullptr != mD3DX11SharedLibrary);
+		return (nullptr != mD3D11SharedLibrary && nullptr != mD3DX11SharedLibrary && nullptr != mD3DCompilerSharedLibrary);
 	}
 
 	bool Direct3D11RuntimeLinking::loadD3D11EntryPoints()
@@ -185,6 +199,43 @@ namespace Direct3D11Renderer
 		// Load the entry points
 		IMPORT_FUNC(D3DX11CompileFromMemory);
 		IMPORT_FUNC(D3DX11FilterTexture);
+
+		// Undefine the helper macro
+		#undef IMPORT_FUNC
+
+		// Done
+		return result;
+	}
+
+	bool Direct3D11RuntimeLinking::loadD3DCompilerEntryPoints()
+	{
+		bool result = true;	// Success by default
+
+		// Define a helper macro
+		#ifdef WIN32
+			#define IMPORT_FUNC(funcName)																																					\
+				if (result)																																									\
+				{																																											\
+					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DCompilerSharedLibrary), #funcName);																			\
+					if (nullptr != symbol)																																					\
+					{																																										\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
+					}																																										\
+					else																																									\
+					{																																										\
+						wchar_t moduleFilename[MAX_PATH];																																	\
+						moduleFilename[0] = '\0';																																			\
+						::GetModuleFileNameW(static_cast<HMODULE>(mD3DCompilerSharedLibrary), moduleFilename, MAX_PATH);																	\
+						RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 11 error: Failed to locate the entry point \"%s\" within the Direct3D 11 shared library \"%s\"", #funcName, moduleFilename)	\
+						result = false;																																						\
+					}																																										\
+				}
+		#else
+			#error "Unsupported platform"
+		#endif
+
+		// Load the entry points
+		IMPORT_FUNC(D3DCreateBlob);
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC

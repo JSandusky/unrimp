@@ -25,6 +25,7 @@
 #include "Direct3D11Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D11Renderer/D3D11.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
+#include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 #include "Direct3D11Renderer/ShaderLanguageHlsl.h"
 
 
@@ -38,6 +39,21 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	VertexShaderHlsl::VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+		VertexShader(direct3D11Renderer),
+		mD3DBlobVertexShader(nullptr),
+		mD3D11VertexShader(nullptr)
+	{
+		// Backup the vertex shader bytecode
+		D3DCreateBlob(numberOfBytes, &mD3DBlobVertexShader);
+		memcpy(mD3DBlobVertexShader->GetBufferPointer(), bytecode, numberOfBytes);
+
+		// Create the Direct3D 11 vertex shader
+		direct3D11Renderer.getD3D11Device()->CreateVertexShader(bytecode, numberOfBytes, nullptr, &mD3D11VertexShader);
+
+		// Don't assign a default name to the resource for debugging purposes, Direct3D 11 automatically sets a decent default name
+	}
+
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
 		VertexShader(direct3D11Renderer),
 		mD3DBlobVertexShader(nullptr),

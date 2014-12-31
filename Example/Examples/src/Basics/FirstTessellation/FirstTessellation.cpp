@@ -77,10 +77,10 @@ void FirstTessellation::onInitialization()
 
 				// Create the program
 				mProgram = shaderLanguage->createProgram(
-					shaderLanguage->createVertexShader(vertexShaderSourceCode),
-					shaderLanguage->createTessellationControlShader(tessellationControlShaderSourceCode),
-					shaderLanguage->createTessellationEvaluationShader(tessellationEvaluationShaderSourceCode),
-					shaderLanguage->createFragmentShader(fragmentShaderSourceCode));
+					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createTessellationControlShaderFromSourceCode(tessellationControlShaderSourceCode),
+					shaderLanguage->createTessellationEvaluationShaderFromSourceCode(tessellationEvaluationShaderSourceCode),
+					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
 			// Is there a valid program?

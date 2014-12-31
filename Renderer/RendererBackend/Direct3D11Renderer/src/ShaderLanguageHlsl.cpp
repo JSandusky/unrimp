@@ -106,13 +106,27 @@ namespace Direct3D11Renderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShader(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	{
+		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
+		return new VertexShaderHlsl(getDirect3D11Renderer(), bytecode, numberOfBytes);
+	}
+
+	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		return new VertexShaderHlsl(getDirect3D11Renderer(), sourceCode);
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShader(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	{
+		// "hull shader" in Direct3D terminology
+
+		// There's no need to check for "Renderer::Capabilities::maximumNumberOfPatchVertices", we know there's tessellation control shader support
+		return new TessellationControlShaderHlsl(getDirect3D11Renderer(), bytecode, numberOfBytes);
+	}
+
+	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// "hull shader" in Direct3D terminology
 
@@ -120,7 +134,15 @@ namespace Direct3D11Renderer
 		return new TessellationControlShaderHlsl(getDirect3D11Renderer(), sourceCode);
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageHlsl::createTessellationEvaluationShader(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::ITessellationEvaluationShader *ShaderLanguageHlsl::createTessellationEvaluationShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	{
+		// "domain shader" in Direct3D terminology
+
+		// There's no need to check for "Renderer::Capabilities::maximumNumberOfPatchVertices", we know there's tessellation evaluation shader support
+		return new TessellationEvaluationShaderHlsl(getDirect3D11Renderer(), bytecode, numberOfBytes);
+	}
+
+	Renderer::ITessellationEvaluationShader *ShaderLanguageHlsl::createTessellationEvaluationShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// "domain shader" in Direct3D terminology
 
@@ -128,7 +150,17 @@ namespace Direct3D11Renderer
 		return new TessellationEvaluationShaderHlsl(getDirect3D11Renderer(), sourceCode);
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShader(const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
+	{
+		// Ignore "gsInputPrimitiveTopology", it's directly set within HLSL
+		// Ignore "gsOutputPrimitiveTopology", it's directly set within HLSL
+		// Ignore "numberOfOutputVertices", it's directly set within HLSL
+
+		// There's no need to check for "Renderer::Capabilities::maximumNumberOfGsOutputVertices", we know there's geometry shader support
+		return new GeometryShaderHlsl(getDirect3D11Renderer(), bytecode, numberOfBytes);
+	}
+
+	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromSourceCode(const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
 	{
 		// Ignore "gsInputPrimitiveTopology", it's directly set within HLSL
 		// Ignore "gsOutputPrimitiveTopology", it's directly set within HLSL
@@ -138,7 +170,13 @@ namespace Direct3D11Renderer
 		return new GeometryShaderHlsl(getDirect3D11Renderer(), sourceCode);
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShader(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	{
+		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
+		return new FragmentShaderHlsl(getDirect3D11Renderer(), bytecode, numberOfBytes);
+	}
+
+	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
 		return new FragmentShaderHlsl(getDirect3D11Renderer(), sourceCode);

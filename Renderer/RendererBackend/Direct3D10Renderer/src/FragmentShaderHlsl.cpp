@@ -38,6 +38,16 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+		FragmentShader(direct3D10Renderer),
+		mD3D10PixelShader(nullptr)
+	{
+		// Create the Direct3D 10 vertex shader
+		direct3D10Renderer.getD3D10Device()->CreatePixelShader(bytecode, numberOfBytes, &mD3D10PixelShader);
+
+		// Don't assign a default name to the resource for debugging purposes, Direct3D 10 automatically sets a decent default name
+	}
+
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode) :
 		FragmentShader(direct3D10Renderer),
 		mD3D10PixelShader(nullptr)

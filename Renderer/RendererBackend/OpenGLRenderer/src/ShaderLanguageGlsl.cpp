@@ -52,13 +52,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t ShaderLanguageGlsl::loadShader(uint32_t shaderType, const char *shaderSource)
+	uint32_t ShaderLanguageGlsl::loadShader(uint32_t shaderType, const char *sourceCode)
 	{
 		// Create the shader object
 		const GLuint openGLShader = glCreateShaderObjectARB(shaderType);
 
 		// Load the shader source
-		glShaderSourceARB(openGLShader, 1, &shaderSource, nullptr);
+		glShaderSourceARB(openGLShader, 1, &sourceCode, nullptr);
 
 		// Compile the shader
 		glCompileShaderARB(openGLShader);
@@ -127,7 +127,22 @@ namespace OpenGLRenderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShader(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	{
+		// Check whether or not there's vertex shader support
+		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
+		if (openGLRenderer.getContext().getExtensions().isGL_ARB_vertex_shader())
+		{
+			return new VertexShaderGlsl(openGLRenderer, bytecode, numberOfBytes);
+		}
+		else
+		{
+			// Error! There's no vertex shader support!
+			return nullptr;
+		}
+	}
+
+	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
@@ -142,7 +157,22 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShader(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	{
+		// Check whether or not there's tessellation support
+		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
+		if (openGLRenderer.getContext().getExtensions().isGL_ARB_tessellation_shader())
+		{
+			return new TessellationControlShaderGlsl(openGLRenderer, bytecode, numberOfBytes);
+		}
+		else
+		{
+			// Error! There's no tessellation support!
+			return nullptr;
+		}
+	}
+
+	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
@@ -157,7 +187,22 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShader(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	{
+		// Check whether or not there's tessellation support
+		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
+		if (openGLRenderer.getContext().getExtensions().isGL_ARB_tessellation_shader())
+		{
+			return new TessellationEvaluationShaderGlsl(openGLRenderer, bytecode, numberOfBytes);
+		}
+		else
+		{
+			// Error! There's no tessellation support!
+			return nullptr;
+		}
+	}
+
+	Renderer::ITessellationEvaluationShader *ShaderLanguageGlsl::createTessellationEvaluationShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
@@ -172,7 +217,26 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShader(const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *, const char *, const char *)
+	{
+		// Check whether or not there's geometry shader support
+		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
+		if (openGLRenderer.getContext().getExtensions().isGL_ARB_geometry_shader4())
+		{
+			// In modern GLSL, "geometry shader input primitive topology" & "geometry shader output primitive topology" & "number of output vertices" can be directly set within GLSL by writing e.g.
+			//   "layout(triangles) in;"
+			//   "layout(triangle_strip, max_vertices = 3) out;"
+			// -> To be able to support older GLSL versions, we have to provide this information also via OpenGL API functions
+			return new GeometryShaderGlsl(openGLRenderer, bytecode, numberOfBytes, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
+		}
+		else
+		{
+			// Error! There's no geometry shader support!
+			return nullptr;
+		}
+	}
+
+	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromSourceCode(const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *, const char *, const char *)
 	{
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
@@ -191,7 +255,22 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShader(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	{
+		// Check whether or not there's fragment shader support
+		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
+		if (openGLRenderer.getContext().getExtensions().isGL_ARB_fragment_shader())
+		{
+			return new FragmentShaderGlsl(openGLRenderer, bytecode, numberOfBytes);
+		}
+		else
+		{
+			// Error! There's no fragment shader support!
+			return nullptr;
+		}
+	}
+
+	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// Check whether or not there's fragment shader support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();

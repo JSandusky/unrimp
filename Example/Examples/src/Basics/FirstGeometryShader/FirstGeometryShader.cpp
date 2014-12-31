@@ -75,9 +75,9 @@ void FirstGeometryShader::onInitialization()
 
 				// Create the program
 				mProgram = shaderLanguage->createProgram(
-					shaderLanguage->createVertexShader(vertexShaderSourceCode),
-					shaderLanguage->createGeometryShader(geometryShaderSourceCode, Renderer::GsInputPrimitiveTopology::POINTS, Renderer::GsOutputPrimitiveTopology::TRIANGLE_STRIP, 3),
-					shaderLanguage->createFragmentShader(fragmentShaderSourceCode));
+					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createGeometryShaderFromSourceCode(geometryShaderSourceCode, Renderer::GsInputPrimitiveTopology::POINTS, Renderer::GsOutputPrimitiveTopology::TRIANGLE_STRIP, 3),
+					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
 			// TODO(co) Attribute less rendering (aka "drawing without data") possible with OpenGL? For me it appears not to work, I see nothing and also get no error...
