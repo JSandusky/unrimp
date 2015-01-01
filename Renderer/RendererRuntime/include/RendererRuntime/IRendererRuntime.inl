@@ -53,11 +53,6 @@ namespace RendererRuntime
 		return *mSceneManager;
 	}
 
-	inline FontResourceManager& IRendererRuntime::getFontResourceManager() const
-	{
-		return *mFontResourceManager;
-	}
-
 	inline TextureResourceManager& IRendererRuntime::getTextureResourceManager() const
 	{
 		return *mTextureResourceManager;
@@ -66,6 +61,11 @@ namespace RendererRuntime
 	inline MaterialResourceManager& IRendererRuntime::getMaterialResourceManager() const
 	{
 		return *mMaterialResourceManager;
+	}
+
+	inline FontResourceManager& IRendererRuntime::getFontResourceManager() const
+	{
+		return *mFontResourceManager;
 	}
 
 	inline MeshResourceManager& IRendererRuntime::getMeshResourceManager() const

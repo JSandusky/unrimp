@@ -47,6 +47,7 @@ namespace RendererRuntime
 	class CompositorManager;
 	class FontResourceManager;
 	class MeshResourceManager;
+	class ShaderResourceManager;
 	class TextureResourceManager;
 	class MaterialResourceManager;
 }
@@ -83,17 +84,21 @@ namespace RendererRuntime
 		{
 			return *mSceneManager;
 		}
-		inline FontResourceManager& getFontResourceManager() const
-		{
-			return *mFontResourceManager;
-		}
 		inline TextureResourceManager& getTextureResourceManager() const
 		{
 			return *mTextureResourceManager;
 		}
+		inline ShaderResourceManager& getShaderResourceManager() const
+		{
+			return *mShaderResourceManager;
+		}
 		inline MaterialResourceManager& getMaterialResourceManager() const
 		{
 			return *mMaterialResourceManager;
+		}
+		inline FontResourceManager& getFontResourceManager() const
+		{
+			return *mFontResourceManager;
 		}
 		inline MeshResourceManager& getMeshResourceManager() const
 		{
@@ -108,9 +113,10 @@ namespace RendererRuntime
 		AssetManager*			 mAssetManager;
 		CompositorManager*		 mCompositorManager;
 		SceneManager*			 mSceneManager;
-		FontResourceManager*	 mFontResourceManager;
 		TextureResourceManager*	 mTextureResourceManager;
+		ShaderResourceManager*   mShaderResourceManager;
 		MaterialResourceManager* mMaterialResourceManager;
+		FontResourceManager*	 mFontResourceManager;
 		MeshResourceManager*	 mMeshResourceManager;
 	};
 	typedef Renderer::SmartRefCount<IRendererRuntime> IRendererRuntimePtr;

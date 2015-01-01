@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ResourceManager.h"
+#include "RendererRuntime/Resource/ResourceSerializer.h"
 
 
 //[-------------------------------------------------------]
@@ -40,16 +40,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class FontResourceManager : private ResourceManager
+	class ShaderResourceSerializer : protected ResourceSerializer
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-	protected:
-		FontResourceManager();
-		~FontResourceManager();
+		friend class ShaderResourceManager;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		inline ShaderResourceSerializer() {}
+		inline ~ShaderResourceSerializer() {}
+		ShaderResourceSerializer(const ShaderResourceSerializer&) = delete;
+		ShaderResourceSerializer& operator=(const ShaderResourceSerializer&) = delete;
 
 
 	};

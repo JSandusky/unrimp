@@ -38,6 +38,9 @@
     <Filter Include="Source Files\Scene">
       <UniqueIdentifier>{a0702f66-3b4a-4cdd-9a0b-12f5c5297843}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Shader">
+      <UniqueIdentifier>{cb09b88d-9f0e-49a2-9ce8-f31da02a0e4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -54,14 +57,14 @@
     <None Include="include\RendererRuntime\Resource\Font\IFont.inl">
       <Filter>Source Files\Resource\Font</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.inl">
-      <Filter>Source Files\Resource\Texture</Filter>
+    <None Include="include\RendererRuntime\Resource\Font\FontResourceSerializer.inl">
+      <Filter>Source Files\Resource\Font</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceSerializer.inl">
       <Filter>Source Files\Resource\Mesh</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Font\FontResourceSerializer.inl">
-      <Filter>Source Files\Resource\Font</Filter>
+    <None Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.inl">
+      <Filter>Source Files\Resource\Texture</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -93,15 +96,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\ResourceManager.h">
       <Filter>Source Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h">
-      <Filter>Source Files\Resource\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.h">
-      <Filter>Source Files\Resource\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h">
-      <Filter>Source Files\Resource\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Scene\SceneManager.h">
       <Filter>Source Files\Scene</Filter>
     </ClInclude>
@@ -132,9 +126,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontImpl.h">
       <Filter>Source Files\Resource\Font</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Mesh\Mesh.h">
-      <Filter>Source Files\Resource\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Export.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -143,18 +134,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\ResourceSerializer.h">
       <Filter>Source Files\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceSerializer.h">
-      <Filter>Source Files\Resource\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.h">
-      <Filter>Source Files\Resource\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceSerializer.h">
-      <Filter>Source Files\Resource\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceSerializer.h">
-      <Filter>Source Files\Resource\Material</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceSerializer.h">
       <Filter>Source Files\Resource\Font</Filter>
@@ -165,19 +144,40 @@
     <ClInclude Include="include\RendererRuntime\Command\Material.h">
       <Filter>Source Files\Command</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceSerializer.h">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceSerializer.h">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\Mesh.h">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.h">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderResourceManager.h">
+      <Filter>Source Files\Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderResourceSerializer.h">
+      <Filter>Source Files\Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceSerializer.h">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.h">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererRuntimeImpl.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp">
-      <Filter>Source Files\Resource\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp">
-      <Filter>Source Files\Resource\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp">
-      <Filter>Source Files\Resource\Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Asset\AssetManager.cpp">
       <Filter>Source Files\Asset</Filter>
@@ -194,20 +194,32 @@
     <ClCompile Include="src\Resource\Font\FontImpl.cpp">
       <Filter>Source Files\Resource\Font</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Mesh\Mesh.cpp">
-      <Filter>Source Files\Resource\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Texture\DdsTextureResourceSerializer.cpp">
-      <Filter>Source Files\Resource\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Mesh\MeshResourceSerializer.cpp">
-      <Filter>Source Files\Resource\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Font\FontResourceSerializer.cpp">
       <Filter>Source Files\Resource\Font</Filter>
     </ClCompile>
     <ClCompile Include="src\Command\CommandBucket.cpp">
       <Filter>Source Files\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Mesh\MeshResourceSerializer.cpp">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Mesh\Mesh.cpp">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Shader\ShaderResourceManager.cpp">
+      <Filter>Source Files\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Texture\DdsTextureResourceSerializer.cpp">
+      <Filter>Source Files\Resource\Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

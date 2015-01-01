@@ -47,6 +47,7 @@ namespace RendererRuntime
 	class CompositorManager;
 	class FontResourceManager;
 	class MeshResourceManager;
+	class ShaderResourceManager;
 	class TextureResourceManager;
 	class MaterialResourceManager;
 }
@@ -124,15 +125,6 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    Return the font resource manager instance
-		*
-		*  @return
-		*    The font resource manager instance, do not release the returned instance
-		*/
-		inline FontResourceManager& getFontResourceManager() const;
-
-		/**
-		*  @brief
 		*    Return the texture resource manager instance
 		*
 		*  @return
@@ -142,12 +134,30 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the shader resource manager instance
+		*
+		*  @return
+		*    The shader resource manager instance, do not release the returned instance
+		*/
+		inline ShaderResourceManager& getShaderResourceManager() const;
+
+		/**
+		*  @brief
 		*    Return the material resource manager instance
 		*
 		*  @return
 		*    The material resource manager instance, do not release the returned instance
 		*/
 		inline MaterialResourceManager& getMaterialResourceManager() const;
+
+		/**
+		*  @brief
+		*    Return the font resource manager instance
+		*
+		*  @return
+		*    The font resource manager instance, do not release the returned instance
+		*/
+		inline FontResourceManager& getFontResourceManager() const;
 
 		/**
 		*  @brief
@@ -201,9 +211,10 @@ namespace RendererRuntime
 		CompositorManager* mCompositorManager;
 		SceneManager*	   mSceneManager;
 		// Resource managers
-		FontResourceManager*	 mFontResourceManager;
 		TextureResourceManager*	 mTextureResourceManager;
+		ShaderResourceManager*	 mShaderResourceManager;
 		MaterialResourceManager* mMaterialResourceManager;
+		FontResourceManager*	 mFontResourceManager;
 		MeshResourceManager*	 mMeshResourceManager;
 
 

@@ -19,15 +19,9 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ResourceManager.h"
+#include "RendererRuntime/Resource/Shader/ShaderResourceManager.h"
 
 
 //[-------------------------------------------------------]
@@ -38,21 +32,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	class FontResourceManager : private ResourceManager
+	ShaderResourceManager::ShaderResourceManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
 	{
+		// Nothing in here
+	}
 
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		FontResourceManager();
-		~FontResourceManager();
-
-
-	};
+	ShaderResourceManager::~ShaderResourceManager()
+	{
+		// Nothing in here
+	}
 
 
 //[-------------------------------------------------------]

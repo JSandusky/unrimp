@@ -27,6 +27,7 @@
 #include "RendererRuntime/compositor/CompositorManager.h"
 #include "RendererRuntime/Resource/Font/FontResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
+#include "RendererRuntime/Resource/Shader/ShaderResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 
@@ -73,9 +74,10 @@ namespace RendererRuntime
 		mSceneManager = new SceneManager(*this);
 
 		// Create the resource manager instances
-		mFontResourceManager = new FontResourceManager(*this);
 		mTextureResourceManager = new TextureResourceManager(*this);
+		mShaderResourceManager = new ShaderResourceManager(*this);
 		mMaterialResourceManager = new MaterialResourceManager(*this);
+		mFontResourceManager = new FontResourceManager(*this);
 		mMeshResourceManager = new MeshResourceManager(*this);
 	}
 
@@ -123,10 +125,11 @@ namespace RendererRuntime
 		delete mSceneManager;
 
 		// Destroy the resource manager instances
-		delete mFontResourceManager;
-		delete mTextureResourceManager;
-		delete mMaterialResourceManager;
 		delete mMeshResourceManager;
+		delete mFontResourceManager;
+		delete mMaterialResourceManager;
+		delete mShaderResourceManager;
+		delete mTextureResourceManager;
 
 		// Release our renderer reference
 		mRenderer->release();
