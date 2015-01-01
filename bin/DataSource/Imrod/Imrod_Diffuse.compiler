@@ -6,8 +6,6 @@
 	},
 	"Configuration":
 	{
-		"Test": "42",
-		"Format": "dds",
-		"Compression": "dxt5"
+		"TextureSemantic": "DiffuseMap"
 	}
 }
