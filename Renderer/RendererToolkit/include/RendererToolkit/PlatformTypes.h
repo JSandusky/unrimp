@@ -67,7 +67,7 @@
 				#define RENDERERTOOLKIT_OUTPUT_DEBUG
 				#include "RendererToolkit/WindowsHeader.h"
 				#include <strsafe.h>	// For "StringCbVPrintf()"
-				#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString) OutputDebugString(TEXT(outputString));
+				#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString) rendererToolkitOutputDebugPrintf(TEXT(outputString));
 				inline void rendererToolkitOutputDebugPrintf(LPCTSTR outputString, ...)
 				{
 					va_list argptr;

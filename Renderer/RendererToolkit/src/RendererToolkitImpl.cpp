@@ -72,7 +72,12 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	IAssetCompiler* RendererToolkitImpl::createShaderAssetCompiler()
 	{
-		return new ShaderAssetCompiler();
+		// TODO(co) Due to the HLSL compiler usage, this is currently MS Windows only (maybe there are Linux HLSL cross-compilers?)
+		#ifdef WIN32
+			return new ShaderAssetCompiler();
+		#else
+			#error "Unsupported platform"
+		#endif
 	}
 
 	IAssetCompiler* RendererToolkitImpl::createFontAssetCompiler()

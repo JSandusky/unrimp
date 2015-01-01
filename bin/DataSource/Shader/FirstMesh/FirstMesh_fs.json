@@ -6,6 +6,7 @@
 	},
 	"Configuration":
 	{
-		"Test": "42"
+		"EntryPoint": "main",
+		"ShaderModel": "ps_4_0"
 	}
 }

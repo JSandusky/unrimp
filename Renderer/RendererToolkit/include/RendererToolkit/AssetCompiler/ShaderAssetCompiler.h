@@ -59,6 +59,13 @@ namespace RendererToolkit
 		virtual bool compile(std::istream& istream, std::ostream& ostream, std::istream& jsonConfiguration) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		void *mD3DCompilerSharedLibrary;	///< D3DCompiler shared library, can be a null pointer
+
+
 	};
 
 

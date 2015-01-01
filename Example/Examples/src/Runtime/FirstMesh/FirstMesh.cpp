@@ -98,12 +98,6 @@ void FirstMesh::onInitialization()
 				#include "FirstMesh_Null.h"
 
 				// Create the program
-				// TODO(co) Cleanup
-				/*
-				mProgram = shaderLanguage->createProgram(
-					shaderLanguage->createVertexShader("../DataPc/Shader/FirstMesh/FirstMesh_vs.cso", vertexShaderProfile),
-					shaderLanguage->createFragmentShader("../DataPc/Shader/FirstMesh/FirstMesh_fs.cso", fragmentShaderProfile));
-					*/
 				mProgram = shaderLanguage->createProgram(
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode, vertexShaderProfile),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode, fragmentShaderProfile));

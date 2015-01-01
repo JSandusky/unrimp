@@ -130,7 +130,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\;..\..\External\libtiff\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\;..\..\External\libtiff\include\;..\..\External\HLSLCrossCompiler\include\;..\RendererBackend\Direct3D11Renderer\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -161,7 +161,7 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\;..\..\External\libtiff\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\;..\..\External\libtiff\include\;..\..\External\HLSLCrossCompiler\include\;..\RendererBackend\Direct3D11Renderer\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -172,8 +172,8 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\nvtt\lib\MTd_DynamicDebug\;..\..\External\Windows_x86\libtiff\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>zlibstatic.lib;PocoFoundationd.lib;freetype_MultiThreadedDLLd.lib;assimp.lib;squish.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;nvtt.lib;bc6h.lib;bc7.lib;libtiff.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\nvtt\lib\MTd_DynamicDebug\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\HLSLCrossCompiler\lib\Debug\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>zlibstatic.lib;PocoFoundationd.lib;freetype_MultiThreadedDLLd.lib;assimp.lib;squish.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;nvtt.lib;bc6h.lib;bc7.lib;libtiff.lib;libHLSLcc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
@@ -192,7 +192,7 @@ copy "..\..\External\Windows_x86\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTar
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\;..\..\External\libtiff\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\;..\..\External\libtiff\include\;..\..\External\HLSLCrossCompiler\include\;..\RendererBackend\Direct3D11Renderer\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -237,7 +237,7 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\;..\..\External\libtiff\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\nvtt\include\;..\..\External\libtiff\include\;..\..\External\HLSLCrossCompiler\include\;..\RendererBackend\Direct3D11Renderer\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -259,8 +259,8 @@ copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\nvtt\lib\MT_DynamicRelease\;..\..\External\Windows_x86\libtiff\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>zlibstatic.lib;PocoFoundation.lib;freetype_MultiThreadedDLL.lib;assimp.lib;squish.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;nvtt.lib;bc6h.lib;bc7.lib;libtiff.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\nvtt\lib\MT_DynamicRelease\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\HLSLCrossCompiler\lib\Release\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>zlibstatic.lib;PocoFoundation.lib;freetype_MultiThreadedDLL.lib;assimp.lib;squish.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;nvtt.lib;bc6h.lib;bc7.lib;libtiff.lib;libHLSLcc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>

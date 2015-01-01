@@ -18,10 +18,20 @@
 \*********************************************************/
 
 
+// TODO(co) Due to the HLSL compiler usage, this is currently MS Windows only (maybe there are Linux HLSL cross-compilers?) (see also "RendererToolkit::RendererToolkitImpl::createShaderAssetCompiler()")
+
+
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/ShaderAssetCompiler.h"
+#include "RendererToolkit/PlatformTypes.h"
+
+#define DIRECT3D11_DEFINERUNTIMELINKING
+#include <Direct3D11Renderer/D3D11.h>
+
+#define EXCLUDE_PSTDINT
+#include <HLSLCrossCompiler/hlslcc.hpp>
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -36,6 +46,15 @@
 	#include <Poco/JSON/Parser.h>
 #pragma warning(pop)
 
+#include <memory>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
+typedef ID3D10Blob ID3DBlob;
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -44,26 +63,116 @@ namespace RendererToolkit
 {
 
 
+	namespace detail
+	{
+		void *malloc_hook(size_t size)
+		{
+			return malloc(size);
+		}
+		void *calloc_hook(size_t num, size_t size)
+		{
+			return calloc(num,size);
+		}
+		void *realloc_hook(void *p, size_t size)
+		{
+			return realloc(p,size);
+		}
+		void free_hook(void *p)
+		{
+			free(p);
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ D3DCompiler functions                                 ]
+	//[-------------------------------------------------------]
+	#ifdef DIRECT3D11_DEFINERUNTIMELINKING
+		#define FNDEF_D3DCOMPILER(retType, funcName, args) retType (WINAPI *funcPtr_##funcName) args
+	#else
+		#define FNDEF_D3DCOMPILER(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
+	#endif
+	FNDEF_D3DCOMPILER(HRESULT,	D3DCompile,	(LPCSTR, SIZE_T, LPCSTR, CONST D3D_SHADER_MACRO *, ID3DInclude *, LPCSTR, LPCSTR, UINT, UINT, ID3D10Blob **, ID3D10Blob **, HRESULT *));
+
+
+	//[-------------------------------------------------------]
+	//[ Macros & definitions                                  ]
+	//[-------------------------------------------------------]
+	#ifndef FNPTR
+		#define FNPTR(name) funcPtr_##name
+	#endif
+
+	// Redirect D3DCompiler* function calls to funcPtr_D3DCompiler*
+
+	// D3DCompiler
+	#define D3DCompile	FNPTR(D3DCompile)
+
+
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ShaderAssetCompiler::ShaderAssetCompiler()
+	ShaderAssetCompiler::ShaderAssetCompiler() :
+		mD3DCompilerSharedLibrary(nullptr)
 	{
+		// Load the shared library
+		mD3DCompilerSharedLibrary = ::LoadLibraryExA("D3DCompiler_47.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+		if (nullptr == mD3DCompilerSharedLibrary)
+		{
+			RENDERERTOOLKIT_OUTPUT_DEBUG_STRING("Direct3D 11 error: Failed to load in the shared library \"D3DCompiler_47.dll\"\n")
+		}
+
+		{ // Load the required D3DCompiler shader compiler entry point
+			bool result = true;	// Success by default
+
+			// Define a helper macro
+			#define IMPORT_FUNC(funcName)																																							\
+				if (result)																																											\
+				{																																													\
+					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DCompilerSharedLibrary), #funcName);																					\
+					if (nullptr != symbol)																																							\
+					{																																												\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																															\
+					}																																												\
+					else																																											\
+					{																																												\
+						wchar_t moduleFilename[MAX_PATH];																																			\
+						moduleFilename[0] = '\0';																																					\
+						::GetModuleFileNameW(static_cast<HMODULE>(mD3DCompilerSharedLibrary), moduleFilename, MAX_PATH);																			\
+						RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF("Direct3D 11 error: Failed to locate the entry point \"%s\" within the Direct3D 11 shared library \"%s\"", #funcName, moduleFilename)	\
+						result = false;																																								\
+					}																																												\
+				}
+
+			// Load the entry points
+			IMPORT_FUNC(D3DCompile);
+
+			// Undefine the helper macro
+			#undef IMPORT_FUNC
+		}
+
+		// Tell the HLSL cross compiler about memory handling functions to use
+		HLSLcc_SetMemoryFunctions(detail::malloc_hook, detail::calloc_hook, detail::free_hook, detail::realloc_hook);
 	}
 
 	ShaderAssetCompiler::~ShaderAssetCompiler()
 	{
+		// Destroy the shared library instances
+		if (nullptr != mD3DCompilerSharedLibrary)
+		{
+			::FreeLibrary(static_cast<HMODULE>(mD3DCompilerSharedLibrary));
+		}
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
-	bool ShaderAssetCompiler::compile(std::istream&, std::ostream&, std::istream& jsonConfiguration)
+	bool ShaderAssetCompiler::compile(std::istream& istream, std::ostream& ostream, std::istream& jsonConfiguration)
 	{
 		// Read configuration
 		// TODO(co) Add required properties
-		uint32_t test = 0;
+		std::string entryPoint = "main";
+		std::string shaderModel = "vs_5_0";
 		{
 			// Parse JSON
 			Poco::JSON::Parser jsonParser;
@@ -84,8 +193,65 @@ namespace RendererToolkit
 
 			// Read configuration
 			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonRootObject->get("Configuration").extract<Poco::JSON::Object::Ptr>();
-			test = jsonConfigurationObject->optValue<uint32_t>("Test", test);
+			entryPoint = jsonConfigurationObject->optValue<std::string>("EntryPoint", entryPoint);
+			shaderModel = jsonConfigurationObject->optValue<std::string>("ShaderModel", shaderModel);
 		}
+
+		// Load in the shader source code
+		std::unique_ptr<char[]> buffer;
+		istream.seekg(0, std::istream::end);
+		const size_t numberOfBytes = static_cast<size_t>(istream.tellg());
+		istream.seekg(0, std::istream::beg);
+		buffer = std::unique_ptr<char[]>(new char[numberOfBytes]);
+		istream.read(buffer.get(), numberOfBytes);
+
+		// Compile the HLSL source code
+		// TODO(co) Cleanup
+		ID3DBlob* d3dBlobVertexShader = nullptr;
+		{
+			HRESULT hr = S_OK;
+
+			DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+			/*
+		#if defined( DEBUG ) || defined( _DEBUG )
+			// Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
+			// Setting this flag improves the shader debugging experience, but still allows 
+			// the shaders to be optimized and to run exactly the way they will run in 
+			// the release configuration of this program.
+			shaderFlags |= D3DCOMPILE_DEBUG;
+		#endif
+		*/
+
+			ID3DBlob *errorBlob;
+			hr = D3DCompile(buffer.get(), numberOfBytes, nullptr, nullptr, nullptr, entryPoint.c_str(), shaderModel.c_str(), 
+				shaderFlags, 0, &d3dBlobVertexShader, &errorBlob, nullptr );
+
+			if (FAILED(hr))
+			{
+				if( errorBlob != nullptr )
+					OutputDebugStringA( (char*)errorBlob->GetBufferPointer() );
+				if( errorBlob ) errorBlob->Release();
+				// TODO(co) Better error handling
+				throw std::exception("Shader asset compiler failed to compile the shader");
+			}
+			if (nullptr != errorBlob ) errorBlob->Release();
+		}
+		
+		// Compiled HLSL
+//		ostream.write(static_cast<char*>(d3dBlobVertexShader->GetBufferPointer()), d3dBlobVertexShader->GetBufferSize());
+
+		GlExtensions ext;
+		ext.ARB_explicit_attrib_location = 0;
+		ext.ARB_explicit_uniform_location = 0;
+		ext.ARB_shading_language_420pack = 0;
+		GLSLShader result;
+		TranslateHLSLFromMem(static_cast<const char*>(d3dBlobVertexShader->GetBufferPointer()), 0, LANG_150, &ext, nullptr, &result);
+		ostream.write(result.sourceCode, strlen(result.sourceCode));
+		FreeGLSLShader(&result);
+
+		// Release the Direct3D 11 shader binary large object
+		d3dBlobVertexShader->Release();
+
 
 		return false;
 	}
