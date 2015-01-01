@@ -64,8 +64,7 @@ float3x3 GetTangentFrame(float3x3 objectSpaceToViewSpaceMatrix, float4 qtangent)
 	);
 }
 
-// Programs
-VS_OUTPUT VertexProgramMain(VS_INPUT input)
+VS_OUTPUT VertexShaderMain(VS_INPUT input)
 {
 	VS_OUTPUT output;
 
@@ -96,8 +95,8 @@ Texture2D NormalMap   : register(t2);	// Tangent space normal map
 Texture2D SpecularMap : register(t3);
 SamplerState SamplerLinear : register(s0);
 
-// Programs
-float4 FragmentProgramMain(VS_OUTPUT input) : SV_Target
+// Functions
+float4 FragmentShaderMain(VS_OUTPUT input) : SV_Target
 {
 	// Build in variables
 	float3 ViewSpaceLightDirection = normalize(float3(0.5f, 0.5f, 1.0f));	// View space light direction

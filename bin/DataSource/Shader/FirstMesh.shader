@@ -176,17 +176,17 @@
 				},
 				"Program":
 				{
-					"VertexProgram":
+					"VertexShader":
 					{
 						"SourceCode": "FirstMesh.hlsl",
-						"EntryPoint": "VertexProgramMain"
+						"EntryPoint": "VertexShaderMain"
 					},
-					"FragmentProgram":
+					"FragmentShader":
 					{
 						"SourceCode": "FirstMesh.hlsl",
-						"EntryPoint": "FragmentProgramMain"
+						"EntryPoint": "FragmentShaderMain"
 					},
-					"ProgramPermutation":
+					"ShaderPermutation":
 					{
 						"LightingQuality": [ "LOW_LIGHTING_QUALITY, MEDIUM_LIGHTING_QUALITY", "HIGH_LIGHTING_QUALITY" ],
 						"UseDiffuseMap": [ "DIFFUSE_MAP_ON", "DIFFUSE_MAP_OFF" ]
