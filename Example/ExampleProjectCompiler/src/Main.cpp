@@ -38,15 +38,38 @@ int programEntryPoint()
 	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
 	if (nullptr != rendererToolkit)
 	{
+		// TODO(co) Experiments
+
+		// Shader
+		try
+		{
+			// Input and output
+//			std::ifstream ifstream("../DataSource/Shader/FirstMesh.hlsl", std::ios::binary);
+			std::ifstream ifstream("../DataSource/Shader/FirstMesh.shader", std::ios::binary);
+			std::ofstream ofstream("../DataPc/Shader/FirstMesh/FirstMesh_vs.glsl");
+
+			// Asset compiler configuration
+			std::ifstream jsonConfiguration("../DataSource/Shader/FirstMesh.compiler", std::ios::binary);
+
+			// Compile asset
+			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createShaderAssetCompiler());
+			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
+		}
+		catch (const std::exception& e)
+		{
+			const char* text = e.what();
+			int ii = 0;
+		}
+		/*
 		// Shader
 		try
 		{
 			// Input and output
 			std::ifstream ifstream("../DataSource/Shader/FirstMesh/FirstMesh_vs.hlsl", std::ios::binary);
-			std::ofstream ofstream("../DataPc/Shader/FirstMesh/FirstMesh_vs.hlsl", std::ios::binary);
+			std::ofstream ofstream("../DataPc/Shader/FirstMesh/FirstMesh_vs.glsl");
 
 			// Asset compiler configuration
-			std::ifstream jsonConfiguration("../DataSource/Shader/FirstMesh/FirstMesh_vs.json", std::ios::binary);
+			std::ifstream jsonConfiguration("../DataSource/Shader/FirstMesh/FirstMesh_vs.compiler", std::ios::binary);
 
 			// Compile asset
 			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createShaderAssetCompiler());
@@ -60,8 +83,8 @@ int programEntryPoint()
 		try
 		{
 			std::ifstream ifstream("../DataSource/Shader/FirstMesh/FirstMesh_fs.hlsl", std::ios::binary);
-			std::ofstream ofstream("../DataPc/Shader/FirstMesh/FirstMesh_fs.hlsl", std::ios::binary);
-			std::ifstream jsonConfiguration("../DataSource/Shader/FirstMesh/FirstMesh_fs.json", std::ios::binary);
+			std::ofstream ofstream("../DataPc/Shader/FirstMesh/FirstMesh_fs.glsl");
+			std::ifstream jsonConfiguration("../DataSource/Shader/FirstMesh/FirstMesh_fs.compiler", std::ios::binary);
 			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createShaderAssetCompiler());
 			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
 		}
@@ -71,6 +94,7 @@ int programEntryPoint()
 			int ii = 0;
 		}
 
+		/*
 		// Font
 		try
 		{
@@ -79,7 +103,7 @@ int programEntryPoint()
 			std::ofstream ofstream("../DataPc/Font/Default/LinBiolinum_R.font", std::ios::binary);
 
 			// Asset compiler configuration
-			std::ifstream jsonConfiguration("../DataSource/Font/LinBiolinum_R.json", std::ios::binary);
+			std::ifstream jsonConfiguration("../DataSource/Font/LinBiolinum_R.compiler", std::ios::binary);
 
 			// Compile asset
 			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createFontAssetCompiler());
@@ -100,7 +124,7 @@ int programEntryPoint()
 				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_Diffuse.dds", std::ios::binary);
 
 				// Asset compiler configuration
-				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_Diffuse.json", std::ios::binary);
+				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_Diffuse.compiler", std::ios::binary);
 
 				// Compile asset
 				RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createTextureAssetCompiler());
@@ -110,21 +134,21 @@ int programEntryPoint()
 			{
 				std::ifstream ifstream("../DataSource/Imrod/Imrod_Illumination.tga", std::ios::binary);
 				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_Illumination.dds", std::ios::binary);
-				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_Illumination.json", std::ios::binary);
+				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_Illumination.compiler", std::ios::binary);
 				RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createTextureAssetCompiler());
 				assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
 			}
 			{
 				std::ifstream ifstream("../DataSource/Imrod/Imrod_norm.tga", std::ios::binary);
 				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_norm.dds", std::ios::binary);
-				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_norm.json", std::ios::binary);
+				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_norm.compiler", std::ios::binary);
 				RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createTextureAssetCompiler());
 				assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
 			}
 			{
 				std::ifstream ifstream("../DataSource/Imrod/Imrod_spec.tga", std::ios::binary);
 				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_spec.dds", std::ios::binary);
-				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_spec.json", std::ios::binary);
+				std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod_spec.compiler", std::ios::binary);
 				RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createTextureAssetCompiler());
 				assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
 			}
@@ -143,7 +167,7 @@ int programEntryPoint()
 			std::ofstream ofstream("../DataPc/Material/Character/Imrod.material", std::ios::binary);
 
 			// Asset compiler configuration
-			std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod.json", std::ios::binary);
+			std::ifstream jsonConfiguration("../DataSource/Imrod/Imrod.compiler", std::ios::binary);
 
 			// Compile asset
 			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createMaterialAssetCompiler());
@@ -163,7 +187,7 @@ int programEntryPoint()
 			std::ofstream ofstream("../DataPc/Mesh/Character/Imrod.mesh", std::ios::binary);
 
 			// Asset compiler configuration
-			std::ifstream jsonConfiguration("../DataSource/Imrod/ImrodLowPoly.json", std::ios::binary);
+			std::ifstream jsonConfiguration("../DataSource/Imrod/ImrodLowPoly.compiler", std::ios::binary);
 
 			// Compile asset
 			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createMeshAssetCompiler());
@@ -174,6 +198,7 @@ int programEntryPoint()
 			const char* text = e.what();
 			int ii = 0;
 		}
+		*/
 	}
 
 	// No error

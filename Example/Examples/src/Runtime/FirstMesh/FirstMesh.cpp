@@ -117,7 +117,7 @@ void FirstMesh::onInitialization()
 				mProgram->setTextureUnit(mProgram->getUniformHandle("NormalMap"),   2);
 				mProgram->setTextureUnit(mProgram->getUniformHandle("SpecularMap"), 3);
 
-				// Optimization: Cached data to not bother the renderer API to much
+				// Optimization: Cached data to not bother the renderer API too much
 				if (nullptr != mUniformBuffer)
 				{
 					mUniformBlockIndex = mProgram->getUniformBlockIndex("UniformBlockDynamicVs", 0);

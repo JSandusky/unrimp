@@ -25,8 +25,8 @@
 struct VS_INPUT
 {
 	float3 Position : POSITION;		// Object space vertex position
-	float2   TexCoord : TEXCOORD0;	// 16 bit texture coordinate
-	float4   QTangent : NORMAL;		// 16 bit QTangent
+	int2   TexCoord : TEXCOORD0;	// 16 bit texture coordinate
+	int2   QTangent : NORMAL;		// 16 bit QTangent
 };
 struct VS_OUTPUT
 {
