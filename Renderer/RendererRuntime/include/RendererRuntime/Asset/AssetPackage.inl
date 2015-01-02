@@ -19,60 +19,42 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererToolkit/RendererToolkitImpl.h"
-#include "RendererToolkit/PlatformTypes.h"
-#include "RendererToolkit/Project/ProjectImpl.h"
-
-
-//[-------------------------------------------------------]
-//[ Global functions                                      ]
-//[-------------------------------------------------------]
-// Export the instance creation function
-#ifdef RENDERERTOOLKIT_EXPORTS
-	#define RENDERERTOOLKIT_API_EXPORT GENERIC_FUNCTION_EXPORT
-#else
-	#define RENDERERTOOLKIT_API_EXPORT
-#endif
-RENDERERTOOLKIT_API_EXPORT RendererToolkit::IRendererToolkit *createRendererToolkitInstance()
-{
-	return new RendererToolkit::RendererToolkitImpl();
-}
-#undef RENDERERTOOLKIT_API_EXPORT
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace RendererRuntime
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RendererToolkitImpl::RendererToolkitImpl()
+	inline AssetPackage::AssetPackage()
 	{
 		// Nothing here
 	}
 
-	RendererToolkitImpl::~RendererToolkitImpl()
+	inline AssetPackage::~AssetPackage()
 	{
 		// Nothing here
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
-	//[-------------------------------------------------------]
-	IProject* RendererToolkitImpl::createProject()
+	inline void AssetPackage::clear()
 	{
-		return new ProjectImpl();
+		mSortedAssetVector.clear();
+	}
+
+	inline const AssetPackage::SortedAssetVector& AssetPackage::getSortedAssetVector() const
+	{
+		return mSortedAssetVector;
+	}
+
+	inline AssetPackage::SortedAssetVector& AssetPackage::getWritableSortedAssetVector()
+	{
+		return mSortedAssetVector;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererToolkit
+} // RendererRuntime

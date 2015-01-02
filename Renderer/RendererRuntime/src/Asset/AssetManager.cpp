@@ -32,7 +32,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	AssetManager::AssetManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime)

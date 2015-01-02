@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\RendererRuntime\Asset\AssetPackage.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
     <None Include="include\RendererRuntime\RendererRuntimeImpl.inl" />
     <None Include="include\RendererRuntime\Resource\Font\FontImpl.inl" />
@@ -31,6 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\Asset\AssetManager.h" />
+    <ClInclude Include="include\RendererRuntime\Asset\AssetPackage.h" />
     <ClInclude Include="include\RendererRuntime\Command\CommandBucket.h" />
     <ClInclude Include="include\RendererRuntime\Command\Material.h" />
     <ClInclude Include="include\RendererRuntime\Compositor\CompositorManager.h" />
@@ -69,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Asset\AssetManager.cpp" />
+    <ClCompile Include="src\Asset\AssetPackage.cpp" />
     <ClCompile Include="src\Command\CommandBucket.cpp" />
     <ClCompile Include="src\Compositor\CompositorManager.cpp" />
     <ClCompile Include="src\RendererRuntimeImpl.cpp" />

@@ -56,24 +56,10 @@ namespace RendererToolkit
 
 	namespace detail
 	{
-		bool orderByAssetId(const ProjectImpl::Asset& left, const ProjectImpl::Asset& right)
+		bool orderByAssetId(const RendererRuntime::AssetPackage::Asset& left, const RendererRuntime::AssetPackage::Asset& right)
 		{
 			return (left.assetId < right.assetId);
 		}
-
-		struct OrderByAssetId
-		{
-			inline bool operator()(const ProjectImpl::Asset& left, uint32_t right) const
-			{
-				return (left.assetId < right);
-			}
-
-			inline bool operator()(uint32_t left, const ProjectImpl::Asset& right) const
-			{
-				return (left < right.assetId);
-			}
-		};
-
 	}
 
 
@@ -92,8 +78,7 @@ namespace RendererToolkit
 
 	const char* ProjectImpl::getAssetFilenameByAssetId(uint32_t assetId) const
 	{
-		SortedAssetVector::const_iterator iterator = std::lower_bound(mSortedAssetVector.cbegin(), mSortedAssetVector.cend(), assetId, detail::OrderByAssetId());
-		return (iterator != mSortedAssetVector.end()) ? iterator->assetFilename : nullptr;
+		return mAssetPackage.getAssetFilenameByAssetId(assetId);
 	}
 
 
@@ -134,10 +119,11 @@ namespace RendererToolkit
 
 	void ProjectImpl::compileAllAssets(const char* rendererTarget)
 	{
-		const size_t numberOfAssets = mSortedAssetVector.size();
+		const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
+		const size_t numberOfAssets = sortedAssetVector.size();
 		for (size_t i = 0; i < numberOfAssets; ++i)
 		{
-			compileAsset(mSortedAssetVector[i], rendererTarget);
+			compileAsset(sortedAssetVector[i], rendererTarget);
 		}
 	}
 
@@ -148,7 +134,7 @@ namespace RendererToolkit
 	void ProjectImpl::clear()
 	{
 		mProjectDirectory.clear();
-		mSortedAssetVector.clear();
+		mAssetPackage.clear();
 	}
 
 	void ProjectImpl::readAssetsByFilename(const std::string& filename)
@@ -176,7 +162,8 @@ namespace RendererToolkit
 		// Read project data
 		Poco::JSON::Object::Ptr jsonProjectObject = jsonRootObject->get("Assets").extract<Poco::JSON::Object::Ptr>();
 		const size_t numberOfAssets = jsonProjectObject->size();
-		mSortedAssetVector.resize(numberOfAssets);
+		RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getWritableSortedAssetVector();
+		sortedAssetVector.resize(numberOfAssets);
 		Poco::JSON::Object::ConstIterator iterator = jsonProjectObject->begin();
 		Poco::JSON::Object::ConstIterator iteratorEnd = jsonProjectObject->end();
 		size_t currentAssetIndex = 0;
@@ -185,14 +172,14 @@ namespace RendererToolkit
 			// Get asset data
 			const uint32_t assetId = static_cast<uint32_t>(std::stoi(iterator->first));	// TODO(co) Parsing directly to "uint32_t" from string to be on the safe-side?
 			const std::string assetFilename = iterator->second.convert<std::string>();
-			if (assetFilename.length() > MAXIMUM_ASSET_FILENAME_LENGTH)
+			if (assetFilename.length() > RendererRuntime::AssetPackage::MAXIMUM_ASSET_FILENAME_LENGTH)
 			{
-				const std::string message = "Asset filename \"" + assetFilename + "\" of asset ID " + std::to_string(assetId) + " is too long. Maximum allowed asset filename number of bytes is " + std::to_string(MAXIMUM_ASSET_FILENAME_LENGTH);
+				const std::string message = "Asset filename \"" + assetFilename + "\" of asset ID " + std::to_string(assetId) + " is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::AssetPackage::MAXIMUM_ASSET_FILENAME_LENGTH);
 				throw std::exception(message.c_str());
 			}
 
 			// Copy asset data
-			Asset& asset = mSortedAssetVector[currentAssetIndex];
+			RendererRuntime::AssetPackage::Asset& asset = sortedAssetVector[currentAssetIndex];
 			asset.assetId = assetId;
 			strcpy(asset.assetFilename, assetFilename.c_str());
 
@@ -200,7 +187,7 @@ namespace RendererToolkit
 			++currentAssetIndex;
 			++iterator;
 		}
-		std::sort(mSortedAssetVector.begin(), mSortedAssetVector.end(), detail::orderByAssetId);
+		std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), detail::orderByAssetId);
 	}
 
 	void ProjectImpl::readTargetsByFilename(const std::string& filename)
@@ -231,7 +218,7 @@ namespace RendererToolkit
 		// TODO(co) Implement me
 	}
 
-	void ProjectImpl::compileAsset(const Asset& asset, const char* rendererTarget)
+	void ProjectImpl::compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget)
 	{
 		// Open the input stream
 		const std::string absoluteAssetFilename = mProjectDirectory + asset.assetFilename;

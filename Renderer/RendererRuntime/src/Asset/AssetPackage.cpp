@@ -21,58 +21,46 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/RendererToolkitImpl.h"
-#include "RendererToolkit/PlatformTypes.h"
-#include "RendererToolkit/Project/ProjectImpl.h"
+#include "RendererRuntime/Asset/AssetPackage.h"
 
-
-//[-------------------------------------------------------]
-//[ Global functions                                      ]
-//[-------------------------------------------------------]
-// Export the instance creation function
-#ifdef RENDERERTOOLKIT_EXPORTS
-	#define RENDERERTOOLKIT_API_EXPORT GENERIC_FUNCTION_EXPORT
-#else
-	#define RENDERERTOOLKIT_API_EXPORT
-#endif
-RENDERERTOOLKIT_API_EXPORT RendererToolkit::IRendererToolkit *createRendererToolkitInstance()
-{
-	return new RendererToolkit::RendererToolkitImpl();
-}
-#undef RENDERERTOOLKIT_API_EXPORT
+#include <algorithm>
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace RendererRuntime
 {
+
+
+	namespace detail
+	{
+		struct OrderByAssetId
+		{
+			inline bool operator()(const AssetPackage::Asset& left, uint32_t right) const
+			{
+				return (left.assetId < right);
+			}
+
+			inline bool operator()(uint32_t left, const AssetPackage::Asset& right) const
+			{
+				return (left < right.assetId);
+			}
+		};
+	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RendererToolkitImpl::RendererToolkitImpl()
+	const char* AssetPackage::getAssetFilenameByAssetId(uint32_t assetId) const
 	{
-		// Nothing here
-	}
-
-	RendererToolkitImpl::~RendererToolkitImpl()
-	{
-		// Nothing here
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
-	//[-------------------------------------------------------]
-	IProject* RendererToolkitImpl::createProject()
-	{
-		return new ProjectImpl();
+		SortedAssetVector::const_iterator iterator = std::lower_bound(mSortedAssetVector.cbegin(), mSortedAssetVector.cend(), assetId, detail::OrderByAssetId());
+		return (iterator != mSortedAssetVector.end()) ? iterator->assetFilename : nullptr;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererToolkit
+} // RendererRuntime

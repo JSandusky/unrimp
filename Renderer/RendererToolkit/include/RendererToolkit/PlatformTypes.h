@@ -30,23 +30,9 @@
 
 
 //[-------------------------------------------------------]
-//[ Data types                                            ]
+//[ Includes                                              ]
 //[-------------------------------------------------------]
-#ifdef WIN32
-	// To export classes, methods and variables
-	// -> Do not add this within the public "RendererToolkit/RendererToolkit.h"-header, it's for the internal implementation only
-	#define GENERIC_API_EXPORT	extern "C" __declspec(dllexport)
-#elif LINUX
-	// To export classes, methods and variables
-	// -> Do not add this within the public "RendererToolkit/RendererToolkit.h"-header, it's for the internal implementation only
-	#if defined(HAVE_VISIBILITY_ATTR)
-		#define GENERIC_API_EXPORT	extern "C" __attribute__ ((visibility("default")))
-	#else
-		#define GENERIC_API_EXPORT	extern "C"
-	#endif
-#else
-	#error "Unsupported platform"
-#endif
+#include <RendererRuntime/PlatformTypes.h>
 
 
 //[-------------------------------------------------------]

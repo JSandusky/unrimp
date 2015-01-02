@@ -22,102 +22,89 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERTOOLKIT_PROJECTIMPL_H__
-#define __RENDERERTOOLKIT_PROJECTIMPL_H__
 
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/Project/IProject.h"
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/NonCopyable.h"
 
-#include <RendererRuntime/Asset/AssetPackage.h>
-
-#include <string>
+#include <vector>
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace RendererRuntime
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Project class implementation
-	*/
-	class ProjectImpl : public IProject
+	class AssetPackage : protected NonCopyable
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const uint32_t MAXIMUM_ASSET_FILENAME_LENGTH = 127;
+
+		/**
+		*  @brief
+		*    Asset class
+		*
+		*  @remarks
+		*    This asset reference table is always kept in memory so we have to implement it in an efficient way.
+		*    No "std::string" by intent to be cache friendly and avoid memory trashing, which is important here.
+		*    132 bytes per asset might sound not much, but when having e.g. 30.000 assets which is not unusual for a
+		*    more complex project, you end up in having a 3 MiB asset reference table in memory.
+		*/
+		struct Asset
+		{
+			uint32_t assetId;											///< Asset ID
+			char	 assetFilename[MAXIMUM_ASSET_FILENAME_LENGTH + 1];	///< Asset UTF-8 filename, +1 for the terminating zero
+		};
+
+		typedef std::vector<Asset> SortedAssetVector;
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class AssetManager;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor
-		*/
-		explicit ProjectImpl();
+		inline AssetPackage();
+		inline ~AssetPackage();
+		inline void clear();
+		inline const SortedAssetVector& getSortedAssetVector() const;
+		RENDERERRUNTIME_API_EXPORT const char* getAssetFilenameByAssetId(uint32_t assetId) const;
 
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~ProjectImpl();
-
-		const char* getAssetFilenameByAssetId(uint32_t assetId) const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IProject methods      ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void loadByFilename(const char* filename) override;
-		virtual void compileAllAssets(const char* rendererTarget) override;
+		// For internal use only (exposed for API performance reasons)
+		inline SortedAssetVector& getWritableSortedAssetVector();
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ProjectImpl(const ProjectImpl &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ProjectImpl &operator =(const ProjectImpl &source);
-
-		void clear();
-		void readAssetsByFilename(const std::string& filename);
-		void readTargetsByFilename(const std::string& filename);
-		void compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget);
+		AssetPackage(const AssetPackage&) = delete;
+		AssetPackage& operator=(const AssetPackage&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		std::string					  mProjectDirectory;
-		RendererRuntime::AssetPackage mAssetPackage;
+		SortedAssetVector mSortedAssetVector;	///< Sorted vector of assets
 
 
 	};
@@ -126,16 +113,10 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererToolkit
+} // RendererRuntime
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/Project/ProjectImpl.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERERTOOLKIT_PROJECTIMPL_H__
+#include "RendererRuntime/Asset/AssetPackage.inl"

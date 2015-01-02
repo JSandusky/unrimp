@@ -66,6 +66,9 @@
     <None Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.inl">
       <Filter>Source Files\Resource\Texture</Filter>
     </None>
+    <None Include="include\RendererRuntime\Asset\AssetPackage.inl">
+      <Filter>Source Files\Asset</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\RendererRuntimeImpl.h">
@@ -174,6 +177,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.h">
       <Filter>Source Files\Resource\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Asset\AssetPackage.h">
+      <Filter>Source Files\Asset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererRuntimeImpl.cpp">
@@ -220,6 +226,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Texture\DdsTextureResourceSerializer.cpp">
       <Filter>Source Files\Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Asset\AssetPackage.cpp">
+      <Filter>Source Files\Asset</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
