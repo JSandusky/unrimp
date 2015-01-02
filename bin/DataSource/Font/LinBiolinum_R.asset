@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"AssetMetadata":
+	{
+		"AssetId": "0",
+		"AssetType": "Font",
+		"FileDependencies": [ "LinBiolinum_R.otf" ],
+		"Copyright": "From the Libertine Open Fonts Projekt ( http://www.linuxlibertine.org/ )"
+	},
+	"FontAssetCompiler":
+	{
+		"InputFile": "LinBiolinum_R.otf",
+		"Size": "12",
+		"Resolution": "96",
+		"GlyphTextureAtlasPadding": "3",
+		"GlyphsPerRow": "16",
+		"GlyphsPerColumn": "16",
+		"NumberOfFontGlyphs": "256"
+	}
+}

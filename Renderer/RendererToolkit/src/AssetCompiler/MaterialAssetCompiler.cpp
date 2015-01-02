@@ -72,9 +72,9 @@ namespace RendererToolkit
 		
 			{ // Check whether or not the configuration format matches
 				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-				if (jsonFormatObject->get("Type").convert<std::string>() != "MaterialAssetCompiler")
+				if (jsonFormatObject->get("Type").convert<std::string>() != "Asset")
 				{
-					throw std::exception("Invalid JSON format type, must be \"MaterialCompiler\"");
+					throw std::exception("Invalid JSON format type, must be \"Asset\"");
 				}
 				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
 				{
@@ -83,7 +83,7 @@ namespace RendererToolkit
 			}
 
 			// Read configuration
-			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonRootObject->get("Configuration").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonRootObject->get("MaterialAssetCompiler").extract<Poco::JSON::Object::Ptr>();
 			test = jsonConfigurationObject->optValue<uint32_t>("Test", test);
 		}
 

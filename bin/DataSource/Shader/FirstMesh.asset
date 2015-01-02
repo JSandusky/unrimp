@@ -1,0 +1,17 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"AssetMetadata":
+	{
+		"AssetId": "3",
+		"AssetType": "Shader",
+		"FileDependencies": [ "FirstMesh.shader", "FirstMesh.hlsl" ]
+	},
+	"ShaderAssetCompiler":
+	{
+		"InputFile": "FirstMesh.shader"
+	}
+}

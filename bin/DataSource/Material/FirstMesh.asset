@@ -1,0 +1,18 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"AssetMetadata":
+	{
+		"AssetId": "1",
+		"AssetType": "Material",
+		"AssetDependencies": [ "3", "4", "5", "6", "7" ],
+		"FileDependencies": [ "FirstMesh.material" ]
+	}
+	"MaterialAssetCompiler":
+	{
+		"InputFile": "FirstMesh.material"
+	}
+}

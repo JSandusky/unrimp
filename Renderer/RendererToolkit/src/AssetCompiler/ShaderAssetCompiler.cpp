@@ -181,9 +181,9 @@ namespace RendererToolkit
 		
 			{ // Check whether or not the configuration format matches
 				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-				if (jsonFormatObject->get("Type").convert<std::string>() != "ShaderAssetCompiler")
+				if (jsonFormatObject->get("Type").convert<std::string>() != "Asset")
 				{
-					throw std::exception("Invalid JSON format type, must be \"ShaderCompiler\"");
+					throw std::exception("Invalid JSON format type, must be \"Asset\"");
 				}
 				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
 				{
@@ -192,10 +192,45 @@ namespace RendererToolkit
 			}
 
 			// Read configuration
-			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonRootObject->get("Configuration").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonRootObject->get("ShaderAssetCompiler").extract<Poco::JSON::Object::Ptr>();
 			entryPoint = jsonConfigurationObject->optValue<std::string>("EntryPoint", entryPoint);
 			shaderModel = jsonConfigurationObject->optValue<std::string>("ShaderModel", shaderModel);
 		}
+
+		{ // Shader
+			// Parse JSON
+			Poco::JSON::Parser jsonParser;
+			jsonParser.parse(istream);
+			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
+		
+			{ // Check whether or not the configuration format matches
+				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
+				if (jsonFormatObject->get("Type").convert<std::string>() != "ShaderAsset")
+				{
+					throw std::exception("Invalid JSON format type, must be \"ShaderAsset\"");
+				}
+				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
+				{
+					throw std::exception("Invalid JSON format version, must be 1");
+				}
+			}
+
+			Poco::JSON::Object::Ptr jsonShaderObject = jsonRootObject->get("Shader").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonShaderPropertiesObject = jsonShaderObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonShaderTechniqueObject = jsonShaderObject->get("Technique").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonShaderTechniqueTagsObject = jsonShaderTechniqueObject->get("Tags").extract<Poco::JSON::Object::Ptr>();
+			std::string tagTest = jsonShaderTechniqueTagsObject->optValue<std::string>("Test", "");
+			std::string sourceCode = jsonShaderTechniqueObject->optValue<std::string>("SourceCode", "");
+			int i = 0;
+
+		}
+
+
+
+
+		entryPoint = "VertexShaderMain";
+		shaderModel = "vs_5_0";
+
 
 		// Load in the shader source code
 		std::unique_ptr<char[]> buffer;
