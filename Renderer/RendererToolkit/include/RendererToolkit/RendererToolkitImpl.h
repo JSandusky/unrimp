@@ -74,6 +74,8 @@ namespace RendererToolkit
 	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
 	//[-------------------------------------------------------]
 	public:
+		virtual IProject* createProject() override;
+
 		//[-------------------------------------------------------]
 		//[ Asset compilers                                       ]
 		//[-------------------------------------------------------]

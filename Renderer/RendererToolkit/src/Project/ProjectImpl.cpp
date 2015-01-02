@@ -21,30 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/RendererToolkitImpl.h"
-#include "RendererToolkit/PlatformTypes.h"
 #include "RendererToolkit/Project/ProjectImpl.h"
-#include "RendererToolkit/AssetCompiler/ShaderAssetCompiler.h"
-#include "RendererToolkit/AssetCompiler/FontAssetCompiler.h"
-#include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
-#include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
-#include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
-
-
-//[-------------------------------------------------------]
-//[ Global functions                                      ]
-//[-------------------------------------------------------]
-// Export the instance creation function
-#ifdef RENDERERTOOLKIT_EXPORTS
-	#define RENDERERTOOLKIT_API_EXPORT GENERIC_API_EXPORT
-#else
-	#define RENDERERTOOLKIT_API_EXPORT
-#endif
-RENDERERTOOLKIT_API_EXPORT RendererToolkit::IRendererToolkit *createRendererToolkitInstance()
-{
-	return new RendererToolkit::RendererToolkitImpl();
-}
-#undef RENDERERTOOLKIT_API_EXPORT
 
 
 //[-------------------------------------------------------]
@@ -57,54 +34,20 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RendererToolkitImpl::RendererToolkitImpl()
+	ProjectImpl::ProjectImpl()
 	{
 		// Nothing here
 	}
 
-	RendererToolkitImpl::~RendererToolkitImpl()
+	ProjectImpl::~ProjectImpl()
 	{
 		// Nothing here
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
+	//[ Public virtual RendererToolkit::IProject methods      ]
 	//[-------------------------------------------------------]
-	IProject* RendererToolkitImpl::createProject()
-	{
-		return new ProjectImpl();
-	}
-
-	IAssetCompiler* RendererToolkitImpl::createShaderAssetCompiler()
-	{
-		// TODO(co) Due to the HLSL compiler usage, this is currently MS Windows only (maybe there are Linux HLSL cross-compilers?)
-		#ifdef WIN32
-			return new ShaderAssetCompiler();
-		#else
-			#error "Unsupported platform"
-		#endif
-	}
-
-	IAssetCompiler* RendererToolkitImpl::createFontAssetCompiler()
-	{
-		return new FontAssetCompiler();
-	}
-
-	IAssetCompiler* RendererToolkitImpl::createTextureAssetCompiler()
-	{
-		return new TextureAssetCompiler();
-	}
-
-	IAssetCompiler* RendererToolkitImpl::createMaterialAssetCompiler()
-	{
-		return new MaterialAssetCompiler();
-	}
-
-	IAssetCompiler* RendererToolkitImpl::createMeshAssetCompiler()
-	{
-		return new MeshAssetCompiler();
-	}
 
 
 //[-------------------------------------------------------]

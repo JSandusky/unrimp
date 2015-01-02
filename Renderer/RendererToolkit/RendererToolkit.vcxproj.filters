@@ -11,6 +11,9 @@
     <Filter Include="Source Files\AssetCompiler">
       <UniqueIdentifier>{fbfa5ba9-8296-4cc7-895f-5985ce94fffa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Project">
+      <UniqueIdentifier>{8a47c378-fd4c-4668-9a62-4b5d1321f70f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -20,6 +23,12 @@
     </None>
     <None Include="include\RendererToolkit\IRendererToolkit.inl">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\RendererToolkit\Project\ProjectImpl.inl">
+      <Filter>Source Files\Project</Filter>
+    </None>
+    <None Include="include\RendererToolkit\Project\IProject.inl">
+      <Filter>Source Files\Project</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +68,12 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\ShaderAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Project\ProjectImpl.h">
+      <Filter>Source Files\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Project\IProject.h">
+      <Filter>Source Files\Project</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -81,6 +96,9 @@
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\ShaderAssetCompiler.cpp">
       <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Project\ProjectImpl.cpp">
+      <Filter>Source Files\Project</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

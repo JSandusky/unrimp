@@ -42,6 +42,7 @@
 //[-------------------------------------------------------]
 namespace RendererToolkit
 {
+	class IProject;
 	class IAssetCompiler;
 	class IRendererToolkit;
 }
@@ -63,6 +64,8 @@ namespace RendererToolkit
 	public:
 		virtual ~IRendererToolkit();
 	public:
+		virtual IProject* createProject() = 0;
+		// TODO(co) We do not really need to expose those inside the public interface, using the project interface should be sufficient
 		virtual IAssetCompiler* createShaderAssetCompiler() = 0;
 		virtual IAssetCompiler* createFontAssetCompiler() = 0;
 		virtual IAssetCompiler* createTextureAssetCompiler() = 0;
@@ -74,6 +77,19 @@ namespace RendererToolkit
 		IRendererToolkit &operator =(const IRendererToolkit &source);
 	};
 	typedef Renderer::SmartRefCount<IRendererToolkit> IRendererToolkitPtr;
+
+	// RendererToolkit/IProject.h
+	class IProject : public Renderer::RefCount<IProject>
+	{
+	public:
+		virtual ~IProject();
+	public:
+	protected:
+		IProject();
+		explicit IProject(const IProject &source);
+		IProject &operator =(const IProject &source);
+	};
+	typedef Renderer::SmartRefCount<IProject> IProjectPtr;
 
 	// RendererToolkit/AssetCompiler/IAssetCompiler.h
 	class IAssetCompiler : public Renderer::RefCount<IAssetCompiler>

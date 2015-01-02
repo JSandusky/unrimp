@@ -40,6 +40,14 @@ int programEntryPoint()
 	{
 		// TODO(co) Experiments
 
+		RendererToolkit::IProject* project = rendererToolkit->createProject();
+
+		delete project;
+
+
+
+
+		/*
 		// Shader
 		try
 		{
@@ -60,6 +68,7 @@ int programEntryPoint()
 			const char* text = e.what();
 			int ii = 0;
 		}
+		*/
 		/*
 		// Shader
 		try
@@ -93,8 +102,8 @@ int programEntryPoint()
 			const char* text = e.what();
 			int ii = 0;
 		}
+		*/
 
-		/*
 		// Font
 		try
 		{
@@ -198,7 +207,6 @@ int programEntryPoint()
 			const char* text = e.what();
 			int ii = 0;
 		}
-		*/
 	}
 
 	// No error

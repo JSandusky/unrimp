@@ -22,8 +22,8 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERTOOLKIT_IRENDERERTOOLKIT_H__
-#define __RENDERERTOOLKIT_IRENDERERTOOLKIT_H__
+#ifndef __RENDERERTOOLKIT_IPROJECT_H__
+#define __RENDERERTOOLKIT_IPROJECT_H__
 
 
 //[-------------------------------------------------------]
@@ -54,9 +54,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract renderer toolkit interface
+	*    Abstract project interface
 	*/
-	class IRendererToolkit : public Renderer::RefCount<IRendererToolkit>
+	class IProject : public Renderer::RefCount<IProject>
 	{
 
 
@@ -68,24 +68,13 @@ namespace RendererToolkit
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IRendererToolkit();
+		inline virtual ~IProject();
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
+	//[ Public virtual RendererToolkit::IProject methods      ]
 	//[-------------------------------------------------------]
 	public:
-		virtual IProject* createProject() = 0;
-
-		//[-------------------------------------------------------]
-		//[ Asset compilers                                       ]
-		//[-------------------------------------------------------]
-		// TODO(co) We do not really need to expose those inside the public interface, using the project interface should be sufficient
-		virtual IAssetCompiler* createShaderAssetCompiler() = 0;
-		virtual IAssetCompiler* createFontAssetCompiler() = 0;
-		virtual IAssetCompiler* createTextureAssetCompiler() = 0;
-		virtual IAssetCompiler* createMaterialAssetCompiler() = 0;
-		virtual IAssetCompiler* createMeshAssetCompiler() = 0;
 
 
 	//[-------------------------------------------------------]
@@ -96,7 +85,7 @@ namespace RendererToolkit
 		*  @brief
 		*    Default constructor
 		*/
-		inline IRendererToolkit();
+		inline IProject();
 
 		/**
 		*  @brief
@@ -105,7 +94,7 @@ namespace RendererToolkit
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		inline explicit IRendererToolkit(const IRendererToolkit &source);
+		inline explicit IProject(const IProject &source);
 
 		/**
 		*  @brief
@@ -117,7 +106,7 @@ namespace RendererToolkit
 		*  @return
 		*    Reference to this instance
 		*/
-		inline IRendererToolkit &operator =(const IRendererToolkit &source);
+		inline IProject &operator =(const IProject &source);
 
 
 	};
@@ -126,7 +115,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Type definitions                                      ]
 	//[-------------------------------------------------------]
-	typedef Renderer::SmartRefCount<IRendererToolkit> IRendererToolkitPtr;
+	typedef Renderer::SmartRefCount<IProject> IProjectPtr;
 
 
 //[-------------------------------------------------------]
@@ -138,10 +127,10 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/IRendererToolkit.inl"
+#include "RendererToolkit/Project/IProject.inl"
 
 
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
-#endif // __RENDERERTOOLKIT_IRENDERERTOOLKIT_H__
+#endif // __RENDERERTOOLKIT_IPROJECT_H__

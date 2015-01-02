@@ -22,24 +22,14 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERTOOLKIT_IRENDERERTOOLKIT_H__
-#define __RENDERERTOOLKIT_IRENDERERTOOLKIT_H__
+#ifndef __RENDERERTOOLKIT_PROJECTIMPL_H__
+#define __RENDERERTOOLKIT_PROJECTIMPL_H__
 
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Public/Renderer.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererToolkit
-{
-	class IProject;
-	class IAssetCompiler;
-}
+#include "RendererToolkit/Project/IProject.h"
 
 
 //[-------------------------------------------------------]
@@ -54,9 +44,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract renderer toolkit interface
+	*    Project class implementation
 	*/
-	class IRendererToolkit : public Renderer::RefCount<IRendererToolkit>
+	class ProjectImpl : public IProject
 	{
 
 
@@ -66,38 +56,27 @@ namespace RendererToolkit
 	public:
 		/**
 		*  @brief
-		*    Destructor
+		*    Constructor
 		*/
-		inline virtual ~IRendererToolkit();
+		explicit ProjectImpl();
 
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
-	//[-------------------------------------------------------]
-	public:
-		virtual IProject* createProject() = 0;
-
-		//[-------------------------------------------------------]
-		//[ Asset compilers                                       ]
-		//[-------------------------------------------------------]
-		// TODO(co) We do not really need to expose those inside the public interface, using the project interface should be sufficient
-		virtual IAssetCompiler* createShaderAssetCompiler() = 0;
-		virtual IAssetCompiler* createFontAssetCompiler() = 0;
-		virtual IAssetCompiler* createTextureAssetCompiler() = 0;
-		virtual IAssetCompiler* createMaterialAssetCompiler() = 0;
-		virtual IAssetCompiler* createMeshAssetCompiler() = 0;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Destructor
 		*/
-		inline IRendererToolkit();
+		virtual ~ProjectImpl();
 
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererToolkit::IProject methods      ]
+	//[-------------------------------------------------------]
+	public:
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
 		/**
 		*  @brief
 		*    Copy constructor
@@ -105,7 +84,7 @@ namespace RendererToolkit
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		inline explicit IRendererToolkit(const IRendererToolkit &source);
+		inline explicit ProjectImpl(const ProjectImpl &source);
 
 		/**
 		*  @brief
@@ -117,16 +96,16 @@ namespace RendererToolkit
 		*  @return
 		*    Reference to this instance
 		*/
-		inline IRendererToolkit &operator =(const IRendererToolkit &source);
+		inline ProjectImpl &operator =(const ProjectImpl &source);
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
 
 
 	};
-
-
-	//[-------------------------------------------------------]
-	//[ Type definitions                                      ]
-	//[-------------------------------------------------------]
-	typedef Renderer::SmartRefCount<IRendererToolkit> IRendererToolkitPtr;
 
 
 //[-------------------------------------------------------]
@@ -138,10 +117,10 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/IRendererToolkit.inl"
+#include "RendererToolkit/Project/ProjectImpl.inl"
 
 
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
-#endif // __RENDERERTOOLKIT_IRENDERERTOOLKIT_H__
+#endif // __RENDERERTOOLKIT_PROJECTIMPL_H__
