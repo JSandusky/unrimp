@@ -4,16 +4,21 @@
 		"Type": "Asset",
 		"Version": "1"
 	},
-	"AssetMetadata":
+	"Asset":
 	{
-		"AssetId": "6",
-		"AssetType": "Texture",
-		"FileDependencies": [ "Imrod_norm.tga" ],
-		"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/personal_art/imrod.htm ) by Dmitry Parkin: http://www.parkparkin.com"
-	},
-	"TextureAssetCompiler":
-	{
-		"InputFile": "Imrod_norm.tga",
-		"TextureSemantic": "NormalMap"
+		"AssetMetadata":
+		{
+			"AssetId": "6",
+			"AssetType": "Texture",
+			"AssetCategory": "Character",
+			"AssetName": "Imrod_norm",
+			"FileDependencies": [ "Imrod_norm.tga" ],
+			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/personal_art/imrod.htm ) by Dmitry Parkin: http://www.parkparkin.com"
+		},
+		"TextureAssetCompiler":
+		{
+			"InputFile": "Imrod_norm.tga",
+			"TextureSemantic": "NormalMap"
+		}
 	}
 }

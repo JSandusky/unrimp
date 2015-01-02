@@ -4,15 +4,20 @@
 		"Type": "Asset",
 		"Version": "1"
 	},
-	"AssetMetadata":
+	"Asset":
 	{
-		"AssetId": "1",
-		"AssetType": "Material",
-		"AssetDependencies": [ "3", "4", "5", "6", "7" ],
-		"FileDependencies": [ "FirstMesh.material" ]
-	}
-	"MaterialAssetCompiler":
-	{
-		"InputFile": "FirstMesh.material"
+		"AssetMetadata":
+		{
+			"AssetId": "1",
+			"AssetType": "Material",
+			"AssetCategory": "Character",
+			"AssetName": "FirstMesh",
+			"AssetDependencies": [ "3", "4", "5", "6", "7" ],
+			"FileDependencies": [ "FirstMesh.material" ]
+		},
+		"MaterialAssetCompiler":
+		{
+			"InputFile": "FirstMesh.material"
+		}
 	}
 }

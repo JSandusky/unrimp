@@ -31,6 +31,9 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Project/IProject.h"
 
+#include <vector>
+#include <string>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -51,6 +54,31 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const uint32_t MAXIMUM_ASSET_FILENAME_LENGTH = 127;
+
+		/**
+		*  @brief
+		*    Asset class
+		*
+		*  @remarks
+		*    This asset reference table is always kept in memory so we have to implement it in an efficient way.
+		*    No "std::string" by intent to be cache friendly and avoid memory trashing, which is important here.
+		*    132 bytes per asset might sound not much, but when having e.g. 30.000 assets which is not unusual for a
+		*    more complex project, you end up in having a 3 MiB asset reference table in memory.
+		*/
+		struct Asset
+		{
+			uint32_t assetId;											///< Asset ID
+			char	 assetFilename[MAXIMUM_ASSET_FILENAME_LENGTH + 1];	///< Asset UTF-8 filename, +1 for the terminating zero
+		};
+
+		typedef std::vector<Asset> SortedAssetVector;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -66,11 +94,15 @@ namespace RendererToolkit
 		*/
 		virtual ~ProjectImpl();
 
+		const char* getAssetFilenameByAssetId(uint32_t assetId) const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IProject methods      ]
 	//[-------------------------------------------------------]
 	public:
+		virtual void loadByFilename(const char* filename) override;
+		virtual void compileAllAssets(const char* rendererTarget) override;
 
 
 	//[-------------------------------------------------------]
@@ -98,11 +130,18 @@ namespace RendererToolkit
 		*/
 		inline ProjectImpl &operator =(const ProjectImpl &source);
 
+		void clear();
+		void readAssetsByFilename(const std::string& filename);
+		void readTargetsByFilename(const std::string& filename);
+		void compileAsset(const Asset& asset, const char* rendererTarget);
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		std::string		  mProjectDirectory;
+		SortedAssetVector mSortedAssetVector;	///< Sorted vector of assets
 
 
 	};

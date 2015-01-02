@@ -4,14 +4,19 @@
 		"Type": "Asset",
 		"Version": "1"
 	},
-	"AssetMetadata":
+	"Asset":
 	{
-		"AssetId": "3",
-		"AssetType": "Shader",
-		"FileDependencies": [ "FirstMesh.shader", "FirstMesh.hlsl" ]
-	},
-	"ShaderAssetCompiler":
-	{
-		"InputFile": "FirstMesh.shader"
+		"AssetMetadata":
+		{
+			"AssetId": "3",
+			"AssetType": "Shader",
+			"AssetCategory": "Default",
+			"AssetName": "FirstMesh",
+			"FileDependencies": [ "FirstMesh.shader", "FirstMesh.hlsl" ]
+		},
+		"ShaderAssetCompiler":
+		{
+			"InputFile": "FirstMesh.shader"
+		}
 	}
 }

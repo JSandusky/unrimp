@@ -75,6 +75,8 @@ namespace RendererToolkit
 	//[ Public virtual RendererToolkit::IProject methods      ]
 	//[-------------------------------------------------------]
 	public:
+		virtual void loadByFilename(const char* filename) = 0;
+		virtual void compileAllAssets(const char* rendererTarget) = 0;
 
 
 	//[-------------------------------------------------------]

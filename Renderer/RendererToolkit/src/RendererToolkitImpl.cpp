@@ -24,11 +24,6 @@
 #include "RendererToolkit/RendererToolkitImpl.h"
 #include "RendererToolkit/PlatformTypes.h"
 #include "RendererToolkit/Project/ProjectImpl.h"
-#include "RendererToolkit/AssetCompiler/ShaderAssetCompiler.h"
-#include "RendererToolkit/AssetCompiler/FontAssetCompiler.h"
-#include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
-#include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
-#include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 
 
 //[-------------------------------------------------------]
@@ -74,36 +69,6 @@ namespace RendererToolkit
 	IProject* RendererToolkitImpl::createProject()
 	{
 		return new ProjectImpl();
-	}
-
-	IAssetCompiler* RendererToolkitImpl::createShaderAssetCompiler()
-	{
-		// TODO(co) Due to the HLSL compiler usage, this is currently MS Windows only (maybe there are Linux HLSL cross-compilers?)
-		#ifdef WIN32
-			return new ShaderAssetCompiler();
-		#else
-			#error "Unsupported platform"
-		#endif
-	}
-
-	IAssetCompiler* RendererToolkitImpl::createFontAssetCompiler()
-	{
-		return new FontAssetCompiler();
-	}
-
-	IAssetCompiler* RendererToolkitImpl::createTextureAssetCompiler()
-	{
-		return new TextureAssetCompiler();
-	}
-
-	IAssetCompiler* RendererToolkitImpl::createMaterialAssetCompiler()
-	{
-		return new MaterialAssetCompiler();
-	}
-
-	IAssetCompiler* RendererToolkitImpl::createMeshAssetCompiler()
-	{
-		return new MeshAssetCompiler();
 	}
 
 

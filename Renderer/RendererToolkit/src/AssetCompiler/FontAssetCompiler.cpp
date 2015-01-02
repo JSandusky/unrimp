@@ -23,24 +23,12 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/FontAssetCompiler.h"
 
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4127)	// warning C4127: conditional expression is constant
-	#pragma warning(disable: 4244)	// warning C4244: 'argument': conversion from '<x>' to '<y>', possible loss of data
-	#pragma warning(disable: 4266)	// warning C4266: '<x>': no override available for virtual member function from base '<y>'; function is hidden
-	#pragma warning(disable: 4365)	// warning C4365: 'return': conversion from '<x>' to '<y>', signed/unsigned mismatch
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#pragma warning(disable: 4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
-	#pragma warning(disable: 4619)	// warning C4619: #pragma warning: there is no warning number '<x>'
-	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-	#include <Poco/JSON/Parser.h>
-#pragma warning(pop)
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <ftglyph.h>
 
 #include <memory>
+#include <fstream>
 
 
 //[-------------------------------------------------------]
@@ -288,8 +276,10 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
-	bool FontAssetCompiler::compile(std::istream& istream, std::ostream& ostream, std::istream& jsonConfiguration)
+	void FontAssetCompiler::compile(const std::string& assetInputDirectory, Poco::JSON::Object::Ptr jsonAssetRootObject, const std::string& assetOutputDirectory)
 	{
+		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
+
 		// We really need an valid FreeType library instance
 		if (nullptr == mFtLibrary)
 		{
@@ -297,6 +287,7 @@ namespace RendererToolkit
 		}
 
 		// Read configuration
+		std::string inputFile;
 		uint32_t size					  = 12;
 		uint32_t resolution				  = 96;
 		uint32_t glyphTextureAtlasPadding = 3;	// Glyph texture atlas gab between glyphs in pixel
@@ -304,25 +295,9 @@ namespace RendererToolkit
 		uint32_t glyphsPerColumn		  = 16;
 		uint32_t numberOfFontGlyphs		  = 256;
 		{
-			// Parse JSON
-			Poco::JSON::Parser jsonParser;
-			jsonParser.parse(jsonConfiguration);
-			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
-		
-			{ // Check whether or not the configuration format matches
-				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-				if (jsonFormatObject->get("Type").convert<std::string>() != "Asset")
-				{
-					throw std::exception("Invalid JSON format type, must be \"Asset\"");
-				}
-				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
-				{
-					throw std::exception("Invalid JSON format version, must be 1");
-				}
-			}
-
-			// Read configuration
-			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonRootObject->get("FontAssetCompiler").extract<Poco::JSON::Object::Ptr>();
+			// Read font asset compiler configuration
+			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonAssetObject->get("FontAssetCompiler").extract<Poco::JSON::Object::Ptr>();
+			inputFile				 = jsonConfigurationObject->getValue<std::string>("InputFile");
 			size					 = jsonConfigurationObject->optValue<uint32_t>("Size", size);
 			resolution				 = jsonConfigurationObject->optValue<uint32_t>("Resolution", resolution);
 			glyphTextureAtlasPadding = jsonConfigurationObject->optValue<uint32_t>("GlyphTextureAtlasPadding", glyphTextureAtlasPadding);
@@ -331,16 +306,21 @@ namespace RendererToolkit
 			numberOfFontGlyphs		 = jsonConfigurationObject->optValue<uint32_t>("NumberOfFontGlyphs", numberOfFontGlyphs);
 		}
 
+		// Open the input file and output file
+		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
+		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
+		std::ofstream ofstream(assetOutputDirectory + assetName + ".font", std::ios::binary);
+
 		// Create the FreeType library face (aka "The Font")
 		FT_Face ftFace;
 		std::unique_ptr<FT_Byte[]> buffer;
 		{
 			// Get file size and file data
-			istream.seekg(0, std::istream::end);
-			const FT_Long numberOfBytes = static_cast<FT_Long>(istream.tellg());
-			istream.seekg(0, std::istream::beg);
+			ifstream.seekg(0, std::ifstream::end);
+			const FT_Long numberOfBytes = static_cast<FT_Long>(ifstream.tellg());
+			ifstream.seekg(0, std::ifstream::beg);
 			buffer = std::unique_ptr<FT_Byte[]>(new FT_Byte[static_cast<size_t>(numberOfBytes)]);
-			istream.read((char*)buffer.get(), numberOfBytes);
+			ifstream.read((char*)buffer.get(), numberOfBytes);
 
 			// Create the FreeType library face
 			if (0 != FT_New_Memory_Face(*mFtLibrary, buffer.get(), numberOfBytes, 0, &ftFace))
@@ -395,7 +375,7 @@ namespace RendererToolkit
 		fontHeader.glyphTextureAtlasSizeY = detail::getNearestPowerOfTwo(static_cast<uint32_t>(glyphTextureAtlasPadding + glyphsPerRow * (fontHeader.height + glyphTextureAtlasPadding)), false);
 
 		// Write down the font header
-		ostream.write(reinterpret_cast<const char*>(&fontHeader), sizeof(FontHeader));
+		ofstream.write(reinterpret_cast<const char*>(&fontHeader), sizeof(FontHeader));
 
 		{ // Fill the font glyphs and data
 			// Allocate memory for the glyph texture atlas and initialize it with zero to avoid sampling artefacts later on
@@ -418,21 +398,18 @@ namespace RendererToolkit
 				}
 
 				// Write down the font glyphs
-				ostream.write(reinterpret_cast<const char*>(fontGlyphTextures), sizeof(detail::FontGlyphTexture) * fontHeader.numberOfFontGlyphs);
+				ofstream.write(reinterpret_cast<const char*>(fontGlyphTextures), sizeof(detail::FontGlyphTexture) * fontHeader.numberOfFontGlyphs);
 
 				// Free allocated memory
 				delete [] fontGlyphTextures;
 			}
 
 			// Write down the font data
-			ostream.write(reinterpret_cast<const char*>(glyphTextureAtlasData), totalNumberOfBytes);
+			ofstream.write(reinterpret_cast<const char*>(glyphTextureAtlasData), totalNumberOfBytes);
 
 			// Free allocated memory
 			delete [] glyphTextureAtlasData;
 		}
-
-		// Done
-		return true;
 	}
 
 

@@ -34,8 +34,6 @@
 //[-------------------------------------------------------]
 #include <Renderer/Public/Renderer.h>
 
-#include <iosfwd>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -43,7 +41,6 @@
 namespace RendererToolkit
 {
 	class IProject;
-	class IAssetCompiler;
 	class IRendererToolkit;
 }
 
@@ -65,12 +62,6 @@ namespace RendererToolkit
 		virtual ~IRendererToolkit();
 	public:
 		virtual IProject* createProject() = 0;
-		// TODO(co) We do not really need to expose those inside the public interface, using the project interface should be sufficient
-		virtual IAssetCompiler* createShaderAssetCompiler() = 0;
-		virtual IAssetCompiler* createFontAssetCompiler() = 0;
-		virtual IAssetCompiler* createTextureAssetCompiler() = 0;
-		virtual IAssetCompiler* createMaterialAssetCompiler() = 0;
-		virtual IAssetCompiler* createMeshAssetCompiler() = 0;
 	protected:
 		IRendererToolkit();
 		explicit IRendererToolkit(const IRendererToolkit &source);
@@ -84,26 +75,14 @@ namespace RendererToolkit
 	public:
 		virtual ~IProject();
 	public:
+		virtual void loadByFilename(const char* filename) = 0;
+		virtual void compileAllAssets(const char* rendererTarget) = 0;
 	protected:
 		IProject();
 		explicit IProject(const IProject &source);
 		IProject &operator =(const IProject &source);
 	};
 	typedef Renderer::SmartRefCount<IProject> IProjectPtr;
-
-	// RendererToolkit/AssetCompiler/IAssetCompiler.h
-	class IAssetCompiler : public Renderer::RefCount<IAssetCompiler>
-	{
-	public:
-		~IAssetCompiler() {};
-	public:
-		virtual bool compile(std::istream& istream, std::ostream& ostream, std::istream& jsonConfiguration) = 0;
-	protected:
-		IAssetCompiler() {};
-		explicit IAssetCompiler(const IAssetCompiler &source);
-		IAssetCompiler &operator =(const IAssetCompiler &source);
-	};
-	typedef Renderer::SmartRefCount<IAssetCompiler> IAssetCompilerPtr;
 
 
 //[-------------------------------------------------------]

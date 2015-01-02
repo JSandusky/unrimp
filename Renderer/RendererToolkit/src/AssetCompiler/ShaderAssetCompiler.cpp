@@ -33,20 +33,8 @@
 #define EXCLUDE_PSTDINT
 #include <HLSLCrossCompiler/hlslcc.hpp>
 
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4127)	// warning C4127: conditional expression is constant
-	#pragma warning(disable: 4244)	// warning C4244: 'argument': conversion from '<x>' to '<y>', possible loss of data
-	#pragma warning(disable: 4266)	// warning C4266: '<x>': no override available for virtual member function from base '<y>'; function is hidden
-	#pragma warning(disable: 4365)	// warning C4365: 'return': conversion from '<x>' to '<y>', signed/unsigned mismatch
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#pragma warning(disable: 4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
-	#pragma warning(disable: 4619)	// warning C4619: #pragma warning: there is no warning number '<x>'
-	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-	#include <Poco/JSON/Parser.h>
-#pragma warning(pop)
-
 #include <memory>
+#include <fstream>
 
 
 //[-------------------------------------------------------]
@@ -167,43 +155,35 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
-	bool ShaderAssetCompiler::compile(std::istream& istream, std::ostream& ostream, std::istream& jsonConfiguration)
+	void ShaderAssetCompiler::compile(const std::string& assetInputDirectory, Poco::JSON::Object::Ptr jsonAssetRootObject, const std::string& assetOutputDirectory)
 	{
+		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
+
 		// Read configuration
 		// TODO(co) Add required properties
+		std::string inputFile;
 		std::string entryPoint = "main";
 		std::string shaderModel = "vs_5_0";
 		{
-			// Parse JSON
-			Poco::JSON::Parser jsonParser;
-			jsonParser.parse(jsonConfiguration);
-			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
-		
-			{ // Check whether or not the configuration format matches
-				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-				if (jsonFormatObject->get("Type").convert<std::string>() != "Asset")
-				{
-					throw std::exception("Invalid JSON format type, must be \"Asset\"");
-				}
-				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
-				{
-					throw std::exception("Invalid JSON format version, must be 1");
-				}
-			}
-
-			// Read configuration
-			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonRootObject->get("ShaderAssetCompiler").extract<Poco::JSON::Object::Ptr>();
-			entryPoint = jsonConfigurationObject->optValue<std::string>("EntryPoint", entryPoint);
+			// Read shader asset compiler configuration
+			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonAssetObject->get("ShaderAssetCompiler").extract<Poco::JSON::Object::Ptr>();
+			inputFile   = jsonConfigurationObject->getValue<std::string>("InputFile");
+			entryPoint  = jsonConfigurationObject->optValue<std::string>("EntryPoint", entryPoint);
 			shaderModel = jsonConfigurationObject->optValue<std::string>("ShaderModel", shaderModel);
 		}
+
+		// Open the input file
+		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
+		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
+		std::ofstream ofstream(assetOutputDirectory + assetName + ".shader", std::ios::binary);
 
 		{ // Shader
 			// Parse JSON
 			Poco::JSON::Parser jsonParser;
-			jsonParser.parse(istream);
+			jsonParser.parse(ifstream);
 			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
 		
-			{ // Check whether or not the configuration format matches
+			{ // Check whether or not the file format matches
 				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
 				if (jsonFormatObject->get("Type").convert<std::string>() != "ShaderAsset")
 				{
@@ -234,12 +214,14 @@ namespace RendererToolkit
 
 		// Load in the shader source code
 		std::unique_ptr<char[]> buffer;
-		istream.seekg(0, std::istream::end);
-		const size_t numberOfBytes = static_cast<size_t>(istream.tellg());
-		istream.seekg(0, std::istream::beg);
+		ifstream.seekg(0, std::ifstream::end);
+		const size_t numberOfBytes = static_cast<size_t>(ifstream.tellg());
+		ifstream.seekg(0, std::ifstream::beg);
 		buffer = std::unique_ptr<char[]>(new char[numberOfBytes]);
-		istream.read(buffer.get(), numberOfBytes);
+		ifstream.read(buffer.get(), numberOfBytes);
 
+		// TODO(co)
+		/*
 		// Compile the HLSL source code
 		// TODO(co) Cleanup
 		ID3DBlob* d3dBlobVertexShader = nullptr;
@@ -247,15 +229,13 @@ namespace RendererToolkit
 			HRESULT hr = S_OK;
 
 			DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_OPTIMIZATION_LEVEL3;
-			/*
-		#if defined( DEBUG ) || defined( _DEBUG )
-			// Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-			// Setting this flag improves the shader debugging experience, but still allows 
-			// the shaders to be optimized and to run exactly the way they will run in 
-			// the release configuration of this program.
-			shaderFlags |= D3DCOMPILE_DEBUG;
-		#endif
-		*/
+			#if defined( DEBUG ) || defined( _DEBUG )
+				// Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
+				// Setting this flag improves the shader debugging experience, but still allows 
+				// the shaders to be optimized and to run exactly the way they will run in 
+				// the release configuration of this program.
+		//		shaderFlags |= D3DCOMPILE_DEBUG;
+			#endif
 
 			ID3DBlob *errorBlob;
 			hr = D3DCompile(buffer.get(), numberOfBytes, nullptr, nullptr, nullptr, entryPoint.c_str(), shaderModel.c_str(), 
@@ -273,7 +253,7 @@ namespace RendererToolkit
 		}
 		
 		// Compiled HLSL
-//		ostream.write(static_cast<char*>(d3dBlobVertexShader->GetBufferPointer()), d3dBlobVertexShader->GetBufferSize());
+//		ofstream.write(static_cast<char*>(d3dBlobVertexShader->GetBufferPointer()), d3dBlobVertexShader->GetBufferSize());
 
 		GlExtensions ext;
 		ext.ARB_explicit_attrib_location = 0;
@@ -281,14 +261,14 @@ namespace RendererToolkit
 		ext.ARB_shading_language_420pack = 0;
 		GLSLShader result;
 		TranslateHLSLFromMem(static_cast<const char*>(d3dBlobVertexShader->GetBufferPointer()), 0, LANG_150, &ext, nullptr, &result);
-		ostream.write(result.sourceCode, strlen(result.sourceCode));
+		ofstream.write(result.sourceCode, strlen(result.sourceCode));
 		FreeGLSLShader(&result);
 
 		// Release the Direct3D 11 shader binary large object
 		d3dBlobVertexShader->Release();
+		*/
 
-
-		return false;
+		// TODO(co) Implement me
 	}
 
 

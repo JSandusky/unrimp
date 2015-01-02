@@ -38,7 +38,6 @@
 namespace RendererToolkit
 {
 	class IProject;
-	class IAssetCompiler;
 }
 
 
@@ -76,16 +75,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		virtual IProject* createProject() = 0;
-
-		//[-------------------------------------------------------]
-		//[ Asset compilers                                       ]
-		//[-------------------------------------------------------]
-		// TODO(co) We do not really need to expose those inside the public interface, using the project interface should be sufficient
-		virtual IAssetCompiler* createShaderAssetCompiler() = 0;
-		virtual IAssetCompiler* createFontAssetCompiler() = 0;
-		virtual IAssetCompiler* createTextureAssetCompiler() = 0;
-		virtual IAssetCompiler* createMaterialAssetCompiler() = 0;
-		virtual IAssetCompiler* createMeshAssetCompiler() = 0;
 
 
 	//[-------------------------------------------------------]

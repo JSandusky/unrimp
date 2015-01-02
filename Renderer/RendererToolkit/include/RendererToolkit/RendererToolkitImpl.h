@@ -76,15 +76,6 @@ namespace RendererToolkit
 	public:
 		virtual IProject* createProject() override;
 
-		//[-------------------------------------------------------]
-		//[ Asset compilers                                       ]
-		//[-------------------------------------------------------]
-		virtual IAssetCompiler* createShaderAssetCompiler() override;
-		virtual IAssetCompiler* createFontAssetCompiler() override;
-		virtual IAssetCompiler* createTextureAssetCompiler() override;
-		virtual IAssetCompiler* createMaterialAssetCompiler() override;
-		virtual IAssetCompiler* createMeshAssetCompiler() override;
-
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

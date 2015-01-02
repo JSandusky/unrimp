@@ -26,7 +26,7 @@
 #include <RendererToolkit/Public/RendererToolkit.h>
 #include <RendererToolkit/Public/RendererToolkitInstance.h>
 
-#include <fstream>
+#include <exception>
 
 
 //[-------------------------------------------------------]
@@ -39,174 +39,19 @@ int programEntryPoint()
 	if (nullptr != rendererToolkit)
 	{
 		// TODO(co) Experiments
-
 		RendererToolkit::IProject* project = rendererToolkit->createProject();
-
+		try
+		{
+			project->loadByFilename("../DataSource/Example.project");
+			project->compileAllAssets("Direct3D11_50");
+			int ii = 0;
+		}
+		catch (const std::exception& e)
+		{
+			const char* text = e.what();
+			int ii = 0;
+		}
 		delete project;
-
-
-
-
-		/*
-		// Shader
-		try
-		{
-			// Input and output
-//			std::ifstream ifstream("../DataSource/Shader/FirstMesh.hlsl", std::ios::binary);
-			std::ifstream ifstream("../DataSource/Shader/FirstMesh.shader", std::ios::binary);
-			std::ofstream ofstream("../DataPc/Shader/FirstMesh/FirstMesh_vs.glsl");
-
-			// Asset compiler configuration
-			std::ifstream jsonConfiguration("../DataSource/Shader/FirstMesh.asset", std::ios::binary);
-
-			// Compile asset
-			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createShaderAssetCompiler());
-			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
-		}
-		catch (const std::exception& e)
-		{
-			const char* text = e.what();
-			int ii = 0;
-		}
-		*/
-		/*
-		// Shader
-		try
-		{
-			// Input and output
-			std::ifstream ifstream("../DataSource/Shader/FirstMesh/FirstMesh_vs.hlsl", std::ios::binary);
-			std::ofstream ofstream("../DataPc/Shader/FirstMesh/FirstMesh_vs.glsl");
-
-			// Asset compiler configuration
-			std::ifstream jsonConfiguration("../DataSource/Shader/FirstMesh/FirstMesh_vs.asset", std::ios::binary);
-
-			// Compile asset
-			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createShaderAssetCompiler());
-			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
-		}
-		catch (const std::exception& e)
-		{
-			const char* text = e.what();
-			int ii = 0;
-		}
-		try
-		{
-			std::ifstream ifstream("../DataSource/Shader/FirstMesh/FirstMesh_fs.hlsl", std::ios::binary);
-			std::ofstream ofstream("../DataPc/Shader/FirstMesh/FirstMesh_fs.glsl");
-			std::ifstream jsonConfiguration("../DataSource/Shader/FirstMesh/FirstMesh_fs.asset", std::ios::binary);
-			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createShaderAssetCompiler());
-			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
-		}
-		catch (const std::exception& e)
-		{
-			const char* text = e.what();
-			int ii = 0;
-		}
-		*/
-
-		// Font
-		try
-		{
-			// Input and output
-			std::ifstream ifstream("../DataSource/Font/LinBiolinum_R.otf", std::ios::binary);
-			std::ofstream ofstream("../DataPc/Font/Default/LinBiolinum_R.font", std::ios::binary);
-
-			// Asset compiler configuration
-			std::ifstream jsonConfiguration("../DataSource/Font/LinBiolinum_R.asset", std::ios::binary);
-
-			// Compile asset
-			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createFontAssetCompiler());
-			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
-		}
-		catch (const std::exception& e)
-		{
-			const char* text = e.what();
-			int ii = 0;
-		}
-
-		// Texture
-		try
-		{
-			{
-				// Input and output
-				std::ifstream ifstream("../DataSource/Texture/Imrod_Diffuse.tga", std::ios::binary);
-				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_Diffuse.dds", std::ios::binary);
-
-				// Asset compiler configuration
-				std::ifstream jsonConfiguration("../DataSource/Texture/Imrod_Diffuse.asset", std::ios::binary);
-
-				// Compile asset
-				RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createTextureAssetCompiler());
-				assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
-			}
-
-			{
-				std::ifstream ifstream("../DataSource/Texture/Imrod_Illumination.tga", std::ios::binary);
-				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_Illumination.dds", std::ios::binary);
-				std::ifstream jsonConfiguration("../DataSource/Texture/Imrod_Illumination.asset", std::ios::binary);
-				RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createTextureAssetCompiler());
-				assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
-			}
-			{
-				std::ifstream ifstream("../DataSource/Texture/Imrod_norm.tga", std::ios::binary);
-				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_norm.dds", std::ios::binary);
-				std::ifstream jsonConfiguration("../DataSource/Texture/Imrod_norm.asset", std::ios::binary);
-				RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createTextureAssetCompiler());
-				assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
-			}
-			{
-				std::ifstream ifstream("../DataSource/Texture/Imrod_spec.tga", std::ios::binary);
-				std::ofstream ofstream("../DataPc/Texture/Character/Imrod_spec.dds", std::ios::binary);
-				std::ifstream jsonConfiguration("../DataSource/Texture/Imrod_spec.asset", std::ios::binary);
-				RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createTextureAssetCompiler());
-				assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
-			}
-		}
-		catch (const std::exception& e)
-		{
-			const char* text = e.what();
-			int ii = 0;
-		}
-
-		// Material
-		try
-		{
-			// Input and output
-			std::ifstream ifstream("../DataSource/Material/Imrod.material", std::ios::binary);
-			std::ofstream ofstream("../DataPc/Material/Character/Imrod.material", std::ios::binary);
-
-			// Asset compiler configuration
-			std::ifstream jsonConfiguration("../DataSource/Material/Imrod.asset", std::ios::binary);
-
-			// Compile asset
-			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createMaterialAssetCompiler());
-			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
-		}
-		catch (const std::exception& e)
-		{
-			const char* text = e.what();
-			int ii = 0;
-		}
-
-		// Mesh
-		try
-		{
-			// Input and output
-			std::ifstream ifstream("../DataSource/Mesh/ImrodLowPoly.obj", std::ios::binary);
-			std::ofstream ofstream("../DataPc/Mesh/Character/Imrod.mesh", std::ios::binary);
-
-			// Asset compiler configuration
-			std::ifstream jsonConfiguration("../DataSource/Mesh/ImrodLowPoly.asset", std::ios::binary);
-
-			// Compile asset
-			RendererToolkit::IAssetCompilerPtr assetCompiler(rendererToolkit->createMeshAssetCompiler());
-			assetCompiler->compile(ifstream, ofstream, jsonConfiguration);
-		}
-		catch (const std::exception& e)
-		{
-			const char* text = e.what();
-			int ii = 0;
-		}
 	}
 
 	// No error
