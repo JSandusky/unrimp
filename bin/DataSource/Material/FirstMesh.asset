@@ -13,7 +13,8 @@
 			"AssetCategory": "Character",
 			"AssetName": "FirstMesh",
 			"AssetDependencies": [ "3", "4", "5", "6", "7" ],
-			"FileDependencies": [ "FirstMesh.material" ]
+			"FileDependencies": [ "FirstMesh.material" ],
+			"Copyright": "Copyright (c) 2012-2014 Christian Ofenberg"
 		},
 		"MaterialAssetCompiler":
 		{

@@ -116,6 +116,7 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		std::string					  mProjectName;
 		std::string					  mProjectDirectory;
 		RendererRuntime::AssetPackage mAssetPackage;
 

@@ -110,11 +110,18 @@ namespace RendererToolkit
 			}
 		}
 
-		// Read project data
+		// Read project metadata
 		Poco::JSON::Object::Ptr jsonProjectObject = jsonRootObject->get("Project").extract<Poco::JSON::Object::Ptr>();
-		mProjectDirectory = Poco::Path(filename).parent().toString(Poco::Path::PATH_UNIX);
-		readAssetsByFilename(jsonProjectObject->getValue<std::string>("AssetsFilename"));
-		readTargetsByFilename(jsonProjectObject->getValue<std::string>("TargetsFilename"));
+		{
+			Poco::JSON::Object::Ptr jsonProjectMetadataObject = jsonProjectObject->get("ProjectMetadata").extract<Poco::JSON::Object::Ptr>();
+			mProjectName = jsonProjectMetadataObject->getValue<std::string>("Name");
+		}
+
+		{ // Read project data
+			mProjectDirectory = Poco::Path(filename).parent().toString(Poco::Path::PATH_UNIX);
+			readAssetsByFilename(jsonProjectObject->getValue<std::string>("AssetsFilename"));
+			readTargetsByFilename(jsonProjectObject->getValue<std::string>("TargetsFilename"));
+		}
 	}
 
 	void ProjectImpl::compileAllAssets(const char* rendererTarget)
@@ -148,9 +155,9 @@ namespace RendererToolkit
 				uint32_t numberOfAssets;
 			};
 			AssetPackageHeader assetPackageHeader;
-			assetPackageHeader.formatType			  = RendererRuntime::StringId("AssetPackage");
-			assetPackageHeader.formatVersion		  = 1;
-			assetPackageHeader.numberOfAssets		  = sortedAssetVector.size();
+			assetPackageHeader.formatType	  = RendererRuntime::StringId("AssetPackage");
+			assetPackageHeader.formatVersion  = 1;
+			assetPackageHeader.numberOfAssets = sortedAssetVector.size();
 			ofstream.write(reinterpret_cast<const char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
 
 			// Write doen the asset package content in one single burst
@@ -164,6 +171,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	void ProjectImpl::clear()
 	{
+		mProjectName.clear();
 		mProjectDirectory.clear();
 		mAssetPackage.clear();
 	}
@@ -300,7 +308,7 @@ namespace RendererToolkit
 
 		// Input, configuration and output
 		IAssetCompiler::Input input;
-		input.projectName		   = "Example";	// TODO(co) Make it dynamic
+		input.projectName		   = mProjectName;
 		input.assetInputDirectory  = assetInputDirectory;
 		input.assetOutputDirectory = assetOutputDirectory;
 
