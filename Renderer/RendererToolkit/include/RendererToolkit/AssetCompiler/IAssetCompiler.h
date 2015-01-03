@@ -45,6 +45,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class AssetPackage;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -59,10 +68,30 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public structures                                     ]
+	//[-------------------------------------------------------]
+	public:
+		struct Input
+		{
+			std::string projectName;
+			std::string assetInputDirectory;
+			std::string assetOutputDirectory;
+		};
+		struct Configuration
+		{
+			Poco::JSON::Object::Ptr jsonAssetRootObject;
+		};
+		struct Output
+		{
+			RendererRuntime::AssetPackage* outputAssetPackage;
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void compile(const std::string& assetInputDirectory, Poco::JSON::Object::Ptr jsonAssetRootObject, const std::string& assetOutputDirectory) = 0;
+		virtual void compile(const Input& input, const Configuration& configuration, Output& output) = 0;
 
 
 	//[-------------------------------------------------------]

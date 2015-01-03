@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Font/FontResourceManager.h"
 #include "RendererRuntime/Resource/Font/FontResourceSerializer.h"
+#include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/RendererRuntimeImpl.h"
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -42,10 +44,18 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	IFont* FontResourceManager::loadFont(const char* filename)
+	IFont* FontResourceManager::loadFontByAssetId(AssetId assetId)
 	{
-		std::ifstream ifstream(filename, std::ios::binary);
-		return mFontResourceSerializer->loadFont(ifstream);
+		try
+		{
+			std::ifstream ifstream(mRendererRuntimeImpl.getAssetManager().getAssetFilenameByAssetId(assetId), std::ios::binary);
+			return mFontResourceSerializer->loadFont(ifstream);
+		}
+		catch (const std::exception& e)
+		{
+			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load font asset %d: %s", assetId, e.what());
+			return nullptr;
+		}
 	}
 
 

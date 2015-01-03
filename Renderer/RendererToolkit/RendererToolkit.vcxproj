@@ -48,9 +48,10 @@
     <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\ShaderAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\TextureAssetCompiler.cpp">
-      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">false</TreatWarningAsError>
-      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">false</TreatWarningAsError>
-      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">false</TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</TreatWarningAsError>
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\tif_win32.cpp">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level3</WarningLevel>

@@ -24,6 +24,8 @@
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
 #include "RendererToolkit/PlatformTypes.h"
 
+#include <RendererRuntime/Asset/AssetPackage.h>
+
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
 	#pragma warning(disable: 4005)	// warning C4005: '<x>': macro redefinition
@@ -78,7 +80,7 @@ namespace RendererToolkit
 		public:
 			virtual void log(const char* str, va_list arg) override
 			{
-				RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(str, arg);
+				RENDERERTOOLKIT_OUTPUT_ERROR_PRINTF(str, arg);
 			}
 
 
@@ -111,8 +113,8 @@ namespace RendererToolkit
 		public:
 			virtual int assertion(const char* exp, const char* file, int line, const char* func, const char* msg, va_list arg) override
 			{
-				RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF("NVTT assertion failed: \"%s\"\nFile \"%s\" line %d\nFunction \"%s\"\n", exp, file, line, func);
-				RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(msg, arg);
+				RENDERERTOOLKIT_OUTPUT_ERROR_PRINTF("NVTT assertion failed: \"%s\"\nFile \"%s\" line %d\nFunction \"%s\"\n", exp, file, line, func);
+				RENDERERTOOLKIT_OUTPUT_ERROR_PRINTF(msg, arg);
 				nv::debug::dumpInfo();
 				exit(1);
 			}
@@ -320,8 +322,15 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
-	void TextureAssetCompiler::compile(const std::string& assetInputDirectory, Poco::JSON::Object::Ptr jsonAssetRootObject, const std::string& assetOutputDirectory)
+	void TextureAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
+		// Input, configuration and output
+		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
+		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
+		Poco::JSON::Object::Ptr		   jsonAssetRootObject	= configuration.jsonAssetRootObject;
+		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
+
+		// Get the JSON asset object
 		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
 
 		// Read configuration
@@ -338,7 +347,8 @@ namespace RendererToolkit
 		// Open the input file
 		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
-		std::ofstream ofstream(assetOutputDirectory + assetName + ".dds", std::ios::binary);	// TODO(co) Flexible file extension
+		const std::string assetFilename = assetOutputDirectory + assetName + ".dds";	// TODO(co) Make this dynamic
+		std::ofstream ofstream(assetFilename, std::ios::binary);
 
 		// Initialize context, no CUDA support at the moment because it makes things more complicated to build
 		nvtt::Context context;
@@ -421,6 +431,17 @@ namespace RendererToolkit
 				context.compress(tempImage, 0, numberOfImageMipmaps, compressionOptions, outputOptions);
 				++numberOfImageMipmaps;
 			}
+		}
+
+		{ // Update the output asset package
+			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
+			const std::string assetIdAsString = input.projectName + "/Texture/" + assetCategory + '/' + assetName;
+
+			// Output asset
+			RendererRuntime::AssetPackage::Asset outputAsset;
+			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
+			strcpy(outputAsset.assetFilename, assetFilename.c_str());	// TODO(co) Buffer overflow test
+			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 		}
 	}
 

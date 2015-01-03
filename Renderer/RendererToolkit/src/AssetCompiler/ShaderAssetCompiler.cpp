@@ -27,6 +27,8 @@
 #include "RendererToolkit/AssetCompiler/ShaderAssetCompiler.h"
 #include "RendererToolkit/PlatformTypes.h"
 
+#include <RendererRuntime/Asset/AssetPackage.h>
+
 #define DIRECT3D11_DEFINERUNTIMELINKING
 #include <Direct3D11Renderer/D3D11.h>
 
@@ -155,8 +157,15 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
-	void ShaderAssetCompiler::compile(const std::string& assetInputDirectory, Poco::JSON::Object::Ptr jsonAssetRootObject, const std::string& assetOutputDirectory)
+	void ShaderAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
+		// Input, configuration and output
+		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
+		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
+		Poco::JSON::Object::Ptr		   jsonAssetRootObject	= configuration.jsonAssetRootObject;
+		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
+
+		// Get the JSON asset object
 		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
 
 		// Read configuration
@@ -175,7 +184,8 @@ namespace RendererToolkit
 		// Open the input file
 		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
-		std::ofstream ofstream(assetOutputDirectory + assetName + ".shader", std::ios::binary);
+		const std::string assetFilename = assetOutputDirectory + assetName + ".shader";
+		std::ofstream ofstream(assetFilename, std::ios::binary);
 
 		{ // Shader
 			// Parse JSON
@@ -269,6 +279,18 @@ namespace RendererToolkit
 		*/
 
 		// TODO(co) Implement me
+
+
+		{ // Update the output asset package
+			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
+			const std::string assetIdAsString = input.projectName + "/Shader/" + assetCategory + '/' + assetName;
+
+			// Output asset
+			RendererRuntime::AssetPackage::Asset outputAsset;
+			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
+			strcpy(outputAsset.assetFilename, assetFilename.c_str());	// TODO(co) Buffer overflow test
+			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
+		}
 	}
 
 

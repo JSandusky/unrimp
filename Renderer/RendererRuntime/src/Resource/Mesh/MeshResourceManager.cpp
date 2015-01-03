@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceSerializer.h"
+#include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -42,10 +44,18 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	Mesh* MeshResourceManager::loadMesh(Renderer::IProgram& program, const char* filename)
+	Mesh* MeshResourceManager::loadMeshByAssetId(Renderer::IProgram& program, AssetId assetId)
 	{
-		std::ifstream ifstream(filename, std::ios::binary);
-		return mMeshResourceSerializer->loadMesh(program, ifstream);
+		try
+		{
+			std::ifstream ifstream(mRendererRuntime.getAssetManager().getAssetFilenameByAssetId(assetId), std::ios::binary);
+			return mMeshResourceSerializer->loadMesh(program, ifstream);
+		}
+		catch (const std::exception& e)
+		{
+			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load mesh asset %d: %s", assetId, e.what());
+			return nullptr;
+		}
 	}
 
 

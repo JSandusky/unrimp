@@ -30,6 +30,44 @@
 
 
 //[-------------------------------------------------------]
+//[ C++ compiler keywords                                 ]
+//[-------------------------------------------------------]
+#ifdef WIN32
+	/**
+	*  @brief
+	*    Force the compiler to inline something
+	*
+	*  @note
+	*    - Do only use this when you really have to, usually it's best to let the compiler decide by using the standard keyword "inline"
+	*/
+	#define FORCEINLINE __forceinline
+
+	/**
+	*  @brief
+	*    No operation macro ("_asm nop"/"__nop()")
+	*/
+	#define NOP __nop()
+#elif LINUX
+	/**
+	*  @brief
+	*    Force the compiler to inline something
+	*
+	*  @note
+	*    - Do only use this when you really have to, usually it's best to let the compiler decide by using the standard keyword "inline"
+	*/
+	#define FORCEINLINE __attribute__((always_inline))
+
+	/**
+	*  @brief
+	*    No operation macro ("_asm nop"/__nop())
+	*/
+	#define NOP __nop()	// TODO(co) This will probably not work, when it's time for Unix ports, review this
+#else
+	#error "Unsupported platform"
+#endif
+
+
+//[-------------------------------------------------------]
 //[ Project independent generic export                    ]
 //[-------------------------------------------------------]
 #ifdef WIN32
@@ -68,48 +106,55 @@
 
 
 //[-------------------------------------------------------]
+//[ Error                                                 ]
+//[-------------------------------------------------------]
+// OUTPUT_ERROR_* macros
+// -> Do not add this within the public "RendererRuntime/RendererRuntime.h"-header, it's for the internal implementation only
+#ifdef WIN32
+	#ifndef RENDERERRUNTIME_OUTPUT_ERROR
+		#define RENDERERRUNTIME_OUTPUT_ERROR
+		#include "RendererRuntime/WindowsHeader.h"
+		#include <strsafe.h>	// For "StringCbVPrintf()"
+		#define RENDERERRUNTIME_OUTPUT_ERROR_STRING(outputString) OutputDebugString(TEXT(outputString));
+		inline void rendererRuntimeOutputErrorPrintf(LPCTSTR outputString, ...)
+		{
+			va_list argptr;
+			va_start(argptr, outputString);
+			TCHAR buffer[2000];
+			const HRESULT hr = StringCbVPrintf(buffer, sizeof(buffer), outputString, argptr);
+			if (STRSAFE_E_INSUFFICIENT_BUFFER == hr || S_OK == hr)
+			{
+				OutputDebugString(buffer);
+			}
+			else
+			{
+				OutputDebugString(TEXT("\"StringCbVPrintf()\" error"));
+			}
+		}
+		#define RENDERERRUNTIME_OUTPUT_ERROR_PRINTF(outputString, ...) rendererRuntimeOutputErrorPrintf(outputString, __VA_ARGS__);
+	#endif
+#elif LINUX
+	// TODO(co) Error stuff is not supported for now
+	#define RENDERERRUNTIME_OUTPUT_ERROR_STRING(outputString)
+	#define RENDERERRUNTIME_OUTPUT_ERROR_PRINTF(outputString, ...)
+#else
+	#error "Unsupported platform"
+#endif
+
+
+//[-------------------------------------------------------]
 //[ Debug                                                 ]
 //[-------------------------------------------------------]
-// Debug macros
+// OUTPUT_DEBUG_* macros
+// -> Do not add this within the public "RendererRuntime/RendererRuntime.h"-header, it's for the internal implementation only
 #ifdef RENDERER_NO_DEBUG
 	// Debugging stuff is not supported
-	// -> Do not add this within the public "RendererRuntime/RendererRuntime.h"-header, it's for the internal implementation only
 	#define RENDERERRUNTIME_OUTPUT_DEBUG_STRING(outputString)
 	#define RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF(outputString, ...)
 #else
-	// OUTPUT_DEBUG_* macros
-	// -> Do not add this within the public "RendererRuntime/RendererRuntime.h"-header, it's for the internal implementation only
 	#ifdef _DEBUG
-		#ifdef WIN32
-			#ifndef RENDERERRUNTIME_OUTPUT_DEBUG
-				#define RENDERERRUNTIME_OUTPUT_DEBUG
-				#include "RendererRuntime/WindowsHeader.h"
-				#include <strsafe.h>	// For "StringCbVPrintf()"
-				#define RENDERERRUNTIME_OUTPUT_DEBUG_STRING(outputString) OutputDebugString(TEXT(outputString));
-				inline void rendererRuntimeOutputDebugPrintf(LPCTSTR outputString, ...)
-				{
-					va_list argptr;
-					va_start(argptr, outputString);
-					TCHAR buffer[2000];
-					const HRESULT hr = StringCbVPrintf(buffer, sizeof(buffer), outputString, argptr);
-					if (STRSAFE_E_INSUFFICIENT_BUFFER == hr || S_OK == hr)
-					{
-						OutputDebugString(buffer);
-					}
-					else
-					{
-						OutputDebugString(TEXT("\"StringCbVPrintf()\" error"));
-					}
-				}
-				#define RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF(outputString, ...) rendererRuntimeOutputDebugPrintf(outputString, __VA_ARGS__);
-			#endif
-		#elif LINUX
-			// Debugging stuff is not supported
-			#define RENDERERRUNTIME_OUTPUT_DEBUG_STRING(outputString)
-			#define RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF(outputString, ...)
-		#else
-			#error "Unsupported platform"
-		#endif
+		#define RENDERERRUNTIME_OUTPUT_DEBUG_STRING(outputString)	   RENDERERRUNTIME_OUTPUT_ERROR_STRING(outputString)
+		#define RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF(outputString, ...) RENDERERRUNTIME_OUTPUT_ERROR_PRINTF(outputString, __VA_ARGS__)
 	#else
 		#define RENDERERRUNTIME_OUTPUT_DEBUG_STRING(outputString)
 		#define RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF(outputString, ...)

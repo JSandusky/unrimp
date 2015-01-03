@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Texture/DdsTextureResourceSerializer.h"
+#include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -41,10 +43,18 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Renderer::ITexture* TextureResourceManager::loadDdsTexture(const char* filename)
+	Renderer::ITexture* TextureResourceManager::loadTextureByAssetId(AssetId assetId)
 	{
-		std::ifstream ifstream(filename, std::ios::binary);
-		return mDdsTextureResourceSerializer->loadDdsTexture(ifstream);
+		try
+		{
+			std::ifstream ifstream(mRendererRuntime.getAssetManager().getAssetFilenameByAssetId(assetId), std::ios::binary);
+			return mDdsTextureResourceSerializer->loadDdsTexture(ifstream);
+		}
+		catch (const std::exception& e)
+		{
+			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load texture asset %d: %s", assetId, e.what());
+			return nullptr;
+		}
 	}
 
 

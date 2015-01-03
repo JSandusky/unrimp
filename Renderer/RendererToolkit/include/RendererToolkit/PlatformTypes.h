@@ -36,48 +36,55 @@
 
 
 //[-------------------------------------------------------]
+//[ Error                                                 ]
+//[-------------------------------------------------------]
+// OUTPUT_ERROR_* macros
+// -> Do not add this within the public "RendererToolkit/RendererToolkit.h"-header, it's for the internal implementation only
+#ifdef WIN32
+	#ifndef RENDERERTOOLKIT_OUTPUT_ERROR
+		#define RENDERERTOOLKIT_OUTPUT_ERROR
+		#include "RendererToolkit/WindowsHeader.h"
+		#include <strsafe.h>	// For "StringCbVPrintf()"
+		#define RENDERERTOOLKIT_OUTPUT_ERROR_STRING(outputString) OutputDebugString(TEXT(outputString));
+		inline void rendererToolkitOutputErrorPrintf(LPCTSTR outputString, ...)
+		{
+			va_list argptr;
+			va_start(argptr, outputString);
+			TCHAR buffer[2000];
+			const HRESULT hr = StringCbVPrintf(buffer, sizeof(buffer), outputString, argptr);
+			if (STRSAFE_E_INSUFFICIENT_BUFFER == hr || S_OK == hr)
+			{
+				OutputDebugString(buffer);
+			}
+			else
+			{
+				OutputDebugString(TEXT("\"StringCbVPrintf()\" error"));
+			}
+		}
+		#define RENDERERTOOLKIT_OUTPUT_ERROR_PRINTF(outputString, ...) rendererToolkitOutputErrorPrintf(outputString, __VA_ARGS__);
+	#endif
+#elif LINUX
+	// TODO(co) Error stuff is not supported for now
+	#define RENDERERTOOLKIT_OUTPUT_ERROR_STRING(outputString)
+	#define RENDERERTOOLKIT_OUTPUT_ERROR_PRINTF(outputString, ...)
+#else
+	#error "Unsupported platform"
+#endif
+
+
+//[-------------------------------------------------------]
 //[ Debug                                                 ]
 //[-------------------------------------------------------]
-// Debug macros
+// OUTPUT_DEBUG_* macros
+// -> Do not add this within the public "RendererToolkit/RendererToolkit.h"-header, it's for the internal implementation only
 #ifdef RENDERER_NO_DEBUG
 	// Debugging stuff is not supported
-	// -> Do not add this within the public "RendererToolkit/RendererToolkit.h"-header, it's for the internal implementation only
 	#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString)
 	#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...)
 #else
-	// OUTPUT_DEBUG_* macros
-	// -> Do not add this within the public "RendererToolkit/RendererToolkit.h"-header, it's for the internal implementation only
 	#ifdef _DEBUG
-		#ifdef WIN32
-			#ifndef RENDERERTOOLKIT_OUTPUT_DEBUG
-				#define RENDERERTOOLKIT_OUTPUT_DEBUG
-				#include "RendererToolkit/WindowsHeader.h"
-				#include <strsafe.h>	// For "StringCbVPrintf()"
-				#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString) rendererToolkitOutputDebugPrintf(TEXT(outputString));
-				inline void rendererToolkitOutputDebugPrintf(LPCTSTR outputString, ...)
-				{
-					va_list argptr;
-					va_start(argptr, outputString);
-					TCHAR buffer[2000];
-					const HRESULT hr = StringCbVPrintf(buffer, sizeof(buffer), outputString, argptr);
-					if (STRSAFE_E_INSUFFICIENT_BUFFER == hr || S_OK == hr)
-					{
-						OutputDebugString(buffer);
-					}
-					else
-					{
-						OutputDebugString(TEXT("\"StringCbVPrintf()\" error"));
-					}
-				}
-				#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...) rendererToolkitOutputDebugPrintf(outputString, __VA_ARGS__);
-			#endif
-		#elif LINUX
-			// Debugging stuff is not supported
-			#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString)
-			#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...)
-		#else
-			#error "Unsupported platform"
-		#endif
+		#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString)	   RENDERERTOOLKIT_OUTPUT_ERROR_STRING(outputString)
+		#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...) RENDERERTOOLKIT_OUTPUT_ERROR_PRINTF(outputString, __VA_ARGS__)
 	#else
 		#define RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(outputString)
 		#define RENDERERTOOLKIT_OUTPUT_DEBUG_PRINTF(outputString, ...)

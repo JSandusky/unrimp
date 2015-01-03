@@ -27,50 +27,53 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
+#include "RendererRuntime/Core/Serializer.h"
+
+#include <iosfwd>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-typedef struct FT_LibraryRec_* FT_Library;
+namespace RendererRuntime
+{
+	class AssetPackage;
+}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace RendererRuntime
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	// TODO(co) More dynamic glyphs generation to be able to support more languages
-	class FontAssetCompiler : public IAssetCompiler
+	class AssetPackageSerializer : protected Serializer
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-	public:
-		FontAssetCompiler();
-		virtual ~FontAssetCompiler();
+		friend class AssetManager;
+
+
+	// TODO(co) Work-in-progress
+	private:
+		AssetPackage* loadAssetPackage(std::istream& istream);
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void compile(const Input& input, const Configuration& configuration, Output& output) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		FT_Library* mFtLibrary;	///< FreeType library object, a null pointer on error (in case of an terrible error)
+		inline AssetPackageSerializer();
+		inline ~AssetPackageSerializer();
+		AssetPackageSerializer(const AssetPackageSerializer&) = delete;
+		AssetPackageSerializer& operator=(const AssetPackageSerializer&) = delete;
 
 
 	};
@@ -79,4 +82,10 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererToolkit
+} // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Asset/AssetPackageSerializer.inl"

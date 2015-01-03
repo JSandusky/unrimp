@@ -22,6 +22,14 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/Asset/AssetPackage.h"
+#include "RendererRuntime/Asset/AssetPackageSerializer.h"
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	#include <fstream>
+#pragma warning(pop)
 
 
 //[-------------------------------------------------------]
@@ -32,17 +40,46 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	AssetManager::AssetManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+	void AssetManager::clear()
 	{
-		// Nothing in here
+		const size_t numberOfAssetPackages = mAssetPackageVector.size();
+		for (size_t i = 0; i < numberOfAssetPackages; ++i)
+		{
+			delete mAssetPackageVector[i];
+		}
+		mAssetPackageVector.clear();
 	}
 
-	AssetManager::~AssetManager()
+	void AssetManager::addAssetPackageByFilename(const char* filename)
 	{
-		// Nothing in here
+		try
+		{
+			std::ifstream ifstream(filename, std::ios::binary);
+			mAssetPackageVector.push_back(AssetPackageSerializer().loadAssetPackage(ifstream));
+		}
+		catch (const std::exception& e)
+		{
+			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load asset package \"%s\": %s", filename, e.what());
+		}
+	}
+
+	const char* AssetManager::getAssetFilenameByAssetId(AssetId assetId) const
+	{
+		// Seach inside all mounted asset packages, later added asset packages cover old ones
+		const size_t numberOfAssetPackages = mAssetPackageVector.size();
+		for (size_t i = 0; i < numberOfAssetPackages; ++i)
+		{
+			const char* filename = mAssetPackageVector[i]->getAssetFilenameByAssetId(assetId);
+			if (nullptr != filename)
+			{
+				return filename;
+			}
+		}
+
+		// Sorry, the given asset ID is unknown
+		return nullptr;
 	}
 
 

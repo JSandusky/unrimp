@@ -70,7 +70,7 @@ namespace RendererToolkit
 		*/
 		virtual ~ProjectImpl();
 
-		const char* getAssetFilenameByAssetId(uint32_t assetId) const;
+		const char* getAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const;
 
 
 	//[-------------------------------------------------------]
@@ -109,7 +109,7 @@ namespace RendererToolkit
 		void clear();
 		void readAssetsByFilename(const std::string& filename);
 		void readTargetsByFilename(const std::string& filename);
-		void compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget);
+		void compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage);
 
 
 	//[-------------------------------------------------------]

@@ -20,7 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\RendererRuntime\Asset\AssetManager.inl" />
     <None Include="include\RendererRuntime\Asset\AssetPackage.inl" />
+    <None Include="include\RendererRuntime\Asset\AssetPackageSerializer.inl" />
+    <None Include="include\RendererRuntime\Core\StringId.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
     <None Include="include\RendererRuntime\RendererRuntimeImpl.inl" />
     <None Include="include\RendererRuntime\Resource\Font\FontImpl.inl" />
@@ -31,14 +34,17 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\RendererRuntime\Asset\Asset.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetManager.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetPackage.h" />
+    <ClInclude Include="include\RendererRuntime\Asset\AssetPackageSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Command\CommandBucket.h" />
     <ClInclude Include="include\RendererRuntime\Command\Material.h" />
     <ClInclude Include="include\RendererRuntime\Compositor\CompositorManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Manager.h" />
     <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h" />
     <ClInclude Include="include\RendererRuntime\Core\Serializer.h" />
+    <ClInclude Include="include\RendererRuntime\Core\StringId.h" />
     <ClInclude Include="include\RendererRuntime\Export.h" />
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\PlatformTypes.h" />
@@ -72,6 +78,12 @@
   <ItemGroup>
     <ClCompile Include="src\Asset\AssetManager.cpp" />
     <ClCompile Include="src\Asset\AssetPackage.cpp" />
+    <ClCompile Include="src\Asset\AssetPackageSerializer.cpp">
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</TreatWarningAsError>
+    </ClCompile>
     <ClCompile Include="src\Command\CommandBucket.cpp" />
     <ClCompile Include="src\Compositor\CompositorManager.cpp" />
     <ClCompile Include="src\RendererRuntimeImpl.cpp" />

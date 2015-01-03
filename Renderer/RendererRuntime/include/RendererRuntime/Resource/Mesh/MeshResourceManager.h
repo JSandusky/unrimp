@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
+#include "RendererRuntime/Asset/Asset.h"
 #include "RendererRuntime/Resource/ResourceManager.h"
 
 
@@ -66,9 +67,12 @@ namespace RendererRuntime
 		friend class RendererRuntimeImpl;
 
 
-	// TODO(co) Work-in-progress
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT Mesh* loadMesh(Renderer::IProgram& program, const char* filename);
+		// TODO(co) Work-in-progress
+		RENDERERRUNTIME_API_EXPORT Mesh* loadMeshByAssetId(Renderer::IProgram& program, AssetId assetId);
 
 
 	//[-------------------------------------------------------]

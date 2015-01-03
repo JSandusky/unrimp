@@ -69,6 +69,15 @@
     <None Include="include\RendererRuntime\Asset\AssetPackage.inl">
       <Filter>Source Files\Asset</Filter>
     </None>
+    <None Include="include\RendererRuntime\Core\StringId.inl">
+      <Filter>Source Files\Core</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Asset\AssetPackageSerializer.inl">
+      <Filter>Source Files\Asset</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Asset\AssetManager.inl">
+      <Filter>Source Files\Asset</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\RendererRuntimeImpl.h">
@@ -180,6 +189,15 @@
     <ClInclude Include="include\RendererRuntime\Asset\AssetPackage.h">
       <Filter>Source Files\Asset</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Asset\Asset.h">
+      <Filter>Source Files\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\StringId.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Asset\AssetPackageSerializer.h">
+      <Filter>Source Files\Asset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererRuntimeImpl.cpp">
@@ -228,6 +246,9 @@
       <Filter>Source Files\Resource\Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Asset\AssetPackage.cpp">
+      <Filter>Source Files\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Asset\AssetPackageSerializer.cpp">
       <Filter>Source Files\Asset</Filter>
     </ClCompile>
   </ItemGroup>

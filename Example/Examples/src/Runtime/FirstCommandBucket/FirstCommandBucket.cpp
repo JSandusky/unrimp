@@ -38,7 +38,9 @@
 #include "Runtime/FirstCommandBucket/FirstCommandBucket.h"
 #include "Framework/Color4.h"
 
-#include <glm/gtc/type_ptr.hpp> 
+#include <RendererRuntime/Asset/AssetManager.h>
+
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 
@@ -75,12 +77,15 @@ void FirstCommandBucket::onInitialization()
 		// Get the renderer instance (at this point in time we know it must be valid)
 		Renderer::IRendererPtr renderer(getRenderer());
 
+		// TODO(co) Under construction: Will probably become "mount asset package"
+		// Add used asset package
+		rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/AssetPackage.assets");
+
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
 		// Create the font instance
-		// -> In order to keep it simple, we use simple ASCII strings as filenames which are relative to the executable
-		mFont = rendererRuntime->getFontResourceManager().loadFont("../DataPc/Font/Default/LinBiolinum_R.font");
+		mFont = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());

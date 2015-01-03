@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/FontAssetCompiler.h"
 
+#include <RendererRuntime/Asset/AssetPackage.h>
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <ftglyph.h>
@@ -276,8 +278,15 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
-	void FontAssetCompiler::compile(const std::string& assetInputDirectory, Poco::JSON::Object::Ptr jsonAssetRootObject, const std::string& assetOutputDirectory)
+	void FontAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
+		// Input, configuration and output
+		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
+		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
+		Poco::JSON::Object::Ptr		   jsonAssetRootObject	= configuration.jsonAssetRootObject;
+		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
+
+		// Get the JSON asset object
 		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
 
 		// We really need an valid FreeType library instance
@@ -309,7 +318,8 @@ namespace RendererToolkit
 		// Open the input file and output file
 		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
-		std::ofstream ofstream(assetOutputDirectory + assetName + ".font", std::ios::binary);
+		const std::string assetFilename = assetOutputDirectory + assetName + ".font";
+		std::ofstream ofstream(assetFilename, std::ios::binary);
 
 		// Create the FreeType library face (aka "The Font")
 		FT_Face ftFace;
@@ -363,7 +373,7 @@ namespace RendererToolkit
 			uint32_t glyphTextureAtlasSizeY;
 		};
 		FontHeader fontHeader;
-		fontHeader.formatType			  = 1;	// TODO(co) String hash of "Font"
+		fontHeader.formatType			  = RendererRuntime::StringId("Font");
 		fontHeader.formatVersion		  = 1;
 		fontHeader.size					  = size;
 		fontHeader.resolution			  = resolution;
@@ -409,6 +419,17 @@ namespace RendererToolkit
 
 			// Free allocated memory
 			delete [] glyphTextureAtlasData;
+		}
+
+		{ // Update the output asset package
+			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
+			const std::string assetIdAsString = input.projectName + "/Font/" + assetCategory + '/' + assetName;
+
+			// Output asset
+			RendererRuntime::AssetPackage::Asset outputAsset;
+			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
+			strcpy(outputAsset.assetFilename, assetFilename.c_str());	// TODO(co) Buffer overflow test
+			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 		}
 	}
 

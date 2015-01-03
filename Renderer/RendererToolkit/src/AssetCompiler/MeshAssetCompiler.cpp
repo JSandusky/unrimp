@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 
+#include <RendererRuntime/Asset/AssetPackage.h>
+
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
 	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
@@ -65,8 +67,15 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
-	void MeshAssetCompiler::compile(const std::string& assetInputDirectory, Poco::JSON::Object::Ptr jsonAssetRootObject, const std::string& assetOutputDirectory)
+	void MeshAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
+		// Input, configuration and output
+		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
+		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
+		Poco::JSON::Object::Ptr		   jsonAssetRootObject	= configuration.jsonAssetRootObject;
+		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
+
+		// Get the JSON asset object
 		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
 
 		// Read configuration
@@ -83,7 +92,8 @@ namespace RendererToolkit
 		// Open the input file
 		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
-		std::ofstream ofstream(assetOutputDirectory + assetName + ".mesh", std::ios::binary);
+		const std::string assetFilename = assetOutputDirectory + assetName + ".mesh";
+		std::ofstream ofstream(assetFilename, std::ios::binary);
 
 		// Get file size and file data
 		ifstream.seekg(0, std::ifstream::end);
@@ -125,7 +135,7 @@ namespace RendererToolkit
 					uint8_t  numberOfVertexArrayAttributes;
 				};
 				MeshHeader meshHeader;
-				meshHeader.formatType					 = 2;	// TODO(co) String hash of "Mesh"
+				meshHeader.formatType					 = RendererRuntime::StringId("Mesh");
 				meshHeader.formatVersion				 = 1;
 				meshHeader.numberOfBytesPerVertex		 = NUMBER_OF_BYTES_PER_VERTEX;
 				meshHeader.numberOfVertices				 = numberOfVertices;
@@ -214,6 +224,17 @@ namespace RendererToolkit
 		else
 		{
 			throw std::exception("ASSIMP failed to load in the given mesh");
+		}
+
+		{ // Update the output asset package
+			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
+			const std::string assetIdAsString = input.projectName + "/Mesh/" + assetCategory + '/' + assetName;
+
+			// Output asset
+			RendererRuntime::AssetPackage::Asset outputAsset;
+			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
+			strcpy(outputAsset.assetFilename, assetFilename.c_str());	// TODO(co) Buffer overflow test
+			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 		}
 	}
 

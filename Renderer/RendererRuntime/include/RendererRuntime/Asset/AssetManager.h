@@ -27,7 +27,15 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Asset/Asset.h"
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	#include <vector>
+#pragma warning(pop)
 
 
 //[-------------------------------------------------------]
@@ -35,6 +43,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class AssetPackage;
 	class IRendererRuntime;
 }
 
@@ -60,11 +69,27 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::vector<AssetPackage*> AssetPackageVector;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		void clear();
+		RENDERERRUNTIME_API_EXPORT void addAssetPackageByFilename(const char* filename);
+		const char* getAssetFilenameByAssetId(AssetId assetId) const;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		AssetManager(IRendererRuntime& rendererRuntime);
-		~AssetManager();
+		inline AssetManager(IRendererRuntime& rendererRuntime);
+		inline ~AssetManager();
 		AssetManager(const AssetManager&) = delete;
 		AssetManager& operator=(const AssetManager&) = delete;
 
@@ -73,7 +98,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		IRendererRuntime&  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		AssetPackageVector mAssetPackageVector;
 
 
 	};
@@ -83,3 +109,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Asset/AssetManager.inl"

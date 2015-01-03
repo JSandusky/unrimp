@@ -19,64 +19,54 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
+#include "RendererRuntime/Asset/AssetPackageSerializer.h"
+#include "RendererRuntime/Asset/AssetPackage.h"
 
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-typedef struct FT_LibraryRec_* FT_Library;
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	#include <fstream>
+#pragma warning(pop)
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace RendererRuntime
 {
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	// TODO(co) More dynamic glyphs generation to be able to support more languages
-	class FontAssetCompiler : public IAssetCompiler
+	// TODO(co) Work-in-progress
+	AssetPackage* AssetPackageSerializer::loadAssetPackage(std::istream& istream)
 	{
+		AssetPackage* assetPackage = new AssetPackage;
 
+		// Read in the asset package header
+		struct AssetPackageHeader
+		{
+			uint32_t formatType;
+			uint16_t formatVersion;
+			uint32_t numberOfAssets;
+		};
+		AssetPackageHeader assetPackageHeader;
+		istream.read(reinterpret_cast<char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
 
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		FontAssetCompiler();
-		virtual ~FontAssetCompiler();
+		// Read in the asset package content in one single burst
+		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage->getWritableSortedAssetVector();
+		sortedAssetVector.resize(assetPackageHeader.numberOfAssets);
+		istream.read(reinterpret_cast<char*>(sortedAssetVector.data()), sizeof(AssetPackage::Asset) * assetPackageHeader.numberOfAssets);
 
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void compile(const Input& input, const Configuration& configuration, Output& output) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		FT_Library* mFtLibrary;	///< FreeType library object, a null pointer on error (in case of an terrible error)
-
-
-	};
+		// Done
+		return assetPackage;
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererToolkit
+} // RendererRuntime

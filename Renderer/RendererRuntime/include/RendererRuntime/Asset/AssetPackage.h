@@ -29,8 +29,13 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Asset/Asset.h"
 
-#include <vector>
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	#include <vector>
+#pragma warning(pop)
 
 
 //[-------------------------------------------------------]
@@ -65,8 +70,8 @@ namespace RendererRuntime
 		*/
 		struct Asset
 		{
-			uint32_t assetId;											///< Asset ID
-			char	 assetFilename[MAXIMUM_ASSET_FILENAME_LENGTH + 1];	///< Asset UTF-8 filename, +1 for the terminating zero
+			AssetId assetId;											///< Asset ID
+			char	assetFilename[MAXIMUM_ASSET_FILENAME_LENGTH + 1];	///< Asset UTF-8 filename, +1 for the terminating zero
 		};
 
 		typedef std::vector<Asset> SortedAssetVector;
@@ -86,7 +91,7 @@ namespace RendererRuntime
 		inline ~AssetPackage();
 		inline void clear();
 		inline const SortedAssetVector& getSortedAssetVector() const;
-		RENDERERRUNTIME_API_EXPORT const char* getAssetFilenameByAssetId(uint32_t assetId) const;
+		RENDERERRUNTIME_API_EXPORT const char* getAssetFilenameByAssetId(AssetId assetId) const;
 
 		// For internal use only (exposed for API performance reasons)
 		inline SortedAssetVector& getWritableSortedAssetVector();

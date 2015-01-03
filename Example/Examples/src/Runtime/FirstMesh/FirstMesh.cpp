@@ -25,6 +25,7 @@
 #include "Runtime/FirstMesh/FirstMesh.h"
 #include "Framework/Color4.h"
 
+#include <RendererRuntime/Asset/AssetManager.h>
 #include <RendererRuntime/Resource/Mesh/Mesh.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/Texture/TextureResourceManager.h>
@@ -67,6 +68,10 @@ void FirstMesh::onInitialization()
 	if (nullptr != rendererRuntime)
 	{
 		Renderer::IRendererPtr renderer(getRenderer());
+
+		// TODO(co) Under construction: Will probably become "mount asset package"
+		// Add used asset package
+		rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/AssetPackage.assets");
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -129,10 +134,9 @@ void FirstMesh::onInitialization()
 				}
 
 				// Create mesh instance
-				// -> In order to keep it simple, we use simple ASCII strings as filenames which are relative to the executable
 				// -> In order to keep it simple, we provide the mesh with the program, usually you want to use a mesh
 				//    with multiple programs and therefore using multiple vertex array objects (VAO)
-				mMesh = rendererRuntime->getMeshResourceManager().loadMesh(*mProgram, "../DataPc/Mesh/Character/ImrodLowPoly.mesh");
+				mMesh = rendererRuntime->getMeshResourceManager().loadMeshByAssetId(*mProgram, "Example/Mesh/Character/ImrodLowPoly");
 			}
 
 			// Use texture collections when you want you exploit renderer API methods like
@@ -140,16 +144,15 @@ void FirstMesh::onInitialization()
 			// By using a single API call, multiple resources can be set at one and the same time in an efficient way.
 			{
 				// Load in the diffuse, emissive, normal and specular texture
-				// -> In order to keep this sample simple, the texture management is quite primitive
 				// -> The tangent space normal map is stored with three components, two would be enought to recalculate the third component within the fragment shader
 				// -> The specular map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
 				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
 				Renderer::ITexture *textures[] =
 				{
-					textureResourceManager.loadDdsTexture("../DataPc/Texture/Character/Imrod_Diffuse.dds"),
-					textureResourceManager.loadDdsTexture("../DataPc/Texture/Character/Imrod_Illumination.dds"),
-					textureResourceManager.loadDdsTexture("../DataPc/Texture/Character/Imrod_norm.dds"),
-					textureResourceManager.loadDdsTexture("../DataPc/Texture/Character/Imrod_spec.dds")
+					textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_Diffuse"),
+					textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_Illumination"),
+					textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_norm"),
+					textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_spec")
 				};
 
 				// Create the texture collection

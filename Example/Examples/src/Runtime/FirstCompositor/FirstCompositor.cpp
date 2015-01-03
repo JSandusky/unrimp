@@ -38,6 +38,8 @@
 #include "Runtime/FirstCompositor/FirstCompositor.h"
 #include "Framework/Color4.h"
 
+#include <RendererRuntime/Asset/AssetManager.h>
+
 #include <glm/gtc/type_ptr.hpp> 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -70,12 +72,15 @@ void FirstCompositor::onInitialization()
 	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
 	if (nullptr != rendererRuntime)
 	{
+		// TODO(co) Under construction: Will probably become "mount asset package"
+		// Add used asset package
+		rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/AssetPackage.assets");
+
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 		// Create the font instance
-		// -> In order to keep it simple, we use simple ASCII strings as filenames which are relative to the executable
-		mFont = rendererRuntime->getFontResourceManager().loadFont("../DataPc/Font/Default/LinBiolinum_R.font");
+		mFont = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(getRenderer())

@@ -76,7 +76,7 @@ namespace RendererToolkit
 		// Nothing here
 	}
 
-	const char* ProjectImpl::getAssetFilenameByAssetId(uint32_t assetId) const
+	const char* ProjectImpl::getAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const
 	{
 		return mAssetPackage.getAssetFilenameByAssetId(assetId);
 	}
@@ -119,11 +119,42 @@ namespace RendererToolkit
 
 	void ProjectImpl::compileAllAssets(const char* rendererTarget)
 	{
-		const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
-		const size_t numberOfAssets = sortedAssetVector.size();
-		for (size_t i = 0; i < numberOfAssets; ++i)
-		{
-			compileAsset(sortedAssetVector[i], rendererTarget);
+		RendererRuntime::AssetPackage outputAssetPackage;
+
+		{ // Compile all assets
+			const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
+			const size_t numberOfAssets = sortedAssetVector.size();
+			for (size_t i = 0; i < numberOfAssets; ++i)
+			{
+				compileAsset(sortedAssetVector[i], rendererTarget, outputAssetPackage);
+			}
+		}
+
+		{ // Write runtime asset package
+		  // TODO(co) Experimental, make more generic elsewhere
+			RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = outputAssetPackage.getWritableSortedAssetVector();
+
+			// Ensure the asset package is sorted
+			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), detail::orderByAssetId);
+
+			// Open the output file
+			std::ofstream ofstream("../DataPc/AssetPackage.assets", std::ios::binary);
+
+			// Write down the asset package header
+			struct AssetPackageHeader
+			{
+				uint32_t formatType;
+				uint16_t formatVersion;
+				uint32_t numberOfAssets;
+			};
+			AssetPackageHeader assetPackageHeader;
+			assetPackageHeader.formatType			  = RendererRuntime::StringId("AssetPackage");
+			assetPackageHeader.formatVersion		  = 1;
+			assetPackageHeader.numberOfAssets		  = sortedAssetVector.size();
+			ofstream.write(reinterpret_cast<const char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
+
+			// Write doen the asset package content in one single burst
+			ofstream.write(reinterpret_cast<const char*>(sortedAssetVector.data()), sizeof(RendererRuntime::AssetPackage::Asset) * assetPackageHeader.numberOfAssets);
 		}
 	}
 
@@ -170,7 +201,7 @@ namespace RendererToolkit
 		while (iterator != iteratorEnd)
 		{
 			// Get asset data
-			const uint32_t assetId = static_cast<uint32_t>(std::stoi(iterator->first));	// TODO(co) Parsing directly to "uint32_t" from string to be on the safe-side?
+			const RendererRuntime::AssetId assetId = static_cast<uint32_t>(std::stoi(iterator->first));	// TODO(co) Parsing directly to "uint32_t" from string to be on the safe-side?
 			const std::string assetFilename = iterator->second.convert<std::string>();
 			if (assetFilename.length() > RendererRuntime::AssetPackage::MAXIMUM_ASSET_FILENAME_LENGTH)
 			{
@@ -218,7 +249,7 @@ namespace RendererToolkit
 		// TODO(co) Implement me
 	}
 
-	void ProjectImpl::compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget)
+	void ProjectImpl::compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage)
 	{
 		// Open the input stream
 		const std::string absoluteAssetFilename = mProjectDirectory + asset.assetFilename;
@@ -246,7 +277,7 @@ namespace RendererToolkit
 		Poco::JSON::Object::Ptr jsonAssetMetadataObject = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>();
 
 		// Check asset ID match: A sanity check in here doesn't hurt
-		const uint32_t assetId = jsonAssetMetadataObject->getValue<uint32_t>("AssetId");
+		const RendererRuntime::AssetId assetId = jsonAssetMetadataObject->getValue<uint32_t>("AssetId");
 		if (assetId != asset.assetId)
 		{
 			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\": According to the asset package it should be asset ID " + std::to_string(asset.assetId) + " but inside the asset file it's asset ID " + std::to_string(assetId);
@@ -267,32 +298,44 @@ namespace RendererToolkit
 		// Ensure that the asset output directory exists, else creating output file streams will fail
 		Poco::File(assetOutputDirectory).createDirectories();
 
+		// Input, configuration and output
+		IAssetCompiler::Input input;
+		input.projectName		   = "Example";	// TODO(co) Make it dynamic
+		input.assetInputDirectory  = assetInputDirectory;
+		input.assetOutputDirectory = assetOutputDirectory;
+
+		IAssetCompiler::Configuration configuration;
+		configuration.jsonAssetRootObject = jsonAssetRootObject;
+
+		IAssetCompiler::Output output;
+		output.outputAssetPackage = &outputAssetPackage;
+
 		// Evaluate the asset type and continue with the processing in the asset type specific way
 		// TODO(co) Currently this is fixed build in, later on me might want to have this dynamic so we can plugin additional asset compilers
 		if ("Font" == assetType)
 		{
-			FontAssetCompiler().compile(assetInputDirectory, jsonAssetRootObject, assetOutputDirectory);
+			FontAssetCompiler().compile(input, configuration, output);
 		}
 		else if ("Texture" == assetType)
 		{
-			TextureAssetCompiler().compile(assetInputDirectory, jsonAssetRootObject, assetOutputDirectory);
+			TextureAssetCompiler().compile(input, configuration, output);
 		}
 		else if ("Shader" == assetType)
 		{
 			// TODO(co) Due to the HLSL compiler usage, this is currently MS Windows only (maybe there are Linux HLSL cross-compilers?)
 			#ifdef WIN32
-				ShaderAssetCompiler().compile(assetInputDirectory, jsonAssetRootObject, assetOutputDirectory);
+				ShaderAssetCompiler().compile(input, configuration, output);
 			#else
 				#error "Unsupported platform"
 			#endif
 		}
 		else if ("Material" == assetType)
 		{
-			MaterialAssetCompiler().compile(assetInputDirectory, jsonAssetRootObject, assetOutputDirectory);
+			MaterialAssetCompiler().compile(input, configuration, output);
 		}
 		else if ("Mesh" == assetType)
 		{
-			MeshAssetCompiler().compile(assetInputDirectory, jsonAssetRootObject, assetOutputDirectory);
+			MeshAssetCompiler().compile(input, configuration, output);
 		}
 		else
 		{

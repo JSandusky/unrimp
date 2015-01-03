@@ -66,7 +66,7 @@ namespace RendererToolkit
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void compile(const std::string& assetInputDirectory, Poco::JSON::Object::Ptr jsonAssetRootObject, const std::string& assetOutputDirectory) override;
+		virtual void compile(const Input& input, const Configuration& configuration, Output& output) override;
 
 
 	//[-------------------------------------------------------]

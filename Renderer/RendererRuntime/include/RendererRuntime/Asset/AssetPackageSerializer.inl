@@ -19,50 +19,27 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace RendererRuntime
 {
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	class TextureAssetCompiler : public IAssetCompiler
+	inline AssetPackageSerializer::AssetPackageSerializer()
 	{
+		// Nothing here
+	}
 
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		TextureAssetCompiler();
-		virtual ~TextureAssetCompiler();
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void compile(const Input& input, const Configuration& configuration, Output& output) override;
-
-
-	};
+	inline AssetPackageSerializer::~AssetPackageSerializer()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererToolkit
+} // RendererRuntime

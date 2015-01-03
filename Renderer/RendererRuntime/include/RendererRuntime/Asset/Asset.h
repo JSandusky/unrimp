@@ -27,56 +27,23 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-typedef struct FT_LibraryRec_* FT_Library;
+#include "RendererRuntime/Core/StringId.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace RendererRuntime
 {
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	// TODO(co) More dynamic glyphs generation to be able to support more languages
-	class FontAssetCompiler : public IAssetCompiler
-	{
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		FontAssetCompiler();
-		virtual ~FontAssetCompiler();
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void compile(const Input& input, const Configuration& configuration, Output& output) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		FT_Library* mFtLibrary;	///< FreeType library object, a null pointer on error (in case of an terrible error)
-
-
-	};
+	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererToolkit
+} // RendererRuntime
