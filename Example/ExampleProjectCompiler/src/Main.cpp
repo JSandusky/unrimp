@@ -44,6 +44,7 @@ int programEntryPoint()
 		{
 			project->loadByFilename("../DataSource/Example.project");
 			project->compileAllAssets("Direct3D11_50");
+		//	project->compileAllAssets("OpenGLES2_100");
 			int ii = 0;
 		}
 		catch (const std::exception& e)

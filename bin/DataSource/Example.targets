@@ -6,7 +6,7 @@
 	},
 	"Targets":
 	{
-		"TextureTarget":
+		"TextureTargets":
 		{
 			"PC_Legacy":
 			{
@@ -78,7 +78,7 @@
 				}
 			}
 		},
-		"ShaderTarget":
+		"ShaderTargets":
 		{
 			"Direct3D_30":
 			{
@@ -121,24 +121,25 @@
 				"ShaderVersion": "3.00"
 			}
 		},
-		"MaterialTarget":
+		"MaterialTargets":
 		{
 			"Default":
 			{
 				"TextureCompositing": "Default"
 			}
 		},
-		"MeshTarget":
+		"MeshTargets":
 		{
 			"Default":
 			{
 				"VertexLayout": "Default"
 			}
 		},
-		"RendererTarget":
+		"RendererTargets":
 		{
 			"Direct3D9_30":
 			{
+				"Platform": "Pc",
 				"RendererBackend": "Direct3D9",
 				"TextureTarget": "PC_Legacy",
 				"ShaderTarget": "Direct3D_30",
@@ -147,6 +148,7 @@
 			},
 			"Direct3D10_40":
 			{
+				"Platform": "Pc",
 				"RendererBackend": "Direct3D10",
 				"TextureTarget": "PC",
 				"ShaderTarget": "Direct3D_40",
@@ -155,6 +157,7 @@
 			},
 			"Direct3D11_50":
 			{
+				"Platform": "Pc",
 				"RendererBackend": "Direct3D11",
 				"TextureTarget": "PC",
 				"ShaderTarget": "Direct3D_50",
@@ -163,6 +166,7 @@
 			},
 			"OpenGL_120":
 			{
+				"Platform": "Pc",
 				"RendererBackend": "OpenGL",
 				"TextureTarget": "PC_Legacy",
 				"ShaderTarget": "OpenGL_120",
@@ -171,6 +175,7 @@
 			},
 			"OpenGL_330":
 			{
+				"Platform": "Pc",
 				"RendererBackend": "OpenGL",
 				"TextureTarget": "PC",
 				"ShaderTarget": "OpenGL_330",
@@ -179,6 +184,7 @@
 			},
 			"OpenGL_440":
 			{
+				"Platform": "Pc",
 				"RendererBackend": "OpenGL",
 				"TextureTarget": "PC",
 				"ShaderTarget": "OpenGL_440",
@@ -187,6 +193,7 @@
 			},
 			"OpenGLES2_100":
 			{
+				"Platform": "Mobile",
 				"RendererBackend": "OpenGLES2",
 				"TextureTarget": "Mobile",
 				"ShaderTarget": "OpenGLES_100",
@@ -195,6 +202,7 @@
 			},
 			"OpenGLES3_300":
 			{
+				"Platform": "Mobile",
 				"RendererBackend": "OpenGLES3",
 				"TextureTarget": "Mobile",
 				"ShaderTarget": "OpenGLES_300",

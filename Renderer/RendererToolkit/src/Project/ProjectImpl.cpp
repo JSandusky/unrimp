@@ -145,7 +145,7 @@ namespace RendererToolkit
 			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), detail::orderByAssetId);
 
 			// Open the output file
-			std::ofstream ofstream("../DataPc/AssetPackage.assets", std::ios::binary);
+			std::ofstream ofstream("../" + getRenderTargetDataRootDirectory(rendererTarget) + " AssetPackage.assets", std::ios::binary);
 
 			// Write down the asset package header
 			struct AssetPackageHeader
@@ -174,6 +174,7 @@ namespace RendererToolkit
 		mProjectName.clear();
 		mProjectDirectory.clear();
 		mAssetPackage.clear();
+		mJsonTargetsObject = nullptr;
 	}
 
 	void ProjectImpl::readAssetsByFilename(const std::string& filename)
@@ -238,7 +239,7 @@ namespace RendererToolkit
 		Poco::JSON::Parser jsonParser;
 		jsonParser.parse(ifstream);
 		Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
-		
+
 		{ // Check whether or not the file format matches
 			Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
 			if (jsonFormatObject->get("Type").convert<std::string>() != "Targets")
@@ -252,9 +253,7 @@ namespace RendererToolkit
 		}
 
 		// Read project data
-		Poco::JSON::Object::Ptr jsonProjectObject = jsonRootObject->get("Targets").extract<Poco::JSON::Object::Ptr>();
-
-		// TODO(co) Implement me
+		mJsonTargetsObject = jsonRootObject->get("Targets").extract<Poco::JSON::Object::Ptr>();
 	}
 
 	void ProjectImpl::compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage)
@@ -293,15 +292,13 @@ namespace RendererToolkit
 		}
 
 		// Dispatch asset compiler
-		// TODO(co) Use the given renderer target
-		rendererTarget = rendererTarget;
 		// TODO(co) Add multithreading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
 
 		// Get the asset input directory and asset output directory
 		const std::string assetInputDirectory = Poco::Path(absoluteAssetFilename).parent().toString(Poco::Path::PATH_UNIX);
 		const std::string assetType = jsonAssetMetadataObject->getValue<std::string>("AssetType");
 		const std::string assetCategory = jsonAssetMetadataObject->getValue<std::string>("AssetCategory");
-		const std::string assetOutputDirectory = "../DataPc/" + assetType + '/' + assetCategory + '/';	// TODO(co) Experimental
+		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + assetType + '/' + assetCategory + '/';
 
 		// Ensure that the asset output directory exists, else creating output file streams will fail
 		Poco::File(assetOutputDirectory).createDirectories();
@@ -350,6 +347,13 @@ namespace RendererToolkit
 			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\" and ID " + std::to_string(asset.assetId) + ": Asset type \"" + assetType + "\" is unknown";
 			throw std::exception(message.c_str());
 		}
+	}
+
+	std::string ProjectImpl::getRenderTargetDataRootDirectory(const char* rendererTarget) const
+	{
+		Poco::JSON::Object::Ptr jsonRendererTargetsObject = mJsonTargetsObject->get("RendererTargets").extract<Poco::JSON::Object::Ptr>();
+		Poco::JSON::Object::Ptr jsonRendererTargetObject = jsonRendererTargetsObject->get(rendererTarget).extract<Poco::JSON::Object::Ptr>();
+		return "Data" + jsonRendererTargetObject->getValue<std::string>("Platform") + '/';
 	}
 
 
