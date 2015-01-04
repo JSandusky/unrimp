@@ -51,8 +51,8 @@ namespace RendererRuntime
 		{
 			// TODO(co) Just an experiment
 			std::ifstream ifstream(mRendererRuntime.getAssetManager().getAssetFilenameByAssetId(assetId), std::ios::binary);
-			return mEtcTextureResourceSerializer->loadEtcTexture(ifstream);
-		//	return mCrnTextureResourceSerializer->loadCrnTexture(ifstream);
+		//	return mEtcTextureResourceSerializer->loadEtcTexture(ifstream);
+			return mCrnTextureResourceSerializer->loadCrnTexture(ifstream);
 		//	return mDdsTextureResourceSerializer->loadDdsTexture(ifstream);
 		}
 		catch (const std::exception& e)

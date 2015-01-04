@@ -125,6 +125,9 @@ namespace RendererRuntime
 	// TODO(co) Work-in-progress
 	Renderer::ITexture* DdsTextureResourceSerializer::loadDdsTexture(std::istream& istream)
 	{
+		// TODO(co) Error handling
+		// TODO(co) We could get rid of the dynamic allocation when using a reused memory for the file and the destination buffer (had no measurable impact in a simple use-case, only do it when it can be shown that it has a positive effect)
+
 		Renderer::ITexture2D* texture2D = nullptr;
 
 		#define MCHAR4(a, b, c, d) (a | (b << 8) | (c << 16) | (d << 24))

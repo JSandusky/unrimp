@@ -4,7 +4,7 @@
 		"Type": "ShaderAsset",
 		"Version": "1"
 	},
-	"Shader":
+	"ShaderAsset":
 	{
 		"Properties":
 		{

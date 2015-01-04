@@ -67,7 +67,7 @@ namespace RendererRuntime
 
 	const char* AssetManager::getAssetFilenameByAssetId(AssetId assetId) const
 	{
-		// Seach inside all mounted asset packages, later added asset packages cover old ones
+		// Search inside all mounted asset packages, later added asset packages cover old ones
 		const size_t numberOfAssetPackages = mAssetPackageVector.size();
 		for (size_t i = 0; i < numberOfAssetPackages; ++i)
 		{

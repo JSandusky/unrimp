@@ -4,7 +4,7 @@
 		"Type": "MaterialAsset",
 		"Version": "1"
 	},
-	"Material":
+	"MaterialAsset":
 	{
 		"Shader": "3",
 		"Properties":

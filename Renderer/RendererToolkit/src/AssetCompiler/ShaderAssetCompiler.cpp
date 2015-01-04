@@ -205,7 +205,7 @@ namespace RendererToolkit
 				}
 			}
 
-			Poco::JSON::Object::Ptr jsonShaderObject = jsonRootObject->get("Shader").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonShaderObject = jsonRootObject->get("ShaderAsset").extract<Poco::JSON::Object::Ptr>();
 			Poco::JSON::Object::Ptr jsonShaderPropertiesObject = jsonShaderObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
 			Poco::JSON::Object::Ptr jsonShaderTechniqueObject = jsonShaderObject->get("Technique").extract<Poco::JSON::Object::Ptr>();
 			Poco::JSON::Object::Ptr jsonShaderTechniqueTagsObject = jsonShaderTechniqueObject->get("Tags").extract<Poco::JSON::Object::Ptr>();

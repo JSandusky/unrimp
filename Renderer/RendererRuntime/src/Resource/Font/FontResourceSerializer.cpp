@@ -45,6 +45,9 @@ namespace RendererRuntime
 	// TODO(co) Work-in-progress
 	IFont* FontResourceSerializer::loadFont(std::istream& istream)
 	{
+		// TODO(co) Error handling
+		// TODO(co) We could get rid of the dynamic allocation when using a reused memory for the file and the destination buffer (had no measurable impact in a simple use-case, only do it when it can be shown that it has a positive effect)
+
 		FontImpl* fontImpl = new FontImpl(mRendererRuntimeImpl);
 
 		// Read in the font header
