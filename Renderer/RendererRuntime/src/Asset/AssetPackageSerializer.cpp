@@ -47,12 +47,15 @@ namespace RendererRuntime
 		AssetPackage* assetPackage = new AssetPackage;
 
 		// Read in the asset package header
-		struct AssetPackageHeader
-		{
-			uint32_t formatType;
-			uint16_t formatVersion;
-			uint32_t numberOfAssets;
-		};
+		#pragma pack(push)
+		#pragma pack(1)
+			struct AssetPackageHeader
+			{
+				uint32_t formatType;
+				uint16_t formatVersion;
+				uint32_t numberOfAssets;
+			};
+		#pragma pack(pop)
 		AssetPackageHeader assetPackageHeader;
 		istream.read(reinterpret_cast<char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
 

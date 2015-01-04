@@ -12,12 +12,12 @@
 			"AssetType": "Texture",
 			"AssetCategory": "Character",
 			"AssetName": "Imrod_Illumination",
-			"FileDependencies": [ "Imrod_Illumination.tga" ],
+			"FileDependencies": [ "Imrod_Illumination.tif" ],
 			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/personal_art/imrod.htm ) by Dmitry Parkin: http://www.parkparkin.com"
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "Imrod_Illumination.tga",
+			"InputFile": "Imrod_Illumination.tif",
 			"TextureSemantic": "EmissiveMap"
 		}
 	}

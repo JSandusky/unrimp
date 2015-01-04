@@ -183,7 +183,8 @@ copy "..\..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\..\bin\$(Pl
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>NullRendererStatic.lib;OpenGLRendererStatic.lib;OpenGLES2RendererStatic.lib;Direct3D9RendererStatic.lib;Direct3D10RendererStatic.lib;Direct3D11RendererStatic.lib;RendererRuntimeStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>

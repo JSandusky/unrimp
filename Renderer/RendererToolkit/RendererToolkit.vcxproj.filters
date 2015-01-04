@@ -91,9 +91,6 @@
     <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
-    <ClCompile Include="src\AssetCompiler\tif_win32.cpp">
-      <Filter>Source Files\AssetCompiler</Filter>
-    </ClCompile>
     <ClCompile Include="src\AssetCompiler\ShaderAssetCompiler.cpp">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>

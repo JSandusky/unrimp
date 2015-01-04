@@ -30,6 +30,7 @@
     <None Include="include\RendererRuntime\Resource\Font\FontResourceSerializer.inl" />
     <None Include="include\RendererRuntime\Resource\Font\IFont.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceSerializer.inl" />
+    <None Include="include\RendererRuntime\Resource\Texture\CrnTextureResourceSerializer.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
@@ -63,6 +64,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\ResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderResourceSerializer.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\CrnTextureResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceSerializer.h" />
@@ -95,6 +97,17 @@
     <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResourceSerializer.cpp" />
     <ClCompile Include="src\Resource\Shader\ShaderResourceManager.cpp" />
+    <ClCompile Include="src\Resource\Texture\CrnTextureResourceSerializer.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">false</TreatWarningAsError>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">false</TreatWarningAsError>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">false</TreatWarningAsError>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">false</TreatWarningAsError>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\Resource\Texture\DdsTextureResourceSerializer.cpp" />
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
@@ -170,7 +183,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -201,7 +214,7 @@ copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -233,7 +246,7 @@ copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -278,7 +291,7 @@ copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>

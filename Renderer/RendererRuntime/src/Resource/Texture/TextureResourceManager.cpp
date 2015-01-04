@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Texture/DdsTextureResourceSerializer.h"
+#include "RendererRuntime/Resource/Texture/CrnTextureResourceSerializer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -47,8 +48,10 @@ namespace RendererRuntime
 	{
 		try
 		{
+			// TODO(co) Just an experiment
 			std::ifstream ifstream(mRendererRuntime.getAssetManager().getAssetFilenameByAssetId(assetId), std::ios::binary);
-			return mDdsTextureResourceSerializer->loadDdsTexture(ifstream);
+			return mCrnTextureResourceSerializer->loadCrnTexture(ifstream);
+		//	return mDdsTextureResourceSerializer->loadDdsTexture(ifstream);
 		}
 		catch (const std::exception& e)
 		{
@@ -63,6 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
+		mCrnTextureResourceSerializer(new CrnTextureResourceSerializer(rendererRuntime)),
 		mDdsTextureResourceSerializer(new DdsTextureResourceSerializer(rendererRuntime))
 	{
 		// Nothing in here

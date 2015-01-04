@@ -18,6 +18,9 @@
 \*********************************************************/
 
 
+// TODO(co) Cleanup
+
+
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
@@ -26,17 +29,31 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4005)	// warning C4005: '<x>': macro redefinition
-	#pragma warning(disable: 4365)	// warning C4365: 'argument': conversion from '<x>' to '<y>', signed/unsigned mismatch
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#pragma warning(disable: 4619)	// warning C4619: #pragma warning: there is no warning number '<x>'
-	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-	#include <nvtt/nvtt.h>
-	#include <nvcore/Debug.h>
-	#include <nvcore/StdStream.h>
-#pragma warning(pop)
+// General STB image definitions
+#define STBI_NO_STDIO
+#define STBI_NO_HDR
+#define STBI_NO_LINEAR
+#define STB_IMAGE_IMPLEMENTATION
+// STB image image format support definitions
+#define STBI_ONLY_PSD
+#define STBI_ONLY_TGA
+/*
+#define STBI_NO_JPEG
+#define STBI_NO_PNG
+#define STBI_NO_BMP
+// #define STBI_NO_PSD
+// #define STBI_NO_TGA
+#define STBI_NO_GIF
+#define STBI_NO_HDR
+#define STBI_NO_PIC
+#define STBI_NO_PNM
+*/
+// STB image
+#include <crunch/stb_image.h>	// TODO(co) This is another library
+
+#include <crunch/crnlib.h>
+
+#include <libtiff/tiffio.h>
 
 #include <fstream>
 
@@ -48,260 +65,17 @@ namespace RendererToolkit
 {
 
 
+	// CRN/DDS compression callback function.
 	namespace detail
 	{
+		const int cDefaultCRNQualityLevel = 128;
 
-
-		//[-------------------------------------------------------]
-		//[ Classes                                               ]
-		//[-------------------------------------------------------]
-		class NvttMessageHandler : public nv::MessageHandler
+		static crn_bool progress_callback_func(crn_uint32 phase_index, crn_uint32 total_phases, crn_uint32 subphase_index, crn_uint32 total_subphases, void* pUser_data_ptr)
 		{
-
-
-		//[-------------------------------------------------------]
-		//[ Public methods                                        ]
-		//[-------------------------------------------------------]
-		public:
-			NvttMessageHandler()
-			{
-				nv::debug::setMessageHandler(this);
-			}
-
-			virtual ~NvttMessageHandler()
-			{
-				nv::debug::resetMessageHandler();
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Public virtual nv::MessageHandler methods             ]
-		//[-------------------------------------------------------]
-		public:
-			virtual void log(const char* str, va_list arg) override
-			{
-				RENDERERTOOLKIT_OUTPUT_ERROR_PRINTF(str, arg);
-			}
-
-
-		};
-
-		class NvttAssertHandler : public nv::AssertHandler
-		{
-
-
-		//[-------------------------------------------------------]
-		//[ Public methods                                        ]
-		//[-------------------------------------------------------]
-		public:
-			NvttAssertHandler()
-			{
-				nv::debug::setAssertHandler(this);
-				nv::debug::enableSigHandler(true);
-			}
-
-			virtual ~NvttAssertHandler()
-			{
-				nv::debug::resetAssertHandler();
-				nv::debug::disableSigHandler();
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Public virtual nv::AssertHandler methods              ]
-		//[-------------------------------------------------------]
-		public:
-			virtual int assertion(const char* exp, const char* file, int line, const char* func, const char* msg, va_list arg) override
-			{
-				RENDERERTOOLKIT_OUTPUT_ERROR_PRINTF("NVTT assertion failed: \"%s\"\nFile \"%s\" line %d\nFunction \"%s\"\n", exp, file, line, func);
-				RENDERERTOOLKIT_OUTPUT_ERROR_PRINTF(msg, arg);
-				nv::debug::dumpInfo();
-				exit(1);
-			}
-
-
-		};
-
-		class NvStream : public nv::Stream
-		{
-
-
-		//[-------------------------------------------------------]
-		//[ Public methods                                        ]
-		//[-------------------------------------------------------]
-		public:
-			NvStream(std::istream& istream) :
-				mIstream(istream)
-			{
-				// Nothing here
-			}
-
-			virtual ~NvStream()
-			{
-				// Nothing here
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Public virtual nv::Stream methods                     ]
-		//[-------------------------------------------------------]
-		public:
-			virtual uint serialize(void* data, uint len) override
-			{
-				const std::streampos previousPosition = mIstream.tellg();
-				mIstream.read(static_cast<char*>(data), len);
-				return static_cast<uint>(mIstream.tellg() - previousPosition);
-			}
-
-			virtual void seek(uint pos) override
-			{
-				mIstream.seekg(pos);
-			}
-
-			virtual uint tell() const override
-			{
-				return static_cast<uint>(mIstream.tellg());
-			}
-
-			virtual uint size() const override
-			{
-				const std::streampos currentPosition = mIstream.tellg();
-				mIstream.seekg(0, std::istream::end);
-				const uint endPosition = static_cast<uint>(mIstream.tellg());
-				mIstream.seekg(currentPosition, std::istream::beg);
-
-				return endPosition;
-			}
-
-			virtual bool isError() const override
-			{
-				return false;
-			}
-
-			virtual void clearError() override
-			{
-				// Nothing here
-			}
-
-			virtual bool isAtEnd() const override
-			{
-				const std::streampos currentPosition = mIstream.tellg();
-				mIstream.seekg(0, std::istream::end);
-				const std::streampos endPosition = mIstream.tellg();
-				mIstream.seekg(currentPosition, std::istream::beg);
-
-				return (endPosition == currentPosition);
-			}
-
-			virtual bool isSeekable() const override
-			{
-				return true;
-			}
-
-			virtual bool isLoading() const override
-			{
-				return true;
-			}
-
-			virtual bool isSaving() const override
-			{
-				return false;
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Private methods                                       ]
-		//[-------------------------------------------------------]
-		private:
-			explicit NvStream(NvStream& other) :
-				mIstream(other.mIstream)
-			{
-				// Nothing here
-			}
-
-			NvStream& operator=(NvStream&)
-			{
-				// Nothing here
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Private data                                          ]
-		//[-------------------------------------------------------]
-		private:
-			std::istream& mIstream;
-
-
-		};
-
-		class NvttOutputHandler : public nvtt::OutputHandler
-		{
-
-
-		//[-------------------------------------------------------]
-		//[ Public methods                                        ]
-		//[-------------------------------------------------------]
-		public:
-			explicit NvttOutputHandler(std::ostream& ostream) :
-				mOstream(ostream)
-			{
-				// Nothing here
-			}
-
-			virtual ~NvttOutputHandler()
-			{
-				// Nothing here
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Public virtual nv::OutputHandler methods              ]
-		//[-------------------------------------------------------]
-		public:
-			virtual void beginImage(int, int, int, int, int, int) override
-			{
-				// Nothing here
-			}
-
-			virtual bool writeData(const void* data, int size) override
-			{
-				mOstream.write(static_cast<const char*>(data), size);
-				return true;
-			}
-
-			virtual void endImage() override
-			{
-				// Nothing here
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Private methods                                       ]
-		//[-------------------------------------------------------]
-		private:
-			explicit NvttOutputHandler(NvttOutputHandler& other) :
-				mOstream(other.mOstream)
-			{
-				// Nothing here
-			}
-
-			NvttOutputHandler& operator=(NvttOutputHandler&)
-			{
-				// Nothing here
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Private data                                          ]
-		//[-------------------------------------------------------]
-		private:
-			std::ostream& mOstream;
-
-
-		};
-
-
-
+			int percentage_complete = (int)(.5f + (phase_index + float(subphase_index) / total_subphases) * 100.0f) / total_phases;
+			//printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\bProcessing: %u%%", std::min(100, std::max(0, percentage_complete)));
+			return true;
+		}
 	}
 
 
@@ -345,93 +119,167 @@ namespace RendererToolkit
 		}
 
 		// Open the input file
-		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
+//		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
 		const std::string assetFilename = assetOutputDirectory + assetName + ".dds";	// TODO(co) Make this dynamic
 		std::ofstream ofstream(assetFilename, std::ios::binary);
 
-		// Initialize context, no CUDA support at the moment because it makes things more complicated to build
-		nvtt::Context context;
+		// "crunch"-settings
+		float	   bitrate = 0.0f;
+		int		   quality_level = -1;
+		bool	   srgb_colorspace = true;
+		bool	   create_mipmaps = true;
+		bool	   output_crn = true;	// TODO(co) Just a test
+		crn_format fmt = cCRNFmtInvalid;
+		bool	   use_adaptive_block_sizes = true;
+		bool	   set_alpha_to_luma = false;
+		bool	   convert_to_luma = false;
+		bool	   enable_dxt1a = false;
 
-		// Custom NVTT message and assert handler
-		detail::NvttMessageHandler nvttMessageHandler;
-		detail::NvttAssertHandler nvttAssertHandler;
+		// Load source image
+		// TODO(co)
+		/*
+		// If image loading fails for any reason, the return value will be NULL,
+		// and *x, *y, *comp will be unchanged. The function stbi_failure_reason()
+		// can be queried for an extremely brief, end-user unfriendly explanation
+		// of why the load failed. Define STBI_NO_FAILURE_STRINGS to avoid
+		// compiling these strings at all, and STBI_FAILURE_USERMSG to get slightly
+		// more user-friendly ones.
+		*/
+		int width, height, actual_comps;
 
-		// Create the surface we'll work with
-		nvtt::Surface image;
-		detail::NvStream nvStream(ifstream);
-		if (!image.load("", nvStream))
+
+		crn_uint32 *pSrc_image = nullptr;
+
+
+			TIFF* tif = TIFFOpen((assetInputDirectory + inputFile).c_str(), "r");
+			if (tif) {
+				uint32 w, h;
+				size_t npixels;
+				uint32* raster;
+        
+				TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &w);
+				TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &h);
+				npixels = w * h;
+				raster = new uint32[npixels];
+				if (raster != NULL) {
+					if (TIFFReadRGBAImage(tif, w, h, raster, 0)) {
+						width = w;
+						height = h;
+						actual_comps = 3;
+					  pSrc_image = raster;
+					}
+				  //  _TIFFfree(raster);
+				}
+				TIFFClose(tif);
+			}
+
+
+		// Load the source image file into memory
+	/*	crn_uint32 src_file_size = 0;
+		crn_uint8 *pSrc_file_data = nullptr;
 		{
-			throw std::exception("Could not load input texture");
+			// Get file size and file data
+			ifstream.seekg(0, std::ifstream::end);
+			src_file_size = static_cast<crn_uint32>(ifstream.tellg());
+			ifstream.seekg(0, std::ifstream::beg);
+			pSrc_file_data = new crn_uint8[static_cast<size_t>(src_file_size)];
+			ifstream.read((char*)pSrc_file_data, src_file_size);
 		}
-
-		// DDS textures will be y-flipped
-		// -> We don't want to care about something like this during runtime, so take care of it during asset compile time
-		image.flipY();
-
-		// Setup compression options, use the highest quality which makes sense
-		// -> NVTT documentation says:
-		//   "
-		//   Quality_Highest is a brute force compressor. In some cases, depending on the size of the search space, this compressor will be extremely slow.
-		//   Use this only for testing purposes, to determine how much room is left for improvement in the regular compressors.
-		//   "
-		// -> According to https://code.google.com/p/nvidia-texture-tools/wiki/ApiDocumentation#Compression_Quality "nvtt::Quality_Highest" is not supported anyway
-		nvtt::CompressionOptions compressionOptions;
-		compressionOptions.setQuality(nvtt::Quality_Production);
-		compressionOptions.setFormat(nvtt::Format_BC1);
-
-		// Setup output options
-		detail::NvttOutputHandler nvttOutputHandler(ofstream);
-		nvtt::OutputOptions outputOptions;
-		outputOptions.setOutputHandler(&nvttOutputHandler);
-
-		// Output compressed image
-		bool generateMipmaps = true;
-		if (!context.outputHeader(image, generateMipmaps ? image.countMipmaps() : 1, compressionOptions, outputOptions))
+		crn_uint32 *pSrc_image = (crn_uint32*)stbi_load_from_memory(pSrc_file_data, src_file_size, &width, &height, &actual_comps, 4);
+		if (!pSrc_image)
 		{
-			throw std::exception("Could not set output header");
-		}
+			free(pSrc_file_data);
+			throw std::exception("Failed reading image file");
+		}*/
 
-		// Output first mipmap
-		context.compress(image, 0, 0, compressionOptions, outputOptions);
 
-		// Generate mipmaps
-		const int imageWidth = image.width();
-		const int imageHeight = image.height();
-		int numberOfImageMipmaps = 0;
-		if (generateMipmaps)
+
+
+		// Fill in compression parameters struct.
+		bool has_alpha_channel = actual_comps > 3;
+
+		if ((fmt == cCRNFmtDXT5A) && (actual_comps <= 3))
+			set_alpha_to_luma = true;
+
+		if ((set_alpha_to_luma) || (convert_to_luma))
 		{
-			// Estimate original coverage
-			// -> See http://the-witness.net/news/2010/09/computing-alpha-mipmaps/ for background information about alpha test coverage
-			// -> For terrain materials, we put the height map into the alpha channel of the diffuse map. We noticed an pretty odd mipmap issue which
-			//    could also be seen when reviewing the mipmaps inside an image editing application. The first mipmap looked fine, while the next was suddenly
-			//    quite darker. "scale alpha to coverage" feature needs to be deactivated if the alpha channel does not store information used for alpha rejection.
-			// -> After switching to the material-texture-compositing, the famous "trees look now odd and one can see the polygons"-issue (TM) came up. Also,
-			//    when moving the camera away from stuff using alpha maps, the alpha pretty fast disappeared and a solid polyon remained. Turned out to be
-			//    "scale alpha to coverage" and when deactivating the feature all looks ok, again.
-			// -> We don't use "scale alpha to coverage" during material-texture-compositing because it has to many pitfalls
-			// -> Don't delete this comment so we don't step into this issue, again
-		//	const float alphaRef = getConfig().alphaCoverageThreshold;
-		//	const float coverage = hasAlpha ? image.alphaTestCoverage(alphaRef) : 0.0f;
-
-			// Build mipmaps
-			numberOfImageMipmaps = 1;
-			while (image.buildNextMipmap(nvtt::MipmapFilter_Kaiser))
+			for (int i = 0; i < width * height; i++)
 			{
-				nvtt::Surface tempImage = image;
+				crn_uint32 r = pSrc_image[i] & 0xFF, g = (pSrc_image[i] >> 8) & 0xFF, b = (pSrc_image[i] >> 16) & 0xFF;
 
-				// Build mipmaps and scale alpha to preserve original coverage
-				// -> See "Estimate original coverage"-comment above for the background
-				// -> Don't delete this comment so we don't step into this issue, again
-			//	if (hasAlpha)
-			//	{
-			//		tempImage.scaleAlphaToCoverage(coverage, alphaRef);
-			//	}
-
-				context.compress(tempImage, 0, numberOfImageMipmaps, compressionOptions, outputOptions);
-				++numberOfImageMipmaps;
+				// Compute CCIR 601 luma.
+				crn_uint32 y = (19595U * r + 38470U * g + 7471U * b + 32768) >> 16U;
+				crn_uint32 a = (pSrc_image[i] >> 24) & 0xFF;
+				if (set_alpha_to_luma) a = y;
+				if (convert_to_luma) { r = y; g = y; b = y; }
+				pSrc_image[i] = r | (g << 8) | (b << 16) | (a << 24);
 			}
 		}
+
+		crn_comp_params comp_params;
+		comp_params.m_width = width;
+		comp_params.m_height = height;
+		comp_params.set_flag(cCRNCompFlagPerceptual, srgb_colorspace);
+		comp_params.set_flag(cCRNCompFlagDXT1AForTransparency, enable_dxt1a && has_alpha_channel);
+		comp_params.set_flag(cCRNCompFlagHierarchical, use_adaptive_block_sizes);
+		comp_params.m_file_type = output_crn ? cCRNFileTypeCRN : cCRNFileTypeDDS;
+		comp_params.m_format = (fmt != cCRNFmtInvalid) ? fmt : (has_alpha_channel ? cCRNFmtDXT5 : cCRNFmtDXT1);
+
+		// Important note: This example only feeds a single source image to the compressor, and it internaly generates mipmaps from that source image.
+		// If you want, there's nothing stopping you from generating the mipmaps on your own, then feeding the multiple source images 
+		// to the compressor. Just set the crn_mipmap_params::m_mode member (set below) to cCRNMipModeUseSourceMips.
+		comp_params.m_pImages[0][0] = pSrc_image;
+
+		if (bitrate > 0.0f)
+			comp_params.m_target_bitrate = bitrate;
+		else if (quality_level >= 0)
+			comp_params.m_quality_level = quality_level;
+		else if (output_crn)
+		{
+			// Set a default quality level for CRN, otherwise we'll get the default (highest quality) which leads to huge compressed palettes.
+			comp_params.m_quality_level = detail::cDefaultCRNQualityLevel;
+		}
+
+
+// TODO(co) Just a test
+comp_params.m_dxt_quality = cCRNDXTQualitySuperFast;
+comp_params.m_quality_level = cCRNMinQualityLevel;
+
+
+		// Determine the # of helper threads (in addition to the main thread) to use during compression. NumberOfCPU's-1 is reasonable.
+		SYSTEM_INFO g_system_info;
+		GetSystemInfo(&g_system_info);  
+		int num_helper_threads = std::max<int>(0, (int)g_system_info.dwNumberOfProcessors - 1);
+		comp_params.m_num_helper_threads = num_helper_threads;
+
+		comp_params.m_pProgress_func = detail::progress_callback_func;
+
+		// Fill in mipmap parameters struct.
+		crn_mipmap_params mip_params;
+		mip_params.m_gamma_filtering = srgb_colorspace;
+		mip_params.m_mode = create_mipmaps ? cCRNMipModeGenerateMips : cCRNMipModeNoMips;
+
+		crn_uint32 actual_quality_level;
+		float actual_bitrate;
+		crn_uint32 output_file_size;
+
+		// Now compress to DDS or CRN.
+		void *pOutput_file_data = crn_compress(comp_params, mip_params, output_file_size, &actual_quality_level, &actual_bitrate);
+		if (!pOutput_file_data)
+		{
+			stbi_image_free(pSrc_image);
+//			free(pSrc_file_data);
+			throw std::exception("Compression failed");
+		}
+
+		// Write the output file.
+		ofstream.write(reinterpret_cast<const char*>(pOutput_file_data), output_file_size);
+
+		crn_free_block(pOutput_file_data);
+		stbi_image_free(pSrc_image);
+
+
 
 		{ // Update the output asset package
 			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");

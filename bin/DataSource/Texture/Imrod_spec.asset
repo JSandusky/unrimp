@@ -12,12 +12,12 @@
 			"AssetType": "Texture",
 			"AssetCategory": "Character",
 			"AssetName": "Imrod_spec",
-			"FileDependencies": [ "Imrod_spec.tga" ],
+			"FileDependencies": [ "Imrod_spec.tif" ],
 			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/personal_art/imrod.htm ) by Dmitry Parkin: http://www.parkparkin.com"
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "Imrod_spec.tga",
+			"InputFile": "Imrod_spec.tif",
 			"TextureSemantic": "SpecularMap"
 		}
 	}

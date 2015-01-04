@@ -145,22 +145,25 @@ namespace RendererToolkit
 			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), detail::orderByAssetId);
 
 			// Open the output file
-			std::ofstream ofstream("../" + getRenderTargetDataRootDirectory(rendererTarget) + " AssetPackage.assets", std::ios::binary);
+			std::ofstream ofstream("../" + getRenderTargetDataRootDirectory(rendererTarget) + "AssetPackage.assets", std::ios::binary);
 
 			// Write down the asset package header
-			struct AssetPackageHeader
-			{
-				uint32_t formatType;
-				uint16_t formatVersion;
-				uint32_t numberOfAssets;
-			};
+			#pragma pack(push)
+			#pragma pack(1)
+				struct AssetPackageHeader
+				{
+					uint32_t formatType;
+					uint16_t formatVersion;
+					uint32_t numberOfAssets;
+				};
+			#pragma pack(pop)
 			AssetPackageHeader assetPackageHeader;
 			assetPackageHeader.formatType	  = RendererRuntime::StringId("AssetPackage");
 			assetPackageHeader.formatVersion  = 1;
 			assetPackageHeader.numberOfAssets = sortedAssetVector.size();
 			ofstream.write(reinterpret_cast<const char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
 
-			// Write doen the asset package content in one single burst
+			// Write down the asset package content in one single burst
 			ofstream.write(reinterpret_cast<const char*>(sortedAssetVector.data()), sizeof(RendererRuntime::AssetPackage::Asset) * assetPackageHeader.numberOfAssets);
 		}
 	}

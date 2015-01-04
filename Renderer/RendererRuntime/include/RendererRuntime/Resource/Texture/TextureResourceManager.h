@@ -42,6 +42,7 @@ namespace Renderer
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	class CrnTextureResourceSerializer;
 	class DdsTextureResourceSerializer;
 }
 
@@ -89,6 +90,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime&			  mRendererRuntime;					///< Renderer runtime instance, do not destroy the instance
+		CrnTextureResourceSerializer* mCrnTextureResourceSerializer;	///< CRN texture resource serializer, always valid, destroy the instance if you no longer need it
 		DdsTextureResourceSerializer* mDdsTextureResourceSerializer;	///< DDS texture resource serializer, always valid, destroy the instance if you no longer need it
 
 

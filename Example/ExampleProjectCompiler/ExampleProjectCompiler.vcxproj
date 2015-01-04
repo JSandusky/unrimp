@@ -90,7 +90,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -106,8 +106,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_static\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\nvtt\lib\MTd_StaticDebug\;..\..\External\Windows_x86\libtiff\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeStaticD.lib;RendererToolkitStaticD.lib;zlibstatic.lib;PocoFoundationmtd.lib;freetype_MultiThreadedd.lib;assimpStaticD.lib;squish.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;nvtt.lib;bc6h.lib;bc7.lib;libtiff.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_static\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MTd_StaticDebug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeStaticD.lib;RendererToolkitStaticD.lib;zlibstatic.lib;PocoFoundationmtd.lib;freetype_MultiThreadedd.lib;assimpStaticD.lib;libtiff.lib;crnlibD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMT</IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -121,7 +121,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -137,8 +137,9 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\External\Windows_x86\Assimp\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
@@ -159,7 +160,7 @@ copy "..\..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\..\bin\$(Pl
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -185,8 +186,8 @@ copy "..\..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\..\bin\$(Pl
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\nvtt\lib\MT_StaticRelease\;..\..\External\Windows_x86\libtiff\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeStatic.lib;RendererToolkitStatic.lib;zlibstatic.lib;PocoFoundationmt.lib;freetype_MultiThreaded.lib;assimpStatic.lib;squish.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvthread.lib;nvtt.lib;bc6h.lib;bc7.lib;libtiff.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MT_StaticRelease\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeStatic.lib;RendererToolkitStatic.lib;zlibstatic.lib;PocoFoundationmt.lib;freetype_MultiThreaded.lib;assimpStatic.lib;libtiff.lib;crnlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -202,7 +203,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -228,8 +229,9 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\External\Windows_x86\Assimp\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
