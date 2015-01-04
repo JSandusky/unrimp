@@ -10,7 +10,7 @@
 		{
 			"PcLegacy":
 			{
-				"Format": "dds",
+				"FileFormat": "dds",
 				"TextureSemantic":
 				{
 					"DiffuseMap":
@@ -33,7 +33,7 @@
 			},
 			"Pc":
 			{
-				"Format": "dds",
+				"FileFormat": "crn",
 				"TextureSemantic":
 				{
 					"DiffuseMap":
@@ -56,24 +56,24 @@
 			},
 			"Mobile":
 			{
-				"Format": "etc",
+				"FileFormat": "ktx",
 				"TextureSemantic":
 				{
 					"DiffuseMap":
 					{
-						"Compression": "todo"
+						"Compression": "ETC1"
 					},
 					"SpecularMap":
 					{
-						"Compression": "todo"
+						"Compression": "ETC1"
 					},
 					"EmissiveMap":
 					{
-						"Compression": "todo"
+						"Compression": "ETC1"
 					},
 					"NormalMap":
 					{
-						"Compression": "todo"
+						"Compression": "ETC1"
 					}
 				}
 			}

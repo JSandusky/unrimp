@@ -32,6 +32,7 @@
     <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceSerializer.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\CrnTextureResourceSerializer.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.inl" />
+    <None Include="include\RendererRuntime\Resource\Texture\EtcTextureResourceSerializer.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +67,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\CrnTextureResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\EtcTextureResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Scene\SceneManager.h" />
@@ -109,6 +111,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\Resource\Texture\DdsTextureResourceSerializer.cpp" />
+    <ClCompile Include="src\Resource\Texture\EtcTextureResourceSerializer.cpp" />
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
   </ItemGroup>

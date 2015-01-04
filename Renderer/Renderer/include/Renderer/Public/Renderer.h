@@ -344,7 +344,8 @@ namespace Renderer
 				BC2           = 6,
 				BC3           = 7,
 				BC4           = 8,
-				BC5           = 9
+				BC5           = 9,
+				ETC1          = 10
 			};
 		};
 		struct TextureFlag

@@ -81,6 +81,9 @@
     <None Include="include\RendererRuntime\Resource\Texture\CrnTextureResourceSerializer.inl">
       <Filter>Source Files\Resource\Texture</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Texture\EtcTextureResourceSerializer.inl">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\RendererRuntimeImpl.h">
@@ -204,6 +207,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Texture\CrnTextureResourceSerializer.h">
       <Filter>Source Files\Resource\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\EtcTextureResourceSerializer.h">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererRuntimeImpl.cpp">
@@ -258,6 +264,9 @@
       <Filter>Source Files\Asset</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Texture\CrnTextureResourceSerializer.cpp">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Texture\EtcTextureResourceSerializer.cpp">
       <Filter>Source Files\Resource\Texture</Filter>
     </ClCompile>
   </ItemGroup>

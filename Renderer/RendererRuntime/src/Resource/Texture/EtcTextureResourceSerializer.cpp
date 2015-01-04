@@ -21,11 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
-#include "RendererRuntime/Resource/Texture/CrnTextureResourceSerializer.h"
 #include "RendererRuntime/Resource/Texture/EtcTextureResourceSerializer.h"
-#include "RendererRuntime/Resource/Texture/DdsTextureResourceSerializer.h"
-#include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 // Disable warnings in external headers, we can't fix them
@@ -33,6 +29,7 @@
 	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
 	#include <fstream>
 #pragma warning(pop)
+#include <algorithm>
 
 
 //[-------------------------------------------------------]
@@ -45,41 +42,72 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Renderer::ITexture* TextureResourceManager::loadTextureByAssetId(AssetId assetId)
+	// TODO(co) Work-in-progress
+	Renderer::ITexture* EtcTextureResourceSerializer::loadEtcTexture(std::istream& istream)
 	{
-		try
+		// TODO(co) Error handling
+		// TODO(co) We could get rid of the dynamic allocation when using a reused memory for the file and the destination buffer (had no measurable impact in a simple use-case, only do it when it can be shown that it has a positive effect)
+
+		// Read in the image header
+		struct KtxHeader
 		{
-			// TODO(co) Just an experiment
-			std::ifstream ifstream(mRendererRuntime.getAssetManager().getAssetFilenameByAssetId(assetId), std::ios::binary);
-			return mEtcTextureResourceSerializer->loadEtcTexture(ifstream);
-		//	return mCrnTextureResourceSerializer->loadCrnTexture(ifstream);
-		//	return mDdsTextureResourceSerializer->loadDdsTexture(ifstream);
-		}
-		catch (const std::exception& e)
+			uint8_t  identifier[12];
+			uint32_t endianness;
+			uint32_t glType;
+			uint32_t glTypeSize;
+			uint32_t glFormat;
+			uint32_t glInternalFormat;
+			uint32_t glBaseInternalFormat;
+			uint32_t pixelWidth;
+			uint32_t pixelHeight;
+			uint32_t pixelDepth;
+			uint32_t numberOfArrayElements;
+			uint32_t numberOfFaces;
+			uint32_t numberOfMipmapLevels;
+			uint32_t bytesOfKeyValueData;
+		};
+		KtxHeader ktxHeader;
+		istream.read(reinterpret_cast<char*>(&ktxHeader), sizeof(KtxHeader));
+		istream.ignore(ktxHeader.bytesOfKeyValueData);
+
+		// Get the size of the compressed image
+		size_t compressedNumberOfBytes = 0;
 		{
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load texture asset %d: %s", assetId, e.what());
-			return nullptr;
+			uint32_t width = ktxHeader.pixelWidth;
+			uint32_t height = ktxHeader.pixelHeight;
+			for (uint32_t mipmap = 0; mipmap < ktxHeader.numberOfMipmapLevels; ++mipmap)
+			{
+				compressedNumberOfBytes += std::max((width * height) >> 1, 8u);
+				width = std::max(width >> 1, 1u);	// /= 2
+				height = std::max(height >> 1, 1u);	// /= 2
+			}
 		}
-	}
 
+		// Load in the image data
+		uint8_t* imageData = new uint8_t[compressedNumberOfBytes];
+		uint8_t* currentImageData = imageData;
+		uint32_t width = ktxHeader.pixelWidth;
+		uint32_t height = ktxHeader.pixelHeight;
+		for (uint32_t mipmap = 0; mipmap < ktxHeader.numberOfMipmapLevels; ++mipmap)
+		{
+			uint32_t imageSize = 0;
+			istream.read(reinterpret_cast<char*>(&imageSize), sizeof(uint32_t));
+			istream.read(reinterpret_cast<char*>(currentImageData), imageSize);
 
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime),
-		mCrnTextureResourceSerializer(new CrnTextureResourceSerializer(rendererRuntime)),
-		mEtcTextureResourceSerializer(new EtcTextureResourceSerializer(rendererRuntime)),
-		mDdsTextureResourceSerializer(new DdsTextureResourceSerializer(rendererRuntime))
-	{
-		// Nothing in here
-	}
+			// Move on to the next mipmap
+			currentImageData += imageSize;
+			width = std::max(width >> 1, 1u);	// /= 2
+			height = std::max(height >> 1, 1u);	// /= 2
+		}
 
-	TextureResourceManager::~TextureResourceManager()
-	{
-		delete mCrnTextureResourceSerializer;
-		delete mEtcTextureResourceSerializer;
-		delete mDdsTextureResourceSerializer;
+		// Create the renderer texture instance
+		Renderer::ITexture2D* texture2D = mRendererRuntime.getRenderer().createTexture2D(ktxHeader.pixelWidth, ktxHeader.pixelHeight, Renderer::TextureFormat::ETC1, imageData, Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+
+		// Free allocated memory
+		delete [] imageData;
+
+		// Done
+		return texture2D;
 	}
 
 

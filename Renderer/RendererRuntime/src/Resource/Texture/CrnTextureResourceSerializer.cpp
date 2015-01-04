@@ -24,10 +24,6 @@
 #include "RendererRuntime/Resource/Texture/CrnTextureResourceSerializer.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-#include <Renderer/Public/Renderer.h>
-
-// #define CRND_HEADER_FILE_ONLY
-//#define CRND_INCLUDE_CRND_H
 #include <crunch/crn_decomp.h>
 #include <crunch/dds_defs.h>
 
@@ -52,6 +48,7 @@ namespace RendererRuntime
 	// TODO(co) Work-in-progress
 	Renderer::ITexture* CrnTextureResourceSerializer::loadCrnTexture(std::istream& istream)
 	{
+		// TODO(co) Error handling
 		// TODO(co) We could get rid of the dynamic allocation when using a reused memory for the file and the destination buffer (had no measurable impact in a simple use-case, only do it when it can be shown that it has a positive effect)
 
 		// Load the source image file into memory

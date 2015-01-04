@@ -19,20 +19,30 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
-#include "RendererRuntime/Resource/Texture/CrnTextureResourceSerializer.h"
-#include "RendererRuntime/Resource/Texture/EtcTextureResourceSerializer.h"
-#include "RendererRuntime/Resource/Texture/DdsTextureResourceSerializer.h"
-#include "RendererRuntime/Asset/AssetManager.h"
-#include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Resource/Texture/TextureResourceSerializer.h"
 
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#include <fstream>
-#pragma warning(pop)
+#include <iosfwd>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class ITexture;
+}
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+}
 
 
 //[-------------------------------------------------------]
@@ -43,47 +53,50 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	Renderer::ITexture* TextureResourceManager::loadTextureByAssetId(AssetId assetId)
+	class EtcTextureResourceSerializer : protected TextureResourceSerializer
 	{
-		try
-		{
-			// TODO(co) Just an experiment
-			std::ifstream ifstream(mRendererRuntime.getAssetManager().getAssetFilenameByAssetId(assetId), std::ios::binary);
-			return mEtcTextureResourceSerializer->loadEtcTexture(ifstream);
-		//	return mCrnTextureResourceSerializer->loadCrnTexture(ifstream);
-		//	return mDdsTextureResourceSerializer->loadDdsTexture(ifstream);
-		}
-		catch (const std::exception& e)
-		{
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load texture asset %d: %s", assetId, e.what());
-			return nullptr;
-		}
-	}
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class TextureResourceManager;
+
+
+	// TODO(co) Work-in-progress
+	public:
+		Renderer::ITexture* loadEtcTexture(std::istream& istream);
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime),
-		mCrnTextureResourceSerializer(new CrnTextureResourceSerializer(rendererRuntime)),
-		mEtcTextureResourceSerializer(new EtcTextureResourceSerializer(rendererRuntime)),
-		mDdsTextureResourceSerializer(new DdsTextureResourceSerializer(rendererRuntime))
-	{
-		// Nothing in here
-	}
+	private:
+		inline EtcTextureResourceSerializer(IRendererRuntime& rendererRuntime);
+		inline ~EtcTextureResourceSerializer();
+		EtcTextureResourceSerializer(const EtcTextureResourceSerializer&) = delete;
+		EtcTextureResourceSerializer& operator=(const EtcTextureResourceSerializer&) = delete;
 
-	TextureResourceManager::~TextureResourceManager()
-	{
-		delete mCrnTextureResourceSerializer;
-		delete mEtcTextureResourceSerializer;
-		delete mDdsTextureResourceSerializer;
-	}
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Texture/EtcTextureResourceSerializer.inl"
