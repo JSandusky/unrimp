@@ -99,7 +99,7 @@ public:
 	*  @brief
 	*    Return the renderer instance
 	*
-	*  @remarks
+	*  @return
 	*    The renderer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 	*/
 	inline Renderer::IRenderer *getRenderer() const;

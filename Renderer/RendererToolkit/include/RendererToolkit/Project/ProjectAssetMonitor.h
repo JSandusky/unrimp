@@ -18,21 +18,20 @@
 \*********************************************************/
 
 
-// Public comfort header putting everything within a single header
-
-
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERTOOLKIT_H__
-#define __RENDERERTOOLKIT_H__
+#ifndef __RENDERERTOOLKIT_PROJECTASSETMONITOR_H__
+#define __RENDERERTOOLKIT_PROJECTASSETMONITOR_H__
 
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Public/Renderer.h>
+#include <RendererRuntime/Core/NonCopyable.h>
+
+#include <string>
 
 
 //[-------------------------------------------------------]
@@ -40,8 +39,7 @@
 //[-------------------------------------------------------]
 namespace RendererToolkit
 {
-	class IProject;
-	class IRendererToolkit;
+	class ProjectImpl;
 }
 
 
@@ -53,38 +51,44 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Types                                                 ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	// RendererToolkit/IRendererToolkit.h
-	class IRendererToolkit : public Renderer::RefCount<IRendererToolkit>
+	class ProjectAssetMonitor : public RendererRuntime::NonCopyable
 	{
-	public:
-		virtual ~IRendererToolkit();
-	public:
-		virtual IProject* createProject() = 0;
-	protected:
-		IRendererToolkit();
-		explicit IRendererToolkit(const IRendererToolkit &source);
-		IRendererToolkit &operator =(const IRendererToolkit &source);
-	};
-	typedef Renderer::SmartRefCount<IRendererToolkit> IRendererToolkitPtr;
 
-	// RendererToolkit/IProject.h
-	class IProject : public Renderer::RefCount<IProject>
-	{
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
 	public:
-		virtual ~IProject();
-	public:
-		virtual void loadByFilename(const char* filename) = 0;
-		virtual void compileAllAssets(const char* rendererTarget) = 0;
-		virtual void startupAssetMonitor(const char* rendererTarget) = 0;
-		virtual void shutdownAssetMonitor() = 0;
-	protected:
-		IProject();
-		explicit IProject(const IProject &source);
-		IProject &operator =(const IProject &source);
+		/**
+		*  @brief
+		*    Constructor
+		*/
+		ProjectAssetMonitor(ProjectImpl& projectImpl, const std::string& rendererTarget);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		virtual ~ProjectAssetMonitor();
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		ProjectImpl& mProjectImpl;
+		std::string  mRendererTarget;
+
+
 	};
-	typedef Renderer::SmartRefCount<IProject> IProjectPtr;
 
 
 //[-------------------------------------------------------]
@@ -94,6 +98,12 @@ namespace RendererToolkit
 
 
 //[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererToolkit/Project/ProjectAssetMonitor.inl"
+
+
+//[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
-#endif // __RENDERERTOOLKIT_H__
+#endif // __RENDERERTOOLKIT_PROJECTASSETMONITOR_H__

@@ -35,6 +35,10 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRendererRuntime.h"
 
+#ifdef SHARED_LIBRARIES
+	#include <RendererToolkit/Public/RendererToolkitInstance.h>
+#endif
+
 #include <RendererRuntime/Public/RendererRuntimeInstance.h>
 
 
@@ -50,6 +54,20 @@ IApplicationRendererRuntime::~IApplicationRendererRuntime()
 RendererRuntime::IRendererRuntime *IApplicationRendererRuntime::getRendererRuntime() const
 {
 	return (nullptr != mRendererRuntimeInstance) ? mRendererRuntimeInstance->getRendererRuntime() : nullptr;
+}
+
+RendererToolkit::IRendererToolkit *IApplicationRendererRuntime::getRendererToolkit()
+{
+	#ifdef SHARED_LIBRARIES
+		// Create the renderer toolkit instance, if required
+		if (nullptr == mRendererToolkitInstance)
+		{
+			mRendererToolkitInstance = new RendererToolkit::RendererToolkitInstance();
+		}
+		return (nullptr != mRendererToolkitInstance) ? mRendererToolkitInstance->getRendererToolkit() : nullptr;
+	#else
+		return nullptr;
+	#endif
 }
 
 
@@ -75,6 +93,13 @@ void IApplicationRendererRuntime::onDeinitialization()
 	// Delete the renderer runtime instance
 	delete mRendererRuntimeInstance;
 	mRendererRuntimeInstance = nullptr;
+	#ifdef SHARED_LIBRARIES
+		if (nullptr != mRendererToolkitInstance)
+		{
+			delete mRendererToolkitInstance;
+			mRendererToolkitInstance = nullptr;
+		}
+	#endif
 }
 
 

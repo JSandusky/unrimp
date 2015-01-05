@@ -30,6 +30,9 @@
     <None Include="include\RendererToolkit\Project\IProject.inl">
       <Filter>Source Files\Project</Filter>
     </None>
+    <None Include="include\RendererToolkit\Project\ProjectAssetMonitor.inl">
+      <Filter>Source Files\Project</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererToolkit\RendererToolkitImpl.h">
@@ -74,6 +77,9 @@
     <ClInclude Include="include\RendererToolkit\Project\IProject.h">
       <Filter>Source Files\Project</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Project\ProjectAssetMonitor.h">
+      <Filter>Source Files\Project</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -95,6 +101,9 @@
       <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
     <ClCompile Include="src\Project\ProjectImpl.cpp">
+      <Filter>Source Files\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Project\ProjectAssetMonitor.cpp">
       <Filter>Source Files\Project</Filter>
     </ClCompile>
   </ItemGroup>

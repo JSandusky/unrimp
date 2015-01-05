@@ -25,6 +25,8 @@
 #include "Runtime/FirstMesh/FirstMesh.h"
 #include "Framework/Color4.h"
 
+#include <RendererToolkit/Public/RendererToolkit.h>
+
 #include <RendererRuntime/Asset/AssetManager.h>
 #include <RendererRuntime/Resource/Mesh/Mesh.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
@@ -43,7 +45,8 @@ FirstMesh::FirstMesh(const char *rendererName) :
 	mUniformBlockIndex(0),
 	mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
 	mObjectSpaceToViewSpaceMatrixUniformHandle(NULL_HANDLE),
-	mGlobalTimer(0.0f)
+	mGlobalTimer(0.0f),
+	mProject(nullptr)
 {
 	// Nothing to do in here
 }
@@ -72,6 +75,26 @@ void FirstMesh::onInitialization()
 		// TODO(co) Under construction: Will probably become "mount asset package"
 		// Add used asset package
 		rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/AssetPackage.assets");
+
+		// TODO(co) First asset hot-reloading test
+		RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
+		if (nullptr != rendererToolkit)
+		{
+			mProject = rendererToolkit->createProject();
+			if (nullptr != mProject)
+			{
+				try
+				{
+					mProject->loadByFilename("../DataSource/Example.project");
+					mProject->startupAssetMonitor("Direct3D11_50");
+				}
+				catch (const std::exception& e)
+				{
+					const char* text = e.what();
+					int ii = 0;
+				}
+			}
+		}
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -192,6 +215,13 @@ void FirstMesh::onInitialization()
 
 void FirstMesh::onDeinitialization()
 {
+	// TODO(co) First asset hot-reloading test
+	if (nullptr != mProject)
+	{
+		delete mProject;
+		mProject = nullptr;
+	}
+
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 

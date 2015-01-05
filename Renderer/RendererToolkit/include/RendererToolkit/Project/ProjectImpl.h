@@ -49,6 +49,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererToolkit
+{
+	class ProjectAssetMonitor;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -91,33 +100,16 @@ namespace RendererToolkit
 	public:
 		virtual void loadByFilename(const char* filename) override;
 		virtual void compileAllAssets(const char* rendererTarget) override;
+		virtual void startupAssetMonitor(const char* rendererTarget) override;
+		virtual void shutdownAssetMonitor() override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		inline explicit ProjectImpl(const ProjectImpl &source);
-
-		/**
-		*  @brief
-		*    Copy operator
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*
-		*  @return
-		*    Reference to this instance
-		*/
-		inline ProjectImpl &operator =(const ProjectImpl &source);
-
+		inline explicit ProjectImpl(const ProjectImpl &source) = delete;
+		inline ProjectImpl &operator =(const ProjectImpl &source) = delete;
 		void clear();
 		void readAssetsByFilename(const std::string& filename);
 		void readTargetsByFilename(const std::string& filename);
@@ -133,6 +125,7 @@ namespace RendererToolkit
 		std::string					  mProjectDirectory;
 		RendererRuntime::AssetPackage mAssetPackage;
 		Poco::JSON::Object::Ptr		  mJsonTargetsObject;	///< There's no real benefit in trying to store the targets data in custom data structures, so we just stick to the read in JSON object
+		ProjectAssetMonitor*		  mProjectAssetMonitor;
 
 
 	};

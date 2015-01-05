@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/Project/ProjectImpl.h"
+#include "RendererToolkit/Project/ProjectAssetMonitor.h"
 #include "RendererToolkit/AssetCompiler/FontAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/ShaderAssetCompiler.h"
@@ -66,14 +67,15 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProjectImpl::ProjectImpl()
+	ProjectImpl::ProjectImpl() :
+		mProjectAssetMonitor(nullptr)
 	{
 		// Nothing here
 	}
 
 	ProjectImpl::~ProjectImpl()
 	{
-		// Nothing here
+		clear();
 	}
 
 	const char* ProjectImpl::getAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const
@@ -168,12 +170,30 @@ namespace RendererToolkit
 		}
 	}
 
+	void ProjectImpl::startupAssetMonitor(const char* rendererTarget)
+	{
+		if (nullptr == mProjectAssetMonitor)
+		{
+			mProjectAssetMonitor = new ProjectAssetMonitor(*this, rendererTarget);
+		}
+	}
+
+	void ProjectImpl::shutdownAssetMonitor()
+	{
+		if (nullptr != mProjectAssetMonitor)
+		{
+			delete mProjectAssetMonitor;
+			mProjectAssetMonitor = nullptr;
+		}
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	void ProjectImpl::clear()
 	{
+		shutdownAssetMonitor();
 		mProjectName.clear();
 		mProjectDirectory.clear();
 		mAssetPackage.clear();

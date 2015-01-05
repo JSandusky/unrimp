@@ -22,6 +22,7 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\RendererToolkit\IRendererToolkit.inl" />
     <None Include="include\RendererToolkit\Project\IProject.inl" />
+    <None Include="include\RendererToolkit\Project\ProjectAssetMonitor.inl" />
     <None Include="include\RendererToolkit\Project\ProjectImpl.inl" />
     <None Include="include\RendererToolkit\RendererToolkitImpl.inl" />
     <None Include="Readme.txt" />
@@ -36,6 +37,7 @@
     <ClInclude Include="include\RendererToolkit\IRendererToolkit.h" />
     <ClInclude Include="include\RendererToolkit\PlatformTypes.h" />
     <ClInclude Include="include\RendererToolkit\Project\IProject.h" />
+    <ClInclude Include="include\RendererToolkit\Project\ProjectAssetMonitor.h" />
     <ClInclude Include="include\RendererToolkit\Project\ProjectImpl.h" />
     <ClInclude Include="include\RendererToolkit\Public\RendererToolkit.h" />
     <ClInclude Include="include\RendererToolkit\Public\RendererToolkitInstance.h" />
@@ -56,6 +58,7 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="src\Project\ProjectAssetMonitor.cpp" />
     <ClCompile Include="src\Project\ProjectImpl.cpp" />
     <ClCompile Include="src\RendererToolkitImpl.cpp" />
   </ItemGroup>

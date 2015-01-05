@@ -77,6 +77,8 @@ namespace RendererToolkit
 	public:
 		virtual void loadByFilename(const char* filename) = 0;
 		virtual void compileAllAssets(const char* rendererTarget) = 0;
+		virtual void startupAssetMonitor(const char* rendererTarget) = 0;
+		virtual void shutdownAssetMonitor() = 0;
 
 
 	//[-------------------------------------------------------]
