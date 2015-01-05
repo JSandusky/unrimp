@@ -658,25 +658,28 @@ namespace Direct3D11Renderer
 			switch (texture->getResourceType())
 			{
 				case Renderer::ResourceType::TEXTURE_BUFFER:
-					{ // Direct3D 11 needs a pointer to a pointer, so give it one
-						ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D11ShaderResourceView();
-						mD3D11DeviceContext->VSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					}
+				{
+					// Direct3D 11 needs a pointer to a pointer, so give it one
+					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D11ShaderResourceView();
+					mD3D11DeviceContext->VSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::TEXTURE_2D:
-					{ // Direct3D 11 needs a pointer to a pointer, so give it one
-						ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D11ShaderResourceView();
-						mD3D11DeviceContext->VSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					}
+				{
+					// Direct3D 11 needs a pointer to a pointer, so give it one
+					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D11ShaderResourceView();
+					mD3D11DeviceContext->VSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-					{ // Direct3D 11 needs a pointer to a pointer, so give it one
-						ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D11ShaderResourceView();
-						mD3D11DeviceContext->VSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					}
+				{
+					// Direct3D 11 needs a pointer to a pointer, so give it one
+					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D11ShaderResourceView();
+					mD3D11DeviceContext->VSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
@@ -703,10 +706,9 @@ namespace Direct3D11Renderer
 		}
 		else
 		{
-			{ // Direct3D 11 needs a pointer to a pointer, so give it one
-				ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
-				mD3D11DeviceContext->VSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-			}
+			// Direct3D 11 needs a pointer to a pointer, so give it one
+			ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
+			mD3D11DeviceContext->VSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
 		}
 	}
 
@@ -843,10 +845,9 @@ namespace Direct3D11Renderer
 		}
 		else
 		{
-			{ // Direct3D 11 needs a pointer to a pointer, so give it one
-				ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
-				mD3D11DeviceContext->HSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-			}
+			// Direct3D 11 needs a pointer to a pointer, so give it one
+			ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
+			mD3D11DeviceContext->HSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
 		}
 	}
 
@@ -943,25 +944,28 @@ namespace Direct3D11Renderer
 			switch (texture->getResourceType())
 			{
 				case Renderer::ResourceType::TEXTURE_BUFFER:
-					{ // Direct3D 11 needs a pointer to a pointer, so give it one
-						ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D11ShaderResourceView();
-						mD3D11DeviceContext->DSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					}
+				{
+					// Direct3D 11 needs a pointer to a pointer, so give it one
+					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D11ShaderResourceView();
+					mD3D11DeviceContext->DSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::TEXTURE_2D:
-					{ // Direct3D 11 needs a pointer to a pointer, so give it one
-						ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D11ShaderResourceView();
-						mD3D11DeviceContext->DSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					}
+				{
+					// Direct3D 11 needs a pointer to a pointer, so give it one
+					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D11ShaderResourceView();
+					mD3D11DeviceContext->DSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-					{ // Direct3D 11 needs a pointer to a pointer, so give it one
-						ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D11ShaderResourceView();
-						mD3D11DeviceContext->DSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					}
+				{
+					// Direct3D 11 needs a pointer to a pointer, so give it one
+					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D11ShaderResourceView();
+					mD3D11DeviceContext->DSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
@@ -988,10 +992,9 @@ namespace Direct3D11Renderer
 		}
 		else
 		{
-			{ // Direct3D 11 needs a pointer to a pointer, so give it one
-				ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
-				mD3D11DeviceContext->DSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-			}
+			// Direct3D 11 needs a pointer to a pointer, so give it one
+			ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
+			mD3D11DeviceContext->DSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
 		}
 	}
 
@@ -1134,10 +1137,9 @@ namespace Direct3D11Renderer
 		}
 		else
 		{
-			{ // Direct3D 11 needs a pointer to a pointer, so give it one
-				ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
-				mD3D11DeviceContext->GSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-			}
+			// Direct3D 11 needs a pointer to a pointer, so give it one
+			ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
+			mD3D11DeviceContext->GSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
 		}
 	}
 
@@ -1322,10 +1324,9 @@ namespace Direct3D11Renderer
 		}
 		else
 		{
-			{ // Direct3D 11 needs a pointer to a pointer, so give it one
-				ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
-				mD3D11DeviceContext->PSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-			}
+			// Direct3D 11 needs a pointer to a pointer, so give it one
+			ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
+			mD3D11DeviceContext->PSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
 		}
 	}
 

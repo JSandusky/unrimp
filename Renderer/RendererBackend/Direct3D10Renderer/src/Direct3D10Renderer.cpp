@@ -701,25 +701,28 @@ namespace Direct3D10Renderer
 			switch (texture->getResourceType())
 			{
 				case Renderer::ResourceType::TEXTURE_BUFFER:
-					{ // Direct3D 10 needs a pointer to a pointer, so give it one
-						ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D10ShaderResourceView();
-						mD3D10Device->VSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					}
+				{
+					// Direct3D 10 needs a pointer to a pointer, so give it one
+					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D10ShaderResourceView();
+					mD3D10Device->VSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::TEXTURE_2D:
-					{ // Direct3D 10 needs a pointer to a pointer, so give it one
-						ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D10ShaderResourceView();
-						mD3D10Device->VSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					}
+				{
+					// Direct3D 10 needs a pointer to a pointer, so give it one
+					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D10ShaderResourceView();
+					mD3D10Device->VSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-					{ // Direct3D 10 needs a pointer to a pointer, so give it one
-						ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D10ShaderResourceView();
-						mD3D10Device->VSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					}
+				{
+					// Direct3D 10 needs a pointer to a pointer, so give it one
+					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D10ShaderResourceView();
+					mD3D10Device->VSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
@@ -746,10 +749,9 @@ namespace Direct3D10Renderer
 		}
 		else
 		{
-			{ // Direct3D 10 needs a pointer to a pointer, so give it one
-				ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
-				mD3D10Device->VSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-			}
+			// Direct3D 10 needs a pointer to a pointer, so give it one
+			ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
+			mD3D10Device->VSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
 		}
 	}
 
@@ -965,25 +967,28 @@ namespace Direct3D10Renderer
 			switch (texture->getResourceType())
 			{
 				case Renderer::ResourceType::TEXTURE_BUFFER:
-					{ // Direct3D 10 needs a pointer to a pointer, so give it one
-						ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D10ShaderResourceView();
-						mD3D10Device->GSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					}
+				{
+					// Direct3D 10 needs a pointer to a pointer, so give it one
+					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D10ShaderResourceView();
+					mD3D10Device->GSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::TEXTURE_2D:
-					{ // Direct3D 10 needs a pointer to a pointer, so give it one
-						ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D10ShaderResourceView();
-						mD3D10Device->GSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					}
+				{
+					// Direct3D 10 needs a pointer to a pointer, so give it one
+					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D10ShaderResourceView();
+					mD3D10Device->GSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-					{ // Direct3D 10 needs a pointer to a pointer, so give it one
-						ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D10ShaderResourceView();
-						mD3D10Device->GSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					}
+				{
+					// Direct3D 10 needs a pointer to a pointer, so give it one
+					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D10ShaderResourceView();
+					mD3D10Device->GSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
@@ -1010,10 +1015,9 @@ namespace Direct3D10Renderer
 		}
 		else
 		{
-			{ // Direct3D 10 needs a pointer to a pointer, so give it one
-				ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
-				mD3D10Device->GSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-			}
+			// Direct3D 10 needs a pointer to a pointer, so give it one
+			ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
+			mD3D10Device->GSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
 		}
 	}
 
@@ -1170,25 +1174,28 @@ namespace Direct3D10Renderer
 			switch (texture->getResourceType())
 			{
 				case Renderer::ResourceType::TEXTURE_BUFFER:
-					{ // Direct3D 10 needs a pointer to a pointer, so give it one
-						ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D10ShaderResourceView();
-						mD3D10Device->PSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					}
+				{
+					// Direct3D 10 needs a pointer to a pointer, so give it one
+					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D10ShaderResourceView();
+					mD3D10Device->PSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::TEXTURE_2D:
-					{ // Direct3D 10 needs a pointer to a pointer, so give it one
-						ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D10ShaderResourceView();
-						mD3D10Device->PSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					}
+				{
+					// Direct3D 10 needs a pointer to a pointer, so give it one
+					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D10ShaderResourceView();
+					mD3D10Device->PSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-					{ // Direct3D 10 needs a pointer to a pointer, so give it one
-						ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D10ShaderResourceView();
-						mD3D10Device->PSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					}
+				{
+					// Direct3D 10 needs a pointer to a pointer, so give it one
+					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D10ShaderResourceView();
+					mD3D10Device->PSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
 					break;
+				}
 
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
@@ -1215,10 +1222,9 @@ namespace Direct3D10Renderer
 		}
 		else
 		{
-			{ // Direct3D 10 needs a pointer to a pointer, so give it one
-				ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
-				mD3D10Device->PSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-			}
+			// Direct3D 10 needs a pointer to a pointer, so give it one
+			ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
+			mD3D10Device->PSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
 		}
 	}
 
