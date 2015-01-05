@@ -352,6 +352,12 @@ namespace Renderer
 		*  @return
 		*    The created 2D texture instance, null pointer on error. Release the returned instance if you no longer need it.
 		*
+		*  @remarks
+		*    The texture data has to be in CRN-texture layout, which means organized in mip-major order, like this:
+		*    - Mip0: Face0, Face1, Face2, Face3, Face4, Face5
+		*    - Mip1: Face0, Face1, Face2, Face3, Face4, Face5
+		*    (DDS-texture layout is using face-major order)
+		*
 		*  @note
 		*    - Only supported if "Renderer::Capabilities::maximumNumberOf2DTextureArraySlices" is not 0
 		*/
@@ -378,6 +384,13 @@ namespace Renderer
 		*
 		*  @return
 		*    The created 2D array texture instance, null pointer on error. Release the returned instance if you no longer need it.
+		*
+		*  @remarks
+		*    The texture array data consists of a sequence of texture slices. Each the texture slice data of a single texture slice has to
+		*    be in CRN-texture layout, which means organized in mip-major order, like this:
+		*    - Mip0: Face0, Face1, Face2, Face3, Face4, Face5
+		*    - Mip1: Face0, Face1, Face2, Face3, Face4, Face5
+		*    (DDS-texture layout is using face-major order)
 		*/
 		virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
 
