@@ -68,13 +68,20 @@ namespace RendererToolkit
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ProjectImpl::ProjectImpl() :
-		mProjectAssetMonitor(nullptr)
+		mProjectAssetMonitor(nullptr),
+		mShutdownWorkerThread(false),
+		mThread(&ProjectImpl::workerThread, this)
 	{
 		// Nothing here
 	}
 
 	ProjectImpl::~ProjectImpl()
 	{
+		// Shutdown worker thread
+		mShutdownWorkerThread = true;
+		mThread.join();
+
+		// Clear
 		clear();
 	}
 
@@ -377,6 +384,15 @@ namespace RendererToolkit
 		Poco::JSON::Object::Ptr jsonRendererTargetsObject = mJsonTargetsObject->get("RendererTargets").extract<Poco::JSON::Object::Ptr>();
 		Poco::JSON::Object::Ptr jsonRendererTargetObject = jsonRendererTargetsObject->get(rendererTarget).extract<Poco::JSON::Object::Ptr>();
 		return "Data" + jsonRendererTargetObject->getValue<std::string>("Platform") + '/';
+	}
+
+	void ProjectImpl::workerThread()
+	{
+		while (!mShutdownWorkerThread)
+		{
+			// TODO(co) Implement me
+		}
+		int i = 0;
 	}
 
 

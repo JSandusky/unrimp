@@ -28,6 +28,11 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcher.h" />
+    <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherImpl.h" />
+    <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherLinux.h" />
+    <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherOSX.h" />
+    <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherWin32.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\FontAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\IAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialAssetCompiler.h" />
@@ -45,6 +50,20 @@
     <ClInclude Include="include\RendererToolkit\WindowsHeader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcher.cpp" />
+    <ClCompile Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherLinux.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherOSX.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherWin32.cpp" />
     <ClCompile Include="src\AssetCompiler\FontAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MaterialAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp" />
@@ -133,7 +152,7 @@
     <ClCompile>
       <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\HLSLCrossCompiler\include\;..\RendererBackend\Direct3D11Renderer\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\HLSLCrossCompiler\include\;..\RendererBackend\Direct3D11Renderer\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -165,7 +184,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\HLSLCrossCompiler\include\;..\RendererBackend\Direct3D11Renderer\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\HLSLCrossCompiler\include\;..\RendererBackend\Direct3D11Renderer\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -197,7 +216,7 @@ copy "..\..\External\Windows_x86\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTar
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\HLSLCrossCompiler\include\;..\RendererBackend\Direct3D11Renderer\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\HLSLCrossCompiler\include\;..\RendererBackend\Direct3D11Renderer\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -243,7 +262,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\HLSLCrossCompiler\include\;..\RendererBackend\Direct3D11Renderer\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\POCO\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\HLSLCrossCompiler\include\;..\RendererBackend\Direct3D11Renderer\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>

@@ -22,7 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/Project/ProjectAssetMonitor.h"
+#include "RendererToolkit/Project/ProjectImpl.h"
 
+#include <FileWatcher/FileWatcher.h>
 
 
 //[-------------------------------------------------------]
@@ -32,19 +34,61 @@ namespace RendererToolkit
 {
 
 
+	namespace detail
+	{
+		class FileWatchListener : public FW::FileWatchListener
+		{
+
+
+		//[-------------------------------------------------------]
+		//[ Public virtual FW::FileWatchListener methods          ]
+		//[-------------------------------------------------------]
+		public:
+			void handleFileAction(FW::WatchID watchId, const FW::String& directory, const FW::String& filename, FW::Action action) override
+			{
+				// TODO(co) Implement me
+				std::cout << "DIR (" << directory + ") FILE (" + filename + ") has event " << action << std::endl;
+			}
+
+
+		};
+	}
+
+
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ProjectAssetMonitor::ProjectAssetMonitor(ProjectImpl& projectImpl, const std::string& rendererTarget) :
 		mProjectImpl(projectImpl),
-		mRendererTarget(rendererTarget)
+		mRendererTarget(rendererTarget),
+		mShutdownWorkerThread(false),
+		mThread(&ProjectAssetMonitor::workerThread, this)
 	{
 		// Nothing here
 	}
 
 	ProjectAssetMonitor::~ProjectAssetMonitor()
 	{
-		// Nothing here
+		mShutdownWorkerThread = true;
+		mThread.join();
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	void ProjectAssetMonitor::workerThread()
+	{
+		// Create the file watcher object
+		FW::FileWatcher fileWatcher;
+		detail::FileWatchListener fileWatchListener;
+		const FW::WatchID watchID = fileWatcher.addWatch(mProjectImpl.getProjectDirectory(), &fileWatchListener, true);
+
+		// Update the file watcher object as long as the project asset monitor is up-and-running
+		while (!mShutdownWorkerThread)
+		{
+			fileWatcher.update();
+		}
 	}
 
 

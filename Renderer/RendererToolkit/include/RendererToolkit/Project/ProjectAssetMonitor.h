@@ -31,6 +31,7 @@
 //[-------------------------------------------------------]
 #include <RendererRuntime/Core/NonCopyable.h>
 
+#include <thread>
 #include <string>
 
 
@@ -40,6 +41,10 @@
 namespace RendererToolkit
 {
 	class ProjectImpl;
+	namespace detail
+	{
+		class FileWatchListener;
+	}
 }
 
 
@@ -55,6 +60,12 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	class ProjectAssetMonitor : public RendererRuntime::NonCopyable
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class detail::FileWatchListener;
 
 
 	//[-------------------------------------------------------]
@@ -78,14 +89,17 @@ namespace RendererToolkit
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		void workerThread();
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ProjectImpl& mProjectImpl;
-		std::string  mRendererTarget;
+		ProjectImpl&  mProjectImpl;
+		std::string	  mRendererTarget;
+		volatile bool mShutdownWorkerThread;
+		std::thread	  mThread;
 
 
 	};

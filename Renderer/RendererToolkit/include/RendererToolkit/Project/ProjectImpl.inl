@@ -28,7 +28,20 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	// TODO(co)
+	inline const std::string& ProjectImpl::getProjectName() const
+	{
+		return mProjectName;
+	}
+
+	inline const std::string& ProjectImpl::getProjectDirectory() const
+	{
+		return mProjectDirectory;
+	}
+
+	inline const RendererRuntime::AssetPackage& ProjectImpl::getAssetPackage() const
+	{
+		return mAssetPackage;
+	}
 
 
 //[-------------------------------------------------------]

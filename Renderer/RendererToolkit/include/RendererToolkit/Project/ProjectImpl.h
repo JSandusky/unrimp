@@ -47,6 +47,8 @@
 	#include <Poco/JSON/Parser.h>
 #pragma warning(pop)
 
+#include <thread>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -91,6 +93,9 @@ namespace RendererToolkit
 		*/
 		virtual ~ProjectImpl();
 
+		inline const std::string& getProjectName() const;
+		inline const std::string& getProjectDirectory() const;
+		inline const RendererRuntime::AssetPackage& getAssetPackage() const;
 		const char* getAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const;
 
 
@@ -115,6 +120,7 @@ namespace RendererToolkit
 		void readTargetsByFilename(const std::string& filename);
 		void compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage);
 		std::string getRenderTargetDataRootDirectory(const char* rendererTarget) const;
+		void workerThread();
 
 
 	//[-------------------------------------------------------]
@@ -126,6 +132,8 @@ namespace RendererToolkit
 		RendererRuntime::AssetPackage mAssetPackage;
 		Poco::JSON::Object::Ptr		  mJsonTargetsObject;	///< There's no real benefit in trying to store the targets data in custom data structures, so we just stick to the read in JSON object
 		ProjectAssetMonitor*		  mProjectAssetMonitor;
+		volatile bool				  mShutdownWorkerThread;
+		std::thread					  mThread;
 
 
 	};
