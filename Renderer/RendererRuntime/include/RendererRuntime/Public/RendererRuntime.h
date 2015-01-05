@@ -18,6 +18,8 @@
 \*********************************************************/
 
 
+// TODO(co) Rethink the header in here
+
 // Public comfort header putting everything within a single header
 
 
@@ -32,6 +34,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Asset/Asset.h"
+
 #include <Renderer/Public/Renderer.h>
 
 
@@ -104,6 +108,8 @@ namespace RendererRuntime
 		{
 			return *mMeshResourceManager;
 		}
+	public:
+		virtual void reloadAssetByAssetId(AssetId assetId) const = 0;
 	protected:
 		IRendererRuntime();
 		explicit IRendererRuntime(const IRendererRuntime &source);

@@ -53,6 +53,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+}
 namespace RendererToolkit
 {
 	class ProjectAssetMonitor;
@@ -106,7 +110,7 @@ namespace RendererToolkit
 	public:
 		virtual void loadByFilename(const char* filename) override;
 		virtual void compileAllAssets(const char* rendererTarget) override;
-		virtual void startupAssetMonitor(const char* rendererTarget) override;
+		virtual void startupAssetMonitor(RendererRuntime::IRendererRuntime& rendererRuntime, const char* rendererTarget) override;
 		virtual void shutdownAssetMonitor() override;
 
 

@@ -38,6 +38,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+}
 namespace RendererToolkit
 {
 	class ProjectImpl;
@@ -76,7 +80,7 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*/
-		ProjectAssetMonitor(ProjectImpl& projectImpl, const std::string& rendererTarget);
+		ProjectAssetMonitor(ProjectImpl& projectImpl, RendererRuntime::IRendererRuntime& rendererRuntime, const std::string& rendererTarget);
 
 		/**
 		*  @brief
@@ -96,10 +100,11 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ProjectImpl&  mProjectImpl;
-		std::string	  mRendererTarget;
-		volatile bool mShutdownWorkerThread;
-		std::thread	  mThread;
+		ProjectImpl&					   mProjectImpl;
+		RendererRuntime::IRendererRuntime& mRendererRuntime;
+		std::string						   mRendererTarget;
+		volatile bool					   mShutdownWorkerThread;
+		std::thread						   mThread;
 
 
 	};

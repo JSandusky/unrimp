@@ -81,7 +81,7 @@ namespace RendererRuntime
 	public:
 		void clear();
 		RENDERERRUNTIME_API_EXPORT void addAssetPackageByFilename(const char* filename);
-		const char* getAssetFilenameByAssetId(AssetId assetId) const;
+		RENDERERRUNTIME_API_EXPORT const char* getAssetFilenameByAssetId(AssetId assetId) const;
 
 
 	//[-------------------------------------------------------]

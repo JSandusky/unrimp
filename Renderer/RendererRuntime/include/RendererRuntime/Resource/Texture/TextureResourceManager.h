@@ -74,6 +74,7 @@ namespace RendererRuntime
 	public:
 		// TODO(co) Work-in-progress
 		RENDERERRUNTIME_API_EXPORT Renderer::ITexture* loadTextureByAssetId(AssetId assetId);
+		RENDERERRUNTIME_API_EXPORT void reloadTextureByAssetId(AssetId assetId) const;
 
 
 	//[-------------------------------------------------------]

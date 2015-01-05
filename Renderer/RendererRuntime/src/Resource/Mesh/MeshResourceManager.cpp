@@ -58,6 +58,12 @@ namespace RendererRuntime
 		}
 	}
 
+	void MeshResourceManager::reloadMeshByAssetId(AssetId assetId) const
+	{
+		// TODO(co) Implement me
+		assetId = assetId;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

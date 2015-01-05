@@ -159,6 +159,13 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void reloadAssetByAssetId(AssetId assetId) const override;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:

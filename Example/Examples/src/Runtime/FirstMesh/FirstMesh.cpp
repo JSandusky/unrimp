@@ -86,7 +86,7 @@ void FirstMesh::onInitialization()
 				try
 				{
 					mProject->loadByFilename("../DataSource/Example.project");
-					mProject->startupAssetMonitor("Direct3D11_50");
+					mProject->startupAssetMonitor(*rendererRuntime, "Direct3D11_50");
 				}
 				catch (const std::exception& e)
 				{

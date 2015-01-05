@@ -73,6 +73,7 @@ namespace RendererRuntime
 	public:
 		// TODO(co) Work-in-progress
 		RENDERERRUNTIME_API_EXPORT Mesh* loadMeshByAssetId(Renderer::IProgram& program, AssetId assetId);
+		RENDERERRUNTIME_API_EXPORT void reloadMeshByAssetId(AssetId assetId) const;
 
 
 	//[-------------------------------------------------------]

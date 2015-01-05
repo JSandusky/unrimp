@@ -58,6 +58,12 @@ namespace RendererRuntime
 		}
 	}
 
+	void FontResourceManager::reloadFontByAssetId(AssetId assetId) const
+	{
+		// TODO(co) Implement me
+		assetId = assetId;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

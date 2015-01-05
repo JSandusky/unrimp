@@ -314,6 +314,21 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
+	//[-------------------------------------------------------]
+	void RendererRuntimeImpl::reloadAssetByAssetId(AssetId assetId) const
+	{
+		// Inform the individual resource manager instances
+		// TODO(co) Under construction
+		mTextureResourceManager->reloadTextureByAssetId(assetId);
+		// mShaderResourceManager->reloadShaderByAssetId(assetId);
+		// mMaterialResourceManager->reloadMaterialByAssetId(assetId);
+		mFontResourceManager->reloadFontByAssetId(assetId);
+		mMeshResourceManager->reloadMeshByAssetId(assetId);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Asset/Asset.h"
+
 #include <Renderer/Public/Renderer.h>
 
 
@@ -167,6 +169,20 @@ namespace RendererRuntime
 		*    The mesh resource manager instance, do not release the returned instance
 		*/
 		inline MeshResourceManager& getMeshResourceManager() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Reload the given asset
+		*
+		*  @param[in] assetId
+		*    ID of the asset to reload
+		*/
+		virtual void reloadAssetByAssetId(AssetId assetId) const = 0;
 
 
 	//[-------------------------------------------------------]

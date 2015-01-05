@@ -270,11 +270,11 @@ namespace RendererToolkit
 		}
 	}
 
-	void ProjectImpl::startupAssetMonitor(const char* rendererTarget)
+	void ProjectImpl::startupAssetMonitor(RendererRuntime::IRendererRuntime& rendererRuntime, const char* rendererTarget)
 	{
 		if (nullptr == mProjectAssetMonitor)
 		{
-			mProjectAssetMonitor = new ProjectAssetMonitor(*this, rendererTarget);
+			mProjectAssetMonitor = new ProjectAssetMonitor(*this, rendererRuntime, rendererTarget);
 		}
 	}
 

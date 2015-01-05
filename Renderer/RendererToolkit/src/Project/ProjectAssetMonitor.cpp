@@ -24,6 +24,8 @@
 #include "RendererToolkit/Project/ProjectAssetMonitor.h"
 #include "RendererToolkit/Project/ProjectImpl.h"
 
+#include <RendererRuntime/Public/RendererRuntime.h>
+
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
 	#pragma warning(disable: 4127)	// warning C4127: conditional expression is constant
@@ -90,6 +92,14 @@ namespace RendererToolkit
 							// TODO(co) At the moment, we only support modifying already existing asset data, we should add support for changes inside the runtime asset package as well
 							RendererRuntime::AssetPackage outputAssetPackage;
 							mProjectAssetMonitor.mProjectImpl.compileAsset(asset, mProjectAssetMonitor.mRendererTarget.c_str(), outputAssetPackage);
+
+							// Inform the asset manager about the modified assets (just pass them individually, there's no real benefit in trying to apply "were's one, there are many" in this situation)
+							const RendererRuntime::AssetPackage::SortedAssetVector& sortedOutputAssetVector = outputAssetPackage.getSortedAssetVector();
+							const size_t numberOfOutputAssets = sortedOutputAssetVector.size();
+							for (size_t outputAssetIndex = 0; outputAssetIndex < numberOfOutputAssets; ++outputAssetIndex)
+							{
+								mProjectAssetMonitor.mRendererRuntime.reloadAssetByAssetId(sortedOutputAssetVector[outputAssetIndex].assetId);
+							}
 							break;
 						}
 					}
@@ -111,8 +121,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProjectAssetMonitor::ProjectAssetMonitor(ProjectImpl& projectImpl, const std::string& rendererTarget) :
+	ProjectAssetMonitor::ProjectAssetMonitor(ProjectImpl& projectImpl, RendererRuntime::IRendererRuntime& rendererRuntime, const std::string& rendererTarget) :
 		mProjectImpl(projectImpl),
+		mRendererRuntime(rendererRuntime),
 		mRendererTarget(rendererTarget),
 		mShutdownWorkerThread(false),
 		mThread(&ProjectAssetMonitor::workerThread, this)
