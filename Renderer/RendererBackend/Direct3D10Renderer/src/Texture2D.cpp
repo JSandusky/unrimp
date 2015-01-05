@@ -50,7 +50,7 @@ namespace Direct3D10Renderer
 		// Calculate the number of mipmaps
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
 		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
-		const uint32_t numberOfMipmaps = getNumberOfMipmaps(width, height);
+		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
 
 		// Direct3D 10 2D texture description
 		D3D10_TEXTURE2D_DESC d3d10Texture2DDesc;
@@ -73,32 +73,34 @@ namespace Direct3D10Renderer
 		}
 
 		// Create the Direct3D 10 2D texture instance
+		// Did the user provided us with any texture data?
 		ID3D10Texture2D *d3d10Texture2D = nullptr;
-		if (generateMipmaps)
+		if (nullptr != data)
 		{
-			// Let Direct3D 10 generate the mipmaps for us automatically
-			direct3D10Renderer.getD3D10Device()->CreateTexture2D(&d3d10Texture2DDesc, nullptr, &d3d10Texture2D);
-			if (nullptr != d3d10Texture2D && nullptr != data)
+			if (generateMipmaps)
 			{
-				{ // Update Direct3D 10 subresource data of the base-map
-					const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-					const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
-					direct3D10Renderer.getD3D10Device()->UpdateSubresource(d3d10Texture2D, 0, nullptr, data, bytesPerRow, bytesPerSlice);
-				}
-
 				// Let Direct3D 10 generate the mipmaps for us automatically
-				D3DX10FilterTexture(d3d10Texture2D, 0, D3DX10_DEFAULT);
+				// -> Sadly, it's impossible to use initialization data in this use-case
+				direct3D10Renderer.getD3D10Device()->CreateTexture2D(&d3d10Texture2DDesc, nullptr, &d3d10Texture2D);
+				if (nullptr != d3d10Texture2D)
+				{
+					{ // Update Direct3D 10 subresource data of the base-map
+						const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
+						const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+						direct3D10Renderer.getD3D10Device()->UpdateSubresource(d3d10Texture2D, 0, nullptr, data, bytesPerRow, bytesPerSlice);
+					}
+
+					// Let Direct3D 10 generate the mipmaps for us automatically
+					D3DX10FilterTexture(d3d10Texture2D, 0, D3DX10_DEFAULT);
+				}
 			}
-		}
-		else
-		{
-			// Did the user provided us with any texture data?
-			// -> We don't want dynamic allocations, so we limit the maximum number of mipmaps and hence are able to use the efficient C runtime stack
-			static constexpr uint32_t MAXIMUM_NUMBER_OF_MIPMAPS = 15;	// A 16384x16384 texture has 15 mipmaps
-			assert(numberOfMipmaps <= MAXIMUM_NUMBER_OF_MIPMAPS);
-			D3D10_SUBRESOURCE_DATA d3d10SubresourceData[MAXIMUM_NUMBER_OF_MIPMAPS];
-			if (nullptr != data)
+			else
 			{
+				// We don't want dynamic allocations, so we limit the maximum number of mipmaps and hence are able to use the efficient C runtime stack
+				static constexpr uint32_t MAXIMUM_NUMBER_OF_MIPMAPS = 15;	// A 16384x16384 texture has 15 mipmaps
+				assert(numberOfMipmaps <= MAXIMUM_NUMBER_OF_MIPMAPS);
+				D3D10_SUBRESOURCE_DATA d3d10SubresourceData[MAXIMUM_NUMBER_OF_MIPMAPS];
+
 				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
 				if (dataContainsMipmaps)
 				{
@@ -124,8 +126,13 @@ namespace Direct3D10Renderer
 					d3d10SubresourceData->SysMemPitch	   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
 					d3d10SubresourceData->SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
 				}
+				direct3D10Renderer.getD3D10Device()->CreateTexture2D(&d3d10Texture2DDesc, d3d10SubresourceData, &d3d10Texture2D);
 			}
-			direct3D10Renderer.getD3D10Device()->CreateTexture2D(&d3d10Texture2DDesc, d3d10SubresourceData, &d3d10Texture2D);
+		}
+		else
+		{
+			// The user did not provide us with texture data
+			direct3D10Renderer.getD3D10Device()->CreateTexture2D(&d3d10Texture2DDesc, nullptr, &d3d10Texture2D);
 		}
 
 		// Create the Direct3D 10 shader resource view instance
