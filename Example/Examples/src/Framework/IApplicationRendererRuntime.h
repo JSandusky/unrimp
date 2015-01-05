@@ -33,6 +33,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class RendererRuntimeInstance;
+}
+
+
+//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 /**
@@ -60,7 +69,7 @@ public:
 	*  @remarks
 	*    The renderer runtime instance, can be a null pointer
 	*/
-	inline RendererRuntime::IRendererRuntime *getRendererRuntime() const;
+	RendererRuntime::IRendererRuntime *getRendererRuntime() const;
 
 
 //[-------------------------------------------------------]
@@ -87,37 +96,10 @@ protected:
 
 
 //[-------------------------------------------------------]
-//[ Private methods                                       ]
-//[-------------------------------------------------------]
-private:
-	/**
-	*  @brief
-	*    Create a renderer runtime instance
-	*
-	*  @param[in] renderer
-	*    Renderer instance to use
-	*
-	*  @return
-	*    The created renderer runtime instance, null pointer on error
-	*
-	*  @note
-	*    - The renderer runtime keeps a reference to the provided renderer instance
-	*/
-	RendererRuntime::IRendererRuntime *createRendererRuntimeInstance(Renderer::IRenderer &renderer);
-
-
-//[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	void								  *mRendererRuntimeSharedLibrary;	///< Renderer runtime shared library, can be a null pointer
-	RendererRuntime::IRendererRuntimePtr   mRendererRuntime;				///< Renderer runtime instance, can be a null pointer
+	RendererRuntime::RendererRuntimeInstance* mRendererRuntimeInstance;	///< Renderer runtime instance, can be a null pointer
 
 
 };
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "IApplicationRendererRuntime.inl"

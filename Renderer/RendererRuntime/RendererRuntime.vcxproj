@@ -51,6 +51,7 @@
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\PlatformTypes.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
+    <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />
     <ClInclude Include="include\RendererRuntime\RendererRuntimeImpl.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontImpl.h" />
@@ -209,7 +210,7 @@
       <Command>md "..\..\lib\$(PlatformTarget)d_static\"
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_static\
 md "..\..\include\Renderer\"
-copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\"
+copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -240,6 +241,7 @@ md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\"
+copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -276,7 +278,7 @@ copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\
       <Command>md "..\..\lib\$(PlatformTarget)_static\"
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_static\
 md "..\..\include\Renderer\"
-copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\"
+copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>
     <Lib>
@@ -327,7 +329,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_dynamic\
 md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
 md "..\..\include\Renderer\"
-copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\"
+copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\Renderer\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

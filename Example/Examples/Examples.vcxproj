@@ -437,7 +437,6 @@ copy "..\..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\..\bin\$(Pl
     <None Include="src\Framework\Color4.inl" />
     <None Include="src\Framework\IApplication.inl" />
     <None Include="src\Framework\IApplicationRenderer.inl" />
-    <None Include="src\Framework\IApplicationRendererRuntime.inl" />
     <None Include="src\Framework\Quaternion.inl" />
     <None Include="src\Framework\RefCount.inl" />
     <None Include="src\Framework\RefCountPtr.inl" />

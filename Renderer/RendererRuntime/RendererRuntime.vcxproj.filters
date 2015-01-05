@@ -210,6 +210,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Texture\EtcTextureResourceSerializer.h">
       <Filter>Source Files\Resource\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h">
+      <Filter>Source Files\Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererRuntimeImpl.cpp">

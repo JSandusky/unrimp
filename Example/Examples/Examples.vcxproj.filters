@@ -598,8 +598,5 @@
     </None>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="src\Framework\IApplicationRendererRuntime.inl">
-      <Filter>Framework</Filter>
-    </None>
   </ItemGroup>
 </Project>
