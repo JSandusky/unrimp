@@ -90,6 +90,99 @@ namespace RendererToolkit
 		return mAssetPackage.getAssetFilenameByAssetId(assetId);
 	}
 
+	void ProjectImpl::compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage)
+	{
+		// Open the input stream
+		const std::string absoluteAssetFilename = mProjectDirectory + asset.assetFilename;
+		std::ifstream ifstream(absoluteAssetFilename, std::ios::binary);
+
+		// Parse JSON
+		Poco::JSON::Parser jsonParser;
+		jsonParser.parse(ifstream);
+		Poco::JSON::Object::Ptr jsonAssetRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
+
+		{ // Check whether or not the file format matches
+			Poco::JSON::Object::Ptr jsonFormatObject = jsonAssetRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
+			if (jsonFormatObject->get("Type").convert<std::string>() != "Asset")
+			{
+				throw std::exception("Invalid JSON format type, must be \"Asset\"");
+			}
+			if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
+			{
+				throw std::exception("Invalid JSON format version, must be 1");
+			}
+		}
+
+		// Read asset metadata
+		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
+		Poco::JSON::Object::Ptr jsonAssetMetadataObject = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>();
+
+		// Check asset ID match: A sanity check in here doesn't hurt
+		const RendererRuntime::AssetId assetId = jsonAssetMetadataObject->getValue<uint32_t>("AssetId");
+		if (assetId != asset.assetId)
+		{
+			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\": According to the asset package it should be asset ID " + std::to_string(asset.assetId) + " but inside the asset file it's asset ID " + std::to_string(assetId);
+			throw std::exception(message.c_str());
+		}
+
+		// Dispatch asset compiler
+		// TODO(co) Add multithreading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
+
+		// Get the asset input directory and asset output directory
+		const std::string assetInputDirectory = Poco::Path(absoluteAssetFilename).parent().toString(Poco::Path::PATH_UNIX);
+		const std::string assetType = jsonAssetMetadataObject->getValue<std::string>("AssetType");
+		const std::string assetCategory = jsonAssetMetadataObject->getValue<std::string>("AssetCategory");
+		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + assetType + '/' + assetCategory + '/';
+
+		// Ensure that the asset output directory exists, else creating output file streams will fail
+		Poco::File(assetOutputDirectory).createDirectories();
+
+		// Input, configuration and output
+		IAssetCompiler::Input input;
+		input.projectName		   = mProjectName;
+		input.assetInputDirectory  = assetInputDirectory;
+		input.assetOutputDirectory = assetOutputDirectory;
+
+		IAssetCompiler::Configuration configuration;
+		configuration.jsonAssetRootObject = jsonAssetRootObject;
+
+		IAssetCompiler::Output output;
+		output.outputAssetPackage = &outputAssetPackage;
+
+		// Evaluate the asset type and continue with the processing in the asset type specific way
+		// TODO(co) Currently this is fixed build in, later on me might want to have this dynamic so we can plugin additional asset compilers
+		if ("Font" == assetType)
+		{
+			FontAssetCompiler().compile(input, configuration, output);
+		}
+		else if ("Texture" == assetType)
+		{
+			TextureAssetCompiler().compile(input, configuration, output);
+		}
+		else if ("Shader" == assetType)
+		{
+			// TODO(co) Due to the HLSL compiler usage, this is currently MS Windows only (maybe there are Linux HLSL cross-compilers?)
+			#ifdef WIN32
+				ShaderAssetCompiler().compile(input, configuration, output);
+			#else
+				#error "Unsupported platform"
+			#endif
+		}
+		else if ("Material" == assetType)
+		{
+			MaterialAssetCompiler().compile(input, configuration, output);
+		}
+		else if ("Mesh" == assetType)
+		{
+			MeshAssetCompiler().compile(input, configuration, output);
+		}
+		else
+		{
+			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\" and ID " + std::to_string(asset.assetId) + ": Asset type \"" + assetType + "\" is unknown";
+			throw std::exception(message.c_str());
+		}
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IProject methods      ]
@@ -284,99 +377,6 @@ namespace RendererToolkit
 
 		// Read project data
 		mJsonTargetsObject = jsonRootObject->get("Targets").extract<Poco::JSON::Object::Ptr>();
-	}
-
-	void ProjectImpl::compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage)
-	{
-		// Open the input stream
-		const std::string absoluteAssetFilename = mProjectDirectory + asset.assetFilename;
-		std::ifstream ifstream(absoluteAssetFilename, std::ios::binary);
-
-		// Parse JSON
-		Poco::JSON::Parser jsonParser;
-		jsonParser.parse(ifstream);
-		Poco::JSON::Object::Ptr jsonAssetRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
-
-		{ // Check whether or not the file format matches
-			Poco::JSON::Object::Ptr jsonFormatObject = jsonAssetRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-			if (jsonFormatObject->get("Type").convert<std::string>() != "Asset")
-			{
-				throw std::exception("Invalid JSON format type, must be \"Asset\"");
-			}
-			if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
-			{
-				throw std::exception("Invalid JSON format version, must be 1");
-			}
-		}
-
-		// Read asset metadata
-		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
-		Poco::JSON::Object::Ptr jsonAssetMetadataObject = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>();
-
-		// Check asset ID match: A sanity check in here doesn't hurt
-		const RendererRuntime::AssetId assetId = jsonAssetMetadataObject->getValue<uint32_t>("AssetId");
-		if (assetId != asset.assetId)
-		{
-			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\": According to the asset package it should be asset ID " + std::to_string(asset.assetId) + " but inside the asset file it's asset ID " + std::to_string(assetId);
-			throw std::exception(message.c_str());
-		}
-
-		// Dispatch asset compiler
-		// TODO(co) Add multithreading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
-
-		// Get the asset input directory and asset output directory
-		const std::string assetInputDirectory = Poco::Path(absoluteAssetFilename).parent().toString(Poco::Path::PATH_UNIX);
-		const std::string assetType = jsonAssetMetadataObject->getValue<std::string>("AssetType");
-		const std::string assetCategory = jsonAssetMetadataObject->getValue<std::string>("AssetCategory");
-		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + assetType + '/' + assetCategory + '/';
-
-		// Ensure that the asset output directory exists, else creating output file streams will fail
-		Poco::File(assetOutputDirectory).createDirectories();
-
-		// Input, configuration and output
-		IAssetCompiler::Input input;
-		input.projectName		   = mProjectName;
-		input.assetInputDirectory  = assetInputDirectory;
-		input.assetOutputDirectory = assetOutputDirectory;
-
-		IAssetCompiler::Configuration configuration;
-		configuration.jsonAssetRootObject = jsonAssetRootObject;
-
-		IAssetCompiler::Output output;
-		output.outputAssetPackage = &outputAssetPackage;
-
-		// Evaluate the asset type and continue with the processing in the asset type specific way
-		// TODO(co) Currently this is fixed build in, later on me might want to have this dynamic so we can plugin additional asset compilers
-		if ("Font" == assetType)
-		{
-			FontAssetCompiler().compile(input, configuration, output);
-		}
-		else if ("Texture" == assetType)
-		{
-			TextureAssetCompiler().compile(input, configuration, output);
-		}
-		else if ("Shader" == assetType)
-		{
-			// TODO(co) Due to the HLSL compiler usage, this is currently MS Windows only (maybe there are Linux HLSL cross-compilers?)
-			#ifdef WIN32
-				ShaderAssetCompiler().compile(input, configuration, output);
-			#else
-				#error "Unsupported platform"
-			#endif
-		}
-		else if ("Material" == assetType)
-		{
-			MaterialAssetCompiler().compile(input, configuration, output);
-		}
-		else if ("Mesh" == assetType)
-		{
-			MeshAssetCompiler().compile(input, configuration, output);
-		}
-		else
-		{
-			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\" and ID " + std::to_string(asset.assetId) + ": Asset type \"" + assetType + "\" is unknown";
-			throw std::exception(message.c_str());
-		}
 	}
 
 	std::string ProjectImpl::getRenderTargetDataRootDirectory(const char* rendererTarget) const

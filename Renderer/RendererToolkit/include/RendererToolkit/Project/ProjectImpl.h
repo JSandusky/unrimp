@@ -97,6 +97,7 @@ namespace RendererToolkit
 		inline const std::string& getProjectDirectory() const;
 		inline const RendererRuntime::AssetPackage& getAssetPackage() const;
 		const char* getAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const;
+		void compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage);
 
 
 	//[-------------------------------------------------------]
@@ -118,7 +119,6 @@ namespace RendererToolkit
 		void clear();
 		void readAssetsByFilename(const std::string& filename);
 		void readTargetsByFilename(const std::string& filename);
-		void compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage);
 		std::string getRenderTargetDataRootDirectory(const char* rendererTarget) const;
 		void workerThread();
 
