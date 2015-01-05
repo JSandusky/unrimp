@@ -106,11 +106,13 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	RendererRuntime::IFontPtr			  mFont;					///< Font, can be a null pointer
 	Renderer::IUniformBufferPtr			  mUniformBuffer;			///< Uniform buffer object (UBO), can be a null pointer
 	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
 	RendererRuntime::Mesh				 *mMesh;					///< Mesh instance, can be a null pointer
 	Renderer::ITextureCollectionPtr		  mTextureCollection;		///< Texture collection, can be a null pointer
 	Renderer::ISamplerStateCollectionPtr  mSamplerStateCollection;	///< Sampler state collection, can be a null pointer
+	Renderer::IBlendStatePtr			  mBlendState;				///< Blend state, can be a null pointer
 	// Optimization: Cache data to not bother the renderer API to much
 	uint32_t mUniformBlockIndex;							///< Uniform block index
 	handle	 mObjectSpaceToClipSpaceMatrixUniformHandle;	///< Object space to clip space matrix uniform handle, can be NULL_HANDLE

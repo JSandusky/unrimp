@@ -30,6 +30,7 @@
 #include <RendererRuntime/Asset/AssetManager.h>
 #include <RendererRuntime/Resource/Mesh/Mesh.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
+#include <RendererRuntime/Resource/Font/FontResourceManager.h>
 #include <RendererRuntime/Resource/Texture/TextureResourceManager.h>
 
 #include <glm/gtc/type_ptr.hpp> 
@@ -98,6 +99,9 @@ void FirstMesh::onInitialization()
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
+
+		// Create the font instance
+		mFont = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
@@ -208,6 +212,9 @@ void FirstMesh::onInitialization()
 			}
 		}
 
+		// Create blend state
+		mBlendState = renderer->createBlendState(Renderer::IBlendState::getDefaultBlendState());
+
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)
 	}
@@ -225,7 +232,11 @@ void FirstMesh::onDeinitialization()
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
-	// Release the used texturing resources
+	// Release the used resources
+	mFont = nullptr;
+
+	// Release the used renderer resources
+	mBlendState = nullptr;
 	mSamplerStateCollection = nullptr;
 	mTextureCollection = nullptr;
 
@@ -341,11 +352,17 @@ void FirstMesh::onDraw()
 			// Use the sampler state collection to set the sampler states
 			renderer->fsSetSamplerStateCollection(0, mSamplerStateCollection);
 
+			// Set the used blend state
+			renderer->omSetBlendState(mBlendState);
+
 			// Draw mesh instance
 			if (nullptr != mMesh)
 			{
 				mMesh->draw();
 			}
+
+			// Draw text
+			mFont->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
 
 			// End scene rendering
 			// -> Required for Direct3D 9
