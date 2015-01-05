@@ -83,11 +83,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void reloadResourceByAssetId(AssetId assetId) const override;
+		virtual void update() override;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
 		ShaderResourceManager(IRendererRuntime& rendererRuntime);
-		~ShaderResourceManager();
+		virtual ~ShaderResourceManager();
 		ShaderResourceManager(const ShaderResourceManager&) = delete;
 		ShaderResourceManager& operator=(const ShaderResourceManager&) = delete;
 

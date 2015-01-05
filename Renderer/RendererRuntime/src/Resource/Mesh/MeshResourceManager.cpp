@@ -58,10 +58,19 @@ namespace RendererRuntime
 		}
 	}
 
-	void MeshResourceManager::reloadMeshByAssetId(AssetId assetId) const
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[-------------------------------------------------------]
+	void MeshResourceManager::reloadResourceByAssetId(AssetId assetId) const
 	{
 		// TODO(co) Implement me
 		assetId = assetId;
+	}
+
+	void MeshResourceManager::update()
+	{
+		// TODO(co) Implement me
 	}
 
 

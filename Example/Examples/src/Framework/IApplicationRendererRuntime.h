@@ -103,6 +103,7 @@ public:
 public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
+	virtual void onUpdate() override;
 
 
 //[-------------------------------------------------------]

@@ -109,7 +109,8 @@ namespace RendererRuntime
 			return *mMeshResourceManager;
 		}
 	public:
-		virtual void reloadAssetByAssetId(AssetId assetId) const = 0;
+		virtual void reloadResourceByAssetId(AssetId assetId) const = 0;
+		virtual void update() const = 0;
 	protected:
 		IRendererRuntime();
 		explicit IRendererRuntime(const IRendererRuntime &source);

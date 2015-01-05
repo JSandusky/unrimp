@@ -74,7 +74,14 @@ namespace RendererRuntime
 	public:
 		// TODO(co) Work-in-progress
 		RENDERERRUNTIME_API_EXPORT Renderer::ITexture* loadTextureByAssetId(AssetId assetId);
-		RENDERERRUNTIME_API_EXPORT void reloadTextureByAssetId(AssetId assetId) const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void reloadResourceByAssetId(AssetId assetId) const override;
+		virtual void update() override;
 
 
 	//[-------------------------------------------------------]
@@ -82,7 +89,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		TextureResourceManager(IRendererRuntime& rendererRuntime);
-		~TextureResourceManager();
+		virtual ~TextureResourceManager();
 		TextureResourceManager(const TextureResourceManager&) = delete;
 		TextureResourceManager& operator=(const TextureResourceManager&) = delete;
 

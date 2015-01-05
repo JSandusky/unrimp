@@ -260,6 +260,9 @@ void FirstMesh::onDeinitialization()
 
 void FirstMesh::onUpdate()
 {
+	// Call the base implementation
+	IApplicationRendererRuntime::onUpdate();
+
 	// Stop the stopwatch
 	mStopwatch.stop();
 

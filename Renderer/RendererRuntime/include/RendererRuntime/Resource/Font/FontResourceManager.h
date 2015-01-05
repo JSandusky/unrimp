@@ -69,7 +69,14 @@ namespace RendererRuntime
 	public:
 		// TODO(co) Work-in-progress
 		RENDERERRUNTIME_API_EXPORT IFont* loadFontByAssetId(AssetId assetId);
-		RENDERERRUNTIME_API_EXPORT void reloadFontByAssetId(AssetId assetId) const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void reloadResourceByAssetId(AssetId assetId) const override;
+		virtual void update() override;
 
 
 	//[-------------------------------------------------------]
@@ -77,7 +84,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl);
-		~FontResourceManager();
+		virtual ~FontResourceManager();
 		FontResourceManager(const FontResourceManager&) = delete;
 		FontResourceManager& operator=(const FontResourceManager&) = delete;
 

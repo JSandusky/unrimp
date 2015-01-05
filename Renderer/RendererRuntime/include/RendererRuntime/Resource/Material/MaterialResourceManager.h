@@ -60,11 +60,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void reloadResourceByAssetId(AssetId assetId) const override;
+		virtual void update() override;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
 		MaterialResourceManager(IRendererRuntime& rendererRuntime);
-		~MaterialResourceManager();
+		virtual ~MaterialResourceManager();
 		MaterialResourceManager(const MaterialResourceManager&) = delete;
 		MaterialResourceManager& operator=(const MaterialResourceManager&) = delete;
 

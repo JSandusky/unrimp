@@ -317,15 +317,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
 	//[-------------------------------------------------------]
-	void RendererRuntimeImpl::reloadAssetByAssetId(AssetId assetId) const
+	void RendererRuntimeImpl::reloadResourceByAssetId(AssetId assetId) const
 	{
 		// Inform the individual resource manager instances
-		// TODO(co) Under construction
-		mTextureResourceManager->reloadTextureByAssetId(assetId);
-		// mShaderResourceManager->reloadShaderByAssetId(assetId);
-		// mMaterialResourceManager->reloadMaterialByAssetId(assetId);
-		mFontResourceManager->reloadFontByAssetId(assetId);
-		mMeshResourceManager->reloadMeshByAssetId(assetId);
+		mTextureResourceManager->reloadResourceByAssetId(assetId);
+		mShaderResourceManager->reloadResourceByAssetId(assetId);
+		mMaterialResourceManager->reloadResourceByAssetId(assetId);
+		mFontResourceManager->reloadResourceByAssetId(assetId);
+		mMeshResourceManager->reloadResourceByAssetId(assetId);
+	}
+
+	void RendererRuntimeImpl::update() const
+	{
+		// Inform the individual resource manager instances
+		mTextureResourceManager->update();
+		mShaderResourceManager->update();
+		mMaterialResourceManager->update();
+		mFontResourceManager->update();
+		mMeshResourceManager->update();
 	}
 
 

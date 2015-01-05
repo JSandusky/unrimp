@@ -177,12 +177,21 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
-		*    Reload the given asset
+		*    Reload resource by using the given asset
 		*
 		*  @param[in] assetId
-		*    ID of the asset to reload
+		*    ID of the asset which has been changed and hence the according resource needs to be reloaded
 		*/
-		virtual void reloadAssetByAssetId(AssetId assetId) const = 0;
+		virtual void reloadResourceByAssetId(AssetId assetId) const = 0;
+
+		/**
+		*  @brief
+		*    Renderer runtime update
+		*
+		*  @note
+		*    - Call this once per frame
+		*/
+		virtual void update() const = 0;
 
 
 	//[-------------------------------------------------------]

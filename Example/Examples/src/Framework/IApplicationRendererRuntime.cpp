@@ -102,6 +102,15 @@ void IApplicationRendererRuntime::onDeinitialization()
 	#endif
 }
 
+void IApplicationRendererRuntime::onUpdate()
+{
+	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+	if (nullptr != rendererRuntime)
+	{
+		rendererRuntime->update();
+	}
+}
+
 
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]

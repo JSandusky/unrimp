@@ -32,6 +32,21 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[-------------------------------------------------------]
+	void ShaderResourceManager::reloadResourceByAssetId(AssetId assetId) const
+	{
+		// TODO(co) Implement me
+		assetId = assetId;
+	}
+
+	void ShaderResourceManager::update()
+	{
+		// TODO(co) Implement me
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	ShaderResourceManager::ShaderResourceManager(IRendererRuntime& rendererRuntime) :

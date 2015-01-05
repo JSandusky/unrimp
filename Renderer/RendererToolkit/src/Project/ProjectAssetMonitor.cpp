@@ -98,7 +98,7 @@ namespace RendererToolkit
 							const size_t numberOfOutputAssets = sortedOutputAssetVector.size();
 							for (size_t outputAssetIndex = 0; outputAssetIndex < numberOfOutputAssets; ++outputAssetIndex)
 							{
-								mProjectAssetMonitor.mRendererRuntime.reloadAssetByAssetId(sortedOutputAssetVector[outputAssetIndex].assetId);
+								mProjectAssetMonitor.mRendererRuntime.reloadResourceByAssetId(sortedOutputAssetVector[outputAssetIndex].assetId);
 							}
 							break;
 						}

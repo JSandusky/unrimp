@@ -62,10 +62,19 @@ namespace RendererRuntime
 		}
 	}
 
-	void TextureResourceManager::reloadTextureByAssetId(AssetId assetId) const
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[-------------------------------------------------------]
+	void TextureResourceManager::reloadResourceByAssetId(AssetId assetId) const
 	{
 		// TODO(co) Implement me
 		assetId = assetId;
+	}
+
+	void TextureResourceManager::update()
+	{
+		// TODO(co) Implement me
 	}
 
 

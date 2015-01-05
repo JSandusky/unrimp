@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Asset/Asset.h"
 
 
 //[-------------------------------------------------------]
@@ -45,11 +46,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void reloadResourceByAssetId(AssetId assetId) const = 0;
+		virtual void update() = 0;
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
 		inline ResourceManager() {}
-		inline ~ResourceManager() {}
+		inline virtual ~ResourceManager() {}
 		ResourceManager(const ResourceManager&) = delete;
 		ResourceManager& operator=(const ResourceManager&) = delete;
 

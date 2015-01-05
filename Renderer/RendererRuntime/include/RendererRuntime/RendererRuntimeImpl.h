@@ -162,7 +162,8 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void reloadAssetByAssetId(AssetId assetId) const override;
+		virtual void reloadResourceByAssetId(AssetId assetId) const override;
+		virtual void update() const override;
 
 
 	//[-------------------------------------------------------]
