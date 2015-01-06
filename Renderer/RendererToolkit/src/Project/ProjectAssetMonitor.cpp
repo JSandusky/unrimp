@@ -85,7 +85,7 @@ namespace RendererToolkit
 					const size_t numberOfAssets = sortedAssetVector.size();
 					for (size_t i = 0; i < numberOfAssets; ++i)
 					{
-						const RendererRuntime::AssetPackage::Asset& asset = sortedAssetVector[i];
+						const RendererRuntime::Asset& asset = sortedAssetVector[i];
 						if (test == asset.assetFilename)
 						{
 							// TODO(co) Performance: Add asset compiler queue so we can compile more then one asset at a time in background

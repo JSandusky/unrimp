@@ -37,12 +37,12 @@ namespace RendererRuntime
 	{
 		struct OrderByAssetId
 		{
-			inline bool operator()(const AssetPackage::Asset& left, AssetId right) const
+			inline bool operator()(const Asset& left, AssetId right) const
 			{
 				return (left.assetId < right);
 			}
 
-			inline bool operator()(AssetId left, const AssetPackage::Asset& right) const
+			inline bool operator()(AssetId left, const Asset& right) const
 			{
 				return (left < right.assetId);
 			}
@@ -53,10 +53,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	const char* AssetPackage::getAssetFilenameByAssetId(AssetId assetId) const
+	const Asset* AssetPackage::getAssetByAssetId(AssetId assetId) const
 	{
 		SortedAssetVector::const_iterator iterator = std::lower_bound(mSortedAssetVector.cbegin(), mSortedAssetVector.cend(), assetId, detail::OrderByAssetId());
-		return (iterator != mSortedAssetVector.end()) ? iterator->assetFilename : nullptr;
+		return (iterator != mSortedAssetVector.end()) ? iterator._Ptr : nullptr;
 	}
 
 

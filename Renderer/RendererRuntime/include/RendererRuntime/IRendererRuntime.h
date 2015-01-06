@@ -46,6 +46,7 @@ namespace RendererRuntime
 	class AssetManager;
 	class SceneManager;
 	class IRendererRuntime;
+	class ResourceStreamer;
 	class CompositorManager;
 	class FontResourceManager;
 	class MeshResourceManager;
@@ -123,8 +124,17 @@ namespace RendererRuntime
 		inline SceneManager& getSceneManager() const;
 
 		//[-------------------------------------------------------]
-		//[ Resource managers                                     ]
+		//[ Resource                                              ]
 		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the resource streamer instance
+		*
+		*  @return
+		*    The resource streamer instance, do not release the returned instance
+		*/
+		inline ResourceStreamer& getResourceStreamer() const;
+
 		/**
 		*  @brief
 		*    Return the texture resource manager instance
@@ -235,7 +245,8 @@ namespace RendererRuntime
 		AssetManager*	   mAssetManager;
 		CompositorManager* mCompositorManager;
 		SceneManager*	   mSceneManager;
-		// Resource managers
+		// Resource
+		ResourceStreamer*		 mResourceStreamer;
 		TextureResourceManager*	 mTextureResourceManager;
 		ShaderResourceManager*	 mShaderResourceManager;
 		MaterialResourceManager* mMaterialResourceManager;

@@ -26,6 +26,16 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline const char* AssetManager::getAssetFilenameByAssetId(AssetId assetId) const
+	{
+		const Asset* asset = getAssetByAssetId(assetId);
+		return (nullptr != asset) ? asset->assetFilename : nullptr;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline AssetManager::AssetManager(IRendererRuntime& rendererRuntime) :

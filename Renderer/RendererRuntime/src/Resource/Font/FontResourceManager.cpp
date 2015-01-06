@@ -22,15 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Font/FontResourceManager.h"
-#include "RendererRuntime/Resource/Font/FontResourceSerializer.h"
+#include "RendererRuntime/Resource/Font/FontResourceLoader.h"
+#include "RendererRuntime/Resource/Font/FontResource.h"
 #include "RendererRuntime/Asset/AssetManager.h"
-#include "RendererRuntime/RendererRuntimeImpl.h"
-
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#include <fstream>
-#pragma warning(pop)
+#include "RendererRuntime/Backend/RendererRuntimeImpl.h"
 
 
 //[-------------------------------------------------------]
@@ -44,18 +39,23 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	IFont* FontResourceManager::loadFontByAssetId(AssetId assetId)
+	FontResource* FontResourceManager::loadFontByAssetId(AssetId assetId)
 	{
-		try
+		const Asset* asset = mRendererRuntimeImpl.getAssetManager().getAssetByAssetId(assetId);
+		if (nullptr != asset)
 		{
-			std::ifstream ifstream(mRendererRuntimeImpl.getAssetManager().getAssetFilenameByAssetId(assetId), std::ios::binary);
-			return mFontResourceSerializer->loadFont(ifstream);
+			FontResource* fontResource = new FontResource(mRendererRuntimeImpl, assetId);
+
+			mFontResourceLoader->initialize(*asset, *fontResource);
+			mFontResourceLoader->onDeserialization();
+			mFontResourceLoader->onProcessing();
+			mFontResourceLoader->onRendererBackendDispatch();
+
+			return fontResource;
 		}
-		catch (const std::exception& e)
-		{
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load font asset %d: %s", assetId, e.what());
-			return nullptr;
-		}
+
+		// Error!
+		return nullptr;
 	}
 
 
@@ -79,14 +79,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	FontResourceManager::FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl) :
 		mRendererRuntimeImpl(rendererRuntimeImpl),
-		mFontResourceSerializer(new FontResourceSerializer(rendererRuntimeImpl))
+		mFontResourceLoader(new FontResourceLoader(rendererRuntimeImpl))
 	{
 		// Nothing in here
 	}
 
 	FontResourceManager::~FontResourceManager()
 	{
-		delete mFontResourceSerializer;
+		delete mFontResourceLoader;
 	}
 
 

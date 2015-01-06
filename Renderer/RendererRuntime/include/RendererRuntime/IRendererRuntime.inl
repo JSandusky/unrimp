@@ -53,6 +53,11 @@ namespace RendererRuntime
 		return *mSceneManager;
 	}
 
+	inline ResourceStreamer& IRendererRuntime::getResourceStreamer() const
+	{
+		return *mResourceStreamer;
+	}
+
 	inline TextureResourceManager& IRendererRuntime::getTextureResourceManager() const
 	{
 		return *mTextureResourceManager;
@@ -84,9 +89,11 @@ namespace RendererRuntime
 		mCompositorManager(nullptr),
 		mSceneManager(nullptr),
 		// Resource managers
-		mFontResourceManager(nullptr),
+		mResourceStreamer(nullptr),
 		mTextureResourceManager(nullptr),
+		mShaderResourceManager(nullptr),
 		mMaterialResourceManager(nullptr),
+		mFontResourceManager(nullptr),
 		mMeshResourceManager(nullptr)
 	{
 		// Nothing to do in here
@@ -99,9 +106,11 @@ namespace RendererRuntime
 		mCompositorManager(nullptr),
 		mSceneManager(nullptr),
 		// Resource managers
-		mFontResourceManager(nullptr),
+		mResourceStreamer(nullptr),
 		mTextureResourceManager(nullptr),
+		mShaderResourceManager(nullptr),
 		mMaterialResourceManager(nullptr),
+		mFontResourceManager(nullptr),
 		mMeshResourceManager(nullptr)
 	{
 		// Not supported

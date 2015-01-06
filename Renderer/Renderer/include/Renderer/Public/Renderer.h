@@ -347,6 +347,105 @@ namespace Renderer
 				BC5           = 9,
 				ETC1          = 10
 			};
+			inline static bool isCompressed(Enum textureFormat)
+			{
+				static bool MAPPING[] =
+				{
+					false,
+					false,
+					false,
+					false,
+					false,
+					true,
+					true,
+					true,
+					true,
+					true,
+					true
+				};
+				return MAPPING[textureFormat];
+			}
+			inline static uint32_t getNumberOfBytesPerElement(Enum textureFormat)
+			{
+				static const uint32_t MAPPING[] =
+				{
+					sizeof(uint8_t),
+					sizeof(uint8_t) * 3,
+					sizeof(uint8_t) * 4,
+					sizeof(float) * 2,
+					sizeof(float) * 4,
+					sizeof(uint8_t) * 3,
+					sizeof(uint8_t) * 4,
+					sizeof(uint8_t) * 4,
+					sizeof(uint8_t) * 1,
+					sizeof(uint8_t) * 2,
+					sizeof(uint8_t) * 3
+				};
+				return MAPPING[textureFormat];
+			}
+			inline static uint32_t getNumberOfBytesPerRow(Enum textureFormat, uint32_t width)
+			{
+				switch (textureFormat)
+				{
+					case A8:
+						return width;
+					case R8G8B8:
+						return 3 * width;
+					case R8G8B8A8:
+						return 4 * width;
+					case R16G16B16A16F:
+						return 8 * width;
+					case R32G32B32A32F:
+						return 16 * width;
+					case BC1:
+						return ((width + 3) >> 2) * 8;
+					case BC2:
+						return ((width + 3) >> 2) * 16;
+					case BC3:
+						return ((width + 3) >> 2) * 16;
+					case BC4:
+						return ((width + 3) >> 2) * 8;
+					case BC5:
+						return ((width + 3) >> 2) * 16;
+					case ETC1:
+						return (width >> 1);
+					default:
+						return 0;
+				}
+			}
+			inline static uint32_t getNumberOfBytesPerSlice(Enum textureFormat, uint32_t width, uint32_t height)
+			{
+				switch (textureFormat)
+				{
+					case A8:
+						return width * height;
+					case R8G8B8:
+						return 3 * width * height;
+					case R8G8B8A8:
+						return 4 * width * height;
+					case R16G16B16A16F:
+						return 8 * width * height;
+					case R32G32B32A32F:
+						return 16 * width * height;
+					case BC1:
+						return ((width + 3) >> 2) * ((height + 3) >> 2) * 8;
+					case BC2:
+						return ((width + 3) >> 2) * ((height + 3) >> 2) * 16;
+					case BC3:
+						return ((width + 3) >> 2) * ((height + 3) >> 2) * 16;
+					case BC4:
+						return ((width + 3) >> 2) * ((height + 3) >> 2) * 8;
+					case BC5:
+						return ((width + 3) >> 2) * ((height + 3) >> 2) * 16;
+					case ETC1:
+					{
+						const uint32_t numberOfBytesPerSlice = (width * height) >> 1;
+						return (numberOfBytesPerSlice > 8) ? numberOfBytesPerSlice : 8;
+					}
+					default:
+						return 0;
+				}
+			}
 		};
 		struct TextureFlag
 		{
@@ -465,6 +564,16 @@ namespace Renderer
 				UNSIGNED_SHORT = 1,
 				UNSIGNED_INT   = 2
 			};
+			inline static uint32_t getNumberOfBytesPerElement(Enum indexFormat)
+			{
+				static uint32_t MAPPING[] =
+				{
+					1,
+					2,
+					4
+				};
+				return MAPPING[indexFormat];
+			}
 		};
 	#endif
 

@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Asset/Asset.h"
 #include "RendererRuntime/Resource/ResourceManager.h"
 
 
@@ -41,9 +40,9 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
-	class Mesh;
+	class MeshResource;
 	class IRendererRuntime;
-	class MeshResourceSerializer;
+	class MeshResourceLoader;
 }
 
 
@@ -72,7 +71,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT Mesh* loadMeshByAssetId(Renderer::IProgram& program, AssetId assetId);
+		RENDERERRUNTIME_API_EXPORT MeshResource* loadMeshResourceByAssetId(Renderer::IProgram& program, AssetId assetId);
 
 
 	//[-------------------------------------------------------]
@@ -87,7 +86,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		MeshResourceManager(IRendererRuntime& rendererRuntime);
+		explicit MeshResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~MeshResourceManager();
 		MeshResourceManager(const MeshResourceManager&) = delete;
 		MeshResourceManager& operator=(const MeshResourceManager&) = delete;
@@ -97,8 +96,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
-		MeshResourceSerializer* mMeshResourceSerializer;	///< Mesh resource serializer, always valid, destroy the instance if you no longer need it
+		IRendererRuntime&	mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
+		MeshResourceLoader* mMeshResourceLoader;	///< Mesh resource loader, always valid, destroy the instance if you no longer need it
 
 
 	};

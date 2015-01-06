@@ -56,24 +56,6 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const uint32_t MAXIMUM_ASSET_FILENAME_LENGTH = 127;
-
-		/**
-		*  @brief
-		*    Asset class
-		*
-		*  @remarks
-		*    This asset reference table is always kept in memory so we have to implement it in an efficient way.
-		*    No "std::string" by intent to be cache friendly and avoid memory trashing, which is important here.
-		*    132 bytes per asset might sound not much, but when having e.g. 30.000 assets which is not unusual for a
-		*    more complex project, you end up in having a 3 MiB asset reference table in memory.
-		*/
-		struct Asset
-		{
-			AssetId assetId;											///< Asset ID
-			char	assetFilename[MAXIMUM_ASSET_FILENAME_LENGTH + 1];	///< Asset UTF-8 filename, +1 for the terminating zero
-		};
-
 		typedef std::vector<Asset> SortedAssetVector;
 
 
@@ -91,7 +73,8 @@ namespace RendererRuntime
 		inline ~AssetPackage();
 		inline void clear();
 		inline const SortedAssetVector& getSortedAssetVector() const;
-		RENDERERRUNTIME_API_EXPORT const char* getAssetFilenameByAssetId(AssetId assetId) const;
+		RENDERERRUNTIME_API_EXPORT const Asset* getAssetByAssetId(AssetId assetId) const;
+		inline const char* getAssetFilenameByAssetId(AssetId assetId) const;
 
 		// For internal use only (exposed for API performance reasons)
 		inline SortedAssetVector& getWritableSortedAssetVector();

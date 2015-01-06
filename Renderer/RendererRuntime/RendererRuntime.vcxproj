@@ -23,16 +23,20 @@
     <None Include="include\RendererRuntime\Asset\AssetManager.inl" />
     <None Include="include\RendererRuntime\Asset\AssetPackage.inl" />
     <None Include="include\RendererRuntime\Asset\AssetPackageSerializer.inl" />
+    <None Include="include\RendererRuntime\Backend\RendererBackendManager.inl" />
+    <None Include="include\RendererRuntime\Backend\RendererRuntimeImpl.inl" />
     <None Include="include\RendererRuntime\Core\StringId.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
-    <None Include="include\RendererRuntime\RendererRuntimeImpl.inl" />
-    <None Include="include\RendererRuntime\Resource\Font\FontImpl.inl" />
-    <None Include="include\RendererRuntime\Resource\Font\FontResourceSerializer.inl" />
-    <None Include="include\RendererRuntime\Resource\Font\IFont.inl" />
-    <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceSerializer.inl" />
-    <None Include="include\RendererRuntime\Resource\Texture\CrnTextureResourceSerializer.inl" />
-    <None Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.inl" />
-    <None Include="include\RendererRuntime\Resource\Texture\EtcTextureResourceSerializer.inl" />
+    <None Include="include\RendererRuntime\Resource\Font\FontResource.inl" />
+    <None Include="include\RendererRuntime\Resource\Font\FontResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Resource\IResource.inl" />
+    <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Resource\ResourceStreamer.inl" />
+    <None Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Resource\Texture\Loader\EtcTextureResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Resource\Texture\Loader\ITextureResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Resource\Texture\TextureResource.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -40,6 +44,8 @@
     <ClInclude Include="include\RendererRuntime\Asset\AssetManager.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetPackage.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetPackageSerializer.h" />
+    <ClInclude Include="include\RendererRuntime\Backend\RendererBackendManager.h" />
+    <ClInclude Include="include\RendererRuntime\Backend\RendererRuntimeImpl.h" />
     <ClInclude Include="include\RendererRuntime\Command\CommandBucket.h" />
     <ClInclude Include="include\RendererRuntime\Command\Material.h" />
     <ClInclude Include="include\RendererRuntime\Compositor\CompositorManager.h" />
@@ -52,25 +58,26 @@
     <ClInclude Include="include\RendererRuntime\PlatformTypes.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />
-    <ClInclude Include="include\RendererRuntime\RendererRuntimeImpl.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResource.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Font\FontImpl.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceSerializer.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Font\IFont.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\IResource.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\IResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceSerializer.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Mesh\Mesh.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResource.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ResourceManager.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\ResourceSerializer.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\ResourceStreamer.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderResourceManager.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderResourceSerializer.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Texture\CrnTextureResourceSerializer.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Texture\DdsTextureResourceSerializer.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Texture\EtcTextureResourceSerializer.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\EtcTextureResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\ITextureResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Scene\SceneManager.h" />
     <ClInclude Include="include\RendererRuntime\WindowsHeader.h" />
     <ClInclude Include="resource.h" />
@@ -89,30 +96,23 @@
       <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</TreatWarningAsError>
       <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</TreatWarningAsError>
     </ClCompile>
+    <ClCompile Include="src\Backend\RendererBackendManager.cpp" />
+    <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp" />
     <ClCompile Include="src\Command\CommandBucket.cpp" />
     <ClCompile Include="src\Compositor\CompositorManager.cpp" />
-    <ClCompile Include="src\RendererRuntimeImpl.cpp" />
+    <ClCompile Include="src\Resource\Font\FontResource.cpp" />
+    <ClCompile Include="src\Resource\Font\FontResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Font\FontResourceManager.cpp" />
-    <ClCompile Include="src\Resource\Font\FontImpl.cpp" />
-    <ClCompile Include="src\Resource\Font\FontResourceSerializer.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp" />
-    <ClCompile Include="src\Resource\Mesh\Mesh.cpp" />
+    <ClCompile Include="src\Resource\Mesh\MeshResource.cpp" />
+    <ClCompile Include="src\Resource\Mesh\MeshResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp" />
-    <ClCompile Include="src\Resource\Mesh\MeshResourceSerializer.cpp" />
+    <ClCompile Include="src\Resource\ResourceStreamer.cpp" />
     <ClCompile Include="src\Resource\Shader\ShaderResourceManager.cpp" />
-    <ClCompile Include="src\Resource\Texture\CrnTextureResourceSerializer.cpp">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">false</TreatWarningAsError>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">false</TreatWarningAsError>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">false</TreatWarningAsError>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">false</TreatWarningAsError>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Texture\DdsTextureResourceSerializer.cpp" />
-    <ClCompile Include="src\Resource\Texture\EtcTextureResourceSerializer.cpp" />
+    <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp" />
+    <ClCompile Include="src\Resource\Texture\Loader\DdsTextureResourceLoader.cpp" />
+    <ClCompile Include="src\Resource\Texture\Loader\EtcTextureResourceLoader.cpp" />
+    <ClCompile Include="src\Resource\Texture\TextureResource.cpp" />
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
   </ItemGroup>

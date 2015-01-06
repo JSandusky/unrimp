@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRendererRuntime.h"
 
+#include <RendererRuntime/Resource/Font/FontResource.h>
+
 
 //[-------------------------------------------------------]
 //[ Classes                                               ]
@@ -82,7 +84,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::IFontPtr mFont;	///< Font, can be a null pointer
+	RendererRuntime::FontResourcePtr mFontResource;	///< Font resource, can be a null pointer
 
 
 };

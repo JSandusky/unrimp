@@ -94,7 +94,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		ShaderResourceManager(IRendererRuntime& rendererRuntime);
+		explicit ShaderResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~ShaderResourceManager();
 		ShaderResourceManager(const ShaderResourceManager&) = delete;
 		ShaderResourceManager& operator=(const ShaderResourceManager&) = delete;

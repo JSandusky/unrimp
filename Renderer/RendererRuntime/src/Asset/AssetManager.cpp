@@ -65,16 +65,16 @@ namespace RendererRuntime
 		}
 	}
 
-	const char* AssetManager::getAssetFilenameByAssetId(AssetId assetId) const
+	const Asset* AssetManager::getAssetByAssetId(AssetId assetId) const
 	{
 		// Search inside all mounted asset packages, later added asset packages cover old ones
 		const size_t numberOfAssetPackages = mAssetPackageVector.size();
 		for (size_t i = 0; i < numberOfAssetPackages; ++i)
 		{
-			const char* filename = mAssetPackageVector[i]->getAssetFilenameByAssetId(assetId);
-			if (nullptr != filename)
+			const Asset* asset = mAssetPackageVector[i]->getAssetByAssetId(assetId);
+			if (nullptr != asset)
 			{
-				return filename;
+				return asset;
 			}
 		}
 

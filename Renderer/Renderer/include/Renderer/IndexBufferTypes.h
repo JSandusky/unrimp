@@ -48,6 +48,18 @@ namespace Renderer
 			UNSIGNED_SHORT = 1,	///< Two bytes per element, uint16_t (best support across multiple renderer APIs)
 			UNSIGNED_INT   = 2	///< Four bytes per element, uint32_t (may not be supported by each API)
 		};
+
+		/**
+		*  @brief
+		*    "Renderer::IndexBufferFormat" to number of bytes per element
+		*
+		*  @param[in] indexFormat
+		*    "Renderer::IndexBufferFormat" to map
+		*
+		*  @return
+		*    Number of bytes per element
+		*/
+		inline static uint32_t getNumberOfBytesPerElement(Enum indexFormat);
 	};
 
 
@@ -55,6 +67,12 @@ namespace Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "Renderer/IndexBufferTypes.inl"
 
 
 //[-------------------------------------------------------]

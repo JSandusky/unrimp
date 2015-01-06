@@ -359,19 +359,22 @@ namespace RendererToolkit
 		//    - Font header
 		//    - Font glyph definitions
 		//    - Font data
-		struct FontHeader
-		{
-			uint32_t formatType;
-			uint16_t formatVersion;
-			uint32_t size;
-			uint32_t resolution;
-			float	 ascender;
-			float	 descender;
-			float	 height;
-			uint32_t numberOfFontGlyphs;
-			uint32_t glyphTextureAtlasSizeX;
-			uint32_t glyphTextureAtlasSizeY;
-		};
+		#pragma pack(push)
+		#pragma pack(1)
+			struct FontHeader
+			{
+				uint32_t formatType;
+				uint16_t formatVersion;
+				uint32_t size;
+				uint32_t resolution;
+				float	 ascender;
+				float	 descender;
+				float	 height;
+				uint32_t numberOfFontGlyphs;
+				uint32_t glyphTextureAtlasSizeX;
+				uint32_t glyphTextureAtlasSizeY;
+			};
+		#pragma pack(pop)
 		FontHeader fontHeader;
 		fontHeader.formatType			  = RendererRuntime::StringId("Font");
 		fontHeader.formatVersion		  = 1;
@@ -426,7 +429,7 @@ namespace RendererToolkit
 			const std::string assetIdAsString = input.projectName + "/Font/" + assetCategory + '/' + assetName;
 
 			// Output asset
-			RendererRuntime::AssetPackage::Asset outputAsset;
+			RendererRuntime::Asset outputAsset;
 			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
 			strcpy(outputAsset.assetFilename, assetFilename.c_str());	// TODO(co) Buffer overflow test
 			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);

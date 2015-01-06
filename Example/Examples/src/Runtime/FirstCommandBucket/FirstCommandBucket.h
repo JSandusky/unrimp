@@ -30,6 +30,7 @@
 #include "Framework/IApplicationRendererRuntime.h"
 
 #include <RendererRuntime/Command/CommandBucket.h>
+#include <RendererRuntime/Resource/Font/FontResource.h>
 
 
 //[-------------------------------------------------------]
@@ -84,7 +85,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::IFontPtr mFont;	///< Font, can be a null pointer
+	RendererRuntime::FontResourcePtr mFontResource;	///< Font resource, can be a null pointer
 	// Command buckets
 	RendererRuntime::CommandBucket<int> mSolidCommandBucket;
 	RendererRuntime::CommandBucket<int> mTransparentCommandBucket;

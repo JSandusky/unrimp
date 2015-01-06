@@ -44,10 +44,10 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class IFont;
 	class AssetManager;
 	class SceneManager;
 	class IRendererRuntime;
+	class ResourceStreamer;
 	class CompositorManager;
 	class FontResourceManager;
 	class MeshResourceManager;
@@ -88,6 +88,10 @@ namespace RendererRuntime
 		{
 			return *mSceneManager;
 		}
+		inline ResourceStreamer& getResourceStreamer() const
+		{
+			return *mResourceStreamer;
+		}
 		inline TextureResourceManager& getTextureResourceManager() const
 		{
 			return *mTextureResourceManager;
@@ -120,6 +124,7 @@ namespace RendererRuntime
 		AssetManager*			 mAssetManager;
 		CompositorManager*		 mCompositorManager;
 		SceneManager*			 mSceneManager;
+		ResourceStreamer*		 mResourceStreamer;
 		TextureResourceManager*	 mTextureResourceManager;
 		ShaderResourceManager*   mShaderResourceManager;
 		MaterialResourceManager* mMaterialResourceManager;
@@ -127,64 +132,6 @@ namespace RendererRuntime
 		MeshResourceManager*	 mMeshResourceManager;
 	};
 	typedef Renderer::SmartRefCount<IRendererRuntime> IRendererRuntimePtr;
-
-	// RendererRuntime/IFont.h
-	class IFont : public Renderer::RefCount<IFont>
-	{
-	public:
-		enum EDrawFlags
-		{
-			CENTER_TEXT    = 1<<0,
-			UNDERLINE_TEXT = 1<<1,
-			CROSSOUT_TEXT  = 1<<2,
-			MIPMAPPING     = 1<<3
-		};
-	public:
-		virtual ~IFont();
-		inline uint32_t getSize() const
-		{
-			return mSize;
-		}
-		inline uint32_t getResolution() const
-		{
-			return mResolution;
-		}
-		inline uint32_t getSizeInPixels() const
-		{
-			return static_cast<uint32_t>(mSize / 72.0f * mResolution);
-		}
-		inline float getAscender() const
-		{
-			return mAscender;
-		}
-		inline float getDescender() const
-		{
-			return mDescender;
-		}
-		inline float getHeight() const
-		{
-			return mHeight;
-		}
-		inline uint32_t getHeightInPixels() const
-		{
-			return static_cast<uint32_t>(getHeight() / 72.0f * mResolution);
-		}
-	public:
-		virtual bool isValid() const = 0;
-		virtual float getTextWidth(const char *text) = 0;
-		virtual void drawText(const char *text, const float *color, const float objectSpaceToClipSpace[16], float scaleX = 1.0f, float scaleY = 1.0f, float biasX = 0.0f, float biasY = 0.0f, uint32_t flags = 0) = 0;
-	protected:
-		IFont();
-		explicit IFont(const IFont &source);
-		IFont &operator =(const IFont &source);
-	protected:
-		uint32_t mSize;
-		uint32_t mResolution;
-		float	 mAscender;
-		float	 mDescender;
-		float	 mHeight;
-	};
-	typedef Renderer::SmartRefCount<IFont> IFontPtr;
 
 
 //[-------------------------------------------------------]

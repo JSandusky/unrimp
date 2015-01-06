@@ -57,7 +57,7 @@ namespace RendererToolkit
 
 	namespace detail
 	{
-		bool orderByAssetId(const RendererRuntime::AssetPackage::Asset& left, const RendererRuntime::AssetPackage::Asset& right)
+		bool orderByAssetId(const RendererRuntime::Asset& left, const RendererRuntime::Asset& right)
 		{
 			return (left.assetId < right.assetId);
 		}
@@ -90,7 +90,7 @@ namespace RendererToolkit
 		return mAssetPackage.getAssetFilenameByAssetId(assetId);
 	}
 
-	void ProjectImpl::compileAsset(const RendererRuntime::AssetPackage::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage)
+	void ProjectImpl::compileAsset(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage)
 	{
 		// Open the input stream
 		const std::string absoluteAssetFilename = mProjectDirectory + asset.assetFilename;
@@ -266,7 +266,7 @@ namespace RendererToolkit
 			ofstream.write(reinterpret_cast<const char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
 
 			// Write down the asset package content in one single burst
-			ofstream.write(reinterpret_cast<const char*>(sortedAssetVector.data()), sizeof(RendererRuntime::AssetPackage::Asset) * assetPackageHeader.numberOfAssets);
+			ofstream.write(reinterpret_cast<const char*>(sortedAssetVector.data()), sizeof(RendererRuntime::Asset) * assetPackageHeader.numberOfAssets);
 		}
 	}
 
@@ -335,14 +335,14 @@ namespace RendererToolkit
 			// Get asset data
 			const RendererRuntime::AssetId assetId = static_cast<uint32_t>(std::stoi(iterator->first));	// TODO(co) Parsing directly to "uint32_t" from string to be on the safe-side?
 			const std::string assetFilename = iterator->second.convert<std::string>();
-			if (assetFilename.length() > RendererRuntime::AssetPackage::MAXIMUM_ASSET_FILENAME_LENGTH)
+			if (assetFilename.length() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
 			{
-				const std::string message = "Asset filename \"" + assetFilename + "\" of asset ID " + std::to_string(assetId) + " is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::AssetPackage::MAXIMUM_ASSET_FILENAME_LENGTH);
+				const std::string message = "Asset filename \"" + assetFilename + "\" of asset ID " + std::to_string(assetId) + " is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
 				throw std::exception(message.c_str());
 			}
 
 			// Copy asset data
-			RendererRuntime::AssetPackage::Asset& asset = sortedAssetVector[currentAssetIndex];
+			RendererRuntime::Asset& asset = sortedAssetVector[currentAssetIndex];
 			asset.assetId = assetId;
 			strcpy(asset.assetFilename, assetFilename.c_str());
 

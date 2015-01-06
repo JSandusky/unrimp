@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Asset/Asset.h"
 #include "RendererRuntime/Resource/ResourceManager.h"
 
 
@@ -37,9 +36,9 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class IFont;
+	class FontResource;
+	class FontResourceLoader;
 	class RendererRuntimeImpl;
-	class FontResourceSerializer;
 }
 
 
@@ -68,7 +67,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT IFont* loadFontByAssetId(AssetId assetId);
+		RENDERERRUNTIME_API_EXPORT FontResource* loadFontByAssetId(AssetId assetId);
 
 
 	//[-------------------------------------------------------]
@@ -83,7 +82,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl);
+		explicit FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl);
 		virtual ~FontResourceManager();
 		FontResourceManager(const FontResourceManager&) = delete;
 		FontResourceManager& operator=(const FontResourceManager&) = delete;
@@ -93,8 +92,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		RendererRuntimeImpl&	mRendererRuntimeImpl;		///< Renderer runtime implementation instance, do not destroy the instance
-		FontResourceSerializer* mFontResourceSerializer;	///< Font resource serializer, always valid, destroy the instance if you no longer need it
+		RendererRuntimeImpl& mRendererRuntimeImpl;	///< Renderer runtime implementation instance, do not destroy the instance
+		FontResourceLoader*  mFontResourceLoader;	///< Font resource loader, always valid, destroy the instance if you no longer need it
 
 
 	};

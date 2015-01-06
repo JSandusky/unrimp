@@ -28,23 +28,21 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Asset/Asset.h"
 #include "RendererRuntime/Resource/ResourceManager.h"
+
+#include <vector>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class ITexture;
-}
 namespace RendererRuntime
 {
+	class TextureResource;
 	class IRendererRuntime;
-	class CrnTextureResourceSerializer;
-	class EtcTextureResourceSerializer;
-	class DdsTextureResourceSerializer;
+	class CrnTextureResourceLoader;
+	class EtcTextureResourceLoader;
+	class DdsTextureResourceLoader;
 }
 
 
@@ -73,7 +71,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT Renderer::ITexture* loadTextureByAssetId(AssetId assetId);
+		RENDERERRUNTIME_API_EXPORT TextureResource* loadTextureByAssetId(AssetId assetId);
 
 
 	//[-------------------------------------------------------]
@@ -88,7 +86,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		TextureResourceManager(IRendererRuntime& rendererRuntime);
+		explicit TextureResourceManager(IRendererRuntime& rendererRuntime);
 		virtual ~TextureResourceManager();
 		TextureResourceManager(const TextureResourceManager&) = delete;
 		TextureResourceManager& operator=(const TextureResourceManager&) = delete;
@@ -98,10 +96,13 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&			  mRendererRuntime;					///< Renderer runtime instance, do not destroy the instance
-		CrnTextureResourceSerializer* mCrnTextureResourceSerializer;	///< CRN texture resource serializer, always valid, destroy the instance if you no longer need it
-		EtcTextureResourceSerializer* mEtcTextureResourceSerializer;	///< ETC texture resource serializer, always valid, destroy the instance if you no longer need it
-		DdsTextureResourceSerializer* mDdsTextureResourceSerializer;	///< DDS texture resource serializer, always valid, destroy the instance if you no longer need it
+		IRendererRuntime&		  mRendererRuntime;				///< Renderer runtime instance, do not destroy the instance
+		CrnTextureResourceLoader* mCrnTextureResourceLoader;	///< CRN texture resource loader, always valid, destroy the instance if you no longer need it
+		EtcTextureResourceLoader* mEtcTextureResourceLoader;	///< ETC texture resource loader, always valid, destroy the instance if you no longer need it
+		DdsTextureResourceLoader* mDdsTextureResourceLoader;	///< DDS texture resource loader, always valid, destroy the instance if you no longer need it
+
+		// TODO(co) Implement decent resource handling
+		std::vector<TextureResource*> mResources;
 
 
 	};

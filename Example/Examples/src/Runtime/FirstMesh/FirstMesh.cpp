@@ -28,9 +28,10 @@
 #include <RendererToolkit/Public/RendererToolkit.h>
 
 #include <RendererRuntime/Asset/AssetManager.h>
-#include <RendererRuntime/Resource/Mesh/Mesh.h>
+#include <RendererRuntime/Resource/Mesh/MeshResource.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/Font/FontResourceManager.h>
+#include <RendererRuntime/Resource/Texture/TextureResource.h>
 #include <RendererRuntime/Resource/Texture/TextureResourceManager.h>
 
 #include <glm/gtc/type_ptr.hpp> 
@@ -42,7 +43,7 @@
 //[-------------------------------------------------------]
 FirstMesh::FirstMesh(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mMesh(nullptr),
+	mMeshResource(nullptr),
 	mUniformBlockIndex(0),
 	mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
 	mObjectSpaceToViewSpaceMatrixUniformHandle(NULL_HANDLE),
@@ -100,8 +101,8 @@ void FirstMesh::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Create the font instance
-		mFont = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
+		// Create the font resource
+		mFontResource = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
@@ -163,29 +164,17 @@ void FirstMesh::onInitialization()
 				// Create mesh instance
 				// -> In order to keep it simple, we provide the mesh with the program, usually you want to use a mesh
 				//    with multiple programs and therefore using multiple vertex array objects (VAO)
-				mMesh = rendererRuntime->getMeshResourceManager().loadMeshByAssetId(*mProgram, "Example/Mesh/Character/ImrodLowPoly");
+				mMeshResource = rendererRuntime->getMeshResourceManager().loadMeshResourceByAssetId(*mProgram, "Example/Mesh/Character/ImrodLowPoly");
 			}
 
-			// Use texture collections when you want you exploit renderer API methods like
-			// "ID3D10Device::PSSetShaderResources()" from Direct3D 10 or "ID3D11DeviceContext::PSSetShaderResources()" from Direct3D 11.
-			// By using a single API call, multiple resources can be set at one and the same time in an efficient way.
-			{
-				// Load in the diffuse, emissive, normal and specular texture
-				// -> The tangent space normal map is stored with three components, two would be enought to recalculate the third component within the fragment shader
-				// -> The specular map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
+			{ // Load in the diffuse, emissive, normal and specular texture
+			  // -> The tangent space normal map is stored with three components, two would be enought to recalculate the third component within the fragment shader
+			  // -> The specular map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
 				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
-				Renderer::ITexture *textures[] =
-				{
-					textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_Diffuse"),
-					textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_Illumination"),
-					textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_norm"),
-					textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_spec")
-				};
-
-				// Create the texture collection
-				// -> The texture collection keeps a reference to the provided resources, so,
-				//    we don't need to care about the resource cleanup in here or later on
-				mTextureCollection = renderer->createTextureCollection(sizeof(textures) / sizeof(Renderer::ITexture2D *), textures);
+				mDiffuseTextureResource  = textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_Diffuse");
+				mNormalTextureResource   = textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_Illumination");
+				mSpecularTextureResource = textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_norm");
+				mEmissiveTextureResource = textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_spec");
 			}
 
 			// Use sampler state collections when you want you exploit renderer API methods like
@@ -233,18 +222,22 @@ void FirstMesh::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
-	mFont = nullptr;
+	mFontResource = nullptr;
 
 	// Release the used renderer resources
 	mBlendState = nullptr;
 	mSamplerStateCollection = nullptr;
-	mTextureCollection = nullptr;
+	// TODO(co) Implement decent resource handling
+	mDiffuseTextureResource = nullptr;
+	mNormalTextureResource = nullptr;
+	mSpecularTextureResource = nullptr;
+	mEmissiveTextureResource = nullptr;
 
 	// Destroy mesh instance
-	if (nullptr != mMesh)
+	if (nullptr != mMeshResource)
 	{
-		delete mMesh;
-		mMesh = nullptr;
+		delete mMeshResource;
+		mMeshResource = nullptr;
 	}
 
 	// Release the used resources
@@ -350,7 +343,10 @@ void FirstMesh::onDraw()
 			}
 
 			// Use the texture collection to set the textures
-			renderer->fsSetTextureCollection(0, mTextureCollection);
+			renderer->fsSetTexture(0, mDiffuseTextureResource->getTexture());
+			renderer->fsSetTexture(1, mNormalTextureResource->getTexture());
+			renderer->fsSetTexture(2, mSpecularTextureResource->getTexture());
+			renderer->fsSetTexture(3, mEmissiveTextureResource->getTexture());
 
 			// Use the sampler state collection to set the sampler states
 			renderer->fsSetSamplerStateCollection(0, mSamplerStateCollection);
@@ -359,13 +355,13 @@ void FirstMesh::onDraw()
 			renderer->omSetBlendState(mBlendState);
 
 			// Draw mesh instance
-			if (nullptr != mMesh)
+			if (nullptr != mMeshResource)
 			{
-				mMesh->draw();
+				mMeshResource->draw();
 			}
 
 			// Draw text
-			mFont->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
+			mFontResource->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
 
 			// End scene rendering
 			// -> Required for Direct3D 9

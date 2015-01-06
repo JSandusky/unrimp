@@ -62,7 +62,7 @@ namespace RendererRuntime
 		// Read in the asset package content in one single burst
 		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage->getWritableSortedAssetVector();
 		sortedAssetVector.resize(assetPackageHeader.numberOfAssets);
-		istream.read(reinterpret_cast<char*>(sortedAssetVector.data()), sizeof(AssetPackage::Asset) * assetPackageHeader.numberOfAssets);
+		istream.read(reinterpret_cast<char*>(sortedAssetVector.data()), sizeof(Asset) * assetPackageHeader.numberOfAssets);
 
 		// Done
 		return assetPackage;

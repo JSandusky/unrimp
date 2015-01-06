@@ -84,8 +84,8 @@ void FirstCommandBucket::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Create the font instance
-		mFont = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
+		// Create the font resource
+		mFontResource = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
@@ -204,7 +204,7 @@ void FirstCommandBucket::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
-	mFont = nullptr;
+	mFontResource = nullptr;
 	mProgram = nullptr;
 	mUniformBufferDynamicVs = nullptr;
 	mSolidVertexArray = nullptr;
@@ -237,7 +237,7 @@ void FirstCommandBucket::onDraw()
 		if (renderer->beginScene())
 		{
 			// Draw text
-	//		mFont->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
+	//		mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
 
 			// Set the used uniform buffers
 			// TODO(co) Has to be part of material binding

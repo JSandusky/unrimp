@@ -85,7 +85,7 @@ namespace RendererToolkit
 			const std::string assetIdAsString = input.projectName + "/Material/" + assetCategory + '/' + assetName;
 
 			// Output asset
-			RendererRuntime::AssetPackage::Asset outputAsset;
+			RendererRuntime::Asset outputAsset;
 			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
 			strcpy(outputAsset.assetFilename, assetFilename.c_str());	// TODO(co) Buffer overflow test
 			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);

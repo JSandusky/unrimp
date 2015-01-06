@@ -43,6 +43,28 @@ namespace RendererRuntime
 	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
 
 
+	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Asset class
+	*
+	*  @remarks
+	*    The asset reference table is always kept in memory so we have to implement it in an efficient way.
+	*    No "std::string" by intent to be cache friendly and avoid memory trashing, which is important here.
+	*    132 bytes per asset might sound not much, but when having e.g. 30.000 assets which is not unusual for a
+	*    more complex project, you end up in having a 3 MiB asset reference table in memory.
+	*/
+	struct Asset
+	{
+		static const uint32_t MAXIMUM_ASSET_FILENAME_LENGTH = 127;
+
+		AssetId assetId;											///< Asset ID
+		char	assetFilename[MAXIMUM_ASSET_FILENAME_LENGTH + 1];	///< Asset UTF-8 filename, +1 for the terminating zero
+	};
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

@@ -122,8 +122,6 @@ namespace Renderer
 		*    - Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
 		*/
 		inline static uint32_t getNumberOfBytesPerSlice(Enum textureFormat, uint32_t width, uint32_t height);
-
-
 	};
 
 	/**

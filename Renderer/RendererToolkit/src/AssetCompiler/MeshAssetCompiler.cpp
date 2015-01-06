@@ -124,16 +124,19 @@ namespace RendererToolkit
 				//    - Mesh header
 				//    - Vertex and index buffer data
 				//    - Vertex array attribute definitions
-				struct MeshHeader
-				{
-					uint32_t formatType;
-					uint16_t formatVersion;
-					uint8_t  numberOfBytesPerVertex;
-					uint32_t numberOfVertices;
-					uint8_t  indexBufferFormat;
-					uint32_t numberOfIndices;
-					uint8_t  numberOfVertexArrayAttributes;
-				};
+				#pragma pack(push)
+				#pragma pack(1)
+					struct MeshHeader
+					{
+						uint32_t formatType;
+						uint16_t formatVersion;
+						uint8_t  numberOfBytesPerVertex;
+						uint32_t numberOfVertices;
+						uint8_t  indexBufferFormat;
+						uint32_t numberOfIndices;
+						uint8_t  numberOfVertexArrayAttributes;
+					};
+				#pragma pack(pop)
 				MeshHeader meshHeader;
 				meshHeader.formatType					 = RendererRuntime::StringId("Mesh");
 				meshHeader.formatVersion				 = 1;
@@ -173,15 +176,18 @@ namespace RendererToolkit
 
 			{ // Vertex array attributes
 				// TODO(co) If we would use a "IVertexBuffer"-handle instead of pointer inside "Renderer::VertexArrayAttribute", we could just dump the stuff and still be 32/64 bit compatible
-				struct VertexArrayAttribute
-				{
-					uint8_t vertexArrayFormat;
-					char	name[32];
-					char	semantic[32];
-					uint8_t semanticIndex;
-					uint8_t offset;
-					uint8_t stride;
-				};
+				#pragma pack(push)
+				#pragma pack(1)
+					struct VertexArrayAttribute
+					{
+						uint8_t vertexArrayFormat;
+						char	name[32];
+						char	semantic[32];
+						uint8_t semanticIndex;
+						uint8_t offset;
+						uint8_t stride;
+					};
+				#pragma pack(pop)
 
 				const VertexArrayAttribute vertexArray[] =
 				{
@@ -231,7 +237,7 @@ namespace RendererToolkit
 			const std::string assetIdAsString = input.projectName + "/Mesh/" + assetCategory + '/' + assetName;
 
 			// Output asset
-			RendererRuntime::AssetPackage::Asset outputAsset;
+			RendererRuntime::Asset outputAsset;
 			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
 			strcpy(outputAsset.assetFilename, assetFilename.c_str());	// TODO(co) Buffer overflow test
 			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);

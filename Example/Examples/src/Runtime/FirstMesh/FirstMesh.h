@@ -30,13 +30,16 @@
 #include "Framework/Stopwatch.h"
 #include "Framework/IApplicationRendererRuntime.h"
 
+#include <RendererRuntime/Resource/Font/FontResource.h>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class Mesh;
+	class MeshResource;
+	class TextureResource;
 }
 namespace RendererToolkit
 {
@@ -106,11 +109,14 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::IFontPtr			  mFont;					///< Font, can be a null pointer
+	RendererRuntime::FontResourcePtr	  mFontResource;			///< Font resource, can be a null pointer
 	Renderer::IUniformBufferPtr			  mUniformBuffer;			///< Uniform buffer object (UBO), can be a null pointer
 	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
-	RendererRuntime::Mesh				 *mMesh;					///< Mesh instance, can be a null pointer
-	Renderer::ITextureCollectionPtr		  mTextureCollection;		///< Texture collection, can be a null pointer
+	RendererRuntime::MeshResource		 *mMeshResource;			///< Mesh resource, can be a null pointer
+	RendererRuntime::TextureResource*	  mDiffuseTextureResource;
+	RendererRuntime::TextureResource*	  mNormalTextureResource;
+	RendererRuntime::TextureResource*	  mSpecularTextureResource;
+	RendererRuntime::TextureResource*	  mEmissiveTextureResource;
 	Renderer::ISamplerStateCollectionPtr  mSamplerStateCollection;	///< Sampler state collection, can be a null pointer
 	Renderer::IBlendStatePtr			  mBlendState;				///< Blend state, can be a null pointer
 	// Optimization: Cache data to not bother the renderer API to much

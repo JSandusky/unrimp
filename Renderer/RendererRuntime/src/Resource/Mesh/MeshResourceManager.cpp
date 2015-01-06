@@ -22,15 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
-#include "RendererRuntime/Resource/Mesh/MeshResourceSerializer.h"
+#include "RendererRuntime/Resource/Mesh/MeshResourceLoader.h"
+#include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
-
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#include <fstream>
-#pragma warning(pop)
 
 
 //[-------------------------------------------------------]
@@ -44,18 +39,23 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	Mesh* MeshResourceManager::loadMeshByAssetId(Renderer::IProgram& program, AssetId assetId)
+	MeshResource* MeshResourceManager::loadMeshResourceByAssetId(Renderer::IProgram& program, AssetId assetId)
 	{
-		try
+		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
+		if (nullptr != asset)
 		{
-			std::ifstream ifstream(mRendererRuntime.getAssetManager().getAssetFilenameByAssetId(assetId), std::ios::binary);
-			return mMeshResourceSerializer->loadMesh(program, ifstream);
+			MeshResource* meshResource = new MeshResource(assetId);
+
+			mMeshResourceLoader->initialize(*asset, *meshResource, program);
+			mMeshResourceLoader->onDeserialization();
+			mMeshResourceLoader->onProcessing();
+			mMeshResourceLoader->onRendererBackendDispatch();
+
+			return meshResource;
 		}
-		catch (const std::exception& e)
-		{
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load mesh asset %d: %s", assetId, e.what());
-			return nullptr;
-		}
+
+		// Error!
+		return nullptr;
 	}
 
 
@@ -79,14 +79,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MeshResourceManager::MeshResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mMeshResourceSerializer(new MeshResourceSerializer(rendererRuntime))
+		mMeshResourceLoader(new MeshResourceLoader(rendererRuntime))
 	{
 		// Nothing in here
 	}
 
 	MeshResourceManager::~MeshResourceManager()
 	{
-		delete mMeshResourceSerializer;
+		delete mMeshResourceLoader;
 	}
 
 

@@ -79,6 +79,7 @@
     <None Include="include\Renderer\IFramebuffer.inl" />
     <None Include="include\Renderer\IGeometryShader.inl" />
     <None Include="include\Renderer\IIndexBuffer.inl" />
+    <None Include="include\Renderer\IndexBufferTypes.inl" />
     <None Include="include\Renderer\IProgram.inl" />
     <None Include="include\Renderer\IRasterizerState.inl" />
     <None Include="include\Renderer\IRenderer.inl" />

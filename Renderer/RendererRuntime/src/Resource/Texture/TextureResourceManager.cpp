@@ -22,17 +22,13 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
-#include "RendererRuntime/Resource/Texture/CrnTextureResourceSerializer.h"
-#include "RendererRuntime/Resource/Texture/EtcTextureResourceSerializer.h"
-#include "RendererRuntime/Resource/Texture/DdsTextureResourceSerializer.h"
+#include "RendererRuntime/Resource/Texture/TextureResource.h"
+#include "RendererRuntime/Resource/Texture/Loader/CrnTextureResourceLoader.h"
+#include "RendererRuntime/Resource/Texture/Loader/EtcTextureResourceLoader.h"
+#include "RendererRuntime/Resource/Texture/Loader/DdsTextureResourceLoader.h"
+#include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
-
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#include <fstream>
-#pragma warning(pop)
 
 
 //[-------------------------------------------------------]
@@ -45,21 +41,35 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Renderer::ITexture* TextureResourceManager::loadTextureByAssetId(AssetId assetId)
+	TextureResource* TextureResourceManager::loadTextureByAssetId(AssetId assetId)
 	{
-		try
+		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
+		if (nullptr != asset)
 		{
-			// TODO(co) Just an experiment
-			std::ifstream ifstream(mRendererRuntime.getAssetManager().getAssetFilenameByAssetId(assetId), std::ios::binary);
-		//	return mEtcTextureResourceSerializer->loadEtcTexture(ifstream);
-			return mCrnTextureResourceSerializer->loadCrnTexture(ifstream);
-		//	return mDdsTextureResourceSerializer->loadDdsTexture(ifstream);
+			// Create the resource instance
+			TextureResource* textureResource = new TextureResource(assetId);
+			mResources.push_back(textureResource);
+
+			{
+				// Prepare the resource loader
+				ITextureResourceLoader* textureResourceLoader = mCrnTextureResourceLoader;
+			//	ITextureResourceLoader* textureResourceLoader = mEtcTextureResourceLoader;
+			//	ITextureResourceLoader* textureResourceLoader = mDdsTextureResourceLoader;
+				mCrnTextureResourceLoader->initialize(*asset, *textureResource);
+
+				// Commit resource streamer asset load request
+				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+				resourceStreamerLoadRequest.resource = textureResource;
+				resourceStreamerLoadRequest.resourceLoader = textureResourceLoader;
+				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+			}
+
+			// TODO(co) No raw pointers in here
+			return textureResource;
 		}
-		catch (const std::exception& e)
-		{
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load texture asset %d: %s", assetId, e.what());
-			return nullptr;
-		}
+
+		// Error!
+		return nullptr;
 	}
 
 
@@ -83,18 +93,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mCrnTextureResourceSerializer(new CrnTextureResourceSerializer(rendererRuntime)),
-		mEtcTextureResourceSerializer(new EtcTextureResourceSerializer(rendererRuntime)),
-		mDdsTextureResourceSerializer(new DdsTextureResourceSerializer(rendererRuntime))
+		mCrnTextureResourceLoader(new CrnTextureResourceLoader(rendererRuntime)),
+		mEtcTextureResourceLoader(new EtcTextureResourceLoader(rendererRuntime)),
+		mDdsTextureResourceLoader(new DdsTextureResourceLoader(rendererRuntime))
 	{
 		// Nothing in here
 	}
 
 	TextureResourceManager::~TextureResourceManager()
 	{
-		delete mCrnTextureResourceSerializer;
-		delete mEtcTextureResourceSerializer;
-		delete mDdsTextureResourceSerializer;
+		// TODO(co) Implement decent resource handling
+		for (size_t i = 0; i < mResources.size(); ++i)
+		{
+			delete mResources[i];
+		}
+
+		delete mCrnTextureResourceLoader;
+		delete mEtcTextureResourceLoader;
+		delete mDdsTextureResourceLoader;
 	}
 
 

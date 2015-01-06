@@ -78,8 +78,8 @@ void FirstFont::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
-		// Create the font instance
-		mFont = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
+		// Create the font resource
+		mFontResource = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -92,7 +92,7 @@ void FirstFont::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
-	mFont = nullptr;
+	mFontResource = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -119,7 +119,7 @@ void FirstFont::onDraw()
 		if (renderer->beginScene())
 		{
 			// Draw text
-			mFont->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
+			mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
 
 			// End scene rendering
 			// -> Required for Direct3D 9
