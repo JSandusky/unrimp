@@ -97,7 +97,14 @@ namespace RendererRuntime
 	void TextureResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		loadTextureResourceByAssetId(assetId);
+		for (size_t i = 0; i < mResources.size(); ++i)
+		{
+			if (mResources[i]->getResourceId() == assetId)
+			{
+				loadTextureResourceByAssetId(assetId);
+				break;
+			}
+		}
 	}
 
 	void TextureResourceManager::update()

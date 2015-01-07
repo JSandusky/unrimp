@@ -52,17 +52,13 @@ namespace RendererRuntime
 		mFontGlyphs(nullptr),
 		mTexture2D(nullptr)
 	{
-		// Add our renderer runtime implementation reference
-		mRendererRuntimeImpl->addReference();
+		// Nothing here
 	}
 
 	FontResource::~FontResource()
 	{
 		// Destroy the glyph texture atlas
 		destroyGlyphTextureAtlas();
-
-		// Release our renderer runtime implementation reference
-		mRendererRuntimeImpl->release();
 	}
 
 	float FontResource::getTextWidth(const char *text)

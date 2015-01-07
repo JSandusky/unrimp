@@ -99,7 +99,14 @@ namespace RendererRuntime
 	void MeshResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		loadMeshResourceByAssetId(*mProgram, assetId);
+		for (size_t i = 0; i < mResources.size(); ++i)
+		{
+			if (mResources[i]->getResourceId() == assetId)
+			{
+				loadMeshResourceByAssetId(*mProgram, assetId);
+				break;
+			}
+		}
 	}
 
 	void MeshResourceManager::update()

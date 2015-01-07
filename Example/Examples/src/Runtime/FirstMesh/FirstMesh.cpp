@@ -43,7 +43,12 @@
 //[-------------------------------------------------------]
 FirstMesh::FirstMesh(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
+	mFontResource(nullptr),
 	mMeshResource(nullptr),
+	mDiffuseTextureResource(nullptr),
+	mNormalTextureResource(nullptr),
+	mSpecularTextureResource(nullptr),
+	mEmissiveTextureResource(nullptr),
 	mUniformBlockIndex(0),
 	mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
 	mObjectSpaceToViewSpaceMatrixUniformHandle(NULL_HANDLE),
@@ -102,7 +107,7 @@ void FirstMesh::onInitialization()
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
 		// Create the font resource
-		mFontResource = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
+		mFontResource = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
@@ -221,14 +226,12 @@ void FirstMesh::onDeinitialization()
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
-	// Release the used resources
-	mFontResource = nullptr;
-
 	// Release the used renderer resources
 	mBlendState = nullptr;
 	mSamplerStateCollection = nullptr;
 
 	// TODO(co) Implement decent resource handling
+	mFontResource = nullptr;
 	mDiffuseTextureResource = nullptr;
 	mNormalTextureResource = nullptr;
 	mSpecularTextureResource = nullptr;

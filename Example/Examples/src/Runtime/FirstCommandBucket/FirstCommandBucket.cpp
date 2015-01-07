@@ -49,6 +49,7 @@
 //[-------------------------------------------------------]
 FirstCommandBucket::FirstCommandBucket(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
+	mFontResource(nullptr),
 	mSolidCommandBucket(4),
 	mTransparentCommandBucket(2)
 {
@@ -85,7 +86,7 @@ void FirstCommandBucket::onInitialization()
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
 		// Create the font resource
-		mFontResource = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
+		mFontResource = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
@@ -203,8 +204,10 @@ void FirstCommandBucket::onDeinitialization()
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
-	// Release the used resources
+	// TODO(co) Implement decent resource handling
 	mFontResource = nullptr;
+
+	// Release the used resources
 	mProgram = nullptr;
 	mUniformBufferDynamicVs = nullptr;
 	mSolidVertexArray = nullptr;

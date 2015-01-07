@@ -47,7 +47,8 @@
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FirstFont::FirstFont(const char *rendererName) :
-	IApplicationRendererRuntime(rendererName)
+	IApplicationRendererRuntime(rendererName),
+	mFontResource(nullptr)
 {
 	// Nothing to do in here
 }
@@ -79,7 +80,7 @@ void FirstFont::onInitialization()
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 		// Create the font resource
-		mFontResource = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
+		mFontResource = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -91,7 +92,7 @@ void FirstFont::onDeinitialization()
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
-	// Release the used resources
+	// TODO(co) Implement decent resource handling
 	mFontResource = nullptr;
 
 	// End debug event

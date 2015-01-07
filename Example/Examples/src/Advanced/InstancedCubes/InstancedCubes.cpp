@@ -43,6 +43,7 @@
 //[-------------------------------------------------------]
 InstancedCubes::InstancedCubes(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
+	mFontResource(nullptr),
 	mCubeRenderer(nullptr),
 	mNumberOfCubeInstances(1000),
 	mGlobalTimer(0.0f),
@@ -87,7 +88,7 @@ void InstancedCubes::onInitialization()
 				rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/AssetPackage.assets");
 
 				// Create the font resource
-				mFontResource = rendererRuntime->getFontResourceManager().loadFontByAssetId("Example/Font/Default/LinBiolinum_R");
+				mFontResource = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
 			}
 		}
 
@@ -127,7 +128,7 @@ void InstancedCubes::onDeinitialization()
 		mCubeRenderer = nullptr;
 	}
 
-	// Release the used resources
+	// TODO(co) Implement decent resource handling
 	mFontResource = nullptr;
 
 	// End debug event

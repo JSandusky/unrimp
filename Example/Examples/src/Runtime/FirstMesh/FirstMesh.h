@@ -109,10 +109,10 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::FontResourcePtr	  mFontResource;			///< Font resource, can be a null pointer
 	Renderer::IUniformBufferPtr			  mUniformBuffer;			///< Uniform buffer object (UBO), can be a null pointer
 	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
-	RendererRuntime::MeshResource		 *mMeshResource;			///< Mesh resource, can be a null pointer
+	RendererRuntime::FontResource*		  mFontResource;			///< Font resource, can be a null pointer
+	RendererRuntime::MeshResource*		  mMeshResource;			///< Mesh resource, can be a null pointer
 	RendererRuntime::TextureResource*	  mDiffuseTextureResource;
 	RendererRuntime::TextureResource*	  mNormalTextureResource;
 	RendererRuntime::TextureResource*	  mSpecularTextureResource;

@@ -37,7 +37,6 @@
 namespace RendererRuntime
 {
 	class FontResource;
-	class FontResourceLoader;
 	class RendererRuntimeImpl;
 }
 
@@ -67,7 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT FontResource* loadFontByAssetId(AssetId assetId);
+		RENDERERRUNTIME_API_EXPORT FontResource* loadFontResourceByAssetId(AssetId assetId);
 
 
 	//[-------------------------------------------------------]
@@ -86,6 +85,7 @@ namespace RendererRuntime
 		virtual ~FontResourceManager();
 		FontResourceManager(const FontResourceManager&) = delete;
 		FontResourceManager& operator=(const FontResourceManager&) = delete;
+		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
@@ -93,7 +93,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		RendererRuntimeImpl& mRendererRuntimeImpl;	///< Renderer runtime implementation instance, do not destroy the instance
-		FontResourceLoader*  mFontResourceLoader;	///< Font resource loader, always valid, destroy the instance if you no longer need it
+
+		// TODO(co) Implement decent resource handling
+		std::vector<FontResource*> mResources;
 
 
 	};

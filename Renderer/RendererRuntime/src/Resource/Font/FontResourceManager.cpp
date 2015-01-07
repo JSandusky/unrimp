@@ -24,8 +24,11 @@
 #include "RendererRuntime/Resource/Font/FontResourceManager.h"
 #include "RendererRuntime/Resource/Font/FontResourceLoader.h"
 #include "RendererRuntime/Resource/Font/FontResource.h"
+#include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/Backend/RendererRuntimeImpl.h"
+
+#include <assert.h>
 
 
 //[-------------------------------------------------------]
@@ -39,18 +42,46 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	FontResource* FontResourceManager::loadFontByAssetId(AssetId assetId)
+	FontResource* FontResourceManager::loadFontResourceByAssetId(AssetId assetId)
 	{
 		const Asset* asset = mRendererRuntimeImpl.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
 		{
-			FontResource* fontResource = new FontResource(mRendererRuntimeImpl, assetId);
+			// Get or create the instance
+			FontResource* fontResource = nullptr;
+			const size_t numberOfResources = mResources.size();
+			for (size_t i = 0; i < numberOfResources; ++i)
+			{
+				FontResource* currentFontResource = mResources[i];
+				if (currentFontResource->getResourceId() == assetId)
+				{
+					fontResource = currentFontResource;
 
-			mFontResourceLoader->initialize(*asset, *fontResource);
-			mFontResourceLoader->onDeserialization();
-			mFontResourceLoader->onProcessing();
-			mFontResourceLoader->onRendererBackendDispatch();
+					// Get us out of the loop
+					i = mResources.size();
+				}
+			}
 
+			// Create the resource instance
+			if (nullptr == fontResource)
+			{
+				fontResource = new FontResource(mRendererRuntimeImpl, assetId);
+				mResources.push_back(fontResource);
+			}
+
+			{
+				// Prepare the resource loader
+				FontResourceLoader* fontResourceLoader = static_cast<FontResourceLoader*>(acquireResourceLoaderInstance(FontResourceLoader::TYPE_ID));
+				fontResourceLoader->initialize(*asset, *fontResource);
+
+				// Commit resource streamer asset load request
+				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+				resourceStreamerLoadRequest.resource = fontResource;
+				resourceStreamerLoadRequest.resourceLoader = fontResourceLoader;
+				mRendererRuntimeImpl.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+			}
+
+			// TODO(co) No raw pointers in here
 			return fontResource;
 		}
 
@@ -64,8 +95,15 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void FontResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) Implement me
-		assetId = assetId;
+		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
+		for (size_t i = 0; i < mResources.size(); ++i)
+		{
+			if (mResources[i]->getResourceId() == assetId)
+			{
+				loadFontResourceByAssetId(assetId);
+				break;
+			}
+		}
 	}
 
 	void FontResourceManager::update()
@@ -77,18 +115,37 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-// TODO(co) Remove this
-#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
 	FontResourceManager::FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl) :
-		mRendererRuntimeImpl(rendererRuntimeImpl),
-		mFontResourceLoader(new FontResourceLoader(*this, rendererRuntimeImpl))
+		mRendererRuntimeImpl(rendererRuntimeImpl)
 	{
 		// Nothing in here
 	}
 
 	FontResourceManager::~FontResourceManager()
 	{
-		delete mFontResourceLoader;
+		// TODO(co) Implement decent resource handling
+		for (size_t i = 0; i < mResources.size(); ++i)
+		{
+			delete mResources[i];
+		}
+	}
+
+	IResourceLoader* FontResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	{
+		// Can we recycle an already existing resource loader instance?
+		IResourceLoader* resourceLoader = ResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
+
+		// We need to create a new resource loader instance
+		if (nullptr == resourceLoader)
+		{
+			// We only support our own font format
+			assert(resourceLoaderTypeId == FontResourceLoader::TYPE_ID);
+			resourceLoader = new FontResourceLoader(*this, mRendererRuntimeImpl);
+			mUsedResourceLoaderInstances.push_back(resourceLoader);
+		}
+
+		// Done
+		return resourceLoader;
 	}
 
 

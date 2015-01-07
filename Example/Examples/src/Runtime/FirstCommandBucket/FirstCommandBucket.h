@@ -85,7 +85,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::FontResourcePtr mFontResource;	///< Font resource, can be a null pointer
+	RendererRuntime::FontResource* mFontResource;	///< Font resource, can be a null pointer
 	// Command buckets
 	RendererRuntime::CommandBucket<int> mSolidCommandBucket;
 	RendererRuntime::CommandBucket<int> mTransparentCommandBucket;

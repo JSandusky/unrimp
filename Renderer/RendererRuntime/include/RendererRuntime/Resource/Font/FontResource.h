@@ -32,8 +32,6 @@
 #include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/IResource.h"
 
-#include <Renderer/Public/Renderer.h>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -82,7 +80,7 @@ namespace RendererRuntime
 	*  @note
 	*    - For italic/bold fonts, you have to specify the corresponding font variation file of the font file
 	*/
-	class FontResource : public IResource, public Renderer::RefCount<FontResource>	// TODO(co) No multi-inheritance
+	class FontResource : public IResource
 	{
 
 
@@ -314,12 +312,6 @@ namespace RendererRuntime
 
 
 	};
-
-
-	//[-------------------------------------------------------]
-	//[ Type definitions                                      ]
-	//[-------------------------------------------------------]
-	typedef Renderer::SmartRefCount<FontResource> FontResourcePtr;
 
 
 //[-------------------------------------------------------]
