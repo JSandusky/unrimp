@@ -36,7 +36,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class ResourceManager;
+	class IResourceManager;
 }
 
 
@@ -63,7 +63,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class ResourceManager;
+		friend class IResourceManager;
 
 
 	//[-------------------------------------------------------]
@@ -77,7 +77,7 @@ namespace RendererRuntime
 		*  @return
 		*    The owner resource manager
 		*/
-		inline ResourceManager& getResourceManager() const;
+		inline IResourceManager& getResourceManager() const;
 
 
 	//[-------------------------------------------------------]
@@ -113,7 +113,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline IResourceLoader(ResourceManager& resourceManager);
+		inline IResourceLoader(IResourceManager& resourceManager);
 		inline virtual ~IResourceLoader();
 		IResourceLoader(const IResourceLoader&) = delete;
 		IResourceLoader& operator=(const IResourceLoader&) = delete;
@@ -123,7 +123,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ResourceManager& mResourceManager;	///< Owner resource manager
+		IResourceManager& mResourceManager;	///< Owner resource manager
 
 
 	};

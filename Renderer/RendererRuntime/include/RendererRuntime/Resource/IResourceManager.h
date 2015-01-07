@@ -44,7 +44,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ResourceManager : private Manager
+	class IResourceManager : private Manager
 	{
 
 
@@ -56,7 +56,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
 		virtual void reloadResourceByAssetId(AssetId assetId) = 0;
@@ -67,10 +67,10 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline ResourceManager();
-		virtual ~ResourceManager();
-		ResourceManager(const ResourceManager&) = delete;
-		ResourceManager& operator=(const ResourceManager&) = delete;
+		inline IResourceManager();
+		virtual ~IResourceManager();
+		IResourceManager(const IResourceManager&) = delete;
+		IResourceManager& operator=(const IResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
@@ -102,4 +102,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ResourceManager.inl"
+#include "RendererRuntime/Resource/IResourceManager.inl"

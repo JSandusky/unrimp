@@ -87,7 +87,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline MeshResourceLoader(ResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
+		inline MeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		virtual ~MeshResourceLoader();
 		MeshResourceLoader(const MeshResourceLoader&) = delete;
 		MeshResourceLoader& operator=(const MeshResourceLoader&) = delete;

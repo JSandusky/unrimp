@@ -32,7 +32,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	void MaterialResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{

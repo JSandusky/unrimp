@@ -28,7 +28,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ResourceManager::ResourceManager()
+	inline IResourceManager::IResourceManager()
 	{
 		// Nothing here
 	}

@@ -28,7 +28,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ResourceManager& IResourceLoader::getResourceManager() const
+	inline IResourceManager& IResourceLoader::getResourceManager() const
 	{
 		return mResourceManager;
 	}
@@ -37,7 +37,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IResourceLoader::IResourceLoader(ResourceManager& resourceManager) :
+	inline IResourceLoader::IResourceLoader(IResourceManager& resourceManager) :
 		mResourceManager(resourceManager)
 	{
 		// Nothing here

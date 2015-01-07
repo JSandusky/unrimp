@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ResourceManager.h"
+#include "RendererRuntime/Resource/IResourceManager.h"
 #include "RendererRuntime/Resource/IResourceLoader.h"
 
 #include <assert.h>
@@ -37,7 +37,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void ResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
+	void IResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
 	{
 		for (ResourceLoaderVector::iterator iterator = mUsedResourceLoaderInstances.begin(); iterator != mUsedResourceLoaderInstances.end(); ++iterator)
 		{
@@ -57,7 +57,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	ResourceManager::~ResourceManager()
+	IResourceManager::~IResourceManager()
 	{
 		{ // Destroy resource loader instances
 			const size_t numberOfFreeResourceLoaderInstances = mFreeResourceLoaderInstances.size();
@@ -71,7 +71,7 @@ namespace RendererRuntime
 		}
 	}
 
-	IResourceLoader* ResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	IResourceLoader* IResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Can we recycle an already existing resource loader instance?
 		// TODO(co) A reverse iterator might be the better choice in here, check it (less moving around stuff when erasing an element)

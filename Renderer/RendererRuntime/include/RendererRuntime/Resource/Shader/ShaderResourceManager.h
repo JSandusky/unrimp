@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ResourceManager.h"
+#include "RendererRuntime/Resource/IResourceManager.h"
 
 
 //[-------------------------------------------------------]
@@ -72,7 +72,7 @@ namespace RendererRuntime
 	*    A commonly used name for the high abstraction level is "Material", which is just a set of properties. This is what's used and
 	*    tweaked by the artists in a large scale. Meaning there are only a few shaders, but tons of materials.
 	*/
-	class ShaderResourceManager : private ResourceManager
+	class ShaderResourceManager : private IResourceManager
 	{
 
 
@@ -83,7 +83,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
 		virtual void reloadResourceByAssetId(AssetId assetId) override;

@@ -28,7 +28,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline MeshResourceLoader::MeshResourceLoader(ResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+	inline MeshResourceLoader::MeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		IResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime),
 		mMeshResource(nullptr),

@@ -28,7 +28,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline CrnTextureResourceLoader::CrnTextureResourceLoader(ResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+	inline CrnTextureResourceLoader::CrnTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		ITextureResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime),
 		mWidth(0),

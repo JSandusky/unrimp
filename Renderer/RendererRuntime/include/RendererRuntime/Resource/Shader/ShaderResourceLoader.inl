@@ -28,7 +28,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline ShaderResourceLoader::ShaderResourceLoader(ResourceManager& resourceManager) :
+	inline ShaderResourceLoader::ShaderResourceLoader(IResourceManager& resourceManager) :
 		IResourceLoader(resourceManager)
 	{
 		// Nothing here

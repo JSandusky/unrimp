@@ -82,7 +82,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline FontResourceLoader(ResourceManager& resourceManager, RendererRuntimeImpl& rendererRuntimeImpl);
+		inline FontResourceLoader(IResourceManager& resourceManager, RendererRuntimeImpl& rendererRuntimeImpl);
 		inline virtual ~FontResourceLoader();
 		FontResourceLoader(const FontResourceLoader&) = delete;
 		FontResourceLoader& operator=(const FontResourceLoader&) = delete;

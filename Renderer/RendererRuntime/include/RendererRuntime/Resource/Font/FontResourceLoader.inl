@@ -28,7 +28,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline FontResourceLoader::FontResourceLoader(ResourceManager& resourceManager, RendererRuntimeImpl& rendererRuntimeImpl) :
+	inline FontResourceLoader::FontResourceLoader(IResourceManager& resourceManager, RendererRuntimeImpl& rendererRuntimeImpl) :
 		IResourceLoader(resourceManager),
 		mRendererRuntimeImpl(rendererRuntimeImpl),
 		mFontResource(nullptr),

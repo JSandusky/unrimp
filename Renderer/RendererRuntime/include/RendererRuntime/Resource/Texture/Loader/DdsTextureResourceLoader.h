@@ -91,7 +91,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline DdsTextureResourceLoader(ResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
+		inline DdsTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~DdsTextureResourceLoader();
 		DdsTextureResourceLoader(const DdsTextureResourceLoader&) = delete;
 		DdsTextureResourceLoader& operator=(const DdsTextureResourceLoader&) = delete;

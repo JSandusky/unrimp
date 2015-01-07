@@ -71,7 +71,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline ShaderResourceLoader(ResourceManager& resourceManager);
+		inline ShaderResourceLoader(IResourceManager& resourceManager);
 		inline virtual ~ShaderResourceLoader();
 		ShaderResourceLoader(const ShaderResourceLoader&) = delete;
 		ShaderResourceLoader& operator=(const ShaderResourceLoader&) = delete;

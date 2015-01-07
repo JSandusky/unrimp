@@ -102,14 +102,14 @@
     <None Include="include\RendererRuntime\Resource\IResource.inl">
       <Filter>Source Files\Resource</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\ResourceManager.inl">
-      <Filter>Source Files\Resource</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\IResourceLoader.inl">
       <Filter>Source Files\Resource</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Shader\ShaderResourceLoader.inl">
       <Filter>Source Files\Resource\Shader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\IResourceManager.inl">
+      <Filter>Source Files\Resource</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -134,9 +134,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Asset\AssetManager.h">
       <Filter>Source Files\Asset</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\ResourceManager.h">
-      <Filter>Source Files\Resource</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Scene\SceneManager.h">
       <Filter>Source Files\Scene</Filter>
@@ -249,6 +246,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.h">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\IResourceManager.h">
+      <Filter>Source Files\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Asset\AssetManager.cpp">
@@ -317,7 +317,7 @@
     <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\ResourceManager.cpp">
+    <ClCompile Include="src\Resource\IResourceManager.cpp">
       <Filter>Source Files\Resource</Filter>
     </ClCompile>
   </ItemGroup>

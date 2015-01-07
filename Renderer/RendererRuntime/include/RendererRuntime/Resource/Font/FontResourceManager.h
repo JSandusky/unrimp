@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/ResourceManager.h"
+#include "RendererRuntime/Resource/IResourceManager.h"
 
 
 //[-------------------------------------------------------]
@@ -51,7 +51,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class FontResourceManager : private ResourceManager
+	class FontResourceManager : private IResourceManager
 	{
 
 
@@ -70,7 +70,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
 		virtual void reloadResourceByAssetId(AssetId assetId) override;

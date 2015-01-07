@@ -64,7 +64,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline ITextureResourceLoader(ResourceManager& resourceManager);
+		inline ITextureResourceLoader(IResourceManager& resourceManager);
 		inline virtual ~ITextureResourceLoader();
 		ITextureResourceLoader(const ITextureResourceLoader&) = delete;
 		ITextureResourceLoader& operator=(const ITextureResourceLoader&) = delete;

@@ -91,7 +91,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline EtcTextureResourceLoader(ResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
+		inline EtcTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~EtcTextureResourceLoader();
 		EtcTextureResourceLoader(const EtcTextureResourceLoader&) = delete;
 		EtcTextureResourceLoader& operator=(const EtcTextureResourceLoader&) = delete;

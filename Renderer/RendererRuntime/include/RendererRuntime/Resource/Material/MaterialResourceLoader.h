@@ -71,7 +71,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline MaterialResourceLoader(ResourceManager& resourceManager) {}
+		inline MaterialResourceLoader(IResourceManager& resourceManager) {}
 		inline virtual ~MaterialResourceLoader() {}
 		MaterialResourceLoader(const MaterialResourceLoader&) = delete;
 		MaterialResourceLoader& operator=(const MaterialResourceLoader&) = delete;

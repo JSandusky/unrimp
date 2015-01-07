@@ -94,7 +94,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	void MeshResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
@@ -137,7 +137,7 @@ namespace RendererRuntime
 	IResourceLoader* MeshResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Can we recycle an already existing resource loader instance?
-		IResourceLoader* resourceLoader = ResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
+		IResourceLoader* resourceLoader = IResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
 
 		// We need to create a new resource loader instance
 		if (nullptr == resourceLoader)

@@ -28,7 +28,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITextureResourceLoader::ITextureResourceLoader(ResourceManager& resourceManager) :
+	inline ITextureResourceLoader::ITextureResourceLoader(IResourceManager& resourceManager) :
 		IResourceLoader(resourceManager)
 	{
 		// Nothing here
