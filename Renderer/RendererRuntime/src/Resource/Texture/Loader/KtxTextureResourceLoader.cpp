@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Texture/Loader/EtcTextureResourceLoader.h"
+#include "RendererRuntime/Resource/Texture/Loader/KtxTextureResourceLoader.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 // Disable warnings in external headers, we can't fix them
@@ -42,14 +42,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const ResourceLoaderTypeId EtcTextureResourceLoader::TYPE_ID("ktx");
+	const ResourceLoaderTypeId KtxTextureResourceLoader::TYPE_ID("ktx");
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	Renderer::ITexture* EtcTextureResourceLoader::loadEtcTexture(std::istream& istream)
+	Renderer::ITexture* KtxTextureResourceLoader::loadEtcTexture(std::istream& istream)
 	{
 		// TODO(co) Error handling
 		// TODO(co) We could get rid of the dynamic allocation when using a reused memory for the file and the destination buffer (had no measurable impact in a simple use-case, only do it when it can be shown that it has a positive effect)
@@ -120,22 +120,22 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	ResourceLoaderTypeId EtcTextureResourceLoader::getResourceLoaderTypeId() const
+	ResourceLoaderTypeId KtxTextureResourceLoader::getResourceLoaderTypeId() const
 	{
 		return TYPE_ID;
 	}
 
-	void EtcTextureResourceLoader::onDeserialization()
+	void KtxTextureResourceLoader::onDeserialization()
 	{
 		// TODO(co) Implemet me
 	}
 
-	void EtcTextureResourceLoader::onProcessing()
+	void KtxTextureResourceLoader::onProcessing()
 	{
 		// TODO(co) Implemet me
 	}
 
-	void EtcTextureResourceLoader::onRendererBackendDispatch()
+	void KtxTextureResourceLoader::onRendererBackendDispatch()
 	{
 		// TODO(co) Implemet me
 	}

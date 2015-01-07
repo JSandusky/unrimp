@@ -55,7 +55,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class EtcTextureResourceLoader : protected ITextureResourceLoader
+	class KtxTextureResourceLoader : protected ITextureResourceLoader
 	{
 
 
@@ -91,10 +91,10 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline EtcTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~EtcTextureResourceLoader();
-		EtcTextureResourceLoader(const EtcTextureResourceLoader&) = delete;
-		EtcTextureResourceLoader& operator=(const EtcTextureResourceLoader&) = delete;
+		inline KtxTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
+		inline virtual ~KtxTextureResourceLoader();
+		KtxTextureResourceLoader(const KtxTextureResourceLoader&) = delete;
+		KtxTextureResourceLoader& operator=(const KtxTextureResourceLoader&) = delete;
 
 
 	//[-------------------------------------------------------]
@@ -116,4 +116,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Texture/Loader/EtcTextureResourceLoader.inl"
+#include "RendererRuntime/Resource/Texture/Loader/KtxTextureResourceLoader.inl"

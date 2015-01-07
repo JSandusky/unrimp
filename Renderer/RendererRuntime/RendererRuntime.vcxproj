@@ -37,8 +37,8 @@
     <None Include="include\RendererRuntime\Resource\Shader\ShaderResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.inl" />
-    <None Include="include\RendererRuntime\Resource\Texture\Loader\EtcTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\ITextureResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Resource\Texture\Loader\KtxTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\TextureResource.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
@@ -77,8 +77,8 @@
     <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\EtcTextureResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\ITextureResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\KtxTextureResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Scene\SceneManager.h" />
@@ -115,7 +115,7 @@
     <ClCompile Include="src\Resource\Shader\ShaderResourceManager.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\DdsTextureResourceLoader.cpp" />
-    <ClCompile Include="src\Resource\Texture\Loader\EtcTextureResourceLoader.cpp" />
+    <ClCompile Include="src\Resource\Texture\Loader\KtxTextureResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Texture\TextureResource.cpp" />
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />

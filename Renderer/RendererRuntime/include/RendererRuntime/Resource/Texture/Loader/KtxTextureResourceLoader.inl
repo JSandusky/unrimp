@@ -28,14 +28,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline EtcTextureResourceLoader::EtcTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+	inline KtxTextureResourceLoader::KtxTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		ITextureResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing here
 	}
 
-	inline EtcTextureResourceLoader::~EtcTextureResourceLoader()
+	inline KtxTextureResourceLoader::~KtxTextureResourceLoader()
 	{
 		// Nothing here
 	}

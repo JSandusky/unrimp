@@ -87,9 +87,6 @@
     <None Include="include\RendererRuntime\Resource\Texture\TextureResource.inl">
       <Filter>Source Files\Resource\Texture</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Texture\Loader\EtcTextureResourceLoader.inl">
-      <Filter>Source Files\Resource\Texture\Loader</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\Texture\Loader\ITextureResourceLoader.inl">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </None>
@@ -110,6 +107,9 @@
     </None>
     <None Include="include\RendererRuntime\Resource\IResourceManager.inl">
       <Filter>Source Files\Resource</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Texture\Loader\KtxTextureResourceLoader.inl">
+      <Filter>Source Files\Resource\Texture\Loader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -234,9 +234,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\IResource.h">
       <Filter>Source Files\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\EtcTextureResourceLoader.h">
-      <Filter>Source Files\Resource\Texture\Loader</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\ITextureResourceLoader.h">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClInclude>
@@ -248,6 +245,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\IResourceManager.h">
       <Filter>Source Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\KtxTextureResourceLoader.h">
+      <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -311,14 +311,14 @@
     <ClCompile Include="src\Resource\Texture\Loader\DdsTextureResourceLoader.cpp">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Texture\Loader\EtcTextureResourceLoader.cpp">
-      <Filter>Source Files\Resource\Texture\Loader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\IResourceManager.cpp">
       <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Texture\Loader\KtxTextureResourceLoader.cpp">
+      <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

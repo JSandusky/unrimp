@@ -24,7 +24,7 @@
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
 #include "RendererRuntime/Resource/Texture/Loader/CrnTextureResourceLoader.h"
-#include "RendererRuntime/Resource/Texture/Loader/EtcTextureResourceLoader.h"
+#include "RendererRuntime/Resource/Texture/Loader/KtxTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Texture/Loader/DdsTextureResourceLoader.h"
 #include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
