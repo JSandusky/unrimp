@@ -70,16 +70,24 @@ namespace RendererRuntime
 				mResources.push_back(textureResource);
 			}
 
-			{
-				// Prepare the resource loader
-				ITextureResourceLoader* textureResourceLoader = static_cast<ITextureResourceLoader*>(acquireResourceLoaderInstance(CrnTextureResourceLoader::TYPE_ID));	// TODO(co) Asset dependent type
-				textureResourceLoader->initialize(*asset, *textureResource);
+			{ // Prepare the resource loader
+			  // -> The totally primitive texture resource loader type detection is sufficient for now
+				const char* filenameExtension = strrchr(asset->assetFilename, '.');
+				if (nullptr != filenameExtension)
+				{
+					ITextureResourceLoader* textureResourceLoader = static_cast<ITextureResourceLoader*>(acquireResourceLoaderInstance(StringId(filenameExtension + 1)));
+					textureResourceLoader->initialize(*asset, *textureResource);
 
-				// Commit resource streamer asset load request
-				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-				resourceStreamerLoadRequest.resource = textureResource;
-				resourceStreamerLoadRequest.resourceLoader = textureResourceLoader;
-				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+					// Commit resource streamer asset load request
+					ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+					resourceStreamerLoadRequest.resource = textureResource;
+					resourceStreamerLoadRequest.resourceLoader = textureResourceLoader;
+					mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+				}
+				else
+				{
+					// TODO(co) Error handling
+				}
 			}
 
 			// TODO(co) No raw pointers in here
