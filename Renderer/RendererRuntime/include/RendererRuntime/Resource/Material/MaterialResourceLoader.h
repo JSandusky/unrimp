@@ -51,9 +51,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const ResourceLoaderTypeId TYPE_ID;
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	public:
+		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization() override;
 		virtual void onProcessing() override;
 		virtual void onRendererBackendDispatch() override;
@@ -63,7 +71,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline MaterialResourceLoader() {}
+		inline MaterialResourceLoader(ResourceManager& resourceManager) {}
 		inline virtual ~MaterialResourceLoader() {}
 		MaterialResourceLoader(const MaterialResourceLoader&) = delete;
 		MaterialResourceLoader& operator=(const MaterialResourceLoader&) = delete;

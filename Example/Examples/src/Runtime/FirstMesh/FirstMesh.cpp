@@ -171,10 +171,10 @@ void FirstMesh::onInitialization()
 			  // -> The tangent space normal map is stored with three components, two would be enought to recalculate the third component within the fragment shader
 			  // -> The specular map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
 				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
-				mDiffuseTextureResource  = textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_Diffuse");
-				mNormalTextureResource   = textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_Illumination");
-				mSpecularTextureResource = textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_norm");
-				mEmissiveTextureResource = textureResourceManager.loadTextureByAssetId("Example/Texture/Character/Imrod_spec");
+				mDiffuseTextureResource  = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_Diffuse");
+				mNormalTextureResource   = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_Illumination");
+				mSpecularTextureResource = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_norm");
+				mEmissiveTextureResource = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_spec");
 			}
 
 			// Use sampler state collections when you want you exploit renderer API methods like
@@ -227,18 +227,13 @@ void FirstMesh::onDeinitialization()
 	// Release the used renderer resources
 	mBlendState = nullptr;
 	mSamplerStateCollection = nullptr;
+
 	// TODO(co) Implement decent resource handling
 	mDiffuseTextureResource = nullptr;
 	mNormalTextureResource = nullptr;
 	mSpecularTextureResource = nullptr;
 	mEmissiveTextureResource = nullptr;
-
-	// Destroy mesh instance
-	if (nullptr != mMeshResource)
-	{
-		delete mMeshResource;
-		mMeshResource = nullptr;
-	}
+	mMeshResource = nullptr;
 
 	// Release the used resources
 	mProgram = nullptr;

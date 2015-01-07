@@ -36,8 +36,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const ResourceLoaderTypeId FontResourceLoader::TYPE_ID("font");
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
+	ResourceLoaderTypeId FontResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
 	void FontResourceLoader::onDeserialization()
 	{
 		// TODO(co) Error handling

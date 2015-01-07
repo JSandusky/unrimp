@@ -67,9 +67,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const ResourceLoaderTypeId TYPE_ID;
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	public:
+		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization() override;
 		virtual void onProcessing() override;
 		virtual void onRendererBackendDispatch() override;
@@ -79,7 +87,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline MeshResourceLoader(IRendererRuntime& rendererRuntime);
+		inline MeshResourceLoader(ResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		virtual ~MeshResourceLoader();
 		MeshResourceLoader(const MeshResourceLoader&) = delete;
 		MeshResourceLoader& operator=(const MeshResourceLoader&) = delete;

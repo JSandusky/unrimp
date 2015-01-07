@@ -30,6 +30,8 @@
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+#include <assert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -41,21 +43,37 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureResource* TextureResourceManager::loadTextureByAssetId(AssetId assetId)
+	TextureResource* TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
 		{
+			// Get or create the instance
+			TextureResource* textureResource = nullptr;
+			const size_t numberOfResources = mResources.size();
+			for (size_t i = 0; i < numberOfResources; ++i)
+			{
+				TextureResource* currentTextureResource = mResources[i];
+				if (currentTextureResource->getResourceId() == assetId)
+				{
+					textureResource = currentTextureResource;
+
+					// Get us out of the loop
+					i = mResources.size();
+				}
+			}
+
 			// Create the resource instance
-			TextureResource* textureResource = new TextureResource(assetId);
-			mResources.push_back(textureResource);
+			if (nullptr == textureResource)
+			{
+				textureResource = new TextureResource(assetId);
+				mResources.push_back(textureResource);
+			}
 
 			{
 				// Prepare the resource loader
-				ITextureResourceLoader* textureResourceLoader = mCrnTextureResourceLoader;
-			//	ITextureResourceLoader* textureResourceLoader = mEtcTextureResourceLoader;
-			//	ITextureResourceLoader* textureResourceLoader = mDdsTextureResourceLoader;
-				mCrnTextureResourceLoader->initialize(*asset, *textureResource);
+				ITextureResourceLoader* textureResourceLoader = static_cast<ITextureResourceLoader*>(acquireResourceLoaderInstance(CrnTextureResourceLoader::TYPE_ID));	// TODO(co) Asset dependent type
+				textureResourceLoader->initialize(*asset, *textureResource);
 
 				// Commit resource streamer asset load request
 				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
@@ -76,10 +94,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ResourceManager methods ]
 	//[-------------------------------------------------------]
-	void TextureResourceManager::reloadResourceByAssetId(AssetId assetId) const
+	void TextureResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) Implement me
-		assetId = assetId;
+		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
+		loadTextureResourceByAssetId(assetId);
 	}
 
 	void TextureResourceManager::update()
@@ -92,10 +110,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime),
-		mCrnTextureResourceLoader(new CrnTextureResourceLoader(rendererRuntime)),
-		mEtcTextureResourceLoader(new EtcTextureResourceLoader(rendererRuntime)),
-		mDdsTextureResourceLoader(new DdsTextureResourceLoader(rendererRuntime))
+		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing in here
 	}
@@ -107,10 +122,33 @@ namespace RendererRuntime
 		{
 			delete mResources[i];
 		}
+	}
 
-		delete mCrnTextureResourceLoader;
-		delete mEtcTextureResourceLoader;
-		delete mDdsTextureResourceLoader;
+	IResourceLoader* TextureResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	{
+		// Can we recycle an already existing resource loader instance?
+		IResourceLoader* resourceLoader = ResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
+
+		// We need to create a new resource loader instance
+		if (nullptr == resourceLoader)
+		{
+			if (resourceLoaderTypeId == CrnTextureResourceLoader::TYPE_ID)
+			{
+				resourceLoader = new CrnTextureResourceLoader(*this, mRendererRuntime);
+			}
+			else
+			{
+				// TODO(co) Error handling
+				assert(false);
+			}
+			if (nullptr != resourceLoader)
+			{
+				mUsedResourceLoaderInstances.push_back(resourceLoader);
+			}
+		}
+
+		// Done
+		return resourceLoader;
 	}
 
 

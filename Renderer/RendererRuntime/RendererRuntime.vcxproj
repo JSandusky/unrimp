@@ -30,8 +30,11 @@
     <None Include="include\RendererRuntime\Resource\Font\FontResource.inl" />
     <None Include="include\RendererRuntime\Resource\Font\FontResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\IResource.inl" />
+    <None Include="include\RendererRuntime\Resource\IResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Resource\ResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\ResourceStreamer.inl" />
+    <None Include="include\RendererRuntime\Resource\Shader\ShaderResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\EtcTextureResourceLoader.inl" />
@@ -107,6 +110,7 @@
     <ClCompile Include="src\Resource\Mesh\MeshResource.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp" />
+    <ClCompile Include="src\Resource\ResourceManager.cpp" />
     <ClCompile Include="src\Resource\ResourceStreamer.cpp" />
     <ClCompile Include="src\Resource\Shader\ShaderResourceManager.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp" />

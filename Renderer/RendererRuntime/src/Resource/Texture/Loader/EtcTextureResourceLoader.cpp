@@ -40,6 +40,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const ResourceLoaderTypeId EtcTextureResourceLoader::TYPE_ID("ktx");
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
@@ -114,6 +120,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
+	ResourceLoaderTypeId EtcTextureResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
 	void EtcTextureResourceLoader::onDeserialization()
 	{
 		// TODO(co) Implemet me

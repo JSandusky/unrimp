@@ -26,6 +26,21 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline ITextureResourceLoader::ITextureResourceLoader(ResourceManager& resourceManager) :
+		IResourceLoader(resourceManager)
+	{
+		// Nothing here
+	}
+
+	inline ITextureResourceLoader::~ITextureResourceLoader()
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline void ITextureResourceLoader::initialize(const Asset& asset, TextureResource& textureResource)

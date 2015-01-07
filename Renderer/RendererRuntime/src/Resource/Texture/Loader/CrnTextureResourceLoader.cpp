@@ -49,8 +49,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const ResourceLoaderTypeId CrnTextureResourceLoader::TYPE_ID("crn");
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
+	ResourceLoaderTypeId CrnTextureResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
 	void CrnTextureResourceLoader::onDeserialization()
 	{
 		// TODO(co) Error handling

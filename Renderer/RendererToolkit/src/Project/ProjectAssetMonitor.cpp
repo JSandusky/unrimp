@@ -125,15 +125,15 @@ namespace RendererToolkit
 		mProjectImpl(projectImpl),
 		mRendererRuntime(rendererRuntime),
 		mRendererTarget(rendererTarget),
-		mShutdownWorkerThread(false),
-		mThread(&ProjectAssetMonitor::workerThread, this)
+		mShutdownThread(false),
+		mThread(&ProjectAssetMonitor::threadWorker, this)
 	{
 		// Nothing here
 	}
 
 	ProjectAssetMonitor::~ProjectAssetMonitor()
 	{
-		mShutdownWorkerThread = true;
+		mShutdownThread = true;
 		mThread.join();
 	}
 
@@ -141,7 +141,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void ProjectAssetMonitor::workerThread()
+	void ProjectAssetMonitor::threadWorker()
 	{
 		// Create the file watcher object
 		FW::FileWatcher fileWatcher;
@@ -149,7 +149,7 @@ namespace RendererToolkit
 		const FW::WatchID watchID = fileWatcher.addWatch(mProjectImpl.getProjectDirectory(), &fileWatchListener, true);
 
 		// Update the file watcher object as long as the project asset monitor is up-and-running
-		while (!mShutdownWorkerThread)
+		while (!mShutdownThread)
 		{
 			fileWatcher.update();
 		}

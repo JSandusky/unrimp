@@ -30,8 +30,6 @@
 #include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/ResourceManager.h"
 
-#include <vector>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -40,9 +38,6 @@ namespace RendererRuntime
 {
 	class TextureResource;
 	class IRendererRuntime;
-	class CrnTextureResourceLoader;
-	class EtcTextureResourceLoader;
-	class DdsTextureResourceLoader;
 }
 
 
@@ -71,14 +66,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT TextureResource* loadTextureByAssetId(AssetId assetId);
+		RENDERERRUNTIME_API_EXPORT TextureResource* loadTextureResourceByAssetId(AssetId assetId);
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void reloadResourceByAssetId(AssetId assetId) const override;
+		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
 
 
@@ -90,16 +85,14 @@ namespace RendererRuntime
 		virtual ~TextureResourceManager();
 		TextureResourceManager(const TextureResourceManager&) = delete;
 		TextureResourceManager& operator=(const TextureResourceManager&) = delete;
+		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		  mRendererRuntime;				///< Renderer runtime instance, do not destroy the instance
-		CrnTextureResourceLoader* mCrnTextureResourceLoader;	///< CRN texture resource loader, always valid, destroy the instance if you no longer need it
-		EtcTextureResourceLoader* mEtcTextureResourceLoader;	///< ETC texture resource loader, always valid, destroy the instance if you no longer need it
-		DdsTextureResourceLoader* mDdsTextureResourceLoader;	///< DDS texture resource loader, always valid, destroy the instance if you no longer need it
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 
 		// TODO(co) Implement decent resource handling
 		std::vector<TextureResource*> mResources;

@@ -28,6 +28,16 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Core/StringId.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class ResourceManager;
+}
 
 
 //[-------------------------------------------------------]
@@ -38,6 +48,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId ResourceLoaderTypeId;	///< Resource loader type identifier, internally just a POD "uint32_t", usually created by hashing the file format extension (if the resource loader is processing file data in the first place)
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	class IResourceLoader : protected NonCopyable
@@ -45,9 +61,35 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class ResourceManager;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return the owner resource manager
+		*
+		*  @return
+		*    The owner resource manager
+		*/
+		inline ResourceManager& getResourceManager() const;
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	public:
+		/**
+		*  @brief
+		*    Return the resource loader type ID
+		*/
+		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const = 0;
+
 		/**
 		*  @brief
 		*    Called when the resource loader has to deserialize (usually from file) the internal data into memory
@@ -71,10 +113,17 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline IResourceLoader() {}
-		inline virtual ~IResourceLoader() {}
+		inline IResourceLoader(ResourceManager& resourceManager);
+		inline virtual ~IResourceLoader();
 		IResourceLoader(const IResourceLoader&) = delete;
 		IResourceLoader& operator=(const IResourceLoader&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		ResourceManager& mResourceManager;	///< Owner resource manager
 
 
 	};
@@ -84,3 +133,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/IResourceLoader.inl"

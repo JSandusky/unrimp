@@ -69,8 +69,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	ProjectImpl::ProjectImpl() :
 		mProjectAssetMonitor(nullptr),
-		mShutdownWorkerThread(false),
-		mThread(&ProjectImpl::workerThread, this)
+		mShutdownThread(false),
+		mThread(&ProjectImpl::threadWorker, this)
 	{
 		// Nothing here
 	}
@@ -78,7 +78,7 @@ namespace RendererToolkit
 	ProjectImpl::~ProjectImpl()
 	{
 		// Shutdown worker thread
-		mShutdownWorkerThread = true;
+		mShutdownThread = true;
 		mThread.join();
 
 		// Clear
@@ -386,9 +386,9 @@ namespace RendererToolkit
 		return "Data" + jsonRendererTargetObject->getValue<std::string>("Platform") + '/';
 	}
 
-	void ProjectImpl::workerThread()
+	void ProjectImpl::threadWorker()
 	{
-		while (!mShutdownWorkerThread)
+		while (!mShutdownThread)
 		{
 			// TODO(co) Implement me
 		}

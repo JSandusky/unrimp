@@ -102,6 +102,15 @@
     <None Include="include\RendererRuntime\Resource\IResource.inl">
       <Filter>Source Files\Resource</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\ResourceManager.inl">
+      <Filter>Source Files\Resource</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\IResourceLoader.inl">
+      <Filter>Source Files\Resource</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Shader\ShaderResourceLoader.inl">
+      <Filter>Source Files\Resource\Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -307,6 +316,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ResourceManager.cpp">
+      <Filter>Source Files\Resource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

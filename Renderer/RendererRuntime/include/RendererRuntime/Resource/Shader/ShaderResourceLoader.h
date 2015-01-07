@@ -51,9 +51,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const ResourceLoaderTypeId TYPE_ID;
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	public:
+		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization() override;
 		virtual void onProcessing() override;
 		virtual void onRendererBackendDispatch() override;
@@ -63,8 +71,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline ShaderResourceLoader() {}
-		inline virtual ~ShaderResourceLoader() {}
+		inline ShaderResourceLoader(ResourceManager& resourceManager);
+		inline virtual ~ShaderResourceLoader();
 		ShaderResourceLoader(const ShaderResourceLoader&) = delete;
 		ShaderResourceLoader& operator=(const ShaderResourceLoader&) = delete;
 
@@ -76,3 +84,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Shader/ShaderResourceLoader.inl"

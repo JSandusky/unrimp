@@ -118,6 +118,11 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const ResourceLoaderTypeId DdsTextureResourceLoader::TYPE_ID("dds");
+
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
@@ -620,6 +625,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
+	ResourceLoaderTypeId DdsTextureResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
 	void DdsTextureResourceLoader::onDeserialization()
 	{
 		// TODO(co) Implemet me

@@ -34,7 +34,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ResourceManager methods ]
 	//[-------------------------------------------------------]
-	void ShaderResourceManager::reloadResourceByAssetId(AssetId assetId) const
+	void ShaderResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Implement me
 		assetId = assetId;

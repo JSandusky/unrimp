@@ -26,16 +26,9 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline DdsTextureResourceLoader::DdsTextureResourceLoader(ResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
-		ITextureResourceLoader(resourceManager),
-		mRendererRuntime(rendererRuntime)
-	{
-		// Nothing here
-	}
-
-	inline DdsTextureResourceLoader::~DdsTextureResourceLoader()
+	inline ResourceManager::ResourceManager()
 	{
 		// Nothing here
 	}

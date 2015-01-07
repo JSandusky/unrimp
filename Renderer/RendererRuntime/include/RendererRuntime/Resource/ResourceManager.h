@@ -29,6 +29,9 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
 #include "RendererRuntime/Asset/Asset.h"
+#include "RendererRuntime/Resource/IResourceLoader.h"
+
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -46,21 +49,45 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		void releaseResourceLoaderInstance(IResourceLoader& resourceLoader);
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void reloadResourceByAssetId(AssetId assetId) const = 0;
-		virtual void update() = 0;
+		virtual void reloadResourceByAssetId(AssetId assetId) = 0;
+		virtual void update() = 0;	// TODO(co) Remove this method if not required
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline ResourceManager() {}
-		inline virtual ~ResourceManager() {}
+		inline ResourceManager();
+		virtual ~ResourceManager();
 		ResourceManager(const ResourceManager&) = delete;
 		ResourceManager& operator=(const ResourceManager&) = delete;
+		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
+
+
+	//[-------------------------------------------------------]
+	//[ Protected definitions                                 ]
+	//[-------------------------------------------------------]
+	protected:
+		typedef std::vector<IResourceLoader*> ResourceLoaderVector;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected data                                        ]
+	//[-------------------------------------------------------]
+	protected:
+		// Resource loader instances
+		ResourceLoaderVector mFreeResourceLoaderInstances;
+		ResourceLoaderVector mUsedResourceLoaderInstances;
 
 
 	};
@@ -70,3 +97,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/ResourceManager.inl"

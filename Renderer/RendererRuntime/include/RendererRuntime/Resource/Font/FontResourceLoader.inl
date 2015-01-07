@@ -28,7 +28,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline FontResourceLoader::FontResourceLoader(RendererRuntimeImpl& rendererRuntimeImpl) :
+	inline FontResourceLoader::FontResourceLoader(ResourceManager& resourceManager, RendererRuntimeImpl& rendererRuntimeImpl) :
+		IResourceLoader(resourceManager),
 		mRendererRuntimeImpl(rendererRuntimeImpl),
 		mFontResource(nullptr),
 		mNumberOfGlyphTextureAtlasDataBytes(0),

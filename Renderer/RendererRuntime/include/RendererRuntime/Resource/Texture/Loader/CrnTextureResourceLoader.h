@@ -64,9 +64,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const ResourceLoaderTypeId TYPE_ID;
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	public:
+		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization() override;
 		virtual void onProcessing() override;
 		virtual void onRendererBackendDispatch() override;
@@ -76,7 +84,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline CrnTextureResourceLoader(IRendererRuntime& rendererRuntime);
+		inline CrnTextureResourceLoader(ResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~CrnTextureResourceLoader();
 		CrnTextureResourceLoader(const CrnTextureResourceLoader&) = delete;
 		CrnTextureResourceLoader& operator=(const CrnTextureResourceLoader&) = delete;

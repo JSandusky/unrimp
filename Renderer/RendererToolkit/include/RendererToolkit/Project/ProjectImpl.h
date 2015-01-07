@@ -48,6 +48,7 @@
 #pragma warning(pop)
 
 #include <thread>
+#include <atomic>
 
 
 //[-------------------------------------------------------]
@@ -124,7 +125,7 @@ namespace RendererToolkit
 		void readAssetsByFilename(const std::string& filename);
 		void readTargetsByFilename(const std::string& filename);
 		std::string getRenderTargetDataRootDirectory(const char* rendererTarget) const;
-		void workerThread();
+		void threadWorker();
 
 
 	//[-------------------------------------------------------]
@@ -136,7 +137,7 @@ namespace RendererToolkit
 		RendererRuntime::AssetPackage mAssetPackage;
 		Poco::JSON::Object::Ptr		  mJsonTargetsObject;	///< There's no real benefit in trying to store the targets data in custom data structures, so we just stick to the read in JSON object
 		ProjectAssetMonitor*		  mProjectAssetMonitor;
-		volatile bool				  mShutdownWorkerThread;
+		std::atomic<bool>			  mShutdownThread;
 		std::thread					  mThread;
 
 

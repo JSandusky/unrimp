@@ -62,9 +62,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const ResourceLoaderTypeId TYPE_ID;
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	public:
+		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization() override;
 		virtual void onProcessing() override;
 		virtual void onRendererBackendDispatch() override;
@@ -74,7 +82,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline FontResourceLoader(RendererRuntimeImpl& rendererRuntimeImpl);
+		inline FontResourceLoader(ResourceManager& resourceManager, RendererRuntimeImpl& rendererRuntimeImpl);
 		inline virtual ~FontResourceLoader();
 		FontResourceLoader(const FontResourceLoader&) = delete;
 		FontResourceLoader& operator=(const FontResourceLoader&) = delete;

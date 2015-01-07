@@ -65,6 +65,13 @@ namespace RendererRuntime
 		friend class TextureResourceManager;
 
 
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const ResourceLoaderTypeId TYPE_ID;
+
+
 	// TODO(co) Work-in-progress
 	public:
 		Renderer::ITexture* loadDdsTexture(std::istream& istream);
@@ -74,6 +81,7 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	public:
+		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization() override;
 		virtual void onProcessing() override;
 		virtual void onRendererBackendDispatch() override;
@@ -83,7 +91,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline DdsTextureResourceLoader(IRendererRuntime& rendererRuntime);
+		inline DdsTextureResourceLoader(ResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~DdsTextureResourceLoader();
 		DdsTextureResourceLoader(const DdsTextureResourceLoader&) = delete;
 		DdsTextureResourceLoader& operator=(const DdsTextureResourceLoader&) = delete;

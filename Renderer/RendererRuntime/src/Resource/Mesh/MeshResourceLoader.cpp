@@ -35,8 +35,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const ResourceLoaderTypeId MeshResourceLoader::TYPE_ID("mesh");
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
+	ResourceLoaderTypeId MeshResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
 	void MeshResourceLoader::onDeserialization()
 	{
 		// TODO(co) Error handling

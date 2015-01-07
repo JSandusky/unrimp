@@ -333,7 +333,7 @@ namespace RendererRuntime
 	void RendererRuntimeImpl::update() const
 	{
 		// Inform the individual resource manager instances
-		mResourceStreamer->update();
+		mResourceStreamer->rendererBackendDispatch();
 		mTextureResourceManager->update();
 		mShaderResourceManager->update();
 		mMaterialResourceManager->update();

@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Resource/IResourceLoader.h"
+#include "RendererRuntime/Resource/ResourceManager.h"
 
 // TODO(co) Can we do somthing about the warning which does not involve using "std::thread"-pointers?
 #pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
@@ -40,14 +41,39 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void ResourceStreamer::commitLoadRequest(const LoadRequest& loadRequest)
 	{
-		loadRequest.resourceLoader->onDeserialization();
-		loadRequest.resourceLoader->onProcessing();
-		loadRequest.resourceLoader->onRendererBackendDispatch();
+		// Push the load request into the queue of the first resource streamer pipeline stage
+		// -> Resource streamer stage: 1. Asynchronous deserialization
+		std::unique_lock<std::mutex> deserializationMutexLock(mDeserializationMutex);
+		mDeserializationQueue.push(loadRequest);
+		deserializationMutexLock.unlock();
+		mDeserializationConditionVariable.notify_one();
 	}
 
-	void ResourceStreamer::update()
+	void ResourceStreamer::rendererBackendDispatch()
 	{
-		// TODO(co)
+		// Resource streamer stage: 3. Synchronous renderer backend dispatch
+
+		// Continue as long as there's a load request left inside the queue
+		bool stillInTimeBudget = true;	// TODO(co) Add a maximum time budget so we're not blocking too long (the show must go on)
+		while (stillInTimeBudget)
+		{
+			// Get the load request
+			std::unique_lock<std::mutex> rendererBackendDispatchMutexLock(mRendererBackendDispatchMutex);
+			if (mRendererBackendDispatchQueue.empty())
+			{
+				break;
+			}
+			LoadRequest loadRequest = mRendererBackendDispatchQueue.front();
+			mRendererBackendDispatchQueue.pop();
+			rendererBackendDispatchMutexLock.unlock();
+
+			// Do the work
+			IResourceLoader* resourceLoader = loadRequest.resourceLoader;
+			resourceLoader->onRendererBackendDispatch();
+
+			// Release the resource loader instance
+			resourceLoader->getResourceManager().releaseResourceLoaderInstance(*resourceLoader);
+		}
 	}
 
 
@@ -69,25 +95,71 @@ namespace RendererRuntime
 		// Deserialization thread and processing thread shutdown
 		mShutdownDeserializationThread = true;
 		mShutdownProcessingThread = true;
+		mDeserializationConditionVariable.notify_one();
+		mProcessingConditionVariable.notify_one();
 		mDeserializationThread.join();
 		mProcessingThread.join();
 	}
 
 	void ResourceStreamer::deserializationThreadWorker()
 	{
-		// TODO(co)
+		// Resource streamer stage: 1. Asynchronous deserialization
 		while (!mShutdownDeserializationThread)
 		{
-			int ii = 0;
+			// Continue as long as there's a load request left inside the queue, if it's empty go to sleep
+			std::unique_lock<std::mutex> deserializationMutexLock(mDeserializationMutex);
+			mDeserializationConditionVariable.wait(deserializationMutexLock);
+			while (!mDeserializationQueue.empty() && !mShutdownDeserializationThread)
+			{
+				// Get the load request
+				LoadRequest loadRequest = mDeserializationQueue.front();
+				mDeserializationQueue.pop();
+				deserializationMutexLock.unlock();
+
+				// Do the work
+				loadRequest.resourceLoader->onDeserialization();
+
+				{ // Push the load request into the queue of the next resource streamer pipeline stage
+				  // -> Resource streamer stage: 2. Asynchronous processing
+					std::unique_lock<std::mutex> processingMutexLock(mProcessingMutex);
+					mProcessingQueue.push(loadRequest);
+					processingMutexLock.unlock();
+					mProcessingConditionVariable.notify_one();
+				}
+
+				// We're ready for the next round
+				deserializationMutexLock.lock();
+			}
 		}
 	}
 
 	void ResourceStreamer::processingThreadWorker()
 	{
-		// TODO(co)
+		// Resource streamer stage: 2. Asynchronous processing
 		while (!mShutdownProcessingThread)
 		{
-			int ii = 0;
+			// Continue as long as there's a load request left inside the queue, if it's empty go to sleep
+			std::unique_lock<std::mutex> processingMutexLock(mProcessingMutex);
+			mProcessingConditionVariable.wait(processingMutexLock);
+			while (!mProcessingQueue.empty() && !mShutdownProcessingThread)
+			{
+				// Get the load request
+				LoadRequest loadRequest = mProcessingQueue.front();
+				mProcessingQueue.pop();
+				processingMutexLock.unlock();
+
+				// Do the work
+				loadRequest.resourceLoader->onProcessing();
+
+				{ // Push the load request into the queue of the next resource streamer pipeline stage
+				  // -> Resource streamer stage: 3. Synchronous renderer backend dispatch
+					std::lock_guard<std::mutex> rendererBackendDispatchMutexLock(mRendererBackendDispatchMutex);
+					mRendererBackendDispatchQueue.push(loadRequest);
+				}
+
+				// We're ready for the next round
+				processingMutexLock.lock();
+			}
 		}
 	}
 

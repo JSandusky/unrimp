@@ -19,16 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Font/FontResourceManager.h"
-#include "RendererRuntime/Resource/Font/FontResourceLoader.h"
-#include "RendererRuntime/Resource/Font/FontResource.h"
-#include "RendererRuntime/Asset/AssetManager.h"
-#include "RendererRuntime/Backend/RendererRuntimeImpl.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -38,57 +28,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Work-in-progress
-	FontResource* FontResourceManager::loadFontByAssetId(AssetId assetId)
+	inline ResourceManager& IResourceLoader::getResourceManager() const
 	{
-		const Asset* asset = mRendererRuntimeImpl.getAssetManager().getAssetByAssetId(assetId);
-		if (nullptr != asset)
-		{
-			FontResource* fontResource = new FontResource(mRendererRuntimeImpl, assetId);
-
-			mFontResourceLoader->initialize(*asset, *fontResource);
-			mFontResourceLoader->onDeserialization();
-			mFontResourceLoader->onProcessing();
-			mFontResourceLoader->onRendererBackendDispatch();
-
-			return fontResource;
-		}
-
-		// Error!
-		return nullptr;
+		return mResourceManager;
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ResourceManager methods ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	void FontResourceManager::reloadResourceByAssetId(AssetId assetId)
+	inline IResourceLoader::IResourceLoader(ResourceManager& resourceManager) :
+		mResourceManager(resourceManager)
 	{
-		// TODO(co) Implement me
-		assetId = assetId;
+		// Nothing here
 	}
 
-	void FontResourceManager::update()
+	inline IResourceLoader::~IResourceLoader()
 	{
-		// TODO(co) Implement me
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-// TODO(co) Remove this
-#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
-	FontResourceManager::FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl) :
-		mRendererRuntimeImpl(rendererRuntimeImpl),
-		mFontResourceLoader(new FontResourceLoader(*this, rendererRuntimeImpl))
-	{
-		// Nothing in here
-	}
-
-	FontResourceManager::~FontResourceManager()
-	{
-		delete mFontResourceLoader;
+		// Nothing here
 	}
 
 

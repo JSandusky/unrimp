@@ -30,10 +30,14 @@
 #include "RendererRuntime/Core/NonCopyable.h"
 
 // Disable warnings in external headers, we can't fix them
+#include <queue>
+#include <atomic>
 #pragma warning(push)
 	#pragma warning(disable: 4265)	// warning C4265: '<x>': class has virtual functions, but destructor is not virtual
 
+	#include <mutex>
 	#include <thread>
+	#include <condition_variable>
 #pragma warning(pop)
 
 
@@ -68,6 +72,11 @@ namespace RendererRuntime
 	*    - Asynchronous asset loading
 	*    - Asynchronous data streaming
 	*    - Background resource loading
+	*
+	*    A resource must master the following stages in order to archive the inner wisdom:
+	*    1. Asynchronous deserialization
+	*    2. Asynchronous processing
+	*    3. Synchronous renderer backend dispatch
 	*/
 	class ResourceStreamer : private NonCopyable
 	{
@@ -98,12 +107,12 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Resource streamer update
+		*    Resource streamer update performing renderer backend dispatch
 		*
 		*  @note
 		*    - Call this once per frame
 		*/
-		void update();
+		void rendererBackendDispatch();
 
 
 	//[-------------------------------------------------------]
@@ -123,13 +132,21 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		// Deserialization thread
-		volatile bool mShutdownDeserializationThread;
-		std::thread   mDeserializationThread;
-		// Processing thread
-		volatile bool mShutdownProcessingThread;
-		std::thread   mProcessingThread;
-		// Renderer backend dispatch
+		// Resource streamer stage: 1. Asynchronous deserialization
+		std::atomic<bool>		  mShutdownDeserializationThread;
+		std::mutex				  mDeserializationMutex;
+		std::condition_variable	  mDeserializationConditionVariable;
+		std::queue<LoadRequest>	  mDeserializationQueue;
+		std::thread				  mDeserializationThread;
+		// Resource streamer stage: 2. Asynchronous processing
+		std::atomic<bool>		  mShutdownProcessingThread;
+		std::mutex				  mProcessingMutex;
+		std::condition_variable	  mProcessingConditionVariable;
+		std::queue<LoadRequest>	  mProcessingQueue;
+		std::thread				  mProcessingThread;
+		// Resource streamer stage: 3. Synchronous renderer backend dispatch
+		std::mutex				  mRendererBackendDispatchMutex;
+		std::queue<LoadRequest>	  mRendererBackendDispatchQueue;
 
 
 	};

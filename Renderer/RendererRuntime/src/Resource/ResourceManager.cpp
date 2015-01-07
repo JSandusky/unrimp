@@ -21,11 +21,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Font/FontResourceManager.h"
-#include "RendererRuntime/Resource/Font/FontResourceLoader.h"
-#include "RendererRuntime/Resource/Font/FontResource.h"
-#include "RendererRuntime/Asset/AssetManager.h"
-#include "RendererRuntime/Backend/RendererRuntimeImpl.h"
+#include "RendererRuntime/Resource/ResourceManager.h"
+#include "RendererRuntime/Resource/IResourceLoader.h"
+
+#include <assert.h>
 
 
 //[-------------------------------------------------------]
@@ -38,57 +37,57 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Work-in-progress
-	FontResource* FontResourceManager::loadFontByAssetId(AssetId assetId)
+	void ResourceManager::releaseResourceLoaderInstance(IResourceLoader& resourceLoader)
 	{
-		const Asset* asset = mRendererRuntimeImpl.getAssetManager().getAssetByAssetId(assetId);
-		if (nullptr != asset)
+		for (ResourceLoaderVector::iterator iterator = mUsedResourceLoaderInstances.begin(); iterator != mUsedResourceLoaderInstances.end(); ++iterator)
 		{
-			FontResource* fontResource = new FontResource(mRendererRuntimeImpl, assetId);
-
-			mFontResourceLoader->initialize(*asset, *fontResource);
-			mFontResourceLoader->onDeserialization();
-			mFontResourceLoader->onProcessing();
-			mFontResourceLoader->onRendererBackendDispatch();
-
-			return fontResource;
+			if (*iterator == &resourceLoader)
+			{
+				mUsedResourceLoaderInstances.erase(iterator);
+				mFreeResourceLoaderInstances.push_back(&resourceLoader);
+				return;
+			}
 		}
 
-		// Error!
+		// There's something funny going on here, an resource loader instance has been released which is not owned by this resource manager
+		assert(false);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	ResourceManager::~ResourceManager()
+	{
+		{ // Destroy resource loader instances
+			const size_t numberOfFreeResourceLoaderInstances = mFreeResourceLoaderInstances.size();
+			for (size_t i = 0; i < numberOfFreeResourceLoaderInstances; ++i)
+			{
+				delete mFreeResourceLoaderInstances[i];
+			}
+
+			// At this point in time, there shouldn't be any used resource loader instances left
+			assert(mUsedResourceLoaderInstances.empty());
+		}
+	}
+
+	IResourceLoader* ResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	{
+		// Can we recycle an already existing resource loader instance?
+		// TODO(co) A reverse iterator might be the better choice in here, check it (less moving around stuff when erasing an element)
+		for (ResourceLoaderVector::iterator iterator = mFreeResourceLoaderInstances.begin(); iterator != mFreeResourceLoaderInstances.end(); ++iterator)
+		{
+			IResourceLoader* resourceLoader = *iterator;
+			if (resourceLoader->getResourceLoaderTypeId() == resourceLoaderTypeId)
+			{
+				mFreeResourceLoaderInstances.erase(iterator);
+				mUsedResourceLoaderInstances.push_back(resourceLoader);
+				return resourceLoader;
+			}
+		}
+
+		// Sorry, no free resource loader instance left
 		return nullptr;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ResourceManager methods ]
-	//[-------------------------------------------------------]
-	void FontResourceManager::reloadResourceByAssetId(AssetId assetId)
-	{
-		// TODO(co) Implement me
-		assetId = assetId;
-	}
-
-	void FontResourceManager::update()
-	{
-		// TODO(co) Implement me
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-// TODO(co) Remove this
-#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
-	FontResourceManager::FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl) :
-		mRendererRuntimeImpl(rendererRuntimeImpl),
-		mFontResourceLoader(new FontResourceLoader(*this, rendererRuntimeImpl))
-	{
-		// Nothing in here
-	}
-
-	FontResourceManager::~FontResourceManager()
-	{
-		delete mFontResourceLoader;
 	}
 
 

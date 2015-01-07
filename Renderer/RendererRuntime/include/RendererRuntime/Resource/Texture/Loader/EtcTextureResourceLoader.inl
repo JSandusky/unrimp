@@ -28,7 +28,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline EtcTextureResourceLoader::EtcTextureResourceLoader(IRendererRuntime& rendererRuntime) :
+	inline EtcTextureResourceLoader::EtcTextureResourceLoader(ResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+		ITextureResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing here

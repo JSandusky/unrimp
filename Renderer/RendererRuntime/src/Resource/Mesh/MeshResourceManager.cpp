@@ -24,8 +24,11 @@
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceLoader.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
+#include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
+
+#include <assert.h>
 
 
 //[-------------------------------------------------------]
@@ -44,13 +47,44 @@ namespace RendererRuntime
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
 		{
-			MeshResource* meshResource = new MeshResource(assetId);
+			// TODO(co) Get rid of the program
+			mProgram = &program;
 
-			mMeshResourceLoader->initialize(*asset, *meshResource, program);
-			mMeshResourceLoader->onDeserialization();
-			mMeshResourceLoader->onProcessing();
-			mMeshResourceLoader->onRendererBackendDispatch();
+			// Get or create the instance
+			MeshResource* meshResource = nullptr;
+			const size_t numberOfResources = mResources.size();
+			for (size_t i = 0; i < numberOfResources; ++i)
+			{
+				MeshResource* currentMeshResource = mResources[i];
+				if (currentMeshResource->getResourceId() == assetId)
+				{
+					meshResource = currentMeshResource;
 
+					// Get us out of the loop
+					i = mResources.size();
+				}
+			}
+
+			// Create the resource instance
+			if (nullptr == meshResource)
+			{
+				meshResource = new MeshResource(assetId);
+				mResources.push_back(meshResource);
+			}
+
+			{
+				// Prepare the resource loader
+				MeshResourceLoader* meshResourceLoader = static_cast<MeshResourceLoader*>(acquireResourceLoaderInstance(MeshResourceLoader::TYPE_ID));
+				meshResourceLoader->initialize(*asset, *meshResource, program);
+
+				// Commit resource streamer asset load request
+				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+				resourceStreamerLoadRequest.resource = meshResource;
+				resourceStreamerLoadRequest.resourceLoader = meshResourceLoader;
+				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+			}
+
+			// TODO(co) No raw pointers in here
 			return meshResource;
 		}
 
@@ -62,10 +96,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ResourceManager methods ]
 	//[-------------------------------------------------------]
-	void MeshResourceManager::reloadResourceByAssetId(AssetId assetId) const
+	void MeshResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) Implement me
-		assetId = assetId;
+		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
+		loadMeshResourceByAssetId(*mProgram, assetId);
 	}
 
 	void MeshResourceManager::update()
@@ -79,14 +113,36 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MeshResourceManager::MeshResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mMeshResourceLoader(new MeshResourceLoader(rendererRuntime))
+		mProgram(nullptr)	// TODO(co) Get rid of the program
 	{
 		// Nothing in here
 	}
 
 	MeshResourceManager::~MeshResourceManager()
 	{
-		delete mMeshResourceLoader;
+		// TODO(co) Implement decent resource handling
+		for (size_t i = 0; i < mResources.size(); ++i)
+		{
+			delete mResources[i];
+		}
+	}
+
+	IResourceLoader* MeshResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	{
+		// Can we recycle an already existing resource loader instance?
+		IResourceLoader* resourceLoader = ResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
+
+		// We need to create a new resource loader instance
+		if (nullptr == resourceLoader)
+		{
+			// We only support our own mesh format
+			assert(resourceLoaderTypeId == MeshResourceLoader::TYPE_ID);
+			resourceLoader = new MeshResourceLoader(*this, mRendererRuntime);
+			mUsedResourceLoaderInstances.push_back(resourceLoader);
+		}
+
+		// Done
+		return resourceLoader;
 	}
 
 

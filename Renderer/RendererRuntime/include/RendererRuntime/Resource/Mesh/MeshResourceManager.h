@@ -42,7 +42,6 @@ namespace RendererRuntime
 {
 	class MeshResource;
 	class IRendererRuntime;
-	class MeshResourceLoader;
 }
 
 
@@ -78,7 +77,7 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::ResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void reloadResourceByAssetId(AssetId assetId) const override;
+		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
 
 
@@ -90,14 +89,18 @@ namespace RendererRuntime
 		virtual ~MeshResourceManager();
 		MeshResourceManager(const MeshResourceManager&) = delete;
 		MeshResourceManager& operator=(const MeshResourceManager&) = delete;
+		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&	mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
-		MeshResourceLoader* mMeshResourceLoader;	///< Mesh resource loader, always valid, destroy the instance if you no longer need it
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+
+		// TODO(co) Implement decent resource handling
+		Renderer::IProgram* mProgram;	// TODO(co) Get rid of the program
+		std::vector<MeshResource*> mResources;
 
 
 	};

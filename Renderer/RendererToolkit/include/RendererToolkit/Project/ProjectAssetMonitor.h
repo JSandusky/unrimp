@@ -32,6 +32,7 @@
 #include <RendererRuntime/Core/NonCopyable.h>
 
 #include <thread>
+#include <atomic>
 #include <string>
 
 
@@ -93,7 +94,7 @@ namespace RendererToolkit
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		void workerThread();
+		void threadWorker();
 
 
 	//[-------------------------------------------------------]
@@ -103,7 +104,7 @@ namespace RendererToolkit
 		ProjectImpl&					   mProjectImpl;
 		RendererRuntime::IRendererRuntime& mRendererRuntime;
 		std::string						   mRendererTarget;
-		volatile bool					   mShutdownWorkerThread;
+		std::atomic<bool>				   mShutdownThread;
 		std::thread						   mThread;
 
 

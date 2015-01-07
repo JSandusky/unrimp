@@ -63,7 +63,7 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::ResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void reloadResourceByAssetId(AssetId assetId) const override;
+		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
 
 
