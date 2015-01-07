@@ -29,16 +29,10 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Texture/Loader/ITextureResourceLoader.h"
 
-#include <iosfwd>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class ITexture;
-}
 namespace RendererRuntime
 {
 	class IRendererRuntime;
@@ -72,11 +66,6 @@ namespace RendererRuntime
 		static const ResourceLoaderTypeId TYPE_ID;
 
 
-	// TODO(co) Work-in-progress
-	public:
-		Renderer::ITexture* loadDdsTexture(std::istream& istream);
-
-
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
@@ -102,6 +91,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		// Temporary data
+		uint32_t mWidth;
+		uint32_t mHeight;
+		uint8_t  mTextureFormat;	// "Renderer::TextureFormat", don't want to include the header in here
+		// Temporary image data
+		uint32_t mNumberOfImageDataBytes;
+		uint32_t mNumberOfUsedImageDataBytes;
+		uint8_t* mImageData;
 
 
 	};

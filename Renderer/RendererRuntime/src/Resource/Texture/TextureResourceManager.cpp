@@ -147,6 +147,10 @@ namespace RendererRuntime
 			{
 				resourceLoader = new KtxTextureResourceLoader(*this, mRendererRuntime);
 			}
+			else if (resourceLoaderTypeId == DdsTextureResourceLoader::TYPE_ID)
+			{
+				resourceLoader = new DdsTextureResourceLoader(*this, mRendererRuntime);
+			}
 			else
 			{
 				// TODO(co) Error handling

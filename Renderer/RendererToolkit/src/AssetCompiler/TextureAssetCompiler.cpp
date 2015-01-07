@@ -618,9 +618,11 @@ namespace RendererToolkit
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".crn";	// TODO(co) Make this dynamic
 //		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".ktx";	// TODO(co) Make this dynamic
+//		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".dds";	// TODO(co) Make this dynamic
 
 		std::string testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename);
 //		std::string testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename + " -fileformat ktx -ETC1");
+//		std::string testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename + " -fileformat dds");
 		const char* pCommand_line = testString.c_str();
       crnlib::command_line_params::param_desc std_params[] =
       {

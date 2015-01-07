@@ -30,14 +30,20 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline DdsTextureResourceLoader::DdsTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		ITextureResourceLoader(resourceManager),
-		mRendererRuntime(rendererRuntime)
+		mRendererRuntime(rendererRuntime),
+		mWidth(0),
+		mHeight(0),
+		mTextureFormat(0),
+		mNumberOfImageDataBytes(0),
+		mNumberOfUsedImageDataBytes(0),
+		mImageData(nullptr)
 	{
 		// Nothing here
 	}
 
 	inline DdsTextureResourceLoader::~DdsTextureResourceLoader()
 	{
-		// Nothing here
+		delete [] mImageData;
 	}
 
 
