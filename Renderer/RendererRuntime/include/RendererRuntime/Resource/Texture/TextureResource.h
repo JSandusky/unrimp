@@ -55,6 +55,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 		friend class TextureResourceLoader;
 		friend class CrnTextureResourceLoader;	// TODO(co) Get rid of this
+		friend class KtxTextureResourceLoader;	// TODO(co) Get rid of this
 
 
 	//[-------------------------------------------------------]

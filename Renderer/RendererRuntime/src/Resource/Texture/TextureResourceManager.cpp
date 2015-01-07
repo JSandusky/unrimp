@@ -143,6 +143,10 @@ namespace RendererRuntime
 			{
 				resourceLoader = new CrnTextureResourceLoader(*this, mRendererRuntime);
 			}
+			else if (resourceLoaderTypeId == KtxTextureResourceLoader::TYPE_ID)
+			{
+				resourceLoader = new KtxTextureResourceLoader(*this, mRendererRuntime);
+			}
 			else
 			{
 				// TODO(co) Error handling

@@ -81,6 +81,7 @@ void FirstMesh::onInitialization()
 
 		// TODO(co) Under construction: Will probably become "mount asset package"
 		// Add used asset package
+	//	rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataMobile/AssetPackage.assets");
 		rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/AssetPackage.assets");
 
 		// TODO(co) First asset hot-reloading test
@@ -93,6 +94,7 @@ void FirstMesh::onInitialization()
 				try
 				{
 					mProject->loadByFilename("../DataSource/Example.project");
+				//	mProject->startupAssetMonitor(*rendererRuntime, "OpenGLES2_100");
 					mProject->startupAssetMonitor(*rendererRuntime, "Direct3D11_50");
 				}
 				catch (const std::exception& e)
