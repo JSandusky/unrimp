@@ -613,16 +613,39 @@ namespace RendererToolkit
 			test	  = jsonConfigurationObject->optValue<uint32_t>("Test", test);
 		}
 
-
 		const std::string inputAssetFilename = assetInputDirectory + inputFile;
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
-		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".crn";	// TODO(co) Make this dynamic
-//		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".ktx";	// TODO(co) Make this dynamic
-//		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".dds";	// TODO(co) Make this dynamic
 
-		std::string testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename);
-//		std::string testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename + " -fileformat ktx -ETC1");
-//		std::string testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename + " -fileformat dds");
+		// TODO(co) Everything rough prototype: Renderer target dependent stuff
+		std::string outputAssetFilename;
+		std::string testString;
+		{
+			// Get the JSON targets object
+			std::string textureTargetName;
+			{
+				Poco::JSON::Object::Ptr jsonRendererTargetsObject = configuration.jsonTargetsObject->get("RendererTargets").extract<Poco::JSON::Object::Ptr>();
+				Poco::JSON::Object::Ptr jsonRendererTargetObject = jsonRendererTargetsObject->get(configuration.rendererTarget).extract<Poco::JSON::Object::Ptr>();
+				textureTargetName = jsonRendererTargetObject->getValue<std::string>("TextureTarget");
+			}
+			Poco::JSON::Object::Ptr jsonTextureTargetsObject = configuration.jsonTargetsObject->get("TextureTargets").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonTextureTargetObject = jsonTextureTargetsObject->get(textureTargetName).extract<Poco::JSON::Object::Ptr>();
+			const std::string fileFormat = jsonTextureTargetObject->getValue<std::string>("FileFormat");
+
+			outputAssetFilename = assetOutputDirectory + assetName + '.' + fileFormat;
+			if (fileFormat == "crn")
+			{
+				testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename);
+			}
+			else if (fileFormat == "dds")
+			{
+				testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename + " -fileformat dds");
+			}
+			else if (fileFormat == "ktx")
+			{
+				testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename + " -fileformat ktx -ETC1");
+			}
+		}
+
 		const char* pCommand_line = testString.c_str();
       crnlib::command_line_params::param_desc std_params[] =
       {

@@ -137,15 +137,19 @@ namespace RendererToolkit
 		// Ensure that the asset output directory exists, else creating output file streams will fail
 		Poco::File(assetOutputDirectory).createDirectories();
 
-		// Input, configuration and output
+		// Asset compiler input
 		IAssetCompiler::Input input;
 		input.projectName		   = mProjectName;
 		input.assetInputDirectory  = assetInputDirectory;
 		input.assetOutputDirectory = assetOutputDirectory;
 
+		// Asset compiler configuration
 		IAssetCompiler::Configuration configuration;
 		configuration.jsonAssetRootObject = jsonAssetRootObject;
+		configuration.jsonTargetsObject	  = mJsonTargetsObject;
+		configuration.rendererTarget	  = rendererTarget;
 
+		// Asset compiler output
 		IAssetCompiler::Output output;
 		output.outputAssetPackage = &outputAssetPackage;
 

@@ -80,6 +80,8 @@ namespace RendererToolkit
 		struct Configuration
 		{
 			Poco::JSON::Object::Ptr jsonAssetRootObject;
+			Poco::JSON::Object::Ptr jsonTargetsObject;
+			std::string				rendererTarget;
 		};
 		struct Output
 		{
