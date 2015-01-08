@@ -9,7 +9,7 @@
 		"ProjectMetadata":
 		{
 			"Name": "Example",
-			"Copyright": "Copyright (c) 2012-2014 Christian Ofenberg"
+			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
 		},
 		"AssetsFilename": "Example.assets",
 		"TargetsFilename": "Example.targets"
