@@ -24,6 +24,7 @@
 #include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Resource/IResourceLoader.h"
 #include "RendererRuntime/Resource/IResourceManager.h"
+#include "RendererRuntime/Resource/IResource.h"
 
 // TODO(co) Can we do somthing about the warning which does not involve using "std::thread"-pointers?
 #pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
@@ -41,6 +42,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void ResourceStreamer::commitLoadRequest(const LoadRequest& loadRequest)
 	{
+		// Update the resource loading state
+		loadRequest.resource->mLoadingState = IResource::LoadingState::LOADING;
+
 		// Push the load request into the queue of the first resource streamer pipeline stage
 		// -> Resource streamer stage: 1. Asynchronous deserialization
 		std::unique_lock<std::mutex> deserializationMutexLock(mDeserializationMutex);
@@ -70,6 +74,9 @@ namespace RendererRuntime
 			// Do the work
 			IResourceLoader* resourceLoader = loadRequest.resourceLoader;
 			resourceLoader->onRendererBackendDispatch();
+
+			// Update the resource loading state
+			loadRequest.resource->mLoadingState = IResource::LoadingState::LOADED;
 
 			// Release the resource loader instance
 			resourceLoader->getResourceManager().releaseResourceLoaderInstance(*resourceLoader);

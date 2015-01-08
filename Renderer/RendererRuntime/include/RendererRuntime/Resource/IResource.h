@@ -52,10 +52,33 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class ResourceStreamer;	// Is changing the resource loading state
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		struct LoadingState
+		{
+			enum Enum
+			{
+				UNLOADED,	///< Not loaded
+				LOADING,	///< Loading is in progress
+				LOADED,		///< Fully loaded
+				UNLOADING	///< Currently unloading	// TODO(co) Currently unused
+			};
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
 		inline ResourceId getResourceId() const;
+		inline LoadingState::Enum getLoadingState() const;
 
 
 	//[-------------------------------------------------------]
@@ -72,7 +95,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ResourceId mResourceId;
+		ResourceId		   mResourceId;
+		LoadingState::Enum mLoadingState;
 
 
 	};

@@ -32,12 +32,18 @@ namespace RendererRuntime
 		return mResourceId;
 	}
 
+	inline IResource::LoadingState::Enum IResource::getLoadingState() const
+	{
+		return mLoadingState;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline IResource::IResource(ResourceId resourceId) :
-		mResourceId(resourceId)
+		mResourceId(resourceId),
+		mLoadingState(LoadingState::UNLOADED)
 	{
 		// Nothing here
 	}
