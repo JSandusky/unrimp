@@ -51,10 +51,15 @@
 // STB image
 #include <crunch/stb_image.h>	// TODO(co) This is another library
 
-#include <crunch/crnlib.h>
-#include <crunch/dds_defs.h>
-#include <crunch/crnlib/crn_texture_conversion.h>
-#include <crunch/crnlib/crn_command_line_params.h>
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4005)	// warning C4005: '<x>': macro redefinition
+
+	#include <crunch/crnlib.h>
+	#include <crunch/dds_defs.h>
+	#include <crunch/crnlib/crn_texture_conversion.h>
+	#include <crunch/crnlib/crn_command_line_params.h>
+#pragma warning(pop)
 
 #include <libtiff/tiffio.h>
 

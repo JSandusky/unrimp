@@ -26,7 +26,7 @@
 #include "RendererRuntime/Resource/IResourceManager.h"
 #include "RendererRuntime/Resource/IResource.h"
 
-// TODO(co) Can we do somthing about the warning which does not involve using "std::thread"-pointers?
+// TODO(co) Can we do something about the warning which does not involve using "std::thread"-pointers?
 #pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
 
 
