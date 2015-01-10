@@ -23,23 +23,8 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 #include "Framework/IApplicationRenderer.h"
-#ifdef SHARED_LIBRARIES
-	// Dynamically linked libraries
-	#ifdef WIN32
-		#include "Framework/WindowsHeader.h"
-	#elif defined LINUX
-		#include "Framework/LinuxHeader.h"
 
-		#include <dlfcn.h>
-		#include <iostream>
-	#else
-		#error "Unsupported platform"
-	#endif
-
-	#include <stdio.h>
-#endif
-
-#include <string.h>
+#include <Renderer/Public/RendererInstance.h>
 
 
 //[-------------------------------------------------------]
@@ -47,8 +32,7 @@
 //[-------------------------------------------------------]
 IApplicationRenderer::~IApplicationRenderer()
 {
-	// Nothing to do in here
-	// mRenderer is destroyed within onDeinitialization()
+	// Nothing here
 }
 
 
@@ -92,25 +76,8 @@ void IApplicationRenderer::onDeinitialization()
 {
 	// Delete the renderer instance
 	mRenderer = nullptr;
-
-	// Destroy the shared library instance
-	#ifdef SHARED_LIBRARIES
-		#ifdef WIN32
-			if (nullptr != mRendererSharedLibrary)
-			{
-				::FreeLibrary(static_cast<HMODULE>(mRendererSharedLibrary));
-				mRendererSharedLibrary = nullptr;
-			}
-		#elif defined LINUX
-			if (nullptr != mRendererSharedLibrary)
-			{
-				dlclose(mRendererSharedLibrary);
-				mRendererSharedLibrary = nullptr;
-			}
-		#else
-			#error "Unsupported platform"
-		#endif
-	#endif
+	delete mRendererInstance;
+	mRendererInstance = nullptr;
 }
 
 void IApplicationRenderer::onResize()
@@ -197,7 +164,8 @@ void IApplicationRenderer::onDrawRequest()
 //[-------------------------------------------------------]
 IApplicationRenderer::IApplicationRenderer(const char *rendererName) :
 	IApplication(rendererName),
-	mRendererSharedLibrary(nullptr)
+	mRendererInstance(nullptr),
+	mRenderer(nullptr)
 {
 	// Copy the given renderer name
 	if (nullptr != rendererName)
@@ -216,178 +184,20 @@ IApplicationRenderer::IApplicationRenderer(const char *rendererName) :
 //[-------------------------------------------------------]
 Renderer::IRenderer *IApplicationRenderer::createRendererInstance(const char *rendererName)
 {
-	Renderer::IRenderer *renderer = nullptr;
-
 	// Is the given pointer valid?
 	if (nullptr != rendererName)
 	{
-		// In order to keep it simple in this test project the supported renderer backends are
-		// fixed typed in. For a real system a dynamic plugin system would be a good idea.
-		#ifdef SHARED_LIBRARIES
-			// Dynamically linked libraries
-			#ifdef WIN32
-				// Load in the dll
-				char rendererFilename[128];
-				#ifdef _DEBUG
-					sprintf(rendererFilename, "%sRendererD.dll", rendererName);
-				#else
-					sprintf(rendererFilename, "%sRenderer.dll", rendererName);
-				#endif
-				mRendererSharedLibrary = ::LoadLibraryExA(rendererFilename, nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-				if (nullptr != mRendererSharedLibrary)
-				{
-					// Get the "CreateRendererInstance()" function pointer
-					char functionName[128];
-					sprintf(functionName, "create%sRendererInstance", rendererName);
-					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mRendererSharedLibrary), functionName);
-					if (nullptr != symbol)
-					{
-						// "createRendererInstance()" signature
-						typedef Renderer::IRenderer *(__cdecl *createRendererInstance)(Renderer::handle);
-
-						// Create the renderer instance
-						renderer = (static_cast<createRendererInstance>(symbol))(getNativeWindowHandle());
-					}
-					else
-					{
-						// Error!
-						OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"%s\" within the renderer shared library \"%s\"", functionName, rendererFilename)
-					}
-				}
-				else
-				{
-					OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", rendererFilename)
-				}
-			#elif defined LINUX
-				// Load in the shared library
-				char rendererFilename[128];
-				#ifdef _DEBUG
-					sprintf(rendererFilename, "%sRendererD.so", rendererName);
-				#else
-					sprintf(rendererFilename, "lib%sRenderer.so", rendererName);
-				#endif
-				mRendererSharedLibrary = ::dlopen(rendererFilename, RTLD_NOW);
-				if (nullptr != mRendererSharedLibrary)
-				{
-					// Get the "CreateRendererInstance()" function pointer
-					char functionName[128];
-					sprintf(functionName, "create%sRendererInstance", rendererName);
-					void *symbol = ::dlsym(mRendererSharedLibrary, functionName);
-					if (nullptr != symbol)
-					{
-						// "createRendererInstance()" signature
-						typedef Renderer::IRenderer *(*createRendererInstance)(Renderer::handle);
-
-						// Create the renderer instance
-						renderer = (reinterpret_cast<createRendererInstance>(symbol))(getNativeWindowHandle());
-					}
-					else
-					{
-						// Error!
-						std::cerr<<"Failed to locate the entry point \""<<functionName<<"\" within the renderer shared library \""<<rendererFilename<<"\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead... as seen below, why the additional output?
-						OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"%s\" within the renderer shared library \"%s\"", functionName, rendererFilename)
-					}
-				}
-				else
-				{
-					std::cerr<<"Failed to load in the shared library \""<<rendererFilename<<"\"\nReason:"<<dlerror()<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead... as seen below, why the additional output?
-					OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", rendererFilename)
-				}
-			#else
-				#error "Unsupported platform"
-			#endif
-		#else
-			// Statically linked libraries
-
-			// Null
-			#ifndef RENDERER_NO_NULL
-				if (0 == strcmp(rendererName, "Null"))
-				{
-					// "createNullRendererInstance()" signature
-					extern Renderer::IRenderer *createNullRendererInstance(Renderer::handle);
-
-					// Create the renderer instance
-					renderer = createNullRendererInstance(getNativeWindowHandle());
-				}
-				else
-			#endif
-
-			// OpenGL
-			#ifndef RENDERER_NO_OPENGL
-				if (0 == strcmp(rendererName, "OpenGL"))
-				{
-					// "createOpenGLRendererInstance()" signature
-					extern Renderer::IRenderer *createOpenGLRendererInstance(Renderer::handle);
-
-					// Create the renderer instance
-					renderer = createOpenGLRendererInstance(getNativeWindowHandle());
-				}
-				else
-			#endif
-
-			// OpenGLES2
-			#ifndef RENDERER_NO_OPENGLES2
-				if (0 == strcmp(rendererName, "OpenGLES2"))
-				{
-					// "createOpenGLES2RendererInstance()" signature
-					extern Renderer::IRenderer *createOpenGLES2RendererInstance(Renderer::handle);
-
-					// Create the renderer instance
-					renderer = createOpenGLES2RendererInstance(getNativeWindowHandle());
-				}
-				else
-			#endif
-
-			// Direct3D 9
-			#ifndef RENDERER_NO_DIRECT3D9
-				if (0 == strcmp(rendererName, "Direct3D9"))
-				{
-					// "createDirect3D9RendererInstance()" signature
-					extern Renderer::IRenderer *createDirect3D9RendererInstance(Renderer::handle);
-
-					// Create the renderer instance
-					renderer = createDirect3D9RendererInstance(getNativeWindowHandle());
-				}
-				else
-			#endif
-
-			// Direct3D 10
-			#ifndef RENDERER_NO_DIRECT3D10
-				if (0 == strcmp(rendererName, "Direct3D10"))
-				{
-					// "createDirect3D10RendererInstance()" signature
-					extern Renderer::IRenderer *createDirect3D10RendererInstance(Renderer::handle);
-
-					// Create the renderer instance
-					renderer = createDirect3D10RendererInstance(getNativeWindowHandle());
-				}
-				else
-			#endif
-
-			// Direct3D 11
-			#ifndef RENDERER_NO_DIRECT3D11
-				if (0 == strcmp(rendererName, "Direct3D11"))
-				{
-					// "createDirect3D11RendererInstance()" signature
-					extern Renderer::IRenderer *createDirect3D11RendererInstance(Renderer::handle);
-
-					// Create the renderer instance
-					renderer = createDirect3D11RendererInstance(getNativeWindowHandle());
-				}
-			#endif
-
-				// Nothing to see, but keep it
-				{
-				}
-		#endif
+		mRendererInstance = new Renderer::RendererInstance(rendererName, getNativeWindowHandle());
 	}
+	Renderer::IRenderer *renderer = (nullptr != mRendererInstance) ? mRendererInstance->getRenderer() : nullptr;
 
 	// Is the renderer instance is properly initialized?
 	if (nullptr != renderer && !renderer->isInitialized())
 	{
 		// We are not interested in not properly initialized renderer instances, so get rid of the broken thing
-		delete renderer;
 		renderer = nullptr;
+		delete mRendererInstance;
+		mRendererInstance = nullptr;
 	}
 
 	#ifdef RENDERER_NO_DEBUG

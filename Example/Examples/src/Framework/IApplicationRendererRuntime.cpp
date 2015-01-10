@@ -100,6 +100,9 @@ void IApplicationRendererRuntime::onDeinitialization()
 			mRendererToolkitInstance = nullptr;
 		}
 	#endif
+
+	// Call the base implementation
+	IApplicationRenderer::onDeinitialization();
 }
 
 void IApplicationRendererRuntime::onUpdate()

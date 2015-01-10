@@ -75,6 +75,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class RendererInstance;
+}
+
+
+//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 /**
@@ -153,9 +162,9 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	char					mRendererName[32];		///< Case sensitive ASCII name of the renderer to instance
-	void				   *mRendererSharedLibrary;	///< Renderer shared library, can be a null pointer
-	Renderer::IRendererPtr  mRenderer;				///< Renderer instance, can be a null pointer
+	char						mRendererName[32];	///< Case sensitive ASCII name of the renderer to instance
+	Renderer::RendererInstance* mRendererInstance;	///< Renderer instance, can be a null pointer
+	Renderer::IRenderer*		mRenderer;			///< Renderer instance, can be a null pointer, do not destroy the instance
 
 
 };
