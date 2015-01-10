@@ -132,7 +132,7 @@ namespace RendererToolkit
 		const std::string assetInputDirectory = Poco::Path(absoluteAssetFilename).parent().toString(Poco::Path::PATH_UNIX);
 		const std::string assetType = jsonAssetMetadataObject->getValue<std::string>("AssetType");
 		const std::string assetCategory = jsonAssetMetadataObject->getValue<std::string>("AssetCategory");
-		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + assetType + '/' + assetCategory + '/';
+		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + assetType + '/' + assetCategory + '/';
 
 		// Ensure that the asset output directory exists, else creating output file streams will fail
 		Poco::File(assetOutputDirectory).createDirectories();
@@ -251,7 +251,7 @@ namespace RendererToolkit
 			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), detail::orderByAssetId);
 
 			// Open the output file
-			std::ofstream ofstream("../" + getRenderTargetDataRootDirectory(rendererTarget) + "AssetPackage.assets", std::ios::binary);
+			std::ofstream ofstream("../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", std::ios::binary);
 
 			// Write down the asset package header
 			#pragma pack(push)
@@ -301,6 +301,7 @@ namespace RendererToolkit
 		mProjectName.clear();
 		mProjectDirectory.clear();
 		mAssetPackage.clear();
+		mAssetPackageDirectoryName.clear();
 		mJsonTargetsObject = nullptr;
 	}
 
@@ -326,6 +327,9 @@ namespace RendererToolkit
 			}
 		}
 
+		// Get the asset package name (includes "/" at the end)
+		mAssetPackageDirectoryName = Poco::Path(filename).parent().toString(Poco::Path::PATH_UNIX);
+
 		// Read project data
 		Poco::JSON::Object::Ptr jsonProjectObject = jsonRootObject->get("Assets").extract<Poco::JSON::Object::Ptr>();
 		const size_t numberOfAssets = jsonProjectObject->size();
@@ -338,7 +342,7 @@ namespace RendererToolkit
 		{
 			// Get asset data
 			const RendererRuntime::AssetId assetId = static_cast<uint32_t>(std::stoi(iterator->first));	// TODO(co) Parsing directly to "uint32_t" from string to be on the safe-side?
-			const std::string assetFilename = iterator->second.convert<std::string>();
+			const std::string assetFilename = mAssetPackageDirectoryName + iterator->second.convert<std::string>();
 			if (assetFilename.length() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
 			{
 				const std::string message = "Asset filename \"" + assetFilename + "\" of asset ID " + std::to_string(assetId) + " is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH);

@@ -11,7 +11,7 @@
 			"Name": "Example",
 			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
 		},
-		"AssetsFilename": "Example.assets",
+		"AssetsFilename": "Content/Example.assets",
 		"TargetsFilename": "Example.targets"
 	}
 }

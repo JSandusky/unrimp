@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "4",
+			"AssetType": "Texture",
+			"AssetCategory": "Character",
+			"AssetName": "Imrod_Diffuse",
+			"FileDependencies": [ "Imrod_Diffuse.tga" ],
+			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/personal_art/imrod.htm ) by Dmitry Parkin: http://www.parkparkin.com"
+		},
+		"TextureAssetCompiler":
+		{
+			"InputFile": "Imrod_Diffuse.tga",
+			"TextureSemantic": "DiffuseMap"
+		}
+	}
+}

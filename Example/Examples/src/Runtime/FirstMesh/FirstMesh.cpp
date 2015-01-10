@@ -81,8 +81,8 @@ void FirstMesh::onInitialization()
 
 		// TODO(co) Under construction: Will probably become "mount asset package"
 		// Add used asset package
-	//	rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataMobile/AssetPackage.assets");
-		rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/AssetPackage.assets");
+	//	rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataMobile/Content/AssetPackage.assets");
+		rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/Content/AssetPackage.assets");
 
 		// TODO(co) First asset hot-reloading test
 		RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();

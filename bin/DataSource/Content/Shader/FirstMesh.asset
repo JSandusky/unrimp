@@ -1,0 +1,23 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "3",
+			"AssetType": "Shader",
+			"AssetCategory": "Default",
+			"AssetName": "FirstMesh",
+			"FileDependencies": [ "FirstMesh.shader", "FirstMesh.hlsl" ],
+			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
+		},
+		"ShaderAssetCompiler":
+		{
+			"InputFile": "FirstMesh.shader"
+		}
+	}
+}

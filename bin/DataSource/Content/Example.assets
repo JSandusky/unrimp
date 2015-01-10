@@ -1,0 +1,18 @@
+{
+	"Format":
+	{
+		"Type": "Assets",
+		"Version": "1"
+	},
+	"Assets":
+	{
+		"0": "Font/LinBiolinum_R.asset",
+		"1": "Material/FirstMesh.asset",
+		"2": "Mesh/ImrodLowPoly.asset",
+		"3": "Shader/FirstMesh.asset",
+		"4": "Texture/Imrod_Diffuse.asset",
+		"5": "Texture/Imrod_Illumination.asset",
+		"6": "Texture/Imrod_norm.asset",
+		"7": "Texture/Imrod_spec.asset"
+	}
+}

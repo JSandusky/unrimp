@@ -135,7 +135,8 @@ namespace RendererToolkit
 		std::string					  mProjectName;
 		std::string					  mProjectDirectory;
 		RendererRuntime::AssetPackage mAssetPackage;
-		Poco::JSON::Object::Ptr		  mJsonTargetsObject;	///< There's no real benefit in trying to store the targets data in custom data structures, so we just stick to the read in JSON object
+		std::string					  mAssetPackageDirectoryName;	///< Asset package name (includes "/" at the end)
+		Poco::JSON::Object::Ptr		  mJsonTargetsObject;			///< There's no real benefit in trying to store the targets data in custom data structures, so we just stick to the read in JSON object
 		ProjectAssetMonitor*		  mProjectAssetMonitor;
 		std::atomic<bool>			  mShutdownThread;
 		std::thread					  mThread;
