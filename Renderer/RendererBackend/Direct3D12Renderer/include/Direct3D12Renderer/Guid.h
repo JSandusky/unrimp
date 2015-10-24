@@ -19,43 +19,39 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+#ifndef __DIRECT3D12RENDERER_GUID_H__
+#define __DIRECT3D12RENDERER_GUID_H__
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Main.h"
-
-#include <RendererToolkit/Public/RendererToolkit.h>
-#include <RendererToolkit/Public/RendererToolkitInstance.h>
-
-#include <exception>
+#include <Guiddef.h>	// For "GUID"
 
 
 //[-------------------------------------------------------]
-//[ Platform independent program entry point              ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-int programEntryPoint()
+namespace Direct3D12Renderer
 {
-	RendererToolkit::RendererToolkitInstance rendererToolkitInstance;
-	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
-	if (nullptr != rendererToolkit)
-	{
-		// TODO(co) Experiments
-		RendererToolkit::IProject* project = rendererToolkit->createProject();
-		try
-		{
-			project->loadByFilename("../DataSource/Example.project");
-		//	project->compileAllAssets("Direct3D9_30");
-			project->compileAllAssets("Direct3D11_50");
-		//	project->compileAllAssets("Direct3D12_50");
-		//	project->compileAllAssets("OpenGLES2_100");
-		}
-		catch (const std::exception& e)
-		{
-			const char* text = e.what();
-			text = text;
-		}
-		delete project;
-	}
 
-	// No error
-	return 0;
-}
+
+	//[-------------------------------------------------------]
+	//[ Global variables                                      ]
+	//[-------------------------------------------------------]
+	extern const GUID WKPDID_D3DDebugObjectName;
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // Direct3D12Renderer
+
+
+//[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#endif // __DIRECT3D12RENDERER_GUID_H__

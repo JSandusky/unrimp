@@ -21,41 +21,41 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Main.h"
-
-#include <RendererToolkit/Public/RendererToolkit.h>
-#include <RendererToolkit/Public/RendererToolkitInstance.h>
-
-#include <exception>
+#include "Direct3D12Renderer/ShaderLanguage.h"
 
 
 //[-------------------------------------------------------]
-//[ Platform independent program entry point              ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-int programEntryPoint()
+namespace Direct3D12Renderer
 {
-	RendererToolkit::RendererToolkitInstance rendererToolkitInstance;
-	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
-	if (nullptr != rendererToolkit)
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	ShaderLanguage::~ShaderLanguage()
 	{
-		// TODO(co) Experiments
-		RendererToolkit::IProject* project = rendererToolkit->createProject();
-		try
-		{
-			project->loadByFilename("../DataSource/Example.project");
-		//	project->compileAllAssets("Direct3D9_30");
-			project->compileAllAssets("Direct3D11_50");
-		//	project->compileAllAssets("Direct3D12_50");
-		//	project->compileAllAssets("OpenGLES2_100");
-		}
-		catch (const std::exception& e)
-		{
-			const char* text = e.what();
-			text = text;
-		}
-		delete project;
+		// Nothing to do in here
 	}
 
-	// No error
-	return 0;
-}
+	Direct3D12Renderer &ShaderLanguage::getDirect3D12Renderer() const
+	{
+		return reinterpret_cast<Direct3D12Renderer&>(getRenderer());
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	ShaderLanguage::ShaderLanguage(Direct3D12Renderer &direct3D12Renderer) :
+		IShaderLanguage(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer))
+	{
+		// Nothing to do in here
+	}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // Direct3D12Renderer

@@ -19,43 +19,27 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-#include "Main.h"
-
-#include <RendererToolkit/Public/RendererToolkit.h>
-#include <RendererToolkit/Public/RendererToolkitInstance.h>
-
-#include <exception>
-
-
-//[-------------------------------------------------------]
-//[ Platform independent program entry point              ]
-//[-------------------------------------------------------]
-int programEntryPoint()
+namespace Direct3D12Renderer
 {
-	RendererToolkit::RendererToolkitInstance rendererToolkitInstance;
-	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
-	if (nullptr != rendererToolkit)
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline uint32_t SamplerStateCollection::getNumberOfD3D12SamplerStates() const
 	{
-		// TODO(co) Experiments
-		RendererToolkit::IProject* project = rendererToolkit->createProject();
-		try
-		{
-			project->loadByFilename("../DataSource/Example.project");
-		//	project->compileAllAssets("Direct3D9_30");
-			project->compileAllAssets("Direct3D11_50");
-		//	project->compileAllAssets("Direct3D12_50");
-		//	project->compileAllAssets("OpenGLES2_100");
-		}
-		catch (const std::exception& e)
-		{
-			const char* text = e.what();
-			text = text;
-		}
-		delete project;
+		return mNumberOfD3D12SamplerStates;
 	}
 
-	// No error
-	return 0;
-}
+	inline ID3D12SamplerState **SamplerStateCollection::getD3D12SamplerStates() const
+	{
+		return mD3D12SamplerStates;
+	}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // Direct3D12Renderer

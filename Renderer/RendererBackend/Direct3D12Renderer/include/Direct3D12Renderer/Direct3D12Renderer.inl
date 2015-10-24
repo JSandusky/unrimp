@@ -19,43 +19,42 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-#include "Main.h"
-
-#include <RendererToolkit/Public/RendererToolkit.h>
-#include <RendererToolkit/Public/RendererToolkitInstance.h>
-
-#include <exception>
-
-
-//[-------------------------------------------------------]
-//[ Platform independent program entry point              ]
-//[-------------------------------------------------------]
-int programEntryPoint()
+namespace Direct3D12Renderer
 {
-	RendererToolkit::RendererToolkitInstance rendererToolkitInstance;
-	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
-	if (nullptr != rendererToolkit)
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline ID3D12Device *Direct3D12Renderer::getD3D12Device() const
 	{
-		// TODO(co) Experiments
-		RendererToolkit::IProject* project = rendererToolkit->createProject();
-		try
-		{
-			project->loadByFilename("../DataSource/Example.project");
-		//	project->compileAllAssets("Direct3D9_30");
-			project->compileAllAssets("Direct3D11_50");
-		//	project->compileAllAssets("Direct3D12_50");
-		//	project->compileAllAssets("OpenGLES2_100");
-		}
-		catch (const std::exception& e)
-		{
-			const char* text = e.what();
-			text = text;
-		}
-		delete project;
+		return mD3D12Device;
 	}
 
-	// No error
-	return 0;
-}
+	inline ID3D12DeviceContext *Direct3D12Renderer::getD3D12DeviceContext() const
+	{
+		return mD3D12DeviceContext;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderer methods            ]
+	//[-------------------------------------------------------]
+	inline const char *Direct3D12Renderer::getName() const
+	{
+		return "Direct3D12";
+	}
+
+	inline bool Direct3D12Renderer::isInitialized() const
+	{
+		// Is there a Direct3D 12 device?
+		return (nullptr != mD3D12Device);
+	}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // Direct3D12Renderer

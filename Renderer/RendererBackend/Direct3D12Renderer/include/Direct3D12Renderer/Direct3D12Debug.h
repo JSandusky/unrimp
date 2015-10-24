@@ -19,43 +19,36 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
+//[ Header guard                                          ]
 //[-------------------------------------------------------]
-#include "Main.h"
-
-#include <RendererToolkit/Public/RendererToolkit.h>
-#include <RendererToolkit/Public/RendererToolkitInstance.h>
-
-#include <exception>
+#pragma once
+#ifndef __DIRECT3D12RENDERER_DIRECT3D12DEBUG_H__
+#define __DIRECT3D12RENDERER_DIRECT3D12DEBUG_H__
 
 
 //[-------------------------------------------------------]
-//[ Platform independent program entry point              ]
+//[ Definitions                                           ]
 //[-------------------------------------------------------]
-int programEntryPoint()
-{
-	RendererToolkit::RendererToolkitInstance rendererToolkitInstance;
-	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
-	if (nullptr != rendererToolkit)
-	{
-		// TODO(co) Experiments
-		RendererToolkit::IProject* project = rendererToolkit->createProject();
-		try
-		{
-			project->loadByFilename("../DataSource/Example.project");
-		//	project->compileAllAssets("Direct3D9_30");
-			project->compileAllAssets("Direct3D11_50");
-		//	project->compileAllAssets("Direct3D12_50");
-		//	project->compileAllAssets("OpenGLES2_100");
+/*
+*  @brief
+*    Check whether or not the given resource is owned by the given renderer
+*
+*  @note
+*    In case of no match, a debug output message will be made with a following immediate "return"
+*/
+#ifdef DIRECT3D12RENDERER_NO_RENDERERMATCHCHECK
+	#define DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference)
+#else
+	#define DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference) \
+		if (&rendererReference != &(resourceReference).getRenderer()) \
+		{ \
+			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: The given resource is owned by another renderer instance") \
+			return; \
 		}
-		catch (const std::exception& e)
-		{
-			const char* text = e.what();
-			text = text;
-		}
-		delete project;
-	}
+#endif
 
-	// No error
-	return 0;
-}
+
+//[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#endif // __DIRECT3D12RENDERER_DIRECT3D12DEBUG_H__

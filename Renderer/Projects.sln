@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22310.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "Renderer\Renderer.vcxproj", "{625483C5-43B6-47AB-BD4F-099A0B091768}"
 EndProject
@@ -41,6 +41,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RendererToolkit", "Renderer
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RendererRuntime", "RendererRuntime\RendererRuntime.vcxproj", "{BC90A670-6608-479F-88A4-3F64CE7823E1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Direct3D12Renderer", "RendererBackend\Direct3D12Renderer\Direct3D12Renderer.vcxproj", "{F5898A4D-8D1B-468E-8BD7-0C01516CE183}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -122,6 +124,14 @@ Global
 		{BC90A670-6608-479F-88A4-3F64CE7823E1}.Release_Dynamic|Win32.Build.0 = Release_Dynamic|Win32
 		{BC90A670-6608-479F-88A4-3F64CE7823E1}.Release_Static|Win32.ActiveCfg = Release_Static|Win32
 		{BC90A670-6608-479F-88A4-3F64CE7823E1}.Release_Static|Win32.Build.0 = Release_Static|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Debug_Dynamic|Win32.ActiveCfg = Debug_Dynamic|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Debug_Dynamic|Win32.Build.0 = Debug_Dynamic|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Debug_Static|Win32.ActiveCfg = Debug_Static|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Debug_Static|Win32.Build.0 = Debug_Static|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Release_Dynamic|Win32.ActiveCfg = Release_Dynamic|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Release_Dynamic|Win32.Build.0 = Release_Dynamic|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Release_Static|Win32.ActiveCfg = Release_Static|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Release_Static|Win32.Build.0 = Release_Static|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

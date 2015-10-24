@@ -64,8 +64,8 @@ ExampleRunner::~ExampleRunner() {}
 
 ExampleRunner::ExampleRunner()
 	:
-	// Case sensitive name of the renderer to instance, might be ignored in case e.g. "RENDERER_ONLY_DIRECT3D11" was set as preprocessor definition
-	// -> Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
+	// Case sensitive name of the renderer to instance, might be ignored in case e.g. "RENDERER_ONLY_DIRECT3D12" was set as preprocessor definition
+	// -> Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 	// -> In case the graphics driver supports it, the OpenGL ES 2 renderer can automatically also run on a desktop PC without an emulator (perfect for testing/debugging)
 	m_defaultRendererName(
 		#ifdef RENDERER_ONLY_NULL
@@ -79,16 +79,18 @@ ExampleRunner::ExampleRunner()
 				"Direct3D9"
 			#elif RENDERER_ONLY_DIRECT3D10
 				"Direct3D10"
-			#else 
+			#elif RENDERER_ONLY_DIRECT3D11
 				"Direct3D11"
+			#else 
+				"Direct3D12"
 			#endif
 		#endif
 	)
 {
-	std::array<std::string, 6> supportsAllRenderer = {{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"}};
-	std::array<std::string, 5> doesnotSupportOpenGLES2 = {{"Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11"}};
-	std::array<std::string, 4> onlyShaderModel4Plus = {{"Null", "OpenGL", "Direct3D10", "Direct3D11"}};
-	std::array<std::string, 3> onlyShaderModel5Plus = {{"Null", "OpenGL", "Direct3D11"}};
+	std::array<std::string, 7> supportsAllRenderer = {{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"}};
+	std::array<std::string, 6> doesNotSupportOpenGLES2 = {{"Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"}};
+	std::array<std::string, 5> onlyShaderModel4Plus = {{"Null", "OpenGL", "Direct3D10", "Direct3D11", "Direct3D12"}};
+	std::array<std::string, 4> onlyShaderModel5Plus = {{"Null", "OpenGL", "Direct3D11", "Direct3D12"}};
 	// Basics
 	addExample("FirstTriangle",					&RunExample<FirstTriangle>,					supportsAllRenderer);
 	addExample("VertexBuffer",					&RunExample<VertexBuffer>,					supportsAllRenderer);
@@ -96,14 +98,14 @@ ExampleRunner::ExampleRunner()
 	addExample("FirstRenderToTexture",			&RunExample<FirstRenderToTexture>,			supportsAllRenderer);
 	addExample("FirstMultipleRenderTargets",	&RunExample<FirstMultipleRenderTargets>,	supportsAllRenderer);
 	addExample("FirstMultipleSwapChains",		&RunExample<FirstMultipleSwapChains>,		supportsAllRenderer);
-	addExample("FirstInstancing",				&RunExample<FirstInstancing>,				doesnotSupportOpenGLES2);
+	addExample("FirstInstancing",				&RunExample<FirstInstancing>,				doesNotSupportOpenGLES2);
 	addExample("FirstGeometryShader",			&RunExample<FirstGeometryShader>,			onlyShaderModel4Plus);
 	addExample("FirstTessellation",				&RunExample<FirstTessellation>,				onlyShaderModel5Plus);
 	// Advanced
 	addExample("FirstPostProcessing",			&RunExample<FirstPostProcessing>,			supportsAllRenderer);
 	addExample("Fxaa",							&RunExample<Fxaa>,							supportsAllRenderer);
 	addExample("FirstGpgpu",					&RunExample<FirstGpgpu>,					supportsAllRenderer);
-	addExample("InstancedCubes",				&RunExample<InstancedCubes>,				doesnotSupportOpenGLES2);
+	addExample("InstancedCubes",				&RunExample<InstancedCubes>,				doesNotSupportOpenGLES2);
 	addExample("IcosahedronTessellation",		&RunExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
 	#ifndef RENDERER_NO_RUNTIME
 		// Renderer runtime
@@ -125,6 +127,9 @@ ExampleRunner::ExampleRunner()
 		#endif
 		#ifndef RENDERER_NO_DIRECT3D11
 			m_availableRenderer.insert("Direct3D11");
+		#endif
+		#ifndef RENDERER_NO_DIRECT3D12
+			m_availableRenderer.insert("Direct3D12");
 		#endif
 	#endif
 	#ifndef RENDERER_NO_OPENGL

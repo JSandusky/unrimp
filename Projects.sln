@@ -51,6 +51,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExampleProjectCompiler", "E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{0C1E092E-E60F-4F34-B88D-3D0891AD4CA5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Direct3D12Renderer", "Renderer\RendererBackend\Direct3D12Renderer\Direct3D12Renderer.vcxproj", "{F5898A4D-8D1B-468E-8BD7-0C01516CE183}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_Dynamic|Win32 = Debug_Dynamic|Win32
@@ -147,6 +149,14 @@ Global
 		{A8D464E0-3B83-44B5-8F8F-80F251B57537}.Release_Dynamic|Win32.Build.0 = Release_Dynamic|Win32
 		{A8D464E0-3B83-44B5-8F8F-80F251B57537}.Release_Static|Win32.ActiveCfg = Release_Static|Win32
 		{A8D464E0-3B83-44B5-8F8F-80F251B57537}.Release_Static|Win32.Build.0 = Release_Static|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Debug_Dynamic|Win32.ActiveCfg = Debug_Dynamic|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Debug_Dynamic|Win32.Build.0 = Debug_Dynamic|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Debug_Static|Win32.ActiveCfg = Debug_Static|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Debug_Static|Win32.Build.0 = Debug_Static|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Release_Dynamic|Win32.ActiveCfg = Release_Dynamic|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Release_Dynamic|Win32.Build.0 = Release_Dynamic|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Release_Static|Win32.ActiveCfg = Release_Static|Win32
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Release_Static|Win32.Build.0 = Release_Static|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -160,5 +170,6 @@ Global
 		{47156869-4788-4729-9B24-6B883DA2EB24} = {A7092446-3AC9-4A5E-AF7D-3BD29C30D2B2}
 		{8AC48118-9381-4BD5-A58A-717E7256FB05} = {0C1E092E-E60F-4F34-B88D-3D0891AD4CA5}
 		{A8D464E0-3B83-44B5-8F8F-80F251B57537} = {0C1E092E-E60F-4F34-B88D-3D0891AD4CA5}
+		{F5898A4D-8D1B-468E-8BD7-0C01516CE183} = {A7092446-3AC9-4A5E-AF7D-3BD29C30D2B2}
 	EndGlobalSection
 EndGlobal
