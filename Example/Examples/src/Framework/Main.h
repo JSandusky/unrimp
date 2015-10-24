@@ -58,8 +58,9 @@ int programEntryPoint(CmdLineArgs &args);
 			{
 				int result;
 				{
-					// uses internaly GetCommandline to fetch the commandline arguments
+					// Uses internally GetCommandline to fetch the command line arguments
 					CmdLineArgs arguments;
+
 					// Call the platform independent program entry point
 					result = programEntryPoint(arguments);
 				}
@@ -81,8 +82,9 @@ int programEntryPoint(CmdLineArgs &args);
 			{
 				int result;
 				{
-					// uses internaly GetCommandline to fetch the commandline arguments
+					// Uses internally GetCommandline to fetch the command line arguments
 					CmdLineArgs arguments;
+
 					// Call the platform independent program entry point
 					result = programEntryPoint(arguments);
 				}
@@ -103,6 +105,7 @@ int programEntryPoint(CmdLineArgs &args);
 	int main(int argc, char **argv)
 	{
 		CmdLineArgs arguments(argc, argv);
+
 		// Call the platform independent program entry point
 		return programEntryPoint(arguments);
 	}

@@ -100,7 +100,7 @@ void FirstMesh::onInitialization()
 				catch (const std::exception& e)
 				{
 					const char* text = e.what();
-					int ii = 0;
+					text = text;
 				}
 			}
 		}

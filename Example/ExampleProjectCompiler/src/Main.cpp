@@ -46,12 +46,11 @@ int programEntryPoint()
 		//	project->compileAllAssets("Direct3D9_30");
 			project->compileAllAssets("Direct3D11_50");
 		//	project->compileAllAssets("OpenGLES2_100");
-			int ii = 0;
 		}
 		catch (const std::exception& e)
 		{
 			const char* text = e.what();
-			int ii = 0;
+			text = text;
 		}
 		delete project;
 	}

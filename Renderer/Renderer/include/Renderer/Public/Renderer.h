@@ -105,6 +105,8 @@ namespace Renderer
 			#ifndef NULL_HANDLE
 				#define NULL_HANDLE 0
 			#endif
+			#define FORCEINLINE __forceinline
+			#define NOP __nop()
 		#elif LINUX
 			#if (__GNUC__ == 4 && __GNUC_MINOR__ == 5 && __GNUC_PATCHLEVEL__ < 3)
 				#error "Due to a bug in GCC 4.5.x ... 4.5.2 this GCC version is not supported. Please use a newer or older GCC version instead."
@@ -129,6 +131,8 @@ namespace Renderer
 			#ifndef NULL_HANDLE
 				#define NULL_HANDLE 0
 			#endif
+			#define FORCEINLINE __attribute__((always_inline))
+			#define NOP
 		#else
 			#error "Unsupported platform"
 		#endif

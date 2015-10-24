@@ -170,8 +170,6 @@ namespace RendererRuntime
 				}
 
 				// Iterate through all characters of the text to draw
-				float penAdvanceX = 0.0f;
-				float penAdvanceY = 0.0f;
 				const char *textEnd = text + strlen(text);
 				const char *currentText = text;
 				for (; currentText < textEnd; ++currentText)

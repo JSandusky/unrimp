@@ -500,7 +500,7 @@ namespace RendererRuntime
 
 
 
-					uint8_t* tempData = nullptr;	// Used when "DDS_LINEARSIZE" is set
+					//uint8_t* tempData = nullptr;	// Used when "DDS_LINEARSIZE" is set
 					for (uint32_t face = 0; face < numberOfFaces; ++face)
 					{
 						// Load in all mipmaps

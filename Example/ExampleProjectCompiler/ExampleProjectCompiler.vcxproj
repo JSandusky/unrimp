@@ -146,11 +146,6 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
       <Command>md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "..\..\External\Windows_x86\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\..\External\Windows_x86\VisualStudio\bin\msvcp140.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\..\External\Windows_x86\VisualStudio\bin\vcruntime140.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\..\External\Windows_x86\VisualStudio\bin\appcrt140.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\..\External\Windows_x86\VisualStudio\bin\desktopcrt140.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -167,7 +162,6 @@ copy "..\..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\..\bin\$(Pl
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -210,7 +204,6 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -238,11 +231,6 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
       <Command>md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "..\..\External\Windows_x86\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)_dynamic\"
-copy "..\..\External\Windows_x86\VisualStudio\bin\msvcp140.dll" "..\..\bin\$(PlatformTarget)_dynamic\"
-copy "..\..\External\Windows_x86\VisualStudio\bin\vcruntime140.dll" "..\..\bin\$(PlatformTarget)_dynamic\"
-copy "..\..\External\Windows_x86\VisualStudio\bin\appcrt140.dll" "..\..\bin\$(PlatformTarget)_dynamic\"
-copy "..\..\External\Windows_x86\VisualStudio\bin\desktopcrt140.dll" "..\..\bin\$(PlatformTarget)_dynamic\"
-copy "..\..\External\Windows_x86\VisualStudio\bin\concrt140.dll" "..\..\bin\$(PlatformTarget)_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

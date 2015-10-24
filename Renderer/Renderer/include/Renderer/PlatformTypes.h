@@ -94,6 +94,44 @@
 
 
 //[-------------------------------------------------------]
+//[ C++ compiler keywords                                 ]
+//[-------------------------------------------------------]
+#ifdef WIN32
+	/**
+	*  @brief
+	*    Force the compiler to inline something
+	*
+	*  @note
+	*    - Do only use this when you really have to, usually it's best to let the compiler decide by using the standard keyword "inline"
+	*/
+	#define FORCEINLINE __forceinline
+
+	/**
+	*  @brief
+	*    No operation macro ("_asm nop"/"__nop()")
+	*/
+	#define NOP __nop()
+#elif LINUX
+	/**
+	*  @brief
+	*    Force the compiler to inline something
+	*
+	*  @note
+	*    - Do only use this when you really have to, usually it's best to let the compiler decide by using the standard keyword "inline"
+	*/
+	#define FORCEINLINE __attribute__((always_inline))
+
+	/**
+	*  @brief
+	*    No operation macro ("_asm nop"/__nop())
+	*/
+	#define NOP __nop()	// TODO(co) This will probably not work, when it's time for Unix ports, review this
+#else
+	#error "Unsupported platform"
+#endif
+
+
+//[-------------------------------------------------------]
 //[ Data types                                            ]
 //[-------------------------------------------------------]
 #ifdef WIN32

@@ -29,19 +29,19 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-// Set Windows version to Windows XP
+// Set Windows version to Windows Vista (0x0600), we don't support Windows XP (0x0501)
 #ifdef WINVER
 	#undef WINVER
 #endif
-#define WINVER			0x0501
+#define WINVER			0x0600
 #ifdef _WIN32_WINNT
 	#undef _WIN32_WINNT
 #endif
-#define _WIN32_WINNT	0x0501
+#define _WIN32_WINNT	0x0600
 
 // Exclude some stuff from "windows.h" to speed up compilation a bit
-#ifndef WIN32_LEAN_AND_MEAN
-	#define WIN32_LEAN_AND_MEAN
+#ifndef NOCRYPT
+	#define NOCRYPT
 #endif
 #ifndef NOGDICAPMASKS
 	#define NOGDICAPMASKS
