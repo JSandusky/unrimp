@@ -14,6 +14,7 @@
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)_dynamic\Examples.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)\bin\$(PlatformTarget)_dynamic\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>FirstMesh -r Direct3D11</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)d_static\ExamplesStaticD.exe</LocalDebuggerCommand>

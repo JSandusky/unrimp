@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22310.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "Renderer\Renderer\Renderer.vcxproj", "{625483C5-43B6-47AB-BD4F-099A0B091768}"
 EndProject
@@ -43,6 +43,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Examples", "Example\Example
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExampleProjectCompiler", "Example\ExampleProjectCompiler\ExampleProjectCompiler.vcxproj", "{A8D464E0-3B83-44B5-8F8F-80F251B57537}"
+	ProjectSection(ProjectDependencies) = postProject
+		{92C1761F-2670-4E3F-B26B-F317740CABA0} = {92C1761F-2670-4E3F-B26B-F317740CABA0}
+		{BC90A670-6608-479F-88A4-3F64CE7823E1} = {BC90A670-6608-479F-88A4-3F64CE7823E1}
+		{625483C5-43B6-47AB-BD4F-099A0B091768} = {625483C5-43B6-47AB-BD4F-099A0B091768}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{0C1E092E-E60F-4F34-B88D-3D0891AD4CA5}"
 EndProject
