@@ -28,6 +28,7 @@
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
+
 	#pragma warning(disable: 4127)	// warning C4127: conditional expression is constant
 	#pragma warning(disable: 4244)	// warning C4244: 'argument': conversion from '<x>' to '<y>', possible loss of data
 	#pragma warning(disable: 4251)	// warning C4251: '<x>': class '<y>' needs to have dll-interface to be used by clients of class '<x>'
@@ -37,6 +38,7 @@
 	#pragma warning(disable: 4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
 	#pragma warning(disable: 4619)	// warning C4619: #pragma warning: there is no warning number '<x>'
 	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+
 	#define POCO_NO_UNWINDOWS
 	#include <Poco/Path.h>
 #pragma warning(pop)
@@ -67,12 +69,21 @@ namespace RendererToolkit
 				// Nothing here
 			}
 
+			FileWatchListener(const FileWatchListener&) = delete;
+
+			virtual ~FileWatchListener()
+			{
+				// Nothing here
+			}
+
+			FileWatchListener& operator=(const FileWatchListener&) = delete;
+
 
 		//[-------------------------------------------------------]
 		//[ Public virtual FW::FileWatchListener methods          ]
 		//[-------------------------------------------------------]
 		public:
-			void handleFileAction(FW::WatchID watchId, const FW::String& directory, const FW::String& filename, FW::Action action) override
+			void handleFileAction(FW::WatchID, const FW::String&, const FW::String& filename, FW::Action action) override
 			{
 				if (FW::Action::Modified == action)
 				{
@@ -125,10 +136,9 @@ namespace RendererToolkit
 		mProjectImpl(projectImpl),
 		mRendererRuntime(rendererRuntime),
 		mRendererTarget(rendererTarget),
-		mShutdownThread(false),
-		mThread(&ProjectAssetMonitor::threadWorker, this)
+		mShutdownThread(false)
 	{
-		// Nothing here
+		mThread = std::thread(&ProjectAssetMonitor::threadWorker, this);
 	}
 
 	ProjectAssetMonitor::~ProjectAssetMonitor()

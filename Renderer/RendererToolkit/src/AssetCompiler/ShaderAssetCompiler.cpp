@@ -211,7 +211,7 @@ namespace RendererToolkit
 			Poco::JSON::Object::Ptr jsonShaderTechniqueTagsObject = jsonShaderTechniqueObject->get("Tags").extract<Poco::JSON::Object::Ptr>();
 			std::string tagTest = jsonShaderTechniqueTagsObject->optValue<std::string>("Test", "");
 			std::string sourceCode = jsonShaderTechniqueObject->optValue<std::string>("SourceCode", "");
-			int i = 0;
+			NOP;
 
 		}
 

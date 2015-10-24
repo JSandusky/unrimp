@@ -69,10 +69,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	ProjectImpl::ProjectImpl() :
 		mProjectAssetMonitor(nullptr),
-		mShutdownThread(false),
-		mThread(&ProjectImpl::threadWorker, this)
+		mShutdownThread(false)
 	{
-		// Nothing here
+		mThread = std::thread(&ProjectImpl::threadWorker, this);
 	}
 
 	ProjectImpl::~ProjectImpl()
@@ -400,7 +399,7 @@ namespace RendererToolkit
 		{
 			// TODO(co) Implement me
 		}
-		int i = 0;
+		NOP;
 	}
 
 

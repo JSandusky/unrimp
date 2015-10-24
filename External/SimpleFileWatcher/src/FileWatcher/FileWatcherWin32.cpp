@@ -24,6 +24,8 @@
 
 #if FILEWATCHER_PLATFORM == FILEWATCHER_PLATFORM_WIN32
 
+#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+
 #define _WIN32_WINNT 0x0550
 #include <windows.h>
 
@@ -85,7 +87,7 @@ namespace FW
 #			else
 				{
 					int count = WideCharToMultiByte(CP_ACP, 0, pNotify->FileName,
-						pNotify->FileNameLength / sizeof(WCHAR),
+						static_cast<int>(pNotify->FileNameLength / sizeof(WCHAR)),
 						szFile, MAX_PATH - 1, NULL, NULL);
 					szFile[count] = TEXT('\0');
 				}
@@ -260,6 +262,8 @@ namespace FW
 		case FILE_ACTION_MODIFIED:
 			fwAction = Actions::Modified;
 			break;
+		default:
+			return;
 		};
 
 		watch->mFileWatchListener->handleFileAction(watch->mWatchid, watch->mDirName, filename, fwAction);

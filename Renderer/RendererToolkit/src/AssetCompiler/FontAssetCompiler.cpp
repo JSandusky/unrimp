@@ -25,9 +25,14 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-#include <ftglyph.h>
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+
+	#include <ft2build.h>
+	#include FT_FREETYPE_H
+	#include <ftglyph.h>
+#pragma warning(pop)
 
 #include <memory>
 #include <fstream>
