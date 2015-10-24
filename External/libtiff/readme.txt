@@ -1,3 +1,3 @@
-libtiff 4.0.3
+libtiff 4.0.6
 - License: "BSD-like licence", see "COPYRIGHT"
-- Online: http://gnuwin32.sourceforge.net/packages/tiff.htm
+- Online: http://www.remotesensing.org/libtiff/
