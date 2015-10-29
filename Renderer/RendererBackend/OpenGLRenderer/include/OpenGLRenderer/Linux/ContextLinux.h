@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_CONTEXTLINUX_H__
-#define __OPENGLRENDERER_CONTEXTLINUX_H__
 
 
 //[-------------------------------------------------------]
@@ -176,9 +174,3 @@ namespace OpenGLRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Linux/ContextLinux.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_CONTEXTLINUX_H__

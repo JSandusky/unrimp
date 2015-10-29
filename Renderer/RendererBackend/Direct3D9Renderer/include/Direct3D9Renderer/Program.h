@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D9RENDERER_PROGRAM_H__
-#define __DIRECT3D9RENDERER_PROGRAM_H__
 
 
 //[-------------------------------------------------------]
@@ -140,9 +138,3 @@ namespace Direct3D9Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D9Renderer/Program.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D9RENDERER_PROGRAM_H__

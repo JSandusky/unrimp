@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __NULLRENDERER_TEXTURECOLLECTION_H__
-#define __NULLRENDERER_TEXTURECOLLECTION_H__
 
 
 //[-------------------------------------------------------]
@@ -106,9 +104,3 @@ namespace NullRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // NullRenderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __NULLRENDERER_TEXTURECOLLECTION_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_FRAMEBUFFER_H__
-#define __OPENGLRENDERER_FRAMEBUFFER_H__
 
 
 //[-------------------------------------------------------]
@@ -149,9 +147,3 @@ namespace OpenGLRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Framebuffer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_FRAMEBUFFER_H__

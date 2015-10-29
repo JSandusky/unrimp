@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D11RENDERER_VERTEXBUFFER_H__
-#define __DIRECT3D11RENDERER_VERTEXBUFFER_H__
 
 
 //[-------------------------------------------------------]
@@ -123,9 +121,3 @@ namespace Direct3D11Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/VertexBuffer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D11RENDERER_VERTEXBUFFER_H__

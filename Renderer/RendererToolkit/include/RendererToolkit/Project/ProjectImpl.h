@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERTOOLKIT_PROJECTIMPL_H__
-#define __RENDERERTOOLKIT_PROJECTIMPL_H__
 
 
 //[-------------------------------------------------------]
@@ -162,9 +160,3 @@ namespace RendererToolkit
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/Project/ProjectImpl.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERERTOOLKIT_PROJECTIMPL_H__

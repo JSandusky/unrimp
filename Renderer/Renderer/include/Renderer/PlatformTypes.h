@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_PLATFORM_TYPES_H__
-#define __RENDERER_PLATFORM_TYPES_H__
 
 
 //[-------------------------------------------------------]
@@ -354,9 +352,3 @@
 		#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...)
 	#endif
 #endif
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_PLATFORM_TYPES_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_IRESOURCE_H__
-#define __RENDERER_IRESOURCE_H__
 
 
 //[-------------------------------------------------------]
@@ -173,9 +171,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/IResource.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_IRESOURCE_H__

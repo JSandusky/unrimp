@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLES2RENDERER_EXTENSIONSRUNTIMELINKING_H__
-#define __OPENGLES2RENDERER_EXTENSIONSRUNTIMELINKING_H__
 
 
 //[-------------------------------------------------------]
@@ -352,9 +350,3 @@ namespace OpenGLES2Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/ExtensionsRuntimeLinking.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLES2RENDERER_EXTENSIONSRUNTIMELINKING_H__

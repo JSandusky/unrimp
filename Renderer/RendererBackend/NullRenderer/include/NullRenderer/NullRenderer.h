@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __NULLRENDERER_NULLRENDERER_H__
-#define __NULLRENDERER_NULLRENDERER_H__
 
 
 //[-------------------------------------------------------]
@@ -239,9 +237,3 @@ namespace NullRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // NullRenderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __NULLRENDERER_NULLRENDERER_H__

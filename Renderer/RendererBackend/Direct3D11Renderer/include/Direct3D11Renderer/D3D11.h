@@ -43,8 +43,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D11RENDERER_D3D11_H__
-#define __DIRECT3D11RENDERER_D3D11_H__
 
 
 //[-------------------------------------------------------]
@@ -1386,9 +1384,3 @@ struct ID3D11Query : public ID3D11Asynchronous
 	public:
 		virtual void STDMETHODCALLTYPE GetDesc(__out D3D11_QUERY_DESC *pDesc) = 0;
 };
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D11RENDERER_D3D11_H__

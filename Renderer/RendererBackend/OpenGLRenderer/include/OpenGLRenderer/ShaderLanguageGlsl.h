@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_SHADERLANGUAGE_GLSL_H__
-#define __OPENGLRENDERER_SHADERLANGUAGE_GLSL_H__
 
 
 //[-------------------------------------------------------]
@@ -124,9 +122,3 @@ namespace OpenGLRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_SHADERLANGUAGE_GLSL_H__

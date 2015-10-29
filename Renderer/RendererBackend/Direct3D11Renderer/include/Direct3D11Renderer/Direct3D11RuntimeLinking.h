@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D11RENDERER_DIRECT3D11RUNTIMELINKING_H__
-#define __DIRECT3D11RENDERER_DIRECT3D11RUNTIMELINKING_H__
 
 
 //[-------------------------------------------------------]
@@ -191,9 +189,3 @@ namespace Direct3D11Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Direct3D11Renderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D11RENDERER_DIRECT3D11RUNTIMELINKING_H__

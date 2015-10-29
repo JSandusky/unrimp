@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __NULLRENDERER_SHADERLANGUAGE_H__
-#define __NULLRENDERER_SHADERLANGUAGE_H__
 
 
 //[-------------------------------------------------------]
@@ -113,9 +111,3 @@ namespace NullRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // NullRenderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __NULLRENDERER_SHADERLANGUAGE_H__

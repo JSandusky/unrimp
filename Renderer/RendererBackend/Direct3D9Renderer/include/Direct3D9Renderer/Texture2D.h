@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D9RENDERER_TEXTURE2D_H__
-#define __DIRECT3D9RENDERER_TEXTURE2D_H__
 
 
 //[-------------------------------------------------------]
@@ -129,9 +127,3 @@ namespace Direct3D9Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D9Renderer/Texture2D.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D9RENDERER_TEXTURE2D_H__

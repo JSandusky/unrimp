@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_RUNTIME_PLATFORM_TYPES_H__
-#define __RENDERER_RUNTIME_PLATFORM_TYPES_H__
 
 
 // Contains only stuff which is not inside the public "Renderer/Public/Renderer.h"-header
@@ -160,9 +158,3 @@
 		#define RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF(outputString, ...)
 	#endif
 #endif
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_RUNTIME_PLATFORM_TYPES_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D10RENDERER_DIRECT3D10DEBUG_H__
-#define __DIRECT3D10RENDERER_DIRECT3D10DEBUG_H__
 
 
 //[-------------------------------------------------------]
@@ -46,9 +44,3 @@
 			return; \
 		}
 #endif
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D10RENDERER_DIRECT3D10DEBUG_H__

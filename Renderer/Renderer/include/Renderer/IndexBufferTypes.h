@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_INDEXBUFFER_TYPES_H__
-#define __RENDERER_INDEXBUFFER_TYPES_H__
 
 
 //[-------------------------------------------------------]
@@ -73,9 +71,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/IndexBufferTypes.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_INDEXBUFFER_TYPES_H__

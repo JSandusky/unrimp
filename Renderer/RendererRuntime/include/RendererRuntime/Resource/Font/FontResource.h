@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERRUNTIME_FONTRESOURCE_H__
-#define __RENDERERRUNTIME_FONTRESOURCE_H__
 
 
 //[-------------------------------------------------------]
@@ -324,9 +322,3 @@ namespace RendererRuntime
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Font/FontResource.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERERRUNTIME_FONTRESOURCE_H__

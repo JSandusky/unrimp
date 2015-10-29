@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_SWAPCHAIN_H__
-#define __OPENGLRENDERER_SWAPCHAIN_H__
 
 
 //[-------------------------------------------------------]
@@ -119,9 +117,3 @@ namespace OpenGLRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/SwapChain.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_SWAPCHAIN_H__

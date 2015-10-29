@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_IVERTEXARRAY_H__
-#define __RENDERER_IVERTEXARRAY_H__
 
 
 //[-------------------------------------------------------]
@@ -122,9 +120,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/IVertexArray.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_IVERTEXARRAY_H__

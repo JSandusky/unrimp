@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_ITEXTUREBUFFER_H__
-#define __RENDERER_ITEXTUREBUFFER_H__
 
 
 //[-------------------------------------------------------]
@@ -145,9 +143,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/ITextureBuffer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_ITEXTUREBUFFER_H__

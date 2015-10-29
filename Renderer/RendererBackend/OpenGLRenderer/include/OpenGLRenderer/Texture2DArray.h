@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_TEXTURE2DARRAY_H__
-#define __OPENGLRENDERER_TEXTURE2DARRAY_H__
 
 
 //[-------------------------------------------------------]
@@ -119,9 +117,3 @@ namespace OpenGLRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Texture2DArray.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_TEXTURE2DARRAY_H__

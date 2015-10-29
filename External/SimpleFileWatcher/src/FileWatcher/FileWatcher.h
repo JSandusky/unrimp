@@ -26,8 +26,6 @@
 	THE SOFTWARE.
 */
 
-#ifndef _FW_FILEWATCHER_H_
-#define _FW_FILEWATCHER_H_
 #pragma once
 
 #include <string>
@@ -142,5 +140,3 @@ namespace FW
 	};//class FileWatchListener
 
 };//namespace FW
-
-#endif//_FW_FILEWATCHER_H_

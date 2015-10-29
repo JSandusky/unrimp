@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_IVERTEXBUFFER_H__
-#define __RENDERER_IVERTEXBUFFER_H__
 
 
 //[-------------------------------------------------------]
@@ -118,9 +116,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/IVertexBuffer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_IVERTEXBUFFER_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D12RENDERER_DIRECT3D12RUNTIMELINKING_H__
-#define __DIRECT3D12RENDERER_DIRECT3D12RUNTIMELINKING_H__
 
 
 //[-------------------------------------------------------]
@@ -191,9 +189,3 @@ namespace Direct3D12Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Direct3D12Renderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D12RENDERER_DIRECT3D12RUNTIMELINKING_H__

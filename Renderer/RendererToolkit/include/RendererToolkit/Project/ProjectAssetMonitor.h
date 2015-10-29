@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERTOOLKIT_PROJECTASSETMONITOR_H__
-#define __RENDERERTOOLKIT_PROJECTASSETMONITOR_H__
 
 
 //[-------------------------------------------------------]
@@ -140,9 +138,3 @@ namespace RendererToolkit
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/Project/ProjectAssetMonitor.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERERTOOLKIT_PROJECTASSETMONITOR_H__

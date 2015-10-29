@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_TESSELATIONEVALUATIONSHADER_GLSL_H__
-#define __OPENGLRENDERER_TESSELATIONEVALUATIONSHADER_GLSL_H__
 
 
 //[-------------------------------------------------------]
@@ -121,9 +119,3 @@ namespace OpenGLRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/TessellationEvaluationShaderGlsl.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_TESSELATIONEVALUATIONSHADER_GLSL_H__

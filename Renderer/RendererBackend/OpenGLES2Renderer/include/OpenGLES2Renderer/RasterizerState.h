@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLES2RENDERER_RASTERIZERSTATE_H__
-#define __OPENGLES2RENDERER_RASTERIZERSTATE_H__
 
 
 //[-------------------------------------------------------]
@@ -117,9 +115,3 @@ namespace OpenGLES2Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/RasterizerState.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLES2RENDERER_RASTERIZERSTATE_H__

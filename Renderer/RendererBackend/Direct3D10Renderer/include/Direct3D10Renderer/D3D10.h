@@ -43,8 +43,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D10RENDERER_D3D10_H__
-#define __DIRECT3D10RENDERER_D3D10_H__
 
 
 //[-------------------------------------------------------]
@@ -1218,9 +1216,3 @@ struct ID3D10Query : public ID3D10Asynchronous
 	public:
 		virtual void STDMETHODCALLTYPE GetDesc(__out D3D10_QUERY_DESC *pDesc) = 0;
 };
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D10RENDERER_D3D10_H__

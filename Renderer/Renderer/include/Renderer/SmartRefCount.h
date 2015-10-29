@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_SMARTREFCOUNT_H__
-#define __RENDERER_SMARTREFCOUNT_H__
 
 
 //[-------------------------------------------------------]
@@ -237,9 +235,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/SmartRefCount.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_SMARTREFCOUNT_H__

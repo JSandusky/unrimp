@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_CONTEXTWINDOWS_H__
-#define __OPENGLRENDERER_CONTEXTWINDOWS_H__
 
 
 //[-------------------------------------------------------]
@@ -172,9 +170,3 @@ namespace OpenGLRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Windows/ContextWindows.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_CONTEXTWINDOWS_H__

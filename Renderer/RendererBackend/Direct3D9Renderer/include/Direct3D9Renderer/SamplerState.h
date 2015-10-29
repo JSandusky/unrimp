@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D9RENDERER_SAMPLERSTATE_H__
-#define __DIRECT3D9RENDERER_SAMPLERSTATE_H__
 
 
 //[-------------------------------------------------------]
@@ -123,9 +121,3 @@ namespace Direct3D9Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Direct3D9Renderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D9RENDERER_SAMPLERSTATE_H__

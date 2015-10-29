@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D10RENDERER_INDEXBUFFER_H__
-#define __DIRECT3D10RENDERER_INDEXBUFFER_H__
 
 
 //[-------------------------------------------------------]
@@ -136,9 +134,3 @@ namespace Direct3D10Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D10Renderer/IndexBuffer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D10RENDERER_INDEXBUFFER_H__

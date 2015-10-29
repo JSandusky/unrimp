@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_ISWAPCHAIN_H__
-#define __RENDERER_ISWAPCHAIN_H__
 
 
 //[-------------------------------------------------------]
@@ -163,9 +161,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/ISwapChain.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_ISWAPCHAIN_H__

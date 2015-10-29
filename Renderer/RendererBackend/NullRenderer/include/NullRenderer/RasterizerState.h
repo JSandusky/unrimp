@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __NULLRENDERER_RASTERIZERSTATE_H__
-#define __NULLRENDERER_RASTERIZERSTATE_H__
 
 
 //[-------------------------------------------------------]
@@ -86,9 +84,3 @@ namespace NullRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // NullRenderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __NULLRENDERER_RASTERIZERSTATE_H__

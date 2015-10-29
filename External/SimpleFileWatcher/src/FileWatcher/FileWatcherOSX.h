@@ -24,8 +24,6 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE.
 */
-#ifndef _FW_FILEWATCHEROSX_H_
-#define _FW_FILEWATCHEROSX_H_
 #pragma once
 
 #include "FileWatcherImpl.h"
@@ -85,5 +83,3 @@ namespace FW
 };//namespace FW
 
 #endif//__APPLE_CC__
-
-#endif//_FW_FILEWATCHEROSX_H_

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_OPENGLRUNTIMELINKING_H__
-#define __OPENGLRENDERER_OPENGLRUNTIMELINKING_H__
 
 
 //[-------------------------------------------------------]
@@ -255,9 +253,3 @@ namespace OpenGLRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_OPENGLRUNTIMELINKING_H__

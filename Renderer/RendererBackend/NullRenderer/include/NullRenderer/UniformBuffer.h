@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __NULLRENDERER_UNIFORMBUFFER_H__
-#define __NULLRENDERER_UNIFORMBUFFER_H__
 
 
 //[-------------------------------------------------------]
@@ -93,9 +91,3 @@ namespace NullRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // NullRenderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __NULLRENDERER_UNIFORMBUFFER_H__

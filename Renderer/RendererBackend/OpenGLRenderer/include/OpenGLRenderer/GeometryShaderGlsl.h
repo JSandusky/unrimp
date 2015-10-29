@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_GEOMETRYSHADER_GLSL_H__
-#define __OPENGLRENDERER_GEOMETRYSHADER_GLSL_H__
 
 
 //[-------------------------------------------------------]
@@ -164,9 +162,3 @@ namespace OpenGLRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/GeometryShaderGlsl.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_GEOMETRYSHADER_GLSL_H__

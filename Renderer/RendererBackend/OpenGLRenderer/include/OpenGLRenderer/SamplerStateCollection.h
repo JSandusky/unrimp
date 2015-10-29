@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_SAMPLERSTATECOLLECTION_H__
-#define __OPENGLRENDERER_SAMPLERSTATECOLLECTION_H__
 
 
 //[-------------------------------------------------------]
@@ -130,9 +128,3 @@ namespace OpenGLRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/SamplerStateCollection.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_SAMPLERSTATECOLLECTION_H__

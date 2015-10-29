@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_ISHADERLANGUAGE_H__
-#define __RENDERER_ISHADERLANGUAGE_H__
 
 
 //[-------------------------------------------------------]
@@ -555,9 +553,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/IShaderLanguage.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_ISHADERLANGUAGE_H__

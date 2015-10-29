@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLES2RENDERER_VERTEXARRAY_H__
-#define __OPENGLES2RENDERER_VERTEXARRAY_H__
 
 
 //[-------------------------------------------------------]
@@ -115,9 +113,3 @@ namespace OpenGLES2Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/VertexArray.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLES2RENDERER_VERTEXARRAY_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D12RENDERER_DEPTHSTENCILSTATE_H__
-#define __DIRECT3D12RENDERER_DEPTHSTENCILSTATE_H__
 
 
 //[-------------------------------------------------------]
@@ -122,9 +120,3 @@ namespace Direct3D12Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/DepthStencilState.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D12RENDERER_DEPTHSTENCILSTATE_H__

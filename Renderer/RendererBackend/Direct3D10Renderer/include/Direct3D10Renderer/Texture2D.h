@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D10RENDERER_TEXTURE2D_H__
-#define __DIRECT3D10RENDERER_TEXTURE2D_H__
 
 
 //[-------------------------------------------------------]
@@ -133,9 +131,3 @@ namespace Direct3D10Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D10Renderer/Texture2D.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D10RENDERER_TEXTURE2D_H__

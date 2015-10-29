@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_TEXTURE_TYPES_H__
-#define __RENDERER_TEXTURE_TYPES_H__
 
 
 //[-------------------------------------------------------]
@@ -169,9 +167,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/TextureTypes.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_TEXTURE_TYPES_H__

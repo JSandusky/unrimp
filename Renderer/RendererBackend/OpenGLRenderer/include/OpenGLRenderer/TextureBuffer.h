@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_TEXTUREBUFFER_H__
-#define __OPENGLRENDERER_TEXTUREBUFFER_H__
 
 
 //[-------------------------------------------------------]
@@ -123,9 +121,3 @@ namespace OpenGLRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/TextureBuffer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_TEXTUREBUFFER_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_UNIFORMBUFFER_H__
-#define __OPENGLRENDERER_UNIFORMBUFFER_H__
 
 
 //[-------------------------------------------------------]
@@ -133,9 +131,3 @@ namespace OpenGLRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/UniformBuffer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_UNIFORMBUFFER_H__

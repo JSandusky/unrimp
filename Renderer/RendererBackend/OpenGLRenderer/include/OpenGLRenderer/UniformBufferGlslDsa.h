@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_UNIFORMBUFFER_GLSL_DSA_H__
-#define __OPENGLRENDERER_UNIFORMBUFFER_GLSL_DSA_H__
 
 
 //[-------------------------------------------------------]
@@ -92,9 +90,3 @@ namespace OpenGLRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_UNIFORMBUFFER_GLSL_DSA_H__

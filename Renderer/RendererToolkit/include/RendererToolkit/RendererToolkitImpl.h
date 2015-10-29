@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERTOOLKIT_RENDERERTOOLKITIMPL_H__
-#define __RENDERERTOOLKIT_RENDERERTOOLKITIMPL_H__
 
 
 //[-------------------------------------------------------]
@@ -122,9 +120,3 @@ namespace RendererToolkit
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/RendererToolkitImpl.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERERTOOLKIT_RENDERERTOOLKITIMPL_H__

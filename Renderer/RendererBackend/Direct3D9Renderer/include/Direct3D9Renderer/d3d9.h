@@ -36,8 +36,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D9RENDERER_D3D9_H__
-#define __DIRECT3D9RENDERER_D3D9_H__
 
 
 //[-------------------------------------------------------]
@@ -1161,9 +1159,3 @@ DECLARE_INTERFACE_(IDirect3DSwapChain9, IUnknown)
 	STDMETHOD(GetDevice)(THIS_ IDirect3DDevice9** ppDevice) PURE;
 	STDMETHOD(GetPresentParameters)(THIS_ D3DPRESENT_PARAMETERS* pPresentationParameters) PURE;
 };
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D9RENDERER_D3D9_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_IRENDERTARGET_H__
-#define __RENDERER_IRENDERTARGET_H__
 
 
 //[-------------------------------------------------------]
@@ -133,9 +131,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/IRenderTarget.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_IRENDERTARGET_H__

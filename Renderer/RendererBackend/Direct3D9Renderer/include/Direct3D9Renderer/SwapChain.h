@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D9RENDERER_SWAPCHAIN_H__
-#define __DIRECT3D9RENDERER_SWAPCHAIN_H__
 
 
 //[-------------------------------------------------------]
@@ -192,9 +190,3 @@ namespace Direct3D9Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D9Renderer/SwapChain.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D9RENDERER_SWAPCHAIN_H__

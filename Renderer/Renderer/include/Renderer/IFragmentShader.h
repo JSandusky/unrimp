@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_IFRAGMENTSHADER_H__
-#define __RENDERER_IFRAGMENTSHADER_H__
 
 
 //[-------------------------------------------------------]
@@ -115,9 +113,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/IFragmentShader.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_IFRAGMENTSHADER_H__

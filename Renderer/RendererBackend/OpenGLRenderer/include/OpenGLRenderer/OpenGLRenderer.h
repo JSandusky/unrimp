@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_OPENGLRENDERER_H__
-#define __OPENGLRENDERER_OPENGLRENDERER_H__
 
 
 //[-------------------------------------------------------]
@@ -287,9 +285,3 @@ namespace OpenGLRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/OpenGLRenderer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_OPENGLRENDERER_H__

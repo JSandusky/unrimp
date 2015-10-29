@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_ITEXTURECOLLECTION_H__
-#define __RENDERER_ITEXTURECOLLECTION_H__
 
 
 //[-------------------------------------------------------]
@@ -120,9 +118,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/ITextureCollection.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_ITEXTURECOLLECTION_H__

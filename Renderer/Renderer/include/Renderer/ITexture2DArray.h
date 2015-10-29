@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_ITEXTURE2DARRAY_H__
-#define __RENDERER_ITEXTURE2DARRAY_H__
 
 
 //[-------------------------------------------------------]
@@ -157,9 +155,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/ITexture2DArray.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_ITEXTURE2DARRAY_H__

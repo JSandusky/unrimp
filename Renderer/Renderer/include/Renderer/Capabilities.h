@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_CAPABILITIES_H__
-#define __RENDERER_CAPABILITIES_H__
 
 
 //[-------------------------------------------------------]
@@ -128,9 +126,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/Capabilities.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_CAPABILITIES_H__

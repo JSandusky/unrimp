@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __NULLRENDERER_TEXTURE2DARRAY_H__
-#define __NULLRENDERER_TEXTURE2DARRAY_H__
 
 
 //[-------------------------------------------------------]
@@ -92,9 +90,3 @@ namespace NullRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // NullRenderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __NULLRENDERER_TEXTURE2DARRAY_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_ITESSELLATIONCONTROLSHADER_H__
-#define __RENDERER_ITESSELLATIONCONTROLSHADER_H__
 
 
 //[-------------------------------------------------------]
@@ -115,9 +113,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/ITessellationControlShader.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_ITESSELLATIONCONTROLSHADER_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_ISAMPLERSTATE_H__
-#define __RENDERER_ISAMPLERSTATE_H__
 
 
 //[-------------------------------------------------------]
@@ -138,9 +136,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/ISamplerState.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_ISAMPLERSTATE_H__

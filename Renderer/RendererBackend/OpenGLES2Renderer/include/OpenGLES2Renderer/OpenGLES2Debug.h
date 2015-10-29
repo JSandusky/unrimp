@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLES2RENDERER_OPENGLES2DEBUG_H__
-#define __OPENGLES2RENDERER_OPENGLES2DEBUG_H__
 
 
 //[-------------------------------------------------------]
@@ -53,9 +51,3 @@
 			return; \
 		}
 #endif
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLES2RENDERER_OPENGLES2DEBUG_H__

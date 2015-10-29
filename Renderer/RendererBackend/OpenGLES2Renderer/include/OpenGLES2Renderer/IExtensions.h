@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLES2RENDERER_EXTENSIONS_H__
-#define __OPENGLES2RENDERER_EXTENSIONS_H__
 
 
 //[-------------------------------------------------------]
@@ -137,9 +135,3 @@ namespace OpenGLES2Renderer
 //[ Implementation includes                               ]
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/ExtensionsRuntimeLinking.h"	// Required in here because we define the OpenGL ES 2 extension functions for dynamic runtime linking
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLES2RENDERER_EXTENSIONS_H__

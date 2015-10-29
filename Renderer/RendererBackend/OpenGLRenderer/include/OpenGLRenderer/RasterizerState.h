@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_RASTERIZERSTATE_H__
-#define __OPENGLRENDERER_RASTERIZERSTATE_H__
 
 
 //[-------------------------------------------------------]
@@ -117,9 +115,3 @@ namespace OpenGLRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/RasterizerState.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_RASTERIZERSTATE_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_IBLENDSTATE_H__
-#define __RENDERER_IBLENDSTATE_H__
 
 
 //[-------------------------------------------------------]
@@ -138,9 +136,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/IBlendState.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_IBLENDSTATE_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_IDEPTHSTENCILSTATE_H__
-#define __RENDERER_IDEPTHSTENCILSTATE_H__
 
 
 //[-------------------------------------------------------]
@@ -138,9 +136,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/IDepthStencilState.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_IDEPTHSTENCILSTATE_H__

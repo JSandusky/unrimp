@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERERRUNTIME_IRENDERERRUNTIME_H__
-#define __RENDERERRUNTIME_IRENDERERRUNTIME_H__
 
 
 //[-------------------------------------------------------]
@@ -273,9 +271,3 @@ namespace RendererRuntime
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/IRendererRuntime.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERERRUNTIME_IRENDERERRUNTIME_H__

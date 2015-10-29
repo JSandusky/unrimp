@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_VERTEXARRAY_NOVAO_H__
-#define __OPENGLRENDERER_VERTEXARRAY_NOVAO_H__
 
 
 //[-------------------------------------------------------]
@@ -119,9 +117,3 @@ namespace OpenGLRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_VERTEXARRAY_NOVAO_H__

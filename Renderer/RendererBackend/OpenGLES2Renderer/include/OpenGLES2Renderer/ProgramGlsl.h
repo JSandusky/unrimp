@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLES2RENDERER_PROGRAM_GLSL_H__
-#define __OPENGLES2RENDERER_PROGRAM_GLSL_H__
 
 
 //[-------------------------------------------------------]
@@ -94,9 +92,3 @@ namespace OpenGLES2Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLES2Renderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLES2RENDERER_PROGRAM_GLSL_H__

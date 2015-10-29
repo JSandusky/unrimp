@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_IUNIFORMBUFFER_H__
-#define __RENDERER_IUNIFORMBUFFER_H__
 
 
 //[-------------------------------------------------------]
@@ -144,9 +142,3 @@ namespace Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Renderer/IUniformBuffer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_IUNIFORMBUFFER_H__

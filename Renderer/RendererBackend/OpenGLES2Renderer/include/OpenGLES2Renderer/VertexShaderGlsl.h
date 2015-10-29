@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLES2RENDERER_VERTEXSHADER_GLSL_H__
-#define __OPENGLES2RENDERER_VERTEXSHADER_GLSL_H__
 
 
 //[-------------------------------------------------------]
@@ -121,9 +119,3 @@ namespace OpenGLES2Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/VertexShaderGlsl.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLES2RENDERER_VERTEXSHADER_GLSL_H__

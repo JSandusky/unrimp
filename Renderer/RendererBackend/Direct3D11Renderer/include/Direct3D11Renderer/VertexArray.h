@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D11RENDERER_VERTEXARRAY_H__
-#define __DIRECT3D11RENDERER_VERTEXARRAY_H__
 
 
 //[-------------------------------------------------------]
@@ -150,9 +148,3 @@ namespace Direct3D11Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/VertexArray.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D11RENDERER_VERTEXARRAY_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D11RENDERER_SHADERLANGUAGE_H__
-#define __DIRECT3D11RENDERER_SHADERLANGUAGE_H__
 
 
 //[-------------------------------------------------------]
@@ -103,9 +101,3 @@ namespace Direct3D11Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Direct3D11Renderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D11RENDERER_SHADERLANGUAGE_H__

@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLES2RENDERER_SAMPLERSTATECOLLECTION_H__
-#define __OPENGLES2RENDERER_SAMPLERSTATECOLLECTION_H__
 
 
 //[-------------------------------------------------------]
@@ -130,9 +128,3 @@ namespace OpenGLES2Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/SamplerStateCollection.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLES2RENDERER_SAMPLERSTATECOLLECTION_H__

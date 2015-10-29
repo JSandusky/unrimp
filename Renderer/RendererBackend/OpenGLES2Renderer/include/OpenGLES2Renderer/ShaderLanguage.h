@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLES2RENDERER_SHADERLANGUAGE_H__
-#define __OPENGLES2RENDERER_SHADERLANGUAGE_H__
 
 
 //[-------------------------------------------------------]
@@ -128,9 +126,3 @@ namespace OpenGLES2Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/ShaderLanguage.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLES2RENDERER_SHADERLANGUAGE_H__

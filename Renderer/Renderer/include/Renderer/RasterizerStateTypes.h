@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_RASTERIZERSTATE_TYPES_H__
-#define __RENDERER_RASTERIZERSTATE_TYPES_H__
 
 
 //[-------------------------------------------------------]
@@ -102,9 +100,3 @@ namespace Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Renderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_RASTERIZERSTATE_TYPES_H__

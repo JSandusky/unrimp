@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLRENDERER_OPENGLDEBUG_H__
-#define __OPENGLRENDERER_OPENGLDEBUG_H__
 
 
 //[-------------------------------------------------------]
@@ -46,9 +44,3 @@
 			return; \
 		}
 #endif
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLRENDERER_OPENGLDEBUG_H__

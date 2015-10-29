@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __RENDERER_WINDOWSHEADER_H__
-#define __RENDERER_WINDOWSHEADER_H__
 
 
 //[-------------------------------------------------------]
@@ -112,9 +110,3 @@ __pragma(warning(pop))
 
 // Get rid of some nasty OS macros
 #undef max
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __RENDERER_WINDOWSHEADER_H__

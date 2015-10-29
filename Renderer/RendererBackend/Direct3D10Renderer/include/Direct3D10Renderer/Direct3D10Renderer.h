@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D10RENDERER_DIRECT3D10RENDERER_H__
-#define __DIRECT3D10RENDERER_DIRECT3D10RENDERER_H__
 
 
 //[-------------------------------------------------------]
@@ -262,9 +260,3 @@ namespace Direct3D10Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D10Renderer/Direct3D10Renderer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D10RENDERER_DIRECT3D10RENDERER_H__

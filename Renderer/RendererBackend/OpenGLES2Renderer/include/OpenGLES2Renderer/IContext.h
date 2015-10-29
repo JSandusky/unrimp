@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __OPENGLES2RENDERER_CONTEXT_H__
-#define __OPENGLES2RENDERER_CONTEXT_H__
 
 
 //[-------------------------------------------------------]
@@ -265,9 +263,3 @@ namespace OpenGLES2Renderer
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/IContext.inl"
 #include "OpenGLES2Renderer/ContextRuntimeLinking.h"	// Required in here because we redefine the OpenGL ES 2 functions for dynamic runtime linking
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __OPENGLES2RENDERER_CONTEXT_H__

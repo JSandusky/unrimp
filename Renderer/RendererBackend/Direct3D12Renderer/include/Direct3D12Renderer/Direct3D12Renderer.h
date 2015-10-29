@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D12RENDERER_DIRECT3D12RENDERER_H__
-#define __DIRECT3D12RENDERER_DIRECT3D12RENDERER_H__
 
 
 //[-------------------------------------------------------]
@@ -273,9 +271,3 @@ namespace Direct3D12Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Direct3D12Renderer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D12RENDERER_DIRECT3D12RENDERER_H__

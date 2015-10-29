@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D11RENDERER_DIRECT3D11RENDERER_H__
-#define __DIRECT3D11RENDERER_DIRECT3D11RENDERER_H__
 
 
 //[-------------------------------------------------------]
@@ -273,9 +271,3 @@ namespace Direct3D11Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/Direct3D11Renderer.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D11RENDERER_DIRECT3D11RENDERER_H__

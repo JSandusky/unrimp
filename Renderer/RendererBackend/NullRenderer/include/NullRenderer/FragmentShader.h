@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __NULLRENDERER_FRAGMENTSHADER_H__
-#define __NULLRENDERER_FRAGMENTSHADER_H__
 
 
 //[-------------------------------------------------------]
@@ -93,9 +91,3 @@ namespace NullRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // NullRenderer
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __NULLRENDERER_FRAGMENTSHADER_H__

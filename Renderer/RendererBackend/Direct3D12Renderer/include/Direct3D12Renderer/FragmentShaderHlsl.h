@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D12RENDERER_FRAGMENTSHADER_HLSL_H__
-#define __DIRECT3D12RENDERER_FRAGMENTSHADER_HLSL_H__
 
 
 //[-------------------------------------------------------]
@@ -134,9 +132,3 @@ namespace Direct3D12Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/FragmentShaderHlsl.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D12RENDERER_FRAGMENTSHADER_HLSL_H__

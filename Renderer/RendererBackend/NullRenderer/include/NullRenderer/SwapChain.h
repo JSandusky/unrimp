@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __NULLRENDERER_SWAPCHAIN_H__
-#define __NULLRENDERER_SWAPCHAIN_H__
 
 
 //[-------------------------------------------------------]
@@ -119,9 +117,3 @@ namespace NullRenderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "NullRenderer/SwapChain.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __NULLRENDERER_SWAPCHAIN_H__

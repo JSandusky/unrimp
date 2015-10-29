@@ -22,8 +22,6 @@
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
 #pragma once
-#ifndef __DIRECT3D11RENDERER_TEXTURECOLLECTION_H__
-#define __DIRECT3D11RENDERER_TEXTURECOLLECTION_H__
 
 
 //[-------------------------------------------------------]
@@ -139,9 +137,3 @@ namespace Direct3D11Renderer
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/TextureCollection.inl"
-
-
-//[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#endif // __DIRECT3D11RENDERER_TEXTURECOLLECTION_H__

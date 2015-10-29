@@ -24,8 +24,6 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 	THE SOFTWARE.
 */
-#ifndef _FW_FILEWATCHERIMPL_H_
-#define _FW_FILEWATCHERIMPL_H_
 #pragma once
 
 #include "FileWatcher.h"
@@ -75,5 +73,3 @@ namespace FW
 
 	};//end FileWatcherImpl
 };//namespace FW
-
-#endif//_FW_FILEWATCHERIMPL_H_
