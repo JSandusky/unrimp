@@ -37,12 +37,15 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Direct3D12Renderer &direct3D12Renderer, handle nativeWindowHandle) :
-		ISwapChain(direct3D12Renderer),
-		mDxgiSwapChain(nullptr),
-		mD3D12RenderTargetView(nullptr),
-		mD3D12DepthStencilView(nullptr)
+	SwapChain::SwapChain(Direct3D12Renderer &direct3D12Renderer, handle) :
+		ISwapChain(direct3D12Renderer)
+		// TODO(co) Direct3D 12 update
+	//	mDxgiSwapChain(nullptr),
+	//	mD3D12RenderTargetView(nullptr),
+	//	mD3D12DepthStencilView(nullptr)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Get the Direct3D 12 device instance
 		ID3D12Device *d3d12Device = direct3D12Renderer.getD3D12Device();
 
@@ -114,10 +117,13 @@ namespace Direct3D12Renderer
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("Swap chain");
 		#endif
+		*/
 	}
 
 	SwapChain::~SwapChain()
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "DXGI Overview - Destroying a Swap Chain" at MSDN http://msdn.microsoft.com/en-us/library/bb205075.aspx states
 		//   "You may not release a swap chain in full-screen mode because doing so may create thread contention (which will
 		//    cause DXGI to raise a non-continuable exception). Before releasing a swap chain, first switch to windowed mode
@@ -143,14 +149,17 @@ namespace Direct3D12Renderer
 			mDxgiSwapChain->Release();
 			mDxgiSwapChain = nullptr;
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void SwapChain::setDebugName(const char *name)
+	void SwapChain::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Assign a debug name to the DXGI swap chain
 			if (nullptr != mDxgiSwapChain)
@@ -179,14 +188,17 @@ namespace Direct3D12Renderer
 				mD3D12DepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getWidthAndHeight(uint32_t &, uint32_t &) const
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain)
 		{
@@ -229,6 +241,7 @@ namespace Direct3D12Renderer
 			width  = 0;
 			height = 0;
 		}
+		*/
 	}
 
 
@@ -237,6 +250,8 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	handle SwapChain::getNativeWindowHandle() const
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain)
 		{
@@ -247,22 +262,27 @@ namespace Direct3D12Renderer
 			// Return the native window handle
 			return reinterpret_cast<handle>(dxgiSwapChainDesc.OutputWindow);
 		}
-
+		*/
 		// Error!
 		return NULL_HANDLE;
 	}
 
 	void SwapChain::present()
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain)
 		{
 			mDxgiSwapChain->Present(0, 0);
 		}
+		*/
 	}
 
 	void SwapChain::resizeBuffers()
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain)
 		{
@@ -310,10 +330,13 @@ namespace Direct3D12Renderer
 				}
 			}
 		}
+		*/
 	}
 
 	bool SwapChain::getFullscreenState() const
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Window mode by default
 		BOOL fullscreen = FALSE;
 
@@ -325,23 +348,30 @@ namespace Direct3D12Renderer
 
 		// Done
 		return (fullscreen != FALSE);
+		*/
+		return false;
 	}
 
-	void SwapChain::setFullscreenState(bool fullscreen)
+	void SwapChain::setFullscreenState(bool)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain)
 		{
 			mDxgiSwapChain->SetFullscreenState(fullscreen, nullptr);
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void SwapChain::getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getSafeWidthAndHeight(uint32_t &, uint32_t &) const
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Get the Direct3D 12 swap chain description
 		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
 		mDxgiSwapChain->GetDesc(&dxgiSwapChainDesc);
@@ -367,10 +397,13 @@ namespace Direct3D12Renderer
 		// Write out the width and height
 		width  = static_cast<UINT>(swapChainWidth);
 		height = static_cast<UINT>(swapChainHeight);
+		*/
 	}
 
 	void SwapChain::createDirect3D12Views()
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Create a render target view
 		ID3D12Texture2D *d3d12Texture2DBackBuffer = nullptr;
 		HRESULT hResult = mDxgiSwapChain->GetBuffer(0, __uuidof(ID3D12Texture2D), reinterpret_cast<LPVOID*>(&d3d12Texture2DBackBuffer));
@@ -418,6 +451,7 @@ namespace Direct3D12Renderer
 				}
 			}
 		}
+		*/
 	}
 
 

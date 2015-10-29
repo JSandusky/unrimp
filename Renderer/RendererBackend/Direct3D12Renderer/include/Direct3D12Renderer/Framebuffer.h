@@ -33,8 +33,8 @@
 //[-------------------------------------------------------]
 //[ Forward declaration                                   ]
 //[-------------------------------------------------------]
-struct ID3D12RenderTargetView;
-struct ID3D12DepthStencilView;
+// struct ID3D12RenderTargetView;	// TODO(co) Direct3D 12
+// struct ID3D12DepthStencilView;	// TODO(co) Direct3D 12
 namespace Renderer
 {
 	class ITexture;
@@ -108,7 +108,8 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The Direct3D 12 render target views, can be a null pointer, do not release the returned instances unless you added an own reference to it
 		*/
-		inline ID3D12RenderTargetView **getD3D12RenderTargetViews() const;
+		// TODO(co) Direct3D 12
+		//inline ID3D12RenderTargetView **getD3D12RenderTargetViews() const;
 
 		/**
 		*  @brief
@@ -117,7 +118,8 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The Direct3D 12 depth stencil view, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D12DepthStencilView *getD3D12DepthStencilView() const;
+		// TODO(co) Direct3D 12
+		//inline ID3D12DepthStencilView *getD3D12DepthStencilView() const;
 
 
 	//[-------------------------------------------------------]
@@ -145,8 +147,9 @@ namespace Direct3D12Renderer
 		uint32_t			 mWidth;					///< The framebuffer width
 		uint32_t			 mHeight;					///< The framebuffer height
 		// Direct3D 12 part
-		ID3D12RenderTargetView **mD3D12RenderTargetViews;	///< The Direct3D 12 render target views (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "m_nNumberOfColorTextures" views in the provided C-array of pointers
-		ID3D12DepthStencilView  *mD3D12DepthStencilView;	///< The Direct3D 12 depth stencil view (we keep a reference to it), can be a null pointer
+		// TODO(co) Direct3D 12
+		//ID3D12RenderTargetView **mD3D12RenderTargetViews;	///< The Direct3D 12 render target views (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "m_nNumberOfColorTextures" views in the provided C-array of pointers
+		//ID3D12DepthStencilView  *mD3D12DepthStencilView;	///< The Direct3D 12 depth stencil view (we keep a reference to it), can be a null pointer
 
 
 	};

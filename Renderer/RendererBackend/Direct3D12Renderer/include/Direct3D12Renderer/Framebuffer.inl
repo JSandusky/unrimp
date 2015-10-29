@@ -33,6 +33,8 @@ namespace Direct3D12Renderer
 		return mNumberOfColorTextures;
 	}
 
+	// TODO(co) Direct3D 12
+	/*
 	inline ID3D12RenderTargetView **Framebuffer::getD3D12RenderTargetViews() const
 	{
 		return mD3D12RenderTargetViews;
@@ -42,6 +44,7 @@ namespace Direct3D12Renderer
 	{
 		return mD3D12DepthStencilView;
 	}
+	*/
 
 
 //[-------------------------------------------------------]

@@ -38,10 +38,12 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
-		IVertexBuffer(direct3D12Renderer),
-		mD3D12Buffer(nullptr)
+	VertexBuffer::VertexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t, const void *, Renderer::BufferUsage::Enum) :
+		IVertexBuffer(direct3D12Renderer)
+	//	mD3D12Buffer(nullptr)	// TODO(co) Direct3D 12 update
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Direct3D 12 buffer description
 		D3D12_BUFFER_DESC d3d12BufferDesc;
 		d3d12BufferDesc.ByteWidth           = numberOfBytes;
@@ -73,22 +75,28 @@ namespace Direct3D12Renderer
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("VBO");
 		#endif
+		*/
 	}
 
 	VertexBuffer::~VertexBuffer()
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != mD3D12Buffer)
 		{
 			mD3D12Buffer->Release();
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void VertexBuffer::setDebugName(const char *name)
+	void VertexBuffer::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 vertex buffer?
 			if (nullptr != mD3D12Buffer)
@@ -99,6 +107,7 @@ namespace Direct3D12Renderer
 				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 

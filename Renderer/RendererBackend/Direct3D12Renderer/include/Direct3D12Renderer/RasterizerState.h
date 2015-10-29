@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D12RasterizerState;
+// struct ID3D12RasterizerState;	// TODO(co) Direct3D 12
 namespace Renderer
 {
 	struct RasterizerState;
@@ -90,7 +90,8 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The Direct3D 12 rasterizer state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D12RasterizerState *getD3D12RasterizerState() const;
+		// TODO(co) Direct3D 12
+		//inline ID3D12RasterizerState *getD3D12RasterizerState() const;
 
 
 	//[-------------------------------------------------------]
@@ -104,7 +105,8 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D12RasterizerState *mD3D12RasterizerState;	///< Direct3D 12 rasterizer state, can be a null pointer
+		// TODO(co) Direct3D 12
+		// ID3D12RasterizerState *mD3D12RasterizerState;	///< Direct3D 12 rasterizer state, can be a null pointer
 
 
 	};

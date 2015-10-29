@@ -43,6 +43,9 @@ namespace Direct3D12Renderer
 	/**
 	*  @brief
 	*    Direct3D 12 runtime linking
+	*
+	*  @todo
+	*    - TODO(co) Looks like there's no "D3DX12", so we stick to "D3DX12" for now
 	*/
 	class Direct3D12RuntimeLinking
 	{
@@ -89,6 +92,15 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
+		*    Load the DXGI entry points
+		*
+		*  @return
+		*    "true" if all went fine, else "false"
+		*/
+		bool loadDxgiEntryPoints();
+
+		/**
+		*  @brief
 		*    Load the D3D12 entry points
 		*
 		*  @return
@@ -98,12 +110,12 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Load the D3DX12 entry points
+		*    Load the D3DX11 entry points
 		*
 		*  @return
 		*    "true" if all went fine, else "false"
 		*/
-		bool loadD3DX12EntryPoints();
+		bool loadD3DX11EntryPoints();
 
 		/**
 		*  @brief
@@ -119,14 +131,26 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		void *mDxgiSharedLibrary;			///< DXGI shared library, can be a null pointer
 		void *mD3D12SharedLibrary;			///< D3D12 shared library, can be a null pointer
-		void *mD3DX12SharedLibrary;			///< D3DX12 shared library, can be a null pointer
+		void *mD3DX11SharedLibrary;			///< D3DX11 shared library, can be a null pointer
 		void *mD3DCompilerSharedLibrary;	///< D3DCompiler shared library, can be a null pointer
 		bool  mEntryPointsRegistered;		///< Entry points successfully registered?
 		bool  mInitialized;					///< Already initialized?
 
 
 	};
+
+
+	//[-------------------------------------------------------]
+	//[ DXGI core functions                                   ]
+	//[-------------------------------------------------------]
+	#ifdef DIRECT3D12_DEFINERUNTIMELINKING
+		#define FNDEF_DXGI(retType, funcName, args) retType (WINAPI *funcPtr_##funcName) args
+	#else
+		#define FNDEF_DXGI(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
+	#endif
+	FNDEF_DXGI(HRESULT,	CreateDXGIFactory1,	(REFIID riid, _COM_Outptr_ void **ppFactory));
 
 
 	//[-------------------------------------------------------]
@@ -137,32 +161,32 @@ namespace Direct3D12Renderer
 	#else
 		#define FNDEF_D3D12(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
-	FNDEF_D3D12(HRESULT,	D3D12CreateDevice,	(__in_opt IDXGIAdapter *, D3D_DRIVER_TYPE, HMODULE, UINT, __in_ecount_opt( FeatureLevels ) CONST D3D_FEATURE_LEVEL *, UINT, UINT, __out_opt ID3D12Device **, __out_opt D3D_FEATURE_LEVEL *, __out_opt ID3D12DeviceContext **));
+	FNDEF_D3D12(HRESULT,	D3D12CreateDevice,	(_In_opt_ IUnknown* pAdapter, D3D_FEATURE_LEVEL MinimumFeatureLevel, _In_ REFIID riid, _COM_Outptr_opt_ void** ppDevice));
 
 
 	//[-------------------------------------------------------]
-	//[ D3DX12 functions                                      ]
+	//[ D3DX11 functions                                      ]
 	//[-------------------------------------------------------]
 	#ifdef DIRECT3D12_DEFINERUNTIMELINKING
-		#define FNDEF_D3DX12(retType, funcName, args) retType (WINAPI *funcPtr_##funcName) args
+		#define FNDEF_D3DX11(retType, funcName, args) retType (WINAPI *funcPtr_##funcName) args
 	#else
-		#define FNDEF_D3DX12(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
+		#define FNDEF_D3DX11(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
-	FNDEF_D3DX12(HRESULT,	D3DX12CompileFromMemory,	(LPCSTR, SIZE_T, LPCSTR, CONST D3D10_SHADER_MACRO *, LPD3D10INCLUDE, LPCSTR, LPCSTR, UINT, UINT, ID3DX12ThreadPump *, ID3D10Blob **, ID3D10Blob **, HRESULT *));
-	FNDEF_D3DX12(HRESULT,	D3DX12FilterTexture,		(ID3D12DeviceContext *, ID3D12Resource *, UINT, UINT));
+	FNDEF_D3DX11(HRESULT,	D3DX11CompileFromMemory,	(LPCSTR, SIZE_T, LPCSTR, CONST D3D10_SHADER_MACRO *, LPD3D10INCLUDE, LPCSTR, LPCSTR, UINT, UINT, ID3DX12ThreadPump *, ID3D10Blob **, ID3D10Blob **, HRESULT *));
+	// FNDEF_D3DX11(HRESULT,	D3DX11FilterTexture,		(ID3D12DeviceContext *, ID3D12Resource *, UINT, UINT));	// TODO(co) Direct3D 12 update
 
 
 	//[-------------------------------------------------------]
 	//[ D3DCompiler functions                                 ]
 	//[-------------------------------------------------------]
 	#ifdef DIRECT3D12_DEFINERUNTIMELINKING
-		#define FNDEF_D3DX12(retType, funcName, args) retType (WINAPI *funcPtr_##funcName) args
+		#define FNDEF_D3DX11(retType, funcName, args) retType (WINAPI *funcPtr_##funcName) args
 	#else
-		#define FNDEF_D3DX12(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
+		#define FNDEF_D3DX11(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
 	typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
 	typedef ID3D10Blob ID3DBlob;
-	FNDEF_D3DX12(HRESULT,	D3DCreateBlob,				(SIZE_T Size, ID3DBlob** ppBlob));
+	FNDEF_D3DX11(HRESULT,	D3DCreateBlob,				(SIZE_T Size, ID3DBlob** ppBlob));
 
 
 	//[-------------------------------------------------------]
@@ -172,14 +196,17 @@ namespace Direct3D12Renderer
 		#define FNPTR(name) funcPtr_##name
 	#endif
 
-	// Redirect D3D12* and D3DX12* function calls to funcPtr_D3D12* and funcPtr_D3DX12*
+	// Redirect D3D12* and D3DX11* function calls to funcPtr_D3D12* and funcPtr_D3DX11*
+
+	// DXGI
+	#define CreateDXGIFactory1	FNPTR(CreateDXGIFactory1)
 
 	// D3D12
 	#define D3D12CreateDevice	FNPTR(D3D12CreateDevice)
 
-	// D3DX12
-	#define D3DX12CompileFromMemory	FNPTR(D3DX12CompileFromMemory)
-	#define D3DX12FilterTexture		FNPTR(D3DX12FilterTexture)
+	// D3DX11
+	#define D3DX11CompileFromMemory	FNPTR(D3DX11CompileFromMemory)
+	// #define D3DX11FilterTexture		FNPTR(D3DX11FilterTexture)	// TODO(co) Direct3D 12 update
 
 	// D3DCompiler
 	#define D3DCreateBlob	FNPTR(D3DCreateBlob)

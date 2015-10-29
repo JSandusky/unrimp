@@ -38,10 +38,12 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
-		Renderer::IUniformBuffer(direct3D12Renderer),
-		mD3D12Buffer(nullptr)
+	UniformBuffer::UniformBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t, const void *, Renderer::BufferUsage::Enum) :
+		Renderer::IUniformBuffer(direct3D12Renderer)
+	//	mD3D12Buffer(nullptr)	// TODO(co) Direct3D 12 update
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// TODO(co) Uniform buffer byte alignment: Is it fine to support the user in here (ease of use) or is this 100% the responsibility of the user? (possible negative side effects)
 		// Check the given number of bytes, if we don't do this we might get told
 		//   "... the ByteWidth (value = <x>) must be a multiple of 16 and be less than or equal to 65536"
@@ -84,23 +86,29 @@ namespace Direct3D12Renderer
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("UBO");
 		#endif
+		*/
 	}
 
 	UniformBuffer::~UniformBuffer()
 	{
 		// Release the Direct3D 12 constant buffer
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != mD3D12Buffer)
 		{
 			mD3D12Buffer->Release();
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void UniformBuffer::setDebugName(const char *name)
+	void UniformBuffer::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 uniform buffer?
 			if (nullptr != mD3D12Buffer)
@@ -111,14 +119,17 @@ namespace Direct3D12Renderer
 				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
+	void UniformBuffer::copyDataFrom(uint32_t, const void *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Check resource pointers
 		if (nullptr != mD3D12Buffer && nullptr != data)
 		{
@@ -141,6 +152,7 @@ namespace Direct3D12Renderer
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(&getRenderer())
 		}
+		*/
 	}
 
 

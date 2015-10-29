@@ -40,18 +40,20 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D12Renderer &direct3D12Renderer, ID3DBlob &d3dBlob, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D12Renderer &direct3D12Renderer, ID3DBlob &, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D12Renderer),
-		mD3D12DeviceContext(direct3D12Renderer.getD3D12DeviceContext()),
+	//	mD3D12DeviceContext(direct3D12Renderer.getD3D12DeviceContext()),	// TODO(co) Direct3D 12 update
 		mIndexBuffer(indexBuffer),
-		mD3D12InputLayout(nullptr),
+	//	mD3D12InputLayout(nullptr),	// TODO(co) Direct3D 12 update
 		mNumberOfSlots(0),
-		mD3D12Buffers(nullptr),
+	//	mD3D12Buffers(nullptr),	// TODO(co) Direct3D 12 update
 		mStrides(nullptr),
 		mOffsets(nullptr),
 		mNumberOfVertexBuffers(numberOfAttributes),
 		mVertexBuffers(nullptr)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Acquire our Direct3D 12 device context reference
 		mD3D12DeviceContext->AddRef();
 
@@ -181,10 +183,13 @@ namespace Direct3D12Renderer
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("VAO");
 		#endif
+		*/
 	}
 
 	VertexArray::~VertexArray()
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Release the index buffer reference
 		if (nullptr != mIndexBuffer)
 		{
@@ -221,10 +226,13 @@ namespace Direct3D12Renderer
 
 		// Release our Direct3D 12 device context reference
 		mD3D12DeviceContext->Release();
+		*/
 	}
 
 	void VertexArray::setDirect3DIASetInputLayoutAndStreamSource() const
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Valid Direct3D 12 input layout?
 		if (nullptr != mD3D12InputLayout)
 		{
@@ -251,14 +259,17 @@ namespace Direct3D12Renderer
 			// Set the Direct3D 12 indices
 			mD3D12DeviceContext->IASetIndexBuffer(mIndexBuffer->getD3D12Buffer(), static_cast<DXGI_FORMAT>(mIndexBuffer->getDXGIFormat()), 0);
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void VertexArray::setDebugName(const char *name)
+	void VertexArray::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 input layout?
 			if (nullptr != mD3D12InputLayout)
@@ -269,6 +280,7 @@ namespace Direct3D12Renderer
 				mD3D12InputLayout->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 

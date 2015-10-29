@@ -39,13 +39,14 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	DepthStencilState::DepthStencilState(Direct3D12Renderer &direct3D12Renderer, const Renderer::DepthStencilState &depthStencilState) :
-		IDepthStencilState(direct3D12Renderer),
-		mD3D12DepthStencilState(nullptr)
+	DepthStencilState::DepthStencilState(Direct3D12Renderer &direct3D12Renderer, const Renderer::DepthStencilState &) :
+		IDepthStencilState(direct3D12Renderer)
+		// mD3D12DepthStencilState(nullptr)	// TODO(co) Direct3D 12
 	{
 		// Create the Direct3D 12 depth stencil state
 		// -> "Renderer::DepthStencilState" maps directly to Direct3D 10 & 11 && 12, do not change it
-		direct3D12Renderer.getD3D12Device()->CreateDepthStencilState(reinterpret_cast<const D3D12_DEPTH_STENCIL_DESC*>(&depthStencilState), &mD3D12DepthStencilState);
+		// TODO(co) Direct3D 12
+		// direct3D12Renderer.getD3D12Device()->CreateDepthStencilState(reinterpret_cast<const D3D12_DEPTH_STENCIL_DESC*>(&depthStencilState), &mD3D12DepthStencilState);
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
@@ -56,18 +57,23 @@ namespace Direct3D12Renderer
 	DepthStencilState::~DepthStencilState()
 	{
 		// Release the Direct3D 12 depth stencil state
+		// TODO(co) Direct3D 12
+		/*
 		if (nullptr != mD3D12DepthStencilState)
 		{
 			mD3D12DepthStencilState->Release();
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void DepthStencilState::setDebugName(const char *name)
+	void DepthStencilState::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 depth stencil state?
 			if (nullptr != mD3D12DepthStencilState)
@@ -78,6 +84,7 @@ namespace Direct3D12Renderer
 				mD3D12DepthStencilState->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 

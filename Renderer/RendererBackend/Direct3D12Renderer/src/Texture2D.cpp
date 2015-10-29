@@ -40,10 +40,12 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D12Renderer &direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage) :
-		ITexture2D(direct3D12Renderer, width, height),
-		mD3D12ShaderResourceViewTexture(nullptr)
+	Texture2D::Texture2D(Direct3D12Renderer &direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage::Enum) :
+		ITexture2D(direct3D12Renderer, width, height)
+	//	mD3D12ShaderResourceViewTexture(nullptr)	// TODO(co) Direct3D 12 update
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D12Renderer)
 
@@ -91,7 +93,8 @@ namespace Direct3D12Renderer
 					}
 
 					// Let Direct3D 12 generate the mipmaps for us automatically
-					D3DX12FilterTexture(direct3D12Renderer.getD3D12DeviceContext(), d3d12Texture2D, 0, D3DX12_DEFAULT);
+					// TODO(co) Direct3D 12 update
+					// D3DX12FilterTexture(direct3D12Renderer.getD3D12DeviceContext(), d3d12Texture2D, 0, D3DX12_DEFAULT);
 				}
 			}
 			else
@@ -160,22 +163,28 @@ namespace Direct3D12Renderer
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(&direct3D12Renderer)
+		*/
 	}
 
 	Texture2D::~Texture2D()
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != mD3D12ShaderResourceViewTexture)
 		{
 			mD3D12ShaderResourceViewTexture->Release();
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Texture2D::setDebugName(const char *name)
+	void Texture2D::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 shader resource view?
 			if (nullptr != mD3D12ShaderResourceViewTexture)
@@ -203,6 +212,7 @@ namespace Direct3D12Renderer
 				}
 			}
 		#endif
+		*/
 	}
 
 

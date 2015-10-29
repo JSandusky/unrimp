@@ -28,10 +28,13 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	// TODO(co) Direct3D 12
+	/*
 	inline ID3D12DepthStencilState *DepthStencilState::getD3D12DepthStencilState() const
 	{
 		return mD3D12DepthStencilState;
 	}
+	*/
 
 
 //[-------------------------------------------------------]

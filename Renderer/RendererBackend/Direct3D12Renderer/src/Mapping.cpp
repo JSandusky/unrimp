@@ -51,8 +51,10 @@ namespace Direct3D12Renderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	uint32_t Mapping::getDirect3D12UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum bufferUsage, uint32_t &cpuAccessFlags)
+	uint32_t Mapping::getDirect3D12UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum, uint32_t &)
 	{
+		// TODO(co) Direct3D 12
+		/*
 		// Direct3D 12 only supports a subset of the OpenGL usage indications
 		// -> See "D3D12_USAGE enumeration "-documentation at http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259%28v=vs.85%29.aspx
 		switch (bufferUsage)
@@ -79,6 +81,8 @@ namespace Direct3D12Renderer
 				cpuAccessFlags = 0;
 				return D3D12_USAGE_DEFAULT;
 		}
+		*/
+		return 0;
 	}
 
 	uint32_t Mapping::getDirect3D12Format(Renderer::IndexBufferFormat::Enum indexBufferFormat)

@@ -34,7 +34,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D12ShaderResourceView;
+//struct ID3D12ShaderResourceView;	// TODO(co) Direct3D 12 update
 namespace Direct3D12Renderer
 {
 	class Direct3D12Renderer;
@@ -101,7 +101,8 @@ namespace Direct3D12Renderer
 		*    - It's not recommended to manipulate the returned Direct3D 12 resource
 		*      view by e.g. assigning another Direct3D 12 resource to it
 		*/
-		inline ID3D12ShaderResourceView *getD3D12ShaderResourceView() const;
+		// TODO(co) Direct3D 12 update
+		//inline ID3D12ShaderResourceView *getD3D12ShaderResourceView() const;
 
 
 	//[-------------------------------------------------------]
@@ -115,7 +116,8 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D12ShaderResourceView *mD3D12ShaderResourceViewTexture;	///< Direct3D 12 shader resource view, can be a null pointer
+		// TODO(co) Direct3D 12 update
+		//ID3D12ShaderResourceView *mD3D12ShaderResourceViewTexture;	///< Direct3D 12 shader resource view, can be a null pointer
 
 
 	};

@@ -40,15 +40,16 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
+	Framebuffer::Framebuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **, Renderer::ITexture *depthStencilTexture) :
 		IFramebuffer(direct3D12Renderer),
 		mNumberOfColorTextures(numberOfColorTextures),
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(depthStencilTexture),
 		mWidth(UINT_MAX),
-		mHeight(UINT_MAX),
-		mD3D12RenderTargetViews(nullptr),
-		mD3D12DepthStencilView(nullptr)
+		mHeight(UINT_MAX)
+		// TODO(co) Direct3D 12
+		//mD3D12RenderTargetViews(nullptr),
+		//mD3D12DepthStencilView(nullptr)
 	{
 		// The Direct3D 12 "ID3D12DeviceContext::OMSetRenderTargets method"-documentation at MSDN http://msdn.microsoft.com/en-us/library/windows/desktop/ff476464%28v=vs.85%29.aspx
 		// says the following about the framebuffer width and height when using multiple render targets
@@ -56,6 +57,8 @@ namespace Direct3D12Renderer
 		// So, in here I use the smallest width and height as the size of the framebuffer and let Direct3D 12 handle the rest regarding errors.
 
 		// Add a reference to the used color textures
+		// TODO(co) Direct3D 12
+		/*
 		if (mNumberOfColorTextures > 0)
 		{
 			mColorTextures = new Renderer::ITexture*[mNumberOfColorTextures];
@@ -224,10 +227,13 @@ namespace Direct3D12Renderer
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("FBO");
 		#endif
+		*/
 	}
 
 	Framebuffer::~Framebuffer()
 	{
+		// TODO(co) Direct3D 12
+		/*
 		// Release the reference to the used color textures
 		if (nullptr != mD3D12RenderTargetViews)
 		{
@@ -273,14 +279,17 @@ namespace Direct3D12Renderer
 			// Release reference
 			mDepthStencilTexture->release();
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Framebuffer::setDebugName(const char *name)
+	void Framebuffer::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			{ // Assign a debug name to the Direct3D 12 render target view, do also add the index to the name
 				const size_t nameLength = strlen(name) + 5;	// Direct3D 12 supports 8 render targets ("D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT", so: One digit + one [ + one ] + one space + terminating zero = 5 characters)
@@ -306,6 +315,7 @@ namespace Direct3D12Renderer
 				mD3D12DepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 

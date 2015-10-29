@@ -33,11 +33,14 @@
 //[-------------------------------------------------------]
 //[ Forward declaration                                   ]
 //[-------------------------------------------------------]
+// TODO(co) Direct3D 12 update
 typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
 typedef ID3D10Blob ID3DBlob;
+/*
 struct ID3D12Buffer;
 struct ID3D12InputLayout;
 struct ID3D12DeviceContext;
+*/
 namespace Renderer
 {
 	struct VertexArrayAttribute;
@@ -102,7 +105,8 @@ namespace Direct3D12Renderer
 		*  @return
 		*    Direct3D 12 input layout instance, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D12InputLayout *getD3D12InputLayout() const;
+		// TODO(co) Direct3D 12 update
+		// inline ID3D12InputLayout *getD3D12InputLayout() const;
 
 		/**
 		*  @brief
@@ -122,12 +126,15 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D12DeviceContext	 *mD3D12DeviceContext;		///< The Direct3D 12 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
+		// TODO(co) Direct3D 12 update
+		//ID3D12DeviceContext	 *mD3D12DeviceContext;		///< The Direct3D 12 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
 		IndexBuffer			 *mIndexBuffer;				///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
-		ID3D12InputLayout	 *mD3D12InputLayout;		///< Direct3D 12 input layout, can be a null pointer
+		// TODO(co) Direct3D 12 update
+		//ID3D12InputLayout	 *mD3D12InputLayout;		///< Direct3D 12 input layout, can be a null pointer
 		// Direct3D 12 input slots
 		uint32_t			  mNumberOfSlots;			///< Number of used Direct3D 12 input slots (type "UINT" not used in here in order to keep the header slim)
-		ID3D12Buffer		**mD3D12Buffers;			///< Direct3D 12 vertex buffers, if "mD3D12InputLayout" is no null pointer this is no null pointer as well
+		// TODO(co) Direct3D 12 update
+		//ID3D12Buffer		**mD3D12Buffers;			///< Direct3D 12 vertex buffers, if "mD3D12InputLayout" is no null pointer this is no null pointer as well
 		uint32_t			 *mStrides;					///< Strides in bytes, if "mD3D12Buffers" is no null pointer this is no null pointer as well (type "UINT" not used in here in order to keep the header slim)
 		uint32_t			 *mOffsets;					///< Offsets in bytes, if "mD3D12Buffers" is no null pointer this is no null pointer as well (type "UINT" not used in here in order to keep the header slim)
 		// For proper vertex buffer reference counter behaviour

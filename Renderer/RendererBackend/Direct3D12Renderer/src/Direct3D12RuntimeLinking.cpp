@@ -44,8 +44,9 @@ namespace Direct3D12Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	Direct3D12RuntimeLinking::Direct3D12RuntimeLinking() :
+		mDxgiSharedLibrary(nullptr),
 		mD3D12SharedLibrary(nullptr),
-		mD3DX12SharedLibrary(nullptr),
+		mD3DX11SharedLibrary(nullptr),
 		mD3DCompilerSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
 		mInitialized(false)
@@ -57,13 +58,17 @@ namespace Direct3D12Renderer
 	{
 		// Destroy the shared library instances
 		#ifdef WIN32
+			if (nullptr != mDxgiSharedLibrary)
+			{
+				::FreeLibrary(static_cast<HMODULE>(mDxgiSharedLibrary));
+			}
 			if (nullptr != mD3D12SharedLibrary)
 			{
 				::FreeLibrary(static_cast<HMODULE>(mD3D12SharedLibrary));
 			}
-			if (nullptr != mD3DX12SharedLibrary)
+			if (nullptr != mD3DX11SharedLibrary)
 			{
-				::FreeLibrary(static_cast<HMODULE>(mD3DX12SharedLibrary));
+				::FreeLibrary(static_cast<HMODULE>(mD3DX11SharedLibrary));
 			}
 			if (nullptr != mD3DCompilerSharedLibrary)
 			{
@@ -86,8 +91,8 @@ namespace Direct3D12Renderer
 			// Load the shared libraries
 			if (loadSharedLibraries())
 			{
-				// Load the D3D12, D3DX12 and D3DCompiler entry points
-				mEntryPointsRegistered = (loadD3D12EntryPoints() && loadD3DX12EntryPoints() && loadD3DCompilerEntryPoints());
+				// Load the DXGI, D3D12, D3DX11 and D3DCompiler entry points
+				mEntryPointsRegistered = (loadDxgiEntryPoints() && loadD3D12EntryPoints() && loadD3DX11EntryPoints() && loadD3DCompilerEntryPoints());
 			}
 		}
 
@@ -101,36 +106,80 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	bool Direct3D12RuntimeLinking::loadSharedLibraries()
 	{
-		// TODO(co) Direct3D 12 update
 		// Load the shared library
 		#ifdef WIN32
-			mD3D12SharedLibrary = ::LoadLibraryExA("d3d12.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-			if (nullptr != mD3D12SharedLibrary)
+			mDxgiSharedLibrary = ::LoadLibraryExA("dxgi.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+			if (nullptr != mDxgiSharedLibrary)
 			{
-				mD3DX12SharedLibrary = ::LoadLibraryExA("d3dx12_43.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-				if (nullptr != mD3DX12SharedLibrary)
+				mD3D12SharedLibrary = ::LoadLibraryExA("d3d12.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+				if (nullptr != mD3D12SharedLibrary)
 				{
-					mD3DCompilerSharedLibrary = ::LoadLibraryExA("D3DCompiler_47.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-					if (nullptr == mD3DCompilerSharedLibrary)
+					mD3DX11SharedLibrary = ::LoadLibraryExA("d3dx11_43.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+					if (nullptr != mD3DX11SharedLibrary)
 					{
-						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to load in the shared library \"D3DCompiler_47.dll\"\n")
+						mD3DCompilerSharedLibrary = ::LoadLibraryExA("D3DCompiler_47.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+						if (nullptr == mD3DCompilerSharedLibrary)
+						{
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to load in the shared library \"D3DCompiler_47.dll\"\n")
+						}
+					}
+					else
+					{
+						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to load in the shared library \"d3dx11_43.dll\"\n")
 					}
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to load in the shared library \"d3dx12_43.dll\"\n")
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to load in the shared library \"d3d12.dll\"\n")
 				}
 			}
 			else
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to load in the shared library \"d3d12.dll\"\n")
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to load in the shared library \"dxgi.dll\"\n")
 			}
 		#else
 			#error "Unsupported platform"
 		#endif
 
 		// Done
-		return (nullptr != mD3D12SharedLibrary && nullptr != mD3DX12SharedLibrary && nullptr != mD3DCompilerSharedLibrary);
+		return (nullptr != mDxgiSharedLibrary && nullptr != mD3D12SharedLibrary && nullptr != mD3DX11SharedLibrary && nullptr != mD3DCompilerSharedLibrary);
+	}
+
+	bool Direct3D12RuntimeLinking::loadDxgiEntryPoints()
+	{
+		bool result = true;	// Success by default
+
+		// Define a helper macro
+		#ifdef WIN32
+			#define IMPORT_FUNC(funcName)																																			\
+				if (result)																																							\
+				{																																									\
+					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mDxgiSharedLibrary), #funcName);																			\
+					if (nullptr != symbol)																																			\
+					{																																								\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
+					}																																								\
+					else																																							\
+					{																																								\
+						wchar_t moduleFilename[MAX_PATH];																															\
+						moduleFilename[0] = '\0';																																	\
+						::GetModuleFileNameW(static_cast<HMODULE>(mDxgiSharedLibrary), moduleFilename, MAX_PATH);																	\
+						RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Failed to locate the entry point \"%s\" within the DXGI shared library \"%s\"", #funcName, moduleFilename)	\
+						result = false;																																				\
+					}																																								\
+				}
+		#else
+			#error "Unsupported platform"
+		#endif
+
+		// Load the entry points
+		IMPORT_FUNC(CreateDXGIFactory1);
+
+		// Undefine the helper macro
+		#undef IMPORT_FUNC
+
+		// Done
+		return result;
 	}
 
 	bool Direct3D12RuntimeLinking::loadD3D12EntryPoints()
@@ -170,7 +219,7 @@ namespace Direct3D12Renderer
 		return result;
 	}
 
-	bool Direct3D12RuntimeLinking::loadD3DX12EntryPoints()
+	bool Direct3D12RuntimeLinking::loadD3DX11EntryPoints()
 	{
 		bool result = true;	// Success by default
 
@@ -179,7 +228,7 @@ namespace Direct3D12Renderer
 			#define IMPORT_FUNC(funcName)																																					\
 				if (result)																																									\
 				{																																											\
-					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DX12SharedLibrary), #funcName);																					\
+					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DX11SharedLibrary), #funcName);																					\
 					if (nullptr != symbol)																																					\
 					{																																										\
 						*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
@@ -188,7 +237,7 @@ namespace Direct3D12Renderer
 					{																																										\
 						wchar_t moduleFilename[MAX_PATH];																																	\
 						moduleFilename[0] = '\0';																																			\
-						::GetModuleFileNameW(static_cast<HMODULE>(mD3DX12SharedLibrary), moduleFilename, MAX_PATH);																			\
+						::GetModuleFileNameW(static_cast<HMODULE>(mD3DX11SharedLibrary), moduleFilename, MAX_PATH);																			\
 						RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Failed to locate the entry point \"%s\" within the Direct3D 12 shared library \"%s\"", #funcName, moduleFilename)	\
 						result = false;																																						\
 					}																																										\
@@ -198,8 +247,8 @@ namespace Direct3D12Renderer
 		#endif
 
 		// Load the entry points
-		IMPORT_FUNC(D3DX12CompileFromMemory);
-		IMPORT_FUNC(D3DX12FilterTexture);
+		IMPORT_FUNC(D3DX11CompileFromMemory);
+		// IMPORT_FUNC(D3DX11FilterTexture);	// TODO(co) Direct3D 12 update
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC

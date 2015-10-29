@@ -28,10 +28,13 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	// TODO(co) Direct3D 12
+	/*
 	inline ID3D12BlendState *BlendState::getD3D12BlendState() const
 	{
 		return mD3D12BlendState;
 	}
+	*/
 
 
 //[-------------------------------------------------------]

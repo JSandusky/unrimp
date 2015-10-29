@@ -39,13 +39,14 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	BlendState::BlendState(Direct3D12Renderer &direct3D12Renderer, const Renderer::BlendState &blendState) :
-		IBlendState(direct3D12Renderer),
-		mD3D12BlendState(nullptr)
+	BlendState::BlendState(Direct3D12Renderer &direct3D12Renderer, const Renderer::BlendState &) :
+		IBlendState(direct3D12Renderer)
+	//	mD3D12BlendState(nullptr)	// TODO(co) Direct3D 12
 	{
 		// Create the Direct3D 12 depth stencil state
 		// -> "Renderer::DepthStencilState" maps directly to Direct3D 10 & 11 & 12, do not change it
-		direct3D12Renderer.getD3D12Device()->CreateBlendState(reinterpret_cast<const D3D12_BLEND_DESC*>(&blendState), &mD3D12BlendState);
+		// TODO(co) Direct3D 12
+		// direct3D12Renderer.getD3D12Device()->CreateBlendState(reinterpret_cast<const D3D12_BLEND_DESC*>(&blendState), &mD3D12BlendState);
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
@@ -56,18 +57,23 @@ namespace Direct3D12Renderer
 	BlendState::~BlendState()
 	{
 		// Release the Direct3D 12 blend state
+		// TODO(co) Direct3D 12
+		/*
 		if (nullptr != mD3D12BlendState)
 		{
 			mD3D12BlendState->Release();
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void BlendState::setDebugName(const char *name)
+	void BlendState::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 blend state?
 			if (nullptr != mD3D12BlendState)
@@ -78,6 +84,7 @@ namespace Direct3D12Renderer
 				mD3D12BlendState->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 

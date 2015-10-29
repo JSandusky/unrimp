@@ -39,13 +39,14 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RasterizerState::RasterizerState(Direct3D12Renderer &direct3D12Renderer, const Renderer::RasterizerState &rasterizerState) :
-		IRasterizerState(direct3D12Renderer),
-		mD3D12RasterizerState(nullptr)
+	RasterizerState::RasterizerState(Direct3D12Renderer &direct3D12Renderer, const Renderer::RasterizerState &) :
+		IRasterizerState(direct3D12Renderer)
+		//mD3D12RasterizerState(nullptr)	// TODO(co) Direct3D 12
 	{
 		// Create the Direct3D 12 rasterizer state
 		// -> "Renderer::RasterizerState" maps directly to Direct3D 10 & 11 & 12, do not change it
-		direct3D12Renderer.getD3D12Device()->CreateRasterizerState(reinterpret_cast<const D3D12_RASTERIZER_DESC*>(&rasterizerState), &mD3D12RasterizerState);
+		// TODO(co) Direct3D 12
+		// direct3D12Renderer.getD3D12Device()->CreateRasterizerState(reinterpret_cast<const D3D12_RASTERIZER_DESC*>(&rasterizerState), &mD3D12RasterizerState);
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
@@ -56,18 +57,23 @@ namespace Direct3D12Renderer
 	RasterizerState::~RasterizerState()
 	{
 		// Release the Direct3D 12 rasterizer state
+		// TODO(co) Direct3D 12
+		/*
 		if (nullptr != mD3D12RasterizerState)
 		{
 			mD3D12RasterizerState->Release();
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void RasterizerState::setDebugName(const char *name)
+	void RasterizerState::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 rasterizer state?
 			if (nullptr != mD3D12RasterizerState)
@@ -78,6 +84,7 @@ namespace Direct3D12Renderer
 				mD3D12RasterizerState->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 

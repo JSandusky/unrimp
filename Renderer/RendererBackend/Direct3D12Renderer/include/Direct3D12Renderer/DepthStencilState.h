@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D12DepthStencilState;
+// struct ID3D12DepthStencilState;	// TODO(co) Direct3D 12
 namespace Renderer
 {
 	struct DepthStencilState;
@@ -90,7 +90,8 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The Direct3D 12 depth stencil state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D12DepthStencilState *getD3D12DepthStencilState() const;
+		// TODO(co) Direct3D 12
+		// inline ID3D12DepthStencilState *getD3D12DepthStencilState() const;
 
 
 	//[-------------------------------------------------------]
@@ -104,7 +105,8 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D12DepthStencilState *mD3D12DepthStencilState;	///< Direct3D 12 depth stencil state, can be a null pointer
+		// TODO(co) Direct3D 12
+		// ID3D12DepthStencilState *mD3D12DepthStencilState;	///< Direct3D 12 depth stencil state, can be a null pointer
 
 
 	};

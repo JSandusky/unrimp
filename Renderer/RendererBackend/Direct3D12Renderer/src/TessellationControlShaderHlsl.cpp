@@ -38,29 +38,33 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		TessellationControlShader(direct3D12Renderer),
-		mD3D12HullShader(nullptr)
+	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *, uint32_t) :
+		TessellationControlShader(direct3D12Renderer)
+	//	mD3D12HullShader(nullptr)	// TODO(co) Direct3D 12 update
 	{
 		// Create the Direct3D 12 hull shader
-		direct3D12Renderer.getD3D12Device()->CreateHullShader(bytecode, numberOfBytes, nullptr, &mD3D12HullShader);
+		// TODO(co) Direct3D 12 update
+		// direct3D12Renderer.getD3D12Device()->CreateHullShader(bytecode, numberOfBytes, nullptr, &mD3D12HullShader);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
 	}
 
 	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		TessellationControlShader(direct3D12Renderer),
-		mD3D12HullShader(nullptr)
+		TessellationControlShader(direct3D12Renderer)
+	//	mD3D12HullShader(nullptr)	// TODO(co) Direct3D 12 update
 	{
 		// Create the Direct3D 12 binary large object for the hull shader
 		ID3DBlob *d3dBlob = ShaderLanguageHlsl::loadShader("hs_5_0", sourceCode, nullptr);
 		if (nullptr != d3dBlob)
 		{
+			// TODO(co) Direct3D 12 update
+			/*
 			// Create the Direct3D 12 hull shader
 			direct3D12Renderer.getD3D12Device()->CreateHullShader(d3dBlob->GetBufferPointer(), d3dBlob->GetBufferSize(), nullptr, &mD3D12HullShader);
 
 			// Release the Direct3D 12 shader binary large object
 			d3dBlob->Release();
+			*/
 		}
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
@@ -69,18 +73,23 @@ namespace Direct3D12Renderer
 	TessellationControlShaderHlsl::~TessellationControlShaderHlsl()
 	{
 		// Release the Direct3D 12 hull shader
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != mD3D12HullShader)
 		{
 			mD3D12HullShader->Release();
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void TessellationControlShaderHlsl::setDebugName(const char *name)
+	void TessellationControlShaderHlsl::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 hull shader?
 			if (nullptr != mD3D12HullShader)
@@ -91,6 +100,7 @@ namespace Direct3D12Renderer
 				mD3D12HullShader->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 

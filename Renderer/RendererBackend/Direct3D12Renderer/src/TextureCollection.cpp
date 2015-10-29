@@ -72,15 +72,18 @@ namespace Direct3D12Renderer
 			switch (texture->getResourceType())
 			{
 				case Renderer::ResourceType::TEXTURE_BUFFER:
-					*currentD3D12ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D12ShaderResourceView();
+					// TODO(co) Direct3D 12 update
+					//*currentD3D12ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D12ShaderResourceView();
 					break;
 
 				case Renderer::ResourceType::TEXTURE_2D:
-					*currentD3D12ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D12ShaderResourceView();
+					// TODO(co) Direct3D 12 update
+					//*currentD3D12ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D12ShaderResourceView();
 					break;
 
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-					*currentD3D12ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D12ShaderResourceView();
+					// TODO(co) Direct3D 12 update
+					//*currentD3D12ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D12ShaderResourceView();
 					break;
 
 				case Renderer::ResourceType::PROGRAM:

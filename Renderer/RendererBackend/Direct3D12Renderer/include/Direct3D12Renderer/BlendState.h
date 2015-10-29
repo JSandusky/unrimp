@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D12BlendState;
+// struct ID3D12BlendState;	// TODO(co) Direct3D 12
 namespace Renderer
 {
 	struct BlendState;
@@ -90,7 +90,8 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The Direct3D 12 blend state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D12BlendState *getD3D12BlendState() const;
+		// TODO(co) Direct3D 12
+		// inline ID3D12BlendState *getD3D12BlendState() const;
 
 
 	//[-------------------------------------------------------]
@@ -104,7 +105,8 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D12BlendState *mD3D12BlendState;	///< Direct3D 12 blend state, can be a null pointer
+		// TODO(co) Direct3D 12
+		// ID3D12BlendState *mD3D12BlendState;	///< Direct3D 12 blend state, can be a null pointer
 
 
 	};

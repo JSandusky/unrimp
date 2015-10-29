@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D12SamplerState;
+//struct ID3D12SamplerState;	// TODO(co) Direct3D 12
 namespace Renderer
 {
 	struct SamplerState;
@@ -90,7 +90,8 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The Direct3D 12 sampler state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D12SamplerState *getD3D12SamplerState() const;
+		// TODO(co) Direct3D 12
+		//inline ID3D12SamplerState *getD3D12SamplerState() const;
 
 
 	//[-------------------------------------------------------]
@@ -104,7 +105,8 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D12SamplerState *mD3D12SamplerState;	///< Direct3D 12 sampler state, can be a null pointer
+		// TODO(co) Direct3D 12
+		//ID3D12SamplerState *mD3D12SamplerState;	///< Direct3D 12 sampler state, can be a null pointer
 
 
 	};

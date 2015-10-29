@@ -28,6 +28,8 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	// TODO(co) Direct3D 12 update
+	/*
 	inline IDXGISwapChain *SwapChain::getDxgiSwapChain() const
 	{
 		return mDxgiSwapChain;
@@ -42,6 +44,7 @@ namespace Direct3D12Renderer
 	{
 		return mD3D12DepthStencilView;
 	}
+	*/
 
 
 //[-------------------------------------------------------]

@@ -38,11 +38,14 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
-		ITextureBuffer(direct3D12Renderer),
-		mD3D12Buffer(nullptr),
-		mD3D12ShaderResourceViewTexture(nullptr)
+	TextureBuffer::TextureBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage::Enum) :
+		ITextureBuffer(direct3D12Renderer)
+		// TODO(co) Direct3D 12 update
+	//	mD3D12Buffer(nullptr),
+	//	mD3D12ShaderResourceViewTexture(nullptr)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		{ // Buffer part
 			// Direct3D 12 buffer description
 			D3D12_BUFFER_DESC d3d12BufferDesc;
@@ -89,10 +92,13 @@ namespace Direct3D12Renderer
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("TBO");
 		#endif
+		*/
 	}
 
 	TextureBuffer::~TextureBuffer()
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Release the used resources
 		if (nullptr != mD3D12ShaderResourceViewTexture)
 		{
@@ -104,14 +110,17 @@ namespace Direct3D12Renderer
 			mD3D12Buffer->Release();
 			mD3D12Buffer = nullptr;
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void TextureBuffer::setDebugName(const char *name)
+	void TextureBuffer::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Assign a debug name to the shader resource view
 			if (nullptr != mD3D12ShaderResourceViewTexture)
@@ -131,14 +140,17 @@ namespace Direct3D12Renderer
 				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
-	void TextureBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
+	void TextureBuffer::copyDataFrom(uint32_t, const void *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Check resource pointers
 		if (nullptr != mD3D12Buffer && nullptr != data)
 		{
@@ -161,6 +173,7 @@ namespace Direct3D12Renderer
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(&getRenderer())
 		}
+		*/
 	}
 
 

@@ -67,7 +67,8 @@ namespace Direct3D12Renderer
 			#endif
 
 			// Get the Direct3D 12 sampler state
-			*currentD3D12SamplerState = static_cast<SamplerState*>(samplerState)->getD3D12SamplerState();
+			// TODO(co) Direct3D 12
+		//	*currentD3D12SamplerState = static_cast<SamplerState*>(samplerState)->getD3D12SamplerState();
 		}
 	}
 

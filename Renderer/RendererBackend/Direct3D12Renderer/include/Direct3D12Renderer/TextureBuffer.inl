@@ -28,6 +28,8 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	// TODO(co) Direct3D 12 update
+	/*
 	inline ID3D12Buffer *TextureBuffer::getD3D12Buffer() const
 	{
 		return mD3D12Buffer;
@@ -37,6 +39,7 @@ namespace Direct3D12Renderer
 	{
 		return mD3D12ShaderResourceViewTexture;
 	}
+	*/
 
 
 //[-------------------------------------------------------]

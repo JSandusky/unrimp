@@ -92,46 +92,45 @@ namespace Direct3D12Renderer
 		// Is Direct3D 12 available?
 		if (mDirect3D12RuntimeLinking->isDirect3D12Avaiable())
 		{
-			{ // Create the Direct3D 12 device
-				// Flags
-				UINT flags = 0;
-			#ifdef _DEBUG
-				flags |= D3D12_CREATE_DEVICE_DEBUG;
-			#endif
+			// Create the Direct3D 12 device
+			// -> In case of failure, create an emulated device instance so we can at least test the DirectX 12 API
+			if (FAILED(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&mD3D12Device))))
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create DirectX 12 device instance. Creating an emulated Direct3D 11 device instance instead.")
 
-				// Driver types
-				static const D3D_DRIVER_TYPE D3D_DRIVER_TYPES[] =
+				// Create the DXGI factory instance
+				IDXGIFactory4* dxgiFactory4 = nullptr;
+				if (SUCCEEDED(CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory4))))
 				{
-					D3D_DRIVER_TYPE_HARDWARE,
-					D3D_DRIVER_TYPE_WARP,
-					D3D_DRIVER_TYPE_REFERENCE,
-				};
-				static const UINT NUMBER_OF_DRIVER_TYPES = sizeof(D3D_DRIVER_TYPES) / sizeof(D3D_DRIVER_TYPE);
-
-				// Feature levels
-				static const D3D_FEATURE_LEVEL D3D_FEATURE_LEVELS[] =
-				{
-					D3D_FEATURE_LEVEL_12_0,
-					D3D_FEATURE_LEVEL_11_0,
-					D3D_FEATURE_LEVEL_10_1,
-					D3D_FEATURE_LEVEL_10_0,
-				};
-				static const UINT NUMBER_OF_FEATURE_LEVELS = sizeof(D3D_FEATURE_LEVELS) / sizeof(D3D_FEATURE_LEVEL);
-
-				// Create the Direct3D 12 device
-				for (UINT i = 0; i < NUMBER_OF_DRIVER_TYPES; ++i)
-				{
-					D3D_FEATURE_LEVEL d3dFeatureLevel = D3D_FEATURE_LEVEL_12_0;
-					if (SUCCEEDED(D3D12CreateDevice(nullptr, D3D_DRIVER_TYPES[i], nullptr, flags, D3D_FEATURE_LEVELS, NUMBER_OF_FEATURE_LEVELS, D3D12_SDK_VERSION, &mD3D12Device, &d3dFeatureLevel, &mD3D12DeviceContext)))
+					// Create the DXGI adapter instance
+					IDXGIAdapter* dxgiAdapter = nullptr;
+					if (SUCCEEDED(dxgiFactory4->EnumWarpAdapter(IID_PPV_ARGS(&dxgiAdapter))))
 					{
-						// Done
-						i = NUMBER_OF_DRIVER_TYPES;
+						// Create the emulated Direct3D 12 device
+						if (FAILED(D3D12CreateDevice(dxgiAdapter, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mD3D12Device))))
+						{
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the device instance")
+						}
+
+						// Release the DXGI adapter instance
+						dxgiAdapter->Release();
 					}
+					else
+					{
+						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create DXGI adapter instance")
+					}
+
+					// Release the DXGI factory instance
+					dxgiFactory4->Release();
+				}
+				else
+				{
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create DXGI factory instance")
 				}
 			}
 
-			// Is there a valid Direct3D 12 device and device context?
-			if (nullptr != mD3D12Device && nullptr != mD3D12DeviceContext)
+			// Is there a valid Direct3D 12 device instance?
+			if (nullptr != mD3D12Device)
 			{
 				#ifdef DIRECT3D12RENDERER_NO_DEBUG
 					// Create the Direct3D 9 runtime linking instance, we know there can't be one, yet
@@ -159,10 +158,6 @@ namespace Direct3D12Renderer
 					// By default, set the created main swap chain as the currently used render target
 					omSetRenderTarget(mMainSwapChain);
 				}
-			}
-			else
-			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create device and device context instance")
 			}
 		}
 
@@ -208,23 +203,32 @@ namespace Direct3D12Renderer
 		}
 
 		// Release the Direct3D 12 query instance used for flush, in case we have one
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != mD3D12QueryFlush)
 		{
 			mD3D12QueryFlush->Release();
 		}
+		*/
 
 		// Release the HLSL shader language instance, in case we have one
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != mShaderLanguageHlsl)
 		{
 			mShaderLanguageHlsl->release();
 		}
+		*/
 
 		// Release the Direct3D 12 device we've created
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != mD3D12DeviceContext)
 		{
 			mD3D12DeviceContext->Release();
 			mD3D12DeviceContext = nullptr;
 		}
+		*/
 		if (nullptr != mD3D12Device)
 		{
 			mD3D12Device->Release();
@@ -382,8 +386,10 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool Direct3D12Renderer::map(Renderer::IResource &resource, uint32_t subresource, Renderer::MapType::Enum mapType, uint32_t mapFlags, Renderer::MappedSubresource &mappedSubresource)
+	bool Direct3D12Renderer::map(Renderer::IResource &, uint32_t, Renderer::MapType::Enum, uint32_t, Renderer::MappedSubresource &)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// The "Renderer::MapType::Enum" values directly map to Direct3D 10 & 11 & 12 constants, do not change them
 		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 12, do not change it
 
@@ -478,10 +484,14 @@ namespace Direct3D12Renderer
 				// Error!
 				return false;
 		}
+		*/
+		return false;
 	}
 
-	void Direct3D12Renderer::unmap(Renderer::IResource &resource, uint32_t subresource)
+	void Direct3D12Renderer::unmap(Renderer::IResource &, uint32_t)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Evaluate the resource type
 		switch (resource.getResourceType())
 		{
@@ -552,14 +562,17 @@ namespace Direct3D12Renderer
 				// Nothing we can unmap
 				break;
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::setProgram(Renderer::IProgram *program)
+	void Direct3D12Renderer::setProgram(Renderer::IProgram *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
@@ -607,14 +620,17 @@ namespace Direct3D12Renderer
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(this)
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
+	void Direct3D12Renderer::iaSetVertexArray(Renderer::IVertexArray *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != vertexArray)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
@@ -633,21 +649,25 @@ namespace Direct3D12Renderer
 			// Set no Direct3D 12 input layout
 			mD3D12DeviceContext->IASetInputLayout(nullptr);
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology::Enum primitiveTopology)
+	void Direct3D12Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology::Enum)
 	{
+		// TODO(co) Direct3D 12 update
 		// Set primitive topology
 		// -> The "Renderer::PrimitiveTopology::Enum" values directly map to Direct3D 9 & 10 & 11 && 12 constants, do not change them
-		mD3D12DeviceContext->IASetPrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(primitiveTopology));
+		//mD3D12DeviceContext->IASetPrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(primitiveTopology));
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::vsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D12Renderer::vsSetTexture(uint32_t, Renderer::ITexture *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Set a texture at that unit?
 		if (nullptr != texture)
 		{
@@ -711,10 +731,13 @@ namespace Direct3D12Renderer
 			ID3D12ShaderResourceView *d3d12ShaderResourceView = nullptr;
 			mD3D12DeviceContext->VSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
+	void Direct3D12Renderer::vsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Is the given texture collection valid?
 		if (nullptr != textureCollection)
 		{
@@ -726,10 +749,13 @@ namespace Direct3D12Renderer
 			TextureCollection *direct3D12TextureCollection = static_cast<TextureCollection*>(textureCollection);
 			mD3D12DeviceContext->VSSetShaderResources(startUnit, direct3D12TextureCollection->getNumberOfD3D12ShaderResourceViews(), direct3D12TextureCollection->getD3D12ShaderResourceViews());
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::vsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D12Renderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Set a sampler state at that unit?
 		if (nullptr != samplerState)
 		{
@@ -749,10 +775,13 @@ namespace Direct3D12Renderer
 			ID3D12SamplerState *d3d12SamplerState = nullptr;
 			mD3D12DeviceContext->VSSetSamplers(unit, 1, &d3d12SamplerState);
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D12Renderer::vsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Is the given sampler state collection valid?
 		if (nullptr != samplerStateCollection)
 		{
@@ -764,10 +793,13 @@ namespace Direct3D12Renderer
 			SamplerStateCollection *direct3D12SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
 			mD3D12DeviceContext->VSSetSamplers(startUnit, direct3D12SamplerStateCollection->getNumberOfD3D12SamplerStates(), direct3D12SamplerStateCollection->getD3D12SamplerStates());
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::vsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D12Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != uniformBuffer)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
@@ -777,14 +809,17 @@ namespace Direct3D12Renderer
 		// Direct3D 12 needs a pointer to a pointer, so give it one
 		ID3D12Buffer *d3d12Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D12Buffer() : nullptr;
 		mD3D12DeviceContext->VSSetConstantBuffers(slot, 1, &d3d12Buffers);
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::tcsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D12Renderer::tcsSetTexture(uint32_t, Renderer::ITexture *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "hull shader" in Direct3D terminology
 
 		// Set a texture at that unit?
@@ -850,10 +885,13 @@ namespace Direct3D12Renderer
 			ID3D12ShaderResourceView *d3d12ShaderResourceView = nullptr;
 			mD3D12DeviceContext->HSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::tcsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
+	void Direct3D12Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "hull shader" in Direct3D terminology
 
 		// Is the given texture collection valid?
@@ -867,10 +905,13 @@ namespace Direct3D12Renderer
 			TextureCollection *direct3D12TextureCollection = static_cast<TextureCollection*>(textureCollection);
 			mD3D12DeviceContext->HSSetShaderResources(startUnit, direct3D12TextureCollection->getNumberOfD3D12ShaderResourceViews(), direct3D12TextureCollection->getD3D12ShaderResourceViews());
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::tcsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D12Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "hull shader" in Direct3D terminology
 
 		// Set a sampler state at that unit?
@@ -892,10 +933,13 @@ namespace Direct3D12Renderer
 			ID3D12SamplerState *d3d12SamplerState = nullptr;
 			mD3D12DeviceContext->HSSetSamplers(unit, 1, &d3d12SamplerState);
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::tcsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D12Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "hull shader" in Direct3D terminology
 
 		// Is the given sampler state collection valid?
@@ -909,10 +953,13 @@ namespace Direct3D12Renderer
 			SamplerStateCollection *direct3D12SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
 			mD3D12DeviceContext->HSSetSamplers(startUnit, direct3D12SamplerStateCollection->getNumberOfD3D12SamplerStates(), direct3D12SamplerStateCollection->getD3D12SamplerStates());
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::tcsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D12Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "hull shader" in Direct3D terminology
 
 		if (nullptr != uniformBuffer)
@@ -924,14 +971,17 @@ namespace Direct3D12Renderer
 		// Direct3D 12 needs a pointer to a pointer, so give it one
 		ID3D12Buffer *d3d12Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D12Buffer() : nullptr;
 		mD3D12DeviceContext->HSSetConstantBuffers(slot, 1, &d3d12Buffers);
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::tesSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D12Renderer::tesSetTexture(uint32_t, Renderer::ITexture *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "domain shader" in Direct3D terminology
 
 		// Set a texture at that unit?
@@ -997,10 +1047,13 @@ namespace Direct3D12Renderer
 			ID3D12ShaderResourceView *d3d12ShaderResourceView = nullptr;
 			mD3D12DeviceContext->DSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::tesSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
+	void Direct3D12Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "domain shader" in Direct3D terminology
 
 		// Is the given texture collection valid?
@@ -1014,10 +1067,13 @@ namespace Direct3D12Renderer
 			TextureCollection *direct3D12TextureCollection = static_cast<TextureCollection*>(textureCollection);
 			mD3D12DeviceContext->DSSetShaderResources(startUnit, direct3D12TextureCollection->getNumberOfD3D12ShaderResourceViews(), direct3D12TextureCollection->getD3D12ShaderResourceViews());
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::tesSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D12Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "domain shader" in Direct3D terminology
 
 		// Set a sampler state at that unit?
@@ -1039,10 +1095,13 @@ namespace Direct3D12Renderer
 			ID3D12SamplerState *d3d12SamplerState = nullptr;
 			mD3D12DeviceContext->DSSetSamplers(unit, 1, &d3d12SamplerState);
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::tesSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D12Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "domain shader" in Direct3D terminology
 
 		// Is the given sampler state collection valid?
@@ -1056,10 +1115,13 @@ namespace Direct3D12Renderer
 			SamplerStateCollection *direct3D12SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
 			mD3D12DeviceContext->DSSetSamplers(startUnit, direct3D12SamplerStateCollection->getNumberOfD3D12SamplerStates(), direct3D12SamplerStateCollection->getD3D12SamplerStates());
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::tesSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D12Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "domain shader" in Direct3D terminology
 
 		if (nullptr != uniformBuffer)
@@ -1071,14 +1133,17 @@ namespace Direct3D12Renderer
 		// Direct3D 12 needs a pointer to a pointer, so give it one
 		ID3D12Buffer *d3d12Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D12Buffer() : nullptr;
 		mD3D12DeviceContext->DSSetConstantBuffers(slot, 1, &d3d12Buffers);
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::gsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D12Renderer::gsSetTexture(uint32_t, Renderer::ITexture *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Set a texture at that unit?
 		if (nullptr != texture)
 		{
@@ -1142,10 +1207,13 @@ namespace Direct3D12Renderer
 			ID3D12ShaderResourceView *d3d12ShaderResourceView = nullptr;
 			mD3D12DeviceContext->GSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::gsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
+	void Direct3D12Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Is the given texture collection valid?
 		if (nullptr != textureCollection)
 		{
@@ -1157,10 +1225,13 @@ namespace Direct3D12Renderer
 			TextureCollection *direct3D12TextureCollection = static_cast<TextureCollection*>(textureCollection);
 			mD3D12DeviceContext->GSSetShaderResources(startUnit, direct3D12TextureCollection->getNumberOfD3D12ShaderResourceViews(), direct3D12TextureCollection->getD3D12ShaderResourceViews());
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::gsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D12Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Set a sampler state at that unit?
 		if (nullptr != samplerState)
 		{
@@ -1180,10 +1251,13 @@ namespace Direct3D12Renderer
 			ID3D12SamplerState *d3d12SamplerState = nullptr;
 			mD3D12DeviceContext->GSSetSamplers(unit, 1, &d3d12SamplerState);
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::gsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D12Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Is the given sampler state collection valid?
 		if (nullptr != samplerStateCollection)
 		{
@@ -1195,10 +1269,13 @@ namespace Direct3D12Renderer
 			SamplerStateCollection *direct3D12SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
 			mD3D12DeviceContext->GSSetSamplers(startUnit, direct3D12SamplerStateCollection->getNumberOfD3D12SamplerStates(), direct3D12SamplerStateCollection->getD3D12SamplerStates());
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::gsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D12Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != uniformBuffer)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
@@ -1208,14 +1285,17 @@ namespace Direct3D12Renderer
 		// Direct3D 12 needs a pointer to a pointer, so give it one
 		ID3D12Buffer *d3d12Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D12Buffer() : nullptr;
 		mD3D12DeviceContext->GSSetConstantBuffers(slot, 1, &d3d12Buffers);
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
+	void Direct3D12Renderer::rsSetViewports(uint32_t, const Renderer::Viewport *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
 		{
@@ -1224,10 +1304,13 @@ namespace Direct3D12Renderer
 			// -> Let Direct3D 12 perform the index validation for us (the Direct3D 12 debug features are pretty good)
 			mD3D12DeviceContext->RSSetViewports(numberOfViewports, reinterpret_cast<const D3D12_VIEWPORT*>(viewports));
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
+	void Direct3D12Renderer::rsSetScissorRectangles(uint32_t, const Renderer::ScissorRectangle *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
 		{
@@ -1236,10 +1319,13 @@ namespace Direct3D12Renderer
 			// -> Let Direct3D 12 perform the index validation for us (the Direct3D 12 debug features are pretty good)
 			mD3D12DeviceContext->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D12_RECT*>(scissorRectangles));
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::rsSetState(Renderer::IRasterizerState *rasterizerState)
+	void Direct3D12Renderer::rsSetState(Renderer::IRasterizerState *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != rasterizerState)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
@@ -1256,14 +1342,17 @@ namespace Direct3D12Renderer
 			//    -> When looking at the samples within "Microsoft DirectX SDK (June 2010)", I assume this sets the default values
 			mD3D12DeviceContext->RSSetState(nullptr);
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::fsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D12Renderer::fsSetTexture(uint32_t, Renderer::ITexture *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "pixel shader" in Direct3D terminology
 
 		// Set a texture at that unit?
@@ -1329,10 +1418,13 @@ namespace Direct3D12Renderer
 			ID3D12ShaderResourceView *d3d12ShaderResourceView = nullptr;
 			mD3D12DeviceContext->PSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
+	void Direct3D12Renderer::fsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Is the given texture collection valid?
 		if (nullptr != textureCollection)
 		{
@@ -1344,10 +1436,13 @@ namespace Direct3D12Renderer
 			TextureCollection *direct3D12TextureCollection = static_cast<TextureCollection*>(textureCollection);
 			mD3D12DeviceContext->PSSetShaderResources(startUnit, direct3D12TextureCollection->getNumberOfD3D12ShaderResourceViews(), direct3D12TextureCollection->getD3D12ShaderResourceViews());
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::fsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D12Renderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "pixel shader" in Direct3D terminology
 
 		// Set a sampler state at that unit?
@@ -1369,10 +1464,13 @@ namespace Direct3D12Renderer
 			ID3D12SamplerState *d3d12SamplerState = nullptr;
 			mD3D12DeviceContext->PSSetSamplers(unit, 1, &d3d12SamplerState);
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D12Renderer::fsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Is the given sampler state collection valid?
 		if (nullptr != samplerStateCollection)
 		{
@@ -1384,10 +1482,13 @@ namespace Direct3D12Renderer
 			SamplerStateCollection *direct3D12SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
 			mD3D12DeviceContext->PSSetSamplers(startUnit, direct3D12SamplerStateCollection->getNumberOfD3D12SamplerStates(), direct3D12SamplerStateCollection->getD3D12SamplerStates());
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::fsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D12Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "pixel shader" in Direct3D terminology
 
 		if (nullptr != uniformBuffer)
@@ -1399,6 +1500,7 @@ namespace Direct3D12Renderer
 		// Direct3D 12 needs a pointer to a pointer, so give it one
 		ID3D12Buffer *d3d12Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D12Buffer() : nullptr;
 		mD3D12DeviceContext->PSSetConstantBuffers(slot, 1, &d3d12Buffers);
+		*/
 	}
 
 
@@ -1410,8 +1512,10 @@ namespace Direct3D12Renderer
 		return mRenderTarget;
 	}
 
-	void Direct3D12Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
+	void Direct3D12Renderer::omSetRenderTarget(Renderer::IRenderTarget *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// New render target?
 		if (mRenderTarget != renderTarget)
 		{
@@ -1492,10 +1596,13 @@ namespace Direct3D12Renderer
 				}
 			}
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::omSetDepthStencilState(Renderer::IDepthStencilState *depthStencilState)
+	void Direct3D12Renderer::omSetDepthStencilState(Renderer::IDepthStencilState *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != depthStencilState)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
@@ -1510,10 +1617,13 @@ namespace Direct3D12Renderer
 			// -> The default values of "Renderer::DepthStencilState" are identical to Direct3D 12
 			mD3D12DeviceContext->OMSetDepthStencilState(nullptr, 0);
 		}
+		*/
 	}
 
-	void Direct3D12Renderer::omSetBlendState(Renderer::IBlendState *blendState)
+	void Direct3D12Renderer::omSetBlendState(Renderer::IBlendState *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		if (nullptr != blendState)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
@@ -1528,14 +1638,17 @@ namespace Direct3D12Renderer
 			// -> The default values of "Renderer::BlendState" are identical to Direct3D 12
 			mD3D12DeviceContext->OMSetBlendState(nullptr, 0, 0xffffffff);
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
+	void Direct3D12Renderer::clear(uint32_t, const float [4], float, uint32_t)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Unlike Direct3D 9, OpenGL or OpenGL ES 2, Direct3D 12 clears a given render target view and not the currently bound
 
 		// Begin debug event
@@ -1645,6 +1758,7 @@ namespace Direct3D12Renderer
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(this)
+		*/
 	}
 
 	bool Direct3D12Renderer::beginScene()
@@ -1664,26 +1778,34 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::draw(uint32_t startVertexLocation, uint32_t numberOfVertices)
+	void Direct3D12Renderer::draw(uint32_t, uint32_t)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		mD3D12DeviceContext->Draw(
 			numberOfVertices,	// Vertex count (UINT)
 			startVertexLocation	// Start index location (UINT)
 		);
+		*/
 	}
 
-	void Direct3D12Renderer::drawInstanced(uint32_t startVertexLocation, uint32_t numberOfVertices, uint32_t numberOfInstances)
+	void Direct3D12Renderer::drawInstanced(uint32_t, uint32_t, uint32_t)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		mD3D12DeviceContext->DrawInstanced(
 			numberOfVertices,		// Vertex count per instance (UINT)
 			numberOfInstances,		// Instance count (UINT)
 			startVertexLocation,	// Start vertex location (UINT)
 			0						// Start instance location (UINT)
 		);
+		*/
 	}
 
-	void Direct3D12Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t)
+	void Direct3D12Renderer::drawIndexed(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 12
 
 		// Draw
@@ -1692,10 +1814,13 @@ namespace Direct3D12Renderer
 			startIndexLocation,						// Start index location (UINT)
 			static_cast<INT>(baseVertexLocation)	// Base vertex location (INT)
 		);
+		*/
 	}
 
-	void Direct3D12Renderer::drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t, uint32_t numberOfInstances)
+	void Direct3D12Renderer::drawIndexedInstanced(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 12
 
 		// Draw
@@ -1706,6 +1831,7 @@ namespace Direct3D12Renderer
 			static_cast<INT>(baseVertexLocation),	// Base vertex location (INT)
 			0										// Start instance location (UINT)
 		);
+		*/
 	}
 
 
@@ -1714,11 +1840,14 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::flush()
 	{
-		mD3D12DeviceContext->Flush();
+		// TODO(co) Direct3D 12 update
+	//	mD3D12DeviceContext->Flush();
 	}
 
 	void Direct3D12Renderer::finish()
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// Create the Direct3D 12 query instance used for flush right now?
 		if (nullptr == mD3D12QueryFlush)
 		{
@@ -1748,6 +1877,7 @@ namespace Direct3D12Renderer
 				mD3D12DeviceContext->GetData(mD3D12QueryFlush, &result, sizeof(BOOL), 0);
 			} while (!result);
 		}
+		*/
 	}
 
 
@@ -1761,11 +1891,15 @@ namespace Direct3D12Renderer
 		// -> Maybe a debugger/profiler ignores the debug state
 		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
 		//    makes it a little bit more time consuming to hack the binary :D (but of course, this is no 100% security)
-		return (D3DPERF_GetStatus() != 0);
+		// TODO(co) Direct3D 12 update
+		//return (D3DPERF_GetStatus() != 0);
+		return false;
 	}
 
-	void Direct3D12Renderer::setDebugMarker(const wchar_t *name)
+	void Direct3D12Renderer::setDebugMarker(const wchar_t *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
@@ -1779,10 +1913,13 @@ namespace Direct3D12Renderer
 				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), name);
 			}
 		#endif
+		*/
 	}
 
-	void Direct3D12Renderer::beginDebugEvent(const wchar_t *name)
+	void Direct3D12Renderer::beginDebugEvent(const wchar_t *)
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
@@ -1796,10 +1933,13 @@ namespace Direct3D12Renderer
 				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), name);
 			}
 		#endif
+		*/
 	}
 
 	void Direct3D12Renderer::endDebugEvent()
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
@@ -1813,6 +1953,7 @@ namespace Direct3D12Renderer
 				D3DPERF_EndEvent();
 			}
 		#endif
+		*/
 	}
 
 
@@ -1821,6 +1962,8 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::initializeCapabilities()
 	{
+		// TODO(co) Direct3D 12 update
+		/*
 		// There are no Direct3D 12 device capabilities we could query on runtime, they depend on the chosen feature level
 		// -> Have a look at "Devices -> Direct3D 12 on Downlevel Hardware -> Introduction" at MSDN http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx
 		//    for a table with a list of the minimum resources supported by Direct3D 12 at the different feature levels
@@ -2020,6 +2163,7 @@ namespace Direct3D12Renderer
 
 		// Is there support for fragment shaders (FS)?
 		mCapabilities.fragmentShader = true;
+		*/
 	}
 
 

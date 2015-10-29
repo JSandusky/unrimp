@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D12GeometryShader;
+//struct ID3D12GeometryShader;	// TODO(co) Direct3D 12
 
 
 //[-------------------------------------------------------]
@@ -95,7 +95,8 @@ namespace Direct3D12Renderer
 		*  @return
 		*    Direct3D 12 geometry shader, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D12GeometryShader *getD3D12GeometryShader() const;
+		// TODO(co) Direct3D 12
+		// inline ID3D12GeometryShader *getD3D12GeometryShader() const;
 
 
 	//[-------------------------------------------------------]
@@ -116,7 +117,8 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D12GeometryShader *mD3D12GeometryShader;	///< Direct3D 12 geometry shader, can be a null pointer
+		// TODO(co) Direct3D 12
+		//ID3D12GeometryShader *mD3D12GeometryShader;	///< Direct3D 12 geometry shader, can be a null pointer
 
 
 	};

@@ -38,29 +38,33 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		FragmentShader(direct3D12Renderer),
-		mD3D12PixelShader(nullptr)
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *, uint32_t) :
+		FragmentShader(direct3D12Renderer)
+		// mD3D12PixelShader(nullptr)	// TODO(co) Direct3D 12
 	{
 		// Create the Direct3D 12 vertex shader
-		direct3D12Renderer.getD3D12Device()->CreatePixelShader(bytecode, numberOfBytes, nullptr, &mD3D12PixelShader);
+		// TODO(co) Direct3D 12
+		// direct3D12Renderer.getD3D12Device()->CreatePixelShader(bytecode, numberOfBytes, nullptr, &mD3D12PixelShader);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
 	}
 
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		FragmentShader(direct3D12Renderer),
-		mD3D12PixelShader(nullptr)
+		FragmentShader(direct3D12Renderer)
+		// mD3D12PixelShader(nullptr)	// TODO(co) Direct3D 12
 	{
 		// Create the Direct3D 12 binary large object for the pixel shader
 		ID3DBlob *d3dBlob = ShaderLanguageHlsl::loadShader("ps_5_0", sourceCode, nullptr);
 		if (nullptr != d3dBlob)
 		{
+			// TODO(co) Direct3D 12
+			/*
 			// Create the Direct3D 12 pixel shader
 			direct3D12Renderer.getD3D12Device()->CreatePixelShader(d3dBlob->GetBufferPointer(), d3dBlob->GetBufferSize(), nullptr, &mD3D12PixelShader);
 
 			// Release the Direct3D 12 shader binary large object
 			d3dBlob->Release();
+			*/
 		}
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
@@ -69,18 +73,23 @@ namespace Direct3D12Renderer
 	FragmentShaderHlsl::~FragmentShaderHlsl()
 	{
 		// Release the Direct3D 12 pixel shader
+		// TODO(co) Direct3D 12
+		/*
 		if (nullptr != mD3D12PixelShader)
 		{
 			mD3D12PixelShader->Release();
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void FragmentShaderHlsl::setDebugName(const char *name)
+	void FragmentShaderHlsl::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 pixel shader?
 			if (nullptr != mD3D12PixelShader)
@@ -91,6 +100,7 @@ namespace Direct3D12Renderer
 				mD3D12PixelShader->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 

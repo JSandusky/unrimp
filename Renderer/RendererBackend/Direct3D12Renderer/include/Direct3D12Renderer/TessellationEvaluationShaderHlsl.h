@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D12DomainShader;
+//struct ID3D12DomainShader;// TODO(co) Direct3D 12 update
 
 
 //[-------------------------------------------------------]
@@ -95,7 +95,8 @@ namespace Direct3D12Renderer
 		*  @return
 		*    Direct3D 12 domain shader, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D12DomainShader *getD3D12DomainShader() const;
+		// TODO(co) Direct3D 12 update
+		//inline ID3D12DomainShader *getD3D12DomainShader() const;
 
 
 	//[-------------------------------------------------------]
@@ -116,7 +117,8 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D12DomainShader *mD3D12DomainShader;	///< Direct3D 12 domain shader, can be a null pointer
+		// TODO(co) Direct3D 12 update
+		//ID3D12DomainShader *mD3D12DomainShader;	///< Direct3D 12 domain shader, can be a null pointer
 
 
 	};

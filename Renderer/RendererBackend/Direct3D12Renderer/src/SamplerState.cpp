@@ -37,13 +37,14 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerState::SamplerState(Direct3D12Renderer &direct3D12Renderer, const Renderer::SamplerState &samplerState) :
-		ISamplerState(direct3D12Renderer),
-		mD3D12SamplerState(nullptr)
+	SamplerState::SamplerState(Direct3D12Renderer &direct3D12Renderer, const Renderer::SamplerState &) :
+		ISamplerState(direct3D12Renderer)
+	//	mD3D12SamplerState(nullptr)	// TODO(co) Direct3D 12
 	{
 		// Create the Direct3D 12 sampler state
 		// -> "Renderer::SamplerState" maps directly to Direct3D 10 & 11 & 12, do not change it
-		direct3D12Renderer.getD3D12Device()->CreateSamplerState(reinterpret_cast<const D3D12_SAMPLER_DESC*>(&samplerState), &mD3D12SamplerState);
+		// TODO(co) Direct3D 12
+	//	direct3D12Renderer.getD3D12Device()->CreateSamplerState(reinterpret_cast<const D3D12_SAMPLER_DESC*>(&samplerState), &mD3D12SamplerState);
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
@@ -54,18 +55,23 @@ namespace Direct3D12Renderer
 	SamplerState::~SamplerState()
 	{
 		// Release the Direct3D 12 sampler state
+		// TODO(co) Direct3D 12
+		/*
 		if (nullptr != mD3D12SamplerState)
 		{
 			mD3D12SamplerState->Release();
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void SamplerState::setDebugName(const char *name)
+	void SamplerState::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 sampler state?
 			if (nullptr != mD3D12SamplerState)
@@ -76,6 +82,7 @@ namespace Direct3D12Renderer
 				mD3D12SamplerState->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 

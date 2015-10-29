@@ -38,9 +38,9 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	IndexBuffer::IndexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *, Renderer::BufferUsage::Enum) :
 		IIndexBuffer(direct3D12Renderer),
-		mD3D12Buffer(nullptr),
+		// mD3D12Buffer(nullptr),	// TODO(co) Direct3D 12
 		mDXGIFormat(DXGI_FORMAT_UNKNOWN)
 	{
 		// "Renderer::IndexBufferFormat::UnsignedChar" is not supported by Direct3D 12
@@ -53,6 +53,8 @@ namespace Direct3D12Renderer
 			// Set the DXGI format
 			mDXGIFormat = Mapping::getDirect3D12Format(indexBufferFormat);
 
+			// TODO(co) Direct3D 12
+			/*
 			// Direct3D 12 buffer description
 			D3D12_BUFFER_DESC d3d12BufferDesc;
 			d3d12BufferDesc.ByteWidth           = numberOfBytes;
@@ -79,6 +81,7 @@ namespace Direct3D12Renderer
 				// Create the Direct3D 12 index buffer
 				direct3D12Renderer.getD3D12Device()->CreateBuffer(&d3d12BufferDesc, nullptr, &mD3D12Buffer);
 			}
+			*/
 		}
 
 		// Assign a default name to the resource for debugging purposes
@@ -89,18 +92,23 @@ namespace Direct3D12Renderer
 
 	IndexBuffer::~IndexBuffer()
 	{
+		// TODO(co) Direct3D 12
+		/*
 		if (nullptr != mD3D12Buffer)
 		{
 			mD3D12Buffer->Release();
 		}
+		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void IndexBuffer::setDebugName(const char *name)
+	void IndexBuffer::setDebugName(const char *)
 	{
+		// TODO(co) Direct3D 12
+		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 index buffer?
 			if (nullptr != mD3D12Buffer)
@@ -111,6 +119,7 @@ namespace Direct3D12Renderer
 				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
+		*/
 	}
 
 

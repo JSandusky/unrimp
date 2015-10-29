@@ -28,10 +28,13 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	// TODO(co) Direct3D 12 update
+	/*
 	inline ID3D12Buffer *VertexBuffer::getD3D12Buffer() const
 	{
 		return mD3D12Buffer;
 	}
+	*/
 
 
 //[-------------------------------------------------------]
