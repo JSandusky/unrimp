@@ -129,7 +129,7 @@ namespace Direct3D11Renderer
 				}
 			}
 
-			// Is there a valid Direct3D 11 device and device contect?
+			// Is there a valid Direct3D 11 device and device context?
 			if (nullptr != mD3D11Device && nullptr != mD3D11DeviceContext)
 			{
 				#ifdef DIRECT3D11RENDERER_NO_DEBUG

@@ -59,7 +59,7 @@ namespace Direct3D11Renderer
 			#ifndef DIRECT3D11RENDERER_NO_RENDERERMATCHCHECK
 				if (&direct3D11Renderer != &samplerState->getRenderer())
 				{
-					// Output an error message and keep on going in order to keep a resonable behaviour even in case on an error
+					// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
 					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 11 error: The given resource at index %d is owned by another renderer instance", currentSamplerState - mSamplerStates)
 					*currentD3D11SamplerState = nullptr;
 					continue;

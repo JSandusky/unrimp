@@ -61,7 +61,7 @@ namespace Direct3D12Renderer
 			#ifndef DIRECT3D12RENDERER_NO_RENDERERMATCHCHECK
 				if (&direct3D12Renderer != &texture->getRenderer())
 				{
-					// Output an error message and keep on going in order to keep a resonable behaviour even in case on an error
+					// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
 					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: The given resource at index %d is owned by another renderer instance", currentTexture - mTextures)
 					*currentD3D12ShaderResourceView = nullptr;
 					continue;

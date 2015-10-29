@@ -130,7 +130,7 @@ namespace Direct3D12Renderer
 				}
 			}
 
-			// Is there a valid Direct3D 12 device and device contect?
+			// Is there a valid Direct3D 12 device and device context?
 			if (nullptr != mD3D12Device && nullptr != mD3D12DeviceContext)
 			{
 				#ifdef DIRECT3D12RENDERER_NO_DEBUG

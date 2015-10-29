@@ -58,7 +58,7 @@ namespace Direct3D9Renderer
 			#ifndef DIRECT3D9RENDERER_NO_RENDERERMATCHCHECK
 				if (&direct3D9Renderer != &texture->getRenderer())
 				{
-					// Output an error message and keep on going in order to keep a resonable behaviour even in case on an error
+					// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
 					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 9 error: The given resource at index %d is owned by another renderer instance", currentTexture - mTextures)
 				}
 			#endif

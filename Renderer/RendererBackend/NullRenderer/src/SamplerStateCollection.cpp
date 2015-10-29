@@ -57,7 +57,7 @@ namespace NullRenderer
 			#ifndef NULLRENDERER_NO_RENDERERMATCHCHECK
 				if (&nullRenderer != &samplerState->getRenderer())
 				{
-					// Output an error message and keep on going in order to keep a resonable behaviour even in case on an error
+					// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
 					RENDERER_OUTPUT_DEBUG_PRINTF("Null error: The given resource at index %d is owned by another renderer instance", currentSamplerState - mSamplerStates)
 				}
 			#endif

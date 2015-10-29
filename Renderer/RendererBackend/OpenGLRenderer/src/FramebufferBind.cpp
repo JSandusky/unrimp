@@ -61,7 +61,7 @@ namespace OpenGLRenderer
 			#ifndef OPENGLRENDERER_NO_RENDERERMATCHCHECK
 				if (&openGLRenderer != &(*colorTexture)->getRenderer())
 				{
-					// Output an error message and keep on going in order to keep a resonable behaviour even in case on an error
+					// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
 					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The given color texture at index %d is owned by another renderer instance", colorTexture - colorTextures)
 
 					// Continue, there's no point in trying to do any error handling in here
