@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
+#include "Direct3D12Renderer/D3D12X.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D12Renderer/Direct3D12Debug.h"	// For "DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D12Renderer/Direct3D9RuntimeLinking.h"	//  For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging
@@ -82,6 +83,8 @@ namespace Direct3D12Renderer
 		mDxgiFactory4(nullptr),
 		mD3D12Device(nullptr),
 		mD3D12CommandQueue(nullptr),
+		mD3D12CommandAllocator(nullptr),
+		mD3D12GraphicsCommandList(nullptr),
 		mShaderLanguageHlsl(nullptr),
 		mD3D12QueryFlush(nullptr),
 		mMainSwapChain(nullptr),
@@ -137,31 +140,55 @@ namespace Direct3D12Renderer
 				d3d12CommandQueueDesc.NodeMask	= 0;
 				if (SUCCEEDED(mD3D12Device->CreateCommandQueue(&d3d12CommandQueueDesc, IID_PPV_ARGS(&mD3D12CommandQueue))))
 				{
-					#ifdef DIRECT3D12RENDERER_NO_DEBUG
-						// Create the Direct3D 9 runtime linking instance, we know there can't be one, yet
-						mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
-
-						// Call the Direct3D 9 PIX function
-						if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
-						{
-							// Disable debugging
-							D3DPERF_SetOptions(1);
-						}
-					#endif
-
-					// Initialize the capabilities
-					initializeCapabilities();
-
-					// Create a main swap chain instance?
-					if (NULL_HANDLE != nativeWindowHandle)
+					// Create the command allocator
+					if (SUCCEEDED(mD3D12Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&mD3D12CommandAllocator))))
 					{
-						// Create a main swap chain instance
-						mMainSwapChain = static_cast<SwapChain*>(createSwapChain(nativeWindowHandle));
-						RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
-						mMainSwapChain->addReference();	// Internal renderer reference
+						// Create the command list
+						if (SUCCEEDED(mD3D12Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, mD3D12CommandAllocator, nullptr, IID_PPV_ARGS(&mD3D12GraphicsCommandList))))
+						{
+							// Command lists are created in the recording state, but there is nothing to record yet. The main loop expects it to be closed, so close it now.
+							if (SUCCEEDED(mD3D12GraphicsCommandList->Close()))
+							{
+								#ifdef DIRECT3D12RENDERER_NO_DEBUG
+									// Create the Direct3D 9 runtime linking instance, we know there can't be one, yet
+									mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
 
-						// By default, set the created main swap chain as the currently used render target
-						omSetRenderTarget(mMainSwapChain);
+									// Call the Direct3D 9 PIX function
+									if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
+									{
+										// Disable debugging
+										D3DPERF_SetOptions(1);
+									}
+								#endif
+
+								// Initialize the capabilities
+								initializeCapabilities();
+
+								// Create a main swap chain instance?
+								if (NULL_HANDLE != nativeWindowHandle)
+								{
+									// Create a main swap chain instance
+									mMainSwapChain = static_cast<SwapChain*>(createSwapChain(nativeWindowHandle));
+									RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
+									mMainSwapChain->addReference();	// Internal renderer reference
+
+									// By default, set the created main swap chain as the currently used render target
+									omSetRenderTarget(mMainSwapChain);
+								}
+							}
+							else
+							{
+								RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to close the command list instance")
+							}
+						}
+						else
+						{
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the command list instance")
+						}
+					}
+					else
+					{
+						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the command allocator instance")
 					}
 				}
 				else
@@ -231,6 +258,16 @@ namespace Direct3D12Renderer
 		*/
 
 		// Release the Direct3D 12 command queue we've created
+		if (nullptr != mD3D12GraphicsCommandList)
+		{
+			mD3D12GraphicsCommandList->Release();
+			mD3D12GraphicsCommandList = nullptr;
+		}
+		if (nullptr != mD3D12CommandAllocator)
+		{
+			mD3D12CommandAllocator->Release();
+			mD3D12CommandAllocator = nullptr;
+		}
 		if (nullptr != mD3D12CommandQueue)
 		{
 			mD3D12CommandQueue->Release();
@@ -1661,8 +1698,14 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::clear(uint32_t, const float [4], float, uint32_t)
+	void Direct3D12Renderer::clear(uint32_t, const float color[4], float, uint32_t)
 	{
+		SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
+		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeap()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
+
+		// Record command
+		mD3D12GraphicsCommandList->ClearRenderTargetView(rtvHandle, color, 0, nullptr);
+
 		// TODO(co) Direct3D 12 update
 		/*
 		// Unlike Direct3D 9, OpenGL or OpenGL ES 2, Direct3D 12 clears a given render target view and not the currently bound
@@ -1780,14 +1823,48 @@ namespace Direct3D12Renderer
 	bool Direct3D12Renderer::beginScene()
 	{
 		// Not required when using Direct3D 12
+		// TODO(co) Until we have a command list interface, we must perform the command list handling in here
 
-		// Done
-		return true;
+		// Command list allocators can only be reset when the associated
+		// command lists have finished execution on the GPU; apps should use
+		// fences to determine GPU execution progress.
+		if (SUCCEEDED(mD3D12CommandAllocator->Reset()))
+		{
+			// However, when ExecuteCommandList() is called on a particular command
+			// list, that command list can then be reset at any time and must be before
+			// re-recording.
+			if (SUCCEEDED(mD3D12GraphicsCommandList->Reset(mD3D12CommandAllocator, nullptr)))
+			{
+				// Indicate that the back buffer will be used as a render target
+				SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
+				CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+				mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+
+				// Done
+				return true;
+			}
+		}
+
+		// Error!
+		return false;
 	}
 
 	void Direct3D12Renderer::endScene()
 	{
 		// Not required when using Direct3D 12
+		// TODO(co) Until we have a command list interface, we must perform the command list handling in here
+
+		// Indicate that the back buffer will now be used to present
+		SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
+		CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+		mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+
+		if (SUCCEEDED(mD3D12GraphicsCommandList->Close()))
+		{
+			// Execute the command list.
+			ID3D12CommandList* commandLists[] = { mD3D12GraphicsCommandList };
+			mD3D12CommandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
+		}
 	}
 
 

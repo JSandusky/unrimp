@@ -34,7 +34,8 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct IDXGISwapChain;
+struct ID3D12Fence;
+struct IDXGISwapChain3;
 struct ID3D12Resource;
 struct ID3D12DescriptorHeap;
 namespace Direct3D12Renderer
@@ -84,38 +85,60 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the DXGI swap chain instance
+		*    Return the DXGI swap chain 3 instance
 		*
 		*  @return
-		*    The DXGI swap chain instance, null pointer on error, do not release the returned instance unless you added an own reference to it
+		*    The DXGI swap chain 3 instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IDXGISwapChain *getDxgiSwapChain() const;
+		inline IDXGISwapChain3 *getDxgiSwapChain3() const;
 
 		/**
 		*  @brief
-		*    Return the Direct3D 12 render target view instance
+		*    Return the Direct3D 12 descriptor heap instance
 		*
 		*  @return
-		*    The Direct3D 12 render target view instance, null pointer on error, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D 12 descriptor heap instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*
 		*  @note
 		*    - It's highly recommended to not keep any references to the returned instance, else issues may occure when resizing the swap chain
 		*/
-		// TODO(co) Direct3D 12 update
-		//inline ID3D12RenderTargetView *getD3D12RenderTargetView() const;
+		inline ID3D12DescriptorHeap *getD3D12DescriptorHeap() const;
 
 		/**
 		*  @brief
-		*    Return the Direct3D 12 depth stencil view instance
+		*    Return the render target view descriptor size
 		*
 		*  @return
-		*    The Direct3D 12 depth stencil view instance, null pointer on error, do not release the returned instance unless you added an own reference to it
+		*    The render target view descriptor size
+		*
+		*  @note
+		*    - It's highly recommended to not keep any backups of this value, else issues may occure when resizing the swap chain
+		*/
+		inline UINT getRenderTargetViewDescriptorSize() const;
+
+		/**
+		*  @brief
+		*    Return the index of the Direct3D 12 resource render target which is currently used as back buffer
+		*
+		*  @return
+		*    The index of the Direct3D 12 resource render target which is currently used as back buffer
 		*
 		*  @note
 		*    - It's highly recommended to not keep any references to the returned instance, else issues may occure when resizing the swap chain
 		*/
-		// TODO(co) Direct3D 12 update
-		//inline ID3D12DepthStencilView *getD3D12DepthStencilView() const;
+		inline UINT getBackD3D12ResourceRenderTargetFrameIndex() const;
+
+		/**
+		*  @brief
+		*    Return the Direct3D 12 resource render target which is currently used as back buffer
+		*
+		*  @return
+		*    The Direct3D 12 resource render target which is currently used as back buffer, null pointer on error, do not release the returned instance unless you added an own reference to it
+		*
+		*  @note
+		*    - It's highly recommended to not keep any references to the returned instance, else issues may occure when resizing the swap chain
+		*/
+		inline ID3D12Resource *getBackD3D12ResourceRenderTarget() const;
 
 
 	//[-------------------------------------------------------]
@@ -174,7 +197,7 @@ namespace Direct3D12Renderer
 		*   window manually and ensures it's never zero.
 		*
 		*  @note
-		*    - "mDxgiSwapChain" must be valid when calling this method
+		*    - "mDxgiSwapChain3" must be valid when calling this method
 		*/
 		void getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const;
 
@@ -190,15 +213,27 @@ namespace Direct3D12Renderer
 		*/
 		void destroyDirect3D12Views();
 
+		/**
+		*  @brief
+		*    Wait for the GPU to be done with all resources
+		*/
+		void waitForPreviousFrame();
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IDXGISwapChain*		  mDxgiSwapChain;									///< The DXGI swap chain instance, null pointer on error
+		IDXGISwapChain3*	  mDxgiSwapChain3;									///< The DXGI swap chain 3 instance, null pointer on error
 		ID3D12DescriptorHeap* mD3D12DescriptorHeap;								///< The Direct3D 12 descriptor heap instance, null pointer on error
 		UINT				  mRenderTargetViewDescriptorSize;					///< Render target view descriptor size
 		ID3D12Resource*		  mD3D12ResourceRenderTargets[NUMBER_OF_FRAMES];	///< The Direct3D 12 render target instances, null pointer on error
+
+		// Synchronization objects
+		UINT		 mFrameIndex;
+		HANDLE		 mFenceEvent;
+		ID3D12Fence* mD3D12Fence;
+		UINT64		 mFenceValue;
 
 
 	};

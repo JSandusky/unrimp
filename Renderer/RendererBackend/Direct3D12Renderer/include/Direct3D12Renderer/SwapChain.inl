@@ -28,23 +28,30 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IDXGISwapChain *SwapChain::getDxgiSwapChain() const
+	inline IDXGISwapChain3 *SwapChain::getDxgiSwapChain3() const
 	{
-		return mDxgiSwapChain;
+		return mDxgiSwapChain3;
 	}
 
-	// TODO(co) Direct3D 12 update
-	/*
-	inline ID3D12RenderTargetView *SwapChain::getD3D12RenderTargetView() const
+	inline ID3D12DescriptorHeap *SwapChain::getD3D12DescriptorHeap() const
 	{
-		return mD3D12RenderTargetView;
+		return mD3D12DescriptorHeap;
 	}
 
-	inline ID3D12DepthStencilView *SwapChain::getD3D12DepthStencilView() const
+	inline UINT SwapChain::getRenderTargetViewDescriptorSize() const
 	{
-		return mD3D12DepthStencilView;
+		return mRenderTargetViewDescriptorSize;
 	}
-	*/
+
+	inline UINT SwapChain::getBackD3D12ResourceRenderTargetFrameIndex() const
+	{
+		return mFrameIndex;
+	}
+
+	inline ID3D12Resource *SwapChain::getBackD3D12ResourceRenderTarget() const
+	{
+		return mD3D12ResourceRenderTargets[mFrameIndex];
+	}
 
 
 //[-------------------------------------------------------]

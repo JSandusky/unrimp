@@ -37,6 +37,8 @@ struct ID3D12Query;
 struct ID3D12Device;
 struct IDXGIFactory4;
 struct ID3D12CommandQueue;
+struct ID3D12CommandAllocator;
+struct ID3D12GraphicsCommandList;
 namespace Renderer
 {
 	class RenderTarget;
@@ -269,6 +271,8 @@ namespace Direct3D12Renderer
 		IDXGIFactory4*				   mDxgiFactory4;				///< DXGI factors instance, always valid for a correctly initialized renderer
 		ID3D12Device				  *mD3D12Device;				///< The Direct3D 12 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
 		ID3D12CommandQueue*			   mD3D12CommandQueue;			///< The Direct3D 12 command queue, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
+		ID3D12CommandAllocator*		   mD3D12CommandAllocator;
+		ID3D12GraphicsCommandList*	   mD3D12GraphicsCommandList;
 		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
 		ID3D12Query					  *mD3D12QueryFlush;			///< Direct3D 12 query used for flush, can be a null pointer
 		//[-------------------------------------------------------]

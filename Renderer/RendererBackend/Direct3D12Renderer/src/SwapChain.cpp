@@ -39,9 +39,13 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	SwapChain::SwapChain(Direct3D12Renderer &direct3D12Renderer, handle nativeWindowHandle) :
 		ISwapChain(direct3D12Renderer),
-		mDxgiSwapChain(nullptr),
+		mDxgiSwapChain3(nullptr),
 		mD3D12DescriptorHeap(nullptr),
-		mRenderTargetViewDescriptorSize(0)
+		mRenderTargetViewDescriptorSize(0),
+		mFrameIndex(0),
+		mFenceEvent(nullptr),
+		mD3D12Fence(nullptr),
+		mFenceValue(0)
 	{
 		memset(mD3D12ResourceRenderTargets, 0, sizeof(ID3D12Resource*) * NUMBER_OF_FRAMES);
 
@@ -49,7 +53,7 @@ namespace Direct3D12Renderer
 		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);
 
 		// Get our IDXGI factory instance
-		IDXGIFactory1 &dxgiFactory1 = direct3D12Renderer.getDxgiFactory4Safe();
+		IDXGIFactory4 &dxgiFactory4 = direct3D12Renderer.getDxgiFactory4Safe();
 
 		// Get the width and height of the given native window and ensure they are never ever zero
 		// -> See "getSafeWidthAndHeight()"-method comments for details
@@ -87,16 +91,50 @@ namespace Direct3D12Renderer
 		dxgiSwapChainDesc.OutputWindow		= hWnd;
 		dxgiSwapChainDesc.SampleDesc.Count	= 1;
 		dxgiSwapChainDesc.Windowed			= TRUE;
-		dxgiFactory1.CreateSwapChain(direct3D12Renderer.getD3D12CommandQueue(), &dxgiSwapChainDesc, &mDxgiSwapChain);
+		IDXGISwapChain* dxgiSwapChain = nullptr;
+		dxgiFactory4.CreateSwapChain(direct3D12Renderer.getD3D12CommandQueue(), &dxgiSwapChainDesc, &dxgiSwapChain);
+		if (FAILED(dxgiSwapChain->QueryInterface(IID_PPV_ARGS(&mDxgiSwapChain3))))
+		{
+			dxgiSwapChain->Release();
+			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to retrieve DXGI swap chain 3")
+		}
 
 		// Disable alt-return for automatic fullscreen state change
 		// -> We handle this manually to have more control over it
-		dxgiFactory1.MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER);
+		dxgiFactory4.MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER);
 
 		// Create the Direct3D 12 views
-		if (nullptr != mDxgiSwapChain)
+		if (nullptr != mDxgiSwapChain3)
 		{
 			createDirect3D12Views();
+		}
+
+		{ // Create synchronization objects
+			// Get the Direct3D 12 device instance
+			ID3D12Device* d3d12Device = nullptr;
+			mDxgiSwapChain3->GetDevice(__uuidof(ID3D12Device), (void**)&d3d12Device);
+			if (nullptr != d3d12Device)
+			{
+				if (SUCCEEDED(d3d12Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mD3D12Fence))))
+				{
+					mFenceValue = 1;
+
+					// Create an event handle to use for frame synchronization
+					mFenceEvent = ::CreateEvent(nullptr, FALSE, FALSE, nullptr);
+					if (nullptr == mFenceEvent)
+					{
+						RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Failed to create an event handle to use for frame synchronization. Error code %d", ::GetLastError())
+					}
+				}
+				else
+				{
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create Direct3D 12 fence instance")
+				}
+			}
+			else
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to retrieve the Direct3D 12 device instance from the swap chain")
+			}
 		}
 
 		// Assign a default name to the resource for debugging purposes
@@ -118,10 +156,22 @@ namespace Direct3D12Renderer
 
 		// Release the used resources
 		destroyDirect3D12Views();
-		if (nullptr != mDxgiSwapChain)
+		if (nullptr != mDxgiSwapChain3)
 		{
-			mDxgiSwapChain->Release();
-			mDxgiSwapChain = nullptr;
+			mDxgiSwapChain3->Release();
+			mDxgiSwapChain3 = nullptr;
+		}
+
+		// Destroy synchronization objects
+		if (nullptr != mFenceEvent)
+		{
+			::CloseHandle(mFenceEvent);
+			mFenceEvent = nullptr;
+		}
+		if (nullptr != mD3D12Fence)
+		{
+			mD3D12Fence->Release();
+			mD3D12Fence = nullptr;
 		}
 	}
 
@@ -133,12 +183,12 @@ namespace Direct3D12Renderer
 	{
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Assign a debug name to the DXGI swap chain
-			if (nullptr != mDxgiSwapChain)
+			if (nullptr != mDxgiSwapChain3)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mDxgiSwapChain->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mDxgiSwapChain->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mDxgiSwapChain3->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mDxgiSwapChain3->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 
 			// Assign a debug name to the Direct3D 12 frame resources
@@ -171,11 +221,11 @@ namespace Direct3D12Renderer
 	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
 	{
 		// Is there a valid swap chain?
-		if (nullptr != mDxgiSwapChain)
+		if (nullptr != mDxgiSwapChain3)
 		{
 			// Get the Direct3D 12 swap chain description
 			DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
-			mDxgiSwapChain->GetDesc(&dxgiSwapChainDesc);
+			mDxgiSwapChain3->GetDesc(&dxgiSwapChainDesc);
 
 			// Get the width and height
 			long swapChainWidth  = 1;
@@ -221,11 +271,11 @@ namespace Direct3D12Renderer
 	handle SwapChain::getNativeWindowHandle() const
 	{
 		// Is there a valid swap chain?
-		if (nullptr != mDxgiSwapChain)
+		if (nullptr != mDxgiSwapChain3)
 		{
 			// Get the Direct3D 12 swap chain description
 			DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
-			mDxgiSwapChain->GetDesc(&dxgiSwapChainDesc);
+			mDxgiSwapChain3->GetDesc(&dxgiSwapChainDesc);
 
 			// Return the native window handle
 			return reinterpret_cast<handle>(dxgiSwapChainDesc.OutputWindow);
@@ -238,16 +288,19 @@ namespace Direct3D12Renderer
 	void SwapChain::present()
 	{
 		// Is there a valid swap chain?
-		if (nullptr != mDxgiSwapChain)
+		if (nullptr != mDxgiSwapChain3)
 		{
-			mDxgiSwapChain->Present(0, 0);
+			mDxgiSwapChain3->Present(0, 0);
+
+			// Wait for the GPU to be done with all resources
+			waitForPreviousFrame();
 		}
 	}
 
 	void SwapChain::resizeBuffers()
 	{
 		// Is there a valid swap chain?
-		if (nullptr != mDxgiSwapChain)
+		if (nullptr != mDxgiSwapChain3)
 		{
 			// Get the currently set render target
 			Renderer::IRenderTarget *renderTargetBackup = getRenderer().omGetRenderTarget();
@@ -272,7 +325,7 @@ namespace Direct3D12Renderer
 
 			// Resize the Direct3D 12 swap chain
 			// -> Preserve the existing buffer count and format
-			if (SUCCEEDED(mDxgiSwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0)))
+			if (SUCCEEDED(mDxgiSwapChain3->ResizeBuffers(NUMBER_OF_FRAMES, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0)))
 			{
 				// Create the Direct3D 12 views
 				createDirect3D12Views();
@@ -292,9 +345,9 @@ namespace Direct3D12Renderer
 		BOOL fullscreen = FALSE;
 
 		// Is there a valid swap chain?
-		if (nullptr != mDxgiSwapChain)
+		if (nullptr != mDxgiSwapChain3)
 		{
-			mDxgiSwapChain->GetFullscreenState(&fullscreen, nullptr);
+			mDxgiSwapChain3->GetFullscreenState(&fullscreen, nullptr);
 		}
 
 		// Done
@@ -304,9 +357,9 @@ namespace Direct3D12Renderer
 	void SwapChain::setFullscreenState(bool fullscreen)
 	{
 		// Is there a valid swap chain?
-		if (nullptr != mDxgiSwapChain)
+		if (nullptr != mDxgiSwapChain3)
 		{
-			mDxgiSwapChain->SetFullscreenState(fullscreen, nullptr);
+			mDxgiSwapChain3->SetFullscreenState(fullscreen, nullptr);
 		}
 	}
 
@@ -318,7 +371,7 @@ namespace Direct3D12Renderer
 	{
 		// Get the Direct3D 12 swap chain description
 		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
-		mDxgiSwapChain->GetDesc(&dxgiSwapChainDesc);
+		mDxgiSwapChain3->GetDesc(&dxgiSwapChainDesc);
 
 		// Get the client rectangle of the native output window
 		RECT rect;
@@ -345,11 +398,11 @@ namespace Direct3D12Renderer
 
 	void SwapChain::createDirect3D12Views()
 	{
-		assert(nullptr != mDxgiSwapChain);
+		assert(nullptr != mDxgiSwapChain3);
 
 		// Get the Direct3D 12 device instance
 		ID3D12Device* d3d12Device = nullptr;
-		mDxgiSwapChain->GetDevice(__uuidof(ID3D12Device), (void**)&d3d12Device);
+		mDxgiSwapChain3->GetDevice(__uuidof(ID3D12Device), (void**)&d3d12Device);
 		if (nullptr != d3d12Device)
 		{
 			// Describe and create a render target view (RTV) descriptor heap
@@ -368,7 +421,7 @@ namespace Direct3D12Renderer
 					// Create a RTV for each frame
 					for (UINT frame = 0; frame < NUMBER_OF_FRAMES; ++frame)
 					{
-						if (SUCCEEDED(mDxgiSwapChain->GetBuffer(frame, IID_PPV_ARGS(&mD3D12ResourceRenderTargets[frame]))))
+						if (SUCCEEDED(mDxgiSwapChain3->GetBuffer(frame, IID_PPV_ARGS(&mD3D12ResourceRenderTargets[frame]))))
 						{
 							d3d12Device->CreateRenderTargetView(mD3D12ResourceRenderTargets[frame], nullptr, d3d12XCpuDescriptorHandle);
 							d3d12XCpuDescriptorHandle.Offset(1, mRenderTargetViewDescriptorSize);
@@ -379,6 +432,8 @@ namespace Direct3D12Renderer
 						}
 					}
 				}
+
+				mFrameIndex = mDxgiSwapChain3->GetCurrentBackBufferIndex();
 			}
 			else
 			{
@@ -393,6 +448,10 @@ namespace Direct3D12Renderer
 
 	void SwapChain::destroyDirect3D12Views()
 	{
+		// Wait for the GPU to be done with all resources
+		waitForPreviousFrame();
+
+		// Release Direct3D 12 resources
 		for (int frame = 0; frame < NUMBER_OF_FRAMES; ++frame)
 		{
 			if (nullptr != mD3D12ResourceRenderTargets[frame])
@@ -405,6 +464,35 @@ namespace Direct3D12Renderer
 		{
 			mD3D12DescriptorHeap->Release();
 			mD3D12DescriptorHeap = nullptr;
+		}
+	}
+
+	void SwapChain::waitForPreviousFrame()
+	{
+		assert(nullptr != mDxgiSwapChain3);
+
+		// TODO(co) This is the most simple but least effective approach and only meant for the Direct3D 12 renderer backend kickoff.
+
+		// Signal and increment the fence value
+		const UINT64 fence = mFenceValue;
+		if (SUCCEEDED(static_cast<Direct3D12Renderer&>(getRenderer()).getD3D12CommandQueue()->Signal(mD3D12Fence, fence)))
+		{
+			++mFenceValue;
+
+			// Wait until the previous frame is finished
+			if (mD3D12Fence->GetCompletedValue() < fence)
+			{
+				if (SUCCEEDED(mD3D12Fence->SetEventOnCompletion(fence, mFenceEvent)))
+				{
+					::WaitForSingleObject(mFenceEvent, INFINITE);
+				}
+				else
+				{
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to set event on completion")
+				}
+			}
+
+			mFrameIndex = mDxgiSwapChain3->GetCurrentBackBufferIndex();
 		}
 	}
 
