@@ -79,8 +79,9 @@ namespace Direct3D12Renderer
 	Direct3D12Renderer::Direct3D12Renderer(handle nativeWindowHandle) :
 		mDirect3D9RuntimeLinking(nullptr),
 		mDirect3D12RuntimeLinking(new Direct3D12RuntimeLinking()),
+		mDxgiFactory4(nullptr),
 		mD3D12Device(nullptr),
-		mD3D12DeviceContext(nullptr),
+		mD3D12CommandQueue(nullptr),
 		mShaderLanguageHlsl(nullptr),
 		mD3D12QueryFlush(nullptr),
 		mMainSwapChain(nullptr),
@@ -92,19 +93,18 @@ namespace Direct3D12Renderer
 		// Is Direct3D 12 available?
 		if (mDirect3D12RuntimeLinking->isDirect3D12Avaiable())
 		{
-			// Create the Direct3D 12 device
-			// -> In case of failure, create an emulated device instance so we can at least test the DirectX 12 API
-			if (FAILED(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&mD3D12Device))))
+			// Create the DXGI factory instance
+			if (SUCCEEDED(CreateDXGIFactory1(IID_PPV_ARGS(&mDxgiFactory4))))
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create DirectX 12 device instance. Creating an emulated Direct3D 11 device instance instead.")
-
-				// Create the DXGI factory instance
-				IDXGIFactory4* dxgiFactory4 = nullptr;
-				if (SUCCEEDED(CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory4))))
+				// Create the Direct3D 12 device
+				// -> In case of failure, create an emulated device instance so we can at least test the DirectX 12 API
+				if (FAILED(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&mD3D12Device))))
 				{
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create DirectX 12 device instance. Creating an emulated Direct3D 11 device instance instead.")
+
 					// Create the DXGI adapter instance
 					IDXGIAdapter* dxgiAdapter = nullptr;
-					if (SUCCEEDED(dxgiFactory4->EnumWarpAdapter(IID_PPV_ARGS(&dxgiAdapter))))
+					if (SUCCEEDED(mDxgiFactory4->EnumWarpAdapter(IID_PPV_ARGS(&dxgiAdapter))))
 					{
 						// Create the emulated Direct3D 12 device
 						if (FAILED(D3D12CreateDevice(dxgiAdapter, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mD3D12Device))))
@@ -119,44 +119,54 @@ namespace Direct3D12Renderer
 					{
 						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create DXGI adapter instance")
 					}
-
-					// Release the DXGI factory instance
-					dxgiFactory4->Release();
 				}
-				else
-				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create DXGI factory instance")
-				}
+			}
+			else
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create DXGI factory instance")
 			}
 
 			// Is there a valid Direct3D 12 device instance?
 			if (nullptr != mD3D12Device)
 			{
-				#ifdef DIRECT3D12RENDERER_NO_DEBUG
-					// Create the Direct3D 9 runtime linking instance, we know there can't be one, yet
-					mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
-
-					// Call the Direct3D 9 PIX function
-					if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
-					{
-						// Disable debugging
-						D3DPERF_SetOptions(1);
-					}
-				#endif
-
-				// Initialize the capabilities
-				initializeCapabilities();
-
-				// Create a main swap chain instance?
-				if (NULL_HANDLE != nativeWindowHandle)
+				// Describe and create the command queue
+				D3D12_COMMAND_QUEUE_DESC d3d12CommandQueueDesc;
+				d3d12CommandQueueDesc.Type		= D3D12_COMMAND_LIST_TYPE_DIRECT;
+				d3d12CommandQueueDesc.Priority	= D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
+				d3d12CommandQueueDesc.Flags		= D3D12_COMMAND_QUEUE_FLAG_NONE;
+				d3d12CommandQueueDesc.NodeMask	= 0;
+				if (SUCCEEDED(mD3D12Device->CreateCommandQueue(&d3d12CommandQueueDesc, IID_PPV_ARGS(&mD3D12CommandQueue))))
 				{
-					// Create a main swap chain instance
-					mMainSwapChain = static_cast<SwapChain*>(createSwapChain(nativeWindowHandle));
-					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
-					mMainSwapChain->addReference();	// Internal renderer reference
+					#ifdef DIRECT3D12RENDERER_NO_DEBUG
+						// Create the Direct3D 9 runtime linking instance, we know there can't be one, yet
+						mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
 
-					// By default, set the created main swap chain as the currently used render target
-					omSetRenderTarget(mMainSwapChain);
+						// Call the Direct3D 9 PIX function
+						if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
+						{
+							// Disable debugging
+							D3DPERF_SetOptions(1);
+						}
+					#endif
+
+					// Initialize the capabilities
+					initializeCapabilities();
+
+					// Create a main swap chain instance?
+					if (NULL_HANDLE != nativeWindowHandle)
+					{
+						// Create a main swap chain instance
+						mMainSwapChain = static_cast<SwapChain*>(createSwapChain(nativeWindowHandle));
+						RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
+						mMainSwapChain->addReference();	// Internal renderer reference
+
+						// By default, set the created main swap chain as the currently used render target
+						omSetRenderTarget(mMainSwapChain);
+					}
+				}
+				else
+				{
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the command queue instance")
 				}
 			}
 		}
@@ -220,19 +230,25 @@ namespace Direct3D12Renderer
 		}
 		*/
 
-		// Release the Direct3D 12 device we've created
-		// TODO(co) Direct3D 12 update
-		/*
-		if (nullptr != mD3D12DeviceContext)
+		// Release the Direct3D 12 command queue we've created
+		if (nullptr != mD3D12CommandQueue)
 		{
-			mD3D12DeviceContext->Release();
-			mD3D12DeviceContext = nullptr;
+			mD3D12CommandQueue->Release();
+			mD3D12CommandQueue = nullptr;
 		}
-		*/
+
+		// Release the Direct3D 12 device we've created
 		if (nullptr != mD3D12Device)
 		{
 			mD3D12Device->Release();
 			mD3D12Device = nullptr;
+		}
+
+		// Release the DXGI factory instance
+		if (nullptr != mDxgiFactory4)
+		{
+			mDxgiFactory4->Release();
+			mDxgiFactory4 = nullptr;
 		}
 
 		// Destroy the Direct3D 12 runtime linking instance

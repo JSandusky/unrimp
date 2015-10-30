@@ -34,10 +34,9 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-// TODO(co) Direct3D 12 update
-//struct IDXGISwapChain;
-//struct ID3D12RenderTargetView;
-//struct ID3D12DepthStencilView;
+struct IDXGISwapChain;
+struct ID3D12Resource;
+struct ID3D12DescriptorHeap;
 namespace Direct3D12Renderer
 {
 	class Direct3D12Renderer;
@@ -90,8 +89,7 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The DXGI swap chain instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		// TODO(co) Direct3D 12 update
-		// inline IDXGISwapChain *getDxgiSwapChain() const;
+		inline IDXGISwapChain *getDxgiSwapChain() const;
 
 		/**
 		*  @brief
@@ -146,6 +144,13 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		static const uint32_t NUMBER_OF_FRAMES = 2;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
@@ -179,15 +184,21 @@ namespace Direct3D12Renderer
 		*/
 		void createDirect3D12Views();
 
+		/**
+		*  @brief
+		*    Destroy the Direct3D 12 views
+		*/
+		void destroyDirect3D12Views();
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Direct3D 12 update
-		//IDXGISwapChain		   *mDxgiSwapChain;			///< The DXGI swap chain instance, null pointer on error
-		//ID3D12RenderTargetView *mD3D12RenderTargetView;	///< The Direct3D 12 render target view instance, null pointer on error
-		//ID3D12DepthStencilView *mD3D12DepthStencilView;	///< The Direct3D 12 depth stencil view instance, null pointer on error
+		IDXGISwapChain*		  mDxgiSwapChain;									///< The DXGI swap chain instance, null pointer on error
+		ID3D12DescriptorHeap* mD3D12DescriptorHeap;								///< The Direct3D 12 descriptor heap instance, null pointer on error
+		UINT				  mRenderTargetViewDescriptorSize;					///< Render target view descriptor size
+		ID3D12Resource*		  mD3D12ResourceRenderTargets[NUMBER_OF_FRAMES];	///< The Direct3D 12 render target instances, null pointer on error
 
 
 	};

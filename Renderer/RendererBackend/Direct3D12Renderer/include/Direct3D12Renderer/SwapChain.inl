@@ -28,13 +28,13 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Direct3D 12 update
-	/*
 	inline IDXGISwapChain *SwapChain::getDxgiSwapChain() const
 	{
 		return mDxgiSwapChain;
 	}
 
+	// TODO(co) Direct3D 12 update
+	/*
 	inline ID3D12RenderTargetView *SwapChain::getD3D12RenderTargetView() const
 	{
 		return mD3D12RenderTargetView;

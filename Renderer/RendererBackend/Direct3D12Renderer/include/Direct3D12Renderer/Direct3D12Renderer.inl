@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <assert.h>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Direct3D12Renderer
@@ -28,14 +34,25 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline IDXGIFactory4 *Direct3D12Renderer::getDxgiFactory4() const
+	{
+		return mDxgiFactory4;
+	}
+
+	inline IDXGIFactory4 &Direct3D12Renderer::getDxgiFactory4Safe() const
+	{
+		assert(nullptr != mDxgiFactory4);
+		return *mDxgiFactory4;
+	}
+
 	inline ID3D12Device *Direct3D12Renderer::getD3D12Device() const
 	{
 		return mD3D12Device;
 	}
 
-	inline ID3D12DeviceContext *Direct3D12Renderer::getD3D12DeviceContext() const
+	inline ID3D12CommandQueue *Direct3D12Renderer::getD3D12CommandQueue() const
 	{
-		return mD3D12DeviceContext;
+		return mD3D12CommandQueue;
 	}
 
 
@@ -49,8 +66,8 @@ namespace Direct3D12Renderer
 
 	inline bool Direct3D12Renderer::isInitialized() const
 	{
-		// Is there a Direct3D 12 device?
-		return (nullptr != mD3D12Device);
+		// Is there a Direct3D 12 command queue?
+		return (nullptr != mD3D12CommandQueue);
 	}
 
 

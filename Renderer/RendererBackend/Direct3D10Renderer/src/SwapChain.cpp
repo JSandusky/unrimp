@@ -49,11 +49,11 @@ namespace Direct3D10Renderer
 		// Get the native window handle
 		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);
 
-		// Get a IDXGIFactory instance
+		// Get a DXGI factory instance
 		IDXGIDevice *dxgiDevice = nullptr;
 		IDXGIAdapter *dxgiAdapter = nullptr;
 		IDXGIFactory *dxgiFactory = nullptr;
-		d3d10Device->QueryInterface(&dxgiDevice);
+		d3d10Device->QueryInterface(IID_PPV_ARGS(&dxgiDevice));
 		dxgiDevice->GetAdapter(&dxgiAdapter);
 		dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
 		dxgiAdapter->Release();
@@ -98,11 +98,13 @@ namespace Direct3D10Renderer
 		dxgiSwapChainDesc.SampleDesc.Quality				 = 0;
 		dxgiSwapChainDesc.Windowed							 = TRUE;
 		dxgiFactory->CreateSwapChain(d3d10Device, &dxgiSwapChainDesc, &mDxgiSwapChain);
-		dxgiFactory->Release();
 
 		// Disable alt-return for automatic fullscreen state change
 		// -> We handle this manually to have more control over it
 		dxgiFactory->MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER);
+
+		// Release our DXGI factory
+		dxgiFactory->Release();
 
 		// Create the Direct3D 10 views
 		if (nullptr != mDxgiSwapChain)

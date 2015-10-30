@@ -25,13 +25,6 @@
   - The Direct3D headers are somewhat chaotic and include tons of other headers.
     This slows down compilation and the more headers are included, the higher the risk of
     naming or redefinition conflicts.
-  - Starting with Windows 8, Direct3D is part of the Windows SDK. When using VisualStudio 2012
-    and the Direct3D headers from "Microsoft DirectX SDK (June 2010)" you will get a lot of
-    "
-      <path>\external\directx\include\dxgitype.h(12): warning C4005: 'DXGI_STATUS_OCCLUDED' : macro redefinition
-      c:\program files (x86)\windows kits\8.0\include\shared\winerror.h(49449) : see previous definition of 'DXGI_STATUS_OCCLUDED'
-    "
-    warnings.
 
     Do not include this header within headers which are usually used by users as well, do only
     use it inside cpp-files. It must still be possible that users of this renderer interface
@@ -59,157 +52,56 @@ __pragma(warning(pop))
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct D3D12_HEAP_DESC;
-struct ID3D12Heap;
-struct ID3D12Pageable;
-struct D3D12_PLACED_SUBRESOURCE_FOOTPRINT;
-struct D3D12_QUERY_HEAP_DESC;
-struct D3D12_COMMAND_SIGNATURE_DESC;
-struct ID3D12RootSignature;
-struct D3D12_PACKED_MIP_INFO;
-struct D3D12_TILE_SHAPE;
-struct D3D12_SUBRESOURCE_TILING;
-struct ID3D12DeviceChild;
-struct D3D12_COMMAND_QUEUE_DESC;
-struct D3D12_COMMAND_LIST_TYPE;
-struct D3D12_GRAPHICS_PIPELINE_STATE_DESC;
-struct D3D12_COMPUTE_PIPELINE_STATE_DESC;
-struct ID3D12CommandAllocator;
-struct ID3D12PipelineState;
-struct D3D12_DESCRIPTOR_HEAP_DESC;
-struct D3D12_DESCRIPTOR_HEAP_TYPE;
-struct D3D12_CONSTANT_BUFFER_VIEW_DESC;
-struct D3D12_CPU_DESCRIPTOR_HANDLE;
-struct D3D12_RESOURCE_DESC;
-struct DXGI_SWAP_CHAIN_DESC;
-struct IDXGISwapChain;
-struct IDXGIAdapter1;
-struct DXGI_SWAP_CHAIN_DESC1;
-struct IDXGIOutput;
-struct DXGI_SWAP_CHAIN_FULLSCREEN_DESC;
-struct IDXGISwapChain1;
+struct DXGI_RESIDENCY;
+struct DXGI_SURFACE_DESC;
 struct DXGI_ADAPTER_DESC;
-struct ID3D12Resource;
-struct D3D12_SHADER_RESOURCE_VIEW_DESC;
-struct D3D12_UNORDERED_ACCESS_VIEW_DESC;
+struct DXGI_SHARED_RESOURCE;
+struct DXGI_FRAME_STATISTICS;
+struct DXGI_SWAP_CHAIN_DESC1;
+struct DXGI_SWAP_CHAIN_FULLSCREEN_DESC;
+struct IDXGIOutput;
+struct IDXGISurface;
+struct IDXGIAdapter;
+struct IDXGIAdapter1;
+struct IDXGISwapChain1;
+struct D3D12_HEAP_DESC;
+struct D3D12_TILE_SHAPE;
+struct D3D12_SAMPLER_DESC;
+struct D3D12_RESOURCE_DESC;
+struct D3D12_QUERY_HEAP_DESC;
+struct D3D12_PACKED_MIP_INFO;
+struct D3D12_TILE_REGION_SIZE;
+struct D3D12_TILE_RANGE_FLAGS;
+struct D3D12_SUBRESOURCE_TILING;
+struct D3D12_COMMAND_SIGNATURE_DESC;
 struct D3D12_RENDER_TARGET_VIEW_DESC;
 struct D3D12_DEPTH_STENCIL_VIEW_DESC;
-struct D3D12_SAMPLER_DESC;
-struct IDXGIAdapter;
-struct ID3D10Blob;	// TODO(co) Direct3D 12 update
-struct D3D10_SHADER_MACRO;	// TODO(co) Direct3D 12 update
-typedef __interface ID3DInclude *LPD3D10INCLUDE;	// TODO(co) Direct3D 12 update
-struct ID3DX12ThreadPump;	// TODO(co) Direct3D 12 update
-typedef DWORD D3DCOLOR;	// TODO(co) Direct3D 12 update
+struct D3D12_TILED_RESOURCE_COORDINATE;
+struct D3D12_CONSTANT_BUFFER_VIEW_DESC;
+struct D3D12_SHADER_RESOURCE_VIEW_DESC;
+struct D3D12_UNORDERED_ACCESS_VIEW_DESC;
+struct D3D12_COMPUTE_PIPELINE_STATE_DESC;
+struct D3D12_GRAPHICS_PIPELINE_STATE_DESC;
+struct D3D12_PLACED_SUBRESOURCE_FOOTPRINT;
+struct ID3D12Heap;
+struct ID3D12Fence;
+struct ID3D12CommandList;
+struct ID3D12RootSignature;
+struct ID3D12PipelineState;
+struct ID3D12CommandAllocator;
+
+// TODO(co) Direct3D 12 update
+struct ID3D10Blob;
+struct D3D10_SHADER_MACRO;
+typedef __interface ID3DInclude *LPD3D10INCLUDE;
+struct ID3DX12ThreadPump;
+typedef DWORD D3DCOLOR;
 
 
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3Dcommon.h"
-enum D3D_FEATURE_LEVEL
-{
-	D3D_FEATURE_LEVEL_9_1	= 0x9100,
-	D3D_FEATURE_LEVEL_9_2	= 0x9200,
-	D3D_FEATURE_LEVEL_9_3	= 0x9300,
-	D3D_FEATURE_LEVEL_10_0	= 0xa000,
-	D3D_FEATURE_LEVEL_10_1	= 0xa100,
-	D3D_FEATURE_LEVEL_11_0	= 0xb000,
-	D3D_FEATURE_LEVEL_11_1	= 0xb100,
-	D3D_FEATURE_LEVEL_12_0	= 0xc000,
-	D3D_FEATURE_LEVEL_12_1	= 0xc100
-};
-
-// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
-typedef struct D3D12_RESOURCE_ALLOCATION_INFO
-{
-	UINT64 SizeInBytes;
-	UINT64 Alignment;
-} D3D12_RESOURCE_ALLOCATION_INFO;
-
-// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
-typedef enum D3D12_HEAP_TYPE
-{
-	D3D12_HEAP_TYPE_DEFAULT		= 1,
-	D3D12_HEAP_TYPE_UPLOAD		= 2,
-	D3D12_HEAP_TYPE_READBACK	= 3,
-	D3D12_HEAP_TYPE_CUSTOM		= 4
-} D3D12_HEAP_TYPE;
-
-// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
-typedef enum D3D12_CPU_PAGE_PROPERTY
-{
-	D3D12_CPU_PAGE_PROPERTY_UNKNOWN			= 0,
-	D3D12_CPU_PAGE_PROPERTY_NOT_AVAILABLE	= 1,
-	D3D12_CPU_PAGE_PROPERTY_WRITE_COMBINE	= 2,
-	D3D12_CPU_PAGE_PROPERTY_WRITE_BACK		= 3
-} D3D12_CPU_PAGE_PROPERTY;
-
-// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
-typedef enum D3D12_MEMORY_POOL
-{
-	D3D12_MEMORY_POOL_UNKNOWN	= 0,
-	D3D12_MEMORY_POOL_L0		= 1,
-	D3D12_MEMORY_POOL_L1		= 2
-} D3D12_MEMORY_POOL;
-
-// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
-typedef struct D3D12_HEAP_PROPERTIES
-{
-	D3D12_HEAP_TYPE Type;
-	D3D12_CPU_PAGE_PROPERTY CPUPageProperty;
-	D3D12_MEMORY_POOL MemoryPoolPreference;
-	UINT CreationNodeMask;
-	UINT VisibleNodeMask;
-} D3D12_HEAP_PROPERTIES;
-
-// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
-typedef enum D3D12_HEAP_FLAGS
-{
-	D3D12_HEAP_FLAG_NONE							= 0,
-	D3D12_HEAP_FLAG_SHARED							= 0x1,
-	D3D12_HEAP_FLAG_DENY_BUFFERS					= 0x4,
-	D3D12_HEAP_FLAG_ALLOW_DISPLAY					= 0x8,
-	D3D12_HEAP_FLAG_SHARED_CROSS_ADAPTER			= 0x20,
-	D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES				= 0x40,
-	D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES			= 0x80,
-	D3D12_HEAP_FLAG_ALLOW_ALL_BUFFERS_AND_TEXTURES	= 0,
-	D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS				= 0xc0,
-	D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES	= 0x44,
-	D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES		= 0x84
-} D3D12_HEAP_FLAGS;
-
-// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
-typedef enum D3D12_RESOURCE_STATES
-{
-	D3D12_RESOURCE_STATE_COMMON						= 0,
-	D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER	= 0x1,
-	D3D12_RESOURCE_STATE_INDEX_BUFFER				= 0x2,
-	D3D12_RESOURCE_STATE_RENDER_TARGET				= 0x4,
-	D3D12_RESOURCE_STATE_UNORDERED_ACCESS			= 0x8,
-	D3D12_RESOURCE_STATE_DEPTH_WRITE				= 0x10,
-	D3D12_RESOURCE_STATE_DEPTH_READ					= 0x20,
-	D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE	= 0x40,
-	D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE		= 0x80,
-	D3D12_RESOURCE_STATE_STREAM_OUT					= 0x100,
-	D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT			= 0x200,
-	D3D12_RESOURCE_STATE_COPY_DEST					= 0x400,
-	D3D12_RESOURCE_STATE_COPY_SOURCE				= 0x800,
-	D3D12_RESOURCE_STATE_RESOLVE_DEST				= 0x1000,
-	D3D12_RESOURCE_STATE_RESOLVE_SOURCE				= 0x2000,
-	D3D12_RESOURCE_STATE_GENERIC_READ				= ((((( 0x1 | 0x2) | 0x40) | 0x80) | 0x200) | 0x800),
-	D3D12_RESOURCE_STATE_PRESENT					= 0,
-	D3D12_RESOURCE_STATE_PREDICATION				= 0x200
-} D3D12_RESOURCE_STATES;
-
-// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
-typedef struct D3D12_DEPTH_STENCIL_VALUE
-{
-	FLOAT Depth;
-	UINT8 Stencil;
-} D3D12_DEPTH_STENCIL_VALUE;
-
-// "dxgiformat.h"
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "dxgiformat.h"
 typedef enum DXGI_FORMAT
 {
 	DXGI_FORMAT_UNKNOWN						= 0,
@@ -334,6 +226,215 @@ typedef enum DXGI_FORMAT
 	DXGI_FORMAT_FORCE_UINT					= 0xffffffff
 } DXGI_FORMAT;
 
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "dxgitype.h"
+typedef struct DXGI_RATIONAL
+{
+	UINT Numerator;
+	UINT Denominator;
+} DXGI_RATIONAL;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "dxgitype.h"
+typedef enum DXGI_MODE_SCANLINE_ORDER
+{
+	DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED		= 0,
+	DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE		= 1,
+	DXGI_MODE_SCANLINE_ORDER_UPPER_FIELD_FIRST	= 2,
+	DXGI_MODE_SCANLINE_ORDER_LOWER_FIELD_FIRST	= 3
+} DXGI_MODE_SCANLINE_ORDER;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "dxgitype.h"
+typedef enum DXGI_MODE_SCALING
+{
+	DXGI_MODE_SCALING_UNSPECIFIED	= 0,
+	DXGI_MODE_SCALING_CENTERED		= 1,
+	DXGI_MODE_SCALING_STRETCHED		= 2
+} DXGI_MODE_SCALING;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "dxgitype.h"
+typedef struct DXGI_MODE_DESC
+{
+	UINT Width;
+	UINT Height;
+	DXGI_RATIONAL RefreshRate;
+	DXGI_FORMAT Format;
+	DXGI_MODE_SCANLINE_ORDER ScanlineOrdering;
+	DXGI_MODE_SCALING Scaling;
+} DXGI_MODE_DESC;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "dxgitype.h"
+typedef struct DXGI_SAMPLE_DESC
+{
+	UINT Count;
+	UINT Quality;
+} DXGI_SAMPLE_DESC;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "DXGI.h"
+typedef UINT DXGI_USAGE;
+#define DXGI_MWA_NO_ALT_ENTER			(1 << 1)
+#define DXGI_USAGE_RENDER_TARGET_OUTPUT	0x00000020UL
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "DXGI.h"
+typedef enum DXGI_SWAP_EFFECT
+{
+	DXGI_SWAP_EFFECT_DISCARD			= 0,
+	DXGI_SWAP_EFFECT_SEQUENTIAL			= 1,
+	DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL	= 3,
+	DXGI_SWAP_EFFECT_FLIP_DISCARD		= 4
+} DXGI_SWAP_EFFECT;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "DXGI.h"
+typedef struct DXGI_SWAP_CHAIN_DESC
+{
+	DXGI_MODE_DESC BufferDesc;
+	DXGI_SAMPLE_DESC SampleDesc;
+	DXGI_USAGE BufferUsage;
+	UINT BufferCount;
+	HWND OutputWindow;
+	BOOL Windowed;
+	DXGI_SWAP_EFFECT SwapEffect;
+	UINT Flags;
+} DXGI_SWAP_CHAIN_DESC;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3Dcommon.h"
+enum D3D_FEATURE_LEVEL
+{
+	D3D_FEATURE_LEVEL_9_1	= 0x9100,
+	D3D_FEATURE_LEVEL_9_2	= 0x9200,
+	D3D_FEATURE_LEVEL_9_3	= 0x9300,
+	D3D_FEATURE_LEVEL_10_0	= 0xa000,
+	D3D_FEATURE_LEVEL_10_1	= 0xa100,
+	D3D_FEATURE_LEVEL_11_0	= 0xb000,
+	D3D_FEATURE_LEVEL_11_1	= 0xb100,
+	D3D_FEATURE_LEVEL_12_0	= 0xc000,
+	D3D_FEATURE_LEVEL_12_1	= 0xc100
+};
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_COMMAND_LIST_TYPE
+{
+	D3D12_COMMAND_LIST_TYPE_DIRECT	= 0,
+	D3D12_COMMAND_LIST_TYPE_BUNDLE	= 1,
+	D3D12_COMMAND_LIST_TYPE_COMPUTE	= 2,
+	D3D12_COMMAND_LIST_TYPE_COPY	= 3
+} D3D12_COMMAND_LIST_TYPE;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+struct D3D12_RANGE;
+struct D3D12_BOX;
+typedef UINT64 D3D12_GPU_VIRTUAL_ADDRESS;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_COMMAND_QUEUE_FLAGS
+{
+	D3D12_COMMAND_QUEUE_FLAG_NONE					= 0,
+	D3D12_COMMAND_QUEUE_FLAG_DISABLE_GPU_TIMEOUT	= 0x1
+} D3D12_COMMAND_QUEUE_FLAGS;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_COMMAND_QUEUE_PRIORITY
+{
+	D3D12_COMMAND_QUEUE_PRIORITY_NORMAL	= 0,
+	D3D12_COMMAND_QUEUE_PRIORITY_HIGH	= 100
+} D3D12_COMMAND_QUEUE_PRIORITY;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_COMMAND_QUEUE_DESC
+{
+	D3D12_COMMAND_LIST_TYPE Type;
+	INT Priority;
+	D3D12_COMMAND_QUEUE_FLAGS Flags;
+	UINT NodeMask;
+} D3D12_COMMAND_QUEUE_DESC;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_RESOURCE_ALLOCATION_INFO
+{
+	UINT64 SizeInBytes;
+	UINT64 Alignment;
+} D3D12_RESOURCE_ALLOCATION_INFO;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_HEAP_TYPE
+{
+	D3D12_HEAP_TYPE_DEFAULT		= 1,
+	D3D12_HEAP_TYPE_UPLOAD		= 2,
+	D3D12_HEAP_TYPE_READBACK	= 3,
+	D3D12_HEAP_TYPE_CUSTOM		= 4
+} D3D12_HEAP_TYPE;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_CPU_PAGE_PROPERTY
+{
+	D3D12_CPU_PAGE_PROPERTY_UNKNOWN			= 0,
+	D3D12_CPU_PAGE_PROPERTY_NOT_AVAILABLE	= 1,
+	D3D12_CPU_PAGE_PROPERTY_WRITE_COMBINE	= 2,
+	D3D12_CPU_PAGE_PROPERTY_WRITE_BACK		= 3
+} D3D12_CPU_PAGE_PROPERTY;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_MEMORY_POOL
+{
+	D3D12_MEMORY_POOL_UNKNOWN	= 0,
+	D3D12_MEMORY_POOL_L0		= 1,
+	D3D12_MEMORY_POOL_L1		= 2
+} D3D12_MEMORY_POOL;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_HEAP_PROPERTIES
+{
+	D3D12_HEAP_TYPE Type;
+	D3D12_CPU_PAGE_PROPERTY CPUPageProperty;
+	D3D12_MEMORY_POOL MemoryPoolPreference;
+	UINT CreationNodeMask;
+	UINT VisibleNodeMask;
+} D3D12_HEAP_PROPERTIES;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_HEAP_FLAGS
+{
+	D3D12_HEAP_FLAG_NONE							= 0,
+	D3D12_HEAP_FLAG_SHARED							= 0x1,
+	D3D12_HEAP_FLAG_DENY_BUFFERS					= 0x4,
+	D3D12_HEAP_FLAG_ALLOW_DISPLAY					= 0x8,
+	D3D12_HEAP_FLAG_SHARED_CROSS_ADAPTER			= 0x20,
+	D3D12_HEAP_FLAG_DENY_RT_DS_TEXTURES				= 0x40,
+	D3D12_HEAP_FLAG_DENY_NON_RT_DS_TEXTURES			= 0x80,
+	D3D12_HEAP_FLAG_ALLOW_ALL_BUFFERS_AND_TEXTURES	= 0,
+	D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS				= 0xc0,
+	D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES	= 0x44,
+	D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES		= 0x84
+} D3D12_HEAP_FLAGS;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_RESOURCE_STATES
+{
+	D3D12_RESOURCE_STATE_COMMON						= 0,
+	D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER	= 0x1,
+	D3D12_RESOURCE_STATE_INDEX_BUFFER				= 0x2,
+	D3D12_RESOURCE_STATE_RENDER_TARGET				= 0x4,
+	D3D12_RESOURCE_STATE_UNORDERED_ACCESS			= 0x8,
+	D3D12_RESOURCE_STATE_DEPTH_WRITE				= 0x10,
+	D3D12_RESOURCE_STATE_DEPTH_READ					= 0x20,
+	D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE	= 0x40,
+	D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE		= 0x80,
+	D3D12_RESOURCE_STATE_STREAM_OUT					= 0x100,
+	D3D12_RESOURCE_STATE_INDIRECT_ARGUMENT			= 0x200,
+	D3D12_RESOURCE_STATE_COPY_DEST					= 0x400,
+	D3D12_RESOURCE_STATE_COPY_SOURCE				= 0x800,
+	D3D12_RESOURCE_STATE_RESOLVE_DEST				= 0x1000,
+	D3D12_RESOURCE_STATE_RESOLVE_SOURCE				= 0x2000,
+	D3D12_RESOURCE_STATE_GENERIC_READ				= ((((( 0x1 | 0x2) | 0x40) | 0x80) | 0x200) | 0x800),
+	D3D12_RESOURCE_STATE_PRESENT					= 0,
+	D3D12_RESOURCE_STATE_PREDICATION				= 0x200
+} D3D12_RESOURCE_STATES;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_DEPTH_STENCIL_VALUE
+{
+	FLOAT Depth;
+	UINT8 Stencil;
+} D3D12_DEPTH_STENCIL_VALUE;
+
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
 typedef struct D3D12_CLEAR_VALUE
 {
@@ -365,6 +466,51 @@ typedef enum D3D12_FEATURE
 	D3D12_FEATURE_GPU_VIRTUAL_ADDRESS_SUPPORT	= (D3D12_FEATURE_FORMAT_INFO + 1) 
 } D3D12_FEATURE;
 
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_TILE_MAPPING_FLAGS
+{
+	D3D12_TILE_MAPPING_FLAG_NONE		= 0,
+	D3D12_TILE_MAPPING_FLAG_NO_HAZARD	= 0x1
+} D3D12_TILE_MAPPING_FLAGS;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_CPU_DESCRIPTOR_HANDLE
+{
+	SIZE_T ptr;
+} D3D12_CPU_DESCRIPTOR_HANDLE;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_GPU_DESCRIPTOR_HANDLE
+{
+	UINT64 ptr;
+} D3D12_GPU_DESCRIPTOR_HANDLE;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_DESCRIPTOR_HEAP_TYPE
+{
+	D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV	= 0,
+	D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER		= (D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV + 1),
+	D3D12_DESCRIPTOR_HEAP_TYPE_RTV			= (D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER + 1),
+	D3D12_DESCRIPTOR_HEAP_TYPE_DSV			= (D3D12_DESCRIPTOR_HEAP_TYPE_RTV + 1),
+	D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES	= (D3D12_DESCRIPTOR_HEAP_TYPE_DSV + 1) 
+} D3D12_DESCRIPTOR_HEAP_TYPE;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_DESCRIPTOR_HEAP_FLAGS
+{
+	D3D12_DESCRIPTOR_HEAP_FLAG_NONE				= 0,
+	D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE	= 0x1
+} D3D12_DESCRIPTOR_HEAP_FLAGS;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_DESCRIPTOR_HEAP_DESC
+{
+	D3D12_DESCRIPTOR_HEAP_TYPE Type;
+	UINT NumDescriptors;
+	D3D12_DESCRIPTOR_HEAP_FLAGS Flags;
+	UINT NodeMask;
+} D3D12_DESCRIPTOR_HEAP_DESC;
+
 
 //[-------------------------------------------------------]
 //[ Classes                                               ]
@@ -378,6 +524,31 @@ IDXGIObject : public IUnknown
 		virtual HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(_In_ REFGUID Name, _In_ const IUnknown *pUnknown) = 0;
 		virtual HRESULT STDMETHODCALLTYPE GetPrivateData(_In_ REFGUID Name, _Inout_ UINT *pDataSize, _Out_writes_bytes_(*pDataSize) void *pData) = 0;
 		virtual HRESULT STDMETHODCALLTYPE GetParent(_In_ REFIID riid, _COM_Outptr_ void **ppParent) = 0;
+};
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "DXGI.h"
+MIDL_INTERFACE("3d3e0379-f9de-4d58-bb6c-18d62992f1a6")
+IDXGIDeviceSubObject : public IDXGIObject
+{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE GetDevice(_In_ REFIID riid, _COM_Outptr_ void **ppDevice) = 0;
+};
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "DXGI.h"
+MIDL_INTERFACE("310d36a0-d2e7-4c0a-aa04-6a9d23b8886a")
+IDXGISwapChain : public IDXGIDeviceSubObject
+{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE Present(UINT SyncInterval, UINT Flags) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetBuffer(UINT Buffer, _In_ REFIID riid, _COM_Outptr_ void **ppSurface) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetFullscreenState(BOOL Fullscreen, _In_opt_ IDXGIOutput *pTarget) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetFullscreenState(_Out_opt_ BOOL *pFullscreen, _COM_Outptr_opt_result_maybenull_ IDXGIOutput **ppTarget) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetDesc(_Out_ DXGI_SWAP_CHAIN_DESC *pDesc) = 0;
+		virtual HRESULT STDMETHODCALLTYPE ResizeBuffers(UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags) = 0;
+		virtual HRESULT STDMETHODCALLTYPE ResizeTarget(_In_ const DXGI_MODE_DESC *pNewTargetParameters) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetContainingOutput(_COM_Outptr_ IDXGIOutput **ppOutput) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetFrameStatistics(_Out_ DXGI_FRAME_STATISTICS *pStats) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetLastPresentCount(_Out_ UINT *pLastPresentCount) = 0;
 };
 
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "DXGI.h"
@@ -436,7 +607,7 @@ IDXGIFactory4 : public IDXGIFactory3
 		virtual HRESULT STDMETHODCALLTYPE EnumWarpAdapter(_In_ REFIID riid, _COM_Outptr_ void **ppvAdapter) = 0;
 };
 
-// "Microsoft DirectX SDK (June 2010)" -> "DXGI.h"
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "DXGI.h"
 MIDL_INTERFACE("2411e7e1-12ac-4ccf-bd14-9798e8534dc0")
 IDXGIAdapter : public IDXGIObject
 {
@@ -444,6 +615,18 @@ IDXGIAdapter : public IDXGIObject
 		virtual HRESULT STDMETHODCALLTYPE EnumOutputs(UINT Output, __out IDXGIOutput **ppOutput) = 0;
 		virtual HRESULT STDMETHODCALLTYPE GetDesc(__out DXGI_ADAPTER_DESC *pDesc) = 0;
 		virtual HRESULT STDMETHODCALLTYPE CheckInterfaceSupport(__in REFGUID InterfaceName, __out LARGE_INTEGER *pUMDVersion) = 0;
+};
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "DXGI.h"
+MIDL_INTERFACE("54ec77fa-1377-44e6-8c32-88fd5f44c84c")
+IDXGIDevice : public IDXGIObject
+{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE GetAdapter(_COM_Outptr_ IDXGIAdapter **pAdapter) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateSurface(_In_ const DXGI_SURFACE_DESC *pDesc, UINT NumSurfaces, DXGI_USAGE Usage, _In_opt_ const DXGI_SHARED_RESOURCE *pSharedResource, _COM_Outptr_ IDXGISurface **ppSurface) = 0;
+		virtual HRESULT STDMETHODCALLTYPE QueryResourceResidency(_In_reads_(NumResources) IUnknown *const *ppResources, _Out_writes_(NumResources) DXGI_RESIDENCY *pResidencyStatus, UINT NumResources) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetGPUThreadPriority(INT Priority) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetGPUThreadPriority(_Out_ INT *pPriority) = 0;
 };
 
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
@@ -458,45 +641,102 @@ ID3D12Object : public IUnknown
 };
 
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+MIDL_INTERFACE("905db94b-a00c-4140-9df5-2b64ca9ea357")
+ID3D12DeviceChild : public ID3D12Object
+{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE GetDevice(REFIID riid, _COM_Outptr_opt_ void **ppvDevice) = 0;
+};
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+MIDL_INTERFACE("63ee58fb-1268-4835-86da-f008ce62f0d6")
+ID3D12Pageable : public ID3D12DeviceChild
+{
+	// Nothing here
+};
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+MIDL_INTERFACE("696442be-a72e-4059-bc79-5b5c98040fad")
+ID3D12Resource : public ID3D12Pageable
+{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE Map(UINT Subresource, _In_opt_ const D3D12_RANGE *pReadRange, _Outptr_opt_result_bytebuffer_(_Inexpressible_("Dependent on resource")) void **ppData) = 0;
+		virtual void STDMETHODCALLTYPE Unmap(UINT Subresource, _In_opt_ const D3D12_RANGE *pWrittenRange) = 0;
+		virtual D3D12_RESOURCE_DESC STDMETHODCALLTYPE GetDesc(void) = 0;
+		virtual D3D12_GPU_VIRTUAL_ADDRESS STDMETHODCALLTYPE GetGPUVirtualAddress( void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE WriteToSubresource(UINT DstSubresource, _In_opt_ const D3D12_BOX *pDstBox, _In_ const void *pSrcData, UINT SrcRowPitch, UINT SrcDepthPitch) = 0;
+		virtual HRESULT STDMETHODCALLTYPE ReadFromSubresource(_Out_ void *pDstData, UINT DstRowPitch, UINT DstDepthPitch, UINT SrcSubresource, _In_opt_ const D3D12_BOX *pSrcBox) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetHeapProperties(_Out_opt_ D3D12_HEAP_PROPERTIES *pHeapProperties, _Out_opt_ D3D12_HEAP_FLAGS *pHeapFlags) = 0;
+};
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+MIDL_INTERFACE("8efb471d-616c-4f49-90f7-127bb763fa51")
+ID3D12DescriptorHeap : public ID3D12Pageable
+{
+	public:
+		virtual D3D12_DESCRIPTOR_HEAP_DESC STDMETHODCALLTYPE GetDesc(void) = 0;
+		virtual D3D12_CPU_DESCRIPTOR_HANDLE STDMETHODCALLTYPE GetCPUDescriptorHandleForHeapStart(void) = 0;
+		virtual D3D12_GPU_DESCRIPTOR_HANDLE STDMETHODCALLTYPE GetGPUDescriptorHandleForHeapStart(void) = 0;
+};
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+MIDL_INTERFACE("0ec870a6-5d7e-4c22-8cfc-5baae07616ed")
+ID3D12CommandQueue : public ID3D12Pageable
+{
+	public:
+		virtual void STDMETHODCALLTYPE UpdateTileMappings(_In_ ID3D12Resource *pResource, UINT NumResourceRegions, _In_reads_opt_(NumResourceRegions) const D3D12_TILED_RESOURCE_COORDINATE *pResourceRegionStartCoordinates, _In_reads_opt_(NumResourceRegions) const D3D12_TILE_REGION_SIZE *pResourceRegionSizes, _In_opt_ ID3D12Heap *pHeap, UINT NumRanges, _In_reads_opt_(NumRanges) const D3D12_TILE_RANGE_FLAGS *pRangeFlags, _In_reads_opt_(NumRanges) const UINT *pHeapRangeStartOffsets, _In_reads_opt_(NumRanges) const UINT *pRangeTileCounts, D3D12_TILE_MAPPING_FLAGS Flags) = 0;
+		virtual void STDMETHODCALLTYPE CopyTileMappings(_In_ ID3D12Resource *pDstResource, _In_ const D3D12_TILED_RESOURCE_COORDINATE *pDstRegionStartCoordinate, _In_ ID3D12Resource *pSrcResource, _In_ const D3D12_TILED_RESOURCE_COORDINATE *pSrcRegionStartCoordinate, _In_ const D3D12_TILE_REGION_SIZE *pRegionSize, D3D12_TILE_MAPPING_FLAGS Flags) = 0;
+		virtual void STDMETHODCALLTYPE ExecuteCommandLists(_In_ UINT NumCommandLists, _In_reads_(NumCommandLists) ID3D12CommandList *const *ppCommandLists) = 0;
+		virtual void STDMETHODCALLTYPE SetMarker(UINT Metadata, _In_reads_bytes_opt_(Size) const void *pData, UINT Size) = 0;
+		virtual void STDMETHODCALLTYPE BeginEvent(UINT Metadata, _In_reads_bytes_opt_(Size) const void *pData, UINT Size) = 0;
+		virtual void STDMETHODCALLTYPE EndEvent(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE Signal(ID3D12Fence *pFence, UINT64 Value) = 0;
+		virtual HRESULT STDMETHODCALLTYPE Wait(ID3D12Fence *pFence, UINT64 Value) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetTimestampFrequency(_Out_ UINT64 *pFrequency) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetClockCalibration(_Out_ UINT64 *pGpuTimestamp, _Out_ UINT64 *pCpuTimestamp) = 0;
+		virtual D3D12_COMMAND_QUEUE_DESC STDMETHODCALLTYPE GetDesc(void) = 0;
+};
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
 MIDL_INTERFACE("189819f1-1db6-4b57-be54-1821339b85f7")
 ID3D12Device : public ID3D12Object
 {
-public:
-	virtual UINT STDMETHODCALLTYPE GetNodeCount(void) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateCommandQueue(_In_ const D3D12_COMMAND_QUEUE_DESC *pDesc, REFIID riid, _COM_Outptr_ void **ppCommandQueue) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateCommandAllocator(_In_ D3D12_COMMAND_LIST_TYPE type, REFIID riid, _COM_Outptr_ void **ppCommandAllocator) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateGraphicsPipelineState(_In_ const D3D12_GRAPHICS_PIPELINE_STATE_DESC *pDesc, REFIID riid, _COM_Outptr_ void **ppPipelineState) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateComputePipelineState(_In_ const D3D12_COMPUTE_PIPELINE_STATE_DESC *pDesc, REFIID riid, _COM_Outptr_ void **ppPipelineState) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateCommandList(_In_ UINT nodeMask, _In_ D3D12_COMMAND_LIST_TYPE type, _In_ ID3D12CommandAllocator *pCommandAllocator, _In_opt_ ID3D12PipelineState *pInitialState, REFIID riid, _COM_Outptr_ void **ppCommandList) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CheckFeatureSupport(D3D12_FEATURE Feature, _Inout_updates_bytes_(FeatureSupportDataSize) void *pFeatureSupportData, UINT FeatureSupportDataSize) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateDescriptorHeap(_In_ const D3D12_DESCRIPTOR_HEAP_DESC *pDescriptorHeapDesc, REFIID riid, _COM_Outptr_ void **ppvHeap) = 0;
-	virtual UINT STDMETHODCALLTYPE GetDescriptorHandleIncrementSize(_In_ D3D12_DESCRIPTOR_HEAP_TYPE DescriptorHeapType) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateRootSignature(_In_ UINT nodeMask, _In_reads_(blobLengthInBytes) const void *pBlobWithRootSignature, _In_ SIZE_T blobLengthInBytes, REFIID riid, _COM_Outptr_ void **ppvRootSignature) = 0;
-	virtual void STDMETHODCALLTYPE CreateConstantBufferView(_In_opt_ const D3D12_CONSTANT_BUFFER_VIEW_DESC *pDesc, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) = 0;
-	virtual void STDMETHODCALLTYPE CreateShaderResourceView(_In_opt_ ID3D12Resource *pResource, _In_opt_ const D3D12_SHADER_RESOURCE_VIEW_DESC *pDesc, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) = 0;
-	virtual void STDMETHODCALLTYPE CreateUnorderedAccessView(_In_opt_ ID3D12Resource *pResource, _In_opt_ ID3D12Resource *pCounterResource, _In_opt_ const D3D12_UNORDERED_ACCESS_VIEW_DESC *pDesc, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) = 0;
-	virtual void STDMETHODCALLTYPE CreateRenderTargetView(_In_opt_ ID3D12Resource *pResource, _In_opt_ const D3D12_RENDER_TARGET_VIEW_DESC *pDesc, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) = 0;
-	virtual void STDMETHODCALLTYPE CreateDepthStencilView(_In_opt_ ID3D12Resource *pResource, _In_opt_ const D3D12_DEPTH_STENCIL_VIEW_DESC *pDesc, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) = 0;
-	virtual void STDMETHODCALLTYPE CreateSampler(_In_ const D3D12_SAMPLER_DESC *pDesc, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) = 0;
-	virtual void STDMETHODCALLTYPE CopyDescriptors(_In_ UINT NumDestDescriptorRanges, _In_reads_(NumDestDescriptorRanges) const D3D12_CPU_DESCRIPTOR_HANDLE *pDestDescriptorRangeStarts, _In_reads_opt_(NumDestDescriptorRanges) const UINT *pDestDescriptorRangeSizes, _In_ UINT NumSrcDescriptorRanges, _In_reads_(NumSrcDescriptorRanges) const D3D12_CPU_DESCRIPTOR_HANDLE *pSrcDescriptorRangeStarts, _In_reads_opt_(NumSrcDescriptorRanges) const UINT *pSrcDescriptorRangeSizes, _In_ D3D12_DESCRIPTOR_HEAP_TYPE DescriptorHeapsType) = 0;
-	virtual void STDMETHODCALLTYPE CopyDescriptorsSimple(_In_ UINT NumDescriptors, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptorRangeStart, _In_ D3D12_CPU_DESCRIPTOR_HANDLE SrcDescriptorRangeStart, _In_ D3D12_DESCRIPTOR_HEAP_TYPE DescriptorHeapsType) = 0;
-	virtual D3D12_RESOURCE_ALLOCATION_INFO STDMETHODCALLTYPE GetResourceAllocationInfo(_In_ UINT visibleMask, _In_ UINT numResourceDescs, _In_reads_(numResourceDescs) const D3D12_RESOURCE_DESC *pResourceDescs) = 0;
-	virtual D3D12_HEAP_PROPERTIES STDMETHODCALLTYPE GetCustomHeapProperties(_In_ UINT nodeMask, D3D12_HEAP_TYPE heapType) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateCommittedResource(_In_ const D3D12_HEAP_PROPERTIES *pHeapProperties, D3D12_HEAP_FLAGS HeapFlags, _In_ const D3D12_RESOURCE_DESC *pResourceDesc, D3D12_RESOURCE_STATES InitialResourceState, _In_opt_ const D3D12_CLEAR_VALUE *pOptimizedClearValue, REFIID riidResource, _COM_Outptr_opt_ void **ppvResource) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateHeap(_In_ const D3D12_HEAP_DESC *pDesc, REFIID riid, _COM_Outptr_opt_ void **ppvHeap) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreatePlacedResource(_In_ ID3D12Heap *pHeap, UINT64 HeapOffset, _In_ const D3D12_RESOURCE_DESC *pDesc, D3D12_RESOURCE_STATES InitialState, _In_opt_ const D3D12_CLEAR_VALUE *pOptimizedClearValue, REFIID riid, _COM_Outptr_opt_ void **ppvResource) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateReservedResource(_In_ const D3D12_RESOURCE_DESC *pDesc, D3D12_RESOURCE_STATES InitialState, _In_opt_ const D3D12_CLEAR_VALUE *pOptimizedClearValue, REFIID riid, _COM_Outptr_opt_ void **ppvResource) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateSharedHandle(_In_ ID3D12DeviceChild *pObject, _In_opt_ const SECURITY_ATTRIBUTES *pAttributes, DWORD Access, _In_opt_ LPCWSTR Name, _Out_ HANDLE *pHandle) = 0;
-	virtual HRESULT STDMETHODCALLTYPE OpenSharedHandle(_In_ HANDLE NTHandle, REFIID riid, _COM_Outptr_opt_ void **ppvObj) = 0;
-	virtual HRESULT STDMETHODCALLTYPE OpenSharedHandleByName(_In_ LPCWSTR Name, DWORD Access, _Out_ HANDLE *pNTHandle) = 0;
-	virtual HRESULT STDMETHODCALLTYPE MakeResident(UINT NumObjects, _In_reads_(NumObjects) ID3D12Pageable *const *ppObjects) = 0;
-	virtual HRESULT STDMETHODCALLTYPE Evict(UINT NumObjects, _In_reads_(NumObjects) ID3D12Pageable *const *ppObjects) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateFence(UINT64 InitialValue, D3D12_FENCE_FLAGS Flags, REFIID riid, _COM_Outptr_ void **ppFence) = 0;
-	virtual HRESULT STDMETHODCALLTYPE GetDeviceRemovedReason(void) = 0;
-	virtual void STDMETHODCALLTYPE GetCopyableFootprints(_In_ const D3D12_RESOURCE_DESC *pResourceDesc, _In_range_(0,D3D12_REQ_SUBRESOURCES) UINT FirstSubresource, _In_range_(0,D3D12_REQ_SUBRESOURCES-FirstSubresource) UINT NumSubresources, UINT64 BaseOffset, _Out_writes_opt_(NumSubresources) D3D12_PLACED_SUBRESOURCE_FOOTPRINT *pLayouts, _Out_writes_opt_(NumSubresources) UINT *pNumRows, _Out_writes_opt_(NumSubresources) UINT64 *pRowSizeInBytes, _Out_opt_ UINT64 *pTotalBytes) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateQueryHeap(_In_ const D3D12_QUERY_HEAP_DESC *pDesc, REFIID riid, _COM_Outptr_opt_ void **ppvHeap) = 0;
-	virtual HRESULT STDMETHODCALLTYPE SetStablePowerState(BOOL Enable) = 0;
-	virtual HRESULT STDMETHODCALLTYPE CreateCommandSignature(_In_ const D3D12_COMMAND_SIGNATURE_DESC *pDesc, _In_opt_ ID3D12RootSignature *pRootSignature, REFIID riid, _COM_Outptr_opt_ void **ppvCommandSignature) = 0;
-	virtual void STDMETHODCALLTYPE GetResourceTiling(_In_ ID3D12Resource *pTiledResource, _Out_opt_ UINT *pNumTilesForEntireResource, _Out_opt_ D3D12_PACKED_MIP_INFO *pPackedMipDesc, _Out_opt_ D3D12_TILE_SHAPE *pStandardTileShapeForNonPackedMips, _Inout_opt_ UINT *pNumSubresourceTilings, _In_ UINT FirstSubresourceTilingToGet, _Out_writes_(*pNumSubresourceTilings) D3D12_SUBRESOURCE_TILING *pSubresourceTilingsForNonPackedMips) = 0;
-	virtual LUID STDMETHODCALLTYPE GetAdapterLuid(void) = 0;
+	public:
+		virtual UINT STDMETHODCALLTYPE GetNodeCount(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateCommandQueue(_In_ const D3D12_COMMAND_QUEUE_DESC *pDesc, REFIID riid, _COM_Outptr_ void **ppCommandQueue) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateCommandAllocator(_In_ D3D12_COMMAND_LIST_TYPE type, REFIID riid, _COM_Outptr_ void **ppCommandAllocator) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateGraphicsPipelineState(_In_ const D3D12_GRAPHICS_PIPELINE_STATE_DESC *pDesc, REFIID riid, _COM_Outptr_ void **ppPipelineState) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateComputePipelineState(_In_ const D3D12_COMPUTE_PIPELINE_STATE_DESC *pDesc, REFIID riid, _COM_Outptr_ void **ppPipelineState) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateCommandList(_In_ UINT nodeMask, _In_ D3D12_COMMAND_LIST_TYPE type, _In_ ID3D12CommandAllocator *pCommandAllocator, _In_opt_ ID3D12PipelineState *pInitialState, REFIID riid, _COM_Outptr_ void **ppCommandList) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CheckFeatureSupport(D3D12_FEATURE Feature, _Inout_updates_bytes_(FeatureSupportDataSize) void *pFeatureSupportData, UINT FeatureSupportDataSize) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateDescriptorHeap(_In_ const D3D12_DESCRIPTOR_HEAP_DESC *pDescriptorHeapDesc, REFIID riid, _COM_Outptr_ void **ppvHeap) = 0;
+		virtual UINT STDMETHODCALLTYPE GetDescriptorHandleIncrementSize(_In_ D3D12_DESCRIPTOR_HEAP_TYPE DescriptorHeapType) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateRootSignature(_In_ UINT nodeMask, _In_reads_(blobLengthInBytes) const void *pBlobWithRootSignature, _In_ SIZE_T blobLengthInBytes, REFIID riid, _COM_Outptr_ void **ppvRootSignature) = 0;
+		virtual void STDMETHODCALLTYPE CreateConstantBufferView(_In_opt_ const D3D12_CONSTANT_BUFFER_VIEW_DESC *pDesc, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) = 0;
+		virtual void STDMETHODCALLTYPE CreateShaderResourceView(_In_opt_ ID3D12Resource *pResource, _In_opt_ const D3D12_SHADER_RESOURCE_VIEW_DESC *pDesc, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) = 0;
+		virtual void STDMETHODCALLTYPE CreateUnorderedAccessView(_In_opt_ ID3D12Resource *pResource, _In_opt_ ID3D12Resource *pCounterResource, _In_opt_ const D3D12_UNORDERED_ACCESS_VIEW_DESC *pDesc, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) = 0;
+		virtual void STDMETHODCALLTYPE CreateRenderTargetView(_In_opt_ ID3D12Resource *pResource, _In_opt_ const D3D12_RENDER_TARGET_VIEW_DESC *pDesc, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) = 0;
+		virtual void STDMETHODCALLTYPE CreateDepthStencilView(_In_opt_ ID3D12Resource *pResource, _In_opt_ const D3D12_DEPTH_STENCIL_VIEW_DESC *pDesc, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) = 0;
+		virtual void STDMETHODCALLTYPE CreateSampler(_In_ const D3D12_SAMPLER_DESC *pDesc, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptor) = 0;
+		virtual void STDMETHODCALLTYPE CopyDescriptors(_In_ UINT NumDestDescriptorRanges, _In_reads_(NumDestDescriptorRanges) const D3D12_CPU_DESCRIPTOR_HANDLE *pDestDescriptorRangeStarts, _In_reads_opt_(NumDestDescriptorRanges) const UINT *pDestDescriptorRangeSizes, _In_ UINT NumSrcDescriptorRanges, _In_reads_(NumSrcDescriptorRanges) const D3D12_CPU_DESCRIPTOR_HANDLE *pSrcDescriptorRangeStarts, _In_reads_opt_(NumSrcDescriptorRanges) const UINT *pSrcDescriptorRangeSizes, _In_ D3D12_DESCRIPTOR_HEAP_TYPE DescriptorHeapsType) = 0;
+		virtual void STDMETHODCALLTYPE CopyDescriptorsSimple(_In_ UINT NumDescriptors, _In_ D3D12_CPU_DESCRIPTOR_HANDLE DestDescriptorRangeStart, _In_ D3D12_CPU_DESCRIPTOR_HANDLE SrcDescriptorRangeStart, _In_ D3D12_DESCRIPTOR_HEAP_TYPE DescriptorHeapsType) = 0;
+		virtual D3D12_RESOURCE_ALLOCATION_INFO STDMETHODCALLTYPE GetResourceAllocationInfo(_In_ UINT visibleMask, _In_ UINT numResourceDescs, _In_reads_(numResourceDescs) const D3D12_RESOURCE_DESC *pResourceDescs) = 0;
+		virtual D3D12_HEAP_PROPERTIES STDMETHODCALLTYPE GetCustomHeapProperties(_In_ UINT nodeMask, D3D12_HEAP_TYPE heapType) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateCommittedResource(_In_ const D3D12_HEAP_PROPERTIES *pHeapProperties, D3D12_HEAP_FLAGS HeapFlags, _In_ const D3D12_RESOURCE_DESC *pResourceDesc, D3D12_RESOURCE_STATES InitialResourceState, _In_opt_ const D3D12_CLEAR_VALUE *pOptimizedClearValue, REFIID riidResource, _COM_Outptr_opt_ void **ppvResource) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateHeap(_In_ const D3D12_HEAP_DESC *pDesc, REFIID riid, _COM_Outptr_opt_ void **ppvHeap) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreatePlacedResource(_In_ ID3D12Heap *pHeap, UINT64 HeapOffset, _In_ const D3D12_RESOURCE_DESC *pDesc, D3D12_RESOURCE_STATES InitialState, _In_opt_ const D3D12_CLEAR_VALUE *pOptimizedClearValue, REFIID riid, _COM_Outptr_opt_ void **ppvResource) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateReservedResource(_In_ const D3D12_RESOURCE_DESC *pDesc, D3D12_RESOURCE_STATES InitialState, _In_opt_ const D3D12_CLEAR_VALUE *pOptimizedClearValue, REFIID riid, _COM_Outptr_opt_ void **ppvResource) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateSharedHandle(_In_ ID3D12DeviceChild *pObject, _In_opt_ const SECURITY_ATTRIBUTES *pAttributes, DWORD Access, _In_opt_ LPCWSTR Name, _Out_ HANDLE *pHandle) = 0;
+		virtual HRESULT STDMETHODCALLTYPE OpenSharedHandle(_In_ HANDLE NTHandle, REFIID riid, _COM_Outptr_opt_ void **ppvObj) = 0;
+		virtual HRESULT STDMETHODCALLTYPE OpenSharedHandleByName(_In_ LPCWSTR Name, DWORD Access, _Out_ HANDLE *pNTHandle) = 0;
+		virtual HRESULT STDMETHODCALLTYPE MakeResident(UINT NumObjects, _In_reads_(NumObjects) ID3D12Pageable *const *ppObjects) = 0;
+		virtual HRESULT STDMETHODCALLTYPE Evict(UINT NumObjects, _In_reads_(NumObjects) ID3D12Pageable *const *ppObjects) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateFence(UINT64 InitialValue, D3D12_FENCE_FLAGS Flags, REFIID riid, _COM_Outptr_ void **ppFence) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetDeviceRemovedReason(void) = 0;
+		virtual void STDMETHODCALLTYPE GetCopyableFootprints(_In_ const D3D12_RESOURCE_DESC *pResourceDesc, _In_range_(0,D3D12_REQ_SUBRESOURCES) UINT FirstSubresource, _In_range_(0,D3D12_REQ_SUBRESOURCES-FirstSubresource) UINT NumSubresources, UINT64 BaseOffset, _Out_writes_opt_(NumSubresources) D3D12_PLACED_SUBRESOURCE_FOOTPRINT *pLayouts, _Out_writes_opt_(NumSubresources) UINT *pNumRows, _Out_writes_opt_(NumSubresources) UINT64 *pRowSizeInBytes, _Out_opt_ UINT64 *pTotalBytes) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateQueryHeap(_In_ const D3D12_QUERY_HEAP_DESC *pDesc, REFIID riid, _COM_Outptr_opt_ void **ppvHeap) = 0;
+		virtual HRESULT STDMETHODCALLTYPE SetStablePowerState(BOOL Enable) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateCommandSignature(_In_ const D3D12_COMMAND_SIGNATURE_DESC *pDesc, _In_opt_ ID3D12RootSignature *pRootSignature, REFIID riid, _COM_Outptr_opt_ void **ppvCommandSignature) = 0;
+		virtual void STDMETHODCALLTYPE GetResourceTiling(_In_ ID3D12Resource *pTiledResource, _Out_opt_ UINT *pNumTilesForEntireResource, _Out_opt_ D3D12_PACKED_MIP_INFO *pPackedMipDesc, _Out_opt_ D3D12_TILE_SHAPE *pStandardTileShapeForNonPackedMips, _Inout_opt_ UINT *pNumSubresourceTilings, _In_ UINT FirstSubresourceTilingToGet, _Out_writes_(*pNumSubresourceTilings) D3D12_SUBRESOURCE_TILING *pSubresourceTilingsForNonPackedMips) = 0;
+		virtual LUID STDMETHODCALLTYPE GetAdapterLuid(void) = 0;
 };

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D12Renderer\D3D12.h" />
+    <ClInclude Include="include\Direct3D12Renderer\D3D12X.h" />
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12Debug.h" />
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12RuntimeLinking.h" />
     <ClInclude Include="include\Direct3D12Renderer\Direct3D9RuntimeLinking.h" />

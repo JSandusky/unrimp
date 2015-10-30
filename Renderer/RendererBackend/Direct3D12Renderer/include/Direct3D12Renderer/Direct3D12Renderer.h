@@ -35,7 +35,8 @@
 //[-------------------------------------------------------]
 struct ID3D12Query;
 struct ID3D12Device;
-struct ID3D12DeviceContext;
+struct IDXGIFactory4;
+struct ID3D12CommandQueue;
 namespace Renderer
 {
 	class RenderTarget;
@@ -90,6 +91,24 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
+		*    Return the DXGI factory instance as pointer
+		*
+		*  @return
+		*    The DXGI factory instance, null pointer on error (but always valid for a correctly initialized renderer), do not release the returned instance unless you added an own reference to it
+		*/
+		inline IDXGIFactory4 *getDxgiFactory4() const;
+
+		/**
+		*  @brief
+		*    Return the DXGI factory instance as reference
+		*
+		*  @return
+		*    The DXGI factory instance, do not release the returned instance unless you added an own reference to it
+		*/
+		inline IDXGIFactory4 &getDxgiFactory4Safe() const;
+
+		/**
+		*  @brief
 		*    Return the Direct3D 12 device
 		*
 		*  @return
@@ -99,12 +118,12 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D 12 device context instance
+		*    Return the Direct3D 12 command queue
 		*
 		*  @return
-		*    The Direct3D 12 device context instance, null pointer on error, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D 12 command queue, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D12DeviceContext *getD3D12DeviceContext() const;
+		inline ID3D12CommandQueue *getD3D12CommandQueue() const;
 
 
 	//[-------------------------------------------------------]
@@ -247,8 +266,9 @@ namespace Direct3D12Renderer
 	private:
 		Direct3D9RuntimeLinking		  *mDirect3D9RuntimeLinking;	///< Direct3D 9 runtime linking instance, can be a null pointer
 		Direct3D12RuntimeLinking	  *mDirect3D12RuntimeLinking;	///< Direct3D 12 runtime linking instance, always valid
+		IDXGIFactory4*				   mDxgiFactory4;				///< DXGI factors instance, always valid for a correctly initialized renderer
 		ID3D12Device				  *mD3D12Device;				///< The Direct3D 12 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
-		ID3D12DeviceContext			  *mD3D12DeviceContext;			///< The Direct3D 12 device context instance, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
+		ID3D12CommandQueue*			   mD3D12CommandQueue;			///< The Direct3D 12 command queue, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
 		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
 		ID3D12Query					  *mD3D12QueryFlush;			///< Direct3D 12 query used for flush, can be a null pointer
 		//[-------------------------------------------------------]

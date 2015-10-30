@@ -115,6 +115,9 @@
     <ClInclude Include="include\Direct3D12Renderer\VertexShaderHlsl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D12Renderer\D3D12X.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Direct3D12Renderer.cpp">

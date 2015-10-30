@@ -49,15 +49,17 @@ namespace Direct3D11Renderer
 		// Get the native window handle
 		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);
 
-		// Get a IDXGIFactory1 instance
-		IDXGIDevice *dxgiDevice = nullptr;
-		IDXGIAdapter *dxgiAdapter = nullptr;
+		// Get a DXGI factory instance
 		IDXGIFactory1 *dxgiFactory1 = nullptr;
-		d3d11Device->QueryInterface(&dxgiDevice);
-		dxgiDevice->GetAdapter(&dxgiAdapter);
-		dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory1));
-		dxgiAdapter->Release();
-		dxgiDevice->Release();
+		{
+			IDXGIDevice *dxgiDevice = nullptr;
+			IDXGIAdapter *dxgiAdapter = nullptr;
+			d3d11Device->QueryInterface(IID_PPV_ARGS(&dxgiDevice));
+			dxgiDevice->GetAdapter(&dxgiAdapter);
+			dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory1));
+			dxgiAdapter->Release();
+			dxgiDevice->Release();
+		}
 
 		// Get the width and height of the given native window and ensure they are never ever zero
 		// -> See "getSafeWidthAndHeight()"-method comments for details
@@ -98,11 +100,13 @@ namespace Direct3D11Renderer
 		dxgiSwapChainDesc.SampleDesc.Quality				 = 0;
 		dxgiSwapChainDesc.Windowed							 = TRUE;
 		dxgiFactory1->CreateSwapChain(d3d11Device, &dxgiSwapChainDesc, &mDxgiSwapChain);
-		dxgiFactory1->Release();
 
 		// Disable alt-return for automatic fullscreen state change
 		// -> We handle this manually to have more control over it
 		dxgiFactory1->MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER);
+
+		// Release our DXGI factory
+		dxgiFactory1->Release();
 
 		// Create the Direct3D 11 views
 		if (nullptr != mDxgiSwapChain)
