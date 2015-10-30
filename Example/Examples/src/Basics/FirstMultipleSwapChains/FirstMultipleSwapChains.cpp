@@ -446,14 +446,14 @@ void FirstMultipleSwapChains::draw(const float color[4])
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && nullptr != mProgram)
 	{
-		// Clear the color buffer of the current render target with the provided color, do also clear the depth buffer
-		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, color, 1.0f, 0);
-
 		// Begin scene rendering
 		// -> Required for Direct3D 9
 		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 		if (renderer->beginScene())
 		{
+			// Clear the color buffer of the current render target with the provided color, do also clear the depth buffer
+			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, color, 1.0f, 0);
+
 			// Set the used program
 			renderer->setProgram(mProgram);
 

@@ -351,14 +351,14 @@ void FirstGpgpu::generate2DTextureContent()
 		// Set the render target to render into
 		mRenderer->omSetRenderTarget(mFramebuffer[0]);
 
-		// Clear the color buffer of the current render target with blue
-		mRenderer->clear(Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
-
 		// Begin scene rendering
 		// -> Required for Direct3D 9
 		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 		if (mRenderer->beginScene())
 		{
+			// Clear the color buffer of the current render target with blue
+			mRenderer->clear(Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
+
 			{ // Set the viewport
 				// Get the render target with and height
 				uint32_t width  = 1;

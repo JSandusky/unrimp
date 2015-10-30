@@ -394,14 +394,14 @@ void Fxaa::sceneRendering()
 		// Set the render target to render into
 		renderer->omSetRenderTarget(mFramebuffer);
 
-		// Clear the color buffer of the current render target with black
-		renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLACK, 1.0f, 0);
-
 		// Begin scene rendering
 		// -> Required for Direct3D 9
 		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 		if (renderer->beginScene())
 		{
+			// Clear the color buffer of the current render target with black
+			renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLACK, 1.0f, 0);
+
 			// Set the used program
 			renderer->setProgram(mProgramSceneRendering);
 

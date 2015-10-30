@@ -189,14 +189,14 @@ void FirstTexture::onDraw()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
-
 		// Begin scene rendering
 		// -> Required for Direct3D 9
 		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 		if (renderer->beginScene())
 		{
+			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
 			// Set the used program
 			renderer->setProgram(mProgram);
 

@@ -222,9 +222,6 @@ void FirstMultipleRenderTargets::onDraw()
 			// Set the render target to render into
 			renderer->omSetRenderTarget(mFramebuffer);
 
-			// Clear the color buffer of the current render targets with black
-			renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLACK, 1.0f, 0);
-
 			// Set the viewport
 			const Renderer::Viewport viewport =
 			{
@@ -242,6 +239,9 @@ void FirstMultipleRenderTargets::onDraw()
 			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 			if (renderer->beginScene())
 			{
+				// Clear the color buffer of the current render targets with black
+				renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLACK, 1.0f, 0);
+
 				// Set the used program
 				renderer->setProgram(mProgramMultipleRenderTargets);
 
@@ -273,9 +273,6 @@ void FirstMultipleRenderTargets::onDraw()
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Use the render to multiple render targets result")
 
-			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
-
 			{ // Set the viewport
 				// Get the render target with and height
 				uint32_t width  = 1;
@@ -304,6 +301,9 @@ void FirstMultipleRenderTargets::onDraw()
 			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 			if (renderer->beginScene())
 			{
+				// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+				renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
 				// Set the used program
 				renderer->setProgram(mProgram);
 
