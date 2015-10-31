@@ -1816,6 +1816,10 @@ namespace Direct3D12Renderer
 		RENDERER_END_DEBUG_EVENT(this)
 	}
 
+	// TODO(co) Just a test, integrate properly
+	D3D12_VIEWPORT m_viewport;
+	D3D12_RECT m_scissorRect;
+
 	bool Direct3D12Renderer::beginScene()
 	{
 		// Not required when using Direct3D 12
@@ -1845,13 +1849,11 @@ namespace Direct3D12Renderer
 					uint32_t height = 0;
 					swapChain->getWidthAndHeight(width, height);
 
-					D3D12_VIEWPORT m_viewport;
 					m_viewport.Width = static_cast<float>(width);
 					m_viewport.Height = static_cast<float>(height);
 					m_viewport.MaxDepth = 1.0f;
 					mD3D12GraphicsCommandList->RSSetViewports(1, &m_viewport);
 
-					D3D12_RECT m_scissorRect;
 					m_scissorRect.right = static_cast<LONG>(width);
 					m_scissorRect.bottom = static_cast<LONG>(height);
 					mD3D12GraphicsCommandList->RSSetScissorRects(1, &m_scissorRect);
