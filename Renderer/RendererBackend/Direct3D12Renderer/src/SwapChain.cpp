@@ -82,15 +82,17 @@ namespace Direct3D12Renderer
 		// Create the swap chain
 		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
 		::ZeroMemory(&dxgiSwapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
-		dxgiSwapChainDesc.BufferCount		= NUMBER_OF_FRAMES;
-		dxgiSwapChainDesc.BufferDesc.Width	= static_cast<UINT>(width);
-		dxgiSwapChainDesc.BufferDesc.Height	= static_cast<UINT>(height);
-		dxgiSwapChainDesc.BufferDesc.Format	= DXGI_FORMAT_R8G8B8A8_UNORM;
-		dxgiSwapChainDesc.BufferUsage		= DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		dxgiSwapChainDesc.SwapEffect		= DXGI_SWAP_EFFECT_FLIP_DISCARD;
-		dxgiSwapChainDesc.OutputWindow		= hWnd;
-		dxgiSwapChainDesc.SampleDesc.Count	= 1;
-		dxgiSwapChainDesc.Windowed			= TRUE;
+		dxgiSwapChainDesc.BufferCount							= NUMBER_OF_FRAMES;
+		dxgiSwapChainDesc.BufferDesc.Width						= static_cast<UINT>(width);
+		dxgiSwapChainDesc.BufferDesc.Height						= static_cast<UINT>(height);
+		dxgiSwapChainDesc.BufferDesc.Format						= DXGI_FORMAT_R8G8B8A8_UNORM;
+		dxgiSwapChainDesc.BufferDesc.RefreshRate.Numerator		= 60;
+		dxgiSwapChainDesc.BufferDesc.RefreshRate.Denominator	= 1;
+		dxgiSwapChainDesc.BufferUsage							= DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		dxgiSwapChainDesc.SwapEffect							= DXGI_SWAP_EFFECT_FLIP_DISCARD;
+		dxgiSwapChainDesc.OutputWindow							= hWnd;
+		dxgiSwapChainDesc.SampleDesc.Count						= 1;
+		dxgiSwapChainDesc.Windowed								= TRUE;
 		IDXGISwapChain* dxgiSwapChain = nullptr;
 		dxgiFactory4.CreateSwapChain(direct3D12Renderer.getD3D12CommandQueue(), &dxgiSwapChainDesc, &dxgiSwapChain);
 		if (FAILED(dxgiSwapChain->QueryInterface(IID_PPV_ARGS(&mDxgiSwapChain3))))
@@ -359,7 +361,12 @@ namespace Direct3D12Renderer
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain3)
 		{
-			mDxgiSwapChain3->SetFullscreenState(fullscreen, nullptr);
+			const HRESULT result = mDxgiSwapChain3->SetFullscreenState(fullscreen, nullptr);
+			if (FAILED(result))
+			{
+				// TODO(co) Better error handling
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to set fullscreen state")
+			}
 		}
 	}
 
