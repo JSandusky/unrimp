@@ -40,6 +40,7 @@ namespace Direct3D12Renderer
 	// TODO(co) Just a first test
 	ID3DBlob* g_D3dBlobErrorVertexShader = nullptr;
 	ID3DBlob* g_D3dBlobErrorFragmentShader = nullptr;
+	VertexBuffer* vertexBuffer = nullptr;
 
 
 	//[-------------------------------------------------------]
@@ -82,7 +83,7 @@ namespace Direct3D12Renderer
 		}
 
 		// Initialize the vertex buffer view
-		VertexBuffer* vertexBuffer = static_cast<VertexBuffer*>(attributes->vertexBuffer);
+		vertexBuffer = static_cast<VertexBuffer*>(attributes->vertexBuffer);
 		vertexBuffer->addReference();
 		mD3D12VertexBufferView.BufferLocation = vertexBuffer->getID3D12Resource()->GetGPUVirtualAddress();
 		mD3D12VertexBufferView.StrideInBytes = attributes->stride;
@@ -260,6 +261,7 @@ namespace Direct3D12Renderer
 		{
 			mD3D12PipelineState->Release();
 		}
+		vertexBuffer->release();
 
 		// TODO(co) Direct3D 12 update
 		/*

@@ -249,13 +249,10 @@ namespace Direct3D12Renderer
 		*/
 
 		// Release the HLSL shader language instance, in case we have one
-		// TODO(co) Direct3D 12 update
-		/*
 		if (nullptr != mShaderLanguageHlsl)
 		{
 			mShaderLanguageHlsl->release();
 		}
-		*/
 
 		// Release the Direct3D 12 command queue we've created
 		if (nullptr != mD3D12GraphicsCommandList)

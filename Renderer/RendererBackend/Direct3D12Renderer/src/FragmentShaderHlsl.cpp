@@ -74,6 +74,8 @@ namespace Direct3D12Renderer
 
 	FragmentShaderHlsl::~FragmentShaderHlsl()
 	{
+		g_D3dBlobErrorFragmentShader->Release();
+
 		// Release the Direct3D 12 pixel shader
 		// TODO(co) Direct3D 12
 		/*
