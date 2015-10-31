@@ -34,7 +34,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-//struct ID3D12Buffer;	// TODO(co) Direct3D 12 update
+struct ID3D12Resource;
 namespace Direct3D12Renderer
 {
 	class Direct3D12Renderer;
@@ -86,13 +86,12 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D vertex buffer instance
+		*    Return the Direct3D vertex buffer resource instance
 		*
 		*  @return
-		*    The Direct3D vertex buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D vertex buffer resource instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		// TODO(co) Direct3D 12 update
-		//inline ID3D12Buffer *getD3D12Buffer() const;
+		inline ID3D12Resource *getID3D12Resource() const;
 
 
 	//[-------------------------------------------------------]
@@ -106,8 +105,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Direct3D 12 update
-		//ID3D12Buffer *mD3D12Buffer;	///< Direct3D vertex buffer instance, can be a null pointer
+		ID3D12Resource* mD3D12Resource;
 
 
 	};

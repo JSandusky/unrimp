@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/VertexBuffer.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D12Renderer/D3D12.h"
+#include "Direct3D12Renderer/D3D12X.h"
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
@@ -38,76 +38,72 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t, const void *, Renderer::BufferUsage::Enum) :
-		IVertexBuffer(direct3D12Renderer)
-	//	mD3D12Buffer(nullptr)	// TODO(co) Direct3D 12 update
+	VertexBuffer::VertexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum) :
+		IVertexBuffer(direct3D12Renderer),
+		mD3D12Resource(nullptr)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Direct3D 12 buffer description
-		D3D12_BUFFER_DESC d3d12BufferDesc;
-		d3d12BufferDesc.ByteWidth           = numberOfBytes;
-		d3d12BufferDesc.Usage               = static_cast<D3D12_USAGE>(Mapping::getDirect3D12UsageAndCPUAccessFlags(bufferUsage, d3d12BufferDesc.CPUAccessFlags));
-		d3d12BufferDesc.BindFlags           = D3D12_BIND_VERTEX_BUFFER;
-		//d3d12BufferDesc.CPUAccessFlags    = <filled above>;
-		d3d12BufferDesc.MiscFlags           = 0;
-		d3d12BufferDesc.StructureByteStride = 0;
+		// TODO(co) This is only meant for the Direct3D 12 renderer backend kickoff.
+		// Note: using upload heaps to transfer static data like vert buffers is not 
+		// recommended. Every time the GPU needs it, the upload heap will be marshalled 
+		// over. Please read up on Default Heap usage. An upload heap is used here for 
+		// code simplicity and because there are very few verts to actually transfer.
 
-		// Data given?
-		if (nullptr != data)
-		{
-			// Direct3D 12 subresource data
-			D3D12_SUBRESOURCE_DATA d3d12SubresourceData;
-			d3d12SubresourceData.pSysMem          = data;
-			d3d12SubresourceData.SysMemPitch      = 0;
-			d3d12SubresourceData.SysMemSlicePitch = 0;
+		// TODO(co) Add buffer usage setting support
 
-			// Create the Direct3D 12 vertex buffer
-			direct3D12Renderer.getD3D12Device()->CreateBuffer(&d3d12BufferDesc, &d3d12SubresourceData, &mD3D12Buffer);
-		}
-		else
+		const CD3DX12_HEAP_PROPERTIES d3d12XHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
+		const CD3DX12_RESOURCE_DESC d3d12XResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(numberOfBytes);
+		if (SUCCEEDED(direct3D12Renderer.getD3D12Device()->CreateCommittedResource(
+			&d3d12XHeapProperties,
+			D3D12_HEAP_FLAG_NONE,
+			&d3d12XResourceDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&mD3D12Resource))))
 		{
-			// Create the Direct3D 12 vertex buffer
-			direct3D12Renderer.getD3D12Device()->CreateBuffer(&d3d12BufferDesc, nullptr, &mD3D12Buffer);
+			// Data given?
+			if (nullptr != data)
+			{
+				// Copy the data to the vertex buffer
+				UINT8* pVertexDataBegin;
+				CD3DX12_RANGE readRange(0, 0);	// We do not intend to read from this resource on the CPU
+				if (SUCCEEDED(mD3D12Resource->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin))))
+				{
+					memcpy(pVertexDataBegin, data, numberOfBytes);
+					mD3D12Resource->Unmap(0, nullptr);
+				}
+			}
 		}
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("VBO");
 		#endif
-		*/
 	}
 
 	VertexBuffer::~VertexBuffer()
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		if (nullptr != mD3D12Buffer)
+		if (nullptr != mD3D12Resource)
 		{
-			mD3D12Buffer->Release();
+			mD3D12Resource->Release();
 		}
-		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void VertexBuffer::setDebugName(const char *)
+	void VertexBuffer::setDebugName(const char *name)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 vertex buffer?
-			if (nullptr != mD3D12Buffer)
+			if (nullptr != mD3D12Resource)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
-		*/
 	}
 
 

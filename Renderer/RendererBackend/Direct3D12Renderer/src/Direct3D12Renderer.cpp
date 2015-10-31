@@ -680,10 +680,8 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::iaSetVertexArray(Renderer::IVertexArray *)
+	void Direct3D12Renderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		if (nullptr != vertexArray)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
@@ -692,7 +690,7 @@ namespace Direct3D12Renderer
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
-			static_cast<VertexArray*>(vertexArray)->setDirect3DIASetInputLayoutAndStreamSource();
+			static_cast<VertexArray*>(vertexArray)->setDirect3DIASetInputLayoutAndStreamSource(*mD3D12GraphicsCommandList);
 
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(this)
@@ -700,9 +698,8 @@ namespace Direct3D12Renderer
 		else
 		{
 			// Set no Direct3D 12 input layout
-			mD3D12DeviceContext->IASetInputLayout(nullptr);
+			mD3D12GraphicsCommandList->IASetVertexBuffers(0, 0, nullptr);
 		}
-		*/
 	}
 
 	void Direct3D12Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology::Enum)
@@ -1700,19 +1697,18 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::clear(uint32_t, const float color[4], float, uint32_t)
 	{
-		SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
-		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeap()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
-
-		// Record command
-		mD3D12GraphicsCommandList->ClearRenderTargetView(rtvHandle, color, 0, nullptr);
-
-		// TODO(co) Direct3D 12 update
-		/*
 		// Unlike Direct3D 9, OpenGL or OpenGL ES 2, Direct3D 12 clears a given render target view and not the currently bound
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
+		// Record command
+		SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
+		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeap()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
+		mD3D12GraphicsCommandList->ClearRenderTargetView(rtvHandle, color, 0, nullptr);
+
+		// TODO(co) Direct3D 12 update
+		/*
 		// Render target set?
 		if (nullptr != mRenderTarget)
 		{
@@ -1814,10 +1810,10 @@ namespace Direct3D12Renderer
 		{
 			// In case no render target is currently set we don't have to do anything in here
 		}
+		*/
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(this)
-		*/
 	}
 
 	bool Direct3D12Renderer::beginScene()
@@ -1837,8 +1833,29 @@ namespace Direct3D12Renderer
 			{
 				// Indicate that the back buffer will be used as a render target
 				SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
+
 				CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 				mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+
+				CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeap()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
+				mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+
+				{ // TODO(co) Just a test, integrate properly
+					uint32_t width = 0;
+					uint32_t height = 0;
+					swapChain->getWidthAndHeight(width, height);
+
+					D3D12_VIEWPORT m_viewport;
+					m_viewport.Width = static_cast<float>(width);
+					m_viewport.Height = static_cast<float>(height);
+					m_viewport.MaxDepth = 1.0f;
+					mD3D12GraphicsCommandList->RSSetViewports(1, &m_viewport);
+
+					D3D12_RECT m_scissorRect;
+					m_scissorRect.right = static_cast<LONG>(width);
+					m_scissorRect.bottom = static_cast<LONG>(height);
+					mD3D12GraphicsCommandList->RSSetScissorRects(1, &m_scissorRect);
+				}
 
 				// Done
 				return true;
@@ -1861,7 +1878,7 @@ namespace Direct3D12Renderer
 
 		if (SUCCEEDED(mD3D12GraphicsCommandList->Close()))
 		{
-			// Execute the command list.
+			// Execute the command list
 			ID3D12CommandList* commandLists[] = { mD3D12GraphicsCommandList };
 			mD3D12CommandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
 		}

@@ -27,6 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "Direct3D12Renderer/D3D12.h"
+
 #include <Renderer/IVertexArray.h>
 
 
@@ -111,8 +113,11 @@ namespace Direct3D12Renderer
 		/**
 		*  @brief
 		*    Set the Direct3D 12 vertex declaration and stream source
+		*
+		*  @param[in] d3d12GraphicsCommandList
+		*    Direct3D 12 graphics command list to feed
 		*/
-		void setDirect3DIASetInputLayoutAndStreamSource() const;
+		void setDirect3DIASetInputLayoutAndStreamSource(ID3D12GraphicsCommandList& d3d12GraphicsCommandList) const;
 
 
 	//[-------------------------------------------------------]
@@ -126,6 +131,10 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		ID3D12RootSignature*	 mD3D12RootSignature;
+		D3D12_VERTEX_BUFFER_VIEW mD3D12VertexBufferView;
+		ID3D12PipelineState*	 mD3D12PipelineState;	// TODO(co) Just a first test
+
 		// TODO(co) Direct3D 12 update
 		//ID3D12DeviceContext	 *mD3D12DeviceContext;		///< The Direct3D 12 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
 		IndexBuffer			 *mIndexBuffer;				///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer

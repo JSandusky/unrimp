@@ -258,9 +258,6 @@
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_ES2.h">
       <Filter>Basics\FirstTriangle</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_HLSL_D3D9_D3D10_D3D11.h">
-      <Filter>Basics\FirstTriangle</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_Null.h">
       <Filter>Basics\FirstTriangle</Filter>
     </ClInclude>
@@ -455,6 +452,9 @@
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_110.h">
       <Filter>Runtime\FirstMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_HLSL_D3D9_D3D10_D3D11_D3D12.h">
+      <Filter>Basics\FirstTriangle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -33,12 +33,9 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-// TODO(co) Direct3D 12 update
-/*
-typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
+typedef __interface ID3D10Blob *LPD3D10BLOB;
 typedef ID3D10Blob ID3DBlob;
-struct ID3D12VertexShader;
-*/
+//struct ID3D12VertexShader;	// TODO(co) Direct3D 12 update
 
 
 //[-------------------------------------------------------]
@@ -100,8 +97,7 @@ namespace Direct3D12Renderer
 		*  @return
 		*    Direct3D 12 vertex shader blob, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		// TODO(co) Direct3D 12 update
-		//inline ID3DBlob *getD3DBlobVertexShader() const;
+		inline ID3DBlob *getD3DBlobVertexShader() const;
 
 		/**
 		*  @brief
@@ -132,8 +128,8 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		ID3DBlob		   *mD3DBlobVertexShader;	///< Direct3D 12 vertex shader blob, can be a null pointer
 		// TODO(co) Direct3D 12 update
-		//ID3DBlob		   *mD3DBlobVertexShader;	///< Direct3D 12 vertex shader blob, can be a null pointer
 		//ID3D12VertexShader *mD3D12VertexShader;		///< Direct3D 12 vertex shader, can be a null pointer
 
 

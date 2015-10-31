@@ -58,13 +58,11 @@ namespace Direct3D12Renderer
 		if (nullptr != d3dBlob)
 		{
 			// TODO(co) Direct3D 12 update
-			/*
 			// Create the Direct3D 12 domain shader
-			direct3D12Renderer.getD3D12Device()->CreateDomainShader(d3dBlob->GetBufferPointer(), d3dBlob->GetBufferSize(), nullptr, &mD3D12DomainShader);
+			// direct3D12Renderer.getD3D12Device()->CreateDomainShader(d3dBlob->GetBufferPointer(), d3dBlob->GetBufferSize(), nullptr, &mD3D12DomainShader);
 
 			// Release the Direct3D 12 shader binary large object
 			d3dBlob->Release();
-			*/
 		}
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name

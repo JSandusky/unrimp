@@ -28,13 +28,13 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Direct3D 12 update
-	/*
 	inline ID3DBlob *VertexShaderHlsl::getD3DBlobVertexShader() const
 	{
 		return mD3DBlobVertexShader;
 	}
 
+	// TODO(co) Direct3D 12 update
+	/*
 	inline ID3D12VertexShader *VertexShaderHlsl::getD3D12VertexShader() const
 	{
 		return mD3D12VertexShader;

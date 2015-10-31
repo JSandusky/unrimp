@@ -400,6 +400,8 @@ namespace Direct3D12Renderer
 	{
 		assert(nullptr != mDxgiSwapChain3);
 
+		// TODO(co) Debug name gets lost when resizing a window, fix this
+
 		// Get the Direct3D 12 device instance
 		ID3D12Device* d3d12Device = nullptr;
 		mDxgiSwapChain3->GetDevice(__uuidof(ID3D12Device), (void**)&d3d12Device);

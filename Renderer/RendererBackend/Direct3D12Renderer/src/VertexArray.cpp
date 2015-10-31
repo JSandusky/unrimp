@@ -23,11 +23,12 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/VertexArray.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D12Renderer/D3D12.h"
+#include "Direct3D12Renderer/D3D12X.h"
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/IndexBuffer.h"
 #include "Direct3D12Renderer/VertexBuffer.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
+#include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
@@ -36,12 +37,18 @@
 namespace Direct3D12Renderer
 {
 
+	// TODO(co) Just a first test
+	ID3DBlob* g_D3dBlobErrorVertexShader = nullptr;
+	ID3DBlob* g_D3dBlobErrorFragmentShader = nullptr;
+
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D12Renderer &direct3D12Renderer, ID3DBlob &, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D12Renderer &direct3D12Renderer, ID3DBlob &, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D12Renderer),
+		mD3D12RootSignature(nullptr),
+		mD3D12PipelineState(nullptr),
 	//	mD3D12DeviceContext(direct3D12Renderer.getD3D12DeviceContext()),	// TODO(co) Direct3D 12 update
 		mIndexBuffer(indexBuffer),
 	//	mD3D12InputLayout(nullptr),	// TODO(co) Direct3D 12 update
@@ -52,6 +59,63 @@ namespace Direct3D12Renderer
 		mNumberOfVertexBuffers(numberOfAttributes),
 		mVertexBuffers(nullptr)
 	{
+		// TODO(co) This is only for the Direct3D 12 renderer backend kickoff. I'am sure the root signature must be integrated in another more efficient way.
+		{ // Create an empty root signature
+			CD3DX12_ROOT_SIGNATURE_DESC d3d12XRootSignatureDesc;
+			d3d12XRootSignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+			ID3DBlob* d3dBlobSignature = nullptr;
+			ID3DBlob* d3dBlobError = nullptr;
+			if (SUCCEEDED(D3D12SerializeRootSignature(&d3d12XRootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &d3dBlobSignature, &d3dBlobError)))
+			{
+				if (FAILED(direct3D12Renderer.getD3D12Device()->CreateRootSignature(0, d3dBlobSignature->GetBufferPointer(), d3dBlobSignature->GetBufferSize(), IID_PPV_ARGS(&mD3D12RootSignature))))
+				{
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the root signature instance")
+				}
+				d3dBlobSignature->Release();
+			}
+			else
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the root signature instance")
+				d3dBlobError->Release();
+			}
+		}
+
+		// Initialize the vertex buffer view
+		VertexBuffer* vertexBuffer = static_cast<VertexBuffer*>(attributes->vertexBuffer);
+		vertexBuffer->addReference();
+		mD3D12VertexBufferView.BufferLocation = vertexBuffer->getID3D12Resource()->GetGPUVirtualAddress();
+		mD3D12VertexBufferView.StrideInBytes = attributes->stride;
+		mD3D12VertexBufferView.SizeInBytes = attributes->stride * 3;	// TODO(co) Number of bytes inside the vertex buffer
+
+		{ // TODO(co) Just a first test
+			// Define the vertex input layout.
+			D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
+			{
+				{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+			};
+
+			// Describe and create the graphics pipeline state object (PSO).
+			D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+			psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
+			psoDesc.pRootSignature = mD3D12RootSignature;
+			psoDesc.VS = { reinterpret_cast<UINT8*>(g_D3dBlobErrorVertexShader->GetBufferPointer()), g_D3dBlobErrorVertexShader->GetBufferSize() };
+			psoDesc.PS = { reinterpret_cast<UINT8*>(g_D3dBlobErrorFragmentShader->GetBufferPointer()), g_D3dBlobErrorFragmentShader->GetBufferSize() };
+			psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+			psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+			psoDesc.DepthStencilState.DepthEnable = FALSE;
+			psoDesc.DepthStencilState.StencilEnable = FALSE;
+			psoDesc.SampleMask = UINT_MAX;
+			psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+			psoDesc.NumRenderTargets = 1;
+			psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+			psoDesc.SampleDesc.Count = 1;
+			if (FAILED(direct3D12Renderer.getD3D12Device()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&mD3D12PipelineState))))
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the pipeline state object")
+			}
+		}
+
 		// TODO(co) Direct3D 12 update
 		/*
 		// Acquire our Direct3D 12 device context reference
@@ -178,16 +242,25 @@ namespace Direct3D12Renderer
 			mOffsets = new UINT[mNumberOfSlots];
 			memset(mOffsets, 0, sizeof(UINT) * mNumberOfSlots);
 		}
+		*/
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("VAO");
 		#endif
-		*/
 	}
 
 	VertexArray::~VertexArray()
 	{
+		if (nullptr != mD3D12RootSignature)
+		{
+			mD3D12RootSignature->Release();
+		}
+		if (nullptr != mD3D12PipelineState)
+		{
+			mD3D12PipelineState->Release();
+		}
+
 		// TODO(co) Direct3D 12 update
 		/*
 		// Release the index buffer reference
@@ -229,8 +302,14 @@ namespace Direct3D12Renderer
 		*/
 	}
 
-	void VertexArray::setDirect3DIASetInputLayoutAndStreamSource() const
+	void VertexArray::setDirect3DIASetInputLayoutAndStreamSource(ID3D12GraphicsCommandList& d3d12GraphicsCommandList) const
 	{
+		d3d12GraphicsCommandList.SetGraphicsRootSignature(mD3D12RootSignature);
+		d3d12GraphicsCommandList.SetPipelineState(mD3D12PipelineState);
+		d3d12GraphicsCommandList.IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		d3d12GraphicsCommandList.IASetVertexBuffers(0, 1, &mD3D12VertexBufferView);
+		d3d12GraphicsCommandList.DrawInstanced(3, 1, 0, 0);
+
 		// TODO(co) Direct3D 12 update
 		/*
 		// Valid Direct3D 12 input layout?
@@ -244,6 +323,7 @@ namespace Direct3D12Renderer
 			{
 				// Just make a single API call
 				mD3D12DeviceContext->IASetVertexBuffers(0, mNumberOfSlots, mD3D12Buffers, mStrides, mOffsets);
+				//m_commandList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 			}
 			else
 			{

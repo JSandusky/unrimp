@@ -105,10 +105,8 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *ProgramHlsl::createVertexArray(uint32_t, const Renderer::VertexArrayAttribute *, Renderer::IIndexBuffer *)
+	Renderer::IVertexArray *ProgramHlsl::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
 	{
-		// TODO(co) Direct3D 12
-		/*
 		// There must be a compiled vertex shader BLOB
 		if (nullptr != mVertexShaderHlsl && nullptr != mVertexShaderHlsl->getD3DBlobVertexShader())
 		{
@@ -133,8 +131,6 @@ namespace Direct3D12Renderer
 			// Error!
 			return nullptr;
 		}
-		*/
-		return nullptr;
 	}
 
 	int ProgramHlsl::getAttributeLocation(const char *)
