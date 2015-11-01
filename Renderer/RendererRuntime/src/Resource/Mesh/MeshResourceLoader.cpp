@@ -120,9 +120,8 @@ namespace RendererRuntime
 				currentVertexArray.semanticIndex = currentVertexArrayFromFile.semanticIndex;
 
 				// Data source
-				currentVertexArray.vertexBuffer = nullptr;	// Filled in "RendererRuntime::MeshResourceLoader::onRendererBackendDispatch()"
+				currentVertexArray.inputSlot = currentVertexArrayFromFile.inputSlot;
 				currentVertexArray.alignedByteOffset = currentVertexArrayFromFile.alignedByteOffset;
-				currentVertexArray.stride = currentVertexArrayFromFile.stride;
 
 				// Data source, instancing part
 				currentVertexArray.instancesPerElement = 0;
@@ -152,19 +151,22 @@ namespace RendererRuntime
 		// Create the index buffer object (IBO)
 		Renderer::IIndexBuffer *indexBuffer = renderer.createIndexBuffer(mNumberOfUsedIndexBufferDataBytes, static_cast<Renderer::IndexBufferFormat::Enum>(mIndexBufferFormat), mIndexBufferData, Renderer::BufferUsage::STATIC_DRAW);
 
-		// Finalize the vertex array attributes by telling them about the vertex buffer source
-		for (uint32_t i = 0; i < mNumberOfUsedVertexArrayAttributes; ++i)
-		{
-			mVertexArray[i].vertexBuffer = vertexBuffer;
-		}
-
 		// Create vertex array object (VAO)
 		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
 		// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
 		// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 		//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 		//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-		mMeshResource->mVertexArray = mProgram->createVertexArray(mNumberOfUsedVertexArrayAttributes, mVertexArray, indexBuffer);
+		const uint32_t numberOfVertices = mMeshResource->mNumberOfVertices;
+		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+		{
+			{ // Vertex buffer 0
+				vertexBuffer,																		// vertexBuffer (Renderer::IVertexBuffer *)
+				(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0,	// strideInBytes (uint32_t)
+				0																					// offsetInBytes (uint32_t)
+			}
+		};
+		mMeshResource->mVertexArray = mProgram->createVertexArray(mNumberOfUsedVertexArrayAttributes, mVertexArray, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 	}
 
 

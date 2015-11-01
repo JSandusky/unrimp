@@ -36,6 +36,7 @@
 namespace Renderer
 {
 	struct VertexArrayAttribute;
+	struct VertexArrayVertexBuffer;
 }
 namespace OpenGLES2Renderer
 {
@@ -76,10 +77,14 @@ namespace OpenGLES2Renderer
 		*    Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
 		*  @param[in] attributes
 		*    At least "numberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes
+		*  @param[in] numberOfVertexBuffers
+		*    Number of vertex buffers, having zero vertex buffers is valid
+		*  @param[in] vertexBuffers
+		*    At least numberOfVertexBuffers instances of vertex array vertex buffers, can be a null pointer in case there are zero vertex buffers, the data is internally copied and you have to free your memory if you no longer need it
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArrayVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer);
+		VertexArrayVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief

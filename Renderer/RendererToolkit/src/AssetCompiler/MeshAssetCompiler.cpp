@@ -184,8 +184,8 @@ namespace RendererToolkit
 						char	name[32];
 						char	semanticName[32];
 						uint8_t semanticIndex;
+						uint8_t inputSlot;
 						uint8_t alignedByteOffset;
-						uint8_t stride;
 					};
 				#pragma pack(pop)
 
@@ -198,8 +198,8 @@ namespace RendererToolkit
 						"POSITION",								// semanticName[32] (char)
 						0,										// semanticIndex (uint32_t)
 						// Data source
-						0,										// alignedByteOffset (uint32_t)
-						NUMBER_OF_BYTES_PER_VERTEX				// stride (uint32_t)
+						0,										// inputSlot (uint32_t)
+						0										// alignedByteOffset (uint32_t)
 					},
 					{ // Attribute 1
 						// Data destination
@@ -208,8 +208,8 @@ namespace RendererToolkit
 						"TEXCOORD",								// semanticName[32] (char)
 						0,										// semanticIndex (uint32_t)
 						// Data source
-						sizeof(float) * 3,						// alignedByteOffset (uint32_t)
-						NUMBER_OF_BYTES_PER_VERTEX				// stride (uint32_t)
+						0,										// inputSlot (uint32_t)
+						sizeof(float) * 3						// alignedByteOffset (uint32_t)
 					},
 					{ // Attribute 2
 						// Data destination
@@ -218,8 +218,8 @@ namespace RendererToolkit
 						"NORMAL",								// semanticName[32] (char)
 						0,										// semanticIndex (uint32_t)
 						// Data source
-						sizeof(float) * 3 + sizeof(short) * 2,	// alignedByteOffset (uint32_t)
-						NUMBER_OF_BYTES_PER_VERTEX				// stride (uint32_t)
+						0,										// inputSlot (uint32_t)
+						sizeof(float) * 3 + sizeof(short) * 2	// alignedByteOffset (uint32_t)
 					}
 				};
 

@@ -548,15 +548,15 @@ namespace Renderer
 			char					 name[32];
 			char					 semanticName[32];
 			uint32_t				 semanticIndex;
-			IVertexBuffer			*vertexBuffer;
+			uint32_t				 inputSlot;
 			uint32_t				 alignedByteOffset;
-			uint32_t				 stride;
 			uint32_t				 instancesPerElement;
 		};
 		struct VertexArrayVertexBuffer
 		{
 			IVertexBuffer* vertexBuffer;
-			uint32_t 	   strideInBytes;
+			uint32_t	   strideInBytes;
+			uint32_t	   offsetInBytes;
 		};
 	#endif
 
@@ -1292,7 +1292,7 @@ namespace Renderer
 		public:
 			virtual ~IProgram();
 		public:
-			virtual IVertexArray *createVertexArray(uint32_t numberOfAttributes, const VertexArrayAttribute *attributes, IIndexBuffer *indexBuffer = nullptr) = 0;
+			virtual IVertexArray *createVertexArray(uint32_t numberOfAttributes, const VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
 			virtual int getAttributeLocation(const char *attributeName) = 0;
 			virtual uint32_t getUniformBlockIndex(const char *uniformBlockName, uint32_t defaultIndex) = 0;
 			virtual handle getUniformHandle(const char *uniformName) = 0;

@@ -39,11 +39,11 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayVao::VertexArrayVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
+	VertexArrayVao::VertexArrayVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		VertexArray(program.getRenderer(), indexBuffer),
 		mOpenGLES2VertexArray(0),
-		mNumberOfVertexBuffers(numberOfAttributes),
-		mVertexBuffers((numberOfAttributes > 0) ? new VertexBuffer*[numberOfAttributes] : nullptr)	// Guaranteed to be filled below, so we don't need to care to initialize the content in here
+		mNumberOfVertexBuffers(numberOfVertexBuffers),
+		mVertexBuffers((mNumberOfVertexBuffers > 0) ? new VertexBuffer*[mNumberOfVertexBuffers] : nullptr)	// Guaranteed to be filled below, so we don't need to care to initialize the content in here
 	{
 		// Create the OpenGL ES 2 vertex array
 		glGenVertexArraysOES(1, &mOpenGLES2VertexArray);
@@ -65,24 +65,31 @@ namespace OpenGLES2Renderer
 		// Bind this OpenGL ES 2 vertex array
 		glBindVertexArrayOES(mOpenGLES2VertexArray);
 
-		{ // Enable OpenGL ES 2 vertex attribute arrays
-			// Loop through all attributes
-			VertexBuffer **vertexBuffers = mVertexBuffers;
-			const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
-			for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++vertexBuffers)
+		{ // Add a reference to the used vertex buffers
+			VertexBuffer **currentVertexBuffers = mVertexBuffers;
+			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + mNumberOfVertexBuffers;
+			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentVertexBuffers)
 			{
 				// Add a reference to the used vertex buffer
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				*vertexBuffers = static_cast<VertexBuffer*>(attribute->vertexBuffer);
-				(*vertexBuffers)->addReference();
+				*currentVertexBuffers = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
+				(*currentVertexBuffers)->addReference();
+			}
+		}
 
+		{ // Enable OpenGL ES 2 vertex attribute arrays
+			// Loop through all attributes
+			const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
+			for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute)
+			{
 				// Get the attribute location
 				const int attributeLocation = program.getAttributeLocation(attribute->name);
 				if (attributeLocation > -1)
 				{
 					// Set the OpenGL ES 2 vertex attribute pointer
-					glBindBuffer(GL_ARRAY_BUFFER, (*vertexBuffers)->getOpenGLES2ArrayBuffer());
-					glVertexAttribPointer(static_cast<GLuint>(attributeLocation), Mapping::getOpenGLES2Size(attribute->vertexArrayFormat), Mapping::getOpenGLES2Type(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(attribute->stride), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
+					const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
+					glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES2ArrayBuffer());
+					glVertexAttribPointer(static_cast<GLuint>(attributeLocation), Mapping::getOpenGLES2Size(attribute->vertexArrayFormat), Mapping::getOpenGLES2Type(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
 
 					// Enable OpenGL ES 2 vertex attribute array
 					glEnableVertexAttribArray(static_cast<GLuint>(attributeLocation));

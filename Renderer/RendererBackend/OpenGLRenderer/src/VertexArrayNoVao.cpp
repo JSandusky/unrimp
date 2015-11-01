@@ -45,10 +45,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayNoVao::VertexArrayNoVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
+	VertexArrayNoVao::VertexArrayNoVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		VertexArray(static_cast<OpenGLRenderer&>(program.getRenderer()), indexBuffer, InternalResourceType::NO_VAO),
 		mNumberOfAttributes(numberOfAttributes),
 		mAttributes(numberOfAttributes ? new Renderer::VertexArrayAttribute[numberOfAttributes] : nullptr),
+		mNumberOfVertexBuffers(numberOfVertexBuffers),
+		mVertexBuffers(numberOfVertexBuffers ? new Renderer::VertexArrayVertexBuffer[numberOfVertexBuffers] : nullptr),
 		mAttributeLocations(numberOfAttributes ? new int[numberOfAttributes] : nullptr),
 		mIsGL_ARB_instanced_arrays(static_cast<OpenGLRenderer&>(program.getRenderer()).getContext().getExtensions().isGL_ARB_instanced_arrays())
 	{
@@ -57,21 +59,31 @@ namespace OpenGLRenderer
 		{
 			memcpy(mAttributes, attributes, sizeof(Renderer::VertexArrayAttribute) * mNumberOfAttributes);
 		}
-
-		// Get the attribute locations
-		int *attributeLocation = mAttributeLocations;
-		const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
-		for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
+		if (nullptr != mVertexBuffers)
 		{
-			// Get the attribute location
-			*attributeLocation = program.getAttributeLocation(attribute->name);
-			if (*attributeLocation < 0)
-			{
-				RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL warning: There's no active vertex attribute with the name \"%s\"\n", attribute->name)
-			}
+			memcpy(mVertexBuffers, vertexBuffers, sizeof(Renderer::VertexArrayVertexBuffer) * mNumberOfVertexBuffers);
+		}
 
-			// Add a reference to the used vertex buffer
-			attribute->vertexBuffer->addReference();
+		{ // Check the attribute locations
+			int *attributeLocation = mAttributeLocations;
+			const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
+			for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
+			{
+				// Get the attribute location
+				*attributeLocation = program.getAttributeLocation(attribute->name);
+				if (*attributeLocation < 0)
+				{
+					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL warning: There's no active vertex attribute with the name \"%s\"\n", attribute->name)
+				}
+			}
+		}
+
+		{ // Add a reference to the used vertex buffers
+			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = mVertexBuffers + mNumberOfVertexBuffers;
+			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = mVertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
+			{
+				vertexBuffer->vertexBuffer->addReference();
+			}
 		}
 	}
 
@@ -80,15 +92,22 @@ namespace OpenGLRenderer
 		// Destroy the vertex array attributes
 		if (nullptr != mAttributes)
 		{
+			// Cleanup
+			delete [] mAttributes;
+		}
+
+		// Destroy the vertex array vertex buffers
+		if (nullptr != mVertexBuffers)
+		{
 			// Release the reference to the used vertex buffers
-			const Renderer::VertexArrayAttribute *attributeEnd = mAttributes + mNumberOfAttributes;
-			for (const Renderer::VertexArrayAttribute *attribute = mAttributes; attribute < attributeEnd; ++attribute)
+			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = mVertexBuffers + mNumberOfVertexBuffers;
+			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = mVertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
 			{
-				attribute->vertexBuffer->release();
+				vertexBuffer->vertexBuffer->release();
 			}
 
 			// Cleanup
-			delete [] mAttributes;
+			delete [] mVertexBuffers;
 		}
 
 		// Destroy the vertex array attribute locations
@@ -117,8 +136,9 @@ namespace OpenGLRenderer
 			{
 				// Set the OpenGL vertex attribute pointer
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<VertexBuffer*>(attribute->vertexBuffer)->getOpenGLArrayBuffer());
-				glVertexAttribPointerARB(static_cast<GLuint>(*attributeLocation), Mapping::getOpenGLSize(attribute->vertexArrayFormat), Mapping::getOpenGLType(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(attribute->stride), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
+				const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = mVertexBuffers[attribute->inputSlot];
+				glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLArrayBuffer());
+				glVertexAttribPointerARB(static_cast<GLuint>(*attributeLocation), Mapping::getOpenGLSize(attribute->vertexArrayFormat), Mapping::getOpenGLType(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
 
 				// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
 				if (attribute->instancesPerElement > 0 && mIsGL_ARB_instanced_arrays)

@@ -152,16 +152,23 @@ void FirstCommandBucket::onInitialization()
 						"POSITION",								// semanticName[32] (char)
 						0,										// semanticIndex (uint32_t)
 						// Data source
-						vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
+						0,										// inputSlot (uint32_t)
 						0,										// alignedByteOffset (uint32_t)
-						sizeof(float) * 2,						// stride (uint32_t)
 						// Data source, instancing part
 						0										// instancesPerElement (uint32_t)
 					}
 				};
-				mSolidVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
+				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+				{
+					{ // Vertex buffer 0
+						vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+						sizeof(float) * 2,	// strideInBytes (uint32_t)
+						0					// offsetInBytes (uint32_t)
+					}
+				};
+				mSolidVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mSolidVertexArray, "Solid triangle VAO")
-				mTransparentVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, indexBuffer);
+				mTransparentVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mTransparentVertexArray, "Transparent triangle VAO")
 			}
 		}

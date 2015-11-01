@@ -39,6 +39,7 @@ namespace Renderer
 	class IVertexArray;
 	class IIndexBuffer;
 	struct VertexArrayAttribute;
+	struct VertexArrayVertexBuffer;
 }
 
 
@@ -83,6 +84,10 @@ namespace Renderer
 		*    Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
 		*  @param[in] attributes
 		*    At least nNumberOfAttributes instances of vertex array attributes, can be a null pointer in case there are zero attributes, the data is internally copied and you have to free your memory if you no longer need it
+		*  @param[in] numberOfVertexBuffers
+		*    Number of vertex buffers, having zero vertex buffers is valid
+		*  @param[in] vertexBuffers
+		*    At least numberOfVertexBuffers instances of vertex array vertex buffers, can be a null pointer in case there are zero vertex buffers, the data is internally copied and you have to free your memory if you no longer need it
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*
@@ -94,7 +99,7 @@ namespace Renderer
 		*    - It's valid that a vertex array implementation is adding a reference and releasing it again at once
 		*      (this means that in the case of not having any more references, a vertex buffer might get destroyed when calling this method)
 		*/
-		virtual IVertexArray *createVertexArray(uint32_t numberOfAttributes, const VertexArrayAttribute *attributes, IIndexBuffer *indexBuffer = nullptr) = 0;
+		virtual IVertexArray *createVertexArray(uint32_t numberOfAttributes, const VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
 
 		// TODO(co) Cleanup
 		inline virtual int getAttributeLocation(const char *attributeName);

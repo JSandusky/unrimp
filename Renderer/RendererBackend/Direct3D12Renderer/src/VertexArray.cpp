@@ -46,7 +46,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D12Renderer &direct3D12Renderer, ID3DBlob &, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D12Renderer &direct3D12Renderer, ID3DBlob &, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D12Renderer),
 		mD3D12RootSignature(nullptr),
 		mD3D12PipelineState(nullptr),

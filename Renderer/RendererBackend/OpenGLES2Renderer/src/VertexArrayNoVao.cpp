@@ -43,10 +43,12 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayNoVao::VertexArrayNoVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
+	VertexArrayNoVao::VertexArrayNoVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		VertexArray(program.getRenderer(), indexBuffer),
 		mNumberOfAttributes(numberOfAttributes),
 		mAttributes(numberOfAttributes ? new Renderer::VertexArrayAttribute[numberOfAttributes] : nullptr),
+		mNumberOfVertexBuffers(numberOfVertexBuffers),
+		mVertexBuffers(numberOfVertexBuffers ? new Renderer::VertexArrayVertexBuffer[numberOfVertexBuffers] : nullptr),
 		mAttributeLocations(numberOfAttributes ? new int[numberOfAttributes] : nullptr)
 	{
 		// Copy over the data
@@ -54,21 +56,31 @@ namespace OpenGLES2Renderer
 		{
 			memcpy(mAttributes, attributes, sizeof(Renderer::VertexArrayAttribute) * mNumberOfAttributes);
 		}
-
-		// Get the attribute locations
-		int *attributeLocation = mAttributeLocations;
-		const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
-		for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
+		if (nullptr != mVertexBuffers)
 		{
-			// Get the attribute location
-			*attributeLocation = program.getAttributeLocation(attribute->name);
-			if (*attributeLocation < 0)
-			{
-				RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 warning: There's no active vertex attribute with the name \"%s\"\n", attribute->name)
-			}
+			memcpy(mVertexBuffers, vertexBuffers, sizeof(Renderer::VertexArrayVertexBuffer) * mNumberOfVertexBuffers);
+		}
 
-			// Add a reference to the used vertex buffer
-			attribute->vertexBuffer->addReference();
+		{ // Check the attribute locations
+			int *attributeLocation = mAttributeLocations;
+			const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
+			for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
+			{
+				// Get the attribute location
+				*attributeLocation = program.getAttributeLocation(attribute->name);
+				if (*attributeLocation < 0)
+				{
+					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 warning: There's no active vertex attribute with the name \"%s\"\n", attribute->name)
+				}
+			}
+		}
+
+		{ // Add a reference to the used vertex buffers
+			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = mVertexBuffers + mNumberOfVertexBuffers;
+			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = mVertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
+			{
+				vertexBuffer->vertexBuffer->addReference();
+			}
 		}
 	}
 
@@ -77,15 +89,22 @@ namespace OpenGLES2Renderer
 		// Destroy the vertex array attributes
 		if (nullptr != mAttributes)
 		{
+			// Cleanup
+			delete [] mAttributes;
+		}
+
+		// Destroy the vertex array vertex buffers
+		if (nullptr != mVertexBuffers)
+		{
 			// Release the reference to the used vertex buffers
-			const Renderer::VertexArrayAttribute *attributeEnd = mAttributes + mNumberOfAttributes;
-			for (const Renderer::VertexArrayAttribute *attribute = mAttributes; attribute < attributeEnd; ++attribute)
+			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = mVertexBuffers + mNumberOfVertexBuffers;
+			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = mVertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
 			{
-				attribute->vertexBuffer->release();
+				vertexBuffer->vertexBuffer->release();
 			}
 
 			// Cleanup
-			delete [] mAttributes;
+			delete [] mVertexBuffers;
 		}
 
 		// Destroy the vertex array attribute locations
@@ -113,8 +132,9 @@ namespace OpenGLES2Renderer
 			{
 				// Set the OpenGL ES 2 vertex attribute pointer
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(attribute->vertexBuffer)->getOpenGLES2ArrayBuffer());
-				glVertexAttribPointer(static_cast<GLuint>(*attributeLocation), Mapping::getOpenGLES2Size(attribute->vertexArrayFormat), Mapping::getOpenGLES2Type(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(attribute->stride), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
+				const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = mVertexBuffers[attribute->inputSlot];
+				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES2ArrayBuffer());
+				glVertexAttribPointer(static_cast<GLuint>(*attributeLocation), Mapping::getOpenGLES2Size(attribute->vertexArrayFormat), Mapping::getOpenGLES2Type(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
 
 				// Enable OpenGL ES 2 vertex attribute array
 				glEnableVertexAttribArray(static_cast<GLuint>(*attributeLocation));

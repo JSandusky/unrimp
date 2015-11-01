@@ -39,6 +39,7 @@ struct IDirect3DVertexDeclaration9;
 namespace Renderer
 {
 	struct VertexArrayAttribute;
+	struct VertexArrayVertexBuffer;
 }
 namespace Direct3D9Renderer
 {
@@ -80,10 +81,14 @@ namespace Direct3D9Renderer
 		*    Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
 		*  @param[in] attributes
 		*    At least nNumberOfAttributes instances of vertex array attributes, can be a null pointer in case there are zero attributes
+		*  @param[in] numberOfVertexBuffers
+		*    Number of vertex buffers, having zero vertex buffers is valid
+		*  @param[in] vertexBuffers
+		*    At least numberOfVertexBuffers instances of vertex array vertex buffers, can be a null pointer in case there are zero vertex buffers, the data is internally copied and you have to free your memory if you no longer need it
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArray(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer);
+		VertexArray(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief
@@ -125,9 +130,9 @@ namespace Direct3D9Renderer
 		uint32_t					  mNumberOfSlots;				///< Number of used Direct3D 9 input slots
 		IDirect3DVertexBuffer9		**mDirect3DVertexBuffer9;		///< Direct3D 9 vertex buffers, if "mDirect3DVertexDeclaration9" is no null pointer this is no null pointer as well
 		uint32_t					 *mStrides;						///< Strides in bytes, if "mDirect3DVertexBuffer9" is no null pointer this is no null pointer as well
+		uint32_t					 *mOffsets;						///< Offsets in bytes, if "mDirect3DVertexBuffer9" is no null pointer this is no null pointer as well (type "UINT" not used in here in order to keep the header slim)
 		uint32_t					 *mInstancesPerElement;			///< Instances per element, if "mDirect3DVertexBuffer9" is no null pointer this is no null pointer as well
 		// For proper vertex buffer reference counter behaviour
-		uint32_t					  mNumberOfVertexBuffers;		///< Number of vertex buffers
 		VertexBuffer				**mVertexBuffers;				///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
 
 

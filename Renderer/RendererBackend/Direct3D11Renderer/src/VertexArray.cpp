@@ -40,16 +40,15 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D11Renderer &direct3D11Renderer, ID3DBlob &d3dBlob, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D11Renderer &direct3D11Renderer, ID3DBlob &d3dBlob, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D11Renderer),
 		mD3D11DeviceContext(direct3D11Renderer.getD3D11DeviceContext()),
 		mIndexBuffer(indexBuffer),
 		mD3D11InputLayout(nullptr),
-		mNumberOfSlots(0),
+		mNumberOfSlots(numberOfVertexBuffers),
 		mD3D11Buffers(nullptr),
 		mStrides(nullptr),
 		mOffsets(nullptr),
-		mNumberOfVertexBuffers(numberOfAttributes),
 		mVertexBuffers(nullptr)
 	{
 		// Acquire our Direct3D 11 device context reference
@@ -62,81 +61,42 @@ namespace Direct3D11Renderer
 		}
 
 		// Add a reference to the used vertex buffers
-		if (numberOfAttributes > 0)
+		if (mNumberOfSlots > 0)
 		{
-			mVertexBuffers = new VertexBuffer*[numberOfAttributes];
+			mD3D11Buffers = new ID3D11Buffer*[mNumberOfSlots];
+			mStrides = new UINT[mNumberOfSlots];
+			mOffsets = new UINT[mNumberOfSlots];
+			mVertexBuffers = new VertexBuffer*[mNumberOfSlots];
 
-			// Loop through all attributes
-			VertexBuffer **vertexBuffers = mVertexBuffers;
-			const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
-			for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++vertexBuffers)
+			// Loop through all vertex buffers
+			ID3D11Buffer** currentD3D11Buffer = mD3D11Buffers;
+			UINT* currentStride = mStrides;
+			UINT* currentOffset = mOffsets;
+			VertexBuffer **currentVertexBuffer = mVertexBuffers;
+			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + mNumberOfSlots;
+			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentD3D11Buffer, ++currentStride, ++currentOffset, ++currentVertexBuffer)
 			{
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				*vertexBuffers = static_cast<VertexBuffer*>(attribute->vertexBuffer);
-				(*vertexBuffers)->addReference();
+				*currentStride = vertexBuffer->strideInBytes;
+				*currentOffset = vertexBuffer->offsetInBytes;
+				*currentVertexBuffer = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
+				*currentD3D11Buffer = (*currentVertexBuffer)->getD3D11Buffer();
+				(*currentVertexBuffer)->addReference();
 			}
 		}
 
-		// Vertex buffer at slot
-		uint32_t numberOfUsedSlots = 0;
-		ID3D11Buffer *d3d11BufferAtSlot[D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT];
-		memset(d3d11BufferAtSlot, 0, sizeof(ID3D11Buffer*) * D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT);
-		UINT strideAtSlot[D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT];
-		memset(strideAtSlot, 0, sizeof(UINT) * D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT);
-
 		// Create Direct3D 11 input element descriptions
-		// -> While doing so, collect the per slot vertex buffer and stride information
-		// -> Direct3D 11 don't like it when the first parameter of "D3D10Device::CreateInputLayout()" is a null pointer:
-		//      "D3D11: ERROR: ID3D11Device::CreateInputLayout: NULL pDesc specified! [ STATE_CREATION ERROR #164: CREATEINPUTLAYOUT_NULLDESC ]"
-		//    Handle this case.
+		// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
 		D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescs   = numberOfAttributes ? new D3D11_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D11_INPUT_ELEMENT_DESC[1];
 		D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDesc    = d3d11InputElementDescs;
 		D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescEnd = d3d11InputElementDescs + numberOfAttributes;
 		for (; d3d11InputElementDesc < d3d11InputElementDescEnd; ++d3d11InputElementDesc, ++attributes)
 		{
-			// Determine the Direct3D 11 input slot to use
-			ID3D11Buffer **currentD3D11BufferAtSlot = d3d11BufferAtSlot;
-			UINT *currentStrideAtSlot = strideAtSlot;
-			int slotToUse = -1;
-			for (uint32_t slot = 0; slot < numberOfUsedSlots; ++slot, ++currentD3D11BufferAtSlot, ++currentStrideAtSlot)
-			{
-				// Vertex buffer and stride match?
-				if (*currentD3D11BufferAtSlot == static_cast<VertexBuffer*>(attributes->vertexBuffer)->getD3D11Buffer() && *currentStrideAtSlot == attributes->stride)
-				{
-					// Jap, this attribute can use an already used Direct3D 11 input slot
-					slotToUse = static_cast<int>(slot);
-
-					// Get us out of this loop right now
-					slot = numberOfUsedSlots;
-				}
-			}
-			if (slotToUse < 0)
-			{
-				// No Direct3D 11 input slot can be reused, so use a new slot
-
-				// Are there still free Direct3D 11 input slots available?
-				if (numberOfUsedSlots < D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT)
-				{
-					// Add the new Direct3D 11 input slot
-					slotToUse = static_cast<int>(numberOfUsedSlots);
-					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					d3d11BufferAtSlot[slotToUse] = static_cast<VertexBuffer*>(attributes->vertexBuffer)->getD3D11Buffer();
-					strideAtSlot[slotToUse] = attributes->stride;
-					++numberOfUsedSlots;
-				}
-				else
-				{
-					// Error! Clean up and get us out of here right now!
-					delete [] d3d11InputElementDescs;
-					return;	// Ugly return, but we haven't much choice in here
-				}
-			}
-
 			// Fill the "D3D11_INPUT_ELEMENT_DESC"-content
 			d3d11InputElementDesc->SemanticName      = attributes->semanticName;																// Semantic name (LPCSTR)
 			d3d11InputElementDesc->SemanticIndex     = attributes->semanticIndex;																// Semantic index (UINT)
 			d3d11InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(attributes->vertexArrayFormat));	// Format (DXGI_FORMAT)
-			d3d11InputElementDesc->InputSlot         = static_cast<UINT>(slotToUse);															// Input slot (UINT)
+			d3d11InputElementDesc->InputSlot         = static_cast<UINT>(attributes->inputSlot);												// Input slot (UINT)
 			d3d11InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;															// Aligned byte offset (UINT)
 
 			// Per-instance instead of per-vertex?
@@ -157,25 +117,6 @@ namespace Direct3D11Renderer
 
 		// Destroy Direct3D 11 input element descriptions
 		delete [] d3d11InputElementDescs;
-
-		// Valid Direct3D 11 input layout?
-		if (nullptr != mD3D11InputLayout && numberOfAttributes > 0)
-		{
-			// Allocate final memory for the Direct3D 11 input slot data
-			mNumberOfSlots = numberOfUsedSlots;
-
-			// Buffers
-			mD3D11Buffers = new ID3D11Buffer*[mNumberOfSlots];
-			memcpy(mD3D11Buffers, d3d11BufferAtSlot, sizeof(ID3D11Buffer*) * mNumberOfSlots);
-
-			// Strides
-			mStrides = new UINT[mNumberOfSlots];
-			memcpy(mStrides, strideAtSlot, sizeof(UINT) * mNumberOfSlots);
-
-			// Offsets
-			mOffsets = new UINT[mNumberOfSlots];
-			memset(mOffsets, 0, sizeof(UINT) * mNumberOfSlots);
-		}
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
@@ -198,7 +139,7 @@ namespace Direct3D11Renderer
 		}
 
 		// Cleanup Direct3D 11 input slot data
-		if (nullptr != mD3D11Buffers)
+		if (mNumberOfSlots > 0)
 		{
 			delete [] mD3D11Buffers;
 			delete [] mStrides;
@@ -209,7 +150,7 @@ namespace Direct3D11Renderer
 		if (nullptr != mVertexBuffers)
 		{
 			// Release references
-			VertexBuffer **vertexBuffersEnd = mVertexBuffers + mNumberOfVertexBuffers;
+			VertexBuffer **vertexBuffersEnd = mVertexBuffers + mNumberOfSlots;
 			for (VertexBuffer **vertexBuffer = mVertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
 			{
 				(*vertexBuffer)->release();

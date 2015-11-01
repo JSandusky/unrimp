@@ -110,9 +110,8 @@ void VertexBuffer::onInitialization()
 							"POSITION",								// semanticName[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
-							vertexBufferPositionColor,				// vertexBuffer (Renderer::IVertexBuffer *)
+							0,										// inputSlot (uint32_t)
 							0,										// alignedByteOffset (uint32_t)
-							sizeof(float) * (2 + 3),				// stride (uint32_t)
 							// Data source, instancing part
 							0										// instancesPerElement (uint32_t)
 						},
@@ -123,14 +122,21 @@ void VertexBuffer::onInitialization()
 							"COLOR",								// semanticName[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
-							vertexBufferPositionColor,				// vertexBuffer (Renderer::IVertexBuffer *)
+							0,										// inputSlot (uint32_t)
 							sizeof(float) * 2,						// alignedByteOffset (uint32_t)
-							sizeof(float) * (2 + 3),				// stride (uint32_t)
 							// Data source, instancing part
 							0										// instancesPerElement (uint32_t)
 						}
 					};
-					mVertexArrayVBO = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+					{
+						{ // Vertex buffer 0
+							vertexBufferPositionColor,	// vertexBuffer (Renderer::IVertexBuffer *)
+							sizeof(float) * (2 + 3),	// strideInBytes (uint32_t)
+							0							// offsetInBytes (uint32_t)
+						}
+					};
+					mVertexArrayVBO = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 				}
 
 				{ // Create vertex array object (VAO) using multiple vertex buffer object (VBO)
@@ -164,9 +170,8 @@ void VertexBuffer::onInitialization()
 							"POSITION",								// semanticName[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
-							vertexBufferPosition,					// vertexBuffer (Renderer::IVertexBuffer *)
+							0,										// inputSlot (uint32_t)
 							0,										// alignedByteOffset (uint32_t)
-							sizeof(float) * 2,						// stride (uint32_t)
 							// Data source, instancing part
 							0										// instancesPerElement (uint32_t)
 						},
@@ -177,14 +182,26 @@ void VertexBuffer::onInitialization()
 							"COLOR",								// semanticName[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
-							vertexBufferColor,						// vertexBuffer (Renderer::IVertexBuffer *)
+							1,										// inputSlot (uint32_t)
 							0,										// alignedByteOffset (uint32_t)
-							sizeof(float) * 3,						// stride (uint32_t)
 							// Data source, instancing part
 							0										// instancesPerElement (uint32_t)
 						}
 					};
-					mVertexArrayVBOs = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+					{
+						{ // Vertex buffer 0
+							vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer *)
+							sizeof(float) * 2,		// strideInBytes (uint32_t)
+							0						// offsetInBytes (uint32_t)
+						},
+						{ // Vertex buffer 1
+							vertexBufferColor,		// vertexBuffer (Renderer::IVertexBuffer *)
+							sizeof(float) * 3,		// strideInBytes (uint32_t)
+							0						// offsetInBytes (uint32_t)
+						}
+					};
+					mVertexArrayVBOs = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 				}
 			}
 		}

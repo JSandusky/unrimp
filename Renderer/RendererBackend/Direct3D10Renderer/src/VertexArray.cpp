@@ -40,16 +40,15 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D10Renderer &direct3D10Renderer, ID3DBlob &d3dBlob, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D10Renderer &direct3D10Renderer, ID3DBlob &d3dBlob, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D10Renderer),
 		mD3D10Device(direct3D10Renderer.getD3D10Device()),
 		mIndexBuffer(indexBuffer),
 		mD3D10InputLayout(nullptr),
-		mNumberOfSlots(0),
+		mNumberOfSlots(numberOfVertexBuffers),
 		mD3D10Buffers(nullptr),
 		mStrides(nullptr),
 		mOffsets(nullptr),
-		mNumberOfVertexBuffers(numberOfAttributes),
 		mVertexBuffers(nullptr)
 	{
 		// Acquire our Direct3D 10 device reference
@@ -62,92 +61,53 @@ namespace Direct3D10Renderer
 		}
 
 		// Add a reference to the used vertex buffers
-		if (numberOfAttributes > 0)
+		if (mNumberOfSlots > 0)
 		{
-			mVertexBuffers = new VertexBuffer*[numberOfAttributes];
+			mD3D10Buffers = new ID3D10Buffer*[mNumberOfSlots];
+			mStrides = new UINT[mNumberOfSlots];
+			mOffsets = new UINT[mNumberOfSlots];
+			mVertexBuffers = new VertexBuffer*[mNumberOfSlots];
 
-			// Loop through all attributes
-			VertexBuffer **vertexBuffers = mVertexBuffers;
-			const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
-			for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++vertexBuffers)
+			// Loop through all vertex buffers
+			ID3D10Buffer** currentD3D10Buffer = mD3D10Buffers;
+			UINT* currentStride = mStrides;
+			UINT* currentOffset = mOffsets;
+			VertexBuffer **currentVertexBuffer = mVertexBuffers;
+			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + mNumberOfSlots;
+			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentD3D10Buffer, ++currentStride, ++currentOffset, ++currentVertexBuffer)
 			{
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				*vertexBuffers = static_cast<VertexBuffer*>(attribute->vertexBuffer);
-				(*vertexBuffers)->addReference();
+				*currentStride = vertexBuffer->strideInBytes;
+				*currentOffset = vertexBuffer->offsetInBytes;
+				*currentVertexBuffer = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
+				*currentD3D10Buffer = (*currentVertexBuffer)->getD3D10Buffer();
+				(*currentVertexBuffer)->addReference();
 			}
 		}
 
-		// Vertex buffer at slot
-		uint32_t numberOfUsedSlots = 0;
-		ID3D10Buffer *d3d10BufferAtSlot[D3D10_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT];
-		memset(d3d10BufferAtSlot, 0, sizeof(ID3D10Buffer*) * D3D10_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT);
-		UINT strideAtSlot[D3D10_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT];
-		memset(strideAtSlot, 0, sizeof(UINT) * D3D10_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT);
-
 		// Create Direct3D 10 input element descriptions
-		// -> While doing so, collect the per slot vertex buffer and stride information
-		// -> Direct3D 10 don't like it when the first parameter of "D3D10Device::CreateInputLayout()" is a null pointer:
-		//      "D3D10: ERROR: ID3D10Device::CreateInputLayout: NULL pDesc specified! [ STATE_CREATION ERROR #164: CREATEINPUTLAYOUT_NULLDESC ]"
-		//    Handle this case.
+		// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
 		D3D10_INPUT_ELEMENT_DESC *d3d10InputElementDescs   = numberOfAttributes ? new D3D10_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D10_INPUT_ELEMENT_DESC[1];
 		D3D10_INPUT_ELEMENT_DESC *d3d10InputElementDesc    = d3d10InputElementDescs;
 		D3D10_INPUT_ELEMENT_DESC *d3d10InputElementDescEnd = d3d10InputElementDescs + numberOfAttributes;
 		for (; d3d10InputElementDesc < d3d10InputElementDescEnd; ++d3d10InputElementDesc, ++attributes)
 		{
-			// Determine the Direct3D 10 input slot to use
-			ID3D10Buffer **currentD3D10BufferAtSlot = d3d10BufferAtSlot;
-			UINT *currentStrideAtSlot = strideAtSlot;
-			int slotToUse = -1;
-			for (uint32_t slot = 0; slot < numberOfUsedSlots; ++slot, ++currentD3D10BufferAtSlot, ++currentStrideAtSlot)
-			{
-				// Vertex buffer and stride match?
-				if (*currentD3D10BufferAtSlot == static_cast<VertexBuffer*>(attributes->vertexBuffer)->getD3D10Buffer() && *currentStrideAtSlot == attributes->stride)
-				{
-					// Jap, this attribute can use an already used Direct3D 10 input slot
-					slotToUse = static_cast<int>(slot);
-
-					// Get us out of this loop right now
-					slot = numberOfUsedSlots;
-				}
-			}
-			if (slotToUse < 0)
-			{
-				// No Direct3D 10 input slot can be reused, so use a new slot
-
-				// Are there still free Direct3D 10 input slots available?
-				if (numberOfUsedSlots < D3D10_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT)
-				{
-					// Add the new Direct3D 10 input slot
-					slotToUse = static_cast<int>(numberOfUsedSlots);
-					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					d3d10BufferAtSlot[slotToUse] = static_cast<VertexBuffer*>(attributes->vertexBuffer)->getD3D10Buffer();
-					strideAtSlot[slotToUse] = attributes->stride;
-					++numberOfUsedSlots;
-				}
-				else
-				{
-					// Error! Clean up and get us out of here right now!
-					delete [] d3d10InputElementDescs;
-					return;	// Ugly return, but we haven't much choice in here
-				}
-			}
-
 			// Fill the "D3D10_INPUT_ELEMENT_DESC"-content
 			d3d10InputElementDesc->SemanticName      = attributes->semanticName;																// Semantic name (LPCSTR)
 			d3d10InputElementDesc->SemanticIndex     = attributes->semanticIndex;																// Semantic index (UINT)
 			d3d10InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(attributes->vertexArrayFormat));	// Format (DXGI_FORMAT)
-			d3d10InputElementDesc->InputSlot         = static_cast<UINT>(slotToUse);															// Input slot (UINT)
+			d3d10InputElementDesc->InputSlot         = static_cast<UINT>(attributes->inputSlot);												// Input slot (UINT)
 			d3d10InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;															// Aligned byte offset (UINT)
 
 			// Per-instance instead of per-vertex?
 			if (attributes->instancesPerElement > 0)
 			{
-				d3d10InputElementDesc->InputSlotClass       = D3D10_INPUT_PER_INSTANCE_DATA;	// Input classification (D3D11_INPUT_CLASSIFICATION)
+				d3d10InputElementDesc->InputSlotClass       = D3D10_INPUT_PER_INSTANCE_DATA;	// Input classification (D3D10_INPUT_CLASSIFICATION)
 				d3d10InputElementDesc->InstanceDataStepRate = attributes->instancesPerElement;	// Instance data step rate (UINT)
 			}
 			else
 			{
-				d3d10InputElementDesc->InputSlotClass       = D3D10_INPUT_PER_VERTEX_DATA;	// Input classification (D3D11_INPUT_CLASSIFICATION)
+				d3d10InputElementDesc->InputSlotClass       = D3D10_INPUT_PER_VERTEX_DATA;	// Input classification (D3D10_INPUT_CLASSIFICATION)
 				d3d10InputElementDesc->InstanceDataStepRate = 0;							// Instance data step rate (UINT)
 			}
 		}
@@ -157,25 +117,6 @@ namespace Direct3D10Renderer
 
 		// Destroy Direct3D 10 input element descriptions
 		delete [] d3d10InputElementDescs;
-
-		// Valid Direct3D 10 input layout?
-		if (nullptr != mD3D10InputLayout && numberOfAttributes > 0)
-		{
-			// Allocate final memory for the Direct3D 10 input slot data
-			mNumberOfSlots = numberOfUsedSlots;
-
-			// Buffers
-			mD3D10Buffers = new ID3D10Buffer*[mNumberOfSlots];
-			memcpy(mD3D10Buffers, d3d10BufferAtSlot, sizeof(ID3D10Buffer*) * mNumberOfSlots);
-
-			// Strides
-			mStrides = new UINT[mNumberOfSlots];
-			memcpy(mStrides, strideAtSlot, sizeof(UINT) * mNumberOfSlots);
-
-			// Offsets
-			mOffsets = new UINT[mNumberOfSlots];
-			memset(mOffsets, 0, sizeof(UINT) * mNumberOfSlots);
-		}
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
@@ -198,7 +139,7 @@ namespace Direct3D10Renderer
 		}
 
 		// Cleanup Direct3D 10 input slot data
-		if (nullptr != mD3D10Buffers)
+		if (mNumberOfSlots > 0)
 		{
 			delete [] mD3D10Buffers;
 			delete [] mStrides;
@@ -209,7 +150,7 @@ namespace Direct3D10Renderer
 		if (nullptr != mVertexBuffers)
 		{
 			// Release references
-			VertexBuffer **vertexBuffersEnd = mVertexBuffers + mNumberOfVertexBuffers;
+			VertexBuffer **vertexBuffersEnd = mVertexBuffers + mNumberOfSlots;
 			for (VertexBuffer **vertexBuffer = mVertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
 			{
 				(*vertexBuffer)->release();

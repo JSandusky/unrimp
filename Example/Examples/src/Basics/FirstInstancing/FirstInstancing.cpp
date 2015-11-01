@@ -137,9 +137,8 @@ void FirstInstancing::onInitialization()
 							"POSITION",								// semanticName[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
-							vertexBufferPosition,					// vertexBuffer (Renderer::IVertexBuffer *)
+							0,										// inputSlot (uint32_t)
 							0,										// alignedByteOffset (uint32_t)
-							sizeof(float) * 2,						// stride (uint32_t)
 							// Data source, instancing part
 							0										// instancesPerElement (uint32_t)
 						},
@@ -150,14 +149,26 @@ void FirstInstancing::onInitialization()
 							"TEXCOORD",								// semanticName[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
-							vertexBufferInstanceId,					// vertexBuffer (Renderer::IVertexBuffer *)
+							1,										// inputSlot (uint32_t)
 							0,										// alignedByteOffset (uint32_t)
-							sizeof(float),							// stride (uint32_t)
 							// Data source, instancing part
 							1										// instancesPerElement (uint32_t)
 						}
 					};
-					mVertexArrayInstancedArrays = mProgramInstancedArrays->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, indexBufferInstancedArrays);
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+					{
+						{ // Vertex buffer 0
+							vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer *)
+							sizeof(float) * 2,		// strideInBytes (uint32_t)
+							0						// offsetInBytes (uint32_t)
+						},
+						{ // Vertex buffer 1
+							vertexBufferInstanceId,	// vertexBuffer (Renderer::IVertexBuffer *)
+							sizeof(float),			// strideInBytes (uint32_t)
+							0						// offsetInBytes (uint32_t)
+						}
+					};
+					mVertexArrayInstancedArrays = mProgramInstancedArrays->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBufferInstancedArrays);
 				}
 			}
 
@@ -206,14 +217,21 @@ void FirstInstancing::onInitialization()
 							"POSITION",								// semanticName[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
-							vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
+							0,										// inputSlot (uint32_t)
 							0,										// alignedByteOffset (uint32_t)
-							sizeof(float) * 2,						// stride (uint32_t)
 							// Data source, instancing part
 							0										// instancesPerElement (uint32_t)
 						}
 					};
-					mVertexArrayDrawInstanced = mProgramDrawInstanced->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+					{
+						{ // Vertex buffer 0
+							vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+							sizeof(float) * 2,	// strideInBytes (uint32_t)
+							0					// offsetInBytes (uint32_t)
+						}
+					};
+					mVertexArrayDrawInstanced = mProgramDrawInstanced->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 				}
 			}
 		}

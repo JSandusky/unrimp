@@ -62,20 +62,20 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *Program::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
+	Renderer::IVertexArray *Program::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
 	{
 		// Is "GL_OES_vertex_array_object" there?
 		if (static_cast<OpenGLES2Renderer&>(getRenderer()).getContext().getExtensions().isGL_OES_vertex_array_object())
 		{
 			// Effective vertex array object (VAO)
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new VertexArrayVao(*this, numberOfAttributes, attributes, static_cast<IndexBuffer*>(indexBuffer));
+			return new VertexArrayVao(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 		}
 		else
 		{
 			// Traditional version
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new VertexArrayNoVao(*this, numberOfAttributes, attributes, static_cast<IndexBuffer*>(indexBuffer));
+			return new VertexArrayNoVao(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 		}
 	}
 

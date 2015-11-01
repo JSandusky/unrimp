@@ -63,25 +63,25 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	VertexArrayVao::VertexArrayVao(OpenGLRenderer &openGLRenderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
+	VertexArrayVao::VertexArrayVao(OpenGLRenderer &openGLRenderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		VertexArray(openGLRenderer, indexBuffer, InternalResourceType::VAO),
 		mOpenGLVertexArray(0),
-		mNumberOfVertexBuffers(numberOfAttributes),
+		mNumberOfVertexBuffers(numberOfVertexBuffers),
 		mVertexBuffers(nullptr)
 	{
 		// Add a reference to the used vertex buffers
-		if (numberOfAttributes > 0)
+		if (numberOfVertexBuffers > 0)
 		{
-			mVertexBuffers = new VertexBuffer*[numberOfAttributes];
+			mVertexBuffers = new VertexBuffer*[numberOfVertexBuffers];
 
-			// Loop through all attributes
-			VertexBuffer **vertexBuffers = mVertexBuffers;
-			const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
-			for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++vertexBuffers)
+			// Loop through all vertex buffers
+			VertexBuffer **currentVertexBuffers = mVertexBuffers;
+			const Renderer::VertexArrayVertexBuffer *vertexBuffersEnd = vertexBuffers + numberOfVertexBuffers;
+			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer, ++currentVertexBuffers)
 			{
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				*vertexBuffers = static_cast<VertexBuffer*>(attribute->vertexBuffer);
-				(*vertexBuffers)->addReference();
+				*currentVertexBuffers = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
+				(*currentVertexBuffers)->addReference();
 			}
 		}
 

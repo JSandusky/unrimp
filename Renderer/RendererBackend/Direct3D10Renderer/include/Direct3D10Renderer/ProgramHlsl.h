@@ -119,7 +119,7 @@ namespace Direct3D10Renderer
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	public:
-		virtual Renderer::IVertexArray *createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer = nullptr) override;
+		virtual Renderer::IVertexArray *createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer = nullptr) override;
 		virtual int getAttributeLocation(const char *attributeName) override;
 		virtual uint32_t getUniformBlockIndex(const char *uniformBlockName, uint32_t defaultIndex) override;
 		virtual handle getUniformHandle(const char *uniformName) override;

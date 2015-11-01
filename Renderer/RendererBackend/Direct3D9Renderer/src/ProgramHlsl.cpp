@@ -125,10 +125,10 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *ProgramHlsl::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
+	Renderer::IVertexArray *ProgramHlsl::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
 	{
 		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-		return new VertexArray(*mDirect3D9Renderer, numberOfAttributes, attributes, static_cast<IndexBuffer*>(indexBuffer));
+		return new VertexArray(*mDirect3D9Renderer, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 	}
 
 	int ProgramHlsl::getAttributeLocation(const char *)

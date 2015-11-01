@@ -85,15 +85,15 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *Program::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
+	Renderer::IVertexArray *Program::createVertexArray(uint32_t, const Renderer::VertexArrayAttribute *, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
 	{
 		// We don't keep a reference to the vertex buffers used by the vertex array attributes in here
 		// -> Ensure a correct reference counter behaviour
-		const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
-		for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute)
+		const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + numberOfVertexBuffers;
+		for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
 		{
-			attribute->vertexBuffer->addReference();
-			attribute->vertexBuffer->release();
+			vertexBuffer->vertexBuffer->addReference();
+			vertexBuffer->vertexBuffer->release();
 		}
 
 		// We don't keep a reference to the index buffer in here

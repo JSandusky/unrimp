@@ -44,8 +44,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayVaoDsa::VertexArrayVaoDsa(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, IndexBuffer *indexBuffer) :
-		VertexArrayVao(static_cast<OpenGLRenderer&>(program.getRenderer()), numberOfAttributes, attributes, indexBuffer)
+	VertexArrayVaoDsa::VertexArrayVaoDsa(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+		VertexArrayVao(static_cast<OpenGLRenderer&>(program.getRenderer()), numberOfVertexBuffers, vertexBuffers, indexBuffer)
 	{
 		// Vertex buffer reference handling is done within the base class "VertexArrayVao"
 
@@ -59,7 +59,8 @@ namespace OpenGLRenderer
 			{
 				// Set the OpenGL vertex attribute pointer
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				glVertexArrayVertexAttribOffsetEXT(mOpenGLVertexArray, static_cast<VertexBuffer*>(attribute->vertexBuffer)->getOpenGLArrayBuffer(), static_cast<GLuint>(attributeLocation), Mapping::getOpenGLSize(attribute->vertexArrayFormat), Mapping::getOpenGLType(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(attribute->stride), static_cast<GLintptr>(attribute->alignedByteOffset));
+				const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
+				glVertexArrayVertexAttribOffsetEXT(mOpenGLVertexArray, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLArrayBuffer(), static_cast<GLuint>(attributeLocation), Mapping::getOpenGLSize(attribute->vertexArrayFormat), Mapping::getOpenGLType(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), static_cast<GLintptr>(attribute->alignedByteOffset));
 
 				// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
 				if (attribute->instancesPerElement > 0 && static_cast<OpenGLRenderer&>(program.getRenderer()).getContext().getExtensions().isGL_ARB_instanced_arrays())

@@ -86,22 +86,22 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *ProgramHlsl::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, Renderer::IIndexBuffer *indexBuffer)
+	Renderer::IVertexArray *ProgramHlsl::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
 	{
 		// There must be a compiled vertex shader BLOB
 		if (nullptr != mVertexShaderHlsl && nullptr != mVertexShaderHlsl->getD3DBlobVertexShader())
 		{
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new VertexArray(*mDirect3D10Renderer, *mVertexShaderHlsl->getD3DBlobVertexShader(), numberOfAttributes, attributes, static_cast<IndexBuffer*>(indexBuffer));
+			return new VertexArray(*mDirect3D10Renderer, *mVertexShaderHlsl->getD3DBlobVertexShader(), numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 		}
 		else
 		{
 			// Ensure a correct reference counter behaviour, even in the situation of an error
-			const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
-			for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute)
+			const Renderer::VertexArrayVertexBuffer *vertexBuffersEnd = vertexBuffers + numberOfVertexBuffers;
+			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBuffersEnd; ++vertexBuffer)
 			{
-				attribute->vertexBuffer->addReference();
-				attribute->vertexBuffer->release();
+				vertexBuffer->vertexBuffer->addReference();
+				vertexBuffer->vertexBuffer->release();
 			}
 			if (nullptr != indexBuffer)
 			{

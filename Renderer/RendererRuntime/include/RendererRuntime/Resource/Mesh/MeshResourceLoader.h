@@ -107,8 +107,8 @@ namespace RendererRuntime
 				char	name[32];
 				char	semanticName[32];
 				uint8_t semanticIndex;
+				uint8_t inputSlot;
 				uint8_t alignedByteOffset;
-				uint8_t stride;
 			};
 		#pragma pack(pop)
 
