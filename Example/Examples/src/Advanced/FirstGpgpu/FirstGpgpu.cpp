@@ -233,8 +233,7 @@ void FirstGpgpu::onInitialization()
 			{
 				{ // Vertex buffer 0
 					vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 2,	// strideInBytes (uint32_t)
-					0					// offsetInBytes (uint32_t)
+					sizeof(float) * 2	// strideInBytes (uint32_t)
 				}
 			};
 			mVertexArrayContentGeneration = mProgramContentGeneration->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
@@ -279,8 +278,7 @@ void FirstGpgpu::onInitialization()
 			{
 				{ // Vertex buffer 0
 					vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 2,	// strideInBytes (uint32_t)
-					0					// offsetInBytes (uint32_t)
+					sizeof(float) * 2	// strideInBytes (uint32_t)
 				}
 			};
 			mVertexArrayContentProcessing = mProgramContentGeneration->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);

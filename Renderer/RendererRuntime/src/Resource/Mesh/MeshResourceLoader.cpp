@@ -162,8 +162,7 @@ namespace RendererRuntime
 		{
 			{ // Vertex buffer 0
 				vertexBuffer,																		// vertexBuffer (Renderer::IVertexBuffer *)
-				(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0,	// strideInBytes (uint32_t)
-				0																					// offsetInBytes (uint32_t)
+				(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0	// strideInBytes (uint32_t)
 			}
 		};
 		mMeshResource->mVertexArray = mProgram->createVertexArray(mNumberOfUsedVertexArrayAttributes, mVertexArray, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);

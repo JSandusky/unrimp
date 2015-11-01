@@ -185,14 +185,12 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 			{
 				{ // Vertex buffer 0
-					&vertexBuffer,					// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * (3 + 2 + 3),	// strideInBytes (uint32_t)
-					0								// offsetInBytes (uint32_t)
+					&vertexBuffer,				// vertexBuffer (Renderer::IVertexBuffer *)
+					sizeof(float) * (3 + 2 + 3)	// strideInBytes (uint32_t)
 				},
 				{ // Vertex buffer 1
 					vertexBufferPerInstanceData,	// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 4 * 2,			// strideInBytes (uint32_t)
-					0								// offsetInBytes (uint32_t)
+					sizeof(float) * 4 * 2			// strideInBytes (uint32_t)
 				}
 			};
 			mVertexArray = program.createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, &indexBuffer);

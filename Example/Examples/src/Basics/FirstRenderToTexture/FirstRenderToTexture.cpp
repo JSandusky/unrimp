@@ -137,8 +137,7 @@ void FirstRenderToTexture::onInitialization()
 				{
 					{ // Vertex buffer 0
 						vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-						sizeof(float) * 2,	// strideInBytes (uint32_t)
-						0					// offsetInBytes (uint32_t)
+						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
 				mVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);

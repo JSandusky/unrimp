@@ -130,7 +130,6 @@ namespace Direct3D9Renderer
 		uint32_t					  mNumberOfSlots;				///< Number of used Direct3D 9 input slots
 		IDirect3DVertexBuffer9		**mDirect3DVertexBuffer9;		///< Direct3D 9 vertex buffers, if "mDirect3DVertexDeclaration9" is no null pointer this is no null pointer as well
 		uint32_t					 *mStrides;						///< Strides in bytes, if "mDirect3DVertexBuffer9" is no null pointer this is no null pointer as well
-		uint32_t					 *mOffsets;						///< Offsets in bytes, if "mDirect3DVertexBuffer9" is no null pointer this is no null pointer as well (type "UINT" not used in here in order to keep the header slim)
 		uint32_t					 *mInstancesPerElement;			///< Instances per element, if "mDirect3DVertexBuffer9" is no null pointer this is no null pointer as well
 		// For proper vertex buffer reference counter behaviour
 		VertexBuffer				**mVertexBuffers;				///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer

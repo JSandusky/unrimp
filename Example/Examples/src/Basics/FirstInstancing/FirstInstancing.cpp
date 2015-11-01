@@ -159,13 +159,11 @@ void FirstInstancing::onInitialization()
 					{
 						{ // Vertex buffer 0
 							vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer *)
-							sizeof(float) * 2,		// strideInBytes (uint32_t)
-							0						// offsetInBytes (uint32_t)
+							sizeof(float) * 2		// strideInBytes (uint32_t)
 						},
 						{ // Vertex buffer 1
 							vertexBufferInstanceId,	// vertexBuffer (Renderer::IVertexBuffer *)
-							sizeof(float),			// strideInBytes (uint32_t)
-							0						// offsetInBytes (uint32_t)
+							sizeof(float)			// strideInBytes (uint32_t)
 						}
 					};
 					mVertexArrayInstancedArrays = mProgramInstancedArrays->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBufferInstancedArrays);
@@ -227,8 +225,7 @@ void FirstInstancing::onInitialization()
 					{
 						{ // Vertex buffer 0
 							vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-							sizeof(float) * 2,	// strideInBytes (uint32_t)
-							0					// offsetInBytes (uint32_t)
+							sizeof(float) * 2	// strideInBytes (uint32_t)
 						}
 					};
 					mVertexArrayDrawInstanced = mProgramDrawInstanced->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);

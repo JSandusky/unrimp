@@ -49,7 +49,6 @@ namespace Direct3D9Renderer
 		mNumberOfSlots(numberOfVertexBuffers),
 		mDirect3DVertexBuffer9(nullptr),
 		mStrides(nullptr),
-		mOffsets(nullptr),
 		mInstancesPerElement(nullptr),
 		mVertexBuffers(nullptr)
 	{
@@ -67,22 +66,19 @@ namespace Direct3D9Renderer
 		{
 			mDirect3DVertexBuffer9 = new IDirect3DVertexBuffer9*[mNumberOfSlots];
 			mStrides = new uint32_t[mNumberOfSlots];
-			mOffsets = new uint32_t[mNumberOfSlots];
 			mInstancesPerElement = new uint32_t[mNumberOfSlots];
 			mVertexBuffers = new VertexBuffer*[mNumberOfSlots];
 
 			// Loop through all vertex buffers
 			IDirect3DVertexBuffer9** currentDirect3DVertexBuffer9 = mDirect3DVertexBuffer9;
 			UINT* currentStride = mStrides;
-			UINT* currentOffset = mOffsets;
 			UINT* currentInstancesPerElement = mInstancesPerElement;
 			VertexBuffer **currentVertexBuffer = mVertexBuffers;
 			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + mNumberOfSlots;
-			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentDirect3DVertexBuffer9, ++currentStride, ++currentOffset, ++currentInstancesPerElement, ++currentVertexBuffer)
+			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentDirect3DVertexBuffer9, ++currentStride, ++currentInstancesPerElement, ++currentVertexBuffer)
 			{
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 				*currentStride = vertexBuffer->strideInBytes;
-				*currentOffset = vertexBuffer->offsetInBytes;
 				*currentInstancesPerElement = 0;
 				*currentVertexBuffer = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
 				*currentDirect3DVertexBuffer9 = (*currentVertexBuffer)->getDirect3DVertexBuffer9();
@@ -153,7 +149,6 @@ namespace Direct3D9Renderer
 		{
 			delete [] mDirect3DVertexBuffer9;
 			delete [] mStrides;
-			delete [] mOffsets;
 			delete [] mInstancesPerElement;
 		}
 
@@ -185,12 +180,12 @@ namespace Direct3D9Renderer
 
 			// Set the Direct3D 9 stream sources
 			IDirect3DVertexBuffer9 **currentDirect3DVertexBuffer9AtSlot = mDirect3DVertexBuffer9;
-			uint32_t *currentOffsetAtSlot = mOffsets;
 			uint32_t *currentStrideAtSlot = mStrides;
 			uint32_t *currentInstancesPerElementAtSlot = mInstancesPerElement;
-			for (uint32_t slot = 0; slot < mNumberOfSlots; ++slot, ++currentDirect3DVertexBuffer9AtSlot, ++currentOffsetAtSlot, ++currentStrideAtSlot, ++currentInstancesPerElementAtSlot)
+			for (uint32_t slot = 0; slot < mNumberOfSlots; ++slot, ++currentDirect3DVertexBuffer9AtSlot, ++currentStrideAtSlot, ++currentInstancesPerElementAtSlot)
 			{
-				mDirect3DDevice9->SetStreamSource(slot, *currentDirect3DVertexBuffer9AtSlot, *currentOffsetAtSlot, *currentStrideAtSlot);
+				// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either
+				mDirect3DDevice9->SetStreamSource(slot, *currentDirect3DVertexBuffer9AtSlot, 0, *currentStrideAtSlot);
 
 				// "D3DSTREAMSOURCE_INDEXEDDATA" is set within "Direct3D9Renderer::Direct3D9Renderer::DrawIndexedInstanced()"
 				mDirect3DDevice9->SetStreamSourceFreq(1, (0 == *currentInstancesPerElementAtSlot) ? 1 : (D3DSTREAMSOURCE_INSTANCEDATA | *currentInstancesPerElementAtSlot));

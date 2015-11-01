@@ -132,8 +132,7 @@ void VertexBuffer::onInitialization()
 					{
 						{ // Vertex buffer 0
 							vertexBufferPositionColor,	// vertexBuffer (Renderer::IVertexBuffer *)
-							sizeof(float) * (2 + 3),	// strideInBytes (uint32_t)
-							0							// offsetInBytes (uint32_t)
+							sizeof(float) * (2 + 3)		// strideInBytes (uint32_t)
 						}
 					};
 					mVertexArrayVBO = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
@@ -192,13 +191,11 @@ void VertexBuffer::onInitialization()
 					{
 						{ // Vertex buffer 0
 							vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer *)
-							sizeof(float) * 2,		// strideInBytes (uint32_t)
-							0						// offsetInBytes (uint32_t)
+							sizeof(float) * 2		// strideInBytes (uint32_t)
 						},
 						{ // Vertex buffer 1
 							vertexBufferColor,		// vertexBuffer (Renderer::IVertexBuffer *)
-							sizeof(float) * 3,		// strideInBytes (uint32_t)
-							0						// offsetInBytes (uint32_t)
+							sizeof(float) * 3		// strideInBytes (uint32_t)
 						}
 					};
 					mVertexArrayVBOs = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);

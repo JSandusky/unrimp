@@ -144,8 +144,7 @@ void Fxaa::onInitialization()
 				{
 					{ // Vertex buffer 0
 						vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-						sizeof(float) * 2,	// strideInBytes (uint32_t)
-						0					// offsetInBytes (uint32_t)
+						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
 				mVertexArraySceneRendering = mProgramSceneRendering->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
@@ -193,8 +192,7 @@ void Fxaa::onInitialization()
 				{
 					{ // Vertex buffer 0
 						vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-						sizeof(float) * 2,	// strideInBytes (uint32_t)
-						0					// offsetInBytes (uint32_t)
+						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
 				mVertexArrayPostProcessing = mProgramSceneRendering->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);

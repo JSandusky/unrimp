@@ -556,7 +556,6 @@ namespace Renderer
 		{
 			IVertexBuffer* vertexBuffer;
 			uint32_t	   strideInBytes;
-			uint32_t	   offsetInBytes;
 		};
 	#endif
 

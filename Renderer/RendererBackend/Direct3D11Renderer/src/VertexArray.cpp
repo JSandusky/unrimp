@@ -68,17 +68,18 @@ namespace Direct3D11Renderer
 			mOffsets = new UINT[mNumberOfSlots];
 			mVertexBuffers = new VertexBuffer*[mNumberOfSlots];
 
+			// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either
+			memset(mOffsets, 0, sizeof(uint32_t) * mNumberOfSlots);
+
 			// Loop through all vertex buffers
 			ID3D11Buffer** currentD3D11Buffer = mD3D11Buffers;
 			UINT* currentStride = mStrides;
-			UINT* currentOffset = mOffsets;
 			VertexBuffer **currentVertexBuffer = mVertexBuffers;
 			const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + mNumberOfSlots;
-			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentD3D11Buffer, ++currentStride, ++currentOffset, ++currentVertexBuffer)
+			for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentD3D11Buffer, ++currentStride, ++currentVertexBuffer)
 			{
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 				*currentStride = vertexBuffer->strideInBytes;
-				*currentOffset = vertexBuffer->offsetInBytes;
 				*currentVertexBuffer = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
 				*currentD3D11Buffer = (*currentVertexBuffer)->getD3D11Buffer();
 				(*currentVertexBuffer)->addReference();

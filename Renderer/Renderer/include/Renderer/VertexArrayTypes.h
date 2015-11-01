@@ -107,7 +107,6 @@ namespace Renderer
 	{
 		IVertexBuffer* vertexBuffer;	///< Vertex buffer used at this vertex input slot (vertex array instances keep a reference to the vertex buffers used by the vertex array attributes, see "Renderer::IProgram::createVertexArray()" for details)
 		uint32_t	   strideInBytes;	///< Specifies the size in bytes of each vertex entry
-		uint32_t	   offsetInBytes;	///< Specifies the number of bytes between the first element of the vertex buffer and the first element that will be used
 	};
 
 
