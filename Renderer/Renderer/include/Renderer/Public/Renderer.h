@@ -542,16 +542,19 @@ namespace Renderer
 				SHORT_4			= 6
 			};
 		};
-		struct VertexArrayAttribute
-		{
-			VertexArrayFormat::Enum  vertexArrayFormat;
-			char					 name[32];
-			char					 semanticName[32];
-			uint32_t				 semanticIndex;
-			uint32_t				 inputSlot;
-			uint32_t				 alignedByteOffset;
-			uint32_t				 instancesPerElement;
-		};
+		#pragma pack(push)
+		#pragma pack(1)
+			struct VertexArrayAttribute
+			{
+				VertexArrayFormat::Enum  vertexArrayFormat;
+				char					 name[32];
+				char					 semanticName[32];
+				uint32_t				 semanticIndex;
+				uint32_t				 inputSlot;
+				uint32_t				 alignedByteOffset;
+				uint32_t				 instancesPerElement;
+			};
+		#pragma pack(pop)
 		struct VertexArrayVertexBuffer
 		{
 			IVertexBuffer* vertexBuffer;

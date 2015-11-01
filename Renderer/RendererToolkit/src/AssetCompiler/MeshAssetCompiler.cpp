@@ -175,21 +175,7 @@ namespace RendererToolkit
 			}
 
 			{ // Vertex array attributes
-				// TODO(co) If we would use a "IVertexBuffer"-handle instead of pointer inside "Renderer::VertexArrayAttribute", we could just dump the stuff and still be 32/64 bit compatible
-				#pragma pack(push)
-				#pragma pack(1)
-					struct VertexArrayAttribute
-					{
-						uint8_t vertexArrayFormat;
-						char	name[32];
-						char	semanticName[32];
-						uint8_t semanticIndex;
-						uint8_t inputSlot;
-						uint8_t alignedByteOffset;
-					};
-				#pragma pack(pop)
-
-				const VertexArrayAttribute vertexArrayAttributes[] =
+				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 				{
 					{ // Attribute 0
 						// Data destination
@@ -199,7 +185,9 @@ namespace RendererToolkit
 						0,										// semanticIndex (uint32_t)
 						// Data source
 						0,										// inputSlot (uint32_t)
-						0										// alignedByteOffset (uint32_t)
+						0,										// alignedByteOffset (uint32_t)
+						// Data source, instancing part
+						0										// instancesPerElement (uint32_t)
 					},
 					{ // Attribute 1
 						// Data destination
@@ -209,7 +197,9 @@ namespace RendererToolkit
 						0,										// semanticIndex (uint32_t)
 						// Data source
 						0,										// inputSlot (uint32_t)
-						sizeof(float) * 3						// alignedByteOffset (uint32_t)
+						sizeof(float) * 3,						// alignedByteOffset (uint32_t)
+						// Data source, instancing part
+						0										// instancesPerElement (uint32_t)
 					},
 					{ // Attribute 2
 						// Data destination
@@ -219,12 +209,14 @@ namespace RendererToolkit
 						0,										// semanticIndex (uint32_t)
 						// Data source
 						0,										// inputSlot (uint32_t)
-						sizeof(float) * 3 + sizeof(short) * 2	// alignedByteOffset (uint32_t)
+						sizeof(float) * 3 + sizeof(short) * 2,	// alignedByteOffset (uint32_t)
+						// Data source, instancing part
+						0										// instancesPerElement (uint32_t)
 					}
 				};
 
 				// Write down the vertex array attributes
-				ofstream.write(reinterpret_cast<const char*>(vertexArrayAttributes), sizeof(VertexArrayAttribute) * numberOfVertexArrayAttributes);
+				ofstream.write(reinterpret_cast<const char*>(vertexArrayAttributes), sizeof(Renderer::VertexArrayAttribute) * numberOfVertexArrayAttributes);
 			}
 		}
 		else

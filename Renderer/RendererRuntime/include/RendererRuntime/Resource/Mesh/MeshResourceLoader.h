@@ -95,25 +95,6 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		// TODO(co) If we would use a "IVertexBuffer"-handle instead of pointer inside "Renderer::VertexArrayAttribute", we could just dump the stuff and still be 32/64 bit compatible
-		#pragma pack(push)
-		#pragma pack(1)
-			struct VertexArrayAttribute
-			{
-				uint8_t vertexArrayFormat;
-				char	name[32];
-				char	semanticName[32];
-				uint8_t semanticIndex;
-				uint8_t inputSlot;
-				uint8_t alignedByteOffset;
-			};
-		#pragma pack(pop)
-
-
-	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
@@ -135,7 +116,6 @@ namespace RendererRuntime
 		// Temporary vertex array
 		uint32_t						mNumberOfVertexArrayAttributes;
 		uint32_t						mNumberOfUsedVertexArrayAttributes;
-		VertexArrayAttribute*			mVertexArrayFromFile;
 		Renderer::VertexArrayAttribute* mVertexArray;
 
 

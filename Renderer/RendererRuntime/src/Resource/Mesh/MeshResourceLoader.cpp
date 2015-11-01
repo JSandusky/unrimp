@@ -102,30 +102,10 @@ namespace RendererRuntime
 			if (mNumberOfVertexArrayAttributes < mNumberOfUsedVertexArrayAttributes)
 			{
 				mNumberOfVertexArrayAttributes = mNumberOfUsedVertexArrayAttributes;
-				delete [] mVertexArrayFromFile;
 				delete [] mVertexArray;
-				mVertexArrayFromFile = new VertexArrayAttribute[mNumberOfVertexArrayAttributes];
 				mVertexArray = new Renderer::VertexArrayAttribute[mNumberOfVertexArrayAttributes];
 			}
-			ifstream.read(reinterpret_cast<char*>(mVertexArrayFromFile), sizeof(VertexArrayAttribute) * mNumberOfUsedVertexArrayAttributes);
-			for (uint32_t i = 0; i < mNumberOfUsedVertexArrayAttributes; ++i)
-			{
-				const VertexArrayAttribute &currentVertexArrayFromFile = mVertexArrayFromFile[i];
-				Renderer::VertexArrayAttribute &currentVertexArray = mVertexArray[i];
-
-				// Data destination
-				currentVertexArray.vertexArrayFormat = static_cast<Renderer::VertexArrayFormat::Enum>(currentVertexArrayFromFile.vertexArrayFormat);
-				memcpy(currentVertexArray.name, currentVertexArrayFromFile.name, 32);
-				memcpy(currentVertexArray.semanticName, currentVertexArrayFromFile.semanticName, 32);
-				currentVertexArray.semanticIndex = currentVertexArrayFromFile.semanticIndex;
-
-				// Data source
-				currentVertexArray.inputSlot = currentVertexArrayFromFile.inputSlot;
-				currentVertexArray.alignedByteOffset = currentVertexArrayFromFile.alignedByteOffset;
-
-				// Data source, instancing part
-				currentVertexArray.instancesPerElement = 0;
-			}
+			ifstream.read(reinterpret_cast<char*>(mVertexArray), sizeof(Renderer::VertexArrayAttribute) * mNumberOfUsedVertexArrayAttributes);
 		}
 		catch (const std::exception& e)
 		{
@@ -176,7 +156,6 @@ namespace RendererRuntime
 	{
 		delete [] mVertexBufferData;
 		delete [] mIndexBufferData;
-		delete [] mVertexArrayFromFile;
 		delete [] mVertexArray;
 	}
 

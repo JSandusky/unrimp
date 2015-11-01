@@ -42,7 +42,6 @@ namespace RendererRuntime
 		mIndexBufferFormat(0),
 		mNumberOfVertexArrayAttributes(0),
 		mNumberOfUsedVertexArrayAttributes(0),
-		mVertexArrayFromFile(nullptr),
 		mVertexArray(nullptr)
 	{
 		// Nothing here

@@ -75,26 +75,32 @@ namespace Renderer
 	*  @brief
 	*    Vertex array attribute ("Input element description" in Direct3D terminology)
 	*
+	*  @note
+	*    - This piece of data is POD and can be serialized/deserialized as a whole (hence the byte alignment compiler setting)
+	*
 	*  @see
 	*    - "Renderer::IVertexArray" class documentation
 	*/
-	struct VertexArrayAttribute
-	{
-		// Data destination
-		VertexArrayFormat::Enum  vertexArrayFormat;		///< Vertex attribute format
-		char					 name[32];				///< Vertex attribute name
-		char					 semanticName[32];		///< Vertex attribute semantic name
-		uint32_t				 semanticIndex;			///< Vertex attribute semantic index
-		// Data source
-		uint32_t				 inputSlot;				///< Index of the vertex input slot to use (see "Renderer::VertexArrayVertexBuffer")
-		uint32_t				 alignedByteOffset;		///< Offset (in bytes) from the start of the vertex to this certain attribute
-		// Data source, instancing part
-		uint32_t				 instancesPerElement;	/**< Number of instances to draw with the same data before advancing in the buffer by one element.
-															 0 for no instancing meaning the data is per-vertex instead of per-instance, 1 for drawing one
-															 instance with the same data, 2 for drawing two instances with the same data and so on.
-															 Instanced arrays is a shader model 3 feature, only supported if "Renderer::Capabilities::instancedArrays" is true.
-															 In order to support Direct3D 9, do not use this within the first attribute. */
-	};
+	#pragma pack(push)
+	#pragma pack(1)
+		struct VertexArrayAttribute
+		{
+			// Data destination
+			VertexArrayFormat::Enum  vertexArrayFormat;		///< Vertex attribute format
+			char					 name[32];				///< Vertex attribute name
+			char					 semanticName[32];		///< Vertex attribute semantic name
+			uint32_t				 semanticIndex;			///< Vertex attribute semantic index
+			// Data source
+			uint32_t				 inputSlot;				///< Index of the vertex input slot to use (see "Renderer::VertexArrayVertexBuffer")
+			uint32_t				 alignedByteOffset;		///< Offset (in bytes) from the start of the vertex to this certain attribute
+			// Data source, instancing part
+			uint32_t				 instancesPerElement;	/**< Number of instances to draw with the same data before advancing in the buffer by one element.
+																 0 for no instancing meaning the data is per-vertex instead of per-instance, 1 for drawing one
+																 instance with the same data, 2 for drawing two instances with the same data and so on.
+																 Instanced arrays is a shader model 3 feature, only supported if "Renderer::Capabilities::instancedArrays" is true.
+																 In order to support Direct3D 9, do not use this within the first attribute. */
+		};
+	#pragma pack(pop)
 
 	/**
 	*  @brief
