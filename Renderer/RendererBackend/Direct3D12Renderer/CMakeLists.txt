@@ -78,13 +78,6 @@ set(SOURCE_CODES
 	src/VertexShader.cpp
 	src/VertexShaderHlsl.cpp
 )
-if(NOT DIRECT3D12RENDERER_NO_DEBUG)
-	# Support Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features
-	set(SOURCE_CODES
-		${SOURCE_CODES}
-		src/Direct3D9RuntimeLinking.cpp
-	)
-endif()
 
 
 ##################################################

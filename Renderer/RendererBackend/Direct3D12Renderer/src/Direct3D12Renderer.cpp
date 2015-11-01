@@ -25,7 +25,6 @@
 #include "Direct3D12Renderer/D3D12X.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D12Renderer/Direct3D12Debug.h"	// For "DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN()"
-#include "Direct3D12Renderer/Direct3D9RuntimeLinking.h"	//  For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 #include "Direct3D12Renderer/ProgramHlsl.h"
 #include "Direct3D12Renderer/ShaderLanguageHlsl.h"
@@ -78,7 +77,6 @@ namespace Direct3D12Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	Direct3D12Renderer::Direct3D12Renderer(handle nativeWindowHandle) :
-		mDirect3D9RuntimeLinking(nullptr),
 		mDirect3D12RuntimeLinking(new Direct3D12RuntimeLinking()),
 		mDxgiFactory4(nullptr),
 		mD3D12Device(nullptr),
@@ -99,6 +97,18 @@ namespace Direct3D12Renderer
 			// Create the DXGI factory instance
 			if (SUCCEEDED(CreateDXGIFactory1(IID_PPV_ARGS(&mDxgiFactory4))))
 			{
+				// Enable the Direct3D 12 debug layer
+				#ifndef DIRECT3D12RENDERER_NO_DEBUG
+				{
+					ID3D12Debug* d3d12Debug = nullptr;
+					if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&d3d12Debug))))
+					{
+						d3d12Debug->EnableDebugLayer();
+						d3d12Debug->Release();
+					}
+				}
+				#endif
+
 				// Create the Direct3D 12 device
 				// -> In case of failure, create an emulated device instance so we can at least test the DirectX 12 API
 				if (FAILED(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&mD3D12Device))))
@@ -149,18 +159,6 @@ namespace Direct3D12Renderer
 							// Command lists are created in the recording state, but there is nothing to record yet. The main loop expects it to be closed, so close it now.
 							if (SUCCEEDED(mD3D12GraphicsCommandList->Close()))
 							{
-								#ifdef DIRECT3D12RENDERER_NO_DEBUG
-									// Create the Direct3D 9 runtime linking instance, we know there can't be one, yet
-									mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
-
-									// Call the Direct3D 9 PIX function
-									if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
-									{
-										// Disable debugging
-										D3DPERF_SetOptions(1);
-									}
-								#endif
-
 								// Initialize the capabilities
 								initializeCapabilities();
 
@@ -290,12 +288,6 @@ namespace Direct3D12Renderer
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(this)
-
-		// Destroy the Direct3D 9 runtime linking instance, in case there's one
-		if (nullptr != mDirect3D9RuntimeLinking)
-		{
-			delete mDirect3D9RuntimeLinking;
-		}
 	}
 
 
@@ -1818,6 +1810,11 @@ namespace Direct3D12Renderer
 
 	bool Direct3D12Renderer::beginScene()
 	{
+		bool result = false;	// Error by default
+
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
 		// Not required when using Direct3D 12
 		// TODO(co) Until we have a command list interface, we must perform the command list handling in here
 
@@ -1856,16 +1853,22 @@ namespace Direct3D12Renderer
 				}
 
 				// Done
-				return true;
+				result = true;
 			}
 		}
 
-		// Error!
-		return false;
+		// End debug event
+		RENDERER_END_DEBUG_EVENT(this)
+
+		// Done
+		return result;
 	}
 
 	void Direct3D12Renderer::endScene()
 	{
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
 		// Not required when using Direct3D 12
 		// TODO(co) Until we have a command list interface, we must perform the command list handling in here
 
@@ -1880,6 +1883,9 @@ namespace Direct3D12Renderer
 			ID3D12CommandList* commandLists[] = { mD3D12GraphicsCommandList };
 			mD3D12CommandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
 		}
+
+		// End debug event
+		RENDERER_END_DEBUG_EVENT(this)
 	}
 
 
@@ -1988,74 +1994,43 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	bool Direct3D12Renderer::isDebugEnabled()
 	{
-		// Don't check for the "DIRECT3D9RENDERER_NO_DEBUG" preprocessor definition, even if debug
-		// is disabled it has to be possible to use this function for an additional security check
-		// -> Maybe a debugger/profiler ignores the debug state
-		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
-		//    makes it a little bit more time consuming to hack the binary :D (but of course, this is no 100% security)
-		// TODO(co) Direct3D 12 update
-		//return (D3DPERF_GetStatus() != 0);
-		return false;
+		#ifdef DIRECT3D12RENDERER_NO_DEBUG
+			return false;
+		#else
+			return true;
+		#endif
 	}
 
-	void Direct3D12Renderer::setDebugMarker(const wchar_t *)
+	void Direct3D12Renderer::setDebugMarker(const wchar_t *name)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
-			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
-			if (nullptr == mDirect3D9RuntimeLinking)
+			if (nullptr != mD3D12GraphicsCommandList)
 			{
-				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
-			}
-
-			// Call the Direct3D 9 PIX function
-			if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
-			{
-				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), name);
+				const UINT size = static_cast<UINT>((wcslen(name) + 1) * sizeof(name[0]));
+				mD3D12GraphicsCommandList->SetMarker(PIX_EVENT_UNICODE_VERSION, name, size);
 			}
 		#endif
-		*/
 	}
 
-	void Direct3D12Renderer::beginDebugEvent(const wchar_t *)
+	void Direct3D12Renderer::beginDebugEvent(const wchar_t *name)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
-			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
-			if (nullptr == mDirect3D9RuntimeLinking)
+			if (nullptr != mD3D12GraphicsCommandList)
 			{
-				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
-			}
-
-			// Call the Direct3D 9 PIX function
-			if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
-			{
-				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), name);
+				const UINT size = static_cast<UINT>((wcslen(name) + 1) * sizeof(name[0]));
+				mD3D12GraphicsCommandList->BeginEvent(PIX_EVENT_UNICODE_VERSION, name, size);
 			}
 		#endif
-		*/
 	}
 
 	void Direct3D12Renderer::endDebugEvent()
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
-			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
-			if (nullptr == mDirect3D9RuntimeLinking)
+			if (nullptr != mD3D12GraphicsCommandList)
 			{
-				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
-			}
-
-			// Call the Direct3D 9 PIX function
-			if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
-			{
-				D3DPERF_EndEvent();
+				mD3D12GraphicsCommandList->EndEvent();
 			}
 		#endif
-		*/
 	}
 
 
@@ -2267,6 +2242,18 @@ namespace Direct3D12Renderer
 		mCapabilities.fragmentShader = true;
 		*/
 	}
+
+	#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		void Direct3D12Renderer::debugReportLiveDeviceObjects()
+		{
+			ID3D12DebugDevice* d3d12DebugDevice = nullptr;
+			if (SUCCEEDED(mD3D12Device->QueryInterface(IID_PPV_ARGS(&d3d12DebugDevice))))
+			{
+				d3d12DebugDevice->ReportLiveDeviceObjects(static_cast<D3D12_RLDO_FLAGS>(D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL));
+				d3d12DebugDevice->Release();
+			}
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

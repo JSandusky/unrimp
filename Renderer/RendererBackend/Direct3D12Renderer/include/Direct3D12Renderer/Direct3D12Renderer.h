@@ -46,7 +46,6 @@ namespace Renderer
 namespace Direct3D12Renderer
 {
 	class SwapChain;
-	class Direct3D9RuntimeLinking;
 	class Direct3D12RuntimeLinking;
 }
 
@@ -261,12 +260,19 @@ namespace Direct3D12Renderer
 		*/
 		void initializeCapabilities();
 
+		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+			/**
+			*  @brief
+			*    Reports information about a device object's lifetime for debugging
+			*/
+			void debugReportLiveDeviceObjects();
+		#endif
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D9RuntimeLinking		  *mDirect3D9RuntimeLinking;	///< Direct3D 9 runtime linking instance, can be a null pointer
 		Direct3D12RuntimeLinking	  *mDirect3D12RuntimeLinking;	///< Direct3D 12 runtime linking instance, always valid
 		IDXGIFactory4*				   mDxgiFactory4;				///< DXGI factors instance, always valid for a correctly initialized renderer
 		ID3D12Device				  *mD3D12Device;				///< The Direct3D 12 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)

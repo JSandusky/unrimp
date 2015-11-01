@@ -163,6 +163,9 @@ namespace Direct3D12Renderer
 	#endif
 	FNDEF_D3D12(HRESULT,	D3D12CreateDevice,				(_In_opt_ IUnknown* pAdapter, D3D_FEATURE_LEVEL MinimumFeatureLevel, _In_ REFIID riid, _COM_Outptr_opt_ void** ppDevice));
 	FNDEF_D3D12(HRESULT,	D3D12SerializeRootSignature,	(_In_ const D3D12_ROOT_SIGNATURE_DESC* pRootSignature, _In_ D3D_ROOT_SIGNATURE_VERSION Version, _Out_ ID3DBlob** ppBlob, _Always_(_Outptr_opt_result_maybenull_) ID3DBlob** ppErrorBlob));
+	#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		FNDEF_D3D12(HRESULT,	D3D12GetDebugInterface,	(_In_ REFIID riid, _COM_Outptr_opt_ void** ppvDebug));
+	#endif
 
 
 	//[-------------------------------------------------------]
@@ -205,6 +208,9 @@ namespace Direct3D12Renderer
 	// D3D12
 	#define D3D12CreateDevice			FNPTR(D3D12CreateDevice)
 	#define D3D12SerializeRootSignature	FNPTR(D3D12SerializeRootSignature)
+	#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		#define D3D12GetDebugInterface	FNPTR(D3D12GetDebugInterface)
+	#endif
 
 	// D3DX11
 	#define D3DX11CompileFromMemory	FNPTR(D3DX11CompileFromMemory)

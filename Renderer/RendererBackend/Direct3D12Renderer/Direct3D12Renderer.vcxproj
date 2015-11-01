@@ -23,7 +23,6 @@
     <ClInclude Include="include\Direct3D12Renderer\D3D12X.h" />
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12Debug.h" />
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12RuntimeLinking.h" />
-    <ClInclude Include="include\Direct3D12Renderer\Direct3D9RuntimeLinking.h" />
     <ClInclude Include="include\Direct3D12Renderer\FragmentShader.h" />
     <ClInclude Include="include\Direct3D12Renderer\FragmentShaderHlsl.h" />
     <ClInclude Include="include\Direct3D12Renderer\Framebuffer.h" />
@@ -59,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Direct3D12RuntimeLinking.cpp" />
-    <ClCompile Include="src\Direct3D9RuntimeLinking.cpp" />
     <ClCompile Include="src\FragmentShader.cpp" />
     <ClCompile Include="src\FragmentShaderHlsl.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />

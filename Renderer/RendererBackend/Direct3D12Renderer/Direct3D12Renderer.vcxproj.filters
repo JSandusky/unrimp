@@ -22,9 +22,6 @@
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12RuntimeLinking.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D12Renderer\Direct3D9RuntimeLinking.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D12Renderer\FragmentShader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -208,9 +205,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\SamplerStateCollection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Direct3D9RuntimeLinking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Framebuffer.cpp">

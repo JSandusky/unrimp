@@ -1278,6 +1278,28 @@ typedef struct D3D12_GRAPHICS_PIPELINE_STATE_DESC
 	D3D12_PIPELINE_STATE_FLAGS Flags;
 } D3D12_GRAPHICS_PIPELINE_STATE_DESC;
 
+#ifndef DIRECT3D12RENDERER_NO_DEBUG
+	// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "d3d12sdklayers.h"
+	typedef enum D3D12_DEBUG_FEATURE
+	{
+		D3D12_DEBUG_FEATURE_NONE						= 0,
+		D3D12_DEBUG_FEATURE_TREAT_BUNDLE_AS_DRAW		= 0x1,
+		D3D12_DEBUG_FEATURE_TREAT_BUNDLE_AS_DISPATCH	= 0x2
+	} D3D12_DEBUG_FEATURE;
+
+	// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "d3d12sdklayers.h"
+	typedef enum D3D12_RLDO_FLAGS
+	{
+		D3D12_RLDO_NONE				= 0,
+		D3D12_RLDO_SUMMARY			= 0x1,
+		D3D12_RLDO_DETAIL			= 0x2,
+		D3D12_RLDO_IGNORE_INTERNAL	= 0x4
+	} D3D12_RLDO_FLAGS;
+
+	// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "pix_win.h"
+	static const UINT PIX_EVENT_UNICODE_VERSION = 0;
+#endif
+
 
 //[-------------------------------------------------------]
 //[ Classes                                               ]
@@ -1658,3 +1680,23 @@ ID3D12Device : public ID3D12Object
 		virtual void STDMETHODCALLTYPE GetResourceTiling(_In_ ID3D12Resource *pTiledResource, _Out_opt_ UINT *pNumTilesForEntireResource, _Out_opt_ D3D12_PACKED_MIP_INFO *pPackedMipDesc, _Out_opt_ D3D12_TILE_SHAPE *pStandardTileShapeForNonPackedMips, _Inout_opt_ UINT *pNumSubresourceTilings, _In_ UINT FirstSubresourceTilingToGet, _Out_writes_(*pNumSubresourceTilings) D3D12_SUBRESOURCE_TILING *pSubresourceTilingsForNonPackedMips) = 0;
 		virtual LUID STDMETHODCALLTYPE GetAdapterLuid(void) = 0;
 };
+
+#ifndef DIRECT3D12RENDERER_NO_DEBUG
+	// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "d3d12sdklayers.h"
+	MIDL_INTERFACE("344488b7-6846-474b-b989-f027448245e0")
+	ID3D12Debug : public IUnknown
+	{
+		public:
+			virtual void STDMETHODCALLTYPE EnableDebugLayer(void) = 0;
+	};
+
+	// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "d3d12sdklayers.h"
+	MIDL_INTERFACE("3febd6dd-4973-4787-8194-e45f9e28923e")
+	ID3D12DebugDevice : public IUnknown
+	{
+		public:
+			virtual HRESULT STDMETHODCALLTYPE SetFeatureMask(D3D12_DEBUG_FEATURE Mask) = 0;
+			virtual D3D12_DEBUG_FEATURE STDMETHODCALLTYPE GetFeatureMask(void) = 0;
+			virtual HRESULT STDMETHODCALLTYPE ReportLiveDeviceObjects(D3D12_RLDO_FLAGS Flags) = 0;
+	};
+#endif
