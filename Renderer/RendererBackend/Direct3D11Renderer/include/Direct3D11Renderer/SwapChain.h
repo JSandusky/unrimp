@@ -99,7 +99,7 @@ namespace Direct3D11Renderer
 		*    The Direct3D 11 render target view instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*
 		*  @note
-		*    - It's highly recommended to not keep any references to the returned instance, else issues may occure when resizing the swap chain
+		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
 		inline ID3D11RenderTargetView *getD3D11RenderTargetView() const;
 
@@ -111,7 +111,7 @@ namespace Direct3D11Renderer
 		*    The Direct3D 11 depth stencil view instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*
 		*  @note
-		*    - It's highly recommended to not keep any references to the returned instance, else issues may occure when resizing the swap chain
+		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
 		inline ID3D11DepthStencilView *getD3D11DepthStencilView() const;
 

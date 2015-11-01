@@ -42,9 +42,11 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract vertex array object (VAO, "vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology) interface
+	*    Abstract vertex array object (VAO, "vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 & 12 terminology) interface
 	*
 	*  @remarks
+	*    Encapsulates all the data that is associated with the vertex processor.
+	*
 	*    Direct3D specifies input stream slot indices within "vertex declaration"/"input layout" without binding them to a particular
 	*    vertex buffer object (VBO). Vertex buffers are bound to particular input stream slots. OpenGL "vertex array object" (VAO) has no
 	*    concept of input stream slot indices, vertex attributes are directly bound to a particular vertex buffer to feed the data into

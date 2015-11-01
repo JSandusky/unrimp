@@ -100,7 +100,7 @@ namespace Direct3D12Renderer
 		*    The Direct3D 12 descriptor heap instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*
 		*  @note
-		*    - It's highly recommended to not keep any references to the returned instance, else issues may occure when resizing the swap chain
+		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
 		inline ID3D12DescriptorHeap *getD3D12DescriptorHeap() const;
 
@@ -112,7 +112,7 @@ namespace Direct3D12Renderer
 		*    The render target view descriptor size
 		*
 		*  @note
-		*    - It's highly recommended to not keep any backups of this value, else issues may occure when resizing the swap chain
+		*    - It's highly recommended to not keep any backups of this value, else issues may occur when resizing the swap chain
 		*/
 		inline UINT getRenderTargetViewDescriptorSize() const;
 
@@ -124,7 +124,7 @@ namespace Direct3D12Renderer
 		*    The index of the Direct3D 12 resource render target which is currently used as back buffer
 		*
 		*  @note
-		*    - It's highly recommended to not keep any references to the returned instance, else issues may occure when resizing the swap chain
+		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
 		inline UINT getBackD3D12ResourceRenderTargetFrameIndex() const;
 
@@ -136,7 +136,7 @@ namespace Direct3D12Renderer
 		*    The Direct3D 12 resource render target which is currently used as back buffer, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*
 		*  @note
-		*    - It's highly recommended to not keep any references to the returned instance, else issues may occure when resizing the swap chain
+		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
 		inline ID3D12Resource *getBackD3D12ResourceRenderTarget() const;
 

@@ -635,7 +635,7 @@ namespace OpenGLRenderer
 				mVertexArray = static_cast<VertexArray*>(vertexArray);
 				mVertexArray->addReference();
 
-				// Evaluate the internal array type type of the new vertex array to set
+				// Evaluate the internal array type of the new vertex array to set
 				switch (static_cast<VertexArray*>(mVertexArray)->getInternalResourceType())
 				{
 					case VertexArray::InternalResourceType::NO_VAO:

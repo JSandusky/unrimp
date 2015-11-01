@@ -98,7 +98,7 @@ namespace Direct3D9Renderer
 		*    The Direct3D 9 render target surface instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*
 		*  @note
-		*    - It's highly recommended to not keep any references to the returned instance, else issues may occure when resizing the swap chain
+		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
 		inline IDirect3DSurface9 *getDirect3DSurface9RenderTarget() const;
 
@@ -110,7 +110,7 @@ namespace Direct3D9Renderer
 		*    The Direct3D 9 depth stencil surface instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*
 		*  @note
-		*    - It's highly recommended to not keep any references to the returned instance, else issues may occure when resizing the swap chain
+		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
 		inline IDirect3DSurface9 *getDirect3DSurface9DepthStencil() const;
 
