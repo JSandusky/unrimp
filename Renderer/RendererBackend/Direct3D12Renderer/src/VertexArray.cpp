@@ -308,9 +308,8 @@ namespace Direct3D12Renderer
 	{
 		d3d12GraphicsCommandList.SetGraphicsRootSignature(mD3D12RootSignature);
 		d3d12GraphicsCommandList.SetPipelineState(mD3D12PipelineState);
-		d3d12GraphicsCommandList.IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		d3d12GraphicsCommandList.IASetVertexBuffers(0, 1, &mD3D12VertexBufferView);
-		d3d12GraphicsCommandList.DrawInstanced(3, 1, 0, 0);
+
 
 		// TODO(co) Direct3D 12 update
 		/*

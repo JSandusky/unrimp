@@ -699,12 +699,11 @@ namespace Direct3D12Renderer
 		}
 	}
 
-	void Direct3D12Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology::Enum)
+	void Direct3D12Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology::Enum primitiveTopology)
 	{
-		// TODO(co) Direct3D 12 update
 		// Set primitive topology
 		// -> The "Renderer::PrimitiveTopology::Enum" values directly map to Direct3D 9 & 10 & 11 && 12 constants, do not change them
-		//mD3D12DeviceContext->IASetPrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(primitiveTopology));
+		mD3D12GraphicsCommandList->IASetPrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(primitiveTopology));
 	}
 
 
@@ -1887,28 +1886,22 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::draw(uint32_t, uint32_t)
+	void Direct3D12Renderer::draw(uint32_t startVertexLocation, uint32_t numberOfVertices)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		mD3D12DeviceContext->Draw(
-			numberOfVertices,	// Vertex count (UINT)
-			startVertexLocation	// Start index location (UINT)
-		);
-		*/
+		mD3D12GraphicsCommandList->DrawInstanced(
+			numberOfVertices,		// Number of vertices to draw (UINT)
+			1,						// Number of instances to draw (UINT)
+			startVertexLocation,	// Index of the first vertex (UINT)
+			0);						// A value added to each index before reading per-instance data from a vertex buffer (UINT)
 	}
 
-	void Direct3D12Renderer::drawInstanced(uint32_t, uint32_t, uint32_t)
+	void Direct3D12Renderer::drawInstanced(uint32_t startVertexLocation, uint32_t numberOfVertices, uint32_t numberOfInstances)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		mD3D12DeviceContext->DrawInstanced(
-			numberOfVertices,		// Vertex count per instance (UINT)
-			numberOfInstances,		// Instance count (UINT)
-			startVertexLocation,	// Start vertex location (UINT)
-			0						// Start instance location (UINT)
-		);
-		*/
+		mD3D12GraphicsCommandList->DrawInstanced(
+			numberOfVertices,		// Number of vertices to draw (UINT)
+			numberOfInstances,		// Number of instances to draw (UINT)
+			startVertexLocation,	// Index of the first vertex (UINT)
+			0);						// A value added to each index before reading per-instance data from a vertex buffer (UINT)
 	}
 
 	void Direct3D12Renderer::drawIndexed(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
