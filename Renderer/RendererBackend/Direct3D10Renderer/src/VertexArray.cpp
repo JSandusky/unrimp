@@ -133,11 +133,11 @@ namespace Direct3D10Renderer
 			}
 
 			// Fill the "D3D10_INPUT_ELEMENT_DESC"-content
-			d3d10InputElementDesc->SemanticName      = attributes->semantic;																	// Semantic name (LPCSTR)
+			d3d10InputElementDesc->SemanticName      = attributes->semanticName;																// Semantic name (LPCSTR)
 			d3d10InputElementDesc->SemanticIndex     = attributes->semanticIndex;																// Semantic index (UINT)
 			d3d10InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(attributes->vertexArrayFormat));	// Format (DXGI_FORMAT)
-			d3d10InputElementDesc->InputSlot         = static_cast<UINT>(slotToUse);															// Input slow (UINT)
-			d3d10InputElementDesc->AlignedByteOffset = attributes->offset;																		// Aligned byte offset (UINT)
+			d3d10InputElementDesc->InputSlot         = static_cast<UINT>(slotToUse);															// Input slot (UINT)
+			d3d10InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;															// Aligned byte offset (UINT)
 
 			// Per-instance instead of per-vertex?
 			if (attributes->instancesPerElement > 0)

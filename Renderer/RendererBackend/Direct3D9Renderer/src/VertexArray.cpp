@@ -146,12 +146,12 @@ namespace Direct3D9Renderer
 			}
 
 			// Fill the "D3DVERTEXELEMENT9"-content
-			d3dVertexElement->Stream     = static_cast<WORD>(slotToUse);											// Stream index (WORD)
-			d3dVertexElement->Offset     = static_cast<WORD>(attributes->offset);									// Offset in the stream in bytes (WORD)
-			d3dVertexElement->Type       = Mapping::getDirect3D9Type(attributes->vertexArrayFormat);				// Data type (BYTE)
-			d3dVertexElement->Method     = D3DDECLMETHOD_DEFAULT;													// Processing method (BYTE)
-			d3dVertexElement->Usage      = static_cast<BYTE>(Mapping::getDirect3D9Semantic(attributes->semantic));	// Semantics (BYTE)
-			d3dVertexElement->UsageIndex = static_cast<BYTE>(attributes->semanticIndex);							// Semantic index (BYTE)
+			d3dVertexElement->Stream     = static_cast<WORD>(slotToUse);												// Stream index (WORD)
+			d3dVertexElement->Offset     = static_cast<WORD>(attributes->alignedByteOffset);							// Offset in the stream in bytes (WORD)
+			d3dVertexElement->Type       = Mapping::getDirect3D9Type(attributes->vertexArrayFormat);					// Data type (BYTE)
+			d3dVertexElement->Method     = D3DDECLMETHOD_DEFAULT;														// Processing method (BYTE)
+			d3dVertexElement->Usage      = static_cast<BYTE>(Mapping::getDirect3D9Semantic(attributes->semanticName));	// Semantic name (BYTE)
+			d3dVertexElement->UsageIndex = static_cast<BYTE>(attributes->semanticIndex);								// Semantic index (BYTE)
 		}
 		// D3DDECL_END()
 		d3dVertexElement->Stream     = 0xFF;				// Stream index (WORD)

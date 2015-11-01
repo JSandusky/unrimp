@@ -200,11 +200,11 @@ namespace Direct3D12Renderer
 			}
 
 			// Fill the "D3D12_INPUT_ELEMENT_DESC"-content
-			d3d12InputElementDesc->SemanticName      = attributes->semantic;																	// Semantic name (LPCSTR)
+			d3d12InputElementDesc->SemanticName      = attributes->semanticName;																// Semantic name (LPCSTR)
 			d3d12InputElementDesc->SemanticIndex     = attributes->semanticIndex;																// Semantic index (UINT)
 			d3d12InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(attributes->vertexArrayFormat));	// Format (DXGI_FORMAT)
-			d3d12InputElementDesc->InputSlot         = static_cast<UINT>(slotToUse);															// Input slow (UINT)
-			d3d12InputElementDesc->AlignedByteOffset = attributes->offset;																		// Aligned byte offset (UINT)
+			d3d12InputElementDesc->InputSlot         = static_cast<UINT>(slotToUse);															// Input slot (UINT)
+			d3d12InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;															// Aligned byte offset (UINT)
 
 			// Per-instance instead of per-vertex?
 			if (attributes->instancesPerElement > 0)

@@ -116,12 +116,12 @@ namespace RendererRuntime
 				// Data destination
 				currentVertexArray.vertexArrayFormat = static_cast<Renderer::VertexArrayFormat::Enum>(currentVertexArrayFromFile.vertexArrayFormat);
 				memcpy(currentVertexArray.name, currentVertexArrayFromFile.name, 32);
-				memcpy(currentVertexArray.semantic, currentVertexArrayFromFile.semantic, 32);
+				memcpy(currentVertexArray.semanticName, currentVertexArrayFromFile.semanticName, 32);
 				currentVertexArray.semanticIndex = currentVertexArrayFromFile.semanticIndex;
 
 				// Data source
 				currentVertexArray.vertexBuffer = nullptr;	// Filled in "RendererRuntime::MeshResourceLoader::onRendererBackendDispatch()"
-				currentVertexArray.offset = currentVertexArrayFromFile.offset;
+				currentVertexArray.alignedByteOffset = currentVertexArrayFromFile.alignedByteOffset;
 				currentVertexArray.stride = currentVertexArrayFromFile.stride;
 
 				// Data source, instancing part

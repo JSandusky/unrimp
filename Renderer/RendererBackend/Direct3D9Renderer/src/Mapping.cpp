@@ -270,62 +270,62 @@ namespace Direct3D9Renderer
 		return MAPPING[vertexArrayFormat];
 	}
 
-	uint32_t Mapping::getDirect3D9Semantic(const char *semantic)
+	uint32_t Mapping::getDirect3D9Semantic(const char *semanticName)
 	{
 		BYTE direct3D9Semantic = D3DDECLUSAGE_POSITION;
-		if (0 == stricmp("POSITION", semantic))
+		if (0 == stricmp("POSITION", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_POSITION;
 		}
-		else if (0 == stricmp("BLENDWEIGHT", semantic))
+		else if (0 == stricmp("BLENDWEIGHT", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_BLENDWEIGHT;
 		}
-		else if (0 == stricmp("BLENDINDICES", semantic))
+		else if (0 == stricmp("BLENDINDICES", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_BLENDINDICES;
 		}
-		else if (0 == stricmp("NORMAL", semantic))
+		else if (0 == stricmp("NORMAL", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_NORMAL;
 		}
-		else if (0 == stricmp("PSIZE", semantic))
+		else if (0 == stricmp("PSIZE", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_PSIZE;
 		}
-		else if (0 == stricmp("TEXCOORD", semantic))
+		else if (0 == stricmp("TEXCOORD", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_TEXCOORD;
 		}
-		else if (0 == stricmp("TANGENT", semantic))
+		else if (0 == stricmp("TANGENT", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_TANGENT;
 		}
-		else if (0 == stricmp("BINORMAL", semantic))
+		else if (0 == stricmp("BINORMAL", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_BINORMAL;
 		}
-		else if (0 == stricmp("TESSFACTOR", semantic))
+		else if (0 == stricmp("TESSFACTOR", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_TESSFACTOR;
 		}
-		else if (0 == stricmp("POSITIONT", semantic))
+		else if (0 == stricmp("POSITIONT", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_POSITIONT;
 		}
-		else if (0 == stricmp("COLOR", semantic))
+		else if (0 == stricmp("COLOR", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_COLOR;
 		}
-		else if (0 == stricmp("FOG", semantic))
+		else if (0 == stricmp("FOG", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_FOG;
 		}
-		else if (0 == stricmp("DEPTH", semantic))
+		else if (0 == stricmp("DEPTH", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_DEPTH;
 		}
-		else if (0 == stricmp("SAMPLE", semantic))
+		else if (0 == stricmp("SAMPLE", semanticName))
 		{
 			direct3D9Semantic = D3DDECLUSAGE_SAMPLE;
 		}

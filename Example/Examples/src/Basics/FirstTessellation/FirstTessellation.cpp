@@ -102,23 +102,23 @@ void FirstTessellation::onInitialization()
 				// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 				//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-				const Renderer::VertexArrayAttribute vertexArray[] =
+				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 				{
 					// Data destination
 					{ // Attribute 0
 						Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 						"Position",								// name[32] (char)
-						"POSITION",								// semantic[32] (char)
+						"POSITION",								// semanticName[32] (char)
 						0,										// semanticIndex (uint32_t)
 						// Data source
 						vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-						0,										// offset (uint32_t)
+						0,										// alignedByteOffset (uint32_t)
 						sizeof(float) * 2,						// stride (uint32_t)
 						// Data source, instancing part
 						0										// instancesPerElement (uint32_t)
 					}
 				};
-				mVertexArray = mProgram->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
+				mVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
 			}
 		}
 

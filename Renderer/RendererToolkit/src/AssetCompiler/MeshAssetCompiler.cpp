@@ -182,49 +182,49 @@ namespace RendererToolkit
 					{
 						uint8_t vertexArrayFormat;
 						char	name[32];
-						char	semantic[32];
+						char	semanticName[32];
 						uint8_t semanticIndex;
-						uint8_t offset;
+						uint8_t alignedByteOffset;
 						uint8_t stride;
 					};
 				#pragma pack(pop)
 
-				const VertexArrayAttribute vertexArray[] =
+				const VertexArrayAttribute vertexArrayAttributes[] =
 				{
 					{ // Attribute 0
 						// Data destination
 						Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 						"Position",								// name[32] (char)
-						"POSITION",								// semantic[32] (char)
+						"POSITION",								// semanticName[32] (char)
 						0,										// semanticIndex (uint32_t)
 						// Data source
-						0,										// offset (uint32_t)
+						0,										// alignedByteOffset (uint32_t)
 						NUMBER_OF_BYTES_PER_VERTEX				// stride (uint32_t)
 					},
 					{ // Attribute 1
 						// Data destination
 						Renderer::VertexArrayFormat::SHORT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 						"TexCoord",								// name[32] (char)
-						"TEXCOORD",								// semantic[32] (char)
+						"TEXCOORD",								// semanticName[32] (char)
 						0,										// semanticIndex (uint32_t)
 						// Data source
-						sizeof(float) * 3,						// offset (uint32_t)
+						sizeof(float) * 3,						// alignedByteOffset (uint32_t)
 						NUMBER_OF_BYTES_PER_VERTEX				// stride (uint32_t)
 					},
 					{ // Attribute 2
 						// Data destination
 						Renderer::VertexArrayFormat::SHORT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 						"QTangent",								// name[32] (char)
-						"NORMAL",								// semantic[32] (char)
+						"NORMAL",								// semanticName[32] (char)
 						0,										// semanticIndex (uint32_t)
 						// Data source
-						sizeof(float) * 3 + sizeof(short) * 2,	// offset (uint32_t)
+						sizeof(float) * 3 + sizeof(short) * 2,	// alignedByteOffset (uint32_t)
 						NUMBER_OF_BYTES_PER_VERTEX				// stride (uint32_t)
 					}
 				};
 
 				// Write down the vertex array attributes
-				ofstream.write(reinterpret_cast<const char*>(vertexArray), sizeof(VertexArrayAttribute) * numberOfVertexArrayAttributes);
+				ofstream.write(reinterpret_cast<const char*>(vertexArrayAttributes), sizeof(VertexArrayAttribute) * numberOfVertexArrayAttributes);
 			}
 		}
 		else

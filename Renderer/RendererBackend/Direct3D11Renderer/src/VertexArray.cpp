@@ -133,11 +133,11 @@ namespace Direct3D11Renderer
 			}
 
 			// Fill the "D3D11_INPUT_ELEMENT_DESC"-content
-			d3d11InputElementDesc->SemanticName      = attributes->semantic;																	// Semantic name (LPCSTR)
+			d3d11InputElementDesc->SemanticName      = attributes->semanticName;																// Semantic name (LPCSTR)
 			d3d11InputElementDesc->SemanticIndex     = attributes->semanticIndex;																// Semantic index (UINT)
 			d3d11InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(attributes->vertexArrayFormat));	// Format (DXGI_FORMAT)
-			d3d11InputElementDesc->InputSlot         = static_cast<UINT>(slotToUse);															// Input slow (UINT)
-			d3d11InputElementDesc->AlignedByteOffset = attributes->offset;																		// Aligned byte offset (UINT)
+			d3d11InputElementDesc->InputSlot         = static_cast<UINT>(slotToUse);															// Input slot (UINT)
+			d3d11InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;															// Aligned byte offset (UINT)
 
 			// Per-instance instead of per-vertex?
 			if (attributes->instancesPerElement > 0)

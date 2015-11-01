@@ -73,7 +73,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Vertex array attribute
+	*    Vertex array attribute ("Input element description" in Direct3D terminology)
 	*
 	*  @see
 	*    - "Renderer::IVertexArray" class documentation
@@ -83,11 +83,11 @@ namespace Renderer
 		// Data destination
 		VertexArrayFormat::Enum  vertexArrayFormat;		///< Vertex attribute format
 		char					 name[32];				///< Vertex attribute name
-		char					 semantic[32];			///< Vertex attribute semantic
+		char					 semanticName[32];		///< Vertex attribute semantic name
 		uint32_t				 semanticIndex;			///< Vertex attribute semantic index
 		// Data source
 		IVertexBuffer			*vertexBuffer;			///< Vertex buffer used at this vertex input slot (vertex array instances keep a reference to the vertex buffers used by the vertex array attributes, see "Renderer::IProgram::createVertexArray()" for details)
-		uint32_t				 offset;				///< Offset (in bytes) from the start of the vertex to this certain attribute
+		uint32_t				 alignedByteOffset;		///< Offset (in bytes) from the start of the vertex to this certain attribute
 		uint32_t				 stride;				///< Number of bytes to the next vertex element
 		// Data source, instancing part
 		uint32_t				 instancesPerElement;	/**< Number of instances to draw with the same data before advancing in the buffer by one element.

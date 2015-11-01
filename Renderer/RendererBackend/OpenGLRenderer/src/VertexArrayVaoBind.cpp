@@ -75,7 +75,7 @@ namespace OpenGLRenderer
 				// Set the OpenGL vertex attribute pointer
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 				glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<VertexBuffer*>(attribute->vertexBuffer)->getOpenGLArrayBuffer());
-				glVertexAttribPointerARB(static_cast<GLuint>(attributeLocation), Mapping::getOpenGLSize(attribute->vertexArrayFormat), Mapping::getOpenGLType(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(attribute->stride), reinterpret_cast<GLvoid*>(attribute->offset));
+				glVertexAttribPointerARB(static_cast<GLuint>(attributeLocation), Mapping::getOpenGLSize(attribute->vertexArrayFormat), Mapping::getOpenGLType(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(attribute->stride), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
 
 				// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
 				if (attribute->instancesPerElement > 0 && static_cast<OpenGLRenderer&>(program.getRenderer()).getContext().getExtensions().isGL_ARB_instanced_arrays())

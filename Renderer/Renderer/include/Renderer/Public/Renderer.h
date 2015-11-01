@@ -546,12 +546,17 @@ namespace Renderer
 		{
 			VertexArrayFormat::Enum  vertexArrayFormat;
 			char					 name[32];
-			char					 semantic[32];
+			char					 semanticName[32];
 			uint32_t				 semanticIndex;
 			IVertexBuffer			*vertexBuffer;
-			uint32_t				 offset;
+			uint32_t				 alignedByteOffset;
 			uint32_t				 stride;
 			uint32_t				 instancesPerElement;
+		};
+		struct VertexArrayVertexBuffer
+		{
+			IVertexBuffer* vertexBuffer;
+			uint32_t 	   strideInBytes;
 		};
 	#endif
 

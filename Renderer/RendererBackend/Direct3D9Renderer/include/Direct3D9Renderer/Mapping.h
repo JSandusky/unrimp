@@ -146,13 +146,13 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    "Semantic as string" to Direct3D 9 semantic
 		*
-		*  @param[in] semantic
-		*    Semantic as string, must be a valid pointer
+		*  @param[in] semanticName
+		*    Semantic name as string, must be a valid pointer
 		*
 		*  @return
 		*    Direct3D 9 semantic, "D3DDECLUSAGE_POSITION" as fallback if no match was found (type "BYTE" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getDirect3D9Semantic(const char *semantic);
+		static uint32_t getDirect3D9Semantic(const char *semanticName);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]

@@ -128,17 +128,17 @@ void FirstInstancing::onInitialization()
 					// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 					//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 					//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-					const Renderer::VertexArrayAttribute vertexArray[] =
+					const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 					{
 						{ // Attribute 0
 							// Data destination
 							Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 							"Position",								// name[32] (char)
-							"POSITION",								// semantic[32] (char)
+							"POSITION",								// semanticName[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBufferPosition,					// vertexBuffer (Renderer::IVertexBuffer *)
-							0,										// offset (uint32_t)
+							0,										// alignedByteOffset (uint32_t)
 							sizeof(float) * 2,						// stride (uint32_t)
 							// Data source, instancing part
 							0										// instancesPerElement (uint32_t)
@@ -147,17 +147,17 @@ void FirstInstancing::onInitialization()
 							// Data destination
 							Renderer::VertexArrayFormat::FLOAT_1,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 							"InstanceID",							// name[32] (char)
-							"TEXCOORD",								// semantic[32] (char)
+							"TEXCOORD",								// semanticName[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBufferInstanceId,					// vertexBuffer (Renderer::IVertexBuffer *)
-							0,										// offset (uint32_t)
+							0,										// alignedByteOffset (uint32_t)
 							sizeof(float),							// stride (uint32_t)
 							// Data source, instancing part
 							1										// instancesPerElement (uint32_t)
 						}
 					};
-					mVertexArrayInstancedArrays = mProgramInstancedArrays->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray, indexBufferInstancedArrays);
+					mVertexArrayInstancedArrays = mProgramInstancedArrays->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, indexBufferInstancedArrays);
 				}
 			}
 
@@ -197,23 +197,23 @@ void FirstInstancing::onInitialization()
 					// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 					//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 					//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-					const Renderer::VertexArrayAttribute vertexArray[] =
+					const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 					{
 						{ // Attribute 0
 							// Data destination
 							Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 							"Position",								// name[32] (char)
-							"POSITION",								// semantic[32] (char)
+							"POSITION",								// semanticName[32] (char)
 							0,										// semanticIndex (uint32_t)
 							// Data source
 							vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-							0,										// offset (uint32_t)
+							0,										// alignedByteOffset (uint32_t)
 							sizeof(float) * 2,						// stride (uint32_t)
 							// Data source, instancing part
 							0										// instancesPerElement (uint32_t)
 						}
 					};
-					mVertexArrayDrawInstanced = mProgramDrawInstanced->createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray);
+					mVertexArrayDrawInstanced = mProgramDrawInstanced->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
 				}
 			}
 		}

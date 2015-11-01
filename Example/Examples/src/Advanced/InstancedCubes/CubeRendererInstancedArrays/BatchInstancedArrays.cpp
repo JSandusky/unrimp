@@ -116,18 +116,18 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-			const Renderer::VertexArrayAttribute vertexArray[] =
+			const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 			{
 				// Mesh data
 				{ // Attribute 0
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Position",								// name[32] (char)
-					"POSITION",								// semantic[32] (char)
+					"POSITION",								// semanticName[32] (char)
 					0,										// semanticIndex (uint32_t)
 					// Data source
 					&vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-					0,										// offset (uint32_t)
+					0,										// alignedByteOffset (uint32_t)
 					sizeof(float) * (3 + 2 + 3),			// stride (uint32_t)
 					// Data source, instancing part
 					0										// instancesPerElement (uint32_t)
@@ -136,11 +136,11 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"TexCoord",								// name[32] (char)
-					"TEXCOORD",								// semantic[32] (char)
+					"TEXCOORD",								// semanticName[32] (char)
 					0,										// semanticIndex (uint32_t)
 					// Data source
 					&vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 3,						// offset (uint32_t)
+					sizeof(float) * 3,						// alignedByteOffset (uint32_t)
 					sizeof(float) * (3 + 2 + 3),			// stride (uint32_t)
 					// Data source, instancing part
 					0										// instancesPerElement (uint32_t)
@@ -149,11 +149,11 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"Normal",								// name[32] (char)
-					"NORMAL",								// semantic[32] (char)
+					"NORMAL",								// semanticName[32] (char)
 					0,										// semanticIndex (uint32_t)
 					// Data source
 					&vertexBuffer,							// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * (3 + 2),				// offset (uint32_t)
+					sizeof(float) * (3 + 2),				// alignedByteOffset (uint32_t)
 					sizeof(float) * (3 + 2 + 3),			// stride (uint32_t)
 					// Data source, instancing part
 					0										// instancesPerElement (uint32_t)
@@ -164,11 +164,11 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"PerInstancePositionTexture",			// name[32] (char)
-					"TEXCOORD",								// semantic[32] (char)
+					"TEXCOORD",								// semanticName[32] (char)
 					1,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBufferPerInstanceData,			// vertexBuffer (Renderer::IVertexBuffer *)
-					0,										// offset (uint32_t)
+					0,										// alignedByteOffset (uint32_t)
 					sizeof(float) * 4 * 2,					// stride (uint32_t)
 					// Data source, instancing part
 					1										// instancesPerElement (uint32_t)
@@ -177,17 +177,17 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 					// Data destination
 					Renderer::VertexArrayFormat::FLOAT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
 					"PerInstanceRotationScale",				// name[32] (char)
-					"TEXCOORD",								// semantic[32] (char)
+					"TEXCOORD",								// semanticName[32] (char)
 					2,										// semanticIndex (uint32_t)
 					// Data source
 					vertexBufferPerInstanceData,			// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 4,						// offset (uint32_t)
+					sizeof(float) * 4,						// alignedByteOffset (uint32_t)
 					sizeof(float) * 4 * 2,					// stride (uint32_t)
 					// Data source, instancing part
 					1										// instancesPerElement (uint32_t)
 				}
 			};
-			mVertexArray = program.createVertexArray(sizeof(vertexArray) / sizeof(Renderer::VertexArrayAttribute), vertexArray, &indexBuffer);
+			mVertexArray = program.createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, &indexBuffer);
 		}
 
 		// Free local per instance data
