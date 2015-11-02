@@ -11,112 +11,73 @@
     <Filter Include="Source Files\Linux">
       <UniqueIdentifier>{81395ef8-6832-484a-93e1-9d63d39f4e46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shader">
+      <UniqueIdentifier>{ff27bada-b551-4241-993e-5bd1a3d26246}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\OpenGLRenderer\BlendState.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h">
+      <Filter>Source Files\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\DepthStencilState.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Linux\ContextLinux.h">
+      <Filter>Source Files\Linux</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Extensions.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\GeometryShader.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\FragmentShader.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\GeometryShaderGlsl.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\FragmentShaderGlsl.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Program.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Framebuffer.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\ProgramGlsl.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\FramebufferBind.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\ProgramGlslDsa.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\FramebufferDsa.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\ShaderLanguage.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\GeometryShader.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\ShaderLanguageGlsl.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\GeometryShaderGlsl.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\TessellationControlShader.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\IContext.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\TessellationControlShaderGlsl.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\IndexBuffer.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\TessellationEvaluationShader.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\IndexBufferBind.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\TessellationEvaluationShaderGlsl.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\IndexBufferDsa.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\UniformBuffer.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Mapping.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\UniformBufferGlsl.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\OpenGLDebug.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\UniformBufferGlslBind.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\OpenGLRuntimeLinking.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\UniformBufferGlslDsa.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Program.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\VertexShader.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\ProgramGlsl.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\VertexShaderGlsl.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\ProgramGlslDsa.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\FragmentShader.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\RasterizerState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\OpenGLRenderer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\SamplerState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\SamplerStateBind.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\SamplerStateCollection.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\SamplerStateDsa.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\SamplerStateSo.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\ShaderLanguage.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\ShaderLanguageGlsl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\SwapChain.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\TessellationControlShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\TessellationControlShaderGlsl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\TessellationEvaluationShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\TessellationEvaluationShaderGlsl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture2D.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Shader\FragmentShaderGlsl.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Texture2DArray.h">
       <Filter>Source Files</Filter>
@@ -145,18 +106,6 @@
     <ClInclude Include="include\OpenGLRenderer\TextureCollection.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\UniformBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\UniformBufferGlsl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\UniformBufferGlslBind.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\UniformBufferGlslDsa.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\VertexArray.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -181,69 +130,171 @@
     <ClInclude Include="include\OpenGLRenderer\VertexBufferDsa.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\VertexShader.h">
+    <ClInclude Include="include\OpenGLRenderer\BlendState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\VertexShaderGlsl.h">
+    <ClInclude Include="include\OpenGLRenderer\DepthStencilState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h">
-      <Filter>Source Files\Windows</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Extensions.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Linux\ContextLinux.h">
-      <Filter>Source Files\Linux</Filter>
+    <ClInclude Include="include\OpenGLRenderer\Framebuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\FramebufferBind.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\FramebufferDsa.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\IContext.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\IndexBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\IndexBufferBind.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\IndexBufferDsa.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Mapping.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\OpenGLDebug.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\OpenGLRenderer.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\OpenGLRenderer_SingleHeader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\OpenGLRuntimeLinking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\RasterizerState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\SamplerState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\SamplerStateBind.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\SamplerStateCollection.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\SamplerStateDsa.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\SamplerStateSo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\SwapChain.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture2D.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\OpenGLRenderer.cpp">
+    <ClCompile Include="src\Windows\ContextWindows.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Windows\ExtensionsWindows.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Linux\ContextLinux.cpp">
+      <Filter>Source Files\Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
+      <Filter>Source Files\Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Program.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\ProgramGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\ProgramGlslDsa.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\ShaderLanguage.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\ShaderLanguageGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\TessellationControlShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\TessellationControlShaderGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\TessellationEvaluationShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\UniformBuffer.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\UniformBufferGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\UniformBufferGlslBind.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\UniformBufferGlslDsa.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\VertexShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\VertexShaderGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\FragmentShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\FragmentShaderGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\GeometryShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\GeometryShaderGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RasterizerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SamplerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SamplerStateBind.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SamplerStateCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SamplerStateDsa.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SamplerStateSo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Texture2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Windows\ContextWindows.cpp">
-      <Filter>Source Files\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IContext.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Extensions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Windows\ExtensionsWindows.cpp">
-      <Filter>Source Files\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="src\Texture2DArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BlendState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DepthStencilState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RasterizerState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBufferBind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBufferDsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IndexBufferBind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IndexBufferDsa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Texture2DArrayBind.cpp">
@@ -267,6 +318,9 @@
     <ClCompile Include="src\TextureBufferDsa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\TextureCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\VertexArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -276,91 +330,28 @@
     <ClCompile Include="src\VertexArrayVao.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\VertexArrayVaoDsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\VertexArrayVaoBind.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SamplerState.cpp">
+    <ClCompile Include="src\VertexArrayVaoDsa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SamplerStateBind.cpp">
+    <ClCompile Include="src\VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SamplerStateDsa.cpp">
+    <ClCompile Include="src\VertexBufferBind.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SamplerStateSo.cpp">
+    <ClCompile Include="src\VertexBufferDsa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Mapping.cpp">
+    <ClCompile Include="src\BlendState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\TessellationEvaluationShader.cpp">
+    <ClCompile Include="src\DepthStencilState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\TessellationEvaluationShaderGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexShaderGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FragmentShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FragmentShaderGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GeometryShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GeometryShaderGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TessellationControlShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TessellationControlShaderGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderLanguageGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderLanguage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UniformBufferGlslBind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UniformBufferGlslDsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UniformBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UniformBufferGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProgramGlslDsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Program.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProgramGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OpenGLRuntimeLinking.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SamplerStateCollection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureCollection.cpp">
+    <ClCompile Include="src\Extensions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Framebuffer.cpp">
@@ -372,63 +363,63 @@
     <ClCompile Include="src\FramebufferDsa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SwapChain.cpp">
+    <ClCompile Include="src\IContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Linux\ContextLinux.cpp">
-      <Filter>Source Files\Linux</Filter>
+    <ClCompile Include="src\IndexBuffer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
-      <Filter>Source Files\Linux</Filter>
+    <ClCompile Include="src\IndexBufferBind.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IndexBufferDsa.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mapping.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenGLRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenGLRuntimeLinking.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\OpenGLRenderer\FragmentShaderGlsl.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\OpenGLRenderer\Windows\ContextWindows.inl">
+      <Filter>Source Files\Windows</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\Framebuffer.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl">
+      <Filter>Source Files\Linux</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\GeometryShaderGlsl.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\OpenGLRenderer\Shader\GeometryShaderGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\IContext.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\OpenGLRenderer\Shader\Program.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\IndexBuffer.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\OpenGLRenderer\Shader\ProgramGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\Program.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\OpenGLRenderer\Shader\TessellationControlShaderGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\ProgramGlsl.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\OpenGLRenderer\Shader\TessellationEvaluationShaderGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\RasterizerState.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\OpenGLRenderer\Shader\UniformBuffer.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\OpenGLRenderer.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\OpenGLRenderer\Shader\UniformBufferGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\SamplerStateCollection.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\OpenGLRenderer\Shader\VertexShaderGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\SamplerStateSo.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\SwapChain.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\TessellationControlShaderGlsl.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\TessellationEvaluationShaderGlsl.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\Texture2D.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\OpenGLRenderer\Shader\FragmentShaderGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Texture2DArray.inl">
       <Filter>Source Files</Filter>
@@ -437,12 +428,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\TextureCollection.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\UniformBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\UniformBufferGlsl.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\VertexArray.inl">
@@ -454,14 +439,32 @@
     <None Include="include\OpenGLRenderer\VertexBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\VertexShaderGlsl.inl">
+    <None Include="include\OpenGLRenderer\Framebuffer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\Windows\ContextWindows.inl">
-      <Filter>Source Files\Windows</Filter>
+    <None Include="include\OpenGLRenderer\IContext.inl">
+      <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl">
-      <Filter>Source Files\Linux</Filter>
+    <None Include="include\OpenGLRenderer\IndexBuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\OpenGLRenderer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\RasterizerState.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\SamplerStateCollection.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\SamplerStateSo.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\SwapChain.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Texture2D.inl">
+      <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
 </Project>

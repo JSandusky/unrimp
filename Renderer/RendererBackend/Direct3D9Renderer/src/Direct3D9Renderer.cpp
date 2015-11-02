@@ -25,8 +25,6 @@
 #include "Direct3D9Renderer/d3d9.h"	// For "DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D9Renderer/Direct3D9Debug.h"	// For "DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
-#include "Direct3D9Renderer/ProgramHlsl.h"
-#include "Direct3D9Renderer/ShaderLanguageHlsl.h"
 #include "Direct3D9Renderer/Texture2D.h"
 #include "Direct3D9Renderer/BlendState.h"
 #include "Direct3D9Renderer/VertexArray.h"
@@ -36,11 +34,13 @@
 #include "Direct3D9Renderer/SamplerState.h"
 #include "Direct3D9Renderer/VertexBuffer.h"
 #include "Direct3D9Renderer/RasterizerState.h"
-#include "Direct3D9Renderer/VertexShaderHlsl.h"
 #include "Direct3D9Renderer/DepthStencilState.h"
 #include "Direct3D9Renderer/TextureCollection.h"
 #include "Direct3D9Renderer/SamplerStateCollection.h"
-#include "Direct3D9Renderer/FragmentShaderHlsl.h"
+#include "Direct3D9Renderer/Shader/ProgramHlsl.h"
+#include "Direct3D9Renderer/Shader/VertexShaderHlsl.h"
+#include "Direct3D9Renderer/Shader/ShaderLanguageHlsl.h"
+#include "Direct3D9Renderer/Shader/FragmentShaderHlsl.h"
 
 
 //[-------------------------------------------------------]

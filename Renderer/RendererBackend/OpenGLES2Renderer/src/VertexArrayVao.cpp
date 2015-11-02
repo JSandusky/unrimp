@@ -23,10 +23,10 @@
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/VertexArrayVao.h"
 #include "OpenGLES2Renderer/Mapping.h"
-#include "OpenGLES2Renderer/Program.h"
 #include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
 #include "OpenGLES2Renderer/IndexBuffer.h"
 #include "OpenGLES2Renderer/VertexBuffer.h"
+#include "OpenGLES2Renderer/Shader/Program.h"
 
 
 //[-------------------------------------------------------]

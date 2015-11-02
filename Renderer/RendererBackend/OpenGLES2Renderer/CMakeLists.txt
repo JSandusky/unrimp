@@ -52,21 +52,15 @@ set(SOURCE_CODES
 	src/ContextRuntimeLinking.cpp
 	src/DepthStencilState.cpp
 	src/ExtensionsRuntimeLinking.cpp
-	src/FragmentShader.cpp
-	src/FragmentShaderGlsl.cpp
 	src/Framebuffer.cpp
 	src/IContext.cpp
 	src/IExtensions.cpp
 	src/IndexBuffer.cpp
 	src/Mapping.cpp
-	src/Program.cpp
-	src/ProgramGlsl.cpp
 	src/RasterizerState.cpp
 	src/OpenGLES2Renderer.cpp
 	src/SamplerState.cpp
 	src/SamplerStateCollection.cpp
-	src/ShaderLanguage.cpp
-	src/ShaderLanguageGlsl.cpp
 	src/SwapChain.cpp
 	src/Texture2D.cpp
 	src/Texture2DArray.cpp
@@ -75,8 +69,14 @@ set(SOURCE_CODES
 	src/VertexArrayNoVao.cpp
 	src/VertexArrayVao.cpp
 	src/VertexBuffer.cpp
-	src/VertexShader.cpp
-	src/VertexShaderGlsl.cpp
+	src/Shader/FragmentShader.cpp
+	src/Shader/FragmentShaderGlsl.cpp
+	src/Shader/Program.cpp
+	src/Shader/ProgramGlsl.cpp
+	src/Shader/ShaderLanguage.cpp
+	src/Shader/ShaderLanguageGlsl.cpp
+	src/Shader/VertexShader.cpp
+	src/Shader/VertexShaderGlsl.cpp
 )
 
 

@@ -19,60 +19,60 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\NullRenderer\FragmentShader.h" />
-    <ClInclude Include="include\NullRenderer\Framebuffer.h" />
-    <ClInclude Include="include\NullRenderer\GeometryShader.h" />
-    <ClInclude Include="include\NullRenderer\IndexBuffer.h" />
-    <ClInclude Include="include\NullRenderer\NullDebug.h" />
-    <ClInclude Include="include\NullRenderer\Program.h" />
-    <ClInclude Include="include\NullRenderer\NullRenderer.h" />
+    <None Include="CMakeLists.txt" />
+    <None Include="include\NullRenderer\SwapChain.inl" />
+    <None Include="Readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="include\NullRenderer\BlendState.h" />
     <ClInclude Include="include\NullRenderer\DepthStencilState.h" />
+    <ClInclude Include="include\NullRenderer\Framebuffer.h" />
+    <ClInclude Include="include\NullRenderer\IndexBuffer.h" />
+    <ClInclude Include="include\NullRenderer\NullDebug.h" />
+    <ClInclude Include="include\NullRenderer\NullRenderer.h" />
     <ClInclude Include="include\NullRenderer\RasterizerState.h" />
     <ClInclude Include="include\NullRenderer\SamplerState.h" />
     <ClInclude Include="include\NullRenderer\SamplerStateCollection.h" />
-    <ClInclude Include="include\NullRenderer\ShaderLanguage.h" />
+    <ClInclude Include="include\NullRenderer\Shader\FragmentShader.h" />
+    <ClInclude Include="include\NullRenderer\Shader\GeometryShader.h" />
+    <ClInclude Include="include\NullRenderer\Shader\Program.h" />
+    <ClInclude Include="include\NullRenderer\Shader\ShaderLanguage.h" />
+    <ClInclude Include="include\NullRenderer\Shader\TessellationControlShader.h" />
+    <ClInclude Include="include\NullRenderer\Shader\TessellationEvaluationShader.h" />
+    <ClInclude Include="include\NullRenderer\Shader\UniformBuffer.h" />
+    <ClInclude Include="include\NullRenderer\Shader\VertexShader.h" />
     <ClInclude Include="include\NullRenderer\SwapChain.h" />
-    <ClInclude Include="include\NullRenderer\TessellationControlShader.h" />
-    <ClInclude Include="include\NullRenderer\TessellationEvaluationShader.h" />
     <ClInclude Include="include\NullRenderer\Texture2D.h" />
     <ClInclude Include="include\NullRenderer\Texture2DArray.h" />
     <ClInclude Include="include\NullRenderer\TextureBuffer.h" />
     <ClInclude Include="include\NullRenderer\TextureCollection.h" />
-    <ClInclude Include="include\NullRenderer\UniformBuffer.h" />
     <ClInclude Include="include\NullRenderer\VertexArray.h" />
     <ClInclude Include="include\NullRenderer\VertexBuffer.h" />
-    <ClInclude Include="include\NullRenderer\VertexShader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\FragmentShader.cpp" />
-    <ClCompile Include="src\Framebuffer.cpp" />
-    <ClCompile Include="src\GeometryShader.cpp" />
-    <ClCompile Include="src\IndexBuffer.cpp" />
-    <ClCompile Include="src\Program.cpp" />
-    <ClCompile Include="src\NullRenderer.cpp" />
     <ClCompile Include="src\BlendState.cpp" />
     <ClCompile Include="src\DepthStencilState.cpp" />
+    <ClCompile Include="src\Framebuffer.cpp" />
+    <ClCompile Include="src\IndexBuffer.cpp" />
+    <ClCompile Include="src\NullRenderer.cpp" />
     <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateCollection.cpp" />
-    <ClCompile Include="src\ShaderLanguage.cpp" />
+    <ClCompile Include="src\Shader\FragmentShader.cpp" />
+    <ClCompile Include="src\Shader\GeometryShader.cpp" />
+    <ClCompile Include="src\Shader\Program.cpp" />
+    <ClCompile Include="src\Shader\ShaderLanguage.cpp" />
+    <ClCompile Include="src\Shader\TessellationControlShader.cpp" />
+    <ClCompile Include="src\Shader\TessellationEvaluationShader.cpp" />
+    <ClCompile Include="src\Shader\UniformBuffer.cpp" />
+    <ClCompile Include="src\Shader\VertexShader.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
-    <ClCompile Include="src\TessellationControlShader.cpp" />
-    <ClCompile Include="src\TessellationEvaluationShader.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
     <ClCompile Include="src\Texture2DArray.cpp" />
     <ClCompile Include="src\TextureBuffer.cpp" />
     <ClCompile Include="src\TextureCollection.cpp" />
-    <ClCompile Include="src\UniformBuffer.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
-    <ClCompile Include="src\VertexShader.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="CMakeLists.txt" />
-    <None Include="include\NullRenderer\SwapChain.inl" />
-    <None Include="Readme.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A9AF6BD9-276D-4AC3-82F0-3588799CF3A0}</ProjectGuid>

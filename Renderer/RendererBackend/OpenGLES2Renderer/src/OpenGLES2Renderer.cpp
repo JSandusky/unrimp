@@ -24,7 +24,6 @@
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 #include "OpenGLES2Renderer/OpenGLES2Debug.h"	// For "OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "OpenGLES2Renderer/Mapping.h"
-#include "OpenGLES2Renderer/Program.h"
 #include "OpenGLES2Renderer/Texture2D.h"
 #include "OpenGLES2Renderer/BlendState.h"
 #include "OpenGLES2Renderer/IExtensions.h"
@@ -41,7 +40,8 @@
 #include "OpenGLES2Renderer/TextureCollection.h"
 #include "OpenGLES2Renderer/SamplerStateCollection.h"
 #include "OpenGLES2Renderer/ContextRuntimeLinking.h"
-#include "OpenGLES2Renderer/ShaderLanguageGlsl.h"
+#include "OpenGLES2Renderer/Shader/Program.h"
+#include "OpenGLES2Renderer/Shader/ShaderLanguageGlsl.h"
 
 
 //[-------------------------------------------------------]

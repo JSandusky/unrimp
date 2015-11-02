@@ -1,0 +1,115 @@
+/*********************************************************\
+ * Copyright (c) 2012-2015 Christian Ofenberg
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "NullRenderer/Shader/Program.h"
+#include "NullRenderer/Shader/VertexShader.h"
+#include "NullRenderer/Shader/GeometryShader.h"
+#include "NullRenderer/Shader/FragmentShader.h"
+#include "NullRenderer/Shader/TessellationControlShader.h"
+#include "NullRenderer/Shader/TessellationEvaluationShader.h"
+#include "NullRenderer/VertexArray.h"
+#include "NullRenderer/IndexBuffer.h"
+#include "NullRenderer/VertexBuffer.h"
+
+#include <Renderer/VertexArrayTypes.h>
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace NullRenderer
+{
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	Program::Program(NullRenderer &nullRenderer, VertexShader *vertexShader, TessellationControlShader *tessellationControlShader, TessellationEvaluationShader *tessellationEvaluationShader, GeometryShader *geometryShader, FragmentShader *fragmentShader) :
+		IProgram(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
+	{
+		// We don't keep a reference to the shaders in here
+		// -> Ensure a correct reference counter behaviour
+		if (nullptr != vertexShader)
+		{
+			vertexShader->addReference();
+			vertexShader->release();
+		}
+		if (nullptr != tessellationControlShader)
+		{
+			tessellationControlShader->addReference();
+			tessellationControlShader->release();
+		}
+		if (nullptr != tessellationEvaluationShader)
+		{
+			tessellationEvaluationShader->addReference();
+			tessellationEvaluationShader->release();
+		}
+		if (nullptr != geometryShader)
+		{
+			geometryShader->addReference();
+			geometryShader->release();
+		}
+		if (nullptr != fragmentShader)
+		{
+			fragmentShader->addReference();
+			fragmentShader->release();
+		}
+	}
+
+	Program::~Program()
+	{
+		// Nothing to do in here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IProgram methods             ]
+	//[-------------------------------------------------------]
+	Renderer::IVertexArray *Program::createVertexArray(uint32_t, const Renderer::VertexArrayAttribute *, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
+	{
+		// We don't keep a reference to the vertex buffers used by the vertex array attributes in here
+		// -> Ensure a correct reference counter behaviour
+		const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + numberOfVertexBuffers;
+		for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
+		{
+			vertexBuffer->vertexBuffer->addReference();
+			vertexBuffer->vertexBuffer->release();
+		}
+
+		// We don't keep a reference to the index buffer in here
+		// -> Ensure a correct reference counter behaviour
+		if (nullptr != indexBuffer)
+		{
+			indexBuffer->addReference();
+			indexBuffer->release();
+		}
+
+		// Create the vertex array instance
+		return new VertexArray(reinterpret_cast<NullRenderer&>(getRenderer()));
+	}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // NullRenderer

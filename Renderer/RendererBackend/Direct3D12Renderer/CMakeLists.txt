@@ -47,36 +47,36 @@ set(SOURCE_CODES
 	src/BlendState.cpp
 	src/DepthStencilState.cpp
 	src/Direct3D12RuntimeLinking.cpp
-	src/FragmentShader.cpp
-	src/FragmentShaderHlsl.cpp
 	src/Framebuffer.cpp
-	src/GeometryShader.cpp
-	src/GeometryShaderHlsl.cpp
 	src/Guid.cpp
 	src/IndexBuffer.cpp
 	src/Mapping.cpp
-	src/Program.cpp
-	src/ProgramHlsl.cpp
 	src/RasterizerState.cpp
 	src/Direct3D12Renderer.cpp
 	src/SamplerState.cpp
 	src/SamplerStateCollection.cpp
-	src/ShaderLanguage.cpp
-	src/ShaderLanguageHlsl.cpp
 	src/SwapChain.cpp
-	src/TessellationControlShader.cpp
-	src/TessellationControlShaderHlsl.cpp
-	src/TessellationEvaluationShader.cpp
-	src/TessellationEvaluationShaderHlsl.cpp
 	src/Texture2D.cpp
 	src/Texture2DArray.cpp
 	src/TextureBuffer.cpp
 	src/TextureCollection.cpp
-	src/UniformBuffer.cpp
 	src/VertexArray.cpp
 	src/VertexBuffer.cpp
-	src/VertexShader.cpp
-	src/VertexShaderHlsl.cpp
+	src/Shader/FragmentShader.cpp
+	src/Shader/FragmentShaderHlsl.cpp
+	src/Shader/GeometryShader.cpp
+	src/Shader/GeometryShaderHlsl.cpp
+	src/Shader/Program.cpp
+	src/Shader/ProgramHlsl.cpp
+	src/Shader/ShaderLanguage.cpp
+	src/Shader/ShaderLanguageHlsl.cpp
+	src/Shader/TessellationControlShader.cpp
+	src/Shader/TessellationControlShaderHlsl.cpp
+	src/Shader/TessellationEvaluationShader.cpp
+	src/Shader/TessellationEvaluationShaderHlsl.cpp
+	src/Shader/UniformBuffer.cpp
+	src/Shader/VertexShader.cpp
+	src/Shader/VertexShaderHlsl.cpp
 )
 
 

@@ -22,7 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/VertexArrayVaoBind.h"
-#include "OpenGLRenderer/Program.h"
 #include "OpenGLRenderer/Mapping.h"
 #include "OpenGLRenderer/IContext.h"
 #include "OpenGLRenderer/Extensions.h"
@@ -30,6 +29,7 @@
 #include "OpenGLRenderer/VertexBuffer.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/Shader/Program.h"
 
 
 //[-------------------------------------------------------]

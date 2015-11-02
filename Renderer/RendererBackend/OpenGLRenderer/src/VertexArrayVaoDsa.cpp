@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/VertexArrayVaoDsa.h"
 #include "OpenGLRenderer/Mapping.h"
-#include "OpenGLRenderer/Program.h"
 #include "OpenGLRenderer/IContext.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/IndexBuffer.h"
@@ -32,6 +31,7 @@
 #ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 	#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #endif
+#include "OpenGLRenderer/Shader/Program.h"
 
 
 //[-------------------------------------------------------]

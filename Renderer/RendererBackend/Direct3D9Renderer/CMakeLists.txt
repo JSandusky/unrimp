@@ -47,27 +47,27 @@ set(SOURCE_CODES
 	src/BlendState.cpp
 	src/DepthStencilState.cpp
 	src/Direct3D9RuntimeLinking.cpp
-	src/FragmentShader.cpp
-	src/FragmentShaderHlsl.cpp
 	src/Framebuffer.cpp
 	src/Guid.cpp
 	src/IndexBuffer.cpp
 	src/Mapping.cpp
-	src/Program.cpp
-	src/ProgramHlsl.cpp
 	src/RasterizerState.cpp
 	src/Direct3D9Renderer.cpp
 	src/SamplerState.cpp
 	src/SamplerStateCollection.cpp
-	src/ShaderLanguage.cpp
-	src/ShaderLanguageHlsl.cpp
 	src/SwapChain.cpp
 	src/Texture2D.cpp
 	src/TextureCollection.cpp
 	src/VertexArray.cpp
 	src/VertexBuffer.cpp
-	src/VertexShader.cpp
-	src/VertexShaderHlsl.cpp
+	src/Shader/FragmentShader.cpp
+	src/Shader/FragmentShaderHlsl.cpp
+	src/Shader/Program.cpp
+	src/Shader/ProgramHlsl.cpp
+	src/Shader/ShaderLanguage.cpp
+	src/Shader/ShaderLanguageHlsl.cpp
+	src/Shader/VertexShader.cpp
+	src/Shader/VertexShaderHlsl.cpp
 )
 
 

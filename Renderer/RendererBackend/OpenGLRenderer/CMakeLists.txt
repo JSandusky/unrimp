@@ -51,22 +51,15 @@ set(SOURCE_CODES
 	src/BlendState.cpp
 	src/DepthStencilState.cpp
 	src/Extensions.cpp
-	src/FragmentShader.cpp
-	src/FragmentShaderGlsl.cpp
 	src/Framebuffer.cpp
 	src/FramebufferDsa.cpp
 	src/FramebufferBind.cpp
-	src/GeometryShader.cpp
-	src/GeometryShaderGlsl.cpp
 	src/IContext.cpp
 	src/IndexBuffer.cpp
 	src/IndexBufferBind.cpp
 	src/IndexBufferDsa.cpp
 	src/Mapping.cpp
 	src/OpenGLRuntimeLinking.cpp
-	src/Program.cpp
-	src/ProgramGlsl.cpp
-	src/ProgramGlslDsa.cpp
 	src/RasterizerState.cpp
 	src/OpenGLRenderer.cpp
 	src/SamplerState.cpp
@@ -74,13 +67,7 @@ set(SOURCE_CODES
 	src/SamplerStateDsa.cpp
 	src/SamplerStateSo.cpp
 	src/SamplerStateCollection.cpp
-	src/ShaderLanguage.cpp
-	src/ShaderLanguageGlsl.cpp
 	src/SwapChain.cpp
-	src/TessellationControlShader.cpp
-	src/TessellationControlShaderGlsl.cpp
-	src/TessellationEvaluationShader.cpp
-	src/TessellationEvaluationShaderGlsl.cpp
 	src/Texture2D.cpp
 	src/Texture2DArray.cpp
 	src/Texture2DArrayBind.cpp
@@ -91,10 +78,6 @@ set(SOURCE_CODES
 	src/TextureBufferBind.cpp
 	src/TextureBufferDsa.cpp
 	src/TextureCollection.cpp
-	src/UniformBuffer.cpp
-	src/UniformBufferGlsl.cpp
-	src/UniformBufferGlslBind.cpp
-	src/UniformBufferGlslDsa.cpp
 	src/VertexArray.cpp
 	src/VertexArrayNoVao.cpp
 	src/VertexArrayVao.cpp
@@ -103,8 +86,25 @@ set(SOURCE_CODES
 	src/VertexBuffer.cpp
 	src/VertexBufferBind.cpp
 	src/VertexBufferDsa.cpp
-	src/VertexShader.cpp
-	src/VertexShaderGlsl.cpp
+	src/Shader/FragmentShader.cpp
+	src/Shader/FragmentShaderGlsl.cpp
+	src/Shader/GeometryShader.cpp
+	src/Shader/GeometryShaderGlsl.cpp
+	src/Shader/Program.cpp
+	src/Shader/ProgramGlsl.cpp
+	src/Shader/ProgramGlslDsa.cpp
+	src/Shader/ShaderLanguage.cpp
+	src/Shader/ShaderLanguageGlsl.cpp
+	src/Shader/TessellationControlShader.cpp
+	src/Shader/TessellationControlShaderGlsl.cpp
+	src/Shader/TessellationEvaluationShader.cpp
+	src/Shader/TessellationEvaluationShaderGlsl.cpp
+	src/Shader/UniformBuffer.cpp
+	src/Shader/UniformBufferGlsl.cpp
+	src/Shader/UniformBufferGlslBind.cpp
+	src/Shader/UniformBufferGlslDsa.cpp
+	src/Shader/VertexShader.cpp
+	src/Shader/VertexShaderGlsl.cpp
 )
 if(WIN32)
 	# Windows source codes

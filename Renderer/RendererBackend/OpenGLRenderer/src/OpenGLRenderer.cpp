@@ -26,9 +26,6 @@
 #include "OpenGLRenderer/Mapping.h"
 #include "OpenGLRenderer/BlendState.h"
 #include "OpenGLRenderer/Extensions.h"
-#include "OpenGLRenderer/ShaderLanguageGlsl.h"
-#include "OpenGLRenderer/ProgramGlsl.h"
-#include "OpenGLRenderer/UniformBufferGlsl.h"
 #include "OpenGLRenderer/SamplerStateSo.h"
 #include "OpenGLRenderer/SamplerStateDsa.h"
 #include "OpenGLRenderer/SamplerStateBind.h"
@@ -52,6 +49,9 @@
 #include "OpenGLRenderer/TextureCollection.h"
 #include "OpenGLRenderer/SamplerStateCollection.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/Shader/ShaderLanguageGlsl.h"
+#include "OpenGLRenderer/Shader/ProgramGlsl.h"
+#include "OpenGLRenderer/Shader/UniformBufferGlsl.h"
 #ifdef WIN32
 	#include "OpenGLRenderer/Windows/ContextWindows.h"
 #elif defined LINUX

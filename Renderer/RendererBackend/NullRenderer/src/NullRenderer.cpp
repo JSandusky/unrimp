@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/NullRenderer.h"
 #include "NullRenderer/NullDebug.h"	// For "NULLRENDERER_RENDERERMATCHCHECK_RETURN()"
-#include "NullRenderer/Program.h"
 #include "NullRenderer/Texture2D.h"
 #include "NullRenderer/Texture2DArray.h"
 #include "NullRenderer/IndexBuffer.h"
@@ -38,8 +37,9 @@
 #include "NullRenderer/DepthStencilState.h"
 #include "NullRenderer/TextureCollection.h"
 #include "NullRenderer/SamplerStateCollection.h"
-#include "NullRenderer/ShaderLanguage.h"
-#include "NullRenderer/UniformBuffer.h"
+#include "NullRenderer/Shader/Program.h"
+#include "NullRenderer/Shader/ShaderLanguage.h"
+#include "NullRenderer/Shader/UniformBuffer.h"
 
 #include <string.h>
 

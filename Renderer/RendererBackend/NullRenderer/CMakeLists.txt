@@ -43,27 +43,27 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(SOURCE_CODES
 	src/BlendState.cpp
 	src/DepthStencilState.cpp
-	src/FragmentShader.cpp
 	src/Framebuffer.cpp
-	src/GeometryShader.cpp
 	src/IndexBuffer.cpp
-	src/Program.cpp
 	src/RasterizerState.cpp
 	src/NullRenderer.cpp
 	src/SamplerState.cpp
 	src/SamplerStateCollection.cpp
-	src/ShaderLanguage.cpp
 	src/SwapChain.cpp
-	src/TessellationControlShader.cpp
-	src/TessellationEvaluationShader.cpp
 	src/Texture2D.cpp
 	src/Texture2DArray.cpp
 	src/TextureBuffer.cpp
 	src/TextureCollection.cpp
-	src/UniformBuffer.cpp
 	src/VertexArray.cpp
 	src/VertexBuffer.cpp
-	src/VertexShader.cpp
+	src/Shader/FragmentShader.cpp
+	src/Shader/GeometryShader.cpp
+	src/Shader/Program.cpp
+	src/Shader/ShaderLanguage.cpp
+	src/Shader/TessellationControlShader.cpp
+	src/Shader/TessellationEvaluationShader.cpp
+	src/Shader/UniformBuffer.cpp
+	src/Shader/VertexShader.cpp
 )
 
 

@@ -24,13 +24,13 @@
 #include "Direct3D12Renderer/PipelineState.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D12Renderer/D3D12X.h"
-#include "Direct3D12Renderer/ProgramHlsl.h"
-#include "Direct3D12Renderer/VertexShaderHlsl.h"
-#include "Direct3D12Renderer/GeometryShaderHlsl.h"
-#include "Direct3D12Renderer/FragmentShaderHlsl.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
-#include "Direct3D12Renderer/TessellationControlShaderHlsl.h"
-#include "Direct3D12Renderer/TessellationEvaluationShaderHlsl.h"
+#include "Direct3D12Renderer/Shader/ProgramHlsl.h"
+#include "Direct3D12Renderer/Shader/VertexShaderHlsl.h"
+#include "Direct3D12Renderer/Shader/GeometryShaderHlsl.h"
+#include "Direct3D12Renderer/Shader/FragmentShaderHlsl.h"
+#include "Direct3D12Renderer/Shader/TessellationControlShaderHlsl.h"
+#include "Direct3D12Renderer/Shader/TessellationEvaluationShaderHlsl.h"
 
 #include <Renderer/PipelineStateTypes.h>
 

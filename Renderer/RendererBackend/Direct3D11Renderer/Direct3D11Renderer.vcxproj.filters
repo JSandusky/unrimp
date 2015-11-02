@@ -5,252 +5,38 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\Direct3D11Renderer\BlendState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\D3D11.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\DepthStencilState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Direct3D11Debug.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Direct3D11RuntimeLinking.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Direct3D9RuntimeLinking.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\FragmentShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\FragmentShaderHlsl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Framebuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\GeometryShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\GeometryShaderHlsl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Guid.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\IndexBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Mapping.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Program.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\ProgramHlsl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\RasterizerState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Direct3D11Renderer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\SamplerState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\SamplerStateCollection.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\ShaderLanguage.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\ShaderLanguageHlsl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\SwapChain.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\TessellationControlShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\TessellationControlShaderHlsl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\TessellationEvaluationShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\TessellationEvaluationShaderHlsl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Texture2D.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Texture2DArray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\TextureBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\TextureCollection.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\UniformBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\VertexArray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\VertexBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\VertexShader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\VertexShaderHlsl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\Direct3D11Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RasterizerState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BlendState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DepthStencilState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2DArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SamplerState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexShaderHlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FragmentShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FragmentShaderHlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GeometryShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GeometryShaderHlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Program.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProgramHlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderLanguage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderLanguageHlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TessellationControlShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TessellationControlShaderHlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TessellationEvaluationShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TessellationEvaluationShaderHlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UniformBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Mapping.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Direct3D11RuntimeLinking.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureCollection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SamplerStateCollection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Direct3D9RuntimeLinking.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Framebuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SwapChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Guid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <Filter Include="Source Files\Shader">
+      <UniqueIdentifier>{72ac5f21-945f-4478-9caf-96bb19fc33cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\Direct3D11Renderer\BlendState.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\Direct3D11Renderer\Shader\ProgramHlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\DepthStencilState.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\Direct3D11Renderer\Shader\TessellationControlShaderHlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\FragmentShaderHlsl.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\Direct3D11Renderer\Shader\TessellationEvaluationShaderHlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\Framebuffer.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\Direct3D11Renderer\Shader\UniformBuffer.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\GeometryShaderHlsl.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\Direct3D11Renderer\Shader\VertexShaderHlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\IndexBuffer.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\Direct3D11Renderer\Shader\FragmentShaderHlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\Program.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\Direct3D11Renderer\Shader\GeometryShaderHlsl.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\ProgramHlsl.inl">
-      <Filter>Source Files</Filter>
+    <None Include="include\Direct3D11Renderer\Shader\Program.inl">
+      <Filter>Source Files\Shader</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\RasterizerState.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\Direct3D11Renderer.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\SamplerState.inl">
@@ -260,12 +46,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\SwapChain.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\TessellationControlShaderHlsl.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\TessellationEvaluationShaderHlsl.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\Texture2D.inl">
@@ -280,17 +60,240 @@
     <None Include="include\Direct3D11Renderer\TextureCollection.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\UniformBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D11Renderer\VertexArray.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\VertexBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\VertexShaderHlsl.inl">
+    <None Include="include\Direct3D11Renderer\BlendState.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\Direct3D11Renderer\DepthStencilState.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Direct3D11Renderer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Framebuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\IndexBuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\ShaderLanguage.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\ShaderLanguageHlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\TessellationControlShader.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\TessellationControlShaderHlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\TessellationEvaluationShader.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\TessellationEvaluationShaderHlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\UniformBuffer.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\VertexShader.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\VertexShaderHlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\FragmentShader.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\FragmentShaderHlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\GeometryShader.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\GeometryShaderHlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\Program.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Shader\ProgramHlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Mapping.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\RasterizerState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\SamplerState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\SamplerStateCollection.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\SwapChain.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Texture2D.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Texture2DArray.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\TextureBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\TextureCollection.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\VertexArray.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\VertexBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\BlendState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\D3D11.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\DepthStencilState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Direct3D9RuntimeLinking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Direct3D11Debug.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Direct3D11Renderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Direct3D11RuntimeLinking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Framebuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Guid.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\IndexBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Shader\ShaderLanguageHlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\TessellationControlShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\TessellationControlShaderHlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\TessellationEvaluationShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\TessellationEvaluationShaderHlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\UniformBuffer.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\VertexShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\VertexShaderHlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\FragmentShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\GeometryShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\GeometryShaderHlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Program.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\ProgramHlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\ShaderLanguage.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BlendState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DepthStencilState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Direct3D9RuntimeLinking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Direct3D11Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Direct3D11RuntimeLinking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Guid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IndexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mapping.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RasterizerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SamplerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SamplerStateCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SwapChain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture2DArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

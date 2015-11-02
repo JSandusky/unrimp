@@ -26,8 +26,6 @@
 #include "Direct3D10Renderer/Direct3D10Debug.h"	// For "DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D10Renderer/Direct3D9RuntimeLinking.h"	//  For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging, also works directly within VisualStudio 2012 out-of-the-box
 #include "Direct3D10Renderer/Direct3D10RuntimeLinking.h"
-#include "Direct3D10Renderer/ProgramHlsl.h"
-#include "Direct3D10Renderer/ShaderLanguageHlsl.h"
 #include "Direct3D10Renderer/Texture2D.h"
 #include "Direct3D10Renderer/BlendState.h"
 #include "Direct3D10Renderer/VertexArray.h"
@@ -36,16 +34,18 @@
 #include "Direct3D10Renderer/IndexBuffer.h"
 #include "Direct3D10Renderer/SamplerState.h"
 #include "Direct3D10Renderer/VertexBuffer.h"
-#include "Direct3D10Renderer/UniformBuffer.h"
 #include "Direct3D10Renderer/TextureBuffer.h"
 #include "Direct3D10Renderer/Texture2DArray.h"
 #include "Direct3D10Renderer/RasterizerState.h"
-#include "Direct3D10Renderer/VertexShaderHlsl.h"
 #include "Direct3D10Renderer/DepthStencilState.h"
 #include "Direct3D10Renderer/TextureCollection.h"
 #include "Direct3D10Renderer/SamplerStateCollection.h"
-#include "Direct3D10Renderer/GeometryShaderHlsl.h"
-#include "Direct3D10Renderer/FragmentShaderHlsl.h"
+#include "Direct3D10Renderer/Shader/ProgramHlsl.h"
+#include "Direct3D10Renderer/Shader/UniformBuffer.h"
+#include "Direct3D10Renderer/Shader/VertexShaderHlsl.h"
+#include "Direct3D10Renderer/Shader/ShaderLanguageHlsl.h"
+#include "Direct3D10Renderer/Shader/GeometryShaderHlsl.h"
+#include "Direct3D10Renderer/Shader/FragmentShaderHlsl.h"
 
 
 //[-------------------------------------------------------]

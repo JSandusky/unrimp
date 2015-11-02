@@ -1,153 +1,100 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\ContextRuntimeLinking.cpp">
+    <None Include="Readme.txt" />
+    <None Include="CMakeLists.txt" />
+    <None Include="include\OpenGLES2Renderer\Shader\ShaderLanguage.inl">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\Shader\VertexShaderGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\Shader\Program.inl">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\RasterizerState.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ExtensionsRuntimeLinking.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\SamplerStateCollection.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IContext.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\SwapChain.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IExtensions.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\Texture2D.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IndexBuffer.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\Texture2DArray.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\OpenGLES2Renderer.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\TextureCollection.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BlendState.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\VertexArray.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DepthStencilState.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\VertexArrayVao.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RasterizerState.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\VertexBuffer.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2D.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2DArray.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\Framebuffer.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBuffer.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\IContext.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArrayVao.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\IndexBuffer.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArray.cpp">
+    </None>
+    <None Include="include\OpenGLES2Renderer\OpenGLES2Renderer.inl">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArrayNoVao.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SamplerState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Mapping.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexShaderGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FragmentShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FragmentShaderGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Program.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ProgramGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderLanguage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderLanguageGlsl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SamplerStateCollection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureCollection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Framebuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SwapChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\OpenGLES2Renderer\BlendState.h">
-      <Filter>Source Files</Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{ad4f3c85-01f1-4d1a-932f-445fe1242503}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shader">
+      <UniqueIdentifier>{7bb8b8f4-503c-4f55-ba5d-fb493a23cf0d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\OpenGLES2Renderer\Shader\ShaderLanguageGlsl.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\ContextRuntimeLinking.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLES2Renderer\Shader\VertexShader.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\DepthStencilState.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLES2Renderer\Shader\VertexShaderGlsl.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLES2Renderer\Shader\FragmentShader.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\FragmentShader.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\FragmentShaderGlsl.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLES2Renderer\Shader\Program.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Framebuffer.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLES2Renderer\Shader\ProgramGlsl.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\IContext.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\IExtensions.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\IndexBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Mapping.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Debug.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Program.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\ProgramGlsl.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\RasterizerState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Renderer.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="include\OpenGLES2Renderer\Shader\ShaderLanguage.h">
+      <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\SamplerState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\SamplerStateCollection.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\ShaderLanguage.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\ShaderLanguageGlsl.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\SwapChain.h">
@@ -174,74 +121,130 @@
     <ClInclude Include="include\OpenGLES2Renderer\VertexBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\VertexShader.h">
+    <ClInclude Include="include\OpenGLES2Renderer\BlendState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\VertexShaderGlsl.h">
+    <ClInclude Include="include\OpenGLES2Renderer\ContextRuntimeLinking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\DepthStencilState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Framebuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\IContext.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\IExtensions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\IndexBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Mapping.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Debug.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Renderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\RasterizerState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Readme.txt" />
-    <None Include="CMakeLists.txt" />
-    <None Include="include\OpenGLES2Renderer\FragmentShaderGlsl.inl">
+    <ClCompile Include="src\Shader\Program.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\ProgramGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\ShaderLanguage.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\ShaderLanguageGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\VertexShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\VertexShaderGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\FragmentShader.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\FragmentShaderGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ExtensionsRuntimeLinking.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\Framebuffer.inl">
+    </ClCompile>
+    <ClCompile Include="src\Framebuffer.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\IContext.inl">
+    </ClCompile>
+    <ClCompile Include="src\IContext.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\IndexBuffer.inl">
+    </ClCompile>
+    <ClCompile Include="src\IExtensions.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\Program.inl">
+    </ClCompile>
+    <ClCompile Include="src\IndexBuffer.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\RasterizerState.inl">
+    </ClCompile>
+    <ClCompile Include="src\Mapping.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\OpenGLES2Renderer.inl">
+    </ClCompile>
+    <ClCompile Include="src\OpenGLES2Renderer.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\SamplerStateCollection.inl">
+    </ClCompile>
+    <ClCompile Include="src\RasterizerState.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\ShaderLanguage.inl">
+    </ClCompile>
+    <ClCompile Include="src\SamplerState.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\SwapChain.inl">
+    </ClCompile>
+    <ClCompile Include="src\SamplerStateCollection.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\Texture2D.inl">
+    </ClCompile>
+    <ClCompile Include="src\SwapChain.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\Texture2DArray.inl">
+    </ClCompile>
+    <ClCompile Include="src\Texture2D.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\TextureCollection.inl">
+    </ClCompile>
+    <ClCompile Include="src\Texture2DArray.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\VertexArray.inl">
+    </ClCompile>
+    <ClCompile Include="src\TextureCollection.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\VertexArrayVao.inl">
+    </ClCompile>
+    <ClCompile Include="src\VertexArray.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\VertexBuffer.inl">
+    </ClCompile>
+    <ClCompile Include="src\VertexArrayNoVao.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\VertexShaderGlsl.inl">
+    </ClCompile>
+    <ClCompile Include="src\VertexArrayVao.cpp">
       <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.inl">
+    </ClCompile>
+    <ClCompile Include="src\VertexBuffer.cpp">
       <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{ad4f3c85-01f1-4d1a-932f-445fe1242503}</UniqueIdentifier>
-    </Filter>
+    </ClCompile>
+    <ClCompile Include="src\BlendState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ContextRuntimeLinking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DepthStencilState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
