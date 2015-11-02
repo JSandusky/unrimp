@@ -315,7 +315,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer.h" />
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_110.h" />
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_ES2.h" />
-    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_HLSL_D3D9_D3D10_D3D11.h" />
+    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_HLSL_D3D9_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_Null.h" />
     <ClInclude Include="src\ConsoleExampleRunner.h" />
     <ClInclude Include="src\ExampleRunner.h" />
