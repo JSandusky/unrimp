@@ -61,7 +61,7 @@ namespace OpenGLRenderer
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
 		*  @param[in] numberOfBytes
-		*    Number of bytes within the index buffer, must be valid
+		*    Number of bytes within the vertex buffer, must be valid
 		*  @param[in] data
 		*    Vertex buffer data, can be a null pointer (empty buffer)
 		*  @param[in] bufferUsage

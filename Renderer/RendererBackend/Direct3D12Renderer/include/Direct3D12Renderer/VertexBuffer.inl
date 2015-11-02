@@ -28,6 +28,11 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline uint32_t VertexBuffer::getNumberOfBytes() const
+	{
+		return mNumberOfBytes;
+	}
+
 	inline ID3D12Resource *VertexBuffer::getID3D12Resource() const
 	{
 		return mD3D12Resource;

@@ -70,7 +70,7 @@ namespace Direct3D12Renderer
 		*  @param[in] direct3D12Renderer
 		*    Owner Direct3D 12 renderer instance
 		*  @param[in] numberOfBytes
-		*    Number of bytes within the index buffer, must be valid
+		*    Number of bytes within the vertex buffer, must be valid
 		*  @param[in] data
 		*    Vertex buffer data, can be a null pointer (empty buffer)
 		*  @param[in] bufferUsage
@@ -83,6 +83,15 @@ namespace Direct3D12Renderer
 		*    Destructor
 		*/
 		virtual ~VertexBuffer();
+
+		/**
+		*  @brief
+		*    Return the number of bytes within the vertex buffer
+		*
+		*  @return
+		*    The number of bytes within the vertex buffer
+		*/
+		inline uint32_t getNumberOfBytes() const;
 
 		/**
 		*  @brief
@@ -105,6 +114,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		uint32_t		mNumberOfBytes;	///< Number of bytes within the vertex buffer
 		ID3D12Resource* mD3D12Resource;
 
 

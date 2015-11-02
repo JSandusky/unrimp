@@ -40,6 +40,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	VertexBuffer::VertexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum) :
 		IVertexBuffer(direct3D12Renderer),
+		mNumberOfBytes(numberOfBytes),
 		mD3D12Resource(nullptr)
 	{
 		// TODO(co) This is only meant for the Direct3D 12 renderer backend kickoff.
@@ -51,7 +52,7 @@ namespace Direct3D12Renderer
 		// TODO(co) Add buffer usage setting support
 
 		const CD3DX12_HEAP_PROPERTIES d3d12XHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
-		const CD3DX12_RESOURCE_DESC d3d12XResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(numberOfBytes);
+		const CD3DX12_RESOURCE_DESC d3d12XResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(mNumberOfBytes);
 		if (SUCCEEDED(direct3D12Renderer.getD3D12Device()->CreateCommittedResource(
 			&d3d12XHeapProperties,
 			D3D12_HEAP_FLAG_NONE,
@@ -68,7 +69,7 @@ namespace Direct3D12Renderer
 				CD3DX12_RANGE readRange(0, 0);	// We do not intend to read from this resource on the CPU
 				if (SUCCEEDED(mD3D12Resource->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin))))
 				{
-					memcpy(pVertexDataBegin, data, numberOfBytes);
+					memcpy(pVertexDataBegin, data, mNumberOfBytes);
 					mD3D12Resource->Unmap(0, nullptr);
 				}
 			}

@@ -277,7 +277,7 @@ namespace Renderer
 		*    Create a vertex buffer object (VBO, "array buffer" in OpenGL terminology) instance
 		*
 		*  @param[in] numberOfBytes
-		*    Number of bytes within the index buffer, must be valid
+		*    Number of bytes within the vertex buffer, must be valid
 		*  @param[in] data
 		*    Vertex buffer data, can be a null pointer (empty buffer), the data is internally copied and you have to free your memory if you no longer need it
 		*  @param[in] bufferUsage
