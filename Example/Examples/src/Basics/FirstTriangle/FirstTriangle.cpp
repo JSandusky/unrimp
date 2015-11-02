@@ -117,10 +117,16 @@ void FirstTriangle::onInitialization()
 						0										// instancesPerElement (uint32_t)
 					}
 				};
+				const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
 
 				{ // Create the pipeline state object (PSO)
+					// Setup
 					Renderer::PipelineState pipelineState;
 					pipelineState.program = program;
+					pipelineState.numberOfVertexAttributes = numberOfVertexAttributes;
+					pipelineState.vertexAttributes = vertexArrayAttributes;
+
+					// Create the instance
 					mPipelineState = renderer->createPipelineState(pipelineState);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mPipelineState, "Triangle PSO")
 				}
@@ -138,7 +144,7 @@ void FirstTriangle::onInitialization()
 							sizeof(float) * 2	// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArray = program->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+					mVertexArray = program->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexArray, "Triangle VAO")
 				}
 			}

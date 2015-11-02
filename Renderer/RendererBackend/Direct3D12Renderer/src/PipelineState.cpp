@@ -24,6 +24,7 @@
 #include "Direct3D12Renderer/PipelineState.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D12Renderer/D3D12X.h"
+#include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D12Renderer/Shader/VertexShaderHlsl.h"
@@ -54,14 +55,42 @@ namespace Direct3D12Renderer
 		mProgram->addReference();
 
 		// Define the vertex input layout
-		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
+		// -> No dynamic allocations/deallocations in here, a fixed maximum number of supported attributes must be sufficient
+		static const uint32_t MAXIMUM_NUMBER_OF_ATTRIBUTES = 16;	// 16 elements per vertex are already pretty many
+		uint32_t numberOfVertexAttributes = pipelineState.numberOfVertexAttributes;
+		if (numberOfVertexAttributes > MAXIMUM_NUMBER_OF_ATTRIBUTES)
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-		};
+			RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Too many vertex attributes (%d) provided. The limit is %d.", pipelineState.numberOfVertexAttributes, MAXIMUM_NUMBER_OF_ATTRIBUTES);
+			numberOfVertexAttributes = MAXIMUM_NUMBER_OF_ATTRIBUTES;
+		}
+		D3D12_INPUT_ELEMENT_DESC d3d12InputElementDescs[MAXIMUM_NUMBER_OF_ATTRIBUTES];
+		for (uint32_t vertexAttribute = 0; vertexAttribute < numberOfVertexAttributes; ++vertexAttribute)
+		{
+			const Renderer::VertexArrayAttribute& vertexArrayAttribute = pipelineState.vertexAttributes[vertexAttribute];
+			D3D12_INPUT_ELEMENT_DESC& d3d12InputElementDesc = d3d12InputElementDescs[vertexAttribute];
+
+			d3d12InputElementDesc.SemanticName			= vertexArrayAttribute.semanticName;
+			d3d12InputElementDesc.SemanticIndex			= vertexArrayAttribute.semanticIndex;
+			d3d12InputElementDesc.Format				= static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(vertexArrayAttribute.vertexArrayFormat));
+			d3d12InputElementDesc.InputSlot				= vertexArrayAttribute.inputSlot;
+			d3d12InputElementDesc.AlignedByteOffset		= vertexArrayAttribute.alignedByteOffset;
+
+			// Per-instance instead of per-vertex?
+			if (vertexArrayAttribute.instancesPerElement > 0)
+			{
+				d3d12InputElementDesc.InputSlotClass       = D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA;	// Input classification (D3D12_INPUT_CLASSIFICATION)
+				d3d12InputElementDesc.InstanceDataStepRate = vertexArrayAttribute.instancesPerElement;		// Instance data step rate (UINT)
+			}
+			else
+			{
+				d3d12InputElementDesc.InputSlotClass       = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;	// Input classification (D3D12_INPUT_CLASSIFICATION)
+				d3d12InputElementDesc.InstanceDataStepRate = 0;												// Instance data step rate (UINT)
+			}
+		}
 
 		// Describe and create the graphics pipeline state object (PSO)
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC d3d12GraphicsPipelineState = {};
-		d3d12GraphicsPipelineState.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
+		d3d12GraphicsPipelineState.InputLayout = { d3d12InputElementDescs, numberOfVertexAttributes };
 		d3d12GraphicsPipelineState.pRootSignature = direct3D12Renderer.getD3D12RootSignature();
 		{ // Set shaders
 			ProgramHlsl* programHlsl = static_cast<ProgramHlsl*>(mProgram);

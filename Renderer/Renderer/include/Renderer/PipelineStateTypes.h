@@ -30,6 +30,7 @@
 namespace Renderer
 {
 	class IProgram;
+	struct VertexArrayAttribute;
 }
 
 
@@ -52,7 +53,9 @@ namespace Renderer
 	*/
 	struct PipelineState
 	{
-		IProgram* program;	///< Program used by the pipeline state (pipeline state instances keep a reference to the program)
+		IProgram*					program;					///< Program used by the pipeline state (pipeline state instances keep a reference to the program)
+		uint32_t					numberOfVertexAttributes;	///< Number of vertex attributes
+		const VertexArrayAttribute*	vertexAttributes;			///< At least "numberOfVertexAttributes" vertex attributes
 	};
 
 

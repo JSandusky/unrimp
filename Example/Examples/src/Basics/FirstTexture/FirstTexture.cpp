@@ -150,10 +150,16 @@ void FirstTexture::onInitialization()
 						0										// instancesPerElement (uint32_t)
 					}
 				};
+				const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
 
 				{ // Create the pipeline state object (PSO)
+					// Setup
 					Renderer::PipelineState pipelineState;
 					pipelineState.program = program;
+					pipelineState.numberOfVertexAttributes = numberOfVertexAttributes;
+					pipelineState.vertexAttributes = vertexArrayAttributes;
+
+					// Create the instance
 					mPipelineState = renderer->createPipelineState(pipelineState);
 				}
 
@@ -170,7 +176,7 @@ void FirstTexture::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArray = program->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mVertexArray = program->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 
 				// Tell the renderer API which texture should be bound to which texture unit (texture unit 0 by default)
 				// -> When using OpenGL or OpenGL ES 2 this is required
