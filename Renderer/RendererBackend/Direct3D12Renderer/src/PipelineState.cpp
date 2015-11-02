@@ -23,8 +23,14 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/PipelineState.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D12Renderer/D3D12.h"
+#include "Direct3D12Renderer/D3D12X.h"
+#include "Direct3D12Renderer/ProgramHlsl.h"
+#include "Direct3D12Renderer/VertexShaderHlsl.h"
+#include "Direct3D12Renderer/GeometryShaderHlsl.h"
+#include "Direct3D12Renderer/FragmentShaderHlsl.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
+#include "Direct3D12Renderer/TessellationControlShaderHlsl.h"
+#include "Direct3D12Renderer/TessellationEvaluationShaderHlsl.h"
 
 #include <Renderer/PipelineStateTypes.h>
 
@@ -39,14 +45,80 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	PipelineState::PipelineState(Direct3D12Renderer &direct3D12Renderer, const Renderer::PipelineState &) :
-		IPipelineState(direct3D12Renderer)
-		//mD3D12PipelineState(nullptr)	// TODO(co) Direct3D 12
+	PipelineState::PipelineState(Direct3D12Renderer &direct3D12Renderer, const Renderer::PipelineState& pipelineState) :
+		IPipelineState(direct3D12Renderer),
+		mD3D12PipelineState(nullptr),
+		mProgram(pipelineState.program)
 	{
-		// Create the Direct3D 12 pipeline state
-		// -> "Renderer::RasterizerState" maps directly to Direct3D 10 & 11 & 12, do not change it
-		// TODO(co) Direct3D 12
-		// direct3D12Renderer.getD3D12Device()->CreateRasterizerState(reinterpret_cast<const D3D12_RASTERIZER_DESC*>(&rasterizerState), &mD3D12RasterizerState);
+		// Add a reference to the given program
+		mProgram->addReference();
+
+		// Define the vertex input layout
+		D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		};
+
+		// Describe and create the graphics pipeline state object (PSO)
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC d3d12GraphicsPipelineState = {};
+		d3d12GraphicsPipelineState.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
+		d3d12GraphicsPipelineState.pRootSignature = direct3D12Renderer.getD3D12RootSignature();
+		{ // Set shaders
+			ProgramHlsl* programHlsl = static_cast<ProgramHlsl*>(mProgram);
+			{ // Vertex shader
+				const VertexShaderHlsl* vertexShaderHlsl = programHlsl->getVertexShaderHlsl();
+				if (nullptr != vertexShaderHlsl)
+				{
+					ID3DBlob* d3dBlobVertexShader = vertexShaderHlsl->getD3DBlobVertexShader();
+					d3d12GraphicsPipelineState.VS = { reinterpret_cast<UINT8*>(d3dBlobVertexShader->GetBufferPointer()), d3dBlobVertexShader->GetBufferSize() };
+				}
+			}
+			{ // Tessellation control shader (TCS, "hull shader" in Direct3D terminology)
+				const TessellationControlShaderHlsl* tessellationControlShaderHlsl = programHlsl->getTessellationControlShaderHlsl();
+				if (nullptr != tessellationControlShaderHlsl)
+				{
+					ID3DBlob* d3dBlobHullShader = tessellationControlShaderHlsl->getD3DBlobHullShader();
+					d3d12GraphicsPipelineState.HS = { reinterpret_cast<UINT8*>(d3dBlobHullShader->GetBufferPointer()), d3dBlobHullShader->GetBufferSize() };
+				}
+			}
+			{ // Tessellation evaluation shader (TES, "domain shader" in Direct3D terminology)
+				const TessellationEvaluationShaderHlsl* tessellationEvaluationShaderHlsl = programHlsl->getTessellationEvaluationShaderHlsl();
+				if (nullptr != tessellationEvaluationShaderHlsl)
+				{
+					ID3DBlob* d3dBlobDomainShader = tessellationEvaluationShaderHlsl->getD3DBlobDomainShader();
+					d3d12GraphicsPipelineState.DS = { reinterpret_cast<UINT8*>(d3dBlobDomainShader->GetBufferPointer()), d3dBlobDomainShader->GetBufferSize() };
+				}
+			}
+			{ // Geometry shader
+				const GeometryShaderHlsl* geometryShaderHlsl = programHlsl->getGeometryShaderHlsl();
+				if (nullptr != geometryShaderHlsl)
+				{
+					ID3DBlob* d3dBlobGeometryShader = geometryShaderHlsl->getD3DBlobGeometryShader();
+					d3d12GraphicsPipelineState.GS = { reinterpret_cast<UINT8*>(d3dBlobGeometryShader->GetBufferPointer()), d3dBlobGeometryShader->GetBufferSize() };
+				}
+			}
+			{ // Fragment shader (FS, "pixel shader" in Direct3D terminology)
+				const FragmentShaderHlsl* fragmentShaderHlsl = programHlsl->getFragmentShaderHlsl();
+				if (nullptr != fragmentShaderHlsl)
+				{
+					ID3DBlob* d3dBlobFragmentShader = programHlsl->getFragmentShaderHlsl()->getD3DBlobFragmentShader();
+					d3d12GraphicsPipelineState.PS = { reinterpret_cast<UINT8*>(d3dBlobFragmentShader->GetBufferPointer()), d3dBlobFragmentShader->GetBufferSize() };
+				}
+			}
+		}
+		d3d12GraphicsPipelineState.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+		d3d12GraphicsPipelineState.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+		d3d12GraphicsPipelineState.DepthStencilState.DepthEnable = FALSE;
+		d3d12GraphicsPipelineState.DepthStencilState.StencilEnable = FALSE;
+		d3d12GraphicsPipelineState.SampleMask = UINT_MAX;
+		d3d12GraphicsPipelineState.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		d3d12GraphicsPipelineState.NumRenderTargets = 1;
+		d3d12GraphicsPipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+		d3d12GraphicsPipelineState.SampleDesc.Count = 1;
+		if (FAILED(direct3D12Renderer.getD3D12Device()->CreateGraphicsPipelineState(&d3d12GraphicsPipelineState, IID_PPV_ARGS(&mD3D12PipelineState))))
+		{
+			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the pipeline state object")
+		}
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
@@ -57,23 +129,24 @@ namespace Direct3D12Renderer
 	PipelineState::~PipelineState()
 	{
 		// Release the Direct3D 12 pipeline state
-		// TODO(co) Direct3D 12
-		/*
 		if (nullptr != mD3D12PipelineState)
 		{
 			mD3D12PipelineState->Release();
 		}
-		*/
+
+		// Release the program reference
+		if (nullptr != mProgram)
+		{
+			mProgram->release();
+		}
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void PipelineState::setDebugName(const char *)
+	void PipelineState::setDebugName(const char *name)
 	{
-		// TODO(co) Direct3D 12
-		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 pipeline state?
 			if (nullptr != mD3D12PipelineState)
@@ -84,7 +157,6 @@ namespace Direct3D12Renderer
 				mD3D12PipelineState->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
-		*/
 	}
 
 

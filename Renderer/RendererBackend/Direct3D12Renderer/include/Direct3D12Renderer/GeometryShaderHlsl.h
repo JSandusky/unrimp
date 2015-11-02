@@ -33,7 +33,8 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-//struct ID3D12GeometryShader;	// TODO(co) Direct3D 12
+typedef __interface ID3D10Blob *LPD3D10BLOB;
+typedef ID3D10Blob ID3DBlob;
 
 
 //[-------------------------------------------------------]
@@ -90,20 +91,12 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D 12 geometry shader
+		*    Return the Direct3D 12 geometry shader blob
 		*
 		*  @return
-		*    Direct3D 12 geometry shader, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
+		*    Direct3D 12 geometry shader blob, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		// TODO(co) Direct3D 12
-		// inline ID3D12GeometryShader *getD3D12GeometryShader() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void setDebugName(const char *name) override;
+		inline ID3DBlob *getD3DBlobGeometryShader() const;
 
 
 	//[-------------------------------------------------------]
@@ -117,8 +110,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Direct3D 12
-		//ID3D12GeometryShader *mD3D12GeometryShader;	///< Direct3D 12 geometry shader, can be a null pointer
+		ID3DBlob *mD3DBlobGeometryShader;	///< Direct3D 12 geometry shader blob, can be a null pointer
 
 
 	};

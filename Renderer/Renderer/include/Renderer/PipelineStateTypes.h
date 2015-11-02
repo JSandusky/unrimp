@@ -25,6 +25,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class IProgram;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -43,6 +52,7 @@ namespace Renderer
 	*/
 	struct PipelineState
 	{
+		IProgram* program;	///< Program used by the pipeline state (pipeline state instances keep a reference to the program)
 	};
 
 

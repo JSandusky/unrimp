@@ -28,13 +28,10 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Direct3D 12
-	/*
 	inline ID3D12PipelineState *PipelineState::getD3D12PipelineState() const
 	{
 		return mD3D12PipelineState;
 	}
-	*/
 
 
 //[-------------------------------------------------------]

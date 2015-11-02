@@ -28,13 +28,10 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Direct3D 12
-	/*
-	inline ID3D12PixelShader *FragmentShaderHlsl::getD3D12PixelShader() const
+	inline ID3DBlob *FragmentShaderHlsl::getD3DBlobFragmentShader() const
 	{
-		return mD3D12PixelShader;
+		return mD3DBlobFragmentShader;
 	}
-	*/
 
 
 //[-------------------------------------------------------]

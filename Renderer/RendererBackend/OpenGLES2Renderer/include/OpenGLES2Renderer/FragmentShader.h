@@ -51,7 +51,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract OpenGL ES 2 fragment shader ("pixel shader" in Direct3D terminology) interface
+	*    Abstract OpenGL ES 2 fragment shader interface (FS, "pixel shader" in Direct3D terminology)
 	*/
 	class FragmentShader : public Renderer::IFragmentShader
 	{

@@ -33,7 +33,8 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-//struct ID3D12HullShader;	// TODO(co) Direct3D 12 update
+typedef __interface ID3D10Blob *LPD3D10BLOB;
+typedef ID3D10Blob ID3DBlob;
 
 
 //[-------------------------------------------------------]
@@ -60,7 +61,7 @@ namespace Direct3D12Renderer
 	public:
 		/**
 		*  @brief
-		*    Constructor for creating a tessellation control shader ("hull shader" in Direct3D terminology) from shader bytecode
+		*    Constructor for creating a tessellation control shader from shader bytecode
 		*
 		*  @param[in] direct3D12Renderer
 		*    Owner Direct3D 12 renderer instance
@@ -73,7 +74,7 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Constructor for creating a tessellation control shader ("hull shader" in Direct3D terminology) from shader source code
+		*    Constructor for creating a tessellation control shader from shader source code
 		*
 		*  @param[in] direct3D12Renderer
 		*    Owner Direct3D 12 renderer instance
@@ -90,20 +91,12 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D 12 hull shader
+		*    Return the Direct3D 12 hull shader blob
 		*
 		*  @return
-		*    Direct3D 12 hull shader, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
+		*    Direct3D 12 hull shader blob, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		// TODO(co) Direct3D 12 update
-		//inline ID3D12HullShader *getD3D12HullShader() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void setDebugName(const char *name) override;
+		inline ID3DBlob *getD3DBlobHullShader() const;
 
 
 	//[-------------------------------------------------------]
@@ -117,8 +110,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Direct3D 12 update
-		//ID3D12HullShader *mD3D12HullShader;	///< Direct3D 12 hull shader, can be a null pointer
+		ID3DBlob *mD3DBlobHullShader;	///< Direct3D 12 hull shader blob, can be a null pointer
 
 
 	};

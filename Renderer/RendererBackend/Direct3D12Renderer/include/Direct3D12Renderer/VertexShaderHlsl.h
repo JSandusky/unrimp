@@ -35,7 +35,6 @@
 //[-------------------------------------------------------]
 typedef __interface ID3D10Blob *LPD3D10BLOB;
 typedef ID3D10Blob ID3DBlob;
-//struct ID3D12VertexShader;	// TODO(co) Direct3D 12 update
 
 
 //[-------------------------------------------------------]
@@ -99,23 +98,6 @@ namespace Direct3D12Renderer
 		*/
 		inline ID3DBlob *getD3DBlobVertexShader() const;
 
-		/**
-		*  @brief
-		*    Return the Direct3D 12 vertex shader
-		*
-		*  @return
-		*    Direct3D 12 vertex shader, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
-		*/
-		// TODO(co) Direct3D 12 update
-		//inline ID3D12VertexShader *getD3D12VertexShader() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void setDebugName(const char *name) override;
-
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
@@ -128,9 +110,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3DBlob		   *mD3DBlobVertexShader;	///< Direct3D 12 vertex shader blob, can be a null pointer
-		// TODO(co) Direct3D 12 update
-		//ID3D12VertexShader *mD3D12VertexShader;		///< Direct3D 12 vertex shader, can be a null pointer
+		ID3DBlob *mD3DBlobVertexShader;	///< Direct3D 12 vertex shader blob, can be a null pointer
 
 
 	};

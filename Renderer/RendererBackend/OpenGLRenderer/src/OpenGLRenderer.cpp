@@ -580,6 +580,9 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::setPipelineState(Renderer::IPipelineState*)
 	{
 		// TODO(co) Implement me
+
+		// Set the used program
+		// setProgram((nullptr != pipelineState) ? pipelineState->program : nullptr);
 	}
 
 	void OpenGLRenderer::setProgram(Renderer::IProgram *program)

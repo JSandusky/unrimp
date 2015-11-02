@@ -33,7 +33,8 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-// struct ID3D12PixelShader;	// TODO(co) Direct3D 12
+typedef __interface ID3D10Blob *LPD3D10BLOB;
+typedef ID3D10Blob ID3DBlob;
 
 
 //[-------------------------------------------------------]
@@ -48,7 +49,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    HLSL fragment shader ("pixel shader" in Direct3D terminology) class
+	*    HLSL fragment shader class (FS, "pixel shader" in Direct3D terminology)
 	*/
 	class FragmentShaderHlsl : public FragmentShader
 	{
@@ -90,20 +91,12 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D 12 pixel shader
+		*    Return the Direct3D 12 fragment shader blob
 		*
 		*  @return
-		*    Direct3D 12 pixel shader, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
+		*    Direct3D 12 fragment shader blob, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		// TODO(co) Direct3D 12
-		// inline ID3D12PixelShader *getD3D12PixelShader() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void setDebugName(const char *name) override;
+		inline ID3DBlob *getD3DBlobFragmentShader() const;
 
 
 	//[-------------------------------------------------------]
@@ -117,8 +110,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Direct3D 12
-		//ID3D12PixelShader *mD3D12PixelShader;	///< Direct3D 12 pixel shader, can be a null pointer
+		ID3DBlob *mD3DBlobFragmentShader;	///< Direct3D 12 fragment shader blob, can be a null pointer
 
 
 	};

@@ -28,13 +28,10 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Direct3D 12 update
-	/*
-	inline ID3D12DomainShader *TessellationEvaluationShaderHlsl::getD3D12DomainShader() const
+	inline ID3DBlob *TessellationEvaluationShaderHlsl::getD3DBlobDomainShader() const
 	{
-		return mD3D12DomainShader;
+		return mD3DBlobDomainShader;
 	}
-	*/
 
 
 //[-------------------------------------------------------]

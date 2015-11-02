@@ -22,9 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/TessellationEvaluationShaderHlsl.h"
-#include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D12Renderer/D3D12.h"
-#include "Direct3D12Renderer/Direct3D12Renderer.h"
+#include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 #include "Direct3D12Renderer/ShaderLanguageHlsl.h"
 
 
@@ -38,67 +36,32 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationEvaluationShaderHlsl::TessellationEvaluationShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *, uint32_t) :
-		TessellationEvaluationShader(direct3D12Renderer)
-	//	mD3D12DomainShader(nullptr)	// TODO(co) Direct3D 12 update
+	TessellationEvaluationShaderHlsl::TessellationEvaluationShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+		TessellationEvaluationShader(direct3D12Renderer),
+		mD3DBlobDomainShader(nullptr)
 	{
-		// Create the Direct3D 12 domain shader
-		// TODO(co) Direct3D 12 update
-		// direct3D12Renderer.getD3D12Device()->CreateDomainShader(bytecode, numberOfBytes, nullptr, &mD3D12DomainShader);
-
-		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
+		// Backup the domain shader bytecode
+		D3DCreateBlob(numberOfBytes, &mD3DBlobDomainShader);
+		memcpy(mD3DBlobDomainShader->GetBufferPointer(), bytecode, numberOfBytes);
 	}
 
 	TessellationEvaluationShaderHlsl::TessellationEvaluationShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		TessellationEvaluationShader(direct3D12Renderer)
-	//	mD3D12DomainShader(nullptr)	// TODO(co) Direct3D 12 update
+		TessellationEvaluationShader(direct3D12Renderer),
+		mD3DBlobDomainShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the domain shader
-		ID3DBlob *d3dBlob = ShaderLanguageHlsl::loadShader("ds_5_0", sourceCode, nullptr);
-		if (nullptr != d3dBlob)
-		{
-			// TODO(co) Direct3D 12 update
-			// Create the Direct3D 12 domain shader
-			// direct3D12Renderer.getD3D12Device()->CreateDomainShader(d3dBlob->GetBufferPointer(), d3dBlob->GetBufferSize(), nullptr, &mD3D12DomainShader);
-
-			// Release the Direct3D 12 shader binary large object
-			d3dBlob->Release();
-		}
+		mD3DBlobDomainShader = ShaderLanguageHlsl::loadShader("ds_5_0", sourceCode, nullptr);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
 	}
 
 	TessellationEvaluationShaderHlsl::~TessellationEvaluationShaderHlsl()
 	{
-		// Release the Direct3D 12 domain shader
-		// TODO(co) Direct3D 12 update
-		/*
-		if (nullptr != mD3D12DomainShader)
+		// Release the Direct3D 12 shader binary large object
+		if (nullptr != mD3DBlobDomainShader)
 		{
-			mD3D12DomainShader->Release();
+			mD3DBlobDomainShader->Release();
 		}
-		*/
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	void TessellationEvaluationShaderHlsl::setDebugName(const char *)
-	{
-		// TODO(co) Direct3D 12 update
-		/*
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
-			// Valid Direct3D 12 domain shader?
-			if (nullptr != mD3D12DomainShader)
-			{
-				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D12DomainShader->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12DomainShader->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
-			}
-		#endif
-		*/
 	}
 
 

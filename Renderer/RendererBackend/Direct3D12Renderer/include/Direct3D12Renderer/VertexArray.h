@@ -33,7 +33,6 @@
 //[-------------------------------------------------------]
 //[ Forward declaration                                   ]
 //[-------------------------------------------------------]
-struct ID3D12PipelineState;
 struct D3D12_VERTEX_BUFFER_VIEW;
 struct ID3D12GraphicsCommandList;
 namespace Renderer
@@ -112,7 +111,6 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D12PipelineState*	  mD3D12PipelineState;		// TODO(co) Just a first test
 		IndexBuffer				 *mIndexBuffer;				///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		// Direct3D 12 input slots
 		uint32_t				  mNumberOfSlots;			///< Number of used Direct3D 12 input slots (type "UINT" not used in here in order to keep the header slim)

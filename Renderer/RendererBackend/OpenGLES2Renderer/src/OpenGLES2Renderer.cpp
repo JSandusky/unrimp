@@ -411,6 +411,9 @@ namespace OpenGLES2Renderer
 	void OpenGLES2Renderer::setPipelineState(Renderer::IPipelineState*)
 	{
 		// TODO(co) Implement me
+
+		// Set the used program
+		// setProgram((nullptr != pipelineState) ? pipelineState->program : nullptr);
 	}
 
 	void OpenGLES2Renderer::setProgram(Renderer::IProgram *program)

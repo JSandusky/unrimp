@@ -42,6 +42,7 @@
 *    - Vertex buffer object (VBO)
 *    - Vertex array object (VAO)
 *    - Vertex shader (VS) and fragment shader (FS)
+*    - Pipeline state object (PSO)
 *    - Debug methods: When using Direct3D <11.1, those methods map to the Direct3D 9 PIX functions
 *      (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
 */
@@ -83,9 +84,8 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IProgramPtr	    mProgram;		///< Program, can be a null pointer
-	Renderer::IVertexArrayPtr   mVertexArray;	///< Vertex array object (VAO), can be a null pointer
 	Renderer::IPipelineStatePtr mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
+	Renderer::IVertexArrayPtr   mVertexArray;	///< Vertex array object (VAO), can be a null pointer
 
 
 };

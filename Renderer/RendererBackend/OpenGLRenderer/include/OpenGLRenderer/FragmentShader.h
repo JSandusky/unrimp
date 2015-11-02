@@ -51,7 +51,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract OpenGL fragment shader ("pixel shader" in Direct3D terminology) interface
+	*    Abstract OpenGL fragment shader interface (FS, "pixel shader" in Direct3D terminology)
 	*/
 	class FragmentShader : public Renderer::IFragmentShader
 	{

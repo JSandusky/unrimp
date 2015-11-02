@@ -22,9 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/GeometryShaderHlsl.h"
-#include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D12Renderer/D3D12.h"
-#include "Direct3D12Renderer/Direct3D12Renderer.h"
+#include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 #include "Direct3D12Renderer/ShaderLanguageHlsl.h"
 
 
@@ -38,67 +36,32 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *, uint32_t) :
-		GeometryShader(direct3D12Renderer)
-		//mD3D12GeometryShader(nullptr)	// TODO(co) Direct3D 12
+	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+		GeometryShader(direct3D12Renderer),
+		mD3DBlobGeometryShader(nullptr)
 	{
-		// Create the Direct3D 12 geometry shader
-		// TODO(co) Direct3D 12
-		// direct3D12Renderer.getD3D12Device()->CreateGeometryShader(bytecode, numberOfBytes, nullptr, &mD3D12GeometryShader);
-
-		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
+		// Backup the geometry shader bytecode
+		D3DCreateBlob(numberOfBytes, &mD3DBlobGeometryShader);
+		memcpy(mD3DBlobGeometryShader->GetBufferPointer(), bytecode, numberOfBytes);
 	}
 
 	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		GeometryShader(direct3D12Renderer)
-		// mD3D12GeometryShader(nullptr)	// TODO(co) Direct3D 12
+		GeometryShader(direct3D12Renderer),
+		mD3DBlobGeometryShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the geometry shader
-		ID3DBlob *d3dBlob = ShaderLanguageHlsl::loadShader("gs_5_0", sourceCode, nullptr);
-		if (nullptr != d3dBlob)
-		{
-			// TODO(co) Direct3D 12
-			// Create the Direct3D 12 geometry shader
-			// direct3D12Renderer.getD3D12Device()->CreateGeometryShader(d3dBlob->GetBufferPointer(), d3dBlob->GetBufferSize(), nullptr, &mD3D12GeometryShader);
-
-			// Release the Direct3D 12 shader binary large object
-			d3dBlob->Release();
-		}
+		mD3DBlobGeometryShader = ShaderLanguageHlsl::loadShader("gs_5_0", sourceCode, nullptr);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
 	}
 
 	GeometryShaderHlsl::~GeometryShaderHlsl()
 	{
-		// Release the Direct3D 12 geometry shader
-		// TODO(co) Direct3D 12
-		/*
-		if (nullptr != mD3D12GeometryShader)
+		// Release the Direct3D 12 shader binary large object
+		if (nullptr != mD3DBlobGeometryShader)
 		{
-			mD3D12GeometryShader->Release();
+			mD3DBlobGeometryShader->Release();
 		}
-		*/
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	void GeometryShaderHlsl::setDebugName(const char *)
-	{
-		// TODO(co) Direct3D 12
-		/*
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
-			// Valid Direct3D 12 geometry shader?
-			if (nullptr != mD3D12GeometryShader)
-			{
-				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D12GeometryShader->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12GeometryShader->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
-			}
-		#endif
-		*/
 	}
 
 

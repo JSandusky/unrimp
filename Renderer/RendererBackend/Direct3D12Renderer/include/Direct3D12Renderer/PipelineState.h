@@ -33,8 +33,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+struct ID3D12PipelineState;
 namespace Renderer
 {
+	class IProgram;
 	struct PipelineState;
 }
 namespace Direct3D12Renderer
@@ -89,8 +91,7 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The Direct3D 12 pipeline state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		// TODO(co) Direct3D 12
-		//inline ID3D12PipelineState *getD3D12PipelineState() const;
+		inline ID3D12PipelineState *getD3D12PipelineState() const;
 
 
 	//[-------------------------------------------------------]
@@ -104,8 +105,8 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Direct3D 12
-		// ID3D12PipelineState *mD3D12PipelineState;	///< Direct3D 12 pipeline state, can be a null pointer
+		ID3D12PipelineState *mD3D12PipelineState;	///< Direct3D 12 pipeline state, can be a null pointer
+		Renderer::IProgram*  mProgram;
 
 
 	};

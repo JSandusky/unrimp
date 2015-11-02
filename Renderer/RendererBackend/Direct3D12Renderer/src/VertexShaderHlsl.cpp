@@ -22,9 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/VertexShaderHlsl.h"
-#include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D12Renderer/D3D12.h"
-#include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 #include "Direct3D12Renderer/ShaderLanguageHlsl.h"
 
@@ -36,45 +33,24 @@ namespace Direct3D12Renderer
 {
 
 
-	// TODO(co) Just a first test
-	extern ID3DBlob* g_D3dBlobErrorVertexShader;
-
-
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
 		VertexShader(direct3D12Renderer),
 		mD3DBlobVertexShader(nullptr)
-	//	mD3D12VertexShader(nullptr)	// TODO(co) Direct3D 12 update
 	{
 		// Backup the vertex shader bytecode
 		D3DCreateBlob(numberOfBytes, &mD3DBlobVertexShader);
 		memcpy(mD3DBlobVertexShader->GetBufferPointer(), bytecode, numberOfBytes);
-
-		// TODO(co) Direct3D 12 update
-		/*
-		// Create the Direct3D 12 vertex shader
-		direct3D12Renderer.getD3D12Device()->CreateVertexShader(bytecode, numberOfBytes, nullptr, &mD3D12VertexShader);
-
-		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
-		*/
 	}
 
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
 		VertexShader(direct3D12Renderer),
 		mD3DBlobVertexShader(nullptr)
-	//	mD3D12VertexShader(nullptr)// TODO(co) Direct3D 12 update
 	{
 		// Create the Direct3D 12 binary large object for the vertex shader
 		mD3DBlobVertexShader = ShaderLanguageHlsl::loadShader("vs_5_0", sourceCode, nullptr);
-		if (nullptr != mD3DBlobVertexShader)
-		{
-			// TODO(co) Direct3D 12 update
-			g_D3dBlobErrorVertexShader = mD3DBlobVertexShader;
-			// Create the Direct3D 12 vertex shader
-			// direct3D12Renderer.getD3D12Device()->CreateVertexShader(mD3DBlobVertexShader->GetBufferPointer(), mD3DBlobVertexShader->GetBufferSize(), nullptr, &mD3D12VertexShader);
-		}
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
 	}
@@ -86,36 +62,6 @@ namespace Direct3D12Renderer
 		{
 			mD3DBlobVertexShader->Release();
 		}
-
-		// TODO(co) Direct3D 12 update
-		/*
-		// Release the Direct3D 12 vertex shader
-		if (nullptr != mD3D12VertexShader)
-		{
-			mD3D12VertexShader->Release();
-		}
-		*/
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	void VertexShaderHlsl::setDebugName(const char *)
-	{
-		// TODO(co) Direct3D 12 update
-		/*
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
-			// Valid Direct3D 12 vertex shader?
-			if (nullptr != mD3D12VertexShader)
-			{
-				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D12VertexShader->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12VertexShader->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
-			}
-		#endif
-		*/
 	}
 
 

@@ -39,6 +39,7 @@
 #include "Direct3D12Renderer/UniformBuffer.h"
 #include "Direct3D12Renderer/TextureBuffer.h"
 #include "Direct3D12Renderer/PipelineState.h"
+#include "Direct3D12Renderer/PipelineState.h"
 #include "Direct3D12Renderer/Texture2DArray.h"
 #include "Direct3D12Renderer/RasterizerState.h"
 #include "Direct3D12Renderer/VertexShaderHlsl.h"
@@ -645,9 +646,20 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::setPipelineState(Renderer::IPipelineState *)
+	void Direct3D12Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
-		// TODO(co) Implement me
+		if (nullptr != pipelineState)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
+
+			// Set pipeline state
+			mD3D12GraphicsCommandList->SetPipelineState(static_cast<PipelineState*>(pipelineState)->getD3D12PipelineState());
+		}
+		else
+		{
+			// TODO(co) Handle this situation?
+		}
 	}
 
 	void Direct3D12Renderer::setProgram(Renderer::IProgram *)

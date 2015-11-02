@@ -63,7 +63,9 @@ void FirstTriangle::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			{ // Create the program
+			// Create the program
+			Renderer::IProgramPtr program;
+			{
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
@@ -81,12 +83,12 @@ void FirstTriangle::onInitialization()
 				RENDERER_SET_RESOURCE_DEBUG_NAME(fragmentShader, "Triangle FS")
 
 				// Create the program
-				mProgram = shaderLanguage->createProgram(vertexShader, fragmentShader);
-				RENDERER_SET_RESOURCE_DEBUG_NAME(mProgram, "Triangle program")
+				program = shaderLanguage->createProgram(vertexShader, fragmentShader);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(program, "Triangle program")
 			}
 
 			// Is there a valid program?
-			if (nullptr != mProgram)
+			if (nullptr != program)
 			{
 				// Create the vertex buffer object (VBO)
 				// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
@@ -116,6 +118,13 @@ void FirstTriangle::onInitialization()
 					}
 				};
 
+				{ // Create the pipeline state object (PSO)
+					Renderer::PipelineState pipelineState;
+					pipelineState.program = program;
+					mPipelineState = renderer->createPipelineState(pipelineState);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(mPipelineState, "Triangle PSO")
+				}
+
 				{ // Create vertex array object (VAO)
 				  // -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
 				  // -> This means that there's no need to keep an own vertex buffer object (VBO) reference
@@ -129,14 +138,8 @@ void FirstTriangle::onInitialization()
 							sizeof(float) * 2	// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+					mVertexArray = program->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexArray, "Triangle VAO")
-				}
-
-				{ // Create the pipeline state object (PSO)
-					Renderer::PipelineState pipelineState;
-					mPipelineState = renderer->createPipelineState(pipelineState);
-					RENDERER_SET_RESOURCE_DEBUG_NAME(mPipelineState, "Triangle PSO")
 				}
 			}
 		}
@@ -152,9 +155,8 @@ void FirstTriangle::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
-	mPipelineState = nullptr;
 	mVertexArray = nullptr;
-	mProgram = nullptr;
+	mPipelineState = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -167,7 +169,7 @@ void FirstTriangle::onDraw()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mProgram)
+	if (nullptr != renderer && nullptr != mPipelineState)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -182,9 +184,6 @@ void FirstTriangle::onDraw()
 
 			// Set the used pipeline state object (PSO)
 			renderer->setPipelineState(mPipelineState);
-
-			// Set the used program
-			renderer->setProgram(mProgram);
 
 			{ // Setup input assembly (IA)
 				// Set the used vertex array

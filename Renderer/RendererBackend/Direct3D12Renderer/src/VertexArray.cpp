@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/VertexArray.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D12Renderer/D3D12X.h"
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/IndexBuffer.h"
 #include "Direct3D12Renderer/VertexBuffer.h"
@@ -37,50 +36,17 @@
 namespace Direct3D12Renderer
 {
 
-	// TODO(co) Just a first test
-	ID3DBlob* g_D3dBlobErrorVertexShader = nullptr;
-	ID3DBlob* g_D3dBlobErrorFragmentShader = nullptr;
-
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	VertexArray::VertexArray(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D12Renderer),
-		mD3D12PipelineState(nullptr),
 		mIndexBuffer(indexBuffer),
 		mNumberOfSlots(numberOfVertexBuffers),
 		mD3D12VertexBufferViews(nullptr),
 		mVertexBuffers(nullptr)
 	{
-		{ // TODO(co) Just a first test
-			// Define the vertex input layout.
-			D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
-			{
-				{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-			};
-
-			// Describe and create the graphics pipeline state object (PSO)
-			D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-			psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
-			psoDesc.pRootSignature = direct3D12Renderer.getD3D12RootSignature();
-			psoDesc.VS = { reinterpret_cast<UINT8*>(g_D3dBlobErrorVertexShader->GetBufferPointer()), g_D3dBlobErrorVertexShader->GetBufferSize() };
-			psoDesc.PS = { reinterpret_cast<UINT8*>(g_D3dBlobErrorFragmentShader->GetBufferPointer()), g_D3dBlobErrorFragmentShader->GetBufferSize() };
-			psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-			psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-			psoDesc.DepthStencilState.DepthEnable = FALSE;
-			psoDesc.DepthStencilState.StencilEnable = FALSE;
-			psoDesc.SampleMask = UINT_MAX;
-			psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-			psoDesc.NumRenderTargets = 1;
-			psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-			psoDesc.SampleDesc.Count = 1;
-			if (FAILED(direct3D12Renderer.getD3D12Device()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&mD3D12PipelineState))))
-			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the pipeline state object")
-			}
-		}
-
 		// Add a reference to the given index buffer
 		if (nullptr != mIndexBuffer)
 		{
@@ -116,12 +82,6 @@ namespace Direct3D12Renderer
 
 	VertexArray::~VertexArray()
 	{
-		// TODO(co) This is only for the Direct3D 12 renderer backend kickoff
-		if (nullptr != mD3D12PipelineState)
-		{
-			mD3D12PipelineState->Release();
-		}
-
 		// Release the index buffer reference
 		if (nullptr != mIndexBuffer)
 		{
@@ -151,7 +111,6 @@ namespace Direct3D12Renderer
 
 	void VertexArray::setDirect3DIASetInputLayoutAndStreamSource(ID3D12GraphicsCommandList& d3d12GraphicsCommandList) const
 	{
-		d3d12GraphicsCommandList.SetPipelineState(mD3D12PipelineState);
 		d3d12GraphicsCommandList.IASetVertexBuffers(0, mNumberOfSlots, mD3D12VertexBufferViews);
 
 		// TODO(co) Direct3D 12 update

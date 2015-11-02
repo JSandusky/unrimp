@@ -642,6 +642,9 @@ namespace Direct3D9Renderer
 	void Direct3D9Renderer::setPipelineState(Renderer::IPipelineState*)
 	{
 		// TODO(co) Implement me
+
+		// Set the used program
+		// setProgram((nullptr != pipelineState) ? pipelineState->program : nullptr);
 	}
 
 	void Direct3D9Renderer::setProgram(Renderer::IProgram *program)

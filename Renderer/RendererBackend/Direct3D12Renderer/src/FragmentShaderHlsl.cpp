@@ -22,9 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/FragmentShaderHlsl.h"
-#include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D12Renderer/D3D12.h"
-#include "Direct3D12Renderer/Direct3D12Renderer.h"
+#include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 #include "Direct3D12Renderer/ShaderLanguageHlsl.h"
 
 
@@ -35,76 +33,35 @@ namespace Direct3D12Renderer
 {
 
 
-	// TODO(co) Just a first test
-	extern ID3DBlob* g_D3dBlobErrorFragmentShader;
-
-
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *, uint32_t) :
-		FragmentShader(direct3D12Renderer)
-		// mD3D12PixelShader(nullptr)	// TODO(co) Direct3D 12
+	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
+		FragmentShader(direct3D12Renderer),
+		mD3DBlobFragmentShader(nullptr)
 	{
-		// Create the Direct3D 12 vertex shader
-		// TODO(co) Direct3D 12
-		// direct3D12Renderer.getD3D12Device()->CreatePixelShader(bytecode, numberOfBytes, nullptr, &mD3D12PixelShader);
-
-		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
+		// Backup the fragment shader bytecode
+		D3DCreateBlob(numberOfBytes, &mD3DBlobFragmentShader);
+		memcpy(mD3DBlobFragmentShader->GetBufferPointer(), bytecode, numberOfBytes);
 	}
 
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		FragmentShader(direct3D12Renderer)
-		// mD3D12PixelShader(nullptr)	// TODO(co) Direct3D 12
+		FragmentShader(direct3D12Renderer),
+		mD3DBlobFragmentShader(nullptr)
 	{
-		// Create the Direct3D 12 binary large object for the pixel shader
-		ID3DBlob *d3dBlob = ShaderLanguageHlsl::loadShader("ps_5_0", sourceCode, nullptr);
-		if (nullptr != d3dBlob)
-		{
-			// Create the Direct3D 12 pixel shader
-			// direct3D12Renderer.getD3D12Device()->CreatePixelShader(d3dBlob->GetBufferPointer(), d3dBlob->GetBufferSize(), nullptr, &mD3D12PixelShader);
-
-			// Release the Direct3D 12 shader binary large object
-			g_D3dBlobErrorFragmentShader = d3dBlob;
-			//d3dBlob->Release();
-		}
+		// Create the Direct3D 12 binary large object for the fragment shader
+		mD3DBlobFragmentShader = ShaderLanguageHlsl::loadShader("ps_5_0", sourceCode, nullptr);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
 	}
 
 	FragmentShaderHlsl::~FragmentShaderHlsl()
 	{
-		g_D3dBlobErrorFragmentShader->Release();
-
-		// Release the Direct3D 12 pixel shader
-		// TODO(co) Direct3D 12
-		/*
-		if (nullptr != mD3D12PixelShader)
+		// Release the Direct3D 12 shader binary large object
+		if (nullptr != mD3DBlobFragmentShader)
 		{
-			mD3D12PixelShader->Release();
+			mD3DBlobFragmentShader->Release();
 		}
-		*/
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	void FragmentShaderHlsl::setDebugName(const char *)
-	{
-		// TODO(co) Direct3D 12
-		/*
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
-			// Valid Direct3D 12 pixel shader?
-			if (nullptr != mD3D12PixelShader)
-			{
-				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D12PixelShader->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12PixelShader->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
-			}
-		#endif
-		*/
 	}
 
 

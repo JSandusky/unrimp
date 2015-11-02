@@ -34,7 +34,8 @@
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FirstTexture::FirstTexture(const char *rendererName) :
-	IApplicationRenderer(rendererName)
+	IApplicationRenderer(rendererName),
+	mTextureUnit(0)
 {
 	// Nothing to do in here
 }
@@ -102,7 +103,9 @@ void FirstTexture::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			{ // Create the program
+			// Create the program
+			Renderer::IProgramPtr program;
+			{
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
@@ -113,13 +116,13 @@ void FirstTexture::onInitialization()
 				#include "FirstTexture_Null.h"
 
 				// Create the program
-				mProgram = shaderLanguage->createProgram(
+				program = shaderLanguage->createProgram(
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
 			// Is there a valid program?
-			if (nullptr != mProgram)
+			if (nullptr != program)
 			{
 				// Create the vertex buffer object (VBO)
 				// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
@@ -131,12 +134,7 @@ void FirstTexture::onInitialization()
 				};
 				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
-				// Create vertex array object (VAO)
-				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-				// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-				// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-				//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+				// Vertex input layout
 				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 				{
 					{ // Attribute 0
@@ -152,6 +150,19 @@ void FirstTexture::onInitialization()
 						0										// instancesPerElement (uint32_t)
 					}
 				};
+
+				{ // Create the pipeline state object (PSO)
+					Renderer::PipelineState pipelineState;
+					pipelineState.program = program;
+					mPipelineState = renderer->createPipelineState(pipelineState);
+				}
+
+				// Create vertex array object (VAO)
+				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+				// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+				// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+				//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
 				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 				{
 					{ // Vertex buffer 0
@@ -159,7 +170,17 @@ void FirstTexture::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mVertexArray = program->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+
+				// Tell the renderer API which texture should be bound to which texture unit (texture unit 0 by default)
+				// -> When using OpenGL or OpenGL ES 2 this is required
+				// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
+				//    in GLSL shader) , for backward compatibility we don't use it in here
+				// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
+				//    to use is usually defined directly within the shader by using the "register"-keyword
+				// -> Usually, this should only be done once during initialization, this example does this
+				//    every frame to keep it local for better overview
+				mTextureUnit = program->setTextureUnit(program->getUniformHandle("DiffuseMap"), 0);
 			}
 		}
 
@@ -175,7 +196,7 @@ void FirstTexture::onDeinitialization()
 
 	// Release the used resources
 	mVertexArray = nullptr;
-	mProgram = nullptr;
+	mPipelineState = nullptr;
 	mSamplerState = nullptr;
 	mTexture2D = nullptr;
 
@@ -190,7 +211,7 @@ void FirstTexture::onDraw()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mProgram)
+	if (nullptr != renderer && nullptr != mPipelineState)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -203,8 +224,8 @@ void FirstTexture::onDraw()
 			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
 
-			// Set the used program
-			renderer->setProgram(mProgram);
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineState);
 
 			{ // Setup input assembly (IA)
 				// Set the used vertex array
@@ -214,22 +235,12 @@ void FirstTexture::onDraw()
 				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 			}
 
-			{ // Set diffuse map (texture unit 0 by default)
-				// Tell the renderer API which texture should be bound to which texture unit
-				// -> When using OpenGL or OpenGL ES 2 this is required
-				// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
-				//    in GLSL shader) , for backward compatibility we don't use it in here
-				// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
-				//    to use is usually defined directly within the shader by using the "register"-keyword
-				// -> Usually, this should only be done once during initialization, this example does this
-				//    every frame to keep it local for better overview
-				const uint32_t unit = mProgram->setTextureUnit(mProgram->getUniformHandle("DiffuseMap"), 0);
-
+			{ // Set diffuse map
 				// Set the used texture at the texture unit
-				renderer->fsSetTexture(unit, mTexture2D);
+				renderer->fsSetTexture(mTextureUnit, mTexture2D);
 
 				// Set the used sampler state at the texture unit
-				renderer->fsSetSamplerState(unit, mSamplerState);
+				renderer->fsSetSamplerState(mTextureUnit, mSamplerState);
 			}
 
 			// Render the specified geometric primitive, based on an array of vertices

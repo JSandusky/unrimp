@@ -51,7 +51,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract Direct3D 9 fragment shader ("pixel shader" in Direct3D terminology) interface
+	*    Abstract Direct3D 9 fragment shader interface (FS, "pixel shader" in Direct3D terminology)
 	*/
 	class FragmentShader : public Renderer::IFragmentShader
 	{
