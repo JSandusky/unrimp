@@ -80,6 +80,7 @@ namespace Direct3D12Renderer
 		mDirect3D12RuntimeLinking(new Direct3D12RuntimeLinking()),
 		mDxgiFactory4(nullptr),
 		mD3D12Device(nullptr),
+		mD3D12RootSignature(nullptr),
 		mD3D12CommandQueue(nullptr),
 		mD3D12CommandAllocator(nullptr),
 		mD3D12GraphicsCommandList(nullptr),
@@ -142,6 +143,27 @@ namespace Direct3D12Renderer
 			// Is there a valid Direct3D 12 device instance?
 			if (nullptr != mD3D12Device)
 			{
+				{ // Create an empty root signature
+					CD3DX12_ROOT_SIGNATURE_DESC d3d12XRootSignatureDesc;
+					d3d12XRootSignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+					ID3DBlob* d3dBlobSignature = nullptr;
+					ID3DBlob* d3dBlobError = nullptr;
+					if (SUCCEEDED(D3D12SerializeRootSignature(&d3d12XRootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &d3dBlobSignature, &d3dBlobError)))
+					{
+						if (FAILED(mD3D12Device->CreateRootSignature(0, d3dBlobSignature->GetBufferPointer(), d3dBlobSignature->GetBufferSize(), IID_PPV_ARGS(&mD3D12RootSignature))))
+						{
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the root signature instance")
+						}
+						d3dBlobSignature->Release();
+					}
+					else
+					{
+						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the root signature instance")
+						d3dBlobError->Release();
+					}
+				}
+
 				// Describe and create the command queue
 				D3D12_COMMAND_QUEUE_DESC d3d12CommandQueueDesc;
 				d3d12CommandQueueDesc.Type		= D3D12_COMMAND_LIST_TYPE_DIRECT;
@@ -267,6 +289,12 @@ namespace Direct3D12Renderer
 		{
 			mD3D12CommandQueue->Release();
 			mD3D12CommandQueue = nullptr;
+		}
+
+		// Release the Direct3D 12 root signature, in case we have one
+		if (nullptr != mD3D12RootSignature)
+		{
+			mD3D12RootSignature->Release();
 		}
 
 		// Release the Direct3D 12 device we've created
@@ -1851,6 +1879,8 @@ namespace Direct3D12Renderer
 					m_scissorRect.bottom = static_cast<LONG>(height);
 					mD3D12GraphicsCommandList->RSSetScissorRects(1, &m_scissorRect);
 				}
+
+				mD3D12GraphicsCommandList->SetGraphicsRootSignature(mD3D12RootSignature);
 
 				// Done
 				result = true;

@@ -47,35 +47,12 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	VertexArray::VertexArray(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D12Renderer),
-		mD3D12RootSignature(nullptr),
 		mD3D12PipelineState(nullptr),
 		mIndexBuffer(indexBuffer),
 		mNumberOfSlots(numberOfVertexBuffers),
 		mD3D12VertexBufferViews(nullptr),
 		mVertexBuffers(nullptr)
 	{
-		// TODO(co) This is only for the Direct3D 12 renderer backend kickoff. I'am sure the root signature must be integrated in another more efficient way.
-		{ // Create an empty root signature
-			CD3DX12_ROOT_SIGNATURE_DESC d3d12XRootSignatureDesc;
-			d3d12XRootSignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-			ID3DBlob* d3dBlobSignature = nullptr;
-			ID3DBlob* d3dBlobError = nullptr;
-			if (SUCCEEDED(D3D12SerializeRootSignature(&d3d12XRootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &d3dBlobSignature, &d3dBlobError)))
-			{
-				if (FAILED(direct3D12Renderer.getD3D12Device()->CreateRootSignature(0, d3dBlobSignature->GetBufferPointer(), d3dBlobSignature->GetBufferSize(), IID_PPV_ARGS(&mD3D12RootSignature))))
-				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the root signature instance")
-				}
-				d3dBlobSignature->Release();
-			}
-			else
-			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the root signature instance")
-				d3dBlobError->Release();
-			}
-		}
-
 		{ // TODO(co) Just a first test
 			// Define the vertex input layout.
 			D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -86,7 +63,7 @@ namespace Direct3D12Renderer
 			// Describe and create the graphics pipeline state object (PSO).
 			D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 			psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
-			psoDesc.pRootSignature = mD3D12RootSignature;
+			psoDesc.pRootSignature = direct3D12Renderer.getD3D12RootSignature();
 			psoDesc.VS = { reinterpret_cast<UINT8*>(g_D3dBlobErrorVertexShader->GetBufferPointer()), g_D3dBlobErrorVertexShader->GetBufferSize() };
 			psoDesc.PS = { reinterpret_cast<UINT8*>(g_D3dBlobErrorFragmentShader->GetBufferPointer()), g_D3dBlobErrorFragmentShader->GetBufferSize() };
 			psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
@@ -140,10 +117,6 @@ namespace Direct3D12Renderer
 	VertexArray::~VertexArray()
 	{
 		// TODO(co) This is only for the Direct3D 12 renderer backend kickoff
-		if (nullptr != mD3D12RootSignature)
-		{
-			mD3D12RootSignature->Release();
-		}
 		if (nullptr != mD3D12PipelineState)
 		{
 			mD3D12PipelineState->Release();
@@ -178,7 +151,6 @@ namespace Direct3D12Renderer
 
 	void VertexArray::setDirect3DIASetInputLayoutAndStreamSource(ID3D12GraphicsCommandList& d3d12GraphicsCommandList) const
 	{
-		d3d12GraphicsCommandList.SetGraphicsRootSignature(mD3D12RootSignature);
 		d3d12GraphicsCommandList.SetPipelineState(mD3D12PipelineState);
 		d3d12GraphicsCommandList.IASetVertexBuffers(0, mNumberOfSlots, mD3D12VertexBufferViews);
 

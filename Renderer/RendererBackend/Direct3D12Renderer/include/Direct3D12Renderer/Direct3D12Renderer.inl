@@ -50,6 +50,11 @@ namespace Direct3D12Renderer
 		return mD3D12Device;
 	}
 
+	inline ID3D12RootSignature *Direct3D12Renderer::getD3D12RootSignature() const
+	{
+		return mD3D12RootSignature;
+	}
+
 	inline ID3D12CommandQueue *Direct3D12Renderer::getD3D12CommandQueue() const
 	{
 		return mD3D12CommandQueue;
