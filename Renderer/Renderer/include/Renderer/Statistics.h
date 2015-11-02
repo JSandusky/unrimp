@@ -83,6 +83,8 @@ namespace Renderer
 		uint32_t currentNumberOfTexture2DArrays;				///< Current number of texture 2D array instances
 		uint32_t numberOfCreatedTexture2DArrays;				///< Number of created texture 2D array instances
 		// IState
+		uint32_t currentNumberOfPipelineStates;					///< Current number of pipeline state (PSO) instances
+		uint32_t numberOfCreatedPipelineStates;					///< Number of created pipeline state (PSO) instances
 		uint32_t currentNumberOfRasterizerStates;				///< Current number of rasterizer state (rasterizer stage (RS)) instances
 		uint32_t numberOfCreatedRasterizerStates;				///< Number of created rasterizer state (rasterizer stage (RS)) instances
 		uint32_t currentNumberOfDepthStencilStates;				///< Current number of depth stencil state (output-merger (OM) stage) instances

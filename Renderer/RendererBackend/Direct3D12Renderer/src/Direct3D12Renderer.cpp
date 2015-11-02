@@ -38,6 +38,7 @@
 #include "Direct3D12Renderer/VertexBuffer.h"
 #include "Direct3D12Renderer/UniformBuffer.h"
 #include "Direct3D12Renderer/TextureBuffer.h"
+#include "Direct3D12Renderer/PipelineState.h"
 #include "Direct3D12Renderer/Texture2DArray.h"
 #include "Direct3D12Renderer/RasterizerState.h"
 #include "Direct3D12Renderer/VertexShaderHlsl.h"
@@ -422,6 +423,11 @@ namespace Direct3D12Renderer
 		return new Texture2DArray(*this, width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
 	}
 
+	Renderer::IPipelineState *Direct3D12Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
+	{
+		return new PipelineState(*this, pipelineState);
+	}
+
 	Renderer::IRasterizerState *Direct3D12Renderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
 	{
 		return new RasterizerState(*this, rasterizerState);
@@ -639,6 +645,11 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
+	void Direct3D12Renderer::setPipelineState(Renderer::IPipelineState *)
+	{
+		// TODO(co) Implement me
+	}
+
 	void Direct3D12Renderer::setProgram(Renderer::IProgram *)
 	{
 		// TODO(co) Direct3D 12 update

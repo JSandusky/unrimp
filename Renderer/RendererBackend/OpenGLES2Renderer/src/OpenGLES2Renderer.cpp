@@ -353,6 +353,12 @@ namespace OpenGLES2Renderer
 		}
 	}
 
+	Renderer::IPipelineState *OpenGLES2Renderer::createPipelineState(const Renderer::PipelineState &)
+	{
+		// TODO(co) Implement me
+		return nullptr;
+	}
+
 	Renderer::IRasterizerState *OpenGLES2Renderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
 	{
 		return new RasterizerState(*this, rasterizerState);
@@ -402,6 +408,11 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
+	void OpenGLES2Renderer::setPipelineState(Renderer::IPipelineState*)
+	{
+		// TODO(co) Implement me
+	}
+
 	void OpenGLES2Renderer::setProgram(Renderer::IProgram *program)
 	{
 		if (nullptr != program)

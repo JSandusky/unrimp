@@ -271,6 +271,12 @@ namespace NullRenderer
 		return new Texture2DArray(*this, width, height, numberOfSlices);
 	}
 
+	Renderer::IPipelineState *NullRenderer::createPipelineState(const Renderer::PipelineState &)
+	{
+		// TODO(co) Implement me
+		return nullptr;
+	}
+
 	Renderer::IRasterizerState *NullRenderer::createRasterizerState(const Renderer::RasterizerState &)
 	{
 		return new RasterizerState(*this);
@@ -320,6 +326,11 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
+	void NullRenderer::setPipelineState(Renderer::IPipelineState*)
+	{
+		// TODO(co) Implement me
+	}
+
 	void NullRenderer::setProgram(Renderer::IProgram *program)
 	{
 		// Nothing to do in here, the following is just for debugging

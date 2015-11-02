@@ -503,6 +503,12 @@ namespace OpenGLRenderer
 		}
 	}
 
+	Renderer::IPipelineState *OpenGLRenderer::createPipelineState(const Renderer::PipelineState &)
+	{
+		// TODO(co) Implement me
+		return nullptr;
+	}
+
 	Renderer::IRasterizerState *OpenGLRenderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
 	{
 		return new RasterizerState(*this, rasterizerState);
@@ -571,6 +577,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
+	void OpenGLRenderer::setPipelineState(Renderer::IPipelineState*)
+	{
+		// TODO(co) Implement me
+	}
+
 	void OpenGLRenderer::setProgram(Renderer::IProgram *program)
 	{
 		// TODO(co) Avoid changing already set program

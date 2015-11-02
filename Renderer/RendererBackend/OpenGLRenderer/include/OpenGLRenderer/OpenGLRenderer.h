@@ -123,6 +123,7 @@ namespace OpenGLRenderer
 		virtual Renderer::ITextureBuffer *createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
 		virtual Renderer::ITexture2D *createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, Renderer::TextureUsage::Enum textureUsage = Renderer::TextureUsage::DEFAULT) override;
 		virtual Renderer::ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, Renderer::TextureUsage::Enum textureUsage = Renderer::TextureUsage::DEFAULT) override;
+		virtual Renderer::IPipelineState *createPipelineState(const Renderer::PipelineState &pipelineState) override;
 		virtual Renderer::IRasterizerState *createRasterizerState(const Renderer::RasterizerState &rasterizerState) override;
 		virtual Renderer::IDepthStencilState *createDepthStencilState(const Renderer::DepthStencilState &depthStencilState) override;
 		virtual Renderer::IBlendState *createBlendState(const Renderer::BlendState &blendState) override;
@@ -137,6 +138,7 @@ namespace OpenGLRenderer
 		//[-------------------------------------------------------]
 		//[ States                                                ]
 		//[-------------------------------------------------------]
+		virtual void setPipelineState(Renderer::IPipelineState *pipelineState) override;
 		virtual void setProgram(Renderer::IProgram *program) override;
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]

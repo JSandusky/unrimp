@@ -329,6 +329,12 @@ namespace Direct3D10Renderer
 		return new Texture2DArray(*this, width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
 	}
 
+	Renderer::IPipelineState *Direct3D10Renderer::createPipelineState(const Renderer::PipelineState &)
+	{
+		// TODO(co) Implement me
+		return nullptr;
+	}
+
 	Renderer::IRasterizerState *Direct3D10Renderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
 	{
 		return new RasterizerState(*this, rasterizerState);
@@ -607,6 +613,11 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
+	void Direct3D10Renderer::setPipelineState(Renderer::IPipelineState*)
+	{
+		// TODO(co) Implement me
+	}
+
 	void Direct3D10Renderer::setProgram(Renderer::IProgram *program)
 	{
 		// Begin debug event

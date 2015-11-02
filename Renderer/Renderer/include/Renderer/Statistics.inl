@@ -59,6 +59,8 @@ namespace Renderer
 		currentNumberOfTexture2DArrays(0),
 		numberOfCreatedTexture2DArrays(0),
 		// IState
+		currentNumberOfPipelineStates(0),
+		numberOfCreatedPipelineStates(0),
 		currentNumberOfRasterizerStates(0),
 		numberOfCreatedRasterizerStates(0),
 		currentNumberOfDepthStencilStates(0),
@@ -109,6 +111,7 @@ namespace Renderer
 				currentNumberOfTexture2Ds +
 				currentNumberOfTexture2DArrays +
 				// IState
+				currentNumberOfPipelineStates +
 				currentNumberOfRasterizerStates +
 				currentNumberOfDepthStencilStates +
 				currentNumberOfBlendStates +
@@ -148,6 +151,7 @@ namespace Renderer
 		RENDERER_OUTPUT_DEBUG_PRINTF("2D texture arrays: %d\n", currentNumberOfTexture2DArrays)
 
 		// IState
+		RENDERER_OUTPUT_DEBUG_PRINTF("Pipeline states: %d\n", currentNumberOfPipelineStates)
 		RENDERER_OUTPUT_DEBUG_PRINTF("Rasterizer states: %d\n", currentNumberOfRasterizerStates)
 		RENDERER_OUTPUT_DEBUG_PRINTF("Depth stencil states: %d\n", currentNumberOfDepthStencilStates)
 		RENDERER_OUTPUT_DEBUG_PRINTF("Blend states: %d\n", currentNumberOfBlendStates)
@@ -197,6 +201,8 @@ namespace Renderer
 		currentNumberOfTexture2DArrays(0),
 		numberOfCreatedTexture2DArrays(0),
 		// IState
+		currentNumberOfPipelineStates(0),
+		numberOfCreatedPipelineStates(0),
 		currentNumberOfRasterizerStates(0),
 		numberOfCreatedRasterizerStates(0),
 		currentNumberOfDepthStencilStates(0),

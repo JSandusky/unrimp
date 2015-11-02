@@ -157,6 +157,12 @@
     <ClInclude Include="include\Renderer\Public\RendererInstance.h">
       <Filter>Header Files\Public</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\PipelineStateTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IPipelineState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -267,6 +273,9 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\IndexBufferTypes.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IPipelineState.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

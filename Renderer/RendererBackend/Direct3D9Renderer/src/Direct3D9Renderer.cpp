@@ -402,6 +402,12 @@ namespace Direct3D9Renderer
 		return nullptr;
 	}
 
+	Renderer::IPipelineState *Direct3D9Renderer::createPipelineState(const Renderer::PipelineState &)
+	{
+		// TODO(co) Implement me
+		return nullptr;
+	}
+
 	Renderer::IRasterizerState *Direct3D9Renderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
 	{
 		return new RasterizerState(*this, rasterizerState);
@@ -633,6 +639,11 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
+	void Direct3D9Renderer::setPipelineState(Renderer::IPipelineState*)
+	{
+		// TODO(co) Implement me
+	}
+
 	void Direct3D9Renderer::setProgram(Renderer::IProgram *program)
 	{
 		// Begin debug event

@@ -31,6 +31,7 @@
     <ClInclude Include="include\Direct3D12Renderer\Guid.h" />
     <ClInclude Include="include\Direct3D12Renderer\IndexBuffer.h" />
     <ClInclude Include="include\Direct3D12Renderer\Mapping.h" />
+    <ClInclude Include="include\Direct3D12Renderer\PipelineState.h" />
     <ClInclude Include="include\Direct3D12Renderer\Program.h" />
     <ClInclude Include="include\Direct3D12Renderer\ProgramHlsl.h" />
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12Renderer.h" />
@@ -66,6 +67,7 @@
     <ClCompile Include="src\Guid.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
+    <ClCompile Include="src\PipelineState.cpp" />
     <ClCompile Include="src\Program.cpp" />
     <ClCompile Include="src\ProgramHlsl.cpp" />
     <ClCompile Include="src\Direct3D12Renderer.cpp" />
@@ -99,6 +101,7 @@
     <None Include="include\Direct3D12Renderer\IndexBuffer.inl" />
     <None Include="include\Direct3D12Renderer\BlendState.inl" />
     <None Include="include\Direct3D12Renderer\DepthStencilState.inl" />
+    <None Include="include\Direct3D12Renderer\PipelineState.inl" />
     <None Include="include\Direct3D12Renderer\Program.inl" />
     <None Include="include\Direct3D12Renderer\ProgramHlsl.inl" />
     <None Include="include\Direct3D12Renderer\RasterizerState.inl" />

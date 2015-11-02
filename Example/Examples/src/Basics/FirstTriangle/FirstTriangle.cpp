@@ -99,12 +99,7 @@ void FirstTriangle::onInitialization()
 				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 				RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Triangle VBO")
 
-				// Create vertex array object (VAO)
-				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-				// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-				// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-				//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+				// Vertex input layout
 				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 				{
 					{ // Attribute 0
@@ -120,15 +115,29 @@ void FirstTriangle::onInitialization()
 						0										// instancesPerElement (uint32_t)
 					}
 				};
-				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-				{
-					{ // Vertex buffer 0
-						vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-						sizeof(float) * 2	// strideInBytes (uint32_t)
-					}
-				};
-				mVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
-				RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexArray, "Triangle VAO")
+
+				{ // Create vertex array object (VAO)
+				  // -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+				  // -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+				  // -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+				  //    reference of the used vertex buffer objects (VBO). If the reference counter of a
+				  //    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+					{
+						{ // Vertex buffer 0
+							vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+							sizeof(float) * 2	// strideInBytes (uint32_t)
+						}
+					};
+					mVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexArray, "Triangle VAO")
+				}
+
+				{ // Create the pipeline state object (PSO)
+					Renderer::PipelineState pipelineState;
+					mPipelineState = renderer->createPipelineState(pipelineState);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(mPipelineState, "Triangle PSO")
+				}
 			}
 		}
 
@@ -143,6 +152,7 @@ void FirstTriangle::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
+	mPipelineState = nullptr;
 	mVertexArray = nullptr;
 	mProgram = nullptr;
 
@@ -169,6 +179,9 @@ void FirstTriangle::onDraw()
 		{
 			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineState);
 
 			// Set the used program
 			renderer->setProgram(mProgram);

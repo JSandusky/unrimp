@@ -56,6 +56,8 @@ namespace Renderer
 	struct SamplerState;
 	class IVertexBuffer;
 	class IRenderTarget;
+	class IPipelineState;
+	struct PipelineState;
 	class IUniformBuffer;
 	class ITextureBuffer;
 	class IShaderLanguage;
@@ -102,6 +104,7 @@ namespace Renderer
 		friend class ITextureBuffer;
 		friend class ITexture2D;
 		friend class ITexture2DArray;
+		friend class IPipelineState;
 		friend class IRasterizerState;
 		friend class IDepthStencilState;
 		friend class IBlendState;
@@ -394,6 +397,18 @@ namespace Renderer
 
 		/**
 		*  @brief
+		*    Create a pipeline state instance
+		*
+		*  @param[in] pipelineState
+		*    Pipeline state to use
+		*
+		*  @return
+		*    The pipeline state instance, null pointer on error. Release the returned instance if you no longer need it.
+		*/
+		virtual IPipelineState *createPipelineState(const PipelineState &pipelineState) = 0;
+
+		/**
+		*  @brief
 		*    Create a rasterizer state instance
 		*
 		*  @param[in] rasterizerState
@@ -513,6 +528,15 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		//[ States                                                ]
 		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Set the used pipeline state
+		*
+		*  @param[in] pipelineState
+		*    Pipeline state to use, can be an null pointer (default: "nullptr")
+		*/
+		virtual void setPipelineState(IPipelineState *pipelineState) = 0;
+
 		/**
 		*  @brief
 		*    Set the used program

@@ -31,6 +31,7 @@
     <ClInclude Include="include\Renderer\IGeometryShader.h" />
     <ClInclude Include="include\Renderer\IIndexBuffer.h" />
     <ClInclude Include="include\Renderer\IndexBufferTypes.h" />
+    <ClInclude Include="include\Renderer\IPipelineState.h" />
     <ClInclude Include="include\Renderer\IProgram.h" />
     <ClInclude Include="include\Renderer\IRenderer.h" />
     <ClInclude Include="include\Renderer\IRenderTarget.h" />
@@ -55,6 +56,7 @@
     <ClInclude Include="include\Renderer\IVertexArray.h" />
     <ClInclude Include="include\Renderer\IVertexBuffer.h" />
     <ClInclude Include="include\Renderer\IVertexShader.h" />
+    <ClInclude Include="include\Renderer\PipelineStateTypes.h" />
     <ClInclude Include="include\Renderer\PlatformTypes.h" />
     <ClInclude Include="include\Renderer\Public\Renderer.h" />
     <ClInclude Include="include\Renderer\Public\RendererInstance.h" />
@@ -81,6 +83,7 @@
     <None Include="include\Renderer\IGeometryShader.inl" />
     <None Include="include\Renderer\IIndexBuffer.inl" />
     <None Include="include\Renderer\IndexBufferTypes.inl" />
+    <None Include="include\Renderer\IPipelineState.inl" />
     <None Include="include\Renderer\IProgram.inl" />
     <None Include="include\Renderer\IRasterizerState.inl" />
     <None Include="include\Renderer\IRenderer.inl" />

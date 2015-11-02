@@ -60,7 +60,7 @@ namespace Direct3D12Renderer
 				{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 			};
 
-			// Describe and create the graphics pipeline state object (PSO).
+			// Describe and create the graphics pipeline state object (PSO)
 			D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 			psoDesc.InputLayout = { inputElementDescs, _countof(inputElementDescs) };
 			psoDesc.pRootSignature = direct3D12Renderer.getD3D12RootSignature();

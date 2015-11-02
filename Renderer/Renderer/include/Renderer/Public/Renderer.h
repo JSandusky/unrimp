@@ -55,6 +55,7 @@ namespace Renderer
 			class ITextureBuffer;
 			class ITexture2DArray;
 		class IState;
+			class IPipelineState;
 			class IRasterizerState;
 			class IDepthStencilState;
 			class IBlendState;
@@ -296,16 +297,17 @@ namespace Renderer
 				TEXTURE_2D					   = 8,
 				TEXTURE_2D_ARRAY			   = 9,
 				RASTERIZER_STATE			   = 10,
-				DEPTH_STENCIL_STATE			   = 11,
-				BLEND_STATE					   = 12,
-				SAMPLER_STATE				   = 13,
-				VERTEX_SHADER				   = 14,
-				TESSELLATION_CONTROL_SHADER	   = 15,
-				TESSELLATION_EVALUATION_SHADER = 16,
-				GEOMETRY_SHADER				   = 17,
-				FRAGMENT_SHADER				   = 18,
-				TEXTURE_COLLECTION			   = 19,
-				SAMPLER_STATE_COLLECTION	   = 20
+				PIPELINE_STATE				   = 11,
+				DEPTH_STENCIL_STATE			   = 12,
+				BLEND_STATE					   = 13,
+				SAMPLER_STATE				   = 14,
+				VERTEX_SHADER				   = 15,
+				TESSELLATION_CONTROL_SHADER	   = 16,
+				TESSELLATION_EVALUATION_SHADER = 17,
+				GEOMETRY_SHADER				   = 18,
+				FRAGMENT_SHADER				   = 19,
+				TEXTURE_COLLECTION			   = 20,
+				SAMPLER_STATE_COLLECTION	   = 21
 			};
 		};
 	#endif
@@ -674,6 +676,14 @@ namespace Renderer
 		};
 	#endif
 
+	// Renderer/PipelineStateTypes.h
+	#ifndef __RENDERER_PIPELINESTATE_TYPES_H__
+	#define __RENDERER_PIPELINESTATE_TYPES_H__
+		struct PipelineState
+		{
+		};
+	#endif
+
 	// Renderer/DepthStencilStateTypes.h
 	#ifndef __RENDERER_DEPTHSTENCILSTATE_TYPES_H__
 	#define __RENDERER_DEPTHSTENCILSTATE_TYPES_H__
@@ -986,6 +996,8 @@ namespace Renderer
 		uint32_t numberOfCreatedTexture2Ds;
 		uint32_t currentNumberOfTexture2DArrays;
 		uint32_t numberOfCreatedTexture2DArrays;
+		uint32_t currentNumberOfPipelineStates;
+		uint32_t numberOfCreatedPipelineStates;
 		uint32_t currentNumberOfRasterizerStates;
 		uint32_t numberOfCreatedRasterizerStates;
 		uint32_t currentNumberOfDepthStencilStates;
@@ -1030,6 +1042,8 @@ namespace Renderer
 			numberOfCreatedTexture2Ds(0),
 			currentNumberOfTexture2DArrays(0),
 			numberOfCreatedTexture2DArrays(0),
+			currentNumberOfPipelineStates(0),
+			numberOfCreatedPipelineStates(0),
 			currentNumberOfRasterizerStates(0),
 			numberOfCreatedRasterizerStates(0),
 			currentNumberOfDepthStencilStates(0),
@@ -1079,6 +1093,8 @@ namespace Renderer
 			numberOfCreatedTexture2Ds(0),
 			currentNumberOfTexture2DArrays(0),
 			numberOfCreatedTexture2DArrays(0),
+			currentNumberOfPipelineStates(0),
+			numberOfCreatedPipelineStates(0),
 			currentNumberOfRasterizerStates(0),
 			numberOfCreatedRasterizerStates(0),
 			currentNumberOfDepthStencilStates(0),
@@ -1143,6 +1159,7 @@ namespace Renderer
 			virtual ITextureBuffer *createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual ITexture2D *createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
 			virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
+			virtual IPipelineState *createPipelineState(const PipelineState &pipelineState) = 0;
 			virtual IRasterizerState *createRasterizerState(const RasterizerState &rasterizerState) = 0;
 			virtual IDepthStencilState *createDepthStencilState(const DepthStencilState &depthStencilState) = 0;
 			virtual IBlendState *createBlendState(const BlendState &blendState) = 0;
@@ -1151,6 +1168,7 @@ namespace Renderer
 			virtual ISamplerStateCollection *createSamplerStateCollection(uint32_t numberOfSamplerStates, ISamplerState **samplerStates) = 0;
 			virtual bool map(IResource &resource, uint32_t subresource, MapType::Enum mapType, uint32_t mapFlags, MappedSubresource &mappedSubresource) = 0;
 			virtual void unmap(IResource &resource, uint32_t subresource) = 0;
+			virtual void setPipelineState(IPipelineState *pipelineState) = 0;
 			virtual void setProgram(IProgram *program) = 0;
 			virtual void iaSetVertexArray(IVertexArray *vertexArray) = 0;
 			virtual void iaSetPrimitiveTopology(PrimitiveTopology::Enum primitiveTopology) = 0;
@@ -1546,6 +1564,21 @@ namespace Renderer
 			IState &operator =(const IState &source);
 		};
 		typedef SmartRefCount<IState> IStatePtr;
+	#endif
+
+	// Renderer/IPipelineState.h
+	#ifndef __RENDERER_IPIPELINESTATE_H__
+	#define __RENDERER_IPIPELINESTATE_H__
+		class IPipelineState : public IState
+		{
+		public:
+			virtual ~IPipelineState();
+		protected:
+			explicit IPipelineState(IRenderer &renderer);
+			explicit IPipelineState(const IPipelineState &source);
+			IPipelineState &operator =(const IPipelineState &source);
+		};
+		typedef SmartRefCount<IPipelineState> IPipelineStatePtr;
 	#endif
 
 	// Renderer/IRasterizerState.h

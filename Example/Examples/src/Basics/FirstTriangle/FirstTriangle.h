@@ -83,8 +83,9 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IProgramPtr	  mProgram;		///< Program, can be a null pointer
-	Renderer::IVertexArrayPtr mVertexArray;	///< Vertex array object (VAO), can be a null pointer
+	Renderer::IProgramPtr	    mProgram;		///< Program, can be a null pointer
+	Renderer::IVertexArrayPtr   mVertexArray;	///< Vertex array object (VAO), can be a null pointer
+	Renderer::IPipelineStatePtr mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
 
 
 };

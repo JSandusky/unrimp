@@ -56,19 +56,20 @@ namespace Renderer
 			TEXTURE_2D					   = 8,		///< Texture 2D
 			TEXTURE_2D_ARRAY			   = 9,		///< Texture 2D array
 			// IState
-			RASTERIZER_STATE			   = 10,	///< Rasterizer state (rasterizer stage (RS))
-			DEPTH_STENCIL_STATE			   = 11,	///< Depth stencil state (output-merger (OM) stage)
-			BLEND_STATE					   = 12,	///< Blend state (output-merger (OM) stage)
-			SAMPLER_STATE				   = 13,	///< Sampler state
+			PIPELINE_STATE				   = 10,	///< Pipeline state (PSO)
+			RASTERIZER_STATE			   = 11,	///< Rasterizer state (rasterizer stage (RS))
+			DEPTH_STENCIL_STATE			   = 12,	///< Depth stencil state (output-merger (OM) stage)
+			BLEND_STATE					   = 13,	///< Blend state (output-merger (OM) stage)
+			SAMPLER_STATE				   = 14,	///< Sampler state
 			// IShader
-			VERTEX_SHADER				   = 14,	///< Vertex shader (VS)
-			TESSELLATION_CONTROL_SHADER	   = 15,	///< Tessellation control shader (TCS, "hull shader" in Direct3D terminology)
-			TESSELLATION_EVALUATION_SHADER = 16,	///< Tessellation evaluation shader (TES, "domain shader" in Direct3D terminology)
-			GEOMETRY_SHADER				   = 17,	///< Geometry shader (GS)
-			FRAGMENT_SHADER				   = 18,	///< Fragment shader (FS, "pixel shader" in Direct3D terminology)
+			VERTEX_SHADER				   = 15,	///< Vertex shader (VS)
+			TESSELLATION_CONTROL_SHADER	   = 16,	///< Tessellation control shader (TCS, "hull shader" in Direct3D terminology)
+			TESSELLATION_EVALUATION_SHADER = 17,	///< Tessellation evaluation shader (TES, "domain shader" in Direct3D terminology)
+			GEOMETRY_SHADER				   = 18,	///< Geometry shader (GS)
+			FRAGMENT_SHADER				   = 19,	///< Fragment shader (FS, "pixel shader" in Direct3D terminology)
 			// ICollection
-			TEXTURE_COLLECTION			   = 19,	///< Texture collection
-			SAMPLER_STATE_COLLECTION	   = 20		///< Sampler state collection
+			TEXTURE_COLLECTION			   = 20,	///< Texture collection
+			SAMPLER_STATE_COLLECTION	   = 21		///< Sampler state collection
 		};
 	};
 

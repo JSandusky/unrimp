@@ -115,6 +115,9 @@
     <ClInclude Include="include\Direct3D12Renderer\D3D12X.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D12Renderer\PipelineState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Direct3D12Renderer.cpp">
@@ -216,6 +219,9 @@
     <ClCompile Include="src\Guid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\PipelineState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -287,6 +293,9 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D12Renderer\VertexShaderHlsl.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D12Renderer\PipelineState.inl">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
