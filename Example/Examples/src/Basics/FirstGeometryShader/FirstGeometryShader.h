@@ -42,6 +42,7 @@
 *    - Vertex buffer object (VBO)
 *    - Vertex array object (VAO)
 *    - Vertex shader (VS), geometry shader (GS) and fragment shader (FS)
+*    - Pipeline state object (PSO)
 *    - Attribute less rendering (aka "drawing without data")
 */
 class FirstGeometryShader : public IApplicationRenderer
@@ -82,8 +83,8 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IProgramPtr	  mProgram;		///< Program, can be a null pointer
-	Renderer::IVertexArrayPtr mVertexArray;	///< Vertex array object (VAO), can be a null pointer
+	Renderer::IPipelineStatePtr mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
+	Renderer::IVertexArrayPtr   mVertexArray;	///< Vertex array object (VAO), can be a null pointer
 
 
 };

@@ -64,17 +64,19 @@ void FirstGeometryShader::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			{ // Create the program
+			// Create the program
+			Renderer::IProgramPtr program;
+			{
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *geometryShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
 				#include "FirstGeometryShader_GLSL_330.h"
-				#include "FirstGeometryShader_HLSL_D3D10_D3D11.h"
+				#include "FirstGeometryShader_HLSL_D3D10_D3D11_D3D12.h"
 				#include "FirstGeometryShader_Null.h"
 
 				// Create the program
-				mProgram = shaderLanguage->createProgram(
+				program = shaderLanguage->createProgram(
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createGeometryShaderFromSourceCode(geometryShaderSourceCode, Renderer::GsInputPrimitiveTopology::POINTS, Renderer::GsOutputPrimitiveTopology::TRIANGLE_STRIP, 3),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
@@ -84,7 +86,7 @@ void FirstGeometryShader::onInitialization()
 			// -> Tested with: "Radeon HD 6970M", driver "catalyst_12-7_beta_windows7_20120629.exe"
 			// -> According to http://renderingpipeline.com/2012/03/are-vertex-shaders-obsolete/ it should work
 			// -> Apparently there are currently some issues when using this approach: http://www.opengl.org/discussion_boards/showthread.php/177372-Rendering-simple-shapes-without-passing-vertices
-			if (nullptr != mProgram && 0 == strcmp(renderer->getName(), "OpenGL"))
+			if (nullptr != program && 0 != strcmp(renderer->getName(), "OpenGL"))
 			{
 				// Create the vertex buffer object (VBO)
 				static const float VERTEX_POSITION[] =
@@ -93,12 +95,7 @@ void FirstGeometryShader::onInitialization()
 				};
 				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
-				// Create vertex array object (VAO)
-				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-				// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-				// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-				//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+				// Vertex input layout
 				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 				{
 					{ // Attribute 0
@@ -114,14 +111,34 @@ void FirstGeometryShader::onInitialization()
 						0										// instancesPerElement (uint32_t)
 					}
 				};
-				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-				{
-					{ // Vertex buffer 0
-						vertexBuffer,	// vertexBuffer (Renderer::IVertexBuffer *)
-						sizeof(float)	// strideInBytes (uint32_t)
-					}
-				};
-				mVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
+
+				{ // Create the pipeline state object (PSO)
+					// Setup
+					Renderer::PipelineState pipelineState;
+					pipelineState.program = program;
+					pipelineState.numberOfVertexAttributes = numberOfVertexAttributes;
+					pipelineState.vertexAttributes = vertexArrayAttributes;
+
+					// Create the instance
+					mPipelineState = renderer->createPipelineState(pipelineState);
+				}
+
+				{ // Create vertex array object (VAO)
+				  // -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+				  // -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+				  // -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+				  //    reference of the used vertex buffer objects (VBO). If the reference counter of a
+				  //    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+					{
+						{ // Vertex buffer 0
+							vertexBuffer,	// vertexBuffer (Renderer::IVertexBuffer *)
+							sizeof(float)	// strideInBytes (uint32_t)
+						}
+					};
+					mVertexArray = program->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				}
 			}
 		}
 
@@ -137,7 +154,7 @@ void FirstGeometryShader::onDeinitialization()
 
 	// Release the used resources
 	mVertexArray = nullptr;
-	mProgram = nullptr;
+	mPipelineState = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -150,7 +167,7 @@ void FirstGeometryShader::onDraw()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mProgram)
+	if (nullptr != renderer && nullptr != mPipelineState)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -163,8 +180,8 @@ void FirstGeometryShader::onDraw()
 			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
 
-			// Set the used program
-			renderer->setProgram(mProgram);
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineState);
 
 			{ // Setup input assembly (IA)
 				// Set the used vertex array

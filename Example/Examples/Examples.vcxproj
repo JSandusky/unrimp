@@ -271,7 +271,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Advanced\InstancedCubes\InstancedCubes.h" />
     <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader.h" />
     <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_GLSL_330.h" />
-    <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_HLSL_D3D10_D3D11.h" />
+    <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_Null.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_140.h" />
