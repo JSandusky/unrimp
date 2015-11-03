@@ -41,7 +41,7 @@
 *    Demonstrates:
 *    - Vertex buffer object (VBO)
 *    - Vertex array object (VAO)
-*    - Rasterizer state object
+*    - Pipeline state object (PSO)
 *    - Vertex shader (VS), tessellation control shader (TCS), tessellation evaluation shader (TES) and fragment shader (FS)
 */
 class FirstTessellation : public IApplicationRenderer
@@ -82,7 +82,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IProgramPtr		  mProgram;			///< Program, can be a null pointer
+	Renderer::IPipelineStatePtr   mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IVertexArrayPtr	  mVertexArray;		///< Vertex array object (VAO), can be a null pointer
 	Renderer::IRasterizerStatePtr mRasterizerState;	///< Rasterizer state, can be a null pointer
 

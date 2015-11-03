@@ -299,7 +299,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_Null.h" />
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation.h" />
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_GLSL_400.h" />
-    <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_HLSL_D3D11.h" />
+    <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_HLSL_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_Null.h" />
     <ClInclude Include="src\Basics\FirstTexture\FirstTexture.h" />
     <ClInclude Include="src\Basics\FirstTexture\FirstTexture_GLSL_110.h" />

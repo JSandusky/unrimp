@@ -228,9 +228,6 @@
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_GLSL_400.h">
       <Filter>Basics\FirstTessellation</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_HLSL_D3D11.h">
-      <Filter>Basics\FirstTessellation</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_Null.h">
       <Filter>Basics\FirstTessellation</Filter>
     </ClInclude>
@@ -455,6 +452,9 @@
     </ClInclude>
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_HLSL_D3D9_D3D10_D3D11_D3D12.h">
       <Filter>Basics\FirstMultipleSwapChains</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_HLSL_D3D11_D3D12.h">
+      <Filter>Basics\FirstTessellation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
