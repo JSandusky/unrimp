@@ -1962,36 +1962,30 @@ namespace Direct3D12Renderer
 			0);						// A value added to each index before reading per-instance data from a vertex buffer (UINT)
 	}
 
-	void Direct3D12Renderer::drawIndexed(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
+	void Direct3D12Renderer::drawIndexed(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 12
 
 		// Draw
-		mD3D12DeviceContext->DrawIndexed(
-			numberOfIndices,						// Index count (UINT)
-			startIndexLocation,						// Start index location (UINT)
-			static_cast<INT>(baseVertexLocation)	// Base vertex location (INT)
-		);
-		*/
+		mD3D12GraphicsCommandList->DrawIndexedInstanced(
+			numberOfIndices,						// Number of indices read from the index buffer for each instance (UINT)
+			1,										// Number of instances to draw (UINT)
+			startIndexLocation,						// The location of the first index read by the GPU from the index buffer (UINT)
+			static_cast<INT>(baseVertexLocation),	// A value added to each index before reading a vertex from the vertex buffer (INT)
+			0);										// A value added to each index before reading per-instance data from a vertex buffer (UINT)
 	}
 
-	void Direct3D12Renderer::drawIndexedInstanced(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
+	void Direct3D12Renderer::drawIndexedInstanced(uint32_t startIndexLocation, uint32_t numberOfIndices, uint32_t baseVertexLocation, uint32_t, uint32_t, uint32_t numberOfInstances)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		// "minimumIndex" & "numberOfVertices" are not supported by Direct3D 12
 
 		// Draw
-		mD3D12DeviceContext->DrawIndexedInstanced(
-			numberOfIndices,						// Index count per instance (UINT)
-			numberOfInstances,						// Instance count (UINT)
-			startIndexLocation,						// Start index location (UINT)
-			static_cast<INT>(baseVertexLocation),	// Base vertex location (INT)
-			0										// Start instance location (UINT)
-		);
-		*/
+		mD3D12GraphicsCommandList->DrawIndexedInstanced(
+			numberOfIndices,						// Number of indices read from the index buffer for each instance (UINT)
+			numberOfInstances,						// Number of instances to draw (UINT)
+			startIndexLocation,						// The location of the first index read by the GPU from the index buffer (UINT)
+			static_cast<INT>(baseVertexLocation),	// A value added to each index before reading a vertex from the vertex buffer (INT)
+			0);										// A value added to each index before reading per-instance data from a vertex buffer (UINT)
 	}
 
 

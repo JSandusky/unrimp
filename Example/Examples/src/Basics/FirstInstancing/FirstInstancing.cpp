@@ -68,7 +68,7 @@ void FirstInstancing::onInitialization()
 			// - Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
 			//
 			// In general, instanced arrays will probably run on the most systems:
-			// -> Direct3D 10 and Direct3D 11 support both approaches
+			// -> Direct3D 10, Direct3D 11 and Direct3D 12 support both approaches
 			// -> Direct3D 9 has support for instanced arrays, but does not support draw instanced
 			// -> OpenGL 3.1 introduced draw instance ("GL_ARB_draw_instanced"-extension)
 			// -> OpenGL 3.3 introduced instance array ("GL_ARB_instanced_arrays"-extension)

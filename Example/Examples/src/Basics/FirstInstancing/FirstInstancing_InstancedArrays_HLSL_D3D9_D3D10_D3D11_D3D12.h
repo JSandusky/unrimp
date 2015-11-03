@@ -43,7 +43,7 @@ struct VS_INPUT
 	// Mesh data
 	float2 Position   : POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
 	// Per-instance data
-	float  InstanceID : TEXCOORD0;	// Simple instance ID in order to keep it similiar to the "draw instanced" version on the right side (blue)
+	float  InstanceID : TEXCOORD0;	// Simple instance ID in order to keep it similar to the "draw instanced" version on the right side (blue)
 };
 struct VS_OUTPUT
 {

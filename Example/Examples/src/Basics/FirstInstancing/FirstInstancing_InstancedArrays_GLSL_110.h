@@ -43,7 +43,7 @@ STRINGIFY(
 attribute vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
 
 // Attribute input - Per-instance data
-attribute float InstanceID;	// Simple instance ID in order to keep it similiar to the "draw instanced" version on the right side (blue)
+attribute float InstanceID;	// Simple instance ID in order to keep it similar to the "draw instanced" version on the right side (blue)
 
 // Programs
 void main()
