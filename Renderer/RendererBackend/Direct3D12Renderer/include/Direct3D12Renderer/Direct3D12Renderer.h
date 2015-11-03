@@ -136,6 +136,15 @@ namespace Direct3D12Renderer
 		*/
 		inline ID3D12CommandQueue *getD3D12CommandQueue() const;
 
+		/**
+		*  @brief
+		*    Return the Direct3D 12 graphics command list
+		*
+		*  @return
+		*    The Direct3D 12 graphics command list, null pointer on error, do not release the returned instance unless you added an own reference to it
+		*/
+		inline ID3D12GraphicsCommandList *getD3D12GraphicsCommandList() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderer methods            ]

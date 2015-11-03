@@ -44,6 +44,9 @@ namespace Direct3D12Renderer
 		mD3D12DescriptorHeap(nullptr),
 		mMappedData(nullptr)
 	{
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&getRenderer())
+
 		ID3D12Device* d3d12Device = direct3D12Renderer.getD3D12Device();
 
 		// Constant buffer size is required to be 256-byte aligned
@@ -93,18 +96,21 @@ namespace Direct3D12Renderer
 			}
 			else
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to map uniform buffer descriptor heap")
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create uniform buffer descriptor heap")
 			}
 		}
 		else
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create uniform buffer")
+			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create uniform buffer resource")
 		}
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("UBO");
 		#endif
+
+		// End debug event
+		RENDERER_END_DEBUG_EVENT(&getRenderer())
 	}
 
 	UniformBuffer::~UniformBuffer()

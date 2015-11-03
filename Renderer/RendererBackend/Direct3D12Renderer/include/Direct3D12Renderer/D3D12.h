@@ -76,13 +76,11 @@ struct D3D12_TILE_REGION_SIZE;
 struct D3D12_TILE_RANGE_FLAGS;
 struct D3D12_SUBRESOURCE_TILING;
 struct D3D12_SO_DECLARATION_ENTRY;
-struct D3D12_TEXTURE_COPY_LOCATION;
 struct D3D12_COMMAND_SIGNATURE_DESC;
 struct D3D12_RENDER_TARGET_VIEW_DESC;
 struct D3D12_DEPTH_STENCIL_VIEW_DESC;
 struct D3D12_STREAM_OUTPUT_BUFFER_VIEW;
 struct D3D12_TILED_RESOURCE_COORDINATE;
-struct D3D12_SHADER_RESOURCE_VIEW_DESC;
 struct D3D12_UNORDERED_ACCESS_VIEW_DESC;
 struct D3D12_COMPUTE_PIPELINE_STATE_DESC;
 struct D3D12_PLACED_SUBRESOURCE_FOOTPRINT;
@@ -458,6 +456,17 @@ typedef struct D3D12_VIEWPORT
 typedef RECT D3D12_RECT;
 
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_BOX
+{
+	UINT left;
+	UINT top;
+	UINT front;
+	UINT right;
+	UINT bottom;
+	UINT back;
+} D3D12_BOX;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
 typedef enum D3D12_INPUT_CLASSIFICATION
 {
 	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA		= 0,
@@ -613,14 +622,24 @@ typedef struct D3D12_RANGE
 } D3D12_RANGE;
 
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
-struct D3D12_BOX;
 typedef UINT64 D3D12_GPU_VIRTUAL_ADDRESS;
+#define	D3D12_REQ_SUBRESOURCES					30720
 #define D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES	0xffffffff
 #define	D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND	0xffffffff
 #define	D3D12_DEFAULT_DEPTH_BIAS				0
 #define D3D12_DEFAULT_DEPTH_BIAS_CLAMP			0.0f
 #define D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS	0.0f
 #define	D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT	8
+#define D3D12_SHADER_COMPONENT_MAPPING_MASK 0x7 
+#define D3D12_SHADER_COMPONENT_MAPPING_SHIFT 3 
+#define D3D12_SHADER_COMPONENT_MAPPING_ALWAYS_SET_BIT_AVOIDING_ZEROMEM_MISTAKES (1<<(D3D12_SHADER_COMPONENT_MAPPING_SHIFT*4)) 
+#define D3D12_ENCODE_SHADER_4_COMPONENT_MAPPING(Src0,Src1,Src2,Src3) ((((Src0)&D3D12_SHADER_COMPONENT_MAPPING_MASK)| \
+                                                                (((Src1)&D3D12_SHADER_COMPONENT_MAPPING_MASK)<<D3D12_SHADER_COMPONENT_MAPPING_SHIFT)| \
+                                                                (((Src2)&D3D12_SHADER_COMPONENT_MAPPING_MASK)<<(D3D12_SHADER_COMPONENT_MAPPING_SHIFT*2))| \
+                                                                (((Src3)&D3D12_SHADER_COMPONENT_MAPPING_MASK)<<(D3D12_SHADER_COMPONENT_MAPPING_SHIFT*3))| \
+                                                                D3D12_SHADER_COMPONENT_MAPPING_ALWAYS_SET_BIT_AVOIDING_ZEROMEM_MISTAKES))
+#define D3D12_DECODE_SHADER_4_COMPONENT_MAPPING(ComponentToExtract,Mapping) ((D3D12_SHADER_COMPONENT_MAPPING)(Mapping >> (D3D12_SHADER_COMPONENT_MAPPING_SHIFT*ComponentToExtract) & D3D12_SHADER_COMPONENT_MAPPING_MASK))
+#define D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING D3D12_ENCODE_SHADER_4_COMPONENT_MAPPING(0,1,2,3)
 
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
 typedef enum D3D12_COMMAND_QUEUE_FLAGS
@@ -858,6 +877,188 @@ typedef struct D3D12_CONSTANT_BUFFER_VIEW_DESC
 	D3D12_GPU_VIRTUAL_ADDRESS BufferLocation;
 	UINT SizeInBytes;
 } D3D12_CONSTANT_BUFFER_VIEW_DESC;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_SRV_DIMENSION
+{
+	D3D12_SRV_DIMENSION_UNKNOWN				= 0,
+	D3D12_SRV_DIMENSION_BUFFER				= 1,
+	D3D12_SRV_DIMENSION_TEXTURE1D			= 2,
+	D3D12_SRV_DIMENSION_TEXTURE1DARRAY		= 3,
+	D3D12_SRV_DIMENSION_TEXTURE2D			= 4,
+	D3D12_SRV_DIMENSION_TEXTURE2DARRAY		= 5,
+	D3D12_SRV_DIMENSION_TEXTURE2DMS			= 6,
+	D3D12_SRV_DIMENSION_TEXTURE2DMSARRAY	= 7,
+	D3D12_SRV_DIMENSION_TEXTURE3D			= 8,
+	D3D12_SRV_DIMENSION_TEXTURECUBE			= 9,
+	D3D12_SRV_DIMENSION_TEXTURECUBEARRAY	= 10
+} D3D12_SRV_DIMENSION;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_BUFFER_SRV_FLAGS
+{
+	D3D12_BUFFER_SRV_FLAG_NONE	= 0,
+	D3D12_BUFFER_SRV_FLAG_RAW	= 0x1
+} D3D12_BUFFER_SRV_FLAGS;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_BUFFER_SRV
+{
+	UINT64 FirstElement;
+	UINT NumElements;
+	UINT StructureByteStride;
+	D3D12_BUFFER_SRV_FLAGS Flags;
+} D3D12_BUFFER_SRV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX1D_SRV
+{
+	UINT MostDetailedMip;
+	UINT MipLevels;
+	FLOAT ResourceMinLODClamp;
+} D3D12_TEX1D_SRV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX1D_ARRAY_SRV
+{
+	UINT MostDetailedMip;
+	UINT MipLevels;
+	UINT FirstArraySlice;
+	UINT ArraySize;
+	FLOAT ResourceMinLODClamp;
+} D3D12_TEX1D_ARRAY_SRV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX2D_SRV
+{
+	UINT MostDetailedMip;
+	UINT MipLevels;
+	UINT PlaneSlice;
+	FLOAT ResourceMinLODClamp;
+} D3D12_TEX2D_SRV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX2D_ARRAY_SRV
+{
+	UINT MostDetailedMip;
+	UINT MipLevels;
+	UINT FirstArraySlice;
+	UINT ArraySize;
+	UINT PlaneSlice;
+	FLOAT ResourceMinLODClamp;
+} D3D12_TEX2D_ARRAY_SRV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX2DMS_SRV
+{
+	UINT UnusedField_NothingToDefine;
+} D3D12_TEX2DMS_SRV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX2DMS_ARRAY_SRV
+{
+	UINT FirstArraySlice;
+	UINT ArraySize;
+} D3D12_TEX2DMS_ARRAY_SRV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX3D_SRV
+{
+	UINT MostDetailedMip;
+	UINT MipLevels;
+	FLOAT ResourceMinLODClamp;
+} D3D12_TEX3D_SRV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEXCUBE_SRV
+{
+	UINT MostDetailedMip;
+	UINT MipLevels;
+	FLOAT ResourceMinLODClamp;
+} D3D12_TEXCUBE_SRV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEXCUBE_ARRAY_SRV
+{
+	UINT MostDetailedMip;
+	UINT MipLevels;
+	UINT First2DArrayFace;
+	UINT NumCubes;
+	FLOAT ResourceMinLODClamp;
+} D3D12_TEXCUBE_ARRAY_SRV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_SHADER_RESOURCE_VIEW_DESC
+{
+	DXGI_FORMAT Format;
+	D3D12_SRV_DIMENSION ViewDimension;
+	UINT Shader4ComponentMapping;
+	union
+	{
+		D3D12_BUFFER_SRV Buffer;
+		D3D12_TEX1D_SRV Texture1D;
+		D3D12_TEX1D_ARRAY_SRV Texture1DArray;
+		D3D12_TEX2D_SRV Texture2D;
+		D3D12_TEX2D_ARRAY_SRV Texture2DArray;
+		D3D12_TEX2DMS_SRV Texture2DMS;
+		D3D12_TEX2DMS_ARRAY_SRV Texture2DMSArray;
+		D3D12_TEX3D_SRV Texture3D;
+		D3D12_TEXCUBE_SRV TextureCube;
+		D3D12_TEXCUBE_ARRAY_SRV TextureCubeArray;
+	};
+} D3D12_SHADER_RESOURCE_VIEW_DESC;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_SUBRESOURCE_DATA
+{
+	const void *pData;
+	LONG_PTR RowPitch;
+	LONG_PTR SlicePitch;
+} D3D12_SUBRESOURCE_DATA;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_MEMCPY_DEST
+{
+	void *pData;
+	SIZE_T RowPitch;
+	SIZE_T SlicePitch;
+} D3D12_MEMCPY_DEST;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_SUBRESOURCE_FOOTPRINT
+{
+	DXGI_FORMAT Format;
+	UINT Width;
+	UINT Height;
+	UINT Depth;
+	UINT RowPitch;
+} D3D12_SUBRESOURCE_FOOTPRINT;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_PLACED_SUBRESOURCE_FOOTPRINT
+{
+	UINT64 Offset;
+	D3D12_SUBRESOURCE_FOOTPRINT Footprint;
+} D3D12_PLACED_SUBRESOURCE_FOOTPRINT;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_TEXTURE_COPY_TYPE
+{
+	D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX	= 0,
+	D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT	= 1
+} D3D12_TEXTURE_COPY_TYPE;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEXTURE_COPY_LOCATION
+{
+	ID3D12Resource *pResource;
+	D3D12_TEXTURE_COPY_TYPE Type;
+	union
+	{
+		D3D12_PLACED_SUBRESOURCE_FOOTPRINT PlacedFootprint;
+		UINT SubresourceIndex;
+	};
+} D3D12_TEXTURE_COPY_LOCATION;
 
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
 typedef enum D3D12_DESCRIPTOR_RANGE_TYPE

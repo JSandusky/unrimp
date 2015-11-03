@@ -23,9 +23,11 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Texture2D.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
+#include "Direct3D12Renderer/D3D12X.h"
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
+#include "Direct3D12Renderer/SwapChain.h"	// TODO(co) Remove this
 
 #include <cassert>
 
@@ -40,120 +42,127 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D12Renderer &direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage::Enum) :
-		ITexture2D(direct3D12Renderer, width, height)
-	//	mD3D12ShaderResourceViewTexture(nullptr)	// TODO(co) Direct3D 12 update
+	Texture2D::Texture2D(Direct3D12Renderer &direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t, Renderer::TextureUsage::Enum) :
+		ITexture2D(direct3D12Renderer, width, height),
+		mD3D12Resource(nullptr),
+		mD3D12DescriptorHeap(nullptr)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D12Renderer)
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&getRenderer())
 
-		// Calculate the number of mipmaps
-		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
-		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
-		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
+		ID3D12Device* d3d12Device = direct3D12Renderer.getD3D12Device();
 
-		// Direct3D 12 2D texture description
-		D3D12_TEXTURE2D_DESC d3d12Texture2DDesc;
-		d3d12Texture2DDesc.Width			  = width;
-		d3d12Texture2DDesc.Height			  = height;
-		d3d12Texture2DDesc.MipLevels		  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 12 allocate the complete mipmap chain for us
-		d3d12Texture2DDesc.ArraySize		  = 1;
-		d3d12Texture2DDesc.Format			  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(textureFormat));
-		d3d12Texture2DDesc.SampleDesc.Count	  = 1;
-		d3d12Texture2DDesc.SampleDesc.Quality = 0;
-		d3d12Texture2DDesc.Usage			  = static_cast<D3D12_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
-		d3d12Texture2DDesc.BindFlags		  = D3D12_BIND_SHADER_RESOURCE;
-		d3d12Texture2DDesc.CPUAccessFlags	  = 0;
-		d3d12Texture2DDesc.MiscFlags		  = 0;
+		// TODO(co) Add buffer usage setting support
+		// TODO(co) Add mipmap support
+		// TODO(co) Add compressed upload support
 
-		// Use this texture as render target?
-		if (flags & Renderer::TextureFlag::RENDER_TARGET)
+		// Describe and create a texture 2D
+		D3D12_RESOURCE_DESC d3d12ResourceDesc = {};
+		d3d12ResourceDesc.MipLevels = 1;
+		d3d12ResourceDesc.Format = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(textureFormat));
+		d3d12ResourceDesc.Width = width;
+		d3d12ResourceDesc.Height = height;
+		d3d12ResourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+		d3d12ResourceDesc.DepthOrArraySize = 1;
+		d3d12ResourceDesc.SampleDesc.Count = 1;
+		d3d12ResourceDesc.SampleDesc.Quality = 0;
+		d3d12ResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+
+		// TODO(co) This is just first Direct3D 12 texture test, so don't wonder about the nasty synchronization handling
+		const CD3DX12_HEAP_PROPERTIES d3d12XHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
+		if (SUCCEEDED(d3d12Device->CreateCommittedResource(
+			&d3d12XHeapProperties,
+			D3D12_HEAP_FLAG_NONE,
+			&d3d12ResourceDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&mD3D12Resource))))
+		/*
+		const CD3DX12_HEAP_PROPERTIES d3d12XHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
+		if (SUCCEEDED(d3d12Device->CreateCommittedResource(
+			&d3d12XHeapProperties,
+			D3D12_HEAP_FLAG_NONE,
+			&d3d12ResourceDesc,
+			D3D12_RESOURCE_STATE_COPY_DEST,
+			nullptr,
+			IID_PPV_ARGS(&mD3D12Resource))))
+		*/
 		{
-			d3d12Texture2DDesc.BindFlags |= D3D12_BIND_RENDER_TARGET;
-		}
-
-		// Create the Direct3D 12 2D texture instance
-		// Did the user provided us with any texture data?
-		ID3D12Texture2D *d3d12Texture2D = nullptr;
-		if (nullptr != data)
-		{
-			if (generateMipmaps)
+			// Describe and create a shader resource view (SRV) heap for the texture
+			D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
+			d3d12DescriptorHeapDesc.NumDescriptors = 1;
+			d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+			d3d12DescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+			if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(&mD3D12DescriptorHeap))))
 			{
-				// Let Direct3D 12 generate the mipmaps for us automatically
-				// -> Sadly, it's impossible to use initialization data in this use-case
-				direct3D12Renderer.getD3D12Device()->CreateTexture2D(&d3d12Texture2DDesc, nullptr, &d3d12Texture2D);
-				if (nullptr != d3d12Texture2D)
+				// Upload the texture data?
+				if (nullptr != data)
 				{
-					{ // Update Direct3D 12 subresource data of the base-map
-						const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-						const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
-						direct3D12Renderer.getD3D12DeviceContext()->UpdateSubresource(d3d12Texture2D, 0, nullptr, data, bytesPerRow, bytesPerSlice);
-					}
-
-					// Let Direct3D 12 generate the mipmaps for us automatically
-					// TODO(co) Direct3D 12 update
-					// D3DX12FilterTexture(direct3D12Renderer.getD3D12DeviceContext(), d3d12Texture2D, 0, D3DX12_DEFAULT);
+					const UINT srcRowPitch = width * Renderer::TextureFormat::getNumberOfBytesPerElement(textureFormat);
+					mD3D12Resource->WriteToSubresource(0, nullptr, data, srcRowPitch, srcRowPitch * height);
 				}
+
+				// TODO(co) This is just first Direct3D 12 texture test, so don't wonder about the nasty synchronization handling
+				/*
+				if (nullptr != data)
+				{
+					ID3D12GraphicsCommandList* d3d12GraphicsCommandList = direct3D12Renderer.getD3D12GraphicsCommandList();
+				//	direct3D12Renderer.beginScene();
+
+					// Create an upload heap to load the texture onto the GPU. ComPtr's are CPU objects
+					// but this heap needs to stay in scope until the GPU work is complete. We will
+					// synchronize with the GPU at the end of this method before the ComPtr is destroyed.
+					ID3D12Resource* d3d12ResourceTextureUploadHeap = nullptr;
+
+					{ // Upload the texture data
+						const UINT64 uploadBufferSize = GetRequiredIntermediateSize(mD3D12Resource, 0, 1);
+
+						// Create the GPU upload buffer
+						const CD3DX12_HEAP_PROPERTIES d3d12XHeapPropertiesUpload(D3D12_HEAP_TYPE_UPLOAD);
+						const CD3DX12_RESOURCE_DESC d3d12XResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
+						if (SUCCEEDED(d3d12Device->CreateCommittedResource(
+							&d3d12XHeapPropertiesUpload,
+							D3D12_HEAP_FLAG_NONE,
+							&d3d12XResourceDesc,
+							D3D12_RESOURCE_STATE_GENERIC_READ,
+							nullptr,
+							IID_PPV_ARGS(&d3d12ResourceTextureUploadHeap))))
+						{
+							// Copy data to the intermediate upload heap and then schedule a copy from the upload heap to the texture 2D
+							D3D12_SUBRESOURCE_DATA textureData = {};
+							textureData.pData = data;
+							textureData.RowPitch = static_cast<LONG_PTR>(width * Renderer::TextureFormat::getNumberOfBytesPerElement(textureFormat));
+							textureData.SlicePitch = static_cast<LONG_PTR>(textureData.RowPitch * height);
+
+							UpdateSubresources(d3d12GraphicsCommandList, mD3D12Resource, d3d12ResourceTextureUploadHeap, 0, 0, 1, &textureData);
+
+		//					CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(mD3D12Resource, D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+		//					d3d12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+						}
+					}
+	
+	//				direct3D12Renderer.endScene();
+//					direct3D12Renderer.mMainSwapChain->waitForPreviousFrame();
+					d3d12ResourceTextureUploadHeap->Release();
+				}
+				*/
+
+				// Describe and create a SRV for the texture
+				D3D12_SHADER_RESOURCE_VIEW_DESC d3d12ShaderResourceViewDesc = {};
+				d3d12ShaderResourceViewDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+				d3d12ShaderResourceViewDesc.Format = d3d12ResourceDesc.Format;
+				d3d12ShaderResourceViewDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+				d3d12ShaderResourceViewDesc.Texture2D.MipLevels = 1;
+				d3d12Device->CreateShaderResourceView(mD3D12Resource, &d3d12ShaderResourceViewDesc, mD3D12DescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 			}
 			else
 			{
-				// We don't want dynamic allocations, so we limit the maximum number of mipmaps and hence are able to use the efficient C runtime stack
-				static constexpr uint32_t MAXIMUM_NUMBER_OF_MIPMAPS = 15;	// A 16384x16384 texture has 15 mipmaps
-				assert(numberOfMipmaps <= MAXIMUM_NUMBER_OF_MIPMAPS);
-				D3D12_SUBRESOURCE_DATA d3d12SubresourceData[MAXIMUM_NUMBER_OF_MIPMAPS];
-
-				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
-				if (dataContainsMipmaps)
-				{
-					// Upload all mipmaps
-					for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
-					{
-						// Upload the current mipmap
-						D3D12_SUBRESOURCE_DATA& currentD3d12SubresourceData = d3d12SubresourceData[mipmap];
-						currentD3d12SubresourceData.pSysMem			 = data;
-						currentD3d12SubresourceData.SysMemPitch		 = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-						currentD3d12SubresourceData.SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
-
-						// Move on to the next mipmap
-						data = static_cast<uint8_t*>(data) + currentD3d12SubresourceData.SysMemSlicePitch;
-						width = std::max(width >> 1, 1u);	// /= 2
-						height = std::max(height >> 1, 1u);	// /= 2
-					}
-				}
-				else
-				{
-					// The user only provided us with the base texture, no mipmaps
-					d3d12SubresourceData->pSysMem		   = data;
-					d3d12SubresourceData->SysMemPitch	   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-					d3d12SubresourceData->SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
-				}
-				direct3D12Renderer.getD3D12Device()->CreateTexture2D(&d3d12Texture2DDesc, d3d12SubresourceData, &d3d12Texture2D);
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create texture 2D descriptor heap")
 			}
 		}
 		else
 		{
-			// The user did not provide us with texture data
-			direct3D12Renderer.getD3D12Device()->CreateTexture2D(&d3d12Texture2DDesc, nullptr, &d3d12Texture2D);
-		}
-
-		// Create the Direct3D 12 shader resource view instance
-		if (nullptr != d3d12Texture2D)
-		{
-			// Direct3D 12 shader resource view description
-			D3D12_SHADER_RESOURCE_VIEW_DESC d3d12ShaderResourceViewDesc;
-			::ZeroMemory(&d3d12ShaderResourceViewDesc, sizeof(D3D12_SHADER_RESOURCE_VIEW_DESC));
-			d3d12ShaderResourceViewDesc.Format					  = d3d12Texture2DDesc.Format;
-			d3d12ShaderResourceViewDesc.ViewDimension			  = D3D12_SRV_DIMENSION_TEXTURE2D;
-			d3d12ShaderResourceViewDesc.Texture2D.MipLevels		  = numberOfMipmaps;
-			d3d12ShaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
-
-			// Create the Direct3D 12 shader resource view instance
-			direct3D12Renderer.getD3D12Device()->CreateShaderResourceView(d3d12Texture2D, &d3d12ShaderResourceViewDesc, &mD3D12ShaderResourceViewTexture);
-
-			// Release the Direct3D 12 2D texture instance
-			d3d12Texture2D->Release();
+			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create texture 2D resource")
 		}
 
 		// Assign a default name to the resource for debugging purposes
@@ -162,57 +171,43 @@ namespace Direct3D12Renderer
 		#endif
 
 		// End debug event
-		RENDERER_END_DEBUG_EVENT(&direct3D12Renderer)
-		*/
+		RENDERER_END_DEBUG_EVENT(&getRenderer())
 	}
 
 	Texture2D::~Texture2D()
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		if (nullptr != mD3D12ShaderResourceViewTexture)
+		if (nullptr != mD3D12Resource)
 		{
-			mD3D12ShaderResourceViewTexture->Release();
+			mD3D12Resource->Release();
 		}
-		*/
+		if (nullptr != mD3D12DescriptorHeap)
+		{
+			mD3D12DescriptorHeap->Release();
+		}
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Texture2D::setDebugName(const char *)
+	void Texture2D::setDebugName(const char * name)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
-			// Valid Direct3D 12 shader resource view?
-			if (nullptr != mD3D12ShaderResourceViewTexture)
+			if (nullptr != mD3D12Resource)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D12ShaderResourceViewTexture->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12ShaderResourceViewTexture->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
-
-				// Do also set the given debug name to the Direct3D 12 resource referenced by the Direct3D resource view
-				// -> In our use case, this resource is tightly coupled with the view
-				// -> In principle the user can assign another resource to the view, but our interface documentation
-				//    asks the user to not do so, so we ignore this situation when assigning the name
-				ID3D12Resource *d3d12Resource = nullptr;
-				mD3D12ShaderResourceViewTexture->GetResource(&d3d12Resource);
-				if (nullptr != d3d12Resource)
-				{
-					// Set the debug name
-					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-					d3d12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-					d3d12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
-
-					// Release the Direct3D 12 resource instance
-					d3d12Resource->Release();
-				}
+				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+			}
+			if (nullptr != mD3D12DescriptorHeap)
+			{
+				// Set the debug name
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
-		*/
 	}
 
 

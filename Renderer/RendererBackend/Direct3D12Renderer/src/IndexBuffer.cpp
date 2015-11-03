@@ -42,6 +42,9 @@ namespace Direct3D12Renderer
 		IIndexBuffer(direct3D12Renderer),
 		mD3D12Resource(nullptr)
 	{
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&getRenderer())
+
 		// "Renderer::IndexBufferFormat::UnsignedChar" is not supported by Direct3D 12
 		// TODO(co) Check this, there's "DXGI_FORMAT_R8_UINT" which might work in Direct3D 12
 		if (Renderer::IndexBufferFormat::UNSIGNED_CHAR == indexBufferFormat)
@@ -95,7 +98,7 @@ namespace Direct3D12Renderer
 			}
 			else
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create index buffer")
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create index buffer resource")
 				mD3D12IndexBufferView.BufferLocation = 0;
 				mD3D12IndexBufferView.SizeInBytes	 = 0;
 				mD3D12IndexBufferView.Format		 = DXGI_FORMAT_UNKNOWN;
@@ -106,6 +109,9 @@ namespace Direct3D12Renderer
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("IBO");
 		#endif
+
+		// End debug event
+		RENDERER_END_DEBUG_EVENT(&getRenderer())
 	}
 
 	IndexBuffer::~IndexBuffer()

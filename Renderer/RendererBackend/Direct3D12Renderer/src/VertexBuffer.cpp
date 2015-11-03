@@ -43,6 +43,9 @@ namespace Direct3D12Renderer
 		mNumberOfBytes(numberOfBytes),
 		mD3D12Resource(nullptr)
 	{
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&getRenderer())
+
 		// TODO(co) This is only meant for the Direct3D 12 renderer backend kickoff.
 		// Note: using upload heaps to transfer static data like vert buffers is not 
 		// recommended. Every time the GPU needs it, the upload heap will be marshalled 
@@ -80,13 +83,16 @@ namespace Direct3D12Renderer
 		}
 		else
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create vertex buffer")
+			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create vertex buffer resource")
 		}
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("VBO");
 		#endif
+
+		// End debug event
+		RENDERER_END_DEBUG_EVENT(&getRenderer())
 	}
 
 	VertexBuffer::~VertexBuffer()
