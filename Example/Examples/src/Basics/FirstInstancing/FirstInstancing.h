@@ -43,6 +43,7 @@
 *    - Vertex array object (VAO)
 *    - Index buffer object (IBO)
 *    - Vertex shader (VS) and fragment shader (FS)
+*    - Pipeline state object (PSO)
 *    - Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 *    - Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
 */
@@ -85,11 +86,11 @@ public:
 //[-------------------------------------------------------]
 private:
 	// Left side (green): Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
-	Renderer::IProgramPtr	  mProgramInstancedArrays;		///< Program, can be a null pointer
-	Renderer::IVertexArrayPtr mVertexArrayInstancedArrays;	///< Vertex array object (VAO), can be a null pointer
+	Renderer::IPipelineStatePtr mPipelineStateInstancedArrays;	///< Pipeline state object (PSO), can be a null pointer
+	Renderer::IVertexArrayPtr   mVertexArrayInstancedArrays;	///< Vertex array object (VAO), can be a null pointer
 	// Right side (blue): Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
-	Renderer::IProgramPtr	  mProgramDrawInstanced;		///< Program, can be a null pointer
-	Renderer::IVertexArrayPtr mVertexArrayDrawInstanced;	///< Vertex array object (VAO), can be a null pointer
+	Renderer::IPipelineStatePtr mPipelineStateDrawInstanced;	///< Pipeline state object (PSO), can be a null pointer
+	Renderer::IVertexArrayPtr   mVertexArrayDrawInstanced;		///< Vertex array object (VAO), can be a null pointer
 
 
 };

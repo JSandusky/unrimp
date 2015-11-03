@@ -275,10 +275,10 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_Null.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_140.h" />
-    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11.h" />
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_Null.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_110.h" />
-    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11.h" />
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_Null.h" />
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets.h" />
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_110.h" />
