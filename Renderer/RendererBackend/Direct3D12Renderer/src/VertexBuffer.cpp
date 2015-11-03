@@ -72,7 +72,15 @@ namespace Direct3D12Renderer
 					memcpy(pVertexDataBegin, data, mNumberOfBytes);
 					mD3D12Resource->Unmap(0, nullptr);
 				}
+				else
+				{
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to map vertex buffer")
+				}
 			}
+		}
+		else
+		{
+			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create vertex buffer")
 		}
 
 		// Assign a default name to the resource for debugging purposes

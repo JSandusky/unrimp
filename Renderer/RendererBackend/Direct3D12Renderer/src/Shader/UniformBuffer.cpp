@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Shader/UniformBuffer.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D12Renderer/D3D12.h"
+#include "Direct3D12Renderer/D3D12X.h"
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
@@ -38,121 +38,131 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t, const void *, Renderer::BufferUsage::Enum) :
-		Renderer::IUniformBuffer(direct3D12Renderer)
-	//	mD3D12Buffer(nullptr)	// TODO(co) Direct3D 12 update
+	UniformBuffer::UniformBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum) :
+		Renderer::IUniformBuffer(direct3D12Renderer),
+		mD3D12Resource(nullptr),
+		mD3D12DescriptorHeap(nullptr),
+		mMappedData(nullptr)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// TODO(co) Uniform buffer byte alignment: Is it fine to support the user in here (ease of use) or is this 100% the responsibility of the user? (possible negative side effects)
-		// Check the given number of bytes, if we don't do this we might get told
-		//   "... the ByteWidth (value = <x>) must be a multiple of 16 and be less than or equal to 65536"
-		// by Direct3D 12
-		const uint32_t leftOverBytes = (numberOfBytes % 16);
-		if (0 != leftOverBytes)
+		ID3D12Device* d3d12Device = direct3D12Renderer.getD3D12Device();
+
+		// Constant buffer size is required to be 256-byte aligned
+		// - See "ID3D12Device::CreateConstantBufferView method": https://msdn.microsoft.com/de-de/library/windows/desktop/dn788659%28v=vs.85%29.aspx
+		const uint32_t numberOfBytesOnGpu = (numberOfBytes + 255) & ~255;
+
+		// TODO(co) Add buffer usage setting support
+
+		const CD3DX12_HEAP_PROPERTIES d3d12XHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
+		const CD3DX12_RESOURCE_DESC d3d12XResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(numberOfBytesOnGpu);
+		if (SUCCEEDED(d3d12Device->CreateCommittedResource(
+			&d3d12XHeapProperties,
+			D3D12_HEAP_FLAG_NONE,
+			&d3d12XResourceDesc,
+			D3D12_RESOURCE_STATE_GENERIC_READ,
+			nullptr,
+			IID_PPV_ARGS(&mD3D12Resource))))
 		{
-			// Fix the byte alignment
-			numberOfBytes += 16 - (numberOfBytes % 16);
-		}
+			// Describe and create a constant buffer view (CBV) descriptor heap.
+			// Flags indicate that this descriptor heap can be bound to the pipeline 
+			// and that descriptors contained in it can be referenced by a root table.
+			D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
+			d3d12DescriptorHeapDesc.NumDescriptors = 1;
+			d3d12DescriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+			d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+			if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(&mD3D12DescriptorHeap))))
+			{
+				// Describe and create a constant buffer view
+				D3D12_CONSTANT_BUFFER_VIEW_DESC d3dConstantBufferViewDesc = {};
+				d3dConstantBufferViewDesc.BufferLocation = mD3D12Resource->GetGPUVirtualAddress();
+				d3dConstantBufferViewDesc.SizeInBytes = numberOfBytesOnGpu;
+				d3d12Device->CreateConstantBufferView(&d3dConstantBufferViewDesc, mD3D12DescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 
-		// Direct3D 12 buffer description
-		D3D12_BUFFER_DESC d3d12BufferDesc;
-		d3d12BufferDesc.ByteWidth           = numberOfBytes;
-		d3d12BufferDesc.Usage               = static_cast<D3D12_USAGE>(Mapping::getDirect3D12UsageAndCPUAccessFlags(bufferUsage, d3d12BufferDesc.CPUAccessFlags));
-		d3d12BufferDesc.BindFlags           = D3D12_BIND_CONSTANT_BUFFER;
-		//d3d12BufferDescd3d12BufferDesc.CPUAccessFlags    = <filled above>;
-		d3d12BufferDesc.MiscFlags           = 0;
-		d3d12BufferDesc.StructureByteStride = 0;
-
-		// Data given?
-		if (nullptr != data)
-		{
-			// Direct3D 12 subresource data
-			D3D12_SUBRESOURCE_DATA d3d12SubresourceData;
-			d3d12SubresourceData.pSysMem          = data;
-			d3d12SubresourceData.SysMemPitch      = 0;
-			d3d12SubresourceData.SysMemSlicePitch = 0;
-
-			// Create the Direct3D 12 constant buffer
-			direct3D12Renderer.getD3D12Device()->CreateBuffer(&d3d12BufferDesc, &d3d12SubresourceData, &mD3D12Buffer);
+				CD3DX12_RANGE readRange(0, 0);	// We do not intend to read from this resource on the CPU
+				if (SUCCEEDED(mD3D12Resource->Map(0, &readRange, reinterpret_cast<void**>(&mMappedData))))
+				{
+					// Data given?
+					if (nullptr != data)
+					{
+						memcpy(mMappedData, &data, numberOfBytes);
+					}
+				}
+				else
+				{
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to map uniform buffer")
+				}
+			}
+			else
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to map uniform buffer descriptor heap")
+			}
 		}
 		else
 		{
-			// Create the Direct3D 12 constant buffer
-			direct3D12Renderer.getD3D12Device()->CreateBuffer(&d3d12BufferDesc, nullptr, &mD3D12Buffer);
+			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create uniform buffer")
 		}
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("UBO");
 		#endif
-		*/
 	}
 
 	UniformBuffer::~UniformBuffer()
 	{
 		// Release the Direct3D 12 constant buffer
-		// TODO(co) Direct3D 12 update
-		/*
-		if (nullptr != mD3D12Buffer)
+		if (nullptr != mD3D12Resource)
 		{
-			mD3D12Buffer->Release();
+			mD3D12Resource->Release();
 		}
-		*/
+		if (nullptr != mD3D12DescriptorHeap)
+		{
+			mD3D12DescriptorHeap->Release();
+		}
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void UniformBuffer::setDebugName(const char *)
+	void UniformBuffer::setDebugName(const char *name)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 uniform buffer?
-			if (nullptr != mD3D12Buffer)
+			if (nullptr != mD3D12Resource)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+			}
+			if (nullptr != mD3D12DescriptorHeap)
+			{
+				// Set the debug name
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
-		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBuffer::copyDataFrom(uint32_t, const void *)
+	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void *data)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		// Check resource pointers
-		if (nullptr != mD3D12Buffer && nullptr != data)
+		if (nullptr != mMappedData && nullptr != data)
 		{
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&getRenderer())
 
-			// Get the Direct3D 12 device context
-			ID3D12DeviceContext *d3d12DeviceContext = static_cast<Direct3D12Renderer&>(getRenderer()).getD3D12DeviceContext();
-
-			// Update Direct3D 12 subresource data
-			// -> Don't use (might fail): d3d12DeviceContext->UpdateSubresource(mD3D12Buffer, 0, nullptr, data, 0, 0);
-			D3D12_MAPPED_SUBRESOURCE d3d12MappedSubresource;
-			const HRESULT hResult = d3d12DeviceContext->Map(mD3D12Buffer, 0, D3D12_MAP_WRITE_DISCARD, 0, &d3d12MappedSubresource);
-			if (S_OK == hResult)
-			{
-				memcpy(d3d12MappedSubresource.pData, data, numberOfBytes);
-				d3d12DeviceContext->Unmap(mD3D12Buffer, 0);
-			}
+			// Copy data
+			memcpy(mMappedData, data, numberOfBytes);
 
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(&getRenderer())
 		}
-		*/
 	}
 
 

@@ -34,7 +34,8 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-//struct ID3D12Buffer;	// TODO(co) Direct3D 12 update
+struct ID3D12Resource;
+struct ID3D12DescriptorHeap;
 namespace Direct3D12Renderer
 {
 	class Direct3D12Renderer;
@@ -113,8 +114,9 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Direct3D 12 update
-		//ID3D12Buffer *mD3D12Buffer;	///< Direct3D 12 constant buffer instance, can be a null pointer
+		ID3D12Resource*		  mD3D12Resource;
+		ID3D12DescriptorHeap* mD3D12DescriptorHeap;
+		uint8_t*			  mMappedData;
 
 
 	};

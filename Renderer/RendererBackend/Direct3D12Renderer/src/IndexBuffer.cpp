@@ -82,13 +82,24 @@ namespace Direct3D12Renderer
 						memcpy(pIndexDataBegin, data, numberOfBytes);
 						mD3D12Resource->Unmap(0, nullptr);
 					}
+					else
+					{
+						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to map index buffer")
+					}
 				}
-			}
 
-			// Fill the Direct3D 12 index buffer view
-			mD3D12IndexBufferView.BufferLocation = mD3D12Resource->GetGPUVirtualAddress();
-			mD3D12IndexBufferView.SizeInBytes	 = numberOfBytes;
-			mD3D12IndexBufferView.Format		 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(indexBufferFormat));
+				// Fill the Direct3D 12 index buffer view
+				mD3D12IndexBufferView.BufferLocation = mD3D12Resource->GetGPUVirtualAddress();
+				mD3D12IndexBufferView.SizeInBytes	 = numberOfBytes;
+				mD3D12IndexBufferView.Format		 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(indexBufferFormat));
+			}
+			else
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create index buffer")
+				mD3D12IndexBufferView.BufferLocation = 0;
+				mD3D12IndexBufferView.SizeInBytes	 = 0;
+				mD3D12IndexBufferView.Format		 = DXGI_FORMAT_UNKNOWN;
+			}
 		}
 
 		// Assign a default name to the resource for debugging purposes
