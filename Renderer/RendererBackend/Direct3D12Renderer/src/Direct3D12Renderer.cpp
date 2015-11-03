@@ -2093,13 +2093,14 @@ namespace Direct3D12Renderer
 	void Direct3D12Renderer::initializeCapabilities()
 	{
 		// TODO(co) Direct3D 12 update
-		/*
+
 		// There are no Direct3D 12 device capabilities we could query on runtime, they depend on the chosen feature level
 		// -> Have a look at "Devices -> Direct3D 12 on Downlevel Hardware -> Introduction" at MSDN http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx
 		//    for a table with a list of the minimum resources supported by Direct3D 12 at the different feature levels
 
 		// Evaluate the chosen feature level
-		switch (mD3D12Device->GetFeatureLevel())
+		switch (D3D_FEATURE_LEVEL_12_0)
+		// switch (mD3D12Device->GetFeatureLevel())	// TODO(co) Direct3D 12 update
 		{
 			case D3D_FEATURE_LEVEL_9_1:
 				// Maximum number of viewports (always at least 1)
@@ -2190,10 +2191,14 @@ namespace Direct3D12Renderer
 
 			case D3D_FEATURE_LEVEL_10_0:
 				// Maximum number of viewports (always at least 1)
-				mCapabilities.maximumNumberOfViewports = D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
+				// TODO(co) Direct3D 12 update
+				// mCapabilities.maximumNumberOfViewports = D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
+				mCapabilities.maximumNumberOfViewports = 8;
 
 				// Maximum number of simultaneous render targets (if <1 render to texture is not supported)
-				mCapabilities.maximumNumberOfSimultaneousRenderTargets = D3D10_SIMULTANEOUS_RENDER_TARGET_COUNT;
+				// TODO(co) Direct3D 12 update
+				//mCapabilities.maximumNumberOfSimultaneousRenderTargets = D3D10_SIMULTANEOUS_RENDER_TARGET_COUNT;
+				mCapabilities.maximumNumberOfSimultaneousRenderTargets = 8;
 
 				// Maximum texture dimension
 				mCapabilities.maximumTextureDimension = 8192;
@@ -2219,10 +2224,14 @@ namespace Direct3D12Renderer
 
 			case D3D_FEATURE_LEVEL_10_1:
 				// Maximum number of viewports (always at least 1)
-				mCapabilities.maximumNumberOfViewports = D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
+				// TODO(co) Direct3D 12 update
+				//mCapabilities.maximumNumberOfViewports = D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
+				mCapabilities.maximumNumberOfViewports = 8;
 
 				// Maximum number of simultaneous render targets (if <1 render to texture is not supported)
-				mCapabilities.maximumNumberOfSimultaneousRenderTargets = D3D10_SIMULTANEOUS_RENDER_TARGET_COUNT;
+				// TODO(co) Direct3D 12 update
+				//mCapabilities.maximumNumberOfSimultaneousRenderTargets = D3D10_SIMULTANEOUS_RENDER_TARGET_COUNT;
+				mCapabilities.maximumNumberOfSimultaneousRenderTargets = 8;
 
 				// Maximum texture dimension
 				mCapabilities.maximumTextureDimension = 8192;
@@ -2247,9 +2256,11 @@ namespace Direct3D12Renderer
 				break;
 
 			case D3D_FEATURE_LEVEL_11_0:
-		//	case D3D_FEATURE_LEVEL_12_0:	// TODO(co) D3D_FEATURE_LEVEL_12_0
+			case D3D_FEATURE_LEVEL_12_0:
 				// Maximum number of viewports (always at least 1)
-				mCapabilities.maximumNumberOfViewports = D3D12_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
+				// TODO(co) Direct3D 12 update
+				//mCapabilities.maximumNumberOfViewports = D3D12_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
+				mCapabilities.maximumNumberOfViewports = 8;
 
 				// Maximum number of simultaneous render targets (if <1 render to texture is not supported)
 				mCapabilities.maximumNumberOfSimultaneousRenderTargets = D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT;
@@ -2293,7 +2304,6 @@ namespace Direct3D12Renderer
 
 		// Is there support for fragment shaders (FS)?
 		mCapabilities.fragmentShader = true;
-		*/
 	}
 
 	#ifndef DIRECT3D12RENDERER_NO_DEBUG
