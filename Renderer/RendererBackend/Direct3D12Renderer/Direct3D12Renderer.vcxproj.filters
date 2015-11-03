@@ -69,9 +69,6 @@
     <None Include="include\Direct3D12Renderer\TextureCollection.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D12Renderer\VertexArray.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D12Renderer\VertexBuffer.inl">
       <Filter>Source Files</Filter>
     </None>

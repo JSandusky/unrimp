@@ -28,17 +28,14 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Direct3D 12
-	/*
-	inline ID3D12Buffer *IndexBuffer::getD3D12Buffer() const
+	inline ID3D12Resource *IndexBuffer::getID3D12Resource() const
 	{
-		return mD3D12Buffer;
+		return mD3D12Resource;
 	}
-	*/
 
-	inline uint32_t IndexBuffer::getDXGIFormat() const
+	inline const D3D12_INDEX_BUFFER_VIEW& IndexBuffer::getD3D12IndexBufferView() const
 	{
-		return mDXGIFormat;
+		return mD3D12IndexBufferView;
 	}
 
 

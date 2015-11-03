@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/IndexBuffer.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D12Renderer/D3D12.h"
+#include "Direct3D12Renderer/D3D12X.h"
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
@@ -38,50 +38,57 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *, Renderer::BufferUsage::Enum) :
+	IndexBuffer::IndexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum) :
 		IIndexBuffer(direct3D12Renderer),
-		// mD3D12Buffer(nullptr),	// TODO(co) Direct3D 12
-		mDXGIFormat(DXGI_FORMAT_UNKNOWN)
+		mD3D12Resource(nullptr)
 	{
 		// "Renderer::IndexBufferFormat::UnsignedChar" is not supported by Direct3D 12
+		// TODO(co) Check this, there's "DXGI_FORMAT_R8_UINT" which might work in Direct3D 12
 		if (Renderer::IndexBufferFormat::UNSIGNED_CHAR == indexBufferFormat)
 		{
 			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: \"Renderer::IndexBufferFormat::UNSIGNED_CHAR\" is not supported by Direct3D 12")
+			mD3D12IndexBufferView.BufferLocation = 0;
+			mD3D12IndexBufferView.SizeInBytes	 = 0;
+			mD3D12IndexBufferView.Format		 = DXGI_FORMAT_UNKNOWN;
 		}
 		else
 		{
-			// Set the DXGI format
-			mDXGIFormat = Mapping::getDirect3D12Format(indexBufferFormat);
+			// TODO(co) This is only meant for the Direct3D 12 renderer backend kickoff.
+			// Note: using upload heaps to transfer static data like vert buffers is not 
+			// recommended. Every time the GPU needs it, the upload heap will be marshalled 
+			// over. Please read up on Default Heap usage. An upload heap is used here for 
+			// code simplicity and because there are very few verts to actually transfer.
 
-			// TODO(co) Direct3D 12
-			/*
-			// Direct3D 12 buffer description
-			D3D12_BUFFER_DESC d3d12BufferDesc;
-			d3d12BufferDesc.ByteWidth           = numberOfBytes;
-			d3d12BufferDesc.Usage               = static_cast<D3D12_USAGE>(Mapping::getDirect3D12UsageAndCPUAccessFlags(bufferUsage, d3d12BufferDesc.CPUAccessFlags));
-			d3d12BufferDesc.BindFlags           = D3D12_BIND_INDEX_BUFFER;
-			//d3d12BufferDesc.CPUAccessFlags    = <filled above>;
-			d3d12BufferDesc.MiscFlags           = 0;
-			d3d12BufferDesc.StructureByteStride = 0;
+			// TODO(co) Add buffer usage setting support
 
-			// Data given?
-			if (nullptr != data)
+			const CD3DX12_HEAP_PROPERTIES d3d12XHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
+			const CD3DX12_RESOURCE_DESC d3d12XResourceDesc = CD3DX12_RESOURCE_DESC::Buffer(numberOfBytes);
+			if (SUCCEEDED(direct3D12Renderer.getD3D12Device()->CreateCommittedResource(
+				&d3d12XHeapProperties,
+				D3D12_HEAP_FLAG_NONE,
+				&d3d12XResourceDesc,
+				D3D12_RESOURCE_STATE_GENERIC_READ,
+				nullptr,
+				IID_PPV_ARGS(&mD3D12Resource))))
 			{
-				// Direct3D 12 subresource data
-				D3D12_SUBRESOURCE_DATA d3d12SubresourceData;
-				d3d12SubresourceData.pSysMem          = data;
-				d3d12SubresourceData.SysMemPitch      = 0;
-				d3d12SubresourceData.SysMemSlicePitch = 0;
+				// Data given?
+				if (nullptr != data)
+				{
+					// Copy the data to the index buffer
+					UINT8* pIndexDataBegin;
+					CD3DX12_RANGE readRange(0, 0);	// We do not intend to read from this resource on the CPU
+					if (SUCCEEDED(mD3D12Resource->Map(0, &readRange, reinterpret_cast<void**>(&pIndexDataBegin))))
+					{
+						memcpy(pIndexDataBegin, data, numberOfBytes);
+						mD3D12Resource->Unmap(0, nullptr);
+					}
+				}
+			}
 
-				// Create the Direct3D 12 index buffer
-				direct3D12Renderer.getD3D12Device()->CreateBuffer(&d3d12BufferDesc, &d3d12SubresourceData, &mD3D12Buffer);
-			}
-			else
-			{
-				// Create the Direct3D 12 index buffer
-				direct3D12Renderer.getD3D12Device()->CreateBuffer(&d3d12BufferDesc, nullptr, &mD3D12Buffer);
-			}
-			*/
+			// Fill the Direct3D 12 index buffer view
+			mD3D12IndexBufferView.BufferLocation = mD3D12Resource->GetGPUVirtualAddress();
+			mD3D12IndexBufferView.SizeInBytes	 = numberOfBytes;
+			mD3D12IndexBufferView.Format		 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(indexBufferFormat));
 		}
 
 		// Assign a default name to the resource for debugging purposes
@@ -92,34 +99,28 @@ namespace Direct3D12Renderer
 
 	IndexBuffer::~IndexBuffer()
 	{
-		// TODO(co) Direct3D 12
-		/*
-		if (nullptr != mD3D12Buffer)
+		if (nullptr != mD3D12Resource)
 		{
-			mD3D12Buffer->Release();
+			mD3D12Resource->Release();
 		}
-		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void IndexBuffer::setDebugName(const char *)
+	void IndexBuffer::setDebugName(const char *name)
 	{
-		// TODO(co) Direct3D 12
-		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			// Valid Direct3D 12 index buffer?
-			if (nullptr != mD3D12Buffer)
+			if (nullptr != mD3D12Resource)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mD3D12Resource->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
-		*/
 	}
 
 

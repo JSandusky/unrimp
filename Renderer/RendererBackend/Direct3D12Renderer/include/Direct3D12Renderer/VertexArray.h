@@ -101,13 +101,6 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void setDebugName(const char *name) override;
-
-
-	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
@@ -126,9 +119,3 @@ namespace Direct3D12Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Direct3D12Renderer
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "Direct3D12Renderer/VertexArray.inl"

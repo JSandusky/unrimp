@@ -27,6 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "Direct3D12Renderer/D3D12.h"
+
 #include <Renderer/BufferTypes.h>
 #include <Renderer/IIndexBuffer.h>
 #include <Renderer/IndexBufferTypes.h>
@@ -35,7 +37,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-// struct ID3D12Buffer;	// TODO(co) Direct3D 12
 namespace Direct3D12Renderer
 {
 	class Direct3D12Renderer;
@@ -89,22 +90,21 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D index buffer instance
+		*    Return the Direct3D index buffer resource instance
 		*
 		*  @return
-		*    The Direct3D index buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D index buffer resource instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		// TODO(co) Direct3D 12
-		//inline ID3D12Buffer *getD3D12Buffer() const;
+		inline ID3D12Resource *getID3D12Resource() const;
 
 		/**
 		*  @brief
-		*    Return the DXGI index buffer data format
+		*    Return the Direct3D 12 index buffer view
 		*
 		*  @return
-		*    The DXGI index buffer data format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
+		*    The Direct3D 12 index buffer view
 		*/
-		inline uint32_t getDXGIFormat() const;
+		inline const D3D12_INDEX_BUFFER_VIEW& getD3D12IndexBufferView() const;
 
 
 	//[-------------------------------------------------------]
@@ -118,9 +118,8 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Direct3D 12
-		//ID3D12Buffer *mD3D12Buffer;	///< Direct3D index buffer instance, can be a null pointer
-		uint32_t	  mDXGIFormat;	///< DXGI index buffer data format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
+		ID3D12Resource*			mD3D12Resource;
+		D3D12_INDEX_BUFFER_VIEW	mD3D12IndexBufferView;
 
 
 	};

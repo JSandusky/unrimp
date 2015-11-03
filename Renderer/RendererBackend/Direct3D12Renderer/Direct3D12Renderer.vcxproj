@@ -42,7 +42,6 @@
     <None Include="include\Direct3D12Renderer\Texture2DArray.inl" />
     <None Include="include\Direct3D12Renderer\TextureBuffer.inl" />
     <None Include="include\Direct3D12Renderer\TextureCollection.inl" />
-    <None Include="include\Direct3D12Renderer\VertexArray.inl" />
     <None Include="include\Direct3D12Renderer\VertexBuffer.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>

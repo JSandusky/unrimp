@@ -44,6 +44,7 @@ namespace Direct3D11Renderer
 		mDXGIFormat(DXGI_FORMAT_UNKNOWN)
 	{
 		// "Renderer::IndexBufferFormat::UnsignedChar" is not supported by Direct3D 11
+		// -> See "Input assembler index buffer resources" ("D3D11_FORMAT_SUPPORT_IA_INDEX_BUFFER"): https://msdn.microsoft.com/en-us/library/windows/desktop/ff471325%28v=vs.85%29.aspx
 		if (Renderer::IndexBufferFormat::UNSIGNED_CHAR == indexBufferFormat)
 		{
 			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: \"Renderer::IndexBufferFormat::UNSIGNED_CHAR\" is not supported by Direct3D 11")

@@ -113,37 +113,13 @@ namespace Direct3D12Renderer
 	{
 		d3d12GraphicsCommandList.IASetVertexBuffers(0, mNumberOfSlots, mD3D12VertexBufferViews);
 
-		// TODO(co) Direct3D 12 update
-		/*
 		// Get the used index buffer
 		// -> In case of no index buffer we don't set null indices, there's not really a point in it
 		if (nullptr != mIndexBuffer)
 		{
 			// Set the Direct3D 12 indices
-			mD3D12DeviceContext->IASetIndexBuffer(mIndexBuffer->getD3D12Buffer(), static_cast<DXGI_FORMAT>(mIndexBuffer->getDXGIFormat()), 0);
+			d3d12GraphicsCommandList.IASetIndexBuffer(&static_cast<IndexBuffer*>(mIndexBuffer)->getD3D12IndexBufferView());
 		}
-		*/
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	void VertexArray::setDebugName(const char *)
-	{
-		// TODO(co) Direct3D 12 update
-		/*
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
-			// Valid Direct3D 12 input layout?
-			if (nullptr != mD3D12InputLayout)
-			{
-				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D12InputLayout->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12InputLayout->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
-			}
-		#endif
-		*/
 	}
 
 
