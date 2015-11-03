@@ -63,7 +63,9 @@ void VertexBuffer::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			{ // Create the program
+			// Create the program
+			Renderer::IProgramPtr program;
+			{
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
@@ -73,13 +75,13 @@ void VertexBuffer::onInitialization()
 				#include "VertexBuffer_Null.h"
 
 				// Create the program
-				mProgram = shaderLanguage->createProgram(
+				program = shaderLanguage->createProgram(
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
 			// Is there a valid program?
-			if (nullptr != mProgram)
+			if (nullptr != program)
 			{
 				// Vertex array object (VAO)
 				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -100,7 +102,7 @@ void VertexBuffer::onInitialization()
 					};
 					Renderer::IVertexBufferPtr vertexBufferPositionColor(renderer->createVertexBuffer(sizeof(VERTEX_POSITION_COLOR), VERTEX_POSITION_COLOR, Renderer::BufferUsage::STATIC_DRAW));
 
-					// Create vertex array object (VAO)
+					// Vertex input layout
 					const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 					{
 						{ // Attribute 0
@@ -128,14 +130,29 @@ void VertexBuffer::onInitialization()
 							0										// instancesPerElement (uint32_t)
 						}
 					};
-					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-					{
-						{ // Vertex buffer 0
-							vertexBufferPositionColor,	// vertexBuffer (Renderer::IVertexBuffer *)
-							sizeof(float) * (2 + 3)		// strideInBytes (uint32_t)
-						}
-					};
-					mVertexArrayVBO = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+					const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
+
+					{ // Create the pipeline state object (PSO)
+						// Setup
+						Renderer::PipelineState pipelineState;
+						pipelineState.program = program;
+						pipelineState.numberOfVertexAttributes = numberOfVertexAttributes;
+						pipelineState.vertexAttributes = vertexArrayAttributes;
+
+						// Create the instance
+						mPipelineStateVBO = renderer->createPipelineState(pipelineState);
+					}
+
+					{ // Create vertex array object (VAO)
+						const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+						{
+							{ // Vertex buffer 0
+								vertexBufferPositionColor,	// vertexBuffer (Renderer::IVertexBuffer *)
+								sizeof(float) * (2 + 3)		// strideInBytes (uint32_t)
+							}
+						};
+						mVertexArrayVBO = program->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+					}
 				}
 
 				{ // Create vertex array object (VAO) using multiple vertex buffer object (VBO)
@@ -159,7 +176,7 @@ void VertexBuffer::onInitialization()
 					};
 					Renderer::IVertexBufferPtr vertexBufferColor(renderer->createVertexBuffer(sizeof(VERTEX_COLOR), VERTEX_COLOR, Renderer::BufferUsage::STATIC_DRAW));
 
-					// Create vertex array object (VAO)
+					// Vertex input layout
 					const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 					{
 						{ // Attribute 0
@@ -187,18 +204,33 @@ void VertexBuffer::onInitialization()
 							0										// instancesPerElement (uint32_t)
 						}
 					};
-					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-					{
-						{ // Vertex buffer 0
-							vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer *)
-							sizeof(float) * 2		// strideInBytes (uint32_t)
-						},
-						{ // Vertex buffer 1
-							vertexBufferColor,		// vertexBuffer (Renderer::IVertexBuffer *)
-							sizeof(float) * 3		// strideInBytes (uint32_t)
-						}
-					};
-					mVertexArrayVBOs = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+					const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
+
+					{ // Create the pipeline state object (PSO)
+						// Setup
+						Renderer::PipelineState pipelineState;
+						pipelineState.program = program;
+						pipelineState.numberOfVertexAttributes = numberOfVertexAttributes;
+						pipelineState.vertexAttributes = vertexArrayAttributes;
+
+						// Create the instance
+						mPipelineStateVBOs = renderer->createPipelineState(pipelineState);
+					}
+
+					{ // Create vertex array object (VAO)
+						const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+						{
+							{ // Vertex buffer 0
+								vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer *)
+								sizeof(float) * 2		// strideInBytes (uint32_t)
+							},
+							{ // Vertex buffer 1
+								vertexBufferColor,		// vertexBuffer (Renderer::IVertexBuffer *)
+								sizeof(float) * 3		// strideInBytes (uint32_t)
+							}
+						};
+						mVertexArrayVBOs = program->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+					}
 				}
 			}
 		}
@@ -215,8 +247,9 @@ void VertexBuffer::onDeinitialization()
 
 	// Release the used resources
 	mVertexArrayVBOs = nullptr;
+	mPipelineStateVBOs = nullptr;
 	mVertexArrayVBO = nullptr;
-	mProgram = nullptr;
+	mPipelineStateVBO = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -229,7 +262,7 @@ void VertexBuffer::onDraw()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mProgram)
+	if (nullptr != renderer)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -242,12 +275,14 @@ void VertexBuffer::onDraw()
 			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
 
-			// Set the used program
-			renderer->setProgram(mProgram);
-
-			{ // First lower triangle using one vertex buffer object (VBO)
+			// First lower triangle using one vertex buffer object (VBO)
+			if (nullptr != mPipelineStateVBO)
+			{
 				// Begin debug event
 				RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw using one VBO")
+
+				// Set the used pipeline state object (PSO)
+				renderer->setPipelineState(mPipelineStateVBO);
 
 				{ // Setup input assembly (IA)
 					// Set the used vertex array
@@ -264,9 +299,14 @@ void VertexBuffer::onDraw()
 				RENDERER_END_DEBUG_EVENT(renderer)
 			}
 
-			{ // Second upper triangle using multiple vertex buffer object (VBO)
+			// Second upper triangle using multiple vertex buffer object (VBO)
+			if (nullptr != mPipelineStateVBOs)
+			{
 				// Begin debug event
 				RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw using multiple VBOs")
+
+				// Set the used pipeline state object (PSO)
+				renderer->setPipelineState(mPipelineStateVBOs);
 
 				{ // Setup input assembly (IA)
 					// Set the used vertex array
