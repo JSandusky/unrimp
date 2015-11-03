@@ -42,10 +42,11 @@
 *    - Vertex buffer object (VBO)
 *    - Vertex array object (VAO)
 *    - Vertex shader (VS) and fragment shader (FS)
+*    - Pipeline state object (PSO)
 *    - Multiple swap chains
 *
 *  @note
-*    - This example is intentionally using OS dependant native window
+*    - This example is intentionally using OS dependent native window
 *      creation in order to keep the example "close to metal"
 */
 class FirstMultipleSwapChains : public IApplicationRenderer
@@ -100,9 +101,9 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IProgramPtr	  mProgram;		///< Program, can be a null pointer
-	Renderer::IVertexArrayPtr mVertexArray;	///< Vertex array object (VAO), can be a null pointer
-	Renderer::ISwapChainPtr   mSwapChain;	///< Swap chain, can be a null pointer
+	Renderer::IPipelineStatePtr mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
+	Renderer::IVertexArrayPtr   mVertexArray;	///< Vertex array object (VAO), can be a null pointer
+	Renderer::ISwapChainPtr     mSwapChain;		///< Swap chain, can be a null pointer
 
 
 };

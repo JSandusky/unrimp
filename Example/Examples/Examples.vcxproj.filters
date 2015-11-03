@@ -195,9 +195,6 @@
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_ES2.h">
       <Filter>Basics\FirstMultipleSwapChains</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_HLSL_D3D9_D3D10_D3D11.h">
-      <Filter>Basics\FirstMultipleSwapChains</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_Null.h">
       <Filter>Basics\FirstMultipleSwapChains</Filter>
     </ClInclude>
@@ -455,6 +452,9 @@
     </ClInclude>
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_HLSL_D3D9_D3D10_D3D11_D3D12.h">
       <Filter>Basics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_HLSL_D3D9_D3D10_D3D11_D3D12.h">
+      <Filter>Basics\FirstMultipleSwapChains</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
