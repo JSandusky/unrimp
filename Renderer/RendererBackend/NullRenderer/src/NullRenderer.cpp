@@ -31,6 +31,7 @@
 #include "NullRenderer/TextureBuffer.h"
 #include "NullRenderer/VertexBuffer.h"
 #include "NullRenderer/VertexArray.h"
+#include "NullRenderer/PipelineState.h"
 #include "NullRenderer/SwapChain.h"
 #include "NullRenderer/Framebuffer.h"
 #include "NullRenderer/RasterizerState.h"
@@ -271,10 +272,9 @@ namespace NullRenderer
 		return new Texture2DArray(*this, width, height, numberOfSlices);
 	}
 
-	Renderer::IPipelineState *NullRenderer::createPipelineState(const Renderer::PipelineState &)
+	Renderer::IPipelineState *NullRenderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
-		// TODO(co) Implement me
-		return nullptr;
+		return new PipelineState(*this, pipelineState);
 	}
 
 	Renderer::IRasterizerState *NullRenderer::createRasterizerState(const Renderer::RasterizerState &)
@@ -326,9 +326,20 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void NullRenderer::setPipelineState(Renderer::IPipelineState*)
+	void NullRenderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
-		// TODO(co) Implement me
+		if (nullptr != pipelineState)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
+
+			// Set pipeline state
+			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
+		}
+		else
+		{
+			// TODO(co) Handle this situation?
+		}
 	}
 
 	void NullRenderer::setProgram(Renderer::IProgram *program)

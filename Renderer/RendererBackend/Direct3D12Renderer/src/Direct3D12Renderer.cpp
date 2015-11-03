@@ -36,7 +36,6 @@
 #include "Direct3D12Renderer/VertexBuffer.h"
 #include "Direct3D12Renderer/TextureBuffer.h"
 #include "Direct3D12Renderer/PipelineState.h"
-#include "Direct3D12Renderer/PipelineState.h"
 #include "Direct3D12Renderer/Texture2DArray.h"
 #include "Direct3D12Renderer/RasterizerState.h"
 #include "Direct3D12Renderer/DepthStencilState.h"

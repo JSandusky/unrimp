@@ -44,6 +44,7 @@
 *    - 2D texture
 *    - Sampler state object
 *    - Vertex shader (VS) and fragment shader (FS)
+*    - Pipeline state object (PSO)
 */
 class FirstTexture : public IApplicationRenderer
 {

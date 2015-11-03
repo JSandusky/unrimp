@@ -75,6 +75,9 @@
     <None Include="include\Direct3D10Renderer\IndexBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\Direct3D10Renderer\PipelineState.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D10Renderer\Shader\GeometryShader.h">
@@ -176,6 +179,9 @@
     <ClInclude Include="include\Direct3D10Renderer\RasterizerState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\PipelineState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\GeometryShaderHlsl.cpp">
@@ -266,6 +272,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\BlendState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PipelineState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

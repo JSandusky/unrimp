@@ -25,6 +25,7 @@
     <None Include="include\Direct3D11Renderer\Direct3D11Renderer.inl" />
     <None Include="include\Direct3D11Renderer\Framebuffer.inl" />
     <None Include="include\Direct3D11Renderer\IndexBuffer.inl" />
+    <None Include="include\Direct3D11Renderer\PipelineState.inl" />
     <None Include="include\Direct3D11Renderer\RasterizerState.inl" />
     <None Include="include\Direct3D11Renderer\SamplerState.inl" />
     <None Include="include\Direct3D11Renderer\SamplerStateCollection.inl" />
@@ -57,6 +58,7 @@
     <ClInclude Include="include\Direct3D11Renderer\Guid.h" />
     <ClInclude Include="include\Direct3D11Renderer\IndexBuffer.h" />
     <ClInclude Include="include\Direct3D11Renderer\Mapping.h" />
+    <ClInclude Include="include\Direct3D11Renderer\PipelineState.h" />
     <ClInclude Include="include\Direct3D11Renderer\RasterizerState.h" />
     <ClInclude Include="include\Direct3D11Renderer\SamplerState.h" />
     <ClInclude Include="include\Direct3D11Renderer\SamplerStateCollection.h" />
@@ -93,6 +95,7 @@
     <ClCompile Include="src\Guid.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
+    <ClCompile Include="src\PipelineState.cpp" />
     <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateCollection.cpp" />

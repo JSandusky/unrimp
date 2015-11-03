@@ -23,6 +23,7 @@
     <None Include="include\Direct3D9Renderer\Direct3D9Renderer.inl" />
     <None Include="include\Direct3D9Renderer\Framebuffer.inl" />
     <None Include="include\Direct3D9Renderer\IndexBuffer.inl" />
+    <None Include="include\Direct3D9Renderer\PipelineState.inl" />
     <None Include="include\Direct3D9Renderer\SamplerStateCollection.inl" />
     <None Include="include\Direct3D9Renderer\Shader\FragmentShaderHlsl.inl" />
     <None Include="include\Direct3D9Renderer\Shader\Program.inl" />
@@ -47,6 +48,7 @@
     <ClInclude Include="include\Direct3D9Renderer\Guid.h" />
     <ClInclude Include="include\Direct3D9Renderer\IndexBuffer.h" />
     <ClInclude Include="include\Direct3D9Renderer\Mapping.h" />
+    <ClInclude Include="include\Direct3D9Renderer\PipelineState.h" />
     <ClInclude Include="include\Direct3D9Renderer\RasterizerState.h" />
     <ClInclude Include="include\Direct3D9Renderer\SamplerState.h" />
     <ClInclude Include="include\Direct3D9Renderer\SamplerStateCollection.h" />
@@ -73,6 +75,7 @@
     <ClCompile Include="src\Guid.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
+    <ClCompile Include="src\PipelineState.cpp" />
     <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateCollection.cpp" />

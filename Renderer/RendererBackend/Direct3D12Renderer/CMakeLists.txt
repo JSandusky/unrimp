@@ -51,6 +51,7 @@ set(SOURCE_CODES
 	src/Guid.cpp
 	src/IndexBuffer.cpp
 	src/Mapping.cpp
+	src/PipelineState.cpp
 	src/RasterizerState.cpp
 	src/Direct3D12Renderer.cpp
 	src/SamplerState.cpp

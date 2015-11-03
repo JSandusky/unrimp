@@ -34,6 +34,7 @@
 #include "Direct3D11Renderer/IndexBuffer.h"
 #include "Direct3D11Renderer/SamplerState.h"
 #include "Direct3D11Renderer/VertexBuffer.h"
+#include "Direct3D11Renderer/PipelineState.h"
 #include "Direct3D11Renderer/TextureBuffer.h"
 #include "Direct3D11Renderer/Texture2DArray.h"
 #include "Direct3D11Renderer/RasterizerState.h"
@@ -347,10 +348,9 @@ namespace Direct3D11Renderer
 		return new Texture2DArray(*this, width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
 	}
 
-	Renderer::IPipelineState *Direct3D11Renderer::createPipelineState(const Renderer::PipelineState &)
+	Renderer::IPipelineState *Direct3D11Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
 	{
-		// TODO(co) Implement me
-		return nullptr;
+		return new PipelineState(*this, pipelineState);
 	}
 
 	Renderer::IRasterizerState *Direct3D11Renderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
@@ -563,12 +563,20 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::setPipelineState(Renderer::IPipelineState*)
+	void Direct3D11Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
-		// TODO(co) Implement me
+		if (nullptr != pipelineState)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
-		// Set the used program
-		// setProgram((nullptr != pipelineState) ? pipelineState->program : nullptr);
+			// Set pipeline state
+			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
+		}
+		else
+		{
+			// TODO(co) Handle this situation?
+		}
 	}
 
 	void Direct3D11Renderer::setProgram(Renderer::IProgram *program)

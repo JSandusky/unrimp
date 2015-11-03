@@ -32,6 +32,7 @@
 #include "OpenGLES2Renderer/VertexBuffer.h"
 #include "OpenGLES2Renderer/VertexArrayVao.h"
 #include "OpenGLES2Renderer/VertexArrayNoVao.h"
+#include "OpenGLES2Renderer/PipelineState.h"
 #include "OpenGLES2Renderer/SwapChain.h"
 #include "OpenGLES2Renderer/Framebuffer.h"
 #include "OpenGLES2Renderer/Texture2DArray.h"
@@ -353,10 +354,9 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	Renderer::IPipelineState *OpenGLES2Renderer::createPipelineState(const Renderer::PipelineState &)
+	Renderer::IPipelineState *OpenGLES2Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
-		// TODO(co) Implement me
-		return nullptr;
+		return new PipelineState(*this, pipelineState);
 	}
 
 	Renderer::IRasterizerState *OpenGLES2Renderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
@@ -408,12 +408,20 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::setPipelineState(Renderer::IPipelineState*)
+	void OpenGLES2Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
-		// TODO(co) Implement me
+		if (nullptr != pipelineState)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
-		// Set the used program
-		// setProgram((nullptr != pipelineState) ? pipelineState->program : nullptr);
+			// Set pipeline state
+			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
+		}
+		else
+		{
+			// TODO(co) Handle this situation?
+		}
 	}
 
 	void OpenGLES2Renderer::setProgram(Renderer::IProgram *program)

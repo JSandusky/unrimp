@@ -231,9 +231,6 @@
     <ClInclude Include="src\Basics\FirstTexture\FirstTexture_HLSL_D3D9.h">
       <Filter>Basics\FirstTexture</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_HLSL_D3D10_D3D11.h">
-      <Filter>Basics\FirstTexture</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstTexture\FirstTexture_Null.h">
       <Filter>Basics\FirstTexture</Filter>
     </ClInclude>
@@ -455,6 +452,9 @@
     </ClInclude>
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11_D3D12.h">
       <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Basics\FirstTexture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

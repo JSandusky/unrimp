@@ -33,6 +33,7 @@
 #include "Direct3D9Renderer/IndexBuffer.h"
 #include "Direct3D9Renderer/SamplerState.h"
 #include "Direct3D9Renderer/VertexBuffer.h"
+#include "Direct3D9Renderer/PipelineState.h"
 #include "Direct3D9Renderer/RasterizerState.h"
 #include "Direct3D9Renderer/DepthStencilState.h"
 #include "Direct3D9Renderer/TextureCollection.h"
@@ -402,10 +403,9 @@ namespace Direct3D9Renderer
 		return nullptr;
 	}
 
-	Renderer::IPipelineState *Direct3D9Renderer::createPipelineState(const Renderer::PipelineState &)
+	Renderer::IPipelineState *Direct3D9Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
 	{
-		// TODO(co) Implement me
-		return nullptr;
+		return new PipelineState(*this, pipelineState);
 	}
 
 	Renderer::IRasterizerState *Direct3D9Renderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
@@ -639,12 +639,20 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::setPipelineState(Renderer::IPipelineState*)
+	void Direct3D9Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
-		// TODO(co) Implement me
+		if (nullptr != pipelineState)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
-		// Set the used program
-		// setProgram((nullptr != pipelineState) ? pipelineState->program : nullptr);
+			// Set pipeline state
+			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
+		}
+		else
+		{
+			// TODO(co) Handle this situation?
+		}
 	}
 
 	void Direct3D9Renderer::setProgram(Renderer::IProgram *program)

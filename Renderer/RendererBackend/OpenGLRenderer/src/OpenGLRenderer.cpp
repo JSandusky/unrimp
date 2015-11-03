@@ -41,6 +41,7 @@
 #include "OpenGLRenderer/RasterizerState.h"
 #include "OpenGLRenderer/VertexBufferDsa.h"
 #include "OpenGLRenderer/VertexBufferBind.h"
+#include "OpenGLRenderer/PipelineState.h"
 #include "OpenGLRenderer/TextureBufferDsa.h"
 #include "OpenGLRenderer/TextureBufferBind.h"
 #include "OpenGLRenderer/Texture2DArrayDsa.h"
@@ -503,10 +504,9 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IPipelineState *OpenGLRenderer::createPipelineState(const Renderer::PipelineState &)
+	Renderer::IPipelineState *OpenGLRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
 	{
-		// TODO(co) Implement me
-		return nullptr;
+		return new PipelineState(*this, pipelineState);
 	}
 
 	Renderer::IRasterizerState *OpenGLRenderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
@@ -577,12 +577,20 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::setPipelineState(Renderer::IPipelineState*)
+	void OpenGLRenderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
-		// TODO(co) Implement me
+		if (nullptr != pipelineState)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
-		// Set the used program
-		// setProgram((nullptr != pipelineState) ? pipelineState->program : nullptr);
+			// Set pipeline state
+			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
+		}
+		else
+		{
+			// TODO(co) Handle this situation?
+		}
 	}
 
 	void OpenGLRenderer::setProgram(Renderer::IProgram *program)

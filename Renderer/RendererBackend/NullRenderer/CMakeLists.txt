@@ -47,6 +47,7 @@ set(SOURCE_CODES
 	src/IndexBuffer.cpp
 	src/RasterizerState.cpp
 	src/NullRenderer.cpp
+	src/PipelineState.cpp
 	src/SamplerState.cpp
 	src/SamplerStateCollection.cpp
 	src/SwapChain.cpp

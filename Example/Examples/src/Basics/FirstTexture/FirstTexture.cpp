@@ -112,7 +112,7 @@ void FirstTexture::onInitialization()
 				#include "FirstTexture_GLSL_110.h"
 				#include "FirstTexture_GLSL_ES2.h"
 				#include "FirstTexture_HLSL_D3D9.h"
-				#include "FirstTexture_HLSL_D3D10_D3D11.h"
+				#include "FirstTexture_HLSL_D3D10_D3D11_D3D12.h"
 				#include "FirstTexture_Null.h"
 
 				// Create the program

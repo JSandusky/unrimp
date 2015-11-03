@@ -60,6 +60,7 @@ set(SOURCE_CODES
 	src/IndexBufferDsa.cpp
 	src/Mapping.cpp
 	src/OpenGLRuntimeLinking.cpp
+	src/PipelineState.cpp
 	src/RasterizerState.cpp
 	src/OpenGLRenderer.cpp
 	src/SamplerState.cpp

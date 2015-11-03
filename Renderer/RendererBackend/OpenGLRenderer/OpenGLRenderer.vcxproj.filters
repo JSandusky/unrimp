@@ -199,6 +199,9 @@
     <ClInclude Include="include\OpenGLRenderer\Texture2D.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\PipelineState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -384,6 +387,9 @@
     <ClCompile Include="src\OpenGLRuntimeLinking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\PipelineState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -464,6 +470,9 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Texture2D.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\PipelineState.inl">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

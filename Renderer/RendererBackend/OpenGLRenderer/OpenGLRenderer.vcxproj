@@ -35,6 +35,7 @@
     <ClInclude Include="include\OpenGLRenderer\OpenGLRenderer.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLRenderer_SingleHeader.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLRuntimeLinking.h" />
+    <ClInclude Include="include\OpenGLRenderer\PipelineState.h" />
     <ClInclude Include="include\OpenGLRenderer\RasterizerState.h" />
     <ClInclude Include="include\OpenGLRenderer\SamplerState.h" />
     <ClInclude Include="include\OpenGLRenderer\SamplerStateBind.h" />
@@ -107,6 +108,7 @@
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\OpenGLRenderer.cpp" />
     <ClCompile Include="src\OpenGLRuntimeLinking.cpp" />
+    <ClCompile Include="src\PipelineState.cpp" />
     <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateBind.cpp" />
@@ -161,6 +163,7 @@
     <None Include="include\OpenGLRenderer\IndexBuffer.inl" />
     <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl" />
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl" />
+    <None Include="include\OpenGLRenderer\PipelineState.inl" />
     <None Include="include\OpenGLRenderer\RasterizerState.inl" />
     <None Include="include\OpenGLRenderer\SamplerStateCollection.inl" />
     <None Include="include\OpenGLRenderer\SamplerStateSo.inl" />

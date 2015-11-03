@@ -15,6 +15,9 @@
     <None Include="include\NullRenderer\SwapChain.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\NullRenderer\PipelineState.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\NullRenderer\Shader\GeometryShader.h">
@@ -89,6 +92,9 @@
     <ClInclude Include="include\NullRenderer\DepthStencilState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\NullRenderer\PipelineState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\GeometryShader.cpp">
@@ -158,6 +164,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DepthStencilState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PipelineState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

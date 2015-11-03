@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\NullRenderer\PipelineState.inl" />
     <None Include="include\NullRenderer\SwapChain.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
@@ -30,6 +31,7 @@
     <ClInclude Include="include\NullRenderer\IndexBuffer.h" />
     <ClInclude Include="include\NullRenderer\NullDebug.h" />
     <ClInclude Include="include\NullRenderer\NullRenderer.h" />
+    <ClInclude Include="include\NullRenderer\PipelineState.h" />
     <ClInclude Include="include\NullRenderer\RasterizerState.h" />
     <ClInclude Include="include\NullRenderer\SamplerState.h" />
     <ClInclude Include="include\NullRenderer\SamplerStateCollection.h" />
@@ -55,6 +57,7 @@
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\NullRenderer.cpp" />
+    <ClCompile Include="src\PipelineState.cpp" />
     <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateCollection.cpp" />

@@ -59,6 +59,7 @@ set(SOURCE_CODES
 	src/Mapping.cpp
 	src/RasterizerState.cpp
 	src/OpenGLES2Renderer.cpp
+	src/PipelineState.cpp
 	src/SamplerState.cpp
 	src/SamplerStateCollection.cpp
 	src/SwapChain.cpp

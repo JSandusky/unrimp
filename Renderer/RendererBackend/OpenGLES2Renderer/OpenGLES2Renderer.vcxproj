@@ -25,6 +25,7 @@
     <None Include="include\OpenGLES2Renderer\IContext.inl" />
     <None Include="include\OpenGLES2Renderer\IndexBuffer.inl" />
     <None Include="include\OpenGLES2Renderer\OpenGLES2Renderer.inl" />
+    <None Include="include\OpenGLES2Renderer\PipelineState.inl" />
     <None Include="include\OpenGLES2Renderer\RasterizerState.inl" />
     <None Include="include\OpenGLES2Renderer\SamplerStateCollection.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.inl" />
@@ -52,6 +53,7 @@
     <ClInclude Include="include\OpenGLES2Renderer\Mapping.h" />
     <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Debug.h" />
     <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Renderer.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\PipelineState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\RasterizerState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\SamplerState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\SamplerStateCollection.h" />
@@ -83,6 +85,7 @@
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\OpenGLES2Renderer.cpp" />
+    <ClCompile Include="src\PipelineState.cpp" />
     <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateCollection.cpp" />
