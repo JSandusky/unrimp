@@ -97,13 +97,6 @@ void FirstGeometryShader::onInitialization()
 			// -> Apparently there are currently some issues when using this approach: http://www.opengl.org/discussion_boards/showthread.php/177372-Rendering-simple-shapes-without-passing-vertices
 			if (nullptr != program && 0 != strcmp(renderer->getName(), "OpenGL"))
 			{
-				// Create the vertex buffer object (VBO)
-				static const float VERTEX_POSITION[] =
-				{			// Vertex ID
-					42.0f	// 0
-				};
-				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-
 				// Vertex input layout
 				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 				{
@@ -135,11 +128,19 @@ void FirstGeometryShader::onInitialization()
 				}
 
 				{ // Create vertex array object (VAO)
-				  // -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-				  // -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-				  // -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-				  //    reference of the used vertex buffer objects (VBO). If the reference counter of a
-				  //    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+					// Create the vertex buffer object (VBO)
+					static const float VERTEX_POSITION[] =
+					{			// Vertex ID
+						42.0f	// 0
+					};
+					Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+
+					// Create vertex array object (VAO)
+					// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+					// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+					// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+					//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+					//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
 					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 					{
 						{ // Vertex buffer 0

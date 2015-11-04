@@ -100,17 +100,6 @@ void VertexBuffer::onInitialization()
 				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
 
 				{ // Create vertex array object (VAO) using one vertex buffer object (VBO)
-					// Create the vertex buffer object (VBO) holding position and color data
-					// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-					// -> Traditional normalized RGB vertex colors
-					static const float VERTEX_POSITION_COLOR[] =
-					{	 // Position     Color				// Vertex ID	Triangle on screen
-						 0.0f, 1.0f,	1.0f, 0.0f, 0.0f,	// 0				0
-						 1.0f, 0.0f,	0.0f, 1.0f, 0.0f,	// 1			   .   .
-						-0.5f, 0.0f,	0.0f, 0.0f, 1.0f	// 2			  2.......1
-					};
-					Renderer::IVertexBufferPtr vertexBufferPositionColor(renderer->createVertexBuffer(sizeof(VERTEX_POSITION_COLOR), VERTEX_POSITION_COLOR, Renderer::BufferUsage::STATIC_DRAW));
-
 					// Vertex input layout
 					const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 					{
@@ -154,6 +143,18 @@ void VertexBuffer::onInitialization()
 					}
 
 					{ // Create vertex array object (VAO)
+						// Create the vertex buffer object (VBO) holding position and color data
+						// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
+						// -> Traditional normalized RGB vertex colors
+						static const float VERTEX_POSITION_COLOR[] =
+						{	 // Position     Color				// Vertex ID	Triangle on screen
+							 0.0f, 1.0f,	1.0f, 0.0f, 0.0f,	// 0				0
+							 1.0f, 0.0f,	0.0f, 1.0f, 0.0f,	// 1			   .   .
+							-0.5f, 0.0f,	0.0f, 0.0f, 1.0f	// 2			  2.......1
+						};
+						Renderer::IVertexBufferPtr vertexBufferPositionColor(renderer->createVertexBuffer(sizeof(VERTEX_POSITION_COLOR), VERTEX_POSITION_COLOR, Renderer::BufferUsage::STATIC_DRAW));
+
+						// Create vertex array object (VAO)
 						const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 						{
 							{ // Vertex buffer 0
@@ -166,16 +167,6 @@ void VertexBuffer::onInitialization()
 				}
 
 				{ // Create vertex array object (VAO) using multiple vertex buffer object (VBO)
-					// Create the vertex buffer object (VBO) holding position data
-					// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-					static const float VERTEX_POSITION[] =
-					{					// Vertex ID	Triangle on screen
-						-0.5f,  0.0f,	// 0			  0.......1
-						 1.0f,  0.0f,	// 1			   .   .
-						 0.0f, -1.0f	// 2			  	2
-					};
-					Renderer::IVertexBufferPtr vertexBufferPosition(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-
 					// Create the vertex buffer object (VBO) holding color data
 					// -> Traditional normalized RGB vertex colors
 					static const float VERTEX_COLOR[] =
@@ -229,6 +220,17 @@ void VertexBuffer::onInitialization()
 					}
 
 					{ // Create vertex array object (VAO)
+						// Create the vertex buffer object (VBO) holding position data
+						// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
+						static const float VERTEX_POSITION[] =
+						{					// Vertex ID	Triangle on screen
+							-0.5f,  0.0f,	// 0			  0.......1
+							 1.0f,  0.0f,	// 1			   .   .
+							 0.0f, -1.0f	// 2			  	2
+						};
+						Renderer::IVertexBufferPtr vertexBufferPosition(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+
+						// Create vertex array object (VAO)
 						const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 						{
 							{ // Vertex buffer 0

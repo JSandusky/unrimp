@@ -105,34 +105,6 @@ void FirstInstancing::onInitialization()
 				// Is there a valid program?
 				if (nullptr != program)
 				{
-					// Create the vertex buffer object (VBO)
-					// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-					static const float VERTEX_POSITION[] =
-					{					// Vertex ID	Triangle on screen
-						 0.0f, 1.0f,	// 0					 .0
-						 0.0f, 0.0f,	// 1				 .    .
-						-1.0f, 0.0f		// 2			  2.......1
-					};
-					Renderer::IVertexBufferPtr vertexBufferPosition(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-
-					// Create the per-instance-data vertex buffer object (VBO)
-					// -> Simple instance ID in order to keep it similar to the "draw instanced" version on the right side (blue)
-					static const float INSTANCE_ID[] =
-					{
-						 0.0f, 1.0f
-					};
-					Renderer::IVertexBufferPtr vertexBufferInstanceId(renderer->createVertexBuffer(sizeof(INSTANCE_ID), INSTANCE_ID, Renderer::BufferUsage::STATIC_DRAW));
-
-					// Create the index buffer object (IBO)
-					// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
-					// -> In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
-					//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
-					static const uint16_t INDICES[] =
-					{
-						0, 1, 2
-					};
-					Renderer::IIndexBuffer *indexBufferInstancedArrays = renderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
-
 					// Vertex input layout
 					const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 					{
@@ -176,11 +148,40 @@ void FirstInstancing::onInitialization()
 					}
 
 					{ // Create vertex array object (VAO)
-					  // -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-					  // -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-					  // -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-					  //    reference of the used vertex buffer objects (VBO). If the reference counter of a
-					  //    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+						// Create the vertex buffer object (VBO)
+						// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
+						static const float VERTEX_POSITION[] =
+						{					// Vertex ID	Triangle on screen
+							 0.0f, 1.0f,	// 0					 .0
+							 0.0f, 0.0f,	// 1				 .    .
+							-1.0f, 0.0f		// 2			  2.......1
+						};
+						Renderer::IVertexBufferPtr vertexBufferPosition(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+
+						// Create the per-instance-data vertex buffer object (VBO)
+						// -> Simple instance ID in order to keep it similar to the "draw instanced" version on the right side (blue)
+						static const float INSTANCE_ID[] =
+						{
+							 0.0f, 1.0f
+						};
+						Renderer::IVertexBufferPtr vertexBufferInstanceId(renderer->createVertexBuffer(sizeof(INSTANCE_ID), INSTANCE_ID, Renderer::BufferUsage::STATIC_DRAW));
+
+						// Create the index buffer object (IBO)
+						// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
+						// -> In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
+						//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
+						static const uint16_t INDICES[] =
+						{
+							0, 1, 2
+						};
+						Renderer::IIndexBuffer *indexBufferInstancedArrays = renderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
+
+						// Create vertex array object (VAO)
+						// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+						// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+						// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+						//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+						//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
 						const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 						{
 							{ // Vertex buffer 0
@@ -219,16 +220,6 @@ void FirstInstancing::onInitialization()
 				// Is there a valid program?
 				if (nullptr != program)
 				{
-					// Create the vertex buffer object (VBO)
-					// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-					static const float VERTEX_POSITION[] =
-					{					// Vertex ID	Triangle on screen
-						 0.0f, 1.0f,	// 0			  0.	
-						 1.0f, 0.0f,	// 1			  .    .
-						 0.0f, 0.0f		// 2			  2.......1
-					};
-					Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-
 					// Vertex input layout
 					const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 					{
@@ -260,11 +251,22 @@ void FirstInstancing::onInitialization()
 					}
 
 					{ // Create vertex array object (VAO)
-					  // -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-					  // -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-					  // -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-					  //    reference of the used vertex buffer objects (VBO). If the reference counter of a
-					  //    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+						// Create the vertex buffer object (VBO)
+						// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
+						static const float VERTEX_POSITION[] =
+						{					// Vertex ID	Triangle on screen
+							 0.0f, 1.0f,	// 0			  0.	
+							 1.0f, 0.0f,	// 1			  .    .
+							 0.0f, 0.0f		// 2			  2.......1
+						};
+						Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+
+						// Create vertex array object (VAO)
+						// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+						// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+						// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+						//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+						//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
 						const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 						{
 							{ // Vertex buffer 0
