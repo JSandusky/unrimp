@@ -42,6 +42,7 @@
 *    - Vertex buffer object (VBO)
 *    - Vertex array object (VAO)
 *    - Vertex shader (VS) and fragment shader (FS)
+*    - Root signature
 *    - Pipeline state object (PSO)
 *    - Multiple vertex attributes within a single vertex buffer object (VBO), vertex array object (VAO) is only using one vertex buffer object (VBO)
 *    - One vertex buffer object (VBO) per vertex attribute, vertex array object (VAO) is using multiple vertex buffer objects (VBO)
@@ -84,6 +85,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	Renderer::IRootSignaturePtr mRootSignature;		///< Root signature, can be a null pointer
 	// Using one vertex buffer object (VBO)
 	Renderer::IPipelineStatePtr mPipelineStateVBO;	///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IVertexArrayPtr   mVertexArrayVBO;	///< Vertex array object (VAO), can be a null pointer

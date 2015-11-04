@@ -160,11 +160,6 @@ namespace Direct3D12Renderer
 					CD3DX12_ROOT_PARAMETER rootParameters[1];
 					rootParameters[0].InitAsDescriptorTable(1, &ranges[0], D3D12_SHADER_VISIBILITY_PIXEL);
 
-					/*
-					CD3DX12_ROOT_PARAMETER rootParameters[1];
-					rootParameters[0].InitAsShaderResourceView(0, 0, D3D12_SHADER_VISIBILITY_PIXEL);
-					*/
-
 					D3D12_STATIC_SAMPLER_DESC sampler = {};
 					sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 					sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;

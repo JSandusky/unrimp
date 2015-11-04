@@ -43,6 +43,7 @@
 *    - Vertex array object (VAO)
 *    - Index buffer object (IBO)
 *    - Vertex shader (VS) and fragment shader (FS)
+*    - Root signature
 *    - Pipeline state object (PSO)
 *    - Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 *    - Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
@@ -85,6 +86,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	Renderer::IRootSignaturePtr mRootSignature;					///< Root signature, can be a null pointer
 	// Left side (green): Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 	Renderer::IPipelineStatePtr mPipelineStateInstancedArrays;	///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IVertexArrayPtr   mVertexArrayInstancedArrays;	///< Vertex array object (VAO), can be a null pointer

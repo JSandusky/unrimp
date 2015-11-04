@@ -46,7 +46,7 @@ namespace Renderer
 	*
 	*  @note
 	*    - Original Direct3D comments from http://msdn.microsoft.com/en-us/library/windows/desktop/bb205060%28v=vs.85%29.aspx are used in here
-	*    - These constants directly map to Direct3D 10 & 11 constants, do not change them
+	*    - These constants directly map to Direct3D 10 & 11 & 12 constants, do not change them
 	*    - "Point" = "nearest" in OpenGL terminology
 	*/
 	struct FilterMode
@@ -80,7 +80,7 @@ namespace Renderer
 	*
 	*  @note
 	*    - Original Direct3D comments from http://msdn.microsoft.com/en-us/library/windows/desktop/bb172483%28v=vs.85%29.aspx are used in here
-	*    - These constants directly map to Direct3D 10 & 11 constants, do not change them
+	*    - These constants directly map to Direct3D 10 & 11 & 12 constants, do not change them
 	*/
 	struct TextureAddressMode
 	{

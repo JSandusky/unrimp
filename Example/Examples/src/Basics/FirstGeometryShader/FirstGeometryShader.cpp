@@ -64,6 +64,15 @@ void FirstGeometryShader::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
+			{ // Create the root signature
+				// Setup
+				Renderer::RootSignatureBuilder rootSignature;
+				rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+				// Create the instance
+				mRootSignature = renderer->createRootSignature(rootSignature);
+			}
+
 			// Create the program
 			Renderer::IProgramPtr program;
 			{
@@ -155,6 +164,7 @@ void FirstGeometryShader::onDeinitialization()
 	// Release the used resources
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
+	mRootSignature = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -179,6 +189,9 @@ void FirstGeometryShader::onDraw()
 		{
 			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
 
 			// Set the used pipeline state object (PSO)
 			renderer->setPipelineState(mPipelineState);

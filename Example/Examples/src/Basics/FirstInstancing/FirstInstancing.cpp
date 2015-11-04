@@ -63,6 +63,15 @@ void FirstInstancing::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
+			{ // Create the root signature
+				// Setup
+				Renderer::RootSignatureBuilder rootSignature;
+				rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+				// Create the instance
+				mRootSignature = renderer->createRootSignature(rootSignature);
+			}
+
 			// There are two instancing approaches available
 			// - Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 			// - Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
@@ -282,6 +291,7 @@ void FirstInstancing::onDeinitialization()
 	mPipelineStateDrawInstanced = nullptr;
 	mVertexArrayInstancedArrays = nullptr;
 	mPipelineStateInstancedArrays = nullptr;
+	mRootSignature = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -306,6 +316,9 @@ void FirstInstancing::onDraw()
 		{
 			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
 
 			// Left side (green): Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 			if (renderer->getCapabilities().instancedArrays)

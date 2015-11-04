@@ -103,6 +103,36 @@ void FirstTexture::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
+			{ // Create the root signature
+				Renderer::DescriptorRangeBuilder ranges[1];
+				ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0);
+
+				Renderer::RootParameterBuilder rootParameters[1];
+				rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
+
+				Renderer::StaticSampler sampler = {};
+				sampler.filter = Renderer::FilterMode::MIN_MAG_MIP_LINEAR;
+				sampler.addressU = Renderer::TextureAddressMode::WRAP;
+				sampler.addressV = Renderer::TextureAddressMode::WRAP;
+				sampler.addressW = Renderer::TextureAddressMode::WRAP;
+				sampler.mipLodBias = 0;
+				sampler.maxAnisotropy = 0;
+				sampler.comparisonFunc = Renderer::ComparisonFunc::NEVER;
+				sampler.borderColor = Renderer::StaticBorderColor::TRANSPARENT_BLACK;
+				sampler.minLod = 0.0f;
+				sampler.maxLod = FLT_MAX;
+				sampler.shaderRegister = 0;
+				sampler.registerSpace = 0;
+				sampler.shaderVisibility = Renderer::ShaderVisibility::FRAGMENT;
+
+				// Setup
+				Renderer::RootSignatureBuilder rootSignature;
+				rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 1, &sampler, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+				// Create the instance
+				mRootSignature = renderer->createRootSignature(rootSignature);
+			}
+
 			// Create the program
 			Renderer::IProgramPtr program;
 			{
@@ -151,14 +181,6 @@ void FirstTexture::onInitialization()
 					}
 				};
 				const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-
-				{ // Create the root signature
-					// Setup
-					Renderer::RootSignature rootSignature;
-
-					// Create the instance
-					mRootSignature = renderer->createRootSignature(rootSignature);
-				}
 
 				{ // Create the pipeline state object (PSO)
 					// Setup
