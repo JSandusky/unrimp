@@ -56,6 +56,8 @@ namespace Renderer
 	struct SamplerState;
 	class IVertexBuffer;
 	class IRenderTarget;
+	class IRootSignature;
+	struct RootSignature;
 	class IPipelineState;
 	struct PipelineState;
 	class IUniformBuffer;
@@ -397,6 +399,18 @@ namespace Renderer
 
 		/**
 		*  @brief
+		*    Create a root signature instance
+		*
+		*  @param[in] rootSignature
+		*    Root signature to use
+		*
+		*  @return
+		*    The root signature instance, null pointer on error. Release the returned instance if you no longer need it.
+		*/
+		virtual IRootSignature *createRootSignature(const RootSignature &rootSignature) = 0;
+
+		/**
+		*  @brief
 		*    Create a pipeline state instance
 		*
 		*  @param[in] pipelineState
@@ -528,6 +542,15 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		//[ States                                                ]
 		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Set the used graphics root signature
+		*
+		*  @param[in] rootSignature
+		*    Graphics root signature to use, can be an null pointer (default: "nullptr")
+		*/
+		virtual void setGraphicsRootSignature(IRootSignature *rootSignature) = 0;
+
 		/**
 		*  @brief
 		*    Set the used pipeline state

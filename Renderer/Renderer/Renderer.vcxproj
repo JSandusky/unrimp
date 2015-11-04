@@ -36,6 +36,7 @@
     <ClInclude Include="include\Renderer\IRenderer.h" />
     <ClInclude Include="include\Renderer\IRenderTarget.h" />
     <ClInclude Include="include\Renderer\IResource.h" />
+    <ClInclude Include="include\Renderer\IRootSignature.h" />
     <ClInclude Include="include\Renderer\ISamplerState.h" />
     <ClInclude Include="include\Renderer\ISamplerStateCollection.h" />
     <ClInclude Include="include\Renderer\IShader.h" />
@@ -64,6 +65,7 @@
     <ClInclude Include="include\Renderer\RefCount.h" />
     <ClInclude Include="include\Renderer\RendererTypes.h" />
     <ClInclude Include="include\Renderer\ResourceTypes.h" />
+    <ClInclude Include="include\Renderer\RootSignatureTypes.h" />
     <ClInclude Include="include\Renderer\SamplerStateTypes.h" />
     <ClInclude Include="include\Renderer\SmartRefCount.h" />
     <ClInclude Include="include\Renderer\Statistics.h" />
@@ -89,6 +91,7 @@
     <None Include="include\Renderer\IRenderer.inl" />
     <None Include="include\Renderer\IRenderTarget.inl" />
     <None Include="include\Renderer\IResource.inl" />
+    <None Include="include\Renderer\IRootSignature.inl" />
     <None Include="include\Renderer\ISamplerState.inl" />
     <None Include="include\Renderer\ISamplerStateCollection.inl" />
     <None Include="include\Renderer\IShader.inl" />

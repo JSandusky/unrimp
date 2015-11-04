@@ -59,6 +59,8 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		//[ Resources                                             ]
 		//[-------------------------------------------------------]
+		uint32_t currentNumberOfRootSignatures;					///< Current number of root signature instances
+		uint32_t numberOfCreatedRootSignatures;					///< Number of created root signature instances
 		uint32_t currentNumberOfPrograms;						///< Current number of program instances
 		uint32_t numberOfCreatedPrograms;						///< Number of created program instances
 		uint32_t currentNumberOfVertexArrays;					///< Current number of vertex array object (VAO, input-assembler (IA) stage) instances
@@ -102,8 +104,8 @@ namespace Renderer
 		uint32_t numberOfCreatedTessellationEvaluationShaders;	///< Number of created tessellation evaluation shader (TES, "domain shader" in Direct3D terminology) instances
 		uint32_t currentNumberOfGeometryShaders;				///< Current number of geometry shader (GS) instances
 		uint32_t numberOfCreatedGeometryShaders;				///< Number of created geometry shader (GS) instances
-		uint32_t currentNumberOfFragmentShaders;				///< Current number of gragment shader (FS, "pixel shader" in Direct3D terminology) instances
-		uint32_t numberOfCreatedFragmentShaders;				///< Number of created gragment shader (FS, "pixel shader" in Direct3D terminology) instances
+		uint32_t currentNumberOfFragmentShaders;				///< Current number of fragment shader (FS, "pixel shader" in Direct3D terminology) instances
+		uint32_t numberOfCreatedFragmentShaders;				///< Number of created fragment shader (FS, "pixel shader" in Direct3D terminology) instances
 		// ICollection
 		uint32_t currentNumberOfTextureCollections;				///< Current number of texture collection instances
 		uint32_t numberOfCreatedTextureCollections;				///< Number of created texture collection instances

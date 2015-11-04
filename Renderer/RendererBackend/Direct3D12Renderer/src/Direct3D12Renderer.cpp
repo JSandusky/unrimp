@@ -459,6 +459,12 @@ namespace Direct3D12Renderer
 		return new Texture2DArray(*this, width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
 	}
 
+	Renderer::IRootSignature *Direct3D12Renderer::createRootSignature(const Renderer::RootSignature &)
+	{
+		// TODO(co) Implement me
+		return nullptr;
+	}
+
 	Renderer::IPipelineState *Direct3D12Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
@@ -681,6 +687,11 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
+	void Direct3D12Renderer::setGraphicsRootSignature(Renderer::IRootSignature *)
+	{
+		// TODO(co) Implement me
+	}
+
 	void Direct3D12Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
 		if (nullptr != pipelineState)

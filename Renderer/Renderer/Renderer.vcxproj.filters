@@ -163,6 +163,12 @@
     <ClInclude Include="include\Renderer\IPipelineState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\RootSignatureTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IRootSignature.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -276,6 +282,9 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\IPipelineState.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IRootSignature.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

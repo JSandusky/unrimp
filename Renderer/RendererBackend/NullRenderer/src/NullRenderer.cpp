@@ -272,6 +272,12 @@ namespace NullRenderer
 		return new Texture2DArray(*this, width, height, numberOfSlices);
 	}
 
+	Renderer::IRootSignature *NullRenderer::createRootSignature(const Renderer::RootSignature &)
+	{
+		// TODO(co) Implement me
+		return nullptr;
+	}
+
 	Renderer::IPipelineState *NullRenderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
@@ -326,6 +332,11 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
+	void NullRenderer::setGraphicsRootSignature(Renderer::IRootSignature *)
+	{
+		// TODO(co) Implement me
+	}
+
 	void NullRenderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
 		if (nullptr != pipelineState)

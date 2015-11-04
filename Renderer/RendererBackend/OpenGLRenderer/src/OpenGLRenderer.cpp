@@ -504,6 +504,12 @@ namespace OpenGLRenderer
 		}
 	}
 
+	Renderer::IRootSignature *OpenGLRenderer::createRootSignature(const Renderer::RootSignature &)
+	{
+		// TODO(co) Implement me
+		return nullptr;
+	}
+
 	Renderer::IPipelineState *OpenGLRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
@@ -577,6 +583,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
+	void OpenGLRenderer::setGraphicsRootSignature(Renderer::IRootSignature *)
+	{
+		// TODO(co) Implement me
+	}
+
 	void OpenGLRenderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
 		if (nullptr != pipelineState)

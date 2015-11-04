@@ -35,6 +35,8 @@ namespace Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline Statistics::Statistics() :
+		currentNumberOfRootSignatures(0),
+		numberOfCreatedRootSignatures(0),
 		currentNumberOfPrograms(0),
 		numberOfCreatedPrograms(0),
 		currentNumberOfVertexArrays(0),
@@ -97,7 +99,8 @@ namespace Renderer
 	inline uint32_t Statistics::getNumberOfCurrentResources() const
 	{
 		// Calculate the current number of resource instances
-		return	currentNumberOfPrograms +
+		return	currentNumberOfRootSignatures +
+				currentNumberOfPrograms +
 				currentNumberOfVertexArrays +
 				// IRenderTarget
 				currentNumberOfSwapChains +
@@ -133,6 +136,7 @@ namespace Renderer
 		RENDERER_OUTPUT_DEBUG_STRING("** Number of current renderer resource instances **\n")
 
 		// Misc
+		RENDERER_OUTPUT_DEBUG_PRINTF("Root signatures: %d\n", currentNumberOfRootSignatures)
 		RENDERER_OUTPUT_DEBUG_PRINTF("Programs: %d\n", currentNumberOfPrograms)
 		RENDERER_OUTPUT_DEBUG_PRINTF("Vertex arrays: %d\n", currentNumberOfVertexArrays)
 
@@ -177,6 +181,8 @@ namespace Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline Statistics::Statistics(const Statistics &) :
+		currentNumberOfRootSignatures(0),
+		numberOfCreatedRootSignatures(0),
 		currentNumberOfPrograms(0),
 		numberOfCreatedPrograms(0),
 		currentNumberOfVertexArrays(0),

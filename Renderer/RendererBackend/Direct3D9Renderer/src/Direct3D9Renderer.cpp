@@ -403,6 +403,12 @@ namespace Direct3D9Renderer
 		return nullptr;
 	}
 
+	Renderer::IRootSignature *Direct3D9Renderer::createRootSignature(const Renderer::RootSignature &)
+	{
+		// TODO(co) Implement me
+		return nullptr;
+	}
+
 	Renderer::IPipelineState *Direct3D9Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
@@ -639,6 +645,11 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
+	void Direct3D9Renderer::setGraphicsRootSignature(Renderer::IRootSignature *)
+	{
+		// TODO(co) Implement me
+	}
+
 	void Direct3D9Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
 		if (nullptr != pipelineState)

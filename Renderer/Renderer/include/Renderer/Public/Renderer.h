@@ -41,6 +41,7 @@ namespace Renderer
 	class IRenderer;
 	class IShaderLanguage;
 	class IResource;
+		class IRootSignature;
 		class IProgram;
 		class IVertexArray;
 		class IRenderTarget;
@@ -286,29 +287,38 @@ namespace Renderer
 		{
 			enum Enum
 			{
-				PROGRAM						   = 0,
-				VERTEX_ARRAY				   = 1,
-				SWAP_CHAIN					   = 2,
-				FRAMEBUFFER					   = 3,
-				INDEX_BUFFER				   = 4,
-				VERTEX_BUFFER				   = 5,
-				UNIFORM_BUFFER				   = 6,
-				TEXTURE_BUFFER				   = 7,
-				TEXTURE_2D					   = 8,
-				TEXTURE_2D_ARRAY			   = 9,
-				RASTERIZER_STATE			   = 10,
-				PIPELINE_STATE				   = 11,
-				DEPTH_STENCIL_STATE			   = 12,
-				BLEND_STATE					   = 13,
-				SAMPLER_STATE				   = 14,
-				VERTEX_SHADER				   = 15,
-				TESSELLATION_CONTROL_SHADER	   = 16,
-				TESSELLATION_EVALUATION_SHADER = 17,
-				GEOMETRY_SHADER				   = 18,
-				FRAGMENT_SHADER				   = 19,
-				TEXTURE_COLLECTION			   = 20,
-				SAMPLER_STATE_COLLECTION	   = 21
+				ROOT_SIGNATURE				   = 0,
+				PROGRAM						   = 1,
+				VERTEX_ARRAY				   = 2,
+				SWAP_CHAIN					   = 3,
+				FRAMEBUFFER					   = 4,
+				INDEX_BUFFER				   = 5,
+				VERTEX_BUFFER				   = 6,
+				UNIFORM_BUFFER				   = 7,
+				TEXTURE_BUFFER				   = 8,
+				TEXTURE_2D					   = 9,
+				TEXTURE_2D_ARRAY			   = 10,
+				RASTERIZER_STATE			   = 11,
+				PIPELINE_STATE				   = 12,
+				DEPTH_STENCIL_STATE			   = 13,
+				BLEND_STATE					   = 14,
+				SAMPLER_STATE				   = 15,
+				VERTEX_SHADER				   = 16,
+				TESSELLATION_CONTROL_SHADER	   = 17,
+				TESSELLATION_EVALUATION_SHADER = 18,
+				GEOMETRY_SHADER				   = 19,
+				FRAGMENT_SHADER				   = 20,
+				TEXTURE_COLLECTION			   = 21,
+				SAMPLER_STATE_COLLECTION	   = 22
 			};
+		};
+	#endif
+
+	// Renderer/RootSignatureTypes.h
+	#ifndef __RENDERER_ROOTSIGNATURE_TYPES_H__
+	#define __RENDERER_ROOTSIGNATURE_TYPES_H__
+		struct RootSignature
+		{
 		};
 	#endif
 
@@ -979,6 +989,8 @@ namespace Renderer
 	class Statistics
 	{
 	public:
+		uint32_t currentNumberOfRootSignatures;
+		uint32_t numberOfCreatedRootSignatures;
 		uint32_t currentNumberOfPrograms;
 		uint32_t numberOfCreatedPrograms;
 		uint32_t currentNumberOfVertexArrays;
@@ -1025,6 +1037,8 @@ namespace Renderer
 		uint32_t numberOfCreatedSamplerStateCollections;
 	public:
 		inline Statistics() :
+			currentNumberOfRootSignatures(0),
+			numberOfCreatedRootSignatures(0),
 			currentNumberOfPrograms(0),
 			numberOfCreatedPrograms(0),
 			currentNumberOfVertexArrays(0),
@@ -1076,6 +1090,8 @@ namespace Renderer
 		}
 	private:
 		inline explicit Statistics(const Statistics &) :
+			currentNumberOfRootSignatures(0),
+			numberOfCreatedRootSignatures(0),
 			currentNumberOfPrograms(0),
 			numberOfCreatedPrograms(0),
 			currentNumberOfVertexArrays(0),
@@ -1162,6 +1178,7 @@ namespace Renderer
 			virtual ITextureBuffer *createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual ITexture2D *createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
 			virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
+			virtual IRootSignature *createRootSignature(const RootSignature &rootSignature) = 0;
 			virtual IPipelineState *createPipelineState(const PipelineState &pipelineState) = 0;
 			virtual IRasterizerState *createRasterizerState(const RasterizerState &rasterizerState) = 0;
 			virtual IDepthStencilState *createDepthStencilState(const DepthStencilState &depthStencilState) = 0;
@@ -1171,6 +1188,7 @@ namespace Renderer
 			virtual ISamplerStateCollection *createSamplerStateCollection(uint32_t numberOfSamplerStates, ISamplerState **samplerStates) = 0;
 			virtual bool map(IResource &resource, uint32_t subresource, MapType::Enum mapType, uint32_t mapFlags, MappedSubresource &mappedSubresource) = 0;
 			virtual void unmap(IResource &resource, uint32_t subresource) = 0;
+			virtual void setGraphicsRootSignature(IRootSignature *rootSignature) = 0;
 			virtual void setPipelineState(IPipelineState *pipelineState) = 0;
 			virtual void setProgram(IProgram *program) = 0;
 			virtual void iaSetVertexArray(IVertexArray *vertexArray) = 0;
@@ -1305,6 +1323,21 @@ namespace Renderer
 			IRenderer		   *mRenderer;
 		};
 		typedef SmartRefCount<IResource> IResourcePtr;
+	#endif
+
+	// Renderer/RootSignature.h
+	#ifndef __RENDERER_IROOTSIGNATURE_H__
+	#define __RENDERER_IROOTSIGNATURE_H__
+		class IRootSignature : public IResource
+		{
+		public:
+			virtual ~IRootSignature();
+		protected:
+			explicit IRootSignature(IRenderer &renderer);
+			explicit IRootSignature(const IRootSignature &source);
+			IRootSignature &operator =(const IRootSignature &source);
+		};
+		typedef SmartRefCount<IRootSignature> IRootSignaturePtr;
 	#endif
 
 	// Renderer/IProgram.h

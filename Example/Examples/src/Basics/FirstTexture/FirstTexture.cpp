@@ -152,6 +152,14 @@ void FirstTexture::onInitialization()
 				};
 				const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
 
+				{ // Create the root signature
+					// Setup
+					Renderer::RootSignature rootSignature;
+
+					// Create the instance
+					mRootSignature = renderer->createRootSignature(rootSignature);
+				}
+
 				{ // Create the pipeline state object (PSO)
 					// Setup
 					Renderer::PipelineState pipelineState;
@@ -203,6 +211,7 @@ void FirstTexture::onDeinitialization()
 	// Release the used resources
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
+	mRootSignature = nullptr;
 	mSamplerState = nullptr;
 	mTexture2D = nullptr;
 
@@ -229,6 +238,9 @@ void FirstTexture::onDraw()
 		{
 			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
 
 			// Set the used pipeline state object (PSO)
 			renderer->setPipelineState(mPipelineState);

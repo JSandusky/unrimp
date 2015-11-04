@@ -44,6 +44,7 @@
 *    - 2D texture
 *    - Sampler state object
 *    - Vertex shader (VS) and fragment shader (FS)
+*    - Root signature
 *    - Pipeline state object (PSO)
 */
 class FirstTexture : public IApplicationRenderer
@@ -87,6 +88,7 @@ private:
 	Renderer::ITexture2DPtr		mTexture2D;		///< 2D texture, can be a null pointer
 	uint32_t					mTextureUnit;	///< Texture unit
 	Renderer::ISamplerStatePtr	mSamplerState;	///< Sampler state, can be a null pointer
+	Renderer::IRootSignaturePtr	mRootSignature;	///< Root signature, can be a null pointer
 	Renderer::IPipelineStatePtr	mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IVertexArrayPtr	mVertexArray;	///< Vertex array object (VAO), can be a null pointer
 
