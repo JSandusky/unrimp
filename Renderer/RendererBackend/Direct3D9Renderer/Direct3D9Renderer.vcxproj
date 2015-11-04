@@ -32,7 +32,6 @@
     <None Include="include\Direct3D9Renderer\SwapChain.inl" />
     <None Include="include\Direct3D9Renderer\Texture2D.inl" />
     <None Include="include\Direct3D9Renderer\TextureCollection.inl" />
-    <None Include="include\Direct3D9Renderer\VertexArray.inl" />
     <None Include="include\Direct3D9Renderer\VertexBuffer.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>

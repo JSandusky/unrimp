@@ -28,7 +28,10 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement or remove me
+	inline IDirect3DVertexDeclaration9 *PipelineState::getDirect3DVertexDeclaration9() const
+	{
+		return mDirect3DVertexDeclaration9;
+	}
 
 
 //[-------------------------------------------------------]

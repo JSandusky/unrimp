@@ -33,6 +33,8 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+struct IDirect3DDevice9;
+struct IDirect3DVertexDeclaration9;
 namespace Renderer
 {
 	class IProgram;
@@ -85,16 +87,34 @@ namespace Direct3D9Renderer
 
 		/**
 		*  @brief
+		*    Return the Direct3D 9 vertex declaration instance
+		*
+		*  @return
+		*    Direct3D 9 vertex declaration instance, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
+		*/
+		inline IDirect3DVertexDeclaration9 *getDirect3DVertexDeclaration9() const;
+
+		/**
+		*  @brief
 		*    Bind the pipeline state
 		*/
 		void bindPipelineState() const;
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void setDebugName(const char *name) override;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IProgram* mProgram;
+		IDirect3DDevice9*			  mDirect3DDevice9;				///< The Direct3D 9 device instance (we keep a reference to it), null pointer on horrible error (so we don't check)
+		Renderer::IProgram*			  mProgram;
+		IDirect3DVertexDeclaration9	 *mDirect3DVertexDeclaration9;	///< Direct3D 9 vertex declaration instance, can be a null pointer
 
 
 	};
