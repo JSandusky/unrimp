@@ -19,49 +19,22 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class IProgram;
-	class IRootSignature;
-	struct VertexArrayAttribute;
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Renderer
+namespace Direct3D12Renderer
 {
 
 
 	//[-------------------------------------------------------]
-	//[ Definitions                                           ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Pipeline state
-	*
-	*  @todo
-	*    - TODO(co) Under construction
-	*/
-	struct PipelineState
+	inline ID3D12RootSignature *RootSignature::getD3D12RootSignature() const
 	{
-		IRootSignature*				rootSignature;				///< Root signature (pipeline state instances keep a reference to the program), must be valid
-		IProgram*					program;					///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
-		uint32_t					numberOfVertexAttributes;	///< Number of vertex attributes
-		const VertexArrayAttribute*	vertexAttributes;			///< At least "numberOfVertexAttributes" vertex attributes, must be valid
-	};
+		return mD3D12RootSignature;
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Renderer
+} // Direct3D12Renderer

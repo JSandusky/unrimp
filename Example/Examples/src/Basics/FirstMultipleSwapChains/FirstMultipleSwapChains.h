@@ -42,6 +42,7 @@
 *    - Vertex buffer object (VBO)
 *    - Vertex array object (VAO)
 *    - Vertex shader (VS) and fragment shader (FS)
+*    - Root signature
 *    - Pipeline state object (PSO)
 *    - Multiple swap chains
 *
@@ -101,6 +102,7 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	Renderer::IRootSignaturePtr mRootSignature;	///< Root signature, can be a null pointer
 	Renderer::IPipelineStatePtr mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IVertexArrayPtr   mVertexArray;	///< Vertex array object (VAO), can be a null pointer
 	Renderer::ISwapChainPtr     mSwapChain;		///< Swap chain, can be a null pointer

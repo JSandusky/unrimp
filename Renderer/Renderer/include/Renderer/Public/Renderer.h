@@ -1071,6 +1071,7 @@ namespace Renderer
 	#define __RENDERER_PIPELINESTATE_TYPES_H__
 		struct PipelineState
 		{
+			IRootSignature*				rootSignature;
 			IProgram*					program;
 			uint32_t					numberOfVertexAttributes;
 			const VertexArrayAttribute*	vertexAttributes;

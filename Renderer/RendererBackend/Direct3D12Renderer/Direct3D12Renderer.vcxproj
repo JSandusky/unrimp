@@ -27,6 +27,7 @@
     <None Include="include\Direct3D12Renderer\IndexBuffer.inl" />
     <None Include="include\Direct3D12Renderer\PipelineState.inl" />
     <None Include="include\Direct3D12Renderer\RasterizerState.inl" />
+    <None Include="include\Direct3D12Renderer\RootSignature.inl" />
     <None Include="include\Direct3D12Renderer\SamplerState.inl" />
     <None Include="include\Direct3D12Renderer\SamplerStateCollection.inl" />
     <None Include="include\Direct3D12Renderer\Shader\FragmentShaderHlsl.inl" />
@@ -59,6 +60,7 @@
     <ClInclude Include="include\Direct3D12Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D12Renderer\PipelineState.h" />
     <ClInclude Include="include\Direct3D12Renderer\RasterizerState.h" />
+    <ClInclude Include="include\Direct3D12Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D12Renderer\SamplerState.h" />
     <ClInclude Include="include\Direct3D12Renderer\SamplerStateCollection.h" />
     <ClInclude Include="include\Direct3D12Renderer\Shader\FragmentShader.h" />
@@ -95,6 +97,7 @@
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\PipelineState.cpp" />
     <ClCompile Include="src\RasterizerState.cpp" />
+    <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateCollection.cpp" />
     <ClCompile Include="src\Shader\FragmentShader.cpp" />

@@ -37,7 +37,6 @@ struct ID3D12Query;
 struct ID3D12Device;
 struct IDXGIFactory4;
 struct ID3D12CommandQueue;
-struct ID3D12RootSignature;
 struct ID3D12CommandAllocator;
 struct ID3D12GraphicsCommandList;
 namespace Renderer
@@ -117,15 +116,6 @@ namespace Direct3D12Renderer
 		*    The Direct3D 12 device, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
 		inline ID3D12Device *getD3D12Device() const;
-
-		/**
-		*  @brief
-		*    Return the Direct3D 12 root signature
-		*
-		*  @return
-		*    The Direct3D 12 root signature, null pointer on error, do not release the returned instance unless you added an own reference to it
-		*/
-		inline ID3D12RootSignature *getD3D12RootSignature() const;
 
 		/**
 		*  @brief
@@ -299,7 +289,6 @@ namespace Direct3D12Renderer
 		Direct3D12RuntimeLinking	  *mDirect3D12RuntimeLinking;	///< Direct3D 12 runtime linking instance, always valid
 		IDXGIFactory4*				   mDxgiFactory4;				///< DXGI factors instance, always valid for a correctly initialized renderer
 		ID3D12Device				  *mD3D12Device;				///< The Direct3D 12 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
-		ID3D12RootSignature*		   mD3D12RootSignature;
 		ID3D12CommandQueue*			   mD3D12CommandQueue;			///< The Direct3D 12 command queue, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
 		ID3D12CommandAllocator*		   mD3D12CommandAllocator;
 		ID3D12GraphicsCommandList*	   mD3D12GraphicsCommandList;

@@ -144,6 +144,15 @@ void FirstMultipleSwapChains::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
+			{ // Create the root signature
+				// Setup
+				Renderer::RootSignatureBuilder rootSignature;
+				rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+				// Create the instance
+				mRootSignature = renderer->createRootSignature(rootSignature);
+			}
+
 			// Create the program
 			Renderer::IProgramPtr program;
 			{
@@ -195,6 +204,7 @@ void FirstMultipleSwapChains::onInitialization()
 				{ // Create the pipeline state object (PSO)
 					// Setup
 					Renderer::PipelineState pipelineState;
+					pipelineState.rootSignature = mRootSignature;
 					pipelineState.program = program;
 					pipelineState.numberOfVertexAttributes = numberOfVertexAttributes;
 					pipelineState.vertexAttributes = vertexArrayAttributes;
@@ -337,6 +347,7 @@ void FirstMultipleSwapChains::onDeinitialization()
 	}
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
+	mRootSignature = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -476,6 +487,9 @@ void FirstMultipleSwapChains::draw(const float color[4])
 		{
 			// Clear the color buffer of the current render target with the provided color, do also clear the depth buffer
 			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, color, 1.0f, 0);
+
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
 
 			// Set the used pipeline state object (PSO)
 			renderer->setPipelineState(mPipelineState);

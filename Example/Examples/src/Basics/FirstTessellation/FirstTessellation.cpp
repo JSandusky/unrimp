@@ -128,6 +128,7 @@ void FirstTessellation::onInitialization()
 				{ // Create the pipeline state object (PSO)
 					// Setup
 					Renderer::PipelineState pipelineState;
+					pipelineState.rootSignature = mRootSignature;
 					pipelineState.program = program;
 					pipelineState.numberOfVertexAttributes = numberOfVertexAttributes;
 					pipelineState.vertexAttributes = vertexArrayAttributes;

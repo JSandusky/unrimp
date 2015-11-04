@@ -35,6 +35,7 @@
 #include "Direct3D12Renderer/SamplerState.h"
 #include "Direct3D12Renderer/VertexBuffer.h"
 #include "Direct3D12Renderer/TextureBuffer.h"
+#include "Direct3D12Renderer/RootSignature.h"
 #include "Direct3D12Renderer/PipelineState.h"
 #include "Direct3D12Renderer/Texture2DArray.h"
 #include "Direct3D12Renderer/RasterizerState.h"
@@ -81,7 +82,6 @@ namespace Direct3D12Renderer
 		mDirect3D12RuntimeLinking(new Direct3D12RuntimeLinking()),
 		mDxgiFactory4(nullptr),
 		mD3D12Device(nullptr),
-		mD3D12RootSignature(nullptr),
 		mD3D12CommandQueue(nullptr),
 		mD3D12CommandAllocator(nullptr),
 		mD3D12GraphicsCommandList(nullptr),
@@ -144,58 +144,6 @@ namespace Direct3D12Renderer
 			// Is there a valid Direct3D 12 device instance?
 			if (nullptr != mD3D12Device)
 			{
-				{ // Create root signature
-					// TODO(co) First Direct3D 12 tests
-					/*
-					// Create an empty root signature
-					CD3DX12_ROOT_SIGNATURE_DESC d3d12XRootSignatureDesc;
-					d3d12XRootSignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-					*/
-
-
-					// TODO(co) First Direct3D 12 texture tests
-					CD3DX12_DESCRIPTOR_RANGE ranges[1];
-					ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-
-					CD3DX12_ROOT_PARAMETER rootParameters[1];
-					rootParameters[0].InitAsDescriptorTable(1, &ranges[0], D3D12_SHADER_VISIBILITY_PIXEL);
-
-					D3D12_STATIC_SAMPLER_DESC sampler = {};
-					sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-					sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-					sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-					sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-					sampler.MipLODBias = 0;
-					sampler.MaxAnisotropy = 0;
-					sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-					sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
-					sampler.MinLOD = 0.0f;
-					sampler.MaxLOD = D3D12_FLOAT32_MAX;
-					sampler.ShaderRegister = 0;
-					sampler.RegisterSpace = 0;
-					sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-
-					CD3DX12_ROOT_SIGNATURE_DESC d3d12XRootSignatureDesc;
-					d3d12XRootSignatureDesc.Init(_countof(rootParameters), rootParameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-
-					ID3DBlob* d3dBlobSignature = nullptr;
-					ID3DBlob* d3dBlobError = nullptr;
-					if (SUCCEEDED(D3D12SerializeRootSignature(&d3d12XRootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &d3dBlobSignature, &d3dBlobError)))
-					{
-						if (FAILED(mD3D12Device->CreateRootSignature(0, d3dBlobSignature->GetBufferPointer(), d3dBlobSignature->GetBufferSize(), IID_PPV_ARGS(&mD3D12RootSignature))))
-						{
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the root signature instance")
-						}
-						d3dBlobSignature->Release();
-					}
-					else
-					{
-						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the root signature instance")
-						d3dBlobError->Release();
-					}
-				}
-
 				// Describe and create the command queue
 				D3D12_COMMAND_QUEUE_DESC d3d12CommandQueueDesc;
 				d3d12CommandQueueDesc.Type		= D3D12_COMMAND_LIST_TYPE_DIRECT;
@@ -323,12 +271,6 @@ namespace Direct3D12Renderer
 			mD3D12CommandQueue = nullptr;
 		}
 
-		// Release the Direct3D 12 root signature, in case we have one
-		if (nullptr != mD3D12RootSignature)
-		{
-			mD3D12RootSignature->Release();
-		}
-
 		// Release the Direct3D 12 device we've created
 		if (nullptr != mD3D12Device)
 		{
@@ -454,10 +396,9 @@ namespace Direct3D12Renderer
 		return new Texture2DArray(*this, width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
 	}
 
-	Renderer::IRootSignature *Direct3D12Renderer::createRootSignature(const Renderer::RootSignature &)
+	Renderer::IRootSignature *Direct3D12Renderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
-		// TODO(co) Implement me
-		return nullptr;
+		return new RootSignature(*this, rootSignature);
 	}
 
 	Renderer::IPipelineState *Direct3D12Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)
@@ -682,9 +623,20 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::setGraphicsRootSignature(Renderer::IRootSignature *)
+	void Direct3D12Renderer::setGraphicsRootSignature(Renderer::IRootSignature* rootSignature)
 	{
-		// TODO(co) Implement me
+		if (nullptr != rootSignature)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+
+			// Set graphics root signature
+			mD3D12GraphicsCommandList->SetGraphicsRootSignature(static_cast<RootSignature*>(rootSignature)->getD3D12RootSignature());
+		}
+		else
+		{
+			// TODO(co) Handle this situation?
+		}
 	}
 
 	void Direct3D12Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
@@ -694,7 +646,7 @@ namespace Direct3D12Renderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
-			// Set pipeline state
+			// Set graphics pipeline state
 			mD3D12GraphicsCommandList->SetPipelineState(static_cast<PipelineState*>(pipelineState)->getD3D12PipelineState());
 		}
 		else
@@ -1947,16 +1899,17 @@ namespace Direct3D12Renderer
 					mD3D12GraphicsCommandList->RSSetScissorRects(1, &m_scissorRect);
 				}
 
-				mD3D12GraphicsCommandList->SetGraphicsRootSignature(mD3D12RootSignature);
 
+				if (nullptr != g_mD3D12DescriptorHeapTexture)
+				{
+					// TODO(co) First Direct3D 12 texture test
+					ID3D12DescriptorHeap* ppHeaps[] = { g_mD3D12DescriptorHeapTexture };
+					mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+					mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(0, g_mD3D12DescriptorHeapTexture->GetGPUDescriptorHandleForHeapStart());
+			//		mD3D12GraphicsCommandList->SetGraphicsRootShaderResourceView(0, g_mD3D12DescriptorHeapTexture->GetGPUDescriptorHandleForHeapStart().ptr);
 
-				// TODO(co) First Direct3D 12 texture test
-				ID3D12DescriptorHeap* ppHeaps[] = { g_mD3D12DescriptorHeapTexture };
-				mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-				mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(0, g_mD3D12DescriptorHeapTexture->GetGPUDescriptorHandleForHeapStart());
-		//		mD3D12GraphicsCommandList->SetGraphicsRootShaderResourceView(0, g_mD3D12DescriptorHeapTexture->GetGPUDescriptorHandleForHeapStart().ptr);
-
-			//	virtual void STDMETHODCALLTYPE SetGraphicsRootShaderResourceView(_In_ UINT RootParameterIndex, _In_ D3D12_GPU_VIRTUAL_ADDRESS BufferLocation) = 0;
+				//	virtual void STDMETHODCALLTYPE SetGraphicsRootShaderResourceView(_In_ UINT RootParameterIndex, _In_ D3D12_GPU_VIRTUAL_ADDRESS BufferLocation) = 0;
+				}
 
 
 				// Done

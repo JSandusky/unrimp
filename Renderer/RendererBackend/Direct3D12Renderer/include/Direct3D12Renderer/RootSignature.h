@@ -27,18 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IPipelineState.h>
+#include <Renderer/IRootSignature.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D12PipelineState;
+struct ID3D12RootSignature;
 namespace Renderer
 {
-	class IProgram;
-	struct PipelineState;
-	class IRootSignature;
+	struct RootSignature;
 }
 namespace Direct3D12Renderer
 {
@@ -58,9 +56,9 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Direct3D 12 pipeline state class
+	*    Direct3D 12 root signature class
 	*/
-	class PipelineState : public Renderer::IPipelineState
+	class RootSignature : public Renderer::IRootSignature
 	{
 
 
@@ -74,25 +72,25 @@ namespace Direct3D12Renderer
 		*
 		*  @param[in] direct3D12Renderer
 		*    Owner Direct3D 12 renderer instance
-		*  @param[in] pipelineState
-		*    Pipeline state to use
+		*  @param[in] rootSignature
+		*    Root signature to use
 		*/
-		PipelineState(Direct3D12Renderer &direct3D12Renderer, const Renderer::PipelineState &pipelineState);
+		RootSignature(Direct3D12Renderer &direct3D12Renderer, const Renderer::RootSignature &rootSignature);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~PipelineState();
+		virtual ~RootSignature();
 
 		/**
 		*  @brief
-		*    Return the Direct3D 12 pipeline state
+		*    Return the Direct3D 12 root signature
 		*
 		*  @return
-		*    The Direct3D 12 pipeline state, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D 12 root signature, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D12PipelineState *getD3D12PipelineState() const;
+		inline ID3D12RootSignature *getD3D12RootSignature() const;
 
 
 	//[-------------------------------------------------------]
@@ -106,9 +104,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D12PipelineState*	  mD3D12PipelineState;	///< Direct3D 12 pipeline state, can be a null pointer
-		Renderer::IRootSignature* mRootSignature;
-		Renderer::IProgram*		  mProgram;
+		ID3D12RootSignature* mD3D12RootSignature;	///< Direct3D 12 root signature, can be a null pointer
 
 
 	};
@@ -123,4 +119,4 @@ namespace Direct3D12Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Direct3D12Renderer/PipelineState.inl"
+#include "Direct3D12Renderer/RootSignature.inl"

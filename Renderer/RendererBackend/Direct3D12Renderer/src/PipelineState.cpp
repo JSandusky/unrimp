@@ -25,6 +25,7 @@
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D12Renderer/D3D12X.h"
 #include "Direct3D12Renderer/Mapping.h"
+#include "Direct3D12Renderer/RootSignature.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D12Renderer/Shader/VertexShaderHlsl.h"
@@ -49,9 +50,11 @@ namespace Direct3D12Renderer
 	PipelineState::PipelineState(Direct3D12Renderer &direct3D12Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(direct3D12Renderer),
 		mD3D12PipelineState(nullptr),
+		mRootSignature(pipelineState.rootSignature),
 		mProgram(pipelineState.program)
 	{
-		// Add a reference to the given program
+		// Add a reference to the given root signature and program
+		mRootSignature->addReference();
 		mProgram->addReference();
 
 		// Define the vertex input layout
@@ -69,11 +72,11 @@ namespace Direct3D12Renderer
 			const Renderer::VertexArrayAttribute& vertexArrayAttribute = pipelineState.vertexAttributes[vertexAttribute];
 			D3D12_INPUT_ELEMENT_DESC& d3d12InputElementDesc = d3d12InputElementDescs[vertexAttribute];
 
-			d3d12InputElementDesc.SemanticName			= vertexArrayAttribute.semanticName;
-			d3d12InputElementDesc.SemanticIndex			= vertexArrayAttribute.semanticIndex;
-			d3d12InputElementDesc.Format				= static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(vertexArrayAttribute.vertexArrayFormat));
-			d3d12InputElementDesc.InputSlot				= vertexArrayAttribute.inputSlot;
-			d3d12InputElementDesc.AlignedByteOffset		= vertexArrayAttribute.alignedByteOffset;
+			d3d12InputElementDesc.SemanticName		= vertexArrayAttribute.semanticName;
+			d3d12InputElementDesc.SemanticIndex		= vertexArrayAttribute.semanticIndex;
+			d3d12InputElementDesc.Format			= static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(vertexArrayAttribute.vertexArrayFormat));
+			d3d12InputElementDesc.InputSlot			= vertexArrayAttribute.inputSlot;
+			d3d12InputElementDesc.AlignedByteOffset	= vertexArrayAttribute.alignedByteOffset;
 
 			// Per-instance instead of per-vertex?
 			if (vertexArrayAttribute.instancesPerElement > 0)
@@ -91,7 +94,7 @@ namespace Direct3D12Renderer
 		// Describe and create the graphics pipeline state object (PSO)
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC d3d12GraphicsPipelineState = {};
 		d3d12GraphicsPipelineState.InputLayout = { d3d12InputElementDescs, numberOfVertexAttributes };
-		d3d12GraphicsPipelineState.pRootSignature = direct3D12Renderer.getD3D12RootSignature();
+		d3d12GraphicsPipelineState.pRootSignature = static_cast<RootSignature*>(mRootSignature)->getD3D12RootSignature();
 		{ // Set shaders
 			ProgramHlsl* programHlsl = static_cast<ProgramHlsl*>(mProgram);
 			{ // Vertex shader
@@ -166,11 +169,9 @@ namespace Direct3D12Renderer
 			mD3D12PipelineState->Release();
 		}
 
-		// Release the program reference
-		if (nullptr != mProgram)
-		{
-			mProgram->release();
-		}
+		// Release the root signature and program reference
+		mRootSignature->release();
+		mProgram->release();
 	}
 
 

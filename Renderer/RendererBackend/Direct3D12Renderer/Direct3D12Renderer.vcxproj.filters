@@ -81,6 +81,9 @@
     <None Include="include\Direct3D12Renderer\Direct3D12Renderer.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\Direct3D12Renderer\RootSignature.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D12Renderer\Shader\ShaderLanguage.h">
@@ -194,6 +197,9 @@
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12RuntimeLinking.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D12Renderer\RootSignature.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\ProgramHlsl.cpp">
@@ -296,6 +302,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Direct3D12RuntimeLinking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -96,6 +96,7 @@ namespace Renderer
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		// Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
+		friend class IRootSignature;
 		friend class IProgram;
 		friend class IVertexArray;
 		friend class ISwapChain;
