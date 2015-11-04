@@ -86,16 +86,6 @@ namespace Direct3D9Renderer
 			}
 		}
 
-		// Get the maximum number of supported streams
-		uint32_t maximumNumberOfStreams = 0;
-		{
-			// TODO(co) Optimization: Read this information only once and then backup the result
-			// Get Direct3D 9 device capabilities and read the required information
-			D3DCAPS9 d3dCaps9;
-			mDirect3DDevice9->GetDeviceCaps(&d3dCaps9);
-			maximumNumberOfStreams = d3dCaps9.MaxStreams;
-		}
-
 		// Create Direct3D 9 vertex elements
 		// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
 		D3DVERTEXELEMENT9 *d3dVertexElements   = new D3DVERTEXELEMENT9[numberOfAttributes + 1];	// +1 for D3DDECL_END()

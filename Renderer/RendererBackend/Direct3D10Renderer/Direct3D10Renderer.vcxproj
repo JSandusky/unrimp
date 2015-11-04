@@ -40,7 +40,6 @@
     <None Include="include\Direct3D10Renderer\Texture2DArray.inl" />
     <None Include="include\Direct3D10Renderer\TextureBuffer.inl" />
     <None Include="include\Direct3D10Renderer\TextureCollection.inl" />
-    <None Include="include\Direct3D10Renderer\VertexArray.inl" />
     <None Include="include\Direct3D10Renderer\VertexBuffer.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>

@@ -54,9 +54,6 @@
     <None Include="include\Direct3D10Renderer\TextureCollection.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D10Renderer\VertexArray.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D10Renderer\VertexBuffer.inl">
       <Filter>Source Files</Filter>
     </None>

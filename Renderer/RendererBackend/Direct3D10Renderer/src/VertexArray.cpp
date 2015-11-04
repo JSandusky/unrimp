@@ -22,12 +22,12 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D10Renderer/VertexArray.h"
-#include "Direct3D10Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D10Renderer/D3D10.h"
-#include "Direct3D10Renderer/Mapping.h"
 #include "Direct3D10Renderer/IndexBuffer.h"
 #include "Direct3D10Renderer/VertexBuffer.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
+
+#include <Renderer/VertexArrayTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -40,11 +40,10 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D10Renderer &direct3D10Renderer, ID3DBlob &d3dBlob, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D10Renderer),
 		mD3D10Device(direct3D10Renderer.getD3D10Device()),
 		mIndexBuffer(indexBuffer),
-		mD3D10InputLayout(nullptr),
 		mNumberOfSlots(numberOfVertexBuffers),
 		mD3D10Buffers(nullptr),
 		mStrides(nullptr),
@@ -85,44 +84,6 @@ namespace Direct3D10Renderer
 				(*currentVertexBuffer)->addReference();
 			}
 		}
-
-		// Create Direct3D 10 input element descriptions
-		// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
-		D3D10_INPUT_ELEMENT_DESC *d3d10InputElementDescs   = numberOfAttributes ? new D3D10_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D10_INPUT_ELEMENT_DESC[1];
-		D3D10_INPUT_ELEMENT_DESC *d3d10InputElementDesc    = d3d10InputElementDescs;
-		D3D10_INPUT_ELEMENT_DESC *d3d10InputElementDescEnd = d3d10InputElementDescs + numberOfAttributes;
-		for (; d3d10InputElementDesc < d3d10InputElementDescEnd; ++d3d10InputElementDesc, ++attributes)
-		{
-			// Fill the "D3D10_INPUT_ELEMENT_DESC"-content
-			d3d10InputElementDesc->SemanticName      = attributes->semanticName;																// Semantic name (LPCSTR)
-			d3d10InputElementDesc->SemanticIndex     = attributes->semanticIndex;																// Semantic index (UINT)
-			d3d10InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(attributes->vertexArrayFormat));	// Format (DXGI_FORMAT)
-			d3d10InputElementDesc->InputSlot         = static_cast<UINT>(attributes->inputSlot);												// Input slot (UINT)
-			d3d10InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;															// Aligned byte offset (UINT)
-
-			// Per-instance instead of per-vertex?
-			if (attributes->instancesPerElement > 0)
-			{
-				d3d10InputElementDesc->InputSlotClass       = D3D10_INPUT_PER_INSTANCE_DATA;	// Input classification (D3D10_INPUT_CLASSIFICATION)
-				d3d10InputElementDesc->InstanceDataStepRate = attributes->instancesPerElement;	// Instance data step rate (UINT)
-			}
-			else
-			{
-				d3d10InputElementDesc->InputSlotClass       = D3D10_INPUT_PER_VERTEX_DATA;	// Input classification (D3D10_INPUT_CLASSIFICATION)
-				d3d10InputElementDesc->InstanceDataStepRate = 0;							// Instance data step rate (UINT)
-			}
-		}
-
-		// Create the Direct3D 10 input layout
-		direct3D10Renderer.getD3D10Device()->CreateInputLayout(d3d10InputElementDescs, numberOfAttributes, d3dBlob.GetBufferPointer(), d3dBlob.GetBufferSize(), &mD3D10InputLayout);
-
-		// Destroy Direct3D 10 input element descriptions
-		delete [] d3d10InputElementDescs;
-
-		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
-			setDebugName("VAO");
-		#endif
 	}
 
 	VertexArray::~VertexArray()
@@ -131,12 +92,6 @@ namespace Direct3D10Renderer
 		if (nullptr != mIndexBuffer)
 		{
 			mIndexBuffer->release();
-		}
-
-		// Release the Direct3D 10 input layout
-		if (nullptr != mD3D10InputLayout)
-		{
-			mD3D10InputLayout->Release();
 		}
 
 		// Cleanup Direct3D 10 input slot data
@@ -167,23 +122,16 @@ namespace Direct3D10Renderer
 
 	void VertexArray::setDirect3DIASetInputLayoutAndStreamSource() const
 	{
-		// Valid Direct3D 10 input layout?
-		if (nullptr != mD3D10InputLayout)
+		// Set the Direct3D 10 vertex buffers
+		if (nullptr != mD3D10Buffers)
 		{
-			// Set the Direct3D 10 input layout
-			mD3D10Device->IASetInputLayout(mD3D10InputLayout);
-
-			// Set the Direct3D 10 vertex buffers
-			if (nullptr != mD3D10Buffers)
-			{
-				// Just make a single API call
-				mD3D10Device->IASetVertexBuffers(0, mNumberOfSlots, mD3D10Buffers, mStrides, mOffsets);
-			}
-			else
-			{
-				// Direct3D 10 says: "D3D10: INFO: ID3D10Device::IASetVertexBuffers: Since NumBuffers is 0, the operation effectively does nothing. This is probably not intentional, nor is the most efficient way to achieve this operation. Avoid calling the routine at all. [ STATE_SETTING INFO #240: DEVICE_IASETVERTEXBUFFERS_BUFFERS_EMPTY ]"
-				// -> Direct3D 10 does not give us this message, but it's probably still no good thing to do
-			}
+			// Just make a single API call
+			mD3D10Device->IASetVertexBuffers(0, mNumberOfSlots, mD3D10Buffers, mStrides, mOffsets);
+		}
+		else
+		{
+			// Direct3D 10 says: "D3D10: INFO: ID3D10Device::IASetVertexBuffers: Since NumBuffers is 0, the operation effectively does nothing. This is probably not intentional, nor is the most efficient way to achieve this operation. Avoid calling the routine at all. [ STATE_SETTING INFO #240: DEVICE_IASETVERTEXBUFFERS_BUFFERS_EMPTY ]"
+			// -> Direct3D 10 does not give us this message, but it's probably still no good thing to do
 		}
 
 		// Get the used index buffer
@@ -193,24 +141,6 @@ namespace Direct3D10Renderer
 			// Set the Direct3D 10 indices
 			mD3D10Device->IASetIndexBuffer(mIndexBuffer->getD3D10Buffer(), static_cast<DXGI_FORMAT>(mIndexBuffer->getDXGIFormat()), 0);
 		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	void VertexArray::setDebugName(const char *name)
-	{
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
-			// Valid Direct3D 10 input layout?
-			if (nullptr != mD3D10InputLayout)
-			{
-				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D10InputLayout->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D10InputLayout->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
-			}
-		#endif
 	}
 
 

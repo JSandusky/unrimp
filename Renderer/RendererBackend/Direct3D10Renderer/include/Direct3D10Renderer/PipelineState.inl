@@ -28,7 +28,10 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement or remove me
+	inline ID3D10InputLayout *PipelineState::getD3D10InputLayout() const
+	{
+		return mD3D10InputLayout;
+	}
 
 
 //[-------------------------------------------------------]
