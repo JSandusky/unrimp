@@ -56,6 +56,8 @@ namespace Renderer
 	{
 		IRootSignature*				rootSignature;				///< Root signature (pipeline state instances keep a reference to the program), must be valid
 		IProgram*					program;					///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
+
+		// "vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology
 		uint32_t					numberOfVertexAttributes;	///< Number of vertex attributes
 		const VertexArrayAttribute*	vertexAttributes;			///< At least "numberOfVertexAttributes" vertex attributes, must be valid
 	};

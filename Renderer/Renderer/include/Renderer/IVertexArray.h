@@ -42,7 +42,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract vertex array object (VAO, "vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 & 12 terminology) interface
+	*    Abstract vertex array object (VAO) interface
 	*
 	*  @remarks
 	*    Encapsulates all the data that is associated with the vertex processor.

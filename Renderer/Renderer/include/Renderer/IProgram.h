@@ -78,7 +78,7 @@ namespace Renderer
 	public:
 		/**
 		*  @brief
-		*    Create a vertex array ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology) instance
+		*    Create a vertex array instance
 		*
 		*  @param[in] numberOfAttributes
 		*    Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
