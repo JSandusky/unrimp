@@ -175,7 +175,7 @@ void FirstMesh::onInitialization()
 			}
 
 			{ // Load in the diffuse, emissive, normal and specular texture
-			  // -> The tangent space normal map is stored with three components, two would be enought to recalculate the third component within the fragment shader
+			  // -> The tangent space normal map is stored with three components, two would be enough to recalculate the third component within the fragment shader
 			  // -> The specular map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
 				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
 				mDiffuseTextureResource  = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_Diffuse");

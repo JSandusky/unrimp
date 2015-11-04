@@ -52,7 +52,7 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 /**
 *  @brief
-*    First mesh examnple
+*    First mesh example
 *
 *  @remarks
 *    Demonstrates:

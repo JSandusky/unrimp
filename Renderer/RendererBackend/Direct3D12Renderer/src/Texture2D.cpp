@@ -38,6 +38,9 @@
 namespace Direct3D12Renderer
 {
 
+	// TODO(co) First Direct3D 12 texture test
+	ID3D12DescriptorHeap* g_mD3D12DescriptorHeapTexture = nullptr;
+
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
@@ -172,6 +175,12 @@ namespace Direct3D12Renderer
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(&getRenderer())
+
+
+		// TODO(co) First Direct3D 12 texture test
+		g_mD3D12DescriptorHeapTexture = mD3D12DescriptorHeap;
+
+
 	}
 
 	Texture2D::~Texture2D()
