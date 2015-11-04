@@ -33,6 +33,8 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+struct ID3D11InputLayout;
+struct ID3D11DeviceContext;
 namespace Renderer
 {
 	class IProgram;
@@ -85,16 +87,34 @@ namespace Direct3D11Renderer
 
 		/**
 		*  @brief
+		*    Return the Direct3D 11 input layout
+		*
+		*  @return
+		*    Direct3D 11 input layout instance, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
+		*/
+		inline ID3D11InputLayout *getD3D11InputLayout() const;
+
+		/**
+		*  @brief
 		*    Bind the pipeline state
 		*/
 		void bindPipelineState() const;
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void setDebugName(const char *name) override;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IProgram* mProgram;
+		Renderer::IProgram*  mProgram;
+		ID3D11DeviceContext* mD3D11DeviceContext;	///< The Direct3D 11 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
+		ID3D11InputLayout*   mD3D11InputLayout;		///< Direct3D 11 input layout, can be a null pointer
 
 
 	};

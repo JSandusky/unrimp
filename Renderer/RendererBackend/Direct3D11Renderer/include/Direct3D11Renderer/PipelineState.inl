@@ -28,7 +28,10 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement or remove me
+	inline ID3D11InputLayout *PipelineState::getD3D11InputLayout() const
+	{
+		return mD3D11InputLayout;
+	}
 
 
 //[-------------------------------------------------------]

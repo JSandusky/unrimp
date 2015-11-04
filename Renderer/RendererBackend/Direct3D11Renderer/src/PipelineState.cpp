@@ -22,8 +22,12 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/PipelineState.h"
+#include "Direct3D11Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
+#include "Direct3D11Renderer/D3D11.h"
+#include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 #include "Direct3D11Renderer/Shader/ProgramHlsl.h"
+#include "Direct3D11Renderer/Shader/VertexShaderHlsl.h"
 
 
 //[-------------------------------------------------------]
@@ -38,10 +42,66 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	PipelineState::PipelineState(Direct3D11Renderer &direct3D11Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(direct3D11Renderer),
-		mProgram(pipelineState.program)
+		mProgram(pipelineState.program),
+		mD3D11DeviceContext(direct3D11Renderer.getD3D11DeviceContext()),
+		mD3D11InputLayout(nullptr)
 	{
+		// Acquire our Direct3D 11 device context reference
+		mD3D11DeviceContext->AddRef();
+
 		// Add a reference to the given program
 		mProgram->addReference();
+
+		// Create Direct3D 11 input element descriptions
+		const VertexShaderHlsl* vertexShaderHlsl = static_cast<ProgramHlsl*>(mProgram)->getVertexShaderHlsl();
+		if (nullptr != vertexShaderHlsl)
+		{
+			const uint32_t numberOfAttributes = pipelineState.numberOfVertexAttributes;
+			const Renderer::VertexArrayAttribute* attributes = pipelineState.vertexAttributes;
+
+			// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
+			D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescs   = numberOfAttributes ? new D3D11_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D11_INPUT_ELEMENT_DESC[1];
+			D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDesc    = d3d11InputElementDescs;
+			D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescEnd = d3d11InputElementDescs + numberOfAttributes;
+			for (; d3d11InputElementDesc < d3d11InputElementDescEnd; ++d3d11InputElementDesc, ++attributes)
+			{
+				// Fill the "D3D11_INPUT_ELEMENT_DESC"-content
+				d3d11InputElementDesc->SemanticName      = attributes->semanticName;																// Semantic name (LPCSTR)
+				d3d11InputElementDesc->SemanticIndex     = attributes->semanticIndex;																// Semantic index (UINT)
+				d3d11InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(attributes->vertexArrayFormat));	// Format (DXGI_FORMAT)
+				d3d11InputElementDesc->InputSlot         = static_cast<UINT>(attributes->inputSlot);												// Input slot (UINT)
+				d3d11InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;															// Aligned byte offset (UINT)
+
+				// Per-instance instead of per-vertex?
+				if (attributes->instancesPerElement > 0)
+				{
+					d3d11InputElementDesc->InputSlotClass       = D3D11_INPUT_PER_INSTANCE_DATA;	// Input classification (D3D11_INPUT_CLASSIFICATION)
+					d3d11InputElementDesc->InstanceDataStepRate = attributes->instancesPerElement;	// Instance data step rate (UINT)
+				}
+				else
+				{
+					d3d11InputElementDesc->InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;	// Input classification (D3D11_INPUT_CLASSIFICATION)
+					d3d11InputElementDesc->InstanceDataStepRate = 0;							// Instance data step rate (UINT)
+				}
+			}
+
+			{ // Create the Direct3D 11 input layout
+				ID3DBlob* d3dBlobVertexShader = vertexShaderHlsl->getD3DBlobVertexShader();
+				direct3D11Renderer.getD3D11Device()->CreateInputLayout(d3d11InputElementDescs, numberOfAttributes, d3dBlobVertexShader->GetBufferPointer(), d3dBlobVertexShader->GetBufferSize(), &mD3D11InputLayout);
+			}
+
+			// Destroy Direct3D 11 input element descriptions
+			delete [] d3d11InputElementDescs;
+		}
+		else
+		{
+			RENDERER_OUTPUT_DEBUG("Direct3D 11 error: Failed to create the pipeline stage input layout because there's no vertex shader");
+		}
+
+		// Assign a default name to the resource for debugging purposes
+		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+			setDebugName("Pipeline state");
+		#endif
 	}
 
 	PipelineState::~PipelineState()
@@ -51,13 +111,45 @@ namespace Direct3D11Renderer
 		{
 			mProgram->release();
 		}
+
+		// Release the Direct3D 11 input layout
+		if (nullptr != mD3D11InputLayout)
+		{
+			mD3D11InputLayout->Release();
+		}
+
+		// Release our Direct3D 11 device context reference
+		mD3D11DeviceContext->Release();
 	}
 
 	void PipelineState::bindPipelineState() const
 	{
-		Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());
+		// TODO(co) Directly move this into "Direct3D11Renderer"
 
+		// Set the Direct3D 11 input layout
+		mD3D11DeviceContext->IASetInputLayout(mD3D11InputLayout);
+
+		// Set the program
+		Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());
 		direct3D11Renderer.setProgram(mProgram);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	void PipelineState::setDebugName(const char *name)
+	{
+		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+			// Valid Direct3D 11 input layout?
+			if (nullptr != mD3D11InputLayout)
+			{
+				// Set the debug name
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				mD3D11InputLayout->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mD3D11InputLayout->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+			}
+		#endif
 	}
 
 

@@ -22,12 +22,12 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/VertexArray.h"
-#include "Direct3D11Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D11Renderer/D3D11.h"
-#include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/IndexBuffer.h"
 #include "Direct3D11Renderer/VertexBuffer.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
+
+#include <Renderer/VertexArrayTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -40,11 +40,10 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D11Renderer &direct3D11Renderer, ID3DBlob &d3dBlob, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D11Renderer),
 		mD3D11DeviceContext(direct3D11Renderer.getD3D11DeviceContext()),
 		mIndexBuffer(indexBuffer),
-		mD3D11InputLayout(nullptr),
 		mNumberOfSlots(numberOfVertexBuffers),
 		mD3D11Buffers(nullptr),
 		mStrides(nullptr),
@@ -85,44 +84,6 @@ namespace Direct3D11Renderer
 				(*currentVertexBuffer)->addReference();
 			}
 		}
-
-		// Create Direct3D 11 input element descriptions
-		// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
-		D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescs   = numberOfAttributes ? new D3D11_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D11_INPUT_ELEMENT_DESC[1];
-		D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDesc    = d3d11InputElementDescs;
-		D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescEnd = d3d11InputElementDescs + numberOfAttributes;
-		for (; d3d11InputElementDesc < d3d11InputElementDescEnd; ++d3d11InputElementDesc, ++attributes)
-		{
-			// Fill the "D3D11_INPUT_ELEMENT_DESC"-content
-			d3d11InputElementDesc->SemanticName      = attributes->semanticName;																// Semantic name (LPCSTR)
-			d3d11InputElementDesc->SemanticIndex     = attributes->semanticIndex;																// Semantic index (UINT)
-			d3d11InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(attributes->vertexArrayFormat));	// Format (DXGI_FORMAT)
-			d3d11InputElementDesc->InputSlot         = static_cast<UINT>(attributes->inputSlot);												// Input slot (UINT)
-			d3d11InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;															// Aligned byte offset (UINT)
-
-			// Per-instance instead of per-vertex?
-			if (attributes->instancesPerElement > 0)
-			{
-				d3d11InputElementDesc->InputSlotClass       = D3D11_INPUT_PER_INSTANCE_DATA;	// Input classification (D3D11_INPUT_CLASSIFICATION)
-				d3d11InputElementDesc->InstanceDataStepRate = attributes->instancesPerElement;	// Instance data step rate (UINT)
-			}
-			else
-			{
-				d3d11InputElementDesc->InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;	// Input classification (D3D11_INPUT_CLASSIFICATION)
-				d3d11InputElementDesc->InstanceDataStepRate = 0;							// Instance data step rate (UINT)
-			}
-		}
-
-		// Create the Direct3D 11 input layout
-		direct3D11Renderer.getD3D11Device()->CreateInputLayout(d3d11InputElementDescs, numberOfAttributes, d3dBlob.GetBufferPointer(), d3dBlob.GetBufferSize(), &mD3D11InputLayout);
-
-		// Destroy Direct3D 11 input element descriptions
-		delete [] d3d11InputElementDescs;
-
-		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
-			setDebugName("VAO");
-		#endif
 	}
 
 	VertexArray::~VertexArray()
@@ -131,12 +92,6 @@ namespace Direct3D11Renderer
 		if (nullptr != mIndexBuffer)
 		{
 			mIndexBuffer->release();
-		}
-
-		// Release the Direct3D 11 input layout
-		if (nullptr != mD3D11InputLayout)
-		{
-			mD3D11InputLayout->Release();
 		}
 
 		// Cleanup Direct3D 11 input slot data
@@ -167,23 +122,16 @@ namespace Direct3D11Renderer
 
 	void VertexArray::setDirect3DIASetInputLayoutAndStreamSource() const
 	{
-		// Valid Direct3D 11 input layout?
-		if (nullptr != mD3D11InputLayout)
+		// Set the Direct3D 11 vertex buffers
+		if (nullptr != mD3D11Buffers)
 		{
-			// Set the Direct3D 11 input layout
-			mD3D11DeviceContext->IASetInputLayout(mD3D11InputLayout);
-
-			// Set the Direct3D 11 vertex buffers
-			if (nullptr != mD3D11Buffers)
-			{
-				// Just make a single API call
-				mD3D11DeviceContext->IASetVertexBuffers(0, mNumberOfSlots, mD3D11Buffers, mStrides, mOffsets);
-			}
-			else
-			{
-				// Direct3D 10 says: "D3D10: INFO: ID3D10Device::IASetVertexBuffers: Since NumBuffers is 0, the operation effectively does nothing. This is probably not intentional, nor is the most efficient way to achieve this operation. Avoid calling the routine at all. [ STATE_SETTING INFO #240: DEVICE_IASETVERTEXBUFFERS_BUFFERS_EMPTY ]"
-				// -> Direct3D 11 does not give us this message, but it's probably still no good thing to do
-			}
+			// Just make a single API call
+			mD3D11DeviceContext->IASetVertexBuffers(0, mNumberOfSlots, mD3D11Buffers, mStrides, mOffsets);
+		}
+		else
+		{
+			// Direct3D 10 says: "D3D10: INFO: ID3D10Device::IASetVertexBuffers: Since NumBuffers is 0, the operation effectively does nothing. This is probably not intentional, nor is the most efficient way to achieve this operation. Avoid calling the routine at all. [ STATE_SETTING INFO #240: DEVICE_IASETVERTEXBUFFERS_BUFFERS_EMPTY ]"
+			// -> Direct3D 11 does not give us this message, but it's probably still no good thing to do
 		}
 
 		// Get the used index buffer
@@ -193,24 +141,6 @@ namespace Direct3D11Renderer
 			// Set the Direct3D 11 indices
 			mD3D11DeviceContext->IASetIndexBuffer(mIndexBuffer->getD3D11Buffer(), static_cast<DXGI_FORMAT>(mIndexBuffer->getDXGIFormat()), 0);
 		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	void VertexArray::setDebugName(const char *name)
-	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
-			// Valid Direct3D 11 input layout?
-			if (nullptr != mD3D11InputLayout)
-			{
-				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D11InputLayout->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D11InputLayout->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
-			}
-		#endif
 	}
 
 

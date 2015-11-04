@@ -33,14 +33,10 @@
 //[-------------------------------------------------------]
 //[ Forward declaration                                   ]
 //[-------------------------------------------------------]
-typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
-typedef ID3D10Blob ID3DBlob;
 struct ID3D11Buffer;
-struct ID3D11InputLayout;
 struct ID3D11DeviceContext;
 namespace Renderer
 {
-	struct VertexArrayAttribute;
 	struct VertexArrayVertexBuffer;
 }
 namespace Direct3D11Renderer
@@ -79,12 +75,6 @@ namespace Direct3D11Renderer
 		*
 		*  @param[in] direct3D11Renderer
 		*    Owner Direct3D 11 renderer instance
-		*  @param[in] d3dBlob
-		*    The loaded and compiled vertex shader
-		*  @param[in] numberOfAttributes
-		*    Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
-		*  @param[in] attributes
-		*    At least nNumberOfAttributes instances of vertex array attributes, can be a null pointer in case there are zero attributes
 		*  @param[in] numberOfVertexBuffers
 		*    Number of vertex buffers, having zero vertex buffers is valid
 		*  @param[in] vertexBuffers
@@ -92,7 +82,7 @@ namespace Direct3D11Renderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArray(Direct3D11Renderer &direct3D11Renderer, ID3DBlob &d3dBlob, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArray(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief
@@ -102,41 +92,24 @@ namespace Direct3D11Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D 11 input layout
-		*
-		*  @return
-		*    Direct3D 11 input layout instance, can be a null pointer on error, do not release the returned instance unless you added an own reference to it
-		*/
-		inline ID3D11InputLayout *getD3D11InputLayout() const;
-
-		/**
-		*  @brief
 		*    Set the Direct3D 11 vertex declaration and stream source
 		*/
 		void setDirect3DIASetInputLayoutAndStreamSource() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void setDebugName(const char *name) override;
-
-
-	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11DeviceContext	 *mD3D11DeviceContext;		///< The Direct3D 11 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
-		IndexBuffer			 *mIndexBuffer;				///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
-		ID3D11InputLayout	 *mD3D11InputLayout;		///< Direct3D 11 input layout, can be a null pointer
+		ID3D11DeviceContext	 *mD3D11DeviceContext;	///< The Direct3D 11 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
+		IndexBuffer			 *mIndexBuffer;			///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		// Direct3D 11 input slots
-		uint32_t			  mNumberOfSlots;			///< Number of used Direct3D 11 input slots (type "UINT" not used in here in order to keep the header slim)
-		ID3D11Buffer		**mD3D11Buffers;			///< Direct3D 11 vertex buffers, if "mD3D11InputLayout" is no null pointer this is no null pointer as well
-		uint32_t			 *mStrides;					///< Strides in bytes, if "mD3D11Buffers" is no null pointer this is no null pointer as well (type "UINT" not used in here in order to keep the header slim)
-		uint32_t			 *mOffsets;					///< Offsets in bytes, if "mD3D11Buffers" is no null pointer this is no null pointer as well (type "UINT" not used in here in order to keep the header slim)
+		uint32_t			  mNumberOfSlots;		///< Number of used Direct3D 11 input slots (type "UINT" not used in here in order to keep the header slim)
+		ID3D11Buffer		**mD3D11Buffers;		///< Direct3D 11 vertex buffers, if "mD3D11InputLayout" is no null pointer this is no null pointer as well
+		uint32_t			 *mStrides;				///< Strides in bytes, if "mD3D11Buffers" is no null pointer this is no null pointer as well (type "UINT" not used in here in order to keep the header slim)
+		uint32_t			 *mOffsets;				///< Offsets in bytes, if "mD3D11Buffers" is no null pointer this is no null pointer as well (type "UINT" not used in here in order to keep the header slim)
 		// For proper vertex buffer reference counter behaviour
-		VertexBuffer		**mVertexBuffers;			///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
+		VertexBuffer		**mVertexBuffers;		///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
 
 
 	};
@@ -146,9 +119,3 @@ namespace Direct3D11Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Direct3D11Renderer
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "Direct3D11Renderer/VertexArray.inl"
