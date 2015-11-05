@@ -122,14 +122,11 @@ namespace RendererRuntime
 	{
 		// Create vertex array object (VAO)
 
-		// Get the used renderer instance
-		Renderer::IRenderer &renderer = mProgram->getRenderer();
-
 		// Create the vertex buffer object (VBO)
-		Renderer::IVertexBufferPtr vertexBuffer(renderer.createVertexBuffer(mNumberOfUsedVertexBufferDataBytes, mVertexBufferData, Renderer::BufferUsage::STATIC_DRAW));
+		Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(mNumberOfUsedVertexBufferDataBytes, mVertexBufferData, Renderer::BufferUsage::STATIC_DRAW));
 
 		// Create the index buffer object (IBO)
-		Renderer::IIndexBuffer *indexBuffer = renderer.createIndexBuffer(mNumberOfUsedIndexBufferDataBytes, static_cast<Renderer::IndexBufferFormat::Enum>(mIndexBufferFormat), mIndexBufferData, Renderer::BufferUsage::STATIC_DRAW);
+		Renderer::IIndexBuffer *indexBuffer = mRenderer->createIndexBuffer(mNumberOfUsedIndexBufferDataBytes, static_cast<Renderer::IndexBufferFormat::Enum>(mIndexBufferFormat), mIndexBufferData, Renderer::BufferUsage::STATIC_DRAW);
 
 		// Create vertex array object (VAO)
 		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -145,7 +142,7 @@ namespace RendererRuntime
 				(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0	// strideInBytes (uint32_t)
 			}
 		};
-		mMeshResource->mVertexArray = renderer.createVertexArray(mNumberOfUsedVertexArrayAttributes, mVertexArray, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+		mMeshResource->mVertexArray = mRenderer->createVertexArray(mNumberOfUsedVertexArrayAttributes, mVertexArray, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 	}
 
 

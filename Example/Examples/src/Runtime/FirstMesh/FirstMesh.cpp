@@ -210,12 +210,10 @@ void FirstMesh::onInitialization()
 					mObjectSpaceToClipSpaceMatrixUniformHandle = mProgram->getUniformHandle("ObjectSpaceToClipSpaceMatrix");
 					mObjectSpaceToViewSpaceMatrixUniformHandle = mProgram->getUniformHandle("ObjectSpaceToViewSpaceMatrix");
 				}
-
-				// Create mesh instance
-				// -> In order to keep it simple, we provide the mesh with the program, usually you want to use a mesh
-				//    with multiple programs and therefore using multiple vertex array objects (VAO)
-				mMeshResource = rendererRuntime->getMeshResourceManager().loadMeshResourceByAssetId(*mProgram, "Example/Mesh/Character/ImrodLowPoly");
 			}
+
+			// Create mesh instance
+			mMeshResource = rendererRuntime->getMeshResourceManager().loadMeshResourceByAssetId(*renderer, "Example/Mesh/Character/ImrodLowPoly");
 
 			{ // Load in the diffuse, emissive, normal and specular texture
 			  // -> The tangent space normal map is stored with three components, two would be enough to recalculate the third component within the fragment shader

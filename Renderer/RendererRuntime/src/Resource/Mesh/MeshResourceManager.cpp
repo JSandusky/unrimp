@@ -42,13 +42,12 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	MeshResource* MeshResourceManager::loadMeshResourceByAssetId(Renderer::IProgram& program, AssetId assetId)
+	MeshResource* MeshResourceManager::loadMeshResourceByAssetId(Renderer::IRenderer& renderer, AssetId assetId)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
 		{
-			// TODO(co) Get rid of the program
-			mProgram = &program;
+			mRenderer = &renderer;
 
 			// Get or create the instance
 			MeshResource* meshResource = nullptr;
@@ -75,7 +74,7 @@ namespace RendererRuntime
 			{
 				// Prepare the resource loader
 				MeshResourceLoader* meshResourceLoader = static_cast<MeshResourceLoader*>(acquireResourceLoaderInstance(MeshResourceLoader::TYPE_ID));
-				meshResourceLoader->initialize(*asset, *meshResource, program);
+				meshResourceLoader->initialize(*asset, *meshResource, renderer);
 
 				// Commit resource streamer asset load request
 				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
@@ -103,7 +102,7 @@ namespace RendererRuntime
 		{
 			if (mResources[i]->getResourceId() == assetId)
 			{
-				loadMeshResourceByAssetId(*mProgram, assetId);
+				loadMeshResourceByAssetId(*mRenderer, assetId);
 				break;
 			}
 		}
@@ -120,7 +119,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MeshResourceManager::MeshResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mProgram(nullptr)	// TODO(co) Get rid of the program
+		mRenderer(nullptr)
 	{
 		// Nothing in here
 	}

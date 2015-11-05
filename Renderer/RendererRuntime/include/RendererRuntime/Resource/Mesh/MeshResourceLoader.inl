@@ -32,7 +32,7 @@ namespace RendererRuntime
 		IResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime),
 		mMeshResource(nullptr),
-		mProgram(nullptr),
+		mRenderer(nullptr),
 		mNumberOfVertexBufferDataBytes(0),
 		mNumberOfUsedVertexBufferDataBytes(0),
 		mVertexBufferData(nullptr),
@@ -47,11 +47,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline void MeshResourceLoader::initialize(const Asset& asset, MeshResource& meshResource, Renderer::IProgram& program)
+	inline void MeshResourceLoader::initialize(const Asset& asset, MeshResource& meshResource, Renderer::IRenderer& renderer)
 	{
 		mAsset		  = asset;
 		mMeshResource = &meshResource;
-		mProgram	  = &program;
+		mRenderer	  = &renderer;
 	}
 
 

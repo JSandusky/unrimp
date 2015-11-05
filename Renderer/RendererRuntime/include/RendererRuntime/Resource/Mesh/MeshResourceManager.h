@@ -36,7 +36,7 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	class IProgram;
+	class IRenderer;
 }
 namespace RendererRuntime
 {
@@ -70,7 +70,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT MeshResource* loadMeshResourceByAssetId(Renderer::IProgram& program, AssetId assetId);
+		RENDERERRUNTIME_API_EXPORT MeshResource* loadMeshResourceByAssetId(Renderer::IRenderer& renderer, AssetId assetId);
 
 
 	//[-------------------------------------------------------]
@@ -99,7 +99,7 @@ namespace RendererRuntime
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 
 		// TODO(co) Implement decent resource handling
-		Renderer::IProgram* mProgram;	// TODO(co) Get rid of the program
+		Renderer::IRenderer* mRenderer;
 		std::vector<MeshResource*> mResources;
 
 

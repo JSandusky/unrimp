@@ -36,7 +36,7 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	class IProgram;
+	class IRenderer;
 	struct VertexArrayAttribute;
 }
 namespace RendererRuntime
@@ -91,7 +91,7 @@ namespace RendererRuntime
 		virtual ~MeshResourceLoader();
 		MeshResourceLoader(const MeshResourceLoader&) = delete;
 		MeshResourceLoader& operator=(const MeshResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, MeshResource& meshResource, Renderer::IProgram& program);
+		inline void initialize(const Asset& asset, MeshResource& meshResource, Renderer::IRenderer& renderer);
 
 
 	//[-------------------------------------------------------]
@@ -100,9 +100,9 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 		// Resource source and destination
-		Asset				mAsset;	///< In order to be multi-threading safe in here, we need an asset copy
-		MeshResource*		mMeshResource;
-		Renderer::IProgram* mProgram;
+		Asset				 mAsset;	///< In order to be multi-threading safe in here, we need an asset copy
+		MeshResource*		 mMeshResource;
+		Renderer::IRenderer* mRenderer;
 		// Temporary data
 		// Temporary vertex buffer
 		uint32_t mNumberOfVertexBufferDataBytes;
