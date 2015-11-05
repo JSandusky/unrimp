@@ -19,14 +19,14 @@
 
 
 // Shaders are from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")
-// -> Ported to GLSL
+// -> Ported from GLSL to HLSL
 
 
 //[-------------------------------------------------------]
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
-#ifndef RENDERER_NO_DIRECT3D11
-if (0 == strcmp(renderer->getName(), "Direct3D11"))
+#if !defined(RENDERER_NO_DIRECT3D11) || !defined(RENDERER_NO_DIRECT3D12)
+if (0 == strcmp(renderer->getName(), "Direct3D11") || 0 == strcmp(renderer->getName(), "Direct3D12"))
 {
 
 

@@ -42,6 +42,8 @@
 *    - Vertex buffer object (VBO)
 *    - Vertex array object (VAO)
 *    - Index buffer object (IBO)
+*    - Root signature
+*    - Pipeline state object (PSO)
 *    - Uniform buffer object (UBO)
 *    - Vertex shader (VS), tessellation control shader (TCS), tessellation evaluation shader (TES), geometry shader (GS) and fragment shader (FS)
 */
@@ -87,7 +89,8 @@ private:
 	Renderer::IUniformBufferPtr	mUniformBufferStaticTes;	///< Static tessellation evaluation shader uniform buffer object (UBO), can be a null pointer
 	Renderer::IUniformBufferPtr	mUniformBufferStaticGs;		///< Static geometry shader uniform buffer object (UBO), can be a null pointer
 	Renderer::IUniformBufferPtr	mUniformBufferStaticFs;		///< Static fragment shader uniform buffer object (UBO), can be a null pointer
-	Renderer::IProgramPtr		mProgram;					///< Program, can be a null pointer
+	Renderer::IRootSignaturePtr	mRootSignature;				///< Root signature, can be a null pointer
+	Renderer::IPipelineStatePtr	mPipelineState;				///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IVertexArrayPtr	mVertexArray;				///< Vertex array object (VAO), can be a null pointer
 	float						mTessellationLevelOuter;	///< Outer tessellation level
 	float						mTessellationLevelInner;	///< Inner tessellation level

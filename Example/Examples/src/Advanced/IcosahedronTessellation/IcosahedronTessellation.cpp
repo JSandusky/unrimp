@@ -69,6 +69,25 @@ void IcosahedronTessellation::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
+		{ // Create the root signature
+			// Setup
+			Renderer::DescriptorRangeBuilder ranges[1];
+			ranges[0].initialize(Renderer::DescriptorRangeType::CBV, 1, 0);
+
+			Renderer::RootParameterBuilder rootParameters[4];
+			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::TESSELLATION_CONTROL);
+			rootParameters[1].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::TESSELLATION_EVALUATION);
+			rootParameters[2].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::GEOMETRY);
+			rootParameters[3].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
+
+			// Setup
+			Renderer::RootSignatureBuilder rootSignature;
+			rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+			// Create the instance
+			mRootSignature = renderer->createRootSignature(rootSignature);
+		}
+
 		// Vertex input layout
 		const Renderer::VertexAttribute vertexAttributesLayout[] =
 		{
@@ -185,7 +204,9 @@ void IcosahedronTessellation::onInitialization()
 				mUniformBufferStaticFs = shaderLanguage->createUniformBuffer(sizeof(LIGHT_AND_MATERIAL), LIGHT_AND_MATERIAL, Renderer::BufferUsage::STATIC_DRAW);
 			}
 
-			{ // Create the program
+			// Create the program
+			Renderer::IProgramPtr program;
+			{
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *tessellationControlShaderSourceCode = nullptr;
@@ -193,17 +214,32 @@ void IcosahedronTessellation::onInitialization()
 				const char *geometryShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
 				#include "IcosahedronTessellation_GLSL_400.h"
-				#include "IcosahedronTessellation_HLSL_D3D11.h"
+				#include "IcosahedronTessellation_HLSL_D3D11_D3D12.h"
 				#include "IcosahedronTessellation_Null.h"
 
 				// Create the program
-				mProgram = shaderLanguage->createProgram(
+				program = shaderLanguage->createProgram(
 					vertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createTessellationControlShaderFromSourceCode(tessellationControlShaderSourceCode),
 					shaderLanguage->createTessellationEvaluationShaderFromSourceCode(tessellationEvaluationShaderSourceCode),
 					shaderLanguage->createGeometryShaderFromSourceCode(geometryShaderSourceCode, Renderer::GsInputPrimitiveTopology::TRIANGLES, Renderer::GsOutputPrimitiveTopology::TRIANGLE_STRIP, 3),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
+			}
+
+			// Create the pipeline state object (PSO)
+			if (nullptr != program)
+			{
+				// Setup
+				Renderer::PipelineState pipelineState;
+				pipelineState.rootSignature = mRootSignature;
+				pipelineState.program = program;
+				pipelineState.vertexAttributes = vertexAttributes;
+				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::PATCH;
+				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+
+				// Create the instance
+				mPipelineState = renderer->createPipelineState(pipelineState);
 			}
 		}
 
@@ -218,12 +254,13 @@ void IcosahedronTessellation::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
-	mVertexArray = nullptr;
-	mProgram = nullptr;
 	mUniformBufferStaticFs = nullptr;
 	mUniformBufferStaticGs = nullptr;
 	mUniformBufferStaticTes = nullptr;
 	mUniformBufferDynamicTcs = nullptr;
+	mVertexArray = nullptr;
+	mPipelineState = nullptr;
+	mRootSignature = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -236,7 +273,7 @@ void IcosahedronTessellation::onDraw()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mProgram)
+	if (nullptr != renderer && nullptr != mPipelineState)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -249,8 +286,11 @@ void IcosahedronTessellation::onDraw()
 			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
 
-			// Set the used program
-			renderer->setProgram(mProgram);
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
+
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineState);
 
 			{ // Setup input assembly (IA)
 				// Set the used vertex array
@@ -273,19 +313,27 @@ void IcosahedronTessellation::onDraw()
 				mUniformBufferDynamicTcs->copyDataFrom(sizeof(data), data);
 
 				// Assign to stage
-				renderer->tcsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockDynamicTcs", 0), mUniformBufferDynamicTcs);
+				// TODO(co) Update
+				renderer->tcsSetUniformBuffer(0, mUniformBufferDynamicTcs);
+				// renderer->tcsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockDynamicTcs", 0), mUniformBufferDynamicTcs);
 			}
 			if (nullptr != mUniformBufferStaticTes)
 			{
-				renderer->tesSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockStaticTes", 0), mUniformBufferStaticTes);
+				// TODO(co) Update
+				renderer->tesSetUniformBuffer(0, mUniformBufferStaticTes);
+				//renderer->tesSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockStaticTes", 0), mUniformBufferStaticTes);
 			}
 			if (nullptr != mUniformBufferStaticGs)
 			{
-				renderer->gsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockStaticGs", 0), mUniformBufferStaticGs);
+				// TODO(co) Update
+				renderer->gsSetUniformBuffer(0, mUniformBufferStaticGs);
+				//renderer->gsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockStaticGs", 0), mUniformBufferStaticGs);
 			}
 			if (nullptr != mUniformBufferStaticFs)
 			{
-				renderer->fsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockStaticFs", 0), mUniformBufferStaticFs);
+				// TODO(co) Update
+				renderer->fsSetUniformBuffer(0, mUniformBufferStaticFs);
+				//renderer->fsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockStaticFs", 0), mUniformBufferStaticFs);
 			}
 
 			// Render the specified geometric primitive, based on indexing into an array of vertices
