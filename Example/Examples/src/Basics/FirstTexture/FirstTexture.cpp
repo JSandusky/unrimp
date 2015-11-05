@@ -65,24 +65,40 @@ void FirstTexture::onInitialization()
 		{ // Create the texture
 			static const uint32_t TEXTURE_WIDTH   = 128;
 			static const uint32_t TEXTURE_HEIGHT  = 128;
-			static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH * TEXTURE_HEIGHT * 4;
+			static const uint32_t TEXEL_ELEMENTS  = 4;
+			static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH * TEXTURE_HEIGHT * TEXEL_ELEMENTS;
 
 			// Allocate memory for the texture
 			uint8_t *data = new uint8_t[NUMBER_OF_BYTES];
 
-			// TODO(co) Be a little bit more creative while filling the texture data
-			// Random content
-			uint8_t *dataCurrent = data;
-			for (uint32_t i = 0; i < TEXTURE_WIDTH * TEXTURE_HEIGHT; ++i)
-			{
-				*dataCurrent = static_cast<uint8_t>(rand() % 255);
-				++dataCurrent;
-				*dataCurrent = static_cast<uint8_t>(rand() % 255);
-				++dataCurrent;
-				*dataCurrent = static_cast<uint8_t>(rand() % 255);
-				++dataCurrent;
-				*dataCurrent = static_cast<uint8_t>(rand() % 255);
-				++dataCurrent;
+			{ // Fill the texture data with a defective checkboard
+				const uint32_t rowPitch   = TEXTURE_WIDTH * TEXEL_ELEMENTS;
+				const uint32_t cellPitch  = rowPitch >> 3;		// The width of a cell in the checkboard texture
+				const uint32_t cellHeight = TEXTURE_WIDTH >> 3;	// The height of a cell in the checkerboard texture
+				for (uint32_t n = 0; n < NUMBER_OF_BYTES; n += TEXEL_ELEMENTS)
+				{
+					const uint32_t x = n % rowPitch;
+					const uint32_t y = n / rowPitch;
+					const uint32_t i = x / cellPitch;
+					const uint32_t j = y / cellHeight;
+
+					if (i % 2 == j % 2)
+					{
+						// Black
+						data[n + 0] = 0;	// R
+						data[n + 1] = 0;	// G
+						data[n + 2] = 0;	// B
+						data[n + 3] = 255;	// A
+					}
+					else
+					{
+						// Add some color fun instead of just boring white
+						data[n + 0] = static_cast<uint8_t>(rand() % 255);	// R
+						data[n + 1] = static_cast<uint8_t>(rand() % 255);	// G
+						data[n + 2] = static_cast<uint8_t>(rand() % 255);	// B
+						data[n + 3] = static_cast<uint8_t>(rand() % 255);	// A
+					}
+				}
 			}
 
 			// Create the texture instance
