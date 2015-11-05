@@ -79,71 +79,69 @@ void FirstRenderToTexture::onInitialization()
 			mSamplerState = renderer->createSamplerState(samplerState);
 		}
 
-		// Decide which shader language should be used (for example "GLSL" or "HLSL")
+		// Vertex input layout
+		const Renderer::VertexAttribute vertexAttributesLayout[] =
+		{
+			{ // Attribute 0
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"Position",									// name[32] (char)
+				"POSITION",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				0,											// inputSlot (uint32_t)
+				0,											// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0											// instancesPerElement (uint32_t)
+			}
+		};
+		const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
+
+		{ // Create vertex array object (VAO)
+			// Create the vertex buffer object (VBO)
+			// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
+			static const float VERTEX_POSITION[] =
+			{					// Vertex ID	Triangle on screen
+					0.0f, 1.0f,	// 0				0
+					1.0f, 0.0f,	// 1			   .   .
+				-0.5f, 0.0f		// 2			  2.......1
+			};
+			Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+
+			// Create vertex array object (VAO)
+			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+			// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+			{
+				{ // Vertex buffer 0
+					vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+					sizeof(float) * 2	// strideInBytes (uint32_t)
+				}
+			};
+			mVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+		}
+
+		// Create the program: Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			// Vertex input layout
-			const Renderer::VertexAttribute vertexAttributesLayout[] =
-			{
-				{ // Attribute 0
-					// Data destination
-					Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
-					"Position",									// name[32] (char)
-					"POSITION",									// semanticName[32] (char)
-					0,											// semanticIndex (uint32_t)
-					// Data source
-					0,											// inputSlot (uint32_t)
-					0,											// alignedByteOffset (uint32_t)
-					// Data source, instancing part
-					0											// instancesPerElement (uint32_t)
-				}
-			};
-			const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
+			// Get the shader source code (outsourced to keep an overview)
+			const char *vertexShaderSourceCode = nullptr;
+			const char *fragmentShaderSourceCode = nullptr;
+			#include "FirstRenderToTexture_GLSL_110.h"
+			#include "FirstRenderToTexture_GLSL_ES2.h"
+			#include "FirstRenderToTexture_HLSL_D3D9.h"
+			#include "FirstRenderToTexture_HLSL_D3D10_D3D11.h"
+			#include "FirstRenderToTexture_Null.h"
 
-			{ // Create the program
-				// Get the shader source code (outsourced to keep an overview)
-				const char *vertexShaderSourceCode = nullptr;
-				const char *fragmentShaderSourceCode = nullptr;
-				#include "FirstRenderToTexture_GLSL_110.h"
-				#include "FirstRenderToTexture_GLSL_ES2.h"
-				#include "FirstRenderToTexture_HLSL_D3D9.h"
-				#include "FirstRenderToTexture_HLSL_D3D10_D3D11.h"
-				#include "FirstRenderToTexture_Null.h"
-
-				// Create the program
-				mProgram = shaderLanguage->createProgram(
-					vertexAttributes,
-					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
-					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
-			}
-
-			{ // Create vertex array object (VAO)
-				// Create the vertex buffer object (VBO)
-				// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-				static const float VERTEX_POSITION[] =
-				{					// Vertex ID	Triangle on screen
-					 0.0f, 1.0f,	// 0				0
-					 1.0f, 0.0f,	// 1			   .   .
-					-0.5f, 0.0f		// 2			  2.......1
-				};
-				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-
-				// Create vertex array object (VAO)
-				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-				// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-				// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-				//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-				{
-					{ // Vertex buffer 0
-						vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-						sizeof(float) * 2	// strideInBytes (uint32_t)
-					}
-				};
-				mVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
-			}
+			// Create the program
+			mProgram = shaderLanguage->createProgram(
+				vertexAttributes,
+				shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+				shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 		}
 
 		// End debug event

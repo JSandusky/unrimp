@@ -60,37 +60,61 @@ void FirstGeometryShader::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Decide which shader language should be used (for example "GLSL" or "HLSL")
+		{ // Create the root signature
+			// Setup
+			Renderer::RootSignatureBuilder rootSignature;
+			rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+			// Create the instance
+			mRootSignature = renderer->createRootSignature(rootSignature);
+		}
+
+		// Vertex input layout
+		const Renderer::VertexAttribute vertexAttributesLayout[] =
+		{
+			{ // Attribute 0
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_1,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"Position",									// name[32] (char)
+				"POSITION",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				0,											// inputSlot (uint32_t)
+				0,											// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0											// instancesPerElement (uint32_t)
+			}
+		};
+		const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
+
+		{ // Create vertex array object (VAO)
+			// Create the vertex buffer object (VBO)
+			static const float VERTEX_POSITION[] =
+			{			// Vertex ID
+				42.0f	// 0
+			};
+			Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+
+			// Create vertex array object (VAO)
+			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+			// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+			{
+				{ // Vertex buffer 0
+					vertexBuffer,	// vertexBuffer (Renderer::IVertexBuffer *)
+					sizeof(float)	// strideInBytes (uint32_t)
+				}
+			};
+			mVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+		}
+
+		// Create the program: Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			{ // Create the root signature
-				// Setup
-				Renderer::RootSignatureBuilder rootSignature;
-				rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-				// Create the instance
-				mRootSignature = renderer->createRootSignature(rootSignature);
-			}
-
-			// Vertex input layout
-			const Renderer::VertexAttribute vertexAttributesLayout[] =
-			{
-				{ // Attribute 0
-					// Data destination
-					Renderer::VertexAttributeFormat::FLOAT_1,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
-					"Position",									// name[32] (char)
-					"POSITION",									// semanticName[32] (char)
-					0,											// semanticIndex (uint32_t)
-					// Data source
-					0,											// inputSlot (uint32_t)
-					0,											// alignedByteOffset (uint32_t)
-					// Data source, instancing part
-					0											// instancesPerElement (uint32_t)
-				}
-			};
-			const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
-
 			// Create the program
 			Renderer::IProgramPtr program;
 			{
@@ -110,46 +134,21 @@ void FirstGeometryShader::onInitialization()
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
+			// Create the pipeline state object (PSO)
 			// TODO(co) Attribute less rendering (aka "drawing without data") possible with OpenGL? For me it appears not to work, I see nothing and also get no error...
 			// -> Tested with: "Radeon HD 6970M", driver "catalyst_12-7_beta_windows7_20120629.exe"
 			// -> According to http://renderingpipeline.com/2012/03/are-vertex-shaders-obsolete/ it should work
 			// -> Apparently there are currently some issues when using this approach: http://www.opengl.org/discussion_boards/showthread.php/177372-Rendering-simple-shapes-without-passing-vertices
 			if (nullptr != program && 0 != strcmp(renderer->getName(), "OpenGL"))
 			{
-				{ // Create the pipeline state object (PSO)
-					// Setup
-					Renderer::PipelineState pipelineState;
-					pipelineState.rootSignature = mRootSignature;
-					pipelineState.program = program;
-					pipelineState.vertexAttributes = vertexAttributes;
+				// Setup
+				Renderer::PipelineState pipelineState;
+				pipelineState.rootSignature = mRootSignature;
+				pipelineState.program = program;
+				pipelineState.vertexAttributes = vertexAttributes;
 
-					// Create the instance
-					mPipelineState = renderer->createPipelineState(pipelineState);
-				}
-
-				{ // Create vertex array object (VAO)
-					// Create the vertex buffer object (VBO)
-					static const float VERTEX_POSITION[] =
-					{			// Vertex ID
-						42.0f	// 0
-					};
-					Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-
-					// Create vertex array object (VAO)
-					// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-					// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-					// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-					//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-					//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-					{
-						{ // Vertex buffer 0
-							vertexBuffer,	// vertexBuffer (Renderer::IVertexBuffer *)
-							sizeof(float)	// strideInBytes (uint32_t)
-						}
-					};
-					mVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
-				}
+				// Create the instance
+				mPipelineState = renderer->createPipelineState(pipelineState);
 			}
 		}
 

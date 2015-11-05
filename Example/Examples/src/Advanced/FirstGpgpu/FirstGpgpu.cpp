@@ -171,102 +171,100 @@ void FirstGpgpu::onInitialization()
 		mRenderer->omSetDepthStencilState(mDepthStencilState);
 	}
 
-	// Decide which shader language should be used (for example "GLSL" or "HLSL")
+	// Vertex input layout
+	const Renderer::VertexAttribute vertexAttributesLayout[] =
+	{
+		{ // Attribute 0
+			// Data destination
+			Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+			"Position",									// name[32] (char)
+			"POSITION",									// semanticName[32] (char)
+			0,											// semanticIndex (uint32_t)
+			// Data source
+			0,											// inputSlot (uint32_t)
+			0,											// alignedByteOffset (uint32_t)
+			// Data source, instancing part
+			0											// instancesPerElement (uint32_t)
+		}
+	};
+	const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
+
+	{ // Create vertex array object (VAO) for content generation
+		// Create the vertex buffer object (VBO)
+		// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
+		static const float VERTEX_POSITION[] =
+		{					// Vertex ID	Triangle on screen
+				0.0f, 1.0f,	// 0				0
+				1.0f, 0.0f,	// 1			   .   .
+			-0.5f, 0.0f		// 2			  2.......1
+		};
+		Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+
+		// Create vertex array object (VAO)
+		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+		// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+		// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+		//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+		//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+		{
+			{ // Vertex buffer 0
+				vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+				sizeof(float) * 2	// strideInBytes (uint32_t)
+			}
+		};
+		mVertexArrayContentGeneration = mRenderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+	}
+
+	{ // Create vertex array object (VAO) for content processing
+		// Create the vertex buffer object (VBO)
+		// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
+		static const float VERTEX_POSITION[] =
+		{					// Vertex ID	Triangle strip on screen
+			-1.0f, -1.0f,	// 0			  1.......3
+			-1.0f,  1.0f,	// 1			  .	  .   .
+				1.0f, -1.0f,	// 2			  0.......2
+				1.0f,  1.0f	// 3
+		};
+		Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+
+		// Create vertex array object (VAO)
+		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+		// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+		// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+		//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+		//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+		{
+			{ // Vertex buffer 0
+				vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+				sizeof(float) * 2	// strideInBytes (uint32_t)
+			}
+		};
+		mVertexArrayContentProcessing = mRenderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+	}
+
+	// Create the programs: Decide which shader language should be used (for example "GLSL" or "HLSL")
 	Renderer::IShaderLanguagePtr shaderLanguage(mRenderer->getShaderLanguage());
 	if (nullptr != shaderLanguage)
 	{
-		// Vertex input layout
-		const Renderer::VertexAttribute vertexAttributesLayout[] =
-		{
-			{ // Attribute 0
-				// Data destination
-				Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
-				"Position",									// name[32] (char)
-				"POSITION",									// semanticName[32] (char)
-				0,											// semanticIndex (uint32_t)
-				// Data source
-				0,											// inputSlot (uint32_t)
-				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
-				0											// instancesPerElement (uint32_t)
-			}
-		};
-		const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
+		// Get the shader source code (outsourced to keep an overview)
+		const char *vertexShaderSourceCode = nullptr;
+		const char *fragmentShaderSourceCode_ContentGeneration = nullptr;
+		const char *fragmentShaderSourceCode_ContentProcessing = nullptr;
+		#include "FirstGpgpu_GLSL_110.h"
+		#include "FirstGpgpu_GLSL_ES2.h"
+		#include "FirstGpgpu_HLSL_D3D9.h"
+		#include "FirstGpgpu_HLSL_D3D10_D3D11.h"
+		#include "FirstGpgpu_Null.h"
 
-		{ // Create the programs
-			// Get the shader source code (outsourced to keep an overview)
-			const char *vertexShaderSourceCode = nullptr;
-			const char *fragmentShaderSourceCode_ContentGeneration = nullptr;
-			const char *fragmentShaderSourceCode_ContentProcessing = nullptr;
-			#include "FirstGpgpu_GLSL_110.h"
-			#include "FirstGpgpu_GLSL_ES2.h"
-			#include "FirstGpgpu_HLSL_D3D9.h"
-			#include "FirstGpgpu_HLSL_D3D10_D3D11.h"
-			#include "FirstGpgpu_Null.h"
-
-			// In order to keep this example simple and to show that it's possible, we use the same vertex shader for both programs
-			// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
-			//    the unused texture coordinate might get optimized out
-			// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-			Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
-			mProgramContentGeneration = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentGeneration));
-			mProgramContentProcessing = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentProcessing));
-		}
-
-		{ // Create vertex array object (VAO) for content generation
-			// Create the vertex buffer object (VBO)
-			// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-			static const float VERTEX_POSITION[] =
-			{					// Vertex ID	Triangle on screen
-				 0.0f, 1.0f,	// 0				0
-				 1.0f, 0.0f,	// 1			   .   .
-				-0.5f, 0.0f		// 2			  2.......1
-			};
-			Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-
-			// Create vertex array object (VAO)
-			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-			// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-			{
-				{ // Vertex buffer 0
-					vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 2	// strideInBytes (uint32_t)
-				}
-			};
-			mVertexArrayContentGeneration = mRenderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
-		}
-
-		{ // Create vertex array object (VAO) for content processing
-			// Create the vertex buffer object (VBO)
-			// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-			static const float VERTEX_POSITION[] =
-			{					// Vertex ID	Triangle strip on screen
-				-1.0f, -1.0f,	// 0			  1.......3
-				-1.0f,  1.0f,	// 1			  .	  .   .
-				 1.0f, -1.0f,	// 2			  0.......2
-				 1.0f,  1.0f	// 3
-			};
-			Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-
-			// Create vertex array object (VAO)
-			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-			// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-			{
-				{ // Vertex buffer 0
-					vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 2	// strideInBytes (uint32_t)
-				}
-			};
-			mVertexArrayContentProcessing = mRenderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
-		}
+		// In order to keep this example simple and to show that it's possible, we use the same vertex shader for both programs
+		// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
+		//    the unused texture coordinate might get optimized out
+		// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
+		Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
+		mProgramContentGeneration = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentGeneration));
+		mProgramContentProcessing = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentProcessing));
 	}
 
 	// End debug event

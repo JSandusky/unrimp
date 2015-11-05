@@ -88,28 +88,66 @@ void FirstCommandBucket::onInitialization()
 		// Create the font resource
 		mFontResource = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
 
+		// Vertex input layout
+		const Renderer::VertexAttribute vertexAttributesLayout[] =
+		{
+			{ // Attribute 0
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"Position",									// name[32] (char)
+				"POSITION",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				0,											// inputSlot (uint32_t)
+				0,											// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0											// instancesPerElement (uint32_t)
+			}
+		};
+		const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
+
+		{ // Create vertex array object (VAO)
+			// Create the vertex buffer object (VBO)
+			// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
+			static const float VERTEX_POSITION[] =
+			{					// Vertex ID	Triangle on screen
+					0.0f, 1.0f,	// 0				0
+					1.0f, 0.0f,	// 1			   .   .
+				-0.5f, 0.0f		// 2			  2.......1
+			};
+			Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Triangle VBO")
+
+			// Create the index buffer object (IBO)
+			static const uint16_t INDICES[] =
+			{
+				0, 1, 2
+			};
+			Renderer::IIndexBufferPtr indexBuffer(renderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW));
+
+			// Create vertex array object (VAO)
+			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+			// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+			{
+				{ // Vertex buffer 0
+					vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+					sizeof(float) * 2	// strideInBytes (uint32_t)
+				}
+			};
+			mSolidVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(mSolidVertexArray, "Solid triangle VAO")
+			mTransparentVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(mTransparentVertexArray, "Transparent triangle VAO")
+		}
+
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			// Vertex input layout
-			const Renderer::VertexAttribute vertexAttributesLayout[] =
-			{
-				{ // Attribute 0
-					// Data destination
-					Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
-					"Position",									// name[32] (char)
-					"POSITION",									// semanticName[32] (char)
-					0,											// semanticIndex (uint32_t)
-					// Data source
-					0,											// inputSlot (uint32_t)
-					0,											// alignedByteOffset (uint32_t)
-					// Data source, instancing part
-					0											// instancesPerElement (uint32_t)
-				}
-			};
-			const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
-
 			{ // Create the program
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
@@ -134,51 +172,13 @@ void FirstCommandBucket::onInitialization()
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mProgram, "Triangle program")
 			}
 
-			{ // Create vertex array object (VAO)
-				// Create the vertex buffer object (VBO)
-				// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-				static const float VERTEX_POSITION[] =
-				{					// Vertex ID	Triangle on screen
-					 0.0f, 1.0f,	// 0				0
-					 1.0f, 0.0f,	// 1			   .   .
-					-0.5f, 0.0f		// 2			  2.......1
-				};
-				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-				RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Triangle VBO")
-
-				// Create the index buffer object (IBO)
-				static const uint16_t INDICES[] =
-				{
-					0, 1, 2
-				};
-				Renderer::IIndexBufferPtr indexBuffer(renderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW));
-
-				// Create vertex array object (VAO)
-				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-				// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-				// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-				//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-				{
-					{ // Vertex buffer 0
-						vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-						sizeof(float) * 2	// strideInBytes (uint32_t)
-					}
-				};
-				mSolidVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
-				RENDERER_SET_RESOURCE_DEBUG_NAME(mSolidVertexArray, "Solid triangle VAO")
-				mTransparentVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
-				RENDERER_SET_RESOURCE_DEBUG_NAME(mTransparentVertexArray, "Transparent triangle VAO")
+			// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
+			// -> If they are there, we really want to use them (performance and ease of use)
+			if (renderer->getCapabilities().uniformBuffer)
+			{
+				// Create dynamic uniform buffer
+				mUniformBufferDynamicVs = shaderLanguage->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 			}
-		}
-
-		// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
-		// -> If they are there, we really want to use them (performance and ease of use)
-		if (renderer->getCapabilities().uniformBuffer)
-		{
-			// Create dynamic uniform buffer
-			mUniformBufferDynamicVs = shaderLanguage->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 		}
 
 		{ // Create solid material

@@ -59,19 +59,19 @@ void FirstInstancing::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
+		{ // Create the root signature
+			// Setup
+			Renderer::RootSignatureBuilder rootSignature;
+			rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+			// Create the instance
+			mRootSignature = renderer->createRootSignature(rootSignature);
+		}
+
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			{ // Create the root signature
-				// Setup
-				Renderer::RootSignatureBuilder rootSignature;
-				rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-				// Create the instance
-				mRootSignature = renderer->createRootSignature(rootSignature);
-			}
-
 			// There are two instancing approaches available
 			// - Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 			// - Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
@@ -116,6 +116,55 @@ void FirstInstancing::onInitialization()
 				};
 				const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
 
+				{ // Create vertex array object (VAO)
+					// Create the vertex buffer object (VBO)
+					// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
+					static const float VERTEX_POSITION[] =
+					{					// Vertex ID	Triangle on screen
+							0.0f, 1.0f,	// 0					 .0
+							0.0f, 0.0f,	// 1				 .    .
+						-1.0f, 0.0f		// 2			  2.......1
+					};
+					Renderer::IVertexBufferPtr vertexBufferPosition(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+
+					// Create the per-instance-data vertex buffer object (VBO)
+					// -> Simple instance ID in order to keep it similar to the "draw instanced" version on the right side (blue)
+					static const float INSTANCE_ID[] =
+					{
+							0.0f, 1.0f
+					};
+					Renderer::IVertexBufferPtr vertexBufferInstanceId(renderer->createVertexBuffer(sizeof(INSTANCE_ID), INSTANCE_ID, Renderer::BufferUsage::STATIC_DRAW));
+
+					// Create the index buffer object (IBO)
+					// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
+					// -> In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
+					//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
+					static const uint16_t INDICES[] =
+					{
+						0, 1, 2
+					};
+					Renderer::IIndexBuffer *indexBufferInstancedArrays = renderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
+
+					// Create vertex array object (VAO)
+					// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+					// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+					// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+					//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+					//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+					{
+						{ // Vertex buffer 0
+							vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer *)
+							sizeof(float) * 2		// strideInBytes (uint32_t)
+						},
+						{ // Vertex buffer 1
+							vertexBufferInstanceId,	// vertexBuffer (Renderer::IVertexBuffer *)
+							sizeof(float)			// strideInBytes (uint32_t)
+						}
+					};
+					mVertexArrayInstancedArrays = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBufferInstancedArrays);
+				}
+
 				// Create the program
 				Renderer::IProgramPtr program;
 				{
@@ -133,68 +182,17 @@ void FirstInstancing::onInitialization()
 						shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 				}
 
-				// Is there a valid program?
+				// Create the pipeline state object (PSO)
 				if (nullptr != program)
 				{
-					{ // Create the pipeline state object (PSO)
-						// Setup
-						Renderer::PipelineState pipelineState;
-						pipelineState.rootSignature = mRootSignature;
-						pipelineState.program = program;
-						pipelineState.vertexAttributes = vertexAttributes;
+					// Setup
+					Renderer::PipelineState pipelineState;
+					pipelineState.rootSignature = mRootSignature;
+					pipelineState.program = program;
+					pipelineState.vertexAttributes = vertexAttributes;
 
-						// Create the instance
-						mPipelineStateInstancedArrays = renderer->createPipelineState(pipelineState);
-					}
-
-					{ // Create vertex array object (VAO)
-						// Create the vertex buffer object (VBO)
-						// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-						static const float VERTEX_POSITION[] =
-						{					// Vertex ID	Triangle on screen
-							 0.0f, 1.0f,	// 0					 .0
-							 0.0f, 0.0f,	// 1				 .    .
-							-1.0f, 0.0f		// 2			  2.......1
-						};
-						Renderer::IVertexBufferPtr vertexBufferPosition(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-
-						// Create the per-instance-data vertex buffer object (VBO)
-						// -> Simple instance ID in order to keep it similar to the "draw instanced" version on the right side (blue)
-						static const float INSTANCE_ID[] =
-						{
-							 0.0f, 1.0f
-						};
-						Renderer::IVertexBufferPtr vertexBufferInstanceId(renderer->createVertexBuffer(sizeof(INSTANCE_ID), INSTANCE_ID, Renderer::BufferUsage::STATIC_DRAW));
-
-						// Create the index buffer object (IBO)
-						// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
-						// -> In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
-						//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
-						static const uint16_t INDICES[] =
-						{
-							0, 1, 2
-						};
-						Renderer::IIndexBuffer *indexBufferInstancedArrays = renderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
-
-						// Create vertex array object (VAO)
-						// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-						// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-						// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-						//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-						//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-						const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-						{
-							{ // Vertex buffer 0
-								vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer *)
-								sizeof(float) * 2		// strideInBytes (uint32_t)
-							},
-							{ // Vertex buffer 1
-								vertexBufferInstanceId,	// vertexBuffer (Renderer::IVertexBuffer *)
-								sizeof(float)			// strideInBytes (uint32_t)
-							}
-						};
-						mVertexArrayInstancedArrays = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBufferInstancedArrays);
-					}
+					// Create the instance
+					mPipelineStateInstancedArrays = renderer->createPipelineState(pipelineState);
 				}
 			}
 
@@ -219,6 +217,33 @@ void FirstInstancing::onInitialization()
 				};
 				const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
 
+				{ // Create vertex array object (VAO)
+					// Create the vertex buffer object (VBO)
+					// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
+					static const float VERTEX_POSITION[] =
+					{					// Vertex ID	Triangle on screen
+							0.0f, 1.0f,	// 0			  0.	
+							1.0f, 0.0f,	// 1			  .    .
+							0.0f, 0.0f		// 2			  2.......1
+					};
+					Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+
+					// Create vertex array object (VAO)
+					// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+					// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+					// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+					//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+					//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+					{
+						{ // Vertex buffer 0
+							vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+							sizeof(float) * 2	// strideInBytes (uint32_t)
+						}
+					};
+					mVertexArrayDrawInstanced = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				}
+
 				// Create the program
 				Renderer::IProgramPtr program;
 				{
@@ -236,46 +261,17 @@ void FirstInstancing::onInitialization()
 						shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 				}
 
-				// Is there a valid program?
+				// Create the pipeline state object (PSO)
 				if (nullptr != program)
 				{
-					{ // Create the pipeline state object (PSO)
-						// Setup
-						Renderer::PipelineState pipelineState;
-						pipelineState.rootSignature = mRootSignature;
-						pipelineState.program = program;
-						pipelineState.vertexAttributes = vertexAttributes;
+					// Setup
+					Renderer::PipelineState pipelineState;
+					pipelineState.rootSignature = mRootSignature;
+					pipelineState.program = program;
+					pipelineState.vertexAttributes = vertexAttributes;
 
-						// Create the instance
-						mPipelineStateDrawInstanced = renderer->createPipelineState(pipelineState);
-					}
-
-					{ // Create vertex array object (VAO)
-						// Create the vertex buffer object (VBO)
-						// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-						static const float VERTEX_POSITION[] =
-						{					// Vertex ID	Triangle on screen
-							 0.0f, 1.0f,	// 0			  0.	
-							 1.0f, 0.0f,	// 1			  .    .
-							 0.0f, 0.0f		// 2			  2.......1
-						};
-						Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-
-						// Create vertex array object (VAO)
-						// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-						// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-						// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-						//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-						//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-						const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-						{
-							{ // Vertex buffer 0
-								vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-								sizeof(float) * 2	// strideInBytes (uint32_t)
-							}
-						};
-						mVertexArrayDrawInstanced = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
-					}
+					// Create the instance
+					mPipelineStateDrawInstanced = renderer->createPipelineState(pipelineState);
 				}
 			}
 		}

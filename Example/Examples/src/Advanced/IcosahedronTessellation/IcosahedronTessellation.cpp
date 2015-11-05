@@ -69,6 +69,87 @@ void IcosahedronTessellation::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
+		// Vertex input layout
+		const Renderer::VertexAttribute vertexAttributesLayout[] =
+		{
+			{ // Attribute 0
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"Position",									// name[32] (char)
+				"POSITION",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				0,											// inputSlot (uint32_t)
+				0,											// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0											// instancesPerElement (uint32_t)
+			}
+		};
+		const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
+
+		{ // Create vertex array object (VAO)
+			// Create the vertex buffer object (VBO)
+			// -> Geometry is from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")
+			static const float VERTEX_POSITION[] =
+			{								// Vertex ID
+					0.000f,  0.000f,  1.000f,	// 0
+					0.894f,  0.000f,  0.447f,	// 1
+					0.276f,  0.851f,  0.447f,	// 2
+				-0.724f,  0.526f,  0.447f,	// 3
+				-0.724f, -0.526f,  0.447f,	// 4
+					0.276f, -0.851f,  0.447f,	// 5
+					0.724f,  0.526f, -0.447f,	// 6
+				-0.276f,  0.851f, -0.447f,	// 7
+				-0.894f,  0.000f, -0.447f,	// 8
+				-0.276f, -0.851f, -0.447f,	// 9
+					0.724f, -0.526f, -0.447f,	// 10
+					0.000f,  0.000f, -1.000f	// 11
+			};
+			Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+
+			// Create the index buffer object (IBO)
+			// -> Geometry is from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")
+			static const uint16_t INDICES[] =
+			{				// Triangle ID
+					2,  1,  0,	// 0
+					3,  2,  0,	// 1
+					4,  3,  0,	// 2
+					5,  4,  0,	// 3
+					1,  5,  0,	// 4
+				11,  6,  7,	// 5
+				11,  7,  8,	// 6
+				11,  8,  9,	// 7
+				11,  9, 10,	// 8
+				11, 10,  6,	// 9
+					1,  2,  6,	// 10
+					2,  3,  7,	// 11
+					3,  4,  8,	// 12
+					4,  5,  9,	// 13
+					5,  1, 10,	// 14
+					2,  7,  6,	// 15
+					3,  8,  7,	// 16
+					4,  9,  8,	// 17
+					5, 10,  9,	// 18
+					1,  6, 10	// 19
+			};
+			Renderer::IIndexBuffer *indexBuffer = renderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
+
+			// Create vertex array object (VAO)
+			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+			// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+			{
+				{ // Vertex buffer 0
+					vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
+					sizeof(float) * 3	// strideInBytes (uint32_t)
+				}
+			};
+			mVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+		}
+
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
@@ -104,24 +185,6 @@ void IcosahedronTessellation::onInitialization()
 				mUniformBufferStaticFs = shaderLanguage->createUniformBuffer(sizeof(LIGHT_AND_MATERIAL), LIGHT_AND_MATERIAL, Renderer::BufferUsage::STATIC_DRAW);
 			}
 
-			// Vertex input layout
-			const Renderer::VertexAttribute vertexAttributesLayout[] =
-			{
-				{ // Attribute 0
-					// Data destination
-					Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
-					"Position",									// name[32] (char)
-					"POSITION",									// semanticName[32] (char)
-					0,											// semanticIndex (uint32_t)
-					// Data source
-					0,											// inputSlot (uint32_t)
-					0,											// alignedByteOffset (uint32_t)
-					// Data source, instancing part
-					0											// instancesPerElement (uint32_t)
-				}
-			};
-			const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
-
 			{ // Create the program
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
@@ -141,69 +204,6 @@ void IcosahedronTessellation::onInitialization()
 					shaderLanguage->createTessellationEvaluationShaderFromSourceCode(tessellationEvaluationShaderSourceCode),
 					shaderLanguage->createGeometryShaderFromSourceCode(geometryShaderSourceCode, Renderer::GsInputPrimitiveTopology::TRIANGLES, Renderer::GsOutputPrimitiveTopology::TRIANGLE_STRIP, 3),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
-			}
-
-			{ // Create vertex array object (VAO)
-				// Create the vertex buffer object (VBO)
-				// -> Geometry is from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")
-				static const float VERTEX_POSITION[] =
-				{								// Vertex ID
-					 0.000f,  0.000f,  1.000f,	// 0
-					 0.894f,  0.000f,  0.447f,	// 1
-					 0.276f,  0.851f,  0.447f,	// 2
-					-0.724f,  0.526f,  0.447f,	// 3
-					-0.724f, -0.526f,  0.447f,	// 4
-					 0.276f, -0.851f,  0.447f,	// 5
-					 0.724f,  0.526f, -0.447f,	// 6
-					-0.276f,  0.851f, -0.447f,	// 7
-					-0.894f,  0.000f, -0.447f,	// 8
-					-0.276f, -0.851f, -0.447f,	// 9
-					 0.724f, -0.526f, -0.447f,	// 10
-					 0.000f,  0.000f, -1.000f	// 11
-				};
-				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-
-				// Create the index buffer object (IBO)
-				// -> Geometry is from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")
-				static const uint16_t INDICES[] =
-				{				// Triangle ID
-					 2,  1,  0,	// 0
-					 3,  2,  0,	// 1
-					 4,  3,  0,	// 2
-					 5,  4,  0,	// 3
-					 1,  5,  0,	// 4
-					11,  6,  7,	// 5
-					11,  7,  8,	// 6
-					11,  8,  9,	// 7
-					11,  9, 10,	// 8
-					11, 10,  6,	// 9
-					 1,  2,  6,	// 10
-					 2,  3,  7,	// 11
-					 3,  4,  8,	// 12
-					 4,  5,  9,	// 13
-					 5,  1, 10,	// 14
-					 2,  7,  6,	// 15
-					 3,  8,  7,	// 16
-					 4,  9,  8,	// 17
-					 5, 10,  9,	// 18
-					 1,  6, 10	// 19
-				};
-				Renderer::IIndexBuffer *indexBuffer = renderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
-
-				// Create vertex array object (VAO)
-				// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-				// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-				// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-				//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-				{
-					{ // Vertex buffer 0
-						vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-						sizeof(float) * 3	// strideInBytes (uint32_t)
-					}
-				};
-				mVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 			}
 		}
 
