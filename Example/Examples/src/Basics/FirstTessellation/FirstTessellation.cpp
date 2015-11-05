@@ -149,6 +149,8 @@ void FirstTessellation::onInitialization()
 				pipelineState.program = program;
 				pipelineState.vertexAttributes = vertexAttributes;
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::PATCH;
+				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+				pipelineState.rasterizerState.fillMode = Renderer::FillMode::WIREFRAME;
 
 				// Create the instance
 				mPipelineState = renderer->createPipelineState(pipelineState);

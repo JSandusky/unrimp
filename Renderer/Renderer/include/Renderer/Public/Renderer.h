@@ -1064,18 +1064,28 @@ namespace Renderer
 				BACK  = 3
 			};
 		};
+		struct ConservativeRasterizationMode
+		{
+			enum Enum
+			{
+				OFF	= 0,
+				ON	= 1
+			};
+		};
 		struct RasterizerState
 		{
-			FillMode::Enum fillMode;
-			CullMode::Enum cullMode;
-			int			   frontCounterClockwise;
-			int			   depthBias;
-			float		   depthBiasClamp;
-			float		   slopeScaledDepthBias;
-			int			   depthClipEnable;
-			int			   scissorEnable;
-			int			   multisampleEnable;
-			int			   antialiasedLineEnable;
+			FillMode::Enum						fillMode;
+			CullMode::Enum						cullMode;
+			int									frontCounterClockwise;
+			int									depthBias;
+			float								depthBiasClamp;
+			float								slopeScaledDepthBias;
+			int									depthClipEnable;
+			int									scissorEnable;
+			int									multisampleEnable;
+			int									antialiasedLineEnable;
+			unsigned int						forcedSampleCount;
+			ConservativeRasterizationMode::Enum	conservativeRasterizationMode;
 		};
 	#endif
 
@@ -1099,6 +1109,7 @@ namespace Renderer
 			IProgram*					program;
 			VertexAttributes			vertexAttributes;
 			PrimitiveTopologyType::Enum primitiveTopologyType;
+			RasterizerState				rasterizerState;
 		};
 	#endif
 
@@ -2040,7 +2051,9 @@ namespace Renderer
 					true,
 					false,
 					false,
-					false
+					false,
+					0,
+					ConservativeRasterizationMode::OFF
 				};
 				return RASTERIZER_STATE;
 			}

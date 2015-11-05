@@ -199,6 +199,7 @@ void VertexBuffer::onInitialization()
 					pipelineState.program = program;
 					pipelineState.vertexAttributes = vertexAttributes;
 					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
 
 					// Create the instance
 					mPipelineStateVBO = renderer->createPipelineState(pipelineState);
@@ -211,6 +212,7 @@ void VertexBuffer::onInitialization()
 					pipelineState.program = program;
 					pipelineState.vertexAttributes = vertexAttributes;
 					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
 
 					// Create the instance
 					mPipelineStateVBOs = renderer->createPipelineState(pipelineState);

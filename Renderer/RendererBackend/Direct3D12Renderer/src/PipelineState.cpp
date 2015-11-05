@@ -138,13 +138,12 @@ namespace Direct3D12Renderer
 				}
 			}
 		}
-		d3d12GraphicsPipelineState.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+		d3d12GraphicsPipelineState.PrimitiveTopologyType = static_cast<D3D12_PRIMITIVE_TOPOLOGY_TYPE>(pipelineState.primitiveTopologyType);
+		memcpy(&d3d12GraphicsPipelineState.RasterizerState, &pipelineState.rasterizerState, sizeof(D3D12_RASTERIZER_DESC));
 		d3d12GraphicsPipelineState.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 		d3d12GraphicsPipelineState.DepthStencilState.DepthEnable = FALSE;
 		d3d12GraphicsPipelineState.DepthStencilState.StencilEnable = FALSE;
 		d3d12GraphicsPipelineState.SampleMask = UINT_MAX;
-		d3d12GraphicsPipelineState.PrimitiveTopologyType = static_cast<D3D12_PRIMITIVE_TOPOLOGY_TYPE>(pipelineState.primitiveTopologyType);
-//		d3d12GraphicsPipelineState.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
 		d3d12GraphicsPipelineState.NumRenderTargets = 1;
 		d3d12GraphicsPipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 		d3d12GraphicsPipelineState.SampleDesc.Count = 1;

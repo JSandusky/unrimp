@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Renderer/VertexArrayTypes.h"
+#include "Renderer/RasterizerStateTypes.h"
 
 
 //[-------------------------------------------------------]
@@ -56,6 +57,9 @@ namespace Renderer
 	*
 	*  @note
 	*    - These constants directly map to Direct3D 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_PRIMITIVE_TOPOLOGY_TYPE"-documentation for details
 	*/
 	struct PrimitiveTopologyType
 	{
@@ -82,6 +86,7 @@ namespace Renderer
 		IProgram*					program;				///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
 		VertexAttributes			vertexAttributes;		///< Vertex attributes
 		PrimitiveTopologyType::Enum	primitiveTopologyType;	///< Primitive topology type
+		RasterizerState				rasterizerState;		///< Rasterizer state
 	};
 
 

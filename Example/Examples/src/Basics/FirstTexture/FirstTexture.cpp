@@ -223,6 +223,7 @@ void FirstTexture::onInitialization()
 					pipelineState.program = program;
 					pipelineState.vertexAttributes = vertexAttributes;
 					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
 
 					// Create the instance
 					mPipelineState = renderer->createPipelineState(pipelineState);

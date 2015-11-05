@@ -39,7 +39,10 @@ namespace Renderer
 	*    Fill mode
 	*
 	*  @note
-	*    - These constants directly map to Direct3D 10 & 11 constants, do not change them
+	*    - These constants directly map to Direct3D 10 & 11 & 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_FILL_MODE"-documentation for details
 	*/
 	struct FillMode
 	{
@@ -55,7 +58,10 @@ namespace Renderer
 	*    Cull mode
 	*
 	*  @note
-	*    - These constants directly map to Direct3D 10 & 11 constants, do not change them
+	*    - These constants directly map to Direct3D 10 & 11 & 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_CULL_MODE"-documentation for details
 	*/
 	struct CullMode
 	{
@@ -64,6 +70,25 @@ namespace Renderer
 			NONE  = 1,	///< No culling
 			FRONT = 2,	///< Do not draw triangles that are front-facing
 			BACK  = 3	///< Do not draw triangles that are back-facing
+		};
+	};
+
+	/**
+	*  @brief
+	*    Conservative rasterization mode
+	*
+	*  @note
+	*    - These constants directly map to Direct3D 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_CONSERVATIVE_RASTERIZATION_MODE"-documentation for details
+	*/
+	struct ConservativeRasterizationMode
+	{
+		enum Enum
+		{
+			OFF	= 0,	///< Conservative rasterization is off
+			ON	= 1		///< Conservative rasterization is on
 		};
 	};
 
@@ -79,20 +104,24 @@ namespace Renderer
 	*    - This rasterizer state maps directly to Direct3D 10 & 11, do not change it
 	*    - This also means that "int" is used over "bool" because in Direct3D it's defined this way
 	*    - If you want to know how the default values were chosen, have a look into the "Renderer::IRasterizerState::getDefaultRasterizerState()"-implementation
+	*
+	*  @see
+	*    - "D3D12_RASTERIZER_DESC"-documentation for details
 	*/
-	// TODO(co) Renderer::RasterizerState, documentation
 	struct RasterizerState
 	{
-		FillMode::Enum fillMode;				///< Default: "Renderer::FillMode::SOLID"
-		CullMode::Enum cullMode;				///< Default: "Renderer::CullMode::BACK"
-		int			   frontCounterClockwise;	///< Select counter-clockwise polygons as front-facing? Default: "false"
-		int			   depthBias;				///< Default: "0"
-		float		   depthBiasClamp;			///< Default: "0.0f"
-		float		   slopeScaledDepthBias;	///< Default: "0.0f"
-		int			   depthClipEnable;			///< Default: "true"
-		int			   scissorEnable;			///< Default: "false"
-		int			   multisampleEnable;		///< Default: "false"
-		int			   antialiasedLineEnable;	///< Default: "false"
+		FillMode::Enum						fillMode;						///< Default: "Renderer::FillMode::SOLID"
+		CullMode::Enum						cullMode;						///< Default: "Renderer::CullMode::BACK"
+		int									frontCounterClockwise;			///< Select counter-clockwise polygons as front-facing? Boolean value. Default: "false"
+		int									depthBias;						///< Default: "0"
+		float								depthBiasClamp;					///< Default: "0.0f"
+		float								slopeScaledDepthBias;			///< Default: "0.0f"
+		int									depthClipEnable;				///< Boolean value. Default: "true"
+		int									scissorEnable;					///< Boolean value. Default: "false"
+		int									multisampleEnable;				///< Boolean value. Default: "false"
+		int									antialiasedLineEnable;			///< Boolean value. Default: "false"
+		unsigned int						forcedSampleCount;				///< Default: "0"
+		ConservativeRasterizationMode::Enum	conservativeRasterizationMode;	///< Boolean value. >= Direct3D 12 only. Default: "false"
 	};
 
 

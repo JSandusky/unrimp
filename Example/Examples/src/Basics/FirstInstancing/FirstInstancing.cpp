@@ -191,6 +191,7 @@ void FirstInstancing::onInitialization()
 					pipelineState.program = program;
 					pipelineState.vertexAttributes = vertexAttributes;
 					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
 
 					// Create the instance
 					mPipelineStateInstancedArrays = renderer->createPipelineState(pipelineState);
@@ -271,6 +272,7 @@ void FirstInstancing::onInitialization()
 					pipelineState.program = program;
 					pipelineState.vertexAttributes = vertexAttributes;
 					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
 
 					// Create the instance
 					mPipelineStateDrawInstanced = renderer->createPipelineState(pipelineState);
