@@ -94,6 +94,25 @@ void FirstMultipleRenderTargets::onInitialization()
 			Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 			if (nullptr != shaderLanguage)
 			{
+				// Vertex input layout
+				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
+				{
+					{ // Attribute 0
+						// Data destination
+						Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+						"Position",								// name[32] (char)
+						"POSITION",								// semanticName[32] (char)
+						0,										// semanticIndex (uint32_t)
+						// Data source
+						0,										// inputSlot (uint32_t)
+						0,										// alignedByteOffset (uint32_t)
+						// Data source, instancing part
+						0										// instancesPerElement (uint32_t)
+					}
+				};
+				const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
+				const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+
 				{ // Create the programs
 					// Get the shader source code (outsourced to keep an overview)
 					const char *vertexShaderSourceCode = nullptr;
@@ -110,8 +129,8 @@ void FirstMultipleRenderTargets::onInitialization()
 					//    the unused texture coordinate might get optimized out
 					// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
 					Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
-					mProgramMultipleRenderTargets = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_MultipleRenderTargets));
-					mProgram = shaderLanguage->createProgram(vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
+					mProgramMultipleRenderTargets = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_MultipleRenderTargets));
+					mProgram = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 				}
 
 				// Is there a valid program?
@@ -133,21 +152,6 @@ void FirstMultipleRenderTargets::onInitialization()
 					// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 					//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 					//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-					const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
-					{
-						{ // Attribute 0
-							// Data destination
-							Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-							"Position",								// name[32] (char)
-							"POSITION",								// semanticName[32] (char)
-							0,										// semanticIndex (uint32_t)
-							// Data source
-							0,										// inputSlot (uint32_t)
-							0,										// alignedByteOffset (uint32_t)
-							// Data source, instancing part
-							0										// instancesPerElement (uint32_t)
-						}
-					};
 					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 					{
 						{ // Vertex buffer 0
@@ -155,7 +159,7 @@ void FirstMultipleRenderTargets::onInitialization()
 							sizeof(float) * 2	// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+					mVertexArray = mProgram->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 				}
 			}
 		}

@@ -44,7 +44,7 @@ BatchInstancedArrays::~BatchInstancedArrays()
 	// The renderer resource pointers are released automatically
 }
 
-void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
+void BatchInstancedArrays::initialize(const Renderer::VertexArrayAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
 {
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&program.getRenderer())
@@ -116,72 +116,6 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-			const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
-			{
-				// Mesh data
-				{ // Attribute 0
-					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"Position",								// name[32] (char)
-					"POSITION",								// semanticName[32] (char)
-					0,										// semanticIndex (uint32_t)
-					// Data source
-					0,										// inputSlot (uint32_t)
-					0,										// alignedByteOffset (uint32_t)
-					// Data source, instancing part
-					0										// instancesPerElement (uint32_t)
-				},
-				{ // Attribute 1
-					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"TexCoord",								// name[32] (char)
-					"TEXCOORD",								// semanticName[32] (char)
-					0,										// semanticIndex (uint32_t)
-					// Data source
-					0,										// inputSlot (uint32_t)
-					sizeof(float) * 3,						// alignedByteOffset (uint32_t)
-					// Data source, instancing part
-					0										// instancesPerElement (uint32_t)
-				},
-				{ // Attribute 2
-					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"Normal",								// name[32] (char)
-					"NORMAL",								// semanticName[32] (char)
-					0,										// semanticIndex (uint32_t)
-					// Data source
-					0,										// inputSlot (uint32_t)
-					sizeof(float) * (3 + 2),				// alignedByteOffset (uint32_t)
-					// Data source, instancing part
-					0										// instancesPerElement (uint32_t)
-				},
-
-				// Per-instance data
-				{ // Attribute 3
-					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"PerInstancePositionTexture",			// name[32] (char)
-					"TEXCOORD",								// semanticName[32] (char)
-					1,										// semanticIndex (uint32_t)
-					// Data source
-					1,										// inputSlot (uint32_t)
-					0,										// alignedByteOffset (uint32_t)
-					// Data source, instancing part
-					1										// instancesPerElement (uint32_t)
-				},
-				{ // Attribute 4
-					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"PerInstanceRotationScale",				// name[32] (char)
-					"TEXCOORD",								// semanticName[32] (char)
-					2,										// semanticIndex (uint32_t)
-					// Data source
-					1,										// inputSlot (uint32_t)
-					sizeof(float) * 4,						// alignedByteOffset (uint32_t)
-					// Data source, instancing part
-					1										// instancesPerElement (uint32_t)
-				}
-			};
 			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 			{
 				{ // Vertex buffer 0
@@ -193,7 +127,7 @@ void BatchInstancedArrays::initialize(Renderer::IVertexBuffer &vertexBuffer, Ren
 					sizeof(float) * 4 * 2			// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArray = program.createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, &indexBuffer);
+			mVertexArray = program.createVertexArray(vertexAttributes.numberOfAttributes, vertexAttributes.attributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, &indexBuffer);
 		}
 
 		// Free local per instance data

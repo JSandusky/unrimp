@@ -33,6 +33,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	struct VertexArrayAttributes;
+}
 namespace OpenGLES2Renderer
 {
 	class VertexShaderGlsl;
@@ -68,6 +72,8 @@ namespace OpenGLES2Renderer
 		*
 		*  @param[in] openGLES2Renderer
 		*    Owner OpenGL ES 2 renderer instance
+		*  @param[in] vertexAttributes
+		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] vertexShaderGlsl
 		*    Vertex shader the program is using, can be a null pointer
 		*  @param[in] fragmentShaderGlsl
@@ -76,7 +82,7 @@ namespace OpenGLES2Renderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl);
+		ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexArrayAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl);
 
 		/**
 		*  @brief

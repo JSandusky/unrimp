@@ -104,6 +104,25 @@ void IcosahedronTessellation::onInitialization()
 				mUniformBufferStaticFs = shaderLanguage->createUniformBuffer(sizeof(LIGHT_AND_MATERIAL), LIGHT_AND_MATERIAL, Renderer::BufferUsage::STATIC_DRAW);
 			}
 
+			// Vertex input layout
+			const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
+			{
+				{ // Attribute 0
+					// Data destination
+					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+					"Position",								// name[32] (char)
+					"POSITION",								// semanticName[32] (char)
+					0,										// semanticIndex (uint32_t)
+					// Data source
+					0,										// inputSlot (uint32_t)
+					0,										// alignedByteOffset (uint32_t)
+					// Data source, instancing part
+					0										// instancesPerElement (uint32_t)
+				}
+			};
+			const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
+			const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+
 			{ // Create the program
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
@@ -117,6 +136,7 @@ void IcosahedronTessellation::onInitialization()
 
 				// Create the program
 				mProgram = shaderLanguage->createProgram(
+					vertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createTessellationControlShaderFromSourceCode(tessellationControlShaderSourceCode),
 					shaderLanguage->createTessellationEvaluationShaderFromSourceCode(tessellationEvaluationShaderSourceCode),
@@ -179,21 +199,6 @@ void IcosahedronTessellation::onInitialization()
 				// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 				//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
-				{
-					{ // Attribute 0
-						// Data destination
-						Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-						"Position",								// name[32] (char)
-						"POSITION",								// semanticName[32] (char)
-						0,										// semanticIndex (uint32_t)
-						// Data source
-						0,										// inputSlot (uint32_t)
-						0,										// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0										// instancesPerElement (uint32_t)
-					}
-				};
 				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 				{
 					{ // Vertex buffer 0
@@ -201,7 +206,7 @@ void IcosahedronTessellation::onInitialization()
 						sizeof(float) * 3	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArray = mProgram->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+				mVertexArray = mProgram->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 			}
 		}
 

@@ -33,6 +33,84 @@
 
 
 //[-------------------------------------------------------]
+//[ Global definitions in anonymous namespace             ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+		// Vertex input layout
+		const Renderer::VertexArrayAttribute VertexArrayAttributes[] =
+		{
+			// Mesh data
+			{ // Attribute 0
+				// Data destination
+				Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+				"Position",								// name[32] (char)
+				"POSITION",								// semanticName[32] (char)
+				0,										// semanticIndex (uint32_t)
+				// Data source
+				0,										// inputSlot (uint32_t)
+				0,										// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0										// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 1
+				// Data destination
+				Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+				"TexCoord",								// name[32] (char)
+				"TEXCOORD",								// semanticName[32] (char)
+				0,										// semanticIndex (uint32_t)
+				// Data source
+				0,										// inputSlot (uint32_t)
+				sizeof(float) * 3,						// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0										// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 2
+				// Data destination
+				Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+				"Normal",								// name[32] (char)
+				"NORMAL",								// semanticName[32] (char)
+				0,										// semanticIndex (uint32_t)
+				// Data source
+				0,										// inputSlot (uint32_t)
+				sizeof(float) * (3 + 2),				// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0										// instancesPerElement (uint32_t)
+			},
+
+			// Per-instance data
+			{ // Attribute 3
+				// Data destination
+				Renderer::VertexArrayFormat::FLOAT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+				"PerInstancePositionTexture",			// name[32] (char)
+				"TEXCOORD",								// semanticName[32] (char)
+				1,										// semanticIndex (uint32_t)
+				// Data source
+				1,										// inputSlot (uint32_t)
+				0,										// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				1										// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 4
+				// Data destination
+				Renderer::VertexArrayFormat::FLOAT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+				"PerInstanceRotationScale",				// name[32] (char)
+				"TEXCOORD",								// semanticName[32] (char)
+				2,										// semanticIndex (uint32_t)
+				// Data source
+				1,										// inputSlot (uint32_t)
+				sizeof(float) * 4,						// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				1										// instancesPerElement (uint32_t)
+			}
+		};
+	}
+}
+
+
+//[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &renderer, uint32_t numberOfTextures, uint32_t sceneRadius) :
@@ -117,7 +195,7 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 		if (mRenderer->getCapabilities().uniformBuffer)
 		{
 			{ // Create and set constant program uniform buffer at once
-				// TODO(co) Uggly fixed hacked in model-view-projection matrix
+				// TODO(co) Ugly fixed hacked in model-view-projection matrix
 				// TODO(co) OpenGL matrix, Direct3D has minor differences within the projection matrix we have to compensate
 				static const float MVP[] =
 				{
@@ -146,6 +224,7 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 
 			// Create the program
 			mProgram = shaderLanguage->createProgram(
+				Renderer::VertexArrayAttributes(sizeof(detail::VertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), detail::VertexArrayAttributes),
 				shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 				shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 		}
@@ -262,13 +341,16 @@ void CubeRendererInstancedArrays::setNumberOfCubes(uint32_t numberOfCubes)
 	mNumberOfBatches = numberOfSolidBatches + numberOfTransparentBatches;
 	mBatches = new BatchInstancedArrays[mNumberOfBatches];
 
+	// Vertex input layout
+	const Renderer::VertexArrayAttributes vertexAttributes(sizeof(detail::VertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), detail::VertexArrayAttributes);
+
 	// Initialize the solid batches
 	BatchInstancedArrays *batch     = mBatches;
 	BatchInstancedArrays *lastBatch = mBatches + numberOfSolidBatches;
 	for (int remaningNumberOfCubes = static_cast<int>(numberOfSolidCubes); batch < lastBatch; ++batch, remaningNumberOfCubes -= mMaximumNumberOfInstancesPerBatch)
 	{
 		const uint32_t currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
-		batch->initialize(*mVertexBuffer, *mIndexBuffer, *mProgram, currentNumberOfCubes, false, mNumberOfTextures, mSceneRadius);
+		batch->initialize(vertexAttributes, *mVertexBuffer, *mIndexBuffer, *mProgram, currentNumberOfCubes, false, mNumberOfTextures, mSceneRadius);
 	}
 
 	// Initialize the transparent batches
@@ -277,7 +359,7 @@ void CubeRendererInstancedArrays::setNumberOfCubes(uint32_t numberOfCubes)
 	for (int remaningNumberOfCubes = static_cast<int>(numberOfTransparentCubes); batch < lastBatch; ++batch, remaningNumberOfCubes -= mMaximumNumberOfInstancesPerBatch)
 	{
 		const uint32_t currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
-		batch->initialize(*mVertexBuffer, *mIndexBuffer, *mProgram, currentNumberOfCubes, true, mNumberOfTextures, mSceneRadius);
+		batch->initialize(vertexAttributes, *mVertexBuffer, *mIndexBuffer, *mProgram, currentNumberOfCubes, true, mNumberOfTextures, mSceneRadius);
 	}
 
 	// End debug event

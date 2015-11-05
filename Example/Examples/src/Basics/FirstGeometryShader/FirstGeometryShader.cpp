@@ -73,6 +73,25 @@ void FirstGeometryShader::onInitialization()
 				mRootSignature = renderer->createRootSignature(rootSignature);
 			}
 
+			// Vertex input layout
+			const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
+			{
+				{ // Attribute 0
+					// Data destination
+					Renderer::VertexArrayFormat::FLOAT_1,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+					"Position",								// name[32] (char)
+					"POSITION",								// semanticName[32] (char)
+					0,										// semanticIndex (uint32_t)
+					// Data source
+					0,										// inputSlot (uint32_t)
+					0,										// alignedByteOffset (uint32_t)
+					// Data source, instancing part
+					0										// instancesPerElement (uint32_t)
+				}
+			};
+			const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
+			const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+
 			// Create the program
 			Renderer::IProgramPtr program;
 			{
@@ -86,6 +105,7 @@ void FirstGeometryShader::onInitialization()
 
 				// Create the program
 				program = shaderLanguage->createProgram(
+					vertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createGeometryShaderFromSourceCode(geometryShaderSourceCode, Renderer::GsInputPrimitiveTopology::POINTS, Renderer::GsOutputPrimitiveTopology::TRIANGLE_STRIP, 3),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
@@ -97,25 +117,6 @@ void FirstGeometryShader::onInitialization()
 			// -> Apparently there are currently some issues when using this approach: http://www.opengl.org/discussion_boards/showthread.php/177372-Rendering-simple-shapes-without-passing-vertices
 			if (nullptr != program && 0 != strcmp(renderer->getName(), "OpenGL"))
 			{
-				// Vertex input layout
-				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
-				{
-					{ // Attribute 0
-						// Data destination
-						Renderer::VertexArrayFormat::FLOAT_1,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-						"Position",								// name[32] (char)
-						"POSITION",								// semanticName[32] (char)
-						0,										// semanticIndex (uint32_t)
-						// Data source
-						0,										// inputSlot (uint32_t)
-						0,										// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0										// instancesPerElement (uint32_t)
-					}
-				};
-				const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-				const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
-
 				{ // Create the pipeline state object (PSO)
 					// Setup
 					Renderer::PipelineState pipelineState;

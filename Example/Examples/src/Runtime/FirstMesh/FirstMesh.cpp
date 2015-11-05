@@ -125,6 +125,48 @@ void FirstMesh::onInitialization()
 				mUniformBuffer = shaderLanguage->createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 			}
 
+			// TODO(co) We need a central vertex input layout management
+			// Vertex input layout
+			const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
+			{
+				{ // Attribute 0
+					// Data destination
+					Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+					"Position",								// name[32] (char)
+					"POSITION",								// semanticName[32] (char)
+					0,										// semanticIndex (uint32_t)
+					// Data source
+					0,										// inputSlot (uint32_t)
+					0,										// alignedByteOffset (uint32_t)
+					// Data source, instancing part
+					0										// instancesPerElement (uint32_t)
+				},
+				{ // Attribute 1
+					// Data destination
+					Renderer::VertexArrayFormat::SHORT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+					"TexCoord",								// name[32] (char)
+					"TEXCOORD",								// semanticName[32] (char)
+					0,										// semanticIndex (uint32_t)
+					// Data source
+					0,										// inputSlot (uint32_t)
+					sizeof(float) * 3,						// alignedByteOffset (uint32_t)
+					// Data source, instancing part
+					0										// instancesPerElement (uint32_t)
+				},
+				{ // Attribute 2
+					// Data destination
+					Renderer::VertexArrayFormat::SHORT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+					"QTangent",								// name[32] (char)
+					"NORMAL",								// semanticName[32] (char)
+					0,										// semanticIndex (uint32_t)
+					// Data source
+					0,										// inputSlot (uint32_t)
+					sizeof(float) * 3 + sizeof(short) * 2,	// alignedByteOffset (uint32_t)
+					// Data source, instancing part
+					0										// instancesPerElement (uint32_t)
+				}
+			};
+
 			{ // Create the program
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderProfile = nullptr;
@@ -139,6 +181,7 @@ void FirstMesh::onInitialization()
 
 				// Create the program
 				mProgram = shaderLanguage->createProgram(
+					Renderer::VertexArrayAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes),
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode, vertexShaderProfile),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode, fragmentShaderProfile));
 			}

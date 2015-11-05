@@ -30,6 +30,33 @@
 
 
 //[-------------------------------------------------------]
+//[ Global definitions in anonymous namespace             ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+		// Vertex input layout
+		const Renderer::VertexArrayAttribute VertexArrayAttributes[] =
+		{
+			{ // Attribute 0
+				// Data destination
+				Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+				"Position",								// name[32] (char)
+				"POSITION",								// semanticName[32] (char)
+				0,										// semanticIndex (uint32_t)
+				// Data source
+				0,										// inputSlot (uint32_t)
+				0,										// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0										// instancesPerElement (uint32_t)
+			}
+		};
+	}
+}
+
+
+//[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 Fxaa::Fxaa(const char *rendererName) :
@@ -91,6 +118,10 @@ void Fxaa::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
+			// Vertex input layout
+			const uint32_t numberOfVertexAttributes = sizeof(detail::VertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
+			const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, detail::VertexArrayAttributes);
+
 			{ // Create the program for scene rendering
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
@@ -102,6 +133,7 @@ void Fxaa::onInitialization()
 
 				// Create the program for scene rendering
 				mProgramSceneRendering = shaderLanguage->createProgram(
+					vertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
@@ -125,21 +157,6 @@ void Fxaa::onInitialization()
 				// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 				//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
-				{
-					{ // Attribute 0
-						// Data destination
-						Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-						"Position",								// name[32] (char)
-						"POSITION",								// semanticName[32] (char)
-						0,										// semanticIndex (uint32_t)
-						// Data source
-						0,										// inputSlot (uint32_t)
-						0,										// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0										// instancesPerElement (uint32_t)
-					}
-				};
 				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 				{
 					{ // Vertex buffer 0
@@ -147,7 +164,7 @@ void Fxaa::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArraySceneRendering = mProgramSceneRendering->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mVertexArraySceneRendering = mProgramSceneRendering->createVertexArray(numberOfVertexAttributes, detail::VertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 			}
 
 			// Create the post-processing program instance by using the current window size
@@ -173,21 +190,6 @@ void Fxaa::onInitialization()
 				// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 				//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
-				{
-					{ // Attribute 0
-						// Data destination
-						Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-						"Position",								// name[32] (char)
-						"POSITION",								// semanticName[32] (char)
-						0,										// semanticIndex (uint32_t)
-						// Data source
-						0,										// inputSlot (uint32)
-						0,										// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0										// instancesPerElement (uint32_t)
-					}
-				};
 				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
 				{
 					{ // Vertex buffer 0
@@ -195,7 +197,7 @@ void Fxaa::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArrayPostProcessing = mProgramSceneRendering->createVertexArray(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mVertexArrayPostProcessing = mProgramSceneRendering->createVertexArray(numberOfVertexAttributes, detail::VertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 			}
 		}
 
@@ -368,6 +370,7 @@ void Fxaa::recreatePostProcessingProgram()
 
 			// Create the program for the FXAA post processing
 			mProgramPostProcessing = shaderLanguage->createProgram(
+				Renderer::VertexArrayAttributes(sizeof(detail::VertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), detail::VertexArrayAttributes),
 				shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 				shaderLanguage->createFragmentShaderFromSourceCode(sourceCode));
 

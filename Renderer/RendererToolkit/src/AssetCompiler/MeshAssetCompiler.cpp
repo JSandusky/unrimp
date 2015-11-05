@@ -175,6 +175,8 @@ namespace RendererToolkit
 			}
 
 			{ // Vertex array attributes
+				// TODO(co) We need a central vertex input layout management
+				// Vertex input layout
 				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
 				{
 					{ // Attribute 0

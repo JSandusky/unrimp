@@ -26,6 +26,8 @@
 #include "OpenGLES2Renderer/Shader/FragmentShaderGlsl.h"
 #include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
 
+#include <Renderer/VertexArrayTypes.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -37,11 +39,19 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramGlsl::ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
+	ProgramGlsl::ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexArrayAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
 		Program(openGLES2Renderer)
 	{
 		// Create the OpenGL ES 2 program
 		mOpenGLES2Program = glCreateProgram();
+
+		{ // Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
+			const uint32_t numberOfVertexAttributes = vertexAttributes.numberOfAttributes;
+			for (uint32_t vertexAttribute = 0; vertexAttribute < numberOfVertexAttributes; ++vertexAttribute)
+			{
+				glBindAttribLocation(mOpenGLES2Program, vertexAttribute, vertexAttributes.attributes[vertexAttribute].name);
+			}
+		}
 
 		// Attach the shaders to the program
 		// -> We don't need to keep a reference to the shader, to add and release at once to ensure a nice behaviour

@@ -35,6 +35,8 @@
 #include "OpenGLRenderer/VertexArrayVaoDsa.h"
 #include "OpenGLRenderer/VertexArrayVaoBind.h"
 
+#include <Renderer/VertexArrayTypes.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -46,10 +48,18 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramGlsl::ProgramGlsl(OpenGLRenderer &openGLRenderer, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
+	ProgramGlsl::ProgramGlsl(OpenGLRenderer &openGLRenderer, const Renderer::VertexArrayAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
 		Program(openGLRenderer, InternalResourceType::GLSL),
 		mOpenGLProgram(glCreateProgramObjectARB())
 	{
+		{ // Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
+			const uint32_t numberOfVertexAttributes = vertexAttributes.numberOfAttributes;
+			for (uint32_t vertexAttribute = 0; vertexAttribute < numberOfVertexAttributes; ++vertexAttribute)
+			{
+				glBindAttribLocationARB(mOpenGLProgram, vertexAttribute, vertexAttributes.attributes[vertexAttribute].name);
+			}
+		}
+
 		// Attach the shaders to the program
 		// -> We don't need to keep a reference to the shader, to add and release at once to ensure a nice behaviour
 		if (nullptr != vertexShaderGlsl)
@@ -123,7 +133,7 @@ namespace OpenGLRenderer
 					// Get the information
 					glGetInfoLogARB(mOpenGLProgram, informationLength, nullptr, informationLog);
 
-					// Ouput the debug string
+					// Output the debug string
 					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
 
 					// Cleanup information memory

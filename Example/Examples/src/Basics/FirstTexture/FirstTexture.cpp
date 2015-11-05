@@ -133,6 +133,25 @@ void FirstTexture::onInitialization()
 				mRootSignature = renderer->createRootSignature(rootSignature);
 			}
 
+			// Vertex input layout
+			const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
+			{
+				{ // Attribute 0
+					// Data destination
+					Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
+					"Position",								// name[32] (char)
+					"POSITION",								// semanticName[32] (char)
+					0,										// semanticIndex (uint32_t)
+					// Data source
+					0,										// inputSlot (size_t)
+					0,										// alignedByteOffset (uint32_t)
+					// Data source, instancing part
+					0										// instancesPerElement (uint32_t)
+				}
+			};
+			const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
+			const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+
 			// Create the program
 			Renderer::IProgramPtr program;
 			{
@@ -147,6 +166,7 @@ void FirstTexture::onInitialization()
 
 				// Create the program
 				program = shaderLanguage->createProgram(
+					vertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
@@ -154,25 +174,6 @@ void FirstTexture::onInitialization()
 			// Is there a valid program?
 			if (nullptr != program)
 			{
-				// Vertex input layout
-				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
-				{
-					{ // Attribute 0
-						// Data destination
-						Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-						"Position",								// name[32] (char)
-						"POSITION",								// semanticName[32] (char)
-						0,										// semanticIndex (uint32_t)
-						// Data source
-						0,										// inputSlot (size_t)
-						0,										// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0										// instancesPerElement (uint32_t)
-					}
-				};
-				const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-				const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
-
 				{ // Create the pipeline state object (PSO)
 					// Setup
 					Renderer::PipelineState pipelineState;
