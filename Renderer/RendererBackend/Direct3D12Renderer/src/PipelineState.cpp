@@ -60,16 +60,16 @@ namespace Direct3D12Renderer
 		// Define the vertex input layout
 		// -> No dynamic allocations/deallocations in here, a fixed maximum number of supported attributes must be sufficient
 		static const uint32_t MAXIMUM_NUMBER_OF_ATTRIBUTES = 16;	// 16 elements per vertex are already pretty many
-		uint32_t numberOfVertexAttributes = pipelineState.numberOfVertexAttributes;
+		uint32_t numberOfVertexAttributes = pipelineState.vertexAttributes.numberOfAttributes;
 		if (numberOfVertexAttributes > MAXIMUM_NUMBER_OF_ATTRIBUTES)
 		{
-			RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Too many vertex attributes (%d) provided. The limit is %d.", pipelineState.numberOfVertexAttributes, MAXIMUM_NUMBER_OF_ATTRIBUTES);
+			RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Too many vertex attributes (%d) provided. The limit is %d.", numberOfVertexAttributes, MAXIMUM_NUMBER_OF_ATTRIBUTES);
 			numberOfVertexAttributes = MAXIMUM_NUMBER_OF_ATTRIBUTES;
 		}
 		D3D12_INPUT_ELEMENT_DESC d3d12InputElementDescs[MAXIMUM_NUMBER_OF_ATTRIBUTES];
 		for (uint32_t vertexAttribute = 0; vertexAttribute < numberOfVertexAttributes; ++vertexAttribute)
 		{
-			const Renderer::VertexArrayAttribute& vertexArrayAttribute = pipelineState.vertexAttributes[vertexAttribute];
+			const Renderer::VertexArrayAttribute& vertexArrayAttribute = pipelineState.vertexAttributes.attributes[vertexAttribute];
 			D3D12_INPUT_ELEMENT_DESC& d3d12InputElementDesc = d3d12InputElementDescs[vertexAttribute];
 
 			d3d12InputElementDesc.SemanticName		= vertexArrayAttribute.semanticName;

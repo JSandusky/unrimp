@@ -51,8 +51,8 @@ namespace Direct3D9Renderer
 		mProgram->addReference();
 
 		{ // Create Direct3D 9 vertex elements
-			const uint32_t numberOfAttributes = pipelineState.numberOfVertexAttributes;
-			const Renderer::VertexArrayAttribute* attributes = pipelineState.vertexAttributes;
+			const uint32_t numberOfAttributes = pipelineState.vertexAttributes.numberOfAttributes;
+			const Renderer::VertexArrayAttribute* attributes = pipelineState.vertexAttributes.attributes;
 
 			// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
 			D3DVERTEXELEMENT9 *d3dVertexElements   = new D3DVERTEXELEMENT9[numberOfAttributes + 1];	// +1 for D3DDECL_END()

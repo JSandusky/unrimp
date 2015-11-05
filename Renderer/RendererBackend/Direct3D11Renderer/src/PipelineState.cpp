@@ -56,8 +56,8 @@ namespace Direct3D11Renderer
 		const VertexShaderHlsl* vertexShaderHlsl = static_cast<ProgramHlsl*>(mProgram)->getVertexShaderHlsl();
 		if (nullptr != vertexShaderHlsl)
 		{
-			const uint32_t numberOfAttributes = pipelineState.numberOfVertexAttributes;
-			const Renderer::VertexArrayAttribute* attributes = pipelineState.vertexAttributes;
+			const uint32_t numberOfAttributes = pipelineState.vertexAttributes.numberOfAttributes;
+			const Renderer::VertexArrayAttribute* attributes = pipelineState.vertexAttributes.attributes;
 
 			// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
 			D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescs   = numberOfAttributes ? new D3D11_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D11_INPUT_ELEMENT_DESC[1];

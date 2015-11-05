@@ -999,6 +999,19 @@ namespace Renderer
 				uint32_t				 alignedByteOffset;
 				uint32_t				 instancesPerElement;
 			};
+			struct VertexArrayAttributes
+			{
+				uint32_t					numberOfAttributes;
+				const VertexArrayAttribute*	attributes;
+				VertexArrayAttributes()
+				{
+				}
+				VertexArrayAttributes(uint32_t _numberOfAttributes, const VertexArrayAttribute*	_attributes) :
+					numberOfAttributes(_numberOfAttributes),
+					attributes(_attributes)
+				{
+				}
+			};
 		#pragma pack(pop)
 		struct VertexArrayVertexBuffer
 		{
@@ -1071,10 +1084,9 @@ namespace Renderer
 	#define __RENDERER_PIPELINESTATE_TYPES_H__
 		struct PipelineState
 		{
-			IRootSignature*				rootSignature;
-			IProgram*					program;
-			uint32_t					numberOfVertexAttributes;
-			const VertexArrayAttribute*	vertexAttributes;
+			IRootSignature*		  rootSignature;
+			IProgram*			  program;
+			VertexArrayAttributes vertexAttributes;
 		};
 	#endif
 

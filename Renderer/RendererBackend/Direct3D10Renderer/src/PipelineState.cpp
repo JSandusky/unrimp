@@ -56,8 +56,8 @@ namespace Direct3D10Renderer
 		const VertexShaderHlsl* vertexShaderHlsl = static_cast<ProgramHlsl*>(mProgram)->getVertexShaderHlsl();
 		if (nullptr != vertexShaderHlsl)
 		{
-			const uint32_t numberOfAttributes = pipelineState.numberOfVertexAttributes;
-			const Renderer::VertexArrayAttribute* attributes = pipelineState.vertexAttributes;
+			const uint32_t numberOfAttributes = pipelineState.vertexAttributes.numberOfAttributes;
+			const Renderer::VertexArrayAttribute* attributes = pipelineState.vertexAttributes.attributes;
 
 			// Create Direct3D 10 input element descriptions
 			// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements

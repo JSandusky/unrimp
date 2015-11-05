@@ -134,14 +134,14 @@ void FirstInstancing::onInitialization()
 						}
 					};
 					const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
+					const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
 
 					{ // Create the pipeline state object (PSO)
 						// Setup
 						Renderer::PipelineState pipelineState;
 						pipelineState.rootSignature = mRootSignature;
 						pipelineState.program = program;
-						pipelineState.numberOfVertexAttributes = numberOfVertexAttributes;
-						pipelineState.vertexAttributes = vertexArrayAttributes;
+						pipelineState.vertexAttributes = vertexAttributes;
 
 						// Create the instance
 						mPipelineStateInstancedArrays = renderer->createPipelineState(pipelineState);
@@ -237,14 +237,14 @@ void FirstInstancing::onInitialization()
 						}
 					};
 					const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
+					const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
 
 					{ // Create the pipeline state object (PSO)
 						// Setup
 						Renderer::PipelineState pipelineState;
 						pipelineState.rootSignature = mRootSignature;
 						pipelineState.program = program;
-						pipelineState.numberOfVertexAttributes = numberOfVertexAttributes;
-						pipelineState.vertexAttributes = vertexArrayAttributes;
+						pipelineState.vertexAttributes = vertexAttributes;
 
 						// Create the instance
 						mPipelineStateDrawInstanced = renderer->createPipelineState(pipelineState);

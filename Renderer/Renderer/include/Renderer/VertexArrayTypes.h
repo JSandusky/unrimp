@@ -104,7 +104,29 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    Vertex array vertex buffer ("Vertex buffer view" in Direct3D terminology)
+	*    Vertex array attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
+	*
+	*  @see
+	*    - "Renderer::IVertexArray" class documentation
+	*/
+	struct VertexArrayAttributes
+	{
+			  uint32_t				numberOfAttributes;	///< Number of vertex attributes
+		const VertexArrayAttribute* attributes;			///< At least "numberOfVertexAttributes" vertex attributes, must be valid
+
+		VertexArrayAttributes()
+		{
+		}
+		VertexArrayAttributes(uint32_t _numberOfAttributes, const VertexArrayAttribute*	_attributes) :
+			numberOfAttributes(_numberOfAttributes),
+			attributes(_attributes)
+		{
+		}
+	};
+
+	/**
+	*  @brief
+	*    Vertex array vertex buffer
 	*
 	*  @see
 	*    - "Renderer::IVertexArray" class documentation
