@@ -79,7 +79,7 @@ namespace OpenGLES2Renderer
 
 		{ // Enable OpenGL ES 2 vertex attribute arrays
 			// Loop through all attributes
-			// -> We're using "glBindAttribLocationARB()" when linking the program so we have known attribute locations (the vertex array can't know about the program)
+			// -> We're using "glBindAttribLocation()" when linking the program so we have known attribute locations (the vertex array can't know about the program)
 			GLuint attributeLocation = 0;
 			const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
 			for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)

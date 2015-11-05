@@ -111,12 +111,6 @@ namespace Direct3D12Renderer
 		return new VertexArray(getDirect3D12Renderer(), numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 	}
 
-	int ProgramHlsl::getAttributeLocation(const char *)
-	{
-		// Not supported by Direct3D 12
-		return -1;
-	}
-
 	uint32_t ProgramHlsl::getUniformBlockIndex(const char *, uint32_t defaultIndex)
 	{
 		// Not supported by Direct3D 12

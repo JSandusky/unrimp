@@ -186,11 +186,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	int ProgramGlsl::getAttributeLocation(const char *attributeName)
-	{
-		return glGetAttribLocationARB(mOpenGLProgram, attributeName);
-	}
-
 	uint32_t ProgramGlsl::getUniformBlockIndex(const char *uniformBlockName, uint32_t)
 	{
 		// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,

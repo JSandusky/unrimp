@@ -92,12 +92,6 @@ namespace Direct3D10Renderer
 		return new VertexArray(*mDirect3D10Renderer, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 	}
 
-	int ProgramHlsl::getAttributeLocation(const char *)
-	{
-		// Not supported by Direct3D 10
-		return -1;
-	}
-
 	uint32_t ProgramHlsl::getUniformBlockIndex(const char *, uint32_t defaultIndex)
 	{
 		// Not supported by Direct3D 10

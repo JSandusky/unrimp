@@ -79,11 +79,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	int Program::getAttributeLocation(const char *attributeName)
-	{
-		return glGetAttribLocation(mOpenGLES2Program, attributeName);
-	}
-
 	uint32_t Program::getUniformBlockIndex(const char *, uint32_t defaultIndex)
 	{
 		// OpenGL ES 2 has no uniform buffer support

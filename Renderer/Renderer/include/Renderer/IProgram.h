@@ -102,7 +102,6 @@ namespace Renderer
 		virtual IVertexArray *createVertexArray(uint32_t numberOfAttributes, const VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
 
 		// TODO(co) Cleanup
-		inline virtual int getAttributeLocation(const char *attributeName);
 		inline virtual uint32_t getUniformBlockIndex(const char *uniformBlockName, uint32_t defaultIndex);
 		inline virtual handle getUniformHandle(const char *uniformName);
 		inline virtual uint32_t setTextureUnit(handle uniformHandle, uint32_t unit);

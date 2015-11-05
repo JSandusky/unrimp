@@ -131,12 +131,6 @@ namespace Direct3D9Renderer
 		return new VertexArray(*mDirect3D9Renderer, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 	}
 
-	int ProgramHlsl::getAttributeLocation(const char *)
-	{
-		// Not supported by Direct3D 9
-		return -1;
-	}
-
 	uint32_t ProgramHlsl::getUniformBlockIndex(const char *, uint32_t defaultIndex)
 	{
 		// Not supported by Direct3D 9
