@@ -146,6 +146,7 @@ void FirstGeometryShader::onInitialization()
 				pipelineState.rootSignature = mRootSignature;
 				pipelineState.program = program;
 				pipelineState.vertexAttributes = vertexAttributes;
+				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::POINT;
 
 				// Create the instance
 				mPipelineState = renderer->createPipelineState(pipelineState);

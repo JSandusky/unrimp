@@ -143,10 +143,8 @@ namespace Direct3D12Renderer
 		d3d12GraphicsPipelineState.DepthStencilState.DepthEnable = FALSE;
 		d3d12GraphicsPipelineState.DepthStencilState.StencilEnable = FALSE;
 		d3d12GraphicsPipelineState.SampleMask = UINT_MAX;
-//		d3d12GraphicsPipelineState.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH;
+		d3d12GraphicsPipelineState.PrimitiveTopologyType = static_cast<D3D12_PRIMITIVE_TOPOLOGY_TYPE>(pipelineState.primitiveTopologyType);
 //		d3d12GraphicsPipelineState.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
-		//d3d12GraphicsPipelineState.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
-		d3d12GraphicsPipelineState.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		d3d12GraphicsPipelineState.NumRenderTargets = 1;
 		d3d12GraphicsPipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 		d3d12GraphicsPipelineState.SampleDesc.Count = 1;

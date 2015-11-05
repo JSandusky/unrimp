@@ -52,6 +52,25 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
+	*    Primitive topology type
+	*
+	*  @note
+	*    - These constants directly map to Direct3D 12 constants, do not change them
+	*/
+	struct PrimitiveTopologyType
+	{
+		enum Enum
+		{
+			UNDEFINED	= 0,	///< The shader has not been initialized with an input primitive type
+			POINT		= 1,	///< Interpret the input primitive as a point
+			LINE		= 2,	///< Interpret the input primitive as a line
+			TRIANGLE	= 3,	///< Interpret the input primitive as a triangle
+			PATCH		= 4		///< Interpret the input primitive as a control point patch
+		};
+	};
+
+	/**
+	*  @brief
 	*    Pipeline state
 	*
 	*  @todo
@@ -59,9 +78,10 @@ namespace Renderer
 	*/
 	struct PipelineState
 	{
-		IRootSignature*	 rootSignature;		///< Root signature (pipeline state instances keep a reference to the program), must be valid
-		IProgram*		 program;			///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
-		VertexAttributes vertexAttributes;	///< Vertex attributes
+		IRootSignature*				rootSignature;			///< Root signature (pipeline state instances keep a reference to the program), must be valid
+		IProgram*					program;				///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
+		VertexAttributes			vertexAttributes;		///< Vertex attributes
+		PrimitiveTopologyType::Enum	primitiveTopologyType;	///< Primitive topology type
 	};
 
 

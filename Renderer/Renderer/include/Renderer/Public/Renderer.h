@@ -1082,11 +1082,23 @@ namespace Renderer
 	// Renderer/PipelineStateTypes.h
 	#ifndef __RENDERER_PIPELINESTATE_TYPES_H__
 	#define __RENDERER_PIPELINESTATE_TYPES_H__
+		struct PrimitiveTopologyType
+		{
+			enum Enum
+			{
+				UNDEFINED	= 0,
+				POINT		= 1,
+				LINE		= 2,
+				TRIANGLE	= 3,
+				PATCH		= 4
+			};
+		};
 		struct PipelineState
 		{
-			IRootSignature*	 rootSignature;
-			IProgram*		 program;
-			VertexAttributes vertexAttributes;
+			IRootSignature*				rootSignature;
+			IProgram*					program;
+			VertexAttributes			vertexAttributes;
+			PrimitiveTopologyType::Enum primitiveTopologyType;
 		};
 	#endif
 

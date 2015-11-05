@@ -190,6 +190,7 @@ void FirstInstancing::onInitialization()
 					pipelineState.rootSignature = mRootSignature;
 					pipelineState.program = program;
 					pipelineState.vertexAttributes = vertexAttributes;
+					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
 
 					// Create the instance
 					mPipelineStateInstancedArrays = renderer->createPipelineState(pipelineState);
@@ -269,6 +270,7 @@ void FirstInstancing::onInitialization()
 					pipelineState.rootSignature = mRootSignature;
 					pipelineState.program = program;
 					pipelineState.vertexAttributes = vertexAttributes;
+					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
 
 					// Create the instance
 					mPipelineStateDrawInstanced = renderer->createPipelineState(pipelineState);

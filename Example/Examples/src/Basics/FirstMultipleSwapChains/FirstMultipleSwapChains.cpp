@@ -224,6 +224,7 @@ void FirstMultipleSwapChains::onInitialization()
 				pipelineState.rootSignature = mRootSignature;
 				pipelineState.program = program;
 				pipelineState.vertexAttributes = vertexAttributes;
+				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
 
 				// Create the instance
 				mPipelineState = renderer->createPipelineState(pipelineState);

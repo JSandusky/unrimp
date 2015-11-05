@@ -198,6 +198,7 @@ void VertexBuffer::onInitialization()
 					pipelineState.rootSignature = mRootSignature;
 					pipelineState.program = program;
 					pipelineState.vertexAttributes = vertexAttributes;
+					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
 
 					// Create the instance
 					mPipelineStateVBO = renderer->createPipelineState(pipelineState);
@@ -209,6 +210,7 @@ void VertexBuffer::onInitialization()
 					pipelineState.rootSignature = mRootSignature;
 					pipelineState.program = program;
 					pipelineState.vertexAttributes = vertexAttributes;
+					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
 
 					// Create the instance
 					mPipelineStateVBOs = renderer->createPipelineState(pipelineState);

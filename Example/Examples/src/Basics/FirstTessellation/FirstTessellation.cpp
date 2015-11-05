@@ -148,6 +148,7 @@ void FirstTessellation::onInitialization()
 				pipelineState.rootSignature = mRootSignature;
 				pipelineState.program = program;
 				pipelineState.vertexAttributes = vertexAttributes;
+				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::PATCH;
 
 				// Create the instance
 				mPipelineState = renderer->createPipelineState(pipelineState);
