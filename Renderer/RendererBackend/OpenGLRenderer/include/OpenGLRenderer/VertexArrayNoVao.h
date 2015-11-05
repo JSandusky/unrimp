@@ -113,7 +113,6 @@ namespace OpenGLRenderer
 		Renderer::VertexArrayAttribute    *mAttributes;					///< At least "numberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes
 		uint32_t						   mNumberOfVertexBuffers;		///< Number of vertex buffers, having zero vertex buffers is valid
 		Renderer::VertexArrayVertexBuffer *mVertexBuffers;				///< At least mNumberOfVertexBuffers instances of vertex array vertex buffers, can be a null pointer in case there are zero vertex buffers, the data is internally copied and you have to free your memory if you no longer need it
-		int								  *mAttributeLocations;			///< Attribute locations, can be a null pointer in case there are zero attributes
 		bool							   mIsGL_ARB_instanced_arrays;	///< Is the "GL_ARB_instanced_arrays"-extension supported?
 
 

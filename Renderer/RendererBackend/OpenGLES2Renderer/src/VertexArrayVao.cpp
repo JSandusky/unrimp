@@ -79,25 +79,18 @@ namespace OpenGLES2Renderer
 
 		{ // Enable OpenGL ES 2 vertex attribute arrays
 			// Loop through all attributes
+			// -> We're using "glBindAttribLocationARB()" when linking the program so we have known attribute locations (the vertex array can't know about the program)
+			GLuint attributeLocation = 0;
 			const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
-			for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute)
+			for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
 			{
-				// Get the attribute location
-				const int attributeLocation = program.getAttributeLocation(attribute->name);
-				if (attributeLocation > -1)
-				{
-					// Set the OpenGL ES 2 vertex attribute pointer
-					const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
-					glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES2ArrayBuffer());
-					glVertexAttribPointer(static_cast<GLuint>(attributeLocation), Mapping::getOpenGLES2Size(attribute->vertexArrayFormat), Mapping::getOpenGLES2Type(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
+				// Set the OpenGL ES 2 vertex attribute pointer
+				const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
+				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES2ArrayBuffer());
+				glVertexAttribPointer(attributeLocation, Mapping::getOpenGLES2Size(attribute->vertexArrayFormat), Mapping::getOpenGLES2Type(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
 
-					// Enable OpenGL ES 2 vertex attribute array
-					glEnableVertexAttribArray(static_cast<GLuint>(attributeLocation));
-				}
-				else
-				{
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 2 warning: There's no active vertex attribute with the name \"%s\"\n", attribute->name)
-				}
+				// Enable OpenGL ES 2 vertex attribute array
+				glEnableVertexAttribArray(attributeLocation);
 			}
 
 			// Get the used index buffer

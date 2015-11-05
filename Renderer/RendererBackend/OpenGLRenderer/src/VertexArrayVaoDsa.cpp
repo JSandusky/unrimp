@@ -50,49 +50,42 @@ namespace OpenGLRenderer
 		// Vertex buffer reference handling is done within the base class "VertexArrayVao"
 
 		// Loop through all attributes
+		// -> We're using "glBindAttribLocationARB()" when linking the program so we have known attribute locations (the vertex array can't know about the program)
+		GLuint attributeLocation = 0;
 		const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
-		for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute)
+		for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
 		{
-			// Get the attribute location
-			const int attributeLocation = program.getAttributeLocation(attribute->name);
-			if (attributeLocation > -1)
+			// Set the OpenGL vertex attribute pointer
+			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+			const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
+			glVertexArrayVertexAttribOffsetEXT(mOpenGLVertexArray, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLArrayBuffer(), attributeLocation, Mapping::getOpenGLSize(attribute->vertexArrayFormat), Mapping::getOpenGLType(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), static_cast<GLintptr>(attribute->alignedByteOffset));
+
+			// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
+			if (attribute->instancesPerElement > 0 && static_cast<OpenGLRenderer&>(program.getRenderer()).getContext().getExtensions().isGL_ARB_instanced_arrays())
 			{
-				// Set the OpenGL vertex attribute pointer
-				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
-				glVertexArrayVertexAttribOffsetEXT(mOpenGLVertexArray, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLArrayBuffer(), static_cast<GLuint>(attributeLocation), Mapping::getOpenGLSize(attribute->vertexArrayFormat), Mapping::getOpenGLType(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), static_cast<GLintptr>(attribute->alignedByteOffset));
-
-				// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
-				if (attribute->instancesPerElement > 0 && static_cast<OpenGLRenderer&>(program.getRenderer()).getContext().getExtensions().isGL_ARB_instanced_arrays())
-				{
-					// Sadly, DSA has no support for "GL_ARB_instanced_arrays", so, we have to use the bind way
-					// -> Keep the bind-horror as local as possible
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Backup the currently bound OpenGL vertex array
-						GLint openGLVertexArrayBackup = 0;
-						glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &openGLVertexArrayBackup);
-					#endif
-
-					// Bind this OpenGL vertex array
-					glBindVertexArray(mOpenGLVertexArray);
-
-					// Set divisor
-					glVertexAttribDivisorARB(static_cast<GLuint>(attributeLocation), attribute->instancesPerElement);
+				// Sadly, DSA has no support for "GL_ARB_instanced_arrays", so, we have to use the bind way
+				// -> Keep the bind-horror as local as possible
 
 				#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-					// Be polite and restore the previous bound OpenGL vertex array
-					glBindVertexArray(openGLVertexArrayBackup);
+					// Backup the currently bound OpenGL vertex array
+					GLint openGLVertexArrayBackup = 0;
+					glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &openGLVertexArrayBackup);
 				#endif
-				}
 
-				// Enable OpenGL vertex attribute array
-				glEnableVertexArrayAttribEXT(mOpenGLVertexArray, static_cast<GLuint>(attributeLocation));
+				// Bind this OpenGL vertex array
+				glBindVertexArray(mOpenGLVertexArray);
+
+				// Set divisor
+				glVertexAttribDivisorARB(attributeLocation, attribute->instancesPerElement);
+
+			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+				// Be polite and restore the previous bound OpenGL vertex array
+				glBindVertexArray(openGLVertexArrayBackup);
+			#endif
 			}
-			else
-			{
-				RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL warning: There's no active vertex attribute with the name \"%s\"\n", attribute->name)
-			}
+
+			// Enable OpenGL vertex attribute array
+			glEnableVertexArrayAttribEXT(mOpenGLVertexArray, attributeLocation);
 		}
 
 		// Check the used index buffer
