@@ -66,11 +66,11 @@ namespace Renderer
 	class ITexture2DArray;
 	class IRasterizerState;
 	struct RasterizerState;
+	struct VertexAttributes;
 	struct ScissorRectangle;
 	class IDepthStencilState;
 	struct DepthStencilState;
 	class ITextureCollection;
-	struct VertexArrayAttributes;
 	class ISamplerStateCollection;
 	struct VertexArrayVertexBuffer;
 }
@@ -335,7 +335,7 @@ namespace Renderer
 		*    - It's valid that a vertex array implementation is adding a reference and releasing it again at once
 		*      (this means that in the case of not having any more references, a vertex buffer might get destroyed when calling this method)
 		*/
-		virtual IVertexArray *createVertexArray(const VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
+		virtual IVertexArray *createVertexArray(const VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
 
 		/**
 		*  @brief

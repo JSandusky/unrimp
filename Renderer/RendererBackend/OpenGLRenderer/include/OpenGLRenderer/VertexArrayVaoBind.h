@@ -35,7 +35,7 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	struct VertexArrayAttributes;
+	struct VertexAttributes;
 }
 namespace OpenGLRenderer
 {
@@ -80,7 +80,7 @@ namespace OpenGLRenderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArrayVaoBind(OpenGLRenderer &openGLRenderer, const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArrayVaoBind(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief

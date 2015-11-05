@@ -44,7 +44,7 @@ BatchInstancedArrays::~BatchInstancedArrays()
 	// The renderer resource pointers are released automatically
 }
 
-void BatchInstancedArrays::initialize(const Renderer::VertexArrayAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
+void BatchInstancedArrays::initialize(const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
 {
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&program.getRenderer())

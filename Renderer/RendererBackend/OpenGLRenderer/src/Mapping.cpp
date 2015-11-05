@@ -221,34 +221,34 @@ namespace OpenGLRenderer
 		return MAPPING[comparisonFunc - 1];	// Lookout! The "Renderer::ComparisonFunc::Enum"-values start with 1, not 0
 	}
 
-	int Mapping::getOpenGLSize(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
+	int Mapping::getOpenGLSize(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat)
 	{
 		static const GLint MAPPING[] =
 		{
-			1,	// Renderer::VertexArrayFormat::FLOAT_1
-			2,	// Renderer::VertexArrayFormat::FLOAT_2
-			3,	// Renderer::VertexArrayFormat::FLOAT_3
-			4,	// Renderer::VertexArrayFormat::FLOAT_4
-			4,	// Renderer::VertexArrayFormat::UNSIGNED_BYTE_4
-			2,	// Renderer::VertexArrayFormat::SHORT_2
-			4	// Renderer::VertexArrayFormat::SHORT_4
+			1,	// Renderer::VertexAttributeFormat::FLOAT_1
+			2,	// Renderer::VertexAttributeFormat::FLOAT_2
+			3,	// Renderer::VertexAttributeFormat::FLOAT_3
+			4,	// Renderer::VertexAttributeFormat::FLOAT_4
+			4,	// Renderer::VertexAttributeFormat::UNSIGNED_BYTE_4
+			2,	// Renderer::VertexAttributeFormat::SHORT_2
+			4	// Renderer::VertexAttributeFormat::SHORT_4
 		};
-		return MAPPING[vertexArrayFormat];
+		return MAPPING[vertexAttributeFormat];
 	}
 
-	uint32_t Mapping::getOpenGLType(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
+	uint32_t Mapping::getOpenGLType(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
-			GL_FLOAT,			// Renderer::VertexArrayFormat::FLOAT_1
-			GL_FLOAT,			// Renderer::VertexArrayFormat::FLOAT_2
-			GL_FLOAT,			// Renderer::VertexArrayFormat::FLOAT_3
-			GL_FLOAT,			// Renderer::VertexArrayFormat::FLOAT_4
-			GL_UNSIGNED_BYTE,	// Renderer::VertexArrayFormat::UNSIGNED_BYTE_4
-			GL_SHORT,			// Renderer::VertexArrayFormat::SHORT_2
-			GL_SHORT			// Renderer::VertexArrayFormat::SHORT_4
+			GL_FLOAT,			// Renderer::VertexAttributeFormat::FLOAT_1
+			GL_FLOAT,			// Renderer::VertexAttributeFormat::FLOAT_2
+			GL_FLOAT,			// Renderer::VertexAttributeFormat::FLOAT_3
+			GL_FLOAT,			// Renderer::VertexAttributeFormat::FLOAT_4
+			GL_UNSIGNED_BYTE,	// Renderer::VertexAttributeFormat::UNSIGNED_BYTE_4
+			GL_SHORT,			// Renderer::VertexAttributeFormat::SHORT_2
+			GL_SHORT			// Renderer::VertexAttributeFormat::SHORT_4
 		};
-		return MAPPING[vertexArrayFormat];
+		return MAPPING[vertexAttributeFormat];
 	}
 
 	uint32_t Mapping::getOpenGLType(Renderer::IndexBufferFormat::Enum indexBufferFormat)

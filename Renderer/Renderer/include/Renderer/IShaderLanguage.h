@@ -44,7 +44,7 @@ namespace Renderer
 	class IUniformBuffer;
 	class IGeometryShader;
 	class IFragmentShader;
-	struct VertexArrayAttributes;
+	struct VertexAttributes;
 	class ITessellationControlShader;
 	class ITessellationEvaluationShader;
 }
@@ -107,7 +107,7 @@ namespace Renderer
 		*      (this means that in the case of not having any more references, a shader might get destroyed when calling this method)
 		*    - Comfort method
 		*/
-		inline IProgram *createProgram(const VertexArrayAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader);
+		inline IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader);
 
 		/**
 		*  @brief
@@ -131,7 +131,7 @@ namespace Renderer
 		*      (this means that in the case of not having any more references, a shader might get destroyed when calling this method)
 		*    - Comfort method
 		*/
-		inline IProgram *createProgram(const VertexArrayAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader);
+		inline IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader);
 
 		/**
 		*  @brief
@@ -157,7 +157,7 @@ namespace Renderer
 		*      (this means that in the case of not having any more references, a shader might get destroyed when calling this method)
 		*    - Comfort method
 		*/
-		inline IProgram *createProgram(const VertexArrayAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader);
+		inline IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader);
 
 
 	//[-------------------------------------------------------]
@@ -479,7 +479,7 @@ namespace Renderer
 		*    - It's valid that a program implementation is adding a reference and releasing it again at once
 		*      (this means that in the case of not having any more references, a shader might get destroyed when calling this method)
 		*/
-		virtual IProgram *createProgram(const VertexArrayAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader) = 0;
+		virtual IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader) = 0;
 
 		/**
 		*  @brief

@@ -66,7 +66,7 @@ namespace RendererRuntime
 					uint32_t numberOfVertices;
 					uint8_t  indexBufferFormat;
 					uint32_t numberOfIndices;
-					uint8_t  numberOfVertexArrayAttributes;
+					uint8_t  numberOfVertexAttributes;
 				};
 			#pragma pack(pop)
 			MeshHeader meshHeader;
@@ -97,15 +97,15 @@ namespace RendererRuntime
 			ifstream.read(reinterpret_cast<char*>(mVertexBufferData), mNumberOfUsedVertexBufferDataBytes);
 			ifstream.read(reinterpret_cast<char*>(mIndexBufferData), mNumberOfUsedIndexBufferDataBytes);
 
-			// Read in the vertex array attributes
-			mNumberOfUsedVertexArrayAttributes = meshHeader.numberOfVertexArrayAttributes;
-			if (mNumberOfVertexArrayAttributes < mNumberOfUsedVertexArrayAttributes)
+			// Read in the vertex attributes
+			mNumberOfUsedVertexAttributes = meshHeader.numberOfVertexAttributes;
+			if (mNumberOfVertexAttributes < mNumberOfUsedVertexAttributes)
 			{
-				mNumberOfVertexArrayAttributes = mNumberOfUsedVertexArrayAttributes;
-				delete [] mVertexArray;
-				mVertexArray = new Renderer::VertexArrayAttribute[mNumberOfVertexArrayAttributes];
+				mNumberOfVertexAttributes = mNumberOfUsedVertexAttributes;
+				delete [] mVertexAttributes;
+				mVertexAttributes = new Renderer::VertexAttribute[mNumberOfVertexAttributes];
 			}
-			ifstream.read(reinterpret_cast<char*>(mVertexArray), sizeof(Renderer::VertexArrayAttribute) * mNumberOfUsedVertexArrayAttributes);
+			ifstream.read(reinterpret_cast<char*>(mVertexAttributes), sizeof(Renderer::VertexAttribute) * mNumberOfUsedVertexAttributes);
 		}
 		catch (const std::exception& e)
 		{
@@ -142,7 +142,7 @@ namespace RendererRuntime
 				(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0	// strideInBytes (uint32_t)
 			}
 		};
-		mMeshResource->mVertexArray = mRenderer->createVertexArray(Renderer::VertexArrayAttributes(mNumberOfUsedVertexArrayAttributes, mVertexArray), sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+		mMeshResource->mVertexArray = mRenderer->createVertexArray(Renderer::VertexAttributes(mNumberOfUsedVertexAttributes, mVertexAttributes), sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 	}
 
 
@@ -153,7 +153,7 @@ namespace RendererRuntime
 	{
 		delete [] mVertexBufferData;
 		delete [] mIndexBufferData;
-		delete [] mVertexArray;
+		delete [] mVertexAttributes;
 	}
 
 

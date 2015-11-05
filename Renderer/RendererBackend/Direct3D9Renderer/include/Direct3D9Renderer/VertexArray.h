@@ -37,7 +37,7 @@ struct IDirect3DDevice9;
 struct IDirect3DVertexBuffer9;
 namespace Renderer
 {
-	struct VertexArrayAttributes;
+	struct VertexAttributes;
 	struct VertexArrayVertexBuffer;
 }
 namespace Direct3D9Renderer
@@ -85,7 +85,7 @@ namespace Direct3D9Renderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArray(Direct3D9Renderer &direct3D9Renderer, const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArray(Direct3D9Renderer &direct3D9Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief

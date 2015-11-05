@@ -38,17 +38,17 @@ namespace Renderer
 		return *mRenderer;
 	}
 
-	inline IProgram *IShaderLanguage::createProgram(const VertexArrayAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader)
+	inline IProgram *IShaderLanguage::createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader)
 	{
 		return createProgram(vertexAttributes, vertexShader, nullptr, nullptr, nullptr, fragmentShader);
 	}
 
-	inline IProgram *IShaderLanguage::createProgram(const VertexArrayAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader)
+	inline IProgram *IShaderLanguage::createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader)
 	{
 		return createProgram(vertexAttributes, vertexShader, nullptr, nullptr, geometryShader, fragmentShader);
 	}
 
-	inline IProgram *IShaderLanguage::createProgram(const VertexArrayAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader)
+	inline IProgram *IShaderLanguage::createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader)
 	{
 		return createProgram(vertexAttributes, vertexShader, tessellationControlShader, tessellationEvaluationShader, nullptr, fragmentShader);
 	}

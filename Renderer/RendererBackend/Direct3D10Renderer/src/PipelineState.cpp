@@ -57,7 +57,7 @@ namespace Direct3D10Renderer
 		if (nullptr != vertexShaderHlsl)
 		{
 			const uint32_t numberOfAttributes = pipelineState.vertexAttributes.numberOfAttributes;
-			const Renderer::VertexArrayAttribute* attributes = pipelineState.vertexAttributes.attributes;
+			const Renderer::VertexAttribute* attributes = pipelineState.vertexAttributes.attributes;
 
 			// Create Direct3D 10 input element descriptions
 			// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
@@ -67,11 +67,11 @@ namespace Direct3D10Renderer
 			for (; d3d10InputElementDesc < d3d10InputElementDescEnd; ++d3d10InputElementDesc, ++attributes)
 			{
 				// Fill the "D3D10_INPUT_ELEMENT_DESC"-content
-				d3d10InputElementDesc->SemanticName      = attributes->semanticName;																// Semantic name (LPCSTR)
-				d3d10InputElementDesc->SemanticIndex     = attributes->semanticIndex;																// Semantic index (UINT)
-				d3d10InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(attributes->vertexArrayFormat));	// Format (DXGI_FORMAT)
-				d3d10InputElementDesc->InputSlot         = static_cast<UINT>(attributes->inputSlot);												// Input slot (UINT)
-				d3d10InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;															// Aligned byte offset (UINT)
+				d3d10InputElementDesc->SemanticName      = attributes->semanticName;																	// Semantic name (LPCSTR)
+				d3d10InputElementDesc->SemanticIndex     = attributes->semanticIndex;																	// Semantic index (UINT)
+				d3d10InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(attributes->vertexAttributeFormat));	// Format (DXGI_FORMAT)
+				d3d10InputElementDesc->InputSlot         = static_cast<UINT>(attributes->inputSlot);													// Input slot (UINT)
+				d3d10InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;																// Aligned byte offset (UINT)
 
 				// Per-instance instead of per-vertex?
 				if (attributes->instancesPerElement > 0)

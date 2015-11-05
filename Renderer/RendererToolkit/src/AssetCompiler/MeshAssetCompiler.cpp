@@ -116,7 +116,7 @@ namespace RendererToolkit
 			getNumberOfVerticesAndIndicesRecursive(*assimpScene, *assimpScene->mRootNode, numberOfVertices, numberOfIndices);
 
 			// TODO(co) Will change when skinned
-			uint8_t numberOfVertexArrayAttributes = 3;
+			uint8_t numberOfVertexAttributes = 3;
 
 			{ // Mesh header
 				// Fill the mesh header
@@ -134,17 +134,17 @@ namespace RendererToolkit
 						uint32_t numberOfVertices;
 						uint8_t  indexBufferFormat;
 						uint32_t numberOfIndices;
-						uint8_t  numberOfVertexArrayAttributes;
+						uint8_t  numberOfVertexAttributes;
 					};
 				#pragma pack(pop)
 				MeshHeader meshHeader;
-				meshHeader.formatType					 = RendererRuntime::StringId("Mesh");
-				meshHeader.formatVersion				 = 1;
-				meshHeader.numberOfBytesPerVertex		 = NUMBER_OF_BYTES_PER_VERTEX;
-				meshHeader.numberOfVertices				 = numberOfVertices;
-				meshHeader.indexBufferFormat			 = Renderer::IndexBufferFormat::UNSIGNED_SHORT;
-				meshHeader.numberOfIndices				 = numberOfIndices;
-				meshHeader.numberOfVertexArrayAttributes = numberOfVertexArrayAttributes;
+				meshHeader.formatType				= RendererRuntime::StringId("Mesh");
+				meshHeader.formatVersion			= 1;
+				meshHeader.numberOfBytesPerVertex	= NUMBER_OF_BYTES_PER_VERTEX;
+				meshHeader.numberOfVertices			= numberOfVertices;
+				meshHeader.indexBufferFormat		= Renderer::IndexBufferFormat::UNSIGNED_SHORT;
+				meshHeader.numberOfIndices			= numberOfIndices;
+				meshHeader.numberOfVertexAttributes = numberOfVertexAttributes;
 
 				// Write down the mesh header
 				ofstream.write(reinterpret_cast<const char*>(&meshHeader), sizeof(MeshHeader));
@@ -174,51 +174,51 @@ namespace RendererToolkit
 				delete [] indexBufferData;
 			}
 
-			{ // Vertex array attributes
+			{ // Vertex attributes
 				// TODO(co) We need a central vertex input layout management
 				// Vertex input layout
-				const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
+				const Renderer::VertexAttribute vertexAttributes[] =
 				{
 					{ // Attribute 0
 						// Data destination
-						Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-						"Position",								// name[32] (char)
-						"POSITION",								// semanticName[32] (char)
-						0,										// semanticIndex (uint32_t)
+						Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+						"Position",									// name[32] (char)
+						"POSITION",									// semanticName[32] (char)
+						0,											// semanticIndex (uint32_t)
 						// Data source
-						0,										// inputSlot (uint32_t)
-						0,										// alignedByteOffset (uint32_t)
+						0,											// inputSlot (uint32_t)
+						0,											// alignedByteOffset (uint32_t)
 						// Data source, instancing part
-						0										// instancesPerElement (uint32_t)
+						0											// instancesPerElement (uint32_t)
 					},
 					{ // Attribute 1
 						// Data destination
-						Renderer::VertexArrayFormat::SHORT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-						"TexCoord",								// name[32] (char)
-						"TEXCOORD",								// semanticName[32] (char)
-						0,										// semanticIndex (uint32_t)
+						Renderer::VertexAttributeFormat::SHORT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+						"TexCoord",									// name[32] (char)
+						"TEXCOORD",									// semanticName[32] (char)
+						0,											// semanticIndex (uint32_t)
 						// Data source
-						0,										// inputSlot (uint32_t)
-						sizeof(float) * 3,						// alignedByteOffset (uint32_t)
+						0,											// inputSlot (uint32_t)
+						sizeof(float) * 3,							// alignedByteOffset (uint32_t)
 						// Data source, instancing part
-						0										// instancesPerElement (uint32_t)
+						0											// instancesPerElement (uint32_t)
 					},
 					{ // Attribute 2
 						// Data destination
-						Renderer::VertexArrayFormat::SHORT_4,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-						"QTangent",								// name[32] (char)
-						"NORMAL",								// semanticName[32] (char)
-						0,										// semanticIndex (uint32_t)
+						Renderer::VertexAttributeFormat::SHORT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+						"QTangent",									// name[32] (char)
+						"NORMAL",									// semanticName[32] (char)
+						0,											// semanticIndex (uint32_t)
 						// Data source
-						0,										// inputSlot (uint32_t)
-						sizeof(float) * 3 + sizeof(short) * 2,	// alignedByteOffset (uint32_t)
+						0,											// inputSlot (uint32_t)
+						sizeof(float) * 3 + sizeof(short) * 2,		// alignedByteOffset (uint32_t)
 						// Data source, instancing part
-						0										// instancesPerElement (uint32_t)
+						0											// instancesPerElement (uint32_t)
 					}
 				};
 
 				// Write down the vertex array attributes
-				ofstream.write(reinterpret_cast<const char*>(vertexArrayAttributes), sizeof(Renderer::VertexArrayAttribute) * numberOfVertexArrayAttributes);
+				ofstream.write(reinterpret_cast<const char*>(vertexAttributes), sizeof(Renderer::VertexAttribute) * numberOfVertexAttributes);
 			}
 		}
 		else

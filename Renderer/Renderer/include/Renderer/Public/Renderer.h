@@ -974,7 +974,7 @@ namespace Renderer
 	// Renderer/VertexArrayTypes.h
 	#ifndef __RENDERER_VERTEXARRAY_TYPES_H__
 	#define __RENDERER_VERTEXARRAY_TYPES_H__
-		struct VertexArrayFormat
+		struct VertexAttributeFormat
 		{
 			enum Enum
 			{
@@ -989,24 +989,24 @@ namespace Renderer
 		};
 		#pragma pack(push)
 		#pragma pack(1)
-			struct VertexArrayAttribute
+			struct VertexAttribute
 			{
-				VertexArrayFormat::Enum  vertexArrayFormat;
-				char					 name[32];
-				char					 semanticName[32];
-				uint32_t				 semanticIndex;
-				uint32_t				 inputSlot;
-				uint32_t				 alignedByteOffset;
-				uint32_t				 instancesPerElement;
+				VertexAttributeFormat::Enum  vertexAttributeFormat;
+				char						 name[32];
+				char						 semanticName[32];
+				uint32_t					 semanticIndex;
+				uint32_t					 inputSlot;
+				uint32_t					 alignedByteOffset;
+				uint32_t					 instancesPerElement;
 			};
-			struct VertexArrayAttributes
+			struct VertexAttributes
 			{
-				uint32_t					numberOfAttributes;
-				const VertexArrayAttribute*	attributes;
-				VertexArrayAttributes()
+				uint32_t				numberOfAttributes;
+				const VertexAttribute*	attributes;
+				VertexAttributes()
 				{
 				}
-				VertexArrayAttributes(uint32_t _numberOfAttributes, const VertexArrayAttribute*	_attributes) :
+				VertexAttributes(uint32_t _numberOfAttributes, const VertexAttribute*	_attributes) :
 					numberOfAttributes(_numberOfAttributes),
 					attributes(_attributes)
 				{
@@ -1084,9 +1084,9 @@ namespace Renderer
 	#define __RENDERER_PIPELINESTATE_TYPES_H__
 		struct PipelineState
 		{
-			IRootSignature*		  rootSignature;
-			IProgram*			  program;
-			VertexArrayAttributes vertexAttributes;
+			IRootSignature*	 rootSignature;
+			IProgram*		 program;
+			VertexAttributes vertexAttributes;
 		};
 	#endif
 
@@ -1568,7 +1568,7 @@ namespace Renderer
 			virtual IFramebuffer *createFramebuffer(uint32_t numberOfColorTextures, ITexture **colorTextures, ITexture *depthStencilTexture = nullptr) = 0;
 			virtual IVertexBuffer *createVertexBuffer(uint32_t numberOfBytes, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual IIndexBuffer *createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-			virtual IVertexArray *createVertexArray(const VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
+			virtual IVertexArray *createVertexArray(const VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
 			virtual ITextureBuffer *createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual ITexture2D *createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
 			virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
@@ -1655,15 +1655,15 @@ namespace Renderer
 			{
 				return *mRenderer;
 			}
-			inline IProgram *createProgram(const VertexArrayAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader)
+			inline IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader)
 			{
 				return createProgram(vertexAttributes, vertexShader, nullptr, nullptr, nullptr, fragmentShader);
 			}
-			inline IProgram *createProgram(const VertexArrayAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader)
+			inline IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader)
 			{
 				return createProgram(vertexAttributes, vertexShader, nullptr, nullptr, geometryShader, fragmentShader);
 			}
-			inline IProgram *createProgram(const VertexArrayAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader)
+			inline IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader)
 			{
 				return createProgram(vertexAttributes, vertexShader, tessellationControlShader, tessellationEvaluationShader, nullptr, fragmentShader);
 			}
@@ -1679,7 +1679,7 @@ namespace Renderer
 			virtual IGeometryShader *createGeometryShaderFromSourceCode(const char *sourceCode, GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
 			virtual IFragmentShader *createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes) = 0;
 			virtual IFragmentShader *createFragmentShaderFromSourceCode(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
-			virtual IProgram *createProgram(const VertexArrayAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader) = 0;
+			virtual IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader) = 0;
 			virtual IUniformBuffer *createUniformBuffer(uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
 		protected:
 			explicit IShaderLanguage(IRenderer &renderer);

@@ -40,9 +40,9 @@ namespace RendererRuntime
 		mNumberOfUsedIndexBufferDataBytes(0),
 		mIndexBufferData(nullptr),
 		mIndexBufferFormat(0),
-		mNumberOfVertexArrayAttributes(0),
-		mNumberOfUsedVertexArrayAttributes(0),
-		mVertexArray(nullptr)
+		mNumberOfVertexAttributes(0),
+		mNumberOfUsedVertexAttributes(0),
+		mVertexAttributes(nullptr)
 	{
 		// Nothing here
 	}

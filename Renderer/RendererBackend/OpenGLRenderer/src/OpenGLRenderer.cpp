@@ -431,7 +431,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IVertexArray *OpenGLRenderer::createVertexArray(const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
+	Renderer::IVertexArray *OpenGLRenderer::createVertexArray(const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
 	{
 		// Get the extensions instance
 		const Extensions &extensions = mContext->getExtensions();

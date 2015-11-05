@@ -254,20 +254,20 @@ namespace Direct3D9Renderer
 		return MAPPING[comparisonFunc];
 	}*/
 
-	uint8_t Mapping::getDirect3D9Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
+	uint8_t Mapping::getDirect3D9Type(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat)
 	{
 		// BYTE
 		static const uint8_t MAPPING[] =
 		{
-			D3DDECLTYPE_FLOAT1,	// Renderer::VertexArrayFormat::FLOAT_1
-			D3DDECLTYPE_FLOAT2,	// Renderer::VertexArrayFormat::FLOAT_2
-			D3DDECLTYPE_FLOAT3,	// Renderer::VertexArrayFormat::FLOAT_3
-			D3DDECLTYPE_FLOAT4,	// Renderer::VertexArrayFormat::FLOAT_4
-			D3DDECLTYPE_UBYTE4,	// Renderer::VertexArrayFormat::UNSIGNED_BYTE_4
-			D3DDECLTYPE_SHORT2,	// Renderer::VertexArrayFormat::SHORT_2
-			D3DDECLTYPE_SHORT4	// Renderer::VertexArrayFormat::SHORT_4
+			D3DDECLTYPE_FLOAT1,	// Renderer::VertexAttributeFormat::FLOAT_1
+			D3DDECLTYPE_FLOAT2,	// Renderer::VertexAttributeFormat::FLOAT_2
+			D3DDECLTYPE_FLOAT3,	// Renderer::VertexAttributeFormat::FLOAT_3
+			D3DDECLTYPE_FLOAT4,	// Renderer::VertexAttributeFormat::FLOAT_4
+			D3DDECLTYPE_UBYTE4,	// Renderer::VertexAttributeFormat::UNSIGNED_BYTE_4
+			D3DDECLTYPE_SHORT2,	// Renderer::VertexAttributeFormat::SHORT_2
+			D3DDECLTYPE_SHORT4	// Renderer::VertexAttributeFormat::SHORT_4
 		};
-		return MAPPING[vertexArrayFormat];
+		return MAPPING[vertexAttributeFormat];
 	}
 
 	uint32_t Mapping::getDirect3D9Semantic(const char *semanticName)

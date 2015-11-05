@@ -35,7 +35,7 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	struct VertexArrayAttributes;
+	struct VertexAttributes;
 }
 namespace OpenGLES2Renderer
 {
@@ -82,7 +82,7 @@ namespace OpenGLES2Renderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexArrayAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl);
+		ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl);
 
 		/**
 		*  @brief

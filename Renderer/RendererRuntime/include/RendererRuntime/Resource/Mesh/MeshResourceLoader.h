@@ -37,7 +37,7 @@
 namespace Renderer
 {
 	class IRenderer;
-	struct VertexArrayAttribute;
+	struct VertexAttribute;
 }
 namespace RendererRuntime
 {
@@ -113,10 +113,10 @@ namespace RendererRuntime
 		uint32_t mNumberOfUsedIndexBufferDataBytes;
 		uint8_t* mIndexBufferData;
 		uint8_t  mIndexBufferFormat;	// "Renderer::IndexBufferFormat", don't want to include the header in here
-		// Temporary vertex array
-		uint32_t						mNumberOfVertexArrayAttributes;
-		uint32_t						mNumberOfUsedVertexArrayAttributes;
-		Renderer::VertexArrayAttribute* mVertexArray;
+		// Temporary vertex attributes
+		uint32_t				   mNumberOfVertexAttributes;
+		uint32_t				   mNumberOfUsedVertexAttributes;
+		Renderer::VertexAttribute* mVertexAttributes;
 
 
 	};

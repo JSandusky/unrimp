@@ -128,19 +128,19 @@ namespace Direct3D9Renderer
 	//	static GLint getDirect3D9ComparisonFunc(Renderer::ComparisonFunc::Enum comparisonFunc);
 
 		//[-------------------------------------------------------]
-		//[ Renderer::VertexArrayFormat and semantic              ]
+		//[ Renderer::VertexAttributeFormat and semantic          ]
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    "Renderer::VertexArrayFormat" to Direct3D 9 type
+		*    "Renderer::VertexAttributeFormat" to Direct3D 9 type
 		*
-		*  @param[in] vertexArrayFormat
-		*    "Renderer::VertexArrayFormat" to map
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to map
 		*
 		*  @return
 		*    Direct3D 9 type (type "BYTE" not used in here in order to keep the header slim)
 		*/
-		static uint8_t getDirect3D9Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
+		static uint8_t getDirect3D9Type(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
 
 		/**
 		*  @brief

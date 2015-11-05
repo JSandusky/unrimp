@@ -74,22 +74,22 @@ void FirstGeometryShader::onInitialization()
 			}
 
 			// Vertex input layout
-			const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
+			const Renderer::VertexAttribute vertexAttributesLayout[] =
 			{
 				{ // Attribute 0
 					// Data destination
-					Renderer::VertexArrayFormat::FLOAT_1,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-					"Position",								// name[32] (char)
-					"POSITION",								// semanticName[32] (char)
-					0,										// semanticIndex (uint32_t)
+					Renderer::VertexAttributeFormat::FLOAT_1,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+					"Position",									// name[32] (char)
+					"POSITION",									// semanticName[32] (char)
+					0,											// semanticIndex (uint32_t)
 					// Data source
-					0,										// inputSlot (uint32_t)
-					0,										// alignedByteOffset (uint32_t)
+					0,											// inputSlot (uint32_t)
+					0,											// alignedByteOffset (uint32_t)
 					// Data source, instancing part
-					0										// instancesPerElement (uint32_t)
+					0											// instancesPerElement (uint32_t)
 				}
 			};
-			const Renderer::VertexArrayAttributes vertexAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
+			const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
 
 			// Create the program
 			Renderer::IProgramPtr program;

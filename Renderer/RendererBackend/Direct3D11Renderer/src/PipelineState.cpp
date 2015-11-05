@@ -57,7 +57,7 @@ namespace Direct3D11Renderer
 		if (nullptr != vertexShaderHlsl)
 		{
 			const uint32_t numberOfAttributes = pipelineState.vertexAttributes.numberOfAttributes;
-			const Renderer::VertexArrayAttribute* attributes = pipelineState.vertexAttributes.attributes;
+			const Renderer::VertexAttribute* attributes = pipelineState.vertexAttributes.attributes;
 
 			// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
 			D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescs   = numberOfAttributes ? new D3D11_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D11_INPUT_ELEMENT_DESC[1];
@@ -66,11 +66,11 @@ namespace Direct3D11Renderer
 			for (; d3d11InputElementDesc < d3d11InputElementDescEnd; ++d3d11InputElementDesc, ++attributes)
 			{
 				// Fill the "D3D11_INPUT_ELEMENT_DESC"-content
-				d3d11InputElementDesc->SemanticName      = attributes->semanticName;																// Semantic name (LPCSTR)
-				d3d11InputElementDesc->SemanticIndex     = attributes->semanticIndex;																// Semantic index (UINT)
-				d3d11InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(attributes->vertexArrayFormat));	// Format (DXGI_FORMAT)
-				d3d11InputElementDesc->InputSlot         = static_cast<UINT>(attributes->inputSlot);												// Input slot (UINT)
-				d3d11InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;															// Aligned byte offset (UINT)
+				d3d11InputElementDesc->SemanticName      = attributes->semanticName;																	// Semantic name (LPCSTR)
+				d3d11InputElementDesc->SemanticIndex     = attributes->semanticIndex;																	// Semantic index (UINT)
+				d3d11InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(attributes->vertexAttributeFormat));	// Format (DXGI_FORMAT)
+				d3d11InputElementDesc->InputSlot         = static_cast<UINT>(attributes->inputSlot);													// Input slot (UINT)
+				d3d11InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;																// Aligned byte offset (UINT)
 
 				// Per-instance instead of per-vertex?
 				if (attributes->instancesPerElement > 0)

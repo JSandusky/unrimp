@@ -140,46 +140,46 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 		}
 
 		// Vertex input layout
-		const Renderer::VertexArrayAttribute vertexArrayAttributes[] =
+		const Renderer::VertexAttribute vertexAttributesLayout[] =
 		{
 			{ // Attribute 0
 				// Data destination
-				Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-				"Position",								// name[32] (char)
-				"POSITION",								// semanticName[32] (char)
-				0,										// semanticIndex (uint32_t)
+				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"Position",									// name[32] (char)
+				"POSITION",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
 				// Data source
-				0,										// inputSlot (uint32_t)
-				0,										// alignedByteOffset (uint32_t)
+				0,											// inputSlot (uint32_t)
+				0,											// alignedByteOffset (uint32_t)
 				// Data source, instancing part
-				0										// instancesPerElement (uint32_t)
+				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 1
 				// Data destination
-				Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-				"TexCoord",								// name[32] (char)
-				"TEXCOORD",								// semanticName[32] (char)
-				0,										// semanticIndex (uint32_t)
+				Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"TexCoord",									// name[32] (char)
+				"TEXCOORD",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
 				// Data source
-				0,										// inputSlot (uint32_t)
-				sizeof(float) * 3,						// alignedByteOffset (uint32_t)
+				0,											// inputSlot (uint32_t)
+				sizeof(float) * 3,							// alignedByteOffset (uint32_t)
 				// Data source, instancing part
-				0										// instancesPerElement (uint32_t)
+				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 2
 				// Data destination
-				Renderer::VertexArrayFormat::FLOAT_3,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-				"Normal",								// name[32] (char)
-				"NORMAL",								// semanticName[32] (char)
-				0,										// semanticIndex (uint32_t)
+				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"Normal",									// name[32] (char)
+				"NORMAL",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
 				// Data source
-				0,										// inputSlot (uint32_t)
-				sizeof(float) * (3 + 2),				// alignedByteOffset (uint32_t)
+				0,											// inputSlot (uint32_t)
+				sizeof(float) * (3 + 2),					// alignedByteOffset (uint32_t)
 				// Data source, instancing part
-				0										// instancesPerElement (uint32_t)
+				0											// instancesPerElement (uint32_t)
 			}
 		};
-		const Renderer::VertexArrayAttributes vertexAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
+		const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
 
 		{ // Create the program
 			// Get the shader source code (outsourced to keep an overview)

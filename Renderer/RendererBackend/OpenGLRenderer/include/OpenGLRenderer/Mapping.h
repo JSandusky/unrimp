@@ -126,31 +126,31 @@ namespace OpenGLRenderer
 		static int getOpenGLComparisonFunc(Renderer::ComparisonFunc::Enum comparisonFunc);
 
 		//[-------------------------------------------------------]
-		//[ Renderer::VertexArrayFormat                           ]
+		//[ Renderer::VertexAttributeFormat                       ]
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    "Renderer::VertexArrayFormat" to OpenGL size (number of elements)
+		*    "Renderer::VertexAttributeFormat" to OpenGL size (number of elements)
 		*
-		*  @param[in] vertexArrayFormat
-		*    "Renderer::VertexArrayFormat" to map
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to map
 		*
 		*  @return
 		*    OpenGL size (number of elements, type GLint not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLSize(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
+		static int getOpenGLSize(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
 
 		/**
 		*  @brief
-		*    "Renderer::VertexArrayFormat" to OpenGL type
+		*    "Renderer::VertexAttributeFormat" to OpenGL type
 		*
-		*  @param[in] vertexArrayFormat
-		*    "Renderer::VertexArrayFormat" to map
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to map
 		*
 		*  @return
 		*    OpenGL type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLType(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
+		static uint32_t getOpenGLType(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]

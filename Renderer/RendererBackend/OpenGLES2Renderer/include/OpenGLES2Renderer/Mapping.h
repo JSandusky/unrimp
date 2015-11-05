@@ -127,31 +127,31 @@ namespace OpenGLES2Renderer
 		static int getOpenGLES2ComparisonFunc(Renderer::ComparisonFunc::Enum comparisonFunc);
 
 		//[-------------------------------------------------------]
-		//[ Renderer::VertexArrayFormat                           ]
+		//[ Renderer::VertexAttributeFormat                       ]
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    "Renderer::VertexArrayFormat" to OpenGL ES 2 size (number of elements)
+		*    "Renderer::VertexAttributeFormat" to OpenGL ES 2 size (number of elements)
 		*
-		*  @param[in] vertexArrayFormat
-		*    "Renderer::VertexArrayFormat" to map
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to map
 		*
 		*  @return
 		*    OpenGL ES 2 size (number of elements, type GLint not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2Size(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
+		static int getOpenGLES2Size(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
 
 		/**
 		*  @brief
-		*    "Renderer::VertexArrayFormat" to OpenGL ES 2 type
+		*    "Renderer::VertexAttributeFormat" to OpenGL ES 2 type
 		*
-		*  @param[in] vertexArrayFormat
-		*    "Renderer::VertexArrayFormat" to map
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to map
 		*
 		*  @return
 		*    OpenGL ES 2 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2Type(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
+		static uint32_t getOpenGLES2Type(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]

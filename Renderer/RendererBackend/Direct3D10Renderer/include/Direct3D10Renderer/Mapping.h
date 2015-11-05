@@ -56,19 +56,19 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	public:
 		//[-------------------------------------------------------]
-		//[ Renderer::VertexArrayFormat and semantic              ]
+		//[ Renderer::VertexAttributeFormat and semantic          ]
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    "Renderer::VertexArrayFormat" to Direct3D 10 format
+		*    "Renderer::VertexAttributeFormat" to Direct3D 10 format
 		*
-		*  @param[in] vertexArrayFormat
-		*    "Renderer::VertexArrayFormat" to map
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to map
 		*
 		*  @return
 		*    Direct3D 10 format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getDirect3D10Format(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
+		static uint32_t getDirect3D10Format(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]

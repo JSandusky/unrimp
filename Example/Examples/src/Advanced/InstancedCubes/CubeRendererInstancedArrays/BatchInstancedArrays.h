@@ -78,7 +78,7 @@ public:
 	*  @param[in] sceneRadius
 	*    Scene radius
 	*/
-	void initialize(const Renderer::VertexArrayAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius);
+	void initialize(const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius);
 
 	/**
 	*  @brief

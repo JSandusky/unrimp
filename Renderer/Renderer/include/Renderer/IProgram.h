@@ -38,7 +38,7 @@ namespace Renderer
 {
 	class IVertexArray;
 	class IIndexBuffer;
-	struct VertexArrayAttribute;
+	struct VertexAttribute;
 	struct VertexArrayVertexBuffer;
 }
 

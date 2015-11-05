@@ -35,20 +35,20 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t Mapping::getDirect3D10Format(Renderer::VertexArrayFormat::Enum vertexArrayFormat)
+	uint32_t Mapping::getDirect3D10Format(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat)
 	{
 		// DXGI_FORMAT
 		static const uint32_t MAPPING[] =
 		{
-			DXGI_FORMAT_R32_FLOAT,			// Renderer::VertexArrayFormat::FLOAT_1
-			DXGI_FORMAT_R32G32_FLOAT,		// Renderer::VertexArrayFormat::FLOAT_2
-			DXGI_FORMAT_R32G32B32_FLOAT,	// Renderer::VertexArrayFormat::FLOAT_3
-			DXGI_FORMAT_R32G32B32A32_FLOAT,	// Renderer::VertexArrayFormat::FLOAT_4
-			DXGI_FORMAT_R8G8B8A8_UINT,		// Renderer::VertexArrayFormat::UNSIGNED_BYTE_4
-			DXGI_FORMAT_R16G16_SINT,		// Renderer::VertexArrayFormat::SHORT_2
-			DXGI_FORMAT_R16G16B16A16_SINT	// Renderer::VertexArrayFormat::SHORT_4
+			DXGI_FORMAT_R32_FLOAT,			// Renderer::VertexAttributeFormat::FLOAT_1
+			DXGI_FORMAT_R32G32_FLOAT,		// Renderer::VertexAttributeFormat::FLOAT_2
+			DXGI_FORMAT_R32G32B32_FLOAT,	// Renderer::VertexAttributeFormat::FLOAT_3
+			DXGI_FORMAT_R32G32B32A32_FLOAT,	// Renderer::VertexAttributeFormat::FLOAT_4
+			DXGI_FORMAT_R8G8B8A8_UINT,		// Renderer::VertexAttributeFormat::UNSIGNED_BYTE_4
+			DXGI_FORMAT_R16G16_SINT,		// Renderer::VertexAttributeFormat::SHORT_2
+			DXGI_FORMAT_R16G16B16A16_SINT	// Renderer::VertexAttributeFormat::SHORT_4
 		};
-		return MAPPING[vertexArrayFormat];
+		return MAPPING[vertexAttributeFormat];
 	}
 
 	uint32_t Mapping::getDirect3D10UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum bufferUsage, uint32_t &cpuAccessFlags)

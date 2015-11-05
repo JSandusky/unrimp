@@ -35,8 +35,8 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	struct VertexArrayAttribute;
-	struct VertexArrayAttributes;
+	struct VertexAttribute;
+	struct VertexAttributes;
 	struct VertexArrayVertexBuffer;
 }
 namespace OpenGLES2Renderer
@@ -82,7 +82,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArrayNoVao(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArrayNoVao(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief
@@ -108,7 +108,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	private:
 		uint32_t						   mNumberOfAttributes;		///< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
-		Renderer::VertexArrayAttribute    *mAttributes;				///< At least "mNumberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes
+		Renderer::VertexAttribute		  *mAttributes;				///< At least "mNumberOfAttributes" instances of vertex attributes, can be a null pointer in case there are zero attributes
 		uint32_t						   mNumberOfVertexBuffers;	///< Number of vertex buffers, having zero vertex buffers is valid
 		Renderer::VertexArrayVertexBuffer *mVertexBuffers;			///< At least mNumberOfVertexBuffers instances of vertex array vertex buffers, can be a null pointer in case there are zero vertex buffers, the data is internally copied and you have to free your memory if you no longer need it
 

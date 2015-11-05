@@ -69,20 +69,20 @@ namespace Direct3D12Renderer
 		D3D12_INPUT_ELEMENT_DESC d3d12InputElementDescs[MAXIMUM_NUMBER_OF_ATTRIBUTES];
 		for (uint32_t vertexAttribute = 0; vertexAttribute < numberOfVertexAttributes; ++vertexAttribute)
 		{
-			const Renderer::VertexArrayAttribute& vertexArrayAttribute = pipelineState.vertexAttributes.attributes[vertexAttribute];
+			const Renderer::VertexAttribute& currentVertexAttribute = pipelineState.vertexAttributes.attributes[vertexAttribute];
 			D3D12_INPUT_ELEMENT_DESC& d3d12InputElementDesc = d3d12InputElementDescs[vertexAttribute];
 
-			d3d12InputElementDesc.SemanticName		= vertexArrayAttribute.semanticName;
-			d3d12InputElementDesc.SemanticIndex		= vertexArrayAttribute.semanticIndex;
-			d3d12InputElementDesc.Format			= static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(vertexArrayAttribute.vertexArrayFormat));
-			d3d12InputElementDesc.InputSlot			= vertexArrayAttribute.inputSlot;
-			d3d12InputElementDesc.AlignedByteOffset	= vertexArrayAttribute.alignedByteOffset;
+			d3d12InputElementDesc.SemanticName		= currentVertexAttribute.semanticName;
+			d3d12InputElementDesc.SemanticIndex		= currentVertexAttribute.semanticIndex;
+			d3d12InputElementDesc.Format			= static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(currentVertexAttribute.vertexAttributeFormat));
+			d3d12InputElementDesc.InputSlot			= currentVertexAttribute.inputSlot;
+			d3d12InputElementDesc.AlignedByteOffset	= currentVertexAttribute.alignedByteOffset;
 
 			// Per-instance instead of per-vertex?
-			if (vertexArrayAttribute.instancesPerElement > 0)
+			if (currentVertexAttribute.instancesPerElement > 0)
 			{
 				d3d12InputElementDesc.InputSlotClass       = D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA;	// Input classification (D3D12_INPUT_CLASSIFICATION)
-				d3d12InputElementDesc.InstanceDataStepRate = vertexArrayAttribute.instancesPerElement;		// Instance data step rate (UINT)
+				d3d12InputElementDesc.InstanceDataStepRate = currentVertexAttribute.instancesPerElement;	// Instance data step rate (UINT)
 			}
 			else
 			{

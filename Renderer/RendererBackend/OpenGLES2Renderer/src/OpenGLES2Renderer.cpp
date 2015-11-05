@@ -318,7 +318,7 @@ namespace OpenGLES2Renderer
 		return new IndexBuffer(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
 	}
 
-	Renderer::IVertexArray *OpenGLES2Renderer::createVertexArray(const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
+	Renderer::IVertexArray *OpenGLES2Renderer::createVertexArray(const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
 	{
 		// Is "GL_OES_vertex_array_object" there?
 		if (mContext->getExtensions().isGL_OES_vertex_array_object())

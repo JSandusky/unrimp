@@ -56,19 +56,19 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	public:
 		//[-------------------------------------------------------]
-		//[ Renderer::VertexArrayFormat and semantic              ]
+		//[ Renderer::VertexAttributeFormat and semantic          ]
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    "Renderer::VertexArrayFormat" to Direct3D 12 format
+		*    "Renderer::VertexAttributeFormat" to Direct3D 12 format
 		*
-		*  @param[in] vertexArrayFormat
-		*    "Renderer::VertexArrayFormat" to map
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to map
 		*
 		*  @return
 		*    Direct3D 12 format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getDirect3D12Format(Renderer::VertexArrayFormat::Enum vertexArrayFormat);
+		static uint32_t getDirect3D12Format(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]

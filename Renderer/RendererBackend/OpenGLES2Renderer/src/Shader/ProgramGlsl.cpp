@@ -39,7 +39,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramGlsl::ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexArrayAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
+	ProgramGlsl::ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
 		Program(openGLES2Renderer)
 	{
 		// Create the OpenGL ES 2 program

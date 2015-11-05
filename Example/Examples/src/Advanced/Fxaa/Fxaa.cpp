@@ -37,22 +37,22 @@ namespace
 	namespace detail
 	{
 		// Vertex input layout
-		const Renderer::VertexArrayAttribute VertexArrayAttributesLayout[] =
+		const Renderer::VertexAttribute VertexAttributesLayout[] =
 		{
 			{ // Attribute 0
 				// Data destination
-				Renderer::VertexArrayFormat::FLOAT_2,	// vertexArrayFormat (Renderer::VertexArrayFormat::Enum)
-				"Position",								// name[32] (char)
-				"POSITION",								// semanticName[32] (char)
-				0,										// semanticIndex (uint32_t)
+				Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"Position",									// name[32] (char)
+				"POSITION",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
 				// Data source
-				0,										// inputSlot (uint32_t)
-				0,										// alignedByteOffset (uint32_t)
+				0,											// inputSlot (uint32_t)
+				0,											// alignedByteOffset (uint32_t)
 				// Data source, instancing part
-				0										// instancesPerElement (uint32_t)
+				0											// instancesPerElement (uint32_t)
 			}
 		};
-		const Renderer::VertexArrayAttributes VertexAttributes(sizeof(VertexArrayAttributesLayout) / sizeof(Renderer::VertexArrayAttribute), VertexArrayAttributesLayout);
+		const Renderer::VertexAttributes VertexAttributes(sizeof(VertexAttributesLayout) / sizeof(Renderer::VertexAttribute), VertexAttributesLayout);
 	}
 }
 

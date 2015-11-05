@@ -59,9 +59,9 @@ namespace Renderer
 	*/
 	struct PipelineState
 	{
-		IRootSignature*		  rootSignature;	///< Root signature (pipeline state instances keep a reference to the program), must be valid
-		IProgram*			  program;			///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
-		VertexArrayAttributes vertexAttributes;	///< Vertex attributes
+		IRootSignature*	 rootSignature;		///< Root signature (pipeline state instances keep a reference to the program), must be valid
+		IProgram*		 program;			///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
+		VertexAttributes vertexAttributes;	///< Vertex attributes
 	};
 
 
