@@ -179,8 +179,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 				0										// instancesPerElement (uint32_t)
 			}
 		};
-		const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-		const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+		const Renderer::VertexArrayAttributes vertexAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
 
 		{ // Create the program
 			// Get the shader source code (outsourced to keep an overview)
@@ -272,7 +271,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 					sizeof(float) * (3 + 2 + 3)	// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArray = mRenderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+			mVertexArray = mRenderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 		}
 	}
 

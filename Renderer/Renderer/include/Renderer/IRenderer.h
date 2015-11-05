@@ -70,7 +70,7 @@ namespace Renderer
 	class IDepthStencilState;
 	struct DepthStencilState;
 	class ITextureCollection;
-	struct VertexArrayAttribute;
+	struct VertexArrayAttributes;
 	class ISamplerStateCollection;
 	struct VertexArrayVertexBuffer;
 }
@@ -318,10 +318,8 @@ namespace Renderer
 		*  @brief
 		*    Create a vertex array instance
 		*
-		*  @param[in] numberOfAttributes
-		*    Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
-		*  @param[in] attributes
-		*    At least nNumberOfAttributes instances of vertex array attributes, can be a null pointer in case there are zero attributes, the data is internally copied and you have to free your memory if you no longer need it
+		*  @param[in] vertexAttributes
+		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] numberOfVertexBuffers
 		*    Number of vertex buffers, having zero vertex buffers is valid
 		*  @param[in] vertexBuffers
@@ -337,7 +335,7 @@ namespace Renderer
 		*    - It's valid that a vertex array implementation is adding a reference and releasing it again at once
 		*      (this means that in the case of not having any more references, a vertex buffer might get destroyed when calling this method)
 		*/
-		virtual IVertexArray *createVertexArray(uint32_t numberOfAttributes, const VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
+		virtual IVertexArray *createVertexArray(const VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
 
 		/**
 		*  @brief

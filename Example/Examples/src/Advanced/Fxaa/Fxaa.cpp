@@ -37,7 +37,7 @@ namespace
 	namespace detail
 	{
 		// Vertex input layout
-		const Renderer::VertexArrayAttribute VertexArrayAttributes[] =
+		const Renderer::VertexArrayAttribute VertexArrayAttributesLayout[] =
 		{
 			{ // Attribute 0
 				// Data destination
@@ -52,6 +52,7 @@ namespace
 				0										// instancesPerElement (uint32_t)
 			}
 		};
+		const Renderer::VertexArrayAttributes VertexAttributes(sizeof(VertexArrayAttributesLayout) / sizeof(Renderer::VertexArrayAttribute), VertexArrayAttributesLayout);
 	}
 }
 
@@ -118,10 +119,6 @@ void Fxaa::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			// Vertex input layout
-			const uint32_t numberOfVertexAttributes = sizeof(detail::VertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-			const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, detail::VertexArrayAttributes);
-
 			{ // Create the program for scene rendering
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
@@ -133,7 +130,7 @@ void Fxaa::onInitialization()
 
 				// Create the program for scene rendering
 				mProgramSceneRendering = shaderLanguage->createProgram(
-					vertexAttributes,
+					detail::VertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
@@ -162,7 +159,7 @@ void Fxaa::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArraySceneRendering = renderer->createVertexArray(numberOfVertexAttributes, detail::VertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mVertexArraySceneRendering = renderer->createVertexArray(detail::VertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 			}
 
 			// Create the post-processing program instance by using the current window size
@@ -193,7 +190,7 @@ void Fxaa::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArrayPostProcessing = renderer->createVertexArray(numberOfVertexAttributes, detail::VertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mVertexArrayPostProcessing = renderer->createVertexArray(detail::VertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 			}
 		}
 
@@ -366,7 +363,7 @@ void Fxaa::recreatePostProcessingProgram()
 
 			// Create the program for the FXAA post processing
 			mProgramPostProcessing = shaderLanguage->createProgram(
-				Renderer::VertexArrayAttributes(sizeof(detail::VertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), detail::VertexArrayAttributes),
+				detail::VertexAttributes,
 				shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 				shaderLanguage->createFragmentShaderFromSourceCode(sourceCode));
 

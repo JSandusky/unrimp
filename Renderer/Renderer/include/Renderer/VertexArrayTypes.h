@@ -111,8 +111,8 @@ namespace Renderer
 	*/
 	struct VertexArrayAttributes
 	{
-			  uint32_t				numberOfAttributes;	///< Number of vertex attributes
-		const VertexArrayAttribute* attributes;			///< At least "numberOfVertexAttributes" vertex attributes, must be valid
+			  uint32_t				numberOfAttributes;	///< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
+		const VertexArrayAttribute* attributes;			///< At least nNumberOfAttributes instances of vertex array attributes, can be a null pointer in case there are zero attributes, the data is internally copied and you have to free your memory if you no longer need it
 
 		VertexArrayAttributes()
 		{

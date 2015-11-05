@@ -36,6 +36,7 @@
 namespace Renderer
 {
 	struct VertexArrayAttribute;
+	struct VertexArrayAttributes;
 	struct VertexArrayVertexBuffer;
 }
 namespace OpenGLES2Renderer
@@ -72,10 +73,8 @@ namespace OpenGLES2Renderer
 		*
 		*  @param[in] openGLES2Renderer
 		*    Owner OpenGL ES 2 renderer instance
-		*  @param[in] numberOfAttributes
-		*    Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
-		*  @param[in] attributes
-		*    At least "numberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes
+		*  @param[in] vertexAttributes
+		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] numberOfVertexBuffers
 		*    Number of vertex buffers, having zero vertex buffers is valid
 		*  @param[in] vertexBuffers
@@ -83,7 +82,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArrayNoVao(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArrayNoVao(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief

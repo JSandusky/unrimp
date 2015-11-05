@@ -169,8 +169,7 @@ void FirstMultipleSwapChains::onInitialization()
 					0										// instancesPerElement (uint32_t)
 				}
 			};
-			const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-			const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+			const Renderer::VertexArrayAttributes vertexAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
 
 			// Create the program
 			Renderer::IProgramPtr program;
@@ -228,7 +227,7 @@ void FirstMultipleSwapChains::onInitialization()
 							sizeof(float) * 2	// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArray = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+					mVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 				}
 			}
 		}

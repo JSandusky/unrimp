@@ -108,8 +108,7 @@ void FirstCommandBucket::onInitialization()
 					0										// instancesPerElement (uint32_t)
 				}
 			};
-			const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-			const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+			const Renderer::VertexArrayAttributes vertexAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
 
 			{ // Create the program
 				// Get the shader source code (outsourced to keep an overview)
@@ -167,9 +166,9 @@ void FirstCommandBucket::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mSolidVertexArray = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mSolidVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mSolidVertexArray, "Solid triangle VAO")
-				mTransparentVertexArray = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+				mTransparentVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mTransparentVertexArray, "Transparent triangle VAO")
 			}
 		}

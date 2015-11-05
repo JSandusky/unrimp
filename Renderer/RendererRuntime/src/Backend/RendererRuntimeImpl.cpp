@@ -53,7 +53,7 @@ namespace
 	namespace detail
 	{
 		// Vertex input layout
-		const Renderer::VertexArrayAttribute VertexArrayAttributes[] =
+		const Renderer::VertexArrayAttribute VertexArrayAttributesLayout[] =
 		{
 			{ // Attribute 0
 				// Data destination
@@ -68,6 +68,7 @@ namespace
 				0										// instancesPerElement (uint32_t)
 			}
 		};
+		const Renderer::VertexArrayAttributes VertexAttributes(sizeof(VertexArrayAttributesLayout) / sizeof(Renderer::VertexArrayAttribute), VertexArrayAttributesLayout);
 	}
 }
 
@@ -185,7 +186,7 @@ namespace RendererRuntime
 
 				// Create the program
 				mFontProgram = shaderLanguage->createProgram(
-					Renderer::VertexArrayAttributes(sizeof(::detail::VertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), ::detail::VertexArrayAttributes),
+					::detail::VertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 				if (nullptr != mFontProgram)
@@ -279,7 +280,7 @@ namespace RendererRuntime
 					sizeof(float) * 3	// strideInBytes (uint32_t)
 				}
 			};
-			mFontVertexArray = mRenderer->createVertexArray(sizeof(::detail::VertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), ::detail::VertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+			mFontVertexArray = mRenderer->createVertexArray(::detail::VertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 			if (nullptr != mFontVertexArray)
 			{
 				// Add our internal reference

@@ -120,8 +120,7 @@ void IcosahedronTessellation::onInitialization()
 					0										// instancesPerElement (uint32_t)
 				}
 			};
-			const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-			const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+			const Renderer::VertexArrayAttributes vertexAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
 
 			{ // Create the program
 				// Get the shader source code (outsourced to keep an overview)
@@ -204,7 +203,7 @@ void IcosahedronTessellation::onInitialization()
 						sizeof(float) * 3	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArray = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+				mVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 			}
 		}
 

@@ -191,8 +191,7 @@ void FirstGpgpu::onInitialization()
 				0										// instancesPerElement (uint32_t)
 			}
 		};
-		const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-		const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+		const Renderer::VertexArrayAttributes vertexAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
 
 		{ // Create the programs
 			// Get the shader source code (outsourced to keep an overview)
@@ -238,7 +237,7 @@ void FirstGpgpu::onInitialization()
 					sizeof(float) * 2	// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArrayContentGeneration = mRenderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+			mVertexArrayContentGeneration = mRenderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 		}
 
 		{ // Create vertex array object (VAO) for content processing
@@ -266,7 +265,7 @@ void FirstGpgpu::onInitialization()
 					sizeof(float) * 2	// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArrayContentProcessing = mRenderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+			mVertexArrayContentProcessing = mRenderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 		}
 	}
 

@@ -431,7 +431,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IVertexArray *OpenGLRenderer::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
+	Renderer::IVertexArray *OpenGLRenderer::createVertexArray(const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
 	{
 		// Get the extensions instance
 		const Extensions &extensions = mContext->getExtensions();
@@ -446,20 +446,20 @@ namespace OpenGLRenderer
 			{
 				// Effective direct state access (DSA)
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				return new VertexArrayVaoDsa(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+				return new VertexArrayVaoDsa(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 			}
 			else
 			{
 				// Traditional bind version
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				return new VertexArrayVaoBind(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+				return new VertexArrayVaoBind(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 			}
 		}
 		else
 		{
 			// Traditional version
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new VertexArrayNoVao(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+			return new VertexArrayNoVao(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 		}
 	}
 

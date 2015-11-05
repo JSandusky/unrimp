@@ -35,7 +35,7 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	struct VertexArrayAttribute;
+	struct VertexArrayAttributes;
 }
 namespace OpenGLRenderer
 {
@@ -71,10 +71,8 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
-		*  @param[in] numberOfAttributes
-		*    Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
-		*  @param[in] attributes
-		*    At least "numberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes
+		*  @param[in] vertexAttributes
+		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] numberOfVertexBuffers
 		*    Number of vertex buffers, having zero vertex buffers is valid
 		*  @param[in] vertexBuffers
@@ -82,7 +80,7 @@ namespace OpenGLRenderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArrayVaoDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArrayVaoDsa(OpenGLRenderer &openGLRenderer, const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief

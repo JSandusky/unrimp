@@ -37,7 +37,7 @@ struct IDirect3DDevice9;
 struct IDirect3DVertexBuffer9;
 namespace Renderer
 {
-	struct VertexArrayAttribute;
+	struct VertexArrayAttributes;
 	struct VertexArrayVertexBuffer;
 }
 namespace Direct3D9Renderer
@@ -76,10 +76,8 @@ namespace Direct3D9Renderer
 		*
 		*  @param[in] direct3D9Renderer
 		*    Owner Direct3D 9 renderer instance
-		*  @param[in] numberOfAttributes
-		*    Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
-		*  @param[in] attributes
-		*    At least nNumberOfAttributes instances of vertex array attributes, can be a null pointer in case there are zero attributes
+		*  @param[in] vertexAttributes
+		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] numberOfVertexBuffers
 		*    Number of vertex buffers, having zero vertex buffers is valid
 		*  @param[in] vertexBuffers
@@ -87,7 +85,7 @@ namespace Direct3D9Renderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArray(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArray(Direct3D9Renderer &direct3D9Renderer, const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief

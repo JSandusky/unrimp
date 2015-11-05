@@ -40,7 +40,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D9Renderer &direct3D9Renderer, const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		IVertexArray(direct3D9Renderer),
 		mDirect3DDevice9(direct3D9Renderer.getDirect3DDevice9()),
 		mIndexBuffer(indexBuffer),
@@ -85,10 +85,11 @@ namespace Direct3D9Renderer
 
 			// Gather instances per element
 			// TODO(co) This will not work when multiple attributes using the same slot, but with a different setting. On the other hand, Direct3D 9 is totally out-of-date and this is just a proof-of-concept.
-			const Renderer::VertexArrayAttribute* attributesEnd = attributes + numberOfAttributes;
-			for (; attributes < attributesEnd;  ++attributes)
+			const Renderer::VertexArrayAttribute *attribute = vertexAttributes.attributes;
+			const Renderer::VertexArrayAttribute* attributesEnd = attribute + vertexAttributes.numberOfAttributes;
+			for (; attribute < attributesEnd;  ++attribute)
 			{
-				mInstancesPerElement[attributes->inputSlot] = attributes->instancesPerElement;
+				mInstancesPerElement[attribute->inputSlot] = attribute->instancesPerElement;
 			}
 		}
 	}

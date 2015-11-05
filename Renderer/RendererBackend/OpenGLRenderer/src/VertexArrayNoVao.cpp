@@ -44,10 +44,10 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayNoVao::VertexArrayNoVao(OpenGLRenderer &openGLRenderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArrayNoVao::VertexArrayNoVao(OpenGLRenderer &openGLRenderer, const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		VertexArray(openGLRenderer, indexBuffer, InternalResourceType::NO_VAO),
-		mNumberOfAttributes(numberOfAttributes),
-		mAttributes(numberOfAttributes ? new Renderer::VertexArrayAttribute[numberOfAttributes] : nullptr),
+		mNumberOfAttributes(vertexAttributes.numberOfAttributes),
+		mAttributes(mNumberOfAttributes ? new Renderer::VertexArrayAttribute[mNumberOfAttributes] : nullptr),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
 		mVertexBuffers(numberOfVertexBuffers ? new Renderer::VertexArrayVertexBuffer[numberOfVertexBuffers] : nullptr),
 		mIsGL_ARB_instanced_arrays(openGLRenderer.getContext().getExtensions().isGL_ARB_instanced_arrays())
@@ -55,7 +55,7 @@ namespace OpenGLRenderer
 		// Copy over the data
 		if (nullptr != mAttributes)
 		{
-			memcpy(mAttributes, attributes, sizeof(Renderer::VertexArrayAttribute) * mNumberOfAttributes);
+			memcpy(mAttributes, vertexAttributes.attributes, sizeof(Renderer::VertexArrayAttribute) * mNumberOfAttributes);
 		}
 		if (nullptr != mVertexBuffers)
 		{

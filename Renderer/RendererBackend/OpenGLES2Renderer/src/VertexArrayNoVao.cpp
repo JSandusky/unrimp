@@ -43,17 +43,17 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayNoVao::VertexArrayNoVao(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArrayNoVao::VertexArrayNoVao(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		VertexArray(openGLES2Renderer, indexBuffer),
-		mNumberOfAttributes(numberOfAttributes),
-		mAttributes(numberOfAttributes ? new Renderer::VertexArrayAttribute[numberOfAttributes] : nullptr),
+		mNumberOfAttributes(vertexAttributes.numberOfAttributes),
+		mAttributes(mNumberOfAttributes ? new Renderer::VertexArrayAttribute[mNumberOfAttributes] : nullptr),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
 		mVertexBuffers(numberOfVertexBuffers ? new Renderer::VertexArrayVertexBuffer[numberOfVertexBuffers] : nullptr)
 	{
 		// Copy over the data
 		if (nullptr != mAttributes)
 		{
-			memcpy(mAttributes, attributes, sizeof(Renderer::VertexArrayAttribute) * mNumberOfAttributes);
+			memcpy(mAttributes, vertexAttributes.attributes, sizeof(Renderer::VertexArrayAttribute) * mNumberOfAttributes);
 		}
 		if (nullptr != mVertexBuffers)
 		{

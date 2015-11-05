@@ -41,7 +41,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayVaoBind::VertexArrayVaoBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArrayVaoBind::VertexArrayVaoBind(OpenGLRenderer &openGLRenderer, const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		VertexArrayVao(openGLRenderer, numberOfVertexBuffers, vertexBuffers, indexBuffer)
 	{
 		// Vertex buffer reference handling is done within the base class "VertexArrayVao"
@@ -66,8 +66,8 @@ namespace OpenGLRenderer
 		// Loop through all attributes
 		// -> We're using "glBindAttribLocationARB()" when linking the program so we have known attribute locations (the vertex array can't know about the program)
 		GLuint attributeLocation = 0;
-		const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
-		for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
+		const Renderer::VertexArrayAttribute *attributeEnd = vertexAttributes.attributes + vertexAttributes.numberOfAttributes;
+		for (const Renderer::VertexArrayAttribute *attribute = vertexAttributes.attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
 		{
 			// Set the OpenGL vertex attribute pointer
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?

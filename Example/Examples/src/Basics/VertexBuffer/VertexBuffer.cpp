@@ -100,8 +100,7 @@ void VertexBuffer::onInitialization()
 					0										// instancesPerElement (uint32_t)
 				}
 			};
-			const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-			const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+			const Renderer::VertexArrayAttributes vertexAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
 
 			// Create the program
 			Renderer::IProgramPtr program;
@@ -163,7 +162,7 @@ void VertexBuffer::onInitialization()
 								sizeof(float) * (2 + 3)		// strideInBytes (uint32_t)
 							}
 						};
-						mVertexArrayVBO = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+						mVertexArrayVBO = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 					}
 				}
 
@@ -213,7 +212,7 @@ void VertexBuffer::onInitialization()
 								sizeof(float) * 3		// strideInBytes (uint32_t)
 							}
 						};
-						mVertexArrayVBOs = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+						mVertexArrayVBOs = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 					}
 				}
 			}

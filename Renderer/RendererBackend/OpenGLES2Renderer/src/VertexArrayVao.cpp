@@ -39,7 +39,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayVao::VertexArrayVao(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArrayVao::VertexArrayVao(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexArrayAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
 		VertexArray(openGLES2Renderer, indexBuffer),
 		mOpenGLES2VertexArray(0),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
@@ -81,8 +81,8 @@ namespace OpenGLES2Renderer
 			// Loop through all attributes
 			// -> We're using "glBindAttribLocation()" when linking the program so we have known attribute locations (the vertex array can't know about the program)
 			GLuint attributeLocation = 0;
-			const Renderer::VertexArrayAttribute *attributeEnd = attributes + numberOfAttributes;
-			for (const Renderer::VertexArrayAttribute *attribute = attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
+			const Renderer::VertexArrayAttribute *attributeEnd = vertexAttributes.attributes + vertexAttributes.numberOfAttributes;
+			for (const Renderer::VertexArrayAttribute *attribute = vertexAttributes.attributes; attribute < attributeEnd; ++attribute, ++attributeLocation)
 			{
 				// Set the OpenGL ES 2 vertex attribute pointer
 				const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];

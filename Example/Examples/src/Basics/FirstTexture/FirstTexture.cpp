@@ -149,8 +149,7 @@ void FirstTexture::onInitialization()
 					0										// instancesPerElement (uint32_t)
 				}
 			};
-			const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-			const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+			const Renderer::VertexArrayAttributes vertexAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
 
 			// Create the program
 			Renderer::IProgramPtr program;
@@ -209,7 +208,7 @@ void FirstTexture::onInitialization()
 							sizeof(float) * 2	// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArray = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+					mVertexArray = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 				}
 
 				// Tell the renderer API which texture should be bound to which texture unit (texture unit 0 by default)

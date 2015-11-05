@@ -166,6 +166,7 @@ void FirstMesh::onInitialization()
 					0										// instancesPerElement (uint32_t)
 				}
 			};
+			const Renderer::VertexArrayAttributes vertexAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
 
 			{ // Create the program
 				// Get the shader source code (outsourced to keep an overview)
@@ -181,7 +182,7 @@ void FirstMesh::onInitialization()
 
 				// Create the program
 				mProgram = shaderLanguage->createProgram(
-					Renderer::VertexArrayAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes),
+					vertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode, vertexShaderProfile),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode, fragmentShaderProfile));
 			}

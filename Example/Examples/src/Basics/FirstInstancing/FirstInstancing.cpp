@@ -114,8 +114,7 @@ void FirstInstancing::onInitialization()
 						1										// instancesPerElement (uint32_t)
 					}
 				};
-				const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-				const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+				const Renderer::VertexArrayAttributes vertexAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
 
 				// Create the program
 				Renderer::IProgramPtr program;
@@ -194,7 +193,7 @@ void FirstInstancing::onInitialization()
 								sizeof(float)			// strideInBytes (uint32_t)
 							}
 						};
-						mVertexArrayInstancedArrays = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBufferInstancedArrays);
+						mVertexArrayInstancedArrays = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBufferInstancedArrays);
 					}
 				}
 			}
@@ -218,8 +217,7 @@ void FirstInstancing::onInitialization()
 						0										// instancesPerElement (uint32_t)
 					}
 				};
-				const uint32_t numberOfVertexAttributes = sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute);
-				const Renderer::VertexArrayAttributes vertexAttributes(numberOfVertexAttributes, vertexArrayAttributes);
+				const Renderer::VertexArrayAttributes vertexAttributes(sizeof(vertexArrayAttributes) / sizeof(Renderer::VertexArrayAttribute), vertexArrayAttributes);
 
 				// Create the program
 				Renderer::IProgramPtr program;
@@ -276,7 +274,7 @@ void FirstInstancing::onInitialization()
 								sizeof(float) * 2	// strideInBytes (uint32_t)
 							}
 						};
-						mVertexArrayDrawInstanced = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+						mVertexArrayDrawInstanced = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 					}
 				}
 			}

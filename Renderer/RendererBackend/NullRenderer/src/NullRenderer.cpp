@@ -257,7 +257,7 @@ namespace NullRenderer
 		return new IndexBuffer(*this);
 	}
 
-	Renderer::IVertexArray *NullRenderer::createVertexArray(uint32_t, const Renderer::VertexArrayAttribute *, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
+	Renderer::IVertexArray *NullRenderer::createVertexArray(const Renderer::VertexArrayAttributes&, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
 	{
 		// We don't keep a reference to the vertex buffers used by the vertex array attributes in here
 		// -> Ensure a correct reference counter behaviour
