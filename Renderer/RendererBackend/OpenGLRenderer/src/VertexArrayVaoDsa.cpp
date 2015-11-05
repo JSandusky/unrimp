@@ -31,7 +31,6 @@
 #ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 	#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #endif
-#include "OpenGLRenderer/Shader/Program.h"
 
 
 //[-------------------------------------------------------]
@@ -44,8 +43,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayVaoDsa::VertexArrayVaoDsa(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
-		VertexArrayVao(static_cast<OpenGLRenderer&>(program.getRenderer()), numberOfVertexBuffers, vertexBuffers, indexBuffer)
+	VertexArrayVaoDsa::VertexArrayVaoDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+		VertexArrayVao(openGLRenderer, numberOfVertexBuffers, vertexBuffers, indexBuffer)
 	{
 		// Vertex buffer reference handling is done within the base class "VertexArrayVao"
 
@@ -61,7 +60,7 @@ namespace OpenGLRenderer
 			glVertexArrayVertexAttribOffsetEXT(mOpenGLVertexArray, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLArrayBuffer(), attributeLocation, Mapping::getOpenGLSize(attribute->vertexArrayFormat), Mapping::getOpenGLType(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), static_cast<GLintptr>(attribute->alignedByteOffset));
 
 			// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
-			if (attribute->instancesPerElement > 0 && static_cast<OpenGLRenderer&>(program.getRenderer()).getContext().getExtensions().isGL_ARB_instanced_arrays())
+			if (attribute->instancesPerElement > 0 && openGLRenderer.getContext().getExtensions().isGL_ARB_instanced_arrays())
 			{
 				// Sadly, DSA has no support for "GL_ARB_instanced_arrays", so, we have to use the bind way
 				// -> Keep the bind-horror as local as possible

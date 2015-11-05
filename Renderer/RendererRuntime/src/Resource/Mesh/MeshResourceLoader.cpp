@@ -145,7 +145,7 @@ namespace RendererRuntime
 				(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0	// strideInBytes (uint32_t)
 			}
 		};
-		mMeshResource->mVertexArray = mProgram->createVertexArray(mNumberOfUsedVertexArrayAttributes, mVertexArray, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+		mMeshResource->mVertexArray = renderer.createVertexArray(mNumberOfUsedVertexArrayAttributes, mVertexArray, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 	}
 
 

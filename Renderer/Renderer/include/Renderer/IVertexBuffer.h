@@ -43,9 +43,6 @@ namespace Renderer
 	/**
 	*  @brief
 	*    Abstract vertex buffer object (VBO, "array buffer" in OpenGL terminology) interface
-	*
-	*  @note
-	*    - Vertex array instances are created by using "IProgram::createVertexArray()"
 	*/
 	class IVertexBuffer : public IBuffer
 	{

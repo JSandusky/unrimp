@@ -30,7 +30,6 @@
 #include "OpenGLRenderer/VertexBuffer.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
-#include "OpenGLRenderer/Shader/Program.h"
 
 #include <memory.h>
 
@@ -45,13 +44,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayNoVao::VertexArrayNoVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
-		VertexArray(static_cast<OpenGLRenderer&>(program.getRenderer()), indexBuffer, InternalResourceType::NO_VAO),
+	VertexArrayNoVao::VertexArrayNoVao(OpenGLRenderer &openGLRenderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+		VertexArray(openGLRenderer, indexBuffer, InternalResourceType::NO_VAO),
 		mNumberOfAttributes(numberOfAttributes),
 		mAttributes(numberOfAttributes ? new Renderer::VertexArrayAttribute[numberOfAttributes] : nullptr),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
 		mVertexBuffers(numberOfVertexBuffers ? new Renderer::VertexArrayVertexBuffer[numberOfVertexBuffers] : nullptr),
-		mIsGL_ARB_instanced_arrays(static_cast<OpenGLRenderer&>(program.getRenderer()).getContext().getExtensions().isGL_ARB_instanced_arrays())
+		mIsGL_ARB_instanced_arrays(openGLRenderer.getContext().getExtensions().isGL_ARB_instanced_arrays())
 	{
 		// Copy over the data
 		if (nullptr != mAttributes)

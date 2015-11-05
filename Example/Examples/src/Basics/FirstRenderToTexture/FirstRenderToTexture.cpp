@@ -119,9 +119,7 @@ void FirstRenderToTexture::onInitialization()
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
-			// Is there a valid program?
-			if (nullptr != mProgram)
-			{
+			{ // Create vertex array object (VAO)
 				// Create the vertex buffer object (VBO)
 				// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
 				static const float VERTEX_POSITION[] =
@@ -145,7 +143,7 @@ void FirstRenderToTexture::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArray = mProgram->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mVertexArray = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 			}
 		}
 

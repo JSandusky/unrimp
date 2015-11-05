@@ -70,7 +70,9 @@ namespace Renderer
 	class IDepthStencilState;
 	struct DepthStencilState;
 	class ITextureCollection;
+	struct VertexArrayAttribute;
 	class ISamplerStateCollection;
+	struct VertexArrayVertexBuffer;
 }
 
 
@@ -291,9 +293,6 @@ namespace Renderer
 		*
 		*  @return
 		*    The created VBO instance, null pointer on error. Release the returned instance if you no longer need it.
-		*
-		*  @note
-		*    - Vertex array instances are created by using "Renderer::IProgram::createVertexArray()"
 		*/
 		virtual IVertexBuffer *createVertexBuffer(uint32_t numberOfBytes, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 
@@ -314,6 +313,31 @@ namespace Renderer
 		*    The created IBO instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
 		virtual IIndexBuffer *createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+
+		/**
+		*  @brief
+		*    Create a vertex array instance
+		*
+		*  @param[in] numberOfAttributes
+		*    Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
+		*  @param[in] attributes
+		*    At least nNumberOfAttributes instances of vertex array attributes, can be a null pointer in case there are zero attributes, the data is internally copied and you have to free your memory if you no longer need it
+		*  @param[in] numberOfVertexBuffers
+		*    Number of vertex buffers, having zero vertex buffers is valid
+		*  @param[in] vertexBuffers
+		*    At least numberOfVertexBuffers instances of vertex array vertex buffers, can be a null pointer in case there are zero vertex buffers, the data is internally copied and you have to free your memory if you no longer need it
+		*  @param[in] indexBuffer
+		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
+		*
+		*  @return
+		*    The created vertex array instance, null pointer on error. Release the returned instance if you no longer need it.
+		*
+		*  @note
+		*    - The created vertex array instance keeps a reference to the vertex buffers used by the vertex array attributes
+		*    - It's valid that a vertex array implementation is adding a reference and releasing it again at once
+		*      (this means that in the case of not having any more references, a vertex buffer might get destroyed when calling this method)
+		*/
+		virtual IVertexArray *createVertexArray(uint32_t numberOfAttributes, const VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
 
 		/**
 		*  @brief
@@ -582,9 +606,6 @@ namespace Renderer
 		*
 		*  @param[in] vertexArray
 		*    Vertex array to use, can be an null pointer (default: "nullptr")
-		*
-		*  @note
-		*    - Vertex array instances are created by using "Renderer::IProgram::createVertexArray()"
 		*/
 		virtual void iaSetVertexArray(IVertexArray *vertexArray) = 0;
 

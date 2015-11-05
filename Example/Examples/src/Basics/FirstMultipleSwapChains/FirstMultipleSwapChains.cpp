@@ -228,7 +228,7 @@ void FirstMultipleSwapChains::onInitialization()
 							sizeof(float) * 2	// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArray = program->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+					mVertexArray = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 				}
 			}
 		}

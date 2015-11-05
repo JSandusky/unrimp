@@ -194,7 +194,7 @@ void FirstInstancing::onInitialization()
 								sizeof(float)			// strideInBytes (uint32_t)
 							}
 						};
-						mVertexArrayInstancedArrays = program->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBufferInstancedArrays);
+						mVertexArrayInstancedArrays = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBufferInstancedArrays);
 					}
 				}
 			}
@@ -276,7 +276,7 @@ void FirstInstancing::onInitialization()
 								sizeof(float) * 2	// strideInBytes (uint32_t)
 							}
 						};
-						mVertexArrayDrawInstanced = program->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+						mVertexArrayDrawInstanced = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 					}
 				}
 			}

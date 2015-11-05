@@ -27,12 +27,7 @@
 #include "Direct3D12Renderer/Shader/FragmentShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/TessellationControlShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/TessellationEvaluationShaderHlsl.h"
-#include "Direct3D12Renderer/VertexArray.h"
-#include "Direct3D12Renderer/IndexBuffer.h"
-#include "Direct3D12Renderer/VertexBuffer.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
-
-#include <Renderer/VertexArrayTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -105,12 +100,6 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *ProgramHlsl::createVertexArray(uint32_t, const Renderer::VertexArrayAttribute*, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
-	{
-		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-		return new VertexArray(getDirect3D12Renderer(), numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-	}
-
 	uint32_t ProgramHlsl::getUniformBlockIndex(const char *, uint32_t defaultIndex)
 	{
 		// Not supported by Direct3D 12

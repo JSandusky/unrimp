@@ -25,8 +25,6 @@
 #include "Direct3D9Renderer/Shader/VertexShaderHlsl.h"
 #include "Direct3D9Renderer/Shader/FragmentShaderHlsl.h"
 #include "Direct3D9Renderer/d3d9.h"
-#include "Direct3D9Renderer/IndexBuffer.h"
-#include "Direct3D9Renderer/VertexArray.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
 
@@ -125,12 +123,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *ProgramHlsl::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
-	{
-		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-		return new VertexArray(*mDirect3D9Renderer, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-	}
-
 	uint32_t ProgramHlsl::getUniformBlockIndex(const char *, uint32_t defaultIndex)
 	{
 		// Not supported by Direct3D 9

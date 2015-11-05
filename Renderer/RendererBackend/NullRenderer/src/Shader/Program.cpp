@@ -27,11 +27,6 @@
 #include "NullRenderer/Shader/FragmentShader.h"
 #include "NullRenderer/Shader/TessellationControlShader.h"
 #include "NullRenderer/Shader/TessellationEvaluationShader.h"
-#include "NullRenderer/VertexArray.h"
-#include "NullRenderer/IndexBuffer.h"
-#include "NullRenderer/VertexBuffer.h"
-
-#include <Renderer/VertexArrayTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -79,33 +74,6 @@ namespace NullRenderer
 	Program::~Program()
 	{
 		// Nothing to do in here
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IProgram methods             ]
-	//[-------------------------------------------------------]
-	Renderer::IVertexArray *Program::createVertexArray(uint32_t, const Renderer::VertexArrayAttribute *, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
-	{
-		// We don't keep a reference to the vertex buffers used by the vertex array attributes in here
-		// -> Ensure a correct reference counter behaviour
-		const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + numberOfVertexBuffers;
-		for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
-		{
-			vertexBuffer->vertexBuffer->addReference();
-			vertexBuffer->vertexBuffer->release();
-		}
-
-		// We don't keep a reference to the index buffer in here
-		// -> Ensure a correct reference counter behaviour
-		if (nullptr != indexBuffer)
-		{
-			indexBuffer->addReference();
-			indexBuffer->release();
-		}
-
-		// Create the vertex array instance
-		return new VertexArray(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
 

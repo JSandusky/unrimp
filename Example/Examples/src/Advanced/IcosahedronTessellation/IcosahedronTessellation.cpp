@@ -144,9 +144,7 @@ void IcosahedronTessellation::onInitialization()
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
-			// Is there a valid program?
-			if (nullptr != mProgram)
-			{
+			{ // Create vertex array object (VAO)
 				// Create the vertex buffer object (VBO)
 				// -> Geometry is from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")
 				static const float VERTEX_POSITION[] =
@@ -206,7 +204,7 @@ void IcosahedronTessellation::onInitialization()
 						sizeof(float) * 3	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArray = mProgram->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+				mVertexArray = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 			}
 		}
 

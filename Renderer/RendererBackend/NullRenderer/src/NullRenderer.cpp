@@ -257,6 +257,29 @@ namespace NullRenderer
 		return new IndexBuffer(*this);
 	}
 
+	Renderer::IVertexArray *NullRenderer::createVertexArray(uint32_t, const Renderer::VertexArrayAttribute *, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
+	{
+		// We don't keep a reference to the vertex buffers used by the vertex array attributes in here
+		// -> Ensure a correct reference counter behaviour
+		const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + numberOfVertexBuffers;
+		for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
+		{
+			vertexBuffer->vertexBuffer->addReference();
+			vertexBuffer->vertexBuffer->release();
+		}
+
+		// We don't keep a reference to the index buffer in here
+		// -> Ensure a correct reference counter behaviour
+		if (nullptr != indexBuffer)
+		{
+			indexBuffer->addReference();
+			indexBuffer->release();
+		}
+
+		// Create the vertex array instance
+		return new VertexArray(*this);
+	}
+
 	Renderer::ITextureBuffer *NullRenderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage::Enum)
 	{
 		return new TextureBuffer(*this);

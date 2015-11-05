@@ -135,9 +135,7 @@ void FirstCommandBucket::onInitialization()
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mProgram, "Triangle program")
 			}
 
-			// Is there a valid program?
-			if (nullptr != mProgram)
-			{
+			{ // Create vertex array object (VAO)
 				// Create the vertex buffer object (VBO)
 				// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
 				static const float VERTEX_POSITION[] =
@@ -169,9 +167,9 @@ void FirstCommandBucket::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mSolidVertexArray = mProgram->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mSolidVertexArray = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mSolidVertexArray, "Solid triangle VAO")
-				mTransparentVertexArray = mProgram->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+				mTransparentVertexArray = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mTransparentVertexArray, "Transparent triangle VAO")
 			}
 		}

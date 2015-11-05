@@ -318,6 +318,23 @@ namespace OpenGLES2Renderer
 		return new IndexBuffer(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
 	}
 
+	Renderer::IVertexArray *OpenGLES2Renderer::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
+	{
+		// Is "GL_OES_vertex_array_object" there?
+		if (mContext->getExtensions().isGL_OES_vertex_array_object())
+		{
+			// Effective vertex array object (VAO)
+			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+			return new VertexArrayVao(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+		}
+		else
+		{
+			// Traditional version
+			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+			return new VertexArrayNoVao(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+		}
+	}
+
 	Renderer::ITextureBuffer *OpenGLES2Renderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage::Enum)
 	{
 		// OpenGL ES 2 has no texture buffer support

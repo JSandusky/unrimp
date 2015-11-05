@@ -1568,6 +1568,7 @@ namespace Renderer
 			virtual IFramebuffer *createFramebuffer(uint32_t numberOfColorTextures, ITexture **colorTextures, ITexture *depthStencilTexture = nullptr) = 0;
 			virtual IVertexBuffer *createVertexBuffer(uint32_t numberOfBytes, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual IIndexBuffer *createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IVertexArray *createVertexArray(uint32_t numberOfAttributes, const VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
 			virtual ITextureBuffer *createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual ITexture2D *createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
 			virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
@@ -1741,7 +1742,6 @@ namespace Renderer
 		public:
 			virtual ~IProgram();
 		public:
-			virtual IVertexArray *createVertexArray(uint32_t numberOfAttributes, const VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
 			virtual uint32_t getUniformBlockIndex(const char *uniformBlockName, uint32_t defaultIndex) = 0;
 			virtual handle getUniformHandle(const char *uniformName) = 0;
 			virtual uint32_t setTextureUnit(handle uniformHandle, uint32_t unit) = 0;

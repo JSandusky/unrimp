@@ -315,6 +315,12 @@ namespace Direct3D10Renderer
 		return new IndexBuffer(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
 	}
 
+	Renderer::IVertexArray *Direct3D10Renderer::createVertexArray(uint32_t, const Renderer::VertexArrayAttribute*, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
+	{
+		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+		return new VertexArray(*this, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+	}
+
 	Renderer::ITextureBuffer *Direct3D10Renderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		return new TextureBuffer(*this, numberOfBytes, textureFormat, data, bufferUsage);

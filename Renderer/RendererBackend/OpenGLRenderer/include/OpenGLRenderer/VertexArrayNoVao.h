@@ -40,8 +40,8 @@ namespace Renderer
 }
 namespace OpenGLRenderer
 {
-	class Program;
 	class IndexBuffer;
+	class OpenGLRenderer;
 }
 
 
@@ -71,8 +71,8 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] program
-		*    Program to use this vertex array for
+		*  @param[in] openGLRenderer
+		*    Owner OpenGL renderer instance
 		*  @param[in] numberOfAttributes
 		*    Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
 		*  @param[in] attributes
@@ -84,7 +84,7 @@ namespace OpenGLRenderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArrayNoVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArrayNoVao(OpenGLRenderer &openGLRenderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief

@@ -29,11 +29,7 @@
 #include "OpenGLRenderer/Shader/TessellationEvaluationShaderGlsl.h"
 #include "OpenGLRenderer/IContext.h"
 #include "OpenGLRenderer/Extensions.h"
-#include "OpenGLRenderer/IndexBuffer.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
-#include "OpenGLRenderer/VertexArrayNoVao.h"
-#include "OpenGLRenderer/VertexArrayVaoDsa.h"
-#include "OpenGLRenderer/VertexArrayVaoBind.h"
 
 #include <Renderer/VertexArrayTypes.h>
 
@@ -154,38 +150,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *ProgramGlsl::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
-	{
-		// Get the extensions instance
-		const Extensions &extensions = static_cast<OpenGLRenderer&>(getRenderer()).getContext().getExtensions();
-
-		// Is "GL_ARB_vertex_array_object" there?
-		if (extensions.isGL_ARB_vertex_array_object())
-		{
-			// Effective vertex array object (VAO)
-
-			// Is "GL_EXT_direct_state_access" there?
-			if (extensions.isGL_EXT_direct_state_access())
-			{
-				// Effective direct state access (DSA)
-				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				return new VertexArrayVaoDsa(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-			}
-			else
-			{
-				// Traditional bind version
-				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				return new VertexArrayVaoBind(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-			}
-		}
-		else
-		{
-			// Traditional version
-			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new VertexArrayNoVao(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-		}
-	}
-
 	uint32_t ProgramGlsl::getUniformBlockIndex(const char *uniformBlockName, uint32_t)
 	{
 		// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,

@@ -129,9 +129,7 @@ void FirstPostProcessing::onInitialization()
 				mProgramPostProcessing = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_PostProcessing));
 			}
 
-			// Is there a valid program for scene rendering?
-			if (nullptr != mProgramSceneRendering)
-			{
+			{ // Create vertex array object (VAO) for scene rendering
 				// Create the vertex buffer object (VBO)
 				// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
 				static const float VERTEX_POSITION[] =
@@ -155,12 +153,10 @@ void FirstPostProcessing::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArraySceneRendering = mProgramSceneRendering->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mVertexArraySceneRendering = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 			}
 
-			// Is there a valid program for post-processing?
-			if (nullptr != mProgramPostProcessing)
-			{
+			{ // Create vertex array object (VAO) for post-processing
 				// Create the vertex buffer object (VBO)
 				// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
 				static const float VERTEX_POSITION[] =
@@ -185,7 +181,7 @@ void FirstPostProcessing::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArrayPostProcessing = mProgramSceneRendering->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mVertexArrayPostProcessing = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 			}
 		}
 

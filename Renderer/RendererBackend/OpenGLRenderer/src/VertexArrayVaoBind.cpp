@@ -29,7 +29,6 @@
 #include "OpenGLRenderer/VertexBuffer.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
-#include "OpenGLRenderer/Shader/Program.h"
 
 
 //[-------------------------------------------------------]
@@ -42,8 +41,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayVaoBind::VertexArrayVaoBind(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
-		VertexArrayVao(static_cast<OpenGLRenderer&>(program.getRenderer()), numberOfVertexBuffers, vertexBuffers, indexBuffer)
+	VertexArrayVaoBind::VertexArrayVaoBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+		VertexArrayVao(openGLRenderer, numberOfVertexBuffers, vertexBuffers, indexBuffer)
 	{
 		// Vertex buffer reference handling is done within the base class "VertexArrayVao"
 
@@ -77,7 +76,7 @@ namespace OpenGLRenderer
 			glVertexAttribPointerARB(attributeLocation, Mapping::getOpenGLSize(attribute->vertexArrayFormat), Mapping::getOpenGLType(attribute->vertexArrayFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
 
 			// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
-			if (attribute->instancesPerElement > 0 && static_cast<OpenGLRenderer&>(program.getRenderer()).getContext().getExtensions().isGL_ARB_instanced_arrays())
+			if (attribute->instancesPerElement > 0 && openGLRenderer.getContext().getExtensions().isGL_ARB_instanced_arrays())
 			{
 				glVertexAttribDivisorARB(attributeLocation, attribute->instancesPerElement);
 			}

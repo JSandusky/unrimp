@@ -40,8 +40,8 @@ namespace Renderer
 }
 namespace OpenGLES2Renderer
 {
-	class Program;
 	class VertexBuffer;
+	class OpenGLES2Renderer;
 }
 
 
@@ -71,8 +71,8 @@ namespace OpenGLES2Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] program
-		*    Program to use this vertex array for
+		*  @param[in] openGLES2Renderer
+		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] numberOfAttributes
 		*    Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
 		*  @param[in] attributes
@@ -84,7 +84,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArrayVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
+		VertexArrayVao(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer);
 
 		/**
 		*  @brief

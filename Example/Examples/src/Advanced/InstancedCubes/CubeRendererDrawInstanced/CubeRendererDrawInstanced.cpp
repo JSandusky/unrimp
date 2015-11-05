@@ -197,9 +197,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 				shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 		}
 
-		// Is there a valid program?
-		if (nullptr != mProgram)
-		{
+		{ // Create vertex array object (VAO)
 			// Create the vertex buffer object (VBO)
 			static const float VERTEX_POSITION[] =
 			{
@@ -274,7 +272,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 					sizeof(float) * (3 + 2 + 3)	// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArray = mProgram->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+			mVertexArray = mRenderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 		}
 	}
 

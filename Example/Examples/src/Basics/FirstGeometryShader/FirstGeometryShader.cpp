@@ -149,7 +149,7 @@ void FirstGeometryShader::onInitialization()
 							sizeof(float)	// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArray = program->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+					mVertexArray = renderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 				}
 			}
 		}

@@ -127,7 +127,7 @@ void BatchInstancedArrays::initialize(const Renderer::VertexArrayAttributes& ver
 					sizeof(float) * 4 * 2			// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArray = program.createVertexArray(vertexAttributes.numberOfAttributes, vertexAttributes.attributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, &indexBuffer);
+			mVertexArray = mRenderer->createVertexArray(vertexAttributes.numberOfAttributes, vertexAttributes.attributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, &indexBuffer);
 		}
 
 		// Free local per instance data

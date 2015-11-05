@@ -25,12 +25,7 @@
 #include "Direct3D10Renderer/Shader/VertexShaderHlsl.h"
 #include "Direct3D10Renderer/Shader/GeometryShaderHlsl.h"
 #include "Direct3D10Renderer/Shader/FragmentShaderHlsl.h"
-#include "Direct3D10Renderer/VertexArray.h"
-#include "Direct3D10Renderer/IndexBuffer.h"
-#include "Direct3D10Renderer/VertexBuffer.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
-
-#include <Renderer/VertexArrayTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -86,12 +81,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	Renderer::IVertexArray *ProgramHlsl::createVertexArray(uint32_t, const Renderer::VertexArrayAttribute*, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
-	{
-		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-		return new VertexArray(*mDirect3D10Renderer, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-	}
-
 	uint32_t ProgramHlsl::getUniformBlockIndex(const char *, uint32_t defaultIndex)
 	{
 		// Not supported by Direct3D 10

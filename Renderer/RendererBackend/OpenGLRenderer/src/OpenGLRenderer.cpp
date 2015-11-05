@@ -31,8 +31,9 @@
 #include "OpenGLRenderer/SamplerStateBind.h"
 #include "OpenGLRenderer/Texture2DDsa.h"
 #include "OpenGLRenderer/Texture2DBind.h"
-#include "OpenGLRenderer/VertexArrayVao.h"
 #include "OpenGLRenderer/VertexArrayNoVao.h"
+#include "OpenGLRenderer/VertexArrayVaoDsa.h"
+#include "OpenGLRenderer/VertexArrayVaoBind.h"
 #include "OpenGLRenderer/SwapChain.h"
 #include "OpenGLRenderer/FramebufferDsa.h"
 #include "OpenGLRenderer/FramebufferBind.h"
@@ -427,6 +428,38 @@ namespace OpenGLRenderer
 		{
 			// Error!
 			return nullptr;
+		}
+	}
+
+	Renderer::IVertexArray *OpenGLRenderer::createVertexArray(uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
+	{
+		// Get the extensions instance
+		const Extensions &extensions = mContext->getExtensions();
+
+		// Is "GL_ARB_vertex_array_object" there?
+		if (extensions.isGL_ARB_vertex_array_object())
+		{
+			// Effective vertex array object (VAO)
+
+			// Is "GL_EXT_direct_state_access" there?
+			if (extensions.isGL_EXT_direct_state_access())
+			{
+				// Effective direct state access (DSA)
+				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+				return new VertexArrayVaoDsa(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+			}
+			else
+			{
+				// Traditional bind version
+				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+				return new VertexArrayVaoBind(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+			}
+		}
+		else
+		{
+			// Traditional version
+			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+			return new VertexArrayNoVao(*this, numberOfAttributes, attributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 		}
 	}
 

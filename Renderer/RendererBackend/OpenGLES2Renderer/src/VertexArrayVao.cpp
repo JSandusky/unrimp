@@ -26,7 +26,7 @@
 #include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
 #include "OpenGLES2Renderer/IndexBuffer.h"
 #include "OpenGLES2Renderer/VertexBuffer.h"
-#include "OpenGLES2Renderer/Shader/Program.h"
+#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 
 
 //[-------------------------------------------------------]
@@ -39,8 +39,8 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArrayVao::VertexArrayVao(Program &program, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
-		VertexArray(program.getRenderer(), indexBuffer),
+	VertexArrayVao::VertexArrayVao(OpenGLES2Renderer &openGLES2Renderer, uint32_t numberOfAttributes, const Renderer::VertexArrayAttribute *attributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+		VertexArray(openGLES2Renderer, indexBuffer),
 		mOpenGLES2VertexArray(0),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
 		mVertexBuffers((mNumberOfVertexBuffers > 0) ? new VertexBuffer*[mNumberOfVertexBuffers] : nullptr)	// Guaranteed to be filled below, so we don't need to care to initialize the content in here

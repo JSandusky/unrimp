@@ -138,9 +138,7 @@ void Fxaa::onInitialization()
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
-			// Is there a valid program for scene rendering?
-			if (nullptr != mProgramSceneRendering)
-			{
+			{ // Create vertex array object (VAO) for scene rendering
 				// Create the vertex buffer object (VBO)
 				// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
 				static const float VERTEX_POSITION[] =
@@ -164,15 +162,13 @@ void Fxaa::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArraySceneRendering = mProgramSceneRendering->createVertexArray(numberOfVertexAttributes, detail::VertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mVertexArraySceneRendering = renderer->createVertexArray(numberOfVertexAttributes, detail::VertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 			}
 
 			// Create the post-processing program instance by using the current window size
 			recreatePostProcessingProgram();
 
-			// Is there a valid program for post-processing?
-			if (nullptr != mProgramPostProcessing)
-			{
+			{ // Create vertex array object (VAO) for post-processing
 				// Create the vertex buffer object (VBO)
 				// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
 				static const float VERTEX_POSITION[] =
@@ -197,7 +193,7 @@ void Fxaa::onInitialization()
 						sizeof(float) * 2	// strideInBytes (uint32_t)
 					}
 				};
-				mVertexArrayPostProcessing = mProgramSceneRendering->createVertexArray(numberOfVertexAttributes, detail::VertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+				mVertexArrayPostProcessing = renderer->createVertexArray(numberOfVertexAttributes, detail::VertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 			}
 		}
 

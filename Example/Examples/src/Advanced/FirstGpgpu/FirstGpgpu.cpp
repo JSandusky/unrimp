@@ -214,9 +214,7 @@ void FirstGpgpu::onInitialization()
 			mProgramContentProcessing = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentProcessing));
 		}
 
-		// Is there a valid program for content generation?
-		if (nullptr != mProgramContentGeneration)
-		{
+		{ // Create vertex array object (VAO) for content generation
 			// Create the vertex buffer object (VBO)
 			// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
 			static const float VERTEX_POSITION[] =
@@ -240,12 +238,10 @@ void FirstGpgpu::onInitialization()
 					sizeof(float) * 2	// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArrayContentGeneration = mProgramContentGeneration->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+			mVertexArrayContentGeneration = mRenderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 		}
 
-		// Is there a valid program for content processing?
-		if (nullptr != mProgramContentProcessing)
-		{
+		{ // Create vertex array object (VAO) for content processing
 			// Create the vertex buffer object (VBO)
 			// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
 			static const float VERTEX_POSITION[] =
@@ -270,7 +266,7 @@ void FirstGpgpu::onInitialization()
 					sizeof(float) * 2	// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArrayContentProcessing = mProgramContentGeneration->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+			mVertexArrayContentProcessing = mRenderer->createVertexArray(numberOfVertexAttributes, vertexArrayAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 		}
 	}
 
