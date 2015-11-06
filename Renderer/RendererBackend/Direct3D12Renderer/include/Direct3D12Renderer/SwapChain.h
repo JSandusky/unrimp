@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include <Renderer/ISwapChain.h>
 #include <Renderer/PlatformTypes.h>
+#include <Renderer/WindowsHeader.h>	// For the MS Windows specific data types (UINT, HANDLE etc. for those we better use the real definition)
 
 
 //[-------------------------------------------------------]

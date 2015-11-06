@@ -24,6 +24,8 @@
 #include "OpenGLRenderer/RootSignature.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
+#include <memory.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

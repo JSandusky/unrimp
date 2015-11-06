@@ -24,6 +24,8 @@
 #include "OpenGLES2Renderer/RootSignature.h"
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 
+#include <memory.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

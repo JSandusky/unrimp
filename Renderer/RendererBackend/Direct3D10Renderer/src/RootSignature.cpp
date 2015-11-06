@@ -24,6 +24,8 @@
 #include "Direct3D10Renderer/RootSignature.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
+#include <memory.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

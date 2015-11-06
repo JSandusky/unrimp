@@ -24,6 +24,8 @@
 #include "NullRenderer/RootSignature.h"
 #include "NullRenderer/NullRenderer.h"
 
+#include <memory.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

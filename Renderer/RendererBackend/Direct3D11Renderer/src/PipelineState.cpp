@@ -95,7 +95,7 @@ namespace Direct3D11Renderer
 		}
 		else
 		{
-			RENDERER_OUTPUT_DEBUG("Direct3D 11 error: Failed to create the pipeline stage input layout because there's no vertex shader");
+			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Failed to create the pipeline stage input layout because there's no vertex shader");
 		}
 
 		// Assign a default name to the resource for debugging purposes
