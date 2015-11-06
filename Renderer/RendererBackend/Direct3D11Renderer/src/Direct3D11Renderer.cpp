@@ -580,6 +580,35 @@ namespace Direct3D11Renderer
 		// TODO(co) Implement me
 	}
 
+	void Direct3D11Renderer::setGraphicsRootDescriptorTable(uint32_t, Renderer::IResource* resource)
+	{
+		if (nullptr != resource)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
+
+			switch (resource->getResourceType())
+			{
+				case Renderer::ResourceType::TEXTURE_2D:
+				{
+					// TODO(co) Test
+					fsSetTexture(0, static_cast<Renderer::ITexture*>(resource));
+					break;
+				}
+
+				case Renderer::ResourceType::SAMPLER_STATE:
+				{
+					fsSetSamplerState(0, static_cast<Renderer::ISamplerState*>(resource));
+					break;
+				}
+			}
+		}
+		else
+		{
+			// TODO(co) Handle this situation?
+		}
+	}
+
 	void Direct3D11Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
 		if (nullptr != pipelineState)

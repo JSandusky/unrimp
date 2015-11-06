@@ -28,13 +28,10 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Direct3D 12 update
-	/*
-	inline ID3D12ShaderResourceView *Texture2D::getD3D12ShaderResourceView() const
+	inline ID3D12DescriptorHeap* Texture2D::getD3D12DescriptorHeap() const
 	{
-		return mD3D12ShaderResourceViewTexture;
+		return mD3D12DescriptorHeap;
 	}
-	*/
 
 
 //[-------------------------------------------------------]

@@ -563,7 +563,7 @@ namespace Renderer
 		virtual void unmap(IResource &resource, uint32_t subresource) = 0;
 
 		//[-------------------------------------------------------]
-		//[ States                                                ]
+		//[ Graphics root                                         ]
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
@@ -574,6 +574,20 @@ namespace Renderer
 		*/
 		virtual void setGraphicsRootSignature(IRootSignature *rootSignature) = 0;
 
+		/**
+		*  @brief
+		*    Set the graphics descriptor table
+		*
+		*  @param[in] rootParameterIndex
+		*    The slot number for binding
+		*  @param[in] resource
+		*    Resource to bind
+		*/
+		virtual void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, IResource* resource) = 0;
+
+		//[-------------------------------------------------------]
+		//[ States                                                ]
+		//[-------------------------------------------------------]
 		/**
 		*  @brief
 		*    Set the used pipeline state

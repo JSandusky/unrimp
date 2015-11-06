@@ -645,6 +645,44 @@ namespace Direct3D12Renderer
 		}
 	}
 
+	void Direct3D12Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
+	{
+		if (nullptr != resource)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
+
+			switch (resource->getResourceType())
+			{
+				case Renderer::ResourceType::TEXTURE_2D:
+				{
+					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<Texture2D*>(resource)->getD3D12DescriptorHeap();
+
+					ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
+					mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+					mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+					break;
+				}
+
+				case Renderer::ResourceType::SAMPLER_STATE:
+				{
+					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<SamplerState*>(resource)->getD3D12DescriptorHeap();
+
+					ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
+					mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+					mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+					break;
+				}
+			}
+		}
+		else
+		{
+			// TODO(co) Handle this situation?
+		}
+	}
+
 	void Direct3D12Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
 		if (nullptr != pipelineState)
@@ -1858,9 +1896,6 @@ namespace Direct3D12Renderer
 	D3D12_VIEWPORT m_viewport;
 	D3D12_RECT m_scissorRect;
 
-	// TODO(co) First Direct3D 12 texture test
-	extern ID3D12DescriptorHeap* g_mD3D12DescriptorHeapTexture;
-
 	bool Direct3D12Renderer::beginScene()
 	{
 		bool result = false;	// Error by default
@@ -1904,19 +1939,6 @@ namespace Direct3D12Renderer
 					m_scissorRect.bottom = static_cast<LONG>(height);
 					mD3D12GraphicsCommandList->RSSetScissorRects(1, &m_scissorRect);
 				}
-
-
-				if (nullptr != g_mD3D12DescriptorHeapTexture)
-				{
-					// TODO(co) First Direct3D 12 texture test
-					ID3D12DescriptorHeap* ppHeaps[] = { g_mD3D12DescriptorHeapTexture };
-					mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-					mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(0, g_mD3D12DescriptorHeapTexture->GetGPUDescriptorHandleForHeapStart());
-			//		mD3D12GraphicsCommandList->SetGraphicsRootShaderResourceView(0, g_mD3D12DescriptorHeapTexture->GetGPUDescriptorHandleForHeapStart().ptr);
-
-				//	virtual void STDMETHODCALLTYPE SetGraphicsRootShaderResourceView(_In_ UINT RootParameterIndex, _In_ D3D12_GPU_VIRTUAL_ADDRESS BufferLocation) = 0;
-				}
-
 
 				// Done
 				result = true;

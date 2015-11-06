@@ -93,17 +93,12 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D shader resource view instance
+		*    Return the Direct3D descriptor heap instance
 		*
 		*  @return
-		*    The Direct3D shader resource view instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
-		*
-		*  @note
-		*    - It's not recommended to manipulate the returned Direct3D 12 resource
-		*      view by e.g. assigning another Direct3D 12 resource to it
+		*    The Direct3D descriptor heap instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		// TODO(co) Direct3D 12 update
-		//inline ID3D12ShaderResourceView *getD3D12ShaderResourceView() const;
+		inline ID3D12DescriptorHeap* getD3D12DescriptorHeap() const;
 
 
 	//[-------------------------------------------------------]

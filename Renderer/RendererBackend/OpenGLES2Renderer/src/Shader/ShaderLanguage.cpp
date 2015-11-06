@@ -70,7 +70,7 @@ namespace OpenGLES2Renderer
 					// Get the information
 					glGetShaderInfoLog(openGLES2Shader, informationLength, nullptr, informationLog);
 
-					// Ouput the debug string
+					// Output the debug string
 					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
 
 					// Cleanup information memory

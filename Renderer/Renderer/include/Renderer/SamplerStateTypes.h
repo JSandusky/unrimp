@@ -48,6 +48,9 @@ namespace Renderer
 	*    - Original Direct3D comments from http://msdn.microsoft.com/en-us/library/windows/desktop/bb205060%28v=vs.85%29.aspx are used in here
 	*    - These constants directly map to Direct3D 10 & 11 & 12 constants, do not change them
 	*    - "Point" = "nearest" in OpenGL terminology
+	*
+	*  @see
+	*    - "D3D12_FILTER"-documentation for details
 	*/
 	struct FilterMode
 	{
@@ -81,6 +84,9 @@ namespace Renderer
 	*  @note
 	*    - Original Direct3D comments from http://msdn.microsoft.com/en-us/library/windows/desktop/bb172483%28v=vs.85%29.aspx are used in here
 	*    - These constants directly map to Direct3D 10 & 11 & 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_TEXTURE_ADDRESS_MODE"-documentation for details
 	*/
 	struct TextureAddressMode
 	{
@@ -113,8 +119,10 @@ namespace Renderer
 	*  @note
 	*    - This sampler state maps directly to Direct3D 10 & 11, do not change it
 	*    - If you want to know how the default values were chosen, have a look into the "Renderer::ISamplerState::getDefaultSamplerState()"-implementation
+	*
+	*  @see
+	*    - "D3D12_SAMPLER_DESC"-documentation for details
 	*/
-	// TODO(co) Renderer::SamplerState, document
 	struct SamplerState
 	{
 		FilterMode::Enum		 filter;			///< Default: "Renderer::FilterMode::MIN_MAG_MIP_LINEAR"

@@ -80,10 +80,10 @@ struct FS_OUTPUT
 // Programs
 FS_OUTPUT main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0)
 {
-	FS_OUTPUT ouput;
-	ouput.Color[0] = float4(1.0f, 0.0f, 0.0f, 0.0f);	// Red
-	ouput.Color[1] = float4(0.0f, 0.0f, 1.0f, 0.0f);	// Blue
-	return ouput;
+	FS_OUTPUT output;
+	output.Color[0] = float4(1.0f, 0.0f, 0.0f, 0.0f);	// Red
+	output.Color[1] = float4(0.0f, 0.0f, 1.0f, 0.0f);	// Blue
+	return output;
 }
 );	// STRINGIFY
 

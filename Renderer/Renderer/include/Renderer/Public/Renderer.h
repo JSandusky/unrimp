@@ -1606,6 +1606,7 @@ namespace Renderer
 			virtual bool map(IResource &resource, uint32_t subresource, MapType::Enum mapType, uint32_t mapFlags, MappedSubresource &mappedSubresource) = 0;
 			virtual void unmap(IResource &resource, uint32_t subresource) = 0;
 			virtual void setGraphicsRootSignature(IRootSignature *rootSignature) = 0;
+			virtual void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, IResource* resource) = 0;
 			virtual void setPipelineState(IPipelineState *pipelineState) = 0;
 			virtual void setProgram(IProgram *program) = 0;
 			virtual void iaSetVertexArray(IVertexArray *vertexArray) = 0;

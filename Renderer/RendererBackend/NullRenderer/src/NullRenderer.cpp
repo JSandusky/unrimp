@@ -360,6 +360,18 @@ namespace NullRenderer
 		// TODO(co) Implement me
 	}
 
+	void NullRenderer::setGraphicsRootDescriptorTable(uint32_t, Renderer::IResource* resource)
+	{
+		// TODO(co) Validate graphics root signature
+
+		// Nothing to do in here, the following is just for debugging
+		if (nullptr != resource)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
+		}
+	}
+
 	void NullRenderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
 		if (nullptr != pipelineState)

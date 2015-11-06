@@ -34,8 +34,7 @@
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FirstTexture::FirstTexture(const char *rendererName) :
-	IApplicationRenderer(rendererName),
-	mTextureUnit(0)
+	IApplicationRenderer(rendererName)
 {
 	// Nothing to do in here
 }
@@ -116,30 +115,17 @@ void FirstTexture::onInitialization()
 		}
 
 		{ // Create the root signature
-			Renderer::DescriptorRangeBuilder ranges[1];
+			Renderer::DescriptorRangeBuilder ranges[2];
 			ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0);
+			ranges[1].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 0);
 
-			Renderer::RootParameterBuilder rootParameters[1];
+			Renderer::RootParameterBuilder rootParameters[2];
 			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
-
-			Renderer::StaticSampler sampler = {};
-			sampler.filter = Renderer::FilterMode::MIN_MAG_MIP_LINEAR;
-			sampler.addressU = Renderer::TextureAddressMode::WRAP;
-			sampler.addressV = Renderer::TextureAddressMode::WRAP;
-			sampler.addressW = Renderer::TextureAddressMode::WRAP;
-			sampler.mipLodBias = 0;
-			sampler.maxAnisotropy = 0;
-			sampler.comparisonFunc = Renderer::ComparisonFunc::NEVER;
-			sampler.borderColor = Renderer::StaticBorderColor::TRANSPARENT_BLACK;
-			sampler.minLod = 0.0f;
-			sampler.maxLod = FLT_MAX;
-			sampler.shaderRegister = 0;
-			sampler.registerSpace = 0;
-			sampler.shaderVisibility = Renderer::ShaderVisibility::FRAGMENT;
+			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
-			rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 1, &sampler, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+			rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 			// Create the instance
 			mRootSignature = renderer->createRootSignature(rootSignature);
@@ -213,31 +199,19 @@ void FirstTexture::onInitialization()
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 
-			// Is there a valid program?
+			// Create the pipeline state object (PSO)
 			if (nullptr != program)
 			{
-				{ // Create the pipeline state object (PSO)
-					// Setup
-					Renderer::PipelineState pipelineState;
-					pipelineState.rootSignature = mRootSignature;
-					pipelineState.program = program;
-					pipelineState.vertexAttributes = vertexAttributes;
-					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+				// Setup
+				Renderer::PipelineState pipelineState;
+				pipelineState.rootSignature = mRootSignature;
+				pipelineState.program = program;
+				pipelineState.vertexAttributes = vertexAttributes;
+				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
 
-					// Create the instance
-					mPipelineState = renderer->createPipelineState(pipelineState);
-				}
-
-				// Tell the renderer API which texture should be bound to which texture unit (texture unit 0 by default)
-				// -> When using OpenGL or OpenGL ES 2 this is required
-				// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
-				//    in GLSL shader) , for backward compatibility we don't use it in here
-				// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
-				//    to use is usually defined directly within the shader by using the "register"-keyword
-				// -> Usually, this should only be done once during initialization, this example does this
-				//    every frame to keep it local for better overview
-				mTextureUnit = program->setTextureUnit(program->getUniformHandle("DiffuseMap"), 0);
+				// Create the instance
+				mPipelineState = renderer->createPipelineState(pipelineState);
 			}
 		}
 
@@ -296,13 +270,9 @@ void FirstTexture::onDraw()
 				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 			}
 
-			{ // Set diffuse map
-				// Set the used texture at the texture unit
-				renderer->fsSetTexture(mTextureUnit, mTexture2D);
-
-				// Set the used sampler state at the texture unit
-				renderer->fsSetSamplerState(mTextureUnit, mSamplerState);
-			}
+			// Set diffuse map
+			renderer->setGraphicsRootDescriptorTable(0, mTexture2D);
+			renderer->setGraphicsRootDescriptorTable(1, mSamplerState);
 
 			// Render the specified geometric primitive, based on an array of vertices
 			renderer->draw(0, 3);

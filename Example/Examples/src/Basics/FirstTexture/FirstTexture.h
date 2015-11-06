@@ -86,7 +86,6 @@ public:
 //[-------------------------------------------------------]
 private:
 	Renderer::ITexture2DPtr		mTexture2D;		///< 2D texture, can be a null pointer
-	uint32_t					mTextureUnit;	///< Texture unit
 	Renderer::ISamplerStatePtr	mSamplerState;	///< Sampler state, can be a null pointer
 	Renderer::IRootSignaturePtr	mRootSignature;	///< Root signature, can be a null pointer
 	Renderer::IPipelineStatePtr	mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
