@@ -44,6 +44,7 @@ namespace Direct3D9Renderer
 {
 	class SwapChain;
 	class BlendState;
+	class RootSignature;
 	class RasterizerState;
 	class DepthStencilState;
 	class Direct3D9RuntimeLinking;
@@ -258,6 +259,7 @@ namespace Direct3D9Renderer
 		IDirect3DDevice9			  *mDirect3DDevice9;			///< Direct3D 9 rendering device, can be a null pointer (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
 		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
 		IDirect3DQuery9				  *mDirect3DQuery9Flush;		///< Direct3D 9 query used for flush, can be a null pointer
+		RootSignature				  *mGraphicsRootSignature;		///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState		  *mDefaultSamplerState;		///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]

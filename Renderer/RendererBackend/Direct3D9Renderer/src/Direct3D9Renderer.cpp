@@ -77,6 +77,7 @@ namespace Direct3D9Renderer
 		mDirect3DDevice9(nullptr),
 		mShaderLanguageHlsl(nullptr),
 		mDirect3DQuery9Flush(nullptr),
+		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
 		mPrimitiveTopology(Renderer::PrimitiveTopology::UNKNOWN),
 		mDefaultRasterizerState(nullptr),
@@ -261,6 +262,13 @@ namespace Direct3D9Renderer
 		if (nullptr != mDirect3DQuery9Flush)
 		{
 			mDirect3DQuery9Flush->Release();
+		}
+
+		// Release the graphics root signature instance
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+			mGraphicsRootSignature = nullptr;
 		}
 
 		// Release the HLSL shader language instance, in case we have one
@@ -651,30 +659,207 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::setGraphicsRootSignature(Renderer::IRootSignature *)
+	void Direct3D9Renderer::setGraphicsRootSignature(Renderer::IRootSignature* rootSignature)
 	{
-		// TODO(co) Implement me
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+		}
+		mGraphicsRootSignature = static_cast<RootSignature*>(rootSignature);
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->addReference();
+
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+		}
 	}
 
-	void Direct3D9Renderer::setGraphicsRootDescriptorTable(uint32_t, Renderer::IResource* resource)
+	void Direct3D9Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
 	{
+		// Security checks
+		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+		{
+			if (nullptr == mGraphicsRootSignature)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: No graphics root signature set")
+				return;
+			}
+			if (rootParameterIndex >= mGraphicsRootSignature->getRootSignature().numberOfParameters)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Root parameter index is out of bounds")
+				return;
+			}
+			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Root parameter index doesn't reference a descriptor table")
+				return;
+			}
+
+			// TODO(co) For now, we only support a single descriptor range
+			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Only a single descriptor range is supported")
+				return;
+			}
+			if (nullptr == rootParameter.descriptorTable.descriptorRanges)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Descriptor ranges is a null pointer")
+				return;
+			}
+		}
+		#endif
+
 		if (nullptr != resource)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
 
+			// Get the root signature parameter instance
+			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+			const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
+
+			// Check the type of resource to set
+			// TODO(co) Some additional resource type root signature security checks in debug build?
 			switch (resource->getResourceType())
 			{
+				case Renderer::ResourceType::TEXTURE_BUFFER:
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no texture buffer support")
+					break;
+
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
-					// TODO(co) Test
-					fsSetTexture(0, static_cast<Renderer::ITexture*>(resource));
+					const UINT startSlot = descriptorRange->baseShaderRegister;
+
+					// Information about vertex texture fetch in Direct3D 9 can be found within:
+					// Whitepaper: ftp://download.nvidia.com/developer/Papers/2004/Vertex_Textures/Vertex_Textures.pdf
+					//    "Shader Model 3.0
+					//     Using Vertex Textures"
+					//    (DA-01373-001_v00 1 - 06/24/04)
+					// From
+					//    Philipp Gerasimov
+					//    Randima (Randy) Fernando
+					//    Simon Green
+					//    NVIDIA Corporation
+					// Four texture samplers are supported:
+					//     D3DVERTEXTEXTURESAMPLER1
+					//     D3DVERTEXTEXTURESAMPLER2
+					//     D3DVERTEXTEXTURESAMPLER3
+					//     D3DVERTEXTEXTURESAMPLER4
+					// -> Update the given zero based texture unit (the constants are linear, so the following is fine)
+					const UINT vertexFetchStartSlot = startSlot + D3DVERTEXTEXTURESAMPLER1;
+
+					switch (rootParameter.shaderVisibility)
+					{
+						case Renderer::ShaderVisibility::ALL:
+						{
+							IDirect3DTexture9* direct3DTexture9 = static_cast<Texture2D*>(resource)->getDirect3DTexture9();
+							mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DTexture9);
+							mDirect3DDevice9->SetTexture(startSlot, direct3DTexture9);
+							break;
+						}
+
+						case Renderer::ShaderVisibility::VERTEX:
+							mDirect3DDevice9->SetTexture(vertexFetchStartSlot, static_cast<Texture2D*>(resource)->getDirect3DTexture9());
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::GEOMETRY:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no geometry shader support")
+							break;
+
+						case Renderer::ShaderVisibility::FRAGMENT:
+							// "pixel shader" in Direct3D terminology
+							mDirect3DDevice9->SetTexture(startSlot, static_cast<Texture2D*>(resource)->getDirect3DTexture9());
+							break;
+					}
 					break;
 				}
 
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no 2D array textures support")
+					break;
+
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
-					fsSetSamplerState(0, static_cast<Renderer::ISamplerState*>(resource));
+					SamplerState* samplerState = static_cast<SamplerState*>(resource);
+					const UINT startSlot = descriptorRange->baseShaderRegister;
+
+					// Information about vertex texture fetch in Direct3D 9 can be found within:
+					// Whitepaper: ftp://download.nvidia.com/developer/Papers/2004/Vertex_Textures/Vertex_Textures.pdf
+					//    "Shader Model 3.0
+					//     Using Vertex Textures"
+					//    (DA-01373-001_v00 1 - 06/24/04)
+					// From
+					//    Philipp Gerasimov
+					//    Randima (Randy) Fernando
+					//    Simon Green
+					//    NVIDIA Corporation
+					// Four texture samplers are supported:
+					//     D3DVERTEXTEXTURESAMPLER1
+					//     D3DVERTEXTEXTURESAMPLER2
+					//     D3DVERTEXTEXTURESAMPLER3
+					//     D3DVERTEXTEXTURESAMPLER4
+					// -> Update the given zero based texture unit (the constants are linear, so the following is fine)
+					const UINT vertexFetchStartSlot = startSlot + D3DVERTEXTEXTURESAMPLER1;
+
+					switch (rootParameter.shaderVisibility)
+					{
+						case Renderer::ShaderVisibility::ALL:
+							// Begin debug event
+							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+							// Set the Direct3D 9 sampler states
+							samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
+							samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+
+							// End debug event
+							RENDERER_END_DEBUG_EVENT(this)
+							break;
+
+						case Renderer::ShaderVisibility::VERTEX:
+							// Begin debug event
+							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+							// Set the Direct3D 9 sampler states
+							samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
+
+							// End debug event
+							RENDERER_END_DEBUG_EVENT(this)
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::GEOMETRY:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no geometry shader support")
+							break;
+
+						case Renderer::ShaderVisibility::FRAGMENT:
+							// Begin debug event
+							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+							// Set the Direct3D 9 sampler states
+							// -> "pixel shader" in Direct3D terminology
+							samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+
+							// End debug event
+							RENDERER_END_DEBUG_EVENT(this)
+							break;
+					}
 					break;
 				}
 			}
@@ -682,6 +867,19 @@ namespace Direct3D9Renderer
 		else
 		{
 			// TODO(co) Handle this situation?
+			/*
+			// Set the default sampler state
+			if (nullptr != mDefaultSamplerState)
+			{
+				fsSetSamplerState(unit, mDefaultSamplerState);
+			}
+			else
+			{
+				// Fallback in case everything goes wrong
+
+				// TODO(co) Set default settings
+			}
+			*/
 		}
 	}
 
@@ -779,73 +977,9 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::vsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D9Renderer::vsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Information about vertex texture fetch in Direct3D 9 can be found within:
-		// Whitepaper: ftp://download.nvidia.com/developer/Papers/2004/Vertex_Textures/Vertex_Textures.pdf
-		//    "Shader Model 3.0
-		//     Using Vertex Textures"
-		//    (DA-01373-001_v00 1 - 06/24/04)
-		// From
-		//    Philipp Gerasimov
-		//    Randima (Randy) Fernando
-		//    Simon Green
-		//    NVIDIA Corporation
-
-		// Four texture samplers are supported:
-		//     D3DVERTEXTEXTURESAMPLER1
-		//     D3DVERTEXTEXTURESAMPLER2
-		//     D3DVERTEXTEXTURESAMPLER3
-		//     D3DVERTEXTEXTURESAMPLER4
-		// -> Update the given zero based texture unit (the constants are linear, so the following is fine)
-		unit += D3DVERTEXTEXTURESAMPLER1;
-
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_2D:
-					mDirect3DDevice9->SetTexture(unit, static_cast<Texture2D*>(texture)->getDirect3DTexture9());
-					break;
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-					// 2D array textures are not supported by Direct3D 9
-					break;
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			mDirect3DDevice9->SetTexture(unit, nullptr);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D9Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
@@ -953,7 +1087,7 @@ namespace Direct3D9Renderer
 			{
 				// Fallback in case everything goes wrong
 
-				// TODO(co) Set defaul settings
+				// TODO(co) Set default settings
 			}
 		}
 	}
@@ -998,7 +1132,7 @@ namespace Direct3D9Renderer
 					{
 						// Fallback in case everything goes wrong
 
-						// TODO(co) Set defaul settings
+						// TODO(co) Set default settings
 					}
 				}
 			}
@@ -1008,195 +1142,96 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D9Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Direct3D 9 has no uniform buffer support (UBO, "constant buffer" in Direct3D terminology)
-
-		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-		DIRECT3D9RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(uniformBuffer)
+		// TODO(co) Remove this method
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::tcsSetTexture(uint32_t, Renderer::ITexture *texture)
+	void Direct3D9Renderer::tcsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Direct3D 9 has no tessellation control shader support ("hull shader" in Direct3D terminology)
-
-		// Is the given texture valid?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void Direct3D9Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// Direct3D 9 has no tessellation control shader support ("hull shader" in Direct3D terminology)
-
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void Direct3D9Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Direct3D 9 has no tessellation control shader support ("hull shader" in Direct3D terminology)
-
-		// Is the given sampler state valid?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D9Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// Direct3D 9 has no tessellation control shader support ("hull shader" in Direct3D terminology)
-
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D9Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Direct3D 9 has no tessellation control shader support ("hull shader" in Direct3D terminology)
-		// Direct3D 9 has no uniform buffer support (UBO, "constant buffer" in Direct3D terminology)
-
-		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-		DIRECT3D9RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(uniformBuffer)
+		// TODO(co) Remove this method
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::tesSetTexture(uint32_t, Renderer::ITexture *texture)
+	void Direct3D9Renderer::tesSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Direct3D 9 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
-
-		// Is the given texture valid?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void Direct3D9Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// Direct3D 9 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
-
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void Direct3D9Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Direct3D 9 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
-
-		// Is the given sampler state valid?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D9Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// Direct3D 9 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
-
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D9Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Direct3D 9 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
-		// Direct3D 9 has no uniform buffer support (UBO, "constant buffer" in Direct3D terminology)
-
-		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-		DIRECT3D9RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(uniformBuffer)
+		// TODO(co) Remove this method
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::gsSetTexture(uint32_t, Renderer::ITexture *texture)
+	void Direct3D9Renderer::gsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Direct3D 9 has no geometry shader support
-
-		// Is the given texture valid?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void Direct3D9Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// Direct3D 9 has no geometry shader support
-
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void Direct3D9Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Direct3D 9 has no geometry shader support
-
-		// Is the given sampler state valid?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D9Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// Direct3D 9 has no geometry shader support
-
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D9Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Direct3D 9 has no geometry shader support
-		// Direct3D 9 has no uniform buffer support (UBO, "constant buffer" in Direct3D terminology)
-
-		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-		DIRECT3D9RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(uniformBuffer)
+		// TODO(co) Remove this method
 	}
 
 
@@ -1305,54 +1340,9 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::fsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D9Renderer::fsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_2D:
-					mDirect3DDevice9->SetTexture(unit, static_cast<Texture2D*>(texture)->getDirect3DTexture9());
-					break;
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-					// 2D array textures are not supported by Direct3D 9
-					break;
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			mDirect3DDevice9->SetTexture(unit, nullptr);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D9Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
@@ -1427,37 +1417,9 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::fsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D9Renderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Set a sampler at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-			// Set the Direct3D 9 sampler states
-			static_cast<SamplerState*>(samplerState)->setDirect3D9SamplerStates(unit, *mDirect3DDevice9);
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(this)
-		}
-		else
-		{
-			// Set the default sampler state
-			if (nullptr != mDefaultSamplerState)
-			{
-				fsSetSamplerState(unit, mDefaultSamplerState);
-			}
-			else
-			{
-				// Fallback in case everything goes wrong
-
-				// TODO(co) Set defaul settings
-			}
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D9Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -1499,7 +1461,7 @@ namespace Direct3D9Renderer
 					{
 						// Fallback in case everything goes wrong
 
-						// TODO(co) Set defaul settings
+						// TODO(co) Set default settings
 					}
 				}
 			}
@@ -1509,12 +1471,9 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D9Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Direct3D 9 has no uniform buffer support (UBO, "constant buffer" in Direct3D terminology)
-
-		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-		DIRECT3D9RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(uniformBuffer)
+		// TODO(co) Remove this method
 	}
 
 

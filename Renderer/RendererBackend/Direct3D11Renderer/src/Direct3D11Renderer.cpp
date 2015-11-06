@@ -86,7 +86,8 @@ namespace Direct3D11Renderer
 		mShaderLanguageHlsl(nullptr),
 		mD3D11QueryFlush(nullptr),
 		mMainSwapChain(nullptr),
-		mRenderTarget(nullptr)
+		mRenderTarget(nullptr),
+		mGraphicsRootSignature(nullptr)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
@@ -186,6 +187,11 @@ namespace Direct3D11Renderer
 		{
 			mRenderTarget->release();
 			mRenderTarget = nullptr;
+		}
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+			mGraphicsRootSignature = nullptr;
 		}
 
 		{ // For debugging: At this point there should be no resource instances left, validate this!
@@ -575,30 +581,164 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::setGraphicsRootSignature(Renderer::IRootSignature *)
+	void Direct3D11Renderer::setGraphicsRootSignature(Renderer::IRootSignature *rootSignature)
 	{
-		// TODO(co) Implement me
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+		}
+		mGraphicsRootSignature = static_cast<RootSignature*>(rootSignature);
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->addReference();
+
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+		}
 	}
 
-	void Direct3D11Renderer::setGraphicsRootDescriptorTable(uint32_t, Renderer::IResource* resource)
+	void Direct3D11Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
 	{
+		// Security checks
+		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		{
+			if (nullptr == mGraphicsRootSignature)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: No graphics root signature set")
+				return;
+			}
+			if (rootParameterIndex >= mGraphicsRootSignature->getRootSignature().numberOfParameters)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Root parameter index is out of bounds")
+				return;
+			}
+			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Root parameter index doesn't reference a descriptor table")
+				return;
+			}
+
+			// TODO(co) For now, we only support a single descriptor range
+			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Only a single descriptor range is supported")
+				return;
+			}
+			if (nullptr == rootParameter.descriptorTable.descriptorRanges)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Descriptor ranges is a null pointer")
+				return;
+			}
+		}
+		#endif
+
 		if (nullptr != resource)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
 
+			// Get the root signature parameter instance
+			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+			const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
+
+			// Check the type of resource to set
+			// TODO(co) Some additional resource type root signature security checks in debug build?
 			switch (resource->getResourceType())
 			{
+				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D:
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
-					// TODO(co) Test
-					fsSetTexture(0, static_cast<Renderer::ITexture*>(resource));
+					ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
+					switch (resource->getResourceType())
+					{
+						case Renderer::ResourceType::TEXTURE_BUFFER:
+							d3d11ShaderResourceView = static_cast<TextureBuffer*>(resource)->getD3D11ShaderResourceView();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_2D:
+							d3d11ShaderResourceView = static_cast<Texture2D*>(resource)->getD3D11ShaderResourceView();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+							d3d11ShaderResourceView = static_cast<Texture2DArray*>(resource)->getD3D11ShaderResourceView();
+							break;
+					}
+					const UINT startSlot = descriptorRange->baseShaderRegister;
+					switch (rootParameter.shaderVisibility)
+					{
+						case Renderer::ShaderVisibility::ALL:
+							mD3D11DeviceContext->VSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+							mD3D11DeviceContext->HSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+							mD3D11DeviceContext->DSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+							mD3D11DeviceContext->GSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+							mD3D11DeviceContext->PSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+							break;
+
+						case Renderer::ShaderVisibility::VERTEX:
+							mD3D11DeviceContext->VSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+							// "hull shader" in Direct3D terminology
+							mD3D11DeviceContext->HSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+							// "domain shader" in Direct3D terminology
+							mD3D11DeviceContext->DSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+							break;
+
+						case Renderer::ShaderVisibility::GEOMETRY:
+							mD3D11DeviceContext->GSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+							break;
+
+						case Renderer::ShaderVisibility::FRAGMENT:
+							// "pixel shader" in Direct3D terminology
+							mD3D11DeviceContext->PSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+							break;
+					}
 					break;
 				}
 
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
-					fsSetSamplerState(0, static_cast<Renderer::ISamplerState*>(resource));
+					ID3D11SamplerState *d3d11SamplerState = static_cast<SamplerState*>(resource)->getD3D11SamplerState();
+					const UINT startSlot = descriptorRange->baseShaderRegister;
+					switch (rootParameter.shaderVisibility)
+					{
+						case Renderer::ShaderVisibility::ALL:
+							mD3D11DeviceContext->VSSetSamplers(startSlot, 1, &d3d11SamplerState);
+							mD3D11DeviceContext->HSSetSamplers(startSlot, 1, &d3d11SamplerState);
+							mD3D11DeviceContext->DSSetSamplers(startSlot, 1, &d3d11SamplerState);
+							mD3D11DeviceContext->GSSetSamplers(startSlot, 1, &d3d11SamplerState);
+							mD3D11DeviceContext->PSSetSamplers(startSlot, 1, &d3d11SamplerState);
+							break;
+
+						case Renderer::ShaderVisibility::VERTEX:
+							mD3D11DeviceContext->VSSetSamplers(startSlot, 1, &d3d11SamplerState);
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+							// "hull shader" in Direct3D terminology
+							mD3D11DeviceContext->HSSetSamplers(startSlot, 1, &d3d11SamplerState);
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+							// "domain shader" in Direct3D terminology
+							mD3D11DeviceContext->DSSetSamplers(startSlot, 1, &d3d11SamplerState);
+							break;
+
+						case Renderer::ShaderVisibility::GEOMETRY:
+							mD3D11DeviceContext->GSSetSamplers(startSlot, 1, &d3d11SamplerState);
+							break;
+
+						case Renderer::ShaderVisibility::FRAGMENT:
+							// "pixel shader" in Direct3D terminology
+							mD3D11DeviceContext->PSSetSamplers(startSlot, 1, &d3d11SamplerState);
+							break;
+					}
 					break;
 				}
 			}
@@ -713,71 +853,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::vsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D11Renderer::vsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->VSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->VSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->VSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 11 needs a pointer to a pointer, so give it one
-			ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
-			mD3D11DeviceContext->VSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
@@ -795,27 +873,9 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::vsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D11Renderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 11 needs a pointer to a pointer, so give it one
-			ID3D11SamplerState *d3d11SamplerState = static_cast<SamplerState*>(samplerState)->getD3D11SamplerState();
-			mD3D11DeviceContext->VSSetSamplers(unit, 1, &d3d11SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D11SamplerState *d3d11SamplerState = nullptr;
-			mD3D11DeviceContext->VSSetSamplers(unit, 1, &d3d11SamplerState);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -850,73 +910,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::tcsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D11Renderer::tcsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// "hull shader" in Direct3D terminology
-
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->HSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->HSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->HSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 11 needs a pointer to a pointer, so give it one
-			ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
-			mD3D11DeviceContext->HSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::tcsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
@@ -936,29 +932,9 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::tcsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D11Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// "hull shader" in Direct3D terminology
-
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 11 needs a pointer to a pointer, so give it one
-			ID3D11SamplerState *d3d11SamplerState = static_cast<SamplerState*>(samplerState)->getD3D11SamplerState();
-			mD3D11DeviceContext->HSSetSamplers(unit, 1, &d3d11SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D11SamplerState *d3d11SamplerState = nullptr;
-			mD3D11DeviceContext->HSSetSamplers(unit, 1, &d3d11SamplerState);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::tcsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -997,73 +973,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::tesSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D11Renderer::tesSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// "domain shader" in Direct3D terminology
-
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->DSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->DSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->DSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 11 needs a pointer to a pointer, so give it one
-			ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
-			mD3D11DeviceContext->DSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::tesSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
@@ -1083,29 +995,9 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::tesSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D11Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// "domain shader" in Direct3D terminology
-
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 11 needs a pointer to a pointer, so give it one
-			ID3D11SamplerState *d3d11SamplerState = static_cast<SamplerState*>(samplerState)->getD3D11SamplerState();
-			mD3D11DeviceContext->DSSetSamplers(unit, 1, &d3d11SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D11SamplerState *d3d11SamplerState = nullptr;
-			mD3D11DeviceContext->DSSetSamplers(unit, 1, &d3d11SamplerState);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::tesSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -1144,71 +1036,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::gsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D11Renderer::gsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->GSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->GSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->GSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 11 needs a pointer to a pointer, so give it one
-			ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
-			mD3D11DeviceContext->GSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::gsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
@@ -1226,27 +1056,9 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::gsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D11Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 11 needs a pointer to a pointer, so give it one
-			ID3D11SamplerState *d3d11SamplerState = static_cast<SamplerState*>(samplerState)->getD3D11SamplerState();
-			mD3D11DeviceContext->GSSetSamplers(unit, 1, &d3d11SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D11SamplerState *d3d11SamplerState = nullptr;
-			mD3D11DeviceContext->GSSetSamplers(unit, 1, &d3d11SamplerState);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::gsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -1329,73 +1141,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::fsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D11Renderer::fsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// "pixel shader" in Direct3D terminology
-
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->PSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->PSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 11 needs a pointer to a pointer, so give it one
-					ID3D11ShaderResourceView *d3d11ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D11ShaderResourceView();
-					mD3D11DeviceContext->PSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 11 needs a pointer to a pointer, so give it one
-			ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
-			mD3D11DeviceContext->PSSetShaderResources(unit, 1, &d3d11ShaderResourceView);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
@@ -1413,29 +1161,9 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::fsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D11Renderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// "pixel shader" in Direct3D terminology
-
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 11 needs a pointer to a pointer, so give it one
-			ID3D11SamplerState *d3d11SamplerState = static_cast<SamplerState*>(samplerState)->getD3D11SamplerState();
-			mD3D11DeviceContext->PSSetSamplers(unit, 1, &d3d11SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D11SamplerState *d3d11SamplerState = nullptr;
-			mD3D11DeviceContext->PSSetSamplers(unit, 1, &d3d11SamplerState);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)

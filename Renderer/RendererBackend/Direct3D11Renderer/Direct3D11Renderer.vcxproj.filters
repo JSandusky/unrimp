@@ -81,6 +81,9 @@
     <None Include="include\Direct3D11Renderer\PipelineState.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\Direct3D11Renderer\RootSignature.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D11Renderer\Shader\ShaderLanguage.h">

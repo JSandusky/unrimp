@@ -27,6 +27,7 @@
     <None Include="include\Direct3D10Renderer\IndexBuffer.inl" />
     <None Include="include\Direct3D10Renderer\PipelineState.inl" />
     <None Include="include\Direct3D10Renderer\RasterizerState.inl" />
+    <None Include="include\Direct3D10Renderer\RootSignature.inl" />
     <None Include="include\Direct3D10Renderer\SamplerState.inl" />
     <None Include="include\Direct3D10Renderer\SamplerStateCollection.inl" />
     <None Include="include\Direct3D10Renderer\Shader\FragmentShaderHlsl.inl" />

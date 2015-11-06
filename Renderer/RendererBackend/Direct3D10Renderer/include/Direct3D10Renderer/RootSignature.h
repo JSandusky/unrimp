@@ -83,6 +83,15 @@ namespace Direct3D10Renderer
 		*/
 		virtual ~RootSignature();
 
+		/**
+		*  @brief
+		*    Return the root signature data
+		*
+		*  @return
+		*    The root signature data
+		*/
+		inline const Renderer::RootSignature& getRootSignature() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
@@ -98,3 +107,9 @@ namespace Direct3D10Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Direct3D10Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "Direct3D10Renderer/RootSignature.inl"

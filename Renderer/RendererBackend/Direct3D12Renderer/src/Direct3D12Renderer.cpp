@@ -792,150 +792,27 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::vsSetTexture(uint32_t, Renderer::ITexture *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->VSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->VSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->VSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 12 needs a pointer to a pointer, so give it one
-			ID3D12ShaderResourceView *d3d12ShaderResourceView = nullptr;
-			mD3D12DeviceContext->VSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::vsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Set the Direct3D 12 resource views
-			TextureCollection *direct3D12TextureCollection = static_cast<TextureCollection*>(textureCollection);
-			mD3D12DeviceContext->VSSetShaderResources(startUnit, direct3D12TextureCollection->getNumberOfD3D12ShaderResourceViews(), direct3D12TextureCollection->getD3D12ShaderResourceViews());
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 12 needs a pointer to a pointer, so give it one
-			ID3D12SamplerState *d3d12SamplerState = static_cast<SamplerState*>(samplerState)->getD3D12SamplerState();
-			mD3D12DeviceContext->VSSetSamplers(unit, 1, &d3d12SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D12SamplerState *d3d12SamplerState = nullptr;
-			mD3D12DeviceContext->VSSetSamplers(unit, 1, &d3d12SamplerState);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::vsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Set the Direct3D 12 sampler states
-			SamplerStateCollection *direct3D12SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
-			mD3D12DeviceContext->VSSetSamplers(startUnit, direct3D12SamplerStateCollection->getNumberOfD3D12SamplerStates(), direct3D12SamplerStateCollection->getD3D12SamplerStates());
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 12 needs a pointer to a pointer, so give it one
-		ID3D12Buffer *d3d12Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D12Buffer() : nullptr;
-		mD3D12DeviceContext->VSSetConstantBuffers(slot, 1, &d3d12Buffers);
-		*/
+		// TODO(co) Remove this method
 	}
 
 
@@ -944,160 +821,27 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::tcsSetTexture(uint32_t, Renderer::ITexture *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "hull shader" in Direct3D terminology
-
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->HSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->HSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->HSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 12 needs a pointer to a pointer, so give it one
-			ID3D12ShaderResourceView *d3d12ShaderResourceView = nullptr;
-			mD3D12DeviceContext->HSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "hull shader" in Direct3D terminology
-
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Set the Direct3D 12 resource views
-			TextureCollection *direct3D12TextureCollection = static_cast<TextureCollection*>(textureCollection);
-			mD3D12DeviceContext->HSSetShaderResources(startUnit, direct3D12TextureCollection->getNumberOfD3D12ShaderResourceViews(), direct3D12TextureCollection->getD3D12ShaderResourceViews());
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "hull shader" in Direct3D terminology
-
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 12 needs a pointer to a pointer, so give it one
-			ID3D12SamplerState *d3d12SamplerState = static_cast<SamplerState*>(samplerState)->getD3D12SamplerState();
-			mD3D12DeviceContext->HSSetSamplers(unit, 1, &d3d12SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D12SamplerState *d3d12SamplerState = nullptr;
-			mD3D12DeviceContext->HSSetSamplers(unit, 1, &d3d12SamplerState);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "hull shader" in Direct3D terminology
-
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Set the Direct3D 12 sampler states
-			SamplerStateCollection *direct3D12SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
-			mD3D12DeviceContext->HSSetSamplers(startUnit, direct3D12SamplerStateCollection->getNumberOfD3D12SamplerStates(), direct3D12SamplerStateCollection->getD3D12SamplerStates());
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "hull shader" in Direct3D terminology
-
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 12 needs a pointer to a pointer, so give it one
-		ID3D12Buffer *d3d12Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D12Buffer() : nullptr;
-		mD3D12DeviceContext->HSSetConstantBuffers(slot, 1, &d3d12Buffers);
-		*/
+		// TODO(co) Remove this method
 	}
 
 
@@ -1106,160 +850,27 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::tesSetTexture(uint32_t, Renderer::ITexture *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "domain shader" in Direct3D terminology
-
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->DSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->DSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->DSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 12 needs a pointer to a pointer, so give it one
-			ID3D12ShaderResourceView *d3d12ShaderResourceView = nullptr;
-			mD3D12DeviceContext->DSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "domain shader" in Direct3D terminology
-
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Set the Direct3D 12 resource views
-			TextureCollection *direct3D12TextureCollection = static_cast<TextureCollection*>(textureCollection);
-			mD3D12DeviceContext->DSSetShaderResources(startUnit, direct3D12TextureCollection->getNumberOfD3D12ShaderResourceViews(), direct3D12TextureCollection->getD3D12ShaderResourceViews());
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "domain shader" in Direct3D terminology
-
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 12 needs a pointer to a pointer, so give it one
-			ID3D12SamplerState *d3d12SamplerState = static_cast<SamplerState*>(samplerState)->getD3D12SamplerState();
-			mD3D12DeviceContext->DSSetSamplers(unit, 1, &d3d12SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D12SamplerState *d3d12SamplerState = nullptr;
-			mD3D12DeviceContext->DSSetSamplers(unit, 1, &d3d12SamplerState);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "domain shader" in Direct3D terminology
-
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Set the Direct3D 12 sampler states
-			SamplerStateCollection *direct3D12SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
-			mD3D12DeviceContext->DSSetSamplers(startUnit, direct3D12SamplerStateCollection->getNumberOfD3D12SamplerStates(), direct3D12SamplerStateCollection->getD3D12SamplerStates());
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "domain shader" in Direct3D terminology
-
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 12 needs a pointer to a pointer, so give it one
-		ID3D12Buffer *d3d12Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D12Buffer() : nullptr;
-		mD3D12DeviceContext->DSSetConstantBuffers(slot, 1, &d3d12Buffers);
-		*/
+		// TODO(co) Remove this method
 	}
 
 
@@ -1268,150 +879,27 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::gsSetTexture(uint32_t, Renderer::ITexture *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->GSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->GSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->GSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 12 needs a pointer to a pointer, so give it one
-			ID3D12ShaderResourceView *d3d12ShaderResourceView = nullptr;
-			mD3D12DeviceContext->GSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Set the Direct3D 12 resource views
-			TextureCollection *direct3D12TextureCollection = static_cast<TextureCollection*>(textureCollection);
-			mD3D12DeviceContext->GSSetShaderResources(startUnit, direct3D12TextureCollection->getNumberOfD3D12ShaderResourceViews(), direct3D12TextureCollection->getD3D12ShaderResourceViews());
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 12 needs a pointer to a pointer, so give it one
-			ID3D12SamplerState *d3d12SamplerState = static_cast<SamplerState*>(samplerState)->getD3D12SamplerState();
-			mD3D12DeviceContext->GSSetSamplers(unit, 1, &d3d12SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D12SamplerState *d3d12SamplerState = nullptr;
-			mD3D12DeviceContext->GSSetSamplers(unit, 1, &d3d12SamplerState);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Set the Direct3D 12 sampler states
-			SamplerStateCollection *direct3D12SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
-			mD3D12DeviceContext->GSSetSamplers(startUnit, direct3D12SamplerStateCollection->getNumberOfD3D12SamplerStates(), direct3D12SamplerStateCollection->getD3D12SamplerStates());
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 12 needs a pointer to a pointer, so give it one
-		ID3D12Buffer *d3d12Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D12Buffer() : nullptr;
-		mD3D12DeviceContext->GSSetConstantBuffers(slot, 1, &d3d12Buffers);
-		*/
+		// TODO(co) Remove this method
 	}
 
 
@@ -1477,156 +965,27 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::fsSetTexture(uint32_t, Renderer::ITexture *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "pixel shader" in Direct3D terminology
-
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->PSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->PSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 12 needs a pointer to a pointer, so give it one
-					ID3D12ShaderResourceView *d3d12ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D12ShaderResourceView();
-					mD3D12DeviceContext->PSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 12 needs a pointer to a pointer, so give it one
-			ID3D12ShaderResourceView *d3d12ShaderResourceView = nullptr;
-			mD3D12DeviceContext->PSSetShaderResources(unit, 1, &d3d12ShaderResourceView);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::fsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Set the Direct3D 12 resource views
-			TextureCollection *direct3D12TextureCollection = static_cast<TextureCollection*>(textureCollection);
-			mD3D12DeviceContext->PSSetShaderResources(startUnit, direct3D12TextureCollection->getNumberOfD3D12ShaderResourceViews(), direct3D12TextureCollection->getD3D12ShaderResourceViews());
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "pixel shader" in Direct3D terminology
-
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 12 needs a pointer to a pointer, so give it one
-			ID3D12SamplerState *d3d12SamplerState = static_cast<SamplerState*>(samplerState)->getD3D12SamplerState();
-			mD3D12DeviceContext->PSSetSamplers(unit, 1, &d3d12SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D12SamplerState *d3d12SamplerState = nullptr;
-			mD3D12DeviceContext->PSSetSamplers(unit, 1, &d3d12SamplerState);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::fsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Set the Direct3D 12 sampler states
-			SamplerStateCollection *direct3D12SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
-			mD3D12DeviceContext->PSSetSamplers(startUnit, direct3D12SamplerStateCollection->getNumberOfD3D12SamplerStates(), direct3D12SamplerStateCollection->getD3D12SamplerStates());
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// "pixel shader" in Direct3D terminology
-
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 12 needs a pointer to a pointer, so give it one
-		ID3D12Buffer *d3d12Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D12Buffer() : nullptr;
-		mD3D12DeviceContext->PSSetConstantBuffers(slot, 1, &d3d12Buffers);
-		*/
+		// TODO(co) Remove this method
 	}
 
 

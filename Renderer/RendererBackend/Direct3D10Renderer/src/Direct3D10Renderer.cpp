@@ -83,7 +83,8 @@ namespace Direct3D10Renderer
 		mShaderLanguageHlsl(nullptr),
 		mD3D10QueryFlush(nullptr),
 		mMainSwapChain(nullptr),
-		mRenderTarget(nullptr)
+		mRenderTarget(nullptr),
+		mGraphicsRootSignature(nullptr)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
@@ -173,6 +174,11 @@ namespace Direct3D10Renderer
 		{
 			mRenderTarget->release();
 			mRenderTarget = nullptr;
+		}
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+			mGraphicsRootSignature = nullptr;
 		}
 
 		{ // For debugging: At this point there should be no resource instances left, validate this!
@@ -625,30 +631,156 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::setGraphicsRootSignature(Renderer::IRootSignature *)
+	void Direct3D10Renderer::setGraphicsRootSignature(Renderer::IRootSignature *rootSignature)
 	{
-		// TODO(co) Implement me
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+		}
+		mGraphicsRootSignature = static_cast<RootSignature*>(rootSignature);
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->addReference();
+
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+		}
 	}
 
-	void Direct3D10Renderer::setGraphicsRootDescriptorTable(uint32_t, Renderer::IResource* resource)
+	void Direct3D10Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
 	{
+		// Security checks
+		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+		{
+			if (nullptr == mGraphicsRootSignature)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: No graphics root signature set")
+				return;
+			}
+			if (rootParameterIndex >= mGraphicsRootSignature->getRootSignature().numberOfParameters)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Root parameter index is out of bounds")
+				return;
+			}
+			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Root parameter index doesn't reference a descriptor table")
+				return;
+			}
+
+			// TODO(co) For now, we only support a single descriptor range
+			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Only a single descriptor range is supported")
+				return;
+			}
+			if (nullptr == rootParameter.descriptorTable.descriptorRanges)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Descriptor ranges is a null pointer")
+				return;
+			}
+		}
+		#endif
+
 		if (nullptr != resource)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
 
+			// Get the root signature parameter instance
+			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+			const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
+
+			// Check the type of resource to set
+			// TODO(co) Some additional resource type root signature security checks in debug build?
 			switch (resource->getResourceType())
 			{
+				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D:
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
-					// TODO(co) Test
-					fsSetTexture(0, static_cast<Renderer::ITexture*>(resource));
+					ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
+					switch (resource->getResourceType())
+					{
+						case Renderer::ResourceType::TEXTURE_BUFFER:
+							d3d10ShaderResourceView = static_cast<TextureBuffer*>(resource)->getD3D10ShaderResourceView();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_2D:
+							d3d10ShaderResourceView = static_cast<Texture2D*>(resource)->getD3D10ShaderResourceView();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+							d3d10ShaderResourceView = static_cast<Texture2DArray*>(resource)->getD3D10ShaderResourceView();
+							break;
+					}
+					const UINT startSlot = descriptorRange->baseShaderRegister;
+					switch (rootParameter.shaderVisibility)
+					{
+						case Renderer::ShaderVisibility::ALL:
+							mD3D10Device->VSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
+							mD3D10Device->GSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
+							mD3D10Device->PSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
+							break;
+
+						case Renderer::ShaderVisibility::VERTEX:
+							mD3D10Device->VSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::GEOMETRY:
+							mD3D10Device->GSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
+							break;
+
+						case Renderer::ShaderVisibility::FRAGMENT:
+							// "pixel shader" in Direct3D terminology
+							mD3D10Device->PSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
+							break;
+					}
 					break;
 				}
 
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
-					fsSetSamplerState(0, static_cast<Renderer::ISamplerState*>(resource));
+					ID3D10SamplerState *d3d10SamplerState = static_cast<SamplerState*>(resource)->getD3D10SamplerState();
+					const UINT startSlot = descriptorRange->baseShaderRegister;
+					switch (rootParameter.shaderVisibility)
+					{
+						case Renderer::ShaderVisibility::ALL:
+							mD3D10Device->VSSetSamplers(startSlot, 1, &d3d10SamplerState);
+							mD3D10Device->GSSetSamplers(startSlot, 1, &d3d10SamplerState);
+							mD3D10Device->PSSetSamplers(startSlot, 1, &d3d10SamplerState);
+							break;
+
+						case Renderer::ShaderVisibility::VERTEX:
+							mD3D10Device->VSSetSamplers(startSlot, 1, &d3d10SamplerState);
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::GEOMETRY:
+							mD3D10Device->GSSetSamplers(startSlot, 1, &d3d10SamplerState);
+							break;
+
+						case Renderer::ShaderVisibility::FRAGMENT:
+							// "pixel shader" in Direct3D terminology
+							mD3D10Device->PSSetSamplers(startSlot, 1, &d3d10SamplerState);
+							break;
+					}
 					break;
 				}
 			}
@@ -756,71 +888,9 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::vsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D10Renderer::vsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 10 needs a pointer to a pointer, so give it one
-					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D10ShaderResourceView();
-					mD3D10Device->VSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 10 needs a pointer to a pointer, so give it one
-					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D10ShaderResourceView();
-					mD3D10Device->VSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 10 needs a pointer to a pointer, so give it one
-					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D10ShaderResourceView();
-					mD3D10Device->VSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 10 needs a pointer to a pointer, so give it one
-			ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
-			mD3D10Device->VSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D10Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
@@ -838,27 +908,9 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::vsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D10Renderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 10 needs a pointer to a pointer, so give it one
-			ID3D10SamplerState *d3d10SamplerState = static_cast<SamplerState*>(samplerState)->getD3D10SamplerState();
-			mD3D10Device->VSSetSamplers(unit, 1, &d3d10SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D10SamplerState *d3d10SamplerState = nullptr;
-			mD3D10Device->VSSetSamplers(unit, 1, &d3d10SamplerState);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D10Renderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -894,199 +946,67 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::tcsSetTexture(uint32_t, Renderer::ITexture *texture)
+	void Direct3D10Renderer::tcsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Direct3D 10 has no tessellation control shader support ("hull shader" in Direct3D terminology)
-
-		// Is the given texture valid?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D10Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void Direct3D10Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// Direct3D 10 has no tessellation control shader support ("hull shader" in Direct3D terminology)
-
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D10Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void Direct3D10Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Direct3D 10 has no tessellation control shader support ("hull shader" in Direct3D terminology)
-
-		// Is the given sampler state valid?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D10Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D10Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// Direct3D 10 has no tessellation control shader support ("hull shader" in Direct3D terminology)
-
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D10Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D10Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Direct3D 10 has no tessellation control shader support ("hull shader" in Direct3D terminology)
-
-		// Is the given uniform buffer valid?
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
+		// TODO(co) Remove this method
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::tesSetTexture(uint32_t, Renderer::ITexture *texture)
+	void Direct3D10Renderer::tesSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Direct3D 10 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
-
-		// Is the given texture valid?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D10Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void Direct3D10Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// Direct3D 10 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
-
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D10Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void Direct3D10Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Direct3D 10 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
-
-		// Is the given sampler state valid?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D10Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void Direct3D10Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// Direct3D 10 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
-
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D10Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D10Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Direct3D 10 has no tessellation evaluation shader support ("domain shader" in Direct3D terminology)
-
-		// Is the given uniform buffer valid?
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
+		// TODO(co) Remove this method
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::gsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D10Renderer::gsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 10 needs a pointer to a pointer, so give it one
-					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D10ShaderResourceView();
-					mD3D10Device->GSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 10 needs a pointer to a pointer, so give it one
-					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D10ShaderResourceView();
-					mD3D10Device->GSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 10 needs a pointer to a pointer, so give it one
-					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D10ShaderResourceView();
-					mD3D10Device->GSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 10 needs a pointer to a pointer, so give it one
-			ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
-			mD3D10Device->GSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D10Renderer::gsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
@@ -1104,27 +1024,9 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::gsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D10Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 10 needs a pointer to a pointer, so give it one
-			ID3D10SamplerState *d3d10SamplerState = static_cast<SamplerState*>(samplerState)->getD3D10SamplerState();
-			mD3D10Device->GSSetSamplers(unit, 1, &d3d10SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D10SamplerState *d3d10SamplerState = nullptr;
-			mD3D10Device->GSSetSamplers(unit, 1, &d3d10SamplerState);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D10Renderer::gsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -1227,73 +1129,9 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::fsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void Direct3D10Renderer::fsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// "pixel shader" in Direct3D terminology
-
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					// Direct3D 10 needs a pointer to a pointer, so give it one
-					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<TextureBuffer*>(texture)->getD3D10ShaderResourceView();
-					mD3D10Device->PSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D:
-				{
-					// Direct3D 10 needs a pointer to a pointer, so give it one
-					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2D*>(texture)->getD3D10ShaderResourceView();
-					mD3D10Device->PSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				{
-					// Direct3D 10 needs a pointer to a pointer, so give it one
-					ID3D10ShaderResourceView *d3d10ShaderResourceView = static_cast<Texture2DArray*>(texture)->getD3D10ShaderResourceView();
-					mD3D10Device->PSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-					break;
-				}
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-		}
-		else
-		{
-			// Direct3D 10 needs a pointer to a pointer, so give it one
-			ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
-			mD3D10Device->PSSetShaderResources(unit, 1, &d3d10ShaderResourceView);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D10Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
@@ -1311,29 +1149,9 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::fsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void Direct3D10Renderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// "pixel shader" in Direct3D terminology
-
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			// Direct3D 10 needs a pointer to a pointer, so give it one
-			ID3D10SamplerState *d3d10SamplerState = static_cast<SamplerState*>(samplerState)->getD3D10SamplerState();
-			mD3D10Device->PSSetSamplers(unit, 1, &d3d10SamplerState);
-		}
-		else
-		{
-			// Set the default sampler state
-			// -> Direct3D 10 needs a pointer to a pointer, so give it one
-			// -> The default values of "Renderer::SamplerState" are identical to Direct3D 10
-			ID3D10SamplerState *d3d10SamplerState = nullptr;
-			mD3D10Device->PSSetSamplers(unit, 1, &d3d10SamplerState);
-		}
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D10Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)

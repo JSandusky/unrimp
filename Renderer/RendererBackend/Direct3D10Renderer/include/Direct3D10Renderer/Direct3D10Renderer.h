@@ -42,6 +42,7 @@ namespace Renderer
 namespace Direct3D10Renderer
 {
 	class SwapChain;
+	class RootSignature;
 	class Direct3D9RuntimeLinking;
 	class Direct3D10RuntimeLinking;
 }
@@ -246,11 +247,9 @@ namespace Direct3D10Renderer
 		Direct3D9RuntimeLinking		  *mDirect3D9RuntimeLinking;	///< Direct3D 9 runtime linking instance, can be a null pointer
 		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
 		ID3D10Query					  *mD3D10QueryFlush;			///< Direct3D 10 query used for flush, can be a null pointer
-		//[-------------------------------------------------------]
-		//[ Output-merger (OM) stage                              ]
-		//[-------------------------------------------------------]
-		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "Direct3D10Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
-		Renderer::IRenderTarget *mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
+		SwapChain					  *mMainSwapChain;				///< In case the optional native main window handle within the "Direct3D10Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
+		Renderer::IRenderTarget		  *mRenderTarget;				///< Currently set render target (we keep a reference to it), can be a null pointer
+		RootSignature				  *mGraphicsRootSignature;		///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 
 
 	};
