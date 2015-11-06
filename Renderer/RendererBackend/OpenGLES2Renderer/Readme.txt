@@ -23,7 +23,7 @@ OpenGL ES 2 renderer implementation.
 
 
 == Dependencies ==
-OpenGL ES 2 capable grahpics driver or emulator, nothing else.
+OpenGL ES 2 capable graphics driver or emulator, nothing else.
 
 
 == Preprocessor Definitions ==

@@ -145,8 +145,8 @@ void VertexBuffer::onInitialization()
 				static const float VERTEX_POSITION[] =
 				{					// Vertex ID	Triangle on screen
 					-0.5f,  0.0f,	// 0			  0.......1
-						1.0f,  0.0f,	// 1			   .   .
-						0.0f, -1.0f	// 2			  	2
+					 1.0f,  0.0f,	// 1			   .   .
+					 0.0f, -1.0f	// 2			  	2
 				};
 				Renderer::IVertexBufferPtr vertexBufferPosition(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 

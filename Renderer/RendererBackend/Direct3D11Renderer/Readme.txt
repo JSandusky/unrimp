@@ -23,7 +23,7 @@ Direct3D 11 renderer implementation.
 
 
 == Dependencies ==
-Direct3D 11 runtime and Direct3D 11 capable grahpics driver, nothing else.
+Direct3D 11 runtime and Direct3D 11 capable graphics driver, nothing else.
 
 
 == Preprocessor Definitions ==

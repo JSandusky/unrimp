@@ -23,7 +23,7 @@ Direct3D 12 renderer implementation.
 
 
 == Dependencies ==
-Direct3D 12 runtime and Direct3D 12 capable grahpics driver, nothing else.
+Direct3D 12 runtime and Direct3D 12 capable graphics driver, nothing else.
 
 
 == Preprocessor Definitions ==

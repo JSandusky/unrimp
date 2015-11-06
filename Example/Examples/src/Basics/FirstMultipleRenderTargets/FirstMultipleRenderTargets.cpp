@@ -124,8 +124,8 @@ void FirstMultipleRenderTargets::onInitialization()
 				// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
 				static const float VERTEX_POSITION[] =
 				{					// Vertex ID	Triangle on screen
-						0.0f, 1.0f,	// 0				0
-						1.0f, 0.0f,	// 1			   .   .
+					 0.0f, 1.0f,	// 0				0
+					 1.0f, 0.0f,	// 1			   .   .
 					-0.5f, 0.0f		// 2			  2.......1
 				};
 				Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));

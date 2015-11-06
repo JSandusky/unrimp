@@ -23,7 +23,7 @@ Direct3D 10 renderer implementation.
 
 
 == Dependencies ==
-Direct3D 10 runtime and Direct3D 10 capable grahpics driver, nothing else.
+Direct3D 10 runtime and Direct3D 10 capable graphics driver, nothing else.
 
 
 == Preprocessor Definitions ==

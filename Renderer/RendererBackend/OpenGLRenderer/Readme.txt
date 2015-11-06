@@ -23,7 +23,7 @@ OpenGL renderer implementation.
 
 
 == Dependencies ==
-OpenGL capable grahpics driver, nothing else.
+OpenGL capable graphics driver, nothing else.
 
 
 == Preprocessor Definitions ==

@@ -111,18 +111,18 @@ void IcosahedronTessellation::onInitialization()
 			// -> Geometry is from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")
 			static const float VERTEX_POSITION[] =
 			{								// Vertex ID
-					0.000f,  0.000f,  1.000f,	// 0
-					0.894f,  0.000f,  0.447f,	// 1
-					0.276f,  0.851f,  0.447f,	// 2
+				 0.000f,  0.000f,  1.000f,	// 0
+				 0.894f,  0.000f,  0.447f,	// 1
+				 0.276f,  0.851f,  0.447f,	// 2
 				-0.724f,  0.526f,  0.447f,	// 3
 				-0.724f, -0.526f,  0.447f,	// 4
-					0.276f, -0.851f,  0.447f,	// 5
-					0.724f,  0.526f, -0.447f,	// 6
+				 0.276f, -0.851f,  0.447f,	// 5
+				 0.724f,  0.526f, -0.447f,	// 6
 				-0.276f,  0.851f, -0.447f,	// 7
 				-0.894f,  0.000f, -0.447f,	// 8
 				-0.276f, -0.851f, -0.447f,	// 9
-					0.724f, -0.526f, -0.447f,	// 10
-					0.000f,  0.000f, -1.000f	// 11
+				 0.724f, -0.526f, -0.447f,	// 10
+				 0.000f,  0.000f, -1.000f	// 11
 			};
 			Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
