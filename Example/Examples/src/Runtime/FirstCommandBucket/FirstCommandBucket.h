@@ -90,6 +90,7 @@ private:
 	RendererRuntime::CommandBucket<int> mSolidCommandBucket;
 	RendererRuntime::CommandBucket<int> mTransparentCommandBucket;
 	// Renderer resources
+	Renderer::IRootSignaturePtr	mRootSignature;
 	Renderer::IProgramPtr		mProgram;
 	Renderer::IUniformBufferPtr	mUniformBufferDynamicVs;
 	Renderer::IVertexArrayPtr	mSolidVertexArray;

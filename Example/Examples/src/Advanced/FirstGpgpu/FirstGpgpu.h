@@ -44,6 +44,7 @@
 *    - 2D texture
 *    - Sampler state object
 *    - Vertex shader (VS) and fragment shader (FS)
+*    - Root signature
 *    - Framebuffer object (FBO) used for render to texture
 *    - Depth stencil state object
 *    - General Purpose Computation on Graphics Processing Unit (GPGPU) by using the renderer interface and shaders without having any output window
@@ -141,6 +142,7 @@ private:
 	Renderer::ITexture2DPtr			mTexture2D[2];		///< 2D texture, can be a null pointer
 	Renderer::IFramebufferPtr		mFramebuffer[2];	///< Framebuffer object (FBO), can be a null pointer
 	Renderer::ISamplerStatePtr		mSamplerState;		///< Sampler state, can be a null pointer
+	Renderer::IRootSignaturePtr		mRootSignature;		///< Root signature, can be a null pointer
 	Renderer::IDepthStencilStatePtr	mDepthStencilState;	///< Depth stencil state, can be a null pointer
 	// Content generation
 	Renderer::IProgramPtr	   mProgramContentGeneration;		///< Program for content generation, can be a null pointer

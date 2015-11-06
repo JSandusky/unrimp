@@ -158,6 +158,17 @@ void FirstGpgpu::onInitialization()
 		mSamplerState = mRenderer->createSamplerState(samplerState);
 	}
 
+	{ // Create the root signature
+		// TODO(co) Correct root signature
+
+		// Setup
+		Renderer::RootSignatureBuilder rootSignature;
+		rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+		// Create the instance
+		mRootSignature = mRenderer->createRootSignature(rootSignature);
+	}
+
 	{ // Depth stencil state
 		// -> By default depth test is enabled
 		// -> In this simple example we don't need depth test, so, disable it so we don't need to care about the depth buffer
@@ -263,8 +274,8 @@ void FirstGpgpu::onInitialization()
 		//    the unused texture coordinate might get optimized out
 		// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
 		Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
-		mProgramContentGeneration = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentGeneration));
-		mProgramContentProcessing = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentProcessing));
+		mProgramContentGeneration = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentGeneration));
+		mProgramContentProcessing = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentProcessing));
 	}
 
 	// End debug event
@@ -283,6 +294,7 @@ void FirstGpgpu::onDeinitialization()
 	mProgramContentGeneration = nullptr;
 	mDepthStencilState = nullptr;
 	mSamplerState = nullptr;
+	mRootSignature = nullptr;
 	for (int i = 0; i < 2; ++i)
 	{
 		mFramebuffer[i] = nullptr;
@@ -352,6 +364,9 @@ void FirstGpgpu::generate2DTextureContent()
 		{
 			// Clear the color buffer of the current render target with blue
 			mRenderer->clear(Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
+
+			// Set the used graphics root signature
+			mRenderer->setGraphicsRootSignature(mRootSignature);
 
 			{ // Set the viewport
 				// Get the render target with and height
@@ -425,6 +440,9 @@ void FirstGpgpu::contentProcessing()
 		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 		if (mRenderer->beginScene())
 		{
+			// Set the used graphics root signature
+			mRenderer->setGraphicsRootSignature(mRootSignature);
+
 			// Set the used program
 			mRenderer->setProgram(mProgramContentProcessing);
 

@@ -128,6 +128,7 @@ void FirstGeometryShader::onInitialization()
 
 				// Create the program
 				program = shaderLanguage->createProgram(
+					*mRootSignature,
 					vertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createGeometryShaderFromSourceCode(geometryShaderSourceCode, Renderer::GsInputPrimitiveTopology::POINTS, Renderer::GsOutputPrimitiveTopology::TRIANGLE_STRIP, 3),

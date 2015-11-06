@@ -42,6 +42,7 @@ namespace Renderer
 	class IRenderer;
 	class IVertexShader;
 	class IUniformBuffer;
+	class IRootSignature;
 	class IGeometryShader;
 	class IFragmentShader;
 	struct VertexAttributes;
@@ -91,6 +92,8 @@ namespace Renderer
 		*  @brief
 		*    Create a program and assigns a vertex and fragment shader to it
 		*
+		*  @param[in] rootSignature
+		*    Root signature
 		*  @param[in] vertexAttributes
 		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] vertexShader
@@ -107,12 +110,14 @@ namespace Renderer
 		*      (this means that in the case of not having any more references, a shader might get destroyed when calling this method)
 		*    - Comfort method
 		*/
-		inline IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader);
+		inline IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader);
 
 		/**
 		*  @brief
 		*    Create a program and assigns a vertex, geometry and fragment shader to it
 		*
+		*  @param[in] rootSignature
+		*    Root signature
 		*  @param[in] vertexAttributes
 		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] vertexShader
@@ -131,12 +136,14 @@ namespace Renderer
 		*      (this means that in the case of not having any more references, a shader might get destroyed when calling this method)
 		*    - Comfort method
 		*/
-		inline IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader);
+		inline IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader);
 
 		/**
 		*  @brief
 		*    Create a program and assigns a vertex, tessellation control, tessellation evaluation and fragment shader to it
 		*
+		*  @param[in] rootSignature
+		*    Root signature
 		*  @param[in] vertexAttributes
 		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] vertexShader
@@ -157,7 +164,7 @@ namespace Renderer
 		*      (this means that in the case of not having any more references, a shader might get destroyed when calling this method)
 		*    - Comfort method
 		*/
-		inline IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader);
+		inline IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader);
 
 
 	//[-------------------------------------------------------]
@@ -457,6 +464,8 @@ namespace Renderer
 		*  @brief
 		*    Create a program and assigns a vertex, tessellation control, tessellation evaluation, geometry and fragment shader to it
 		*
+		*  @param[in] rootSignature
+		*    Root signature
 		*  @param[in] vertexAttributes
 		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] vertexShader
@@ -479,7 +488,7 @@ namespace Renderer
 		*    - It's valid that a program implementation is adding a reference and releasing it again at once
 		*      (this means that in the case of not having any more references, a shader might get destroyed when calling this method)
 		*/
-		virtual IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader) = 0;
+		virtual IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader) = 0;
 
 		/**
 		*  @brief

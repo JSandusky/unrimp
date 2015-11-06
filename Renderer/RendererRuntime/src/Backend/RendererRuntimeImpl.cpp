@@ -84,6 +84,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	RendererRuntimeImpl::RendererRuntimeImpl(Renderer::IRenderer &renderer) :
+		mRootSignature(nullptr),
 		mFontProgram(nullptr),
 		mFontVertexShaderUniformBuffer(nullptr),
 		mFontFragmentShaderUniformBuffer(nullptr),
@@ -149,6 +150,12 @@ namespace RendererRuntime
 			mFontProgram->release();
 		}
 
+		// Release the root signature instance
+		if (nullptr != mRootSignature)
+		{
+			mRootSignature->release();
+		}
+
 		// Destroy the manager instances
 		delete mAssetManager;
 		delete mCompositorManager;
@@ -168,6 +175,27 @@ namespace RendererRuntime
 
 	Renderer::IProgram *RendererRuntimeImpl::getFontProgram()
 	{
+		// Create the root signature instance right now?
+		// TODO(co) Move this elsewhere
+		if (nullptr == mRootSignature)
+		{
+			// Create the root signature
+			Renderer::DescriptorRangeBuilder ranges[2];
+			ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0);
+			ranges[1].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 0);
+
+			Renderer::RootParameterBuilder rootParameters[2];
+			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
+			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
+
+			// Setup
+			Renderer::RootSignatureBuilder rootSignature;
+			rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+			// Create the instance
+			mRootSignature = mRenderer->createRootSignature(rootSignature);
+		}
+
 		// Create the font program instance right now?
 		if (nullptr == mFontProgram)
 		{
@@ -186,6 +214,7 @@ namespace RendererRuntime
 
 				// Create the program
 				mFontProgram = shaderLanguage->createProgram(
+					*mRootSignature,
 					::detail::VertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));

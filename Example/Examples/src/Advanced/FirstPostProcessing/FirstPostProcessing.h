@@ -44,6 +44,7 @@
 *    - 2D texture
 *    - Sampler state object
 *    - Vertex shader (VS) and fragment shader (FS)
+*    - Root signature
 *    - Framebuffer object (FBO) used for render to texture
 *    - Depth stencil state object
 *    - Post processing
@@ -113,6 +114,7 @@ private:
 	Renderer::ITexture2DPtr			mTexture2D;			///< 2D texture, can be a null pointer
 	Renderer::IFramebufferPtr		mFramebuffer;		///< Framebuffer object (FBO), can be a null pointer
 	Renderer::ISamplerStatePtr		mSamplerState;		///< Sampler state, can be a null pointer
+	Renderer::IRootSignaturePtr		mRootSignature;		///< Root signature, can be a null pointer
 	Renderer::IDepthStencilStatePtr	mDepthStencilState;	///< Depth stencil state, can be a null pointer
 	// Scene rendering
 	Renderer::IProgramPtr	   mProgramSceneRendering;		///< Program for scene rendering, can be a null pointer

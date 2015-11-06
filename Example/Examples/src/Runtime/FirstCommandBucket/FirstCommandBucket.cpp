@@ -144,6 +144,17 @@ void FirstCommandBucket::onInitialization()
 			RENDERER_SET_RESOURCE_DEBUG_NAME(mTransparentVertexArray, "Transparent triangle VAO")
 		}
 
+		{ // Create the root signature
+			// TODO(co) Correct root signature
+
+			// Setup
+			Renderer::RootSignatureBuilder rootSignature;
+			rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+			// Create the instance
+			mRootSignature = renderer->createRootSignature(rootSignature);
+		}
+
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
@@ -168,7 +179,7 @@ void FirstCommandBucket::onInitialization()
 				RENDERER_SET_RESOURCE_DEBUG_NAME(fragmentShader, "Triangle FS")
 
 				// Create the program
-				mProgram = shaderLanguage->createProgram(vertexAttributes, vertexShader, fragmentShader);
+				mProgram = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, fragmentShader);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mProgram, "Triangle program")
 			}
 
@@ -216,6 +227,7 @@ void FirstCommandBucket::onDeinitialization()
 
 	// Release the used resources
 	mProgram = nullptr;
+	mRootSignature = nullptr;
 	mUniformBufferDynamicVs = nullptr;
 	mSolidVertexArray = nullptr;
 	mTransparentVertexArray = nullptr;
@@ -248,6 +260,9 @@ void FirstCommandBucket::onDraw()
 
 			// Draw text
 	//		mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
+
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
 
 			// Set the used uniform buffers
 			// TODO(co) Has to be part of material binding

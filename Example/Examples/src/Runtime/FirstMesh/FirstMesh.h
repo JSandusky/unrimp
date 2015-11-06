@@ -63,6 +63,7 @@ namespace RendererToolkit
 *    - Texture buffer object (TBO)
 *    - Sampler state object
 *    - Vertex shader (VS) and fragment shader (FS)
+*    - Root signature
 *    - Texture collection
 *    - Sampler state collection
 *    - Blinn-Phong shading
@@ -110,6 +111,7 @@ public:
 //[-------------------------------------------------------]
 private:
 	Renderer::IUniformBufferPtr			  mUniformBuffer;			///< Uniform buffer object (UBO), can be a null pointer
+	Renderer::IRootSignaturePtr			  mRootSignature;			///< Root signature, can be a null pointer
 	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
 	RendererRuntime::FontResource*		  mFontResource;			///< Font resource, can be a null pointer
 	RendererRuntime::MeshResource*		  mMeshResource;			///< Mesh resource, can be a null pointer

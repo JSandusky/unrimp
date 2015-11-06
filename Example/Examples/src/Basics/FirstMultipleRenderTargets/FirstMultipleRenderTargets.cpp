@@ -90,6 +90,17 @@ void FirstMultipleRenderTargets::onInitialization()
 				mSamplerState = renderer->createSamplerState(samplerState);
 			}
 
+			{ // Create the root signature
+				// TODO(co) Correct root signature
+
+				// Setup
+				Renderer::RootSignatureBuilder rootSignature;
+				rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+				// Create the instance
+				mRootSignature = renderer->createRootSignature(rootSignature);
+			}
+
 			// Vertex input layout
 			const Renderer::VertexAttribute vertexAttributesLayout[] =
 			{
@@ -154,8 +165,8 @@ void FirstMultipleRenderTargets::onInitialization()
 				//    the unused texture coordinate might get optimized out
 				// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
 				Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
-				mProgramMultipleRenderTargets = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_MultipleRenderTargets));
-				mProgram = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
+				mProgramMultipleRenderTargets = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_MultipleRenderTargets));
+				mProgram = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 		}
 		else
@@ -179,6 +190,7 @@ void FirstMultipleRenderTargets::onDeinitialization()
 	mProgramMultipleRenderTargets = nullptr;
 	mProgram = nullptr;
 	mSamplerState = nullptr;
+	mRootSignature = nullptr;
 	mFramebuffer = nullptr;
 	for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 	{
@@ -247,6 +259,9 @@ void FirstMultipleRenderTargets::onDraw()
 				// Clear the color buffer of the current render targets with black
 				renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLACK, 1.0f, 0);
 
+				// Set the used graphics root signature
+				renderer->setGraphicsRootSignature(mRootSignature);
+
 				// Set the used program
 				renderer->setProgram(mProgramMultipleRenderTargets);
 
@@ -308,6 +323,9 @@ void FirstMultipleRenderTargets::onDraw()
 			{
 				// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 				renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+				// Set the used graphics root signature
+				renderer->setGraphicsRootSignature(mRootSignature);
 
 				// Set the used program
 				renderer->setProgram(mProgram);

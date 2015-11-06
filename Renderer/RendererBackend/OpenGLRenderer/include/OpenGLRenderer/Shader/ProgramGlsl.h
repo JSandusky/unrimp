@@ -35,6 +35,7 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
+	class IRootSignature;
 	struct VertexAttributes;
 }
 namespace OpenGLRenderer
@@ -75,6 +76,8 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
+		*  @param[in] rootSignature
+		*    Root signature
 		*  @param[in] vertexAttributes
 		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] vertexShaderGlsl
@@ -91,7 +94,7 @@ namespace OpenGLRenderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramGlsl(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl);
+		ProgramGlsl(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl);
 
 		/**
 		*  @brief

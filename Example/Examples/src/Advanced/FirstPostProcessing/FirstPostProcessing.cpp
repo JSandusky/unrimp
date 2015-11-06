@@ -73,6 +73,17 @@ void FirstPostProcessing::onInitialization()
 			mSamplerState = renderer->createSamplerState(samplerState);
 		}
 
+		{ // Create the root signature
+			// TODO(co) Correct root signature
+
+			// Setup
+			Renderer::RootSignatureBuilder rootSignature;
+			rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+			// Create the instance
+			mRootSignature = renderer->createRootSignature(rootSignature);
+		}
+
 		{ // Depth stencil state
 		  // -> By default depth test is enabled
 		  // -> In this simple example we don't need depth test, so, disable it so we don't need to care about the depth buffer
@@ -178,8 +189,8 @@ void FirstPostProcessing::onInitialization()
 			//    the unused texture coordinate might get optimized out
 			// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
 			Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
-			mProgramSceneRendering = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_SceneRendering));
-			mProgramPostProcessing = shaderLanguage->createProgram(vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_PostProcessing));
+			mProgramSceneRendering = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_SceneRendering));
+			mProgramPostProcessing = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_PostProcessing));
 		}
 
 		// End debug event
@@ -198,6 +209,7 @@ void FirstPostProcessing::onDeinitialization()
 	mVertexArraySceneRendering = nullptr;
 	mProgramSceneRendering = nullptr;
 	mDepthStencilState = nullptr;
+	mRootSignature = nullptr;
 	mSamplerState = nullptr;
 	mFramebuffer = nullptr;
 	mTexture2D = nullptr;
@@ -312,6 +324,9 @@ void FirstPostProcessing::sceneRendering()
 			// Clear the color buffer of the current render target with blue
 			renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
 
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
+
 			// Set the used program
 			renderer->setProgram(mProgramSceneRendering);
 
@@ -356,6 +371,9 @@ void FirstPostProcessing::postProcessing()
 		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 		if (renderer->beginScene())
 		{
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
+
 			// Set the used program
 			renderer->setProgram(mProgramPostProcessing);
 

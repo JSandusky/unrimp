@@ -79,6 +79,17 @@ void FirstRenderToTexture::onInitialization()
 			mSamplerState = renderer->createSamplerState(samplerState);
 		}
 
+		{ // Create the root signature
+			// TODO(co) Correct root signature
+
+			// Setup
+			Renderer::RootSignatureBuilder rootSignature;
+			rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+			// Create the instance
+			mRootSignature = renderer->createRootSignature(rootSignature);
+		}
+
 		// Vertex input layout
 		const Renderer::VertexAttribute vertexAttributesLayout[] =
 		{
@@ -139,6 +150,7 @@ void FirstRenderToTexture::onInitialization()
 
 			// Create the program
 			mProgram = shaderLanguage->createProgram(
+				*mRootSignature,
 				vertexAttributes,
 				shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 				shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
@@ -158,6 +170,7 @@ void FirstRenderToTexture::onDeinitialization()
 	mVertexArray = nullptr;
 	mProgram = nullptr;
 	mSamplerState = nullptr;
+	mRootSignature = nullptr;
 	mFramebuffer = nullptr;
 	mTexture2D = nullptr;
 
@@ -219,6 +232,9 @@ void FirstRenderToTexture::onDraw()
 			{
 				// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 				renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+				// Set the used graphics root signature
+				renderer->setGraphicsRootSignature(mRootSignature);
 
 				// Set the used program
 				renderer->setProgram(mProgram);

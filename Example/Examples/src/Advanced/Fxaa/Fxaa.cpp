@@ -102,6 +102,17 @@ void Fxaa::onInitialization()
 			mSamplerState = renderer->createSamplerState(samplerState);
 		}
 
+		{ // Create the root signature
+			// TODO(co) Correct root signature
+
+			// Setup
+			Renderer::RootSignatureBuilder rootSignature;
+			rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+			// Create the instance
+			mRootSignature = renderer->createRootSignature(rootSignature);
+		}
+
 		{ // Depth stencil state
 		  // -> By default depth test is enabled
 		  // -> In this simple example we don't need depth test, so, disable it so we don't need to care about the depth buffer
@@ -130,6 +141,7 @@ void Fxaa::onInitialization()
 
 				// Create the program for scene rendering
 				mProgramSceneRendering = shaderLanguage->createProgram(
+					*mRootSignature,
 					detail::VertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
@@ -211,6 +223,7 @@ void Fxaa::onDeinitialization()
 	mProgramSceneRendering = nullptr;
 	mDepthStencilState = nullptr;
 	mSamplerState = nullptr;
+	mRootSignature = nullptr;
 	mFramebuffer = nullptr;
 	mTexture2D = nullptr;
 
@@ -363,6 +376,7 @@ void Fxaa::recreatePostProcessingProgram()
 
 			// Create the program for the FXAA post processing
 			mProgramPostProcessing = shaderLanguage->createProgram(
+				*mRootSignature,
 				detail::VertexAttributes,
 				shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 				shaderLanguage->createFragmentShaderFromSourceCode(sourceCode));
@@ -410,6 +424,9 @@ void Fxaa::sceneRendering()
 			// Clear the color buffer of the current render target with black
 			renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLACK, 1.0f, 0);
 
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
+
 			// Set the used program
 			renderer->setProgram(mProgramSceneRendering);
 
@@ -454,6 +471,9 @@ void Fxaa::postProcessing()
 		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 		if (renderer->beginScene())
 		{
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
+
 			// Set the used program
 			renderer->setProgram(mProgramPostProcessing);
 

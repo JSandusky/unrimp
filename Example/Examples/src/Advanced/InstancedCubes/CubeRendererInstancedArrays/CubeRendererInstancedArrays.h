@@ -95,6 +95,7 @@ private:
 	uint32_t					  mMaximumNumberOfInstancesPerBatch;	///< Maximum number of instances per batch
 	Renderer::ITexture2DPtr		  mTexture2D;							///< 2D texture, can be a null pointer
 	Renderer::ISamplerStatePtr	  mSamplerState;						///< Sampler state, can be a null pointer
+	Renderer::IRootSignaturePtr	  mRootSignature;						///< Root signature, can be a null pointer
 	Renderer::IUniformBufferPtr	  mUniformBufferStaticVs;				///< Static vertex shader uniform buffer object (UBO), can be a null pointer
 	Renderer::IUniformBufferPtr	  mUniformBufferDynamicVs;				///< Dynamic vertex shader uniform buffer object (UBO), can be a null pointer
 	Renderer::IUniformBufferPtr	  mUniformBufferDynamicFs;				///< Dynamic fragment shader uniform buffer object (UBO), can be a null pointer

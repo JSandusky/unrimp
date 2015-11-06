@@ -187,6 +187,17 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 	// Create sampler state
 	mSamplerState = mRenderer->createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
+	{ // Create the root signature
+		// TODO(co) Correct root signature
+
+		// Setup
+		Renderer::RootSignatureBuilder rootSignature;
+		rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+		// Create the instance
+		mRootSignature = mRenderer->createRootSignature(rootSignature);
+	}
+
 	// Decide which shader language should be used (for example "GLSL" or "HLSL")
 	Renderer::IShaderLanguagePtr shaderLanguage(mRenderer->getShaderLanguage());
 	if (nullptr != shaderLanguage)
@@ -225,6 +236,7 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 
 			// Create the program
 			mProgram = shaderLanguage->createProgram(
+				*mRootSignature,
 				detail::VertexAttributes,
 				shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 				shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
@@ -371,6 +383,9 @@ void CubeRendererInstancedArrays::draw(float globalTimer, float globalScale, flo
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
+
+		// Set the used graphics root signature
+		mRenderer->setGraphicsRootSignature(mRootSignature);
 
 		// Set the used program
 		mRenderer->setProgram(mProgram);

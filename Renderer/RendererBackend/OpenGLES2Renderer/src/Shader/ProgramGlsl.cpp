@@ -39,7 +39,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramGlsl::ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
+	ProgramGlsl::ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, const Renderer::IRootSignature&, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
 		Program(openGLES2Renderer)
 	{
 		// Create the OpenGL ES 2 program
@@ -74,7 +74,14 @@ namespace OpenGLES2Renderer
 		// Check the link status
 		GLint linked = GL_FALSE;
 		glGetProgramiv(mOpenGLES2Program, GL_LINK_STATUS, &linked);
-		if (GL_TRUE != linked)
+		if (GL_TRUE == linked)
+		{
+			// The actual locations assigned to uniform variables are not known until the program object is linked successfully
+			// TODO(co) Use root signature
+			int i = 0;
+			i = 0;
+		}
+		else
 		{
 			// Error, program link failed!
 			#ifdef RENDERER_OUTPUT_DEBUG
@@ -89,7 +96,7 @@ namespace OpenGLES2Renderer
 					// Get the information
 					glGetProgramInfoLog(mOpenGLES2Program, informationLength, nullptr, informationLog);
 
-					// Ouput the debug string
+					// Output the debug string
 					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
 
 					// Cleanup information memory

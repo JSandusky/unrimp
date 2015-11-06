@@ -168,6 +168,17 @@ void FirstMesh::onInitialization()
 			};
 			const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
 
+			{ // Create the root signature
+				// TODO(co) Correct root signature
+
+				// Setup
+				Renderer::RootSignatureBuilder rootSignature;
+				rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+				// Create the instance
+				mRootSignature = renderer->createRootSignature(rootSignature);
+			}
+
 			{ // Create the program
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderProfile = nullptr;
@@ -182,6 +193,7 @@ void FirstMesh::onInitialization()
 
 				// Create the program
 				mProgram = shaderLanguage->createProgram(
+					*mRootSignature,
 					vertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode, vertexShaderProfile),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode, fragmentShaderProfile));
@@ -284,6 +296,7 @@ void FirstMesh::onDeinitialization()
 
 	// Release the used resources
 	mProgram = nullptr;
+	mRootSignature = nullptr;
 	mUniformBuffer = nullptr;
 
 	// End debug event
@@ -340,6 +353,9 @@ void FirstMesh::onDraw()
 		{
 			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
 
 			// Set the used program
 			renderer->setProgram(mProgram);

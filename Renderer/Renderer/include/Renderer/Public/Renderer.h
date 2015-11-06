@@ -1679,17 +1679,17 @@ namespace Renderer
 			{
 				return *mRenderer;
 			}
-			inline IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader)
+			inline IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader)
 			{
-				return createProgram(vertexAttributes, vertexShader, nullptr, nullptr, nullptr, fragmentShader);
+				return createProgram(rootSignature, vertexAttributes, vertexShader, nullptr, nullptr, nullptr, fragmentShader);
 			}
-			inline IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader)
+			inline IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader)
 			{
-				return createProgram(vertexAttributes, vertexShader, nullptr, nullptr, geometryShader, fragmentShader);
+				return createProgram(rootSignature, vertexAttributes, vertexShader, nullptr, nullptr, geometryShader, fragmentShader);
 			}
-			inline IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader)
+			inline IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader)
 			{
-				return createProgram(vertexAttributes, vertexShader, tessellationControlShader, tessellationEvaluationShader, nullptr, fragmentShader);
+				return createProgram(rootSignature, vertexAttributes, vertexShader, tessellationControlShader, tessellationEvaluationShader, nullptr, fragmentShader);
 			}
 		public:
 			virtual const char *getShaderLanguageName() const = 0;
@@ -1703,7 +1703,7 @@ namespace Renderer
 			virtual IGeometryShader *createGeometryShaderFromSourceCode(const char *sourceCode, GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
 			virtual IFragmentShader *createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes) = 0;
 			virtual IFragmentShader *createFragmentShaderFromSourceCode(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
-			virtual IProgram *createProgram(const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader) = 0;
+			virtual IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader) = 0;
 			virtual IUniformBuffer *createUniformBuffer(uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
 		protected:
 			explicit IShaderLanguage(IRenderer &renderer);

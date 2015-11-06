@@ -113,6 +113,17 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 	// Create sampler state
 	mSamplerState = mRenderer->createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
+	{ // Create the root signature
+		// TODO(co) Correct root signature
+
+		// Setup
+		Renderer::RootSignatureBuilder rootSignature;
+		rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+		// Create the instance
+		mRootSignature = mRenderer->createRootSignature(rootSignature);
+	}
+
 	// Vertex input layout
 	const Renderer::VertexAttribute vertexAttributesLayout[] =
 	{
@@ -269,6 +280,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 
 			// Create the program
 			mProgram = shaderLanguage->createProgram(
+				*mRootSignature,
 				vertexAttributes,
 				shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 				shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
@@ -349,6 +361,9 @@ void CubeRendererDrawInstanced::draw(float globalTimer, float globalScale, float
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
+
+		// Set the used graphics root signature
+		mRenderer->setGraphicsRootSignature(mRootSignature);
 
 		// Set the used program
 		mRenderer->setProgram(mProgram);

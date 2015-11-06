@@ -184,6 +184,7 @@ void VertexBuffer::onInitialization()
 
 				// Create the program
 				program = shaderLanguage->createProgram(
+					*mRootSignature,
 					vertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));

@@ -139,7 +139,7 @@ void FirstTriangle::onInitialization()
 				RENDERER_SET_RESOURCE_DEBUG_NAME(fragmentShader, "Triangle FS")
 
 				// Create the program
-				program = shaderLanguage->createProgram(vertexAttributes, vertexShader, fragmentShader);
+				program = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, fragmentShader);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(program, "Triangle program")
 			}
 

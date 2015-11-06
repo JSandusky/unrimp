@@ -39,6 +39,7 @@ namespace Renderer
 	class IBlendState;
 	class IVertexArray;
 	class ISamplerState;
+	class IRootSignature;
 	class IUniformBuffer;
 }
 
@@ -194,12 +195,13 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		Renderer::IRootSignature *mRootSignature;					///< Root signature, can be a null pointer
 		Renderer::IProgram		 *mFontProgram;						///< Font program (we keep a reference to it), can be a null pointer, do only access it by using "getFontProgram()"
 		Renderer::IUniformBuffer *mFontVertexShaderUniformBuffer;	///< Font vertex shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexShaderUniformBuffer()"
 		Renderer::IUniformBuffer *mFontFragmentShaderUniformBuffer;	///< Font fragment shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontFragmentShaderUniformBuffer()"
 		Renderer::IVertexArray	 *mFontVertexArray;					///< Vertex array object (VAO, we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexArray()"
 		Renderer::ISamplerState	 *mFontSamplerState;				///< Font sampler state (we keep a reference to it), can be a null pointer, do only access it by using "getFontSamplerState()"
-		Renderer::IBlendState	 *mFontBlendState;					///< Font blend state state (we keep a reference to it), can be a null pointer, do only access it by using "getFontBlendState()"
+		Renderer::IBlendState	 *mFontBlendState;					///< Font blend state (we keep a reference to it), can be a null pointer, do only access it by using "getFontBlendState()"
 
 
 	};

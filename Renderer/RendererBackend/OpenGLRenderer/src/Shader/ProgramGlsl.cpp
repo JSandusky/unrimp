@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramGlsl::ProgramGlsl(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
+	ProgramGlsl::ProgramGlsl(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature&, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
 		Program(openGLRenderer, InternalResourceType::GLSL),
 		mOpenGLProgram(glCreateProgramObjectARB())
 	{
@@ -114,7 +114,14 @@ namespace OpenGLRenderer
 		// Check the link status
 		GLint linked = GL_FALSE;
 		glGetObjectParameterivARB(mOpenGLProgram, GL_OBJECT_LINK_STATUS_ARB, &linked);
-		if (GL_TRUE != linked)
+		if (GL_TRUE == linked)
+		{
+			// The actual locations assigned to uniform variables are not known until the program object is linked successfully
+			// TODO(co) Use root signature
+			int i = 0;
+			i = 0;
+		}
+		else
 		{
 			// Error, program link failed!
 			#ifdef RENDERER_OUTPUT_DEBUG

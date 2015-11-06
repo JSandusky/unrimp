@@ -124,7 +124,7 @@ namespace OpenGLES2Renderer
 		return new FragmentShaderGlsl(getOpenGLES2Renderer(), sourceCode);
 	}
 
-	Renderer::IProgram *ShaderLanguageGlsl::createProgram(const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)
+	Renderer::IProgram *ShaderLanguageGlsl::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)
 	{
 		// A shader can be a null pointer, but if it's not the shader and program language must match!
 		// -> Optimization: Comparing the shader language name by directly comparing the pointer address of
@@ -153,7 +153,7 @@ namespace OpenGLES2Renderer
 		else
 		{
 			// Create the program
-			return new ProgramGlsl(getOpenGLES2Renderer(), vertexAttributes, static_cast<VertexShaderGlsl*>(vertexShader), static_cast<FragmentShaderGlsl*>(fragmentShader));
+			return new ProgramGlsl(getOpenGLES2Renderer(), rootSignature, vertexAttributes, static_cast<VertexShaderGlsl*>(vertexShader), static_cast<FragmentShaderGlsl*>(fragmentShader));
 		}
 
 		// Error! Shader language mismatch!
