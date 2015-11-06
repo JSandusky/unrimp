@@ -42,10 +42,13 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    See Direct3D 12 "D3D12_DESCRIPTOR_RANGE_TYPE"-documentation
+	*    Descriptor range type
 	*
 	*  @note
 	*    - These constants directly map to Direct3D 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_DESCRIPTOR_RANGE_TYPE"-documentation for details
 	*/
 	struct DescriptorRangeType
 	{
@@ -60,10 +63,13 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    See Direct3D 12 "D3D12_DESCRIPTOR_RANGE"-documentation
+	*    Descriptor range
 	*
 	*  @note
 	*    - This structure directly maps to Direct3D 12 structure, do not change it
+	*
+	*  @see
+	*    - "D3D12_DESCRIPTOR_RANGE"-documentation for details
 	*/
 	struct DescriptorRange
 	{
@@ -118,10 +124,13 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    See Direct3D 12 "D3D12_ROOT_DESCRIPTOR_TABLE"-documentation
+	*    Root descriptor table
 	*
 	*  @note
 	*    - This structure directly maps to Direct3D 12 structure, do not change it
+	*
+	*  @see
+	*    - "D3D12_ROOT_DESCRIPTOR_TABLE"-documentation for details
 	*/
 	struct RootDescriptorTable
 	{
@@ -160,10 +169,13 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    See Direct3D 12 "D3D12_ROOT_PARAMETER_TYPE"-documentation
+	*    Root parameter type
 	*
 	*  @note
 	*    - These constants directly map to Direct3D 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_ROOT_PARAMETER_TYPE"-documentation for details
 	*/
 	struct RootParameterType
 	{
@@ -179,10 +191,13 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    See Direct3D 12 "D3D12_ROOT_CONSTANTS"-documentation
+	*    Root constants
 	*
 	*  @note
 	*    - This structure directly maps to Direct3D 12 structure, do not change it
+	*
+	*  @see
+	*    - "D3D12_ROOT_CONSTANTS"-documentation for details
 	*/
 	struct RootConstants
 	{
@@ -226,10 +241,13 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    See Direct3D 12 "D3D12_ROOT_DESCRIPTOR"-documentation
+	*    Root descriptor
 	*
 	*  @note
 	*    - This structure directly maps to Direct3D 12 structure, do not change it
+	*
+	*  @see
+	*    - "D3D12_ROOT_DESCRIPTOR"-documentation for details
 	*/
 	struct RootDescriptor
 	{
@@ -265,10 +283,13 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    See Direct3D 12 "D3D12_SHADER_VISIBILITY"-documentation
+	*    Shader visibility
 	*
 	*  @note
 	*    - These constants directly map to Direct3D 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_SHADER_VISIBILITY"-documentation for details
 	*/
 	struct ShaderVisibility
 	{
@@ -285,10 +306,13 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    See Direct3D 12 "D3D12_ROOT_PARAMETER"-documentation
+	*    Root parameter
 	*
 	*  @note
 	*    - This structure directly maps to Direct3D 12 structure, do not change it
+	*
+	*  @see
+	*    - "D3D12_ROOT_PARAMETER"-documentation for details
 	*/
 	struct RootParameter
 	{
@@ -400,10 +424,13 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    See Direct3D 12 "D3D12_ROOT_SIGNATURE_FLAGS"-documentation
+	*    Root signature flags
 	*
 	*  @note
 	*    - These constants directly map to Direct3D 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_ROOT_SIGNATURE_FLAGS"-documentation for details
 	*/
 	struct RootSignatureFlags
 	{
@@ -422,10 +449,13 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    See Direct3D 12 "D3D12_STATIC_BORDER_COLOR"-documentation
+	*    Static border color
 	*
 	*  @note
 	*    - These constants directly map to Direct3D 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_STATIC_BORDER_COLOR"-documentation for details
 	*/
 	struct StaticBorderColor
 	{
@@ -439,10 +469,13 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    See Direct3D 12 "D3D12_STATIC_SAMPLER_DESC"-documentation
+	*    Static sampler
 	*
 	*  @note
 	*    - This structure directly maps to Direct3D 12 structure, do not change it
+	*
+	*  @see
+	*    - "D3D12_STATIC_SAMPLER_DESC"-documentation for details
 	*/
 	struct StaticSampler
 	{
@@ -463,10 +496,13 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    See Direct3D 12 "D3D12_ROOT_SIGNATURE_DESC"-documentation
+	*    Root signature
 	*
 	*  @note
 	*    - This structure directly maps to Direct3D 12 structure, do not change it
+	*
+	*  @see
+	*    - "D3D12_ROOT_SIGNATURE_DESC"-documentation for details
 	*/
 	struct RootSignature
 	{
