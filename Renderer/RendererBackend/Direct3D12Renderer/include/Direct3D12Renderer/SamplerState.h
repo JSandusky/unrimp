@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-//struct ID3D12SamplerState;	// TODO(co) Direct3D 12
+struct ID3D12DescriptorHeap;
 namespace Renderer
 {
 	struct SamplerState;
@@ -85,13 +85,12 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D 12 sampler state
+		*    Return the Direct3D descriptor heap instance
 		*
 		*  @return
-		*    The Direct3D 12 sampler state, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D descriptor heap instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		// TODO(co) Direct3D 12
-		//inline ID3D12SamplerState *getD3D12SamplerState() const;
+		inline ID3D12DescriptorHeap* getD3D12DescriptorHeap() const;
 
 
 	//[-------------------------------------------------------]
@@ -105,8 +104,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Direct3D 12
-		//ID3D12SamplerState *mD3D12SamplerState;	///< Direct3D 12 sampler state, can be a null pointer
+		ID3D12DescriptorHeap* mD3D12DescriptorHeap;
 
 
 	};
