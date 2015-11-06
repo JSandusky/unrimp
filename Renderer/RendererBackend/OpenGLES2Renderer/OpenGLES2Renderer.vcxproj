@@ -55,6 +55,7 @@
     <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Renderer.h" />
     <ClInclude Include="include\OpenGLES2Renderer\PipelineState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\RasterizerState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\RootSignature.h" />
     <ClInclude Include="include\OpenGLES2Renderer\SamplerState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\SamplerStateCollection.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Shader\FragmentShader.h" />
@@ -87,6 +88,7 @@
     <ClCompile Include="src\OpenGLES2Renderer.cpp" />
     <ClCompile Include="src\PipelineState.cpp" />
     <ClCompile Include="src\RasterizerState.cpp" />
+    <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateCollection.cpp" />
     <ClCompile Include="src\Shader\FragmentShader.cpp" />

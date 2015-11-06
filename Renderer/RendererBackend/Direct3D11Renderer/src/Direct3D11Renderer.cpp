@@ -34,6 +34,7 @@
 #include "Direct3D11Renderer/IndexBuffer.h"
 #include "Direct3D11Renderer/SamplerState.h"
 #include "Direct3D11Renderer/VertexBuffer.h"
+#include "Direct3D11Renderer/RootSignature.h"
 #include "Direct3D11Renderer/PipelineState.h"
 #include "Direct3D11Renderer/TextureBuffer.h"
 #include "Direct3D11Renderer/Texture2DArray.h"
@@ -354,10 +355,9 @@ namespace Direct3D11Renderer
 		return new Texture2DArray(*this, width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
 	}
 
-	Renderer::IRootSignature *Direct3D11Renderer::createRootSignature(const Renderer::RootSignature &)
+	Renderer::IRootSignature *Direct3D11Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
 	{
-		// TODO(co) Implement me
-		return nullptr;
+		return new RootSignature(*this, rootSignature);
 	}
 
 	Renderer::IPipelineState *Direct3D11Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)

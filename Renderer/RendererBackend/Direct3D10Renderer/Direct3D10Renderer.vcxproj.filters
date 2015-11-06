@@ -179,6 +179,9 @@
     <ClInclude Include="include\Direct3D10Renderer\PipelineState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\RootSignature.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\GeometryShaderHlsl.cpp">
@@ -272,6 +275,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PipelineState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

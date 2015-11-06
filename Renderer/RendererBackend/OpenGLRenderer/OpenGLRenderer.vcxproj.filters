@@ -202,6 +202,9 @@
     <ClInclude Include="include\OpenGLRenderer\PipelineState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\RootSignature.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -388,6 +391,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PipelineState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

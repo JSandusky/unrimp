@@ -33,6 +33,7 @@
 #include "Direct3D9Renderer/IndexBuffer.h"
 #include "Direct3D9Renderer/SamplerState.h"
 #include "Direct3D9Renderer/VertexBuffer.h"
+#include "Direct3D9Renderer/RootSignature.h"
 #include "Direct3D9Renderer/PipelineState.h"
 #include "Direct3D9Renderer/RasterizerState.h"
 #include "Direct3D9Renderer/DepthStencilState.h"
@@ -409,10 +410,9 @@ namespace Direct3D9Renderer
 		return nullptr;
 	}
 
-	Renderer::IRootSignature *Direct3D9Renderer::createRootSignature(const Renderer::RootSignature &)
+	Renderer::IRootSignature *Direct3D9Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
 	{
-		// TODO(co) Implement me
-		return nullptr;
+		return new RootSignature(*this, rootSignature);
 	}
 
 	Renderer::IPipelineState *Direct3D9Renderer::createPipelineState(const Renderer::PipelineState &pipelineState)

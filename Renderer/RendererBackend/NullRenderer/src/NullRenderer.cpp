@@ -31,6 +31,7 @@
 #include "NullRenderer/TextureBuffer.h"
 #include "NullRenderer/VertexBuffer.h"
 #include "NullRenderer/VertexArray.h"
+#include "NullRenderer/RootSignature.h"
 #include "NullRenderer/PipelineState.h"
 #include "NullRenderer/SwapChain.h"
 #include "NullRenderer/Framebuffer.h"
@@ -295,10 +296,9 @@ namespace NullRenderer
 		return new Texture2DArray(*this, width, height, numberOfSlices);
 	}
 
-	Renderer::IRootSignature *NullRenderer::createRootSignature(const Renderer::RootSignature &)
+	Renderer::IRootSignature *NullRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)
 	{
-		// TODO(co) Implement me
-		return nullptr;
+		return new RootSignature(*this, rootSignature);
 	}
 
 	Renderer::IPipelineState *NullRenderer::createPipelineState(const Renderer::PipelineState& pipelineState)

@@ -59,6 +59,7 @@
     <ClInclude Include="include\Direct3D11Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D11Renderer\PipelineState.h" />
     <ClInclude Include="include\Direct3D11Renderer\RasterizerState.h" />
+    <ClInclude Include="include\Direct3D11Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D11Renderer\SamplerState.h" />
     <ClInclude Include="include\Direct3D11Renderer\SamplerStateCollection.h" />
     <ClInclude Include="include\Direct3D11Renderer\Shader\FragmentShader.h" />
@@ -96,6 +97,7 @@
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\PipelineState.cpp" />
     <ClCompile Include="src\RasterizerState.cpp" />
+    <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateCollection.cpp" />
     <ClCompile Include="src\Shader\FragmentShader.cpp" />

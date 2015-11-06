@@ -32,6 +32,7 @@
 #include "OpenGLES2Renderer/VertexBuffer.h"
 #include "OpenGLES2Renderer/VertexArrayVao.h"
 #include "OpenGLES2Renderer/VertexArrayNoVao.h"
+#include "OpenGLES2Renderer/RootSignature.h"
 #include "OpenGLES2Renderer/PipelineState.h"
 #include "OpenGLES2Renderer/SwapChain.h"
 #include "OpenGLES2Renderer/Framebuffer.h"
@@ -371,10 +372,9 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	Renderer::IRootSignature *OpenGLES2Renderer::createRootSignature(const Renderer::RootSignature &)
+	Renderer::IRootSignature *OpenGLES2Renderer::createRootSignature(const Renderer::RootSignature &rootSignature)
 	{
-		// TODO(co) Implement me
-		return nullptr;
+		return new RootSignature(*this, rootSignature);
 	}
 
 	Renderer::IPipelineState *OpenGLES2Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)

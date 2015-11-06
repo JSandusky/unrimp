@@ -260,6 +260,10 @@ void FirstTexture::onDraw()
 			// Set the used graphics root signature
 			renderer->setGraphicsRootSignature(mRootSignature);
 
+			// Set diffuse map
+			renderer->setGraphicsRootDescriptorTable(0, mTexture2D);
+			renderer->setGraphicsRootDescriptorTable(1, mSamplerState);
+
 			// Set the used pipeline state object (PSO)
 			renderer->setPipelineState(mPipelineState);
 
@@ -270,10 +274,6 @@ void FirstTexture::onDraw()
 				// Set the primitive topology used for draw calls
 				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 			}
-
-			// Set diffuse map
-			renderer->setGraphicsRootDescriptorTable(0, mTexture2D);
-			renderer->setGraphicsRootDescriptorTable(1, mSamplerState);
 
 			// Render the specified geometric primitive, based on an array of vertices
 			renderer->draw(0, 3);

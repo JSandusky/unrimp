@@ -42,6 +42,7 @@
 #include "OpenGLRenderer/RasterizerState.h"
 #include "OpenGLRenderer/VertexBufferDsa.h"
 #include "OpenGLRenderer/VertexBufferBind.h"
+#include "OpenGLRenderer/RootSignature.h"
 #include "OpenGLRenderer/PipelineState.h"
 #include "OpenGLRenderer/TextureBufferDsa.h"
 #include "OpenGLRenderer/TextureBufferBind.h"
@@ -537,10 +538,9 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IRootSignature *OpenGLRenderer::createRootSignature(const Renderer::RootSignature &)
+	Renderer::IRootSignature *OpenGLRenderer::createRootSignature(const Renderer::RootSignature &rootSignature)
 	{
-		// TODO(co) Implement me
-		return nullptr;
+		return new RootSignature(*this, rootSignature);
 	}
 
 	Renderer::IPipelineState *OpenGLRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
