@@ -60,6 +60,9 @@
     <None Include="include\OpenGLES2Renderer\PipelineState.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\OpenGLES2Renderer\RootSignature.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

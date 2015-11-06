@@ -34,10 +34,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	struct RootSignature;
-}
 namespace OpenGLRenderer
 {
 	class OpenGLRenderer;
@@ -83,6 +79,15 @@ namespace OpenGLRenderer
 		*/
 		virtual ~RootSignature();
 
+		/**
+		*  @brief
+		*    Return the root signature data
+		*
+		*  @return
+		*    The root signature data
+		*/
+		inline const Renderer::RootSignature& getRootSignature() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
@@ -98,3 +103,9 @@ namespace OpenGLRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "OpenGLRenderer/RootSignature.inl"

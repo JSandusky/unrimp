@@ -104,6 +104,7 @@ namespace OpenGLRenderer
 		#error "Unsupported platform"
 	#endif
 		mShaderLanguageGlsl(nullptr),
+		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
 		mVertexArray(nullptr),
 		mOpenGLPrimitiveTopology(0xFFFF),	// Unknown default setting
@@ -247,6 +248,12 @@ namespace OpenGLRenderer
 		if (nullptr != mShaderLanguageGlsl)
 		{
 			mShaderLanguageGlsl->release();
+		}
+
+		// Release the graphics root signature instance, in case we have one
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
 		}
 
 		// Destroy the OpenGL context instance
@@ -616,9 +623,20 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::setGraphicsRootSignature(Renderer::IRootSignature *)
+	void OpenGLRenderer::setGraphicsRootSignature(Renderer::IRootSignature* rootSignature)
 	{
-		// TODO(co) Implement me
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+		}
+		mGraphicsRootSignature = static_cast<RootSignature*>(rootSignature);
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->addReference();
+
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+		}
 	}
 
 	void OpenGLRenderer::setGraphicsRootDescriptorTable(uint32_t, Renderer::IResource* resource)

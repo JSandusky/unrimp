@@ -43,6 +43,7 @@ namespace OpenGLES2Renderer
 	class SwapChain;
 	class BlendState;
 	class VertexArray;
+	class RootSignature;
 	class RasterizerState;
 	class DepthStencilState;
 }
@@ -244,6 +245,7 @@ namespace OpenGLES2Renderer
 	private:
 		IContext					  *mContext;				///< Context instance, always valid
 		Renderer::IShaderLanguage	  *mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
+		RootSignature				  *mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState		  *mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]

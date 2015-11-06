@@ -27,6 +27,7 @@
     <None Include="include\OpenGLES2Renderer\OpenGLES2Renderer.inl" />
     <None Include="include\OpenGLES2Renderer\PipelineState.inl" />
     <None Include="include\OpenGLES2Renderer\RasterizerState.inl" />
+    <None Include="include\OpenGLES2Renderer\RootSignature.inl" />
     <None Include="include\OpenGLES2Renderer\SamplerStateCollection.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\Program.inl" />

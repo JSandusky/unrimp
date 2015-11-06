@@ -34,10 +34,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	struct RootSignature;
-}
 namespace Direct3D10Renderer
 {
 	class Direct3D10Renderer;

@@ -34,10 +34,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	struct RootSignature;
-}
 namespace OpenGLES2Renderer
 {
 	class OpenGLES2Renderer;
@@ -83,6 +79,15 @@ namespace OpenGLES2Renderer
 		*/
 		virtual ~RootSignature();
 
+		/**
+		*  @brief
+		*    Return the root signature data
+		*
+		*  @return
+		*    The root signature data
+		*/
+		inline const Renderer::RootSignature& getRootSignature() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
@@ -98,3 +103,9 @@ namespace OpenGLES2Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLES2Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "OpenGLES2Renderer/RootSignature.inl"

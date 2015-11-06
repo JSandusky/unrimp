@@ -34,10 +34,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	struct RootSignature;
-}
 namespace NullRenderer
 {
 	class NullRenderer;

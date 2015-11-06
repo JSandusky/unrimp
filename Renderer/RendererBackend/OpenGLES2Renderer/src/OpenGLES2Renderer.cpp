@@ -75,6 +75,7 @@ namespace OpenGLES2Renderer
 	OpenGLES2Renderer::OpenGLES2Renderer(handle nativeWindowHandle) :
 		mContext(new ContextRuntimeLinking(nativeWindowHandle)),
 		mShaderLanguageGlsl(nullptr),
+		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
 		mVertexArray(nullptr),
 		mOpenGLES2PrimitiveTopology(0xFFFF),	// Unknown default setting
@@ -218,6 +219,12 @@ namespace OpenGLES2Renderer
 		if (nullptr != mShaderLanguageGlsl)
 		{
 			mShaderLanguageGlsl->release();
+		}
+
+		// Release the graphics root signature instance, in case we have one
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
 		}
 
 		// Destroy the context instance
@@ -431,9 +438,20 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::setGraphicsRootSignature(Renderer::IRootSignature *)
+	void OpenGLES2Renderer::setGraphicsRootSignature(Renderer::IRootSignature* rootSignature)
 	{
-		// TODO(co) Implement me
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+		}
+		mGraphicsRootSignature = static_cast<RootSignature*>(rootSignature);
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->addReference();
+
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+		}
 	}
 
 	void OpenGLES2Renderer::setGraphicsRootDescriptorTable(uint32_t, Renderer::IResource* resource)
@@ -627,183 +645,87 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::tcsSetTexture(uint32_t, Renderer::ITexture *texture)
+	void OpenGLES2Renderer::tcsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// OpenGL ES 2 has no tessellation control shader support
-
-		// Is the given texture valid?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void OpenGLES2Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// OpenGL ES 2 has no tessellation control shader support
-
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void OpenGLES2Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// OpenGL ES 2 has no tessellation control shader support
-
-		// Is the given sampler state valid?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLES2Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// OpenGL ES 2 has no tessellation control shader support
-
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLES2Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// OpenGL ES 2 has no tessellation control shader support
-		// OpenGL ES 2 has no uniform buffer support
-
-		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-		OPENGLES2RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(uniformBuffer)
+		// TODO(co) Remove this method
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::tesSetTexture(uint32_t, Renderer::ITexture *texture)
+	void OpenGLES2Renderer::tesSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// OpenGL ES 2 has no tessellation evaluation shader support
-
-		// Is the given texture valid?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void OpenGLES2Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// OpenGL ES 2 has no tessellation evaluation shader support
-
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void OpenGLES2Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// OpenGL ES 2 has no tessellation evaluation shader support
-
-		// Is the given sampler state valid?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLES2Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// OpenGL ES 2 has no tessellation evaluation shader support
-
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLES2Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// OpenGL ES 2 has no tessellation evaluation shader support
-		// OpenGL ES 2 has no uniform buffer support
-
-		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-		OPENGLES2RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(uniformBuffer)
+		// TODO(co) Remove this method
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::gsSetTexture(uint32_t, Renderer::ITexture *texture)
+	void OpenGLES2Renderer::gsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// OpenGL ES 2 has no geometry shader support
-
-		// Is the given texture valid?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void OpenGLES2Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// OpenGL ES 2 has no geometry shader support
-
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void OpenGLES2Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// OpenGL ES 2 has no geometry shader support
-
-		// Is the given sampler state valid?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void OpenGLES2Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// OpenGL ES 2 has no geometry shader support
-
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLES2Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// OpenGL ES 2 has no geometry shader support
-		// OpenGL ES 2 has no uniform buffer support
-
-		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-		OPENGLES2RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(uniformBuffer)
+		// TODO(co) Remove this method
 	}
 
 

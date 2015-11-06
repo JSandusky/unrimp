@@ -167,6 +167,7 @@
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl" />
     <None Include="include\OpenGLRenderer\PipelineState.inl" />
     <None Include="include\OpenGLRenderer\RasterizerState.inl" />
+    <None Include="include\OpenGLRenderer\RootSignature.inl" />
     <None Include="include\OpenGLRenderer\SamplerStateCollection.inl" />
     <None Include="include\OpenGLRenderer\SamplerStateSo.inl" />
     <None Include="include\OpenGLRenderer\Shader\FragmentShaderGlsl.inl" />
