@@ -75,7 +75,8 @@ namespace NullRenderer
 	NullRenderer::NullRenderer(handle nativeWindowHandle) :
 		mShaderLanguage(nullptr),
 		mMainSwapChain(nullptr),
-		mRenderTarget(nullptr)
+		mRenderTarget(nullptr),
+		mGraphicsRootSignature(nullptr)
 	{
 		// Initialize the capabilities
 		initializeCapabilities();
@@ -105,6 +106,11 @@ namespace NullRenderer
 		{
 			mRenderTarget->release();
 			mRenderTarget = nullptr;
+		}
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+			mGraphicsRootSignature = nullptr;
 		}
 
 		{ // For debugging: At this point there should be no resource instances left, validate this!
@@ -355,20 +361,68 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ States                                                ]
 	//[-------------------------------------------------------]
-	void NullRenderer::setGraphicsRootSignature(Renderer::IRootSignature *)
+	void NullRenderer::setGraphicsRootSignature(Renderer::IRootSignature* rootSignature)
 	{
-		// TODO(co) Implement me
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+		}
+		mGraphicsRootSignature = static_cast<RootSignature*>(rootSignature);
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->addReference();
+
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+		}
 	}
 
-	void NullRenderer::setGraphicsRootDescriptorTable(uint32_t, Renderer::IResource* resource)
+	void NullRenderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
 	{
-		// TODO(co) Validate graphics root signature
+		// Security checks
+		#ifndef NULLRENDERER_NO_DEBUG
+		{
+			if (nullptr == mGraphicsRootSignature)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Null error: No graphics root signature set")
+				return;
+			}
+			if (rootParameterIndex >= mGraphicsRootSignature->getRootSignature().numberOfParameters)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Null error: Root parameter index is out of bounds")
+				return;
+			}
+			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Null error: Root parameter index doesn't reference a descriptor table")
+				return;
+			}
 
-		// Nothing to do in here, the following is just for debugging
+			// TODO(co) For now, we only support a single descriptor range
+			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Null error: Only a single descriptor range is supported")
+				return;
+			}
+			if (nullptr == rootParameter.descriptorTable.descriptorRanges)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("Null error: Descriptor ranges is a null pointer")
+				return;
+			}
+		}
+		#endif
+
 		if (nullptr != resource)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
+
+			// TODO(co) Some additional resource type root signature security checks in debug build?
+		}
+		else
+		{
+			// TODO(co) Handle this situation?
 		}
 	}
 
@@ -421,216 +475,116 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void NullRenderer::vsSetTexture(uint32_t, Renderer::ITexture *texture)
+	void NullRenderer::vsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::vsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void NullRenderer::vsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void NullRenderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::vsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void NullRenderer::vsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void NullRenderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
+		// TODO(co) Remove this method
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void NullRenderer::tcsSetTexture(uint32_t, Renderer::ITexture *texture)
+	void NullRenderer::tcsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void NullRenderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void NullRenderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void NullRenderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void NullRenderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
+		// TODO(co) Remove this method
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void NullRenderer::tesSetTexture(uint32_t, Renderer::ITexture *texture)
+	void NullRenderer::tesSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void NullRenderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void NullRenderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void NullRenderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void NullRenderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
+		// TODO(co) Remove this method
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void NullRenderer::gsSetTexture(uint32_t, Renderer::ITexture *texture)
+	void NullRenderer::gsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void NullRenderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void NullRenderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void NullRenderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void NullRenderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
+		// TODO(co) Remove this method
 	}
 
 
@@ -661,54 +615,29 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void NullRenderer::fsSetTexture(uint32_t, Renderer::ITexture *texture)
+	void NullRenderer::fsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::fsSetTextureCollection(uint32_t, Renderer::ITextureCollection *textureCollection)
+	void NullRenderer::fsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState *samplerState)
+	void NullRenderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::fsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *samplerStateCollection)
+	void NullRenderer::fsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void NullRenderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
+		// TODO(co) Remove this method
 	}
 
 

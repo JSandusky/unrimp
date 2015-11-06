@@ -18,6 +18,9 @@
     <None Include="include\NullRenderer\PipelineState.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\NullRenderer\RootSignature.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\NullRenderer\Shader\GeometryShader.h">

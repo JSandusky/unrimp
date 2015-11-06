@@ -40,6 +40,7 @@ namespace Renderer
 namespace NullRenderer
 {
 	class SwapChain;
+	class RootSignature;
 }
 
 
@@ -228,12 +229,10 @@ namespace NullRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IShaderLanguage *mShaderLanguage;	///< Null shader language instance (we keep a reference to it), can be a null pointer
-		//[-------------------------------------------------------]
-		//[ Output-merger (OM) stage                              ]
-		//[-------------------------------------------------------]
-		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "NullRenderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
-		Renderer::IRenderTarget *mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
+		Renderer::IShaderLanguage *mShaderLanguage;			///< Null shader language instance (we keep a reference to it), can be a null pointer
+		SwapChain				  *mMainSwapChain;			///< In case the optional native main window handle within the "NullRenderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
+		Renderer::IRenderTarget   *mRenderTarget;			///< Currently set render target (we keep a reference to it), can be a null pointer
+		RootSignature			  *mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 
 
 	};

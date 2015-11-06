@@ -21,6 +21,7 @@
   <ItemGroup>
     <None Include="CMakeLists.txt" />
     <None Include="include\NullRenderer\PipelineState.inl" />
+    <None Include="include\NullRenderer\RootSignature.inl" />
     <None Include="include\NullRenderer\SwapChain.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
