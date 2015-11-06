@@ -367,38 +367,7 @@ void CubeRendererDrawInstanced::draw(float globalTimer, float globalScale, float
 		// Set the used sampler state at a certain texture unit
 		mRenderer->fsSetSamplerState(0, mSamplerState);
 
-		// Set the used uniform buffers
-		if (nullptr != mUniformBufferStaticVs)
-		{
-			mRenderer->vsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockStaticVs", 0), mUniformBufferStaticVs);
-		}
-		if (nullptr != mUniformBufferDynamicVs)
-		{
-			mRenderer->vsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockDynamicVs", 1), mUniformBufferDynamicVs);
-		}
-		if (nullptr != mUniformBufferDynamicFs)
-		{
-			mRenderer->fsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockDynamicFs", 0), mUniformBufferDynamicFs);
-		}
-
-		// Set constant program uniform
-		if (nullptr == mUniformBufferStaticVs)
-		{
-			// TODO(co) Uggly fixed hacked in model-view-projection matrix
-			// TODO(co) OpenGL matrix, Direct3D has minor differences within the projection matrix we have to compensate
-			static const float MVP[] =
-			{
-				 1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
-				 0.0f,			 1.9776078f,	-0.57472473f,	-0.573576453f,
-				-1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
-				 0.0f,			 0.0f,			 9.8198195f,	 10.0f
-			};
-
-			// There's no uniform buffer: We have to set individual uniforms
-			mProgram->setUniform4fv(mProgram->getUniformHandle("MVP"), MVP);
-		}
-
-		{ // Set program uniforms
+		{ // Update program uniform data
 			// Some counting timer, we don't want to touch the buffers on the GPU
 			const float timerAndGlobalScale[] = { globalTimer, globalScale };
 
@@ -424,6 +393,37 @@ void CubeRendererDrawInstanced::draw(float globalTimer, float globalScale, float
 				mProgram->setUniform2fv(mProgram->getUniformHandle("TimerAndGlobalScale"), timerAndGlobalScale);
 				mProgram->setUniform3fv(mProgram->getUniformHandle("LightPosition"), lightPosition);
 			}
+		}
+
+		// Set the used uniform buffers
+		if (nullptr != mUniformBufferStaticVs)
+		{
+			mRenderer->vsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockStaticVs", 0), mUniformBufferStaticVs);
+		}
+		if (nullptr != mUniformBufferDynamicVs)
+		{
+			mRenderer->vsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockDynamicVs", 1), mUniformBufferDynamicVs);
+		}
+		if (nullptr != mUniformBufferDynamicFs)
+		{
+			mRenderer->fsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockDynamicFs", 0), mUniformBufferDynamicFs);
+		}
+
+		// Set constant program uniform
+		if (nullptr == mUniformBufferStaticVs)
+		{
+			// TODO(co) Ugly fixed hacked in model-view-projection matrix
+			// TODO(co) OpenGL matrix, Direct3D has minor differences within the projection matrix we have to compensate
+			static const float MVP[] =
+			{
+				 1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
+				 0.0f,			 1.9776078f,	-0.57472473f,	-0.573576453f,
+				-1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
+				 0.0f,			 0.0f,			 9.8198195f,	 10.0f
+			};
+
+			// There's no uniform buffer: We have to set individual uniforms
+			mProgram->setUniform4fv(mProgram->getUniformHandle("MVP"), MVP);
 		}
 
 		// Draw the batches
