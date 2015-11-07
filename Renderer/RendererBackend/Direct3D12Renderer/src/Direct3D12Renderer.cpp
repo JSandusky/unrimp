@@ -659,6 +659,7 @@ namespace Direct3D12Renderer
 					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<UniformBuffer*>(resource)->getD3D12DescriptorHeap();
 					if (nullptr != d3D12DescriptorHeap)
 					{
+						// TODO(co) Just a first Direct3D 12 test, don't call "ID3D12GraphicsCommandList::SetDescriptorHeaps()" that often (pipeline flush)
 						ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
 						mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
@@ -672,6 +673,7 @@ namespace Direct3D12Renderer
 					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<Texture2D*>(resource)->getD3D12DescriptorHeap();
 					if (nullptr != d3D12DescriptorHeap)
 					{
+						// TODO(co) Just a first Direct3D 12 test, don't call "ID3D12GraphicsCommandList::SetDescriptorHeaps()" that often (pipeline flush)
 						ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
 						mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
@@ -685,6 +687,7 @@ namespace Direct3D12Renderer
 					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<SamplerState*>(resource)->getD3D12DescriptorHeap();
 					if (nullptr != d3D12DescriptorHeap)
 					{
+						// TODO(co) Just a first Direct3D 12 test, don't call "ID3D12GraphicsCommandList::SetDescriptorHeaps()" that often (pipeline flush)
 						ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
 						mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
