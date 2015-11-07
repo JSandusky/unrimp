@@ -191,7 +191,9 @@ void FirstMesh::onInitialization()
 				mRootSignature = renderer->createRootSignature(rootSignature);
 			}
 
-			{ // Create the program
+			// Create the program
+			Renderer::IProgramPtr program;
+			{
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderProfile = nullptr;
 				const char *vertexShaderSourceCode = nullptr;
@@ -204,7 +206,7 @@ void FirstMesh::onInitialization()
 				#include "FirstMesh_Null.h"
 
 				// Create the program
-				mProgram = shaderLanguage->createProgram(
+				mProgram = program = shaderLanguage->createProgram(
 					*mRootSignature,
 					vertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode, vertexShaderProfile),
@@ -212,17 +214,30 @@ void FirstMesh::onInitialization()
 			}
 
 			// Is there a valid program?
-			if (nullptr != mProgram)
+			if (nullptr != program)
 			{
+				{ // Create the pipeline state object (PSO)
+					// Setup
+					Renderer::PipelineState pipelineState;
+					pipelineState.rootSignature = mRootSignature;
+					pipelineState.program = program;
+					pipelineState.vertexAttributes = vertexAttributes;
+					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+
+					// Create the instance
+					mPipelineState = renderer->createPipelineState(pipelineState);
+				}
+
 				// Optimization: Cached data to not bother the renderer API too much
 				if (nullptr != mUniformBuffer)
 				{
-					mUniformBlockIndex = mProgram->getUniformBlockIndex("UniformBlockDynamicVs", 0);
+					mUniformBlockIndex = program->getUniformBlockIndex("UniformBlockDynamicVs", 0);
 				}
 				else
 				{
-					mObjectSpaceToClipSpaceMatrixUniformHandle = mProgram->getUniformHandle("ObjectSpaceToClipSpaceMatrix");
-					mObjectSpaceToViewSpaceMatrixUniformHandle = mProgram->getUniformHandle("ObjectSpaceToViewSpaceMatrix");
+					mObjectSpaceToClipSpaceMatrixUniformHandle = program->getUniformHandle("ObjectSpaceToClipSpaceMatrix");
+					mObjectSpaceToViewSpaceMatrixUniformHandle = program->getUniformHandle("ObjectSpaceToViewSpaceMatrix");
 				}
 			}
 
@@ -280,6 +295,7 @@ void FirstMesh::onDeinitialization()
 	mMeshResource = nullptr;
 
 	// Release the used resources
+	mPipelineState = nullptr;
 	mProgram = nullptr;
 	mRootSignature = nullptr;
 	mUniformBuffer = nullptr;
@@ -310,7 +326,7 @@ void FirstMesh::onDraw()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mProgram)
+	if (nullptr != renderer && nullptr != mPipelineState)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -349,8 +365,8 @@ void FirstMesh::onDraw()
 			renderer->setGraphicsRootDescriptorTable(3, mSpecularTextureResource->getTexture());
 			renderer->setGraphicsRootDescriptorTable(4, mEmissiveTextureResource->getTexture());
 
-			// Set the used program
-			renderer->setProgram(mProgram);
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineState);
 
 			{ // Set uniform
 				// Calculate the object space to clip space matrix
