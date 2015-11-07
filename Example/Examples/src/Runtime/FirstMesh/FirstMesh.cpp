@@ -49,7 +49,6 @@ FirstMesh::FirstMesh(const char *rendererName) :
 	mNormalTextureResource(nullptr),
 	mSpecularTextureResource(nullptr),
 	mEmissiveTextureResource(nullptr),
-	mUniformBlockIndex(0),
 	mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
 	mObjectSpaceToViewSpaceMatrixUniformHandle(NULL_HANDLE),
 	mGlobalTimer(0.0f),
@@ -233,11 +232,7 @@ void FirstMesh::onInitialization()
 				}
 
 				// Optimization: Cached data to not bother the renderer API too much
-				if (nullptr != mUniformBuffer)
-				{
-					mUniformBlockIndex = program->getUniformBlockIndex("UniformBlockDynamicVs", 0);
-				}
-				else
+				if (nullptr == mUniformBuffer)
 				{
 					mObjectSpaceToClipSpaceMatrixUniformHandle = program->getUniformHandle("ObjectSpaceToClipSpaceMatrix");
 					mObjectSpaceToViewSpaceMatrixUniformHandle = program->getUniformHandle("ObjectSpaceToViewSpaceMatrix");
@@ -408,9 +403,6 @@ void FirstMesh::onDraw()
 
 					// Copy data
 					mUniformBuffer->copyDataFrom(sizeof(UniformBlockDynamicVs), &uniformBlockDynamicVS);
-
-					// Assign to stage
-					renderer->vsSetUniformBuffer(mUniformBlockIndex, mUniformBuffer);
 				}
 				else
 				{

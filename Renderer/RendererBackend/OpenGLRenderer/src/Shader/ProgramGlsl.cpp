@@ -51,7 +51,7 @@ namespace OpenGLRenderer
 		mNumberOfRootSignatureParameters(0),
 		mRootSignatureParameterIndexToUniformLocation(nullptr)
 	{
-		{ // Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
+		{ // Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 & 12 terminology)
 			const uint32_t numberOfVertexAttributes = vertexAttributes.numberOfAttributes;
 			for (uint32_t vertexAttribute = 0; vertexAttribute < numberOfVertexAttributes; ++vertexAttribute)
 			{
@@ -166,7 +166,7 @@ namespace OpenGLRenderer
 									// -> When using OpenGL or OpenGL ES 2 this is required
 									// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
 									//    in GLSL shader) , for backward compatibility we don't use it in here
-									// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
+									// -> When using Direct3D 9, 10, 11 or 12, the texture unit
 									//    to use is usually defined directly within the shader by using the "register"-keyword
 									// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
 									#ifndef OPENGLRENDERER_NO_STATE_CLEANUP

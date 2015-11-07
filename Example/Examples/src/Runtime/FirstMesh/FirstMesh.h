@@ -122,7 +122,6 @@ private:
 	Renderer::ISamplerStatePtr			  mSamplerState;			///< Sampler state, can be a null pointer
 	Renderer::IBlendStatePtr			  mBlendState;				///< Blend state, can be a null pointer
 	// Optimization: Cache data to not bother the renderer API to much
-	uint32_t mUniformBlockIndex;							///< Uniform block index
 	handle	 mObjectSpaceToClipSpaceMatrixUniformHandle;	///< Object space to clip space matrix uniform handle, can be NULL_HANDLE
 	handle	 mObjectSpaceToViewSpaceMatrixUniformHandle;	///< Object space to view space matrix uniform handle, can be NULL_HANDLE
 	// For timing
