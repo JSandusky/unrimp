@@ -275,6 +275,18 @@ void IcosahedronTessellation::onDeinitialization()
 
 void IcosahedronTessellation::onDraw()
 {
+	// Update the uniform buffer content
+	if (nullptr != mUniformBufferDynamicTcs)
+	{
+		// Copy data into the uniform buffer
+		const float data[] =
+		{
+			mTessellationLevelOuter,	// "TessellationLevelOuter"
+			mTessellationLevelInner		// "TessellationLevelInner"
+		};
+		mUniformBufferDynamicTcs->copyDataFrom(sizeof(data), data);
+	}
+
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && nullptr != mPipelineState)
@@ -309,41 +321,6 @@ void IcosahedronTessellation::onDraw()
 				// Set the primitive topology used for draw calls
 				// -> Patch list with 3 vertices per patch (tessellation relevant topology type) - "Renderer::PrimitiveTopology::TriangleList" used for tessellation
 				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::PATCH_LIST_3);
-			}
-
-			// Set the used uniform buffers
-			if (nullptr != mUniformBufferDynamicTcs)
-			{
-				// Copy data into the uniform buffer
-				const float data[] =
-				{
-					mTessellationLevelOuter,	// "TessellationLevelOuter"
-					mTessellationLevelInner		// "TessellationLevelInner"
-				};
-				mUniformBufferDynamicTcs->copyDataFrom(sizeof(data), data);
-
-				// Assign to stage
-				// TODO(co) Update
-				renderer->tcsSetUniformBuffer(0, mUniformBufferDynamicTcs);
-				// renderer->tcsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockDynamicTcs", 0), mUniformBufferDynamicTcs);
-			}
-			if (nullptr != mUniformBufferStaticTes)
-			{
-				// TODO(co) Update
-				renderer->tesSetUniformBuffer(0, mUniformBufferStaticTes);
-				//renderer->tesSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockStaticTes", 0), mUniformBufferStaticTes);
-			}
-			if (nullptr != mUniformBufferStaticGs)
-			{
-				// TODO(co) Update
-				renderer->gsSetUniformBuffer(0, mUniformBufferStaticGs);
-				//renderer->gsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockStaticGs", 0), mUniformBufferStaticGs);
-			}
-			if (nullptr != mUniformBufferStaticFs)
-			{
-				// TODO(co) Update
-				renderer->fsSetUniformBuffer(0, mUniformBufferStaticFs);
-				//renderer->fsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockStaticFs", 0), mUniformBufferStaticFs);
 			}
 
 			// Render the specified geometric primitive, based on indexing into an array of vertices

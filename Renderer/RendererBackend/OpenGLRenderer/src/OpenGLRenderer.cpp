@@ -691,6 +691,19 @@ namespace OpenGLRenderer
 			const Renderer::ResourceType::Enum resourceType = resource->getResourceType();
 			switch (resourceType)
 			{
+				case Renderer::ResourceType::UNIFORM_BUFFER:
+					// Evaluate the internal uniform buffer type of the new uniform buffer to set
+					// -> "GL_ARB_uniform_buffer_object" required
+					if (static_cast<UniformBuffer*>(resource)->getInternalResourceType() == UniformBuffer::InternalResourceType::GLSL &&
+						mContext->getExtensions().isGL_ARB_uniform_buffer_object())
+					{
+						// Attach the buffer to the given UBO binding point
+						// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+						// -> Direct3D 10 and Direct3D 11 have explicit binding points
+						glBindBufferBaseEXT(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<UniformBufferGlsl*>(resource)->getOpenGLUniformBuffer());
+					}
+					break;
+
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
@@ -1019,12 +1032,9 @@ namespace OpenGLRenderer
 		// TODO(co) Remove this method
 	}
 
-	void OpenGLRenderer::vsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLRenderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// In OpenGL a single program is set instead of individual shaders
-		// -> This means that there are uniform binding slots per program, not slots per shader as in e.g. Direct3D 10
-		// -> Reuse the fragment shader version of this method
-		fsSetUniformBuffer(slot, uniformBuffer);
+		// TODO(co) Remove this method
 	}
 
 
@@ -1051,12 +1061,9 @@ namespace OpenGLRenderer
 		// TODO(co) Remove this method
 	}
 
-	void OpenGLRenderer::tcsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLRenderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// In OpenGL a single program is set instead of individual shaders
-		// -> This means that there are uniform binding slots per program, not slots per shader as in e.g. Direct3D 10
-		// -> Reuse the fragment shader version of this method
-		fsSetUniformBuffer(slot, uniformBuffer);
+		// TODO(co) Remove this method
 	}
 
 
@@ -1083,12 +1090,9 @@ namespace OpenGLRenderer
 		// TODO(co) Remove this method
 	}
 
-	void OpenGLRenderer::tesSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLRenderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// In OpenGL a single program is set instead of individual shaders
-		// -> This means that there are uniform binding slots per program, not slots per shader as in e.g. Direct3D 10
-		// -> Reuse the fragment shader version of this method
-		fsSetUniformBuffer(slot, uniformBuffer);
+		// TODO(co) Remove this method
 	}
 
 
@@ -1115,12 +1119,9 @@ namespace OpenGLRenderer
 		// TODO(co) Remove this method
 	}
 
-	void OpenGLRenderer::gsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLRenderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// In OpenGL a single program is set instead of individual shaders
-		// -> This means that there are uniform binding slots per program, not slots per shader as in e.g. Direct3D 10
-		// -> Reuse the fragment shader version of this method
-		fsSetUniformBuffer(slot, uniformBuffer);
+		// TODO(co) Remove this method
 	}
 
 
@@ -1482,37 +1483,9 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::fsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLRenderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Set a uniform buffer at that unit?
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-
-			// Evaluate the internal uniform buffer type of the new uniform buffer to set
-			switch (static_cast<UniformBuffer*>(uniformBuffer)->getInternalResourceType())
-			{
-				case UniformBuffer::InternalResourceType::GLSL:
-					// "GL_ARB_uniform_buffer_object" required
-					if (mContext->getExtensions().isGL_ARB_uniform_buffer_object())
-					{
-						// Attach the buffer to the given UBO binding point
-						// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
-						// -> Direct3D 10 and Direct3D 11 have explicit binding points
-						// -> TODO(co) For now, nStartSlot is set from outside to the uniform block index which is directly used as binding point - Review this, maybe there's a better cross-API solution
-						glBindBufferBaseEXT(GL_UNIFORM_BUFFER, slot, uniformBuffer ? static_cast<UniformBufferGlsl*>(uniformBuffer)->getOpenGLUniformBuffer() : 0);
-
-						// Associate the uniform block with the given binding point
-						glUniformBlockBinding(mOpenGLProgram, slot, slot);
-					}
-					break;
-			}
-		}
-		else
-		{
-			// TODO(co) Implement me
-		}
+		// TODO(co) Remove this method
 	}
 
 
