@@ -157,7 +157,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void RootSignature::setSamplerStates(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const
+	void RootSignature::setSamplerState(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const
 	{
 		// Security checks
 		#ifndef OPENGLES2RENDERER_NO_DEBUG

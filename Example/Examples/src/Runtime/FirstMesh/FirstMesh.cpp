@@ -342,7 +342,7 @@ void FirstMesh::onDraw()
 			// Set the used graphics root signature
 			renderer->setGraphicsRootSignature(mRootSignature);
 
-			// Set textures
+			// Set sampler and textures
 			renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
 			renderer->setGraphicsRootDescriptorTable(1, mDiffuseTextureResource->getTexture());
 			renderer->setGraphicsRootDescriptorTable(2, mNormalTextureResource->getTexture());

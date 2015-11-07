@@ -29,6 +29,7 @@
 #include "OpenGLRenderer/Shader/TessellationEvaluationShaderGlsl.h"
 #include "OpenGLRenderer/IContext.h"
 #include "OpenGLRenderer/Extensions.h"
+#include "OpenGLRenderer/RootSignature.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
 #include <Renderer/VertexArrayTypes.h>
@@ -44,9 +45,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramGlsl::ProgramGlsl(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature&, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
+	ProgramGlsl::ProgramGlsl(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
 		Program(openGLRenderer, InternalResourceType::GLSL),
-		mOpenGLProgram(glCreateProgramObjectARB())
+		mOpenGLProgram(glCreateProgramObjectARB()),
+		mNumberOfRootSignatureParameters(0),
+		mRootSignatureParameterIndexToUniformLocation(nullptr)
 	{
 		{ // Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 			const uint32_t numberOfVertexAttributes = vertexAttributes.numberOfAttributes;
@@ -117,9 +120,71 @@ namespace OpenGLRenderer
 		if (GL_TRUE == linked)
 		{
 			// The actual locations assigned to uniform variables are not known until the program object is linked successfully
-			// TODO(co) Use root signature
-			int i = 0;
-			i = 0;
+			// -> So we have to build a root signature parameter index -> uniform location mapping here
+			const Renderer::RootSignature& rootSignatureData = static_cast<const RootSignature&>(rootSignature).getRootSignature();
+			const uint32_t numberOfParameters = rootSignatureData.numberOfParameters;
+			if (numberOfParameters > 0)
+			{
+				mRootSignatureParameterIndexToUniformLocation = new int32_t[numberOfParameters];
+				memset(mRootSignatureParameterIndexToUniformLocation, -1, sizeof(int32_t) * numberOfParameters);
+				for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
+				{
+					const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[parameterIndex];
+					if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
+					{
+						// TODO(co) For now, we only support a single descriptor range
+						if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
+						{
+							RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Only a single descriptor range is supported")
+						}
+						else
+						{
+							const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
+
+							// Ignore sampler range types in here (OpenGL handles samplers in a different way then Direct3D 10>=)
+							if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
+							{
+								const GLint uniformLocation = glGetUniformLocationARB(mOpenGLProgram, descriptorRange->baseShaderRegisterName);
+								if (uniformLocation >= 0)
+								{
+									mRootSignatureParameterIndexToUniformLocation[parameterIndex] = uniformLocation;
+
+									// OpenGL/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
+									// -> When using OpenGL or OpenGL ES 2 this is required
+									// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
+									//    in GLSL shader) , for backward compatibility we don't use it in here
+									// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
+									//    to use is usually defined directly within the shader by using the "register"-keyword
+									// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
+									#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+										// Backup the currently used OpenGL program
+										GLint openGLProgramBackup = 0;
+										glGetIntegerv(GL_CURRENT_PROGRAM, &openGLProgramBackup);
+										if (openGLProgramBackup == mOpenGLProgram)
+										{
+											// Set uniform, please note that for this our program must be the currently used one
+											glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+										}
+										else
+										{
+											// Set uniform, please note that for this our program must be the currently used one
+											glUseProgramObjectARB(mOpenGLProgram);
+											glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+
+											// Be polite and restore the previous used OpenGL program
+											glUseProgramObjectARB(openGLProgramBackup);
+										}
+									#else
+										// Set uniform, please note that for this our program must be the currently used one
+										glUseProgramObjectARB(mOpenGLProgram);
+										glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+									#endif
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 		else
 		{
@@ -151,6 +216,12 @@ namespace OpenGLRenderer
 		// Destroy the OpenGL program
 		// -> A value of 0 for program will be silently ignored
 		glDeleteObjectARB(mOpenGLProgram);
+
+		// Destroy root signature parameter index to OpenGL uniform location mapping, if required
+		if (nullptr != mRootSignatureParameterIndexToUniformLocation)
+		{
+			delete [] mRootSignatureParameterIndexToUniformLocation;
+		}
 	}
 
 

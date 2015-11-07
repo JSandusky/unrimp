@@ -568,7 +568,7 @@ namespace OpenGLES2Renderer
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
 					// Unlike Direct3D >=10, OpenGL ES 2 directly attaches the sampler settings to the texture
-					mGraphicsRootSignature->setSamplerStates(descriptorRange->samplerRootParameterIndex, static_cast<SamplerState*>(resource));
+					mGraphicsRootSignature->setSamplerState(descriptorRange->samplerRootParameterIndex, static_cast<SamplerState*>(resource));
 					break;
 				}
 			}

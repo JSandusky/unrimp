@@ -98,7 +98,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] samplerState
 		*    Sampler state
 		*/
-		void setSamplerStates(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const;
+		void setSamplerState(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const;
 
 		/**
 		*  @brief

@@ -135,6 +135,14 @@ namespace OpenGLRenderer
 		uint32_t mOpenGLProgram;	///< OpenGL program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		uint32_t mNumberOfRootSignatureParameters;				///< Number of root signature parameters
+		int32_t* mRootSignatureParameterIndexToUniformLocation;	///< Root signature parameter index to OpenGL uniform location mapping, can be a null pointer (type "GLint" not used in here in order to keep the header slim)
+
+
 	};
 
 
