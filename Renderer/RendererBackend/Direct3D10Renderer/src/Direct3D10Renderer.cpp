@@ -695,14 +695,51 @@ namespace Direct3D10Renderer
 
 			// Check the type of resource to set
 			// TODO(co) Some additional resource type root signature security checks in debug build?
-			switch (resource->getResourceType())
+			const Renderer::ResourceType::Enum resourceType = resource->getResourceType();
+			switch (resourceType)
 			{
+				case Renderer::ResourceType::UNIFORM_BUFFER:
+				{
+					ID3D10Buffer *d3d10Buffers = static_cast<UniformBuffer*>(resource)->getD3D10Buffer();
+					const UINT startSlot = descriptorRange->baseShaderRegister;
+					switch (rootParameter.shaderVisibility)
+					{
+						case Renderer::ShaderVisibility::ALL:
+							mD3D10Device->VSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
+							mD3D10Device->GSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
+							mD3D10Device->PSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
+							break;
+
+						case Renderer::ShaderVisibility::VERTEX:
+							mD3D10Device->VSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::GEOMETRY:
+							mD3D10Device->GSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
+							break;
+
+						case Renderer::ShaderVisibility::FRAGMENT:
+							// "pixel shader" in Direct3D terminology
+							mD3D10Device->PSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
+							break;
+					}
+					break;
+				}
+
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
 					ID3D10ShaderResourceView *d3d10ShaderResourceView = nullptr;
-					switch (resource->getResourceType())
+					switch (resourceType)
 					{
 						case Renderer::ResourceType::TEXTURE_BUFFER:
 							d3d10ShaderResourceView = static_cast<TextureBuffer*>(resource)->getD3D10ShaderResourceView();
@@ -929,18 +966,9 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::vsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D10Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Is the given uniform buffer valid?
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 10 needs a pointer to a pointer, so give it one
-		ID3D10Buffer *d3d10Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D10Buffer() : nullptr;
-		mD3D10Device->VSSetConstantBuffers(slot, 1, &d3d10Buffers);
+		// TODO(co) Remove this method
 	}
 
 
@@ -1045,20 +1073,10 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::gsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D10Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// Is the given uniform buffer valid?
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 10 needs a pointer to a pointer, so give it one
-		ID3D10Buffer *d3d10Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D10Buffer() : nullptr;
-		mD3D10Device->GSSetConstantBuffers(slot, 1, &d3d10Buffers);
+		// TODO(co) Remove this method
 	}
-
 
 
 	//[-------------------------------------------------------]
@@ -1170,19 +1188,9 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::fsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D10Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// "pixel shader" in Direct3D terminology
-
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 10 needs a pointer to a pointer, so give it one
-		ID3D10Buffer *d3d10Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D10Buffer() : nullptr;
-		mD3D10Device->PSSetConstantBuffers(slot, 1, &d3d10Buffers);
+		// TODO(co) Remove this method
 	}
 
 

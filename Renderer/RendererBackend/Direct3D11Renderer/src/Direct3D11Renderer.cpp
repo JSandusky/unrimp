@@ -645,14 +645,55 @@ namespace Direct3D11Renderer
 
 			// Check the type of resource to set
 			// TODO(co) Some additional resource type root signature security checks in debug build?
-			switch (resource->getResourceType())
+			const Renderer::ResourceType::Enum resourceType = resource->getResourceType();
+			switch (resourceType)
 			{
+				case Renderer::ResourceType::UNIFORM_BUFFER:
+				{
+					ID3D11Buffer *d3d11Buffers = static_cast<UniformBuffer*>(resource)->getD3D11Buffer();
+					const UINT startSlot = descriptorRange->baseShaderRegister;
+					switch (rootParameter.shaderVisibility)
+					{
+						case Renderer::ShaderVisibility::ALL:
+							mD3D11DeviceContext->VSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+							mD3D11DeviceContext->HSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+							mD3D11DeviceContext->DSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+							mD3D11DeviceContext->GSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+							mD3D11DeviceContext->PSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+							break;
+
+						case Renderer::ShaderVisibility::VERTEX:
+							mD3D11DeviceContext->VSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+							// "hull shader" in Direct3D terminology
+							mD3D11DeviceContext->HSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+							// "domain shader" in Direct3D terminology
+							mD3D11DeviceContext->DSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+							break;
+
+						case Renderer::ShaderVisibility::GEOMETRY:
+							mD3D11DeviceContext->GSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+							break;
+
+						case Renderer::ShaderVisibility::FRAGMENT:
+							// "pixel shader" in Direct3D terminology
+							mD3D11DeviceContext->PSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+							break;
+					}
+					break;
+				}
+
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
 					ID3D11ShaderResourceView *d3d11ShaderResourceView = nullptr;
-					switch (resource->getResourceType())
+					switch (resourceType)
 					{
 						case Renderer::ResourceType::TEXTURE_BUFFER:
 							d3d11ShaderResourceView = static_cast<TextureBuffer*>(resource)->getD3D11ShaderResourceView();
@@ -894,17 +935,9 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::vsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D11Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 11 needs a pointer to a pointer, so give it one
-		ID3D11Buffer *d3d11Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D11Buffer() : nullptr;
-		mD3D11DeviceContext->VSSetConstantBuffers(slot, 1, &d3d11Buffers);
+		// TODO(co) Remove this method
 	}
 
 
@@ -955,19 +988,9 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::tcsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D11Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// "hull shader" in Direct3D terminology
-
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 11 needs a pointer to a pointer, so give it one
-		ID3D11Buffer *d3d11Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D11Buffer() : nullptr;
-		mD3D11DeviceContext->HSSetConstantBuffers(slot, 1, &d3d11Buffers);
+		// TODO(co) Remove this method
 	}
 
 
@@ -1018,19 +1041,9 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::tesSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D11Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// "domain shader" in Direct3D terminology
-
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 11 needs a pointer to a pointer, so give it one
-		ID3D11Buffer *d3d11Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D11Buffer() : nullptr;
-		mD3D11DeviceContext->DSSetConstantBuffers(slot, 1, &d3d11Buffers);
+		// TODO(co) Remove this method
 	}
 
 
@@ -1077,17 +1090,9 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::gsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D11Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 11 needs a pointer to a pointer, so give it one
-		ID3D11Buffer *d3d11Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D11Buffer() : nullptr;
-		mD3D11DeviceContext->GSSetConstantBuffers(slot, 1, &d3d11Buffers);
+		// TODO(co) Remove this method
 	}
 
 
@@ -1182,19 +1187,9 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::fsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer)
+	void Direct3D11Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// "pixel shader" in Direct3D terminology
-
-		if (nullptr != uniformBuffer)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *uniformBuffer)
-		}
-
-		// Direct3D 11 needs a pointer to a pointer, so give it one
-		ID3D11Buffer *d3d11Buffers = (nullptr != uniformBuffer) ? static_cast<UniformBuffer*>(uniformBuffer)->getD3D11Buffer() : nullptr;
-		mD3D11DeviceContext->PSSetConstantBuffers(slot, 1, &d3d11Buffers);
+		// TODO(co) Remove this method
 	}
 
 
