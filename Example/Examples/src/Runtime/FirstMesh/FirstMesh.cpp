@@ -326,6 +326,14 @@ void FirstMesh::onUpdate()
 
 void FirstMesh::onDraw()
 {
+	// Due to background texture loading, some textures might not be ready, yet
+	// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
+	if (nullptr == mDiffuseTextureResource->getTexture() || nullptr == mNormalTextureResource->getTexture() ||
+		nullptr == mSpecularTextureResource->getTexture() || nullptr == mEmissiveTextureResource->getTexture())
+	{
+		return;
+	}
+
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && nullptr != mPipelineState)
