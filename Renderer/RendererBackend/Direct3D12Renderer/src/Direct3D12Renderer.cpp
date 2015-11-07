@@ -1159,8 +1159,9 @@ namespace Direct3D12Renderer
 
 		// Record command
 		SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
-		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeap()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
+		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRtv()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
 		mD3D12GraphicsCommandList->ClearRenderTargetView(rtvHandle, color, 0, nullptr);
+		mD3D12GraphicsCommandList->ClearDepthStencilView(swapChain->getD3D12DescriptorHeapDsv()->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 		// TODO(co) Direct3D 12 update
 		/*
@@ -1301,8 +1302,9 @@ namespace Direct3D12Renderer
 				CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 				mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
 
-				CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeap()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
-				mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+				CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRtv()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
+				CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(swapChain->getD3D12DescriptorHeapDsv()->GetCPUDescriptorHandleForHeapStart());
+				mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
 				{ // TODO(co) Just a test, integrate properly
 					uint32_t width = 0;

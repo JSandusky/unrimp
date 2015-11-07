@@ -95,15 +95,27 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D 12 descriptor heap instance
+		*    Return the Direct3D 12 render target view descriptor heap instance
 		*
 		*  @return
-		*    The Direct3D 12 descriptor heap instance, null pointer on error, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D 12 render target view descriptor heap instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*
 		*  @note
 		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
-		inline ID3D12DescriptorHeap *getD3D12DescriptorHeap() const;
+		inline ID3D12DescriptorHeap *getD3D12DescriptorHeapRtv() const;
+
+		/**
+		*  @brief
+		*    Return the Direct3D 12 depth stencil view descriptor heap instance
+		*
+		*  @return
+		*    The Direct3D 12 depth stencil view descriptor heap instance, null pointer on error, do not release the returned instance unless you added an own reference to it
+		*
+		*  @note
+		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
+		*/
+		inline ID3D12DescriptorHeap *getD3D12DescriptorHeapDsv() const;
 
 		/**
 		*  @brief
@@ -226,9 +238,11 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	private:
 		IDXGISwapChain3*	  mDxgiSwapChain3;									///< The DXGI swap chain 3 instance, null pointer on error
-		ID3D12DescriptorHeap* mD3D12DescriptorHeap;								///< The Direct3D 12 descriptor heap instance, null pointer on error
+		ID3D12DescriptorHeap* mD3D12DescriptorHeapRtv;							///< The Direct3D 12 render target view descriptor heap instance, null pointer on error
+		ID3D12DescriptorHeap* mD3D12DescriptorHeapDsv;							///< The Direct3D 12 depth stencil view descriptor heap instance, null pointer on error
 		UINT				  mRenderTargetViewDescriptorSize;					///< Render target view descriptor size
 		ID3D12Resource*		  mD3D12ResourceRenderTargets[NUMBER_OF_FRAMES];	///< The Direct3D 12 render target instances, null pointer on error
+		ID3D12Resource*		  mD3D12ResourceDepthStencil;						///< The Direct3D 12 depth stencil instance, null pointer on error
 
 		// Synchronization objects
 		UINT		 mFrameIndex;
