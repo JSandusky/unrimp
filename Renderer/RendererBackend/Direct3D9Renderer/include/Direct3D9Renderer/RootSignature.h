@@ -36,6 +36,7 @@
 //[-------------------------------------------------------]
 namespace Direct3D9Renderer
 {
+	class SamplerState;
 	class Direct3D9Renderer;
 }
 
@@ -88,12 +89,33 @@ namespace Direct3D9Renderer
 		*/
 		inline const Renderer::RootSignature& getRootSignature() const;
 
+		/**
+		*  @brief
+		*    Return the sampler state at the given sampler root parameter index
+		*
+		*  @return
+		*    Sampler state, null pointer on error, don't destroy the returned instance
+		*/
+		const SamplerState* getSamplerState(uint32_t samplerRootParameterIndex) const;
+
+		/**
+		*  @brief
+		*    Set the sampler state
+		*
+		*  @param[in] samplerRootParameterIndex
+		*    Sampler root parameter index
+		*  @param[in] samplerState
+		*    Sampler state
+		*/
+		void setSamplerState(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
 		Renderer::RootSignature mRootSignature;
+		SamplerState**			mSamplerStates;
 
 
 	};

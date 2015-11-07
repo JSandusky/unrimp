@@ -755,14 +755,38 @@ namespace Direct3D9Renderer
 					{
 						case Renderer::ShaderVisibility::ALL:
 						{
-							IDirect3DTexture9* direct3DTexture9 = static_cast<Texture2D*>(resource)->getDirect3DTexture9();
-							mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DTexture9);
-							mDirect3DDevice9->SetTexture(startSlot, direct3DTexture9);
+							// Begin debug event
+							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+							{ // Set texture
+								IDirect3DTexture9* direct3DTexture9 = static_cast<Texture2D*>(resource)->getDirect3DTexture9();
+								mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DTexture9);
+								mDirect3DDevice9->SetTexture(startSlot, direct3DTexture9);
+							}
+
+							{ // Set sampler
+								const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex);
+								samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
+								samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+							}
+
+							// End debug event
+							RENDERER_END_DEBUG_EVENT(this)
 							break;
 						}
 
 						case Renderer::ShaderVisibility::VERTEX:
+							// Begin debug event
+							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+							// Set texture
 							mDirect3DDevice9->SetTexture(vertexFetchStartSlot, static_cast<Texture2D*>(resource)->getDirect3DTexture9());
+
+							// Set sampler
+							mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex)->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
+
+							// End debug event
+							RENDERER_END_DEBUG_EVENT(this)
 							break;
 
 						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
@@ -779,7 +803,18 @@ namespace Direct3D9Renderer
 
 						case Renderer::ShaderVisibility::FRAGMENT:
 							// "pixel shader" in Direct3D terminology
+
+							// Begin debug event
+							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+							// Set texture
 							mDirect3DDevice9->SetTexture(startSlot, static_cast<Texture2D*>(resource)->getDirect3DTexture9());
+
+							// Set sampler
+							mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex)->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+
+							// End debug event
+							RENDERER_END_DEBUG_EVENT(this)
 							break;
 					}
 					break;
@@ -791,76 +826,8 @@ namespace Direct3D9Renderer
 
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
-					SamplerState* samplerState = static_cast<SamplerState*>(resource);
-					const UINT startSlot = descriptorRange->baseShaderRegister;
-
-					// Information about vertex texture fetch in Direct3D 9 can be found within:
-					// Whitepaper: ftp://download.nvidia.com/developer/Papers/2004/Vertex_Textures/Vertex_Textures.pdf
-					//    "Shader Model 3.0
-					//     Using Vertex Textures"
-					//    (DA-01373-001_v00 1 - 06/24/04)
-					// From
-					//    Philipp Gerasimov
-					//    Randima (Randy) Fernando
-					//    Simon Green
-					//    NVIDIA Corporation
-					// Four texture samplers are supported:
-					//     D3DVERTEXTEXTURESAMPLER1
-					//     D3DVERTEXTEXTURESAMPLER2
-					//     D3DVERTEXTEXTURESAMPLER3
-					//     D3DVERTEXTEXTURESAMPLER4
-					// -> Update the given zero based texture unit (the constants are linear, so the following is fine)
-					const UINT vertexFetchStartSlot = startSlot + D3DVERTEXTEXTURESAMPLER1;
-
-					switch (rootParameter.shaderVisibility)
-					{
-						case Renderer::ShaderVisibility::ALL:
-							// Begin debug event
-							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-							// Set the Direct3D 9 sampler states
-							samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
-							samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
-
-							// End debug event
-							RENDERER_END_DEBUG_EVENT(this)
-							break;
-
-						case Renderer::ShaderVisibility::VERTEX:
-							// Begin debug event
-							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-							// Set the Direct3D 9 sampler states
-							samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
-
-							// End debug event
-							RENDERER_END_DEBUG_EVENT(this)
-							break;
-
-						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no tessellation control shader support (hull shader in Direct3D terminology)")
-							break;
-
-						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
-							break;
-
-						case Renderer::ShaderVisibility::GEOMETRY:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no geometry shader support")
-							break;
-
-						case Renderer::ShaderVisibility::FRAGMENT:
-							// Begin debug event
-							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-							// Set the Direct3D 9 sampler states
-							// -> "pixel shader" in Direct3D terminology
-							samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
-
-							// End debug event
-							RENDERER_END_DEBUG_EVENT(this)
-							break;
-					}
+					// Unlike Direct3D >=10, Direct3D 9 directly attaches the sampler settings to texture stages
+					mGraphicsRootSignature->setSamplerState(descriptorRange->samplerRootParameterIndex, static_cast<SamplerState*>(resource));
 					break;
 				}
 			}
