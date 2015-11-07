@@ -117,9 +117,9 @@ void FirstMesh::onInitialization()
 		{
 			// Create uniform buffers
 			// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
-			// -> Direct3D 10 and Direct3D 11 do not support individual uniforms
+			// -> Direct3D 10, 11 and 12 do not support individual uniforms
 			// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
-			if ((0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11")))
+			if ((0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11") || 0 == strcmp(renderer->getName(), "Direct3D12")))
 			{
 				// Allocate enough memory for two 4x4 floating point matrices
 				mUniformBuffer = shaderLanguage->createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
@@ -169,19 +169,21 @@ void FirstMesh::onInitialization()
 			const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
 
 			{ // Create the root signature
-				Renderer::DescriptorRangeBuilder ranges[5];
-				ranges[0].initializeSampler(1, 0);
-				ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
-				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "EmissiveMap", 0);
-				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "NormalMap", 0);
-				ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 3, "SpecularMap", 0);
+				Renderer::DescriptorRangeBuilder ranges[6];
+				ranges[0].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockDynamicVs", 0);
+				ranges[1].initializeSampler(1, 0);
+				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
+				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "EmissiveMap", 0);
+				ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "NormalMap", 0);
+				ranges[5].initialize(Renderer::DescriptorRangeType::SRV, 1, 3, "SpecularMap", 0);
 
-				Renderer::RootParameterBuilder rootParameters[5];
-				rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
+				Renderer::RootParameterBuilder rootParameters[6];
+				rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);
 				rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
 				rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::FRAGMENT);
 				rootParameters[3].initializeAsDescriptorTable(1, &ranges[3], Renderer::ShaderVisibility::FRAGMENT);
 				rootParameters[4].initializeAsDescriptorTable(1, &ranges[4], Renderer::ShaderVisibility::FRAGMENT);
+				rootParameters[5].initializeAsDescriptorTable(1, &ranges[5], Renderer::ShaderVisibility::FRAGMENT);
 
 				// Setup
 				Renderer::RootSignatureBuilder rootSignature;
@@ -202,7 +204,7 @@ void FirstMesh::onInitialization()
 				#include "FirstMesh_GLSL_110.h"
 				#include "FirstMesh_GLSL_ES2.h"
 				#include "FirstMesh_HLSL_D3D9.h"
-				#include "FirstMesh_HLSL_D3D10_D3D11.h"
+				#include "FirstMesh_HLSL_D3D10_D3D11_D3D12.h"
 				#include "FirstMesh_Null.h"
 
 				// Create the program
@@ -359,11 +361,12 @@ void FirstMesh::onDraw()
 			renderer->setGraphicsRootSignature(mRootSignature);
 
 			// Set sampler and textures
-			renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
-			renderer->setGraphicsRootDescriptorTable(1, mDiffuseTextureResource->getTexture());
-			renderer->setGraphicsRootDescriptorTable(2, mNormalTextureResource->getTexture());
-			renderer->setGraphicsRootDescriptorTable(3, mSpecularTextureResource->getTexture());
-			renderer->setGraphicsRootDescriptorTable(4, mEmissiveTextureResource->getTexture());
+			renderer->setGraphicsRootDescriptorTable(0, mUniformBuffer);
+			renderer->setGraphicsRootDescriptorTable(1, mSamplerState);
+			renderer->setGraphicsRootDescriptorTable(2, mDiffuseTextureResource->getTexture());
+			renderer->setGraphicsRootDescriptorTable(3, mNormalTextureResource->getTexture());
+			renderer->setGraphicsRootDescriptorTable(4, mSpecularTextureResource->getTexture());
+			renderer->setGraphicsRootDescriptorTable(5, mEmissiveTextureResource->getTexture());
 
 			// Set the used pipeline state object (PSO)
 			renderer->setPipelineState(mPipelineState);
@@ -418,7 +421,8 @@ void FirstMesh::onDraw()
 			}
 
 			// Draw text
-			mFontResource->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
+			// TODO(co) Update font support
+			// mFontResource->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
 
 			// End scene rendering
 			// -> Required for Direct3D 9

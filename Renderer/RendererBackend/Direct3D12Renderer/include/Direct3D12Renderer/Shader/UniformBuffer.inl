@@ -28,13 +28,10 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Direct3D 12 update
-	/*
-	inline ID3D12Buffer *UniformBuffer::getD3D12Buffer() const
+	inline ID3D12DescriptorHeap* UniformBuffer::getD3D12DescriptorHeap() const
 	{
-		return mD3D12Buffer;
+		return mD3D12DescriptorHeap;
 	}
-	*/
 
 
 //[-------------------------------------------------------]

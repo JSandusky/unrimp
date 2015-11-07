@@ -417,9 +417,6 @@
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_HLSL_D3D9.h">
       <Filter>Runtime\FirstMesh</Filter>
     </ClInclude>
-    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_HLSL_D3D10_D3D11.h">
-      <Filter>Runtime\FirstMesh</Filter>
-    </ClInclude>
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_Null.h">
       <Filter>Runtime\FirstMesh</Filter>
     </ClInclude>
@@ -455,6 +452,9 @@
     </ClInclude>
     <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_HLSL_D3D11_D3D12.h">
       <Filter>Advanced\IcosahedronTessellation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Runtime\FirstMesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

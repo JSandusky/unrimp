@@ -654,25 +654,42 @@ namespace Direct3D12Renderer
 
 			switch (resource->getResourceType())
 			{
+				case Renderer::ResourceType::UNIFORM_BUFFER:
+				{
+					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<UniformBuffer*>(resource)->getD3D12DescriptorHeap();
+					if (nullptr != d3D12DescriptorHeap)
+					{
+						ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
+						mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+						mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+					}
+					break;
+				}
+
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
 					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<Texture2D*>(resource)->getD3D12DescriptorHeap();
+					if (nullptr != d3D12DescriptorHeap)
+					{
+						ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
+						mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-					ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
-					mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-					mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+						mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+					}
 					break;
 				}
 
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
 					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<SamplerState*>(resource)->getD3D12DescriptorHeap();
+					if (nullptr != d3D12DescriptorHeap)
+					{
+						ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
+						mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-					ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
-					mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-
-					mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+						mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+					}
 					break;
 				}
 			}

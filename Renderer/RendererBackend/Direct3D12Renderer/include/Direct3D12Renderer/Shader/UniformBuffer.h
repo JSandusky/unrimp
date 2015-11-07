@@ -87,13 +87,12 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D 12 constant buffer instance
+		*    Return the Direct3D descriptor heap instance
 		*
 		*  @return
-		*    The Direct3D 12 constant buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D descriptor heap instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		// TODO(co) Direct3D 12 update
-		//inline ID3D12Buffer *getD3D12Buffer() const;
+		inline ID3D12DescriptorHeap* getD3D12DescriptorHeap() const;
 
 
 	//[-------------------------------------------------------]
