@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "Renderer/SamplerStateTypes.h"
 
+#include <string.h>	// For strcpy
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
