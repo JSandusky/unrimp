@@ -454,25 +454,152 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::setGraphicsRootDescriptorTable(uint32_t, Renderer::IResource* resource)
+	void OpenGLES2Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
 	{
+		// Security checks
+		#ifndef OPENGLES2RENDERER_NO_DEBUG
+		{
+			if (nullptr == mGraphicsRootSignature)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: No graphics root signature set")
+				return;
+			}
+			if (rootParameterIndex >= mGraphicsRootSignature->getRootSignature().numberOfParameters)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Root parameter index is out of bounds")
+				return;
+			}
+			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Root parameter index doesn't reference a descriptor table")
+				return;
+			}
+
+			// TODO(co) For now, we only support a single descriptor range
+			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Only a single descriptor range is supported")
+				return;
+			}
+			if (nullptr == rootParameter.descriptorTable.descriptorRanges)
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Descriptor ranges is a null pointer")
+				return;
+			}
+		}
+		#endif
+
 		if (nullptr != resource)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
 
-			switch (resource->getResourceType())
+			// Get the root signature parameter instance
+			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+			const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
+
+			// Check the type of resource to set
+			// TODO(co) Some additional resource type root signature security checks in debug build?
+			const Renderer::ResourceType::Enum resourceType = resource->getResourceType();
+			switch (resourceType)
 			{
+				case Renderer::ResourceType::TEXTURE_BUFFER:
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: OpenGL ES 2 has no texture buffer support")
+					break;
+
 				case Renderer::ResourceType::TEXTURE_2D:
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
-					// TODO(co) Test
-					fsSetTexture(0, static_cast<Renderer::ITexture*>(resource));
+					switch (rootParameter.shaderVisibility)
+					{
+						// In OpenGL ES 2, all shaders share the same texture units
+						case Renderer::ShaderVisibility::ALL:
+						case Renderer::ShaderVisibility::VERTEX:
+						case Renderer::ShaderVisibility::FRAGMENT:
+						{
+							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+								// Backup the currently active OpenGL ES 2 texture
+								GLint openGLES2ActiveTextureBackup = 0;
+								glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
+							#endif
+
+							// TODO(co) Some security checks might be wise *maximum number of texture units*
+							glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + descriptorRange->baseShaderRegister));
+
+							// Bind texture
+							if (resourceType == Renderer::ResourceType::TEXTURE_2D_ARRAY)
+							{
+								// No extension check required, if we in here we already know it must exist
+								glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLES2Texture());
+							}
+							else
+							{
+								glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLES2Texture());
+							}
+
+							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+								// Be polite and restore the previous active OpenGL ES 2 texture
+								glActiveTexture(openGLES2ActiveTextureBackup);
+							#endif
+							break;
+						}
+
+						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2: OpenGL ES 2 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: OpenGL ES 2 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::GEOMETRY:
+							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: OpenGL ES 2 has no geometry shader support")
+							break;
+					}
 					break;
 				}
 
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
-					fsSetSamplerState(0, static_cast<Renderer::ISamplerState*>(resource));
+					switch (rootParameter.shaderVisibility)
+					{
+						// In OpenGL ES 2, all shaders share the same texture units
+						case Renderer::ShaderVisibility::ALL:
+						case Renderer::ShaderVisibility::VERTEX:
+						case Renderer::ShaderVisibility::FRAGMENT:
+						{
+							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+								// Backup the currently active OpenGL ES 2 texture
+								GLint openGLES2ActiveTextureBackup = 0;
+								glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
+							#endif
+
+							// TODO(co) Some security checks might be wise *maximum number of texture units*
+							glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + descriptorRange->baseShaderRegister));
+
+							// Set the OpenGL ES 2 sampler states
+							static_cast<SamplerState*>(resource)->setOpenGLES2SamplerStates();
+
+							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+								// Be polite and restore the previous active OpenGL ES 2 texture
+								glActiveTexture(openGLES2ActiveTextureBackup);
+							#endif
+							break;
+						}
+
+						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2: OpenGL ES 2 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: OpenGL ES 2 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							break;
+
+						case Renderer::ShaderVisibility::GEOMETRY:
+							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: OpenGL ES 2 has no geometry shader support")
+							break;
+					}
 					break;
 				}
 			}
@@ -480,6 +607,24 @@ namespace OpenGLES2Renderer
 		else
 		{
 			// TODO(co) Handle this situation?
+			/*
+			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+				// Backup the currently active OpenGL ES 2 texture
+				GLint openGLES2ActiveTextureBackup = 0;
+				glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
+			#endif
+
+			// TODO(co) Some security checks might be wise *maximum number of texture units*
+			glActiveTexture(GL_TEXTURE0 + unit);
+
+			// Unbind the texture at the given texture unit
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+				// Be polite and restore the previous active OpenGL ES 2 texture
+				glActiveTexture(openGLES2ActiveTextureBackup);
+			#endif
+			*/
 		}
 	}
 
@@ -609,10 +754,9 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::vsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void OpenGLES2Renderer::vsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// In OpenGL ES 2, all shaders share the same texture units
-		fsSetTexture(unit, texture);
+		// TODO(co) Remove this method
 	}
 
 	void OpenGLES2Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
@@ -621,10 +765,9 @@ namespace OpenGLES2Renderer
 		fsSetTextureCollection(startUnit, textureCollection);
 	}
 
-	void OpenGLES2Renderer::vsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void OpenGLES2Renderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// In OpenGL ES 2, all shaders share the same texture units
-		fsSetSamplerState(unit, samplerState);
+		// TODO(co) Remove this method
 	}
 
 	void OpenGLES2Renderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -633,12 +776,9 @@ namespace OpenGLES2Renderer
 		fsSetSamplerStateCollection(startUnit, samplerStateCollection);
 	}
 
-	void OpenGLES2Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLES2Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// OpenGL ES 2 has no uniform buffer support
-
-		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-		OPENGLES2RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(uniformBuffer)
+		// TODO(co) Remove this method
 	}
 
 
@@ -842,83 +982,9 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::fsSetTexture(uint32_t unit, Renderer::ITexture *texture)
+	void OpenGLES2Renderer::fsSetTexture(uint32_t, Renderer::ITexture*)
 	{
-		// Set a texture at that unit?
-		if (nullptr != texture)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *texture)
-
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Backup the currently active OpenGL ES 2 texture
-				GLint openGLES2ActiveTextureBackup = 0;
-				glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
-			#endif
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + unit));
-
-			// Evaluate the texture
-			switch (texture->getResourceType())
-			{
-				case Renderer::ResourceType::TEXTURE_2D:
-					glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(texture)->getOpenGLES2Texture());
-					break;
-
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-					// No extension check required, if we in here we already know it must exist
-					glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(texture)->getOpenGLES2Texture());
-					break;
-
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-				default:
-					// Not handled in here
-					break;
-			}
-
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Be polite and restore the previous active OpenGL ES 2 texture
-				glActiveTexture(openGLES2ActiveTextureBackup);
-			#endif
-		}
-		else
-		{
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Backup the currently active OpenGL ES 2 texture
-				GLint openGLES2ActiveTextureBackup = 0;
-				glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
-			#endif
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			glActiveTexture(GL_TEXTURE0 + unit);
-
-			// Unbind the texture at the given texture unit
-			glBindTexture(GL_TEXTURE_2D, 0);
-
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Be polite and restore the previous active OpenGL ES 2 texture
-				glActiveTexture(openGLES2ActiveTextureBackup);
-			#endif
-		}
+		// TODO(co) Remove this method
 	}
 
 	void OpenGLES2Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
@@ -1003,45 +1069,9 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::fsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
+	void OpenGLES2Renderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
-		// Set a sampler state at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Backup the currently active OpenGL ES 2 texture
-				GLint openGLES2ActiveTextureBackup = 0;
-				glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
-			#endif
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			glActiveTexture(GL_TEXTURE0 + unit);
-
-			// Set the OpenGL ES 2 sampler states
-			static_cast<SamplerState*>(samplerState)->setOpenGLES2SamplerStates();
-
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Be polite and restore the previous active OpenGL ES 2 texture
-				glActiveTexture(openGLES2ActiveTextureBackup);
-			#endif
-		}
-		else
-		{
-			// Set the default sampler state
-			if (nullptr != mDefaultSamplerState)
-			{
-				fsSetSamplerState(unit, mDefaultSamplerState);
-			}
-			else
-			{
-				// Fallback in case everything goes wrong
-
-				// TODO(co) Implement me
-			}
-		}
+		// TODO(co) Remove this method
 	}
 
 	void OpenGLES2Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -1102,12 +1132,9 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *uniformBuffer)
+	void OpenGLES2Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
-		// OpenGL ES 2 has no uniform buffer support
-
-		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-		OPENGLES2RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(uniformBuffer)
+		// TODO(co) Remove this method
 	}
 
 

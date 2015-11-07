@@ -24,6 +24,7 @@
 #include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
 #include "OpenGLES2Renderer/Shader/VertexShaderGlsl.h"
 #include "OpenGLES2Renderer/Shader/FragmentShaderGlsl.h"
+#include "OpenGLES2Renderer/RootSignature.h"
 #include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
 
 #include <Renderer/VertexArrayTypes.h>
@@ -39,8 +40,10 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramGlsl::ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, const Renderer::IRootSignature&, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
-		Program(openGLES2Renderer)
+	ProgramGlsl::ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
+		Program(openGLES2Renderer),
+		mNumberOfRootSignatureParameters(0),
+		mRootSignatureParameterIndexToUniformLocation(nullptr)
 	{
 		// Create the OpenGL ES 2 program
 		mOpenGLES2Program = glCreateProgram();
@@ -77,9 +80,66 @@ namespace OpenGLES2Renderer
 		if (GL_TRUE == linked)
 		{
 			// The actual locations assigned to uniform variables are not known until the program object is linked successfully
-			// TODO(co) Use root signature
-			int i = 0;
-			i = 0;
+			// -> So we have to build a root signature parameter index -> uniform location mapping here
+			const Renderer::RootSignature& rootSignatureData = static_cast<const RootSignature&>(rootSignature).getRootSignature();
+			const uint32_t numberOfParameters = rootSignatureData.numberOfParameters;
+			if (numberOfParameters > 0)
+			{
+				mRootSignatureParameterIndexToUniformLocation = new int32_t[numberOfParameters];
+				memset(mRootSignatureParameterIndexToUniformLocation, -1, sizeof(int32_t) * numberOfParameters);
+				for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
+				{
+					const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[parameterIndex];
+					if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
+					{
+						// TODO(co) For now, we only support a single descriptor range
+						if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
+						{
+							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Only a single descriptor range is supported")
+						}
+						else
+						{
+							const Renderer::DescriptorRange* rescriptorRange = rootParameter.descriptorTable.descriptorRanges;
+							const GLint uniformLocation = glGetUniformLocation(mOpenGLES2Program, rescriptorRange->baseShaderRegisterName);
+							if (uniformLocation >= 0)
+							{
+								mRootSignatureParameterIndexToUniformLocation[parameterIndex] = uniformLocation;
+
+								// OpenGL ES 2/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
+								// -> When using OpenGL or OpenGL ES 2 this is required
+								// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
+								//    in GLSL shader) , for backward compatibility we don't use it in here
+								// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
+								//    to use is usually defined directly within the shader by using the "register"-keyword
+								// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
+								#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+									// Backup the currently used OpenGL ES 2 program
+									GLint openGLES2ProgramBackup = 0;
+									glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
+									if (openGLES2ProgramBackup == mOpenGLES2Program)
+									{
+										// Set uniform, please note that for this our program must be the currently used one
+										glUniform1i(uniformLocation, static_cast<GLint>(rescriptorRange->baseShaderRegister));
+									}
+									else
+									{
+										// Set uniform, please note that for this our program must be the currently used one
+										glUseProgram(mOpenGLES2Program);
+										glUniform1i(uniformLocation, static_cast<GLint>(rescriptorRange->baseShaderRegister));
+
+										// Be polite and restore the previous used OpenGL ES 2 program
+										glUseProgram(openGLES2ProgramBackup);
+									}
+								#else
+									// Set uniform, please note that for this our program must be the currently used one
+									glUseProgram(mOpenGLES2Program);
+									glUniform1i(uniformLocation, static_cast<GLint>(rescriptorRange->baseShaderRegister));
+								#endif
+							}
+						}
+					}
+				}
+			}
 		}
 		else
 		{
@@ -108,7 +168,11 @@ namespace OpenGLES2Renderer
 
 	ProgramGlsl::~ProgramGlsl()
 	{
-		// Nothing to do in here
+		// Destroy root signature parameter index to OpenGL ES 2 uniform location mapping, if required
+		if (nullptr != mRootSignatureParameterIndexToUniformLocation)
+		{
+			delete [] mRootSignatureParameterIndexToUniformLocation;
+		}
 	}
 
 

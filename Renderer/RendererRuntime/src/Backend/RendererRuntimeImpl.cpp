@@ -181,8 +181,8 @@ namespace RendererRuntime
 		{
 			// Create the root signature
 			Renderer::DescriptorRangeBuilder ranges[2];
-			ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0);
-			ranges[1].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 0);
+			ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GlyphMap");
+			ranges[1].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 0, "GlyphMap");
 
 			Renderer::RootParameterBuilder rootParameters[2];
 			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);

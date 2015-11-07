@@ -66,18 +66,20 @@ namespace Renderer
 	*    Descriptor range
 	*
 	*  @note
-	*    - This structure directly maps to Direct3D 12 structure, do not change it
+	*    - "Renderer::DescriptorRange" is not identical to "D3D12_DESCRIPTOR_RANGE" because it had to be extended by information required by OpenGL
 	*
 	*  @see
 	*    - "D3D12_DESCRIPTOR_RANGE"-documentation for details
 	*/
 	struct DescriptorRange
 	{
+		static const uint32_t NAME_LENGTH = 32;
 		DescriptorRangeType::Enum rangeType;
 		uint32_t				  numberOfDescriptors;
-		uint32_t				  baseShaderRegister;
+		uint32_t				  baseShaderRegister;					///< When using explicit binding locations
 		uint32_t				  registerSpace;
 		uint32_t				  offsetInDescriptorsFromTableStart;
+		char					  baseShaderRegisterName[NAME_LENGTH];	///< When not using explicit binding locations (OpenGL ES 2, legacy GLSL profiles)
 	};
 	struct DescriptorRangeBuilder : public DescriptorRange
 	{
@@ -92,25 +94,28 @@ namespace Renderer
 			DescriptorRangeType::Enum _rangeType,
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
+			char	 _baseShaderRegisterName[NAME_LENGTH],
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 		{
-			initialize(_rangeType, _numberOfDescriptors, _baseShaderRegister, _registerSpace, _offsetInDescriptorsFromTableStart);
+			initialize(_rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _registerSpace, _offsetInDescriptorsFromTableStart);
 		}
 		inline void initialize(
 			DescriptorRangeType::Enum _rangeType,
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
+			char	 _baseShaderRegisterName[NAME_LENGTH],
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 		{
-			initialize(*this, _rangeType, _numberOfDescriptors, _baseShaderRegister, _registerSpace, _offsetInDescriptorsFromTableStart);
+			initialize(*this, _rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _registerSpace, _offsetInDescriptorsFromTableStart);
 		}
 		static inline void initialize(
 			DescriptorRange& range,
 			DescriptorRangeType::Enum _rangeType,
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
+			char	 _baseShaderRegisterName[NAME_LENGTH],
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 		{
@@ -119,6 +124,7 @@ namespace Renderer
 			range.baseShaderRegister = _baseShaderRegister;
 			range.registerSpace = _registerSpace;
 			range.offsetInDescriptorsFromTableStart = _offsetInDescriptorsFromTableStart;
+			strcpy(range.baseShaderRegisterName, _baseShaderRegisterName);
 		}
 	};
 
@@ -499,7 +505,7 @@ namespace Renderer
 	*    Root signature
 	*
 	*  @note
-	*    - "Renderer::RootSignature" is not identical to "D3D12_ROOT_SIGNATURE_DESC" because it had to be extended by information required by OpenGL
+	*    - "Renderer::RootSignature" is not totally identical to "D3D12_ROOT_SIGNATURE_DESC" because it had to be extended by information required by OpenGL, so can't cast to Direct3D 12 structure
 	*
 	*  @see
 	*    - "D3D12_ROOT_SIGNATURE_DESC"-documentation for details

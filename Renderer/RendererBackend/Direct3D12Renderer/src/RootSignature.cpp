@@ -57,15 +57,20 @@ namespace Direct3D12Renderer
 					memcpy(d3dRootParameters, rootSignature.parameters, sizeof(Renderer::RootParameter) * numberOfParameters);
 
 					// Copy the descriptor table data
-					for (uint32_t i = 0; i < numberOfParameters; ++i)
+					for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
 					{
-						D3D12_ROOT_PARAMETER& d3dRootParameter = d3dRootParameters[i];
-						const Renderer::RootParameter& rootParameter = rootSignature.parameters[i];
+						D3D12_ROOT_PARAMETER& d3dRootParameter = d3dRootParameters[parameterIndex];
+						const Renderer::RootParameter& rootParameter = rootSignature.parameters[parameterIndex];
 						if (D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE == d3dRootParameter.ParameterType)
 						{
 							const uint32_t numberOfDescriptorRanges = d3dRootParameter.DescriptorTable.NumDescriptorRanges;
 							d3dRootParameter.DescriptorTable.pDescriptorRanges = new D3D12_DESCRIPTOR_RANGE[numberOfDescriptorRanges];
-							memcpy(const_cast<D3D12_DESCRIPTOR_RANGE*>(d3dRootParameter.DescriptorTable.pDescriptorRanges), rootParameter.descriptorTable.descriptorRanges, sizeof(Renderer::DescriptorRange) * numberOfDescriptorRanges);
+
+							// "Renderer::DescriptorRange" is not identical to "D3D12_DESCRIPTOR_RANGE" because it had to be extended by information required by OpenGL
+							for (uint32_t descriptorRangeIndex = 0; descriptorRangeIndex < numberOfDescriptorRanges; ++descriptorRangeIndex)
+							{
+								memcpy(const_cast<D3D12_DESCRIPTOR_RANGE*>(&d3dRootParameter.DescriptorTable.pDescriptorRanges[descriptorRangeIndex]), &rootParameter.descriptorTable.descriptorRanges[descriptorRangeIndex], sizeof(D3D12_DESCRIPTOR_RANGE));
+							}
 						}
 					}
 				}

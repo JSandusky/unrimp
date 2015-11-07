@@ -94,6 +94,14 @@ namespace OpenGLES2Renderer
 		virtual ~ProgramGlsl();
 
 
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		uint32_t mNumberOfRootSignatureParameters;				///< Number of root signature parameters
+		int32_t* mRootSignatureParameterIndexToUniformLocation;	///< Root signature parameter index to OpenGL ES 2 uniform location mapping, can be a null pointer (type "GLint" not used in here in order to keep the header slim)
+
+
 	};
 
 
