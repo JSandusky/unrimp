@@ -1150,7 +1150,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::clear(uint32_t, const float color[4], float, uint32_t)
+	void Direct3D12Renderer::clear(uint32_t, const float color[4], float z, uint32_t stencil)
 	{
 		// Unlike Direct3D 9, OpenGL or OpenGL ES 2, Direct3D 12 clears a given render target view and not the currently bound
 
@@ -1161,7 +1161,7 @@ namespace Direct3D12Renderer
 		SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
 		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRtv()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
 		mD3D12GraphicsCommandList->ClearRenderTargetView(rtvHandle, color, 0, nullptr);
-		mD3D12GraphicsCommandList->ClearDepthStencilView(swapChain->getD3D12DescriptorHeapDsv()->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+		mD3D12GraphicsCommandList->ClearDepthStencilView(swapChain->getD3D12DescriptorHeapDsv()->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, z, static_cast<UINT8>(stencil), 0, nullptr);
 
 		// TODO(co) Direct3D 12 update
 		/*
