@@ -45,9 +45,11 @@ namespace Renderer
 	*    Depth write mask
 	*
 	*  @note
-	*    - These constants directly map to Direct3D 10 & 11 constants, do not change them
+	*    - These constants directly map to Direct3D 10 & 11 & 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_DEPTH_WRITE_MASK"-documentation for details
 	*/
-	// TODO(co) Renderer::DepthStencilState, document
 	struct DepthWriteMask
 	{
 		enum Enum
@@ -62,9 +64,11 @@ namespace Renderer
 	*    Stencil operation
 	*
 	*  @note
-	*    - These constants directly map to Direct3D 10 & 11 constants, do not change them
+	*    - These constants directly map to Direct3D 10 & 11 & 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_STENCIL_OP"-documentation for details
 	*/
-	// TODO(co) Renderer::DepthStencilState, document
 	struct StencilOp
 	{
 		enum Enum
@@ -89,10 +93,12 @@ namespace Renderer
 	*    Depth stencil operation description
 	*
 	*  @note
-	*    - This depth stencil operation description maps directly to Direct3D 10 & 11, do not change it
+	*    - This depth stencil operation description maps directly to Direct3D 10 & 11 & 12, do not change it
 	*    - If you want to know how the default values were chosen, have a look into the "Renderer::IDepthStencilState::getDefaultDepthStencilState()"-implementation
+	*
+	*  @see
+	*    - "D3D12_DEPTH_STENCILOP_DESC"-documentation for details
 	*/
-	// TODO(co) Renderer::DepthStencilState, document
 	struct DepthStencilOpDesc
 	{
 		StencilOp::Enum		 stencilFailOp;			///< Default: "Renderer::StencilOp::KEEP"
@@ -106,11 +112,13 @@ namespace Renderer
 	*    Depth stencil state
 	*
 	*  @note
-	*    - This depth stencil state maps directly to Direct3D 10 & 11, do not change it
+	*    - This depth stencil state maps directly to Direct3D 10 & 11 & 12, do not change it
 	*    - This also means that "int" is used over "bool" because in Direct3D it's defined this way
 	*    - If you want to know how the default values were chosen, have a look into the "Renderer::IDepthStencilState::getDefaultDepthStencilState()"-implementation
+	*
+	*  @see
+	*    - "D3D12_DEPTH_STENCIL_DESC"-documentation for details
 	*/
-	// TODO(co) Renderer::DepthStencilState, document
 	struct DepthStencilState
 	{
 		int					 depthEnable;		///< Default: "true"

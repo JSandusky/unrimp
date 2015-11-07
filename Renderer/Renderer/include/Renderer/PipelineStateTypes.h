@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "Renderer/VertexArrayTypes.h"
 #include "Renderer/RasterizerStateTypes.h"
+#include "Renderer/DepthStencilStateTypes.h"
 
 
 //[-------------------------------------------------------]
@@ -87,6 +88,7 @@ namespace Renderer
 		VertexAttributes			vertexAttributes;		///< Vertex attributes
 		PrimitiveTopologyType::Enum	primitiveTopologyType;	///< Primitive topology type
 		RasterizerState				rasterizerState;		///< Rasterizer state
+		DepthStencilState			depthStencilState;		///< Depth stencil state
 	};
 
 

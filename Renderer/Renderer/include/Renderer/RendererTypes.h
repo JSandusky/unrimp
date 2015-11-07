@@ -149,6 +149,9 @@ namespace Renderer
 	*  @note
 	*    - Original Direct3D comments from http://msdn.microsoft.com/en-us/library/windows/desktop/bb204902%28v=vs.85%29.aspx are used in here
 	*    - These constants directly map to Direct3D 10 & 11 & 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_COMPARISON_FUNC"-documentation for details
 	*/
 	struct ComparisonFunc
 	{

@@ -1109,30 +1109,6 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/PipelineStateTypes.h
-	#ifndef __RENDERER_PIPELINESTATE_TYPES_H__
-	#define __RENDERER_PIPELINESTATE_TYPES_H__
-		struct PrimitiveTopologyType
-		{
-			enum Enum
-			{
-				UNDEFINED	= 0,
-				POINT		= 1,
-				LINE		= 2,
-				TRIANGLE	= 3,
-				PATCH		= 4
-			};
-		};
-		struct PipelineState
-		{
-			IRootSignature*				rootSignature;
-			IProgram*					program;
-			VertexAttributes			vertexAttributes;
-			PrimitiveTopologyType::Enum primitiveTopologyType;
-			RasterizerState				rasterizerState;
-		};
-	#endif
-
 	// Renderer/DepthStencilStateTypes.h
 	#ifndef __RENDERER_DEPTHSTENCILSTATE_TYPES_H__
 	#define __RENDERER_DEPTHSTENCILSTATE_TYPES_H__
@@ -1175,6 +1151,31 @@ namespace Renderer
 			uint8_t				 stencilWriteMask;
 			DepthStencilOpDesc	 frontFace;
 			DepthStencilOpDesc	 backFace;
+		};
+	#endif
+
+	// Renderer/PipelineStateTypes.h
+	#ifndef __RENDERER_PIPELINESTATE_TYPES_H__
+	#define __RENDERER_PIPELINESTATE_TYPES_H__
+		struct PrimitiveTopologyType
+		{
+			enum Enum
+			{
+				UNDEFINED	= 0,
+				POINT		= 1,
+				LINE		= 2,
+				TRIANGLE	= 3,
+				PATCH		= 4
+			};
+		};
+		struct PipelineState
+		{
+			IRootSignature*				rootSignature;
+			IProgram*					program;
+			VertexAttributes			vertexAttributes;
+			PrimitiveTopologyType::Enum primitiveTopologyType;
+			RasterizerState				rasterizerState;
+			DepthStencilState			depthStencilState;
 		};
 	#endif
 
