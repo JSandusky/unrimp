@@ -499,7 +499,7 @@ namespace Renderer
 	*    Root signature
 	*
 	*  @note
-	*    - This structure directly maps to Direct3D 12 structure, do not change it
+	*    - "Renderer::RootSignature" is not identical to "D3D12_ROOT_SIGNATURE_DESC" because it had to be extended by information required by OpenGL
 	*
 	*  @see
 	*    - "D3D12_ROOT_SIGNATURE_DESC"-documentation for details
