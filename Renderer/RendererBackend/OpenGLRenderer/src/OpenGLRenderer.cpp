@@ -224,6 +224,12 @@ namespace OpenGLRenderer
 			omSetBlendState(nullptr);
 		}
 
+		// Release the graphics root signature instance, in case we have one
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+		}
+
 		{ // For debugging: At this point there should be no resource instances left, validate this!
 			// -> Are the currently any resource instances?
 			const unsigned long numberOfCurrentResources = getStatistics().getNumberOfCurrentResources();
@@ -248,12 +254,6 @@ namespace OpenGLRenderer
 		if (nullptr != mShaderLanguageGlsl)
 		{
 			mShaderLanguageGlsl->release();
-		}
-
-		// Release the graphics root signature instance, in case we have one
-		if (nullptr != mGraphicsRootSignature)
-		{
-			mGraphicsRootSignature->release();
 		}
 
 		// Destroy the OpenGL context instance

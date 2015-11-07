@@ -22,9 +22,49 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/RootSignature.h"
+#include "OpenGLES2Renderer/SamplerState.h"
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 
 #include <memory.h>
+
+
+//[-------------------------------------------------------]
+//[ Global functions in anonymous namespace               ]
+//[-------------------------------------------------------]
+#ifndef OPENGLES2RENDERER_NO_DEBUG
+	namespace
+	{
+		namespace detail
+		{
+			void checkSamplerState(const Renderer::RootSignature& rootSignature, uint32_t samplerRootParameterIndex)
+			{
+				if (samplerRootParameterIndex >= rootSignature.numberOfParameters)
+				{
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index is out of bounds")
+					return;
+				}
+				const Renderer::RootParameter& samplerRootParameter = rootSignature.parameters[samplerRootParameterIndex];
+				if (Renderer::RootParameterType::DESCRIPTOR_TABLE != samplerRootParameter.parameterType)
+				{
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index doesn't point to a descriptor table")
+					return;
+				}
+
+				// TODO(co) For now, we only support a single descriptor range
+				if (1 != samplerRootParameter.descriptorTable.numberOfDescriptorRanges)
+				{
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter: Only a single descriptor range is supported")
+					return;
+				}
+				if (Renderer::DescriptorRangeType::SAMPLER != samplerRootParameter.descriptorTable.descriptorRanges[0].rangeType)
+				{
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index is out of bounds")
+					return;
+				}
+			}
+		}
+	}
+#endif
 
 
 //[-------------------------------------------------------]
@@ -39,7 +79,8 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	RootSignature::RootSignature(OpenGLES2Renderer &openGLES2Renderer, const Renderer::RootSignature &rootSignature) :
 		IRootSignature(openGLES2Renderer),
-		mRootSignature(rootSignature)
+		mRootSignature(rootSignature),
+		mSamplerStates(nullptr)
 	{
 		{ // Copy the parameter data
 			const uint32_t numberOfParameters = mRootSignature.numberOfParameters;
@@ -72,10 +113,32 @@ namespace OpenGLES2Renderer
 				memcpy(const_cast<Renderer::StaticSampler*>(mRootSignature.staticSamplers), rootSignature.staticSamplers, sizeof(Renderer::StaticSampler) * numberOfStaticSamplers);
 			}
 		}
+
+		// Initialize sampler state references
+		if (mRootSignature.numberOfParameters > 0)
+		{
+			mSamplerStates = new SamplerState*[mRootSignature.numberOfParameters];
+			memset(mSamplerStates, 0, sizeof(SamplerState*) * mRootSignature.numberOfParameters);
+		}
 	}
 
 	RootSignature::~RootSignature()
 	{
+		// Release all sampler state references
+		if (nullptr != mSamplerStates)
+		{
+			for (uint32_t i = 0; i < mRootSignature.numberOfParameters; ++i)
+			{
+				SamplerState* samplerState = mSamplerStates[i];
+				if (nullptr != samplerState)
+				{
+					samplerState->release();
+				}
+			}
+			delete [] mSamplerStates;
+		}
+
+		// Destroy the root signature data
 		if (nullptr != mRootSignature.parameters)
 		{
 			for (uint32_t i = 0; i < mRootSignature.numberOfParameters; ++i)
@@ -92,6 +155,45 @@ namespace OpenGLES2Renderer
 		{
 			delete [] mRootSignature.staticSamplers;
 		}
+	}
+
+	void RootSignature::setSamplerStates(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const
+	{
+		// Security checks
+		#ifndef OPENGLES2RENDERER_NO_DEBUG
+			detail::checkSamplerState(mRootSignature, samplerRootParameterIndex);
+		#endif
+
+		// Set sampler state
+		SamplerState** samplerStateSlot = &mSamplerStates[samplerRootParameterIndex];
+		if (samplerState != *samplerStateSlot)
+		{
+			if (nullptr != *samplerStateSlot)
+			{
+				(*samplerStateSlot)->release();
+			}
+			(*samplerStateSlot) = samplerState;
+			if (nullptr != *samplerStateSlot)
+			{
+				(*samplerStateSlot)->addReference();
+			}
+		}
+	}
+
+	void RootSignature::setOpenGLES2SamplerStates(uint32_t samplerRootParameterIndex) const
+	{
+		// Security checks
+		#ifndef OPENGLES2RENDERER_NO_DEBUG
+			detail::checkSamplerState(mRootSignature, samplerRootParameterIndex);
+			if (nullptr == mSamplerStates[samplerRootParameterIndex])
+			{
+				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index points to no sampler state instance")
+				return;
+			}
+		#endif
+
+		// Set sampler state
+		mSamplerStates[samplerRootParameterIndex]->setOpenGLES2SamplerStates();
 	}
 
 

@@ -238,6 +238,13 @@ namespace Direct3D9Renderer
 			rsSetState(nullptr);
 		}
 
+		// Release the graphics root signature instance
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+			mGraphicsRootSignature = nullptr;
+		}
+
 		{ // For debugging: At this point there should be no resource instances left, validate this!
 			// -> Are the currently any resource instances?
 			const unsigned long numberOfCurrentResources = getStatistics().getNumberOfCurrentResources();
@@ -262,13 +269,6 @@ namespace Direct3D9Renderer
 		if (nullptr != mDirect3DQuery9Flush)
 		{
 			mDirect3DQuery9Flush->Release();
-		}
-
-		// Release the graphics root signature instance
-		if (nullptr != mGraphicsRootSignature)
-		{
-			mGraphicsRootSignature->release();
-			mGraphicsRootSignature = nullptr;
 		}
 
 		// Release the HLSL shader language instance, in case we have one

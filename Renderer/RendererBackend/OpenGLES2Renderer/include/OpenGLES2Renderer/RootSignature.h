@@ -36,6 +36,7 @@
 //[-------------------------------------------------------]
 namespace OpenGLES2Renderer
 {
+	class SamplerState;
 	class OpenGLES2Renderer;
 }
 
@@ -88,12 +89,33 @@ namespace OpenGLES2Renderer
 		*/
 		inline const Renderer::RootSignature& getRootSignature() const;
 
+		/**
+		*  @brief
+		*    Set the sampler state
+		*
+		*  @param[in] samplerRootParameterIndex
+		*    Sampler root parameter index
+		*  @param[in] samplerState
+		*    Sampler state
+		*/
+		void setSamplerStates(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const;
+
+		/**
+		*  @brief
+		*    Set the OpenGL ES 2 sampler states
+		*
+		*  @param[in] samplerRootParameterIndex
+		*    Sampler root parameter index
+		*/
+		void setOpenGLES2SamplerStates(uint32_t samplerRootParameterIndex) const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::RootSignature mRootSignature;
+		Renderer::RootSignature	mRootSignature;
+		SamplerState**			mSamplerStates;
 
 
 	};

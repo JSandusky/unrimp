@@ -195,6 +195,12 @@ namespace OpenGLES2Renderer
 			omSetBlendState(nullptr);
 		}
 
+		// Release the graphics root signature instance, in case we have one
+		if (nullptr != mGraphicsRootSignature)
+		{
+			mGraphicsRootSignature->release();
+		}
+
 		{ // For debugging: At this point there should be no resource instances left, validate this!
 			// -> Are the currently any resource instances?
 			const unsigned long numberOfCurrentResources = getStatistics().getNumberOfCurrentResources();
@@ -219,12 +225,6 @@ namespace OpenGLES2Renderer
 		if (nullptr != mShaderLanguageGlsl)
 		{
 			mShaderLanguageGlsl->release();
-		}
-
-		// Release the graphics root signature instance, in case we have one
-		if (nullptr != mGraphicsRootSignature)
-		{
-			mGraphicsRootSignature->release();
 		}
 
 		// Destroy the context instance
@@ -540,40 +540,8 @@ namespace OpenGLES2Renderer
 								glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLES2Texture());
 							}
 
-							{ // Set the OpenGL ES 2 sampler states
-								// Security checks
-								#ifndef OPENGLES2RENDERER_NO_DEBUG
-								{
-									const Renderer::RootSignature& rootSignature = mGraphicsRootSignature->getRootSignature();
-									if (descriptorRange->samplerRootParameterIndex >= rootSignature.numberOfParameters)
-									{
-										RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index is out of bounds")
-										return;
-									}
-									const Renderer::RootParameter& samplerRootParameter = rootSignature.parameters[descriptorRange->samplerRootParameterIndex];
-									if (Renderer::RootParameterType::DESCRIPTOR_TABLE != samplerRootParameter.parameterType)
-									{
-										RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index doesn't point to a descriptor table")
-										return;
-									}
-
-									// TODO(co) For now, we only support a single descriptor range
-									if (1 != samplerRootParameter.descriptorTable.numberOfDescriptorRanges)
-									{
-										RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter: Only a single descriptor range is supported")
-										return;
-									}
-									if (Renderer::DescriptorRangeType::SAMPLER != samplerRootParameter.descriptorTable.descriptorRanges[0].rangeType)
-									{
-										RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index is out of bounds")
-										return;
-									}
-								}
-								#endif
-
-								// TODO(co)
-								//static_cast<SamplerState*>(resource)->setOpenGLES2SamplerStates();
-							}
+							// Set the OpenGL ES 2 sampler states
+							mGraphicsRootSignature->setOpenGLES2SamplerStates(descriptorRange->samplerRootParameterIndex);
 
 							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 								// Be polite and restore the previous active OpenGL ES 2 texture
@@ -599,7 +567,8 @@ namespace OpenGLES2Renderer
 
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
-					// Nothing to do in here. Unlike Direct3D >=10, OpenGL ES 2 directly attaches the sampler settings to the texture.
+					// Unlike Direct3D >=10, OpenGL ES 2 directly attaches the sampler settings to the texture
+					mGraphicsRootSignature->setSamplerStates(descriptorRange->samplerRootParameterIndex, static_cast<SamplerState*>(resource));
 					break;
 				}
 			}
