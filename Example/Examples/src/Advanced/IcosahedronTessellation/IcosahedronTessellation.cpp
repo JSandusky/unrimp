@@ -71,14 +71,17 @@ void IcosahedronTessellation::onInitialization()
 
 		{ // Create the root signature
 			// Setup
-			Renderer::DescriptorRangeBuilder ranges[1];
+			Renderer::DescriptorRangeBuilder ranges[4];
 			ranges[0].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockDynamicTcs", 0);
+			ranges[1].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockStaticTes", 0);
+			ranges[2].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockStaticGs", 0);
+			ranges[3].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockStaticFs", 0);
 
 			Renderer::RootParameterBuilder rootParameters[4];
 			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::TESSELLATION_CONTROL);
-			rootParameters[1].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::TESSELLATION_EVALUATION);
-			rootParameters[2].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::GEOMETRY);
-			rootParameters[3].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
+			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::TESSELLATION_EVALUATION);
+			rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::GEOMETRY);
+			rootParameters[3].initializeAsDescriptorTable(1, &ranges[3], Renderer::ShaderVisibility::FRAGMENT);
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
@@ -130,26 +133,26 @@ void IcosahedronTessellation::onInitialization()
 			// -> Geometry is from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")
 			static const uint16_t INDICES[] =
 			{				// Triangle ID
-					2,  1,  0,	// 0
-					3,  2,  0,	// 1
-					4,  3,  0,	// 2
-					5,  4,  0,	// 3
-					1,  5,  0,	// 4
+				2,  1,  0,	// 0
+				3,  2,  0,	// 1
+				4,  3,  0,	// 2
+				5,  4,  0,	// 3
+				1,  5,  0,	// 4
 				11,  6,  7,	// 5
 				11,  7,  8,	// 6
 				11,  8,  9,	// 7
 				11,  9, 10,	// 8
 				11, 10,  6,	// 9
-					1,  2,  6,	// 10
-					2,  3,  7,	// 11
-					3,  4,  8,	// 12
-					4,  5,  9,	// 13
-					5,  1, 10,	// 14
-					2,  7,  6,	// 15
-					3,  8,  7,	// 16
-					4,  9,  8,	// 17
-					5, 10,  9,	// 18
-					1,  6, 10	// 19
+				1,  2,  6,	// 10
+				2,  3,  7,	// 11
+				3,  4,  8,	// 12
+				4,  5,  9,	// 13
+				5,  1, 10,	// 14
+				2,  7,  6,	// 15
+				3,  8,  7,	// 16
+				4,  9,  8,	// 17
+				5, 10,  9,	// 18
+				1,  6, 10	// 19
 			};
 			Renderer::IIndexBuffer *indexBuffer = renderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
 
@@ -289,6 +292,12 @@ void IcosahedronTessellation::onDraw()
 
 			// Set the used graphics root signature
 			renderer->setGraphicsRootSignature(mRootSignature);
+
+			// Set the used uniform buffers
+			renderer->setGraphicsRootDescriptorTable(0, mUniformBufferDynamicTcs);
+			renderer->setGraphicsRootDescriptorTable(1, mUniformBufferStaticTes);
+			renderer->setGraphicsRootDescriptorTable(2, mUniformBufferStaticGs);
+			renderer->setGraphicsRootDescriptorTable(3, mUniformBufferStaticFs);
 
 			// Set the used pipeline state object (PSO)
 			renderer->setPipelineState(mPipelineState);
