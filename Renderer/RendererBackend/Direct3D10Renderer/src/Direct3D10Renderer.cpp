@@ -657,12 +657,13 @@ namespace Direct3D10Renderer
 				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: No graphics root signature set")
 				return;
 			}
-			if (rootParameterIndex >= mGraphicsRootSignature->getRootSignature().numberOfParameters)
+			const Renderer::RootSignature& rootSignature = mGraphicsRootSignature->getRootSignature();
+			if (rootParameterIndex >= rootSignature.numberOfParameters)
 			{
 				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Root parameter index is out of bounds")
 				return;
 			}
-			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+			const Renderer::RootParameter& rootParameter = rootSignature.parameters[rootParameterIndex];
 			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
 			{
 				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Root parameter index doesn't reference a descriptor table")

@@ -390,6 +390,7 @@ namespace Renderer
 			uint32_t				  registerSpace;
 			uint32_t				  offsetInDescriptorsFromTableStart;
 			char					  baseShaderRegisterName[NAME_LENGTH];
+			uint32_t				  samplerRootParameterIndex;
 		};
 		struct DescriptorRangeBuilder : public DescriptorRange
 		{
@@ -405,20 +406,30 @@ namespace Renderer
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
 				char	 _baseShaderRegisterName[NAME_LENGTH],
+				uint32_t _samplerRootParameterIndex,
 				uint32_t _registerSpace = 0,
 				uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 			{
-				initialize(_rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _registerSpace, _offsetInDescriptorsFromTableStart);
+				initialize(_rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _samplerRootParameterIndex, _registerSpace, _offsetInDescriptorsFromTableStart);
+			}
+			inline void initializeSampler(
+				uint32_t _numberOfDescriptors,
+				uint32_t _baseShaderRegister,
+				uint32_t _registerSpace = 0,
+				uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
+			{
+				initialize(*this, DescriptorRangeType::SAMPLER, _numberOfDescriptors, _baseShaderRegister, "", 0, _registerSpace, _offsetInDescriptorsFromTableStart);
 			}
 			inline void initialize(
 				DescriptorRangeType::Enum _rangeType,
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
 				char	 _baseShaderRegisterName[NAME_LENGTH],
+				uint32_t _samplerRootParameterIndex,
 				uint32_t _registerSpace = 0,
 				uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 			{
-				initialize(*this, _rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _registerSpace, _offsetInDescriptorsFromTableStart);
+				initialize(*this, _rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _samplerRootParameterIndex, _registerSpace, _offsetInDescriptorsFromTableStart);
 			}
 			static inline void initialize(
 				DescriptorRange& range,
@@ -426,6 +437,7 @@ namespace Renderer
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
 				char	 _baseShaderRegisterName[NAME_LENGTH],
+				uint32_t _samplerRootParameterIndex,
 				uint32_t _registerSpace = 0,
 				uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 			{
@@ -435,6 +447,7 @@ namespace Renderer
 				range.registerSpace = _registerSpace;
 				range.offsetInDescriptorsFromTableStart = _offsetInDescriptorsFromTableStart;
 				strcpy(range.baseShaderRegisterName, _baseShaderRegisterName);
+				range.samplerRootParameterIndex = _samplerRootParameterIndex;
 			}
 		};
 		struct RootDescriptorTable

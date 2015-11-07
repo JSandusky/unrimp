@@ -169,25 +169,19 @@ void FirstMesh::onInitialization()
 			const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
 
 			{ // Create the root signature
-				Renderer::DescriptorRangeBuilder ranges[8];
-				ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap");
-				ranges[1].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 0, "DiffuseMap");
-				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "EmissiveMap");
-				ranges[3].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 1, "EmissiveMap");
-				ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "NormalMap");
-				ranges[5].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 2, "NormalMap");
-				ranges[6].initialize(Renderer::DescriptorRangeType::SRV, 1, 3, "SpecularMap");
-				ranges[7].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 3, "SpecularMap");
+				Renderer::DescriptorRangeBuilder ranges[5];
+				ranges[0].initializeSampler(1, 0);
+				ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
+				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "EmissiveMap", 0);
+				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "NormalMap", 0);
+				ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 3, "SpecularMap", 0);
 
-				Renderer::RootParameterBuilder rootParameters[8];
+				Renderer::RootParameterBuilder rootParameters[5];
 				rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
 				rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
 				rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::FRAGMENT);
 				rootParameters[3].initializeAsDescriptorTable(1, &ranges[3], Renderer::ShaderVisibility::FRAGMENT);
 				rootParameters[4].initializeAsDescriptorTable(1, &ranges[4], Renderer::ShaderVisibility::FRAGMENT);
-				rootParameters[5].initializeAsDescriptorTable(1, &ranges[5], Renderer::ShaderVisibility::FRAGMENT);
-				rootParameters[6].initializeAsDescriptorTable(1, &ranges[6], Renderer::ShaderVisibility::FRAGMENT);
-				rootParameters[7].initializeAsDescriptorTable(1, &ranges[7], Renderer::ShaderVisibility::FRAGMENT);
 
 				// Setup
 				Renderer::RootSignatureBuilder rootSignature;
@@ -348,23 +342,12 @@ void FirstMesh::onDraw()
 			// Set the used graphics root signature
 			renderer->setGraphicsRootSignature(mRootSignature);
 
-			{ // Set textures
-				// Diffuse texture
-				renderer->setGraphicsRootDescriptorTable(0, mDiffuseTextureResource->getTexture());
-				renderer->setGraphicsRootDescriptorTable(1, mSamplerState);
-
-				// Normal texture
-				renderer->setGraphicsRootDescriptorTable(2, mNormalTextureResource->getTexture());
-				renderer->setGraphicsRootDescriptorTable(3, mSamplerState);
-
-				// Specular texture
-				renderer->setGraphicsRootDescriptorTable(4, mSpecularTextureResource->getTexture());
-				renderer->setGraphicsRootDescriptorTable(5, mSamplerState);
-
-				// Emissive texture
-				renderer->setGraphicsRootDescriptorTable(6, mEmissiveTextureResource->getTexture());
-				renderer->setGraphicsRootDescriptorTable(7, mSamplerState);
-			}
+			// Set textures
+			renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
+			renderer->setGraphicsRootDescriptorTable(1, mDiffuseTextureResource->getTexture());
+			renderer->setGraphicsRootDescriptorTable(2, mNormalTextureResource->getTexture());
+			renderer->setGraphicsRootDescriptorTable(3, mSpecularTextureResource->getTexture());
+			renderer->setGraphicsRootDescriptorTable(4, mEmissiveTextureResource->getTexture());
 
 			// Set the used program
 			renderer->setProgram(mProgram);

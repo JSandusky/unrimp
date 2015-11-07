@@ -99,8 +99,8 @@ VS_OUTPUT main(float3 Position : POSITION)	// Clip space vertex position as inpu
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode = STRINGIFY(
 // Uniforms
-Texture2D GlyphMap : register(t0);	// Glyph atlas texture map
 SamplerState SamplerLinear : register(s0);
+Texture2D GlyphMap : register(t0);	// Glyph atlas texture map
 
 // Uniforms
 cbuffer UniformBlockDynamicFs : register(b0)

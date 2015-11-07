@@ -116,8 +116,8 @@ void FirstTexture::onInitialization()
 
 		{ // Create the root signature
 			Renderer::DescriptorRangeBuilder ranges[2];
-			ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap");
-			ranges[1].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 0, "DiffuseMap");
+			ranges[0].initializeSampler(1, 0);
+			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
 
 			Renderer::RootParameterBuilder rootParameters[2];
 			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
@@ -261,8 +261,8 @@ void FirstTexture::onDraw()
 			renderer->setGraphicsRootSignature(mRootSignature);
 
 			// Set diffuse map
-			renderer->setGraphicsRootDescriptorTable(0, mTexture2D);
-			renderer->setGraphicsRootDescriptorTable(1, mSamplerState);
+			renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
+			renderer->setGraphicsRootDescriptorTable(1, mTexture2D);
 
 			// Set the used pipeline state object (PSO)
 			renderer->setPipelineState(mPipelineState);

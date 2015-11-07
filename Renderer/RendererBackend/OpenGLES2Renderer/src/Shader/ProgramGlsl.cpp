@@ -100,41 +100,46 @@ namespace OpenGLES2Renderer
 						else
 						{
 							const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
-							const GLint uniformLocation = glGetUniformLocation(mOpenGLES2Program, descriptorRange->baseShaderRegisterName);
-							if (uniformLocation >= 0)
-							{
-								mRootSignatureParameterIndexToUniformLocation[parameterIndex] = uniformLocation;
 
-								// OpenGL ES 2/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
-								// -> When using OpenGL or OpenGL ES 2 this is required
-								// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
-								//    in GLSL shader) , for backward compatibility we don't use it in here
-								// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
-								//    to use is usually defined directly within the shader by using the "register"-keyword
-								// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
-								#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-									// Backup the currently used OpenGL ES 2 program
-									GLint openGLES2ProgramBackup = 0;
-									glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
-									if (openGLES2ProgramBackup == mOpenGLES2Program)
-									{
-										// Set uniform, please note that for this our program must be the currently used one
-										glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-									}
-									else
-									{
+							// Ignore sampler range types in here (OpenGL handles samplers in a different way then Direct3D 10>=)
+							if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
+							{
+								const GLint uniformLocation = glGetUniformLocation(mOpenGLES2Program, descriptorRange->baseShaderRegisterName);
+								if (uniformLocation >= 0)
+								{
+									mRootSignatureParameterIndexToUniformLocation[parameterIndex] = uniformLocation;
+
+									// OpenGL ES 2/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
+									// -> When using OpenGL or OpenGL ES 2 this is required
+									// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
+									//    in GLSL shader) , for backward compatibility we don't use it in here
+									// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
+									//    to use is usually defined directly within the shader by using the "register"-keyword
+									// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
+									#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+										// Backup the currently used OpenGL ES 2 program
+										GLint openGLES2ProgramBackup = 0;
+										glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
+										if (openGLES2ProgramBackup == mOpenGLES2Program)
+										{
+											// Set uniform, please note that for this our program must be the currently used one
+											glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+										}
+										else
+										{
+											// Set uniform, please note that for this our program must be the currently used one
+											glUseProgram(mOpenGLES2Program);
+											glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+
+											// Be polite and restore the previous used OpenGL ES 2 program
+											glUseProgram(openGLES2ProgramBackup);
+										}
+									#else
 										// Set uniform, please note that for this our program must be the currently used one
 										glUseProgram(mOpenGLES2Program);
 										glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-
-										// Be polite and restore the previous used OpenGL ES 2 program
-										glUseProgram(openGLES2ProgramBackup);
-									}
-								#else
-									// Set uniform, please note that for this our program must be the currently used one
-									glUseProgram(mOpenGLES2Program);
-									glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-								#endif
+									#endif
+								}
 							}
 						}
 					}

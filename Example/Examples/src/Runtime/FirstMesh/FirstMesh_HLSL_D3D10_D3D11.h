@@ -118,11 +118,11 @@ struct VS_OUTPUT
 };
 
 // Uniforms
+SamplerState SamplerLinear : register(s0);
 Texture2D DiffuseMap  : register(t0);
 Texture2D EmissiveMap : register(t1);
 Texture2D NormalMap   : register(t2);	// Tangent space normal map
 Texture2D SpecularMap : register(t3);
-SamplerState SamplerLinear : register(s0);
 
 // Programs
 float4 main(VS_OUTPUT input) : SV_Target

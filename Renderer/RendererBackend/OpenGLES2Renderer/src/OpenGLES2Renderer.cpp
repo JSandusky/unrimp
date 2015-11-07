@@ -464,12 +464,13 @@ namespace OpenGLES2Renderer
 				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: No graphics root signature set")
 				return;
 			}
-			if (rootParameterIndex >= mGraphicsRootSignature->getRootSignature().numberOfParameters)
+			const Renderer::RootSignature& rootSignature = mGraphicsRootSignature->getRootSignature();
+			if (rootParameterIndex >= rootSignature.numberOfParameters)
 			{
 				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Root parameter index is out of bounds")
 				return;
 			}
-			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+			const Renderer::RootParameter& rootParameter = rootSignature.parameters[rootParameterIndex];
 			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
 			{
 				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Root parameter index doesn't reference a descriptor table")
@@ -539,6 +540,41 @@ namespace OpenGLES2Renderer
 								glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLES2Texture());
 							}
 
+							{ // Set the OpenGL ES 2 sampler states
+								// Security checks
+								#ifndef OPENGLES2RENDERER_NO_DEBUG
+								{
+									const Renderer::RootSignature& rootSignature = mGraphicsRootSignature->getRootSignature();
+									if (descriptorRange->samplerRootParameterIndex >= rootSignature.numberOfParameters)
+									{
+										RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index is out of bounds")
+										return;
+									}
+									const Renderer::RootParameter& samplerRootParameter = rootSignature.parameters[descriptorRange->samplerRootParameterIndex];
+									if (Renderer::RootParameterType::DESCRIPTOR_TABLE != samplerRootParameter.parameterType)
+									{
+										RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index doesn't point to a descriptor table")
+										return;
+									}
+
+									// TODO(co) For now, we only support a single descriptor range
+									if (1 != samplerRootParameter.descriptorTable.numberOfDescriptorRanges)
+									{
+										RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter: Only a single descriptor range is supported")
+										return;
+									}
+									if (Renderer::DescriptorRangeType::SAMPLER != samplerRootParameter.descriptorTable.descriptorRanges[0].rangeType)
+									{
+										RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Sampler root parameter index is out of bounds")
+										return;
+									}
+								}
+								#endif
+
+								// TODO(co)
+								//static_cast<SamplerState*>(resource)->setOpenGLES2SamplerStates();
+							}
+
 							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
 								// Be polite and restore the previous active OpenGL ES 2 texture
 								glActiveTexture(openGLES2ActiveTextureBackup);
@@ -563,44 +599,7 @@ namespace OpenGLES2Renderer
 
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
-					switch (rootParameter.shaderVisibility)
-					{
-						// In OpenGL ES 2, all shaders share the same texture units
-						case Renderer::ShaderVisibility::ALL:
-						case Renderer::ShaderVisibility::VERTEX:
-						case Renderer::ShaderVisibility::FRAGMENT:
-						{
-							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-								// Backup the currently active OpenGL ES 2 texture
-								GLint openGLES2ActiveTextureBackup = 0;
-								glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
-							#endif
-
-							// TODO(co) Some security checks might be wise *maximum number of texture units*
-							glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + descriptorRange->baseShaderRegister));
-
-							// Set the OpenGL ES 2 sampler states
-							static_cast<SamplerState*>(resource)->setOpenGLES2SamplerStates();
-
-							#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-								// Be polite and restore the previous active OpenGL ES 2 texture
-								glActiveTexture(openGLES2ActiveTextureBackup);
-							#endif
-							break;
-						}
-
-						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2: OpenGL ES 2 has no tessellation control shader support (hull shader in Direct3D terminology)")
-							break;
-
-						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: OpenGL ES 2 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
-							break;
-
-						case Renderer::ShaderVisibility::GEOMETRY:
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: OpenGL ES 2 has no geometry shader support")
-							break;
-					}
+					// Nothing to do in here. Unlike Direct3D >=10, OpenGL ES 2 directly attaches the sampler settings to the texture.
 					break;
 				}
 			}
