@@ -42,7 +42,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D12Renderer &direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t, Renderer::TextureUsage::Enum) :
+	Texture2D::Texture2D(Direct3D12Renderer &direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum) :
 		ITexture2D(direct3D12Renderer, width, height),
 		mD3D12Resource(nullptr),
 		mD3D12DescriptorHeap(nullptr)
@@ -53,12 +53,16 @@ namespace Direct3D12Renderer
 		ID3D12Device* d3d12Device = direct3D12Renderer.getD3D12Device();
 
 		// TODO(co) Add buffer usage setting support
-		// TODO(co) Add mipmap support
-		// TODO(co) Add compressed upload support
+		// TODO(co) Add "Renderer::TextureFlag::GENERATE_MIPMAPS" support
+
+		// Calculate the number of mipmaps
+		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
+		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
+		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height) : 1;
 
 		// Describe and create a texture 2D
 		D3D12_RESOURCE_DESC d3d12ResourceDesc = {};
-		d3d12ResourceDesc.MipLevels = 1;
+		d3d12ResourceDesc.MipLevels = static_cast<UINT16>(numberOfMipmaps);
 		d3d12ResourceDesc.Format = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(textureFormat));
 		d3d12ResourceDesc.Width = width;
 		d3d12ResourceDesc.Height = height;
@@ -98,9 +102,34 @@ namespace Direct3D12Renderer
 				// Upload the texture data?
 				if (nullptr != data)
 				{
-					const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
-					const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
-					mD3D12Resource->WriteToSubresource(0, nullptr, data, bytesPerRow, bytesPerSlice);
+					// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
+					if (dataContainsMipmaps)
+					{
+						// Upload all mipmaps
+						for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+						{
+							// Upload the current mipmap
+							const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
+							const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+							mD3D12Resource->WriteToSubresource(mipmap, nullptr, data, bytesPerRow, bytesPerSlice);
+
+							// Move on to the next mipmap
+							data = static_cast<uint8_t*>(data) + bytesPerSlice;
+							width = std::max(width >> 1, 1u);	// /= 2
+							height = std::max(height >> 1, 1u);	// /= 2
+						}
+					}
+					else if (generateMipmaps)
+					{
+						// TODO(co) Implement me
+					}
+					else
+					{
+						// The user only provided us with the base texture, no mipmaps
+						const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
+						const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+						mD3D12Resource->WriteToSubresource(0, nullptr, data, bytesPerRow, bytesPerSlice);
+					}
 				}
 
 				// TODO(co) This is just first Direct3D 12 texture test, so don't wonder about the nasty synchronization handling
@@ -153,7 +182,7 @@ namespace Direct3D12Renderer
 				d3d12ShaderResourceViewDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 				d3d12ShaderResourceViewDesc.Format = d3d12ResourceDesc.Format;
 				d3d12ShaderResourceViewDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-				d3d12ShaderResourceViewDesc.Texture2D.MipLevels = 1;
+				d3d12ShaderResourceViewDesc.Texture2D.MipLevels = numberOfMipmaps;
 				d3d12Device->CreateShaderResourceView(mD3D12Resource, &d3d12ShaderResourceViewDesc, mD3D12DescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 			}
 			else
