@@ -99,8 +99,8 @@ namespace OpenGLES2Renderer
 						}
 						else
 						{
-							const Renderer::DescriptorRange* rescriptorRange = rootParameter.descriptorTable.descriptorRanges;
-							const GLint uniformLocation = glGetUniformLocation(mOpenGLES2Program, rescriptorRange->baseShaderRegisterName);
+							const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
+							const GLint uniformLocation = glGetUniformLocation(mOpenGLES2Program, descriptorRange->baseShaderRegisterName);
 							if (uniformLocation >= 0)
 							{
 								mRootSignatureParameterIndexToUniformLocation[parameterIndex] = uniformLocation;
@@ -119,13 +119,13 @@ namespace OpenGLES2Renderer
 									if (openGLES2ProgramBackup == mOpenGLES2Program)
 									{
 										// Set uniform, please note that for this our program must be the currently used one
-										glUniform1i(uniformLocation, static_cast<GLint>(rescriptorRange->baseShaderRegister));
+										glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
 									}
 									else
 									{
 										// Set uniform, please note that for this our program must be the currently used one
 										glUseProgram(mOpenGLES2Program);
-										glUniform1i(uniformLocation, static_cast<GLint>(rescriptorRange->baseShaderRegister));
+										glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
 
 										// Be polite and restore the previous used OpenGL ES 2 program
 										glUseProgram(openGLES2ProgramBackup);
@@ -133,7 +133,7 @@ namespace OpenGLES2Renderer
 								#else
 									// Set uniform, please note that for this our program must be the currently used one
 									glUseProgram(mOpenGLES2Program);
-									glUniform1i(uniformLocation, static_cast<GLint>(rescriptorRange->baseShaderRegister));
+									glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
 								#endif
 							}
 						}

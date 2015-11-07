@@ -501,6 +501,7 @@ namespace OpenGLES2Renderer
 
 			// Check the type of resource to set
 			// TODO(co) Some additional resource type root signature security checks in debug build?
+			// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
 			const Renderer::ResourceType::Enum resourceType = resource->getResourceType();
 			switch (resourceType)
 			{

@@ -169,11 +169,29 @@ void FirstMesh::onInitialization()
 			const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
 
 			{ // Create the root signature
-				// TODO(co) Correct root signature
+				Renderer::DescriptorRangeBuilder ranges[8];
+				ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap");
+				ranges[1].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 0, "DiffuseMap");
+				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "EmissiveMap");
+				ranges[3].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 1, "EmissiveMap");
+				ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "NormalMap");
+				ranges[5].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 2, "NormalMap");
+				ranges[6].initialize(Renderer::DescriptorRangeType::SRV, 1, 3, "SpecularMap");
+				ranges[7].initialize(Renderer::DescriptorRangeType::SAMPLER, 1, 3, "SpecularMap");
+
+				Renderer::RootParameterBuilder rootParameters[8];
+				rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
+				rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
+				rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::FRAGMENT);
+				rootParameters[3].initializeAsDescriptorTable(1, &ranges[3], Renderer::ShaderVisibility::FRAGMENT);
+				rootParameters[4].initializeAsDescriptorTable(1, &ranges[4], Renderer::ShaderVisibility::FRAGMENT);
+				rootParameters[5].initializeAsDescriptorTable(1, &ranges[5], Renderer::ShaderVisibility::FRAGMENT);
+				rootParameters[6].initializeAsDescriptorTable(1, &ranges[6], Renderer::ShaderVisibility::FRAGMENT);
+				rootParameters[7].initializeAsDescriptorTable(1, &ranges[7], Renderer::ShaderVisibility::FRAGMENT);
 
 				// Setup
 				Renderer::RootSignatureBuilder rootSignature;
-				rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+				rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 				// Create the instance
 				mRootSignature = renderer->createRootSignature(rootSignature);
@@ -202,17 +220,6 @@ void FirstMesh::onInitialization()
 			// Is there a valid program?
 			if (nullptr != mProgram)
 			{
-				// Tell the renderer API which texture should be bound to which texture unit
-				// -> When using OpenGL or OpenGL ES 2 this is required
-				// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
-				//    in GLSL shader) , for backward compatibility we don't use it in here
-				// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
-				//    to use is usually defined directly within the shader by using the "register"-keyword
-				mProgram->setTextureUnit(mProgram->getUniformHandle("DiffuseMap"),  0);
-				mProgram->setTextureUnit(mProgram->getUniformHandle("EmissiveMap"), 1);
-				mProgram->setTextureUnit(mProgram->getUniformHandle("NormalMap"),   2);
-				mProgram->setTextureUnit(mProgram->getUniformHandle("SpecularMap"), 3);
-
 				// Optimization: Cached data to not bother the renderer API too much
 				if (nullptr != mUniformBuffer)
 				{
@@ -238,27 +245,11 @@ void FirstMesh::onInitialization()
 				mEmissiveTextureResource = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_spec");
 			}
 
-			// Use sampler state collections when you want you exploit renderer API methods like
-			// "ID3D10Device::PSSetShaderResources()" from Direct3D 10 or "ID3D11DeviceContext::PSSetShaderResources()" from Direct3D 11.
-			// By using a single API call, multiple resources can be set at one and the same time in an efficient way.
-			{
-				// Create sampler state
+			{ // Create sampler state
 				Renderer::SamplerState samplerStateSettings = Renderer::ISamplerState::getDefaultSamplerState();
 				samplerStateSettings.addressU = Renderer::TextureAddressMode::WRAP;
 				samplerStateSettings.addressV = Renderer::TextureAddressMode::WRAP;
-				Renderer::ISamplerState *samplerState = renderer->createSamplerState(samplerStateSettings);
-
-				// Create the sampler state collection
-				// -> The sampler state collection keeps a reference to the provided resources, so,
-				//    we don't need to care about the resource cleanup in here
-				Renderer::ISamplerState *samplerStates[] =
-				{
-					samplerState,
-					samplerState,
-					samplerState,
-					samplerState
-				};
-				mSamplerStateCollection = renderer->createSamplerStateCollection(sizeof(samplerStates) / sizeof(Renderer::ISamplerState *), samplerStates);
+				mSamplerState = renderer->createSamplerState(samplerStateSettings);
 			}
 		}
 
@@ -284,7 +275,7 @@ void FirstMesh::onDeinitialization()
 
 	// Release the used renderer resources
 	mBlendState = nullptr;
-	mSamplerStateCollection = nullptr;
+	mSamplerState = nullptr;
 
 	// TODO(co) Implement decent resource handling
 	mFontResource = nullptr;
@@ -357,6 +348,24 @@ void FirstMesh::onDraw()
 			// Set the used graphics root signature
 			renderer->setGraphicsRootSignature(mRootSignature);
 
+			{ // Set textures
+				// Diffuse texture
+				renderer->setGraphicsRootDescriptorTable(0, mDiffuseTextureResource->getTexture());
+				renderer->setGraphicsRootDescriptorTable(1, mSamplerState);
+
+				// Normal texture
+				renderer->setGraphicsRootDescriptorTable(2, mNormalTextureResource->getTexture());
+				renderer->setGraphicsRootDescriptorTable(3, mSamplerState);
+
+				// Specular texture
+				renderer->setGraphicsRootDescriptorTable(4, mSpecularTextureResource->getTexture());
+				renderer->setGraphicsRootDescriptorTable(5, mSamplerState);
+
+				// Emissive texture
+				renderer->setGraphicsRootDescriptorTable(6, mEmissiveTextureResource->getTexture());
+				renderer->setGraphicsRootDescriptorTable(7, mSamplerState);
+			}
+
 			// Set the used program
 			renderer->setProgram(mProgram);
 
@@ -399,15 +408,6 @@ void FirstMesh::onDraw()
 					mProgram->setUniformMatrix3fv(mObjectSpaceToViewSpaceMatrixUniformHandle, glm::value_ptr(glm::mat3(objectSpaceToViewSpace)));
 				}
 			}
-
-			// Use the texture collection to set the textures
-			renderer->fsSetTexture(0, mDiffuseTextureResource->getTexture());
-			renderer->fsSetTexture(1, mNormalTextureResource->getTexture());
-			renderer->fsSetTexture(2, mSpecularTextureResource->getTexture());
-			renderer->fsSetTexture(3, mEmissiveTextureResource->getTexture());
-
-			// Use the sampler state collection to set the sampler states
-			renderer->fsSetSamplerStateCollection(0, mSamplerStateCollection);
 
 			// Set the used blend state
 			renderer->omSetBlendState(mBlendState);

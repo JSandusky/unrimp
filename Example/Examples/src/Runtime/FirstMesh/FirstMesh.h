@@ -64,8 +64,7 @@ namespace RendererToolkit
 *    - Sampler state object
 *    - Vertex shader (VS) and fragment shader (FS)
 *    - Root signature
-*    - Texture collection
-*    - Sampler state collection
+*    - Pipeline state object (PSO)
 *    - Blinn-Phong shading
 *    - Diffuse, normal, specular and emissive mapping
 *    - Optimization: Cache data to not bother the renderer API to much
@@ -119,7 +118,7 @@ private:
 	RendererRuntime::TextureResource*	  mNormalTextureResource;
 	RendererRuntime::TextureResource*	  mSpecularTextureResource;
 	RendererRuntime::TextureResource*	  mEmissiveTextureResource;
-	Renderer::ISamplerStateCollectionPtr  mSamplerStateCollection;	///< Sampler state collection, can be a null pointer
+	Renderer::ISamplerStatePtr			  mSamplerState;			///< Sampler state, can be a null pointer
 	Renderer::IBlendStatePtr			  mBlendState;				///< Blend state, can be a null pointer
 	// Optimization: Cache data to not bother the renderer API to much
 	uint32_t mUniformBlockIndex;							///< Uniform block index
