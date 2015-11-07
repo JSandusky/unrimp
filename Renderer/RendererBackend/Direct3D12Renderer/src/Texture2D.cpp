@@ -98,8 +98,9 @@ namespace Direct3D12Renderer
 				// Upload the texture data?
 				if (nullptr != data)
 				{
-					const UINT srcRowPitch = width * Renderer::TextureFormat::getNumberOfBytesPerElement(textureFormat);
-					mD3D12Resource->WriteToSubresource(0, nullptr, data, srcRowPitch, srcRowPitch * height);
+					const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
+					const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+					mD3D12Resource->WriteToSubresource(0, nullptr, data, bytesPerRow, bytesPerSlice);
 				}
 
 				// TODO(co) This is just first Direct3D 12 texture test, so don't wonder about the nasty synchronization handling
