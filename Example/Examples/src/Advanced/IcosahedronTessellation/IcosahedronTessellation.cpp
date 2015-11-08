@@ -241,6 +241,7 @@ void IcosahedronTessellation::onInitialization()
 				pipelineState.vertexAttributes = vertexAttributes;
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::PATCH;
 				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
 
 				// Create the instance
 				mPipelineState = renderer->createPipelineState(pipelineState);

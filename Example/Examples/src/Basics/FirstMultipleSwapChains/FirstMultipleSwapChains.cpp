@@ -227,6 +227,7 @@ void FirstMultipleSwapChains::onInitialization()
 				pipelineState.vertexAttributes = vertexAttributes;
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
 				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
 
 				// Create the instance
 				mPipelineState = renderer->createPipelineState(pipelineState);

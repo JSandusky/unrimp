@@ -190,6 +190,7 @@ void FirstMultipleRenderTargets::onInitialization()
 					pipelineState.vertexAttributes = vertexAttributes;
 					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
 					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+					pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
 
 					// Create the instances
 					mPipelineStateMultipleRenderTargets = renderer->createPipelineState(pipelineState);

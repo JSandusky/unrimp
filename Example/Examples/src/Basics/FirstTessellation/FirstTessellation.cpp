@@ -152,6 +152,7 @@ void FirstTessellation::onInitialization()
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::PATCH;
 				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
 				pipelineState.rasterizerState.fillMode = Renderer::FillMode::WIREFRAME;
+				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
 
 				// Create the instance
 				mPipelineState = renderer->createPipelineState(pipelineState);

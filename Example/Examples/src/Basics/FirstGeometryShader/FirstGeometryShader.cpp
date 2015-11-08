@@ -149,6 +149,7 @@ void FirstGeometryShader::onInitialization()
 				pipelineState.vertexAttributes = vertexAttributes;
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::POINT;
 				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
 
 				// Create the instance
 				mPipelineState = renderer->createPipelineState(pipelineState);
