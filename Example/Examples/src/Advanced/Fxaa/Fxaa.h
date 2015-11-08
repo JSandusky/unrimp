@@ -47,7 +47,6 @@
 *    - Root signature
 *    - Pipeline state object (PSO)
 *    - Framebuffer object (FBO) used for render to texture
-*    - Depth stencil state object
 *    - Post processing
 *    - "Fast Approximate Anti-Aliasing" (FXAA) as described within http://developer.download.nvidia.com/assets/gamedev/files/sdk/11/FXAA_WhitePaper.pdf and
 *      "FxaaSamplePack.zip" ( https://docs.google.com/leaf?id=0B2manFVVrzQAMzUzYWQ5MTEtYmE1NC00ZTQzLWI2YWYtNTk2MDcyMmY1ZWNm&sort=name&layout=list&num=50&pli=1 )
@@ -66,7 +65,7 @@ public:
 	*
 	*  @param[in] rendererName
 	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
+	*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 	*/
 	explicit Fxaa(const char *rendererName);
 

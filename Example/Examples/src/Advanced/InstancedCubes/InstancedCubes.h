@@ -56,8 +56,6 @@ class ICubeRenderer;
 *    - 2D texture
 *    - 2D texture array
 *    - Sampler state object
-*    - Depth stencil state object
-*    - Blend state object
 *    - Vertex shader (VS) and fragment shader (FS)
 *    - Root signature
 *    - Pipeline state object (PSO)
@@ -79,7 +77,7 @@ public:
 	*
 	*  @param[in] rendererName
 	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-	*    Example renderer names: "Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11"
+	*    Example renderer names: "Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 	*/
 	explicit InstancedCubes(const char *rendererName);
 

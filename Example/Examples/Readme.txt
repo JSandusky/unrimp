@@ -28,11 +28,15 @@ Standalone renderer examples.
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
 		- Vertex shader (VS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 		- Debug methods: When using Direct3D <11.1, those methods map to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
 	- "VertexBuffer" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
 		- Vertex shader (VS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 		- Multiple vertex attributes within a single vertex buffer object (VBO), vertex array object (VAO) is only using one vertex buffer object (VBO)
 		- One vertex buffer object (VBO) per vertex attribute, vertex array object (VAO) is using multiple vertex buffer objects (VBO)
 	- "FirstTexture" demonstrates:
@@ -41,12 +45,16 @@ Standalone renderer examples.
 		- 2D texture
 		- Sampler state object
 		- Vertex shader (VS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 	- "FirstRenderToTexture" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
 		- 2D texture
 		- Sampler state object
 		- Vertex shader (VS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 		- Framebuffer object (FBO) used for render to texture
 	- "FirstMultipleRenderTargets" demonstrates:
 		- Vertex buffer object (VBO)
@@ -54,30 +62,39 @@ Standalone renderer examples.
 		- 2D texture
 		- Sampler state object
 		- Vertex shader (VS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 		- Framebuffer object (FBO) used for render to texture
 		- Multiple render targets (MRT)
 	- "FirstMultipleSwapChains" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
 		- Vertex shader (VS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 		- Multiple swap chains
 	- "FirstInstancing" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
 		- Index buffer object (IBO)
 		- Vertex shader (VS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 		- Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 		- Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
 	- "FirstGeometryShader" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
 		- Vertex shader (VS), geometry shader (GS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 		- Attribute less rendering (aka "drawing without data")
 	- "FirstTessellation" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
-		- Rasterizer state object
 		- Vertex shader (VS), tessellation control shader (TCS), tessellation evaluation shader (TES) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 - Advanced
 	- "FirstPostProcessing" demonstrates:
 		- Vertex buffer object (VBO)
@@ -85,8 +102,9 @@ Standalone renderer examples.
 		- 2D texture
 		- Sampler state object
 		- Vertex shader (VS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 		- Framebuffer object (FBO) used for render to texture
-		- Depth stencil state object
 		- Post processing
 	- "Fxaa" demonstrates:
 		- Vertex buffer object (VBO)
@@ -94,8 +112,9 @@ Standalone renderer examples.
 		- 2D texture
 		- Sampler state object
 		- Vertex shader (VS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 		- Framebuffer object (FBO) used for render to texture
-		- Depth stencil state object
 		- Post processing
 		- "Fast Approximate Anti-Aliasing" (FXAA) as described within http://developer.download.nvidia.com/assets/gamedev/files/sdk/11/FXAA_WhitePaper.pdf and
 		  "FxaaSamplePack.zip" ( https://docs.google.com/leaf?id=0B2manFVVrzQAMzUzYWQ5MTEtYmE1NC00ZTQzLWI2YWYtNTk2MDcyMmY1ZWNm&sort=name&layout=list&num=50&pli=1 )
@@ -105,8 +124,9 @@ Standalone renderer examples.
 		- 2D texture
 		- Sampler state object
 		- Vertex shader (VS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 		- Framebuffer object (FBO) used for render to texture
-		- Depth stencil state object
 		- General Purpose Computation on Graphics Processing Unit (GPGPU) by using the renderer interface and shaders without having any output window
 	- "InstancedCubes" demonstrates:
 		- Vertex buffer object (VBO)
@@ -117,9 +137,9 @@ Standalone renderer examples.
 		- 2D texture
 		- 2D texture array
 		- Sampler state object
-		- Depth stencil state object
-		- Blend state object
 		- Vertex shader (VS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 		- Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 		- Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
 		- Renderer runtime fonts
@@ -129,6 +149,8 @@ Standalone renderer examples.
 		- Index buffer object (IBO)
 		- Uniform buffer object (UBO)
 		- Vertex shader (VS), tessellation control shader (TCS), tessellation evaluation shader (TES), geometry shader (GS) and fragment shader (FS)
+		- Root signature
+		- Pipeline state object (PSO)
 - Runtime
 	- "FirstFont" demonstrates:
 		- Renderer runtime fonts
@@ -142,8 +164,8 @@ Standalone renderer examples.
 		- Texture buffer object (TBO)
 		- Sampler state object
 		- Vertex shader (VS) and fragment shader (FS)
-		- Texture collection
-		- Sampler state collection
+		- Root signature
+		- Pipeline state object (PSO)
 		- Blinn-Phong shading
 		- Diffuse, normal, specular and emissive mapping
 		- Optimization: Cache data to not bother the renderer API to much
@@ -173,6 +195,6 @@ Other
 - "WIN32":					Set as preprocessor definition when building for MS Windows
 - "LINUX":					Set as preprocessor definition when building for Linux or similar platforms
 - "X64_ARCHITECTURE":		Set this as preprocessor definition when building for x64 instead of x86
-- "SHARED_LIBRARIES":		Use renderers via shared libaries, if this is not defined, the renderers are statically linked
+- "SHARED_LIBRARIES":		Use renderers via shared libraries, if this is not defined, the renderers are statically linked
 - "RENDERER_NO_DEBUG":		Disable e.g. Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features (disabling support just reduces the binary size slightly but makes debugging more difficult)
 - "RENDERER_NO_RUNTIME":	Disable renderer runtime support

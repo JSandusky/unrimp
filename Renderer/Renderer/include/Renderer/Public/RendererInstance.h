@@ -74,7 +74,7 @@ namespace Renderer
 		*
 		*  @param[in] rendererName
 		*    Case sensitive ASCII name of the renderer to instance, must be valid.
-		*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
+		*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 		*  @param[in] rendererName
 		*    Native window handle TODO(co) A renderer instance fixed connected to a native window handle? This can't be right. If it's about OpenGL context sharing we surely can find a better solution.
 		*/
