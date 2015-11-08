@@ -155,35 +155,23 @@ namespace Direct3D10Renderer
 		//[-------------------------------------------------------]
 		//[ Vertex-shader (VS) stage                              ]
 		//[-------------------------------------------------------]
-		virtual void vsSetTexture(uint32_t unit, Renderer::ITexture *texture) override;
 		virtual void vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void vsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState) override;
 		virtual void vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		virtual void vsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer) override;
 		//[-------------------------------------------------------]
 		//[ Tessellation-control-shader (TCS) stage               ]
 		//[-------------------------------------------------------]
-		virtual void tcsSetTexture(uint32_t unit, Renderer::ITexture *texture) override;
 		virtual void tcsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void tcsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState) override;
 		virtual void tcsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		virtual void tcsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer) override;
 		//[-------------------------------------------------------]
 		//[ Tessellation-evaluation-shader (TES) stage            ]
 		//[-------------------------------------------------------]
-		virtual void tesSetTexture(uint32_t unit, Renderer::ITexture *texture) override;
 		virtual void tesSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void tesSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState) override;
 		virtual void tesSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		virtual void tesSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer) override;
 		//[-------------------------------------------------------]
 		//[ Geometry-shader (GS) stage                            ]
 		//[-------------------------------------------------------]
-		virtual void gsSetTexture(uint32_t unit, Renderer::ITexture *texture) override;
 		virtual void gsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void gsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState) override;
 		virtual void gsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		virtual void gsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer) override;
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
 		//[-------------------------------------------------------]
@@ -193,11 +181,8 @@ namespace Direct3D10Renderer
 		//[-------------------------------------------------------]
 		//[ Fragment-shader (FS) stage                            ]
 		//[-------------------------------------------------------]
-		virtual void fsSetTexture(uint32_t unit, Renderer::ITexture *texture) override;
 		virtual void fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void fsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState) override;
 		virtual void fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		virtual void fsSetUniformBuffer(uint32_t slot, Renderer::IUniformBuffer *uniformBuffer) override;
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]

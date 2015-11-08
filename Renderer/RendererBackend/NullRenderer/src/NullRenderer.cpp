@@ -463,17 +463,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void NullRenderer::vsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void NullRenderer::vsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void NullRenderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -483,26 +473,11 @@ namespace NullRenderer
 		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void NullRenderer::tcsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void NullRenderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void NullRenderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -512,26 +487,11 @@ namespace NullRenderer
 		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void NullRenderer::tesSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void NullRenderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void NullRenderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -541,36 +501,16 @@ namespace NullRenderer
 		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void NullRenderer::gsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void NullRenderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
 		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void NullRenderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void NullRenderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -603,27 +543,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void NullRenderer::fsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void NullRenderer::fsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
 		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void NullRenderer::fsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void NullRenderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
 		// TODO(co) Remove this method
 	}

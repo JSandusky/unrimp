@@ -844,11 +844,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::vsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D11Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
@@ -862,11 +857,6 @@ namespace Direct3D11Renderer
 			TextureCollection *direct3D11TextureCollection = static_cast<TextureCollection*>(textureCollection);
 			mD3D11DeviceContext->VSSetShaderResources(startUnit, direct3D11TextureCollection->getNumberOfD3D11ShaderResourceViews(), direct3D11TextureCollection->getD3D11ShaderResourceViews());
 		}
-	}
-
-	void Direct3D11Renderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -884,20 +874,10 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::tcsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D11Renderer::tcsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// "hull shader" in Direct3D terminology
@@ -913,11 +893,6 @@ namespace Direct3D11Renderer
 			TextureCollection *direct3D11TextureCollection = static_cast<TextureCollection*>(textureCollection);
 			mD3D11DeviceContext->HSSetShaderResources(startUnit, direct3D11TextureCollection->getNumberOfD3D11ShaderResourceViews(), direct3D11TextureCollection->getD3D11ShaderResourceViews());
 		}
-	}
-
-	void Direct3D11Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::tcsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -937,20 +912,10 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::tesSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D11Renderer::tesSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// "domain shader" in Direct3D terminology
@@ -966,11 +931,6 @@ namespace Direct3D11Renderer
 			TextureCollection *direct3D11TextureCollection = static_cast<TextureCollection*>(textureCollection);
 			mD3D11DeviceContext->DSSetShaderResources(startUnit, direct3D11TextureCollection->getNumberOfD3D11ShaderResourceViews(), direct3D11TextureCollection->getD3D11ShaderResourceViews());
 		}
-	}
-
-	void Direct3D11Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
 	}
 
 	void Direct3D11Renderer::tesSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -990,20 +950,10 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::gsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D11Renderer::gsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
@@ -1019,11 +969,6 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D11Renderer::gsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
@@ -1037,11 +982,6 @@ namespace Direct3D11Renderer
 			SamplerStateCollection *direct3D11SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
 			mD3D11DeviceContext->GSSetSamplers(startUnit, direct3D11SamplerStateCollection->getNumberOfD3D11SamplerStates(), direct3D11SamplerStateCollection->getD3D11SamplerStates());
 		}
-	}
-
-	void Direct3D11Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
 	}
 
 
@@ -1096,11 +1036,6 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::fsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D11Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
@@ -1116,11 +1051,6 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D11Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
@@ -1134,11 +1064,6 @@ namespace Direct3D11Renderer
 			SamplerStateCollection *direct3D11SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
 			mD3D11DeviceContext->PSSetSamplers(startUnit, direct3D11SamplerStateCollection->getNumberOfD3D11SamplerStates(), direct3D11SamplerStateCollection->getD3D11SamplerStates());
 		}
-	}
-
-	void Direct3D11Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
 	}
 
 

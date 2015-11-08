@@ -50,14 +50,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	uint32_t ProgramGlslDsa::setTextureUnit(handle uniformHandle, uint32_t unit)
-	{
-		// OpenGL/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
-		// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
-		glProgramUniform1iEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), static_cast<GLint>(unit));
-		return unit;
-	}
-
 	void ProgramGlslDsa::setUniform1f(handle uniformHandle, float value)
 	{
 		glProgramUniform1fEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), value);

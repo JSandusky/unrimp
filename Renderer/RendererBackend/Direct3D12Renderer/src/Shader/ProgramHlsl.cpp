@@ -100,12 +100,6 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	uint32_t ProgramHlsl::getUniformBlockIndex(const char *, uint32_t defaultIndex)
-	{
-		// Not supported by Direct3D 12
-		return defaultIndex;
-	}
-
 	handle ProgramHlsl::getUniformHandle(const char *)
 	{
 		// Not supported by Direct3D 12

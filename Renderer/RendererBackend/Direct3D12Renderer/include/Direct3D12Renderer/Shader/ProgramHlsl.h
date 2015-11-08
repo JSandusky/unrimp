@@ -143,7 +143,6 @@ namespace Direct3D12Renderer
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	public:
-		virtual uint32_t getUniformBlockIndex(const char *uniformBlockName, uint32_t defaultIndex) override;
 		virtual handle getUniformHandle(const char *uniformName) override;
 		virtual void setUniform1f(handle uniformHandle, float value) override;
 		virtual void setUniform2fv(handle uniformHandle, const float *value) override;

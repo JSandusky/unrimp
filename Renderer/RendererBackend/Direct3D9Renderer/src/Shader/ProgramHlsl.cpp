@@ -123,12 +123,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	uint32_t ProgramHlsl::getUniformBlockIndex(const char *, uint32_t defaultIndex)
-	{
-		// Not supported by Direct3D 9
-		return defaultIndex;
-	}
-
 	handle ProgramHlsl::getUniformHandle(const char *uniformName)
 	{
 		// Get the uniform handle
@@ -153,15 +147,6 @@ namespace Direct3D9Renderer
 
 		// Error!
 		return NULL_HANDLE;
-	}
-
-	uint32_t ProgramHlsl::setTextureUnit(handle uniformHandle, uint32_t)
-	{
-		// Usually, binding a sampler to a particular register by using ": register(<name>)" within HLSL should be fine
-		// -> But safe is safe
-
-		// Get the sampler index
-		return mD3DXConstantTable->GetSamplerIndex(reinterpret_cast<D3DXHANDLE>(uniformHandle));
 	}
 
 	void ProgramHlsl::setUniform1f(handle uniformHandle, float value)

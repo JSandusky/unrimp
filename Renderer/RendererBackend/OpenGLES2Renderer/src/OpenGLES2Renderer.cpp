@@ -700,20 +700,10 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::vsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLES2Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// In OpenGL ES 2, all shaders share the same texture units
 		fsSetTextureCollection(startUnit, textureCollection);
-	}
-
-	void OpenGLES2Renderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
 	}
 
 	void OpenGLES2Renderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -722,26 +712,11 @@ namespace OpenGLES2Renderer
 		fsSetSamplerStateCollection(startUnit, samplerStateCollection);
 	}
 
-	void OpenGLES2Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::tcsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLES2Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLES2Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -751,26 +726,11 @@ namespace OpenGLES2Renderer
 		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::tesSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLES2Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLES2Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -780,36 +740,16 @@ namespace OpenGLES2Renderer
 		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::gsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLES2Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
 		// TODO(co) Remove this method
 	}
 
-	void OpenGLES2Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLES2Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLES2Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -928,11 +868,6 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::fsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLES2Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
@@ -1015,11 +950,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLES2Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
@@ -1060,7 +990,7 @@ namespace OpenGLES2Renderer
 					// Set the default sampler state
 					if (nullptr != mDefaultSamplerState)
 					{
-						fsSetSamplerState(unit, mDefaultSamplerState);
+						// TODO(co)
 					}
 					else
 					{
@@ -1076,11 +1006,6 @@ namespace OpenGLES2Renderer
 				glActiveTexture(openGLES2ActiveTextureBackup);
 			#endif
 		}
-	}
-
-	void OpenGLES2Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
 	}
 
 

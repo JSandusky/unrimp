@@ -49,9 +49,7 @@ namespace Renderer
 	//[ Public virtual IProgram methods                       ]
 	//[-------------------------------------------------------]
 	// TODO(co) Cleanup
-	inline uint32_t IProgram::getUniformBlockIndex(const char *, uint32_t defaultIndex) { return defaultIndex; };
 	inline handle IProgram::getUniformHandle(const char *) { return NULL_HANDLE; };
-	inline uint32_t IProgram::setTextureUnit(handle, uint32_t unit) { return unit; };
 	inline void IProgram::setUniform1i(handle, int) {};
 	inline void IProgram::setUniform1f(handle, float) {};
 	inline void IProgram::setUniform2fv(handle, const float *) {};

@@ -881,11 +881,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::vsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D10Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
@@ -899,11 +894,6 @@ namespace Direct3D10Renderer
 			TextureCollection *direct3D10TextureCollection = static_cast<TextureCollection*>(textureCollection);
 			mD3D10Device->VSSetShaderResources(startUnit, direct3D10TextureCollection->getNumberOfD3D10ShaderResourceViews(), direct3D10TextureCollection->getD3D10ShaderResourceViews());
 		}
-	}
-
-	void Direct3D10Renderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
 	}
 
 	void Direct3D10Renderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
@@ -921,26 +911,11 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::tcsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D10Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D10Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -950,26 +925,11 @@ namespace Direct3D10Renderer
 		// TODO(co) Remove this method
 	}
 
-	void Direct3D10Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::tesSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D10Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D10Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -979,20 +939,10 @@ namespace Direct3D10Renderer
 		// TODO(co) Remove this method
 	}
 
-	void Direct3D10Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::gsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D10Renderer::gsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
@@ -1008,11 +958,6 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D10Renderer::gsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
@@ -1026,11 +971,6 @@ namespace Direct3D10Renderer
 			SamplerStateCollection *direct3D10SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
 			mD3D10Device->GSSetSamplers(startUnit, direct3D10SamplerStateCollection->getNumberOfD3D10SamplerStates(), direct3D10SamplerStateCollection->getD3D10SamplerStates());
 		}
-	}
-
-	void Direct3D10Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
 	}
 
 
@@ -1103,11 +1043,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::fsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D10Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
@@ -1123,11 +1058,6 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D10Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
@@ -1141,11 +1071,6 @@ namespace Direct3D10Renderer
 			SamplerStateCollection *direct3D10SamplerStateCollection = static_cast<SamplerStateCollection*>(samplerStateCollection);
 			mD3D10Device->PSSetSamplers(startUnit, direct3D10SamplerStateCollection->getNumberOfD3D10SamplerStates(), direct3D10SamplerStateCollection->getD3D10SamplerStates());
 		}
-	}
-
-	void Direct3D10Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
 	}
 
 

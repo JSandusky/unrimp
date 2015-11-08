@@ -77,9 +77,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Cleanup
-		inline virtual uint32_t getUniformBlockIndex(const char *uniformBlockName, uint32_t defaultIndex);
 		inline virtual handle getUniformHandle(const char *uniformName);
-		inline virtual uint32_t setTextureUnit(handle uniformHandle, uint32_t unit);
 		inline virtual void setUniform1i(handle uniformHandle, int value);
 		inline virtual void setUniform1f(handle uniformHandle, float value);
 		inline virtual void setUniform2fv(handle uniformHandle, const float *value);

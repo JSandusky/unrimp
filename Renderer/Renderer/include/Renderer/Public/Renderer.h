@@ -1631,34 +1631,19 @@ namespace Renderer
 			virtual void setPipelineState(IPipelineState *pipelineState) = 0;
 			virtual void iaSetVertexArray(IVertexArray *vertexArray) = 0;
 			virtual void iaSetPrimitiveTopology(PrimitiveTopology::Enum primitiveTopology) = 0;
-			virtual void vsSetTexture(uint32_t unit, ITexture *texture) = 0;
 			virtual void vsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void vsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
 			virtual void vsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void vsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
-			virtual void tcsSetTexture(uint32_t unit, ITexture *texture) = 0;
 			virtual void tcsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void tcsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
 			virtual void tcsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void tcsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
-			virtual void tesSetTexture(uint32_t unit, ITexture *texture) = 0;
 			virtual void tesSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void tesSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
 			virtual void tesSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void tesSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
-			virtual void gsSetTexture(uint32_t unit, ITexture *texture) = 0;
 			virtual void gsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void gsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
 			virtual void gsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void gsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
 			virtual void rsSetViewports(uint32_t numberOfViewports, const Viewport *viewports) = 0;
 			virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles) = 0;
 			virtual void rsSetState(IRasterizerState *rasterizerState) = 0;
-			virtual void fsSetTexture(uint32_t unit, ITexture *texture) = 0;
 			virtual void fsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void fsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
 			virtual void fsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void fsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
 			virtual IRenderTarget *omGetRenderTarget() = 0;
 			virtual void omSetRenderTarget(IRenderTarget *renderTarget) = 0;
 			virtual void omSetDepthStencilState(IDepthStencilState *depthStencilState) = 0;
@@ -1786,9 +1771,7 @@ namespace Renderer
 		public:
 			virtual ~IProgram();
 		public:
-			virtual uint32_t getUniformBlockIndex(const char *uniformBlockName, uint32_t defaultIndex) = 0;
 			virtual handle getUniformHandle(const char *uniformName) = 0;
-			virtual uint32_t setTextureUnit(handle uniformHandle, uint32_t unit) = 0;
 			virtual void setUniform1i(handle uniformHandle, int value) = 0;
 			virtual void setUniform1f(handle uniformHandle, float value) = 0;
 			virtual void setUniform2fv(handle uniformHandle, const float *value) = 0;

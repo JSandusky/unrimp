@@ -903,11 +903,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::vsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D9Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
@@ -981,43 +976,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::vsSetSamplerState(uint32_t unit, Renderer::ISamplerState *samplerState)
-	{
-		// Update the given zero based texture unit (the constants are linear, so the following is fine)
-		// -> "+ D3DVERTEXTEXTURESAMPLER1", see "Direct3D9Renderer::vsSetTexture()" above for details
-		unit += D3DVERTEXTEXTURESAMPLER1;
-
-		// Set a sampler at that unit?
-		if (nullptr != samplerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerState)
-
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-			// Set the Direct3D 9 sampler states
-			static_cast<SamplerState*>(samplerState)->setDirect3D9SamplerStates(unit, *mDirect3DDevice9);
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(this)
-		}
-		else
-		{
-			// Set the default sampler state
-			if (nullptr != mDefaultSamplerState)
-			{
-				vsSetSamplerState(unit, mDefaultSamplerState);
-			}
-			else
-			{
-				// Fallback in case everything goes wrong
-
-				// TODO(co) Set default settings
-			}
-		}
-	}
-
 	void Direct3D9Renderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
@@ -1052,7 +1010,7 @@ namespace Direct3D9Renderer
 					// Set the default sampler state
 					if (nullptr != mDefaultSamplerState)
 					{
-						fsSetSamplerState(unit, mDefaultSamplerState);
+						// TODO(co)
 					}
 					else
 					{
@@ -1068,26 +1026,11 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::tcsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D9Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D9Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -1097,26 +1040,11 @@ namespace Direct3D9Renderer
 		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::tesSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D9Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D9Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -1126,36 +1054,16 @@ namespace Direct3D9Renderer
 		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::gsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D9Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
 		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D9Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D9Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -1266,11 +1174,6 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::fsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D9Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
@@ -1343,11 +1246,6 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D9Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
@@ -1381,7 +1279,7 @@ namespace Direct3D9Renderer
 					// Set the default sampler state
 					if (nullptr != mDefaultSamplerState)
 					{
-						fsSetSamplerState(unit, mDefaultSamplerState);
+						// TODO(co)
 					}
 					else
 					{
@@ -1395,11 +1293,6 @@ namespace Direct3D9Renderer
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(this)
 		}
-	}
-
-	void Direct3D9Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
 	}
 
 

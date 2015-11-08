@@ -81,12 +81,6 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	uint32_t ProgramHlsl::getUniformBlockIndex(const char *, uint32_t defaultIndex)
-	{
-		// Not supported by Direct3D 10
-		return defaultIndex;
-	}
-
 	handle ProgramHlsl::getUniformHandle(const char *)
 	{
 		// Not supported by Direct3D 10

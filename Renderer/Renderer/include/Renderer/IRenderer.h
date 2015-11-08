@@ -623,17 +623,6 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    Set the used vertex shader texture resource at a certain texture unit
-		*
-		*  @param[in] unit
-		*    Texture unit
-		*  @param[in] texture
-		*    Texture to use, can be an null pointer (default: "nullptr")
-		*/
-		virtual void vsSetTexture(uint32_t unit, ITexture *texture) = 0;
-
-		/**
-		*  @brief
 		*    Set the used vertex shader texture resource at a certain texture unit by using a texture collection
 		*
 		*  @param[in] startUnit
@@ -642,17 +631,6 @@ namespace Renderer
 		*    Texture collection to use, can be an null pointer
 		*/
 		virtual void vsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-
-		/**
-		*  @brief
-		*    Set the used vertex shader sampler state at a certain texture unit
-		*
-		*  @param[in] unit
-		*    Texture unit
-		*  @param[in] samplerState
-		*    Sampler state, can be a null pointer (default: "nullptr", see "Renderer::SamplerState" for the default values used in this case)
-		*/
-		virtual void vsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
 
 		/**
 		*  @brief
@@ -665,36 +643,9 @@ namespace Renderer
 		*/
 		virtual void vsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
 
-		/**
-		*  @brief
-		*    Set the used vertex shader uniform buffer object (UBO, "constant buffer" in Direct3D terminology) at a certain slot
-		*
-		*  @param[in] slot
-		*    Slot which can either be searched by an uniform name via "Renderer::IProgram::getUniformBlockIndex()" (for performance reasons not recommended)
-		*    or fixed set inside the shader (in OpenGL the "GL_ARB_explicit_uniform_location"-extension is required for this)
-		*  @param[in] uniformBuffer
-		*    Uniform buffer, can be a null pointer (default: "nullptr")
-		*
-		*  @note
-		*    - Uniform buffer instances are created by using "Renderer::IShaderLanguage::createUniformBuffer()"
-		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
-		*/
-		virtual void vsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
-
 		//[-------------------------------------------------------]
 		//[ Tessellation-control-shader (TCS) stage               ]
 		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the used tessellation control shader texture resource at a certain texture unit
-		*
-		*  @param[in] unit
-		*    Texture unit
-		*  @param[in] texture
-		*    Texture to use, can be an null pointer (default: "nullptr")
-		*/
-		virtual void tcsSetTexture(uint32_t unit, ITexture *texture) = 0;
-
 		/**
 		*  @brief
 		*    Set the used tessellation control shader texture resource at a certain texture unit by using a texture collection
@@ -708,17 +659,6 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Set the used tessellation control shader sampler state at a certain texture unit
-		*
-		*  @param[in] unit
-		*    Texture unit
-		*  @param[in] samplerState
-		*    Sampler state, can be a null pointer (default: "nullptr", see "Renderer::SamplerState" for the default values used in this case)
-		*/
-		virtual void tcsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
-
-		/**
-		*  @brief
 		*    Set the used tessellation control shader sampler state resource at a certain texture unit by using a sampler state collection
 		*
 		*  @param[in] startUnit
@@ -728,36 +668,9 @@ namespace Renderer
 		*/
 		virtual void tcsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
 
-		/**
-		*  @brief
-		*    Set the used tessellation control shader uniform buffer object (UBO, "constant buffer" in Direct3D terminology) at a certain slot
-		*
-		*  @param[in] slot
-		*    Slot which can either be searched by an uniform name via "Renderer::IProgram::getUniformBlockIndex()" (for performance reasons not recommended)
-		*    or fixed set inside the shader (in OpenGL the "GL_ARB_explicit_uniform_location"-extension is required for this)
-		*  @param[in] uniformBuffer
-		*    Uniform buffer, can be a null pointer (default: "nullptr")
-		*
-		*  @note
-		*    - Uniform buffer instances are created by using "Renderer::IShaderLanguage::createUniformBuffer()"
-		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
-		*/
-		virtual void tcsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
-
 		//[-------------------------------------------------------]
 		//[ Tessellation-evaluation-shader (TES) stage            ]
 		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the used tessellation evaluation shader texture resource at a certain texture unit
-		*
-		*  @param[in] unit
-		*    Texture unit
-		*  @param[in] texture
-		*    Texture to use, can be an null pointer (default: "nullptr")
-		*/
-		virtual void tesSetTexture(uint32_t unit, ITexture *texture) = 0;
-
 		/**
 		*  @brief
 		*    Set the used tessellation evaluation shader texture resource at a certain texture unit by using a texture collection
@@ -771,17 +684,6 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Set the used tessellation evaluation shader sampler state at a certain texture unit
-		*
-		*  @param[in] unit
-		*    Texture unit
-		*  @param[in] samplerState
-		*    Sampler state, can be a null pointer (default: "nullptr", see "Renderer::SamplerState" for the default values used in this case)
-		*/
-		virtual void tesSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
-
-		/**
-		*  @brief
 		*    Set the used tessellation evaluation shader sampler state resource at a certain texture unit by using a sampler state collection
 		*
 		*  @param[in] startUnit
@@ -791,36 +693,9 @@ namespace Renderer
 		*/
 		virtual void tesSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
 
-		/**
-		*  @brief
-		*    Set the used tessellation evaluation shader uniform buffer object (UBO, "constant buffer" in Direct3D terminology) at a certain slot
-		*
-		*  @param[in] slot
-		*    Slot which can either be searched by an uniform name via "Renderer::IProgram::getUniformBlockIndex()" (for performance reasons not recommended)
-		*    or fixed set inside the shader (in OpenGL the "GL_ARB_explicit_uniform_location"-extension is required for this)
-		*  @param[in] uniformBuffer
-		*    Uniform buffer, can be a null pointer (default: "nullptr")
-		*
-		*  @note
-		*    - Uniform buffer instances are created by using "Renderer::IShaderLanguage::createUniformBuffer()"
-		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
-		*/
-		virtual void tesSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
-
 		//[-------------------------------------------------------]
 		//[ Geometry-shader (GS) stage                            ]
 		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the used geometry shader texture resource at a certain texture unit
-		*
-		*  @param[in] unit
-		*    Texture unit
-		*  @param[in] texture
-		*    Texture to use, can be an null pointer (default: "nullptr")
-		*/
-		virtual void gsSetTexture(uint32_t unit, ITexture *texture) = 0;
-
 		/**
 		*  @brief
 		*    Set the used geometry shader texture resource at a certain texture unit by using a texture collection
@@ -834,17 +709,6 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Set the used geometry shader sampler state at a certain texture unit
-		*
-		*  @param[in] unit
-		*    Texture unit
-		*  @param[in] samplerState
-		*    Sampler state, can be a null pointer (default: "nullptr", see "Renderer::SamplerState" for the default values used in this case)
-		*/
-		virtual void gsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
-
-		/**
-		*  @brief
 		*    Set the used geometry shader sampler state resource at a certain texture unit by using a sampler state collection
 		*
 		*  @param[in] startUnit
@@ -853,22 +717,6 @@ namespace Renderer
 		*    Sampler state collection to use, can be an null pointer
 		*/
 		virtual void gsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-
-		/**
-		*  @brief
-		*    Set the used geometry shader uniform buffer object (UBO, "constant buffer" in Direct3D terminology) at a certain slot
-		*
-		*  @param[in] slot
-		*    Slot which can either be searched by an uniform name via "Renderer::IProgram::getUniformBlockIndex()" (for performance reasons not recommended)
-		*    or fixed set inside the shader (in OpenGL the "GL_ARB_explicit_uniform_location"-extension is required for this)
-		*  @param[in] uniformBuffer
-		*    Uniform buffer, can be a null pointer (default: "nullptr")
-		*
-		*  @note
-		*    - Uniform buffer instances are created by using "Renderer::IShaderLanguage::createUniformBuffer()"
-		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
-		*/
-		virtual void gsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
@@ -916,17 +764,6 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
-		*    Set the used fragment shader texture resource at a certain texture unit
-		*
-		*  @param[in] unit
-		*    Texture unit
-		*  @param[in] texture
-		*    Texture to use, can be an null pointer (default: "nullptr")
-		*/
-		virtual void fsSetTexture(uint32_t unit, ITexture *texture) = 0;
-
-		/**
-		*  @brief
 		*    Set the used fragment shader texture resource at a certain texture unit by using a texture collection
 		*
 		*  @param[in] startUnit
@@ -938,17 +775,6 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Set the used fragment shader sampler state at a certain texture unit
-		*
-		*  @param[in] unit
-		*    Texture unit
-		*  @param[in] samplerState
-		*    Sampler state, can be a null pointer (default: "nullptr", see "Renderer::SamplerState" for the default values used in this case)
-		*/
-		virtual void fsSetSamplerState(uint32_t unit, ISamplerState *samplerState) = 0;
-
-		/**
-		*  @brief
 		*    Set the used fragment shader sampler state resource at a certain texture unit by using a sampler state collection
 		*
 		*  @param[in] startUnit
@@ -957,22 +783,6 @@ namespace Renderer
 		*    Sampler state collection to use, can be an null pointer
 		*/
 		virtual void fsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-
-		/**
-		*  @brief
-		*    Set the used fragment shader uniform buffer object (UBO, "constant buffer" in Direct3D terminology) at a certain slot
-		*
-		*  @param[in] slot
-		*    Slot which can either be searched by an uniform name via "Renderer::IProgram::getUniformBlockIndex()" (for performance reasons not recommended)
-		*    or fixed set inside the shader (in OpenGL the "GL_ARB_explicit_uniform_location"-extension is required for this)
-		*  @param[in] uniformBuffer
-		*    Uniform buffer, can be a null pointer (default: "nullptr")
-		*
-		*  @note
-		*    - Uniform buffer instances are created by using "Renderer::IShaderLanguage::createUniformBuffer()"
-		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
-		*/
-		virtual void fsSetUniformBuffer(uint32_t slot, IUniformBuffer *uniformBuffer) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]

@@ -330,13 +330,11 @@ void FirstGpgpu::generate2DTextureContent()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT(mRenderer, L"Generate the content of the 2D texture to process later on")
 
-		// Unbind our texture from the texture unit before rendering into it
+		// TODO(co) Unbind our texture from the texture unit before rendering into it
 		// -> Direct3D 9, OpenGL and OpenGL ES 2 don't mind as long as the texture is not used inside the shader while rendering into it
 		// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
 		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
 		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
-		// TODO(co) Update
-		// mRenderer->fsSetTexture(mProgramContentProcessing->setTextureUnit(mProgramContentProcessing->getUniformHandle("ContentMap"), 0), nullptr);
 
 		// Backup the currently used render target
 		Renderer::IRenderTargetPtr previousRenderTarget(mRenderer->omGetRenderTarget());

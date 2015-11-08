@@ -241,45 +241,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	uint32_t ProgramGlsl::getUniformBlockIndex(const char *uniformBlockName, uint32_t)
-	{
-		// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
-		// for backward compatibility, ask for the uniform block index
-		return glGetUniformBlockIndex(mOpenGLProgram, uniformBlockName);
-	}
-
 	handle ProgramGlsl::getUniformHandle(const char *uniformName)
 	{
 		return static_cast<handle>(glGetUniformLocationARB(mOpenGLProgram, uniformName));
-	}
-
-	uint32_t ProgramGlsl::setTextureUnit(handle uniformHandle, uint32_t unit)
-	{
-		// OpenGL/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
-		// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
-		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL program
-			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mOpenGLProgram)
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUniform1iARB(static_cast<GLint>(uniformHandle), unit);
-			}
-			else
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mOpenGLProgram);
-				glUniform1iARB(static_cast<GLint>(uniformHandle), unit);
-
-				// Be polite and restore the previous used OpenGL program
-				glUseProgramObjectARB(openGLProgramBackup);
-			}
-		#else
-			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mOpenGLProgram);
-			glUniform1iARB(static_cast<GLint>(uniformHandle), static_cast<GLint>(unit));
-		#endif
-		return unit;
 	}
 
 	void ProgramGlsl::setUniform1i(handle uniformHandle, int value)

@@ -756,17 +756,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::vsSetTexture(uint32_t, Renderer::ITexture *)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D12Renderer::vsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D12Renderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
 		// TODO(co) Remove this method
 	}
@@ -776,26 +766,11 @@ namespace Direct3D12Renderer
 		// TODO(co) Remove this method
 	}
 
-	void Direct3D12Renderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::tcsSetTexture(uint32_t, Renderer::ITexture *)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D12Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D12Renderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
 		// TODO(co) Remove this method
 	}
@@ -805,26 +780,11 @@ namespace Direct3D12Renderer
 		// TODO(co) Remove this method
 	}
 
-	void Direct3D12Renderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::tesSetTexture(uint32_t, Renderer::ITexture *)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D12Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D12Renderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState *)
 	{
 		// TODO(co) Remove this method
 	}
@@ -834,36 +794,16 @@ namespace Direct3D12Renderer
 		// TODO(co) Remove this method
 	}
 
-	void Direct3D12Renderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::gsSetTexture(uint32_t, Renderer::ITexture *)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D12Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
 	{
 		// TODO(co) Remove this method
 	}
 
-	void Direct3D12Renderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState *)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D12Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D12Renderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
 	{
 		// TODO(co) Remove this method
 	}
@@ -929,27 +869,12 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::fsSetTexture(uint32_t, Renderer::ITexture *)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D12Renderer::fsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
 	{
 		// TODO(co) Remove this method
 	}
 
-	void Direct3D12Renderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState *)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void Direct3D12Renderer::fsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D12Renderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer *)
 	{
 		// TODO(co) Remove this method
 	}

@@ -62,44 +62,9 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	uint32_t Program::getUniformBlockIndex(const char *, uint32_t defaultIndex)
-	{
-		// OpenGL ES 2 has no uniform buffer support
-		return defaultIndex;
-	}
-
 	handle Program::getUniformHandle(const char *uniformName)
 	{
 		return static_cast<handle>(glGetUniformLocation(mOpenGLES2Program, uniformName));
-	}
-
-	uint32_t Program::setTextureUnit(handle uniformHandle, uint32_t unit)
-	{
-		// OpenGL ES 2/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
-		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-			// Backup the currently used OpenGL ES 2 program
-			GLint openGLES2ProgramBackup = 0;
-			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
-			if (openGLES2ProgramBackup == mOpenGLES2Program)
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUniform1i(static_cast<GLint>(uniformHandle), unit);
-			}
-			else
-			{
-				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgram(mOpenGLES2Program);
-				glUniform1i(static_cast<GLint>(uniformHandle), unit);
-
-				// Be polite and restore the previous used OpenGL ES 2 program
-				glUseProgram(openGLES2ProgramBackup);
-			}
-		#else
-			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgram(mOpenGLES2Program);
-			glUniform1i(static_cast<GLint>(uniformHandle), static_cast<GLint>(unit));
-		#endif
-		return unit;
 	}
 
 	void Program::setUniform1i(handle uniformHandle, int value)

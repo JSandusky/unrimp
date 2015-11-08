@@ -970,17 +970,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Vertex-shader (VS) stage                              ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::vsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLRenderer::vsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLRenderer::vsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -990,26 +980,11 @@ namespace OpenGLRenderer
 		// TODO(co) Remove this method
 	}
 
-	void OpenGLRenderer::vsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-control-shader (TCS) stage               ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::tcsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLRenderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLRenderer::tcsSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -1019,26 +994,11 @@ namespace OpenGLRenderer
 		// TODO(co) Remove this method
 	}
 
-	void OpenGLRenderer::tcsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Tessellation-evaluation-shader (TES) stage            ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::tesSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLRenderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLRenderer::tesSetSamplerState(uint32_t, Renderer::ISamplerState*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -1048,36 +1008,16 @@ namespace OpenGLRenderer
 		// TODO(co) Remove this method
 	}
 
-	void OpenGLRenderer::tesSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Geometry-shader (GS) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::gsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLRenderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
 	{
 		// TODO(co) Remove this method
 	}
 
-	void OpenGLRenderer::gsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLRenderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLRenderer::gsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
 	{
 		// TODO(co) Remove this method
 	}
@@ -1199,11 +1139,6 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Fragment-shader (FS) stage                            ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::fsSetTexture(uint32_t, Renderer::ITexture*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLRenderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
 	{
 		// Is the given texture collection valid?
@@ -1365,11 +1300,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::fsSetSamplerState(uint32_t, Renderer::ISamplerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 	void OpenGLRenderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
 	{
 		// Is the given sampler state collection valid?
@@ -1427,7 +1357,7 @@ namespace OpenGLRenderer
 						// Set the default sampler state
 						if (nullptr != mDefaultSamplerState)
 						{
-							fsSetSamplerState(unit, mDefaultSamplerState);
+							// TODO(co)
 						}
 						else
 						{
@@ -1439,11 +1369,6 @@ namespace OpenGLRenderer
 				}
 			}
 		}
-	}
-
-	void OpenGLRenderer::fsSetUniformBuffer(uint32_t, Renderer::IUniformBuffer*)
-	{
-		// TODO(co) Remove this method
 	}
 
 
