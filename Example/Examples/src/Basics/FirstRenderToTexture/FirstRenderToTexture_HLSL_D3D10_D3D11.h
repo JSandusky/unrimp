@@ -63,8 +63,8 @@ VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as inpu
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode = STRINGIFY(
 // Uniforms
-Texture2D DiffuseMap : register(t0);
 SamplerState SamplerLinear : register(s0);
+Texture2D DiffuseMap : register(t0);
 
 // Programs
 float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Target
