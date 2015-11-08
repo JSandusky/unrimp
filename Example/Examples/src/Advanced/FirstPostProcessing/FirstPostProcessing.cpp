@@ -74,11 +74,17 @@ void FirstPostProcessing::onInitialization()
 		}
 
 		{ // Create the root signature
-			// TODO(co) Correct root signature
+			Renderer::DescriptorRangeBuilder ranges[2];
+			ranges[0].initializeSampler(1, 0);
+			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
+
+			Renderer::RootParameterBuilder rootParameters[2];
+			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
+			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
-			rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+			rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 			// Create the instance
 			mRootSignature = renderer->createRootSignature(rootSignature);
@@ -174,23 +180,46 @@ void FirstPostProcessing::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			// Get the shader source code (outsourced to keep an overview)
-			const char *vertexShaderSourceCode = nullptr;
-			const char *fragmentShaderSourceCode_SceneRendering = nullptr;
-			const char *fragmentShaderSourceCode_PostProcessing = nullptr;
-			#include "FirstPostProcessing_GLSL_110.h"
-			#include "FirstPostProcessing_GLSL_ES2.h"
-			#include "FirstPostProcessing_HLSL_D3D9.h"
-			#include "FirstPostProcessing_HLSL_D3D10_D3D11.h"
-			#include "FirstPostProcessing_Null.h"
+			// Create the programs
+			Renderer::IProgramPtr programSceneRendering;
+			Renderer::IProgramPtr programPostProcessing;
+			{
+				// Get the shader source code (outsourced to keep an overview)
+				const char *vertexShaderSourceCode = nullptr;
+				const char *fragmentShaderSourceCode_SceneRendering = nullptr;
+				const char *fragmentShaderSourceCode_PostProcessing = nullptr;
+				#include "FirstPostProcessing_GLSL_110.h"
+				#include "FirstPostProcessing_GLSL_ES2.h"
+				#include "FirstPostProcessing_HLSL_D3D9.h"
+				#include "FirstPostProcessing_HLSL_D3D10_D3D11_D3D12.h"
+				#include "FirstPostProcessing_Null.h"
 
-			// In order to keep this example simple and to show that it's possible, we use the same vertex shader for both programs
-			// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
-			//    the unused texture coordinate might get optimized out
-			// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-			Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
-			mProgramSceneRendering = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_SceneRendering));
-			mProgramPostProcessing = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_PostProcessing));
+				// In order to keep this example simple and to show that it's possible, we use the same vertex shader for both programs
+				// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
+				//    the unused texture coordinate might get optimized out
+				// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
+				Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
+				programSceneRendering = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_SceneRendering));
+				programPostProcessing = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_PostProcessing));
+			}
+
+			// Create the pipeline state objects (PSO)
+			if (nullptr != programSceneRendering && nullptr != programPostProcessing)
+			{
+				// Setup
+				Renderer::PipelineState pipelineState;
+				pipelineState.rootSignature = mRootSignature;
+				pipelineState.program = programSceneRendering;
+				pipelineState.vertexAttributes = vertexAttributes;
+				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
+
+				// Create the instances
+				mPipelineStateSceneRendering = renderer->createPipelineState(pipelineState);
+				pipelineState.program = programPostProcessing;
+				mPipelineStatePostProcessing = renderer->createPipelineState(pipelineState);
+			}
 		}
 
 		// End debug event
@@ -205,9 +234,9 @@ void FirstPostProcessing::onDeinitialization()
 
 	// Release the used resources
 	mVertexArrayPostProcessing = nullptr;
-	mProgramPostProcessing = nullptr;
+	mPipelineStatePostProcessing = nullptr;
 	mVertexArraySceneRendering = nullptr;
-	mProgramSceneRendering = nullptr;
+	mPipelineStateSceneRendering = nullptr;
 	mDepthStencilState = nullptr;
 	mRootSignature = nullptr;
 	mSamplerState = nullptr;
@@ -294,7 +323,7 @@ void FirstPostProcessing::sceneRendering()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mProgramSceneRendering && nullptr != mProgramPostProcessing)
+	if (nullptr != renderer && nullptr != mPipelineStateSceneRendering && nullptr != mPipelineStatePostProcessing)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -308,7 +337,8 @@ void FirstPostProcessing::sceneRendering()
 		// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
 		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
 		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
-		renderer->fsSetTexture(mProgramPostProcessing->setTextureUnit(mProgramPostProcessing->getUniformHandle("DiffuseMap"), 0), nullptr);
+		// TODO(co) Update
+		// renderer->fsSetTexture(mProgramPostProcessing->setTextureUnit(mProgramPostProcessing->getUniformHandle("DiffuseMap"), 0), nullptr);
 
 		// Backup the currently used render target
 		Renderer::IRenderTargetPtr renderTarget(renderer->omGetRenderTarget());
@@ -327,8 +357,8 @@ void FirstPostProcessing::sceneRendering()
 			// Set the used graphics root signature
 			renderer->setGraphicsRootSignature(mRootSignature);
 
-			// Set the used program
-			renderer->setProgram(mProgramSceneRendering);
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineStateSceneRendering);
 
 			{ // Setup input assembly (IA)
 				// Set the used vertex array
@@ -359,7 +389,7 @@ void FirstPostProcessing::postProcessing()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && mProgramPostProcessing)
+	if (nullptr != renderer && mPipelineStatePostProcessing)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -374,8 +404,12 @@ void FirstPostProcessing::postProcessing()
 			// Set the used graphics root signature
 			renderer->setGraphicsRootSignature(mRootSignature);
 
-			// Set the used program
-			renderer->setProgram(mProgramPostProcessing);
+			// Set diffuse map
+			renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
+			renderer->setGraphicsRootDescriptorTable(1, mTexture2D);
+
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineStatePostProcessing);
 
 			{ // Setup input assembly (IA)
 				// Set the used vertex array
@@ -383,24 +417,6 @@ void FirstPostProcessing::postProcessing()
 
 				// Set the primitive topology used for draw calls
 				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_STRIP);
-			}
-
-			{ // Set diffuse map (texture unit 0 by default)
-				// Tell the renderer API which texture should be bound to which texture unit
-				// -> When using OpenGL or OpenGL ES 2 this is required
-				// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
-				//    in GLSL shader) , for backward compatibility we don't use it in here
-				// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
-				//    to use is usually defined directly within the shader by using the "register"-keyword
-				// -> Usually, this should only be done once during initialization, this example does this
-				//    every frame to keep it local for better overview
-				const uint32_t unit = mProgramPostProcessing->setTextureUnit(mProgramPostProcessing->getUniformHandle("DiffuseMap"), 0);
-
-				// Set the used texture at the texture unit
-				renderer->fsSetTexture(unit, mTexture2D);
-
-				// Set the used sampler state at the texture unit
-				renderer->fsSetSamplerState(unit, mSamplerState);
 			}
 
 			// Render the specified geometric primitive, based on indexing into an array of vertices

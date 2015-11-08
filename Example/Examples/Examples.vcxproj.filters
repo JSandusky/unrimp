@@ -285,9 +285,6 @@
     <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_HLSL_D3D9.h">
       <Filter>Advanced\FirstPostProcessing</Filter>
     </ClInclude>
-    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_HLSL_D3D10_D3D11.h">
-      <Filter>Advanced\FirstPostProcessing</Filter>
-    </ClInclude>
     <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_Null.h">
       <Filter>Advanced\FirstPostProcessing</Filter>
     </ClInclude>
@@ -455,6 +452,9 @@
     </ClInclude>
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D10_D3D11_D3D12.h">
       <Filter>Basics\FirstMultipleRenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Advanced\FirstPostProcessing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -45,6 +45,7 @@
 *    - Sampler state object
 *    - Vertex shader (VS) and fragment shader (FS)
 *    - Root signature
+*    - Pipeline state object (PSO)
 *    - Framebuffer object (FBO) used for render to texture
 *    - Depth stencil state object
 *    - Post processing
@@ -117,11 +118,11 @@ private:
 	Renderer::IRootSignaturePtr		mRootSignature;		///< Root signature, can be a null pointer
 	Renderer::IDepthStencilStatePtr	mDepthStencilState;	///< Depth stencil state, can be a null pointer
 	// Scene rendering
-	Renderer::IProgramPtr	   mProgramSceneRendering;		///< Program for scene rendering, can be a null pointer
-	Renderer::IVertexArrayPtr  mVertexArraySceneRendering;	///< Vertex array object (VAO) for scene rendering, can be a null pointer
+	Renderer::IPipelineStatePtr mPipelineStateSceneRendering;	///< Pipeline state object (PSO) for scene rendering, can be a null pointer
+	Renderer::IVertexArrayPtr   mVertexArraySceneRendering;		///< Vertex array object (VAO) for scene rendering, can be a null pointer
 	// Post-processing
-	Renderer::IProgramPtr	   mProgramPostProcessing;		///< Program for post-processing, can be a null pointer
-	Renderer::IVertexArrayPtr  mVertexArrayPostProcessing;	///< Vertex array object (VAO) for post-processing, can be a null pointer
+	Renderer::IPipelineStatePtr mPipelineStatePostProcessing;	///< Pipeline state object (PSO) for post-processing, can be a null pointer
+	Renderer::IVertexArrayPtr   mVertexArrayPostProcessing;		///< Vertex array object (VAO) for post-processing, can be a null pointer
 
 
 };

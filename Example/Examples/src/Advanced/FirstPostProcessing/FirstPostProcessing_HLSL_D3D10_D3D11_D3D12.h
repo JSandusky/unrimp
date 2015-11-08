@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
-#if !defined(RENDERER_NO_DIRECT3D10) || !defined(RENDERER_NO_DIRECT3D11)
-if (0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11"))
+#if !defined(RENDERER_NO_DIRECT3D10) || !defined(RENDERER_NO_DIRECT3D11) || !defined(RENDERER_NO_DIRECT3D12)
+if (0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11") || 0 == strcmp(renderer->getName(), "Direct3D12"))
 {
 
 
@@ -88,8 +88,8 @@ float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Tar
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode_PostProcessing = STRINGIFY(
 // Uniforms
-Texture2D DiffuseMap : register(t0);
 SamplerState SamplerLinear : register(s0);
+Texture2D DiffuseMap : register(t0);
 
 // Programs
 float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Target
