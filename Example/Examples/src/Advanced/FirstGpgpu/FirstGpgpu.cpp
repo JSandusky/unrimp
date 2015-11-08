@@ -24,62 +24,18 @@
 #include "PrecompiledHeader.h"
 #include "Advanced/FirstGpgpu/FirstGpgpu.h"
 #include "Framework/Color4.h"
-#include "Framework/IApplicationRenderer.h"
+#include "Framework/PlatformTypes.h"
+
+#include <Renderer/Public/RendererInstance.h>
 
 #include <string.h>
 
 
 //[-------------------------------------------------------]
-//[ Classes                                               ]
-//[-------------------------------------------------------]
-/**
-*  @brief
-*    Renderer application
-*
-*  @note
-*    - We only use this class in order to create and manage the renderer instance easily in this example
-*/
-class ApplicationRenderer : public IApplicationRenderer
-{
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] rendererName
-		*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
-		*    Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11"
-		*/
-		explicit ApplicationRenderer(const char *rendererName) :
-			IApplicationRenderer(rendererName)
-		{
-			// Call application implementation initialization method
-			onInitialization();
-		}
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~ApplicationRenderer()
-		{
-			// Call application implementation de-initialization method
-			onDeinitialization();
-		}
-
-
-};
-
-
-//[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FirstGpgpu::FirstGpgpu(const char *rendererName)
+FirstGpgpu::FirstGpgpu(const char *rendererName) :
+	mRendererInstance(nullptr)
 {
 	// Copy the given renderer name
 	if (nullptr != rendererName)
@@ -100,13 +56,12 @@ FirstGpgpu::~FirstGpgpu()
 
 int FirstGpgpu::run()
 {
-	// Create an instance of a renderer application on the C runtime stack
-	// -> We only use this instance in order to create and manage the renderer instance easily in this example
-	ApplicationRenderer applicationRenderer(mRendererName);
+	// Create renderer instance
+	mRendererInstance = new Renderer::RendererInstance(mRendererName, 0);
 
 	// Get the renderer instance and ensure it's valid
-	mRenderer = applicationRenderer.getRenderer();
-	if (nullptr != mRenderer)
+	mRenderer = mRendererInstance->getRenderer();
+	if (nullptr != mRenderer && mRenderer->isInitialized())
 	{
 		// Call initialization method
 		onInitialization();
@@ -116,10 +71,12 @@ int FirstGpgpu::run()
 
 		// Call de-initialization method
 		onDeinitialization();
-
-		// Release our renderer reference
-		mRenderer = nullptr;
 	}
+
+	// Destroy the renderer instance
+	mRenderer = nullptr;
+	delete mRendererInstance;
+	mRendererInstance = nullptr;
 
 	// Done, no error
 	return 0;
@@ -159,11 +116,17 @@ void FirstGpgpu::onInitialization()
 	}
 
 	{ // Create the root signature
-		// TODO(co) Correct root signature
+		Renderer::DescriptorRangeBuilder ranges[2];
+		ranges[0].initializeSampler(1, 0);
+		ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
+
+		Renderer::RootParameterBuilder rootParameters[2];
+		rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
+		rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
 
 		// Setup
 		Renderer::RootSignatureBuilder rootSignature;
-		rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+		rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 		// Create the instance
 		mRootSignature = mRenderer->createRootSignature(rootSignature);
@@ -259,23 +222,46 @@ void FirstGpgpu::onInitialization()
 	Renderer::IShaderLanguagePtr shaderLanguage(mRenderer->getShaderLanguage());
 	if (nullptr != shaderLanguage)
 	{
-		// Get the shader source code (outsourced to keep an overview)
-		const char *vertexShaderSourceCode = nullptr;
-		const char *fragmentShaderSourceCode_ContentGeneration = nullptr;
-		const char *fragmentShaderSourceCode_ContentProcessing = nullptr;
-		#include "FirstGpgpu_GLSL_110.h"
-		#include "FirstGpgpu_GLSL_ES2.h"
-		#include "FirstGpgpu_HLSL_D3D9.h"
-		#include "FirstGpgpu_HLSL_D3D10_D3D11.h"
-		#include "FirstGpgpu_Null.h"
+		// Create the programs
+		Renderer::IProgramPtr programContentGeneration;
+		Renderer::IProgramPtr programContentProcessing;
+		{
+			// Get the shader source code (outsourced to keep an overview)
+			const char *vertexShaderSourceCode = nullptr;
+			const char *fragmentShaderSourceCode_ContentGeneration = nullptr;
+			const char *fragmentShaderSourceCode_ContentProcessing = nullptr;
+			#include "FirstGpgpu_GLSL_110.h"
+			#include "FirstGpgpu_GLSL_ES2.h"
+			#include "FirstGpgpu_HLSL_D3D9.h"
+			#include "FirstGpgpu_HLSL_D3D10_D3D11_D3D12.h"
+			#include "FirstGpgpu_Null.h"
 
-		// In order to keep this example simple and to show that it's possible, we use the same vertex shader for both programs
-		// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
-		//    the unused texture coordinate might get optimized out
-		// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-		Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
-		mProgramContentGeneration = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentGeneration));
-		mProgramContentProcessing = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentProcessing));
+			// In order to keep this example simple and to show that it's possible, we use the same vertex shader for both programs
+			// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
+			//    the unused texture coordinate might get optimized out
+			// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
+			Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
+			programContentGeneration = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentGeneration));
+			programContentProcessing = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentProcessing));
+		}
+
+		// Create the pipeline state objects (PSO)
+		if (nullptr != programContentGeneration && nullptr != programContentProcessing)
+		{
+			// Setup
+			Renderer::PipelineState pipelineState;
+			pipelineState.rootSignature = mRootSignature;
+			pipelineState.program = programContentGeneration;
+			pipelineState.vertexAttributes = vertexAttributes;
+			pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+			pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+			pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
+
+			// Create the instances
+			mPipelineStateContentGeneration = mRenderer->createPipelineState(pipelineState);
+			pipelineState.program = programContentProcessing;
+			mPipelineStateContentProcessing = mRenderer->createPipelineState(pipelineState);
+		}
 	}
 
 	// End debug event
@@ -289,9 +275,9 @@ void FirstGpgpu::onDeinitialization()
 
 	// Release the used resources
 	mVertexArrayContentProcessing = nullptr;
-	mProgramContentProcessing = nullptr;
+	mPipelineStateContentProcessing = nullptr;
 	mVertexArrayContentGeneration = nullptr;
-	mProgramContentGeneration = nullptr;
+	mPipelineStateContentGeneration = nullptr;
 	mDepthStencilState = nullptr;
 	mSamplerState = nullptr;
 	mRootSignature = nullptr;
@@ -339,7 +325,7 @@ void FirstGpgpu::onDoJob()
 void FirstGpgpu::generate2DTextureContent()
 {
 	// Get and check the program instances
-	if (nullptr != mProgramContentGeneration && nullptr != mProgramContentProcessing)
+	if (nullptr != mPipelineStateContentGeneration && nullptr != mPipelineStateContentProcessing)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT(mRenderer, L"Generate the content of the 2D texture to process later on")
@@ -349,7 +335,8 @@ void FirstGpgpu::generate2DTextureContent()
 		// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
 		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
 		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
-		mRenderer->fsSetTexture(mProgramContentProcessing->setTextureUnit(mProgramContentProcessing->getUniformHandle("ContentMap"), 0), nullptr);
+		// TODO(co) Update
+		// mRenderer->fsSetTexture(mProgramContentProcessing->setTextureUnit(mProgramContentProcessing->getUniformHandle("ContentMap"), 0), nullptr);
 
 		// Backup the currently used render target
 		Renderer::IRenderTargetPtr previousRenderTarget(mRenderer->omGetRenderTarget());
@@ -391,8 +378,8 @@ void FirstGpgpu::generate2DTextureContent()
 				mRenderer->rsSetViewports(1, &viewport);
 			}
 
-			// Set the used program
-			mRenderer->setProgram(mProgramContentGeneration);
+			// Set the used pipeline state object (PSO)
+			mRenderer->setPipelineState(mPipelineStateContentGeneration);
 
 			{ // Setup input assembly (IA)
 				// Set the used vertex array
@@ -422,7 +409,7 @@ void FirstGpgpu::generate2DTextureContent()
 void FirstGpgpu::contentProcessing()
 {
 	// Get and check the program instance
-	if (nullptr != mProgramContentProcessing)
+	if (nullptr != mPipelineStateContentProcessing)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT(mRenderer, L"Content processing")
@@ -443,8 +430,12 @@ void FirstGpgpu::contentProcessing()
 			// Set the used graphics root signature
 			mRenderer->setGraphicsRootSignature(mRootSignature);
 
-			// Set the used program
-			mRenderer->setProgram(mProgramContentProcessing);
+			// Set the used pipeline state object (PSO)
+			mRenderer->setPipelineState(mPipelineStateContentProcessing);
+
+			// Set content map
+			mRenderer->setGraphicsRootDescriptorTable(0, mSamplerState);
+			mRenderer->setGraphicsRootDescriptorTable(1, mTexture2D[0]);
 
 			{ // Setup input assembly (IA)
 				// Set the used vertex array
@@ -452,24 +443,6 @@ void FirstGpgpu::contentProcessing()
 
 				// Set the primitive topology used for draw calls
 				mRenderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_STRIP);
-			}
-
-			{ // Set content map (texture unit 0 by default)
-				// Tell the renderer API which texture should be bound to which texture unit
-				// -> When using OpenGL or OpenGL ES 2 this is required
-				// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
-				//    in GLSL shader) , for backward compatibility we don't use it in here
-				// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
-				//    to use is usually defined directly within the shader by using the "register"-keyword
-				// -> Usually, this should only be done once during initialization, this example does this
-				//    every frame to keep it local for better overview
-				const uint32_t unit = mProgramContentProcessing->setTextureUnit(mProgramContentProcessing->getUniformHandle("ContentMap"), 0);
-
-				// Set the used texture at the texture unit
-				mRenderer->fsSetTexture(unit, mTexture2D[0]);
-
-				// Set the used sampler state at the texture unit
-				mRenderer->fsSetSamplerState(unit, mSamplerState);
 			}
 
 			// Render the specified geometric primitive, based on indexing into an array of vertices

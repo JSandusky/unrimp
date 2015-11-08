@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class RendererInstance;
+}
+
+
+//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 /**
@@ -45,6 +54,7 @@
 *    - Sampler state object
 *    - Vertex shader (VS) and fragment shader (FS)
 *    - Root signature
+*    - Pipeline state object (PSO)
 *    - Framebuffer object (FBO) used for render to texture
 *    - Depth stencil state object
 *    - General Purpose Computation on Graphics Processing Unit (GPGPU) by using the renderer interface and shaders without having any output window
@@ -138,6 +148,7 @@ private:
 //[-------------------------------------------------------]
 private:
 	char							mRendererName[32];	///< Case sensitive ASCII name of the renderer to instance
+	Renderer::RendererInstance*		mRendererInstance;	///< Renderer instance, can be a null pointer
 	Renderer::IRendererPtr			mRenderer;			///< Renderer instance, can be a null pointer
 	Renderer::ITexture2DPtr			mTexture2D[2];		///< 2D texture, can be a null pointer
 	Renderer::IFramebufferPtr		mFramebuffer[2];	///< Framebuffer object (FBO), can be a null pointer
@@ -145,11 +156,11 @@ private:
 	Renderer::IRootSignaturePtr		mRootSignature;		///< Root signature, can be a null pointer
 	Renderer::IDepthStencilStatePtr	mDepthStencilState;	///< Depth stencil state, can be a null pointer
 	// Content generation
-	Renderer::IProgramPtr	   mProgramContentGeneration;		///< Program for content generation, can be a null pointer
-	Renderer::IVertexArrayPtr  mVertexArrayContentGeneration;	///< Vertex array object (VAO) for content generation, can be a null pointer
+	Renderer::IPipelineStatePtr mPipelineStateContentGeneration;	///< Pipeline state object (PSO) for content generation, can be a null pointer
+	Renderer::IVertexArrayPtr   mVertexArrayContentGeneration;		///< Vertex array object (VAO) for content generation, can be a null pointer
 	// Content processing
-	Renderer::IProgramPtr	   mProgramContentProcessing;		///< Program for content processing, can be a null pointer
-	Renderer::IVertexArrayPtr  mVertexArrayContentProcessing;	///< Vertex array object (VAO) for content processing, can be a null pointer
+	Renderer::IPipelineStatePtr mPipelineStateContentProcessing;	///< Pipeline state object (PSO) for content processing, can be a null pointer
+	Renderer::IVertexArrayPtr   mVertexArrayContentProcessing;		///< Vertex array object (VAO) for content processing, can be a null pointer
 
 
 };
