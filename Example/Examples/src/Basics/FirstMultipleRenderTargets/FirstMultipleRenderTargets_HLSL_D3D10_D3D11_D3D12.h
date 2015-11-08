@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
-#if !defined(RENDERER_NO_DIRECT3D10) || !defined(RENDERER_NO_DIRECT3D11)
-if (0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11"))
+#if !defined(RENDERER_NO_DIRECT3D10) || !defined(RENDERER_NO_DIRECT3D11) || !defined(RENDERER_NO_DIRECT3D12)
+if (0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11") || 0 == strcmp(renderer->getName(), "Direct3D12"))
 {
 
 
@@ -95,19 +95,18 @@ FS_OUTPUT main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0)
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode = STRINGIFY(
 // Uniforms
+SamplerState SamplerLinear : register(s0);
 Texture2D DiffuseMap0 : register(t0);
 Texture2D DiffuseMap1 : register(t1);
-SamplerState SamplerLinear0 : register(s0);
-SamplerState SamplerLinear1 : register(s1);
 
 // Programs
 float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Target
 {
 	// Fetch the texel at the given texture coordinate from render target 0 (which should contain a red triangle)
-	float4 color0 = DiffuseMap0.Sample(SamplerLinear0, TexCoord);
+	float4 color0 = DiffuseMap0.Sample(SamplerLinear, TexCoord);
 
 	// Fetch the texel at the given texture coordinate from render target 1 (which should contain a blue triangle)
-	float4 color1 = DiffuseMap1.Sample(SamplerLinear1, TexCoord);
+	float4 color1 = DiffuseMap1.Sample(SamplerLinear, TexCoord);
 
 	// Calculate the final color by subtracting the colors of the both render targets from white
 	// -> The result should be white or green

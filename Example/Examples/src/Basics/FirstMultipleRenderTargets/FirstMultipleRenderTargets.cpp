@@ -25,7 +25,6 @@
 #include "Basics/FirstMultipleRenderTargets/FirstMultipleRenderTargets.h"
 #include "Framework/Color4.h"
 
-#include <stdio.h>
 #include <string.h>
 
 
@@ -91,11 +90,19 @@ void FirstMultipleRenderTargets::onInitialization()
 			}
 
 			{ // Create the root signature
-				// TODO(co) Correct root signature
+				Renderer::DescriptorRangeBuilder ranges[3];
+				ranges[0].initializeSampler(1, 0);
+				ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap0", 0);
+				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "DiffuseMap1", 0);
+
+				Renderer::RootParameterBuilder rootParameters[3];
+				rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
+				rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
+				rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::FRAGMENT);
 
 				// Setup
 				Renderer::RootSignatureBuilder rootSignature;
-				rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+				rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 				// Create the instance
 				mRootSignature = renderer->createRootSignature(rootSignature);
@@ -150,23 +157,45 @@ void FirstMultipleRenderTargets::onInitialization()
 			Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 			if (nullptr != shaderLanguage)
 			{
-				// Get the shader source code (outsourced to keep an overview)
-				const char *vertexShaderSourceCode = nullptr;
-				const char *fragmentShaderSourceCode_MultipleRenderTargets = nullptr;
-				const char *fragmentShaderSourceCode = nullptr;
-				#include "FirstMultipleRenderTargets_GLSL_110.h"
-				#include "FirstMultipleRenderTargets_GLSL_ES2.h"
-				#include "FirstMultipleRenderTargets_HLSL_D3D9.h"
-				#include "FirstMultipleRenderTargets_HLSL_D3D10_D3D11.h"
-				#include "FirstMultipleRenderTargets_Null.h"
+				// Create the programs
+				Renderer::IProgramPtr programMultipleRenderTargets;
+				Renderer::IProgramPtr program;
+				{
+					// Get the shader source code (outsourced to keep an overview)
+					const char *vertexShaderSourceCode = nullptr;
+					const char *fragmentShaderSourceCode_MultipleRenderTargets = nullptr;
+					const char *fragmentShaderSourceCode = nullptr;
+					#include "FirstMultipleRenderTargets_GLSL_110.h"
+					#include "FirstMultipleRenderTargets_GLSL_ES2.h"
+					#include "FirstMultipleRenderTargets_HLSL_D3D9.h"
+					#include "FirstMultipleRenderTargets_HLSL_D3D10_D3D11_D3D12.h"
+					#include "FirstMultipleRenderTargets_Null.h"
 
-				// In order to keep this example simple and to show that it's possible, we use the same vertex shader for both programs
-				// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
-				//    the unused texture coordinate might get optimized out
-				// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-				Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
-				mProgramMultipleRenderTargets = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_MultipleRenderTargets));
-				mProgram = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
+					// In order to keep this example simple and to show that it's possible, we use the same vertex shader for both programs
+					// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
+					//    the unused texture coordinate might get optimized out
+					// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
+					Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
+					programMultipleRenderTargets = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_MultipleRenderTargets));
+					program = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
+				}
+
+				// Create the pipeline state objects (PSO)
+				if (nullptr != programMultipleRenderTargets && nullptr != program)
+				{
+					// Setup
+					Renderer::PipelineState pipelineState;
+					pipelineState.rootSignature = mRootSignature;
+					pipelineState.program = programMultipleRenderTargets;
+					pipelineState.vertexAttributes = vertexAttributes;
+					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+
+					// Create the instances
+					mPipelineStateMultipleRenderTargets = renderer->createPipelineState(pipelineState);
+					pipelineState.program = program;
+					mPipelineState = renderer->createPipelineState(pipelineState);
+				}
 			}
 		}
 		else
@@ -187,8 +216,8 @@ void FirstMultipleRenderTargets::onDeinitialization()
 
 	// Release the used resources
 	mVertexArray = nullptr;
-	mProgramMultipleRenderTargets = nullptr;
-	mProgram = nullptr;
+	mPipelineStateMultipleRenderTargets = nullptr;
+	mPipelineState = nullptr;
 	mSamplerState = nullptr;
 	mRootSignature = nullptr;
 	mFramebuffer = nullptr;
@@ -208,7 +237,7 @@ void FirstMultipleRenderTargets::onDraw()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mProgramMultipleRenderTargets && nullptr != mProgram)
+	if (nullptr != renderer && nullptr != mPipelineStateMultipleRenderTargets && nullptr != mPipelineState)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -226,12 +255,15 @@ void FirstMultipleRenderTargets::onDraw()
 			// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
 			//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
 			//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
+			// TODO(co)
+			/*
 			for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 			{
 				char uniformName[16];
 				sprintf(uniformName, "DiffuseMap%d", i);
 				renderer->fsSetTexture(mProgram->setTextureUnit(mProgram->getUniformHandle(uniformName), i), nullptr);
 			}
+			*/
 
 			// Backup the currently used render target
 			Renderer::IRenderTargetPtr renderTarget(renderer->omGetRenderTarget());
@@ -262,8 +294,8 @@ void FirstMultipleRenderTargets::onDraw()
 				// Set the used graphics root signature
 				renderer->setGraphicsRootSignature(mRootSignature);
 
-				// Set the used program
-				renderer->setProgram(mProgramMultipleRenderTargets);
+				// Set the used pipeline state object (PSO)
+				renderer->setPipelineState(mPipelineStateMultipleRenderTargets);
 
 				{ // Setup input assembly (IA)
 					// Set the used vertex array
@@ -327,8 +359,15 @@ void FirstMultipleRenderTargets::onDraw()
 				// Set the used graphics root signature
 				renderer->setGraphicsRootSignature(mRootSignature);
 
-				// Set the used program
-				renderer->setProgram(mProgram);
+				// Set the textures
+				renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
+				for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
+				{
+					renderer->setGraphicsRootDescriptorTable(1 + i, mTexture2D[i]);
+				}
+
+				// Set the used pipeline state object (PSO)
+				renderer->setPipelineState(mPipelineState);
 
 				{ // Setup input assembly (IA)
 					// Set the used vertex array
@@ -336,30 +375,6 @@ void FirstMultipleRenderTargets::onDraw()
 
 					// Set the primitive topology used for draw calls
 					renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-				}
-
-				// Set the diffuse maps
-				for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
-				{
-					// Set diffuse map i (texture unit i by default)
-					char uniformName[16];
-					sprintf(uniformName, "DiffuseMap%d", i);
-
-					// Tell the renderer API which texture should be bound to which texture unit
-					// -> When using OpenGL or OpenGL ES 2 this is required
-					// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
-					//    in GLSL shader) , for backward compatibility we don't use it in here
-					// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
-					//    to use is usually defined directly within the shader by using the "register"-keyword
-					// -> Usually, this should only be done once during initialization, this example does this
-					//    every frame to keep it local for better overview
-					const uint32_t unit = mProgram->setTextureUnit(mProgram->getUniformHandle(uniformName), i);
-
-					// Set the used texture at the texture unit
-					renderer->fsSetTexture(unit, mTexture2D[i]);
-
-					// Set the used sampler state at the texture unit
-					renderer->fsSetSamplerState(unit, mSamplerState);
 				}
 
 				// Render the specified geometric primitive, based on an array of vertices

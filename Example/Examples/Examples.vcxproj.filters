@@ -171,9 +171,6 @@
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D9.h">
       <Filter>Basics\FirstMultipleRenderTargets</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D10_D3D11.h">
-      <Filter>Basics\FirstMultipleRenderTargets</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_Null.h">
       <Filter>Basics\FirstMultipleRenderTargets</Filter>
     </ClInclude>
@@ -455,6 +452,9 @@
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_HLSL_D3D10_D3D11_D3D12.h">
       <Filter>Runtime\FirstMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Basics\FirstMultipleRenderTargets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

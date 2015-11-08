@@ -45,6 +45,7 @@
 *    - Sampler state object
 *    - Vertex shader (VS) and fragment shader (FS)
 *    - Root signature
+*    - Pipeline state object (PSO)
 *    - Framebuffer object (FBO) used for render to texture
 *    - Multiple render targets (MRT)
 */
@@ -94,13 +95,13 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::ITexture2DPtr		mTexture2D[NUMBER_OF_TEXTURES];	///< 2D textures, can be a null pointer
-	Renderer::IFramebufferPtr	mFramebuffer;					///< Framebuffer object (FBO), can be a null pointer
-	Renderer::ISamplerStatePtr	mSamplerState;					///< Sampler state, can be a null pointer
-	Renderer::IRootSignaturePtr	mRootSignature;					///< Root signature, can be a null pointer
-	Renderer::IProgramPtr		mProgramMultipleRenderTargets;	///< Program multiple render targets, can be a null pointer
-	Renderer::IProgramPtr		mProgram;						///< Program, can be a null pointer
-	Renderer::IVertexArrayPtr	mVertexArray;					///< Vertex array object (VAO), can be a null pointer
+	Renderer::ITexture2DPtr		mTexture2D[NUMBER_OF_TEXTURES];			///< 2D textures, can be a null pointer
+	Renderer::IFramebufferPtr	mFramebuffer;							///< Framebuffer object (FBO), can be a null pointer
+	Renderer::ISamplerStatePtr	mSamplerState;							///< Sampler state, can be a null pointer
+	Renderer::IRootSignaturePtr	mRootSignature;							///< Root signature, can be a null pointer
+	Renderer::IPipelineStatePtr mPipelineStateMultipleRenderTargets;	///< Pipeline state object (PSO) multiple render targets, can be a null pointer
+	Renderer::IPipelineStatePtr mPipelineState;							///< Pipeline state object (PSO), can be a null pointer
+	Renderer::IVertexArrayPtr	mVertexArray;							///< Vertex array object (VAO), can be a null pointer
 
 
 };
