@@ -1017,10 +1017,8 @@ namespace Direct3D12Renderer
 		return mRenderTarget;
 	}
 
-	void Direct3D12Renderer::omSetRenderTarget(Renderer::IRenderTarget *)
+	void Direct3D12Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		// New render target?
 		if (mRenderTarget != renderTarget)
 		{
@@ -1048,19 +1046,22 @@ namespace Direct3D12Renderer
 						// Get the Direct3D 12 swap chain instance
 						SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
 
-						// Direct3D 12 needs a pointer to a pointer, so give it one
-						ID3D12RenderTargetView *d3d12RenderTargetView = swapChain->getD3D12RenderTargetView();
-						mD3D12DeviceContext->OMSetRenderTargets(1, &d3d12RenderTargetView, swapChain->getD3D12DepthStencilView());
+						CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRtv()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
+						CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(swapChain->getD3D12DescriptorHeapDsv()->GetCPUDescriptorHandleForHeapStart());
+						mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 						break;
 					}
 
 					case Renderer::ResourceType::FRAMEBUFFER:
 					{
-						// Get the Direct3D 12 framebuffer instance
+						// TODO(co)
+						/*
+						// Get the Direct3D 11 framebuffer instance
 						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
-						// Set the Direct3D 12 render targets
-						mD3D12DeviceContext->OMSetRenderTargets(framebuffer->getNumberOfD3D12RenderTargetViews(), framebuffer->getD3D12RenderTargetViews(), framebuffer->getD3D12DepthStencilView());
+						// Set the Direct3D 11 render targets
+						mD3D11DeviceContext->OMSetRenderTargets(framebuffer->getNumberOfD3D11RenderTargetViews(), framebuffer->getD3D11RenderTargetViews(), framebuffer->getD3D11DepthStencilView());
+						*/
 						break;
 					}
 
@@ -1090,8 +1091,8 @@ namespace Direct3D12Renderer
 			}
 			else
 			{
-				// Set the Direct3D 12 render targets
-				mD3D12DeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+				// Set the Direct3D 11 render targets
+				mD3D12GraphicsCommandList->OMSetRenderTargets(1, nullptr, FALSE, nullptr);
 
 				// Release the render target reference, in case we have one
 				if (nullptr != mRenderTarget)
@@ -1101,7 +1102,6 @@ namespace Direct3D12Renderer
 				}
 			}
 		}
-		*/
 	}
 
 	void Direct3D12Renderer::omSetDepthStencilState(Renderer::IDepthStencilState *)
