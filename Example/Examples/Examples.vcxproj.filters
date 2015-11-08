@@ -297,9 +297,6 @@
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_HLSL_D3D9.h">
       <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_HLSL_D3D10_D3D11.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_Null.h">
       <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
@@ -307,9 +304,6 @@
       <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_ES2.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_HLSL_D3D9_D3D10_D3D11.h">
       <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_Null.h">
@@ -455,6 +449,12 @@
     </ClInclude>
     <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_HLSL_D3D10_D3D11_D3D12.h">
       <Filter>Advanced\FirstPostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_HLSL_D3D9_D3D10_D3D11_D3D12.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

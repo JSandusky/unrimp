@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
-#if !defined(RENDERER_NO_DIRECT3D10) || !defined(RENDERER_NO_DIRECT3D11)
-if (0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11"))
+#if !defined(RENDERER_NO_DIRECT3D10) || !defined(RENDERER_NO_DIRECT3D11) || !defined(RENDERER_NO_DIRECT3D12)
+if (0 == strcmp(renderer->getName(), "Direct3D9") || 0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11") || 0 == strcmp(renderer->getName(), "Direct3D12"))
 {
 
 
@@ -41,25 +41,14 @@ vertexShaderSourceCode = STRINGIFY(
 struct VS_OUTPUT
 {
 	float4 Position : SV_POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
-	float2 TexCoord : TEXCOORD0;	// Normalized texture coordinate as output
 };
 
 // Programs
 VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
 {
-	VS_OUTPUT output;
-
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
+	VS_OUTPUT output;
 	output.Position = float4(Position, 0.0f, 1.0f);
-
-	// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
-	// -> Unlike OpenGL or OpenGL ES 2, in Direct3D 9 & 10 & 11 the texture origin is left/top which does not map well to clip space coordinates
-	// -> We have to flip the y-axis to map the coordinate system to the Direct3D 9 & 10 & 11 texture coordinate system
-	// -> (-1,-1) -> (0,1)
-	// -> (1,1) -> (1,0)
-	output.TexCoord = float2(Position.x * 0.5f + 0.5f, 1.0f - (Position.y * 0.5f + 0.5f));
-
-	// Done
 	return output;
 }
 );	// STRINGIFY
@@ -70,20 +59,12 @@ VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as inpu
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 // "pixel shader" in Direct3D terminology
-fragmentShaderSourceCode_Definitions = "#define FXAA_HLSL_4 1\n#define FXAA_PRESET 5\n";	// For "Fxaa_PostProcessing.h"
 fragmentShaderSourceCode = STRINGIFY(
-// Uniforms
-Texture2D DiffuseMap : register(t0);
-SamplerState SamplerLinear : register(s0);
-
 // Programs
-float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Target
+float4 main(float4 Position : SV_POSITION) : SV_Target
 {
-	// Call the FXAA shader, lucky us that we don't have to write an own implementation
-	FxaaTex tex;
-	tex.smpl = SamplerLinear;
-	tex.tex = DiffuseMap;
-	return float4(FxaaPixelShader(TexCoord, tex, RCPFRAME), 1.0f);
+	// Return the color white
+	return float4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 );	// STRINGIFY
 

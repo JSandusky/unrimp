@@ -103,11 +103,17 @@ void Fxaa::onInitialization()
 		}
 
 		{ // Create the root signature
-			// TODO(co) Correct root signature
+			Renderer::DescriptorRangeBuilder ranges[2];
+			ranges[0].initializeSampler(1, 0);
+			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
+
+			Renderer::RootParameterBuilder rootParameters[2];
+			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
+			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
-			rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+			rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 			// Create the instance
 			mRootSignature = renderer->createRootSignature(rootSignature);
@@ -130,21 +136,39 @@ void Fxaa::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			{ // Create the program for scene rendering
+			// Create the program for scene rendering
+			Renderer::IProgramPtr programSceneRendering;
+			{
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
 				#include "Fxaa_SceneRendering_GLSL_120.h"
 				#include "Fxaa_SceneRendering_GLSL_ES2.h"
-				#include "Fxaa_SceneRendering_HLSL_D3D9_D3D10_D3D11.h"
+				#include "Fxaa_SceneRendering_HLSL_D3D9_D3D10_D3D11_D3D12.h"
 				#include "Fxaa_SceneRendering_Null.h"
 
 				// Create the program for scene rendering
-				mProgramSceneRendering = shaderLanguage->createProgram(
+				programSceneRendering = shaderLanguage->createProgram(
 					*mRootSignature,
 					detail::VertexAttributes,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
+			}
+
+			// Create the pipeline state object (PSO)
+			if (nullptr != programSceneRendering)
+			{
+				// Setup
+				Renderer::PipelineState pipelineState;
+				pipelineState.rootSignature = mRootSignature;
+				pipelineState.program = programSceneRendering;
+				pipelineState.vertexAttributes = detail::VertexAttributes;
+				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
+
+				// Create the instance
+				mPipelineStateSceneRendering = renderer->createPipelineState(pipelineState);
 			}
 
 			// Create the post-processing program instance by using the current window size
@@ -218,9 +242,9 @@ void Fxaa::onDeinitialization()
 
 	// Release the used resources
 	mVertexArrayPostProcessing = nullptr;
-	mProgramPostProcessing = nullptr;
+	mPipelineStatePostProcessing = nullptr;
 	mVertexArraySceneRendering = nullptr;
-	mProgramSceneRendering = nullptr;
+	mPipelineStateSceneRendering = nullptr;
 	mDepthStencilState = nullptr;
 	mSamplerState = nullptr;
 	mRootSignature = nullptr;
@@ -319,70 +343,90 @@ void Fxaa::recreatePostProcessingProgram()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			// Get the shader source code (outsourced to keep an overview)
-			const char *vertexShaderSourceCode = nullptr;
-			const char *fragmentShaderSourceCode_Definitions = nullptr;
-			const char *fragmentShaderSourceCode = nullptr;
-			#include "Fxaa_PostProcessing_GLSL_120.h"
-			#include "Fxaa_PostProcessing_GLSL_ES2.h"
-			#include "Fxaa_PostProcessing_HLSL_D3D9.h"
-			#include "Fxaa_PostProcessing_HLSL_D3D10_D3D11.h"
-			#include "Fxaa_PostProcessing_Null.h"
-			#include "Fxaa_PostProcessing.h"
-
-			// Get the window size
-			int width  = 0;
-			int height = 0;
-			getWindowSize(width, height);
-
-			// The FXAA shader comments state: "RCPFRAME SHOULD PIXEL SHADER CONSTANTS"
-			char dynamicDefinition[256];
-			dynamicDefinition[0] = '\0';
-			if (0 == strcmp(renderer->getName(), "Direct3D9") || 0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11"))
+			// Create the program for post-processing
+			Renderer::IProgramPtr programPostProcessing;
 			{
-				sprintf(dynamicDefinition, "#define RCPFRAME float2(%ff, %ff)\n", 1.0f / width, 1.0f / height);
+				// Get the shader source code (outsourced to keep an overview)
+				const char *vertexShaderSourceCode = nullptr;
+				const char *fragmentShaderSourceCode_Definitions = nullptr;
+				const char *fragmentShaderSourceCode = nullptr;
+				#include "Fxaa_PostProcessing_GLSL_120.h"
+				#include "Fxaa_PostProcessing_GLSL_ES2.h"
+				#include "Fxaa_PostProcessing_HLSL_D3D9.h"
+				#include "Fxaa_PostProcessing_HLSL_D3D10_D3D11_D3D12.h"
+				#include "Fxaa_PostProcessing_Null.h"
+				#include "Fxaa_PostProcessing.h"
+
+				// Get the window size
+				int width  = 0;
+				int height = 0;
+				getWindowSize(width, height);
+
+				// The FXAA shader comments state: "RCPFRAME SHOULD PIXEL SHADER CONSTANTS"
+				char dynamicDefinition[256];
+				dynamicDefinition[0] = '\0';
+				if (0 == strcmp(renderer->getName(), "Direct3D9") || 0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11") || 0 == strcmp(renderer->getName(), "Direct3D12"))
+				{
+					sprintf(dynamicDefinition, "#define RCPFRAME float2(%ff, %ff)\n", 1.0f / width, 1.0f / height);
+				}
+				else if (0 == strcmp(renderer->getName(), "OpenGL") || 0 == strcmp(renderer->getName(), "OpenGLES2"))
+				{
+					sprintf(dynamicDefinition, "#define RCPFRAME vec2(%f, %f)\n", 1.0f / width, 1.0f / height);
+				}
+
+				// Compose the fragment shader source code
+				const size_t definitionsLength		  = strlen(fragmentShaderSourceCode_Definitions);
+				const size_t dynamicDefinitionLength  = strlen(dynamicDefinition);
+				const size_t postProcessingLength	  = strlen(fragmentShaderSourceCode);
+				const size_t part1Length			  = strlen(fxaa_FS_Part1);
+				const size_t part2Length			  = strlen(fxaa_FS_Part2);
+				const size_t length					  = definitionsLength + dynamicDefinitionLength + part1Length + part2Length + postProcessingLength + 1;	// +1 for the terminating zero
+				char *sourceCode = new char[length];
+				char *sourceCodeCurrent = sourceCode;
+				// Definitions
+				strncpy(sourceCodeCurrent, fragmentShaderSourceCode_Definitions, definitionsLength);
+				sourceCodeCurrent += definitionsLength;
+				// Dynamic definitions
+				strncpy(sourceCodeCurrent, dynamicDefinition, dynamicDefinitionLength);
+				sourceCodeCurrent += dynamicDefinitionLength;
+				// FXAA fragment shader
+				strncpy(sourceCodeCurrent, fxaa_FS_Part1, part1Length);
+				sourceCodeCurrent += part1Length;
+				strncpy(sourceCodeCurrent, fxaa_FS_Part2, part2Length);
+				sourceCodeCurrent += part2Length;
+				// Fragment shader shell
+				strncpy(sourceCodeCurrent, fragmentShaderSourceCode, postProcessingLength);
+				sourceCodeCurrent += postProcessingLength;
+				*sourceCodeCurrent = '\0';
+
+				// Due to the usage of smart pointers there's no need to explicitly free the previous resources, this is done automatically
+
+				// Create the program for the FXAA post processing
+				programPostProcessing = shaderLanguage->createProgram(
+					*mRootSignature,
+					detail::VertexAttributes,
+					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createFragmentShaderFromSourceCode(sourceCode));
+
+				// Free the memory
+				delete [] sourceCode;
 			}
-			else if (0 == strcmp(renderer->getName(), "OpenGL") || 0 == strcmp(renderer->getName(), "OpenGLES2"))
+
+			// Create the pipeline state object (PSO)
+			if (nullptr != programPostProcessing)
 			{
-				sprintf(dynamicDefinition, "#define RCPFRAME vec2(%f, %f)\n", 1.0f / width, 1.0f / height);
+				// Setup
+				Renderer::PipelineState pipelineState;
+				pipelineState.rootSignature = mRootSignature;
+				pipelineState.program = programPostProcessing;
+				pipelineState.vertexAttributes = detail::VertexAttributes;
+				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
+
+				// Create the instance
+				mPipelineStatePostProcessing = renderer->createPipelineState(pipelineState);
 			}
-
-			// Compose the fragment shader source code
-			const size_t definitionsLength		  = strlen(fragmentShaderSourceCode_Definitions);
-			const size_t dynamicDefinitionLength  = strlen(dynamicDefinition);
-			const size_t postProcessingLength	  = strlen(fragmentShaderSourceCode);
-			const size_t part1Length			  = strlen(fxaa_FS_Part1);
-			const size_t part2Length			  = strlen(fxaa_FS_Part2);
-			const size_t length					  = definitionsLength + dynamicDefinitionLength + part1Length + part2Length + postProcessingLength + 1;	// +1 for the terminating zero
-			char *sourceCode = new char[length];
-			char *sourceCodeCurrent = sourceCode;
-			// Definitions
-			strncpy(sourceCodeCurrent, fragmentShaderSourceCode_Definitions, definitionsLength);
-			sourceCodeCurrent += definitionsLength;
-			// Dynamic definitions
-			strncpy(sourceCodeCurrent, dynamicDefinition, dynamicDefinitionLength);
-			sourceCodeCurrent += dynamicDefinitionLength;
-			// FXAA fragment shader
-			strncpy(sourceCodeCurrent, fxaa_FS_Part1, part1Length);
-			sourceCodeCurrent += part1Length;
-			strncpy(sourceCodeCurrent, fxaa_FS_Part2, part2Length);
-			sourceCodeCurrent += part2Length;
-			// Fragment shader shell
-			strncpy(sourceCodeCurrent, fragmentShaderSourceCode, postProcessingLength);
-			sourceCodeCurrent += postProcessingLength;
-			*sourceCodeCurrent = '\0';
-
-			// Due to the usage of smart pointers there's no need to explicitly free the previous resources, this is done automatically
-
-			// Create the program for the FXAA post processing
-			mProgramPostProcessing = shaderLanguage->createProgram(
-				*mRootSignature,
-				detail::VertexAttributes,
-				shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
-				shaderLanguage->createFragmentShaderFromSourceCode(sourceCode));
-
-			// Free the memory
-			delete [] sourceCode;
 		}
 
 		// End debug event
@@ -394,7 +438,7 @@ void Fxaa::sceneRendering()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && nullptr != mProgramSceneRendering && nullptr != mProgramPostProcessing)
+	if (nullptr != renderer && nullptr != mPipelineStateSceneRendering && nullptr != mPipelineStatePostProcessing)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -408,7 +452,8 @@ void Fxaa::sceneRendering()
 		// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
 		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
 		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
-		renderer->fsSetTexture(mProgramPostProcessing->setTextureUnit(mProgramPostProcessing->getUniformHandle("DiffuseMap"), 0), nullptr);
+		// TODO(co) Update
+		// renderer->fsSetTexture(mProgramPostProcessing->setTextureUnit(mProgramPostProcessing->getUniformHandle("DiffuseMap"), 0), nullptr);
 
 		// Backup the currently used render target
 		Renderer::IRenderTargetPtr renderTarget(renderer->omGetRenderTarget());
@@ -427,8 +472,8 @@ void Fxaa::sceneRendering()
 			// Set the used graphics root signature
 			renderer->setGraphicsRootSignature(mRootSignature);
 
-			// Set the used program
-			renderer->setProgram(mProgramSceneRendering);
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineStateSceneRendering);
 
 			{ // Setup input assembly (IA)
 				// Set the used vertex array
@@ -459,7 +504,7 @@ void Fxaa::postProcessing()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && mProgramPostProcessing)
+	if (nullptr != renderer && mPipelineStatePostProcessing)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -474,8 +519,12 @@ void Fxaa::postProcessing()
 			// Set the used graphics root signature
 			renderer->setGraphicsRootSignature(mRootSignature);
 
-			// Set the used program
-			renderer->setProgram(mProgramPostProcessing);
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineStatePostProcessing);
+
+			// Set diffuse map
+			renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
+			renderer->setGraphicsRootDescriptorTable(1, mTexture2D);
 
 			{ // Setup input assembly (IA)
 				// Set the used vertex array
@@ -483,24 +532,6 @@ void Fxaa::postProcessing()
 
 				// Set the primitive topology used for draw calls
 				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_STRIP);
-			}
-
-			{ // Set diffuse map (texture unit 0 by default)
-				// Tell the renderer API which texture should be bound to which texture unit
-				// -> When using OpenGL or OpenGL ES 2 this is required
-				// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
-				//    in GLSL shader) , for backward compatibility we don't use it in here
-				// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
-				//    to use is usually defined directly within the shader by using the "register"-keyword
-				// -> Usually, this should only be done once during initialization, this example does this
-				//    every frame to keep it local for better overview
-				const uint32_t unit = mProgramPostProcessing->setTextureUnit(mProgramPostProcessing->getUniformHandle("DiffuseMap"), 0);
-
-				// Set the used texture at the texture unit
-				renderer->fsSetTexture(unit, mTexture2D);
-
-				// Set the used sampler state at the texture unit
-				renderer->fsSetSamplerState(unit, mSamplerState);
 			}
 
 			// Render the specified geometric primitive, based on indexing into an array of vertices

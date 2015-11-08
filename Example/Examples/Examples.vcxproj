@@ -244,12 +244,12 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing.h" />
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_GLSL_120.h" />
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_GLSL_ES2.h" />
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_HLSL_D3D10_D3D11.h" />
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_HLSL_D3D9.h" />
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_Null.h" />
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_120.h" />
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_ES2.h" />
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_HLSL_D3D9_D3D10_D3D11.h" />
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_HLSL_D3D9_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_Null.h" />
     <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation.h" />
     <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_GLSL_400.h" />
