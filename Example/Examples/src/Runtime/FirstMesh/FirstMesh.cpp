@@ -422,8 +422,7 @@ void FirstMesh::onDraw()
 			}
 
 			// Draw text
-			// TODO(co) Update font support
-			// mFontResource->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
+			mFontResource->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
 
 			// End scene rendering
 			// -> Required for Direct3D 9

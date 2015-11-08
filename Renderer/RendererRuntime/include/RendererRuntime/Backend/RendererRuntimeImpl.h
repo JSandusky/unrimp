@@ -35,12 +35,12 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	class IProgram;
 	class IBlendState;
 	class IVertexArray;
 	class ISamplerState;
 	class IRootSignature;
 	class IUniformBuffer;
+	class IPipelineState;
 }
 
 
@@ -86,15 +86,27 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the font program
+		*    Return the font root signature
 		*
 		*  @return
-		*    The font program, do not release the returned instance unless you added an own reference to it, can be a null pointer in case on an error
+		*    The font root signature, do not release the returned instance unless you added an own reference to it, can be a null pointer in case on an error
 		*
 		*  @note
-		*    - The font program is created by using lazy evaluation, meaning that the font program is created the first time it's required
+		*    - The font root signature is created by using lazy evaluation, meaning that the font root signature is created the first time it's required
 		*/
-		Renderer::IProgram *getFontProgram();
+		Renderer::IRootSignature *getFontRootSignature();
+
+		/**
+		*  @brief
+		*    Return the font pipeline state
+		*
+		*  @return
+		*    The font pipeline state, do not release the returned instance unless you added an own reference to it, can be a null pointer in case on an error
+		*
+		*  @note
+		*    - The font pipeline state is created by using lazy evaluation, meaning that the font pipeline state is created the first time it's required
+		*/
+		Renderer::IPipelineState *getFontPipelineState();
 
 		/**
 		*  @brief
@@ -195,8 +207,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IRootSignature *mRootSignature;					///< Root signature, can be a null pointer
-		Renderer::IProgram		 *mFontProgram;						///< Font program (we keep a reference to it), can be a null pointer, do only access it by using "getFontProgram()"
+		Renderer::IRootSignature *mRootFontSignature;				///< Font root signature, can be a null pointer
+		Renderer::IPipelineState *mFontPipelineState;				///< Font pipeline state (we keep a reference to it), can be a null pointer, do only access it by using "getFontPipelineState()"
 		Renderer::IUniformBuffer *mFontVertexShaderUniformBuffer;	///< Font vertex shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexShaderUniformBuffer()"
 		Renderer::IUniformBuffer *mFontFragmentShaderUniformBuffer;	///< Font fragment shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontFragmentShaderUniformBuffer()"
 		Renderer::IVertexArray	 *mFontVertexArray;					///< Vertex array object (VAO, we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexArray()"

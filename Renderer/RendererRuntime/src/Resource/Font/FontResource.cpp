@@ -105,12 +105,24 @@ namespace RendererRuntime
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
-			// Get the font program
-			Renderer::IProgram *program = mRendererRuntimeImpl->getFontProgram();
-			if (nullptr != program)
+			// Get the font pipeline state
+			Renderer::IPipelineState *pipelineState = mRendererRuntimeImpl->getFontPipelineState();
+			if (nullptr != pipelineState)
 			{
-				// Set the used program
-				renderer.setProgram(program);
+				// Set the used graphics root signature
+				renderer.setGraphicsRootSignature(mRendererRuntimeImpl->getFontRootSignature());
+
+				// Set graphics root descriptors
+				renderer.setGraphicsRootDescriptorTable(0, mRendererRuntimeImpl->getFontVertexShaderUniformBuffer());
+				renderer.setGraphicsRootDescriptorTable(1, mRendererRuntimeImpl->getFontSamplerState());
+				renderer.setGraphicsRootDescriptorTable(2, mTexture2D);
+				renderer.setGraphicsRootDescriptorTable(3, mRendererRuntimeImpl->getFontFragmentShaderUniformBuffer());
+
+				// Set the used pipeline state object (PSO)
+				renderer.setPipelineState(pipelineState);
+
+				// Set the used blend state
+				renderer.omSetBlendState(mRendererRuntimeImpl->getFontBlendState());
 
 				{ // Setup input assembly (IA)
 					// Set the used vertex array
@@ -129,35 +141,13 @@ namespace RendererRuntime
 					{
 						// Copy data
 						uniformBuffer->copyDataFrom(sizeof(float) * 4, color);
-
-						// Assign to stage
-						renderer.fsSetUniformBuffer(program->getUniformBlockIndex("UniformBlockDynamicFs", 0), uniformBuffer);
 					}
 					else
 					{
-						program->setUniform4fv(program->getUniformHandle("Color"), color);
+						// TODO(co) Update
+						// program->setUniform4fv(program->getUniformHandle("Color"), color);
 					}
 				}
-
-				{ // Set diffuse map (texture unit 0 by default)
-					// Tell the renderer API which texture should be bound to which texture unit
-					// -> When using OpenGL or OpenGL ES 2 this is required
-					// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
-					//    in GLSL shader) , for backward compatibility we don't use it in here
-					// -> When using Direct3D 9, Direct3D 10 or Direct3D 11, the texture unit
-					//    to use is usually defined directly within the shader by using the "register"-keyword
-					// TODO(co) This should only be done once during initialization
-					const uint32_t unit = program->setTextureUnit(program->getUniformHandle("GlyphMap"), 0);
-
-					// Set the used texture at the texture unit
-					renderer.fsSetTexture(unit, mTexture2D);
-
-					// Set the used sampler state at the texture unit
-					renderer.fsSetSamplerState(unit, mRendererRuntimeImpl->getFontSamplerState());
-				}
-
-				// Set the used blend state
-				renderer.omSetBlendState(mRendererRuntimeImpl->getFontBlendState());
 
 				// The current object space pen position
 				float penPositionX = biasX;
@@ -222,15 +212,13 @@ namespace RendererRuntime
 
 								// Copy data
 								uniformBuffer->copyDataFrom(sizeof(UniformBlockDynamicVs), &uniformBlockDynamicVS);
-
-								// Assign to stage
-								renderer.vsSetUniformBuffer(program->getUniformBlockIndex("UniformBlockDynamicVs", 0), uniformBuffer);
 							}
 							else
 							{
-								program->setUniform4fv(program->getUniformHandle("GlyphSizePenPosition"), uniformBlockDynamicVS.GlyphSizePenPosition);
-								program->setUniform4fv(program->getUniformHandle("TextureCoordinateMinMax"), uniformBlockDynamicVS.TextureCoordinateMinMax);
-								program->setUniformMatrix4fv(program->getUniformHandle("ObjectSpaceToClipSpaceMatrix"), objectSpaceToClipSpace);
+								// TODO(co) Update
+								// program->setUniform4fv(program->getUniformHandle("GlyphSizePenPosition"), uniformBlockDynamicVS.GlyphSizePenPosition);
+								// program->setUniform4fv(program->getUniformHandle("TextureCoordinateMinMax"), uniformBlockDynamicVS.TextureCoordinateMinMax);
+								// program->setUniformMatrix4fv(program->getUniformHandle("ObjectSpaceToClipSpaceMatrix"), objectSpaceToClipSpace);
 							}
 						}
 

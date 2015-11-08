@@ -87,6 +87,7 @@
     <ClInclude Include="src\Resource\Font\Font_GLSL_110.h" />
     <ClInclude Include="src\Resource\Font\Font_GLSL_ES2.h" />
     <ClInclude Include="src\Resource\Font\Font_HLSL_D3D10_D3D11.h" />
+    <ClInclude Include="src\Resource\Font\Font_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Resource\Font\Font_HLSL_D3D9.h" />
     <ClInclude Include="src\Resource\Font\Font_Null.h" />
   </ItemGroup>

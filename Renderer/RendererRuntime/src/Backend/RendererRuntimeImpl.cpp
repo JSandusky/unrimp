@@ -84,8 +84,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	RendererRuntimeImpl::RendererRuntimeImpl(Renderer::IRenderer &renderer) :
-		mRootSignature(nullptr),
-		mFontProgram(nullptr),
+		mRootFontSignature(nullptr),
+		mFontPipelineState(nullptr),
 		mFontVertexShaderUniformBuffer(nullptr),
 		mFontFragmentShaderUniformBuffer(nullptr),
 		mFontVertexArray(nullptr),
@@ -144,16 +144,16 @@ namespace RendererRuntime
 			mFontVertexShaderUniformBuffer->release();
 		}
 
-		// Release the font program instance
-		if (nullptr != mFontProgram)
+		// Release the font pipeline state instance
+		if (nullptr != mFontPipelineState)
 		{
-			mFontProgram->release();
+			mFontPipelineState->release();
 		}
 
-		// Release the root signature instance
-		if (nullptr != mRootSignature)
+		// Release the font root signature instance
+		if (nullptr != mRootFontSignature)
 		{
-			mRootSignature->release();
+			mRootFontSignature->release();
 		}
 
 		// Destroy the manager instances
@@ -173,61 +173,95 @@ namespace RendererRuntime
 		mRenderer->release();
 	}
 
-	Renderer::IProgram *RendererRuntimeImpl::getFontProgram()
+	Renderer::IRootSignature *RendererRuntimeImpl::getFontRootSignature()
 	{
-		// Create the root signature instance right now?
-		// TODO(co) Move this elsewhere
-		if (nullptr == mRootSignature)
+		// Create the font root signature instance right now?
+		if (nullptr == mRootFontSignature)
 		{
 			// Create the root signature
-			Renderer::DescriptorRangeBuilder ranges[2];
-			ranges[0].initializeSampler(1, 0);
-			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GlyphMap", 0);
+			Renderer::DescriptorRangeBuilder ranges[4];
+			ranges[0].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockDynamicVs", 0);
+			ranges[1].initializeSampler(1, 0);
+			ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GlyphMap", 0);
+			ranges[3].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockDynamicFs", 0);
 
-			Renderer::RootParameterBuilder rootParameters[2];
-			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
+			Renderer::RootParameterBuilder rootParameters[4];
+			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);
 			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
+			rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::FRAGMENT);
+			rootParameters[3].initializeAsDescriptorTable(1, &ranges[3], Renderer::ShaderVisibility::FRAGMENT);
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
 			rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 			// Create the instance
-			mRootSignature = mRenderer->createRootSignature(rootSignature);
+			mRootFontSignature = mRenderer->createRootSignature(rootSignature);
+			if (nullptr != mRootFontSignature)
+			{
+				// Add our internal reference
+				mRootFontSignature->addReference();
+			}
 		}
 
-		// Create the font program instance right now?
-		if (nullptr == mFontProgram)
+		// Return the instance of the font root signature
+		return mRootFontSignature;
+	}
+
+	Renderer::IPipelineState *RendererRuntimeImpl::getFontPipelineState()
+	{
+		// Create the font pipeline state instance right now?
+		if (nullptr == mFontPipelineState)
 		{
 			// Decide which shader language should be used (for example "GLSL" or "HLSL")
 			Renderer::IShaderLanguage *shaderLanguage = mRenderer->getShaderLanguage();
 			if (nullptr != shaderLanguage)
 			{
-				// Get the shader source code (outsourced to keep an overview)
-				const char *vertexShaderSourceCode = nullptr;
-				const char *fragmentShaderSourceCode = nullptr;
-				#include "../Resource/Font/Font_GLSL_110.h"
-				#include "../Resource/Font/Font_GLSL_ES2.h"
-				#include "../Resource/Font/Font_HLSL_D3D9.h"
-				#include "../Resource/Font/Font_HLSL_D3D10_D3D11.h"
-				#include "../Resource/Font/Font_Null.h"
-
 				// Create the program
-				mFontProgram = shaderLanguage->createProgram(
-					*mRootSignature,
-					::detail::VertexAttributes,
-					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
-					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
-				if (nullptr != mFontProgram)
+				Renderer::IProgramPtr program;
 				{
-					// Add our internal reference
-					mFontProgram->addReference();
+					// Get the shader source code (outsourced to keep an overview)
+					const char *vertexShaderSourceCode = nullptr;
+					const char *fragmentShaderSourceCode = nullptr;
+					#include "../Resource/Font/Font_GLSL_110.h"
+					#include "../Resource/Font/Font_GLSL_ES2.h"
+					#include "../Resource/Font/Font_HLSL_D3D9.h"
+					#include "../Resource/Font/Font_HLSL_D3D10_D3D11_D3D12.h"
+					#include "../Resource/Font/Font_Null.h"
+
+					// Create the program
+					program = shaderLanguage->createProgram(
+						*getFontRootSignature(),
+						::detail::VertexAttributes,
+						shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+						shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
+				}
+
+				// Create the pipeline state object (PSO)
+				if (nullptr != program)
+				{
+					// Setup
+					Renderer::PipelineState pipelineState;
+					pipelineState.rootSignature = getFontRootSignature();
+					pipelineState.program = program;
+					pipelineState.vertexAttributes = ::detail::VertexAttributes;
+					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+					pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
+
+					// Create the instance
+					mFontPipelineState = mRenderer->createPipelineState(pipelineState);
+					if (nullptr != mFontPipelineState)
+					{
+						// Add our internal reference
+						mFontPipelineState->addReference();
+					}
 				}
 			}
 		}
 
-		// Return the instance of the font program
-		return mFontProgram;
+		// Return the instance of the font pipeline state
+		return mFontPipelineState;
 	}
 
 	Renderer::IUniformBuffer *RendererRuntimeImpl::getFontVertexShaderUniformBuffer()

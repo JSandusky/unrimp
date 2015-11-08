@@ -249,6 +249,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\KtxTextureResourceLoader.h">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="src\Resource\Font\Font_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Source Files\Resource\Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Asset\AssetManager.cpp">
