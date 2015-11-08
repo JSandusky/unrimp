@@ -34,14 +34,14 @@ namespace RendererRuntime
 	// TODO(co) Work in progress
 	struct Material
 	{
-		Renderer::IProgramPtr			program;
-		Renderer::IRasterizerStatePtr	rasterizerState;	///< Rasterizer state (rasterizer stage (RS))
-		Renderer::IDepthStencilStatePtr	depthStencilState;	///< Depth stencil state (output-merger (OM) stage)
-		Renderer::IBlendStatePtr		blendState;			///< Blend state (output-merger (OM) stage)
+		Renderer::IPipelineStatePtr		pipelineState;
+		Renderer::IRasterizerStatePtr	rasterizerState;	///< Rasterizer state (rasterizer stage (RS)) - TODO(co) Remove
+		Renderer::IDepthStencilStatePtr	depthStencilState;	///< Depth stencil state (output-merger (OM) stage) - TODO(co) Remove
+		Renderer::IBlendStatePtr		blendState;			///< Blend state (output-merger (OM) stage) - TODO(co) Remove
 
 		void clear()
 		{
-			program = nullptr;
+			pipelineState = nullptr;
 			rasterizerState = nullptr;
 			depthStencilState = nullptr;
 			blendState = nullptr;
@@ -49,7 +49,7 @@ namespace RendererRuntime
 
 		void bind(Renderer::IRenderer& renderer)
 		{
-			renderer.setProgram(program);
+			renderer.setPipelineState(pipelineState);
 			renderer.rsSetState(rasterizerState);
 			renderer.omSetDepthStencilState(depthStencilState);
 			renderer.omSetBlendState(blendState);

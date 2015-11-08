@@ -145,11 +145,16 @@ void FirstCommandBucket::onInitialization()
 		}
 
 		{ // Create the root signature
-			// TODO(co) Correct root signature
+			// Setup
+			Renderer::DescriptorRangeBuilder ranges[1];
+			ranges[0].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockDynamicVs", 0);
+
+			Renderer::RootParameterBuilder rootParameters[1];
+			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
-			rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+			rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 			// Create the instance
 			mRootSignature = renderer->createRootSignature(rootSignature);
@@ -159,7 +164,9 @@ void FirstCommandBucket::onInitialization()
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			{ // Create the program
+			// Create the program
+			Renderer::IProgramPtr program;
+			{
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
@@ -167,7 +174,7 @@ void FirstCommandBucket::onInitialization()
 				#include "FirstCommandBucket_GLSL_140.h"
 				#include "FirstCommandBucket_GLSL_ES2.h"
 				#include "FirstCommandBucket_HLSL_D3D9.h"
-				#include "FirstCommandBucket_HLSL_D3D10_D3D11.h"
+				#include "FirstCommandBucket_HLSL_D3D10_D3D11_D3D12.h"
 				#include "FirstCommandBucket_Null.h"
 
 				// Create the vertex shader
@@ -179,8 +186,24 @@ void FirstCommandBucket::onInitialization()
 				RENDERER_SET_RESOURCE_DEBUG_NAME(fragmentShader, "Triangle FS")
 
 				// Create the program
-				mProgram = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, fragmentShader);
-				RENDERER_SET_RESOURCE_DEBUG_NAME(mProgram, "Triangle program")
+				program = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, fragmentShader);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(program, "Triangle program")
+			}
+
+			// Create the pipeline state object (PSO)
+			if (nullptr != program)
+			{
+				// Setup
+				Renderer::PipelineState pipelineState;
+				pipelineState.rootSignature = mRootSignature;
+				pipelineState.program = program;
+				pipelineState.vertexAttributes = vertexAttributes;
+				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
+
+				// Create the instance
+				mPipelineState = renderer->createPipelineState(pipelineState);
 			}
 
 			// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
@@ -193,14 +216,14 @@ void FirstCommandBucket::onInitialization()
 		}
 
 		{ // Create solid material
-			mSolidMaterial.program = mProgram;
+			mSolidMaterial.pipelineState = mPipelineState;
 			mSolidMaterial.rasterizerState = renderer->createRasterizerState(Renderer::IRasterizerState::getDefaultRasterizerState());
 			mSolidMaterial.depthStencilState = renderer->createDepthStencilState(Renderer::IDepthStencilState::getDefaultDepthStencilState());
 			mSolidMaterial.blendState = renderer->createBlendState(Renderer::IBlendState::getDefaultBlendState());
 		}
 
 		{ // Create transparent material
-			mTransparentMaterial.program = mProgram;
+			mTransparentMaterial.pipelineState = mPipelineState;
 			mTransparentMaterial.rasterizerState = mSolidMaterial.rasterizerState;
 			mTransparentMaterial.depthStencilState = mSolidMaterial.depthStencilState;
 			{ // Blend state
@@ -226,7 +249,7 @@ void FirstCommandBucket::onDeinitialization()
 	mFontResource = nullptr;
 
 	// Release the used resources
-	mProgram = nullptr;
+	mPipelineState = nullptr;
 	mRootSignature = nullptr;
 	mUniformBufferDynamicVs = nullptr;
 	mSolidVertexArray = nullptr;
@@ -268,8 +291,11 @@ void FirstCommandBucket::onDraw()
 			// TODO(co) Has to be part of material binding
 			if (nullptr != mUniformBufferDynamicVs)
 			{
-				renderer->setProgram(mProgram);	// OpenGL: Must be done, first
-				renderer->vsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockDynamicVs", 0), mUniformBufferDynamicVs);
+				// Set the used uniform buffers
+				renderer->setGraphicsRootDescriptorTable(0, mUniformBufferDynamicVs);
+
+				// Set the used pipeline state object (PSO)
+				renderer->setPipelineState(mPipelineState);
 			}
 
 			{ // Push draw calls into different command buckets (can be done in parallel)

@@ -381,9 +381,6 @@
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_110.h">
       <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D10_D3D11.h">
-      <Filter>Runtime\FirstCommandBucket</Filter>
-    </ClInclude>
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D9.h">
       <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
@@ -455,6 +452,9 @@
     </ClInclude>
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_HLSL_D3D10_D3D11_D3D12.h">
       <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
