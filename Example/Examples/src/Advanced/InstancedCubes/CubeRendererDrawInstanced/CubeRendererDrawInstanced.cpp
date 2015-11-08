@@ -33,6 +33,58 @@
 
 
 //[-------------------------------------------------------]
+//[ Global definitions in anonymous namespace             ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+		// Vertex input layout
+		const Renderer::VertexAttribute VertexAttributesLayout[] =
+		{
+			{ // Attribute 0
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"Position",									// name[32] (char)
+				"POSITION",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				0,											// inputSlot (uint32_t)
+				0,											// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0											// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 1
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"TexCoord",									// name[32] (char)
+				"TEXCOORD",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				0,											// inputSlot (uint32_t)
+				sizeof(float) * 3,							// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0											// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 2
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"Normal",									// name[32] (char)
+				"NORMAL",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				0,											// inputSlot (uint32_t)
+				sizeof(float) * (3 + 2),					// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0											// instancesPerElement (uint32_t)
+			}
+		};
+		const Renderer::VertexAttributes VertexAttributes(sizeof(VertexAttributesLayout) / sizeof(Renderer::VertexAttribute), VertexAttributesLayout);
+	}
+}
+
+
+//[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &renderer, uint32_t numberOfTextures, uint32_t sceneRadius) :
@@ -114,57 +166,29 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 	mSamplerState = mRenderer->createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
 	{ // Create the root signature
-		// TODO(co) Correct root signature
+		Renderer::DescriptorRangeBuilder ranges[6];
+		ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "TextureBufferStaticVS", 0);
+		ranges[1].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockStaticVs", 0);
+		ranges[2].initialize(Renderer::DescriptorRangeType::CBV, 1, 1, "UniformBlockDynamicVs", 0);
+		ranges[3].initializeSampler(1, 0);
+		ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
+		ranges[5].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockDynamicFs", 0);
+
+		Renderer::RootParameterBuilder rootParameters[6];
+		rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);
+		rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::VERTEX);
+		rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::VERTEX);
+		rootParameters[3].initializeAsDescriptorTable(1, &ranges[3], Renderer::ShaderVisibility::FRAGMENT);
+		rootParameters[4].initializeAsDescriptorTable(1, &ranges[4], Renderer::ShaderVisibility::FRAGMENT);
+		rootParameters[5].initializeAsDescriptorTable(1, &ranges[5], Renderer::ShaderVisibility::FRAGMENT);
 
 		// Setup
 		Renderer::RootSignatureBuilder rootSignature;
-		rootSignature.initialize(0, nullptr, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+		rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 		// Create the instance
 		mRootSignature = mRenderer->createRootSignature(rootSignature);
 	}
-
-	// Vertex input layout
-	const Renderer::VertexAttribute vertexAttributesLayout[] =
-	{
-		{ // Attribute 0
-			// Data destination
-			Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
-			"Position",									// name[32] (char)
-			"POSITION",									// semanticName[32] (char)
-			0,											// semanticIndex (uint32_t)
-			// Data source
-			0,											// inputSlot (uint32_t)
-			0,											// alignedByteOffset (uint32_t)
-			// Data source, instancing part
-			0											// instancesPerElement (uint32_t)
-		},
-		{ // Attribute 1
-			// Data destination
-			Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
-			"TexCoord",									// name[32] (char)
-			"TEXCOORD",									// semanticName[32] (char)
-			0,											// semanticIndex (uint32_t)
-			// Data source
-			0,											// inputSlot (uint32_t)
-			sizeof(float) * 3,							// alignedByteOffset (uint32_t)
-			// Data source, instancing part
-			0											// instancesPerElement (uint32_t)
-		},
-		{ // Attribute 2
-			// Data destination
-			Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
-			"Normal",									// name[32] (char)
-			"NORMAL",									// semanticName[32] (char)
-			0,											// semanticIndex (uint32_t)
-			// Data source
-			0,											// inputSlot (uint32_t)
-			sizeof(float) * (3 + 2),					// alignedByteOffset (uint32_t)
-			// Data source, instancing part
-			0											// instancesPerElement (uint32_t)
-		}
-	};
-	const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
 
 	{ // Create vertex array object (VAO)
 		// Create the vertex buffer object (VBO)
@@ -208,13 +232,13 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 		static const uint16_t INDICES[] =
 		{
 			// Front face	Triangle ID
-				1,  0,  2,		// 0
-				3,  2,  0,		// 1
+			1,  0,  2,		// 0
+			3,  2,  0,		// 1
 			// Back face
-				6,  5,  4,		// 2
-				4,  7,  6,		// 3
+			6,  5,  4,		// 2
+			4,  7,  6,		// 3
 			// Top face
-				9,  8, 10,		// 4
+			9,  8, 10,		// 4
 			11, 10,  8,		// 5
 			// Bottom face
 			13, 12, 14,		// 6
@@ -241,7 +265,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 				sizeof(float) * (3 + 2 + 3)	// strideInBytes (uint32_t)
 			}
 		};
-		mVertexArray = mRenderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+		mVertexArray = mRenderer->createVertexArray(detail::VertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
 	}
 
 	// Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -275,13 +299,13 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 			const char *vertexShaderSourceCode = nullptr;
 			const char *fragmentShaderSourceCode = nullptr;
 			#include "CubeRendererDrawInstanced_GLSL_140.h"
-			#include "CubeRendererDrawInstanced_HLSL_D3D10_D3D11.h"
+			#include "CubeRendererDrawInstanced_HLSL_D3D10_D3D11_D3D12.h"
 			#include "CubeRendererDrawInstanced_Null.h"
 
 			// Create the program
 			mProgram = shaderLanguage->createProgram(
 				*mRootSignature,
-				vertexAttributes,
+				detail::VertexAttributes,
 				shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 				shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 		}
@@ -338,7 +362,7 @@ void CubeRendererDrawInstanced::setNumberOfCubes(uint32_t numberOfCubes)
 	for (int remaningNumberOfCubes = static_cast<int>(numberOfSolidCubes); batch < lastBatch; ++batch, remaningNumberOfCubes -= mMaximumNumberOfInstancesPerBatch)
 	{
 		const uint32_t currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
-		batch->initialize(*mRenderer, currentNumberOfCubes, false, mNumberOfTextures, mSceneRadius);
+		batch->initialize(*mRootSignature, detail::VertexAttributes, *mProgram, currentNumberOfCubes, false, mNumberOfTextures, mSceneRadius);
 	}
 
 	// Initialize the transparent batches
@@ -347,7 +371,7 @@ void CubeRendererDrawInstanced::setNumberOfCubes(uint32_t numberOfCubes)
 	for (int remaningNumberOfCubes = static_cast<int>(numberOfTransparentCubes); batch < lastBatch; ++batch, remaningNumberOfCubes -= mMaximumNumberOfInstancesPerBatch)
 	{
 		const uint32_t currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
-		batch->initialize(*mRenderer, currentNumberOfCubes, true, mNumberOfTextures, mSceneRadius);
+		batch->initialize(*mRootSignature, detail::VertexAttributes, *mProgram, currentNumberOfCubes, true, mNumberOfTextures, mSceneRadius);
 	}
 
 	// End debug event
@@ -361,26 +385,6 @@ void CubeRendererDrawInstanced::draw(float globalTimer, float globalScale, float
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
-
-		// Set the used graphics root signature
-		mRenderer->setGraphicsRootSignature(mRootSignature);
-
-		// Set the used program
-		mRenderer->setProgram(mProgram);
-
-		{ // Setup input assembly (IA)
-			// Set the used vertex array
-			mRenderer->iaSetVertexArray(mVertexArray);
-
-			// Set the primitive topology used for draw calls
-			mRenderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-		}
-
-		// Set the used texture at a certain texture unit
-		mRenderer->fsSetTexture(0, mTexture2DArray);
-
-		// Set the used sampler state at a certain texture unit
-		mRenderer->fsSetSamplerState(0, mSamplerState);
 
 		{ // Update program uniform data
 			// Some counting timer, we don't want to touch the buffers on the GPU
@@ -405,23 +409,10 @@ void CubeRendererDrawInstanced::draw(float globalTimer, float globalScale, float
 				// Set individual program uniforms
 				// -> Using uniform buffers (aka constant buffers in Direct3D) would be more efficient, but Direct3D 9 doesn't support it (neither does e.g. OpenGL ES 2.0)
 				// -> To keep it simple in here, I just use a less performant string to identity the uniform (does not really hurt in here)
-				mProgram->setUniform2fv(mProgram->getUniformHandle("TimerAndGlobalScale"), timerAndGlobalScale);
-				mProgram->setUniform3fv(mProgram->getUniformHandle("LightPosition"), lightPosition);
+				// TODO(co) Update
+				// mProgram->setUniform2fv(mProgram->getUniformHandle("TimerAndGlobalScale"), timerAndGlobalScale);
+				// mProgram->setUniform3fv(mProgram->getUniformHandle("LightPosition"), lightPosition);
 			}
-		}
-
-		// Set the used uniform buffers
-		if (nullptr != mUniformBufferStaticVs)
-		{
-			mRenderer->vsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockStaticVs", 0), mUniformBufferStaticVs);
-		}
-		if (nullptr != mUniformBufferDynamicVs)
-		{
-			mRenderer->vsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockDynamicVs", 1), mUniformBufferDynamicVs);
-		}
-		if (nullptr != mUniformBufferDynamicFs)
-		{
-			mRenderer->fsSetUniformBuffer(mProgram->getUniformBlockIndex("UniformBlockDynamicFs", 0), mUniformBufferDynamicFs);
 		}
 
 		// Set constant program uniform
@@ -438,7 +429,27 @@ void CubeRendererDrawInstanced::draw(float globalTimer, float globalScale, float
 			};
 
 			// There's no uniform buffer: We have to set individual uniforms
-			mProgram->setUniform4fv(mProgram->getUniformHandle("MVP"), MVP);
+			// TODO(co) Update
+			// mProgram->setUniform4fv(mProgram->getUniformHandle("MVP"), MVP);
+		}
+
+		// Set the used graphics root signature
+		mRenderer->setGraphicsRootSignature(mRootSignature);
+
+		// Set diffuse map
+		// -> Graphics root descriptor table 0 is set inside "BatchDrawInstanced::draw()"
+		mRenderer->setGraphicsRootDescriptorTable(1, mUniformBufferStaticVs);
+		mRenderer->setGraphicsRootDescriptorTable(2, mUniformBufferDynamicVs);
+		mRenderer->setGraphicsRootDescriptorTable(3, mSamplerState);
+		mRenderer->setGraphicsRootDescriptorTable(4, mTexture2DArray);
+		mRenderer->setGraphicsRootDescriptorTable(5, mUniformBufferDynamicFs);
+
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			mRenderer->iaSetVertexArray(mVertexArray);
+
+			// Set the primitive topology used for draw calls
+			mRenderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 		}
 
 		// Draw the batches

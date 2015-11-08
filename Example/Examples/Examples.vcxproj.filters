@@ -330,9 +330,6 @@
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_GLSL_140.h">
       <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
     </ClInclude>
-    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_HLSL_D3D10_D3D11.h">
-      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
-    </ClInclude>
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_Null.h">
       <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
     </ClInclude>
@@ -346,9 +343,6 @@
       <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
     </ClInclude>
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_HLSL_D3D9.h">
-      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_HLSL_D3D10_D3D11.h">
       <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
     </ClInclude>
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_Null.h">
@@ -455,6 +449,12 @@
     </ClInclude>
     <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_HLSL_D3D10_D3D11_D3D12.h">
       <Filter>Advanced\FirstGpgpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

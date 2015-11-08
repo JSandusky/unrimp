@@ -44,17 +44,17 @@ BatchDrawInstanced::~BatchDrawInstanced()
 	// The renderer resource pointers are released automatically
 }
 
-void BatchDrawInstanced::initialize(Renderer::IRenderer &renderer, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
+void BatchDrawInstanced::initialize(Renderer::IRootSignature &rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
 {
+	// Set owner renderer instance
+	mRenderer = &program.getRenderer();
+
 	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
 
 	// Release previous data if required
 	mBlendState = nullptr;
 	mTextureBufferPerInstanceData = nullptr;
-
-	// Set owner renderer instance
-	mRenderer = &renderer;
 
 	// Set the number of cube instance
 	mNumberOfCubeInstances = numberOfCubeInstances;
@@ -122,8 +122,22 @@ void BatchDrawInstanced::initialize(Renderer::IRenderer &renderer, uint32_t numb
 		mBlendState = mRenderer->createBlendState(blendState);
 	}
 
+	{ // Create the pipeline state object (PSO)
+		// Setup
+		Renderer::PipelineState pipelineState;
+		pipelineState.rootSignature = &rootSignature;
+		pipelineState.program = &program;
+		pipelineState.vertexAttributes = vertexAttributes;
+		pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+		pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+		pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
+
+		// Create the instance
+		mPipelineState = mRenderer->createPipelineState(pipelineState);
+	}
+
 	// End debug event
-	RENDERER_END_DEBUG_EVENT(&renderer)
+	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
 void BatchDrawInstanced::draw()
@@ -134,8 +148,11 @@ void BatchDrawInstanced::draw()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
 
-		// Set the used texture at a certain texture unit
-		mRenderer->vsSetTexture(0, mTextureBufferPerInstanceData);
+		// Set the used texture
+		mRenderer->setGraphicsRootDescriptorTable(0, mTextureBufferPerInstanceData);
+
+		// Set the used pipeline state object (PSO)
+		mRenderer->setPipelineState(mPipelineState);
 
 		// Set the used blend state
 		mRenderer->omSetBlendState(mBlendState);

@@ -60,6 +60,7 @@ class ICubeRenderer;
 *    - Blend state object
 *    - Vertex shader (VS) and fragment shader (FS)
 *    - Root signature
+*    - Pipeline state object (PSO)
 *    - Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 *    - Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
 *    - Renderer runtime fonts

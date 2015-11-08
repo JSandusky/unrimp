@@ -1043,12 +1043,15 @@ namespace Direct3D12Renderer
 				{
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
+						// TODO(co)
+						/*
 						// Get the Direct3D 12 swap chain instance
 						SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
 
 						CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRtv()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
 						CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(swapChain->getD3D12DescriptorHeapDsv()->GetCPUDescriptorHandleForHeapStart());
 						mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+						*/
 						break;
 					}
 

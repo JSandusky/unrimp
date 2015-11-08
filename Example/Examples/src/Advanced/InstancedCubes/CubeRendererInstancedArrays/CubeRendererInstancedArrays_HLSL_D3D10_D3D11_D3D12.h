@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
-#if !defined(RENDERER_NO_DIRECT3D10) || !defined(RENDERER_NO_DIRECT3D11)
-if (0 == strcmp(mRenderer->getName(), "Direct3D10") || 0 == strcmp(mRenderer->getName(), "Direct3D11"))
+#if !defined(RENDERER_NO_DIRECT3D10) || !defined(RENDERER_NO_DIRECT3D11) || !defined(RENDERER_NO_DIRECT3D12)
+if (0 == strcmp(mRenderer->getName(), "Direct3D10") || 0 == strcmp(mRenderer->getName(), "Direct3D11") || 0 == strcmp(mRenderer->getName(), "Direct3D12"))
 {
 
 
@@ -187,8 +187,8 @@ struct VS_OUTPUT
 };
 
 // Uniforms
-Texture2D DiffuseMap : register(t0);
 SamplerState SamplerLinear : register(s0);
+Texture2D DiffuseMap : register(t0);
 cbuffer UniformBlockDynamicFs : register(b0)
 {
 	float3 LightPosition;	// World space light position

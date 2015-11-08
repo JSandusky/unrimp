@@ -44,17 +44,17 @@ BatchInstancedArrays::~BatchInstancedArrays()
 	// The renderer resource pointers are released automatically
 }
 
-void BatchInstancedArrays::initialize(const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
+void BatchInstancedArrays::initialize(Renderer::IRootSignature &rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
 {
+	// Set owner renderer instance
+	mRenderer = &program.getRenderer();
+
 	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&program.getRenderer())
+	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
 
 	// Release previous data if required
 	mBlendState = nullptr;
 	mVertexArray = nullptr;
-
-	// Set owner renderer instance
-	mRenderer = &vertexBuffer.getRenderer();
 
 	// Set the number of cube instance
 	mNumberOfCubeInstances = numberOfCubeInstances;
@@ -142,8 +142,22 @@ void BatchInstancedArrays::initialize(const Renderer::VertexAttributes& vertexAt
 		mBlendState = mRenderer->createBlendState(blendState);
 	}
 
+	{ // Create the pipeline state object (PSO)
+		// Setup
+		Renderer::PipelineState pipelineState;
+		pipelineState.rootSignature = &rootSignature;
+		pipelineState.program = &program;
+		pipelineState.vertexAttributes = vertexAttributes;
+		pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
+		pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
+		pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
+
+		// Create the instance
+		mPipelineState = mRenderer->createPipelineState(pipelineState);
+	}
+
 	// End debug event
-	RENDERER_END_DEBUG_EVENT(&program.getRenderer())
+	RENDERER_END_DEBUG_EVENT(mRenderer)
 }
 
 void BatchInstancedArrays::draw()
@@ -158,6 +172,9 @@ void BatchInstancedArrays::draw()
 			// Set the used vertex array
 			mRenderer->iaSetVertexArray(mVertexArray);
 		}
+
+		// Set the used pipeline state object (PSO)
+		mRenderer->setPipelineState(mPipelineState);
 
 		// Set the used blend state
 		mRenderer->omSetBlendState(mBlendState);

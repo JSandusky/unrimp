@@ -61,6 +61,8 @@ public:
 	*  @brief
 	*    Initialize the batch
 	*
+	*  @param[in] rootSignature
+	*    Root signature
 	*  @param[in] vertexAttributes
 	*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 	*  @param[in] vertexBuffer
@@ -78,7 +80,7 @@ public:
 	*  @param[in] sceneRadius
 	*    Scene radius
 	*/
-	void initialize(const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius);
+	void initialize(Renderer::IRootSignature &rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius);
 
 	/**
 	*  @brief
@@ -117,10 +119,11 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IRendererPtr	  mRenderer;				///< Owner renderer instance, can be a null pointer
-	uint32_t				  mNumberOfCubeInstances;	///< Number of cube instances
-	Renderer::IVertexArrayPtr mVertexArray;				///< Vertex array object (VAO), can be a null pointer
-	Renderer::IBlendStatePtr  mBlendState;				///< Blend state, can be a null pointer
+	Renderer::IRendererPtr		mRenderer;				///< Owner renderer instance, can be a null pointer
+	uint32_t					mNumberOfCubeInstances;	///< Number of cube instances
+	Renderer::IVertexArrayPtr	mVertexArray;			///< Vertex array object (VAO), can be a null pointer
+	Renderer::IBlendStatePtr	mBlendState;			///< Blend state, can be a null pointer
+	Renderer::IPipelineStatePtr	mPipelineState;			///< Pipeline state object (PSO), can be a null pointer
 
 
 };
