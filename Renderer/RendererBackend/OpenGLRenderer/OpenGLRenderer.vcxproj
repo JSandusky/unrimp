@@ -33,7 +33,6 @@
     <ClInclude Include="include\OpenGLRenderer\Mapping.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLDebug.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLRenderer.h" />
-    <ClInclude Include="include\OpenGLRenderer\OpenGLRenderer_SingleHeader.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLRuntimeLinking.h" />
     <ClInclude Include="include\OpenGLRenderer\PipelineState.h" />
     <ClInclude Include="include\OpenGLRenderer\RasterizerState.h" />

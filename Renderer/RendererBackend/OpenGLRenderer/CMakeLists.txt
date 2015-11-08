@@ -161,7 +161,3 @@ endif()
 ##################################################
 # Copy header
 file(MAKE_DIRECTORY ${OUTPUT_INCLUDE_DIR}/../OpenGLRenderer/)
-
-add_custom_command(TARGET OpenGLRenderer POST_BUILD
-                     COMMAND ${CMAKE_COMMAND} -E
-                         copy "${CMAKE_CURRENT_SOURCE_DIR}/include/OpenGLRenderer/OpenGLRenderer_SingleHeader.h" "${OUTPUT_INCLUDE_DIR}/../OpenGLRenderer/OpenGLRenderer.h")
