@@ -40,8 +40,6 @@
 #include "Direct3D12Renderer/Texture2DArray.h"
 #include "Direct3D12Renderer/RasterizerState.h"
 #include "Direct3D12Renderer/DepthStencilState.h"
-#include "Direct3D12Renderer/TextureCollection.h"
-#include "Direct3D12Renderer/SamplerStateCollection.h"
 #include "Direct3D12Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D12Renderer/Shader/UniformBuffer.h"
 #include "Direct3D12Renderer/Shader/VertexShaderHlsl.h"
@@ -432,16 +430,6 @@ namespace Direct3D12Renderer
 		return new SamplerState(*this, samplerState);
 	}
 
-	Renderer::ITextureCollection *Direct3D12Renderer::createTextureCollection(uint32_t numberOfTextures, Renderer::ITexture **textures)
-	{
-		return new TextureCollection(*this, numberOfTextures, textures);
-	}
-
-	Renderer::ISamplerStateCollection *Direct3D12Renderer::createSamplerStateCollection(uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
-	{
-		return new SamplerStateCollection(*this, numberOfSamplerStates, samplerStates);
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
@@ -533,8 +521,6 @@ namespace Direct3D12Renderer
 			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 			case Renderer::ResourceType::GEOMETRY_SHADER:
 			case Renderer::ResourceType::FRAGMENT_SHADER:
-			case Renderer::ResourceType::TEXTURE_COLLECTION:
-			case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 			default:
 				// Nothing we can map, set known return values
 				mappedSubresource.data		 = nullptr;
@@ -616,8 +602,6 @@ namespace Direct3D12Renderer
 			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 			case Renderer::ResourceType::GEOMETRY_SHADER:
 			case Renderer::ResourceType::FRAGMENT_SHADER:
-			case Renderer::ResourceType::TEXTURE_COLLECTION:
-			case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 			default:
 				// Nothing we can unmap
 				break;
@@ -754,62 +738,6 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Vertex-shader (VS) stage                              ]
-	//[-------------------------------------------------------]
-	void Direct3D12Renderer::vsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D12Renderer::vsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Tessellation-control-shader (TCS) stage               ]
-	//[-------------------------------------------------------]
-	void Direct3D12Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D12Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Tessellation-evaluation-shader (TES) stage            ]
-	//[-------------------------------------------------------]
-	void Direct3D12Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D12Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Geometry-shader (GS) stage                            ]
-	//[-------------------------------------------------------]
-	void Direct3D12Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D12Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::rsSetViewports(uint32_t, const Renderer::Viewport *)
@@ -863,20 +791,6 @@ namespace Direct3D12Renderer
 			mD3D12DeviceContext->RSSetState(nullptr);
 		}
 		*/
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Fragment-shader (FS) stage                            ]
-	//[-------------------------------------------------------]
-	void Direct3D12Renderer::fsSetTextureCollection(uint32_t, Renderer::ITextureCollection *)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D12Renderer::fsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection *)
-	{
-		// TODO(co) Remove this method
 	}
 
 
@@ -956,8 +870,6 @@ namespace Direct3D12Renderer
 					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 					case Renderer::ResourceType::GEOMETRY_SHADER:
 					case Renderer::ResourceType::FRAGMENT_SHADER:
-					case Renderer::ResourceType::TEXTURE_COLLECTION:
-					case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 					default:
 						// Not handled in here
 						break;
@@ -1129,8 +1041,6 @@ namespace Direct3D12Renderer
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 				default:
 					// Not handled in here
 					break;

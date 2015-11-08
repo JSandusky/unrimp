@@ -81,12 +81,7 @@ namespace Renderer
 		currentNumberOfGeometryShaders(0),
 		numberOfCreatedGeometryShaders(0),
 		currentNumberOfFragmentShaders(0),
-		numberOfCreatedFragmentShaders(0),
-		// ICollection
-		currentNumberOfTextureCollections(0),
-		numberOfCreatedTextureCollections(0),
-		currentNumberOfSamplerStateCollections(0),
-		numberOfCreatedSamplerStateCollections(0)
+		numberOfCreatedFragmentShaders(0)
 	{
 		// Nothing to do in here
 	}
@@ -124,10 +119,7 @@ namespace Renderer
 				currentNumberOfTessellationControlShaders +
 				currentNumberOfTessellationEvaluationShaders +
 				currentNumberOfGeometryShaders +
-				currentNumberOfFragmentShaders +
-				// ICollection
-				currentNumberOfTextureCollections +
-				currentNumberOfSamplerStateCollections;
+				currentNumberOfFragmentShaders;
 	}
 
 	inline void Statistics::debugOutputCurrentResouces() const
@@ -167,10 +159,6 @@ namespace Renderer
 		RENDERER_OUTPUT_DEBUG_PRINTF("Tessellation evaluation shaders: %d\n", currentNumberOfTessellationEvaluationShaders)
 		RENDERER_OUTPUT_DEBUG_PRINTF("Geometry shaders: %d\n", currentNumberOfGeometryShaders)
 		RENDERER_OUTPUT_DEBUG_PRINTF("Fragment shaders: %d\n", currentNumberOfFragmentShaders)
-
-		// ICollection
-		RENDERER_OUTPUT_DEBUG_PRINTF("Texture collections: %d\n", currentNumberOfTextureCollections)
-		RENDERER_OUTPUT_DEBUG_PRINTF("Sampler state collections: %d\n", currentNumberOfSamplerStateCollections)
 
 		// End
 		RENDERER_OUTPUT_DEBUG_STRING("***************************************************\n")
@@ -227,12 +215,7 @@ namespace Renderer
 		currentNumberOfGeometryShaders(0),
 		numberOfCreatedGeometryShaders(0),
 		currentNumberOfFragmentShaders(0),
-		numberOfCreatedFragmentShaders(0),
-		// ICollection
-		currentNumberOfTextureCollections(0),
-		numberOfCreatedTextureCollections(0),
-		currentNumberOfSamplerStateCollections(0),
-		numberOfCreatedSamplerStateCollections(0)
+		numberOfCreatedFragmentShaders(0)
 	{
 		// Not supported
 	}

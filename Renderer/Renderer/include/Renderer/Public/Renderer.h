@@ -68,9 +68,6 @@ namespace Renderer
 			class ITessellationEvaluationShader;
 			class IGeometryShader;
 			class IFragmentShader;
-		class ICollection;
-			class ITextureCollection;
-			class ISamplerStateCollection;
 }
 
 
@@ -308,9 +305,7 @@ namespace Renderer
 				TESSELLATION_CONTROL_SHADER	   = 17,
 				TESSELLATION_EVALUATION_SHADER = 18,
 				GEOMETRY_SHADER				   = 19,
-				FRAGMENT_SHADER				   = 20,
-				TEXTURE_COLLECTION			   = 21,
-				SAMPLER_STATE_COLLECTION	   = 22
+				FRAGMENT_SHADER				   = 20
 			};
 		};
 	#endif
@@ -1468,10 +1463,6 @@ namespace Renderer
 		uint32_t numberOfCreatedGeometryShaders;
 		uint32_t currentNumberOfFragmentShaders;
 		uint32_t numberOfCreatedFragmentShaders;
-		uint32_t currentNumberOfTextureCollections;
-		uint32_t numberOfCreatedTextureCollections;
-		uint32_t currentNumberOfSamplerStateCollections;
-		uint32_t numberOfCreatedSamplerStateCollections;
 	public:
 		inline Statistics() :
 			currentNumberOfRootSignatures(0),
@@ -1515,11 +1506,7 @@ namespace Renderer
 			currentNumberOfGeometryShaders(0),
 			numberOfCreatedGeometryShaders(0),
 			currentNumberOfFragmentShaders(0),
-			numberOfCreatedFragmentShaders(0),
-			currentNumberOfTextureCollections(0),
-			numberOfCreatedTextureCollections(0),
-			currentNumberOfSamplerStateCollections(0),
-			numberOfCreatedSamplerStateCollections(0)
+			numberOfCreatedFragmentShaders(0)
 		{
 		}
 		inline ~Statistics()
@@ -1568,11 +1555,7 @@ namespace Renderer
 			currentNumberOfGeometryShaders(0),
 			numberOfCreatedGeometryShaders(0),
 			currentNumberOfFragmentShaders(0),
-			numberOfCreatedFragmentShaders(0),
-			currentNumberOfTextureCollections(0),
-			numberOfCreatedTextureCollections(0),
-			currentNumberOfSamplerStateCollections(0),
-			numberOfCreatedSamplerStateCollections(0)
+			numberOfCreatedFragmentShaders(0)
 		{
 		}
 		inline Statistics &operator =(const Statistics &)
@@ -1622,8 +1605,6 @@ namespace Renderer
 			virtual IDepthStencilState *createDepthStencilState(const DepthStencilState &depthStencilState) = 0;
 			virtual IBlendState *createBlendState(const BlendState &blendState) = 0;
 			virtual ISamplerState *createSamplerState(const SamplerState &samplerState) = 0;
-			virtual ITextureCollection *createTextureCollection(uint32_t numberOfTextures, ITexture **textures) = 0;
-			virtual ISamplerStateCollection *createSamplerStateCollection(uint32_t numberOfSamplerStates, ISamplerState **samplerStates) = 0;
 			virtual bool map(IResource &resource, uint32_t subresource, MapType::Enum mapType, uint32_t mapFlags, MappedSubresource &mappedSubresource) = 0;
 			virtual void unmap(IResource &resource, uint32_t subresource) = 0;
 			virtual void setGraphicsRootSignature(IRootSignature *rootSignature) = 0;
@@ -1631,19 +1612,9 @@ namespace Renderer
 			virtual void setPipelineState(IPipelineState *pipelineState) = 0;
 			virtual void iaSetVertexArray(IVertexArray *vertexArray) = 0;
 			virtual void iaSetPrimitiveTopology(PrimitiveTopology::Enum primitiveTopology) = 0;
-			virtual void vsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void vsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void tcsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void tcsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void tesSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void tesSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-			virtual void gsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void gsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
 			virtual void rsSetViewports(uint32_t numberOfViewports, const Viewport *viewports) = 0;
 			virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles) = 0;
 			virtual void rsSetState(IRasterizerState *rasterizerState) = 0;
-			virtual void fsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-			virtual void fsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
 			virtual IRenderTarget *omGetRenderTarget() = 0;
 			virtual void omSetRenderTarget(IRenderTarget *renderTarget) = 0;
 			virtual void omSetDepthStencilState(IDepthStencilState *depthStencilState) = 0;
@@ -2347,51 +2318,6 @@ namespace Renderer
 			IFragmentShader &operator =(const IFragmentShader &source);
 		};
 		typedef SmartRefCount<IFragmentShader> IFragmentShaderPtr;
-	#endif
-
-	// Renderer/ICollection.h
-	#ifndef __RENDERER_ICOLLECTION_H__
-	#define __RENDERER_ICOLLECTION_H__
-		class ICollection : public IResource
-		{
-		public:
-			virtual ~ICollection();
-		protected:
-			ICollection(ResourceType::Enum resourceType, IRenderer &renderer);
-			explicit ICollection(const ICollection &source);
-			ICollection &operator =(const ICollection &source);
-		};
-		typedef SmartRefCount<ICollection> ICollectionPtr;
-	#endif
-
-	// Renderer/ITextureCollection.h
-	#ifndef __RENDERER_ITEXTURECOLLECTION_H__
-	#define __RENDERER_ITEXTURECOLLECTION_H__
-		class ITextureCollection : public ICollection
-		{
-		public:
-			virtual ~ITextureCollection();
-		protected:
-			ITextureCollection(ResourceType::Enum resourceType, IRenderer &renderer);
-			explicit ITextureCollection(const ITextureCollection &source);
-			ITextureCollection &operator =(const ITextureCollection &source);
-		};
-		typedef SmartRefCount<ITextureCollection> ITextureCollectionPtr;
-	#endif
-
-	// Renderer/ISamplerStateCollection.h
-	#ifndef __RENDERER_ISAMPLERSTATECOLLECTION_H__
-	#define __RENDERER_ISAMPLERSTATECOLLECTION_H__
-		class ISamplerStateCollection : public ICollection
-		{
-		public:
-			virtual ~ISamplerStateCollection();
-		protected:
-			ISamplerStateCollection(ResourceType::Enum resourceType, IRenderer &renderer);
-			explicit ISamplerStateCollection(const ISamplerStateCollection &source);
-			ISamplerStateCollection &operator =(const ISamplerStateCollection &source);
-		};
-		typedef SmartRefCount<ISamplerStateCollection> ISamplerStateCollectionPtr;
 	#endif
 
 

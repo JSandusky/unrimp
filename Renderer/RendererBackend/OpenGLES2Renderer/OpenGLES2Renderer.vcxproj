@@ -28,7 +28,6 @@
     <None Include="include\OpenGLES2Renderer\PipelineState.inl" />
     <None Include="include\OpenGLES2Renderer\RasterizerState.inl" />
     <None Include="include\OpenGLES2Renderer\RootSignature.inl" />
-    <None Include="include\OpenGLES2Renderer\SamplerStateCollection.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\Program.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\ShaderLanguage.inl" />
@@ -36,7 +35,6 @@
     <None Include="include\OpenGLES2Renderer\SwapChain.inl" />
     <None Include="include\OpenGLES2Renderer\Texture2D.inl" />
     <None Include="include\OpenGLES2Renderer\Texture2DArray.inl" />
-    <None Include="include\OpenGLES2Renderer\TextureCollection.inl" />
     <None Include="include\OpenGLES2Renderer\VertexArray.inl" />
     <None Include="include\OpenGLES2Renderer\VertexArrayVao.inl" />
     <None Include="include\OpenGLES2Renderer\VertexBuffer.inl" />
@@ -58,7 +56,6 @@
     <ClInclude Include="include\OpenGLES2Renderer\RasterizerState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\RootSignature.h" />
     <ClInclude Include="include\OpenGLES2Renderer\SamplerState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\SamplerStateCollection.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Shader\FragmentShader.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Shader\Program.h" />
@@ -70,7 +67,6 @@
     <ClInclude Include="include\OpenGLES2Renderer\SwapChain.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Texture2D.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Texture2DArray.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\TextureCollection.h" />
     <ClInclude Include="include\OpenGLES2Renderer\VertexArray.h" />
     <ClInclude Include="include\OpenGLES2Renderer\VertexArrayNoVao.h" />
     <ClInclude Include="include\OpenGLES2Renderer\VertexArrayVao.h" />
@@ -91,7 +87,6 @@
     <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
-    <ClCompile Include="src\SamplerStateCollection.cpp" />
     <ClCompile Include="src\Shader\FragmentShader.cpp" />
     <ClCompile Include="src\Shader\FragmentShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\Program.cpp" />
@@ -103,7 +98,6 @@
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
     <ClCompile Include="src\Texture2DArray.cpp" />
-    <ClCompile Include="src\TextureCollection.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\VertexArrayNoVao.cpp" />
     <ClCompile Include="src\VertexArrayVao.cpp" />

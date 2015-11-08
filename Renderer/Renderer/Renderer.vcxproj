@@ -25,7 +25,6 @@
     <ClInclude Include="include\Renderer\DepthStencilStateTypes.h" />
     <ClInclude Include="include\Renderer\GeometryShaderTypes.h" />
     <ClInclude Include="include\Renderer\IBuffer.h" />
-    <ClInclude Include="include\Renderer\ICollection.h" />
     <ClInclude Include="include\Renderer\IFragmentShader.h" />
     <ClInclude Include="include\Renderer\IFramebuffer.h" />
     <ClInclude Include="include\Renderer\IGeometryShader.h" />
@@ -38,7 +37,6 @@
     <ClInclude Include="include\Renderer\IResource.h" />
     <ClInclude Include="include\Renderer\IRootSignature.h" />
     <ClInclude Include="include\Renderer\ISamplerState.h" />
-    <ClInclude Include="include\Renderer\ISamplerStateCollection.h" />
     <ClInclude Include="include\Renderer\IShader.h" />
     <ClInclude Include="include\Renderer\IShaderLanguage.h" />
     <ClInclude Include="include\Renderer\IState.h" />
@@ -52,7 +50,6 @@
     <ClInclude Include="include\Renderer\ITexture2D.h" />
     <ClInclude Include="include\Renderer\ITexture2DArray.h" />
     <ClInclude Include="include\Renderer\ITextureBuffer.h" />
-    <ClInclude Include="include\Renderer\ITextureCollection.h" />
     <ClInclude Include="include\Renderer\IUniformBuffer.h" />
     <ClInclude Include="include\Renderer\IVertexArray.h" />
     <ClInclude Include="include\Renderer\IVertexBuffer.h" />
@@ -78,7 +75,6 @@
     <None Include="include\Renderer\Capabilities.inl" />
     <None Include="include\Renderer\IBlendState.inl" />
     <None Include="include\Renderer\IBuffer.inl" />
-    <None Include="include\Renderer\ICollection.inl" />
     <None Include="include\Renderer\IDepthStencilState.inl" />
     <None Include="include\Renderer\IFragmentShader.inl" />
     <None Include="include\Renderer\IFramebuffer.inl" />
@@ -93,7 +89,6 @@
     <None Include="include\Renderer\IResource.inl" />
     <None Include="include\Renderer\IRootSignature.inl" />
     <None Include="include\Renderer\ISamplerState.inl" />
-    <None Include="include\Renderer\ISamplerStateCollection.inl" />
     <None Include="include\Renderer\IShader.inl" />
     <None Include="include\Renderer\IShaderLanguage.inl" />
     <None Include="include\Renderer\IState.inl" />
@@ -104,7 +99,6 @@
     <None Include="include\Renderer\ITexture2D.inl" />
     <None Include="include\Renderer\ITexture2DArray.inl" />
     <None Include="include\Renderer\ITextureBuffer.inl" />
-    <None Include="include\Renderer\ITextureCollection.inl" />
     <None Include="include\Renderer\IUniformBuffer.inl" />
     <None Include="include\Renderer\IVertexArray.inl" />
     <None Include="include\Renderer\IVertexBuffer.inl" />

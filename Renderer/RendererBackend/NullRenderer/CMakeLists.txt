@@ -49,12 +49,10 @@ set(SOURCE_CODES
 	src/NullRenderer.cpp
 	src/PipelineState.cpp
 	src/SamplerState.cpp
-	src/SamplerStateCollection.cpp
 	src/SwapChain.cpp
 	src/Texture2D.cpp
 	src/Texture2DArray.cpp
 	src/TextureBuffer.cpp
-	src/TextureCollection.cpp
 	src/VertexArray.cpp
 	src/VertexBuffer.cpp
 	src/Shader/FragmentShader.cpp

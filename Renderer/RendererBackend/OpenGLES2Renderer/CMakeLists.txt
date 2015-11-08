@@ -61,11 +61,9 @@ set(SOURCE_CODES
 	src/OpenGLES2Renderer.cpp
 	src/PipelineState.cpp
 	src/SamplerState.cpp
-	src/SamplerStateCollection.cpp
 	src/SwapChain.cpp
 	src/Texture2D.cpp
 	src/Texture2DArray.cpp
-	src/TextureCollection.cpp
 	src/VertexArray.cpp
 	src/VertexArrayNoVao.cpp
 	src/VertexArrayVao.cpp

@@ -106,11 +106,6 @@ namespace Renderer
 		uint32_t numberOfCreatedGeometryShaders;				///< Number of created geometry shader (GS) instances
 		uint32_t currentNumberOfFragmentShaders;				///< Current number of fragment shader (FS, "pixel shader" in Direct3D terminology) instances
 		uint32_t numberOfCreatedFragmentShaders;				///< Number of created fragment shader (FS, "pixel shader" in Direct3D terminology) instances
-		// ICollection
-		uint32_t currentNumberOfTextureCollections;				///< Current number of texture collection instances
-		uint32_t numberOfCreatedTextureCollections;				///< Number of created texture collection instances
-		uint32_t currentNumberOfSamplerStateCollections;		///< Current number of sampler state collection instances
-		uint32_t numberOfCreatedSamplerStateCollections;		///< Number of created sampler state collection instances
 
 
 	//[-------------------------------------------------------]

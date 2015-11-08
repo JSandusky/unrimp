@@ -33,16 +33,10 @@
     <None Include="include\Direct3D9Renderer\IndexBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D9Renderer\SamplerStateCollection.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D9Renderer\SwapChain.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D9Renderer\Texture2D.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D9Renderer\TextureCollection.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D9Renderer\VertexBuffer.inl">
@@ -104,16 +98,10 @@
     <ClInclude Include="include\Direct3D9Renderer\SamplerState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\SamplerStateCollection.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\SwapChain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\Texture2D.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\TextureCollection.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\VertexArray.h">
@@ -196,16 +184,10 @@
     <ClCompile Include="src\SamplerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SamplerStateCollection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Texture2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureCollection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexArray.cpp">

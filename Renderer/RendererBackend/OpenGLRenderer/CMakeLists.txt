@@ -67,7 +67,6 @@ set(SOURCE_CODES
 	src/SamplerStateBind.cpp
 	src/SamplerStateDsa.cpp
 	src/SamplerStateSo.cpp
-	src/SamplerStateCollection.cpp
 	src/SwapChain.cpp
 	src/Texture2D.cpp
 	src/Texture2DArray.cpp
@@ -78,7 +77,6 @@ set(SOURCE_CODES
 	src/TextureBuffer.cpp
 	src/TextureBufferBind.cpp
 	src/TextureBufferDsa.cpp
-	src/TextureCollection.cpp
 	src/VertexArray.cpp
 	src/VertexArrayNoVao.cpp
 	src/VertexArrayVao.cpp

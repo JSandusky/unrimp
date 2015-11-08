@@ -127,8 +127,6 @@ namespace Direct3D10Renderer
 						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
-						case Renderer::ResourceType::TEXTURE_COLLECTION:
-						case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 						default:
 							RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 10 error: The type of the given color texture at index %d is not supported", colorTexture - colorTextures)
 							*d3d10RenderTargetView = nullptr;
@@ -202,8 +200,6 @@ namespace Direct3D10Renderer
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 				default:
 					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: The type of the given depth stencil texture is not supported")
 					break;

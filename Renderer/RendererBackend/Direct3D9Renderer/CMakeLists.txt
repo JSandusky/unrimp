@@ -55,10 +55,8 @@ set(SOURCE_CODES
 	src/RasterizerState.cpp
 	src/Direct3D9Renderer.cpp
 	src/SamplerState.cpp
-	src/SamplerStateCollection.cpp
 	src/SwapChain.cpp
 	src/Texture2D.cpp
-	src/TextureCollection.cpp
 	src/VertexArray.cpp
 	src/VertexBuffer.cpp
 	src/Shader/FragmentShader.cpp

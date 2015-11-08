@@ -142,8 +142,6 @@ namespace OpenGLRenderer
 						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
-						case Renderer::ResourceType::TEXTURE_COLLECTION:
-						case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 						default:
 							// Nothing to do in here
 							break;
@@ -197,8 +195,6 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 				default:
 					// Nothing to do in here
 					break;

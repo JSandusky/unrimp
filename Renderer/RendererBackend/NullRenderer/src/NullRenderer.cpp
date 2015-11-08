@@ -37,8 +37,6 @@
 #include "NullRenderer/Framebuffer.h"
 #include "NullRenderer/RasterizerState.h"
 #include "NullRenderer/DepthStencilState.h"
-#include "NullRenderer/TextureCollection.h"
-#include "NullRenderer/SamplerStateCollection.h"
 #include "NullRenderer/Shader/Program.h"
 #include "NullRenderer/Shader/ShaderLanguage.h"
 #include "NullRenderer/Shader/UniformBuffer.h"
@@ -332,16 +330,6 @@ namespace NullRenderer
 		return new SamplerState(*this);
 	}
 
-	Renderer::ITextureCollection *NullRenderer::createTextureCollection(uint32_t numberOfTextures, Renderer::ITexture **textures)
-	{
-		return new TextureCollection(*this, numberOfTextures, textures);
-	}
-
-	Renderer::ISamplerStateCollection *NullRenderer::createSamplerStateCollection(uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
-	{
-		return new SamplerStateCollection(*this, numberOfSamplerStates, samplerStates);
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
@@ -461,62 +449,6 @@ namespace NullRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Vertex-shader (VS) stage                              ]
-	//[-------------------------------------------------------]
-	void NullRenderer::vsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void NullRenderer::vsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Tessellation-control-shader (TCS) stage               ]
-	//[-------------------------------------------------------]
-	void NullRenderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void NullRenderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Tessellation-evaluation-shader (TES) stage            ]
-	//[-------------------------------------------------------]
-	void NullRenderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void NullRenderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Geometry-shader (GS) stage                            ]
-	//[-------------------------------------------------------]
-	void NullRenderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void NullRenderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
 	void NullRenderer::rsSetViewports(uint32_t, const Renderer::Viewport *)
@@ -537,20 +469,6 @@ namespace NullRenderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *rasterizerState)
 		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Fragment-shader (FS) stage                            ]
-	//[-------------------------------------------------------]
-	void NullRenderer::fsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void NullRenderer::fsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
 	}
 
 

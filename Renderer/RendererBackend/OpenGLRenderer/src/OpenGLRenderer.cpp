@@ -49,8 +49,6 @@
 #include "OpenGLRenderer/Texture2DArrayDsa.h"
 #include "OpenGLRenderer/Texture2DArrayBind.h"
 #include "OpenGLRenderer/DepthStencilState.h"
-#include "OpenGLRenderer/TextureCollection.h"
-#include "OpenGLRenderer/SamplerStateCollection.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #include "OpenGLRenderer/Shader/ShaderLanguageGlsl.h"
 #include "OpenGLRenderer/Shader/ProgramGlsl.h"
@@ -594,16 +592,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITextureCollection *OpenGLRenderer::createTextureCollection(uint32_t numberOfTextures, Renderer::ITexture **textures)
-	{
-		return new TextureCollection(*this, numberOfTextures, textures);
-	}
-
-	Renderer::ISamplerStateCollection *OpenGLRenderer::createSamplerStateCollection(uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
-	{
-		return new SamplerStateCollection(*this, numberOfSamplerStates, samplerStates);
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
@@ -968,62 +956,6 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Vertex-shader (VS) stage                              ]
-	//[-------------------------------------------------------]
-	void OpenGLRenderer::vsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLRenderer::vsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Tessellation-control-shader (TCS) stage               ]
-	//[-------------------------------------------------------]
-	void OpenGLRenderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLRenderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Tessellation-evaluation-shader (TES) stage            ]
-	//[-------------------------------------------------------]
-	void OpenGLRenderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLRenderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Geometry-shader (GS) stage                            ]
-	//[-------------------------------------------------------]
-	void OpenGLRenderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLRenderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
 	void OpenGLRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
@@ -1137,242 +1069,6 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Fragment-shader (FS) stage                            ]
-	//[-------------------------------------------------------]
-	void OpenGLRenderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
-	{
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-
-			// Is "GL_EXT_direct_state_access" there?
-			if (mContext->getExtensions().isGL_EXT_direct_state_access())
-			{
-				// Effective direct state access (DSA)
-
-				// Loop through all textures within the given texture collection
-				// -> "GL_TEXTURE0_ARB" is the first texture unit, while nUnit we received is zero based
-				Renderer::ITexture **currentTexture = static_cast<TextureCollection*>(textureCollection)->getTextures();
-				Renderer::ITexture **textureEnd	    = currentTexture + static_cast<TextureCollection*>(textureCollection)->getNumberOfTextures();
-				for (GLenum unit = static_cast<GLenum>(GL_TEXTURE0_ARB + startUnit); currentTexture < textureEnd; ++currentTexture, ++unit)
-				{
-					// Get the current texture
-					Renderer::ITexture *texture = *currentTexture;
-
-					// TODO(co) Some security checks might be wise *maximum number of texture units*
-					// Set a texture at that unit?
-					if (nullptr != texture)
-					{
-						// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-						// -> Not required in here, this is already done within the texture collection
-
-						// Evaluate the texture type
-						switch (texture->getResourceType())
-						{
-							case Renderer::ResourceType::TEXTURE_BUFFER:
-								glBindMultiTextureEXT(unit, GL_TEXTURE_BUFFER_ARB, static_cast<TextureBuffer*>(texture)->getOpenGLTexture());
-								break;
-
-							case Renderer::ResourceType::TEXTURE_2D:
-								glBindMultiTextureEXT(unit, GL_TEXTURE_2D, static_cast<Texture2D*>(texture)->getOpenGLTexture());
-								break;
-
-							case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-								// No extension check required, if we in here we already know it must exist
-								glBindMultiTextureEXT(unit, GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(texture)->getOpenGLTexture());
-								break;
-
-							case Renderer::ResourceType::PROGRAM:
-							case Renderer::ResourceType::VERTEX_ARRAY:
-							case Renderer::ResourceType::SWAP_CHAIN:
-							case Renderer::ResourceType::FRAMEBUFFER:
-							case Renderer::ResourceType::INDEX_BUFFER:
-							case Renderer::ResourceType::VERTEX_BUFFER:
-							case Renderer::ResourceType::UNIFORM_BUFFER:
-							case Renderer::ResourceType::RASTERIZER_STATE:
-							case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-							case Renderer::ResourceType::BLEND_STATE:
-							case Renderer::ResourceType::SAMPLER_STATE:
-							case Renderer::ResourceType::VERTEX_SHADER:
-							case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-							case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-							case Renderer::ResourceType::GEOMETRY_SHADER:
-							case Renderer::ResourceType::FRAGMENT_SHADER:
-							case Renderer::ResourceType::TEXTURE_COLLECTION:
-							case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-							default:
-								// Not handled in here
-								break;
-						}
-					}
-					else
-					{
-						// Unbind the texture at the given texture unit
-						glBindMultiTextureEXT(unit, GL_TEXTURE_2D, 0);
-					}
-				}
-			}
-			else
-			{
-				// Traditional bind version
-
-				// "GL_ARB_multitexture" required
-				if (mContext->getExtensions().isGL_ARB_multitexture())
-				{
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Backup the currently active OpenGL texture
-						GLint openGLActiveTextureBackup = 0;
-						glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLActiveTextureBackup);
-					#endif
-
-					// Loop through all textures within the given texture collection
-					// -> GL_TEXTURE0_ARB is the first texture unit, while nUnit we received is zero based
-					Renderer::ITexture **currentTexture = static_cast<TextureCollection*>(textureCollection)->getTextures();
-					Renderer::ITexture **textureEnd	    = currentTexture + static_cast<TextureCollection*>(textureCollection)->getNumberOfTextures();
-					for (GLenum unit = static_cast<GLenum>(GL_TEXTURE0_ARB + startUnit); currentTexture < textureEnd; ++currentTexture, ++unit)
-					{
-						// Get the current texture
-						Renderer::ITexture *texture = *currentTexture;
-
-						// TODO(co) Some security checks might be wise *maximum number of texture units*
-						glActiveTextureARB(unit);
-
-						// Set a texture at that unit?
-						if (nullptr != texture)
-						{
-							// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-							// -> Not required in here, this is already done within the texture collection
-
-							// Evaluate the texture
-							switch (texture->getResourceType())
-							{
-								case Renderer::ResourceType::TEXTURE_BUFFER:
-									glBindTexture(GL_TEXTURE_BUFFER_ARB, static_cast<TextureBuffer*>(texture)->getOpenGLTexture());
-									break;
-
-								case Renderer::ResourceType::TEXTURE_2D:
-									glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(texture)->getOpenGLTexture());
-									break;
-
-								case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-									// No extension check required, if we in here we already know it must exist
-									glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(texture)->getOpenGLTexture());
-									break;
-
-								case Renderer::ResourceType::PROGRAM:
-								case Renderer::ResourceType::VERTEX_ARRAY:
-								case Renderer::ResourceType::SWAP_CHAIN:
-								case Renderer::ResourceType::FRAMEBUFFER:
-								case Renderer::ResourceType::INDEX_BUFFER:
-								case Renderer::ResourceType::VERTEX_BUFFER:
-								case Renderer::ResourceType::UNIFORM_BUFFER:
-								case Renderer::ResourceType::RASTERIZER_STATE:
-								case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-								case Renderer::ResourceType::BLEND_STATE:
-								case Renderer::ResourceType::SAMPLER_STATE:
-								case Renderer::ResourceType::VERTEX_SHADER:
-								case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-								case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-								case Renderer::ResourceType::GEOMETRY_SHADER:
-								case Renderer::ResourceType::FRAGMENT_SHADER:
-								case Renderer::ResourceType::TEXTURE_COLLECTION:
-								case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-								default:
-									// Not handled in here
-									break;
-							}
-						}
-						else
-						{
-							// Unbind the texture at the given texture unit
-							glBindTexture(GL_TEXTURE_2D, 0);
-						}
-					}
-
-					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-						// Be polite and restore the previous active OpenGL texture
-						glActiveTextureARB(openGLActiveTextureBackup);
-					#endif
-				}
-			}
-		}
-	}
-
-	void OpenGLRenderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
-	{
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-
-			// Is "GL_ARB_sampler_objects" there?
-			if (mContext->getExtensions().isGL_ARB_sampler_objects())
-			{
-				// Effective sampler object (SO)
-
-				// Loop through all sampler states within the given sampler state collection
-				Renderer::ISamplerState **currentSamplerState = static_cast<SamplerStateCollection*>(samplerStateCollection)->getSamplerStates();
-				Renderer::ISamplerState **samplerStateEnd	  = currentSamplerState + static_cast<SamplerStateCollection*>(samplerStateCollection)->getNumberOfSamplerStates();
-				for (uint32_t unit = startUnit; currentSamplerState < samplerStateEnd; ++currentSamplerState, ++unit)
-				{
-					// Get the current sampler state
-					Renderer::ISamplerState *samplerState = *currentSamplerState;
-
-					// Set a sampler state at that unit?
-					glBindSampler(unit, (nullptr != samplerState) ? static_cast<SamplerStateSo*>(samplerState)->getOpenGLSampler() : 0);
-				}
-			}
-			else
-			{
-				// Loop through all sampler states within the given sampler state collection
-				Renderer::ISamplerState **currentSamplerState = static_cast<SamplerStateCollection*>(samplerStateCollection)->getSamplerStates();
-				Renderer::ISamplerState **samplerStateEnd	  = currentSamplerState + static_cast<SamplerStateCollection*>(samplerStateCollection)->getNumberOfSamplerStates();
-				for (uint32_t unit = startUnit; currentSamplerState < samplerStateEnd; ++currentSamplerState, ++unit)
-				{
-					// Get the current sampler state
-					Renderer::ISamplerState *samplerState = *currentSamplerState;
-
-					// TODO(co) Activate texture and so on
-
-					// Set a sampler state at that unit?
-					if (nullptr != samplerState)
-					{
-						// Is "GL_EXT_direct_state_access" there?
-						if (mContext->getExtensions().isGL_EXT_direct_state_access())
-						{
-							// Direct state access (DSA) version to emulate a sampler object
-							static_cast<SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
-						}
-						else
-						{
-							// Traditional bind version to emulate a sampler object
-							static_cast<SamplerStateBind*>(samplerState)->setOpenGLSamplerStates();
-						}
-					}
-					else
-					{
-						// Set the default sampler state
-						if (nullptr != mDefaultSamplerState)
-						{
-							// TODO(co)
-						}
-						else
-						{
-							// Fallback in case everything goes wrong
-
-							// TODO(co) Implement me
-						}
-					}
-				}
-			}
-		}
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
 	Renderer::IRenderTarget *OpenGLRenderer::omGetRenderTarget()
@@ -1459,8 +1155,6 @@ namespace OpenGLRenderer
 					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 					case Renderer::ResourceType::GEOMETRY_SHADER:
 					case Renderer::ResourceType::FRAGMENT_SHADER:
-					case Renderer::ResourceType::TEXTURE_COLLECTION:
-					case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 					default:
 						// Not handled in here
 						break;

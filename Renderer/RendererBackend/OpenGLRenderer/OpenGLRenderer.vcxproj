@@ -40,7 +40,6 @@
     <ClInclude Include="include\OpenGLRenderer\RootSignature.h" />
     <ClInclude Include="include\OpenGLRenderer\SamplerState.h" />
     <ClInclude Include="include\OpenGLRenderer\SamplerStateBind.h" />
-    <ClInclude Include="include\OpenGLRenderer\SamplerStateCollection.h" />
     <ClInclude Include="include\OpenGLRenderer\SamplerStateDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\SamplerStateSo.h" />
     <ClInclude Include="include\OpenGLRenderer\Shader\FragmentShader.h" />
@@ -72,7 +71,6 @@
     <ClInclude Include="include\OpenGLRenderer\TextureBuffer.h" />
     <ClInclude Include="include\OpenGLRenderer\TextureBufferBind.h" />
     <ClInclude Include="include\OpenGLRenderer\TextureBufferDsa.h" />
-    <ClInclude Include="include\OpenGLRenderer\TextureCollection.h" />
     <ClInclude Include="include\OpenGLRenderer\VertexArray.h" />
     <ClInclude Include="include\OpenGLRenderer\VertexArrayNoVao.h" />
     <ClInclude Include="include\OpenGLRenderer\VertexArrayVao.h" />
@@ -114,7 +112,6 @@
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateBind.cpp" />
-    <ClCompile Include="src\SamplerStateCollection.cpp" />
     <ClCompile Include="src\SamplerStateDsa.cpp" />
     <ClCompile Include="src\SamplerStateSo.cpp" />
     <ClCompile Include="src\Shader\FragmentShader.cpp" />
@@ -146,7 +143,6 @@
     <ClCompile Include="src\TextureBuffer.cpp" />
     <ClCompile Include="src\TextureBufferBind.cpp" />
     <ClCompile Include="src\TextureBufferDsa.cpp" />
-    <ClCompile Include="src\TextureCollection.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\VertexArrayNoVao.cpp" />
     <ClCompile Include="src\VertexArrayVao.cpp" />
@@ -168,7 +164,6 @@
     <None Include="include\OpenGLRenderer\PipelineState.inl" />
     <None Include="include\OpenGLRenderer\RasterizerState.inl" />
     <None Include="include\OpenGLRenderer\RootSignature.inl" />
-    <None Include="include\OpenGLRenderer\SamplerStateCollection.inl" />
     <None Include="include\OpenGLRenderer\SamplerStateSo.inl" />
     <None Include="include\OpenGLRenderer\Shader\FragmentShaderGlsl.inl" />
     <None Include="include\OpenGLRenderer\Shader\GeometryShaderGlsl.inl" />
@@ -183,7 +178,6 @@
     <None Include="include\OpenGLRenderer\Texture2D.inl" />
     <None Include="include\OpenGLRenderer\Texture2DArray.inl" />
     <None Include="include\OpenGLRenderer\TextureBuffer.inl" />
-    <None Include="include\OpenGLRenderer\TextureCollection.inl" />
     <None Include="include\OpenGLRenderer\VertexArray.inl" />
     <None Include="include\OpenGLRenderer\VertexArrayVao.inl" />
     <None Include="include\OpenGLRenderer\VertexBuffer.inl" />

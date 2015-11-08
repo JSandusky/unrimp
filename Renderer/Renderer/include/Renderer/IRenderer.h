@@ -70,8 +70,6 @@ namespace Renderer
 	struct ScissorRectangle;
 	class IDepthStencilState;
 	struct DepthStencilState;
-	class ITextureCollection;
-	class ISamplerStateCollection;
 	struct VertexArrayVertexBuffer;
 }
 
@@ -119,8 +117,6 @@ namespace Renderer
 		friend class ITessellationEvaluationShader;
 		friend class IGeometryShader;
 		friend class IFragmentShader;
-		friend class ITextureCollection;
-		friend class ISamplerStateCollection;
 
 
 	//[-------------------------------------------------------]
@@ -492,42 +488,6 @@ namespace Renderer
 		*/
 		virtual ISamplerState *createSamplerState(const SamplerState &samplerState) = 0;
 
-		/**
-		*  @brief
-		*    Create a texture collection instance
-		*
-		*  @param[in] numberOfTextures
-		*    The number of textures
-		*  @param[in] textures
-		*    The textures, can be a null pointer or can contain null pointers, if not a null pointer there must be at
-		*    least "numberOfTextures" textures in the provided C-array of pointers
-		*
-		*  @return
-		*    The texture collection instance, null pointer on error. Release the returned instance if you no longer need it.
-		*
-		*  @note
-		*    - The texture collection keeps a reference to the provided texture instances
-		*/
-		virtual ITextureCollection *createTextureCollection(uint32_t numberOfTextures, ITexture **textures) = 0;
-
-		/**
-		*  @brief
-		*    Create a sampler state collection instance
-		*
-		*  @param[in] numberOfSamplerStates
-		*    The number of sampler states
-		*  @param[in] samplerStates
-		*    The sampler states, can be a null pointer or can contain null pointers, if not a null pointer there must be at
-		*    least "numberOfSamplerStates" sampler states in the provided C-array of pointers
-		*
-		*  @return
-		*    The sampler state collection instance, null pointer on error. Release the returned instance if you no longer need it.
-		*
-		*  @note
-		*    - The sampler state collection keeps a reference to the provided sampler state instances
-		*/
-		virtual ISamplerStateCollection *createSamplerStateCollection(uint32_t numberOfSamplerStates, ISamplerState **samplerStates) = 0;
-
 		//[-------------------------------------------------------]
 		//[ Resource handling                                     ]
 		//[-------------------------------------------------------]
@@ -619,106 +579,6 @@ namespace Renderer
 		virtual void iaSetPrimitiveTopology(PrimitiveTopology::Enum primitiveTopology) = 0;
 
 		//[-------------------------------------------------------]
-		//[ Vertex-shader (VS) stage                              ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the used vertex shader texture resource at a certain texture unit by using a texture collection
-		*
-		*  @param[in] startUnit
-		*    Start texture unit, incremented automatically internally for every texture collection element
-		*  @param[in] textureCollection
-		*    Texture collection to use, can be an null pointer
-		*/
-		virtual void vsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-
-		/**
-		*  @brief
-		*    Set the used vertex shader sampler state resource at a certain texture unit by using a sampler state collection
-		*
-		*  @param[in] startUnit
-		*    Start texture unit, incremented automatically internally for every sampler state collection element
-		*  @param[in] samplerStateCollection
-		*    Sampler state collection to use, can be an null pointer
-		*/
-		virtual void vsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-
-		//[-------------------------------------------------------]
-		//[ Tessellation-control-shader (TCS) stage               ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the used tessellation control shader texture resource at a certain texture unit by using a texture collection
-		*
-		*  @param[in] startUnit
-		*    Start texture unit, incremented automatically internally for every texture collection element
-		*  @param[in] textureCollection
-		*    Texture collection to use, can be an null pointer
-		*/
-		virtual void tcsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-
-		/**
-		*  @brief
-		*    Set the used tessellation control shader sampler state resource at a certain texture unit by using a sampler state collection
-		*
-		*  @param[in] startUnit
-		*    Start texture unit, incremented automatically internally for every sampler state collection element
-		*  @param[in] samplerStateCollection
-		*    Sampler state collection to use, can be an null pointer
-		*/
-		virtual void tcsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-
-		//[-------------------------------------------------------]
-		//[ Tessellation-evaluation-shader (TES) stage            ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the used tessellation evaluation shader texture resource at a certain texture unit by using a texture collection
-		*
-		*  @param[in] startUnit
-		*    Start texture unit, incremented automatically internally for every texture collection element
-		*  @param[in] textureCollection
-		*    Texture collection to use, can be an null pointer
-		*/
-		virtual void tesSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-
-		/**
-		*  @brief
-		*    Set the used tessellation evaluation shader sampler state resource at a certain texture unit by using a sampler state collection
-		*
-		*  @param[in] startUnit
-		*    Start texture unit, incremented automatically internally for every sampler state collection element
-		*  @param[in] samplerStateCollection
-		*    Sampler state collection to use, can be an null pointer
-		*/
-		virtual void tesSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-
-		//[-------------------------------------------------------]
-		//[ Geometry-shader (GS) stage                            ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the used geometry shader texture resource at a certain texture unit by using a texture collection
-		*
-		*  @param[in] startUnit
-		*    Start texture unit, incremented automatically internally for every texture collection element
-		*  @param[in] textureCollection
-		*    Texture collection to use, can be an null pointer
-		*/
-		virtual void gsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-
-		/**
-		*  @brief
-		*    Set the used geometry shader sampler state resource at a certain texture unit by using a sampler state collection
-		*
-		*  @param[in] startUnit
-		*    Start texture unit, incremented automatically internally for every sampler state collection element
-		*  @param[in] samplerStateCollection
-		*    Sampler state collection to use, can be an null pointer
-		*/
-		virtual void gsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
-
-		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
 		//[-------------------------------------------------------]
 		/**
@@ -758,31 +618,6 @@ namespace Renderer
 		*    Rasterizer state to use, can be an null pointer (in this case nothing happens, default: "nullptr", see "Renderer::RasterizerState" for the default values used in this case)
 		*/
 		virtual void rsSetState(IRasterizerState *rasterizerState) = 0;
-
-		//[-------------------------------------------------------]
-		//[ Fragment-shader (FS) stage                            ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Set the used fragment shader texture resource at a certain texture unit by using a texture collection
-		*
-		*  @param[in] startUnit
-		*    Start texture unit, incremented automatically internally for every texture collection element
-		*  @param[in] textureCollection
-		*    Texture collection to use, can be an null pointer
-		*/
-		virtual void fsSetTextureCollection(uint32_t startUnit, ITextureCollection *textureCollection) = 0;
-
-		/**
-		*  @brief
-		*    Set the used fragment shader sampler state resource at a certain texture unit by using a sampler state collection
-		*
-		*  @param[in] startUnit
-		*    Start texture unit, incremented automatically internally for every sampler state collection element
-		*  @param[in] samplerStateCollection
-		*    Sampler state collection to use, can be an null pointer
-		*/
-		virtual void fsSetSamplerStateCollection(uint32_t startUnit, ISamplerStateCollection *samplerStateCollection) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]

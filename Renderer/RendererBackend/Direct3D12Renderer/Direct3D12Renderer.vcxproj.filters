@@ -51,9 +51,6 @@
     <None Include="include\Direct3D12Renderer\SamplerState.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D12Renderer\SamplerStateCollection.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D12Renderer\SwapChain.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -64,9 +61,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D12Renderer\TextureBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D12Renderer\TextureCollection.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D12Renderer\VertexBuffer.inl">
@@ -152,9 +146,6 @@
     <ClInclude Include="include\Direct3D12Renderer\SamplerState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D12Renderer\SamplerStateCollection.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D12Renderer\SwapChain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -165,9 +156,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D12Renderer\TextureBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D12Renderer\TextureCollection.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D12Renderer\VertexArray.h">
@@ -268,9 +256,6 @@
     <ClCompile Include="src\SamplerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SamplerStateCollection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -281,9 +266,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TextureBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureCollection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexArray.cpp">

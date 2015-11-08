@@ -95,8 +95,6 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
-				case Renderer::ResourceType::TEXTURE_COLLECTION:
-				case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 				default:
 					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The type of the given color texture at index %d is not supported", colorTexture - colorTextures)
 					break;

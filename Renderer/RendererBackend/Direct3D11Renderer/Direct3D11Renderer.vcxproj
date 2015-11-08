@@ -29,7 +29,6 @@
     <None Include="include\Direct3D11Renderer\RasterizerState.inl" />
     <None Include="include\Direct3D11Renderer\RootSignature.inl" />
     <None Include="include\Direct3D11Renderer\SamplerState.inl" />
-    <None Include="include\Direct3D11Renderer\SamplerStateCollection.inl" />
     <None Include="include\Direct3D11Renderer\Shader\FragmentShaderHlsl.inl" />
     <None Include="include\Direct3D11Renderer\Shader\GeometryShaderHlsl.inl" />
     <None Include="include\Direct3D11Renderer\Shader\Program.inl" />
@@ -42,7 +41,6 @@
     <None Include="include\Direct3D11Renderer\Texture2D.inl" />
     <None Include="include\Direct3D11Renderer\Texture2DArray.inl" />
     <None Include="include\Direct3D11Renderer\TextureBuffer.inl" />
-    <None Include="include\Direct3D11Renderer\TextureCollection.inl" />
     <None Include="include\Direct3D11Renderer\VertexBuffer.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
@@ -62,7 +60,6 @@
     <ClInclude Include="include\Direct3D11Renderer\RasterizerState.h" />
     <ClInclude Include="include\Direct3D11Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D11Renderer\SamplerState.h" />
-    <ClInclude Include="include\Direct3D11Renderer\SamplerStateCollection.h" />
     <ClInclude Include="include\Direct3D11Renderer\Shader\FragmentShader.h" />
     <ClInclude Include="include\Direct3D11Renderer\Shader\FragmentShaderHlsl.h" />
     <ClInclude Include="include\Direct3D11Renderer\Shader\GeometryShader.h" />
@@ -82,7 +79,6 @@
     <ClInclude Include="include\Direct3D11Renderer\Texture2D.h" />
     <ClInclude Include="include\Direct3D11Renderer\Texture2DArray.h" />
     <ClInclude Include="include\Direct3D11Renderer\TextureBuffer.h" />
-    <ClInclude Include="include\Direct3D11Renderer\TextureCollection.h" />
     <ClInclude Include="include\Direct3D11Renderer\VertexArray.h" />
     <ClInclude Include="include\Direct3D11Renderer\VertexBuffer.h" />
   </ItemGroup>
@@ -100,7 +96,6 @@
     <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
-    <ClCompile Include="src\SamplerStateCollection.cpp" />
     <ClCompile Include="src\Shader\FragmentShader.cpp" />
     <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp" />
     <ClCompile Include="src\Shader\GeometryShader.cpp" />
@@ -120,7 +115,6 @@
     <ClCompile Include="src\Texture2D.cpp" />
     <ClCompile Include="src\Texture2DArray.cpp" />
     <ClCompile Include="src\TextureBuffer.cpp" />
-    <ClCompile Include="src\TextureCollection.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>

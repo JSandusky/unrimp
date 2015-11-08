@@ -65,9 +65,6 @@
     <ClInclude Include="include\NullRenderer\SamplerState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\NullRenderer\SamplerStateCollection.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\NullRenderer\SwapChain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -78,9 +75,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\NullRenderer\TextureBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\NullRenderer\TextureCollection.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\NullRenderer\VertexArray.h">
@@ -142,9 +136,6 @@
     <ClCompile Include="src\SamplerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SamplerStateCollection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -155,9 +146,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TextureBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureCollection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexArray.cpp">

@@ -37,8 +37,6 @@
 #include "Direct3D9Renderer/PipelineState.h"
 #include "Direct3D9Renderer/RasterizerState.h"
 #include "Direct3D9Renderer/DepthStencilState.h"
-#include "Direct3D9Renderer/TextureCollection.h"
-#include "Direct3D9Renderer/SamplerStateCollection.h"
 #include "Direct3D9Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D9Renderer/Shader/VertexShaderHlsl.h"
 #include "Direct3D9Renderer/Shader/ShaderLanguageHlsl.h"
@@ -448,16 +446,6 @@ namespace Direct3D9Renderer
 		return new SamplerState(*this, samplerState);
 	}
 
-	Renderer::ITextureCollection *Direct3D9Renderer::createTextureCollection(uint32_t numberOfTextures, Renderer::ITexture **textures)
-	{
-		return new TextureCollection(*this, numberOfTextures, textures);
-	}
-
-	Renderer::ISamplerStateCollection *Direct3D9Renderer::createSamplerStateCollection(uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
-	{
-		return new SamplerStateCollection(*this, numberOfSamplerStates, samplerStates);
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
@@ -601,8 +589,6 @@ namespace Direct3D9Renderer
 			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 			case Renderer::ResourceType::GEOMETRY_SHADER:
 			case Renderer::ResourceType::FRAGMENT_SHADER:
-			case Renderer::ResourceType::TEXTURE_COLLECTION:
-			case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 			default:
 				// Nothing we can map, set known return values
 				mappedSubresource.data		 = nullptr;
@@ -647,8 +633,6 @@ namespace Direct3D9Renderer
 			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 			case Renderer::ResourceType::GEOMETRY_SHADER:
 			case Renderer::ResourceType::FRAGMENT_SHADER:
-			case Renderer::ResourceType::TEXTURE_COLLECTION:
-			case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 			default:
 				// Nothing we can unmap
 				break;
@@ -901,175 +885,6 @@ namespace Direct3D9Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Vertex-shader (VS) stage                              ]
-	//[-------------------------------------------------------]
-	void Direct3D9Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
-	{
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-			// Loop through all textures within the given texture collection
-			// -> "+ D3DVERTEXTEXTURESAMPLER1", see "Direct3D9Renderer::vsSetTexture()" above for details
-			Renderer::ITexture **currentTexture = static_cast<TextureCollection*>(textureCollection)->getTextures();
-			Renderer::ITexture **textureEnd	    = currentTexture + static_cast<TextureCollection*>(textureCollection)->getNumberOfTextures();
-			for (uint32_t unit = startUnit + D3DVERTEXTEXTURESAMPLER1; currentTexture < textureEnd; ++currentTexture, ++unit)
-			{
-				// Get the current texture
-				Renderer::ITexture *texture = *currentTexture;
-
-				// Set a texture at that unit?
-				if (nullptr != texture)
-				{
-					// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-					// -> Not required in here, this is already done within the texture collection
-
-					// TODO(co) Some security checks might be wise *maximum number of texture units*
-					// Evaluate the texture
-					switch (texture->getResourceType())
-					{
-						case Renderer::ResourceType::TEXTURE_2D:
-							mDirect3DDevice9->SetTexture(unit, static_cast<Texture2D*>(texture)->getDirect3DTexture9());
-							break;
-
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-							// 2D array textures are not supported by Direct3D 9
-							break;
-
-						case Renderer::ResourceType::PROGRAM:
-						case Renderer::ResourceType::VERTEX_ARRAY:
-						case Renderer::ResourceType::SWAP_CHAIN:
-						case Renderer::ResourceType::FRAMEBUFFER:
-						case Renderer::ResourceType::INDEX_BUFFER:
-						case Renderer::ResourceType::VERTEX_BUFFER:
-						case Renderer::ResourceType::UNIFORM_BUFFER:
-						case Renderer::ResourceType::TEXTURE_BUFFER:
-						case Renderer::ResourceType::RASTERIZER_STATE:
-						case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-						case Renderer::ResourceType::BLEND_STATE:
-						case Renderer::ResourceType::SAMPLER_STATE:
-						case Renderer::ResourceType::VERTEX_SHADER:
-						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-						case Renderer::ResourceType::GEOMETRY_SHADER:
-						case Renderer::ResourceType::FRAGMENT_SHADER:
-						case Renderer::ResourceType::TEXTURE_COLLECTION:
-						case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-						default:
-							// Not handled in here
-							break;
-					}
-				}
-				else
-				{
-					mDirect3DDevice9->SetTexture(unit, nullptr);
-				}
-			}
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(this)
-		}
-	}
-
-	void Direct3D9Renderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
-	{
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-			// Loop through all sampler states within the given sampler state collection
-			// -> "+ D3DVERTEXTEXTURESAMPLER1", see "Direct3D9Renderer::vsSetTexture()" above for details
-			Renderer::ISamplerState **currentSamplerState = static_cast<SamplerStateCollection*>(samplerStateCollection)->getSamplerStates();
-			Renderer::ISamplerState **samplerStateEnd	  = currentSamplerState + static_cast<SamplerStateCollection*>(samplerStateCollection)->getNumberOfSamplerStates();
-			for (uint32_t unit = startUnit + D3DVERTEXTEXTURESAMPLER1; currentSamplerState < samplerStateEnd; ++currentSamplerState, ++unit)
-			{
-				// Get the current sampler state
-				Renderer::ISamplerState *samplerState = *currentSamplerState;
-
-				// Set a sampler at that unit?
-				if (nullptr != samplerState)
-				{
-					// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-					// -> Not required in here, this is already done within the texture collection
-
-					// Set the Direct3D 9 sampler states
-					static_cast<SamplerState*>(samplerState)->setDirect3D9SamplerStates(unit, *mDirect3DDevice9);
-				}
-				else
-				{
-					// Set the default sampler state
-					if (nullptr != mDefaultSamplerState)
-					{
-						// TODO(co)
-					}
-					else
-					{
-						// Fallback in case everything goes wrong
-
-						// TODO(co) Set default settings
-					}
-				}
-			}
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(this)
-		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Tessellation-control-shader (TCS) stage               ]
-	//[-------------------------------------------------------]
-	void Direct3D9Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D9Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Tessellation-evaluation-shader (TES) stage            ]
-	//[-------------------------------------------------------]
-	void Direct3D9Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D9Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Geometry-shader (GS) stage                            ]
-	//[-------------------------------------------------------]
-	void Direct3D9Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D9Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
 	void Direct3D9Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
@@ -1167,131 +982,6 @@ namespace Direct3D9Renderer
 					}
 				}
 			}
-		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Fragment-shader (FS) stage                            ]
-	//[-------------------------------------------------------]
-	void Direct3D9Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
-	{
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-			// Loop through all textures within the given texture collection
-			Renderer::ITexture **currentTexture = static_cast<TextureCollection*>(textureCollection)->getTextures();
-			Renderer::ITexture **textureEnd	    = currentTexture + static_cast<TextureCollection*>(textureCollection)->getNumberOfTextures();
-			for (uint32_t unit = startUnit; currentTexture < textureEnd; ++currentTexture, ++unit)
-			{
-				// Get the current texture
-				Renderer::ITexture *texture = *currentTexture;
-
-				// Set a texture at that unit?
-				if (nullptr != texture)
-				{
-					// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-					// -> Not required in here, this is already done within the texture collection
-
-					// TODO(co) Some security checks might be wise *maximum number of texture units*
-					// Evaluate the texture
-					switch (texture->getResourceType())
-					{
-						case Renderer::ResourceType::TEXTURE_2D:
-							mDirect3DDevice9->SetTexture(unit, static_cast<Texture2D*>(texture)->getDirect3DTexture9());
-							break;
-
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-							// 2D array textures are not supported by Direct3D 9
-							break;
-
-						case Renderer::ResourceType::PROGRAM:
-						case Renderer::ResourceType::VERTEX_ARRAY:
-						case Renderer::ResourceType::SWAP_CHAIN:
-						case Renderer::ResourceType::FRAMEBUFFER:
-						case Renderer::ResourceType::INDEX_BUFFER:
-						case Renderer::ResourceType::VERTEX_BUFFER:
-						case Renderer::ResourceType::UNIFORM_BUFFER:
-						case Renderer::ResourceType::TEXTURE_BUFFER:
-						case Renderer::ResourceType::RASTERIZER_STATE:
-						case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-						case Renderer::ResourceType::BLEND_STATE:
-						case Renderer::ResourceType::SAMPLER_STATE:
-						case Renderer::ResourceType::VERTEX_SHADER:
-						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-						case Renderer::ResourceType::GEOMETRY_SHADER:
-						case Renderer::ResourceType::FRAGMENT_SHADER:
-						case Renderer::ResourceType::TEXTURE_COLLECTION:
-						case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-						default:
-							// Not handled in here
-							break;
-					}
-				}
-				else
-				{
-					mDirect3DDevice9->SetTexture(unit, nullptr);
-				}
-			}
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(this)
-		}
-	}
-
-	void Direct3D9Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
-	{
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-			// Loop through all sampler states within the given sampler state collection
-			Renderer::ISamplerState **currentSamplerState = static_cast<SamplerStateCollection*>(samplerStateCollection)->getSamplerStates();
-			Renderer::ISamplerState **samplerStateEnd	  = currentSamplerState + static_cast<SamplerStateCollection*>(samplerStateCollection)->getNumberOfSamplerStates();
-			for (uint32_t unit = startUnit; currentSamplerState < samplerStateEnd; ++currentSamplerState, ++unit)
-			{
-				// Get the current sampler state
-				Renderer::ISamplerState *samplerState = *currentSamplerState;
-
-				// Set a sampler at that unit?
-				if (nullptr != samplerState)
-				{
-					// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-					// -> Not required in here, this is already done within the texture collection
-
-					// Set the Direct3D 9 sampler states
-					static_cast<SamplerState*>(samplerState)->setDirect3D9SamplerStates(unit, *mDirect3DDevice9);
-				}
-				else
-				{
-					// Set the default sampler state
-					if (nullptr != mDefaultSamplerState)
-					{
-						// TODO(co)
-					}
-					else
-					{
-						// Fallback in case everything goes wrong
-
-						// TODO(co) Set default settings
-					}
-				}
-			}
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(this)
 		}
 	}
 
@@ -1395,8 +1085,6 @@ namespace Direct3D9Renderer
 					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 					case Renderer::ResourceType::GEOMETRY_SHADER:
 					case Renderer::ResourceType::FRAGMENT_SHADER:
-					case Renderer::ResourceType::TEXTURE_COLLECTION:
-					case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 					default:
 						// Not handled in here
 						break;

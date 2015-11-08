@@ -130,15 +130,6 @@
     <ClInclude Include="include\Renderer\Statistics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\ICollection.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\ITextureCollection.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\ISamplerStateCollection.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\WindowsHeader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -257,15 +248,6 @@
     </None>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\Renderer\ICollection.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\ITextureCollection.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\ISamplerStateCollection.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="include\Renderer\IFramebuffer.inl">
       <Filter>Header Files</Filter>
     </None>

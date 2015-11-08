@@ -67,10 +67,7 @@ namespace Renderer
 			TESSELLATION_CONTROL_SHADER	   = 17,	///< Tessellation control shader (TCS, "hull shader" in Direct3D terminology)
 			TESSELLATION_EVALUATION_SHADER = 18,	///< Tessellation evaluation shader (TES, "domain shader" in Direct3D terminology)
 			GEOMETRY_SHADER				   = 19,	///< Geometry shader (GS)
-			FRAGMENT_SHADER				   = 20,	///< Fragment shader (FS, "pixel shader" in Direct3D terminology)
-			// ICollection
-			TEXTURE_COLLECTION			   = 21,	///< Texture collection
-			SAMPLER_STATE_COLLECTION	   = 22		///< Sampler state collection
+			FRAGMENT_SHADER				   = 20		///< Fragment shader (FS, "pixel shader" in Direct3D terminology)
 		};
 	};
 

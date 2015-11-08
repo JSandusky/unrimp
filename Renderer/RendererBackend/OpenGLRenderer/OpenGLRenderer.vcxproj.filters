@@ -103,9 +103,6 @@
     <ClInclude Include="include\OpenGLRenderer\TextureBufferDsa.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\TextureCollection.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\VertexArray.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -182,9 +179,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\SamplerStateBind.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\SamplerStateCollection.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\SamplerStateDsa.h">
@@ -285,9 +279,6 @@
     <ClCompile Include="src\SamplerStateBind.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SamplerStateCollection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SamplerStateDsa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -322,9 +313,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\TextureBufferDsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureCollection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexArray.cpp">
@@ -439,9 +427,6 @@
     <None Include="include\OpenGLRenderer\TextureBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\TextureCollection.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\VertexArray.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -464,9 +449,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\RasterizerState.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\SamplerStateCollection.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\SamplerStateSo.inl">

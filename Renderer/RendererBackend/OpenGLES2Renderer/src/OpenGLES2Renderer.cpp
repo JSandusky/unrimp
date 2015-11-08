@@ -39,8 +39,6 @@
 #include "OpenGLES2Renderer/Texture2DArray.h"
 #include "OpenGLES2Renderer/RasterizerState.h"
 #include "OpenGLES2Renderer/DepthStencilState.h"
-#include "OpenGLES2Renderer/TextureCollection.h"
-#include "OpenGLES2Renderer/SamplerStateCollection.h"
 #include "OpenGLES2Renderer/ContextRuntimeLinking.h"
 #include "OpenGLES2Renderer/Shader/Program.h"
 #include "OpenGLES2Renderer/Shader/ShaderLanguageGlsl.h"
@@ -409,16 +407,6 @@ namespace OpenGLES2Renderer
 		return new SamplerState(*this, samplerState);
 	}
 
-	Renderer::ITextureCollection *OpenGLES2Renderer::createTextureCollection(uint32_t numberOfTextures, Renderer::ITexture **textures)
-	{
-		return new TextureCollection(*this, numberOfTextures, textures);
-	}
-
-	Renderer::ISamplerStateCollection *OpenGLES2Renderer::createSamplerStateCollection(uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates)
-	{
-		return new SamplerStateCollection(*this, numberOfSamplerStates, samplerStates);
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
@@ -698,64 +686,6 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Vertex-shader (VS) stage                              ]
-	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
-	{
-		// In OpenGL ES 2, all shaders share the same texture units
-		fsSetTextureCollection(startUnit, textureCollection);
-	}
-
-	void OpenGLES2Renderer::vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
-	{
-		// In OpenGL ES 2, all shaders share the same texture units
-		fsSetSamplerStateCollection(startUnit, samplerStateCollection);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Tessellation-control-shader (TCS) stage               ]
-	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::tcsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLES2Renderer::tcsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Tessellation-evaluation-shader (TES) stage            ]
-	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::tesSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLES2Renderer::tesSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Geometry-shader (GS) stage                            ]
-	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::gsSetTextureCollection(uint32_t, Renderer::ITextureCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLES2Renderer::gsSetSamplerStateCollection(uint32_t, Renderer::ISamplerStateCollection*)
-	{
-		// TODO(co) Remove this method
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
 	void OpenGLES2Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
@@ -866,150 +796,6 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Fragment-shader (FS) stage                            ]
-	//[-------------------------------------------------------]
-	void OpenGLES2Renderer::fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection)
-	{
-		// Is the given texture collection valid?
-		if (nullptr != textureCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *textureCollection)
-
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Backup the currently active OpenGL ES 2 texture
-				GLint openGLES2ActiveTextureBackup = 0;
-				glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
-			#endif
-
-			// Loop through all textures within the given texture collection
-			// -> "GL_TEXTURE0" is the first texture unit, while nUnit we received is zero based
-			Renderer::ITexture **currentTexture = static_cast<TextureCollection*>(textureCollection)->getTextures();
-			Renderer::ITexture **textureEnd	    = currentTexture + static_cast<TextureCollection*>(textureCollection)->getNumberOfTextures();
-			for (uint32_t unit = static_cast<GLenum>(GL_TEXTURE0 + startUnit); currentTexture < textureEnd; ++currentTexture, ++unit)
-			{
-				// Get the current texture
-				Renderer::ITexture *texture = *currentTexture;
-
-				// TODO(co) Some security checks might be wise *maximum number of texture units*
-				glActiveTexture(unit);
-
-				// Set a texture at that unit?
-				if (nullptr != texture)
-				{
-					// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-					// -> Not required in here, this is already done within the texture collection
-
-					// Evaluate the texture
-					switch (texture->getResourceType())
-					{
-						case Renderer::ResourceType::TEXTURE_2D:
-							glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(texture)->getOpenGLES2Texture());
-							break;
-
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-							// No extension check required, if we in here we already know it must exist
-							glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(texture)->getOpenGLES2Texture());
-							break;
-
-						case Renderer::ResourceType::PROGRAM:
-						case Renderer::ResourceType::VERTEX_ARRAY:
-						case Renderer::ResourceType::SWAP_CHAIN:
-						case Renderer::ResourceType::FRAMEBUFFER:
-						case Renderer::ResourceType::INDEX_BUFFER:
-						case Renderer::ResourceType::VERTEX_BUFFER:
-						case Renderer::ResourceType::UNIFORM_BUFFER:
-						case Renderer::ResourceType::TEXTURE_BUFFER:
-						case Renderer::ResourceType::RASTERIZER_STATE:
-						case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-						case Renderer::ResourceType::BLEND_STATE:
-						case Renderer::ResourceType::SAMPLER_STATE:
-						case Renderer::ResourceType::VERTEX_SHADER:
-						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-						case Renderer::ResourceType::GEOMETRY_SHADER:
-						case Renderer::ResourceType::FRAGMENT_SHADER:
-						case Renderer::ResourceType::TEXTURE_COLLECTION:
-						case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
-						default:
-							// Not handled in here
-							break;
-					}
-				}
-				else
-				{
-					// Unbind the texture at the given texture unit
-					glBindTexture(GL_TEXTURE_2D, 0);
-				}
-			}
-
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Be polite and restore the previous active OpenGL ES 2 texture
-				glActiveTexture(openGLES2ActiveTextureBackup);
-			#endif
-		}
-	}
-
-	void OpenGLES2Renderer::fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection)
-	{
-		// Is the given sampler state collection valid?
-		if (nullptr != samplerStateCollection)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *samplerStateCollection)
-
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Backup the currently active OpenGL ES 2 texture
-				GLint openGLES2ActiveTextureBackup = 0;
-				glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES2ActiveTextureBackup);
-			#endif
-
-			// Loop through all sampler states within the given sampler state collection
-			Renderer::ISamplerState **currentSamplerState = static_cast<SamplerStateCollection*>(samplerStateCollection)->getSamplerStates();
-			Renderer::ISamplerState **samplerStateEnd	  = currentSamplerState + static_cast<SamplerStateCollection*>(samplerStateCollection)->getNumberOfSamplerStates();
-			for (uint32_t unit = startUnit; currentSamplerState < samplerStateEnd; ++currentSamplerState, ++unit)
-			{
-				// Get the current sampler state
-				Renderer::ISamplerState *samplerState = *currentSamplerState;
-
-				// Set a sampler state at that unit?
-				if (nullptr != samplerState)
-				{
-					// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-					// -> Not required in here, this is already done within the sampler state collection
-
-					// TODO(co) Some security checks might be wise *maximum number of texture units*
-					// -> "GL_TEXTURE0" is the first texture unit, while nUnit we received is zero based
-					glActiveTexture(GL_TEXTURE0 + unit);
-
-					// Set the OpenGL ES 2 sampler states
-					static_cast<SamplerState*>(samplerState)->setOpenGLES2SamplerStates();
-				}
-				else
-				{
-					// Set the default sampler state
-					if (nullptr != mDefaultSamplerState)
-					{
-						// TODO(co)
-					}
-					else
-					{
-						// Fallback in case everything goes wrong
-
-						// TODO(co) Implement me
-					}
-				}
-			}
-
-			#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
-				// Be polite and restore the previous active OpenGL ES 2 texture
-				glActiveTexture(openGLES2ActiveTextureBackup);
-			#endif
-		}
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
 	//[-------------------------------------------------------]
 	Renderer::IRenderTarget *OpenGLES2Renderer::omGetRenderTarget()
@@ -1096,8 +882,6 @@ namespace OpenGLES2Renderer
 					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 					case Renderer::ResourceType::GEOMETRY_SHADER:
 					case Renderer::ResourceType::FRAGMENT_SHADER:
-					case Renderer::ResourceType::TEXTURE_COLLECTION:
-					case Renderer::ResourceType::SAMPLER_STATE_COLLECTION:
 					default:
 						// Not handled in here
 						break;

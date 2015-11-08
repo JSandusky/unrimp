@@ -115,8 +115,6 @@ namespace NullRenderer
 		virtual Renderer::IDepthStencilState *createDepthStencilState(const Renderer::DepthStencilState &depthStencilState) override;
 		virtual Renderer::IBlendState *createBlendState(const Renderer::BlendState &blendState) override;
 		virtual Renderer::ISamplerState *createSamplerState(const Renderer::SamplerState &samplerState) override;
-		virtual Renderer::ITextureCollection *createTextureCollection(uint32_t numberOfTextures, Renderer::ITexture **textures) override;
-		virtual Renderer::ISamplerStateCollection *createSamplerStateCollection(uint32_t numberOfSamplerStates, Renderer::ISamplerState **samplerStates) override;
 		//[-------------------------------------------------------]
 		//[ Resource handling                                     ]
 		//[-------------------------------------------------------]
@@ -134,36 +132,11 @@ namespace NullRenderer
 		virtual void iaSetVertexArray(Renderer::IVertexArray *vertexArray) override;
 		virtual void iaSetPrimitiveTopology(Renderer::PrimitiveTopology::Enum primitiveTopology) override;
 		//[-------------------------------------------------------]
-		//[ Vertex-shader (VS) stage                              ]
-		//[-------------------------------------------------------]
-		virtual void vsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void vsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		//[-------------------------------------------------------]
-		//[ Tessellation-control-shader (TCS) stage               ]
-		//[-------------------------------------------------------]
-		virtual void tcsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void tcsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		//[-------------------------------------------------------]
-		//[ Tessellation-evaluation-shader (TES) stage            ]
-		//[-------------------------------------------------------]
-		virtual void tesSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void tesSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		//[-------------------------------------------------------]
-		//[ Geometry-shader (GS) stage                            ]
-		//[-------------------------------------------------------]
-		virtual void gsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void gsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
-		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
 		//[-------------------------------------------------------]
 		virtual void rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports) override;
 		virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles) override;
 		virtual void rsSetState(Renderer::IRasterizerState *rasterizerState) override;
-		//[-------------------------------------------------------]
-		//[ Fragment-shader (FS) stage                            ]
-		//[-------------------------------------------------------]
-		virtual void fsSetTextureCollection(uint32_t startUnit, Renderer::ITextureCollection *textureCollection) override;
-		virtual void fsSetSamplerStateCollection(uint32_t startUnit, Renderer::ISamplerStateCollection *samplerStateCollection) override;
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
