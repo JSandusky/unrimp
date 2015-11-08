@@ -890,48 +890,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::setProgram(Renderer::IProgram *program)
-	{
-		// TODO(co) Avoid changing already set program
-
-		if (nullptr != program)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
-
-			// TODO(co) GLSL buffer settings, unset previous program
-
-			// Evaluate the internal program type of the new program to set
-			switch (static_cast<Program*>(program)->getInternalResourceType())
-			{
-				case Program::InternalResourceType::GLSL:
-					// "GL_ARB_shader_objects" required
-					if (mContext->getExtensions().isGL_ARB_shader_objects())
-					{
-						// Backup OpenGL program identifier
-						mOpenGLProgram = static_cast<ProgramGlsl*>(program)->getOpenGLProgram();
-
-						// Bind the program
-						glUseProgramObjectARB(mOpenGLProgram);
-					}
-					break;
-			}
-		}
-		else
-		{
-			// TODO(co) GLSL buffer settings
-			// "GL_ARB_shader_objects" required
-			if (mContext->getExtensions().isGL_ARB_shader_objects())
-			{
-				// Unbind the program
-				glUseProgramObjectARB(0);
-			}
-
-			// Reset OpenGL program identifier
-			mOpenGLProgram = 0;
-		}
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
@@ -2033,6 +1991,48 @@ namespace OpenGLRenderer
 			// Release reference
 			mVertexArray->release();
 			mVertexArray = nullptr;
+		}
+	}
+
+	void OpenGLRenderer::setProgram(Renderer::IProgram *program)
+	{
+		// TODO(co) Avoid changing already set program
+
+		if (nullptr != program)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
+
+			// TODO(co) GLSL buffer settings, unset previous program
+
+			// Evaluate the internal program type of the new program to set
+			switch (static_cast<Program*>(program)->getInternalResourceType())
+			{
+				case Program::InternalResourceType::GLSL:
+					// "GL_ARB_shader_objects" required
+					if (mContext->getExtensions().isGL_ARB_shader_objects())
+					{
+						// Backup OpenGL program identifier
+						mOpenGLProgram = static_cast<ProgramGlsl*>(program)->getOpenGLProgram();
+
+						// Bind the program
+						glUseProgramObjectARB(mOpenGLProgram);
+					}
+					break;
+			}
+		}
+		else
+		{
+			// TODO(co) GLSL buffer settings
+			// "GL_ARB_shader_objects" required
+			if (mContext->getExtensions().isGL_ARB_shader_objects())
+			{
+				// Unbind the program
+				glUseProgramObjectARB(0);
+			}
+
+			// Reset OpenGL program identifier
+			mOpenGLProgram = 0;
 		}
 	}
 

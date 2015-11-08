@@ -83,12 +83,6 @@ namespace NullRenderer
 		*/
 		virtual ~PipelineState();
 
-		/**
-		*  @brief
-		*    Bind the pipeline state
-		*/
-		void bindPipelineState() const;
-
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]

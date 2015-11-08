@@ -597,18 +597,6 @@ namespace Renderer
 		*/
 		virtual void setPipelineState(IPipelineState *pipelineState) = 0;
 
-		/**
-		*  @brief
-		*    Set the used program
-		*
-		*  @param[in] program
-		*    Program to use, can be an null pointer (default: "nullptr")
-		*
-		*  @note
-		*    - Program instances are created by using "Renderer::IShaderLanguage::createProgram()"
-		*/
-		virtual void setProgram(IProgram *program) = 0;
-
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]

@@ -613,29 +613,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::setProgram(Renderer::IProgram *program)
-	{
-		if (nullptr != program)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
-
-			// Backup OpenGL ES 2 program identifier
-			mOpenGLES2Program = static_cast<Program*>(program)->getOpenGLES2Program();
-
-			// Bind the program
-			glUseProgram(mOpenGLES2Program);
-		}
-		else
-		{
-			// Unbind the program
-			glUseProgram(0);
-
-			// Reset OpenGL ES 2 program identifier
-			mOpenGLES2Program = 0;
-		}
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
@@ -1540,6 +1517,29 @@ namespace OpenGLES2Renderer
 
 		// Is there support for fragment shaders (FS)?
 		mCapabilities.fragmentShader = true;
+	}
+
+	void OpenGLES2Renderer::setProgram(Renderer::IProgram *program)
+	{
+		if (nullptr != program)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
+
+			// Backup OpenGL ES 2 program identifier
+			mOpenGLES2Program = static_cast<Program*>(program)->getOpenGLES2Program();
+
+			// Bind the program
+			glUseProgram(mOpenGLES2Program);
+		}
+		else
+		{
+			// Unbind the program
+			glUseProgram(0);
+
+			// Reset OpenGL ES 2 program identifier
+			mOpenGLES2Program = 0;
+		}
 	}
 
 

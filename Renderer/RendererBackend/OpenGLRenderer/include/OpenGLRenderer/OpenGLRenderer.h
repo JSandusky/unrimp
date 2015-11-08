@@ -68,6 +68,12 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class PipelineState;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -144,7 +150,6 @@ namespace OpenGLRenderer
 		virtual void setGraphicsRootSignature(Renderer::IRootSignature *rootSignature) override;
 		virtual void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource) override;
 		virtual void setPipelineState(Renderer::IPipelineState *pipelineState) override;
-		virtual void setProgram(Renderer::IProgram *program) override;
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
@@ -245,6 +250,15 @@ namespace OpenGLRenderer
 		*    Unset the currently used vertex array
 		*/
 		void iaUnsetVertexArray();
+
+		/**
+		*  @brief
+		*    Set program
+		*
+		*  @param[in] program
+		*    Program to set
+		*/
+		void setProgram(Renderer::IProgram *program);
 
 
 	//[-------------------------------------------------------]

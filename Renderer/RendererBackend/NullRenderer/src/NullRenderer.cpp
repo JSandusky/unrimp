@@ -433,23 +433,10 @@ namespace NullRenderer
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
-
-			// Set pipeline state
-			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
 		}
 		else
 		{
 			// TODO(co) Handle this situation?
-		}
-	}
-
-	void NullRenderer::setProgram(Renderer::IProgram *program)
-	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != program)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 		}
 	}
 

@@ -1629,7 +1629,6 @@ namespace Renderer
 			virtual void setGraphicsRootSignature(IRootSignature *rootSignature) = 0;
 			virtual void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, IResource* resource) = 0;
 			virtual void setPipelineState(IPipelineState *pipelineState) = 0;
-			virtual void setProgram(IProgram *program) = 0;
 			virtual void iaSetVertexArray(IVertexArray *vertexArray) = 0;
 			virtual void iaSetPrimitiveTopology(PrimitiveTopology::Enum primitiveTopology) = 0;
 			virtual void vsSetTexture(uint32_t unit, ITexture *texture) = 0;

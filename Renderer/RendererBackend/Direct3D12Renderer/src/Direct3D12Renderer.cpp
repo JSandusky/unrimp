@@ -719,60 +719,6 @@ namespace Direct3D12Renderer
 		}
 	}
 
-	void Direct3D12Renderer::setProgram(Renderer::IProgram *)
-	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-		// TODO(co) Avoid changing already set program
-
-		if (nullptr != program)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
-
-			// TODO(co) HLSL buffer settings, unset previous program
-
-			// Evaluate the internal program type of the new program to set
-			switch (static_cast<Program*>(program)->getInternalResourceType())
-			{
-				case Program::InternalResourceType::HLSL:
-				{
-					// Get shaders
-					const ProgramHlsl					   *programHlsl						 = static_cast<ProgramHlsl*>(program);
-					const VertexShaderHlsl				   *vertexShaderHlsl				 = programHlsl->getVertexShaderHlsl();
-					const TessellationControlShaderHlsl	   *tessellationControlShaderHlsl	 = programHlsl->getTessellationControlShaderHlsl();
-					const TessellationEvaluationShaderHlsl *tessellationEvaluationShaderHlsl = programHlsl->getTessellationEvaluationShaderHlsl();
-					const GeometryShaderHlsl			   *geometryShaderHlsl				 = programHlsl->getGeometryShaderHlsl();
-					const FragmentShaderHlsl			   *fragmentShaderHlsl				 = programHlsl->getFragmentShaderHlsl();
-
-					// Set shaders
-					mD3D12DeviceContext->VSSetShader(vertexShaderHlsl				  ? vertexShaderHlsl->getD3D12VertexShader()				 : nullptr, nullptr, 0);
-					mD3D12DeviceContext->HSSetShader(tessellationControlShaderHlsl	  ? tessellationControlShaderHlsl->getD3D12HullShader()		 : nullptr, nullptr, 0);
-					mD3D12DeviceContext->DSSetShader(tessellationEvaluationShaderHlsl ? tessellationEvaluationShaderHlsl->getD3D12DomainShader() : nullptr, nullptr, 0);
-					mD3D12DeviceContext->GSSetShader(geometryShaderHlsl				  ? geometryShaderHlsl->getD3D12GeometryShader()			 : nullptr, nullptr, 0);
-					mD3D12DeviceContext->PSSetShader(fragmentShaderHlsl				  ? fragmentShaderHlsl->getD3D12PixelShader()				 : nullptr, nullptr, 0);
-					break;
-				}
-			}
-		}
-		else
-		{
-			// TODO(co) HLSL buffer settings
-			mD3D12DeviceContext->VSSetShader(nullptr, nullptr, 0);
-			mD3D12DeviceContext->HSSetShader(nullptr, nullptr, 0);
-			mD3D12DeviceContext->DSSetShader(nullptr, nullptr, 0);
-			mD3D12DeviceContext->GSSetShader(nullptr, nullptr, 0);
-			mD3D12DeviceContext->PSSetShader(nullptr, nullptr, 0);
-		}
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(this)
-		*/
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]

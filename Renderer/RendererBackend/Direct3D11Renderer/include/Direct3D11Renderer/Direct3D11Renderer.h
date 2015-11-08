@@ -68,6 +68,12 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class PipelineState;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -151,7 +157,6 @@ namespace Direct3D11Renderer
 		virtual void setGraphicsRootSignature(Renderer::IRootSignature *rootSignature) override;
 		virtual void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource) override;
 		virtual void setPipelineState(Renderer::IPipelineState *pipelineState) override;
-		virtual void setProgram(Renderer::IProgram *program) override;
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
@@ -246,6 +251,15 @@ namespace Direct3D11Renderer
 		*    Initialize the capabilities
 		*/
 		void initializeCapabilities();
+
+		/**
+		*  @brief
+		*    Set program
+		*
+		*  @param[in] program
+		*    Program to set
+		*/
+		void setProgram(Renderer::IProgram *program);
 
 
 	//[-------------------------------------------------------]

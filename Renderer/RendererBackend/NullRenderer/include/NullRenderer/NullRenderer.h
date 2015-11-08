@@ -128,7 +128,6 @@ namespace NullRenderer
 		virtual void setGraphicsRootSignature(Renderer::IRootSignature *rootSignature) override;
 		virtual void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource) override;
 		virtual void setPipelineState(Renderer::IPipelineState *pipelineState) override;
-		virtual void setProgram(Renderer::IProgram *program) override;
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]

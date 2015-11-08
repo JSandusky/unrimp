@@ -845,51 +845,6 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::setProgram(Renderer::IProgram *program)
-	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-		// TODO(co) Avoid changing already set program
-
-		if (nullptr != program)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
-
-			// TODO(co) HLSL buffer settings, unset previous program
-
-			// Evaluate the internal program type of the new program to set
-			switch (static_cast<Program*>(program)->getInternalResourceType())
-			{
-				case Program::InternalResourceType::HLSL:
-				{
-					// Get shaders
-					const ProgramHlsl		 *programHlsl		 = static_cast<ProgramHlsl*>(program);
-					const VertexShaderHlsl	 *vertexShaderHlsl	 = programHlsl->getVertexShaderHlsl();
-					const GeometryShaderHlsl *geometryShaderHlsl = programHlsl->getGeometryShaderHlsl();
-					const FragmentShaderHlsl *fragmentShaderHlsl = programHlsl->getFragmentShaderHlsl();
-
-					// Set shaders
-					mD3D10Device->VSSetShader(vertexShaderHlsl	 ? vertexShaderHlsl->  getD3D10VertexShader()	: nullptr);
-					mD3D10Device->GSSetShader(geometryShaderHlsl ? geometryShaderHlsl->getD3D10GeometryShader() : nullptr);
-					mD3D10Device->PSSetShader(fragmentShaderHlsl ? fragmentShaderHlsl->getD3D10PixelShader()	: nullptr);
-					break;
-				}
-			}
-		}
-		else
-		{
-			// TODO(co) HLSL buffer settings
-			mD3D10Device->VSSetShader(nullptr);
-			mD3D10Device->GSSetShader(nullptr);
-			mD3D10Device->PSSetShader(nullptr);
-		}
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(this)
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Input-assembler (IA) stage                            ]
@@ -1660,6 +1615,51 @@ namespace Direct3D10Renderer
 
 		// Is there support for fragment shaders (FS)?
 		mCapabilities.fragmentShader = true;
+	}
+
+	void Direct3D10Renderer::setProgram(Renderer::IProgram *program)
+	{
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+		// TODO(co) Avoid changing already set program
+
+		if (nullptr != program)
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
+
+			// TODO(co) HLSL buffer settings, unset previous program
+
+			// Evaluate the internal program type of the new program to set
+			switch (static_cast<Program*>(program)->getInternalResourceType())
+			{
+				case Program::InternalResourceType::HLSL:
+				{
+					// Get shaders
+					const ProgramHlsl		 *programHlsl		 = static_cast<ProgramHlsl*>(program);
+					const VertexShaderHlsl	 *vertexShaderHlsl	 = programHlsl->getVertexShaderHlsl();
+					const GeometryShaderHlsl *geometryShaderHlsl = programHlsl->getGeometryShaderHlsl();
+					const FragmentShaderHlsl *fragmentShaderHlsl = programHlsl->getFragmentShaderHlsl();
+
+					// Set shaders
+					mD3D10Device->VSSetShader(vertexShaderHlsl	 ? vertexShaderHlsl->  getD3D10VertexShader()	: nullptr);
+					mD3D10Device->GSSetShader(geometryShaderHlsl ? geometryShaderHlsl->getD3D10GeometryShader() : nullptr);
+					mD3D10Device->PSSetShader(fragmentShaderHlsl ? fragmentShaderHlsl->getD3D10PixelShader()	: nullptr);
+					break;
+				}
+			}
+		}
+		else
+		{
+			// TODO(co) HLSL buffer settings
+			mD3D10Device->VSSetShader(nullptr);
+			mD3D10Device->GSSetShader(nullptr);
+			mD3D10Device->PSSetShader(nullptr);
+		}
+
+		// End debug event
+		RENDERER_END_DEBUG_EVENT(this)
 	}
 
 

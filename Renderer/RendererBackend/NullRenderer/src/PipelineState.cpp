@@ -53,13 +53,6 @@ namespace NullRenderer
 		}
 	}
 
-	void PipelineState::bindPipelineState() const
-	{
-		NullRenderer& nullRenderer = static_cast<NullRenderer&>(getRenderer());
-
-		nullRenderer.setProgram(mProgram);
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
