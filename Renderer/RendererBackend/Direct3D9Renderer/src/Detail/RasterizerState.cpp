@@ -24,6 +24,8 @@
 #include "Direct3D9Renderer/Detail/RasterizerState.h"
 #include "Direct3D9Renderer/d3d9.h"
 
+#include <Renderer/RasterizerStateTypes.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -35,8 +37,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RasterizerState::RasterizerState(Direct3D9Renderer &direct3D9Renderer, const Renderer::RasterizerState &rasterizerState) :
-		IRasterizerState(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer)),
+	RasterizerState::RasterizerState(const Renderer::RasterizerState &rasterizerState) :
 		mDirect3DFillMode(0),	// Set below
 		mDirect3DCullMode(0),	// Set below
 		mDirect3DDepthBias(*(reinterpret_cast<const DWORD*>(&rasterizerState.depthBias))),	// Direct3D 9 type is float, but has to be handed over by using DWORD
@@ -116,15 +117,6 @@ namespace Direct3D9Renderer
 
 		// RasterizerState::antialiasedLineEnable
 		direct3DDevice9.SetRenderState(D3DRS_ANTIALIASEDLINEENABLE, mDirect3DAntialiasedLineEnable);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	void RasterizerState::setDebugName(const char *)
-	{
-		// There's no Direct3D 9 resource we could assign a debug name to
 	}
 
 

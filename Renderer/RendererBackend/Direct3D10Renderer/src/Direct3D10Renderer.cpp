@@ -37,9 +37,6 @@
 #include "Direct3D10Renderer/PipelineState.h"
 #include "Direct3D10Renderer/TextureBuffer.h"
 #include "Direct3D10Renderer/Texture2DArray.h"
-#include "Direct3D10Renderer/Detail/BlendState.h"
-#include "Direct3D10Renderer/Detail/RasterizerState.h"
-#include "Direct3D10Renderer/Detail/DepthStencilState.h"
 #include "Direct3D10Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D10Renderer/Shader/UniformBuffer.h"
 #include "Direct3D10Renderer/Shader/VertexShaderHlsl.h"
@@ -351,19 +348,22 @@ namespace Direct3D10Renderer
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::IRasterizerState *Direct3D10Renderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
+	Renderer::IRasterizerState *Direct3D10Renderer::createRasterizerState(const Renderer::RasterizerState&)
 	{
-		return new RasterizerState(*this, rasterizerState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
-	Renderer::IDepthStencilState *Direct3D10Renderer::createDepthStencilState(const Renderer::DepthStencilState &depthStencilState)
+	Renderer::IDepthStencilState *Direct3D10Renderer::createDepthStencilState(const Renderer::DepthStencilState&)
 	{
-		return new DepthStencilState(*this, depthStencilState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
-	Renderer::IBlendState *Direct3D10Renderer::createBlendState(const Renderer::BlendState &blendState)
+	Renderer::IBlendState *Direct3D10Renderer::createBlendState(const Renderer::BlendState&)
 	{
-		return new BlendState(*this, blendState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
 	Renderer::ISamplerState *Direct3D10Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
@@ -907,24 +907,9 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::rsSetState(Renderer::IRasterizerState *rasterizerState)
+	void Direct3D10Renderer::rsSetState(Renderer::IRasterizerState*)
 	{
-		if (nullptr != rasterizerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rasterizerState)
-
-			// Set the Direct3D 10 rasterizer state
-			mD3D10Device->RSSetState(static_cast<RasterizerState*>(rasterizerState)->getD3D10RasterizerState());
-		}
-		else
-		{
-			// Set the default rasterizer state
-			// -> The default values of "Renderer::RasterizerState" are identical to Direct3D 10
-			// -> The Direct3D documentation does not tell what happens when "ID3D10Device::RSSetState()" is called with a null pointer
-			//    -> When looking at the samples within "Microsoft DirectX SDK (June 2010)", I assume this sets the default values
-			mD3D10Device->RSSetState(nullptr);
-		}
+		// TODO(co) Remove this method
 	}
 
 
@@ -1018,42 +1003,14 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::omSetDepthStencilState(Renderer::IDepthStencilState *depthStencilState)
+	void Direct3D10Renderer::omSetDepthStencilState(Renderer::IDepthStencilState*)
 	{
-		if (nullptr != depthStencilState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *depthStencilState)
-
-			// Set Direct3D 10 depth stencil state
-			mD3D10Device->OMSetDepthStencilState(static_cast<DepthStencilState*>(depthStencilState)->getD3D10DepthStencilState(), 0);
-		}
-		else
-		{
-			// Set the default depth stencil state
-			// -> The default values of "Renderer::DepthStencilState" are identical to Direct3D 10
-			// -> The Direct3D documentation does not tell what happens when "ID3D10Device::OMSetDepthStencilState()" is called with a null pointer
-			//    -> Within "Microsoft DirectX SDK (June 2010)" no samples are using this case, I assume this sets the default values (as in Direct3D 11 were it's documented)
-			mD3D10Device->OMSetDepthStencilState(nullptr, 0);
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D10Renderer::omSetBlendState(Renderer::IBlendState *blendState)
+	void Direct3D10Renderer::omSetBlendState(Renderer::IBlendState*)
 	{
-		if (nullptr != blendState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *blendState)
-
-			// Set Direct3D 10 blend state
-			mD3D10Device->OMSetBlendState(static_cast<BlendState*>(blendState)->getD3D10BlendState(), 0, 0xffffffff);
-		}
-		else
-		{
-			// Set the default blend state
-			// -> The default values of "Renderer::BlendState" are identical to Direct3D 10
-			mD3D10Device->OMSetBlendState(nullptr, 0, 0xffffffff);
-		}
+		// TODO(co) Remove this method
 	}
 
 

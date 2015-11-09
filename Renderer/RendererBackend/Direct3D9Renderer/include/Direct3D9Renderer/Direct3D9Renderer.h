@@ -43,10 +43,7 @@ namespace Renderer
 namespace Direct3D9Renderer
 {
 	class SwapChain;
-	class BlendState;
 	class RootSignature;
-	class RasterizerState;
-	class DepthStencilState;
 	class Direct3D9RuntimeLinking;
 }
 
@@ -238,19 +235,10 @@ namespace Direct3D9Renderer
 		//[-------------------------------------------------------]
 		Renderer::PrimitiveTopology::Enum mPrimitiveTopology;		///< Primitive topology describing the type of primitive to render
 		//[-------------------------------------------------------]
-		//[ Rasterizer (RS) stage                                 ]
-		//[-------------------------------------------------------]
-		Renderer::IRasterizerState *mDefaultRasterizerState;		///< Default rasterizer state (we keep a reference to it), can be a null pointer
-		RasterizerState			   *mRasterizerState;				///< Currently set rasterizer state (we keep a reference to it), can be a null pointer
-		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
 		SwapChain					 *mMainSwapChain;				///< In case the optional native main window handle within the "Direct3D9Renderer::Direct3D9Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget		 *mRenderTarget;				///< Currently set render target (we keep a reference to it), can be a null pointer
-		Renderer::IDepthStencilState *mDefaultDepthStencilState;	///< Default depth stencil state (we keep a reference to it), can be a null pointer
-		DepthStencilState			 *mDepthStencilState;			///< Currently set depth stencil state (we keep a reference to it), can be a null pointer
-		Renderer::IBlendState		 *mDefaultBlendState;			///< Default blend state (we keep a reference to it), can be a null pointer
-		BlendState					 *mBlendState;					///< Currently set blend state (we keep a reference to it), can be a null pointer
 
 
 	};

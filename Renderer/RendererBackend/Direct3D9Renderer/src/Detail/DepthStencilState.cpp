@@ -35,8 +35,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	DepthStencilState::DepthStencilState(Direct3D9Renderer &direct3D9Renderer, const Renderer::DepthStencilState &depthStencilState) :
-		IDepthStencilState(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer)),
+	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState &depthStencilState) :
 		mDepthStencilState(depthStencilState)
 	{
 		// Nothing to do in here
@@ -56,15 +55,6 @@ namespace Direct3D9Renderer
 		direct3DDevice9.SetRenderState(D3DRS_ZWRITEENABLE, static_cast<DWORD>((Renderer::DepthWriteMask::ALL == mDepthStencilState.depthWriteMask) ? TRUE : FALSE));
 
 		// TODO(co) Map the rest of the depth stencil states
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	void DepthStencilState::setDebugName(const char *)
-	{
-		// There's no Direct3D 9 resource we could assign a debug name to
 	}
 
 

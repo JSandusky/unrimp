@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="include\OpenGLRenderer\Detail\BlendState.h" />
     <ClInclude Include="include\OpenGLRenderer\Detail\DepthStencilState.h" />
+    <ClInclude Include="include\OpenGLRenderer\Detail\IState.h" />
     <ClInclude Include="include\OpenGLRenderer\Detail\RasterizerState.h" />
     <ClInclude Include="include\OpenGLRenderer\Extensions.h" />
     <ClInclude Include="include\OpenGLRenderer\Framebuffer.h" />
@@ -155,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\OpenGLRenderer\Detail\IState.inl" />
     <None Include="include\OpenGLRenderer\Detail\RasterizerState.inl" />
     <None Include="include\OpenGLRenderer\Framebuffer.inl" />
     <None Include="include\OpenGLRenderer\IContext.inl" />

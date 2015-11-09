@@ -42,6 +42,9 @@ namespace Renderer
 }
 namespace Direct3D10Renderer
 {
+	class BlendState;
+	class RasterizerState;
+	class DepthStencilState;
 	class Direct3D10Renderer;
 }
 
@@ -115,6 +118,9 @@ namespace Direct3D10Renderer
 		ID3D10Device	   *mD3D10Device;		///< The Direct3D 10 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
 		Renderer::IProgram* mProgram;
 		ID3D10InputLayout  *mD3D10InputLayout;	///< Direct3D 10 input layout, can be a null pointer
+		RasterizerState*    mRasterizerState;
+		DepthStencilState*  mDepthStencilState;
+		BlendState*			mBlendState;
 
 
 	};

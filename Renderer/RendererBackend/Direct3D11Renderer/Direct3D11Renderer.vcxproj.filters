@@ -81,6 +81,9 @@
     <None Include="include\Direct3D11Renderer\Detail\RasterizerState.inl">
       <Filter>Source Files\Detail</Filter>
     </None>
+    <None Include="include\Direct3D11Renderer\Detail\IState.inl">
+      <Filter>Source Files\Detail</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D11Renderer\Shader\ShaderLanguage.h">
@@ -189,6 +192,9 @@
       <Filter>Source Files\Detail</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Detail\BlendState.h">
+      <Filter>Source Files\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Detail\IState.h">
       <Filter>Source Files\Detail</Filter>
     </ClInclude>
   </ItemGroup>

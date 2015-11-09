@@ -36,8 +36,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RasterizerState::RasterizerState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::RasterizerState &rasterizerState) :
-		IRasterizerState(openGLES2Renderer),
+	RasterizerState::RasterizerState(const Renderer::RasterizerState &rasterizerState) :
 		mRasterizerState(rasterizerState)
 	{
 		// Nothing to do in here

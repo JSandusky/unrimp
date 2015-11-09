@@ -27,12 +27,13 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IBlendState.h>
+#include "Direct3D9Renderer/Detail/IState.h"
+
 #include <Renderer/BlendStateTypes.h>
 
 
 //[-------------------------------------------------------]
-//[ Forward declaratiosn                                  ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct IDirect3DDevice9;
 namespace Direct3D9Renderer
@@ -55,7 +56,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 blend state class
 	*/
-	class BlendState : public Renderer::IBlendState
+	class BlendState : public IState
 	{
 
 
@@ -67,12 +68,10 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] direct3D9Renderer
-		*    Owner Direct3D 9 renderer instance
 		*  @param[in] blendState
 		*    Blend state to use
 		*/
-		BlendState(Direct3D9Renderer &direct3D9Renderer, const Renderer::BlendState &blendState);
+		BlendState(const Renderer::BlendState &blendState);
 
 		/**
 		*  @brief
@@ -88,13 +87,6 @@ namespace Direct3D9Renderer
 		*    Direct3D 9 device instance to use
 		*/
 		void setDirect3D9BlendStates(IDirect3DDevice9 &direct3DDevice9) const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void setDebugName(const char *name) override;
 
 
 	//[-------------------------------------------------------]

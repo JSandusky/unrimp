@@ -26,6 +26,9 @@
 #include "Direct3D10Renderer/D3D10.h"
 #include "Direct3D10Renderer/Mapping.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
+#include "Direct3D10Renderer/Detail/BlendState.h"
+#include "Direct3D10Renderer/Detail/RasterizerState.h"
+#include "Direct3D10Renderer/Detail/DepthStencilState.h"
 #include "Direct3D10Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D10Renderer/Shader/VertexShaderHlsl.h"
 
@@ -44,7 +47,10 @@ namespace Direct3D10Renderer
 		IPipelineState(direct3D10Renderer),
 		mD3D10Device(direct3D10Renderer.getD3D10Device()),
 		mProgram(pipelineState.program),
-		mD3D10InputLayout(nullptr)
+		mD3D10InputLayout(nullptr),
+		mRasterizerState(new RasterizerState(direct3D10Renderer, pipelineState.rasterizerState)),
+		mDepthStencilState(new DepthStencilState(direct3D10Renderer, pipelineState.depthStencilState)),
+		mBlendState(new BlendState(direct3D10Renderer, pipelineState.blendState))
 	{
 		// Acquire our Direct3D 10 device reference
 		mD3D10Device->AddRef();
@@ -107,6 +113,11 @@ namespace Direct3D10Renderer
 
 	PipelineState::~PipelineState()
 	{
+		// Destroy states
+		delete mRasterizerState;
+		delete mDepthStencilState;
+		delete mBlendState;
+
 		// Release the program reference
 		if (nullptr != mProgram)
 		{
@@ -125,14 +136,20 @@ namespace Direct3D10Renderer
 
 	void PipelineState::bindPipelineState() const
 	{
-		// TODO(co) Directly move this into "Direct3D10Renderer"
-
 		// Set the Direct3D 10 input layout
 		mD3D10Device->IASetInputLayout(mD3D10InputLayout);
 
 		// Set the program
-		Direct3D10Renderer& direct3D10Renderer = static_cast<Direct3D10Renderer&>(getRenderer());
-		direct3D10Renderer.setProgram(mProgram);
+		static_cast<Direct3D10Renderer&>(getRenderer()).setProgram(mProgram);
+
+		// Set the Direct3D 10 rasterizer state
+		mD3D10Device->RSSetState(mRasterizerState->getD3D10RasterizerState());
+
+		// Set Direct3D 10 depth stencil state
+		mD3D10Device->OMSetDepthStencilState(mDepthStencilState->getD3D10DepthStencilState(), 0);
+
+		// Set Direct3D 10 blend state
+		mD3D10Device->OMSetBlendState(mBlendState->getD3D10BlendState(), 0, 0xffffffff);
 	}
 
 

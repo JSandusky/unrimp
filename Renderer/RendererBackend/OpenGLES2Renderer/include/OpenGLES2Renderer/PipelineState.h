@@ -40,6 +40,9 @@ namespace Renderer
 }
 namespace OpenGLES2Renderer
 {
+	class BlendState;
+	class RasterizerState;
+	class DepthStencilState;
 	class OpenGLES2Renderer;
 }
 
@@ -95,6 +98,9 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	private:
 		Renderer::IProgram* mProgram;
+		RasterizerState*	mRasterizerState;
+		DepthStencilState*	mDepthStencilState;
+		BlendState*			mBlendState;
 
 
 	};

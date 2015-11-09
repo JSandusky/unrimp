@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IRasterizerState.h>
+#include "Direct3D11Renderer/Detail/IState.h"
 
 
 //[-------------------------------------------------------]
@@ -58,7 +58,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    Direct3D 11 rasterizer state class
 	*/
-	class RasterizerState : public Renderer::IRasterizerState
+	class RasterizerState : public IState
 	{
 
 
@@ -94,7 +94,7 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
+	//[ Public virtual Direct3D11Renderer::IState methods     ]
 	//[-------------------------------------------------------]
 	public:
 		virtual void setDebugName(const char *name) override;

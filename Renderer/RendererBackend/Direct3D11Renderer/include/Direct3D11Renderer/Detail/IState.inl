@@ -19,67 +19,28 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "OpenGLRenderer/PipelineState.h"
-#include "OpenGLRenderer/OpenGLRenderer.h"
-#include "OpenGLRenderer/Detail/BlendState.h"
-#include "OpenGLRenderer/Detail/RasterizerState.h"
-#include "OpenGLRenderer/Detail/DepthStencilState.h"
-#include "OpenGLRenderer/Shader/ProgramGlsl.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace Direct3D11Renderer
 {
 
 
+
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	PipelineState::PipelineState(OpenGLRenderer &openGLRenderer, const Renderer::PipelineState& pipelineState) :
-		IPipelineState(openGLRenderer),
-		mProgram(pipelineState.program),
-		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
-		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),
-		mBlendState(new BlendState(pipelineState.blendState))
+	inline IState::IState()
 	{
-		// Add a reference to the given program
-		mProgram->addReference();
+		// Nothing here
 	}
 
-	PipelineState::~PipelineState()
+	inline IState::~IState()
 	{
-		// Destroy states
-		delete mRasterizerState;
-		delete mDepthStencilState;
-		delete mBlendState;
-
-		// Release the program reference
-		if (nullptr != mProgram)
-		{
-			mProgram->release();
-		}
-	}
-
-	void PipelineState::bindPipelineState() const
-	{
-		static_cast<OpenGLRenderer&>(getRenderer()).setProgram(mProgram);
-
-		// Set the OpenGL rasterizer state
-		mRasterizerState->setOpenGLRasterizerStates();
-
-		// Set OpenGL depth stencil state
-		mDepthStencilState->setOpenGLDepthStencilStates();
-
-		// Set OpenGL blend state
-		mBlendState->setOpenGLBlendStates();
+		// Nothing here
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // Direct3D11Renderer

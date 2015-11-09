@@ -27,13 +27,17 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IRasterizerState.h>
+#include "Direct3D9Renderer/Detail/IState.h"
 
 
 //[-------------------------------------------------------]
-//[ Forward declaratiosn                                  ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct IDirect3DDevice9;
+namespace Renderer
+{
+	struct RasterizerState;
+}
 namespace Direct3D9Renderer
 {
 	class Direct3D9Renderer;
@@ -54,7 +58,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 rasterizer state class
 	*/
-	class RasterizerState : public Renderer::IRasterizerState
+	class RasterizerState : public IState
 	{
 
 
@@ -66,12 +70,10 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] direct3D9Renderer
-		*    Owner Direct3D 9 renderer instance
 		*  @param[in] rasterizerState
 		*    Rasterizer state to use
 		*/
-		RasterizerState(Direct3D9Renderer &direct3D9Renderer, const Renderer::RasterizerState &rasterizerState);
+		RasterizerState(const Renderer::RasterizerState &rasterizerState);
 
 		/**
 		*  @brief
@@ -87,13 +89,6 @@ namespace Direct3D9Renderer
 		*    Direct3D 9 device instance to use
 		*/
 		void setDirect3D9RasterizerStates(IDirect3DDevice9 &direct3DDevice9) const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void setDebugName(const char *name) override;
 
 
 	//[-------------------------------------------------------]

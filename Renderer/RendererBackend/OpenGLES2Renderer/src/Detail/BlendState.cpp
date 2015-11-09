@@ -36,8 +36,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	BlendState::BlendState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::BlendState &blendState) :
-		IBlendState(openGLES2Renderer),
+	BlendState::BlendState(const Renderer::BlendState &blendState) :
 		mBlendState(blendState)
 	{
 		// Nothing to do in here

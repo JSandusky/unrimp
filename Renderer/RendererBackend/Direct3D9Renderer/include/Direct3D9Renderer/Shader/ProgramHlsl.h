@@ -31,7 +31,7 @@
 
 
 //[-------------------------------------------------------]
-//[ Forward declaratiosn                                  ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct IDirect3DDevice9;
 struct ID3DXConstantTable;

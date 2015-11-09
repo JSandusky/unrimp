@@ -27,7 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IRasterizerState.h>
+#include "OpenGLRenderer/Detail/IState.h"
+
 #include <Renderer/RasterizerStateTypes.h>
 
 
@@ -54,7 +55,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL rasterizer state class
 	*/
-	class RasterizerState : public Renderer::IRasterizerState
+	class RasterizerState : public IState
 	{
 
 
@@ -66,12 +67,10 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
 		*  @param[in] rasterizerState
 		*    Rasterizer state to use
 		*/
-		RasterizerState(OpenGLRenderer &openGLRenderer, const Renderer::RasterizerState &rasterizerState);
+		RasterizerState(const Renderer::RasterizerState &rasterizerState);
 
 		/**
 		*  @brief

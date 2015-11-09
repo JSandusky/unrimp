@@ -47,9 +47,6 @@
 #include "OpenGLRenderer/Texture2DArrayDsa.h"
 #include "OpenGLRenderer/Texture2DArrayBind.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
-#include "OpenGLRenderer/Detail/BlendState.h"
-#include "OpenGLRenderer/Detail/RasterizerState.h"
-#include "OpenGLRenderer/Detail/DepthStencilState.h"
 #include "OpenGLRenderer/Shader/ShaderLanguageGlsl.h"
 #include "OpenGLRenderer/Shader/ProgramGlsl.h"
 #include "OpenGLRenderer/Shader/UniformBufferGlsl.h"
@@ -106,44 +103,20 @@ namespace OpenGLRenderer
 		mDefaultSamplerState(nullptr),
 		mVertexArray(nullptr),
 		mOpenGLPrimitiveTopology(0xFFFF),	// Unknown default setting
-		mDefaultRasterizerState(nullptr),
-		mRasterizerState(nullptr),
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
-		mDefaultDepthStencilState(nullptr),
-		mDepthStencilState(nullptr),
-		mDefaultBlendState(nullptr),
-		mBlendState(nullptr),
 		mOpenGLProgram(0)
 	{
 		// Is the context initialized?
 		if (mContext->isInitialized())
 		{
-			// Create the default state objects
-			mDefaultSamplerState		= createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
-			mDefaultRasterizerState		= createRasterizerState(Renderer::IRasterizerState::getDefaultRasterizerState());
-			mDefaultDepthStencilState	= createDepthStencilState(Renderer::IDepthStencilState::getDefaultDepthStencilState());
-			mDefaultBlendState			= createBlendState(Renderer::IBlendState::getDefaultBlendState());
+			// Create the default sampler state
+			mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
 			// Initialize the capabilities
 			initializeCapabilities();
 
-			// Add references to the default state objects and set them
-			if (nullptr != mDefaultRasterizerState)
-			{
-				mDefaultRasterizerState->addReference();
-				rsSetState(mDefaultRasterizerState);
-			}
-			if (nullptr != mDefaultDepthStencilState)
-			{
-				mDefaultDepthStencilState->addReference();
-				omSetDepthStencilState(mDefaultDepthStencilState);
-			}
-			if (nullptr != mDefaultBlendState)
-			{
-				mDefaultBlendState->addReference();
-				omSetBlendState(mDefaultBlendState);
-			}
+			// Add references to the default sampler state and set it
 			if (nullptr != mDefaultSamplerState)
 			{
 				mDefaultSamplerState->addReference();
@@ -183,43 +156,10 @@ namespace OpenGLRenderer
 			mRenderTarget->release();
 			mRenderTarget = nullptr;
 		}
-		if (nullptr != mDefaultRasterizerState)
-		{
-			mDefaultRasterizerState->release();
-			mDefaultRasterizerState = nullptr;
-		}
-		if (nullptr != mDefaultDepthStencilState)
-		{
-			mDefaultDepthStencilState->release();
-			mDefaultDepthStencilState = nullptr;
-		}
-		if (nullptr != mDefaultBlendState)
-		{
-			mDefaultBlendState->release();
-			mDefaultBlendState = nullptr;
-		}
 		if (nullptr != mDefaultSamplerState)
 		{
 			mDefaultSamplerState->release();
 			mDefaultSamplerState = nullptr;
-		}
-
-		// Set no rasterizer state reference, in case we have one
-		if (nullptr != mRasterizerState)
-		{
-			rsSetState(nullptr);
-		}
-
-		// Set no depth stencil reference, in case we have one
-		if (nullptr != mDepthStencilState)
-		{
-			omSetDepthStencilState(nullptr);
-		}
-
-		// Set no blend state reference, in case we have one
-		if (nullptr != mBlendState)
-		{
-			omSetBlendState(nullptr);
 		}
 
 		// Release the graphics root signature instance, in case we have one
@@ -553,19 +493,22 @@ namespace OpenGLRenderer
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::IRasterizerState *OpenGLRenderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
+	Renderer::IRasterizerState *OpenGLRenderer::createRasterizerState(const Renderer::RasterizerState&)
 	{
-		return new RasterizerState(*this, rasterizerState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
-	Renderer::IDepthStencilState *OpenGLRenderer::createDepthStencilState(const Renderer::DepthStencilState &depthStencilState)
+	Renderer::IDepthStencilState *OpenGLRenderer::createDepthStencilState(const Renderer::DepthStencilState&)
 	{
-		return new DepthStencilState(*this, depthStencilState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
-	Renderer::IBlendState *OpenGLRenderer::createBlendState(const Renderer::BlendState &blendState)
+	Renderer::IBlendState *OpenGLRenderer::createBlendState(const Renderer::BlendState&)
 	{
-		return new BlendState(*this, blendState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
 	Renderer::ISamplerState *OpenGLRenderer::createSamplerState(const Renderer::SamplerState &samplerState)
@@ -1019,52 +962,9 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::rsSetState(Renderer::IRasterizerState *rasterizerState)
+	void OpenGLRenderer::rsSetState(Renderer::IRasterizerState*)
 	{
-		// New rasterizer state?
-		if (mRasterizerState != rasterizerState)
-		{
-			// Set a rasterizer state?
-			if (nullptr != rasterizerState)
-			{
-				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *rasterizerState)
-
-				// Release the rasterizer state reference, in case we have one
-				if (nullptr != mRasterizerState)
-				{
-					mRasterizerState->release();
-				}
-
-				// Set new rasterizer state and add a reference to it
-				mRasterizerState = static_cast<RasterizerState*>(rasterizerState);
-				mRasterizerState->addReference();
-
-				// Set the OpenGL rasterizer states
-				// TODO(co) Reduce state changes: Maybe it's a good idea to have alternative methods allowing to pass through the previous states and then performing per-state-change-comparison in order to reduce graphics-API calls
-				mRasterizerState->setOpenGLRasterizerStates();
-			}
-			else
-			{
-				// Set the default rasterizer state
-				if (nullptr != mDefaultRasterizerState)
-				{
-					rsSetState(mDefaultRasterizerState);
-				}
-				else
-				{
-					// Fallback in case everything goes wrong
-
-					// Release the rasterizer state reference, in case we have one
-					if (nullptr != mRasterizerState)
-					{
-						// Release reference
-						mRasterizerState->release();
-						mRasterizerState = nullptr;
-					}
-				}
-			}
-		}
+		// TODO(co) Remove this method
 	}
 
 
@@ -1181,100 +1081,14 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::omSetDepthStencilState(Renderer::IDepthStencilState *depthStencilState)
+	void OpenGLRenderer::omSetDepthStencilState(Renderer::IDepthStencilState*)
 	{
-		// New depth stencil state?
-		if (mDepthStencilState != depthStencilState)
-		{
-			// Set a depth stencil state?
-			if (nullptr != depthStencilState)
-			{
-				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *depthStencilState)
-
-				// Release the depth stencil state reference, in case we have one
-				if (nullptr != mDepthStencilState)
-				{
-					mDepthStencilState->release();
-				}
-
-				// Set new depth stencil state and add a reference to it
-				mDepthStencilState = static_cast<DepthStencilState*>(depthStencilState);
-				mDepthStencilState->addReference();
-
-				// Set the OpenGL depth stencil states
-				// TODO(co) Reduce state changes: Maybe it's a good idea to have alternative methods allowing to pass through the previous states and then performing per-state-change-comparison in order to reduce graphics-API calls
-				mDepthStencilState->setOpenGLDepthStencilStates();
-			}
-			else
-			{
-				// Set the default depth stencil state
-				if (nullptr != mDefaultDepthStencilState)
-				{
-					omSetDepthStencilState(mDefaultDepthStencilState);
-				}
-				else
-				{
-					// Fallback in case everything goes wrong
-
-					// Release the depth stencil state reference, in case we have one
-					if (nullptr != mDepthStencilState)
-					{
-						// Release reference
-						mDepthStencilState->release();
-						mDepthStencilState = nullptr;
-					}
-				}
-			}
-		}
+		// TODO(co) Remove this method
 	}
 
-	void OpenGLRenderer::omSetBlendState(Renderer::IBlendState *blendState)
+	void OpenGLRenderer::omSetBlendState(Renderer::IBlendState*)
 	{
-		// New blend state?
-		if (mBlendState != blendState)
-		{
-			// Set a blend state?
-			if (nullptr != blendState)
-			{
-				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *blendState)
-
-				// Release the blend state reference, in case we have one
-				if (nullptr != mBlendState)
-				{
-					mBlendState->release();
-				}
-
-				// Set new blend state and add a reference to it
-				mBlendState = static_cast<BlendState*>(blendState);
-				mBlendState->addReference();
-
-				// Set the OpenGL blend states
-				// TODO(co) Reduce state changes: Maybe it's a good idea to have alternative methods allowing to pass through the previous states and then performing per-state-change-comparison in order to reduce graphics-API calls
-				mBlendState->setOpenGLBlendStates();
-			}
-			else
-			{
-				// Set the default blend state
-				if (nullptr != mDefaultBlendState)
-				{
-					omSetBlendState(mDefaultBlendState);
-				}
-				else
-				{
-					// Fallback in case everything goes wrong
-
-					// Release the blend state reference, in case we have one
-					if (nullptr != mBlendState)
-					{
-						// Release reference
-						mBlendState->release();
-						mBlendState = nullptr;
-					}
-				}
-			}
-		}
+		// TODO(co) Remove this method
 	}
 
 
@@ -1319,7 +1133,8 @@ namespace OpenGLRenderer
 			// -> We have to compensate the OpenGL behaviour in here
 
 			// Disable OpenGL scissor test, in case it's not disabled, yet
-			if (mRasterizerState->getRasterizerState().scissorEnable)
+			// TODO(co) Pipeline state update
+			//if (mRasterizerState->getRasterizerState().scissorEnable)
 			{
 				glDisable(GL_SCISSOR_TEST);
 			}
@@ -1328,7 +1143,8 @@ namespace OpenGLRenderer
 			glClear(flagsApi);
 
 			// Restore the previously set OpenGL viewport
-			if (mRasterizerState->getRasterizerState().scissorEnable)
+			// TODO(co) Pipeline state update
+			// if (mRasterizerState->getRasterizerState().scissorEnable)
 			{
 				glEnable(GL_SCISSOR_TEST);
 			}

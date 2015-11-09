@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\Direct3D9Renderer\Detail\IState.inl" />
     <None Include="include\Direct3D9Renderer\Direct3D9Renderer.inl" />
     <None Include="include\Direct3D9Renderer\Framebuffer.inl" />
     <None Include="include\Direct3D9Renderer\IndexBuffer.inl" />
@@ -39,6 +40,7 @@
     <ClInclude Include="include\Direct3D9Renderer\d3dx9.h" />
     <ClInclude Include="include\Direct3D9Renderer\Detail\BlendState.h" />
     <ClInclude Include="include\Direct3D9Renderer\Detail\DepthStencilState.h" />
+    <ClInclude Include="include\Direct3D9Renderer\Detail\IState.h" />
     <ClInclude Include="include\Direct3D9Renderer\Detail\RasterizerState.h" />
     <ClInclude Include="include\Direct3D9Renderer\Direct3D9Debug.h" />
     <ClInclude Include="include\Direct3D9Renderer\Direct3D9Renderer.h" />

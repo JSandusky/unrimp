@@ -42,6 +42,9 @@ namespace Renderer
 }
 namespace Direct3D11Renderer
 {
+	class BlendState;
+	class RasterizerState;
+	class DepthStencilState;
 	class Direct3D11Renderer;
 }
 
@@ -115,6 +118,9 @@ namespace Direct3D11Renderer
 		Renderer::IProgram*  mProgram;
 		ID3D11DeviceContext* mD3D11DeviceContext;	///< The Direct3D 11 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
 		ID3D11InputLayout*   mD3D11InputLayout;		///< Direct3D 11 input layout, can be a null pointer
+		RasterizerState*	 mRasterizerState;
+		DepthStencilState*	 mDepthStencilState;
+		BlendState*			 mBlendState;
 
 
 	};

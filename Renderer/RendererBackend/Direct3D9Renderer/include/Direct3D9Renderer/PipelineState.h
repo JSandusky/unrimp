@@ -42,6 +42,9 @@ namespace Renderer
 }
 namespace Direct3D9Renderer
 {
+	class BlendState;
+	class RasterizerState;
+	class DepthStencilState;
 	class Direct3D9Renderer;
 }
 
@@ -115,6 +118,9 @@ namespace Direct3D9Renderer
 		IDirect3DDevice9*			  mDirect3DDevice9;				///< The Direct3D 9 device instance (we keep a reference to it), null pointer on horrible error (so we don't check)
 		Renderer::IProgram*			  mProgram;
 		IDirect3DVertexDeclaration9	 *mDirect3DVertexDeclaration9;	///< Direct3D 9 vertex declaration instance, can be a null pointer
+		RasterizerState*			  mRasterizerState;
+		DepthStencilState*			  mDepthStencilState;
+		BlendState*					  mBlendState;
 
 
 	};

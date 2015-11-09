@@ -35,8 +35,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RasterizerState::RasterizerState(OpenGLRenderer &openGLRenderer, const Renderer::RasterizerState &rasterizerState) :
-		IRasterizerState(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+	RasterizerState::RasterizerState(const Renderer::RasterizerState &rasterizerState) :
 		mRasterizerState(rasterizerState)
 	{
 		// Nothing to do in here

@@ -19,14 +19,9 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
+//[ Header guard                                          ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/PipelineState.h"
-#include "OpenGLRenderer/OpenGLRenderer.h"
-#include "OpenGLRenderer/Detail/BlendState.h"
-#include "OpenGLRenderer/Detail/RasterizerState.h"
-#include "OpenGLRenderer/Detail/DepthStencilState.h"
-#include "OpenGLRenderer/Shader/ProgramGlsl.h"
+#pragma once
 
 
 //[-------------------------------------------------------]
@@ -37,49 +32,43 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	PipelineState::PipelineState(OpenGLRenderer &openGLRenderer, const Renderer::PipelineState& pipelineState) :
-		IPipelineState(openGLRenderer),
-		mProgram(pipelineState.program),
-		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
-		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),
-		mBlendState(new BlendState(pipelineState.blendState))
+	/**
+	*  @brief
+	*    Abstract state base class
+	*/
+	class IState
 	{
-		// Add a reference to the given program
-		mProgram->addReference();
-	}
 
-	PipelineState::~PipelineState()
-	{
-		// Destroy states
-		delete mRasterizerState;
-		delete mDepthStencilState;
-		delete mBlendState;
 
-		// Release the program reference
-		if (nullptr != mProgram)
-		{
-			mProgram->release();
-		}
-	}
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		/**
+		*  @brief
+		*    Default constructor
+		*/
+		inline IState();
 
-	void PipelineState::bindPipelineState() const
-	{
-		static_cast<OpenGLRenderer&>(getRenderer()).setProgram(mProgram);
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~IState();
 
-		// Set the OpenGL rasterizer state
-		mRasterizerState->setOpenGLRasterizerStates();
 
-		// Set OpenGL depth stencil state
-		mDepthStencilState->setOpenGLDepthStencilStates();
-
-		// Set OpenGL blend state
-		mBlendState->setOpenGLBlendStates();
-	}
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "OpenGLRenderer/Detail/IState.inl"

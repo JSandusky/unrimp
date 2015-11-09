@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/PipelineState.h"
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
+#include "OpenGLES2Renderer/Detail/BlendState.h"
+#include "OpenGLES2Renderer/Detail/RasterizerState.h"
+#include "OpenGLES2Renderer/Detail/DepthStencilState.h"
 #include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
 
 
@@ -38,7 +41,10 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	PipelineState::PipelineState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(openGLES2Renderer),
-		mProgram(pipelineState.program)
+		mProgram(pipelineState.program),
+		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
+		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),
+		mBlendState(new BlendState(pipelineState.blendState))
 	{
 		// Add a reference to the given program
 		mProgram->addReference();
@@ -46,6 +52,11 @@ namespace OpenGLES2Renderer
 
 	PipelineState::~PipelineState()
 	{
+		// Destroy states
+		delete mRasterizerState;
+		delete mDepthStencilState;
+		delete mBlendState;
+
 		// Release the program reference
 		if (nullptr != mProgram)
 		{
@@ -55,9 +66,16 @@ namespace OpenGLES2Renderer
 
 	void PipelineState::bindPipelineState() const
 	{
-		OpenGLES2Renderer& openGLES2Renderer = static_cast<OpenGLES2Renderer&>(getRenderer());
+		static_cast<OpenGLES2Renderer&>(getRenderer()).setProgram(mProgram);
 
-		openGLES2Renderer.setProgram(mProgram);
+		// Set the OpenGL ES 2 rasterizer state
+		mRasterizerState->setOpenGLES2RasterizerStates();
+
+		// Set OpenGL ES 2 depth stencil state
+		mDepthStencilState->setOpenGLES2DepthStencilStates();
+
+		// Set OpenGL ES 2 blend state
+		mBlendState->setOpenGLES2BlendStates();
 	}
 
 

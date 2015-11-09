@@ -26,6 +26,9 @@
 #include "Direct3D11Renderer/D3D11.h"
 #include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
+#include "Direct3D11Renderer/Detail/BlendState.h"
+#include "Direct3D11Renderer/Detail/RasterizerState.h"
+#include "Direct3D11Renderer/Detail/DepthStencilState.h"
 #include "Direct3D11Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D11Renderer/Shader/VertexShaderHlsl.h"
 
@@ -44,7 +47,10 @@ namespace Direct3D11Renderer
 		IPipelineState(direct3D11Renderer),
 		mProgram(pipelineState.program),
 		mD3D11DeviceContext(direct3D11Renderer.getD3D11DeviceContext()),
-		mD3D11InputLayout(nullptr)
+		mD3D11InputLayout(nullptr),
+		mRasterizerState(new RasterizerState(direct3D11Renderer, pipelineState.rasterizerState)),
+		mDepthStencilState(new DepthStencilState(direct3D11Renderer, pipelineState.depthStencilState)),
+		mBlendState(new BlendState(direct3D11Renderer, pipelineState.blendState))
 	{
 		// Acquire our Direct3D 11 device context reference
 		mD3D11DeviceContext->AddRef();
@@ -106,6 +112,11 @@ namespace Direct3D11Renderer
 
 	PipelineState::~PipelineState()
 	{
+		// Destroy states
+		delete mRasterizerState;
+		delete mDepthStencilState;
+		delete mBlendState;
+
 		// Release the program reference
 		if (nullptr != mProgram)
 		{
@@ -124,14 +135,20 @@ namespace Direct3D11Renderer
 
 	void PipelineState::bindPipelineState() const
 	{
-		// TODO(co) Directly move this into "Direct3D11Renderer"
-
 		// Set the Direct3D 11 input layout
 		mD3D11DeviceContext->IASetInputLayout(mD3D11InputLayout);
 
 		// Set the program
-		Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());
-		direct3D11Renderer.setProgram(mProgram);
+		static_cast<Direct3D11Renderer&>(getRenderer()).setProgram(mProgram);
+
+		// Set the Direct3D 11 rasterizer state
+		mD3D11DeviceContext->RSSetState(mRasterizerState->getD3D11RasterizerState());
+
+		// Set Direct3D 11 depth stencil state
+		mD3D11DeviceContext->OMSetDepthStencilState(mDepthStencilState->getD3D11DepthStencilState(), 0);
+
+		// Set Direct3D 11 blend state
+		mD3D11DeviceContext->OMSetBlendState(mBlendState->getD3D11BlendState(), 0, 0xffffffff);
 	}
 
 

@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IDepthStencilState.h>
+#include "Direct3D10Renderer/Detail/IState.h"
 
 
 //[-------------------------------------------------------]
@@ -58,7 +58,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    Direct3D 10 depth stencil state class
 	*/
-	class DepthStencilState : public Renderer::IDepthStencilState
+	class DepthStencilState : public IState
 	{
 
 
@@ -94,7 +94,7 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
+	//[ Public virtual Direct3D10Renderer::IState methods     ]
 	//[-------------------------------------------------------]
 	public:
 		virtual void setDebugName(const char *name) override;

@@ -27,7 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IBlendState.h>
+#include "OpenGLRenderer/Detail/IState.h"
+
 #include <Renderer/BlendStateTypes.h>
 
 
@@ -54,7 +55,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL blend state class
 	*/
-	class BlendState : public Renderer::IBlendState
+	class BlendState : public IState
 	{
 
 
@@ -66,12 +67,10 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
 		*  @param[in] blendState
 		*    Blend state to use
 		*/
-		BlendState(OpenGLRenderer &openGLRenderer, const Renderer::BlendState &blendState);
+		BlendState(const Renderer::BlendState &blendState);
 
 		/**
 		*  @brief

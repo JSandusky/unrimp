@@ -27,7 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IDepthStencilState.h>
+#include "OpenGLES2Renderer/Detail/IState.h"
+
 #include <Renderer/DepthStencilStateTypes.h>
 
 
@@ -54,7 +55,7 @@ namespace OpenGLES2Renderer
 	*  @brief
 	*    OpenGL ES 2 depth stencil state class
 	*/
-	class DepthStencilState : public Renderer::IDepthStencilState
+	class DepthStencilState : public IState
 	{
 
 
@@ -66,12 +67,10 @@ namespace OpenGLES2Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES2Renderer
-		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] depthStencilState
 		*    Depth stencil state to use
 		*/
-		DepthStencilState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::DepthStencilState &depthStencilState);
+		DepthStencilState(const Renderer::DepthStencilState &depthStencilState);
 
 		/**
 		*  @brief

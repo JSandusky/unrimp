@@ -35,8 +35,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	DepthStencilState::DepthStencilState(OpenGLRenderer &openGLRenderer, const Renderer::DepthStencilState &depthStencilState) :
-		IDepthStencilState(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState &depthStencilState) :
 		mDepthStencilState(depthStencilState)
 	{
 		// Nothing to do in here

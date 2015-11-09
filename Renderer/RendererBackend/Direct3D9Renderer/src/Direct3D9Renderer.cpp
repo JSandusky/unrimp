@@ -34,9 +34,6 @@
 #include "Direct3D9Renderer/VertexBuffer.h"
 #include "Direct3D9Renderer/RootSignature.h"
 #include "Direct3D9Renderer/PipelineState.h"
-#include "Direct3D9Renderer/Detail/BlendState.h"
-#include "Direct3D9Renderer/Detail/RasterizerState.h"
-#include "Direct3D9Renderer/Detail/DepthStencilState.h"
 #include "Direct3D9Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D9Renderer/Shader/VertexShaderHlsl.h"
 #include "Direct3D9Renderer/Shader/ShaderLanguageHlsl.h"
@@ -78,14 +75,8 @@ namespace Direct3D9Renderer
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
 		mPrimitiveTopology(Renderer::PrimitiveTopology::UNKNOWN),
-		mDefaultRasterizerState(nullptr),
-		mRasterizerState(nullptr),
 		mMainSwapChain(nullptr),
-		mRenderTarget(nullptr),
-		mDefaultDepthStencilState(nullptr),
-		mDepthStencilState(nullptr),
-		mDefaultBlendState(nullptr),
-		mBlendState(nullptr)
+		mRenderTarget(nullptr)
 	{
 		// Is Direct3D 9 available?
 		if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
@@ -123,31 +114,13 @@ namespace Direct3D9Renderer
 						D3DPERF_SetOptions(1);
 					#endif
 
-					// Create the default state objects
-					mDefaultSamplerState	  = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
-					mDefaultRasterizerState	  = createRasterizerState(Renderer::IRasterizerState::getDefaultRasterizerState());
-					mDefaultDepthStencilState = createDepthStencilState(Renderer::IDepthStencilState::getDefaultDepthStencilState());
-					mDefaultBlendState		  = createBlendState(Renderer::IBlendState::getDefaultBlendState());
+					// Create the default sampler state
+					mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
 					// Initialize the capabilities
 					initializeCapabilities();
 
-					// Add references to the default state objects and set them
-					if (nullptr != mDefaultRasterizerState)
-					{
-						mDefaultRasterizerState->addReference();
-						rsSetState(mDefaultRasterizerState);
-					}
-					if (nullptr != mDefaultDepthStencilState)
-					{
-						mDefaultDepthStencilState->addReference();
-						omSetDepthStencilState(mDefaultDepthStencilState);
-					}
-					if (nullptr != mDefaultBlendState)
-					{
-						mDefaultBlendState->addReference();
-						omSetBlendState(mDefaultBlendState);
-					}
+					// Add references to the default sampler state and set it
 					if (nullptr != mDefaultSamplerState)
 					{
 						mDefaultSamplerState->addReference();
@@ -187,11 +160,6 @@ namespace Direct3D9Renderer
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
 		// Release instances
-		if (nullptr != mDefaultRasterizerState)
-		{
-			mDefaultRasterizerState->release();
-			mDefaultRasterizerState = nullptr;
-		}
 		if (nullptr != mMainSwapChain)
 		{
 			mMainSwapChain->release();
@@ -202,38 +170,10 @@ namespace Direct3D9Renderer
 			mRenderTarget->release();
 			mRenderTarget = nullptr;
 		}
-		if (nullptr != mDefaultDepthStencilState)
-		{
-			mDefaultDepthStencilState->release();
-			mDefaultDepthStencilState = nullptr;
-		}
-		if (nullptr != mDefaultBlendState)
-		{
-			mDefaultBlendState->release();
-			mDefaultBlendState = nullptr;
-		}
 		if (nullptr != mDefaultSamplerState)
 		{
 			mDefaultSamplerState->release();
 			mDefaultSamplerState = nullptr;
-		}
-
-		// Set no blend state reference, in case we have one
-		if (nullptr != mBlendState)
-		{
-			omSetBlendState(nullptr);
-		}
-
-		// Set no depth stencil reference, in case we have one
-		if (nullptr != mDepthStencilState)
-		{
-			omSetDepthStencilState(nullptr);
-		}
-
-		// Set no rasterizer state reference, in case we have one
-		if (nullptr != mRasterizerState)
-		{
-			rsSetState(nullptr);
 		}
 
 		// Release the graphics root signature instance
@@ -426,19 +366,22 @@ namespace Direct3D9Renderer
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::IRasterizerState *Direct3D9Renderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
+	Renderer::IRasterizerState *Direct3D9Renderer::createRasterizerState(const Renderer::RasterizerState&)
 	{
-		return new RasterizerState(*this, rasterizerState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
-	Renderer::IDepthStencilState *Direct3D9Renderer::createDepthStencilState(const Renderer::DepthStencilState &depthStencilState)
+	Renderer::IDepthStencilState *Direct3D9Renderer::createDepthStencilState(const Renderer::DepthStencilState&)
 	{
-		return new DepthStencilState(*this, depthStencilState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
-	Renderer::IBlendState *Direct3D9Renderer::createBlendState(const Renderer::BlendState &blendState)
+	Renderer::IBlendState *Direct3D9Renderer::createBlendState(const Renderer::BlendState&)
 	{
-		return new BlendState(*this, blendState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
 	Renderer::ISamplerState *Direct3D9Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
@@ -931,58 +874,9 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::rsSetState(Renderer::IRasterizerState *rasterizerState)
+	void Direct3D9Renderer::rsSetState(Renderer::IRasterizerState*)
 	{
-		// New rasterizer state?
-		if (mRasterizerState != rasterizerState)
-		{
-			// Set a rasterizer state?
-			if (nullptr != rasterizerState)
-			{
-				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rasterizerState)
-
-				// Release the rasterizer state reference, in case we have one
-				if (nullptr != mRasterizerState)
-				{
-					mRasterizerState->release();
-				}
-
-				// Set new rasterizer state and add a reference to it
-				mRasterizerState = static_cast<RasterizerState*>(rasterizerState);
-				mRasterizerState->addReference();
-
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Set the Direct3D 9 rasterizer states
-				// TODO(co) Reduce state changes: Maybe it's a good idea to have alternative methods allowing to pass through the previous states and then performing per-state-change-comparison in order to reduce graphics-API calls
-				mRasterizerState->setDirect3D9RasterizerStates(*mDirect3DDevice9);
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-			}
-			else
-			{
-				// Set the default rasterizer state
-				if (nullptr != mDefaultRasterizerState)
-				{
-					rsSetState(mDefaultRasterizerState);
-				}
-				else
-				{
-					// Fallback in case everything goes wrong
-
-					// Release the rasterizer state reference, in case we have one
-					if (nullptr != mRasterizerState)
-					{
-						// Release reference
-						mRasterizerState->release();
-						mRasterizerState = nullptr;
-					}
-				}
-			}
-		}
+		// TODO(co) Remove this method
 	}
 
 
@@ -1118,112 +1012,14 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::omSetDepthStencilState(Renderer::IDepthStencilState *depthStencilState)
+	void Direct3D9Renderer::omSetDepthStencilState(Renderer::IDepthStencilState*)
 	{
-		// New depth stencil state?
-		if (mDepthStencilState != depthStencilState)
-		{
-			// Set a depth stencil state?
-			if (nullptr != depthStencilState)
-			{
-				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *depthStencilState)
-
-				// Release the depth stencil state reference, in case we have one
-				if (nullptr != mDepthStencilState)
-				{
-					mDepthStencilState->release();
-				}
-
-				// Set new depth stencil state and add a reference to it
-				mDepthStencilState = static_cast<DepthStencilState*>(depthStencilState);
-				mDepthStencilState->addReference();
-
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Set the Direct3D 9 depth stencil states
-				// TODO(co) Reduce state changes: Maybe it's a good idea to have alternative methods allowing to pass through the previous states and then performing per-state-change-comparison in order to reduce graphics-API calls
-				mDepthStencilState->setDirect3D9DepthStencilStates(*mDirect3DDevice9);
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-			}
-			else
-			{
-				// Set the default depth stencil state
-				if (nullptr != mDefaultDepthStencilState)
-				{
-					omSetDepthStencilState(mDefaultDepthStencilState);
-				}
-				else
-				{
-					// Fallback in case everything goes wrong
-
-					// Release the depth stencil state reference, in case we have one
-					if (nullptr != mDepthStencilState)
-					{
-						// Release reference
-						mDepthStencilState->release();
-						mDepthStencilState = nullptr;
-					}
-				}
-			}
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D9Renderer::omSetBlendState(Renderer::IBlendState *blendState)
+	void Direct3D9Renderer::omSetBlendState(Renderer::IBlendState*)
 	{
-		// New blend state?
-		if (mBlendState != blendState)
-		{
-			// Set a blend state?
-			if (nullptr != blendState)
-			{
-				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *blendState)
-
-				// Release the blend state reference, in case we have one
-				if (nullptr != mBlendState)
-				{
-					mBlendState->release();
-				}
-
-				// Set new blend state and add a reference to it
-				mBlendState = static_cast<BlendState*>(blendState);
-				mBlendState->addReference();
-
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-				// Set the Direct3D 9 blend states
-				// TODO(co) Reduce state changes: Maybe it's a good idea to have alternative methods allowing to pass through the previous states and then performing per-state-change-comparison in order to reduce graphics-API calls
-				mBlendState->setDirect3D9BlendStates(*mDirect3DDevice9);
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(this)
-			}
-			else
-			{
-				// Set the default blend state
-				if (nullptr != mDefaultBlendState)
-				{
-					omSetBlendState(mDefaultBlendState);
-				}
-				else
-				{
-					// Fallback in case everything goes wrong
-
-					// Release the blend state reference, in case we have one
-					if (nullptr != mBlendState)
-					{
-						// Release reference
-						mBlendState->release();
-						mBlendState = nullptr;
-					}
-				}
-			}
-		}
+		// TODO(co) Remove this method
 	}
 
 

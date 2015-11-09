@@ -199,6 +199,9 @@
     <ClInclude Include="include\OpenGLRenderer\Detail\DepthStencilState.h">
       <Filter>Source Files\Detail</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Detail\IState.h">
+      <Filter>Source Files\Detail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -464,6 +467,9 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Detail\RasterizerState.inl">
+      <Filter>Source Files\Detail</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Detail\IState.inl">
       <Filter>Source Files\Detail</Filter>
     </None>
   </ItemGroup>

@@ -35,8 +35,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	BlendState::BlendState(OpenGLRenderer &openGLRenderer, const Renderer::BlendState &blendState) :
-		IBlendState(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+	BlendState::BlendState(const Renderer::BlendState &blendState) :
 		mBlendState(blendState)
 	{
 		// Nothing to do in here

@@ -40,11 +40,10 @@ namespace Direct3D11Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	DepthStencilState::DepthStencilState(Direct3D11Renderer &direct3D11Renderer, const Renderer::DepthStencilState &depthStencilState) :
-		IDepthStencilState(direct3D11Renderer),
 		mD3D11DepthStencilState(nullptr)
 	{
 		// Create the Direct3D 11 depth stencil state
-		// -> "Renderer::DepthStencilState" maps directly to Direct3D 10 & 11, do not change it
+		// -> "Renderer::DepthStencilState" maps directly to Direct3D 10 & 11 & 12, do not change it
 		direct3D11Renderer.getD3D11Device()->CreateDepthStencilState(reinterpret_cast<const D3D11_DEPTH_STENCIL_DESC*>(&depthStencilState), &mD3D11DepthStencilState);
 
 		// Assign a default name to the resource for debugging purposes
@@ -64,7 +63,7 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
+	//[ Public virtual Direct3D11Renderer::IState methods     ]
 	//[-------------------------------------------------------]
 	void DepthStencilState::setDebugName(const char *name)
 	{

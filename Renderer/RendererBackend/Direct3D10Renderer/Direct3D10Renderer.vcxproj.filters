@@ -75,6 +75,9 @@
     <None Include="include\Direct3D10Renderer\Detail\BlendState.inl">
       <Filter>Source Files\Detail</Filter>
     </None>
+    <None Include="include\Direct3D10Renderer\Detail\IState.inl">
+      <Filter>Source Files\Detail</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D10Renderer\Shader\GeometryShader.h">
@@ -174,6 +177,9 @@
       <Filter>Source Files\Detail</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D10Renderer\Detail\BlendState.h">
+      <Filter>Source Files\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\Detail\IState.h">
       <Filter>Source Files\Detail</Filter>
     </ClInclude>
   </ItemGroup>

@@ -25,6 +25,9 @@
 #include "Direct3D9Renderer/d3d9.h"
 #include "Direct3D9Renderer/Mapping.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
+#include "Direct3D9Renderer/Detail/BlendState.h"
+#include "Direct3D9Renderer/Detail/RasterizerState.h"
+#include "Direct3D9Renderer/Detail/DepthStencilState.h"
 #include "Direct3D9Renderer/Shader/ProgramHlsl.h"
 
 
@@ -42,7 +45,10 @@ namespace Direct3D9Renderer
 		IPipelineState(direct3D9Renderer),
 		mDirect3DDevice9(direct3D9Renderer.getDirect3DDevice9()),
 		mProgram(pipelineState.program),
-		mDirect3DVertexDeclaration9(nullptr)
+		mDirect3DVertexDeclaration9(nullptr),
+		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
+		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),
+		mBlendState(new BlendState(pipelineState.blendState))
 	{
 		// Acquire our Direct3D 9 device reference
 		mDirect3DDevice9->AddRef();
@@ -86,6 +92,11 @@ namespace Direct3D9Renderer
 
 	PipelineState::~PipelineState()
 	{
+		// Destroy states
+		delete mRasterizerState;
+		delete mDepthStencilState;
+		delete mBlendState;
+
 		// Release the program reference
 		mProgram->release();
 
@@ -101,14 +112,20 @@ namespace Direct3D9Renderer
 
 	void PipelineState::bindPipelineState() const
 	{
-		// TODO(co) Directly move this into "Direct3D11Renderer"
-
 		// Set the Direct3D 9 vertex declaration
 		mDirect3DDevice9->SetVertexDeclaration(mDirect3DVertexDeclaration9);
 
 		// Set the program
-		Direct3D9Renderer& direct3D9Renderer = static_cast<Direct3D9Renderer&>(getRenderer());
-		direct3D9Renderer.setProgram(mProgram);
+		static_cast<Direct3D9Renderer&>(getRenderer()).setProgram(mProgram);
+
+		// Set the Direct3D 9 rasterizer state
+		mRasterizerState->setDirect3D9RasterizerStates(*mDirect3DDevice9);
+
+		// Set Direct3D 9 depth stencil state
+		mDepthStencilState->setDirect3D9DepthStencilStates(*mDirect3DDevice9);
+
+		// Set Direct3D 9 blend state
+		mBlendState->setDirect3D9BlendStates(*mDirect3DDevice9);
 	}
 
 

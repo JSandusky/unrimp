@@ -22,6 +22,7 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\Direct3D11Renderer\Detail\BlendState.inl" />
     <None Include="include\Direct3D11Renderer\Detail\DepthStencilState.inl" />
+    <None Include="include\Direct3D11Renderer\Detail\IState.inl" />
     <None Include="include\Direct3D11Renderer\Detail\RasterizerState.inl" />
     <None Include="include\Direct3D11Renderer\Direct3D11Renderer.inl" />
     <None Include="include\Direct3D11Renderer\Framebuffer.inl" />
@@ -48,6 +49,7 @@
     <ClInclude Include="include\Direct3D11Renderer\D3D11.h" />
     <ClInclude Include="include\Direct3D11Renderer\Detail\BlendState.h" />
     <ClInclude Include="include\Direct3D11Renderer\Detail\DepthStencilState.h" />
+    <ClInclude Include="include\Direct3D11Renderer\Detail\IState.h" />
     <ClInclude Include="include\Direct3D11Renderer\Detail\RasterizerState.h" />
     <ClInclude Include="include\Direct3D11Renderer\Direct3D11Debug.h" />
     <ClInclude Include="include\Direct3D11Renderer\Direct3D11Renderer.h" />

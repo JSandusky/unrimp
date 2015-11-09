@@ -36,8 +36,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	DepthStencilState::DepthStencilState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::DepthStencilState &depthStencilState) :
-		IDepthStencilState(openGLES2Renderer),
+	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState &depthStencilState) :
 		mDepthStencilState(depthStencilState)
 	{
 		// Nothing to do in here

@@ -27,7 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IRasterizerState.h>
+#include "OpenGLES2Renderer/Detail/IState.h"
+
 #include <Renderer/RasterizerStateTypes.h>
 
 
@@ -54,7 +55,7 @@ namespace OpenGLES2Renderer
 	*  @brief
 	*    OpenGL ES 2 rasterizer state class
 	*/
-	class RasterizerState : public Renderer::IRasterizerState
+	class RasterizerState : public IState
 	{
 
 
@@ -66,12 +67,10 @@ namespace OpenGLES2Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES2Renderer
-		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] rasterizerState
 		*    Rasterizer state to use
 		*/
-		RasterizerState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::RasterizerState &rasterizerState);
+		RasterizerState(const Renderer::RasterizerState &rasterizerState);
 
 		/**
 		*  @brief

@@ -35,8 +35,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	BlendState::BlendState(Direct3D9Renderer &direct3D9Renderer, const Renderer::BlendState &blendState) :
-		IBlendState(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer)),
+	BlendState::BlendState(const Renderer::BlendState &blendState) :
 		mBlendState(blendState)
 	{
 		// Nothing to do in here
@@ -56,15 +55,6 @@ namespace Direct3D9Renderer
 		direct3DDevice9.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
 		// TODO(co) Map the rest of the blend states
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	void BlendState::setDebugName(const char *)
-	{
-		// There's no Direct3D 9 resource we could assign a debug name to
 	}
 
 

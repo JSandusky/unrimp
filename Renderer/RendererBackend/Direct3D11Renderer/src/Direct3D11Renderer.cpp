@@ -37,9 +37,6 @@
 #include "Direct3D11Renderer/PipelineState.h"
 #include "Direct3D11Renderer/TextureBuffer.h"
 #include "Direct3D11Renderer/Texture2DArray.h"
-#include "Direct3D11Renderer/Detail/BlendState.h"
-#include "Direct3D11Renderer/Detail/RasterizerState.h"
-#include "Direct3D11Renderer/Detail/DepthStencilState.h"
 #include "Direct3D11Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D11Renderer/Shader/ShaderLanguageHlsl.h"
 #include "Direct3D11Renderer/Shader/UniformBuffer.h"
@@ -369,19 +366,22 @@ namespace Direct3D11Renderer
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::IRasterizerState *Direct3D11Renderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
+	Renderer::IRasterizerState *Direct3D11Renderer::createRasterizerState(const Renderer::RasterizerState&)
 	{
-		return new RasterizerState(*this, rasterizerState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
-	Renderer::IDepthStencilState *Direct3D11Renderer::createDepthStencilState(const Renderer::DepthStencilState &depthStencilState)
+	Renderer::IDepthStencilState *Direct3D11Renderer::createDepthStencilState(const Renderer::DepthStencilState&)
 	{
-		return new DepthStencilState(*this, depthStencilState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
-	Renderer::IBlendState *Direct3D11Renderer::createBlendState(const Renderer::BlendState &blendState)
+	Renderer::IBlendState *Direct3D11Renderer::createBlendState(const Renderer::BlendState&)
 	{
-		return new BlendState(*this, blendState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
 	Renderer::ISamplerState *Direct3D11Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
@@ -852,24 +852,9 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::rsSetState(Renderer::IRasterizerState *rasterizerState)
+	void Direct3D11Renderer::rsSetState(Renderer::IRasterizerState*)
 	{
-		if (nullptr != rasterizerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rasterizerState)
-
-			// Set the Direct3D 11 rasterizer state
-			mD3D11DeviceContext->RSSetState(static_cast<RasterizerState*>(rasterizerState)->getD3D11RasterizerState());
-		}
-		else
-		{
-			// Set the default rasterizer state
-			// -> The default values of "Renderer::RasterizerState" are identical to Direct3D 11
-			// -> The Direct3D documentation does not tell what happens when "ID3D11DeviceContext::RSSetState()" is called with a null pointer
-			//    -> When looking at the samples within "Microsoft DirectX SDK (June 2010)", I assume this sets the default values
-			mD3D11DeviceContext->RSSetState(nullptr);
-		}
+		// TODO(co) Remove this method
 	}
 
 
@@ -963,40 +948,14 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::omSetDepthStencilState(Renderer::IDepthStencilState *depthStencilState)
+	void Direct3D11Renderer::omSetDepthStencilState(Renderer::IDepthStencilState*)
 	{
-		if (nullptr != depthStencilState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *depthStencilState)
-
-			// Set Direct3D 11 depth stencil state
-			mD3D11DeviceContext->OMSetDepthStencilState(static_cast<DepthStencilState*>(depthStencilState)->getD3D11DepthStencilState(), 0);
-		}
-		else
-		{
-			// Set the default depth stencil state
-			// -> The default values of "Renderer::DepthStencilState" are identical to Direct3D 11
-			mD3D11DeviceContext->OMSetDepthStencilState(nullptr, 0);
-		}
+		// TODO(co) Remove this method
 	}
 
-	void Direct3D11Renderer::omSetBlendState(Renderer::IBlendState *blendState)
+	void Direct3D11Renderer::omSetBlendState(Renderer::IBlendState*)
 	{
-		if (nullptr != blendState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *blendState)
-
-			// Set Direct3D 11 blend state
-			mD3D11DeviceContext->OMSetBlendState(static_cast<BlendState*>(blendState)->getD3D11BlendState(), 0, 0xffffffff);
-		}
-		else
-		{
-			// Set the default blend state
-			// -> The default values of "Renderer::BlendState" are identical to Direct3D 11
-			mD3D11DeviceContext->OMSetBlendState(nullptr, 0, 0xffffffff);
-		}
+		// TODO(co) Remove this method
 	}
 
 

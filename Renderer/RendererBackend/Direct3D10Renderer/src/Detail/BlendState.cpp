@@ -40,7 +40,6 @@ namespace Direct3D10Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	BlendState::BlendState(Direct3D10Renderer &direct3D10Renderer, const Renderer::BlendState &blendState) :
-		IBlendState(direct3D10Renderer),
 		mD3D10BlendState(nullptr)
 	{
 		// Create the Direct3D 10 blend state
@@ -89,7 +88,7 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
+	//[ Public virtual Direct3D10Renderer::IState methods     ]
 	//[-------------------------------------------------------]
 	void BlendState::setDebugName(const char *name)
 	{

@@ -40,11 +40,10 @@ namespace Direct3D11Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	RasterizerState::RasterizerState(Direct3D11Renderer &direct3D11Renderer, const Renderer::RasterizerState &rasterizerState) :
-		IRasterizerState(direct3D11Renderer),
 		mD3D11RasterizerState(nullptr)
 	{
 		// Create the Direct3D 11 rasterizer state
-		// -> "Renderer::RasterizerState" maps directly to Direct3D 10 & 11, do not change it
+		// -> "Renderer::RasterizerState" maps directly to Direct3D 10 & 11 & 12, do not change it
 		direct3D11Renderer.getD3D11Device()->CreateRasterizerState(reinterpret_cast<const D3D11_RASTERIZER_DESC*>(&rasterizerState), &mD3D11RasterizerState);
 
 		// Assign a default name to the resource for debugging purposes
@@ -64,7 +63,7 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
+	//[ Public virtual Direct3D11Renderer::IState methods     ]
 	//[-------------------------------------------------------]
 	void RasterizerState::setDebugName(const char *name)
 	{

@@ -27,12 +27,13 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IDepthStencilState.h>
+#include "Direct3D9Renderer/Detail/IState.h"
+
 #include <Renderer/DepthStencilStateTypes.h>
 
 
 //[-------------------------------------------------------]
-//[ Forward declaratiosn                                  ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct IDirect3DDevice9;
 namespace Direct3D9Renderer
@@ -55,7 +56,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 depth stencil state class
 	*/
-	class DepthStencilState : public Renderer::IDepthStencilState
+	class DepthStencilState : public IState
 	{
 
 
@@ -67,12 +68,10 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] direct3D9Renderer
-		*    Owner Direct3D 9 renderer instance
 		*  @param[in] depthStencilState
 		*    Depth stencil state to use
 		*/
-		DepthStencilState(Direct3D9Renderer &direct3D9Renderer, const Renderer::DepthStencilState &depthStencilState);
+		DepthStencilState(const Renderer::DepthStencilState &depthStencilState);
 
 		/**
 		*  @brief
@@ -88,13 +87,6 @@ namespace Direct3D9Renderer
 		*    Direct3D 9 device instance to use
 		*/
 		void setDirect3D9DepthStencilStates(IDirect3DDevice9 &direct3DDevice9) const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void setDebugName(const char *name) override;
 
 
 	//[-------------------------------------------------------]

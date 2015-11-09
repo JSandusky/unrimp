@@ -40,7 +40,10 @@ namespace Renderer
 }
 namespace OpenGLRenderer
 {
+	class BlendState;
 	class OpenGLRenderer;
+	class RasterizerState;
+	class DepthStencilState;
 }
 
 
@@ -95,6 +98,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	private:
 		Renderer::IProgram* mProgram;
+		RasterizerState*	mRasterizerState;
+		DepthStencilState*	mDepthStencilState;
+		BlendState*			mBlendState;
 
 
 	};
