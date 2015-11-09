@@ -249,9 +249,6 @@ void FirstMesh::onInitialization()
 			}
 		}
 
-		// Create blend state
-		mBlendState = renderer->createBlendState(Renderer::IBlendState::getDefaultBlendState());
-
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)
 	}
@@ -270,7 +267,6 @@ void FirstMesh::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used renderer resources
-	mBlendState = nullptr;
 	mSamplerState = nullptr;
 
 	// TODO(co) Implement decent resource handling
@@ -400,9 +396,6 @@ void FirstMesh::onDraw()
 					mProgram->setUniformMatrix3fv(mObjectSpaceToViewSpaceMatrixUniformHandle, glm::value_ptr(glm::mat3(objectSpaceToViewSpace)));
 				}
 			}
-
-			// Set the used blend state
-			renderer->omSetBlendState(mBlendState);
 
 			// Draw mesh instance
 			if (nullptr != mMeshResource)
