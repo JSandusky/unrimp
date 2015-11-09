@@ -27,7 +27,6 @@
 #include "Direct3D12Renderer/Direct3D12Debug.h"	// For "DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 #include "Direct3D12Renderer/Texture2D.h"
-#include "Direct3D12Renderer/BlendState.h"
 #include "Direct3D12Renderer/VertexArray.h"
 #include "Direct3D12Renderer/SwapChain.h"
 #include "Direct3D12Renderer/Framebuffer.h"
@@ -38,8 +37,6 @@
 #include "Direct3D12Renderer/RootSignature.h"
 #include "Direct3D12Renderer/PipelineState.h"
 #include "Direct3D12Renderer/Texture2DArray.h"
-#include "Direct3D12Renderer/RasterizerState.h"
-#include "Direct3D12Renderer/DepthStencilState.h"
 #include "Direct3D12Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D12Renderer/Shader/UniformBuffer.h"
 #include "Direct3D12Renderer/Shader/VertexShaderHlsl.h"
@@ -410,19 +407,22 @@ namespace Direct3D12Renderer
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::IRasterizerState *Direct3D12Renderer::createRasterizerState(const Renderer::RasterizerState &rasterizerState)
+	Renderer::IRasterizerState *Direct3D12Renderer::createRasterizerState(const Renderer::RasterizerState&)
 	{
-		return new RasterizerState(*this, rasterizerState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
-	Renderer::IDepthStencilState *Direct3D12Renderer::createDepthStencilState(const Renderer::DepthStencilState &depthStencilState)
+	Renderer::IDepthStencilState *Direct3D12Renderer::createDepthStencilState(const Renderer::DepthStencilState&)
 	{
-		return new DepthStencilState(*this, depthStencilState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
-	Renderer::IBlendState *Direct3D12Renderer::createBlendState(const Renderer::BlendState &blendState)
+	Renderer::IBlendState *Direct3D12Renderer::createBlendState(const Renderer::BlendState&)
 	{
-		return new BlendState(*this, blendState);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
 	Renderer::ISamplerState *Direct3D12Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
@@ -772,25 +772,7 @@ namespace Direct3D12Renderer
 
 	void Direct3D12Renderer::rsSetState(Renderer::IRasterizerState *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		if (nullptr != rasterizerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rasterizerState)
-
-			// Set the Direct3D 12 rasterizer state
-			mD3D12DeviceContext->RSSetState(static_cast<RasterizerState*>(rasterizerState)->getD3D12RasterizerState());
-		}
-		else
-		{
-			// Set the default rasterizer state
-			// -> The default values of "Renderer::RasterizerState" are identical to Direct3D 12
-			// -> The Direct3D documentation does not tell what happens when "ID3D12DeviceContext::RSSetState()" is called with a null pointer
-			//    -> When looking at the samples within "Microsoft DirectX SDK (June 2010)", I assume this sets the default values
-			mD3D12DeviceContext->RSSetState(nullptr);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 
@@ -892,44 +874,12 @@ namespace Direct3D12Renderer
 
 	void Direct3D12Renderer::omSetDepthStencilState(Renderer::IDepthStencilState *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		if (nullptr != depthStencilState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *depthStencilState)
-
-			// Set Direct3D 12 depth stencil state
-			mD3D12DeviceContext->OMSetDepthStencilState(static_cast<DepthStencilState*>(depthStencilState)->getD3D12DepthStencilState(), 0);
-		}
-		else
-		{
-			// Set the default depth stencil state
-			// -> The default values of "Renderer::DepthStencilState" are identical to Direct3D 12
-			mD3D12DeviceContext->OMSetDepthStencilState(nullptr, 0);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 	void Direct3D12Renderer::omSetBlendState(Renderer::IBlendState *)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
-		if (nullptr != blendState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *blendState)
-
-			// Set Direct3D 12 blend state
-			mD3D12DeviceContext->OMSetBlendState(static_cast<BlendState*>(blendState)->getD3D12BlendState(), 0, 0xffffffff);
-		}
-		else
-		{
-			// Set the default blend state
-			// -> The default values of "Renderer::BlendState" are identical to Direct3D 12
-			mD3D12DeviceContext->OMSetBlendState(nullptr, 0, 0xffffffff);
-		}
-		*/
+		// TODO(co) Remove this method
 	}
 
 

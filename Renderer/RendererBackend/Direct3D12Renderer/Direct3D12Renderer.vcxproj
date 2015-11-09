@@ -20,13 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\Direct3D12Renderer\BlendState.inl" />
-    <None Include="include\Direct3D12Renderer\DepthStencilState.inl" />
     <None Include="include\Direct3D12Renderer\Direct3D12Renderer.inl" />
     <None Include="include\Direct3D12Renderer\Framebuffer.inl" />
     <None Include="include\Direct3D12Renderer\IndexBuffer.inl" />
     <None Include="include\Direct3D12Renderer\PipelineState.inl" />
-    <None Include="include\Direct3D12Renderer\RasterizerState.inl" />
     <None Include="include\Direct3D12Renderer\RootSignature.inl" />
     <None Include="include\Direct3D12Renderer\SamplerState.inl" />
     <None Include="include\Direct3D12Renderer\Shader\FragmentShaderHlsl.inl" />
@@ -45,10 +42,8 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Direct3D12Renderer\BlendState.h" />
     <ClInclude Include="include\Direct3D12Renderer\D3D12.h" />
     <ClInclude Include="include\Direct3D12Renderer\D3D12X.h" />
-    <ClInclude Include="include\Direct3D12Renderer\DepthStencilState.h" />
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12Debug.h" />
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12Renderer.h" />
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12RuntimeLinking.h" />
@@ -57,7 +52,6 @@
     <ClInclude Include="include\Direct3D12Renderer\IndexBuffer.h" />
     <ClInclude Include="include\Direct3D12Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D12Renderer\PipelineState.h" />
-    <ClInclude Include="include\Direct3D12Renderer\RasterizerState.h" />
     <ClInclude Include="include\Direct3D12Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D12Renderer\SamplerState.h" />
     <ClInclude Include="include\Direct3D12Renderer\Shader\FragmentShader.h" />
@@ -83,8 +77,6 @@
     <ClInclude Include="include\Direct3D12Renderer\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BlendState.cpp" />
-    <ClCompile Include="src\DepthStencilState.cpp" />
     <ClCompile Include="src\Direct3D12Renderer.cpp" />
     <ClCompile Include="src\Direct3D12RuntimeLinking.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
@@ -92,7 +84,6 @@
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\PipelineState.cpp" />
-    <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\Shader\FragmentShader.cpp" />
