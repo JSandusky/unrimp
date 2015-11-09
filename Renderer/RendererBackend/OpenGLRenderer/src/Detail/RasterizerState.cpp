@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/RasterizerState.h"
+#include "OpenGLRenderer/Detail/RasterizerState.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 

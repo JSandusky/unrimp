@@ -20,13 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\OpenGLES2Renderer\Detail\RasterizerState.inl" />
     <None Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.inl" />
     <None Include="include\OpenGLES2Renderer\Framebuffer.inl" />
     <None Include="include\OpenGLES2Renderer\IContext.inl" />
     <None Include="include\OpenGLES2Renderer\IndexBuffer.inl" />
     <None Include="include\OpenGLES2Renderer\OpenGLES2Renderer.inl" />
     <None Include="include\OpenGLES2Renderer\PipelineState.inl" />
-    <None Include="include\OpenGLES2Renderer\RasterizerState.inl" />
     <None Include="include\OpenGLES2Renderer\RootSignature.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\Program.inl" />
@@ -41,9 +41,10 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\OpenGLES2Renderer\BlendState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\ContextRuntimeLinking.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\DepthStencilState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\Detail\BlendState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\Detail\DepthStencilState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\Detail\RasterizerState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Framebuffer.h" />
     <ClInclude Include="include\OpenGLES2Renderer\IContext.h" />
@@ -53,7 +54,6 @@
     <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Debug.h" />
     <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Renderer.h" />
     <ClInclude Include="include\OpenGLES2Renderer\PipelineState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\RasterizerState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\RootSignature.h" />
     <ClInclude Include="include\OpenGLES2Renderer\SamplerState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Shader\FragmentShader.h" />
@@ -73,9 +73,10 @@
     <ClInclude Include="include\OpenGLES2Renderer\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BlendState.cpp" />
     <ClCompile Include="src\ContextRuntimeLinking.cpp" />
-    <ClCompile Include="src\DepthStencilState.cpp" />
+    <ClCompile Include="src\Detail\BlendState.cpp" />
+    <ClCompile Include="src\Detail\DepthStencilState.cpp" />
+    <ClCompile Include="src\Detail\RasterizerState.cpp" />
     <ClCompile Include="src\ExtensionsRuntimeLinking.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\IContext.cpp" />
@@ -84,7 +85,6 @@
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\OpenGLES2Renderer.cpp" />
     <ClCompile Include="src\PipelineState.cpp" />
-    <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\Shader\FragmentShader.cpp" />

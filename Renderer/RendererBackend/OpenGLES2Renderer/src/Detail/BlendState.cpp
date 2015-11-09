@@ -21,22 +21,23 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/BlendState.h"
-#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLES2Renderer/Detail/BlendState.h"
+#include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
+#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace OpenGLES2Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	BlendState::BlendState(OpenGLRenderer &openGLRenderer, const Renderer::BlendState &blendState) :
-		IBlendState(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+	BlendState::BlendState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::BlendState &blendState) :
+		IBlendState(openGLES2Renderer),
 		mBlendState(blendState)
 	{
 		// Nothing to do in here
@@ -47,7 +48,7 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	void BlendState::setOpenGLBlendStates() const
+	void BlendState::setOpenGLES2BlendStates() const
 	{
 		if (mBlendState.renderTarget[0].blendEnable)
 		{
@@ -62,15 +63,10 @@ namespace OpenGLRenderer
 		}
 
 		// TODO(co) Map the rest of the blend states
-		// GL_EXT_blend_func_separate
-		// (GL_EXT_blend_equation_separate)
-		// GL_EXT_blend_color
-		// GL_EXT_blend_minmax
-		// GL_EXT_blend_subtract
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // OpenGLES2Renderer

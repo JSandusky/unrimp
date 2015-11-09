@@ -48,16 +48,13 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../External/OpenGLES2/incl
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
-	src/BlendState.cpp
 	src/ContextRuntimeLinking.cpp
-	src/DepthStencilState.cpp
 	src/ExtensionsRuntimeLinking.cpp
 	src/Framebuffer.cpp
 	src/IContext.cpp
 	src/IExtensions.cpp
 	src/IndexBuffer.cpp
 	src/Mapping.cpp
-	src/RasterizerState.cpp
 	src/OpenGLES2Renderer.cpp
 	src/PipelineState.cpp
 	src/SamplerState.cpp
@@ -68,6 +65,9 @@ set(SOURCE_CODES
 	src/VertexArrayNoVao.cpp
 	src/VertexArrayVao.cpp
 	src/VertexBuffer.cpp
+	src/Detail/BlendState.cpp
+	src/Detail/DepthStencilState.cpp
+	src/Detail/RasterizerState.cpp
 	src/Shader/FragmentShader.cpp
 	src/Shader/FragmentShaderGlsl.cpp
 	src/Shader/Program.cpp

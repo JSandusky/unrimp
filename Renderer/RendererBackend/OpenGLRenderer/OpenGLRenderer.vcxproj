@@ -19,8 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\OpenGLRenderer\BlendState.h" />
-    <ClInclude Include="include\OpenGLRenderer\DepthStencilState.h" />
+    <ClInclude Include="include\OpenGLRenderer\Detail\BlendState.h" />
+    <ClInclude Include="include\OpenGLRenderer\Detail\DepthStencilState.h" />
+    <ClInclude Include="include\OpenGLRenderer\Detail\RasterizerState.h" />
     <ClInclude Include="include\OpenGLRenderer\Extensions.h" />
     <ClInclude Include="include\OpenGLRenderer\Framebuffer.h" />
     <ClInclude Include="include\OpenGLRenderer\FramebufferBind.h" />
@@ -35,7 +36,6 @@
     <ClInclude Include="include\OpenGLRenderer\OpenGLRenderer.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLRuntimeLinking.h" />
     <ClInclude Include="include\OpenGLRenderer\PipelineState.h" />
-    <ClInclude Include="include\OpenGLRenderer\RasterizerState.h" />
     <ClInclude Include="include\OpenGLRenderer\RootSignature.h" />
     <ClInclude Include="include\OpenGLRenderer\SamplerState.h" />
     <ClInclude Include="include\OpenGLRenderer\SamplerStateBind.h" />
@@ -81,8 +81,9 @@
     <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BlendState.cpp" />
-    <ClCompile Include="src\DepthStencilState.cpp" />
+    <ClCompile Include="src\Detail\BlendState.cpp" />
+    <ClCompile Include="src\Detail\DepthStencilState.cpp" />
+    <ClCompile Include="src\Detail\RasterizerState.cpp" />
     <ClCompile Include="src\Extensions.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\FramebufferBind.cpp" />
@@ -107,7 +108,6 @@
     <ClCompile Include="src\OpenGLRenderer.cpp" />
     <ClCompile Include="src\OpenGLRuntimeLinking.cpp" />
     <ClCompile Include="src\PipelineState.cpp" />
-    <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\SamplerStateBind.cpp" />
@@ -155,13 +155,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\OpenGLRenderer\Detail\RasterizerState.inl" />
     <None Include="include\OpenGLRenderer\Framebuffer.inl" />
     <None Include="include\OpenGLRenderer\IContext.inl" />
     <None Include="include\OpenGLRenderer\IndexBuffer.inl" />
     <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl" />
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl" />
     <None Include="include\OpenGLRenderer\PipelineState.inl" />
-    <None Include="include\OpenGLRenderer\RasterizerState.inl" />
     <None Include="include\OpenGLRenderer\RootSignature.inl" />
     <None Include="include\OpenGLRenderer\SamplerStateSo.inl" />
     <None Include="include\OpenGLRenderer\Shader\FragmentShaderGlsl.inl" />

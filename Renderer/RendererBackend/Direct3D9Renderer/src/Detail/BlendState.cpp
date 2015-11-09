@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D9Renderer/BlendState.h"
+#include "Direct3D9Renderer/Detail/BlendState.h"
 #include "Direct3D9Renderer/d3d9.h"
 
 

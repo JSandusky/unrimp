@@ -34,16 +34,16 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace OpenGLES2Renderer
 {
-	class OpenGLRenderer;
+	class OpenGLES2Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace OpenGLES2Renderer
 {
 
 
@@ -52,7 +52,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL rasterizer state class
+	*    OpenGL ES 2 rasterizer state class
 	*/
 	class RasterizerState : public Renderer::IRasterizerState
 	{
@@ -66,12 +66,12 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
+		*  @param[in] openGLES2Renderer
+		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] rasterizerState
 		*    Rasterizer state to use
 		*/
-		RasterizerState(OpenGLRenderer &openGLRenderer, const Renderer::RasterizerState &rasterizerState);
+		RasterizerState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::RasterizerState &rasterizerState);
 
 		/**
 		*  @brief
@@ -90,9 +90,9 @@ namespace OpenGLRenderer
 
 		/**
 		*  @brief
-		*    Set the OpenGL rasterizer states
+		*    Set the OpenGL ES 2 rasterizer states
 		*/
-		void setOpenGLRasterizerStates() const;
+		void setOpenGLES2RasterizerStates() const;
 
 
 	//[-------------------------------------------------------]
@@ -108,10 +108,10 @@ namespace OpenGLRenderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // OpenGLES2Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/RasterizerState.inl"
+#include "OpenGLES2Renderer/Detail/RasterizerState.inl"

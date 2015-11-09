@@ -14,6 +14,9 @@
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{ff27bada-b551-4241-993e-5bd1a3d26246}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Detail">
+      <UniqueIdentifier>{6794a761-5f92-4fb7-87d1-21e6a12ba69b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h">
@@ -127,12 +130,6 @@
     <ClInclude Include="include\OpenGLRenderer\VertexBufferDsa.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\BlendState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\DepthStencilState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Extensions.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -169,9 +166,6 @@
     <ClInclude Include="include\OpenGLRenderer\OpenGLRuntimeLinking.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\RasterizerState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\SamplerState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -195,6 +189,15 @@
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\RootSignature.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Detail\RasterizerState.h">
+      <Filter>Source Files\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Detail\BlendState.h">
+      <Filter>Source Files\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Detail\DepthStencilState.h">
+      <Filter>Source Files\Detail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -267,9 +270,6 @@
     <ClCompile Include="src\Shader\GeometryShaderGlsl.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\RasterizerState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SamplerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -336,12 +336,6 @@
     <ClCompile Include="src\VertexBufferDsa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\BlendState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DepthStencilState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Extensions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -380,6 +374,15 @@
     </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Detail\DepthStencilState.cpp">
+      <Filter>Source Files\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Detail\RasterizerState.cpp">
+      <Filter>Source Files\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Detail\BlendState.cpp">
+      <Filter>Source Files\Detail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -445,9 +448,6 @@
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\RasterizerState.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\SamplerStateSo.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -462,6 +462,9 @@
     </None>
     <None Include="include\OpenGLRenderer\RootSignature.inl">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Detail\RasterizerState.inl">
+      <Filter>Source Files\Detail</Filter>
     </None>
   </ItemGroup>
 </Project>

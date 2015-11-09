@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/BlendState.h"
+#include "OpenGLES2Renderer/Detail/DepthStencilState.h"
 #include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 
@@ -36,33 +36,34 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	BlendState::BlendState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::BlendState &blendState) :
-		IBlendState(openGLES2Renderer),
-		mBlendState(blendState)
+	DepthStencilState::DepthStencilState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::DepthStencilState &depthStencilState) :
+		IDepthStencilState(openGLES2Renderer),
+		mDepthStencilState(depthStencilState)
 	{
 		// Nothing to do in here
 	}
 
-	BlendState::~BlendState()
+	DepthStencilState::~DepthStencilState()
 	{
 		// Nothing to do in here
 	}
 
-	void BlendState::setOpenGLES2BlendStates() const
+	void DepthStencilState::setOpenGLES2DepthStencilStates() const
 	{
-		if (mBlendState.renderTarget[0].blendEnable)
+		// Renderer::DepthStencilState::depthEnable
+		if (mDepthStencilState.depthEnable)
 		{
-			glEnable(GL_BLEND);
-
-			// TODO(co) Add more blend state options: Due to time limitations for now only fixed build in alpha blend setup in order to see a change
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+			glEnable(GL_DEPTH_TEST);
 		}
 		else
 		{
-			glDisable(GL_BLEND);
+			glDisable(GL_DEPTH_TEST);
 		}
 
-		// TODO(co) Map the rest of the blend states
+		// Renderer::DepthStencilState::depthWriteMask
+		glDepthMask(static_cast<GLboolean>((Renderer::DepthWriteMask::ALL == mDepthStencilState.depthWriteMask) ? GL_TRUE : GL_FALSE));
+
+		// TODO(co) Map the rest of the depth stencil states
 	}
 
 

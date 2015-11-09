@@ -21,22 +21,22 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D9Renderer/DepthStencilState.h"
-#include "Direct3D9Renderer/d3d9.h"
+#include "OpenGLRenderer/Detail/DepthStencilState.h"
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Direct3D9Renderer
+namespace OpenGLRenderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	DepthStencilState::DepthStencilState(Direct3D9Renderer &direct3D9Renderer, const Renderer::DepthStencilState &depthStencilState) :
-		IDepthStencilState(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer)),
+	DepthStencilState::DepthStencilState(OpenGLRenderer &openGLRenderer, const Renderer::DepthStencilState &depthStencilState) :
+		IDepthStencilState(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mDepthStencilState(depthStencilState)
 	{
 		// Nothing to do in here
@@ -47,28 +47,26 @@ namespace Direct3D9Renderer
 		// Nothing to do in here
 	}
 
-	void DepthStencilState::setDirect3D9DepthStencilStates(IDirect3DDevice9 &direct3DDevice9) const
+	void DepthStencilState::setOpenGLDepthStencilStates() const
 	{
 		// Renderer::DepthStencilState::depthEnable
-		direct3DDevice9.SetRenderState(D3DRS_ZENABLE, static_cast<DWORD>(mDepthStencilState.depthEnable));
+		if (mDepthStencilState.depthEnable)
+		{
+			glEnable(GL_DEPTH_TEST);
+		}
+		else
+		{
+			glDisable(GL_DEPTH_TEST);
+		}
 
 		// Renderer::DepthStencilState::depthWriteMask
-		direct3DDevice9.SetRenderState(D3DRS_ZWRITEENABLE, static_cast<DWORD>((Renderer::DepthWriteMask::ALL == mDepthStencilState.depthWriteMask) ? TRUE : FALSE));
+		glDepthMask(static_cast<GLboolean>((Renderer::DepthWriteMask::ALL == mDepthStencilState.depthWriteMask) ? GL_TRUE : GL_FALSE));
 
 		// TODO(co) Map the rest of the depth stencil states
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	void DepthStencilState::setDebugName(const char *)
-	{
-		// There's no Direct3D 9 resource we could assign a debug name to
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Direct3D9Renderer
+} // OpenGLRenderer

@@ -21,65 +21,26 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D9Renderer/RasterizerState.h"
-#include "Direct3D9Renderer/d3d9.h"
+#include "OpenGLES2Renderer/Detail/RasterizerState.h"
+#include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
+#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Direct3D9Renderer
+namespace OpenGLES2Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RasterizerState::RasterizerState(Direct3D9Renderer &direct3D9Renderer, const Renderer::RasterizerState &rasterizerState) :
-		IRasterizerState(reinterpret_cast<Renderer::IRenderer&>(direct3D9Renderer)),
-		mDirect3DFillMode(0),	// Set below
-		mDirect3DCullMode(0),	// Set below
-		mDirect3DDepthBias(*(reinterpret_cast<const DWORD*>(&rasterizerState.depthBias))),	// Direct3D 9 type is float, but has to be handed over by using DWORD
-		mDirect3DSlopeScaledDepthBias(*(reinterpret_cast<const DWORD*>(&rasterizerState.slopeScaledDepthBias))),	// Direct3D 9 type is float, but has to be handed over by using DWORD
-		mDirect3DScissorEnable(static_cast<unsigned long>(rasterizerState.scissorEnable)),
-		mDirect3DMultisampleEnable(static_cast<unsigned long>(rasterizerState.multisampleEnable)),
-		mDirect3DAntialiasedLineEnable(static_cast<unsigned long>(rasterizerState.antialiasedLineEnable))
+	RasterizerState::RasterizerState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::RasterizerState &rasterizerState) :
+		IRasterizerState(openGLES2Renderer),
+		mRasterizerState(rasterizerState)
 	{
-		// Renderer::RasterizerState::fillMode
-		switch (rasterizerState.fillMode)
-		{
-			// Wireframe
-			case Renderer::FillMode::WIREFRAME:
-				mDirect3DFillMode = D3DFILL_WIREFRAME;
-				break;
-
-			// Solid
-			default:
-			case Renderer::FillMode::SOLID:
-				mDirect3DFillMode = D3DFILL_SOLID;
-				break;
-		}
-
-		// Renderer::RasterizerState::cullMode
-		// Renderer::RasterizerState::frontCounterClockwise
-		switch (rasterizerState.cullMode)
-		{
-			// No culling
-			default:
-			case Renderer::CullMode::NONE:
-				mDirect3DCullMode = D3DCULL_NONE;
-				break;
-
-			// Selects clockwise polygons as front-facing
-			case Renderer::CullMode::FRONT:
-				mDirect3DCullMode = rasterizerState.frontCounterClockwise ? D3DCULL_CCW : D3DCULL_CW;
-				break;
-
-			// Selects counterclockwise polygons as front-facing
-			case Renderer::CullMode::BACK:
-				mDirect3DCullMode = rasterizerState.frontCounterClockwise ? D3DCULL_CW : D3DCULL_CCW;
-				break;
-		}
+		// Nothing to do in here
 	}
 
 	RasterizerState::~RasterizerState()
@@ -87,48 +48,78 @@ namespace Direct3D9Renderer
 		// Nothing to do in here
 	}
 
-	void RasterizerState::setDirect3D9RasterizerStates(IDirect3DDevice9 &direct3DDevice9) const
+	void RasterizerState::setOpenGLES2RasterizerStates() const
 	{
 		// Renderer::RasterizerState::fillMode
-		direct3DDevice9.SetRenderState(D3DRS_FILLMODE, mDirect3DFillMode);
+		switch (mRasterizerState.fillMode)
+		{
+			// Wireframe
+			case Renderer::FillMode::WIREFRAME:
+				// OpenGL ES 2 has no support for polygon mode
+				// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				break;
+
+			// Solid
+			default:
+			case Renderer::FillMode::SOLID:
+				// OpenGL ES 2 has no support for polygon mode
+				// glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				break;
+		}
 
 		// Renderer::RasterizerState::cullMode
+		switch (mRasterizerState.cullMode)
+		{
+			// No culling
+			default:
+			case Renderer::CullMode::NONE:
+				glDisable(GL_CULL_FACE);
+				break;
+
+			// Selects clockwise polygons as front-facing
+			case Renderer::CullMode::FRONT:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_FRONT);
+				break;
+
+			// Selects counterclockwise polygons as front-facing
+			case Renderer::CullMode::BACK:
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_BACK);
+				break;
+		}
+
 		// Renderer::RasterizerState::frontCounterClockwise
-		direct3DDevice9.SetRenderState(D3DRS_CULLMODE, mDirect3DCullMode);
+		glFrontFace(static_cast<GLenum>(mRasterizerState.frontCounterClockwise ? GL_CCW : GL_CW));
+
+		// TODO(co) Map the rest of the rasterizer states
 
 		// RasterizerState::depthBias
-		direct3DDevice9.SetRenderState(D3DRS_DEPTHBIAS, mDirect3DDepthBias);
 
 		// RasterizerState::depthBiasClamp
-		// -> Not available in Direct3D 9
 
 		// RasterizerState::slopeScaledDepthBias
-		direct3DDevice9.SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, mDirect3DSlopeScaledDepthBias);
 
 		// RasterizerState::depthClipEnable
-		// TODO(co) Supported in Direct3D 9? I assume it's not...
 
 		// RasterizerState::scissorEnable
-		direct3DDevice9.SetRenderState(D3DRS_SCISSORTESTENABLE, mDirect3DScissorEnable);
+		if (mRasterizerState.scissorEnable)
+		{
+			glEnable(GL_SCISSOR_TEST);
+		}
+		else
+		{
+			glDisable(GL_SCISSOR_TEST);
+		}
 
 		// RasterizerState::multisampleEnable
-		direct3DDevice9.SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, mDirect3DMultisampleEnable);
 
 		// RasterizerState::antialiasedLineEnable
-		direct3DDevice9.SetRenderState(D3DRS_ANTIALIASEDLINEENABLE, mDirect3DAntialiasedLineEnable);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	void RasterizerState::setDebugName(const char *)
-	{
-		// There's no Direct3D 9 resource we could assign a debug name to
+		// -> Anti-aliased lines are not supported by OpenGL ES 2
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Direct3D9Renderer
+} // OpenGLES2Renderer

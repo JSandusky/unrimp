@@ -48,8 +48,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../External/OpenGL/include
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
-	src/BlendState.cpp
-	src/DepthStencilState.cpp
 	src/Extensions.cpp
 	src/Framebuffer.cpp
 	src/FramebufferDsa.cpp
@@ -61,7 +59,6 @@ set(SOURCE_CODES
 	src/Mapping.cpp
 	src/OpenGLRuntimeLinking.cpp
 	src/PipelineState.cpp
-	src/RasterizerState.cpp
 	src/OpenGLRenderer.cpp
 	src/SamplerState.cpp
 	src/SamplerStateBind.cpp
@@ -85,6 +82,9 @@ set(SOURCE_CODES
 	src/VertexBuffer.cpp
 	src/VertexBufferBind.cpp
 	src/VertexBufferDsa.cpp
+	src/Detail/BlendState.cpp
+	src/Detail/DepthStencilState.cpp
+	src/Detail/RasterizerState.cpp
 	src/Shader/FragmentShader.cpp
 	src/Shader/FragmentShaderGlsl.cpp
 	src/Shader/GeometryShader.cpp

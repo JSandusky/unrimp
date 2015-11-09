@@ -21,53 +21,56 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/DepthStencilState.h"
-#include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
-#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
+#include "OpenGLRenderer/Detail/BlendState.h"
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES2Renderer
+namespace OpenGLRenderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	DepthStencilState::DepthStencilState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::DepthStencilState &depthStencilState) :
-		IDepthStencilState(openGLES2Renderer),
-		mDepthStencilState(depthStencilState)
+	BlendState::BlendState(OpenGLRenderer &openGLRenderer, const Renderer::BlendState &blendState) :
+		IBlendState(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mBlendState(blendState)
 	{
 		// Nothing to do in here
 	}
 
-	DepthStencilState::~DepthStencilState()
+	BlendState::~BlendState()
 	{
 		// Nothing to do in here
 	}
 
-	void DepthStencilState::setOpenGLES2DepthStencilStates() const
+	void BlendState::setOpenGLBlendStates() const
 	{
-		// Renderer::DepthStencilState::depthEnable
-		if (mDepthStencilState.depthEnable)
+		if (mBlendState.renderTarget[0].blendEnable)
 		{
-			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_BLEND);
+
+			// TODO(co) Add more blend state options: Due to time limitations for now only fixed build in alpha blend setup in order to see a change
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		}
 		else
 		{
-			glDisable(GL_DEPTH_TEST);
+			glDisable(GL_BLEND);
 		}
 
-		// Renderer::DepthStencilState::depthWriteMask
-		glDepthMask(static_cast<GLboolean>((Renderer::DepthWriteMask::ALL == mDepthStencilState.depthWriteMask) ? GL_TRUE : GL_FALSE));
-
-		// TODO(co) Map the rest of the depth stencil states
+		// TODO(co) Map the rest of the blend states
+		// GL_EXT_blend_func_separate
+		// (GL_EXT_blend_equation_separate)
+		// GL_EXT_blend_color
+		// GL_EXT_blend_minmax
+		// GL_EXT_blend_subtract
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES2Renderer
+} // OpenGLRenderer
