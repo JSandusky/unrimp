@@ -78,9 +78,6 @@ namespace Renderer
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Types                                                 ]
-	//[-------------------------------------------------------]
 	// Renderer/PlatformTypes.h
 	#ifndef __RENDERER_PLATFORM_TYPES_H__
 	#define __RENDERER_PLATFORM_TYPES_H__
@@ -984,6 +981,100 @@ namespace Renderer
 			int					  independentBlendEnable;
 			RenderTargetBlendDesc renderTarget[8];
 		};
+		struct BlendStateBuilder
+		{
+			static inline const BlendState &getDefaultBlendState()
+			{
+				static const BlendState BLEND_STATE =
+				{
+					false,
+					false,
+					{
+						{
+							false,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							ColorWriteEnable::ALL,
+						},
+						{
+							false,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							ColorWriteEnable::ALL,
+						},
+						{
+							false,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							ColorWriteEnable::ALL,
+						},
+						{
+							false,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							ColorWriteEnable::ALL,
+						},
+						{
+							false,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							ColorWriteEnable::ALL,
+						},
+						{
+							false,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							ColorWriteEnable::ALL,
+						},
+						{
+							false,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							ColorWriteEnable::ALL,
+						},
+						{
+							false,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							Blend::ONE,
+							Blend::ZERO,
+							BlendOp::ADD,
+							ColorWriteEnable::ALL,
+						},
+					}
+				};
+				return BLEND_STATE;
+			}
+		};
 	#endif
 
 	// Renderer/VertexArrayTypes.h
@@ -1102,6 +1193,28 @@ namespace Renderer
 			unsigned int						forcedSampleCount;
 			ConservativeRasterizationMode::Enum	conservativeRasterizationMode;
 		};
+		struct RasterizerStateBuilder
+		{
+			static inline const RasterizerState &getDefaultRasterizerState()
+			{
+				static const RasterizerState RASTERIZER_STATE =
+				{
+					FillMode::SOLID,
+					CullMode::BACK,
+					false,
+					0,
+					0.0f,
+					0.0f,
+					true,
+					false,
+					false,
+					false,
+					0,
+					ConservativeRasterizationMode::OFF
+				};
+				return RASTERIZER_STATE;
+			}
+		};
 	#endif
 
 	// Renderer/DepthStencilStateTypes.h
@@ -1147,6 +1260,34 @@ namespace Renderer
 			DepthStencilOpDesc	 frontFace;
 			DepthStencilOpDesc	 backFace;
 		};
+		struct DepthStencilStateBuilder
+		{
+			static inline const DepthStencilState &getDefaultDepthStencilState()
+			{
+				static const DepthStencilState DEPTH_STENCIL_STATE =
+				{
+					true,
+					DepthWriteMask::ALL,
+					ComparisonFunc::LESS,
+					false,
+					0xff,
+					0xff,
+					{
+						StencilOp::KEEP,
+						StencilOp::KEEP,
+						StencilOp::KEEP,
+						ComparisonFunc::ALWAYS
+					},
+					{
+						StencilOp::KEEP,
+						StencilOp::KEEP,
+						StencilOp::KEEP,
+						ComparisonFunc::ALWAYS
+					}
+				};
+				return DEPTH_STENCIL_STATE;
+			}
+		};
 	#endif
 
 	// Renderer/PipelineStateTypes.h
@@ -1171,6 +1312,20 @@ namespace Renderer
 			PrimitiveTopologyType::Enum primitiveTopologyType;
 			RasterizerState				rasterizerState;
 			DepthStencilState			depthStencilState;
+			BlendState					blendState;
+		};
+		struct PipelineStateBuilder : public PipelineState
+		{
+			PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes)
+			{
+				rootSignature			= _rootSignature;
+				program					= _program;
+				vertexAttributes		= _vertexAttributes;
+				primitiveTopologyType	= PrimitiveTopologyType::TRIANGLE;
+				rasterizerState			= RasterizerStateBuilder::getDefaultRasterizerState();
+				depthStencilState		= DepthStencilStateBuilder::getDefaultDepthStencilState();
+				blendState				= BlendStateBuilder::getDefaultBlendState();
+			}
 		};
 	#endif
 
@@ -1347,10 +1502,6 @@ namespace Renderer
 		};
 	#endif
 
-
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
 	// Renderer/Capabilities.h
 	#ifndef __RENDERER_CAPABILITIES_H__
 	#define __RENDERER_CAPABILITIES_H__

@@ -121,14 +121,33 @@ namespace Renderer
 	*/
 	struct DepthStencilState
 	{
-		int					 depthEnable;		///< Default: "true"
+		int					 depthEnable;		///< Boolean value. Default: "true"
 		DepthWriteMask::Enum depthWriteMask;	///< Default: "Renderer::DepthWriteMask::ALL"
 		ComparisonFunc::Enum depthFunc;			///< Default: "Renderer::ComparisonFunc::LESS"
-		int					 stencilEnable;		///< Default: "false"
+		int					 stencilEnable;		///< Boolean value. Default: "false"
 		uint8_t				 stencilReadMask;	///< Default: "0xff"
 		uint8_t				 stencilWriteMask;	///< Default: "0xff"
 		DepthStencilOpDesc	 frontFace;			///< Default: See "Renderer::DepthStencilOpDesc"
 		DepthStencilOpDesc	 backFace;			///< Default: See "Renderer::DepthStencilOpDesc"
+	};
+	struct DepthStencilStateBuilder
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return the default depth stencil state
+		*
+		*  @return
+		*    The default depth stencil state, see "Renderer::DepthStencilState" for the default values
+		*/
+		static inline const DepthStencilState &getDefaultDepthStencilState();
+
+
 	};
 
 
@@ -136,3 +155,9 @@ namespace Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "Renderer/DepthStencilStateTypes.inl"

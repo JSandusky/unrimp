@@ -72,7 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\Renderer\BlendStateTypes.inl" />
     <None Include="include\Renderer\Capabilities.inl" />
+    <None Include="include\Renderer\DepthStencilStateTypes.inl" />
     <None Include="include\Renderer\IBlendState.inl" />
     <None Include="include\Renderer\IBuffer.inl" />
     <None Include="include\Renderer\IDepthStencilState.inl" />
@@ -103,6 +105,8 @@
     <None Include="include\Renderer\IVertexArray.inl" />
     <None Include="include\Renderer\IVertexBuffer.inl" />
     <None Include="include\Renderer\IVertexShader.inl" />
+    <None Include="include\Renderer\PipelineStateTypes.inl" />
+    <None Include="include\Renderer\RasterizerStateTypes.inl" />
     <None Include="include\Renderer\RefCount.inl" />
     <None Include="include\Renderer\SmartRefCount.inl" />
     <None Include="include\Renderer\Statistics.inl" />

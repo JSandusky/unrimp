@@ -217,19 +217,8 @@ void FirstMesh::onInitialization()
 			// Is there a valid program?
 			if (nullptr != program)
 			{
-				{ // Create the pipeline state object (PSO)
-					// Setup
-					Renderer::PipelineState pipelineState;
-					pipelineState.rootSignature = mRootSignature;
-					pipelineState.program = program;
-					pipelineState.vertexAttributes = vertexAttributes;
-					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-					pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-					// Create the instance
-					mPipelineState = renderer->createPipelineState(pipelineState);
-				}
+				// Create the pipeline state object (PSO)
+				mPipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
 
 				// Optimization: Cached data to not bother the renderer API too much
 				if (nullptr == mUniformBuffer)

@@ -123,9 +123,35 @@ namespace Renderer
 		unsigned int						forcedSampleCount;				///< Default: "0"
 		ConservativeRasterizationMode::Enum	conservativeRasterizationMode;	///< Boolean value. >= Direct3D 12 only. Default: "false"
 	};
+	struct RasterizerStateBuilder
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return the default rasterizer state
+		*
+		*  @return
+		*    The default rasterizer state, see "Renderer::RasterizerState" for the default values
+		*/
+		static inline const RasterizerState &getDefaultRasterizerState();
+
+
+	};
+
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "Renderer/RasterizerStateTypes.inl"

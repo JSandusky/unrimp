@@ -269,5 +269,17 @@
     <None Include="include\Renderer\IRootSignature.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="include\Renderer\RasterizerStateTypes.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\BlendStateTypes.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\DepthStencilStateTypes.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\PipelineStateTypes.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

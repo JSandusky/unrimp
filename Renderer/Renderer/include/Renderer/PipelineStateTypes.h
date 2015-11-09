@@ -27,7 +27,11 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "Renderer/IBlendState.h"
+#include "Renderer/BlendStateTypes.h"
+#include "Renderer/IRasterizerState.h"
 #include "Renderer/VertexArrayTypes.h"
+#include "Renderer/IDepthStencilState.h"
 #include "Renderer/RasterizerStateTypes.h"
 #include "Renderer/DepthStencilStateTypes.h"
 
@@ -89,6 +93,19 @@ namespace Renderer
 		PrimitiveTopologyType::Enum	primitiveTopologyType;	///< Primitive topology type
 		RasterizerState				rasterizerState;		///< Rasterizer state
 		DepthStencilState			depthStencilState;		///< Depth stencil state
+		BlendState					blendState;				///< Blend state
+	};
+	struct PipelineStateBuilder : public PipelineState
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		inline PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes);
+
+
 	};
 
 
@@ -96,3 +113,9 @@ namespace Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "Renderer/PipelineStateTypes.inl"

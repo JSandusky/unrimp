@@ -45,30 +45,32 @@ namespace Renderer
 	*    Blend
 	*
 	*  @note
-	*    - These constants directly map to Direct3D 10 & 11 constants, do not change them
+	*    - These constants directly map to Direct3D 10 & 11 & 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_BLEND"-documentation for details
 	*/
-	// TODO(co) Renderer::Blend, document
 	struct Blend
 	{
 		enum Enum
 		{
-			ZERO		     = 1,
-			ONE			     = 2,
-			SRC_COLOR	     = 3,
-			INV_SRC_COLOR    = 4,
-			SRC_ALPHA	     = 5,
-			INV_SRC_ALPHA    = 6,
-			DEST_ALPHA	     = 7,
-			INV_DEST_ALPHA   = 8,
-			DEST_COLOR	     = 9,
-			INV_DEST_COLOR   = 10,
-			SRC_ALPHA_SAT    = 11,
-			BLEND_FACTOR     = 14,
+			ZERO			 = 1,
+			ONE				 = 2,
+			SRC_COLOR		 = 3,
+			INV_SRC_COLOR	 = 4,
+			SRC_ALPHA		 = 5,
+			INV_SRC_ALPHA	 = 6,
+			DEST_ALPHA		 = 7,
+			INV_DEST_ALPHA	 = 8,
+			DEST_COLOR		 = 9,
+			INV_DEST_COLOR	 = 10,
+			SRC_ALPHA_SAT	 = 11,
+			BLEND_FACTOR	 = 14,
 			INV_BLEND_FACTOR = 15,
-			SRC_1_COLOR	     = 16,
-			INV_SRC_1_COLOR  = 17,
-			SRC_1_ALPHA	     = 18,
-			INV_SRC_1_ALPHA  = 19
+			SRC_1_COLOR		 = 16,
+			INV_SRC_1_COLOR	 = 17,
+			SRC_1_ALPHA		 = 18,
+			INV_SRC_1_ALPHA	 = 19
 		};
 	};
 
@@ -78,8 +80,10 @@ namespace Renderer
 	*
 	*  @note
 	*    - These constants directly map to Direct3D 10 & 11 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_BLEND_OP"-documentation for details
 	*/
-	// TODO(co) Renderer::BlendOp, document
 	struct BlendOp
 	{
 		enum Enum
@@ -104,11 +108,13 @@ namespace Renderer
 	*    - This render target blend description maps directly to Direct3D 10.1 & 11, do not change it
 	*    - This also means that "int" is used over "bool" because in Direct3D it's defined this way
 	*    - If you want to know how the default values were chosen, have a look into the "Renderer::IBlendState::getDefaultBlendState()"-implementation
+	*
+	*  @see
+	*    - "D3D12_RENDER_TARGET_BLEND_DESC"-documentation for details
 	*/
-	// TODO(co) Renderer::RasterizerState, documentation
 	struct RenderTargetBlendDesc
 	{
-		int			  blendEnable;				///< Default: "false"
+		int			  blendEnable;				///< Boolean value. Default: "false"
 		Blend::Enum	  srcBlend;					///< Default: "Renderer::Blend::ONE"
 		Blend::Enum	  destBlend;				///< Default: "Renderer::Blend::ZERO"
 		BlendOp::Enum blendOp;					///< Default: "Renderer::BlendOp::ADD"
@@ -123,16 +129,37 @@ namespace Renderer
 	*    Blend state
 	*
 	*  @note
-	*    - This blend state maps directly to Direct3D 10.1 & 11, do not change it
+	*    - This blend state maps directly to Direct3D 10.1 & 11 & 12, do not change it
 	*    - This also means that "int" is used over "bool" because in Direct3D it's defined this way
 	*    - If you want to know how the default values were chosen, have a look into the "Renderer::IBlendState::getDefaultBlendState()"-implementation
+	*
+	*  @see
+	*    - "D3D12_BLEND_DESC"-documentation for details
 	*/
-	// TODO(co) Renderer::BlendState, document
 	struct BlendState
 	{
-		int					  alphaToCoverageEnable;	///< Default: "false"
-		int					  independentBlendEnable;	///< Default: "false"
+		int					  alphaToCoverageEnable;	///< Boolean value. Default: "false"
+		int					  independentBlendEnable;	///< Boolean value. Default: "false"
 		RenderTargetBlendDesc renderTarget[8];			///< Default: See "Renderer::RenderTargetBlendDesc"
+	};
+	struct BlendStateBuilder
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return the default blend state
+		*
+		*  @return
+		*    The default blend state, see "Renderer::BlendState" for the default values
+		*/
+		static inline const BlendState &getDefaultBlendState();
+
+
 	};
 
 
@@ -140,3 +167,9 @@ namespace Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "Renderer/BlendStateTypes.inl"
