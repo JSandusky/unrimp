@@ -193,17 +193,7 @@ void FirstCommandBucket::onInitialization()
 			// Create the pipeline state object (PSO)
 			if (nullptr != program)
 			{
-				// Setup
-				Renderer::PipelineState pipelineState;
-				pipelineState.rootSignature = mRootSignature;
-				pipelineState.program = program;
-				pipelineState.vertexAttributes = vertexAttributes;
-				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-				// Create the instance
-				mPipelineState = renderer->createPipelineState(pipelineState);
+				mPipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
 			}
 
 			// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?

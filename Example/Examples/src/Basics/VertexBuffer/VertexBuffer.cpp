@@ -69,7 +69,7 @@ void VertexBuffer::onInitialization()
 		}
 
 		// Vertex input layout
-		Renderer::VertexAttribute vertexAttributesLayout[] =
+		const Renderer::VertexAttribute vertexAttributesLayoutVBO[] =
 		{
 			{ // Attribute 0
 				// Data destination
@@ -96,7 +96,35 @@ void VertexBuffer::onInitialization()
 				0											// instancesPerElement (uint32_t)
 			}
 		};
-		const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
+		const Renderer::VertexAttributes vertexAttributesVBO(sizeof(vertexAttributesLayoutVBO) / sizeof(Renderer::VertexAttribute), vertexAttributesLayoutVBO);
+		const Renderer::VertexAttribute vertexAttributesLayoutVBOs[] =
+		{
+			{ // Attribute 0
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"Position",									// name[32] (char)
+				"POSITION",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				0,											// inputSlot (uint32_t)
+				0,											// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0											// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 1
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				"Color",									// name[32] (char)
+				"COLOR",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				1,											// inputSlot (uint32_t)
+				0,											// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0											// instancesPerElement (uint32_t)
+			}
+		};
+		const Renderer::VertexAttributes vertexAttributesVBOs(sizeof(vertexAttributesLayoutVBOs) / sizeof(Renderer::VertexAttribute), vertexAttributesLayoutVBOs);
 
 		// Vertex array object (VAO)
 		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -111,8 +139,8 @@ void VertexBuffer::onInitialization()
 			// -> Traditional normalized RGB vertex colors
 			static const float VERTEX_POSITION_COLOR[] =
 			{	 // Position     Color				// Vertex ID	Triangle on screen
-					0.0f, 1.0f,	1.0f, 0.0f, 0.0f,	// 0				0
-					1.0f, 0.0f,	0.0f, 1.0f, 0.0f,	// 1			   .   .
+				 0.0f, 1.0f,	1.0f, 0.0f, 0.0f,	// 0				0
+				 1.0f, 0.0f,	0.0f, 1.0f, 0.0f,	// 1			   .   .
 				-0.5f, 0.0f,	0.0f, 0.0f, 1.0f	// 2			  2.......1
 			};
 			Renderer::IVertexBufferPtr vertexBufferPositionColor(renderer->createVertexBuffer(sizeof(VERTEX_POSITION_COLOR), VERTEX_POSITION_COLOR, Renderer::BufferUsage::STATIC_DRAW));
@@ -125,7 +153,7 @@ void VertexBuffer::onInitialization()
 					sizeof(float) * (2 + 3)		// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArrayVBO = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+			mVertexArrayVBO = renderer->createVertexArray(vertexAttributesVBO, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 		}
 
 		{ // Create vertex array object (VAO) using multiple vertex buffer object (VBO)
@@ -139,86 +167,72 @@ void VertexBuffer::onInitialization()
 			};
 			Renderer::IVertexBufferPtr vertexBufferColor(renderer->createVertexBuffer(sizeof(VERTEX_COLOR), VERTEX_COLOR, Renderer::BufferUsage::STATIC_DRAW));
 
-			{ // Create vertex array object (VAO)
-				// Create the vertex buffer object (VBO) holding position data
-				// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-				static const float VERTEX_POSITION[] =
-				{					// Vertex ID	Triangle on screen
-					-0.5f,  0.0f,	// 0			  0.......1
-					 1.0f,  0.0f,	// 1			   .   .
-					 0.0f, -1.0f	// 2			  	2
-				};
-				Renderer::IVertexBufferPtr vertexBufferPosition(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+			// Create the vertex buffer object (VBO) holding position data
+			// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
+			static const float VERTEX_POSITION[] =
+			{					// Vertex ID	Triangle on screen
+				-0.5f,  0.0f,	// 0			  0.......1
+				 1.0f,  0.0f,	// 1			   .   .
+				 0.0f, -1.0f	// 2			  	2
+			};
+			Renderer::IVertexBufferPtr vertexBufferPosition(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
-				// Create vertex array object (VAO)
-				vertexAttributesLayout[1].inputSlot = 1;	// Except for this input slot, the vertex attributes are identical (so we don't need two separate programs)
-				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-				{
-					{ // Vertex buffer 0
-						vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer *)
-						sizeof(float) * 2		// strideInBytes (uint32_t)
-					},
-					{ // Vertex buffer 1
-						vertexBufferColor,		// vertexBuffer (Renderer::IVertexBuffer *)
-						sizeof(float) * 3		// strideInBytes (uint32_t)
-					}
-				};
-				mVertexArrayVBOs = renderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
-			}
+			// Create vertex array object (VAO)
+			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+			{
+				{ // Vertex buffer 0
+					vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer *)
+					sizeof(float) * 2		// strideInBytes (uint32_t)
+				},
+				{ // Vertex buffer 1
+					vertexBufferColor,		// vertexBuffer (Renderer::IVertexBuffer *)
+					sizeof(float) * 3		// strideInBytes (uint32_t)
+				}
+			};
+			mVertexArrayVBOs = renderer->createVertexArray(vertexAttributesVBOs, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
 		}
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			// Create the program
-			Renderer::IProgramPtr program;
-			{
-				// Get the shader source code (outsourced to keep an overview)
-				const char *vertexShaderSourceCode = nullptr;
-				const char *fragmentShaderSourceCode = nullptr;
-				#include "VertexBuffer_GLSL_110.h"
-				#include "VertexBuffer_GLSL_ES2.h"
-				#include "VertexBuffer_HLSL_D3D9_D3D10_D3D11_D3D12.h"
-				#include "VertexBuffer_Null.h"
+			// Get the shader source code (outsourced to keep an overview)
+			const char *vertexShaderSourceCode = nullptr;
+			const char *fragmentShaderSourceCode = nullptr;
+			#include "VertexBuffer_GLSL_110.h"
+			#include "VertexBuffer_GLSL_ES2.h"
+			#include "VertexBuffer_HLSL_D3D9_D3D10_D3D11_D3D12.h"
+			#include "VertexBuffer_Null.h"
 
+			{ // Create pipeline state objects (PSO) using one vertex buffer object (VBO)
 				// Create the program
+				Renderer::IProgramPtr program;
 				program = shaderLanguage->createProgram(
 					*mRootSignature,
-					vertexAttributes,
+					vertexAttributesVBO,
 					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
+
+				// Create the pipeline state objects (PSO)
+				if (nullptr != program)
+				{
+					mPipelineStateVBO = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributesVBO));
+				}
 			}
 
-			// Create the pipeline state objects (PSO)
-			if (nullptr != program)
-			{
-				{ // Create pipeline state objects (PSO) using one vertex buffer object (VBO)
-					// Setup
-					Renderer::PipelineState pipelineState;
-					pipelineState.rootSignature = mRootSignature;
-					pipelineState.program = program;
-					pipelineState.vertexAttributes = vertexAttributes;
-					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-					pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
+			{ // Create pipeline state objects (PSO) using multiple vertex buffer object (VBO)
+				// Create the program
+				Renderer::IProgramPtr program;
+				program = shaderLanguage->createProgram(
+					*mRootSignature,
+					vertexAttributesVBOs,
+					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 
-					// Create the instance
-					mPipelineStateVBO = renderer->createPipelineState(pipelineState);
-				}
-
-				{ // Create pipeline state objects (PSO) using multiple vertex buffer object (VBO)
-					// Setup
-					Renderer::PipelineState pipelineState;
-					pipelineState.rootSignature = mRootSignature;
-					pipelineState.program = program;
-					pipelineState.vertexAttributes = vertexAttributes;
-					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-					pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-					// Create the instance
-					mPipelineStateVBOs = renderer->createPipelineState(pipelineState);
+				// Create the pipeline state objects (PSO)
+				if (nullptr != program)
+				{
+					mPipelineStateVBOs = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributesVBOs));
 				}
 			}
 		}

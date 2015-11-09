@@ -248,19 +248,8 @@ void FirstGpgpu::onInitialization()
 		// Create the pipeline state objects (PSO)
 		if (nullptr != programContentGeneration && nullptr != programContentProcessing)
 		{
-			// Setup
-			Renderer::PipelineState pipelineState;
-			pipelineState.rootSignature = mRootSignature;
-			pipelineState.program = programContentGeneration;
-			pipelineState.vertexAttributes = vertexAttributes;
-			pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-			pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-			pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-			// Create the instances
-			mPipelineStateContentGeneration = mRenderer->createPipelineState(pipelineState);
-			pipelineState.program = programContentProcessing;
-			mPipelineStateContentProcessing = mRenderer->createPipelineState(pipelineState);
+			mPipelineStateContentGeneration = mRenderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programContentGeneration, vertexAttributes));
+			mPipelineStateContentProcessing = mRenderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programContentProcessing, vertexAttributes));
 		}
 	}
 

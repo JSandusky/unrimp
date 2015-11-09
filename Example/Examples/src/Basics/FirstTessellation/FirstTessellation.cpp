@@ -144,17 +144,9 @@ void FirstTessellation::onInitialization()
 			// Create the pipeline state object (PSO)
 			if (nullptr != program)
 			{
-				// Setup
-				Renderer::PipelineState pipelineState;
-				pipelineState.rootSignature = mRootSignature;
-				pipelineState.program = program;
-				pipelineState.vertexAttributes = vertexAttributes;
+				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes);
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::PATCH;
-				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
 				pipelineState.rasterizerState.fillMode = Renderer::FillMode::WIREFRAME;
-				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-				// Create the instance
 				mPipelineState = renderer->createPipelineState(pipelineState);
 			}
 		}

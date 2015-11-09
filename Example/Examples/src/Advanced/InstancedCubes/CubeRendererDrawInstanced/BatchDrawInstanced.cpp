@@ -122,19 +122,8 @@ void BatchDrawInstanced::initialize(Renderer::IRootSignature &rootSignature, con
 		mBlendState = mRenderer->createBlendState(blendState);
 	}
 
-	{ // Create the pipeline state object (PSO)
-		// Setup
-		Renderer::PipelineState pipelineState;
-		pipelineState.rootSignature = &rootSignature;
-		pipelineState.program = &program;
-		pipelineState.vertexAttributes = vertexAttributes;
-		pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-		pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-		pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-		// Create the instance
-		mPipelineState = mRenderer->createPipelineState(pipelineState);
-	}
+	// Create the pipeline state object (PSO)
+	mPipelineState = mRenderer->createPipelineState(Renderer::PipelineStateBuilder(&rootSignature, &program, vertexAttributes));
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(mRenderer)

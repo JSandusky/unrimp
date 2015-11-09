@@ -240,17 +240,8 @@ namespace RendererRuntime
 				// Create the pipeline state object (PSO)
 				if (nullptr != program)
 				{
-					// Setup
-					Renderer::PipelineState pipelineState;
-					pipelineState.rootSignature = getFontRootSignature();
-					pipelineState.program = program;
-					pipelineState.vertexAttributes = ::detail::VertexAttributes;
-					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-					pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
 					// Create the instance
-					mFontPipelineState = mRenderer->createPipelineState(pipelineState);
+					mFontPipelineState = mRenderer->createPipelineState(Renderer::PipelineStateBuilder(getFontRootSignature(), program, ::detail::VertexAttributes));
 					if (nullptr != mFontPipelineState)
 					{
 						// Add our internal reference

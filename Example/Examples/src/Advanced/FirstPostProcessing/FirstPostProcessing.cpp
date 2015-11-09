@@ -206,19 +206,8 @@ void FirstPostProcessing::onInitialization()
 			// Create the pipeline state objects (PSO)
 			if (nullptr != programSceneRendering && nullptr != programPostProcessing)
 			{
-				// Setup
-				Renderer::PipelineState pipelineState;
-				pipelineState.rootSignature = mRootSignature;
-				pipelineState.program = programSceneRendering;
-				pipelineState.vertexAttributes = vertexAttributes;
-				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-				// Create the instances
-				mPipelineStateSceneRendering = renderer->createPipelineState(pipelineState);
-				pipelineState.program = programPostProcessing;
-				mPipelineStatePostProcessing = renderer->createPipelineState(pipelineState);
+				mPipelineStateSceneRendering = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programSceneRendering, vertexAttributes));
+				mPipelineStatePostProcessing = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programPostProcessing, vertexAttributes));
 			}
 		}
 

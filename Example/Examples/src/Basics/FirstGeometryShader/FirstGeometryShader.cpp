@@ -142,16 +142,8 @@ void FirstGeometryShader::onInitialization()
 			// -> Apparently there are currently some issues when using this approach: http://www.opengl.org/discussion_boards/showthread.php/177372-Rendering-simple-shapes-without-passing-vertices
 			if (nullptr != program && 0 != strcmp(renderer->getName(), "OpenGL"))
 			{
-				// Setup
-				Renderer::PipelineState pipelineState;
-				pipelineState.rootSignature = mRootSignature;
-				pipelineState.program = program;
-				pipelineState.vertexAttributes = vertexAttributes;
+				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes);
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::POINT;
-				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-				// Create the instance
 				mPipelineState = renderer->createPipelineState(pipelineState);
 			}
 		}

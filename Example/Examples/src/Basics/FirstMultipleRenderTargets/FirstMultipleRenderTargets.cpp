@@ -183,19 +183,8 @@ void FirstMultipleRenderTargets::onInitialization()
 				// Create the pipeline state objects (PSO)
 				if (nullptr != programMultipleRenderTargets && nullptr != program)
 				{
-					// Setup
-					Renderer::PipelineState pipelineState;
-					pipelineState.rootSignature = mRootSignature;
-					pipelineState.program = programMultipleRenderTargets;
-					pipelineState.vertexAttributes = vertexAttributes;
-					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-					pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-					// Create the instances
-					mPipelineStateMultipleRenderTargets = renderer->createPipelineState(pipelineState);
-					pipelineState.program = program;
-					mPipelineState = renderer->createPipelineState(pipelineState);
+					mPipelineStateMultipleRenderTargets = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programMultipleRenderTargets, vertexAttributes));
+					mPipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
 				}
 			}
 		}

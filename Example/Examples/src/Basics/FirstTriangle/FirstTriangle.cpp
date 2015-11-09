@@ -146,17 +146,7 @@ void FirstTriangle::onInitialization()
 			// Create the pipeline state object (PSO)
 			if (nullptr != program)
 			{
-				// Setup
-				Renderer::PipelineState pipelineState;
-				pipelineState.rootSignature = mRootSignature;
-				pipelineState.program = program;
-				pipelineState.vertexAttributes = vertexAttributes;
-				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-				// Create the instance
-				mPipelineState = renderer->createPipelineState(pipelineState);
+				mPipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mPipelineState, "Triangle PSO")
 			}
 		}

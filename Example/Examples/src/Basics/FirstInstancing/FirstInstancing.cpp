@@ -186,17 +186,7 @@ void FirstInstancing::onInitialization()
 				// Create the pipeline state object (PSO)
 				if (nullptr != program)
 				{
-					// Setup
-					Renderer::PipelineState pipelineState;
-					pipelineState.rootSignature = mRootSignature;
-					pipelineState.program = program;
-					pipelineState.vertexAttributes = vertexAttributes;
-					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-					pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-					// Create the instance
-					mPipelineStateInstancedArrays = renderer->createPipelineState(pipelineState);
+					mPipelineStateInstancedArrays = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
 				}
 			}
 
@@ -269,17 +259,7 @@ void FirstInstancing::onInitialization()
 				// Create the pipeline state object (PSO)
 				if (nullptr != program)
 				{
-					// Setup
-					Renderer::PipelineState pipelineState;
-					pipelineState.rootSignature = mRootSignature;
-					pipelineState.program = program;
-					pipelineState.vertexAttributes = vertexAttributes;
-					pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-					pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-					pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-					// Create the instance
-					mPipelineStateDrawInstanced = renderer->createPipelineState(pipelineState);
+					mPipelineStateDrawInstanced = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
 				}
 			}
 		}

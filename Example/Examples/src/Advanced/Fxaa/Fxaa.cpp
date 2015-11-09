@@ -158,17 +158,7 @@ void Fxaa::onInitialization()
 			// Create the pipeline state object (PSO)
 			if (nullptr != programSceneRendering)
 			{
-				// Setup
-				Renderer::PipelineState pipelineState;
-				pipelineState.rootSignature = mRootSignature;
-				pipelineState.program = programSceneRendering;
-				pipelineState.vertexAttributes = detail::VertexAttributes;
-				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-				// Create the instance
-				mPipelineStateSceneRendering = renderer->createPipelineState(pipelineState);
+				mPipelineStateSceneRendering = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programSceneRendering, detail::VertexAttributes));
 			}
 
 			// Create the post-processing program instance by using the current window size
@@ -415,17 +405,7 @@ void Fxaa::recreatePostProcessingProgram()
 			// Create the pipeline state object (PSO)
 			if (nullptr != programPostProcessing)
 			{
-				// Setup
-				Renderer::PipelineState pipelineState;
-				pipelineState.rootSignature = mRootSignature;
-				pipelineState.program = programPostProcessing;
-				pipelineState.vertexAttributes = detail::VertexAttributes;
-				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::TRIANGLE;
-				pipelineState.rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-				pipelineState.depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-
-				// Create the instance
-				mPipelineStatePostProcessing = renderer->createPipelineState(pipelineState);
+				mPipelineStatePostProcessing = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programPostProcessing, detail::VertexAttributes));
 			}
 		}
 
