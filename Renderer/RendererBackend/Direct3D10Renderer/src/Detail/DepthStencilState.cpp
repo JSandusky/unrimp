@@ -21,12 +21,12 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D10Renderer/RasterizerState.h"
+#include "Direct3D10Renderer/Detail/DepthStencilState.h"
 #include "Direct3D10Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D10Renderer/D3D10.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
-#include <Renderer/RasterizerStateTypes.h>
+#include <Renderer/DepthStencilStateTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -39,26 +39,26 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RasterizerState::RasterizerState(Direct3D10Renderer &direct3D10Renderer, const Renderer::RasterizerState &rasterizerState) :
-		IRasterizerState(direct3D10Renderer),
-		mD3D10RasterizerState(nullptr)
+	DepthStencilState::DepthStencilState(Direct3D10Renderer &direct3D10Renderer, const Renderer::DepthStencilState &depthStencilState) :
+		IDepthStencilState(direct3D10Renderer),
+		mD3D10DepthStencilState(nullptr)
 	{
-		// Create the Direct3D 10 rasterizer state
-		// -> "Renderer::RasterizerState" maps directly to Direct3D 10 & 11, do not change it
-		direct3D10Renderer.getD3D10Device()->CreateRasterizerState(reinterpret_cast<const D3D10_RASTERIZER_DESC*>(&rasterizerState), &mD3D10RasterizerState);
+		// Create the Direct3D 10 depth stencil state
+		// -> "Renderer::DepthStencilState" maps directly to Direct3D 10 & 11, do not change it
+		direct3D10Renderer.getD3D10Device()->CreateDepthStencilState(reinterpret_cast<const D3D10_DEPTH_STENCIL_DESC*>(&depthStencilState), &mD3D10DepthStencilState);
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
-			setDebugName("Rasterizer state");
+			setDebugName("Depth stencil state");
 		#endif
 	}
 
-	RasterizerState::~RasterizerState()
+	DepthStencilState::~DepthStencilState()
 	{
-		// Release the Direct3D 10 rasterizer state
-		if (nullptr != mD3D10RasterizerState)
+		// Release the Direct3D 10 depth stencil state
+		if (nullptr != mD3D10DepthStencilState)
 		{
-			mD3D10RasterizerState->Release();
+			mD3D10DepthStencilState->Release();
 		}
 	}
 
@@ -66,16 +66,16 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void RasterizerState::setDebugName(const char *name)
+	void DepthStencilState::setDebugName(const char *name)
 	{
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
-			// Valid Direct3D 10 rasterizer state?
-			if (nullptr != mD3D10RasterizerState)
+			// Valid Direct3D 10 depth stencil state?
+			if (nullptr != mD3D10DepthStencilState)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D10RasterizerState->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D10RasterizerState->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D10DepthStencilState->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mD3D10DepthStencilState->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
 	}

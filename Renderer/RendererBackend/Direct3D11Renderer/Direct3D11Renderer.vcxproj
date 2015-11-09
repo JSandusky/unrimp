@@ -20,13 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\Direct3D11Renderer\BlendState.inl" />
-    <None Include="include\Direct3D11Renderer\DepthStencilState.inl" />
+    <None Include="include\Direct3D11Renderer\Detail\BlendState.inl" />
+    <None Include="include\Direct3D11Renderer\Detail\DepthStencilState.inl" />
+    <None Include="include\Direct3D11Renderer\Detail\RasterizerState.inl" />
     <None Include="include\Direct3D11Renderer\Direct3D11Renderer.inl" />
     <None Include="include\Direct3D11Renderer\Framebuffer.inl" />
     <None Include="include\Direct3D11Renderer\IndexBuffer.inl" />
     <None Include="include\Direct3D11Renderer\PipelineState.inl" />
-    <None Include="include\Direct3D11Renderer\RasterizerState.inl" />
     <None Include="include\Direct3D11Renderer\RootSignature.inl" />
     <None Include="include\Direct3D11Renderer\SamplerState.inl" />
     <None Include="include\Direct3D11Renderer\Shader\FragmentShaderHlsl.inl" />
@@ -45,9 +45,10 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Direct3D11Renderer\BlendState.h" />
     <ClInclude Include="include\Direct3D11Renderer\D3D11.h" />
-    <ClInclude Include="include\Direct3D11Renderer\DepthStencilState.h" />
+    <ClInclude Include="include\Direct3D11Renderer\Detail\BlendState.h" />
+    <ClInclude Include="include\Direct3D11Renderer\Detail\DepthStencilState.h" />
+    <ClInclude Include="include\Direct3D11Renderer\Detail\RasterizerState.h" />
     <ClInclude Include="include\Direct3D11Renderer\Direct3D11Debug.h" />
     <ClInclude Include="include\Direct3D11Renderer\Direct3D11Renderer.h" />
     <ClInclude Include="include\Direct3D11Renderer\Direct3D11RuntimeLinking.h" />
@@ -57,7 +58,6 @@
     <ClInclude Include="include\Direct3D11Renderer\IndexBuffer.h" />
     <ClInclude Include="include\Direct3D11Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D11Renderer\PipelineState.h" />
-    <ClInclude Include="include\Direct3D11Renderer\RasterizerState.h" />
     <ClInclude Include="include\Direct3D11Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D11Renderer\SamplerState.h" />
     <ClInclude Include="include\Direct3D11Renderer\Shader\FragmentShader.h" />
@@ -83,8 +83,9 @@
     <ClInclude Include="include\Direct3D11Renderer\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BlendState.cpp" />
-    <ClCompile Include="src\DepthStencilState.cpp" />
+    <ClCompile Include="src\Detail\BlendState.cpp" />
+    <ClCompile Include="src\Detail\DepthStencilState.cpp" />
+    <ClCompile Include="src\Detail\RasterizerState.cpp" />
     <ClCompile Include="src\Direct3D11Renderer.cpp" />
     <ClCompile Include="src\Direct3D11RuntimeLinking.cpp" />
     <ClCompile Include="src\Direct3D9RuntimeLinking.cpp" />
@@ -93,7 +94,6 @@
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\PipelineState.cpp" />
-    <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\Shader\FragmentShader.cpp" />

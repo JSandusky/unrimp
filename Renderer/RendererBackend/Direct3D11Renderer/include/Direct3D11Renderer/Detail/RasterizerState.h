@@ -27,27 +27,27 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IDepthStencilState.h>
+#include <Renderer/IRasterizerState.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D10DepthStencilState;
+struct ID3D11RasterizerState;
 namespace Renderer
 {
-	struct DepthStencilState;
+	struct RasterizerState;
 }
-namespace Direct3D10Renderer
+namespace Direct3D11Renderer
 {
-	class Direct3D10Renderer;
+	class Direct3D11Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Direct3D10Renderer
+namespace Direct3D11Renderer
 {
 
 
@@ -56,9 +56,9 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Direct3D 10 depth stencil state class
+	*    Direct3D 11 rasterizer state class
 	*/
-	class DepthStencilState : public Renderer::IDepthStencilState
+	class RasterizerState : public Renderer::IRasterizerState
 	{
 
 
@@ -70,27 +70,27 @@ namespace Direct3D10Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] direct3D10Renderer
-		*    Owner Direct3D 10 renderer instance
-		*  @param[in] depthStencilState
-		*    Depth stencil state to use
+		*  @param[in] direct3D11Renderer
+		*    Owner Direct3D 11 renderer instance
+		*  @param[in] rasterizerState
+		*    Rasterizer state to use
 		*/
-		DepthStencilState(Direct3D10Renderer &direct3D10Renderer, const Renderer::DepthStencilState &depthStencilState);
+		RasterizerState(Direct3D11Renderer &direct3D11Renderer, const Renderer::RasterizerState &rasterizerState);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~DepthStencilState();
+		virtual ~RasterizerState();
 
 		/**
 		*  @brief
-		*    Return the Direct3D 10 depth stencil state
+		*    Return the Direct3D 11 rasterizer state
 		*
 		*  @return
-		*    The Direct3D 10 depth stencil state, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D 11 rasterizer state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D10DepthStencilState *getD3D10DepthStencilState() const;
+		inline ID3D11RasterizerState *getD3D11RasterizerState() const;
 
 
 	//[-------------------------------------------------------]
@@ -104,7 +104,7 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10DepthStencilState *mD3D10DepthStencilState;	///< Direct3D 10 depth stencil state, can be a null pointer
+		ID3D11RasterizerState *mD3D11RasterizerState;	///< Direct3D 11 rasterizer state, can be a null pointer
 
 
 	};
@@ -113,10 +113,10 @@ namespace Direct3D10Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Direct3D10Renderer
+} // Direct3D11Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Direct3D10Renderer/DepthStencilState.inl"
+#include "Direct3D11Renderer/Detail/RasterizerState.inl"

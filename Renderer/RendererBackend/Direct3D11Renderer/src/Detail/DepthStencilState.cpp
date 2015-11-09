@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D11Renderer/DepthStencilState.h"
+#include "Direct3D11Renderer/Detail/DepthStencilState.h"
 #include "Direct3D11Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D11Renderer/D3D11.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"

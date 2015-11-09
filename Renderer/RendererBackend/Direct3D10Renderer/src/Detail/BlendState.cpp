@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D10Renderer/BlendState.h"
+#include "Direct3D10Renderer/Detail/BlendState.h"
 #include "Direct3D10Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D10Renderer/D3D10.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"

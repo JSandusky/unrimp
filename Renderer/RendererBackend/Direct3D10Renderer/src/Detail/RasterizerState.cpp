@@ -19,104 +19,69 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IBlendState.h>
+#include "Direct3D10Renderer/Detail/RasterizerState.h"
+#include "Direct3D10Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
+#include "Direct3D10Renderer/D3D10.h"
+#include "Direct3D10Renderer/Direct3D10Renderer.h"
 
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-struct ID3D11BlendState;
-namespace Renderer
-{
-	struct BlendState;
-}
-namespace Direct3D11Renderer
-{
-	class Direct3D11Renderer;
-}
+#include <Renderer/RasterizerStateTypes.h>
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Direct3D11Renderer
+namespace Direct3D10Renderer
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Direct3D 11 blend state class
-	*/
-	class BlendState : public Renderer::IBlendState
-	{
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] direct3D11Renderer
-		*    Owner Direct3D 11 renderer instance
-		*  @param[in] blendState
-		*    Blend state to use
-		*/
-		BlendState(Direct3D11Renderer &direct3D11Renderer, const Renderer::BlendState &blendState);
+	RasterizerState::RasterizerState(Direct3D10Renderer &direct3D10Renderer, const Renderer::RasterizerState &rasterizerState) :
+		IRasterizerState(direct3D10Renderer),
+		mD3D10RasterizerState(nullptr)
+	{
+		// Create the Direct3D 10 rasterizer state
+		// -> "Renderer::RasterizerState" maps directly to Direct3D 10 & 11, do not change it
+		direct3D10Renderer.getD3D10Device()->CreateRasterizerState(reinterpret_cast<const D3D10_RASTERIZER_DESC*>(&rasterizerState), &mD3D10RasterizerState);
 
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~BlendState();
+		// Assign a default name to the resource for debugging purposes
+		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+			setDebugName("Rasterizer state");
+		#endif
+	}
 
-		/**
-		*  @brief
-		*    Return the Direct3D 11 blend state
-		*
-		*  @return
-		*    The Direct3D 11 blend state, can be a null pointer, do not release the returned instance unless you added an own reference to it
-		*/
-		inline ID3D11BlendState *getD3D11BlendState() const;
+	RasterizerState::~RasterizerState()
+	{
+		// Release the Direct3D 10 rasterizer state
+		if (nullptr != mD3D10RasterizerState)
+		{
+			mD3D10RasterizerState->Release();
+		}
+	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	public:
-		virtual void setDebugName(const char *name) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		ID3D11BlendState *mD3D11BlendState;	///< Direct3D 11 blend state, can be a null pointer
-
-
-	};
+	void RasterizerState::setDebugName(const char *name)
+	{
+		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+			// Valid Direct3D 10 rasterizer state?
+			if (nullptr != mD3D10RasterizerState)
+			{
+				// Set the debug name
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
+				mD3D10RasterizerState->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mD3D10RasterizerState->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+			}
+		#endif
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Direct3D11Renderer
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "Direct3D11Renderer/BlendState.inl"
+} // Direct3D10Renderer

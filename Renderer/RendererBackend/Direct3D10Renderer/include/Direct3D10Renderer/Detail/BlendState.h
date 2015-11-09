@@ -27,27 +27,27 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IDepthStencilState.h>
+#include <Renderer/IBlendState.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D11DepthStencilState;
+struct ID3D10BlendState;
 namespace Renderer
 {
-	struct DepthStencilState;
+	struct BlendState;
 }
-namespace Direct3D11Renderer
+namespace Direct3D10Renderer
 {
-	class Direct3D11Renderer;
+	class Direct3D10Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Direct3D11Renderer
+namespace Direct3D10Renderer
 {
 
 
@@ -56,9 +56,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Direct3D 11 depth stencil state class
+	*    Direct3D 10 blend state class
 	*/
-	class DepthStencilState : public Renderer::IDepthStencilState
+	class BlendState : public Renderer::IBlendState
 	{
 
 
@@ -70,27 +70,27 @@ namespace Direct3D11Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] direct3D11Renderer
-		*    Owner Direct3D 11 renderer instance
-		*  @param[in] depthStencilState
-		*    Depth stencil state to use
+		*  @param[in] direct3D10Renderer
+		*    Owner Direct3D 10 renderer instance
+		*  @param[in] blendState
+		*    Blend state to use
 		*/
-		DepthStencilState(Direct3D11Renderer &direct3D11Renderer, const Renderer::DepthStencilState &depthStencilState);
+		BlendState(Direct3D10Renderer &direct3D10Renderer, const Renderer::BlendState &blendState);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~DepthStencilState();
+		virtual ~BlendState();
 
 		/**
 		*  @brief
-		*    Return the Direct3D 11 depth stencil state
+		*    Return the Direct3D 10 blend state
 		*
 		*  @return
-		*    The Direct3D 11 depth stencil state, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D 10 blend state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11DepthStencilState *getD3D11DepthStencilState() const;
+		inline ID3D10BlendState *getD3D10BlendState() const;
 
 
 	//[-------------------------------------------------------]
@@ -104,7 +104,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11DepthStencilState *mD3D11DepthStencilState;	///< Direct3D 11 depth stencil state, can be a null pointer
+		ID3D10BlendState *mD3D10BlendState;	///< Direct3D 10 blend state, can be a null pointer
 
 
 	};
@@ -113,10 +113,10 @@ namespace Direct3D11Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Direct3D11Renderer
+} // Direct3D10Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Direct3D11Renderer/DepthStencilState.inl"
+#include "Direct3D10Renderer/Detail/BlendState.inl"

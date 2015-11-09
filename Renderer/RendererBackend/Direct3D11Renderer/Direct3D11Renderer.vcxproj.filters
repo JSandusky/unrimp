@@ -8,6 +8,9 @@
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{72ac5f21-945f-4478-9caf-96bb19fc33cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Detail">
+      <UniqueIdentifier>{5cf85777-e281-44f4-a5e4-8f08505f0772}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -36,9 +39,6 @@
     <None Include="include\Direct3D11Renderer\Shader\Program.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\RasterizerState.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D11Renderer\SamplerState.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -57,12 +57,6 @@
     <None Include="include\Direct3D11Renderer\VertexBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\BlendState.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\DepthStencilState.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D11Renderer\Direct3D11Renderer.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -77,6 +71,15 @@
     </None>
     <None Include="include\Direct3D11Renderer\RootSignature.inl">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Detail\BlendState.inl">
+      <Filter>Source Files\Detail</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Detail\DepthStencilState.inl">
+      <Filter>Source Files\Detail</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Detail\RasterizerState.inl">
+      <Filter>Source Files\Detail</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -128,9 +131,6 @@
     <ClInclude Include="include\Direct3D11Renderer\Mapping.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\RasterizerState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\SamplerState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -152,13 +152,7 @@
     <ClInclude Include="include\Direct3D11Renderer\VertexBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\BlendState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\D3D11.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\DepthStencilState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Direct3D9RuntimeLinking.h">
@@ -187,6 +181,15 @@
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\RootSignature.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Detail\DepthStencilState.h">
+      <Filter>Source Files\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Detail\RasterizerState.h">
+      <Filter>Source Files\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Detail\BlendState.h">
+      <Filter>Source Files\Detail</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -235,12 +238,6 @@
     <ClCompile Include="src\Shader\ShaderLanguage.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\BlendState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DepthStencilState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Direct3D9RuntimeLinking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -260,9 +257,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RasterizerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\SamplerState.cpp">
@@ -291,6 +285,15 @@
     </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Detail\DepthStencilState.cpp">
+      <Filter>Source Files\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Detail\RasterizerState.cpp">
+      <Filter>Source Files\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Detail\BlendState.cpp">
+      <Filter>Source Files\Detail</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

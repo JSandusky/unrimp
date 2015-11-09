@@ -33,21 +33,21 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D11RasterizerState;
+struct ID3D10RasterizerState;
 namespace Renderer
 {
 	struct RasterizerState;
 }
-namespace Direct3D11Renderer
+namespace Direct3D10Renderer
 {
-	class Direct3D11Renderer;
+	class Direct3D10Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Direct3D11Renderer
+namespace Direct3D10Renderer
 {
 
 
@@ -56,7 +56,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Direct3D 11 rasterizer state class
+	*    Direct3D 10 rasterizer state class
 	*/
 	class RasterizerState : public Renderer::IRasterizerState
 	{
@@ -70,12 +70,12 @@ namespace Direct3D11Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] direct3D11Renderer
-		*    Owner Direct3D 11 renderer instance
+		*  @param[in] direct3D10Renderer
+		*    Owner Direct3D 10 renderer instance
 		*  @param[in] rasterizerState
 		*    Rasterizer state to use
 		*/
-		RasterizerState(Direct3D11Renderer &direct3D11Renderer, const Renderer::RasterizerState &rasterizerState);
+		RasterizerState(Direct3D10Renderer &direct3D10Renderer, const Renderer::RasterizerState &rasterizerState);
 
 		/**
 		*  @brief
@@ -85,12 +85,12 @@ namespace Direct3D11Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D 11 rasterizer state
+		*    Return the Direct3D 10 rasterizer state
 		*
 		*  @return
-		*    The Direct3D 11 rasterizer state, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D 10 rasterizer state, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11RasterizerState *getD3D11RasterizerState() const;
+		inline ID3D10RasterizerState *getD3D10RasterizerState() const;
 
 
 	//[-------------------------------------------------------]
@@ -104,7 +104,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11RasterizerState *mD3D11RasterizerState;	///< Direct3D 11 rasterizer state, can be a null pointer
+		ID3D10RasterizerState *mD3D10RasterizerState;	///< Direct3D 10 rasterizer state, can be a null pointer
 
 
 	};
@@ -113,10 +113,10 @@ namespace Direct3D11Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Direct3D11Renderer
+} // Direct3D10Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Direct3D11Renderer/RasterizerState.inl"
+#include "Direct3D10Renderer/Detail/RasterizerState.inl"

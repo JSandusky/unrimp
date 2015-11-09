@@ -44,15 +44,12 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
-	src/BlendState.cpp
-	src/DepthStencilState.cpp
 	src/Direct3D11RuntimeLinking.cpp
 	src/Framebuffer.cpp
 	src/Guid.cpp
 	src/IndexBuffer.cpp
 	src/Mapping.cpp
 	src/PipelineState.cpp
-	src/RasterizerState.cpp
 	src/Direct3D11Renderer.cpp
 	src/SamplerState.cpp
 	src/SwapChain.cpp
@@ -61,6 +58,9 @@ set(SOURCE_CODES
 	src/TextureBuffer.cpp
 	src/VertexArray.cpp
 	src/VertexBuffer.cpp
+	src/Detail/BlendState.cpp
+	src/Detail/DepthStencilState.cpp
+	src/Detail/RasterizerState.cpp
 	src/Shader/FragmentShader.cpp
 	src/Shader/FragmentShaderHlsl.cpp
 	src/Shader/GeometryShader.cpp
