@@ -121,9 +121,6 @@ namespace RendererRuntime
 				// Set the used pipeline state object (PSO)
 				renderer.setPipelineState(pipelineState);
 
-				// Set the used blend state
-				renderer.omSetBlendState(mRendererRuntimeImpl->getFontBlendState());
-
 				{ // Setup input assembly (IA)
 					// Set the used vertex array
 					renderer.iaSetVertexArray(mRendererRuntimeImpl->getVertexArray());

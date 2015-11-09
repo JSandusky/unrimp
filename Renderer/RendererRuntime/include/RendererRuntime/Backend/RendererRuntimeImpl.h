@@ -35,7 +35,6 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	class IBlendState;
 	class IVertexArray;
 	class ISamplerState;
 	class IRootSignature;
@@ -156,18 +155,6 @@ namespace RendererRuntime
 		*/
 		Renderer::ISamplerState *getFontSamplerState();
 
-		/**
-		*  @brief
-		*    Return the font blend state
-		*
-		*  @return
-		*    The font blend state, do not release the returned instance unless you added an own reference to it, can be a null pointer in case on an error
-		*
-		*  @note
-		*    - The font blend state is created by using lazy evaluation, meaning that the font blend state is created the first time it's required
-		*/
-		Renderer::IBlendState *getFontBlendState();
-
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
@@ -213,7 +200,6 @@ namespace RendererRuntime
 		Renderer::IUniformBuffer *mFontFragmentShaderUniformBuffer;	///< Font fragment shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontFragmentShaderUniformBuffer()"
 		Renderer::IVertexArray	 *mFontVertexArray;					///< Vertex array object (VAO, we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexArray()"
 		Renderer::ISamplerState	 *mFontSamplerState;				///< Font sampler state (we keep a reference to it), can be a null pointer, do only access it by using "getFontSamplerState()"
-		Renderer::IBlendState	 *mFontBlendState;					///< Font blend state (we keep a reference to it), can be a null pointer, do only access it by using "getFontBlendState()"
 
 
 	};

@@ -89,8 +89,7 @@ namespace RendererRuntime
 		mFontVertexShaderUniformBuffer(nullptr),
 		mFontFragmentShaderUniformBuffer(nullptr),
 		mFontVertexArray(nullptr),
-		mFontSamplerState(nullptr),
-		mFontBlendState(nullptr)
+		mFontSamplerState(nullptr)
 	{
 		// Backup the given renderer
 		mRenderer = &renderer;
@@ -114,12 +113,6 @@ namespace RendererRuntime
 
 	RendererRuntimeImpl::~RendererRuntimeImpl()
 	{
-		// Release the font blend state instance
-		if (nullptr != mFontBlendState)
-		{
-			mFontBlendState->release();
-		}
-
 		// Release the font sampler state instance
 		if (nullptr != mFontSamplerState)
 		{
@@ -240,8 +233,11 @@ namespace RendererRuntime
 				// Create the pipeline state object (PSO)
 				if (nullptr != program)
 				{
-					// Create the instance
-					mFontPipelineState = mRenderer->createPipelineState(Renderer::PipelineStateBuilder(getFontRootSignature(), program, ::detail::VertexAttributes));
+					Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(getFontRootSignature(), program, ::detail::VertexAttributes);
+					pipelineState.blendState.renderTarget[0].blendEnable = true;
+					pipelineState.blendState.renderTarget[0].srcBlend	 = Renderer::Blend::SRC_ALPHA;
+					pipelineState.blendState.renderTarget[0].destBlend   = Renderer::Blend::ONE;
+					mFontPipelineState = mRenderer->createPipelineState(pipelineState);
 					if (nullptr != mFontPipelineState)
 					{
 						// Add our internal reference
@@ -363,26 +359,6 @@ namespace RendererRuntime
 
 		// Return the instance of the font sampler state
 		return mFontSamplerState;
-	}
-
-	Renderer::IBlendState *RendererRuntimeImpl::getFontBlendState()
-	{
-		// Create the font blend state instance right now?
-		if (nullptr == mFontBlendState)
-		{
-			// Create blend state
-			Renderer::BlendState blendState = Renderer::IBlendState::getDefaultBlendState();
-			blendState.renderTarget[0].blendEnable = true;
-			blendState.renderTarget[0].srcBlend	   = Renderer::Blend::SRC_ALPHA;
-			blendState.renderTarget[0].destBlend   = Renderer::Blend::ONE;
-			mFontBlendState = mRenderer->createBlendState(blendState);
-
-			// Add our internal reference
-			mFontBlendState->addReference();
-		}
-
-		// Return the instance of the font blend state
-		return mFontBlendState;
 	}
 
 
