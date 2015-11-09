@@ -63,12 +63,6 @@ namespace Renderer
 		// IState
 		currentNumberOfPipelineStates(0),
 		numberOfCreatedPipelineStates(0),
-		currentNumberOfRasterizerStates(0),
-		numberOfCreatedRasterizerStates(0),
-		currentNumberOfDepthStencilStates(0),
-		numberOfCreatedDepthStencilStates(0),
-		currentNumberOfBlendStates(0),
-		numberOfCreatedBlendStates(0),
 		currentNumberOfSamplerStates(0),
 		numberOfCreatedSamplerStates(0),
 		// IShader
@@ -110,9 +104,6 @@ namespace Renderer
 				currentNumberOfTexture2DArrays +
 				// IState
 				currentNumberOfPipelineStates +
-				currentNumberOfRasterizerStates +
-				currentNumberOfDepthStencilStates +
-				currentNumberOfBlendStates +
 				currentNumberOfSamplerStates +
 				// IShader
 				currentNumberOfVertexShaders +
@@ -148,9 +139,6 @@ namespace Renderer
 
 		// IState
 		RENDERER_OUTPUT_DEBUG_PRINTF("Pipeline states: %d\n", currentNumberOfPipelineStates)
-		RENDERER_OUTPUT_DEBUG_PRINTF("Rasterizer states: %d\n", currentNumberOfRasterizerStates)
-		RENDERER_OUTPUT_DEBUG_PRINTF("Depth stencil states: %d\n", currentNumberOfDepthStencilStates)
-		RENDERER_OUTPUT_DEBUG_PRINTF("Blend states: %d\n", currentNumberOfBlendStates)
 		RENDERER_OUTPUT_DEBUG_PRINTF("Sampler states: %d\n", currentNumberOfSamplerStates)
 
 		// IShader
@@ -197,12 +185,6 @@ namespace Renderer
 		// IState
 		currentNumberOfPipelineStates(0),
 		numberOfCreatedPipelineStates(0),
-		currentNumberOfRasterizerStates(0),
-		numberOfCreatedRasterizerStates(0),
-		currentNumberOfDepthStencilStates(0),
-		numberOfCreatedDepthStencilStates(0),
-		currentNumberOfBlendStates(0),
-		numberOfCreatedBlendStates(0),
 		currentNumberOfSamplerStates(0),
 		numberOfCreatedSamplerStates(0),
 		// IShader

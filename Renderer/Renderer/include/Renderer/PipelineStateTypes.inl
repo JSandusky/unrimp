@@ -34,9 +34,9 @@ namespace Renderer
 		program					= _program;
 		vertexAttributes		= _vertexAttributes;
 		primitiveTopologyType	= PrimitiveTopologyType::TRIANGLE;
-		rasterizerState			= IRasterizerState::getDefaultRasterizerState();
-		depthStencilState		= IDepthStencilState::getDefaultDepthStencilState();
-		blendState				= IBlendState::getDefaultBlendState();
+		rasterizerState			= RasterizerStateBuilder::getDefaultRasterizerState();
+		depthStencilState		= DepthStencilStateBuilder::getDefaultDepthStencilState();
+		blendState				= BlendStateBuilder::getDefaultBlendState();
 	}
 
 

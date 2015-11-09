@@ -90,19 +90,6 @@ void FirstPostProcessing::onInitialization()
 			mRootSignature = renderer->createRootSignature(rootSignature);
 		}
 
-		{ // Depth stencil state
-		  // -> By default depth test is enabled
-		  // -> In this simple example we don't need depth test, so, disable it so we don't need to care about the depth buffer
-
-			// Create depth stencil state
-			Renderer::DepthStencilState depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-			depthStencilState.depthEnable = false;
-			mDepthStencilState = renderer->createDepthStencilState(depthStencilState);
-
-			// Set the depth stencil state directly within this initialization phase, we don't change it later on
-			renderer->omSetDepthStencilState(mDepthStencilState);
-		}
-
 		// Vertex input layout
 		const Renderer::VertexAttribute vertexAttributesLayout[] =
 		{
@@ -206,8 +193,16 @@ void FirstPostProcessing::onInitialization()
 			// Create the pipeline state objects (PSO)
 			if (nullptr != programSceneRendering && nullptr != programPostProcessing)
 			{
-				mPipelineStateSceneRendering = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programSceneRendering, vertexAttributes));
-				mPipelineStatePostProcessing = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programPostProcessing, vertexAttributes));
+				{ // Scene rendering
+					Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programSceneRendering, vertexAttributes);
+					pipelineState.depthStencilState.depthEnable = false;
+					mPipelineStateSceneRendering = renderer->createPipelineState(pipelineState);
+				}
+				{ // Post-processing
+					Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programPostProcessing, vertexAttributes);
+					pipelineState.depthStencilState.depthEnable = false;
+					mPipelineStatePostProcessing = renderer->createPipelineState(pipelineState);
+				}
 			}
 		}
 
@@ -226,7 +221,6 @@ void FirstPostProcessing::onDeinitialization()
 	mPipelineStatePostProcessing = nullptr;
 	mVertexArraySceneRendering = nullptr;
 	mPipelineStateSceneRendering = nullptr;
-	mDepthStencilState = nullptr;
 	mRootSignature = nullptr;
 	mSamplerState = nullptr;
 	mFramebuffer = nullptr;

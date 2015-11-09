@@ -40,9 +40,6 @@
     <ClInclude Include="include\Renderer\IShader.h" />
     <ClInclude Include="include\Renderer\IShaderLanguage.h" />
     <ClInclude Include="include\Renderer\IState.h" />
-    <ClInclude Include="include\Renderer\IBlendState.h" />
-    <ClInclude Include="include\Renderer\IDepthStencilState.h" />
-    <ClInclude Include="include\Renderer\IRasterizerState.h" />
     <ClInclude Include="include\Renderer\ISwapChain.h" />
     <ClInclude Include="include\Renderer\ITessellationControlShader.h" />
     <ClInclude Include="include\Renderer\ITessellationEvaluationShader.h" />
@@ -75,9 +72,7 @@
     <None Include="include\Renderer\BlendStateTypes.inl" />
     <None Include="include\Renderer\Capabilities.inl" />
     <None Include="include\Renderer\DepthStencilStateTypes.inl" />
-    <None Include="include\Renderer\IBlendState.inl" />
     <None Include="include\Renderer\IBuffer.inl" />
-    <None Include="include\Renderer\IDepthStencilState.inl" />
     <None Include="include\Renderer\IFragmentShader.inl" />
     <None Include="include\Renderer\IFramebuffer.inl" />
     <None Include="include\Renderer\IGeometryShader.inl" />
@@ -85,7 +80,6 @@
     <None Include="include\Renderer\IndexBufferTypes.inl" />
     <None Include="include\Renderer\IPipelineState.inl" />
     <None Include="include\Renderer\IProgram.inl" />
-    <None Include="include\Renderer\IRasterizerState.inl" />
     <None Include="include\Renderer\IRenderer.inl" />
     <None Include="include\Renderer\IRenderTarget.inl" />
     <None Include="include\Renderer\IResource.inl" />

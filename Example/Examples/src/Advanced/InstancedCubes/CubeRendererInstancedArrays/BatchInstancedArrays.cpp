@@ -53,7 +53,6 @@ void BatchInstancedArrays::initialize(Renderer::IRootSignature &rootSignature, c
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
 
 	// Release previous data if required
-	mBlendState = nullptr;
 	mVertexArray = nullptr;
 
 	// Set the number of cube instance
@@ -134,16 +133,13 @@ void BatchInstancedArrays::initialize(Renderer::IRootSignature &rootSignature, c
 		delete [] data;
 	}
 
-	{ // Create blend state
-		Renderer::BlendState blendState = Renderer::IBlendState::getDefaultBlendState();
-		blendState.renderTarget[0].blendEnable = alphaBlending;
-		blendState.renderTarget[0].srcBlend    = Renderer::Blend::SRC_ALPHA;
-		blendState.renderTarget[0].destBlend   = Renderer::Blend::ONE;
-		mBlendState = mRenderer->createBlendState(blendState);
+	{ // Create the pipeline state object (PSO)
+		Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(&rootSignature, &program, vertexAttributes);
+		pipelineState.blendState.renderTarget[0].blendEnable = alphaBlending;
+		pipelineState.blendState.renderTarget[0].srcBlend    = Renderer::Blend::SRC_ALPHA;
+		pipelineState.blendState.renderTarget[0].destBlend   = Renderer::Blend::ONE;
+		mPipelineState = mRenderer->createPipelineState(pipelineState);
 	}
-
-	// Create the pipeline state object (PSO)
-	mPipelineState = mRenderer->createPipelineState(Renderer::PipelineStateBuilder(&rootSignature, &program, vertexAttributes));
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(mRenderer)
@@ -164,9 +160,6 @@ void BatchInstancedArrays::draw()
 
 		// Set the used pipeline state object (PSO)
 		mRenderer->setPipelineState(mPipelineState);
-
-		// Set the used blend state
-		mRenderer->omSetBlendState(mBlendState);
 
 		// Use instancing in order to draw multiple cubes with just a single draw call
 		// -> Draw calls are one of the most expensive rendering, avoid them if possible

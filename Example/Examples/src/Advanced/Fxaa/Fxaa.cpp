@@ -119,19 +119,6 @@ void Fxaa::onInitialization()
 			mRootSignature = renderer->createRootSignature(rootSignature);
 		}
 
-		{ // Depth stencil state
-		  // -> By default depth test is enabled
-		  // -> In this simple example we don't need depth test, so, disable it so we don't need to care about the depth buffer
-
-			// Create depth stencil state
-			Renderer::DepthStencilState depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-			depthStencilState.depthEnable = false;
-			mDepthStencilState = renderer->createDepthStencilState(depthStencilState);
-
-			// Set the depth stencil state directly within this initialization phase, we don't change it later on
-			renderer->omSetDepthStencilState(mDepthStencilState);
-		}
-
 		// Create the programs: Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
@@ -158,7 +145,9 @@ void Fxaa::onInitialization()
 			// Create the pipeline state object (PSO)
 			if (nullptr != programSceneRendering)
 			{
-				mPipelineStateSceneRendering = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programSceneRendering, detail::VertexAttributes));
+				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programSceneRendering, detail::VertexAttributes);
+				pipelineState.depthStencilState.depthEnable = false;
+				mPipelineStateSceneRendering = renderer->createPipelineState(pipelineState);
 			}
 
 			// Create the post-processing program instance by using the current window size
@@ -235,7 +224,6 @@ void Fxaa::onDeinitialization()
 	mPipelineStatePostProcessing = nullptr;
 	mVertexArraySceneRendering = nullptr;
 	mPipelineStateSceneRendering = nullptr;
-	mDepthStencilState = nullptr;
 	mSamplerState = nullptr;
 	mRootSignature = nullptr;
 	mFramebuffer = nullptr;
@@ -405,7 +393,9 @@ void Fxaa::recreatePostProcessingProgram()
 			// Create the pipeline state object (PSO)
 			if (nullptr != programPostProcessing)
 			{
-				mPipelineStatePostProcessing = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programPostProcessing, detail::VertexAttributes));
+				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programPostProcessing, detail::VertexAttributes);
+				pipelineState.depthStencilState.depthEnable = false;
+				mPipelineStatePostProcessing = renderer->createPipelineState(pipelineState);
 			}
 		}
 

@@ -493,24 +493,6 @@ namespace OpenGLRenderer
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::IRasterizerState *OpenGLRenderer::createRasterizerState(const Renderer::RasterizerState&)
-	{
-		// TODO(co) Remove this method
-		return nullptr;
-	}
-
-	Renderer::IDepthStencilState *OpenGLRenderer::createDepthStencilState(const Renderer::DepthStencilState&)
-	{
-		// TODO(co) Remove this method
-		return nullptr;
-	}
-
-	Renderer::IBlendState *OpenGLRenderer::createBlendState(const Renderer::BlendState&)
-	{
-		// TODO(co) Remove this method
-		return nullptr;
-	}
-
 	Renderer::ISamplerState *OpenGLRenderer::createSamplerState(const Renderer::SamplerState &samplerState)
 	{
 		// Is "GL_ARB_sampler_objects" there?
@@ -962,11 +944,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::rsSetState(Renderer::IRasterizerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
@@ -1079,16 +1056,6 @@ namespace OpenGLRenderer
 				}
 			}
 		}
-	}
-
-	void OpenGLRenderer::omSetDepthStencilState(Renderer::IDepthStencilState*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLRenderer::omSetBlendState(Renderer::IBlendState*)
-	{
-		// TODO(co) Remove this method
 	}
 
 

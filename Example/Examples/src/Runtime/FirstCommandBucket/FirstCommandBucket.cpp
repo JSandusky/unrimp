@@ -190,12 +190,6 @@ void FirstCommandBucket::onInitialization()
 				RENDERER_SET_RESOURCE_DEBUG_NAME(program, "Triangle program")
 			}
 
-			// Create the pipeline state object (PSO)
-			if (nullptr != program)
-			{
-				mPipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
-			}
-
 			// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
 			// -> If they are there, we really want to use them (performance and ease of use)
 			if (renderer->getCapabilities().uniformBuffer)
@@ -203,25 +197,16 @@ void FirstCommandBucket::onInitialization()
 				// Create dynamic uniform buffer
 				mUniformBufferDynamicVs = shaderLanguage->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 			}
-		}
 
-		{ // Create solid material
-			mSolidMaterial.pipelineState = mPipelineState;
-			mSolidMaterial.rasterizerState = renderer->createRasterizerState(Renderer::IRasterizerState::getDefaultRasterizerState());
-			mSolidMaterial.depthStencilState = renderer->createDepthStencilState(Renderer::IDepthStencilState::getDefaultDepthStencilState());
-			mSolidMaterial.blendState = renderer->createBlendState(Renderer::IBlendState::getDefaultBlendState());
-		}
+			// Create solid material
+			mSolidMaterial.pipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
 
-		{ // Create transparent material
-			mTransparentMaterial.pipelineState = mPipelineState;
-			mTransparentMaterial.rasterizerState = mSolidMaterial.rasterizerState;
-			mTransparentMaterial.depthStencilState = mSolidMaterial.depthStencilState;
-			{ // Blend state
-				Renderer::BlendState blendState = Renderer::IBlendState::getDefaultBlendState();
-				blendState.renderTarget[0].blendEnable = true;
-				blendState.renderTarget[0].srcBlend    = Renderer::Blend::SRC_ALPHA;
-				blendState.renderTarget[0].destBlend   = Renderer::Blend::ONE;
-				mSolidMaterial.blendState = renderer->createBlendState(blendState);
+			{ // Create transparent material
+				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes);
+				pipelineState.blendState.renderTarget[0].blendEnable = true;
+				pipelineState.blendState.renderTarget[0].srcBlend    = Renderer::Blend::SRC_ALPHA;
+				pipelineState.blendState.renderTarget[0].destBlend   = Renderer::Blend::ONE;
+				mTransparentMaterial.pipelineState = renderer->createPipelineState(pipelineState);
 			}
 		}
 
@@ -239,7 +224,6 @@ void FirstCommandBucket::onDeinitialization()
 	mFontResource = nullptr;
 
 	// Release the used resources
-	mPipelineState = nullptr;
 	mRootSignature = nullptr;
 	mUniformBufferDynamicVs = nullptr;
 	mSolidVertexArray = nullptr;
@@ -283,9 +267,6 @@ void FirstCommandBucket::onDraw()
 			{
 				// Set the used uniform buffers
 				renderer->setGraphicsRootDescriptorTable(0, mUniformBufferDynamicVs);
-
-				// Set the used pipeline state object (PSO)
-				renderer->setPipelineState(mPipelineState);
 			}
 
 			{ // Push draw calls into different command buckets (can be done in parallel)

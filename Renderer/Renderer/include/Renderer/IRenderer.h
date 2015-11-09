@@ -47,7 +47,6 @@ namespace Renderer
 	struct Viewport;
 	class ITexture2D;
 	class ISwapChain;
-	class IBlendState;
 	struct BlendState;
 	class IIndexBuffer;
 	class IVertexArray;
@@ -64,11 +63,9 @@ namespace Renderer
 	class ITextureBuffer;
 	class IShaderLanguage;
 	class ITexture2DArray;
-	class IRasterizerState;
 	struct RasterizerState;
 	struct VertexAttributes;
 	struct ScissorRectangle;
-	class IDepthStencilState;
 	struct DepthStencilState;
 	struct VertexArrayVertexBuffer;
 }
@@ -108,9 +105,6 @@ namespace Renderer
 		friend class ITexture2D;
 		friend class ITexture2DArray;
 		friend class IPipelineState;
-		friend class IRasterizerState;
-		friend class IDepthStencilState;
-		friend class IBlendState;
 		friend class ISamplerState;
 		friend class IVertexShader;
 		friend class ITessellationControlShader;
@@ -442,42 +436,6 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Create a rasterizer state instance
-		*
-		*  @param[in] rasterizerState
-		*    Rasterizer state to use
-		*
-		*  @return
-		*    The rasterizer state instance, null pointer on error. Release the returned instance if you no longer need it.
-		*/
-		virtual IRasterizerState *createRasterizerState(const RasterizerState &rasterizerState) = 0;
-
-		/**
-		*  @brief
-		*    Create a depth stencil state instance
-		*
-		*  @param[in] depthStencilState
-		*    Depth stencil state to use
-		*
-		*  @return
-		*    The depth stencil state instance, null pointer on error. Release the returned instance if you no longer need it.
-		*/
-		virtual IDepthStencilState *createDepthStencilState(const DepthStencilState &depthStencilState) = 0;
-
-		/**
-		*  @brief
-		*    Create a blend state instance
-		*
-		*  @param[in] blendState
-		*    Blend state to use
-		*
-		*  @return
-		*    The blend state instance, null pointer on error. Release the returned instance if you no longer need it.
-		*/
-		virtual IBlendState *createBlendState(const BlendState &blendState) = 0;
-
-		/**
-		*  @brief
 		*    Create a sampler state instance
 		*
 		*  @param[in] samplerState
@@ -610,15 +568,6 @@ namespace Renderer
 		*/
 		virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const ScissorRectangle *scissorRectangles) = 0;
 
-		/**
-		*  @brief
-		*    Set the used rasterizer state
-		*
-		*  @param[in] rasterizerState
-		*    Rasterizer state to use, can be an null pointer (in this case nothing happens, default: "nullptr", see "Renderer::RasterizerState" for the default values used in this case)
-		*/
-		virtual void rsSetState(IRasterizerState *rasterizerState) = 0;
-
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
@@ -639,24 +588,6 @@ namespace Renderer
 		*    Render target to render into by binding it to the output-merger state, can be an null pointer to render into the primary window
 		*/
 		virtual void omSetRenderTarget(IRenderTarget *renderTarget) = 0;
-
-		/**
-		*  @brief
-		*    Set the used depth stencil state
-		*
-		*  @param[in] depthStencilState
-		*    Depth stencil state to use, can be an null pointer (in this case nothing happens, default: "nullptr", see "Renderer::DepthStencilState" for the default values used in this case)
-		*/
-		virtual void omSetDepthStencilState(IDepthStencilState *depthStencilState) = 0;
-
-		/**
-		*  @brief
-		*    Set the used blend state
-		*
-		*  @param[in] blendState
-		*    Blend state to use, can be an null pointer (in this case nothing happens, default: "nullptr", see "Renderer::BlendState" for the default values used in this case)
-		*/
-		virtual void omSetBlendState(IBlendState *blendState) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Operations                                            ]

@@ -37,15 +37,6 @@
     <ClInclude Include="include\Renderer\IState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\IBlendState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IRasterizerState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IDepthStencilState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\IUniformBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -196,15 +187,6 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\IShader.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IBlendState.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IDepthStencilState.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IRasterizerState.inl">
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\ISamplerState.inl">

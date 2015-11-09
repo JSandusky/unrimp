@@ -151,12 +151,6 @@ void FirstTessellation::onInitialization()
 			}
 		}
 
-		{ // Create rasterizer state
-			Renderer::RasterizerState rasterizerState = Renderer::IRasterizerState::getDefaultRasterizerState();
-			rasterizerState.fillMode = Renderer::FillMode::WIREFRAME;
-			mRasterizerState = renderer->createRasterizerState(rasterizerState);
-		}
-
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)
 	}
@@ -168,7 +162,6 @@ void FirstTessellation::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
-	mRasterizerState = nullptr;
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
 	mRootSignature = nullptr;
@@ -202,9 +195,6 @@ void FirstTessellation::onDraw()
 
 			// Set the used pipeline state object (PSO)
 			renderer->setPipelineState(mPipelineState);
-
-			// Set the used rasterizer state
-			renderer->rsSetState(mRasterizerState);
 
 			{ // Setup input assembly (IA)
 				// Set the used vertex array

@@ -107,7 +107,7 @@ namespace Renderer
 	*  @note
 	*    - This render target blend description maps directly to Direct3D 10.1 & 11, do not change it
 	*    - This also means that "int" is used over "bool" because in Direct3D it's defined this way
-	*    - If you want to know how the default values were chosen, have a look into the "Renderer::IBlendState::getDefaultBlendState()"-implementation
+	*    - If you want to know how the default values were chosen, have a look into the "Renderer::BlendStateBuilder::getDefaultBlendState()"-implementation
 	*
 	*  @see
 	*    - "D3D12_RENDER_TARGET_BLEND_DESC"-documentation for details
@@ -131,7 +131,7 @@ namespace Renderer
 	*  @note
 	*    - This blend state maps directly to Direct3D 10.1 & 11 & 12, do not change it
 	*    - This also means that "int" is used over "bool" because in Direct3D it's defined this way
-	*    - If you want to know how the default values were chosen, have a look into the "Renderer::IBlendState::getDefaultBlendState()"-implementation
+	*    - If you want to know how the default values were chosen, have a look into the "Renderer::BlendStateBuilder::getDefaultBlendState()"-implementation
 	*
 	*  @see
 	*    - "D3D12_BLEND_DESC"-documentation for details

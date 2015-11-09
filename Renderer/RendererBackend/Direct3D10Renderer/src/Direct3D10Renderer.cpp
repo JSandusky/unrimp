@@ -348,24 +348,6 @@ namespace Direct3D10Renderer
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::IRasterizerState *Direct3D10Renderer::createRasterizerState(const Renderer::RasterizerState&)
-	{
-		// TODO(co) Remove this method
-		return nullptr;
-	}
-
-	Renderer::IDepthStencilState *Direct3D10Renderer::createDepthStencilState(const Renderer::DepthStencilState&)
-	{
-		// TODO(co) Remove this method
-		return nullptr;
-	}
-
-	Renderer::IBlendState *Direct3D10Renderer::createBlendState(const Renderer::BlendState&)
-	{
-		// TODO(co) Remove this method
-		return nullptr;
-	}
-
 	Renderer::ISamplerState *Direct3D10Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
 	{
 		return new SamplerState(*this, samplerState);
@@ -907,11 +889,6 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::rsSetState(Renderer::IRasterizerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
@@ -1001,16 +978,6 @@ namespace Direct3D10Renderer
 				}
 			}
 		}
-	}
-
-	void Direct3D10Renderer::omSetDepthStencilState(Renderer::IDepthStencilState*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void Direct3D10Renderer::omSetBlendState(Renderer::IBlendState*)
-	{
-		// TODO(co) Remove this method
 	}
 
 

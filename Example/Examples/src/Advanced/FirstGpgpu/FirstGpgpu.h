@@ -153,7 +153,6 @@ private:
 	Renderer::IFramebufferPtr		mFramebuffer[2];	///< Framebuffer object (FBO), can be a null pointer
 	Renderer::ISamplerStatePtr		mSamplerState;		///< Sampler state, can be a null pointer
 	Renderer::IRootSignaturePtr		mRootSignature;		///< Root signature, can be a null pointer
-	Renderer::IDepthStencilStatePtr	mDepthStencilState;	///< Depth stencil state, can be a null pointer
 	// Content generation
 	Renderer::IPipelineStatePtr mPipelineStateContentGeneration;	///< Pipeline state object (PSO) for content generation, can be a null pointer
 	Renderer::IVertexArrayPtr   mVertexArrayContentGeneration;		///< Vertex array object (VAO) for content generation, can be a null pointer

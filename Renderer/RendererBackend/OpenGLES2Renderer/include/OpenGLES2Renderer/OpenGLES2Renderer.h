@@ -128,9 +128,6 @@ namespace OpenGLES2Renderer
 		virtual Renderer::ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, Renderer::TextureUsage::Enum textureUsage = Renderer::TextureUsage::DEFAULT) override;
 		virtual Renderer::IRootSignature *createRootSignature(const Renderer::RootSignature &rootSignature) override;
 		virtual Renderer::IPipelineState *createPipelineState(const Renderer::PipelineState &pipelineState) override;
-		virtual Renderer::IRasterizerState *createRasterizerState(const Renderer::RasterizerState &rasterizerState) override;
-		virtual Renderer::IDepthStencilState *createDepthStencilState(const Renderer::DepthStencilState &depthStencilState) override;
-		virtual Renderer::IBlendState *createBlendState(const Renderer::BlendState &blendState) override;
 		virtual Renderer::ISamplerState *createSamplerState(const Renderer::SamplerState &samplerState) override;
 		//[-------------------------------------------------------]
 		//[ Resource handling                                     ]
@@ -153,14 +150,11 @@ namespace OpenGLES2Renderer
 		//[-------------------------------------------------------]
 		virtual void rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports) override;
 		virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles) override;
-		virtual void rsSetState(Renderer::IRasterizerState *rasterizerState) override;
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
 		virtual Renderer::IRenderTarget *omGetRenderTarget() override;
 		virtual void omSetRenderTarget(Renderer::IRenderTarget *renderTarget) override;
-		virtual void omSetDepthStencilState(Renderer::IDepthStencilState *depthStencilState) override;
-		virtual void omSetBlendState(Renderer::IBlendState *blendState) override;
 		//[-------------------------------------------------------]
 		//[ Operations                                            ]
 		//[-------------------------------------------------------]

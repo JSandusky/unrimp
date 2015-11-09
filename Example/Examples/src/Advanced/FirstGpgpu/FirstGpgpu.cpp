@@ -132,19 +132,6 @@ void FirstGpgpu::onInitialization()
 		mRootSignature = mRenderer->createRootSignature(rootSignature);
 	}
 
-	{ // Depth stencil state
-		// -> By default depth test is enabled
-		// -> In this simple example we don't need depth test, so, disable it so we don't need to care about the depth buffer
-
-		// Create depth stencil state
-		Renderer::DepthStencilState depthStencilState = Renderer::IDepthStencilState::getDefaultDepthStencilState();
-		depthStencilState.depthEnable = false;
-		mDepthStencilState = mRenderer->createDepthStencilState(depthStencilState);
-
-		// Set the depth stencil state directly within this initialization phase, we don't change it later on
-		mRenderer->omSetDepthStencilState(mDepthStencilState);
-	}
-
 	// Vertex input layout
 	const Renderer::VertexAttribute vertexAttributesLayout[] =
 	{
@@ -248,8 +235,16 @@ void FirstGpgpu::onInitialization()
 		// Create the pipeline state objects (PSO)
 		if (nullptr != programContentGeneration && nullptr != programContentProcessing)
 		{
-			mPipelineStateContentGeneration = mRenderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programContentGeneration, vertexAttributes));
-			mPipelineStateContentProcessing = mRenderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programContentProcessing, vertexAttributes));
+			{ // Content generation
+				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programContentGeneration, vertexAttributes);
+				pipelineState.depthStencilState.depthEnable = false;
+				mPipelineStateContentGeneration = mRenderer->createPipelineState(pipelineState);
+			}
+			{ // Content processing
+				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programContentProcessing, vertexAttributes);
+				pipelineState.depthStencilState.depthEnable = false;
+				mPipelineStateContentProcessing = mRenderer->createPipelineState(pipelineState);
+			}
 		}
 	}
 
@@ -267,7 +262,6 @@ void FirstGpgpu::onDeinitialization()
 	mPipelineStateContentProcessing = nullptr;
 	mVertexArrayContentGeneration = nullptr;
 	mPipelineStateContentGeneration = nullptr;
-	mDepthStencilState = nullptr;
 	mSamplerState = nullptr;
 	mRootSignature = nullptr;
 	for (int i = 0; i < 2; ++i)

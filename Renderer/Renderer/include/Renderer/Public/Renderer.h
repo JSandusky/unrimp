@@ -58,9 +58,6 @@ namespace Renderer
 			class ITexture2DArray;
 		class IState;
 			class IPipelineState;
-			class IRasterizerState;
-			class IDepthStencilState;
-			class IBlendState;
 			class ISamplerState;
 		class IShader;
 			class IVertexShader;
@@ -1596,12 +1593,6 @@ namespace Renderer
 		uint32_t numberOfCreatedTexture2DArrays;
 		uint32_t currentNumberOfPipelineStates;
 		uint32_t numberOfCreatedPipelineStates;
-		uint32_t currentNumberOfRasterizerStates;
-		uint32_t numberOfCreatedRasterizerStates;
-		uint32_t currentNumberOfDepthStencilStates;
-		uint32_t numberOfCreatedDepthStencilStates;
-		uint32_t currentNumberOfBlendStates;
-		uint32_t numberOfCreatedBlendStates;
 		uint32_t currentNumberOfSamplerStates;
 		uint32_t numberOfCreatedSamplerStates;
 		uint32_t currentNumberOfVertexShaders;
@@ -1640,12 +1631,6 @@ namespace Renderer
 			numberOfCreatedTexture2DArrays(0),
 			currentNumberOfPipelineStates(0),
 			numberOfCreatedPipelineStates(0),
-			currentNumberOfRasterizerStates(0),
-			numberOfCreatedRasterizerStates(0),
-			currentNumberOfDepthStencilStates(0),
-			numberOfCreatedDepthStencilStates(0),
-			currentNumberOfBlendStates(0),
-			numberOfCreatedBlendStates(0),
 			currentNumberOfSamplerStates(0),
 			numberOfCreatedSamplerStates(0),
 			currentNumberOfVertexShaders(0),
@@ -1689,12 +1674,6 @@ namespace Renderer
 			numberOfCreatedTexture2DArrays(0),
 			currentNumberOfPipelineStates(0),
 			numberOfCreatedPipelineStates(0),
-			currentNumberOfRasterizerStates(0),
-			numberOfCreatedRasterizerStates(0),
-			currentNumberOfDepthStencilStates(0),
-			numberOfCreatedDepthStencilStates(0),
-			currentNumberOfBlendStates(0),
-			numberOfCreatedBlendStates(0),
 			currentNumberOfSamplerStates(0),
 			numberOfCreatedSamplerStates(0),
 			currentNumberOfVertexShaders(0),
@@ -1752,9 +1731,6 @@ namespace Renderer
 			virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
 			virtual IRootSignature *createRootSignature(const RootSignature &rootSignature) = 0;
 			virtual IPipelineState *createPipelineState(const PipelineState &pipelineState) = 0;
-			virtual IRasterizerState *createRasterizerState(const RasterizerState &rasterizerState) = 0;
-			virtual IDepthStencilState *createDepthStencilState(const DepthStencilState &depthStencilState) = 0;
-			virtual IBlendState *createBlendState(const BlendState &blendState) = 0;
 			virtual ISamplerState *createSamplerState(const SamplerState &samplerState) = 0;
 			virtual bool map(IResource &resource, uint32_t subresource, MapType::Enum mapType, uint32_t mapFlags, MappedSubresource &mappedSubresource) = 0;
 			virtual void unmap(IResource &resource, uint32_t subresource) = 0;
@@ -1765,11 +1741,8 @@ namespace Renderer
 			virtual void iaSetPrimitiveTopology(PrimitiveTopology::Enum primitiveTopology) = 0;
 			virtual void rsSetViewports(uint32_t numberOfViewports, const Viewport *viewports) = 0;
 			virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles) = 0;
-			virtual void rsSetState(IRasterizerState *rasterizerState) = 0;
 			virtual IRenderTarget *omGetRenderTarget() = 0;
 			virtual void omSetRenderTarget(IRenderTarget *renderTarget) = 0;
-			virtual void omSetDepthStencilState(IDepthStencilState *depthStencilState) = 0;
-			virtual void omSetBlendState(IBlendState *blendState) = 0;
 			virtual void clear(uint32_t flags, const float color[4], float z, uint32_t stencil) = 0;
 			virtual bool beginScene() = 0;
 			virtual void endScene() = 0;
@@ -2156,189 +2129,6 @@ namespace Renderer
 			IPipelineState &operator =(const IPipelineState &source);
 		};
 		typedef SmartRefCount<IPipelineState> IPipelineStatePtr;
-	#endif
-
-	// Renderer/IRasterizerState.h
-	#ifndef __RENDERER_IRASTERIZERSTATE_H__
-	#define __RENDERER_IRASTERIZERSTATE_H__
-		class IRasterizerState : public IState
-		{
-		public:
-			static inline const RasterizerState &getDefaultRasterizerState()
-			{
-				static const Renderer::RasterizerState RASTERIZER_STATE =
-				{
-					Renderer::FillMode::SOLID,
-					Renderer::CullMode::BACK,
-					false,
-					0,
-					0.0f,
-					0.0f,
-					true,
-					false,
-					false,
-					false,
-					0,
-					ConservativeRasterizationMode::OFF
-				};
-				return RASTERIZER_STATE;
-			}
-		public:
-			virtual ~IRasterizerState();
-		protected:
-			explicit IRasterizerState(IRenderer &renderer);
-			explicit IRasterizerState(const IRasterizerState &source);
-			IRasterizerState &operator =(const IRasterizerState &source);
-		};
-		typedef SmartRefCount<IRasterizerState> IRasterizerStatePtr;
-	#endif
-
-	// Renderer/IDepthStencilState.h
-	#ifndef __RENDERER_IDEPTHSTENCILSTATE_H__
-	#define __RENDERER_IDEPTHSTENCILSTATE_H__
-		class IDepthStencilState : public IState
-		{
-		public:
-			static inline const DepthStencilState &getDefaultDepthStencilState()
-			{
-				static const Renderer::DepthStencilState DEPTH_STENCIL_STATE =
-				{
-					true,
-					Renderer::DepthWriteMask::ALL,
-					Renderer::ComparisonFunc::LESS,
-					false,
-					0xff,
-					0xff,
-					{
-						Renderer::StencilOp::KEEP,
-						Renderer::StencilOp::KEEP,
-						Renderer::StencilOp::KEEP,
-						Renderer::ComparisonFunc::ALWAYS
-					},
-					{
-						Renderer::StencilOp::KEEP,
-						Renderer::StencilOp::KEEP,
-						Renderer::StencilOp::KEEP,
-						Renderer::ComparisonFunc::ALWAYS
-					}
-				};
-				return DEPTH_STENCIL_STATE;
-			}
-		public:
-			virtual ~IDepthStencilState();
-		protected:
-			explicit IDepthStencilState(IRenderer &renderer);
-			explicit IDepthStencilState(const IDepthStencilState &source);
-			IDepthStencilState &operator =(const IDepthStencilState &source);
-		};
-		typedef SmartRefCount<IDepthStencilState> IDepthStencilStatePtr;
-	#endif
-
-	// Renderer/IBlendState.h
-	#ifndef __RENDERER_IBLENDSTATE_H__
-	#define __RENDERER_IBLENDSTATE_H__
-		class IBlendState : public IState
-		{
-		public:
-			static inline const BlendState &getDefaultBlendState()
-			{
-				static const Renderer::BlendState BLEND_STATE =
-				{
-					false,
-					false,
-					{
-						{
-							false,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::ColorWriteEnable::ALL,
-						},
-						{
-							false,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::ColorWriteEnable::ALL,
-						},
-						{
-							false,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::ColorWriteEnable::ALL,
-						},
-						{
-							false,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::ColorWriteEnable::ALL,
-						},
-						{
-							false,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::ColorWriteEnable::ALL,
-						},
-						{
-							false,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::ColorWriteEnable::ALL,
-						},
-						{
-							false,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::ColorWriteEnable::ALL,
-						},
-						{
-							false,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::Blend::ONE,
-							Renderer::Blend::ZERO,
-							Renderer::BlendOp::ADD,
-							Renderer::ColorWriteEnable::ALL,
-						},
-					}
-				};
-				return BLEND_STATE;
-			}
-		public:
-			virtual ~IBlendState();
-		protected:
-			explicit IBlendState(IRenderer &renderer);
-			explicit IBlendState(const IBlendState &source);
-			IBlendState &operator =(const IBlendState &source);
-		};
-		typedef SmartRefCount<IBlendState> IBlendStatePtr;
 	#endif
 
 	// Renderer/ISamplerState.h

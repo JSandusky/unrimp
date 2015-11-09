@@ -87,12 +87,6 @@ namespace Renderer
 		// IState
 		uint32_t currentNumberOfPipelineStates;					///< Current number of pipeline state (PSO) instances
 		uint32_t numberOfCreatedPipelineStates;					///< Number of created pipeline state (PSO) instances
-		uint32_t currentNumberOfRasterizerStates;				///< Current number of rasterizer state (rasterizer stage (RS)) instances
-		uint32_t numberOfCreatedRasterizerStates;				///< Number of created rasterizer state (rasterizer stage (RS)) instances
-		uint32_t currentNumberOfDepthStencilStates;				///< Current number of depth stencil state (output-merger (OM) stage) instances
-		uint32_t numberOfCreatedDepthStencilStates;				///< Number of created depth stencil state (output-merger (OM) stage) instances
-		uint32_t currentNumberOfBlendStates;					///< Current number of blend state (output-merger (OM) stage) instances
-		uint32_t numberOfCreatedBlendStates;					///< Number of created blend state (output-merger (OM) stage) instances
 		uint32_t currentNumberOfSamplerStates;					///< Current number of sampler state instances
 		uint32_t numberOfCreatedSamplerStates;					///< Number of created sampler state instances
 		// IShader

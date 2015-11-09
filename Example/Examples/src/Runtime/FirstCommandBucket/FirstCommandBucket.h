@@ -91,7 +91,6 @@ private:
 	RendererRuntime::CommandBucket<int> mTransparentCommandBucket;
 	// Renderer resources
 	Renderer::IRootSignaturePtr	mRootSignature;
-	Renderer::IPipelineStatePtr	mPipelineState;
 	Renderer::IUniformBufferPtr	mUniformBufferDynamicVs;
 	Renderer::IVertexArrayPtr	mSolidVertexArray;
 	Renderer::IVertexArrayPtr	mTransparentVertexArray;

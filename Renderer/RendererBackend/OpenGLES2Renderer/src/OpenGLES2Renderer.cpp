@@ -327,24 +327,6 @@ namespace OpenGLES2Renderer
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::IRasterizerState *OpenGLES2Renderer::createRasterizerState(const Renderer::RasterizerState&)
-	{
-		// TODO(co) Remove this method
-		return nullptr;
-	}
-
-	Renderer::IDepthStencilState *OpenGLES2Renderer::createDepthStencilState(const Renderer::DepthStencilState&)
-	{
-		// TODO(co) Remove this method
-		return nullptr;
-	}
-
-	Renderer::IBlendState *OpenGLES2Renderer::createBlendState(const Renderer::BlendState&)
-	{
-		// TODO(co) Remove this method
-		return nullptr;
-	}
-
 	Renderer::ISamplerState *OpenGLES2Renderer::createSamplerState(const Renderer::SamplerState &samplerState)
 	{
 		return new SamplerState(*this, samplerState);
@@ -689,11 +671,6 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::rsSetState(Renderer::IRasterizerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
@@ -806,16 +783,6 @@ namespace OpenGLES2Renderer
 				}
 			}
 		}
-	}
-
-	void OpenGLES2Renderer::omSetDepthStencilState(Renderer::IDepthStencilState*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void OpenGLES2Renderer::omSetBlendState(Renderer::IBlendState*)
-	{
-		// TODO(co) Remove this method
 	}
 
 

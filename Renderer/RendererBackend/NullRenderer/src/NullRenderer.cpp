@@ -307,24 +307,6 @@ namespace NullRenderer
 		return new PipelineState(*this, pipelineState);
 	}
 
-	Renderer::IRasterizerState *NullRenderer::createRasterizerState(const Renderer::RasterizerState &)
-	{
-		// TODO(co) Remove this method
-		return nullptr;
-	}
-
-	Renderer::IDepthStencilState *NullRenderer::createDepthStencilState(const Renderer::DepthStencilState &)
-	{
-		// TODO(co) Remove this method
-		return nullptr;
-	}
-
-	Renderer::IBlendState *NullRenderer::createBlendState(const Renderer::BlendState &)
-	{
-		// TODO(co) Remove this method
-		return nullptr;
-	}
-
 	Renderer::ISamplerState *NullRenderer::createSamplerState(const Renderer::SamplerState &)
 	{
 		return new SamplerState(*this);
@@ -461,11 +443,6 @@ namespace NullRenderer
 		// Nothing to do in here
 	}
 
-	void NullRenderer::rsSetState(Renderer::IRasterizerState*)
-	{
-		// TODO(co) Remove this method
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Output-merger (OM) stage                              ]
@@ -510,16 +487,6 @@ namespace NullRenderer
 				// That's all folks!
 			}
 		}
-	}
-
-	void NullRenderer::omSetDepthStencilState(Renderer::IDepthStencilState*)
-	{
-		// TODO(co) Remove this method
-	}
-
-	void NullRenderer::omSetBlendState(Renderer::IBlendState*)
-	{
-		// TODO(co) Remove this method
 	}
 
 

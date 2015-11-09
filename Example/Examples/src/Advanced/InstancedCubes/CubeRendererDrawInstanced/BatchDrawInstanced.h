@@ -118,7 +118,6 @@ private:
 	Renderer::IRendererPtr		mRenderer;						///< Owner renderer instance, can be a null pointer
 	uint32_t					mNumberOfCubeInstances;			///< Number of cube instances
 	Renderer::ITextureBufferPtr	mTextureBufferPerInstanceData;	///< Texture buffer with per instance data (used via vertex texture fetch), each entry can contain a null pointer
-	Renderer::IBlendStatePtr	mBlendState;					///< Blend state, can be a null pointer
 	Renderer::IPipelineStatePtr	mPipelineState;					///< Pipeline state object (PSO), can be a null pointer
 
 

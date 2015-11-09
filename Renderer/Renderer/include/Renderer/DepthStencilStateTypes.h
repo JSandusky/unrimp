@@ -94,7 +94,7 @@ namespace Renderer
 	*
 	*  @note
 	*    - This depth stencil operation description maps directly to Direct3D 10 & 11 & 12, do not change it
-	*    - If you want to know how the default values were chosen, have a look into the "Renderer::IDepthStencilState::getDefaultDepthStencilState()"-implementation
+	*    - If you want to know how the default values were chosen, have a look into the "Renderer::DepthStencilStateBuilder::getDefaultDepthStencilState()"-implementation
 	*
 	*  @see
 	*    - "D3D12_DEPTH_STENCILOP_DESC"-documentation for details
@@ -114,7 +114,7 @@ namespace Renderer
 	*  @note
 	*    - This depth stencil state maps directly to Direct3D 10 & 11 & 12, do not change it
 	*    - This also means that "int" is used over "bool" because in Direct3D it's defined this way
-	*    - If you want to know how the default values were chosen, have a look into the "Renderer::IDepthStencilState::getDefaultDepthStencilState()"-implementation
+	*    - If you want to know how the default values were chosen, have a look into the "Renderer::DepthStencilStateBuilder::getDefaultDepthStencilState()"-implementation
 	*
 	*  @see
 	*    - "D3D12_DEPTH_STENCIL_DESC"-documentation for details

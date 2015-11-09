@@ -27,11 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/IBlendState.h"
 #include "Renderer/BlendStateTypes.h"
-#include "Renderer/IRasterizerState.h"
 #include "Renderer/VertexArrayTypes.h"
-#include "Renderer/IDepthStencilState.h"
 #include "Renderer/RasterizerStateTypes.h"
 #include "Renderer/DepthStencilStateTypes.h"
 

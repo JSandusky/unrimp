@@ -122,7 +122,6 @@ private:
 	Renderer::IRendererPtr		mRenderer;				///< Owner renderer instance, can be a null pointer
 	uint32_t					mNumberOfCubeInstances;	///< Number of cube instances
 	Renderer::IVertexArrayPtr	mVertexArray;			///< Vertex array object (VAO), can be a null pointer
-	Renderer::IBlendStatePtr	mBlendState;			///< Blend state, can be a null pointer
 	Renderer::IPipelineStatePtr	mPipelineState;			///< Pipeline state object (PSO), can be a null pointer
 
 

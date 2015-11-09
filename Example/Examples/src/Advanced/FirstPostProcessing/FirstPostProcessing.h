@@ -111,11 +111,10 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::ITexture2DPtr			mTexture2D;			///< 2D texture, can be a null pointer
-	Renderer::IFramebufferPtr		mFramebuffer;		///< Framebuffer object (FBO), can be a null pointer
-	Renderer::ISamplerStatePtr		mSamplerState;		///< Sampler state, can be a null pointer
-	Renderer::IRootSignaturePtr		mRootSignature;		///< Root signature, can be a null pointer
-	Renderer::IDepthStencilStatePtr	mDepthStencilState;	///< Depth stencil state, can be a null pointer
+	Renderer::ITexture2DPtr		mTexture2D;		///< 2D texture, can be a null pointer
+	Renderer::IFramebufferPtr	mFramebuffer;	///< Framebuffer object (FBO), can be a null pointer
+	Renderer::ISamplerStatePtr	mSamplerState;	///< Sampler state, can be a null pointer
+	Renderer::IRootSignaturePtr	mRootSignature;	///< Root signature, can be a null pointer
 	// Scene rendering
 	Renderer::IPipelineStatePtr mPipelineStateSceneRendering;	///< Pipeline state object (PSO) for scene rendering, can be a null pointer
 	Renderer::IVertexArrayPtr   mVertexArraySceneRendering;		///< Vertex array object (VAO) for scene rendering, can be a null pointer
