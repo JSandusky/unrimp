@@ -26,14 +26,11 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\NullRenderer\BlendState.h" />
-    <ClInclude Include="include\NullRenderer\DepthStencilState.h" />
     <ClInclude Include="include\NullRenderer\Framebuffer.h" />
     <ClInclude Include="include\NullRenderer\IndexBuffer.h" />
     <ClInclude Include="include\NullRenderer\NullDebug.h" />
     <ClInclude Include="include\NullRenderer\NullRenderer.h" />
     <ClInclude Include="include\NullRenderer\PipelineState.h" />
-    <ClInclude Include="include\NullRenderer\RasterizerState.h" />
     <ClInclude Include="include\NullRenderer\RootSignature.h" />
     <ClInclude Include="include\NullRenderer\SamplerState.h" />
     <ClInclude Include="include\NullRenderer\Shader\FragmentShader.h" />
@@ -52,13 +49,10 @@
     <ClInclude Include="include\NullRenderer\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\BlendState.cpp" />
-    <ClCompile Include="src\DepthStencilState.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\NullRenderer.cpp" />
     <ClCompile Include="src\PipelineState.cpp" />
-    <ClCompile Include="src\RasterizerState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\Shader\FragmentShader.cpp" />

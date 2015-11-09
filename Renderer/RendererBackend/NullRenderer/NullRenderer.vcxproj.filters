@@ -59,9 +59,6 @@
     <ClInclude Include="include\NullRenderer\NullRenderer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\NullRenderer\RasterizerState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\NullRenderer\SamplerState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -81,12 +78,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\NullRenderer\VertexBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\NullRenderer\BlendState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\NullRenderer\DepthStencilState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\NullRenderer\PipelineState.h">
@@ -130,9 +121,6 @@
     <ClCompile Include="src\NullRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\RasterizerState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SamplerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -152,12 +140,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BlendState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DepthStencilState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PipelineState.cpp">

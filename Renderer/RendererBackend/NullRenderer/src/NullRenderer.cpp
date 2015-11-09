@@ -26,7 +26,6 @@
 #include "NullRenderer/Texture2D.h"
 #include "NullRenderer/Texture2DArray.h"
 #include "NullRenderer/IndexBuffer.h"
-#include "NullRenderer/BlendState.h"
 #include "NullRenderer/SamplerState.h"
 #include "NullRenderer/TextureBuffer.h"
 #include "NullRenderer/VertexBuffer.h"
@@ -35,8 +34,6 @@
 #include "NullRenderer/PipelineState.h"
 #include "NullRenderer/SwapChain.h"
 #include "NullRenderer/Framebuffer.h"
-#include "NullRenderer/RasterizerState.h"
-#include "NullRenderer/DepthStencilState.h"
 #include "NullRenderer/Shader/Program.h"
 #include "NullRenderer/Shader/ShaderLanguage.h"
 #include "NullRenderer/Shader/UniformBuffer.h"
@@ -312,17 +309,20 @@ namespace NullRenderer
 
 	Renderer::IRasterizerState *NullRenderer::createRasterizerState(const Renderer::RasterizerState &)
 	{
-		return new RasterizerState(*this);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
 	Renderer::IDepthStencilState *NullRenderer::createDepthStencilState(const Renderer::DepthStencilState &)
 	{
-		return new DepthStencilState(*this);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
 	Renderer::IBlendState *NullRenderer::createBlendState(const Renderer::BlendState &)
 	{
-		return new BlendState(*this);
+		// TODO(co) Remove this method
+		return nullptr;
 	}
 
 	Renderer::ISamplerState *NullRenderer::createSamplerState(const Renderer::SamplerState &)
@@ -461,14 +461,9 @@ namespace NullRenderer
 		// Nothing to do in here
 	}
 
-	void NullRenderer::rsSetState(Renderer::IRasterizerState *rasterizerState)
+	void NullRenderer::rsSetState(Renderer::IRasterizerState*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != rasterizerState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *rasterizerState)
-		}
+		// TODO(co) Remove this method
 	}
 
 
@@ -517,24 +512,14 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::omSetDepthStencilState(Renderer::IDepthStencilState *depthStencilState)
+	void NullRenderer::omSetDepthStencilState(Renderer::IDepthStencilState*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != depthStencilState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *depthStencilState)
-		}
+		// TODO(co) Remove this method
 	}
 
-	void NullRenderer::omSetBlendState(Renderer::IBlendState *blendState)
+	void NullRenderer::omSetBlendState(Renderer::IBlendState*)
 	{
-		// Nothing to do in here, the following is just for debugging
-		if (nullptr != blendState)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *blendState)
-		}
+		// TODO(co) Remove this method
 	}
 
 

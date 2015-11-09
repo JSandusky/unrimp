@@ -41,11 +41,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
-	src/BlendState.cpp
-	src/DepthStencilState.cpp
 	src/Framebuffer.cpp
 	src/IndexBuffer.cpp
-	src/RasterizerState.cpp
 	src/NullRenderer.cpp
 	src/PipelineState.cpp
 	src/SamplerState.cpp
