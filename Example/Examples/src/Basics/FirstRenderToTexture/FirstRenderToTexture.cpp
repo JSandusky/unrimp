@@ -61,7 +61,7 @@ void FirstRenderToTexture::onInitialization()
 
 		// Create the texture instance, but without providing texture data (we use the texture as render target)
 		// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
-		// -> Required for Direct3D 9, Direct3D 10 and Direct3D 11
+		// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 		// -> Not required for OpenGL and OpenGL ES 2
 		Renderer::ITexture *texture2D = mTexture2D = renderer->createTexture2D(16, 16, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET);
 
