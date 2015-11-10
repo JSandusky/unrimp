@@ -42,7 +42,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D12Renderer &direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum) :
+	Texture2D::Texture2D(Direct3D12Renderer &direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue) :
 		ITexture2D(direct3D12Renderer, width, height),
 		mDxgiFormat(Mapping::getDirect3D12Format(textureFormat)),
 		mD3D12Resource(nullptr),
@@ -73,6 +73,14 @@ namespace Direct3D12Renderer
 		d3d12ResourceDesc.SampleDesc.Quality = 0;
 		d3d12ResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 
+		// If we don't pass a clear value, we later on get the following debug message: "ID3D12CommandList::ClearRenderTargetView: The application did not pass any clear value to resource creation. The clear operation is typically slower as a result; but will still clear to the desired value. [ EXECUTION WARNING #820: CLEARRENDERTARGETVIEW_MISMATCHINGCLEARVALUE]"
+		D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
+		depthOptimizedClearValue.Format = d3d12ResourceDesc.Format;
+		if (nullptr != optimizedTextureClearValue)
+		{
+			memcpy(depthOptimizedClearValue.Color, optimizedTextureClearValue->color, sizeof(float) * 4);
+		}
+
 		// TODO(co) This is just first Direct3D 12 texture test, so don't wonder about the nasty synchronization handling
 		const CD3DX12_HEAP_PROPERTIES d3d12XHeapProperties(D3D12_HEAP_TYPE_UPLOAD);
 		if (SUCCEEDED(d3d12Device->CreateCommittedResource(
@@ -80,7 +88,7 @@ namespace Direct3D12Renderer
 			D3D12_HEAP_FLAG_NONE,
 			&d3d12ResourceDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ,
-			nullptr,
+			&depthOptimizedClearValue,
 			IID_PPV_ARGS(&mD3D12Resource))))
 		/*
 		const CD3DX12_HEAP_PROPERTIES d3d12XHeapProperties(D3D12_HEAP_TYPE_DEFAULT);

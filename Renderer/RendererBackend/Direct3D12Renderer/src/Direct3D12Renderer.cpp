@@ -387,9 +387,9 @@ namespace Direct3D12Renderer
 		return new TextureBuffer(*this, numberOfBytes, textureFormat, data, bufferUsage);
 	}
 
-	Renderer::ITexture2D *Direct3D12Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage)
+	Renderer::ITexture2D *Direct3D12Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue)
 	{
-		return new Texture2D(*this, width, height, textureFormat, data, flags, textureUsage);
+		return new Texture2D(*this, width, height, textureFormat, data, flags, textureUsage, optimizedTextureClearValue);
 	}
 
 	Renderer::ITexture2DArray *Direct3D12Renderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage)

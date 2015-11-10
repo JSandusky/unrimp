@@ -364,6 +364,8 @@ namespace Renderer
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*  @param[in] textureUsage
 		*    Indication of the texture usage (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*  @param[in] optimizedTextureClearValue
+		*    Optional optimized texture clear value
 		*
 		*  @return
 		*    The created 2D texture instance, null pointer on error. Release the returned instance if you no longer need it.
@@ -377,7 +379,7 @@ namespace Renderer
 		*  @note
 		*    - Only supported if "Renderer::Capabilities::maximumNumberOf2DTextureArraySlices" is not 0
 		*/
-		virtual ITexture2D *createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
+		virtual ITexture2D *createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
 
 		/**
 		*  @brief

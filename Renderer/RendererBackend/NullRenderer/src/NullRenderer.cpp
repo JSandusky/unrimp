@@ -287,7 +287,7 @@ namespace NullRenderer
 		return new TextureBuffer(*this);
 	}
 
-	Renderer::ITexture2D *NullRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage::Enum)
+	Renderer::ITexture2D *NullRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage::Enum, const Renderer::OptimizedTextureClearValue*)
 	{
 		return new Texture2D(*this, width, height);
 	}

@@ -156,6 +156,26 @@ namespace Renderer
 		};
 	};
 
+	/**
+	*  @brief
+	*    Optimized clear value
+	*
+	*  @see
+	*    - "ID3D12Device::CreateCommittedResource method" documentation at https://msdn.microsoft.com/de-de/library/windows/desktop/dn899178%28v=vs.85%29.aspx
+	*/
+	struct OptimizedTextureClearValue
+	{
+		union
+		{
+			float color[4];
+			struct DepthStencil
+			{
+				float depth;
+				uint8_t stencil;
+			};
+		};
+	};
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

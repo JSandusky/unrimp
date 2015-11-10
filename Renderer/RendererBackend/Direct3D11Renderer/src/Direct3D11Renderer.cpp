@@ -346,7 +346,7 @@ namespace Direct3D11Renderer
 		return new TextureBuffer(*this, numberOfBytes, textureFormat, data, bufferUsage);
 	}
 
-	Renderer::ITexture2D *Direct3D11Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage)
+	Renderer::ITexture2D *Direct3D11Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage, const Renderer::OptimizedTextureClearValue*)
 	{
 		return new Texture2D(*this, width, height, textureFormat, data, flags, textureUsage);
 	}

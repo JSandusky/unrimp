@@ -433,7 +433,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITexture2D *OpenGLRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum)
+	Renderer::ITexture2D *OpenGLRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum, const Renderer::OptimizedTextureClearValue*)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
 
