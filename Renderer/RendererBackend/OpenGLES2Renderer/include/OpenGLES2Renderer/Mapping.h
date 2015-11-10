@@ -78,11 +78,13 @@ namespace OpenGLES2Renderer
 		*
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
+		*  @param[in] hasMipmaps
+		*    Are mipmaps available?
 		*
 		*  @return
 		*    OpenGL ES 2 minification filter mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2MinFilterMode(Renderer::FilterMode::Enum filterMode);
+		static int getOpenGLES2MinFilterMode(Renderer::FilterMode::Enum filterMode, bool hasMipmaps);
 
 		/**
 		*  @brief

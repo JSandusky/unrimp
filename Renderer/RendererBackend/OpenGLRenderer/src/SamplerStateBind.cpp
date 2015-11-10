@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	SamplerStateBind::SamplerStateBind(OpenGLRenderer &openGLRenderer, const Renderer::SamplerState &samplerState) :
 		SamplerState(openGLRenderer),
 		mOpenGLMagFilterMode(Mapping::getOpenGLMagFilterMode(samplerState.filter)),
-		mOpenGLMinFilterMode(Mapping::getOpenGLMinFilterMode(samplerState.filter)),
+		mOpenGLMinFilterMode(Mapping::getOpenGLMinFilterMode(samplerState.filter, samplerState.maxLOD > 0.0f)),
 		mOpenGLTextureAddressModeS(Mapping::getOpenGLTextureAddressMode(samplerState.addressU)),
 		mOpenGLTextureAddressModeT(Mapping::getOpenGLTextureAddressMode(samplerState.addressV)),
 		mOpenGLTextureAddressModeR(Mapping::getOpenGLTextureAddressMode(samplerState.addressW)),

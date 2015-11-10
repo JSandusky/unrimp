@@ -76,16 +76,10 @@ void FirstMultipleRenderTargets::onInitialization()
 			mFramebuffer = renderer->createFramebuffer(NUMBER_OF_TEXTURES, texture2D);
 
 			{ // Create sampler state
-			  // -> Our texture does not have any mipmaps, set "Renderer::SamplerState::MaxLOD" to zero
-			  //    in order to ensure a correct behaviour across the difference graphics APIs
-			  // -> When not doing this you usually have no issues when using OpenGL, OpenGL ES 2, Direct 10,
-			  //    Direct3D 11 or Direct3D 9 with the "ps_2_0"-profile, but when using Direct3D 9 with the
-			  //    "ps_3_0"-profile you might get into trouble due to another internal graphics API behaviour
 				Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 				samplerState.filter   = Renderer::FilterMode::MIN_MAG_MIP_POINT;
 				samplerState.addressU = Renderer::TextureAddressMode::WRAP;
 				samplerState.addressV = Renderer::TextureAddressMode::WRAP;
-				samplerState.maxLOD   = 0.0f;	// We don't use mipmaps
 				mSamplerState = renderer->createSamplerState(samplerState);
 			}
 

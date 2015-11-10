@@ -42,7 +42,7 @@ namespace OpenGLES2Renderer
 	SamplerState::SamplerState(OpenGLES2Renderer &openGLES2Renderer, const Renderer::SamplerState &samplerState) :
 		ISamplerState(openGLES2Renderer),
 		mOpenGLMagFilterMode(Mapping::getOpenGLES2MagFilterMode(samplerState.filter)),
-		mOpenGLMinFilterMode(Mapping::getOpenGLES2MinFilterMode(samplerState.filter)),
+		mOpenGLMinFilterMode(Mapping::getOpenGLES2MinFilterMode(samplerState.filter, samplerState.maxLOD > 0.0f)),
 		mOpenGLTextureAddressModeS(Mapping::getOpenGLES2TextureAddressMode(samplerState.addressU)),
 		mOpenGLTextureAddressModeT(Mapping::getOpenGLES2TextureAddressMode(samplerState.addressV)),
 		mOpenGLTextureAddressModeR(Mapping::getOpenGLES2TextureAddressMode(samplerState.addressW)),

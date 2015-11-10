@@ -98,63 +98,63 @@ namespace OpenGLRenderer
 		}
 	}
 
-	int Mapping::getOpenGLMinFilterMode(Renderer::FilterMode::Enum filterMode)
+	int Mapping::getOpenGLMinFilterMode(Renderer::FilterMode::Enum filterMode, bool hasMipmaps)
 	{
 		switch (filterMode)
 		{
 			case Renderer::FilterMode::MIN_MAG_MIP_POINT:
-				return GL_NEAREST_MIPMAP_NEAREST;
+				return hasMipmaps ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
 
 			case Renderer::FilterMode::MIN_MAG_POINT_MIP_LINEAR:
-				return GL_NEAREST_MIPMAP_LINEAR;
+				return hasMipmaps ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
 
 			case Renderer::FilterMode::MIN_POINT_MAG_LINEAR_MIP_POINT:
-				return GL_NEAREST_MIPMAP_NEAREST;
+				return hasMipmaps ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
 
 			case Renderer::FilterMode::MIN_POINT_MAG_MIP_LINEAR:
-				return GL_NEAREST_MIPMAP_LINEAR;
+				return hasMipmaps ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
 
 			case Renderer::FilterMode::MIN_LINEAR_MAG_MIP_POINT:
-				return GL_LINEAR_MIPMAP_NEAREST;
+				return hasMipmaps ? GL_LINEAR_MIPMAP_NEAREST : GL_LINEAR;
 
 			case Renderer::FilterMode::MIN_LINEAR_MAG_POINT_MIP_LINEAR:
-				return GL_LINEAR_MIPMAP_LINEAR;
+				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
 			case Renderer::FilterMode::MIN_MAG_LINEAR_MIP_POINT:
-				return GL_LINEAR_MIPMAP_NEAREST;
+				return hasMipmaps ? GL_LINEAR_MIPMAP_NEAREST : GL_LINEAR;
 
 			case Renderer::FilterMode::MIN_MAG_MIP_LINEAR:
-				return GL_LINEAR_MIPMAP_LINEAR;
+				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
 			case Renderer::FilterMode::ANISOTROPIC:
-				return GL_LINEAR_MIPMAP_LINEAR;	// There's no special setting in OpenGL
+				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;	// There's no special setting in OpenGL
 
 			case Renderer::FilterMode::COMPARISON_MIN_MAG_MIP_POINT:
-				return GL_NEAREST_MIPMAP_NEAREST;
+				return hasMipmaps ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
 
 			case Renderer::FilterMode::COMPARISON_MIN_MAG_POINT_MIP_LINEAR:
-				return GL_NEAREST_MIPMAP_LINEAR;
+				return hasMipmaps ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
 
 			case Renderer::FilterMode::COMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT:
-				return GL_NEAREST_MIPMAP_NEAREST;
+				return hasMipmaps ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
 
 			case Renderer::FilterMode::COMPARISON_MIN_POINT_MAG_MIP_LINEAR:
-				return GL_NEAREST_MIPMAP_LINEAR;
+				return hasMipmaps ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
 
 			case Renderer::FilterMode::COMPARISON_MIN_LINEAR_MAG_MIP_POINT:
-				return GL_LINEAR_MIPMAP_NEAREST;
+				return hasMipmaps ? GL_LINEAR_MIPMAP_NEAREST : GL_LINEAR;
 
 			case Renderer::FilterMode::COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR:
-				return GL_LINEAR_MIPMAP_LINEAR;
+				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
 			case Renderer::FilterMode::COMPARISON_MIN_MAG_LINEAR_MIP_POINT:
-				return GL_LINEAR_MIPMAP_NEAREST;
+				return hasMipmaps ? GL_LINEAR_MIPMAP_NEAREST : GL_LINEAR;
 
 			case Renderer::FilterMode::COMPARISON_MIN_MAG_MIP_LINEAR:
-				return GL_LINEAR_MIPMAP_LINEAR;
+				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 
 			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
-				return GL_LINEAR_MIPMAP_LINEAR;	// There's no special setting in OpenGL
+				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;	// There's no special setting in OpenGL
 
 			default:
 				return GL_NEAREST;	// We should never be in here

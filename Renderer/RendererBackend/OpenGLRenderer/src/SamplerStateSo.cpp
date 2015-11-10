@@ -45,7 +45,7 @@ namespace OpenGLRenderer
 
 		// Renderer::SamplerState::filter
 		glSamplerParameteri(mOpenGLSampler, GL_TEXTURE_MAG_FILTER, Mapping::getOpenGLMagFilterMode(samplerState.filter));
-		glSamplerParameteri(mOpenGLSampler, GL_TEXTURE_MIN_FILTER, Mapping::getOpenGLMinFilterMode(samplerState.filter));
+		glSamplerParameteri(mOpenGLSampler, GL_TEXTURE_MIN_FILTER, Mapping::getOpenGLMinFilterMode(samplerState.filter, samplerState.maxLOD > 0.0f));
 
 		// Renderer::SamplerState::addressU
 		glSamplerParameteri(mOpenGLSampler, GL_TEXTURE_WRAP_S, Mapping::getOpenGLTextureAddressMode(samplerState.addressU));

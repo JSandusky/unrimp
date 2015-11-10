@@ -77,11 +77,13 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
+		*  @param[in] hasMipmaps
+		*    Are mipmaps available?
 		*
 		*  @return
 		*    OpenGL minification filter mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLMinFilterMode(Renderer::FilterMode::Enum filterMode);
+		static int getOpenGLMinFilterMode(Renderer::FilterMode::Enum filterMode, bool hasMipmaps);
 
 		/**
 		*  @brief
