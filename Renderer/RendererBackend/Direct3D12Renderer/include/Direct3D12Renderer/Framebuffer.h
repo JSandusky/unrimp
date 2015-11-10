@@ -33,8 +33,7 @@
 //[-------------------------------------------------------]
 //[ Forward declaration                                   ]
 //[-------------------------------------------------------]
-// struct ID3D12RenderTargetView;	// TODO(co) Direct3D 12
-// struct ID3D12DepthStencilView;	// TODO(co) Direct3D 12
+struct ID3D12DescriptorHeap;
 namespace Renderer
 {
 	class ITexture;
@@ -58,6 +57,9 @@ namespace Direct3D12Renderer
 	/**
 	*  @brief
 	*    Direct3D 12 framebuffer class
+	*
+	*  @todo
+	*    - TODO(co) "D3D12GraphicsCommandList::OMSetRenderTargets()" supports using a single Direct3D 12 render target view descriptor heap instance with multiple targets in it, use it
 	*/
 	class Framebuffer : public Renderer::IFramebuffer
 	{
@@ -103,23 +105,27 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D 12 render target views
+		*    Return the Direct3D 12 render target view descriptor heap instance
 		*
 		*  @return
-		*    The Direct3D 12 render target views, can be a null pointer, do not release the returned instances unless you added an own reference to it
+		*    The Direct3D 12 render target view descriptor heap instance, null pointer on error, do not release the returned instance unless you added an own reference to it
+		*
+		*  @note
+		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
-		// TODO(co) Direct3D 12
-		//inline ID3D12RenderTargetView **getD3D12RenderTargetViews() const;
+		inline ID3D12DescriptorHeap **getD3D12DescriptorHeapRenderTargetViews() const;
 
 		/**
 		*  @brief
-		*    Return the Direct3D 12 depth stencil view
+		*    Return the Direct3D 12 depth stencil view descriptor heap instance
 		*
 		*  @return
-		*    The Direct3D 12 depth stencil view, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D 12 depth stencil view descriptor heap instance, null pointer on error, do not release the returned instance unless you added an own reference to it
+		*
+		*  @note
+		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
-		// TODO(co) Direct3D 12
-		//inline ID3D12DepthStencilView *getD3D12DepthStencilView() const;
+		inline ID3D12DescriptorHeap *getD3D12DescriptorHeapDepthStencilView() const;
 
 
 	//[-------------------------------------------------------]
@@ -147,9 +153,8 @@ namespace Direct3D12Renderer
 		uint32_t			 mWidth;					///< The framebuffer width
 		uint32_t			 mHeight;					///< The framebuffer height
 		// Direct3D 12 part
-		// TODO(co) Direct3D 12
-		//ID3D12RenderTargetView **mD3D12RenderTargetViews;	///< The Direct3D 12 render target views (we keep a reference to it), can be a null pointer or can contain null pointers, if not a null pointer there must be at least "m_nNumberOfColorTextures" views in the provided C-array of pointers
-		//ID3D12DepthStencilView  *mD3D12DepthStencilView;	///< The Direct3D 12 depth stencil view (we keep a reference to it), can be a null pointer
+		ID3D12DescriptorHeap** mD3D12DescriptorHeapRenderTargetViews;	///< The Direct3D 12 render target view descriptor heap instance, null pointer on error
+		ID3D12DescriptorHeap*  mD3D12DescriptorHeapDepthStencilView;	///< The Direct3D 12 depth stencil view descriptor heap instance, null pointer on error
 
 
 	};

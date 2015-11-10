@@ -77,7 +77,6 @@ struct D3D12_TILE_RANGE_FLAGS;
 struct D3D12_SUBRESOURCE_TILING;
 struct D3D12_SO_DECLARATION_ENTRY;
 struct D3D12_COMMAND_SIGNATURE_DESC;
-struct D3D12_RENDER_TARGET_VIEW_DESC;
 struct D3D12_STREAM_OUTPUT_BUFFER_VIEW;
 struct D3D12_TILED_RESOURCE_COORDINATE;
 struct D3D12_UNORDERED_ACCESS_VIEW_DESC;
@@ -603,6 +602,96 @@ typedef struct D3D12_RESOURCE_BARRIER
 		D3D12_RESOURCE_UAV_BARRIER UAV;
 	};
 } D3D12_RESOURCE_BARRIER;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef enum D3D12_RTV_DIMENSION
+{
+	D3D12_RTV_DIMENSION_UNKNOWN				= 0,
+	D3D12_RTV_DIMENSION_BUFFER				= 1,
+	D3D12_RTV_DIMENSION_TEXTURE1D			= 2,
+	D3D12_RTV_DIMENSION_TEXTURE1DARRAY		= 3,
+	D3D12_RTV_DIMENSION_TEXTURE2D			= 4,
+	D3D12_RTV_DIMENSION_TEXTURE2DARRAY		= 5,
+	D3D12_RTV_DIMENSION_TEXTURE2DMS			= 6,
+	D3D12_RTV_DIMENSION_TEXTURE2DMSARRAY	= 7,
+	D3D12_RTV_DIMENSION_TEXTURE3D			= 8
+} D3D12_RTV_DIMENSION;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_BUFFER_RTV
+{
+	UINT64 FirstElement;
+	UINT NumElements;
+} D3D12_BUFFER_RTV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX1D_RTV
+{
+	UINT MipSlice;
+} D3D12_TEX1D_RTV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX1D_ARRAY_RTV
+{
+	UINT MipSlice;
+	UINT FirstArraySlice;
+	UINT ArraySize;
+} D3D12_TEX1D_ARRAY_RTV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX2D_RTV
+{
+	UINT MipSlice;
+	UINT PlaneSlice;
+} D3D12_TEX2D_RTV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX2DMS_RTV
+{
+	UINT UnusedField_NothingToDefine;
+} D3D12_TEX2DMS_RTV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX2D_ARRAY_RTV
+{
+	UINT MipSlice;
+	UINT FirstArraySlice;
+	UINT ArraySize;
+	UINT PlaneSlice;
+} D3D12_TEX2D_ARRAY_RTV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX2DMS_ARRAY_RTV
+{
+	UINT FirstArraySlice;
+	UINT ArraySize;
+} D3D12_TEX2DMS_ARRAY_RTV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_TEX3D_RTV
+{
+	UINT MipSlice;
+	UINT FirstWSlice;
+	UINT WSize;
+} D3D12_TEX3D_RTV;
+
+// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
+typedef struct D3D12_RENDER_TARGET_VIEW_DESC
+{
+	DXGI_FORMAT Format;
+	D3D12_RTV_DIMENSION ViewDimension;
+	union
+	{
+		D3D12_BUFFER_RTV Buffer;
+		D3D12_TEX1D_RTV Texture1D;
+		D3D12_TEX1D_ARRAY_RTV Texture1DArray;
+		D3D12_TEX2D_RTV Texture2D;
+		D3D12_TEX2D_ARRAY_RTV Texture2DArray;
+		D3D12_TEX2DMS_RTV Texture2DMS;
+		D3D12_TEX2DMS_ARRAY_RTV Texture2DMSArray;
+		D3D12_TEX3D_RTV Texture3D;
+	};
+} D3D12_RENDER_TARGET_VIEW_DESC;
 
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
 typedef enum D3D12_COMMAND_LIST_TYPE

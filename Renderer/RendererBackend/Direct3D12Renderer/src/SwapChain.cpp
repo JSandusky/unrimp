@@ -40,8 +40,8 @@ namespace Direct3D12Renderer
 	SwapChain::SwapChain(Direct3D12Renderer &direct3D12Renderer, handle nativeWindowHandle) :
 		ISwapChain(direct3D12Renderer),
 		mDxgiSwapChain3(nullptr),
-		mD3D12DescriptorHeapRtv(nullptr),
-		mD3D12DescriptorHeapDsv(nullptr),
+		mD3D12DescriptorHeapRenderTargetView(nullptr),
+		mD3D12DescriptorHeapDepthStencilView(nullptr),
 		mRenderTargetViewDescriptorSize(0),
 		mD3D12ResourceDepthStencil(nullptr),
 		mFrameIndex(0),
@@ -215,19 +215,19 @@ namespace Direct3D12Renderer
 			}
 
 			// Assign a debug name to the Direct3D 12 descriptor heaps
-			if (nullptr != mD3D12DescriptorHeapRtv)
+			if (nullptr != mD3D12DescriptorHeapRenderTargetView)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D12DescriptorHeapRtv->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12DescriptorHeapRtv->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12DescriptorHeapRenderTargetView->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mD3D12DescriptorHeapRenderTargetView->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
-			if (nullptr != mD3D12DescriptorHeapDsv)
+			if (nullptr != mD3D12DescriptorHeapDepthStencilView)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D12DescriptorHeapDsv->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12DescriptorHeapDsv->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12DescriptorHeapDepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mD3D12DescriptorHeapDepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
 	}
@@ -436,12 +436,12 @@ namespace Direct3D12Renderer
 				d3d12DescriptorHeapDesc.NumDescriptors	= NUMBER_OF_FRAMES;
 				d3d12DescriptorHeapDesc.Type			= D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 				d3d12DescriptorHeapDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-				if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(&mD3D12DescriptorHeapRtv))))
+				if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(&mD3D12DescriptorHeapRenderTargetView))))
 				{
 					mRenderTargetViewDescriptorSize = d3d12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 					{ // Create frame resources
-						CD3DX12_CPU_DESCRIPTOR_HANDLE d3d12XCpuDescriptorHandle(mD3D12DescriptorHeapRtv->GetCPUDescriptorHandleForHeapStart());
+						CD3DX12_CPU_DESCRIPTOR_HANDLE d3d12XCpuDescriptorHandle(mD3D12DescriptorHeapRenderTargetView->GetCPUDescriptorHandleForHeapStart());
 
 						// Create a RTV for each frame
 						for (UINT frame = 0; frame < NUMBER_OF_FRAMES; ++frame)
@@ -472,7 +472,7 @@ namespace Direct3D12Renderer
 				d3d12DescriptorHeapDesc.NumDescriptors	= 1;
 				d3d12DescriptorHeapDesc.Type			= D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
 				d3d12DescriptorHeapDesc.Flags			= D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-				if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(&mD3D12DescriptorHeapDsv))))
+				if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(&mD3D12DescriptorHeapDepthStencilView))))
 				{
 					D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
 					depthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
@@ -500,7 +500,7 @@ namespace Direct3D12Renderer
 						IID_PPV_ARGS(&mD3D12ResourceDepthStencil)
 						)))
 					{
-						d3d12Device->CreateDepthStencilView(mD3D12ResourceDepthStencil, &depthStencilDesc, mD3D12DescriptorHeapDsv->GetCPUDescriptorHandleForHeapStart());
+						d3d12Device->CreateDepthStencilView(mD3D12ResourceDepthStencil, &depthStencilDesc, mD3D12DescriptorHeapDepthStencilView->GetCPUDescriptorHandleForHeapStart());
 					}
 					else
 					{
@@ -540,15 +540,15 @@ namespace Direct3D12Renderer
 		}
 
 		// Release Direct3D 12 descriptor heap
-		if (nullptr != mD3D12DescriptorHeapRtv)
+		if (nullptr != mD3D12DescriptorHeapRenderTargetView)
 		{
-			mD3D12DescriptorHeapRtv->Release();
-			mD3D12DescriptorHeapRtv = nullptr;
+			mD3D12DescriptorHeapRenderTargetView->Release();
+			mD3D12DescriptorHeapRenderTargetView = nullptr;
 		}
-		if (nullptr != mD3D12DescriptorHeapDsv)
+		if (nullptr != mD3D12DescriptorHeapDepthStencilView)
 		{
-			mD3D12DescriptorHeapDsv->Release();
-			mD3D12DescriptorHeapDsv = nullptr;
+			mD3D12DescriptorHeapDepthStencilView->Release();
+			mD3D12DescriptorHeapDepthStencilView = nullptr;
 		}
 	}
 

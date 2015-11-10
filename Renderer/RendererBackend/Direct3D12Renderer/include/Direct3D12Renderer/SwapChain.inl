@@ -33,14 +33,14 @@ namespace Direct3D12Renderer
 		return mDxgiSwapChain3;
 	}
 
-	inline ID3D12DescriptorHeap *SwapChain::getD3D12DescriptorHeapRtv() const
+	inline ID3D12DescriptorHeap *SwapChain::getD3D12DescriptorHeapRenderTargetView() const
 	{
-		return mD3D12DescriptorHeapRtv;
+		return mD3D12DescriptorHeapRenderTargetView;
 	}
 
-	inline ID3D12DescriptorHeap *SwapChain::getD3D12DescriptorHeapDsv() const
+	inline ID3D12DescriptorHeap *SwapChain::getD3D12DescriptorHeapDepthStencilView() const
 	{
-		return mD3D12DescriptorHeapDsv;
+		return mD3D12DescriptorHeapDepthStencilView;
 	}
 
 	inline UINT SwapChain::getRenderTargetViewDescriptorSize() const

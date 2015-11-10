@@ -28,6 +28,16 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline uint32_t Texture2D::getDxgiFormat() const
+	{
+		return mDxgiFormat;
+	}
+
+	inline ID3D12Resource* Texture2D::getD3D12Resource() const
+	{
+		return mD3D12Resource;
+	}
+
 	inline ID3D12DescriptorHeap* Texture2D::getD3D12DescriptorHeap() const
 	{
 		return mD3D12DescriptorHeap;

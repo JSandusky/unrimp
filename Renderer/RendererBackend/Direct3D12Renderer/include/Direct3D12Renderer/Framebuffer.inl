@@ -33,18 +33,15 @@ namespace Direct3D12Renderer
 		return mNumberOfColorTextures;
 	}
 
-	// TODO(co) Direct3D 12
-	/*
-	inline ID3D12RenderTargetView **Framebuffer::getD3D12RenderTargetViews() const
+	inline ID3D12DescriptorHeap **Framebuffer::getD3D12DescriptorHeapRenderTargetViews() const
 	{
-		return mD3D12RenderTargetViews;
+		return mD3D12DescriptorHeapRenderTargetViews;
 	}
 
-	inline ID3D12DepthStencilView *Framebuffer::getD3D12DepthStencilView() const
+	inline ID3D12DescriptorHeap *Framebuffer::getD3D12DescriptorHeapDepthStencilView() const
 	{
-		return mD3D12DepthStencilView;
+		return mD3D12DescriptorHeapDepthStencilView;
 	}
-	*/
 
 
 //[-------------------------------------------------------]

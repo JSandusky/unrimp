@@ -44,6 +44,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	Texture2D::Texture2D(Direct3D12Renderer &direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum) :
 		ITexture2D(direct3D12Renderer, width, height),
+		mDxgiFormat(Mapping::getDirect3D12Format(textureFormat)),
 		mD3D12Resource(nullptr),
 		mD3D12DescriptorHeap(nullptr)
 	{
@@ -63,10 +64,10 @@ namespace Direct3D12Renderer
 		// Describe and create a texture 2D
 		D3D12_RESOURCE_DESC d3d12ResourceDesc = {};
 		d3d12ResourceDesc.MipLevels = static_cast<UINT16>(numberOfMipmaps);
-		d3d12ResourceDesc.Format = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(textureFormat));
+		d3d12ResourceDesc.Format = static_cast<DXGI_FORMAT>(mDxgiFormat);
 		d3d12ResourceDesc.Width = width;
 		d3d12ResourceDesc.Height = height;
-		d3d12ResourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+		d3d12ResourceDesc.Flags = (flags & Renderer::TextureFlag::RENDER_TARGET) ? D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET : D3D12_RESOURCE_FLAG_NONE;
 		d3d12ResourceDesc.DepthOrArraySize = 1;
 		d3d12ResourceDesc.SampleDesc.Count = 1;
 		d3d12ResourceDesc.SampleDesc.Quality = 0;

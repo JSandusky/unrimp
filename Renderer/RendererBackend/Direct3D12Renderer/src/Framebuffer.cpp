@@ -40,34 +40,29 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **, Renderer::ITexture *depthStencilTexture) :
+	Framebuffer::Framebuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture) :
 		IFramebuffer(direct3D12Renderer),
 		mNumberOfColorTextures(numberOfColorTextures),
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(depthStencilTexture),
 		mWidth(UINT_MAX),
-		mHeight(UINT_MAX)
-		// TODO(co) Direct3D 12
-		//mD3D12RenderTargetViews(nullptr),
-		//mD3D12DepthStencilView(nullptr)
+		mHeight(UINT_MAX),
+		mD3D12DescriptorHeapRenderTargetViews(nullptr),
+		mD3D12DescriptorHeapDepthStencilView(nullptr)
 	{
-		// The Direct3D 12 "ID3D12DeviceContext::OMSetRenderTargets method"-documentation at MSDN http://msdn.microsoft.com/en-us/library/windows/desktop/ff476464%28v=vs.85%29.aspx
-		// says the following about the framebuffer width and height when using multiple render targets
-		//   "All render targets must have the same size in all dimensions (width and height, and depth for 3D or array size for *Array types)"
-		// So, in here I use the smallest width and height as the size of the framebuffer and let Direct3D 12 handle the rest regarding errors.
+		// Get the Direct3D 12 device instance
+		ID3D12Device* d3d12Device = direct3D12Renderer.getD3D12Device();
 
 		// Add a reference to the used color textures
-		// TODO(co) Direct3D 12
-		/*
 		if (mNumberOfColorTextures > 0)
 		{
 			mColorTextures = new Renderer::ITexture*[mNumberOfColorTextures];
-			mD3D12RenderTargetViews = new ID3D12RenderTargetView*[mNumberOfColorTextures];
+			mD3D12DescriptorHeapRenderTargetViews = new ID3D12DescriptorHeap*[mNumberOfColorTextures];
 
 			// Loop through all color textures
-			ID3D12RenderTargetView **d3d12RenderTargetView = mD3D12RenderTargetViews;
+			ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetView = mD3D12DescriptorHeapRenderTargetViews;
 			Renderer::ITexture **colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
-			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorTextures, ++d3d12RenderTargetView)
+			for (Renderer::ITexture **colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorTextures, ++d3d12DescriptorHeapRenderTargetView)
 			{
 				// Valid entry?
 				if (nullptr != *colorTextures)
@@ -93,22 +88,20 @@ namespace Direct3D12Renderer
 							}
 
 							// Get the Direct3D 12 resource
-							ID3D12Resource *d3d12Resource = nullptr;
-							texture2D->getD3D12ShaderResourceView()->GetResource(&d3d12Resource);
-
-							// Get the DXGI format of the 2D texture
-							D3D12_TEXTURE2D_DESC d3d12Texture2DDesc;
-							static_cast<ID3D12Texture2D*>(d3d12Resource)->GetDesc(&d3d12Texture2DDesc);
+							ID3D12Resource *d3d12Resource = texture2D->getD3D12Resource();
 
 							// Create the Direct3D 12 render target view instance
-							D3D12_RENDER_TARGET_VIEW_DESC d3d12RenderTargetViewDesc;
-							d3d12RenderTargetViewDesc.Format			 = d3d12Texture2DDesc.Format;
-							d3d12RenderTargetViewDesc.ViewDimension		 = D3D12_RTV_DIMENSION_TEXTURE2D;
-							d3d12RenderTargetViewDesc.Texture2D.MipSlice = 0;
-							direct3D12Renderer.getD3D12Device()->CreateRenderTargetView(d3d12Resource, &d3d12RenderTargetViewDesc, d3d12RenderTargetView);
-
-							// Release our Direct3D 12 resource reference
-							d3d12Resource->Release();
+							D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
+							d3d12DescriptorHeapDesc.NumDescriptors = 1;
+							d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+							if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(d3d12DescriptorHeapRenderTargetView))))
+							{
+								D3D12_RENDER_TARGET_VIEW_DESC d3d12RenderTargetViewDesc = {};
+								d3d12RenderTargetViewDesc.Format = static_cast<DXGI_FORMAT>(texture2D->getDxgiFormat());
+								d3d12RenderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+								d3d12RenderTargetViewDesc.Texture2D.MipSlice = 0;
+								d3d12Device->CreateRenderTargetView(d3d12Resource, &d3d12RenderTargetViewDesc, (*d3d12DescriptorHeapRenderTargetView)->GetCPUDescriptorHandleForHeapStart());
+							}
 							break;
 						}
 
@@ -132,14 +125,14 @@ namespace Direct3D12Renderer
 						case Renderer::ResourceType::FRAGMENT_SHADER:
 						default:
 							RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: The type of the given color texture at index %d is not supported", colorTexture - colorTextures)
-							*d3d12RenderTargetView = nullptr;
+							*d3d12DescriptorHeapRenderTargetView = nullptr;
 							break;
 					}
 				}
 				else
 				{
 					*colorTexture = nullptr;
-					*d3d12RenderTargetView = nullptr;
+					*d3d12DescriptorHeapRenderTargetView = nullptr;
 				}
 			}
 		}
@@ -166,22 +159,20 @@ namespace Direct3D12Renderer
 					}
 
 					// Get the Direct3D 12 resource
-					ID3D12Resource *d3d12Resource = nullptr;
-					texture2D->getD3D12ShaderResourceView()->GetResource(&d3d12Resource);
-
-					// Get the DXGI format of the 2D texture
-					D3D12_TEXTURE2D_DESC d3d12Texture2DDesc;
-					static_cast<ID3D12Texture2D*>(d3d12Resource)->GetDesc(&d3d12Texture2DDesc);
+					ID3D12Resource *d3d12Resource = texture2D->getD3D12Resource();
 
 					// Create the Direct3D 12 render target view instance
-					D3D12_DEPTH_STENCIL_VIEW_DESC d3d12DepthStencilViewDesc;
-					d3d12DepthStencilViewDesc.Format			 = d3d12Texture2DDesc.Format;
-					d3d12DepthStencilViewDesc.ViewDimension		 = D3D12_DSV_DIMENSION_TEXTURE2D;
-					d3d12DepthStencilViewDesc.Texture2D.MipSlice = 0;
-					direct3D12Renderer.getD3D12Device()->CreateDepthStencilView(d3d12Resource, &d3d12DepthStencilViewDesc, &mD3D12DepthStencilView);
-
-					// Release our Direct3D 12 resource reference
-					d3d12Resource->Release();
+					D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
+					d3d12DescriptorHeapDesc.NumDescriptors = 1;
+					d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+					if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(&mD3D12DescriptorHeapDepthStencilView))))
+					{
+						D3D12_RENDER_TARGET_VIEW_DESC d3d12RenderTargetViewDesc = {};
+						d3d12RenderTargetViewDesc.Format = static_cast<DXGI_FORMAT>(texture2D->getDxgiFormat());
+						d3d12RenderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+						d3d12RenderTargetViewDesc.Texture2D.MipSlice = 0;
+						d3d12Device->CreateRenderTargetView(d3d12Resource, &d3d12RenderTargetViewDesc, mD3D12DescriptorHeapDepthStencilView->GetCPUDescriptorHandleForHeapStart());
+					}
 					break;
 				}
 
@@ -223,29 +214,26 @@ namespace Direct3D12Renderer
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			setDebugName("FBO");
 		#endif
-		*/
 	}
 
 	Framebuffer::~Framebuffer()
 	{
-		// TODO(co) Direct3D 12
-		/*
 		// Release the reference to the used color textures
-		if (nullptr != mD3D12RenderTargetViews)
+		if (nullptr != mD3D12DescriptorHeapRenderTargetViews)
 		{
 			// Release references
-			ID3D12RenderTargetView **d3d12RenderTargetViewsEnd = mD3D12RenderTargetViews + mNumberOfColorTextures;
-			for (ID3D12RenderTargetView **d3d12RenderTargetView = mD3D12RenderTargetViews; d3d12RenderTargetView < d3d12RenderTargetViewsEnd; ++d3d12RenderTargetView)
+			ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetViewsEnd = mD3D12DescriptorHeapRenderTargetViews + mNumberOfColorTextures;
+			for (ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetView = mD3D12DescriptorHeapRenderTargetViews; d3d12DescriptorHeapRenderTargetView < d3d12DescriptorHeapRenderTargetViewsEnd; ++d3d12DescriptorHeapRenderTargetView)
 			{
 				// Valid entry?
-				if (nullptr != *d3d12RenderTargetView)
+				if (nullptr != *d3d12DescriptorHeapRenderTargetView)
 				{
-					(*d3d12RenderTargetView)->Release();
+					(*d3d12DescriptorHeapRenderTargetView)->Release();
 				}
 			}
 
 			// Cleanup
-			delete [] mD3D12RenderTargetViews;
+			delete [] mD3D12DescriptorHeapRenderTargetViews;
 		}
 		if (nullptr != mColorTextures)
 		{
@@ -265,53 +253,49 @@ namespace Direct3D12Renderer
 		}
 
 		// Release the reference to the used depth stencil texture
-		if (nullptr != mD3D12DepthStencilView)
+		if (nullptr != mD3D12DescriptorHeapDepthStencilView)
 		{
 			// Release reference
-			mD3D12DepthStencilView->Release();
+			mD3D12DescriptorHeapDepthStencilView->Release();
 		}
 		if (nullptr != mDepthStencilTexture)
 		{
 			// Release reference
 			mDepthStencilTexture->release();
 		}
-		*/
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Framebuffer::setDebugName(const char *)
+	void Framebuffer::setDebugName(const char* name)
 	{
-		// TODO(co) Direct3D 12
-		/*
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			{ // Assign a debug name to the Direct3D 12 render target view, do also add the index to the name
 				const size_t nameLength = strlen(name) + 5;	// Direct3D 12 supports 8 render targets ("D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT", so: One digit + one [ + one ] + one space + terminating zero = 5 characters)
 				char *nameWithIndex = new char[nameLength];
-				ID3D12RenderTargetView **d3d12RenderTargetViewsEnd = mD3D12RenderTargetViews + mNumberOfColorTextures;
-				for (ID3D12RenderTargetView **d3d12RenderTargetView = mD3D12RenderTargetViews; d3d12RenderTargetView < d3d12RenderTargetViewsEnd; ++d3d12RenderTargetView)
+				ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetViewsEnd = mD3D12DescriptorHeapRenderTargetViews + mNumberOfColorTextures;
+				for (ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetView = mD3D12DescriptorHeapRenderTargetViews; d3d12DescriptorHeapRenderTargetView < d3d12DescriptorHeapRenderTargetViewsEnd; ++d3d12DescriptorHeapRenderTargetView)
 				{
 					// Set the debug name
 					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-					sprintf_s(nameWithIndex, nameLength, "%s [%d]", name, d3d12RenderTargetView - mD3D12RenderTargetViews);
-					(*d3d12RenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-					(*d3d12RenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, nameLength, nameWithIndex);
+					sprintf_s(nameWithIndex, nameLength, "%s [%d]", name, d3d12DescriptorHeapRenderTargetView - mD3D12DescriptorHeapRenderTargetViews);
+					(*d3d12DescriptorHeapRenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+					(*d3d12DescriptorHeapRenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, nameLength, nameWithIndex);
 				}
 				delete [] nameWithIndex;
 			}
 
 			// Assign a debug name to the Direct3D 12 depth stencil view
-			if (nullptr != mD3D12DepthStencilView)
+			if (nullptr != mD3D12DescriptorHeapDepthStencilView)
 			{
 				// Set the debug name
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-				mD3D12DepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D12DepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+				mD3D12DescriptorHeapDepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mD3D12DescriptorHeapDepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 			}
 		#endif
-		*/
 	}
 
 

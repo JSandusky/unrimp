@@ -93,10 +93,28 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D descriptor heap instance
+		*    Return the DXGI format
 		*
 		*  @return
-		*    The Direct3D descriptor heap instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*    The DDXGI format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
+		*/
+		inline uint32_t getDxgiFormat() const;
+
+		/**
+		*  @brief
+		*    Return the Direct3D 12 resource instance
+		*
+		*  @return
+		*    The Direct3D 12 resource instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*/
+		inline ID3D12Resource* getD3D12Resource() const;
+
+		/**
+		*  @brief
+		*    Return the Direct3D 12 descriptor heap instance
+		*
+		*  @return
+		*    The Direct3D 12 descriptor heap instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
 		inline ID3D12DescriptorHeap* getD3D12DescriptorHeap() const;
 
@@ -112,6 +130,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		uint32_t			  mDxgiFormat;	//// DXGI format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 		ID3D12Resource*		  mD3D12Resource;
 		ID3D12DescriptorHeap* mD3D12DescriptorHeap;
 
