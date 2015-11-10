@@ -777,9 +777,11 @@ namespace Direct3D12Renderer
 				DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
 
 				// Release the render target reference, in case we have one
+				bool hadPreviousRenderTarget = false;
 				if (nullptr != mRenderTarget)
 				{
 					mRenderTarget->release();
+					hadPreviousRenderTarget = true;
 				}
 
 				// Set new render target and add a reference to it
@@ -792,51 +794,53 @@ namespace Direct3D12Renderer
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
 						// TODO(co) Until we have a command list interface, we must perform the command list handling in here
-
-						// Begin debug event
-						RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
-						// Command list allocators can only be reset when the associated
-						// command lists have finished execution on the GPU; apps should use
-						// fences to determine GPU execution progress.
-						if (SUCCEEDED(mD3D12CommandAllocator->Reset()))
+						if (!hadPreviousRenderTarget)
 						{
-							// However, when ExecuteCommandList() is called on a particular command
-							// list, that command list can then be reset at any time and must be before
-							// re-recording.
-							if (SUCCEEDED(mD3D12GraphicsCommandList->Reset(mD3D12CommandAllocator, nullptr)))
+							// Begin debug event
+							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+							// Command list allocators can only be reset when the associated
+							// command lists have finished execution on the GPU; apps should use
+							// fences to determine GPU execution progress.
+							if (SUCCEEDED(mD3D12CommandAllocator->Reset()))
 							{
-								// Indicate that the back buffer will be used as a render target
-								SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
-
+								// However, when ExecuteCommandList() is called on a particular command
+								// list, that command list can then be reset at any time and must be before
+								// re-recording.
+								if (SUCCEEDED(mD3D12GraphicsCommandList->Reset(mD3D12CommandAllocator, nullptr)))
 								{
-									CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-									mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
-								}
+									// Indicate that the back buffer will be used as a render target
+									SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
 
-								CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRenderTargetView()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
-								CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(swapChain->getD3D12DescriptorHeapDepthStencilView()->GetCPUDescriptorHandleForHeapStart());
-								mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+									{
+										CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+										mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+									}
 
-								{ // TODO(co) Just a test, integrate properly
-									uint32_t width = 0;
-									uint32_t height = 0;
-									swapChain->getWidthAndHeight(width, height);
+									CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRenderTargetView()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
+									CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(swapChain->getD3D12DescriptorHeapDepthStencilView()->GetCPUDescriptorHandleForHeapStart());
+									mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
-									m_viewport.Width = static_cast<float>(width);
-									m_viewport.Height = static_cast<float>(height);
-									m_viewport.MaxDepth = 1.0f;
-									mD3D12GraphicsCommandList->RSSetViewports(1, &m_viewport);
+									{ // TODO(co) Just a test, integrate properly
+										uint32_t width = 0;
+										uint32_t height = 0;
+										swapChain->getWidthAndHeight(width, height);
 
-									m_scissorRect.right = static_cast<LONG>(width);
-									m_scissorRect.bottom = static_cast<LONG>(height);
-									mD3D12GraphicsCommandList->RSSetScissorRects(1, &m_scissorRect);
+										m_viewport.Width = static_cast<float>(width);
+										m_viewport.Height = static_cast<float>(height);
+										m_viewport.MaxDepth = 1.0f;
+										mD3D12GraphicsCommandList->RSSetViewports(1, &m_viewport);
+
+										m_scissorRect.right = static_cast<LONG>(width);
+										m_scissorRect.bottom = static_cast<LONG>(height);
+										mD3D12GraphicsCommandList->RSSetScissorRects(1, &m_scissorRect);
+									}
 								}
 							}
-						}
 
-						// End debug event
-						RENDERER_END_DEBUG_EVENT(this)
+							// End debug event
+							RENDERER_END_DEBUG_EVENT(this)
+						}
 
 						// TODO(co)
 						/*
@@ -904,21 +908,13 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::clear(uint32_t, const float color[4], float z, uint32_t stencil)
+	void Direct3D12Renderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
 	{
 		// Unlike Direct3D 9, OpenGL or OpenGL ES 2, Direct3D 12 clears a given render target view and not the currently bound
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
-		// Record command
-		SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
-		CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRenderTargetView()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
-		mD3D12GraphicsCommandList->ClearRenderTargetView(rtvHandle, color, 0, nullptr);
-		mD3D12GraphicsCommandList->ClearDepthStencilView(swapChain->getD3D12DescriptorHeapDepthStencilView()->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH, z, static_cast<UINT8>(stencil), 0, nullptr);
-
-		// TODO(co) Direct3D 12 update
-		/*
 		// Render target set?
 		if (nullptr != mRenderTarget)
 		{
@@ -933,22 +929,24 @@ namespace Direct3D12Renderer
 					// Clear the Direct3D 12 render target view?
 					if (flags & Renderer::ClearFlag::COLOR)
 					{
-						mD3D12DeviceContext->ClearRenderTargetView(swapChain->getD3D12RenderTargetView(), color);
+						CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRenderTargetView()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
+						mD3D12GraphicsCommandList->ClearRenderTargetView(rtvHandle, color, 0, nullptr);
 					}
 
 					// Clear the Direct3D 12 depth stencil view?
-					if (nullptr != swapChain->getD3D12DepthStencilView())
+					ID3D12DescriptorHeap* d3d12DescriptorHeapDepthStencilView = swapChain->getD3D12DescriptorHeapDepthStencilView();
+					if (nullptr != d3d12DescriptorHeapDepthStencilView)
 					{
 						// Get the Direct3D 12 clear flags
-						UINT direct3D12ClearFlags = (flags & Renderer::ClearFlag::DEPTH) ? D3D12_CLEAR_DEPTH : 0u;
+						UINT direct3D12ClearFlags = (flags & Renderer::ClearFlag::DEPTH) ? D3D12_CLEAR_FLAG_DEPTH : 0u;
 						if (flags & Renderer::ClearFlag::STENCIL)
 						{
-							direct3D12ClearFlags |= D3D12_CLEAR_STENCIL;
+							direct3D12ClearFlags |= D3D12_CLEAR_FLAG_STENCIL;
 						}
 						if (0 != direct3D12ClearFlags)
 						{
 							// Clear the Direct3D 12 depth stencil view
-							mD3D12DeviceContext->ClearDepthStencilView(swapChain->getD3D12DepthStencilView(), direct3D12ClearFlags, z, static_cast<UINT8>(stencil));
+							mD3D12GraphicsCommandList->ClearDepthStencilView(d3d12DescriptorHeapDepthStencilView->GetCPUDescriptorHandleForHeapStart(), static_cast<D3D12_CLEAR_FLAGS>(direct3D12ClearFlags), z, static_cast<UINT8>(stencil), 0, nullptr);
 						}
 					}
 					break;
@@ -963,30 +961,31 @@ namespace Direct3D12Renderer
 					if (flags & Renderer::ClearFlag::COLOR)
 					{
 						// Loop through all Direct3D 12 render target views
-						ID3D12RenderTargetView **d3d12RenderTargetViewsEnd = framebuffer->getD3D12RenderTargetViews() + framebuffer->getNumberOfD3D12RenderTargetViews();
-						for (ID3D12RenderTargetView **d3d12RenderTargetView = framebuffer->getD3D12RenderTargetViews(); d3d12RenderTargetView < d3d12RenderTargetViewsEnd; ++d3d12RenderTargetView)
+						ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetViews = framebuffer->getD3D12DescriptorHeapRenderTargetViews() + framebuffer->getNumberOfD3D12RenderTargetViews();
+						for (ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetView = framebuffer->getD3D12DescriptorHeapRenderTargetViews(); d3d12DescriptorHeapRenderTargetView < d3d12DescriptorHeapRenderTargetViews; ++d3d12DescriptorHeapRenderTargetView)
 						{
 							// Valid Direct3D 12 render target view?
-							if (nullptr != *d3d12RenderTargetView)
+							if (nullptr != *d3d12DescriptorHeapRenderTargetView)
 							{
-								mD3D12DeviceContext->ClearRenderTargetView(*d3d12RenderTargetView, color);
+								mD3D12GraphicsCommandList->ClearRenderTargetView((*d3d12DescriptorHeapRenderTargetView)->GetCPUDescriptorHandleForHeapStart(), color, 0, nullptr);
 							}
 						}
 					}
 
 					// Clear the Direct3D 12 depth stencil view?
-					if (nullptr != framebuffer->getD3D12DepthStencilView())
+					ID3D12DescriptorHeap* d3d12DescriptorHeapDepthStencilView = framebuffer->getD3D12DescriptorHeapDepthStencilView();
+					if (nullptr != d3d12DescriptorHeapDepthStencilView)
 					{
 						// Get the Direct3D 12 clear flags
-						UINT direct3D12ClearFlags = (flags & Renderer::ClearFlag::DEPTH) ? D3D12_CLEAR_DEPTH : 0u;
+						UINT direct3D12ClearFlags = (flags & Renderer::ClearFlag::DEPTH) ? D3D12_CLEAR_FLAG_DEPTH : 0u;
 						if (flags & Renderer::ClearFlag::STENCIL)
 						{
-							direct3D12ClearFlags |= D3D12_CLEAR_STENCIL;
+							direct3D12ClearFlags |= D3D12_CLEAR_FLAG_STENCIL;
 						}
 						if (0 != direct3D12ClearFlags)
 						{
 							// Clear the Direct3D 12 depth stencil view
-							mD3D12DeviceContext->ClearDepthStencilView(framebuffer->getD3D12DepthStencilView(), direct3D12ClearFlags, z, static_cast<UINT8>(stencil));
+							mD3D12GraphicsCommandList->ClearDepthStencilView(d3d12DescriptorHeapDepthStencilView->GetCPUDescriptorHandleForHeapStart(), static_cast<D3D12_CLEAR_FLAGS>(direct3D12ClearFlags), z, static_cast<UINT8>(stencil), 0, nullptr);
 						}
 					}
 					break;
@@ -1018,7 +1017,6 @@ namespace Direct3D12Renderer
 		{
 			// In case no render target is currently set we don't have to do anything in here
 		}
-		*/
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(this)
