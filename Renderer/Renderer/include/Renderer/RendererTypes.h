@@ -213,7 +213,10 @@ namespace Renderer
 	*    Viewport
 	*
 	*  @note
-	*    - This structure directly maps to Direct3D 11, do not change it
+	*    - This structure directly maps to Direct3D 11 & 12, do not change it
+	*
+	*  @see
+	*    - "D3D12_VIEWPORT"-documentation for details
 	*/
 	struct Viewport
 	{
@@ -230,7 +233,10 @@ namespace Renderer
 	*    Scissor rectangle
 	*
 	*  @note
-	*    - This structure directly maps to Direct3D 9 & 10 & 11, do not change it
+	*    - This structure directly maps to Direct3D 9 & 10 & 11 & 12, do not change it
+	*
+	*  @see
+	*    - "D3D12_RECT"-documentation for details
 	*/
 	struct ScissorRectangle
 	{

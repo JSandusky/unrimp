@@ -722,34 +722,28 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::rsSetViewports(uint32_t, const Renderer::Viewport *)
+	void Direct3D12Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport *viewports)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
 		{
 			// Set the Direct3D 12 viewports
 			// -> "Renderer::Viewport" directly maps to Direct3D 12, do not change it
 			// -> Let Direct3D 12 perform the index validation for us (the Direct3D 12 debug features are pretty good)
-			mD3D12DeviceContext->RSSetViewports(numberOfViewports, reinterpret_cast<const D3D12_VIEWPORT*>(viewports));
+			mD3D12GraphicsCommandList->RSSetViewports(numberOfViewports, reinterpret_cast<const D3D12_VIEWPORT*>(viewports));
 		}
-		*/
 	}
 
-	void Direct3D12Renderer::rsSetScissorRectangles(uint32_t, const Renderer::ScissorRectangle *)
+	void Direct3D12Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles)
 	{
-		// TODO(co) Direct3D 12 update
-		/*
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
 		{
 			// Set the Direct3D 12 scissor rectangles
 			// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11 & 12, do not change it
 			// -> Let Direct3D 12 perform the index validation for us (the Direct3D 12 debug features are pretty good)
-			mD3D12DeviceContext->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D12_RECT*>(scissorRectangles));
+			mD3D12GraphicsCommandList->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D12_RECT*>(scissorRectangles));
 		}
-		*/
 	}
 
 
@@ -760,10 +754,6 @@ namespace Direct3D12Renderer
 	{
 		return mRenderTarget;
 	}
-
-	// TODO(co) Just a test, integrate properly
-	D3D12_VIEWPORT m_viewport;
-	D3D12_RECT m_scissorRect;
 
 	void Direct3D12Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
 	{
@@ -820,21 +810,6 @@ namespace Direct3D12Renderer
 									CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRenderTargetView()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
 									CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(swapChain->getD3D12DescriptorHeapDepthStencilView()->GetCPUDescriptorHandleForHeapStart());
 									mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
-
-									{ // TODO(co) Just a test, integrate properly
-										uint32_t width = 0;
-										uint32_t height = 0;
-										swapChain->getWidthAndHeight(width, height);
-
-										m_viewport.Width = static_cast<float>(width);
-										m_viewport.Height = static_cast<float>(height);
-										m_viewport.MaxDepth = 1.0f;
-										mD3D12GraphicsCommandList->RSSetViewports(1, &m_viewport);
-
-										m_scissorRect.right = static_cast<LONG>(width);
-										m_scissorRect.bottom = static_cast<LONG>(height);
-										mD3D12GraphicsCommandList->RSSetScissorRects(1, &m_scissorRect);
-									}
 								}
 							}
 
