@@ -43,33 +43,6 @@ void IApplicationRenderer::onInitialization()
 {
 	// Create the renderer instance (at this point our renderer pointer must be a null pointer, or something went terrible wrong!)
 	mRenderer = createRendererInstance(mRendererName);
-
-	// Is there a renderer instance and a native window handle?
-	if (nullptr != mRenderer && NULL_HANDLE != getNativeWindowHandle())
-	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
-
-		// Get the window size
-		int width  = 0;
-		int height = 0;
-		getWindowSize(width, height);
-
-		// Set the viewport
-		const Renderer::Viewport viewport =
-		{
-			0.0f,						// topLeftX (float)
-			0.0f,						// topLeftY (float)
-			static_cast<float>(width),	// width (float)
-			static_cast<float>(height),	// height (float)
-			0.0f,						// minDepth (float)
-			1.0f						// maxDepth (float)
-		};
-		mRenderer->rsSetViewports(1, &viewport);
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(mRenderer)
-	}
 }
 
 void IApplicationRenderer::onDeinitialization()
@@ -93,25 +66,6 @@ void IApplicationRenderer::onResize()
 			// -> Required for Direct3D 9, Direct3D 10, Direct3D 11
 			// -> Not required for OpenGL and OpenGL ES 2
 			swapChain->resizeBuffers();
-
-			{ // Set the viewport
-				// Get the window size
-				int width  = 0;
-				int height = 0;
-				getWindowSize(width, height);
-
-				// Set the viewport
-				const Renderer::Viewport viewport =
-				{
-					0.0f,						// topLeftX (float)
-					0.0f,						// topLeftY (float)
-					static_cast<float>(width),	// width (float)
-					static_cast<float>(height),	// height (float)
-					0.0f,						// minDepth (float)
-					1.0f						// maxDepth (float)
-				};
-				mRenderer->rsSetViewports(1, &viewport);
-			}
 		}
 	}
 }
@@ -145,6 +99,26 @@ void IApplicationRenderer::onDrawRequest()
 
 			// Make the main swap chain to the current render target
 			mRenderer->omSetRenderTarget(swapChain);
+
+			{ // Since Direct3D 12 is command list based, the viewport must be set
+			  // in every draw call to work with all supported renderer APIs
+				// Get the window size
+				uint32_t width  = 0;
+				uint32_t height = 0;
+				swapChain->getWidthAndHeight(width, height);
+
+				// Set the viewport
+				const Renderer::Viewport viewport =
+				{
+					0.0f,						// topLeftX (float)
+					0.0f,						// topLeftY (float)
+					static_cast<float>(width),	// width (float)
+					static_cast<float>(height),	// height (float)
+					0.0f,						// minDepth (float)
+					1.0f						// maxDepth (float)
+				};
+				mRenderer->rsSetViewports(1, &viewport);
+			}
 
 			// Call the draw method
 			onDraw();

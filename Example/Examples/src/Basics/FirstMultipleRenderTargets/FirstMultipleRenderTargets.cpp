@@ -66,10 +66,11 @@ void FirstMultipleRenderTargets::onInitialization()
 			// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
 			// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 			// -> Not required for OpenGL and OpenGL ES 2
+			// -> The optimized texture clear value is a Direct3D 12 related option
 			Renderer::ITexture *texture2D[NUMBER_OF_TEXTURES];
 			for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 			{
-				texture2D[i] = mTexture2D[i] = renderer->createTexture2D(TEXTURE_SIZE, TEXTURE_SIZE, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+				texture2D[i] = mTexture2D[i] = renderer->createTexture2D(TEXTURE_SIZE, TEXTURE_SIZE, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLACK));
 			}
 
 			// Create the framebuffer object (FBO) instance
@@ -246,17 +247,18 @@ void FirstMultipleRenderTargets::onDraw()
 			// Set the render target to render into
 			renderer->omSetRenderTarget(mFramebuffer);
 
-			// Set the viewport
-			const Renderer::Viewport viewport =
-			{
-				0.0f,								// topLeftX (float)
-				0.0f,								// topLeftY (float)
-				static_cast<float>(TEXTURE_SIZE),	// width (float)
-				static_cast<float>(TEXTURE_SIZE),	// height (float)
-				0.0f,								// minDepth (float)
-				1.0f								// maxDepth (float)
-			};
-			renderer->rsSetViewports(1, &viewport);
+			{ // Set the viewport
+				const Renderer::Viewport viewport =
+				{
+					0.0f,								// topLeftX (float)
+					0.0f,								// topLeftY (float)
+					static_cast<float>(TEXTURE_SIZE),	// width (float)
+					static_cast<float>(TEXTURE_SIZE),	// height (float)
+					0.0f,								// minDepth (float)
+					1.0f								// maxDepth (float)
+				};
+				renderer->rsSetViewports(1, &viewport);
+			}
 
 			// Begin scene rendering
 			// -> Required for Direct3D 9
