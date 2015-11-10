@@ -117,11 +117,11 @@ namespace Renderer
 		float								depthBiasClamp;					///< Default: "0.0f"
 		float								slopeScaledDepthBias;			///< Default: "0.0f"
 		int									depthClipEnable;				///< Boolean value. Default: "true"
-		int									scissorEnable;					///< Boolean value. Default: "false"
 		int									multisampleEnable;				///< Boolean value. Default: "false"
 		int									antialiasedLineEnable;			///< Boolean value. Default: "false"
 		unsigned int						forcedSampleCount;				///< Default: "0"
 		ConservativeRasterizationMode::Enum	conservativeRasterizationMode;	///< Boolean value. >= Direct3D 12 only. Default: "false"
+		int									scissorEnable;					///< Boolean value. Not available in Direct3D 12 (scissor testing is always enabled). Default: "false"
 	};
 	struct RasterizerStateBuilder
 	{

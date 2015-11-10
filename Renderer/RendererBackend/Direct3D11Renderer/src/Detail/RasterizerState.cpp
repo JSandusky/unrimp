@@ -43,8 +43,19 @@ namespace Direct3D11Renderer
 		mD3D11RasterizerState(nullptr)
 	{
 		// Create the Direct3D 11 rasterizer state
-		// -> "Renderer::RasterizerState" maps directly to Direct3D 10 & 11 & 12, do not change it
-		direct3D11Renderer.getD3D11Device()->CreateRasterizerState(reinterpret_cast<const D3D11_RASTERIZER_DESC*>(&rasterizerState), &mD3D11RasterizerState);
+		// -> Thank's to Direct3D 12, "Renderer::RasterizerState" doesn't map directly to Direct3D 10 & 11 - but at least the constants directly still map
+		D3D11_RASTERIZER_DESC d3d11RasterizerDesc;
+		d3d11RasterizerDesc.FillMode				= static_cast<D3D11_FILL_MODE>(rasterizerState.fillMode);
+		d3d11RasterizerDesc.CullMode				= static_cast<D3D11_CULL_MODE>(rasterizerState.cullMode);
+		d3d11RasterizerDesc.FrontCounterClockwise	= rasterizerState.frontCounterClockwise;
+		d3d11RasterizerDesc.DepthBias				= rasterizerState.depthBias;
+		d3d11RasterizerDesc.DepthBiasClamp			= rasterizerState.depthBiasClamp;
+		d3d11RasterizerDesc.SlopeScaledDepthBias	= rasterizerState.slopeScaledDepthBias;
+		d3d11RasterizerDesc.DepthClipEnable			= rasterizerState.depthClipEnable;
+		d3d11RasterizerDesc.ScissorEnable			= rasterizerState.scissorEnable;
+		d3d11RasterizerDesc.MultisampleEnable		= rasterizerState.multisampleEnable;
+		d3d11RasterizerDesc.AntialiasedLineEnable	= rasterizerState.antialiasedLineEnable;
+		direct3D11Renderer.getD3D11Device()->CreateRasterizerState(&d3d11RasterizerDesc, &mD3D11RasterizerState);
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG

@@ -43,8 +43,19 @@ namespace Direct3D10Renderer
 		mD3D10RasterizerState(nullptr)
 	{
 		// Create the Direct3D 10 rasterizer state
-		// -> "Renderer::RasterizerState" maps directly to Direct3D 10 & 11, do not change it
-		direct3D10Renderer.getD3D10Device()->CreateRasterizerState(reinterpret_cast<const D3D10_RASTERIZER_DESC*>(&rasterizerState), &mD3D10RasterizerState);
+		// -> Thank's to Direct3D 12, "Renderer::RasterizerState" doesn't map directly to Direct3D 10 & 11 - but at least the constants directly still map
+		D3D10_RASTERIZER_DESC d3d10RasterizerDesc;
+		d3d10RasterizerDesc.FillMode				= static_cast<D3D10_FILL_MODE>(rasterizerState.fillMode);
+		d3d10RasterizerDesc.CullMode				= static_cast<D3D10_CULL_MODE>(rasterizerState.cullMode);
+		d3d10RasterizerDesc.FrontCounterClockwise	= rasterizerState.frontCounterClockwise;
+		d3d10RasterizerDesc.DepthBias				= rasterizerState.depthBias;
+		d3d10RasterizerDesc.DepthBiasClamp			= rasterizerState.depthBiasClamp;
+		d3d10RasterizerDesc.SlopeScaledDepthBias	= rasterizerState.slopeScaledDepthBias;
+		d3d10RasterizerDesc.DepthClipEnable			= rasterizerState.depthClipEnable;
+		d3d10RasterizerDesc.ScissorEnable			= rasterizerState.scissorEnable;
+		d3d10RasterizerDesc.MultisampleEnable		= rasterizerState.multisampleEnable;
+		d3d10RasterizerDesc.AntialiasedLineEnable	= rasterizerState.antialiasedLineEnable;
+		direct3D10Renderer.getD3D10Device()->CreateRasterizerState(&d3d10RasterizerDesc, &mD3D10RasterizerState);
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG

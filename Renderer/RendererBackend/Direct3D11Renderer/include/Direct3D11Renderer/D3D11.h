@@ -101,7 +101,6 @@ struct D3D11_TEXTURE2D_DESC;
 struct D3D11_TEXTURE3D_DESC;
 struct ID3D11GeometryShader;
 struct DXGI_FRAME_STATISTICS;
-struct D3D11_RASTERIZER_DESC;
 struct ID3D11RasterizerState;
 struct D3D11_SUBRESOURCE_DATA;
 struct ID3D11RenderTargetView;
@@ -1044,6 +1043,36 @@ struct D3D11_INPUT_ELEMENT_DESC
 	D3D11_INPUT_CLASSIFICATION InputSlotClass;
 	UINT InstanceDataStepRate;
 };
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
+typedef enum D3D11_FILL_MODE
+{
+	D3D11_FILL_WIREFRAME	= 2,
+	D3D11_FILL_SOLID		= 3
+} D3D11_FILL_MODE;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
+typedef enum D3D11_CULL_MODE
+{
+	D3D11_CULL_NONE		= 1,
+	D3D11_CULL_FRONT	= 2,
+	D3D11_CULL_BACK		= 3 
+} D3D11_CULL_MODE;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
+typedef struct D3D11_RASTERIZER_DESC
+{
+	D3D11_FILL_MODE FillMode;
+	D3D11_CULL_MODE CullMode;
+	BOOL            FrontCounterClockwise;
+	INT             DepthBias;
+	FLOAT           DepthBiasClamp;
+	FLOAT           SlopeScaledDepthBias;
+	BOOL            DepthClipEnable;
+	BOOL            ScissorEnable;
+	BOOL            MultisampleEnable;
+	BOOL            AntialiasedLineEnable;
+} D3D11_RASTERIZER_DESC;
 
 
 //[-------------------------------------------------------]

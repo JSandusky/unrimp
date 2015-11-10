@@ -91,7 +91,6 @@ struct D3D10_TEXTURE2D_DESC;
 struct D3D10_TEXTURE3D_DESC;
 struct ID3D10GeometryShader;
 struct DXGI_FRAME_STATISTICS;
-struct D3D10_RASTERIZER_DESC;
 struct ID3D10RasterizerState;
 struct D3D10_SUBRESOURCE_DATA;
 struct ID3D10RenderTargetView;
@@ -100,7 +99,6 @@ struct ID3D10DepthStencilState;
 struct D3D10_DEPTH_STENCIL_DESC;
 struct ID3D10ShaderResourceView;
 struct D3D10_RESOURCE_DIMENSION;
-struct D3D10_INPUT_ELEMENT_DESC;
 struct D3D10_SO_DECLARATION_ENTRY;
 struct D3D10_DEPTH_STENCIL_VIEW_DESC;
 struct D3D10_RENDER_TARGET_VIEW_DESC;
@@ -902,6 +900,36 @@ struct D3D10_INPUT_ELEMENT_DESC
 	D3D10_INPUT_CLASSIFICATION InputSlotClass;
 	UINT InstanceDataStepRate;
 };
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"
+typedef enum D3D10_FILL_MODE
+{
+	D3D10_FILL_WIREFRAME	= 2,
+	D3D10_FILL_SOLID		= 3
+} D3D10_FILL_MODE;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"
+typedef enum D3D10_CULL_MODE
+{
+	D3D10_CULL_NONE		= 1,
+	D3D10_CULL_FRONT	= 2,
+	D3D10_CULL_BACK		= 3 
+} D3D10_CULL_MODE;
+
+// "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"
+typedef struct D3D10_RASTERIZER_DESC
+{
+	D3D10_FILL_MODE FillMode;
+	D3D10_CULL_MODE CullMode;
+	BOOL            FrontCounterClockwise;
+	INT             DepthBias;
+	FLOAT           DepthBiasClamp;
+	FLOAT           SlopeScaledDepthBias;
+	BOOL            DepthClipEnable;
+	BOOL            ScissorEnable;
+	BOOL            MultisampleEnable;
+	BOOL            AntialiasedLineEnable;
+} D3D10_RASTERIZER_DESC;
 
 
 //[-------------------------------------------------------]

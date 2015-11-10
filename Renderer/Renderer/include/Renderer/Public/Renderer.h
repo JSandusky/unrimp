@@ -1196,11 +1196,11 @@ namespace Renderer
 			float								depthBiasClamp;
 			float								slopeScaledDepthBias;
 			int									depthClipEnable;
-			int									scissorEnable;
 			int									multisampleEnable;
 			int									antialiasedLineEnable;
 			unsigned int						forcedSampleCount;
 			ConservativeRasterizationMode::Enum	conservativeRasterizationMode;
+			int									scissorEnable;
 		};
 		struct RasterizerStateBuilder
 		{
@@ -1217,9 +1217,9 @@ namespace Renderer
 					true,
 					false,
 					false,
-					false,
 					0,
-					ConservativeRasterizationMode::OFF
+					ConservativeRasterizationMode::OFF,
+					false
 				};
 				return RASTERIZER_STATE;
 			}

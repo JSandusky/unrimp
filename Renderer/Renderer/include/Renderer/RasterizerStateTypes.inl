@@ -48,11 +48,11 @@ namespace Renderer
 			0.0f,								// depthBiasClamp (float)															"0.0f"			"0.0f"		<unsupported>	TODO(co)
 			0.0f,								// slopeScaledDepthBias (float)														"0.0f"			"0.0f"		"0.0f"			TODO(co)
 			true,								// depthClipEnable (int)															"true"			"true"		<unsupported>	TODO(co)
-			false,								// scissorEnable (int)																"false"			"false"		"false"			"false"
 			false,								// multisampleEnable (int)															"false"			"false"		"true"			"true"
 			false,								// antialiasedLineEnable (int)														"false"			"false"		"false"			"false"
 			0,									// forcedSampleCount (unsigned int)
-			ConservativeRasterizationMode::OFF	// conservativeRasterizationMode (Renderer::ConservativeRasterizationMode::Enum)
+			ConservativeRasterizationMode::OFF,	// conservativeRasterizationMode (Renderer::ConservativeRasterizationMode::Enum)
+			false								// scissorEnable (int)																"false"			"false"		"false"			"false"
 		};
 		return RASTERIZER_STATE;
 	}
