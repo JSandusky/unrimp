@@ -426,7 +426,7 @@ void Fxaa::sceneRendering()
 
 		// Begin scene rendering
 		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
 		if (renderer->beginScene())
 		{
 			// Clear the color buffer of the current render target with black
@@ -451,7 +451,7 @@ void Fxaa::sceneRendering()
 
 			// End scene rendering
 			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
 			renderer->endScene();
 		}
 
@@ -476,7 +476,7 @@ void Fxaa::postProcessing()
 
 		// Begin scene rendering
 		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
 		if (renderer->beginScene())
 		{
 			// Set the used graphics root signature
@@ -502,7 +502,7 @@ void Fxaa::postProcessing()
 
 			// End scene rendering
 			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
 			renderer->endScene();
 		}
 

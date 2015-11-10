@@ -272,7 +272,7 @@ void VertexBuffer::onDraw()
 
 		// Begin scene rendering
 		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
 		if (renderer->beginScene())
 		{
 			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
@@ -331,7 +331,7 @@ void VertexBuffer::onDraw()
 
 			// End scene rendering
 			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
 			renderer->endScene();
 		}
 

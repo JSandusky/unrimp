@@ -322,7 +322,7 @@ void FirstGpgpu::generate2DTextureContent()
 
 		// Begin scene rendering
 		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
 		if (mRenderer->beginScene())
 		{
 			// Clear the color buffer of the current render target with blue
@@ -361,7 +361,7 @@ void FirstGpgpu::generate2DTextureContent()
 
 			// End scene rendering
 			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
 			mRenderer->endScene();
 		}
 
@@ -391,7 +391,7 @@ void FirstGpgpu::contentProcessing()
 
 		// Begin scene rendering
 		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
 		if (mRenderer->beginScene())
 		{
 			// Set the used graphics root signature
@@ -417,7 +417,7 @@ void FirstGpgpu::contentProcessing()
 
 			// End scene rendering
 			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
 			mRenderer->endScene();
 		}
 
