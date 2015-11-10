@@ -31,67 +31,6 @@
 
 
 //[-------------------------------------------------------]
-//[ C++11 definitions                                     ]
-//[-------------------------------------------------------]
-#ifdef WIN32
-	// Microsoft Visual Studio 2010: Have a look at http://blogs.msdn.com/b/vcblog/archive/2010/04/06/c-0x-core-language-features-in-vc10-the-table.aspx see which C++11 features are supported
-
-	// "nullptr"-definition
-	#if defined(__INTEL_COMPILER) || !defined(_MSC_VER) || _MSC_VER < 1600	// The Intel C++ compiler has no support for nullptr, 1600 = Microsoft Visual Studio 2010
-		/**
-		*  @brief
-		*    nullptr definition for compilers don't supporting this C++11 feature
-		*
-		*  @note
-		*    - The implementation comes from the "A name for the null pointer: nullptr"-document (http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2431.pdf)
-		*/
-		const class
-		{
-			public:
-				template<class T> operator T*() const  { return 0; }
-				template<class C, class T> operator T C::*() const  { return 0; }
-			private:
-				void operator&() const;
-		} nullptr = {};
-	#endif
-#elif LINUX
-	// GCC: Have a look at http://gcc.gnu.org/projects/cxx0x.html see which C++11 features are supported
-
-	// "nullptr"-definition
-	#if (__GNUC__ == 4 && __GNUC_MINOR__ == 5 && __GNUC_PATCHLEVEL__ < 3)
-		// There's a bug in GCC 4.5.x ... 4.5.2 causing compiler errors when using the nullptr-class solution from below:
-		//   "Bug 45383 - [4.5 Regression] Implicit conversion to pointer does no longer automatically generate operator== and operator!=."
-		//   (http://gcc.gnu.org/bugzilla/show_bug.cgi?id=45383)
-		// ... looked a few minutes for a solution, without success... (just defining it as 0 is no solution and will introduce other compiler errors!)
-		#error "Due to a bug in GCC 4.5.x ... 4.5.2 this GCC version is not supported. Please use a newer or older GCC version instead."
-	#elif ((__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 6)) && !defined(__clang__))
-		/**
-		*  @brief
-		*    nullptr definition for compilers don't supporting this C++11 feature
-		*
-		*  @note
-		*    - The implementation comes from the "A name for the null pointer: nullptr"-document (http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2431.pdf)
-		*/
-		const class
-		{
-			public:
-				template<class T> operator T*() const  { return 0; }
-				template<class C, class T> operator T C::*() const  { return 0; }
-			private:
-				void operator&() const;
-		} nullptr = {};
-	#endif
-
-	// "override"-definition, see e.g. http://www2.research.att.com/~bs/C++0xFAQ.html#override (C++11 keyword is introduced in GCC 4.7 or clang 2.9)
-	#if ((__GNUC__ < 4 || __GNUC_MINOR__ < 7) && !defined(__clang__))
-		#define override
-	#endif
-#else
-	#error "Unsupported platform"
-#endif
-
-
-//[-------------------------------------------------------]
 //[ C++ compiler keywords                                 ]
 //[-------------------------------------------------------]
 #ifdef WIN32

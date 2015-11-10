@@ -79,16 +79,6 @@ namespace Renderer
 	#ifndef __RENDERER_PLATFORM_TYPES_H__
 	#define __RENDERER_PLATFORM_TYPES_H__
 		#ifdef WIN32
-			#if defined(__INTEL_COMPILER) || !defined(_MSC_VER) || _MSC_VER < 1600
-				const class
-				{
-					public:
-						template<class T> operator T*() const  { return 0; }
-						template<class C, class T> operator T C::*() const  { return 0; }
-					private:
-						void operator&() const;
-				} nullptr = {};
-			#endif
 			#ifdef X64_ARCHITECTURE
 				typedef unsigned __int64 handle;
 			#else
@@ -100,21 +90,6 @@ namespace Renderer
 			#define FORCEINLINE __forceinline
 			#define NOP __nop()
 		#elif LINUX
-			#if (__GNUC__ == 4 && __GNUC_MINOR__ == 5 && __GNUC_PATCHLEVEL__ < 3)
-				#error "Due to a bug in GCC 4.5.x ... 4.5.2 this GCC version is not supported. Please use a newer or older GCC version instead."
-			#elif ((__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 6)) && !defined(__clang__))
-				const class
-				{
-					public:
-						template<class T> operator T*() const  { return 0; }
-						template<class C, class T> operator T C::*() const  { return 0; }
-					private:
-						void operator&() const;
-				} nullptr = {};
-			#endif
-			#if ((__GNUC__ < 4 || __GNUC_MINOR__ < 7) && !defined(__clang__))
-				#define override
-			#endif
 			#if X64_ARCHITECTURE
 				typedef uint64_t handle;
 			#else
