@@ -201,9 +201,6 @@
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D9.h">
       <Filter>Basics\FirstRenderToTexture</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D10_D3D11.h">
-      <Filter>Basics\FirstRenderToTexture</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_Null.h">
       <Filter>Basics\FirstRenderToTexture</Filter>
     </ClInclude>
@@ -455,6 +452,9 @@
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D10_D3D11_D3D12.h">
       <Filter>Runtime\FirstCommandBucket</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Basics\FirstRenderToTexture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -294,7 +294,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture.h" />
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_110.h" />
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_ES2.h" />
-    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D10_D3D11.h" />
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D9.h" />
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_Null.h" />
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation.h" />
