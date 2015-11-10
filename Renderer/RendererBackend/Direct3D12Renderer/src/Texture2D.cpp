@@ -88,7 +88,7 @@ namespace Direct3D12Renderer
 			D3D12_HEAP_FLAG_NONE,
 			&d3d12ResourceDesc,
 			D3D12_RESOURCE_STATE_GENERIC_READ,
-			&depthOptimizedClearValue,
+			(flags & Renderer::TextureFlag::RENDER_TARGET) ? &depthOptimizedClearValue : nullptr,	// Avoid: "Direct3D 12 error: Failed to create texture 2D resourceD3D12 ERROR: ID3D12Device::CreateCommittedResource: pOptimizedClearValue must be NULL when D3D12_RESOURCE_DESC::Dimension is not D3D12_RESOURCE_DIMENSION_BUFFER and neither D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET nor D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL are set in D3D12_RESOURCE_DESC::Flags. [ STATE_CREATION ERROR #815: CREATERESOURCE_INVALIDCLEARVALUE]"
 			IID_PPV_ARGS(&mD3D12Resource))))
 		/*
 		const CD3DX12_HEAP_PROPERTIES d3d12XHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
