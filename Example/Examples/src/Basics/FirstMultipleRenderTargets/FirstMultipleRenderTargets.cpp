@@ -247,18 +247,8 @@ void FirstMultipleRenderTargets::onDraw()
 			// Set the render target to render into
 			renderer->omSetRenderTarget(mFramebuffer);
 
-			{ // Set the viewport
-				const Renderer::Viewport viewport =
-				{
-					0.0f,								// topLeftX (float)
-					0.0f,								// topLeftY (float)
-					static_cast<float>(TEXTURE_SIZE),	// width (float)
-					static_cast<float>(TEXTURE_SIZE),	// height (float)
-					0.0f,								// minDepth (float)
-					1.0f								// maxDepth (float)
-				};
-				renderer->rsSetViewports(1, &viewport);
-			}
+			// Set the viewport and scissor rectangle
+			renderer->rsSetViewportAndScissorRectangle(0, 0, TEXTURE_SIZE, TEXTURE_SIZE);
 
 			// Begin scene rendering
 			// -> Required for Direct3D 9
@@ -312,17 +302,8 @@ void FirstMultipleRenderTargets::onDraw()
 					renderTarget->getWidthAndHeight(width, height);
 				}
 
-				// Set the viewport
-				const Renderer::Viewport viewport =
-				{
-					0.0f,						// topLeftX (float)
-					0.0f,						// topLeftY (float)
-					static_cast<float>(width),	// width (float)
-					static_cast<float>(height),	// height (float)
-					0.0f,						// minDepth (float)
-					1.0f						// maxDepth (float)
-				};
-				renderer->rsSetViewports(1, &viewport);
+				// Set the viewport and scissor rectangle
+				renderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
 			}
 
 			// Begin scene rendering

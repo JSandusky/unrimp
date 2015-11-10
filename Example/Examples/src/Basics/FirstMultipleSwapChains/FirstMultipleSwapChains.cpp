@@ -398,17 +398,8 @@ void FirstMultipleSwapChains::onDraw()
 				uint32_t height = 1;
 				mSwapChain->getWidthAndHeight(width, height);
 
-				// Set the viewport
-				const Renderer::Viewport viewport =
-				{
-					0.0f,						// topLeftX (float)
-					0.0f,						// topLeftY (float)
-					static_cast<float>(width),	// width (float)
-					static_cast<float>(height),	// height (float)
-					0.0f,						// minDepth (float)
-					1.0f						// maxDepth (float)
-				};
-				renderer->rsSetViewports(1, &viewport);
+				// Set the viewport and scissor rectangle
+				renderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
 			}
 
 			// Draw into the swap chain created in this example
@@ -438,17 +429,8 @@ void FirstMultipleSwapChains::onDraw()
 					renderTarget->getWidthAndHeight(width, height);
 				}
 
-				// Set the viewport
-				const Renderer::Viewport viewport =
-				{
-					0.0f,						// topLeftX (float)
-					0.0f,						// topLeftY (float)
-					static_cast<float>(width),	// width (float)
-					static_cast<float>(height),	// height (float)
-					0.0f,						// minDepth (float)
-					1.0f						// maxDepth (float)
-				};
-				renderer->rsSetViewports(1, &viewport);
+				// Set the viewport and scissor rectangle
+				renderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
 			}
 
 			// Draw into the main swap chain

@@ -100,24 +100,15 @@ void IApplicationRenderer::onDrawRequest()
 			// Make the main swap chain to the current render target
 			mRenderer->omSetRenderTarget(swapChain);
 
-			{ // Since Direct3D 12 is command list based, the viewport must be set
-			  // in every draw call to work with all supported renderer APIs
+			{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle
+			  // must be set in every draw call to work with all supported renderer APIs
 				// Get the window size
 				uint32_t width  = 0;
 				uint32_t height = 0;
 				swapChain->getWidthAndHeight(width, height);
 
-				// Set the viewport
-				const Renderer::Viewport viewport =
-				{
-					0.0f,						// topLeftX (float)
-					0.0f,						// topLeftY (float)
-					static_cast<float>(width),	// width (float)
-					static_cast<float>(height),	// height (float)
-					0.0f,						// minDepth (float)
-					1.0f						// maxDepth (float)
-				};
-				mRenderer->rsSetViewports(1, &viewport);
+				// Set the viewport and scissor rectangle
+				mRenderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
 			}
 
 			// Call the draw method

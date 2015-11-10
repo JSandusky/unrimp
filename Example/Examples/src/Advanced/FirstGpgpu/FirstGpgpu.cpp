@@ -331,7 +331,7 @@ void FirstGpgpu::generate2DTextureContent()
 			// Set the used graphics root signature
 			mRenderer->setGraphicsRootSignature(mRootSignature);
 
-			{ // Set the viewport
+			{ // Set the viewport and scissor rectangle
 				// Get the render target with and height
 				uint32_t width  = 1;
 				uint32_t height = 1;
@@ -341,17 +341,8 @@ void FirstGpgpu::generate2DTextureContent()
 					renderTarget->getWidthAndHeight(width, height);
 				}
 
-				// Set the viewport
-				const Renderer::Viewport viewport =
-				{
-					0.0f,						// topLeftX (float)
-					0.0f,						// topLeftY (float)
-					static_cast<float>(width),	// width (float)
-					static_cast<float>(height),	// height (float)
-					0.0f,						// minDepth (float)
-					1.0f						// maxDepth (float)
-				};
-				mRenderer->rsSetViewports(1, &viewport);
+				// Set the viewport and scissor rectangle
+				mRenderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
 			}
 
 			// Set the used pipeline state object (PSO)

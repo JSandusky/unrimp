@@ -148,6 +148,25 @@ namespace Renderer
 		*/
 		inline const Statistics &getStatistics() const;
 
+		/**
+		*  @brief
+		*    Set viewport and scissor rectangle
+		*
+		*  @param[in] topLeftX
+		*    Top left x
+		*  @param[in] topLeftY
+		*    Top left y
+		*  @param[in] width
+		*    width
+		*  @param[in] height
+		*    height
+		*
+		*  @note
+		*    - Lookout! In Direct3D 12 the scissor test can't be deactivated and hence one always needs to set a valid scissor rectangle.
+		*      Use the convenience method "Renderer::rsSetViewportAndScissorRectangle()" if possible to not walk into this Direct3D 12 trap.
+		*/
+		inline void rsSetViewportAndScissorRectangle(uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height);
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual IRenderer methods                      ]
@@ -552,6 +571,8 @@ namespace Renderer
 		*
 		*  @note
 		*    - The current viewport(s) does not affect the clear operation
+		*    - Lookout! In Direct3D 12 the scissor test can't be deactivated and hence one always needs to set a valid scissor rectangle.
+		*      Use the convenience method "Renderer::rsSetViewportAndScissorRectangle()" if possible to not walk into this Direct3D 12 trap.
 		*/
 		virtual void rsSetViewports(uint32_t numberOfViewports, const Viewport *viewports) = 0;
 
