@@ -305,6 +305,29 @@ namespace Direct3D12Renderer
 
 	void SwapChain::present()
 	{
+		{ // TODO(co) Until we have a command list interface, we must perform the command list handling in here
+			Direct3D12Renderer& direct3D12Renderer = static_cast<Direct3D12Renderer&>(getRenderer());
+			ID3D12GraphicsCommandList* d3d12GraphicsCommandList = direct3D12Renderer.getD3D12GraphicsCommandList();
+
+			// Begin debug event
+			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D12Renderer)
+
+			{ // Indicate that the back buffer will now be used to present
+				CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+				d3d12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+			}
+
+			if (SUCCEEDED(d3d12GraphicsCommandList->Close()))
+			{
+				// Execute the command list
+				ID3D12CommandList* commandLists[] = { d3d12GraphicsCommandList };
+				direct3D12Renderer.getD3D12CommandQueue()->ExecuteCommandLists(_countof(commandLists), commandLists);
+			}
+
+			// End debug event
+			RENDERER_END_DEBUG_EVENT(&direct3D12Renderer)
+		}
+
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain3)
 		{
@@ -313,6 +336,9 @@ namespace Direct3D12Renderer
 			// Wait for the GPU to be done with all resources
 			waitForPreviousFrame();
 		}
+
+		// TODO(co) Until we have a command list interface, we must perform the command list handling in here
+		getRenderer().omSetRenderTarget(nullptr);
 	}
 
 	void SwapChain::resizeBuffers()

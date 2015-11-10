@@ -761,6 +761,10 @@ namespace Direct3D12Renderer
 		return mRenderTarget;
 	}
 
+	// TODO(co) Just a test, integrate properly
+	D3D12_VIEWPORT m_viewport;
+	D3D12_RECT m_scissorRect;
+
 	void Direct3D12Renderer::omSetRenderTarget(Renderer::IRenderTarget *renderTarget)
 	{
 		// New render target?
@@ -787,6 +791,53 @@ namespace Direct3D12Renderer
 				{
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
+						// TODO(co) Until we have a command list interface, we must perform the command list handling in here
+
+						// Begin debug event
+						RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+						// Command list allocators can only be reset when the associated
+						// command lists have finished execution on the GPU; apps should use
+						// fences to determine GPU execution progress.
+						if (SUCCEEDED(mD3D12CommandAllocator->Reset()))
+						{
+							// However, when ExecuteCommandList() is called on a particular command
+							// list, that command list can then be reset at any time and must be before
+							// re-recording.
+							if (SUCCEEDED(mD3D12GraphicsCommandList->Reset(mD3D12CommandAllocator, nullptr)))
+							{
+								// Indicate that the back buffer will be used as a render target
+								SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
+
+								{
+									CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+									mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+								}
+
+								CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRenderTargetView()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
+								CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(swapChain->getD3D12DescriptorHeapDepthStencilView()->GetCPUDescriptorHandleForHeapStart());
+								mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+
+								{ // TODO(co) Just a test, integrate properly
+									uint32_t width = 0;
+									uint32_t height = 0;
+									swapChain->getWidthAndHeight(width, height);
+
+									m_viewport.Width = static_cast<float>(width);
+									m_viewport.Height = static_cast<float>(height);
+									m_viewport.MaxDepth = 1.0f;
+									mD3D12GraphicsCommandList->RSSetViewports(1, &m_viewport);
+
+									m_scissorRect.right = static_cast<LONG>(width);
+									m_scissorRect.bottom = static_cast<LONG>(height);
+									mD3D12GraphicsCommandList->RSSetScissorRects(1, &m_scissorRect);
+								}
+							}
+						}
+
+						// End debug event
+						RENDERER_END_DEBUG_EVENT(this)
+
 						// TODO(co)
 						/*
 						// Get the Direct3D 12 swap chain instance
@@ -836,8 +887,8 @@ namespace Direct3D12Renderer
 			}
 			else
 			{
-				// Set the Direct3D 11 render targets
-				mD3D12GraphicsCommandList->OMSetRenderTargets(1, nullptr, FALSE, nullptr);
+				// TODO(co) Set the Direct3D 12 render targets
+				// mD3D12GraphicsCommandList->OMSetRenderTargets(1, nullptr, FALSE, nullptr);
 
 				// Release the render target reference, in case we have one
 				if (nullptr != mRenderTarget)
@@ -973,89 +1024,15 @@ namespace Direct3D12Renderer
 		RENDERER_END_DEBUG_EVENT(this)
 	}
 
-	// TODO(co) Just a test, integrate properly
-	D3D12_VIEWPORT m_viewport;
-	D3D12_RECT m_scissorRect;
-
 	bool Direct3D12Renderer::beginScene()
 	{
-		bool result = false;	// Error by default
-
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
 		// Not required when using Direct3D 12
-		// TODO(co) Until we have a command list interface, we must perform the command list handling in here
-
-		// Command list allocators can only be reset when the associated
-		// command lists have finished execution on the GPU; apps should use
-		// fences to determine GPU execution progress.
-		if (SUCCEEDED(mD3D12CommandAllocator->Reset()))
-		{
-			// However, when ExecuteCommandList() is called on a particular command
-			// list, that command list can then be reset at any time and must be before
-			// re-recording.
-			if (SUCCEEDED(mD3D12GraphicsCommandList->Reset(mD3D12CommandAllocator, nullptr)))
-			{
-				// Indicate that the back buffer will be used as a render target
-				SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
-
-				CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-				mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
-
-				CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRenderTargetView()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
-				CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(swapChain->getD3D12DescriptorHeapDepthStencilView()->GetCPUDescriptorHandleForHeapStart());
-				mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
-
-				{ // TODO(co) Just a test, integrate properly
-					uint32_t width = 0;
-					uint32_t height = 0;
-					swapChain->getWidthAndHeight(width, height);
-
-					m_viewport.Width = static_cast<float>(width);
-					m_viewport.Height = static_cast<float>(height);
-					m_viewport.MaxDepth = 1.0f;
-					mD3D12GraphicsCommandList->RSSetViewports(1, &m_viewport);
-
-					m_scissorRect.right = static_cast<LONG>(width);
-					m_scissorRect.bottom = static_cast<LONG>(height);
-					mD3D12GraphicsCommandList->RSSetScissorRects(1, &m_scissorRect);
-				}
-
-				// Done
-				result = true;
-			}
-		}
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(this)
-
-		// Done
-		return result;
+		return true;
 	}
 
 	void Direct3D12Renderer::endScene()
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
 		// Not required when using Direct3D 12
-		// TODO(co) Until we have a command list interface, we must perform the command list handling in here
-
-		// Indicate that the back buffer will now be used to present
-		SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
-		CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-		mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
-
-		if (SUCCEEDED(mD3D12GraphicsCommandList->Close()))
-		{
-			// Execute the command list
-			ID3D12CommandList* commandLists[] = { mD3D12GraphicsCommandList };
-			mD3D12CommandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
-		}
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(this)
 	}
 
 
