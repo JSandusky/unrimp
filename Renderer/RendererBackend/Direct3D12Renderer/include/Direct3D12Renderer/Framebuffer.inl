@@ -28,9 +28,19 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t Framebuffer::getNumberOfD3D12RenderTargetViews() const
+	inline uint32_t Framebuffer::getNumberOfColorTextures() const
 	{
 		return mNumberOfColorTextures;
+	}
+
+	inline Renderer::ITexture** Framebuffer::getColorTextures() const
+	{
+		return mColorTextures;
+	}
+
+	inline Renderer::ITexture* Framebuffer::getDepthStencilTexture() const
+	{
+		return mDepthStencilTexture;
 	}
 
 	inline ID3D12DescriptorHeap **Framebuffer::getD3D12DescriptorHeapRenderTargetViews() const

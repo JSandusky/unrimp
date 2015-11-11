@@ -96,12 +96,30 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
-		*    Return the number of Direct3D 12 render target views
+		*    Return the number of color textures
 		*
 		*  @return
-		*    The number of Direct3D 12 render target views
+		*    The number of color textures
 		*/
-		inline uint32_t getNumberOfD3D12RenderTargetViews() const;
+		inline uint32_t getNumberOfColorTextures() const;
+
+		/**
+		*  @brief
+		*    Return the color textures
+		*
+		*  @return
+		*    The color textures, null pointer on error, do not release the returned instance unless you added an own reference to it
+		*/
+		inline Renderer::ITexture** getColorTextures() const;
+
+		/**
+		*  @brief
+		*    Return the depth stencil texture
+		*
+		*  @return
+		*    The depth stencil texture, null pointer on error, do not release the returned instance unless you added an own reference to it
+		*/
+		inline Renderer::ITexture* getDepthStencilTexture() const;
 
 		/**
 		*  @brief
@@ -109,9 +127,6 @@ namespace Direct3D12Renderer
 		*
 		*  @return
 		*    The Direct3D 12 render target view descriptor heap instance, null pointer on error, do not release the returned instance unless you added an own reference to it
-		*
-		*  @note
-		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
 		inline ID3D12DescriptorHeap **getD3D12DescriptorHeapRenderTargetViews() const;
 
@@ -121,9 +136,6 @@ namespace Direct3D12Renderer
 		*
 		*  @return
 		*    The Direct3D 12 depth stencil view descriptor heap instance, null pointer on error, do not release the returned instance unless you added an own reference to it
-		*
-		*  @note
-		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
 		inline ID3D12DescriptorHeap *getD3D12DescriptorHeapDepthStencilView() const;
 

@@ -776,13 +776,25 @@ namespace Direct3D12Renderer
 
 					case Renderer::ResourceType::FRAMEBUFFER:
 					{
-						// TODO(co)
+						// TODO(co) Implement resource transition handling (first "Direct3D12Renderer::Texture2D" needs to be cleaned up)
 						/*
-						// Get the Direct3D 11 framebuffer instance
+						// Get the Direct3D 12 framebuffer instance
 						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
-						// Set the Direct3D 11 render targets
-						mD3D11DeviceContext->OMSetRenderTargets(framebuffer->getNumberOfD3D11RenderTargetViews(), framebuffer->getD3D11RenderTargetViews(), framebuffer->getD3D11DepthStencilView());
+						// Inform Direct3D 12 about the resource transitions
+						const uint32_t numberOfColorTextures = framebuffer->getNumberOfColorTextures();
+						for (uint32_t i = 0; i < numberOfColorTextures; ++i)
+						{
+							// TODO(co) Resource type handling, currently only 2D texture is supported
+							CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(static_cast<Texture2D*>(framebuffer->getColorTextures()[i])->getD3D12Resource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
+							mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+						}
+						if (nullptr != framebuffer->getDepthStencilTexture())
+						{
+							// TODO(co) Resource type handling, currently only 2D texture is supported
+							CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(static_cast<Texture2D*>(framebuffer->getDepthStencilTexture())->getD3D12Resource(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_GENERIC_READ);
+							mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+						}
 						*/
 						break;
 					}
@@ -850,21 +862,40 @@ namespace Direct3D12Renderer
 						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
 						// Set the Direct3D 12 render targets
-						const uint32_t numberOfD3D12RenderTargetViews = framebuffer->getNumberOfD3D12RenderTargetViews();
+						const uint32_t numberOfColorTextures = framebuffer->getNumberOfColorTextures();
 						D3D12_CPU_DESCRIPTOR_HANDLE d3d12CpuDescriptorHandlesRenderTarget[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT];
-						for (uint32_t i = 0; i < numberOfD3D12RenderTargetViews; ++i)
+						for (uint32_t i = 0; i < numberOfColorTextures; ++i)
 						{
 							d3d12CpuDescriptorHandlesRenderTarget[i] = framebuffer->getD3D12DescriptorHeapRenderTargetViews()[i]->GetCPUDescriptorHandleForHeapStart();
+
+							// TODO(co) Implement resource transition handling (first "Direct3D12Renderer::Texture2D" needs to be cleaned up)
+							/*
+							{ // Inform Direct3D 12 about the resource transition
+								// TODO(co) Resource type handling, currently only 2D texture is supported
+								CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(static_cast<Texture2D*>(framebuffer->getColorTextures()[i])->getD3D12Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
+								mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+							}
+							*/
 						}
 						ID3D12DescriptorHeap* d3d12DescriptorHeapDepthStencilView = framebuffer->getD3D12DescriptorHeapDepthStencilView();
 						if (nullptr != d3d12DescriptorHeapDepthStencilView)
 						{
+							// TODO(co) Implement resource transition handling (first "Direct3D12Renderer::Texture2D" needs to be cleaned up)
+							/*
+							{ // Inform Direct3D 12 about the resource transition
+								// TODO(co) Resource type handling, currently only 2D texture is supported
+								CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(static_cast<Texture2D*>(framebuffer->getDepthStencilTexture())->getD3D12Resource(), D3D12_RESOURCE_STATE_GENERIC_READ, D3D12_RESOURCE_STATE_RENDER_TARGET);
+								mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+							}
+							*/
+
+							// Set the Direct3D 12 render targets
 							D3D12_CPU_DESCRIPTOR_HANDLE d3d12CpuDescriptorHandlesDepthStencil = d3d12DescriptorHeapDepthStencilView->GetCPUDescriptorHandleForHeapStart();
-							mD3D12GraphicsCommandList->OMSetRenderTargets(numberOfD3D12RenderTargetViews, d3d12CpuDescriptorHandlesRenderTarget, FALSE, &d3d12CpuDescriptorHandlesDepthStencil);
+							mD3D12GraphicsCommandList->OMSetRenderTargets(numberOfColorTextures, d3d12CpuDescriptorHandlesRenderTarget, FALSE, &d3d12CpuDescriptorHandlesDepthStencil);
 						}
 						else
 						{
-							mD3D12GraphicsCommandList->OMSetRenderTargets(numberOfD3D12RenderTargetViews, d3d12CpuDescriptorHandlesRenderTarget, FALSE, nullptr);
+							mD3D12GraphicsCommandList->OMSetRenderTargets(numberOfColorTextures, d3d12CpuDescriptorHandlesRenderTarget, FALSE, nullptr);
 						}
 						break;
 					}
@@ -905,6 +936,7 @@ namespace Direct3D12Renderer
 	void Direct3D12Renderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
 	{
 		// Unlike Direct3D 9, OpenGL or OpenGL ES 2, Direct3D 12 clears a given render target view and not the currently bound
+		// -> No resource transition required in here, it's handled inside "Direct3D12Renderer::omSetRenderTarget()"
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
@@ -955,7 +987,7 @@ namespace Direct3D12Renderer
 					if (flags & Renderer::ClearFlag::COLOR)
 					{
 						// Loop through all Direct3D 12 render target views
-						ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetViews = framebuffer->getD3D12DescriptorHeapRenderTargetViews() + framebuffer->getNumberOfD3D12RenderTargetViews();
+						ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetViews = framebuffer->getD3D12DescriptorHeapRenderTargetViews() + framebuffer->getNumberOfColorTextures();
 						for (ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetView = framebuffer->getD3D12DescriptorHeapRenderTargetViews(); d3d12DescriptorHeapRenderTargetView < d3d12DescriptorHeapRenderTargetViews; ++d3d12DescriptorHeapRenderTargetView)
 						{
 							// Valid Direct3D 12 render target view?
