@@ -853,11 +853,7 @@ namespace OpenGLES2Renderer
 	void OpenGLES2Renderer::endScene()
 	{
 		// We need to forget about the currently set render target
-		if (nullptr != mRenderTarget)
-		{
-			mRenderTarget->release();
-			mRenderTarget = nullptr;
-		}
+		omSetRenderTarget(nullptr);
 	}
 
 

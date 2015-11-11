@@ -1103,11 +1103,7 @@ namespace Direct3D10Renderer
 	void Direct3D10Renderer::endScene()
 	{
 		// We need to forget about the currently set render target
-		if (nullptr != mRenderTarget)
-		{
-			mRenderTarget->release();
-			mRenderTarget = nullptr;
-		}
+		omSetRenderTarget(nullptr);
 	}
 
 

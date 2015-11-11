@@ -1088,14 +1088,10 @@ namespace Direct3D9Renderer
 
 	void Direct3D9Renderer::endScene()
 	{
-		mDirect3DDevice9->EndScene();
-
 		// We need to forget about the currently set render target
-		if (nullptr != mRenderTarget)
-		{
-			mRenderTarget->release();
-			mRenderTarget = nullptr;
-		}
+		omSetRenderTarget(nullptr);
+
+		mDirect3DDevice9->EndScene();
 	}
 
 
