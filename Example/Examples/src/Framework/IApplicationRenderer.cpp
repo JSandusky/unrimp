@@ -101,8 +101,8 @@ void IApplicationRenderer::onDrawRequest()
 			mRenderer->omSetRenderTarget(swapChain);
 
 			// Begin scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
+			// -> Required for Direct3D 9 and Direct3D 12
+			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 			if (mRenderer->beginScene())
 			{
 				{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle
@@ -120,8 +120,8 @@ void IApplicationRenderer::onDrawRequest()
 				onDraw();
 
 				// End scene rendering
-				// -> Required for Direct3D 9
-				// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
+				// -> Required for Direct3D 9 and Direct3D 12
+				// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 				mRenderer->endScene();
 			}
 
