@@ -236,6 +236,10 @@ namespace OpenGLRenderer
 						0
 					};
 
+					// Lookout! OpenGL context sharing chaos: https://www.opengl.org/wiki/OpenGL_Context
+					// "State" objects are not shared between contexts, including but not limited to:
+					// -> Vertex Array Objects (VAOs)
+					// -> Framebuffer Objects (FBOs)
 					const HGLRC hglrc = wglCreateContextAttribsARB(mWindowDeviceContext, (nullptr != shareContextWindows) ? shareContextWindows->getRenderContext() : nullptr, ATTRIBUTES);
 					if (nullptr != hglrc)
 					{
