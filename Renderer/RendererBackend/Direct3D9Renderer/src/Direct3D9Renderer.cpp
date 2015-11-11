@@ -134,9 +134,6 @@ namespace Direct3D9Renderer
 						mMainSwapChain = static_cast<SwapChain*>(createSwapChain(nativeWindowHandle));
 						RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
 						mMainSwapChain->addReference();	// Internal renderer reference
-
-						// By default, set the created main swap chain as the currently used render target
-						omSetRenderTarget(mMainSwapChain);
 					}
 				}
 				else
@@ -1092,6 +1089,13 @@ namespace Direct3D9Renderer
 	void Direct3D9Renderer::endScene()
 	{
 		mDirect3DDevice9->EndScene();
+
+		// We need to forget about the currently set render target
+		if (nullptr != mRenderTarget)
+		{
+			mRenderTarget->release();
+			mRenderTarget = nullptr;
+		}
 	}
 
 

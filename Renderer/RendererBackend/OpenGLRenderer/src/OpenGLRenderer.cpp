@@ -130,9 +130,6 @@ namespace OpenGLRenderer
 				mMainSwapChain = static_cast<SwapChain*>(createSwapChain(nativeWindowHandle));
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
 				mMainSwapChain->addReference();	// Internal renderer reference
-
-				// By default, set the created main swap chain as the currently used render target
-				omSetRenderTarget(mMainSwapChain);
 			}
 		}
 	}
@@ -1128,7 +1125,12 @@ namespace OpenGLRenderer
 
 	void OpenGLRenderer::endScene()
 	{
-		// Not required when using OpenGL
+		// We need to forget about the currently set render target
+		if (nullptr != mRenderTarget)
+		{
+			mRenderTarget->release();
+			mRenderTarget = nullptr;
+		}
 	}
 
 
