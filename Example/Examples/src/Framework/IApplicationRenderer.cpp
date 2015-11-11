@@ -97,14 +97,14 @@ void IApplicationRenderer::onDrawRequest()
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
 
-			// Make the main swap chain to the current render target
-			mRenderer->omSetRenderTarget(swapChain);
-
 			// Begin scene rendering
 			// -> Required for Direct3D 9 and Direct3D 12
 			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 			if (mRenderer->beginScene())
 			{
+				// Make the main swap chain to the current render target
+				mRenderer->omSetRenderTarget(swapChain);
+
 				{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle
 				  // must be set in every draw call to work with all supported renderer APIs
 					// Get the window size

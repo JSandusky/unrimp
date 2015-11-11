@@ -166,9 +166,6 @@ namespace Direct3D12Renderer
 									mMainSwapChain = static_cast<SwapChain*>(createSwapChain(nativeWindowHandle));
 									RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
 									mMainSwapChain->addReference();	// Internal renderer reference
-
-									// By default, set the created main swap chain as the currently used render target
-									omSetRenderTarget(mMainSwapChain);
 								}
 							}
 							else
@@ -781,15 +778,15 @@ namespace Direct3D12Renderer
 				{
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
-						// TODO(co)
-						/*
 						// Get the Direct3D 12 swap chain instance
 						SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
+
+						CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+						mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
 
 						CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRenderTargetView()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
 						CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(swapChain->getD3D12DescriptorHeapDepthStencilView()->GetCPUDescriptorHandleForHeapStart());
 						mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
-						*/
 						break;
 					}
 
@@ -979,21 +976,7 @@ namespace Direct3D12Renderer
 			// However, when ExecuteCommandList() is called on a particular command
 			// list, that command list can then be reset at any time and must be before
 			// re-recording.
-			if (SUCCEEDED(mD3D12GraphicsCommandList->Reset(mD3D12CommandAllocator, nullptr)))
-			{
-				// Indicate that the back buffer will be used as a render target
-				SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
-
-				CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-				mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
-
-				CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRenderTargetView()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
-				CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(swapChain->getD3D12DescriptorHeapDepthStencilView()->GetCPUDescriptorHandleForHeapStart());
-				mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
-
-				// Done
-				result = true;
-			}
+			result = SUCCEEDED(mD3D12GraphicsCommandList->Reset(mD3D12CommandAllocator, nullptr));
 		}
 
 		// End debug event
@@ -1021,6 +1004,13 @@ namespace Direct3D12Renderer
 			// Execute the command list
 			ID3D12CommandList* commandLists[] = { mD3D12GraphicsCommandList };
 			mD3D12CommandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
+		}
+
+		// We need to forget about the currently set render target
+		if (nullptr != mRenderTarget)
+		{
+			mRenderTarget->release();
+			mRenderTarget = nullptr;
 		}
 
 		// End debug event
