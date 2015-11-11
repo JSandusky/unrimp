@@ -757,17 +757,68 @@ namespace Direct3D12Renderer
 		// New render target?
 		if (mRenderTarget != renderTarget)
 		{
+			// Unset the previous render target
+			if (nullptr != mRenderTarget)
+			{
+				// Evaluate the render target type
+				switch (mRenderTarget->getResourceType())
+				{
+					case Renderer::ResourceType::SWAP_CHAIN:
+					{
+						// Get the Direct3D 12 swap chain instance
+						SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
+
+						// Inform Direct3D 12 about the resource transition
+						CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+						mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+						break;
+					}
+
+					case Renderer::ResourceType::FRAMEBUFFER:
+					{
+						// TODO(co)
+						/*
+						// Get the Direct3D 11 framebuffer instance
+						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
+
+						// Set the Direct3D 11 render targets
+						mD3D11DeviceContext->OMSetRenderTargets(framebuffer->getNumberOfD3D11RenderTargetViews(), framebuffer->getD3D11RenderTargetViews(), framebuffer->getD3D11DepthStencilView());
+						*/
+						break;
+					}
+
+					case Renderer::ResourceType::PROGRAM:
+					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::INDEX_BUFFER:
+					case Renderer::ResourceType::VERTEX_BUFFER:
+					case Renderer::ResourceType::UNIFORM_BUFFER:
+					case Renderer::ResourceType::TEXTURE_BUFFER:
+					case Renderer::ResourceType::TEXTURE_2D:
+					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::RASTERIZER_STATE:
+					case Renderer::ResourceType::DEPTH_STENCIL_STATE:
+					case Renderer::ResourceType::BLEND_STATE:
+					case Renderer::ResourceType::SAMPLER_STATE:
+					case Renderer::ResourceType::VERTEX_SHADER:
+					case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+					case Renderer::ResourceType::GEOMETRY_SHADER:
+					case Renderer::ResourceType::FRAGMENT_SHADER:
+					default:
+						// Not handled in here
+						break;
+				}
+
+				// Release the render target reference, in case we have one
+				mRenderTarget->release();
+				mRenderTarget = nullptr;
+			}
+
 			// Set a render target?
 			if (nullptr != renderTarget)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 				DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
-
-				// Release the render target reference, in case we have one
-				if (nullptr != mRenderTarget)
-				{
-					mRenderTarget->release();
-				}
 
 				// Set new render target and add a reference to it
 				mRenderTarget = renderTarget;
@@ -781,9 +832,12 @@ namespace Direct3D12Renderer
 						// Get the Direct3D 12 swap chain instance
 						SwapChain *swapChain = static_cast<SwapChain*>(mRenderTarget);
 
-						CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-						mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+						{ // Inform Direct3D 12 about the resource transition
+							CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+							mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
+						}
 
+						// Set Direct3D 12 render target
 						CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(swapChain->getD3D12DescriptorHeapRenderTargetView()->GetCPUDescriptorHandleForHeapStart(), static_cast<INT>(swapChain->getBackD3D12ResourceRenderTargetFrameIndex()), swapChain->getRenderTargetViewDescriptorSize());
 						CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(swapChain->getD3D12DescriptorHeapDepthStencilView()->GetCPUDescriptorHandleForHeapStart());
 						mD3D12GraphicsCommandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
@@ -827,15 +881,7 @@ namespace Direct3D12Renderer
 			}
 			else
 			{
-				// TODO(co) Set the Direct3D 12 render targets
-				// mD3D12GraphicsCommandList->OMSetRenderTargets(1, nullptr, FALSE, nullptr);
-
-				// Release the render target reference, in case we have one
-				if (nullptr != mRenderTarget)
-				{
-					mRenderTarget->release();
-					mRenderTarget = nullptr;
-				}
+				mD3D12GraphicsCommandList->OMSetRenderTargets(0, nullptr, FALSE, nullptr);
 			}
 		}
 	}
@@ -988,29 +1034,20 @@ namespace Direct3D12Renderer
 
 	void Direct3D12Renderer::endScene()
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
-
 		// Not required when using Direct3D 12
 		// TODO(co) Until we have a command list interface, we must perform the command list handling in here
 
-		// Indicate that the back buffer will now be used to present
-		SwapChain* swapChain = mMainSwapChain;	// TODO(co) As mentioned above, this is just meant for the Direct3D 12 renderer backend kickoff to have something to start with
-		CD3DX12_RESOURCE_BARRIER d3d12XResourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(swapChain->getBackD3D12ResourceRenderTarget(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-		mD3D12GraphicsCommandList->ResourceBarrier(1, &d3d12XResourceBarrier);
-
-		if (SUCCEEDED(mD3D12GraphicsCommandList->Close()))
-		{
-			// Execute the command list
-			ID3D12CommandList* commandLists[] = { mD3D12GraphicsCommandList };
-			mD3D12CommandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
-		}
+		// Begin debug event
+		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
 		// We need to forget about the currently set render target
-		if (nullptr != mRenderTarget)
+		omSetRenderTarget(nullptr);
+
+		// Close and execute the command list
+		if (SUCCEEDED(mD3D12GraphicsCommandList->Close()))
 		{
-			mRenderTarget->release();
-			mRenderTarget = nullptr;
+			ID3D12CommandList* commandLists[] = { mD3D12GraphicsCommandList };
+			mD3D12CommandQueue->ExecuteCommandLists(_countof(commandLists), commandLists);
 		}
 
 		// End debug event

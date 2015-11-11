@@ -349,15 +349,12 @@ void FirstMultipleSwapChains::onDeinitialization()
 	IApplicationRenderer::onDeinitialization();
 }
 
-void FirstMultipleSwapChains::onDraw()
+void FirstMultipleSwapChains::onDrawRequest()
 {
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && nullptr != mPipelineState)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
 		// Usually you draw into a swap chain when getting informed by the OS that the
 		// used native OS window requests a redraw of it's content. In order to avoid
 		// adding to much unnecessary overhead in here we just draw into the created
@@ -369,14 +366,55 @@ void FirstMultipleSwapChains::onDraw()
 		// -> Usually, a swap chain present is interpreted by the debug/profile tool as a single frame, which is of course correct
 		// -> In this example this behaviour makes it difficult to catch the desired frame of the desired native OS window
 
-		// Render to the swap chain created in this example, but only if it's valid
-		if (nullptr != mSwapChain)
+		{ // Draw into the main swap chain
+			Renderer::ISwapChainPtr swapChain(renderer->getMainSwapChain());
+			if (nullptr != swapChain)
+			{
+				// Begin scene rendering
+				// -> Required for Direct3D 9 and Direct3D 12
+				// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+				if (renderer->beginScene())
+				{
+					// Begin debug event
+					RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw into the main swap chain")
+
+					// Set the render target to render into
+					renderer->omSetRenderTarget(swapChain);
+
+					{ // Set the viewport
+						// Get the render target with and height
+						uint32_t width  = 1;
+						uint32_t height = 1;
+						swapChain->getWidthAndHeight(width, height);
+
+						// Set the viewport and scissor rectangle
+						renderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
+					}
+
+					// Draw into the main swap chain
+					draw(Color4::GRAY);
+
+					// End debug event
+					RENDERER_END_DEBUG_EVENT(renderer)
+
+					// End scene rendering
+					// -> Required for Direct3D 9 and Direct3D 12
+					// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+					renderer->endScene();
+
+					// Present the content of the current back buffer
+					swapChain->present();
+				}
+			}
+		}
+
+		// Render to the swap chain created in this example, but only if it's valid: Begin scene rendering
+		// -> Required for Direct3D 9 and Direct3D 12
+		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+		if (nullptr != mSwapChain && renderer->beginScene())
 		{
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Render to the swap chain created in this example")
-
-			// Backup the currently used render target
-			Renderer::IRenderTargetPtr renderTarget(renderer->omGetRenderTarget());
 
 			// Set the render target to render into
 			renderer->omSetRenderTarget(mSwapChain);
@@ -405,43 +443,17 @@ void FirstMultipleSwapChains::onDraw()
 			// Draw into the swap chain created in this example
 			draw(Color4::GREEN);
 
-			// Restore the previously set render target
-			renderer->omSetRenderTarget(renderTarget);
+			// End debug event
+			RENDERER_END_DEBUG_EVENT(renderer)
+
+			// End scene rendering
+			// -> Required for Direct3D 9 and Direct3D 12
+			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			renderer->endScene();
 
 			// Present the content of the current back buffer
 			mSwapChain->present();
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(renderer)
 		}
-
-		{ // Draw into the main swap chain
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw into the main swap chain")
-
-			{ // Set the viewport
-				// Get the render target with and height
-				uint32_t width  = 1;
-				uint32_t height = 1;
-				Renderer::IRenderTarget *renderTarget = renderer->omGetRenderTarget();
-				if (nullptr != renderTarget)
-				{
-					renderTarget->getWidthAndHeight(width, height);
-				}
-
-				// Set the viewport and scissor rectangle
-				renderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
-			}
-
-			// Draw into the main swap chain
-			draw(Color4::GRAY);
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(renderer)
-		}
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(renderer)
 	}
 }
 

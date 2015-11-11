@@ -94,14 +94,14 @@ void IApplicationRenderer::onDrawRequest()
 		Renderer::ISwapChainPtr swapChain(mRenderer->getMainSwapChain());
 		if (nullptr != swapChain)
 		{
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
-
 			// Begin scene rendering
 			// -> Required for Direct3D 9 and Direct3D 12
 			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
 			if (mRenderer->beginScene())
 			{
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
+
 				// Make the main swap chain to the current render target
 				mRenderer->omSetRenderTarget(swapChain);
 
@@ -125,11 +125,11 @@ void IApplicationRenderer::onDrawRequest()
 				mRenderer->endScene();
 			}
 
-			// Present the content of the current back buffer
-			swapChain->present();
-
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(mRenderer)
+
+			// Present the content of the current back buffer
+			swapChain->present();
 		}
 	}
 }
