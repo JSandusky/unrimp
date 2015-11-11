@@ -58,7 +58,8 @@ namespace Renderer
 			BC3           = 7,	///< DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
 			BC4           = 8,	///< 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
 			BC5           = 9,	///< 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block)
-			ETC1          = 10	///< 3 component texture compression meant for mobile devices
+			ETC1          = 10,	///< 3 component texture compression meant for mobile devices
+			D32_FLOAT     = 11	///< 32-bit float depth format
 		};
 
 		/**

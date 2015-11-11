@@ -42,7 +42,8 @@ namespace Renderer
 			true,	// Renderer::TextureFormat::BC3           - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed
 			true,	// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - when being uncompressed
 			true,	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - when being uncompressed
-			true	// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices
+			true,	// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices
+			false	// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 		};
 		return MAPPING[textureFormat];
 	}
@@ -61,7 +62,8 @@ namespace Renderer
 			sizeof(uint8_t) * 4,	// Renderer::TextureFormat::BC3           - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed
 			sizeof(uint8_t) * 1,	// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - when being uncompressed
 			sizeof(uint8_t) * 2,	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - when being uncompressed
-			sizeof(uint8_t) * 3		// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - when being uncompressed
+			sizeof(uint8_t) * 3,	// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - when being uncompressed
+			sizeof(float)			// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 		};
 		return MAPPING[textureFormat];
 	}
@@ -113,6 +115,10 @@ namespace Renderer
 			// 3 component texture compression meant for mobile devices
 			case ETC1:
 				return (width >> 1);
+
+			// 32-bit float depth format
+			case D32_FLOAT:
+				return sizeof(float) * width;
 
 			default:
 				return 0;
@@ -170,6 +176,10 @@ namespace Renderer
 				const uint32_t numberOfBytesPerSlice = (width * height) >> 1;
 				return (numberOfBytesPerSlice > 8) ? numberOfBytesPerSlice : 8;
 			}
+
+			// 32-bit float depth format
+			case D32_FLOAT:
+				return sizeof(float) * width * height;
 
 			default:
 				return 0;

@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "Renderer/TextureTypes.h"
 #include "Renderer/BlendStateTypes.h"
 #include "Renderer/VertexArrayTypes.h"
 #include "Renderer/RasterizerStateTypes.h"
@@ -84,13 +85,16 @@ namespace Renderer
 	*/
 	struct PipelineState
 	{
-		IRootSignature*				rootSignature;			///< Root signature (pipeline state instances keep a reference to the program), must be valid
-		IProgram*					program;				///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
-		VertexAttributes			vertexAttributes;		///< Vertex attributes
-		PrimitiveTopologyType::Enum	primitiveTopologyType;	///< Primitive topology type
-		RasterizerState				rasterizerState;		///< Rasterizer state
-		DepthStencilState			depthStencilState;		///< Depth stencil state
-		BlendState					blendState;				///< Blend state
+		IRootSignature*				rootSignature;				///< Root signature (pipeline state instances keep a reference to the program), must be valid
+		IProgram*					program;					///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
+		VertexAttributes			vertexAttributes;			///< Vertex attributes
+		PrimitiveTopologyType::Enum	primitiveTopologyType;		///< Primitive topology type
+		RasterizerState				rasterizerState;			///< Rasterizer state
+		DepthStencilState			depthStencilState;			///< Depth stencil state
+		BlendState					blendState;					///< Blend state
+		uint32_t					numberOfRenderTargets;		///< Number of render targets
+		TextureFormat::Enum			renderTargetViewFormats[8];	///< Render target view formats
+		TextureFormat::Enum			depthStencilViewFormat;		///< Depth stencil view formats
 	};
 	struct PipelineStateBuilder : public PipelineState
 	{

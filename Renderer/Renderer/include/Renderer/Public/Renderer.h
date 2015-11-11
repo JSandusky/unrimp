@@ -776,7 +776,8 @@ namespace Renderer
 				BC3           = 7,
 				BC4           = 8,
 				BC5           = 9,
-				ETC1          = 10
+				ETC1          = 10,
+				D32_FLOAT     = 11
 			};
 			inline static bool isCompressed(Enum textureFormat)
 			{
@@ -792,7 +793,8 @@ namespace Renderer
 					true,
 					true,
 					true,
-					true
+					true,
+					false
 				};
 				return MAPPING[textureFormat];
 			}
@@ -810,7 +812,8 @@ namespace Renderer
 					sizeof(uint8_t) * 4,
 					sizeof(uint8_t) * 1,
 					sizeof(uint8_t) * 2,
-					sizeof(uint8_t) * 3
+					sizeof(uint8_t) * 3,
+					sizeof(float)
 				};
 				return MAPPING[textureFormat];
 			}
@@ -840,6 +843,8 @@ namespace Renderer
 						return ((width + 3) >> 2) * 16;
 					case ETC1:
 						return (width >> 1);
+					case D32_FLOAT:
+						return sizeof(float) * width;
 					default:
 						return 0;
 				}
@@ -873,6 +878,8 @@ namespace Renderer
 						const uint32_t numberOfBytesPerSlice = (width * height) >> 1;
 						return (numberOfBytesPerSlice > 8) ? numberOfBytesPerSlice : 8;
 					}
+					case D32_FLOAT:
+						return sizeof(float) * width * height;
 					default:
 						return 0;
 				}
@@ -1297,18 +1304,31 @@ namespace Renderer
 			RasterizerState				rasterizerState;
 			DepthStencilState			depthStencilState;
 			BlendState					blendState;
+			uint32_t					numberOfRenderTargets;
+			TextureFormat::Enum			renderTargetViewFormats[8];
+			TextureFormat::Enum			depthStencilViewFormat;
 		};
 		struct PipelineStateBuilder : public PipelineState
 		{
 			PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes)
 			{
-				rootSignature			= _rootSignature;
-				program					= _program;
-				vertexAttributes		= _vertexAttributes;
-				primitiveTopologyType	= PrimitiveTopologyType::TRIANGLE;
-				rasterizerState			= RasterizerStateBuilder::getDefaultRasterizerState();
-				depthStencilState		= DepthStencilStateBuilder::getDefaultDepthStencilState();
-				blendState				= BlendStateBuilder::getDefaultBlendState();
+				rootSignature				= _rootSignature;
+				program						= _program;
+				vertexAttributes			= _vertexAttributes;
+				primitiveTopologyType		= PrimitiveTopologyType::TRIANGLE;
+				rasterizerState				= RasterizerStateBuilder::getDefaultRasterizerState();
+				depthStencilState			= DepthStencilStateBuilder::getDefaultDepthStencilState();
+				blendState					= BlendStateBuilder::getDefaultBlendState();
+				numberOfRenderTargets		= 1;
+				renderTargetViewFormats[0]	= TextureFormat::R8G8B8A8;
+				renderTargetViewFormats[1]	= TextureFormat::R8G8B8A8;
+				renderTargetViewFormats[2]	= TextureFormat::R8G8B8A8;
+				renderTargetViewFormats[3]	= TextureFormat::R8G8B8A8;
+				renderTargetViewFormats[4]	= TextureFormat::R8G8B8A8;
+				renderTargetViewFormats[5]	= TextureFormat::R8G8B8A8;
+				renderTargetViewFormats[6]	= TextureFormat::R8G8B8A8;
+				renderTargetViewFormats[7]	= TextureFormat::R8G8B8A8;
+				depthStencilViewFormat		= TextureFormat::D32_FLOAT;
 			}
 		};
 	#endif

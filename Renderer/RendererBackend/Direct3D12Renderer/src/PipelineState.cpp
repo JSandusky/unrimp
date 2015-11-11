@@ -143,9 +143,12 @@ namespace Direct3D12Renderer
 		memcpy(&d3d12GraphicsPipelineState.DepthStencilState, &pipelineState.depthStencilState, sizeof(D3D12_DEPTH_STENCIL_DESC));
 		d3d12GraphicsPipelineState.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 		d3d12GraphicsPipelineState.SampleMask = UINT_MAX;
-		d3d12GraphicsPipelineState.NumRenderTargets = 1;
-		d3d12GraphicsPipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-		d3d12GraphicsPipelineState.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+		d3d12GraphicsPipelineState.NumRenderTargets = pipelineState.numberOfRenderTargets;
+		for (uint32_t i = 0; i < pipelineState.numberOfRenderTargets; ++i)
+		{
+			d3d12GraphicsPipelineState.RTVFormats[i] = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(pipelineState.renderTargetViewFormats[i]));
+		}
+		d3d12GraphicsPipelineState.DSVFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(pipelineState.depthStencilViewFormat));
 		d3d12GraphicsPipelineState.SampleDesc.Count = 1;
 		if (FAILED(direct3D12Renderer.getD3D12Device()->CreateGraphicsPipelineState(&d3d12GraphicsPipelineState, IID_PPV_ARGS(&mD3D12PipelineState))))
 		{
