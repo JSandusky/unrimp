@@ -75,7 +75,7 @@ namespace OpenGLRenderer
 				mWindowDeviceContext = ::GetDC(reinterpret_cast<HWND>(mNativeWindowHandle));
 				if (NULL_HANDLE != mWindowDeviceContext)
 				{
-					// Get the color depth of the deskop
+					// Get the color depth of the desktop
 					int bits = 32;
 					{
 						HDC deskTopDC = ::GetDC(nullptr);
@@ -221,9 +221,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	void ContextWindows::makeCurrent(handle nativeWindowHandle) const
 	{
-		// TODO(sw) Check if working properly
 		HDC hDC = ::GetDC(reinterpret_cast<HWND>(nativeWindowHandle));
 		wglMakeCurrent(hDC, mWindowRenderContext);
+		::ReleaseDC(reinterpret_cast<HWND>(nativeWindowHandle), hDC);
 	}
 
 

@@ -128,11 +128,12 @@ namespace OpenGLRenderer
 
 	void SwapChain::present()
 	{
-		// TODO(co) Correct implementation
-		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		#ifdef WIN32
-			SwapBuffers(static_cast<const ContextWindows&>(openGLRenderer.getContext()).getDeviceContext());
+			HDC hDC = ::GetDC(reinterpret_cast<HWND>(mNativeWindowHandle));
+			::SwapBuffers(hDC);
+			::ReleaseDC(reinterpret_cast<HWND>(mNativeWindowHandle), hDC);
 		#elif defined LINUX
+			OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 			glXSwapBuffers(static_cast<const ContextLinux&>(openGLRenderer.getContext()).getDisplay(), mNativeWindowHandle);
 		#else
 			#error "Unsupported platform"

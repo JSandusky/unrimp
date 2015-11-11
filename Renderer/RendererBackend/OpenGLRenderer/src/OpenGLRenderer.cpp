@@ -984,8 +984,7 @@ namespace OpenGLRenderer
 				{
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
-						Renderer::ISwapChain *chain = static_cast<Renderer::ISwapChain*>(mRenderTarget);
-						mContext->makeCurrent(chain->getNativeWindowHandle());
+						mContext->makeCurrent(static_cast<Renderer::ISwapChain*>(mRenderTarget)->getNativeWindowHandle());
 						break;
 					}
 
