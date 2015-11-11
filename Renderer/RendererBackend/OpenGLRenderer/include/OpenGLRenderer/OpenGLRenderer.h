@@ -49,6 +49,20 @@ namespace OpenGLRenderer
 
 
 //[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+#ifdef WIN32
+	#ifndef CALLBACK
+		#define CALLBACK __stdcall
+	#endif
+#elif defined LINUX
+	#define CALLBACK
+#else
+	#error "Unsupported platform"
+#endif
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
