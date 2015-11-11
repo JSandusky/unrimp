@@ -78,10 +78,8 @@ void FirstMultipleRenderTargets::onInitialization()
 
 			{ // Create sampler state: We don't use mipmaps
 				Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
-				samplerState.filter   = Renderer::FilterMode::MIN_MAG_MIP_POINT;
-				samplerState.maxLOD   = 0.0f;
-				samplerState.addressU = Renderer::TextureAddressMode::WRAP;
-				samplerState.addressV = Renderer::TextureAddressMode::WRAP;
+				samplerState.filter = Renderer::FilterMode::MIN_MAG_MIP_POINT;
+				samplerState.maxLOD = 0.0f;
 				mSamplerState = renderer->createSamplerState(samplerState);
 			}
 
