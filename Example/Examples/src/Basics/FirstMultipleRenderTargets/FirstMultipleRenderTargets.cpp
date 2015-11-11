@@ -76,9 +76,10 @@ void FirstMultipleRenderTargets::onInitialization()
 			// Create the framebuffer object (FBO) instance
 			mFramebuffer = renderer->createFramebuffer(NUMBER_OF_TEXTURES, texture2D);
 
-			{ // Create sampler state
+			{ // Create sampler state: We don't use mipmaps
 				Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 				samplerState.filter   = Renderer::FilterMode::MIN_MAG_MIP_POINT;
+				samplerState.maxLOD   = 0.0f;
 				samplerState.addressU = Renderer::TextureAddressMode::WRAP;
 				samplerState.addressV = Renderer::TextureAddressMode::WRAP;
 				mSamplerState = renderer->createSamplerState(samplerState);
