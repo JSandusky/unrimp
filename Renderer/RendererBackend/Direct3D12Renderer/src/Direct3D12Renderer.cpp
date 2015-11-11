@@ -846,14 +846,26 @@ namespace Direct3D12Renderer
 
 					case Renderer::ResourceType::FRAMEBUFFER:
 					{
-						// TODO(co)
-						/*
-						// Get the Direct3D 11 framebuffer instance
+						// Get the Direct3D 12 framebuffer instance
 						Framebuffer *framebuffer = static_cast<Framebuffer*>(mRenderTarget);
 
-						// Set the Direct3D 11 render targets
-						mD3D11DeviceContext->OMSetRenderTargets(framebuffer->getNumberOfD3D11RenderTargetViews(), framebuffer->getD3D11RenderTargetViews(), framebuffer->getD3D11DepthStencilView());
-						*/
+						// Set the Direct3D 12 render targets
+						const uint32_t numberOfD3D12RenderTargetViews = framebuffer->getNumberOfD3D12RenderTargetViews();
+						D3D12_CPU_DESCRIPTOR_HANDLE d3d12CpuDescriptorHandlesRenderTarget[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT];
+						for (uint32_t i = 0; i < numberOfD3D12RenderTargetViews; ++i)
+						{
+							d3d12CpuDescriptorHandlesRenderTarget[i] = framebuffer->getD3D12DescriptorHeapRenderTargetViews()[i]->GetCPUDescriptorHandleForHeapStart();
+						}
+						ID3D12DescriptorHeap* d3d12DescriptorHeapDepthStencilView = framebuffer->getD3D12DescriptorHeapDepthStencilView();
+						if (nullptr != d3d12DescriptorHeapDepthStencilView)
+						{
+							D3D12_CPU_DESCRIPTOR_HANDLE d3d12CpuDescriptorHandlesDepthStencil = d3d12DescriptorHeapDepthStencilView->GetCPUDescriptorHandleForHeapStart();
+							mD3D12GraphicsCommandList->OMSetRenderTargets(numberOfD3D12RenderTargetViews, d3d12CpuDescriptorHandlesRenderTarget, FALSE, &d3d12CpuDescriptorHandlesDepthStencil);
+						}
+						else
+						{
+							mD3D12GraphicsCommandList->OMSetRenderTargets(numberOfD3D12RenderTargetViews, d3d12CpuDescriptorHandlesRenderTarget, FALSE, nullptr);
+						}
 						break;
 					}
 
