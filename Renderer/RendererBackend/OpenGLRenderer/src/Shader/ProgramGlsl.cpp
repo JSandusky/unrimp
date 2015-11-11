@@ -119,6 +119,14 @@ namespace OpenGLRenderer
 		glGetObjectParameterivARB(mOpenGLProgram, GL_OBJECT_LINK_STATUS_ARB, &linked);
 		if (GL_TRUE == linked)
 		{
+			// We're not using "glBindFragDataLocation()", else the user would have to provide us with additional OpenGL-only specific information
+			// -> Use modern GLSL:
+			//    "layout(location = 0) out vec4 ColorOutput0;"
+			//    "layout(location = 1) out vec4 ColorOutput1;"
+			// -> Use legacy GLSL if necessary:
+			//    "gl_FragData[0] = vec4(1.0f, 0.0f, 0.0f, 0.0f);"
+			//    "gl_FragData[1] = vec4(0.0f, 0.0f, 1.0f, 0.0f);"
+
 			// The actual locations assigned to uniform variables are not known until the program object is linked successfully
 			// -> So we have to build a root signature parameter index -> uniform location mapping here
 			const Renderer::RootSignature& rootSignatureData = static_cast<const RootSignature&>(rootSignature).getRootSignature();
