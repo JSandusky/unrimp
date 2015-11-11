@@ -46,6 +46,9 @@ namespace OpenGLRenderer
 	*
 	*  @remarks
 	*    While the OpenGL specification is platform independent, creating an OpenGL context is not.
+	*
+	*  @note
+	*    - Every native OS window needs its own context instance
 	*/
 	class IContext
 	{

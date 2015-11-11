@@ -854,6 +854,9 @@ namespace OpenGLES2Renderer
 	{
 		// We need to forget about the currently set render target
 		omSetRenderTarget(nullptr);
+
+		// We need to forget about the currently set vertex array
+		iaSetVertexArray(nullptr);
 	}
 
 

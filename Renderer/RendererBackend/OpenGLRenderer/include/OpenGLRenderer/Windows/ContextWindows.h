@@ -124,6 +124,7 @@ namespace OpenGLRenderer
 		handle mDummyWindow;			///< OpenGL dummy window, can be a null pointer (HWND)
 		HDC	   mWindowDeviceContext;	///< The device context of the OpenGL dummy window, can be a null pointer
 		HGLRC  mWindowRenderContext;	///< The render context of the OpenGL dummy window, can be a null pointer
+		bool   mOwnsRenderContext;		///< Does this context owns the OpenGL render context?
 
 
 	};

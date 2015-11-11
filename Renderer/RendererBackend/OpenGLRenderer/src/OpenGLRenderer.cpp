@@ -1517,7 +1517,7 @@ namespace OpenGLRenderer
 		// Release the currently used vertex array reference, in case we have one
 		if (nullptr != mVertexArray)
 		{
-			// Evaluate the internal array type type of the currently set vertex array
+			// Evaluate the internal array type of the currently set vertex array
 			switch (static_cast<VertexArray*>(mVertexArray)->getInternalResourceType())
 			{
 				case VertexArray::InternalResourceType::NO_VAO:

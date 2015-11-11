@@ -40,7 +40,8 @@ namespace OpenGLRenderer
 		mNativeWindowHandle(nativeWindowHandle),
 		mDummyWindow(NULL_HANDLE),
 		mWindowDeviceContext(NULL_HANDLE),
-		mWindowRenderContext(NULL_HANDLE)
+		mWindowRenderContext(NULL_HANDLE),
+		mOwnsRenderContext(true)
 	{
 		// Create a OpenGL dummy window?
 		// -> Under MS Windows, a OpenGL context is always coupled to a window... even if we're not going to render into a window at all...
@@ -107,30 +108,44 @@ namespace OpenGLRenderer
 					// Set the pixel format
 					::SetPixelFormat(mWindowDeviceContext, pixelFormat, &pixelFormatDescriptor);
 
-					// Create a legacy OpenGL render context
-					HGLRC legacyRenderContext = wglCreateContext(mWindowDeviceContext);
-					if (NULL_HANDLE != legacyRenderContext)
+					// Lookout! OpenGL context sharing chaos: https://www.opengl.org/wiki/OpenGL_Context
+					// "State" objects are not shared between contexts, including but not limited to:
+					// - Vertex Array Objects (VAOs)
+					// - Framebuffer Objects (FBOs)
+					// -> Keep away from "wglShareLists()" and the share context parameter of "wglCreateContextAttribsARB()" and just share the OpenGL render context instead
+					if (nullptr != shareContextWindows)
 					{
-						// Make the legacy OpenGL render context to the current one
-						wglMakeCurrent(mWindowDeviceContext, legacyRenderContext);
-
-						// Create the render context of the OpenGL window
-						mWindowRenderContext = createOpenGLContext(shareContextWindows);
-
-						// Destroy the legacy OpenGL render context
-						wglMakeCurrent(nullptr, nullptr);
-						wglDeleteContext(legacyRenderContext);
-
-						// If there's an OpenGL context, do some final initialization steps
-						if (NULL_HANDLE != mWindowRenderContext)
-						{
-							// Make the OpenGL context to the current one
-							wglMakeCurrent(mWindowDeviceContext, mWindowRenderContext);
-						}
+						mWindowRenderContext = shareContextWindows->getRenderContext();
+						mOwnsRenderContext = false;
 					}
 					else
 					{
-						// Error, failed to create a legacy OpenGL render context!
+						// Create a legacy OpenGL render context
+						HGLRC legacyRenderContext = wglCreateContext(mWindowDeviceContext);
+						if (NULL_HANDLE != legacyRenderContext)
+						{
+							// Make the legacy OpenGL render context to the current one
+							wglMakeCurrent(mWindowDeviceContext, legacyRenderContext);
+
+							// Create the render context of the OpenGL window
+							mWindowRenderContext = createOpenGLContext(nullptr);
+
+							// Destroy the legacy OpenGL render context
+							wglMakeCurrent(nullptr, nullptr);
+							wglDeleteContext(legacyRenderContext);
+
+							// If there's an OpenGL context, do some final initialization steps
+							if (NULL_HANDLE != mWindowRenderContext)
+							{
+								// Make the OpenGL context to the current one
+								// TODO(co) Review this, might cause issues when creating a context while a program is running
+								wglMakeCurrent(mWindowDeviceContext, mWindowRenderContext);
+							}
+						}
+						else
+						{
+							// Error, failed to create a legacy OpenGL render context!
+						}
 					}
 				}
 				else
@@ -161,7 +176,7 @@ namespace OpenGLRenderer
 			}
 
 			// Destroy the render context of the OpenGL window
-			if (NULL_HANDLE != mWindowRenderContext)
+			if (NULL_HANDLE != mWindowRenderContext && mOwnsRenderContext)
 			{
 				wglDeleteContext(mWindowRenderContext);
 			}
@@ -238,8 +253,9 @@ namespace OpenGLRenderer
 
 					// Lookout! OpenGL context sharing chaos: https://www.opengl.org/wiki/OpenGL_Context
 					// "State" objects are not shared between contexts, including but not limited to:
-					// -> Vertex Array Objects (VAOs)
-					// -> Framebuffer Objects (FBOs)
+					// - Vertex Array Objects (VAOs)
+					// - Framebuffer Objects (FBOs)
+					// -> Practically, this makes a second OpenGL context only useful for resource background loading
 					const HGLRC hglrc = wglCreateContextAttribsARB(mWindowDeviceContext, (nullptr != shareContextWindows) ? shareContextWindows->getRenderContext() : nullptr, ATTRIBUTES);
 					if (nullptr != hglrc)
 					{
