@@ -39,7 +39,6 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ContextLinux::ContextLinux(handle nativeWindowHandle, bool useExternalContext) :
-		mOpenGLRuntimeLinking(new OpenGLRuntimeLinking()),
 		mNativeWindowHandle(nativeWindowHandle),
 		mDummyWindow(NULL_HANDLE),
 		mDisplay(nullptr),
@@ -47,107 +46,80 @@ namespace OpenGLRenderer
 		mWindowRenderContext(NULL_HANDLE),
 		mUseExternalContext(useExternalContext)
 	{
-		// Is OpenGL available?
-		if (mOpenGLRuntimeLinking->isOpenGLAvaiable())
+		// Get X server display connection
+		if (!mUseExternalContext)
 		{
-			// Get X server display connection
-			if (!mUseExternalContext)
+			mDisplay = XOpenDisplay(nullptr);
+		}
+		if (nullptr != mDisplay)
+		{
+			// Get an appropriate visual
+			int attributeList[] =
 			{
-				mDisplay = XOpenDisplay(nullptr);
-			}
-			if (nullptr != mDisplay)
+				GLX_RGBA,
+				GLX_DOUBLEBUFFER,
+				GLX_RED_SIZE,	4,
+				GLX_GREEN_SIZE,	4,
+				GLX_BLUE_SIZE,	4,
+				GLX_DEPTH_SIZE,	16,
+				0	// = "None"
+			};
+
+			m_pDummyVisualInfo = glXChooseVisual(mDisplay, DefaultScreen(mDisplay), attributeList);
+			if (nullptr != m_pDummyVisualInfo)
 			{
-				// Get an appropriate visual
-				int attributeList[] =
+				if (NULL_HANDLE == mNativeWindowHandle)
 				{
-					GLX_RGBA,
-					GLX_DOUBLEBUFFER,
-					GLX_RED_SIZE,	4,
-					GLX_GREEN_SIZE,	4,
-					GLX_BLUE_SIZE,	4,
-					GLX_DEPTH_SIZE,	16,
-					0	// = "None"
-				};
+					// Create a color map
+					XSetWindowAttributes setWindowAttributes;
+					setWindowAttributes.colormap = XCreateColormap(mDisplay, RootWindow(mDisplay, m_pDummyVisualInfo->screen), m_pDummyVisualInfo->visual, AllocNone);
 
-				m_pDummyVisualInfo = glXChooseVisual(mDisplay, DefaultScreen(mDisplay), attributeList);
-				if (nullptr != m_pDummyVisualInfo)
+					// Create a window
+					setWindowAttributes.border_pixel = 0;
+					setWindowAttributes.event_mask = 0;
+					mNativeWindowHandle = mDummyWindow = XCreateWindow(mDisplay, RootWindow(mDisplay, m_pDummyVisualInfo->screen), 0, 0, 300,
+																		300, 0, m_pDummyVisualInfo->depth, InputOutput, m_pDummyVisualInfo->visual,
+																		CWBorderPixel | CWColormap | CWEventMask, &setWindowAttributes);
+					std::cout<<"Create dummy window\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+				}
+
+				// Create a GLX context
+				GLXContext legacyRenderContext = glXCreateContext(mDisplay, m_pDummyVisualInfo, 0, GL_TRUE);
+				if (nullptr != legacyRenderContext)
 				{
-					if (NULL_HANDLE == mNativeWindowHandle)
+					// Make the internal dummy to the current render target
+					const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, legacyRenderContext);
+					std::cout<<"Make legacy context current: "<<result<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+
+					// Create the render context of the OpenGL window
+					mWindowRenderContext = createOpenGLContext();
+
+					// Destroy the legacy OpenGL render context
+					glXMakeCurrent(mDisplay, None, nullptr);
+					glXDestroyContext(mDisplay, legacyRenderContext);
+
+					// If there's an OpenGL context, do some final initialization steps
+					if (NULL_HANDLE != mWindowRenderContext)
 					{
-						// Create a color map
-						XSetWindowAttributes setWindowAttributes;
-						setWindowAttributes.colormap = XCreateColormap(mDisplay, RootWindow(mDisplay, m_pDummyVisualInfo->screen), m_pDummyVisualInfo->visual, AllocNone);
-
-						// Create a window
-						setWindowAttributes.border_pixel = 0;
-						setWindowAttributes.event_mask = 0;
-						mNativeWindowHandle = mDummyWindow = XCreateWindow(mDisplay, RootWindow(mDisplay, m_pDummyVisualInfo->screen), 0, 0, 300,
-																		   300, 0, m_pDummyVisualInfo->depth, InputOutput, m_pDummyVisualInfo->visual,
-																		   CWBorderPixel | CWColormap | CWEventMask, &setWindowAttributes);
-						std::cout<<"Create dummy window\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
-					}
-
-					// Create a GLX context
-					GLXContext legacyRenderContext = glXCreateContext(mDisplay, m_pDummyVisualInfo, 0, GL_TRUE);
-					if (nullptr != legacyRenderContext)
-					{
-						// Make the internal dummy to the current render target
-						const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, legacyRenderContext);
-						std::cout<<"Make legacy context current: "<<result<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
-
-						// Create the render context of the OpenGL window
-						mWindowRenderContext = createOpenGLContext();
-
-						// Destroy the legacy OpenGL render context
-						glXMakeCurrent(mDisplay, None, nullptr);
-						glXDestroyContext(mDisplay, legacyRenderContext);
-
-						// If there's an OpenGL context, do some final initialization steps
-						if (NULL_HANDLE != mWindowRenderContext)
-						{
-							// Make the OpenGL context to the current one
-							const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, mWindowRenderContext);
-							std::cout<<"Make new context current: "<<result<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
-							std::cout<<"Supported extensions: "<<glGetString(GL_EXTENSIONS)<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
-						}
-					}
-					else
-					{
-						// Error, failed to create a GLX context!
+						// Make the OpenGL context to the current one
+						const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, mWindowRenderContext);
+						std::cout<<"Make new context current: "<<result<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+						std::cout<<"Supported extensions: "<<glGetString(GL_EXTENSIONS)<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 					}
 				}
 				else
 				{
-					// Error, failed to get an appropriate visual!
+					// Error, failed to create a GLX context!
 				}
 			}
 			else
 			{
-				// Error, failed to get display!
+				// Error, failed to get an appropriate visual!
 			}
-
-			// Is there a valid render context?
-			if (nullptr != mWindowRenderContext || mUseExternalContext)
-			{
-				// Initialize the OpenGL extensions
-				getExtensions().initialize();
-
-				#ifdef RENDERER_OUTPUT_DEBUG
-					// "GL_ARB_debug_output"-extension available?
-					if (getExtensions().isGL_ARB_debug_output())
-					{
-						// Synchronous debug output, please
-						// -> Makes it easier to find the place causing the issue
-						glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
-
-						// We don't need to configure the debug output by using "glDebugMessageControlARB()",
-						// by default all messages are enabled and this is good this way
-
-						// Set the debug message callback function
-						glDebugMessageCallbackARB(&ContextLinux::debugMessageCallback, nullptr);
-					}
-				#endif
-			}
+		}
+		else
+		{
+			// Error, failed to get display!
 		}
 	}
 
@@ -175,9 +147,6 @@ namespace OpenGLRenderer
 			// Destroy the OpenGL dummy window
 			::XDestroyWindow(mDisplay, mDummyWindow);
 		}
-
-		// Destroy the OpenGL runtime linking instance
-		delete mOpenGLRuntimeLinking;
 	}
 
 
@@ -187,109 +156,6 @@ namespace OpenGLRenderer
 	void ContextLinux::makeCurrent(handle nativeWindowHandle) const
 	{
 		glXMakeCurrent(getDisplay(), nativeWindowHandle, getRenderContext());
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private static methods                                ]
-	//[-------------------------------------------------------]
-	void ContextLinux::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char *message, const void *)
-	{
-		// Source to string
-		char debugSource[16];
-		switch (source)
-		{
-			case GL_DEBUG_SOURCE_API_ARB:
-				strncpy(debugSource, "OpenGL", 7);
-				break;
-
-			case GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB:
-				strncpy(debugSource, "Linux", 8);
-				break;
-
-			case GL_DEBUG_SOURCE_SHADER_COMPILER_ARB:
-				strncpy(debugSource, "Shader compiler", 16);
-				break;
-
-			case GL_DEBUG_SOURCE_THIRD_PARTY_ARB:
-				strncpy(debugSource, "Third party", 12);
-				break;
-
-			case GL_DEBUG_SOURCE_APPLICATION_ARB:
-				strncpy(debugSource, "Application", 12);
-				break;
-
-			case GL_DEBUG_SOURCE_OTHER_ARB:
-				strncpy(debugSource, "Other", 6);
-				break;
-
-			default:
-				strncpy(debugSource, "?", 1);
-				break;
-		}
-
-		// Debug type to string
-		char debugType[20];
-		switch (type)
-		{
-			case GL_DEBUG_TYPE_ERROR_ARB:
-				strncpy(debugType, "Error", 6);
-				break;
-
-			case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB:
-				strncpy(debugType, "Deprecated behavior", 20);
-				break;
-
-			case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB:
-				strncpy(debugType, "Undefined behavior", 19);
-				break;
-
-			case GL_DEBUG_TYPE_PORTABILITY_ARB:
-				strncpy(debugType, "Portability", 12);
-				break;
-
-			case GL_DEBUG_TYPE_PERFORMANCE_ARB:
-				strncpy(debugType, "Performance", 12);
-				break;
-
-			case GL_DEBUG_TYPE_OTHER_ARB:
-				strncpy(debugType, "Other", 6);
-				break;
-
-			default:
-				strncpy(debugType, "?", 1);
-				break;
-		}
-
-		// Debug severity to string
-		char debugSeverity[7];
-		switch (severity)
-		{
-			case GL_DEBUG_SEVERITY_HIGH_ARB:
-				strncpy(debugSeverity, "High", 5);
-				break;
-
-			case GL_DEBUG_SEVERITY_MEDIUM_ARB:
-				strncpy(debugSeverity, "Medium", 7);
-				break;
-
-			case GL_DEBUG_SEVERITY_LOW_ARB:
-				strncpy(debugSeverity, "Low", 3);
-				break;
-
-			default:
-				strncpy(debugType, "?", 1);
-				break;
-		}
-
-		// Output the debug message
-		#ifdef _DEBUG
-			RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
-		#else
-			// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
-			id = id;
-			message = message;
-		#endif
 	}
 
 

@@ -43,6 +43,7 @@ namespace OpenGLRenderer
 	class SwapChain;
 	class VertexArray;
 	class RootSignature;
+	class OpenGLRuntimeLinking;
 }
 
 
@@ -185,6 +186,32 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private static methods                                ]
+	//[-------------------------------------------------------]
+	private:
+		/**
+		*  @brief
+		*    Debug message callback function called by the "GL_ARB_debug_output"-extension
+		*
+		*  @param[in] source
+		*    Source of the debug message
+		*  @param[in] type
+		*    Type of the debug message
+		*  @param[in] id
+		*    ID of the debug message
+		*  @param[in] severity
+		*    Severity of the debug message
+		*  @param[in] length
+		*    Length of the debug message
+		*  @param[in] message
+		*    The debug message
+		*  @param[in] userParam
+		*    Additional user parameter of the debug message
+		*/
+		static void CALLBACK debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int length, const char *message, const void *userParam);
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
@@ -214,6 +241,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		OpenGLRuntimeLinking	  *mOpenGLRuntimeLinking;	///< OpenGL runtime linking instance, always valid
 		IContext				  *mContext;				///< OpenGL context instance, always valid
 		Renderer::IShaderLanguage *mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
 		RootSignature			  *mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer

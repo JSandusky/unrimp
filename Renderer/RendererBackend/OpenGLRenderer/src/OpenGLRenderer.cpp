@@ -91,13 +91,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	#ifdef WIN32
 	OpenGLRenderer::OpenGLRenderer(handle nativeWindowHandle, bool) :
-		mContext(new ContextWindows(nativeWindowHandle)),	// TODO(co) Add external context support
 	#elif defined LINUX
 	OpenGLRenderer::OpenGLRenderer(handle nativeWindowHandle, bool useExternalContext) :
-		mContext(new ContextLinux(nativeWindowHandle, useExternalContext)),
 	#else
 		#error "Unsupported platform"
 	#endif
+		mOpenGLRuntimeLinking(new OpenGLRuntimeLinking()),
+		mContext(nullptr),
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
@@ -107,29 +107,61 @@ namespace OpenGLRenderer
 		mRenderTarget(nullptr),
 		mOpenGLProgram(0)
 	{
-		// Is the context initialized?
-		if (mContext->isInitialized())
+		// Is OpenGL available?
+		if (mOpenGLRuntimeLinking->isOpenGLAvaiable())
 		{
-			// Create the default sampler state
-			mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
+			#ifdef WIN32
+				// TODO(co) Add external context support
+				mContext = new ContextWindows(nativeWindowHandle);
+			#elif defined LINUX
+				mContext = new ContextLinux(nativeWindowHandle, useExternalContext);
+			#else
+				#error "Unsupported platform"
+			#endif
 
-			// Initialize the capabilities
-			initializeCapabilities();
-
-			// Add references to the default sampler state and set it
-			if (nullptr != mDefaultSamplerState)
+			// Is the context initialized?
+			if (mContext->isInitialized())
 			{
-				mDefaultSamplerState->addReference();
-				// TODO(co) Set default sampler states
-			}
+				// Initialize the OpenGL extensions
+				mContext->getExtensions().initialize();
 
-			// Create a main swap chain instance?
-			if (NULL_HANDLE != nativeWindowHandle)
-			{
-				// Create a main swap chain instance
-				mMainSwapChain = static_cast<SwapChain*>(createSwapChain(nativeWindowHandle));
-				RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
-				mMainSwapChain->addReference();	// Internal renderer reference
+				#ifdef RENDERER_OUTPUT_DEBUG
+					// "GL_ARB_debug_output"-extension available?
+					if (mContext->getExtensions().isGL_ARB_debug_output())
+					{
+						// Synchronous debug output, please
+						// -> Makes it easier to find the place causing the issue
+						glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
+
+						// We don't need to configure the debug output by using "glDebugMessageControlARB()",
+						// by default all messages are enabled and this is good this way
+
+						// Set the debug message callback function
+						glDebugMessageCallbackARB(&OpenGLRenderer::debugMessageCallback, nullptr);
+					}
+				#endif
+
+				// Create the default sampler state
+				mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
+
+				// Initialize the capabilities
+				initializeCapabilities();
+
+				// Add references to the default sampler state and set it
+				if (nullptr != mDefaultSamplerState)
+				{
+					mDefaultSamplerState->addReference();
+					// TODO(co) Set default sampler states
+				}
+
+				// Create a main swap chain instance?
+				if (NULL_HANDLE != nativeWindowHandle)
+				{
+					// Create a main swap chain instance
+					mMainSwapChain = static_cast<SwapChain*>(createSwapChain(nativeWindowHandle));
+					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
+					mMainSwapChain->addReference();	// Internal renderer reference
+				}
 			}
 		}
 	}
@@ -193,6 +225,9 @@ namespace OpenGLRenderer
 
 		// Destroy the OpenGL context instance
 		delete mContext;
+
+		// Destroy the OpenGL runtime linking instance
+		delete mOpenGLRuntimeLinking;
 	}
 
 
@@ -1267,6 +1302,109 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::endDebugEvent()
 	{
 		// OpenGL has nothing that is similar to the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private static methods                                ]
+	//[-------------------------------------------------------]
+	void OpenGLRenderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char *message, const void *)
+	{
+		// Source to string
+		char debugSource[16];
+		switch (source)
+		{
+			case GL_DEBUG_SOURCE_API_ARB:
+				strncpy(debugSource, "OpenGL", 7);
+				break;
+
+			case GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB:
+				strncpy(debugSource, "Windows", 8);
+				break;
+
+			case GL_DEBUG_SOURCE_SHADER_COMPILER_ARB:
+				strncpy(debugSource, "Shader compiler", 16);
+				break;
+
+			case GL_DEBUG_SOURCE_THIRD_PARTY_ARB:
+				strncpy(debugSource, "Third party", 12);
+				break;
+
+			case GL_DEBUG_SOURCE_APPLICATION_ARB:
+				strncpy(debugSource, "Application", 12);
+				break;
+
+			case GL_DEBUG_SOURCE_OTHER_ARB:
+				strncpy(debugSource, "Other", 6);
+				break;
+
+			default:
+				strncpy(debugSource, "?", 1);
+				break;
+		}
+
+		// Debug type to string
+		char debugType[20];
+		switch (type)
+		{
+			case GL_DEBUG_TYPE_ERROR_ARB:
+				strncpy(debugType, "Error", 6);
+				break;
+
+			case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB:
+				strncpy(debugType, "Deprecated behavior", 20);
+				break;
+
+			case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB:
+				strncpy(debugType, "Undefined behavior", 19);
+				break;
+
+			case GL_DEBUG_TYPE_PORTABILITY_ARB:
+				strncpy(debugType, "Portability", 12);
+				break;
+
+			case GL_DEBUG_TYPE_PERFORMANCE_ARB:
+				strncpy(debugType, "Performance", 12);
+				break;
+
+			case GL_DEBUG_TYPE_OTHER_ARB:
+				strncpy(debugType, "Other", 6);
+				break;
+
+			default:
+				strncpy(debugType, "?", 1);
+				break;
+		}
+
+		// Debug severity to string
+		char debugSeverity[7];
+		switch (severity)
+		{
+			case GL_DEBUG_SEVERITY_HIGH_ARB:
+				strncpy(debugSeverity, "High", 5);
+				break;
+
+			case GL_DEBUG_SEVERITY_MEDIUM_ARB:
+				strncpy(debugSeverity, "Medium", 7);
+				break;
+
+			case GL_DEBUG_SEVERITY_LOW_ARB:
+				strncpy(debugSeverity, "Low", 3);
+				break;
+
+			default:
+				strncpy(debugType, "?", 1);
+				break;
+		}
+
+		// Output the debug message
+		#ifdef _DEBUG
+			RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
+		#else
+			// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
+			id = id;
+			message = message;
+		#endif
 	}
 
 
