@@ -258,7 +258,7 @@ namespace Renderer
 		*    Create a swap chain instance
 		*
 		*  @param[in] nativeWindowHandle
-		*    Native window handle, in case of a null handle nothing happens
+		*    Native window handle, must be valid
 		*
 		*  @return
 		*    The created swap chain instance, null pointer on error. Release the returned instance if you no longer need it.

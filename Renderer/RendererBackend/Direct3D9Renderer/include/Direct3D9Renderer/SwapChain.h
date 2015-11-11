@@ -71,7 +71,7 @@ namespace Direct3D9Renderer
 		*  @param[in] direct3D9Renderer
 		*    Owner Direct3D 9 renderer instance
 		*  @param[in] nativeWindowHandle
-		*    Native window handle, in case of a null handle nothing happens
+		*    Native window handle, must be valid
 		*/
 		SwapChain(Direct3D9Renderer &direct3D9Renderer, handle nativeWindowHandle);
 

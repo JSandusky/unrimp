@@ -72,7 +72,7 @@ namespace Direct3D10Renderer
 		*  @param[in] direct3D10Renderer
 		*    Owner Direct3D 10 renderer instance
 		*  @param[in] nativeWindowHandle
-		*    Native window handle, in case of a null handle nothing happens
+		*    Native window handle, must be valid
 		*/
 		SwapChain(Direct3D10Renderer &direct3D10Renderer, handle nativeWindowHandle);
 

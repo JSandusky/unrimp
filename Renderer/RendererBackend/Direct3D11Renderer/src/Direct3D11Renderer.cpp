@@ -149,7 +149,7 @@ namespace Direct3D11Renderer
 				if (NULL_HANDLE != nativeWindowHandle)
 				{
 					// Create a main swap chain instance
-					mMainSwapChain = static_cast<SwapChain*>(createSwapChain(nativeWindowHandle));
+					mMainSwapChain = new SwapChain(*this, nativeWindowHandle);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
 					mMainSwapChain->addReference();	// Internal renderer reference
 				}

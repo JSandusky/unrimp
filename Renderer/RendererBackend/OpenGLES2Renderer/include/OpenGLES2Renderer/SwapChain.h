@@ -68,7 +68,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] openGLES2Renderer
 		*    Owner OpenGL ES 2 renderer instance
 		*  @param[in] nativeWindowHandle
-		*    Optional native main window handle, can be a null handle
+		*    Native window handle, must be valid
 		*/
 		SwapChain(OpenGLES2Renderer &openGLES2Renderer, handle nativeWindowHandle);
 

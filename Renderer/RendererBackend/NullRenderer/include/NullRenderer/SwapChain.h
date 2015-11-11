@@ -68,7 +68,7 @@ namespace NullRenderer
 		*  @param[in] nullRenderer
 		*    Owner null renderer instance
 		*  @param[in] nativeWindowHandle
-		*    Optional native main window handle, can be a null handle
+		*    Native window handle, must be valid
 		*/
 		SwapChain(NullRenderer &nullRenderer, handle nativeWindowHandle);
 

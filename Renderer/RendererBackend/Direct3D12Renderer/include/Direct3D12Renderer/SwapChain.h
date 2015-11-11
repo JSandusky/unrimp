@@ -74,7 +74,7 @@ namespace Direct3D12Renderer
 		*  @param[in] direct3D12Renderer
 		*    Owner Direct3D 12 renderer instance
 		*  @param[in] nativeWindowHandle
-		*    Native window handle, in case of a null handle nothing happens
+		*    Native window handle, must be valid
 		*/
 		SwapChain(Direct3D12Renderer &direct3D12Renderer, handle nativeWindowHandle);
 
