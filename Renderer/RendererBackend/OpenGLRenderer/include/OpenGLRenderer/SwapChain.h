@@ -35,6 +35,7 @@
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
 {
+	class IContext;
 	class OpenGLRenderer;
 }
 
@@ -74,9 +75,31 @@ namespace OpenGLRenderer
 
 		/**
 		*  @brief
+		*    Constructor
+		*
+		*  @param[in] openGLRenderer
+		*    Owner OpenGL renderer instance
+		*  @param[in] nativeWindowHandle
+		*    Native window handle, must be valid
+		*  @param[in] context
+		*    Context to use
+		*/
+		SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle, IContext& context);
+
+		/**
+		*  @brief
 		*    Destructor
 		*/
 		virtual ~SwapChain();
+
+		/**
+		*  @brief
+		*    Return the context
+		*
+		*  @return
+		*    The context
+		*/
+		inline IContext& getContext() const;
 
 
 	//[-------------------------------------------------------]
@@ -101,7 +124,9 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle mNativeWindowHandle;	///< Native window handle window, can be a null handle
+		handle    mNativeWindowHandle;	///< Native window handle window, can be a null handle
+		IContext* mContext;				///< Context, must be valid
+		bool	  mOwnsContext;			///< Does this swap chain own the context?
 
 
 	};

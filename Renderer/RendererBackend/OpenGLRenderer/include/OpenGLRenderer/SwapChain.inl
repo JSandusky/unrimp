@@ -28,7 +28,10 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement me
+	inline IContext& SwapChain::getContext() const
+	{
+		return *mContext;
+	}
 
 
 //[-------------------------------------------------------]

@@ -96,7 +96,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	public:
 		inline virtual bool isInitialized() const override;
-		void makeCurrent(handle nativeWindowHandle) const override;
+		virtual void makeCurrent() const override;
 
 
 	//[-------------------------------------------------------]

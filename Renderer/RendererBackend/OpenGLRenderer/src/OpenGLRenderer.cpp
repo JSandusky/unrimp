@@ -162,7 +162,7 @@ namespace OpenGLRenderer
 				if (NULL_HANDLE != nativeWindowHandle)
 				{
 					// Create a main swap chain instance
-					mMainSwapChain = new SwapChain(*this, nativeWindowHandle);
+					mMainSwapChain = new SwapChain(*this, nativeWindowHandle, *mContext);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
 					mMainSwapChain->addReference();	// Internal renderer reference
 				}
@@ -1023,7 +1023,7 @@ namespace OpenGLRenderer
 				{
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
-						mContext->makeCurrent(static_cast<Renderer::ISwapChain*>(mRenderTarget)->getNativeWindowHandle());
+						static_cast<SwapChain*>(mRenderTarget)->getContext().makeCurrent();
 						break;
 					}
 
@@ -1165,6 +1165,9 @@ namespace OpenGLRenderer
 	{
 		// We need to forget about the currently set render target
 		omSetRenderTarget(nullptr);
+
+		// We need to forget about the currently set vertex array
+		iaUnsetVertexArray();
 	}
 
 

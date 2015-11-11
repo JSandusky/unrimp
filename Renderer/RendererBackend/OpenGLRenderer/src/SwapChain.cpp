@@ -43,14 +43,34 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	SwapChain::SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle) :
 		ISwapChain(openGLRenderer),
-		mNativeWindowHandle(nativeWindowHandle)
+		mNativeWindowHandle(nativeWindowHandle),
+		#ifdef WIN32
+			mContext(new ContextWindows(nativeWindowHandle, static_cast<const ContextWindows*>(&openGLRenderer.getContext()))),
+		#elif defined LINUX
+			mContext(new ContextLinux(nativeWindowHandle, false)),	// TODO(co) Add share context
+		#else
+			#error "Unsupported platform"
+		#endif
+		mOwnsContext(true)
 	{
-		// TODO(co) Implement me
+		// Nothing here
+	}
+
+	SwapChain::SwapChain(OpenGLRenderer &openGLRenderer, handle nativeWindowHandle, IContext& context) :
+		ISwapChain(openGLRenderer),
+		mNativeWindowHandle(nativeWindowHandle),
+		mContext(&context),
+		mOwnsContext(false)
+	{
+		// Nothing here
 	}
 
 	SwapChain::~SwapChain()
 	{
-		// TODO(co) Implement me
+		if (mOwnsContext)
+		{
+			delete mContext;
+		}
 	}
 
 

@@ -153,9 +153,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual OpenGLRenderer::IContext methods       ]
 	//[-------------------------------------------------------]
-	void ContextLinux::makeCurrent(handle nativeWindowHandle) const
+	void ContextLinux::makeCurrent() const
 	{
-		glXMakeCurrent(getDisplay(), nativeWindowHandle, getRenderContext());
+		glXMakeCurrent(getDisplay(), mNativeWindowHandle, getRenderContext());
 	}
 
 

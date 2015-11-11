@@ -61,8 +61,10 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
+		*  @param[in] shareContextWindows
+		*    Optional share context, can be a null pointer
 		*/
-		explicit ContextWindows(handle nativeWindowHandle);
+		explicit ContextWindows(handle nativeWindowHandle, const ContextWindows* shareContextWindows = nullptr);
 
 		/**
 		*  @brief
@@ -94,7 +96,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	public:
 		inline virtual bool isInitialized() const override;
-		void makeCurrent(handle nativeWindowHandle) const override;
+		virtual void makeCurrent() const override;
 
 
 	//[-------------------------------------------------------]
@@ -105,10 +107,13 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Create a OpenGL context
 		*
+		*  @param[in] shareContextWindows
+		*    Optional share context, can be a null pointer
+		*
 		*  @return
 		*    The created OpenGL context, null pointer on error
 		*/
-		HGLRC createOpenGLContext();
+		HGLRC createOpenGLContext(const ContextWindows* shareContextWindows);
 
 
 	//[-------------------------------------------------------]

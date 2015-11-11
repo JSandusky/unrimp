@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ContextWindows::ContextWindows(handle nativeWindowHandle) :
+	ContextWindows::ContextWindows(handle nativeWindowHandle, const ContextWindows* shareContextWindows) :
 		mNativeWindowHandle(nativeWindowHandle),
 		mDummyWindow(NULL_HANDLE),
 		mWindowDeviceContext(NULL_HANDLE),
@@ -115,7 +115,7 @@ namespace OpenGLRenderer
 						wglMakeCurrent(mWindowDeviceContext, legacyRenderContext);
 
 						// Create the render context of the OpenGL window
-						mWindowRenderContext = createOpenGLContext();
+						mWindowRenderContext = createOpenGLContext(shareContextWindows);
 
 						// Destroy the legacy OpenGL render context
 						wglMakeCurrent(nullptr, nullptr);
@@ -188,18 +188,16 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual OpenGLRenderer::IContext methods       ]
 	//[-------------------------------------------------------]
-	void ContextWindows::makeCurrent(handle nativeWindowHandle) const
+	void ContextWindows::makeCurrent() const
 	{
-		HDC hDC = ::GetDC(reinterpret_cast<HWND>(nativeWindowHandle));
-		wglMakeCurrent(hDC, mWindowRenderContext);
-		::ReleaseDC(reinterpret_cast<HWND>(nativeWindowHandle), hDC);
+		wglMakeCurrent(mWindowDeviceContext, mWindowRenderContext);
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	HGLRC ContextWindows::createOpenGLContext()
+	HGLRC ContextWindows::createOpenGLContext(const ContextWindows* shareContextWindows)
 	{
 		// Disable the following warning, we can't do anything to resolve this warning
 		__pragma(warning(push))
@@ -238,7 +236,7 @@ namespace OpenGLRenderer
 						0
 					};
 
-					const HGLRC hglrc = wglCreateContextAttribsARB(mWindowDeviceContext, nullptr, ATTRIBUTES);
+					const HGLRC hglrc = wglCreateContextAttribsARB(mWindowDeviceContext, (nullptr != shareContextWindows) ? shareContextWindows->getRenderContext() : nullptr, ATTRIBUTES);
 					if (nullptr != hglrc)
 					{
 						// Done
