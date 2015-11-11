@@ -100,19 +100,30 @@ void IApplicationRenderer::onDrawRequest()
 			// Make the main swap chain to the current render target
 			mRenderer->omSetRenderTarget(swapChain);
 
-			{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle
-			  // must be set in every draw call to work with all supported renderer APIs
-				// Get the window size
-				uint32_t width  = 0;
-				uint32_t height = 0;
-				swapChain->getWidthAndHeight(width, height);
+			// Begin scene rendering
+			// -> Required for Direct3D 9
+			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
+			if (mRenderer->beginScene())
+			{
+				{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle
+				  // must be set in every draw call to work with all supported renderer APIs
+					// Get the window size
+					uint32_t width  = 0;
+					uint32_t height = 0;
+					swapChain->getWidthAndHeight(width, height);
 
-				// Set the viewport and scissor rectangle
-				mRenderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
+					// Set the viewport and scissor rectangle
+					mRenderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
+				}
+
+				// Call the draw method
+				onDraw();
+
+				// End scene rendering
+				// -> Required for Direct3D 9
+				// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
+				mRenderer->endScene();
 			}
-
-			// Call the draw method
-			onDraw();
 
 			// Present the content of the current back buffer
 			swapChain->present();

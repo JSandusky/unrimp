@@ -247,82 +247,71 @@ void FirstCommandBucket::onDraw()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Begin scene rendering
-		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-		if (renderer->beginScene())
+		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+		// Draw text
+//		mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
+
+		// Set the used graphics root signature
+		renderer->setGraphicsRootSignature(mRootSignature);
+
+		// Set the used uniform buffers
+		// TODO(co) Has to be part of material binding
+		if (nullptr != mUniformBufferDynamicVs)
 		{
-			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
-
-			// Draw text
-	//		mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
-
-			// Set the used graphics root signature
-			renderer->setGraphicsRootSignature(mRootSignature);
-
 			// Set the used uniform buffers
-			// TODO(co) Has to be part of material binding
-			if (nullptr != mUniformBufferDynamicVs)
-			{
-				// Set the used uniform buffers
-				renderer->setGraphicsRootDescriptorTable(0, mUniformBufferDynamicVs);
-			}
-
-			{ // Push draw calls into different command buckets (can be done in parallel)
-				{ // Solid stuff
-					// Update uniform buffer content
-					const float offset[] = { 0.0f, 0.0f };
-					RendererRuntime::Command::CopyUniformBufferData *copyUniformBufferDataCommand = mSolidCommandBucket.addCommand<RendererRuntime::Command::CopyUniformBufferData>(42, sizeof(offset));
-					copyUniformBufferDataCommand->uniformBufferDynamicVs = mUniformBufferDynamicVs;
-					copyUniformBufferDataCommand->size = sizeof(offset);
-					copyUniformBufferDataCommand->data = RendererRuntime::commandPacket::GetAuxiliaryMemory(copyUniformBufferDataCommand);
-					memcpy(copyUniformBufferDataCommand->data, &offset, sizeof(offset));
-
-					// Draw call
-					RendererRuntime::Command::Draw *drawCommand = mSolidCommandBucket.appendCommand<RendererRuntime::Command::Draw>(copyUniformBufferDataCommand);
-					drawCommand->iaVertexArray		 = mSolidVertexArray;
-					drawCommand->iaPrimitiveTopology = Renderer::PrimitiveTopology::TRIANGLE_LIST;
-					drawCommand->material			 = &mSolidMaterial;
-					drawCommand->startVertexLocation = 0;
-					drawCommand->numberOfVertices	 = 3;
-				}
-
-				// Transparent stuff
-				for (int i = 0; i < 2; ++i)
-				{
-					// Update uniform buffer content
-					const float offset[] = { 0.25f - i * 0.5f, 0.25f - i * 0.5f };
-					RendererRuntime::Command::CopyUniformBufferData *copyUniformBufferDataCommand = mTransparentCommandBucket.addCommand<RendererRuntime::Command::CopyUniformBufferData>(42 - i, sizeof(offset));
-					copyUniformBufferDataCommand->uniformBufferDynamicVs = mUniformBufferDynamicVs;
-					copyUniformBufferDataCommand->size = sizeof(offset);
-					copyUniformBufferDataCommand->data = RendererRuntime::commandPacket::GetAuxiliaryMemory(copyUniformBufferDataCommand);
-					memcpy(copyUniformBufferDataCommand->data, &offset, sizeof(offset));
-
-					// Draw call
-					RendererRuntime::Command::DrawIndexed *drawIndexedCommand = mTransparentCommandBucket.appendCommand<RendererRuntime::Command::DrawIndexed>(copyUniformBufferDataCommand);
-					drawIndexedCommand->iaVertexArray		= mTransparentVertexArray;
-					drawIndexedCommand->iaPrimitiveTopology = Renderer::PrimitiveTopology::TRIANGLE_LIST;
-					drawIndexedCommand->material			= &mTransparentMaterial;
-					drawIndexedCommand->startIndexLocation  = 0;
-					drawIndexedCommand->numberOfIndices		= 3;
-					drawIndexedCommand->baseVertexLocation	= 0;
-				}
-			}
-
-			// Sort command buckets by command key (can be done in parallel)
-			mSolidCommandBucket.sort();
-			mTransparentCommandBucket.sort();
-
-			// Submit command buckets to the renderer backend (has to be done sequential)
-			mSolidCommandBucket.submit(*renderer);
-			mTransparentCommandBucket.submit(*renderer);
-
-			// End scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-			renderer->endScene();
+			renderer->setGraphicsRootDescriptorTable(0, mUniformBufferDynamicVs);
 		}
+
+		{ // Push draw calls into different command buckets (can be done in parallel)
+			{ // Solid stuff
+				// Update uniform buffer content
+				const float offset[] = { 0.0f, 0.0f };
+				RendererRuntime::Command::CopyUniformBufferData *copyUniformBufferDataCommand = mSolidCommandBucket.addCommand<RendererRuntime::Command::CopyUniformBufferData>(42, sizeof(offset));
+				copyUniformBufferDataCommand->uniformBufferDynamicVs = mUniformBufferDynamicVs;
+				copyUniformBufferDataCommand->size = sizeof(offset);
+				copyUniformBufferDataCommand->data = RendererRuntime::commandPacket::GetAuxiliaryMemory(copyUniformBufferDataCommand);
+				memcpy(copyUniformBufferDataCommand->data, &offset, sizeof(offset));
+
+				// Draw call
+				RendererRuntime::Command::Draw *drawCommand = mSolidCommandBucket.appendCommand<RendererRuntime::Command::Draw>(copyUniformBufferDataCommand);
+				drawCommand->iaVertexArray		 = mSolidVertexArray;
+				drawCommand->iaPrimitiveTopology = Renderer::PrimitiveTopology::TRIANGLE_LIST;
+				drawCommand->material			 = &mSolidMaterial;
+				drawCommand->startVertexLocation = 0;
+				drawCommand->numberOfVertices	 = 3;
+			}
+
+			// Transparent stuff
+			for (int i = 0; i < 2; ++i)
+			{
+				// Update uniform buffer content
+				const float offset[] = { 0.25f - i * 0.5f, 0.25f - i * 0.5f };
+				RendererRuntime::Command::CopyUniformBufferData *copyUniformBufferDataCommand = mTransparentCommandBucket.addCommand<RendererRuntime::Command::CopyUniformBufferData>(42 - i, sizeof(offset));
+				copyUniformBufferDataCommand->uniformBufferDynamicVs = mUniformBufferDynamicVs;
+				copyUniformBufferDataCommand->size = sizeof(offset);
+				copyUniformBufferDataCommand->data = RendererRuntime::commandPacket::GetAuxiliaryMemory(copyUniformBufferDataCommand);
+				memcpy(copyUniformBufferDataCommand->data, &offset, sizeof(offset));
+
+				// Draw call
+				RendererRuntime::Command::DrawIndexed *drawIndexedCommand = mTransparentCommandBucket.appendCommand<RendererRuntime::Command::DrawIndexed>(copyUniformBufferDataCommand);
+				drawIndexedCommand->iaVertexArray		= mTransparentVertexArray;
+				drawIndexedCommand->iaPrimitiveTopology = Renderer::PrimitiveTopology::TRIANGLE_LIST;
+				drawIndexedCommand->material			= &mTransparentMaterial;
+				drawIndexedCommand->startIndexLocation  = 0;
+				drawIndexedCommand->numberOfIndices		= 3;
+				drawIndexedCommand->baseVertexLocation	= 0;
+			}
+		}
+
+		// Sort command buckets by command key (can be done in parallel)
+		mSolidCommandBucket.sort();
+		mTransparentCommandBucket.sort();
+
+		// Submit command buckets to the renderer backend (has to be done sequential)
+		mSolidCommandBucket.submit(*renderer);
+		mTransparentCommandBucket.submit(*renderer);
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)

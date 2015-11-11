@@ -320,50 +320,39 @@ void FirstGpgpu::generate2DTextureContent()
 		// Set the render target to render into
 		mRenderer->omSetRenderTarget(mFramebuffer[0]);
 
-		// Begin scene rendering
-		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-		if (mRenderer->beginScene())
-		{
-			// Clear the color buffer of the current render target with blue
-			mRenderer->clear(Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
+		// Clear the color buffer of the current render target with blue
+		mRenderer->clear(Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
 
-			// Set the used graphics root signature
-			mRenderer->setGraphicsRootSignature(mRootSignature);
+		// Set the used graphics root signature
+		mRenderer->setGraphicsRootSignature(mRootSignature);
 
-			{ // Set the viewport and scissor rectangle
-				// Get the render target with and height
-				uint32_t width  = 1;
-				uint32_t height = 1;
-				Renderer::IRenderTarget *renderTarget = mRenderer->omGetRenderTarget();
-				if (nullptr != renderTarget)
-				{
-					renderTarget->getWidthAndHeight(width, height);
-				}
-
-				// Set the viewport and scissor rectangle
-				mRenderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
+		{ // Set the viewport and scissor rectangle
+			// Get the render target with and height
+			uint32_t width  = 1;
+			uint32_t height = 1;
+			Renderer::IRenderTarget *renderTarget = mRenderer->omGetRenderTarget();
+			if (nullptr != renderTarget)
+			{
+				renderTarget->getWidthAndHeight(width, height);
 			}
 
-			// Set the used pipeline state object (PSO)
-			mRenderer->setPipelineState(mPipelineStateContentGeneration);
-
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				mRenderer->iaSetVertexArray(mVertexArrayContentGeneration);
-
-				// Set the primitive topology used for draw calls
-				mRenderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
-
-			// Render the specified geometric primitive, based on indexing into an array of vertices
-			mRenderer->draw(0, 3);
-
-			// End scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-			mRenderer->endScene();
+			// Set the viewport and scissor rectangle
+			mRenderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
 		}
+
+		// Set the used pipeline state object (PSO)
+		mRenderer->setPipelineState(mPipelineStateContentGeneration);
+
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			mRenderer->iaSetVertexArray(mVertexArrayContentGeneration);
+
+			// Set the primitive topology used for draw calls
+			mRenderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
+		}
+
+		// Render the specified geometric primitive, based on indexing into an array of vertices
+		mRenderer->draw(0, 3);
 
 		// Restore the previously set render target
 		mRenderer->omSetRenderTarget(previousRenderTarget);
@@ -389,37 +378,26 @@ void FirstGpgpu::contentProcessing()
 
 		// We don't need to clear the current render target because our fullscreen quad covers the full screen
 
-		// Begin scene rendering
-		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-		if (mRenderer->beginScene())
-		{
-			// Set the used graphics root signature
-			mRenderer->setGraphicsRootSignature(mRootSignature);
+		// Set the used graphics root signature
+		mRenderer->setGraphicsRootSignature(mRootSignature);
 
-			// Set the used pipeline state object (PSO)
-			mRenderer->setPipelineState(mPipelineStateContentProcessing);
+		// Set the used pipeline state object (PSO)
+		mRenderer->setPipelineState(mPipelineStateContentProcessing);
 
-			// Set content map
-			mRenderer->setGraphicsRootDescriptorTable(0, mSamplerState);
-			mRenderer->setGraphicsRootDescriptorTable(1, mTexture2D[0]);
+		// Set content map
+		mRenderer->setGraphicsRootDescriptorTable(0, mSamplerState);
+		mRenderer->setGraphicsRootDescriptorTable(1, mTexture2D[0]);
 
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				mRenderer->iaSetVertexArray(mVertexArrayContentProcessing);
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			mRenderer->iaSetVertexArray(mVertexArrayContentProcessing);
 
-				// Set the primitive topology used for draw calls
-				mRenderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_STRIP);
-			}
-
-			// Render the specified geometric primitive, based on indexing into an array of vertices
-			mRenderer->draw(0, 4);
-
-			// End scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-			mRenderer->endScene();
+			// Set the primitive topology used for draw calls
+			mRenderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_STRIP);
 		}
+
+		// Render the specified geometric primitive, based on indexing into an array of vertices
+		mRenderer->draw(0, 4);
 
 		// Restore the previously set render target
 		mRenderer->omSetRenderTarget(renderTarget);

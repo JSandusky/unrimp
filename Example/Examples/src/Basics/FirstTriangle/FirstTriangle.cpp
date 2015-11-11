@@ -182,33 +182,29 @@ void FirstTriangle::onDraw()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Begin scene rendering
-		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-		if (renderer->beginScene())
+		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+		// Set the used graphics root signature
+		renderer->setGraphicsRootSignature(mRootSignature);
+
+		// Set the used pipeline state object (PSO)
+		renderer->setPipelineState(mPipelineState);
+
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			renderer->iaSetVertexArray(mVertexArray);
+
+			// Set the primitive topology used for draw calls
+			renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
+		}
+
+		// Set debug marker
+		// -> Debug methods: When using Direct3D <11.1, these methods map to the Direct3D 9 PIX functions
+		//    (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
+		RENDERER_SET_DEBUG_MARKER(renderer, L"Everyone ready for the upcoming triangle?")
+
 		{
-			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
-
-			// Set the used graphics root signature
-			renderer->setGraphicsRootSignature(mRootSignature);
-
-			// Set the used pipeline state object (PSO)
-			renderer->setPipelineState(mPipelineState);
-
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer->iaSetVertexArray(mVertexArray);
-
-				// Set the primitive topology used for draw calls
-				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
-
-			// Set debug marker
-			// -> Debug methods: When using Direct3D <11.1, these methods map to the Direct3D 9 PIX functions
-			//    (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box)
-			RENDERER_SET_DEBUG_MARKER(renderer, L"Everyone ready for the upcoming triangle?")
-
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Drawing the fancy triangle")
 
@@ -217,11 +213,6 @@ void FirstTriangle::onDraw()
 
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(renderer)
-
-			// End scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-			renderer->endScene();
 		}
 
 		// End debug event

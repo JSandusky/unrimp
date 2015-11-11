@@ -297,69 +297,58 @@ void FirstInstancing::onDraw()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Begin scene rendering
-		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-		if (renderer->beginScene())
+		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+		// Set the used graphics root signature
+		renderer->setGraphicsRootSignature(mRootSignature);
+
+		// Left side (green): Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
+		if (renderer->getCapabilities().instancedArrays)
 		{
-			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+			// Begin debug event
+			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw using instanced arrays")
 
-			// Set the used graphics root signature
-			renderer->setGraphicsRootSignature(mRootSignature);
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineStateInstancedArrays);
 
-			// Left side (green): Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
-			if (renderer->getCapabilities().instancedArrays)
-			{
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw using instanced arrays")
+			{ // Setup input assembly (IA)
+				// Set the used vertex array
+				renderer->iaSetVertexArray(mVertexArrayInstancedArrays);
 
-				// Set the used pipeline state object (PSO)
-				renderer->setPipelineState(mPipelineStateInstancedArrays);
-
-				{ // Setup input assembly (IA)
-					// Set the used vertex array
-					renderer->iaSetVertexArray(mVertexArrayInstancedArrays);
-
-					// Set the primitive topology used for draw calls
-					renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-				}
-
-				// Render the specified geometric primitive, based on an array of vertices
-				// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
-				// -> In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
-				//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
-				renderer->drawIndexedInstanced(0, 3, 0, 0, 3, 2);
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(renderer)
+				// Set the primitive topology used for draw calls
+				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 			}
 
-			// Right side (blue): Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
-			if (renderer->getCapabilities().drawInstanced)
-			{
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw instanced")
+			// Render the specified geometric primitive, based on an array of vertices
+			// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
+			// -> In Direct3D 9, instanced arrays with hardware support is only possible when drawing indexed primitives, see
+			//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
+			renderer->drawIndexedInstanced(0, 3, 0, 0, 3, 2);
 
-				// Set the used pipeline state object (PSO)
-				renderer->setPipelineState(mPipelineStateDrawInstanced);
+			// End debug event
+			RENDERER_END_DEBUG_EVENT(renderer)
+		}
 
-				{ // Setup input assembly (IA)
-					// Set the used vertex array
-					renderer->iaSetVertexArray(mVertexArrayDrawInstanced);
+		// Right side (blue): Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
+		if (renderer->getCapabilities().drawInstanced)
+		{
+			// Begin debug event
+			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw instanced")
 
-					// Set the primitive topology used for draw calls
-					renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-				}
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineStateDrawInstanced);
 
-				// Render the specified geometric primitive, based on an array of vertices
-				renderer->drawInstanced(0, 3, 2);
+			{ // Setup input assembly (IA)
+				// Set the used vertex array
+				renderer->iaSetVertexArray(mVertexArrayDrawInstanced);
+
+				// Set the primitive topology used for draw calls
+				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 			}
 
-			// End scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-			renderer->endScene();
+			// Render the specified geometric primitive, based on an array of vertices
+			renderer->drawInstanced(0, 3, 2);
 
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(renderer)

@@ -455,35 +455,24 @@ void FirstMultipleSwapChains::draw(const float color[4])
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer && nullptr != mPipelineState)
 	{
-		// Begin scene rendering
-		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-		if (renderer->beginScene())
-		{
-			// Clear the color buffer of the current render target with the provided color, do also clear the depth buffer
-			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, color, 1.0f, 0);
+		// Clear the color buffer of the current render target with the provided color, do also clear the depth buffer
+		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, color, 1.0f, 0);
 
-			// Set the used graphics root signature
-			renderer->setGraphicsRootSignature(mRootSignature);
+		// Set the used graphics root signature
+		renderer->setGraphicsRootSignature(mRootSignature);
 
-			// Set the used pipeline state object (PSO)
-			renderer->setPipelineState(mPipelineState);
+		// Set the used pipeline state object (PSO)
+		renderer->setPipelineState(mPipelineState);
 
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer->iaSetVertexArray(mVertexArray);
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			renderer->iaSetVertexArray(mVertexArray);
 
-				// Set the primitive topology used for draw calls
-				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
-
-			// Render the specified geometric primitive, based on an array of vertices
-			renderer->draw(0, 3);
-
-			// End scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-			renderer->endScene();
+			// Set the primitive topology used for draw calls
+			renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 		}
+
+		// Render the specified geometric primitive, based on an array of vertices
+		renderer->draw(0, 3);
 	}
 }

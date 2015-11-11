@@ -250,36 +250,25 @@ void FirstMultipleRenderTargets::onDraw()
 			// Set the viewport and scissor rectangle
 			renderer->rsSetViewportAndScissorRectangle(0, 0, TEXTURE_SIZE, TEXTURE_SIZE);
 
-			// Begin scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-			if (renderer->beginScene())
-			{
-				// Clear the color buffer of the current render targets with black
-				renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLACK, 1.0f, 0);
+			// Clear the color buffer of the current render targets with black
+			renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLACK, 1.0f, 0);
 
-				// Set the used graphics root signature
-				renderer->setGraphicsRootSignature(mRootSignature);
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
 
-				// Set the used pipeline state object (PSO)
-				renderer->setPipelineState(mPipelineStateMultipleRenderTargets);
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineStateMultipleRenderTargets);
 
-				{ // Setup input assembly (IA)
-					// Set the used vertex array
-					renderer->iaSetVertexArray(mVertexArray);
+			{ // Setup input assembly (IA)
+				// Set the used vertex array
+				renderer->iaSetVertexArray(mVertexArray);
 
-					// Set the primitive topology used for draw calls
-					renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-				}
-
-				// Render the specified geometric primitive, based on an array of vertices
-				renderer->draw(0, 3);
-
-				// End scene rendering
-				// -> Required for Direct3D 9
-				// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-				renderer->endScene();
+				// Set the primitive topology used for draw calls
+				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 			}
+
+			// Render the specified geometric primitive, based on an array of vertices
+			renderer->draw(0, 3);
 
 			// Restore the previously set render target
 			renderer->omSetRenderTarget(renderTarget);
@@ -306,43 +295,32 @@ void FirstMultipleRenderTargets::onDraw()
 				renderer->rsSetViewportAndScissorRectangle(0, 0, width, height);
 			}
 
-			// Begin scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-			if (renderer->beginScene())
+			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+			// Set the used graphics root signature
+			renderer->setGraphicsRootSignature(mRootSignature);
+
+			// Set the textures
+			renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
+			for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 			{
-				// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-				renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
-
-				// Set the used graphics root signature
-				renderer->setGraphicsRootSignature(mRootSignature);
-
-				// Set the textures
-				renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
-				for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
-				{
-					renderer->setGraphicsRootDescriptorTable(1 + i, mTexture2D[i]);
-				}
-
-				// Set the used pipeline state object (PSO)
-				renderer->setPipelineState(mPipelineState);
-
-				{ // Setup input assembly (IA)
-					// Set the used vertex array
-					renderer->iaSetVertexArray(mVertexArray);
-
-					// Set the primitive topology used for draw calls
-					renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-				}
-
-				// Render the specified geometric primitive, based on an array of vertices
-				renderer->draw(0, 3);
-
-				// End scene rendering
-				// -> Required for Direct3D 9
-				// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-				renderer->endScene();
+				renderer->setGraphicsRootDescriptorTable(1 + i, mTexture2D[i]);
 			}
+
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineState);
+
+			{ // Setup input assembly (IA)
+				// Set the used vertex array
+				renderer->iaSetVertexArray(mVertexArray);
+
+				// Set the primitive topology used for draw calls
+				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
+			}
+
+			// Render the specified geometric primitive, based on an array of vertices
+			renderer->draw(0, 3);
 
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(renderer)

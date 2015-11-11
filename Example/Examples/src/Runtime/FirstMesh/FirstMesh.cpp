@@ -338,79 +338,68 @@ void FirstMesh::onDraw()
 			}
 		}
 
-		// Begin scene rendering
-		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-		if (renderer->beginScene())
-		{
-			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
 
-			// Set the used graphics root signature
-			renderer->setGraphicsRootSignature(mRootSignature);
+		// Set the used graphics root signature
+		renderer->setGraphicsRootSignature(mRootSignature);
 
-			// Set sampler and textures
-			renderer->setGraphicsRootDescriptorTable(0, mUniformBuffer);
-			renderer->setGraphicsRootDescriptorTable(1, mSamplerState);
-			renderer->setGraphicsRootDescriptorTable(2, mDiffuseTextureResource->getTexture());
-			renderer->setGraphicsRootDescriptorTable(3, mNormalTextureResource->getTexture());
-			renderer->setGraphicsRootDescriptorTable(4, mSpecularTextureResource->getTexture());
-			renderer->setGraphicsRootDescriptorTable(5, mEmissiveTextureResource->getTexture());
+		// Set sampler and textures
+		renderer->setGraphicsRootDescriptorTable(0, mUniformBuffer);
+		renderer->setGraphicsRootDescriptorTable(1, mSamplerState);
+		renderer->setGraphicsRootDescriptorTable(2, mDiffuseTextureResource->getTexture());
+		renderer->setGraphicsRootDescriptorTable(3, mNormalTextureResource->getTexture());
+		renderer->setGraphicsRootDescriptorTable(4, mSpecularTextureResource->getTexture());
+		renderer->setGraphicsRootDescriptorTable(5, mEmissiveTextureResource->getTexture());
 
-			// Set the used pipeline state object (PSO)
-			renderer->setPipelineState(mPipelineState);
+		// Set the used pipeline state object (PSO)
+		renderer->setPipelineState(mPipelineState);
 
-			{ // Set uniform
-				// Calculate the object space to clip space matrix
-				glm::mat4 viewSpaceToClipSpace		= glm::perspective(45.0f, aspectRatio, 0.1f, 100.f);
-				glm::mat4 viewTranslate				= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -7.0f, -25.0f));
-				glm::mat4 worldSpaceToViewSpace		= glm::rotate(viewTranslate, mGlobalTimer, glm::vec3(0.0f, 1.0f, 0.0f));
-				glm::mat4 objectSpaceToWorldSpace	= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-				glm::mat4 objectSpaceToViewSpace	= worldSpaceToViewSpace * objectSpaceToWorldSpace;
-				glm::mat4 objectSpaceToClipSpace	= viewSpaceToClipSpace * objectSpaceToViewSpace;
+		{ // Set uniform
+			// Calculate the object space to clip space matrix
+			glm::mat4 viewSpaceToClipSpace		= glm::perspective(45.0f, aspectRatio, 0.1f, 100.f);
+			glm::mat4 viewTranslate				= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -7.0f, -25.0f));
+			glm::mat4 worldSpaceToViewSpace		= glm::rotate(viewTranslate, mGlobalTimer, glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::mat4 objectSpaceToWorldSpace	= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+			glm::mat4 objectSpaceToViewSpace	= worldSpaceToViewSpace * objectSpaceToWorldSpace;
+			glm::mat4 objectSpaceToClipSpace	= viewSpaceToClipSpace * objectSpaceToViewSpace;
 
-				// Upload the uniform data
-				// -> Two versions: One using an uniform buffer and one setting an individual uniform
-				if (nullptr != mUniformBuffer)
-				{
-					struct UniformBlockDynamicVs
-					{
-						float objectSpaceToClipSpaceMatrix[4 * 4];	// Object space to clip space matrix
-						float objectSpaceToViewSpaceMatrix[4 * 4];	// Object space to view space matrix
-					};
-					UniformBlockDynamicVs uniformBlockDynamicVS;
-					memcpy(uniformBlockDynamicVS.objectSpaceToClipSpaceMatrix, glm::value_ptr(objectSpaceToClipSpace), sizeof(float) * 4 * 4);
-
-					// TODO(co) float3x3 (currently there are alignment issues when using Direct3D, have a look into possible solutions)
-					glm::mat3 objectSpaceToViewSpace3x3 = glm::mat3(objectSpaceToViewSpace);
-					objectSpaceToViewSpace = glm::mat4(objectSpaceToViewSpace3x3);
-					memcpy(uniformBlockDynamicVS.objectSpaceToViewSpaceMatrix, glm::value_ptr(objectSpaceToViewSpace), sizeof(float) * 4 * 4);
-
-					// Copy data
-					mUniformBuffer->copyDataFrom(sizeof(UniformBlockDynamicVs), &uniformBlockDynamicVS);
-				}
-				else
-				{
-					// Set uniforms
-					mProgram->setUniformMatrix4fv(mObjectSpaceToClipSpaceMatrixUniformHandle, glm::value_ptr(objectSpaceToClipSpace));
-					mProgram->setUniformMatrix3fv(mObjectSpaceToViewSpaceMatrixUniformHandle, glm::value_ptr(glm::mat3(objectSpaceToViewSpace)));
-				}
-			}
-
-			// Draw mesh instance
-			if (nullptr != mMeshResource)
+			// Upload the uniform data
+			// -> Two versions: One using an uniform buffer and one setting an individual uniform
+			if (nullptr != mUniformBuffer)
 			{
-				mMeshResource->draw();
+				struct UniformBlockDynamicVs
+				{
+					float objectSpaceToClipSpaceMatrix[4 * 4];	// Object space to clip space matrix
+					float objectSpaceToViewSpaceMatrix[4 * 4];	// Object space to view space matrix
+				};
+				UniformBlockDynamicVs uniformBlockDynamicVS;
+				memcpy(uniformBlockDynamicVS.objectSpaceToClipSpaceMatrix, glm::value_ptr(objectSpaceToClipSpace), sizeof(float) * 4 * 4);
+
+				// TODO(co) float3x3 (currently there are alignment issues when using Direct3D, have a look into possible solutions)
+				glm::mat3 objectSpaceToViewSpace3x3 = glm::mat3(objectSpaceToViewSpace);
+				objectSpaceToViewSpace = glm::mat4(objectSpaceToViewSpace3x3);
+				memcpy(uniformBlockDynamicVS.objectSpaceToViewSpaceMatrix, glm::value_ptr(objectSpaceToViewSpace), sizeof(float) * 4 * 4);
+
+				// Copy data
+				mUniformBuffer->copyDataFrom(sizeof(UniformBlockDynamicVs), &uniformBlockDynamicVS);
 			}
-
-			// Draw text
-			mFontResource->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
-
-			// End scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-			renderer->endScene();
+			else
+			{
+				// Set uniforms
+				mProgram->setUniformMatrix4fv(mObjectSpaceToClipSpaceMatrixUniformHandle, glm::value_ptr(objectSpaceToClipSpace));
+				mProgram->setUniformMatrix3fv(mObjectSpaceToViewSpaceMatrixUniformHandle, glm::value_ptr(glm::mat3(objectSpaceToViewSpace)));
+			}
 		}
+
+		// Draw mesh instance
+		if (nullptr != mMeshResource)
+		{
+			mMeshResource->draw();
+		}
+
+		// Draw text
+		mFontResource->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)

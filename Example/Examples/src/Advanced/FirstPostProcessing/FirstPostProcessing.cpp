@@ -322,36 +322,25 @@ void FirstPostProcessing::sceneRendering()
 		// Set the render target to render into
 		renderer->omSetRenderTarget(mFramebuffer);
 
-		// Begin scene rendering
-		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-		if (renderer->beginScene())
-		{
-			// Clear the color buffer of the current render target with blue
-			renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
+		// Clear the color buffer of the current render target with blue
+		renderer->clear(Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
 
-			// Set the used graphics root signature
-			renderer->setGraphicsRootSignature(mRootSignature);
+		// Set the used graphics root signature
+		renderer->setGraphicsRootSignature(mRootSignature);
 
-			// Set the used pipeline state object (PSO)
-			renderer->setPipelineState(mPipelineStateSceneRendering);
+		// Set the used pipeline state object (PSO)
+		renderer->setPipelineState(mPipelineStateSceneRendering);
 
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer->iaSetVertexArray(mVertexArraySceneRendering);
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			renderer->iaSetVertexArray(mVertexArraySceneRendering);
 
-				// Set the primitive topology used for draw calls
-				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
-
-			// Render the specified geometric primitive, based on indexing into an array of vertices
-			renderer->draw(0, 3);
-
-			// End scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-			renderer->endScene();
+			// Set the primitive topology used for draw calls
+			renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 		}
+
+		// Render the specified geometric primitive, based on indexing into an array of vertices
+		renderer->draw(0, 3);
 
 		// Restore the previously set render target
 		renderer->omSetRenderTarget(renderTarget);
@@ -372,37 +361,26 @@ void FirstPostProcessing::postProcessing()
 
 		// We don't need to clear the current render target because our fullscreen quad covers the full screen
 
-		// Begin scene rendering
-		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-		if (renderer->beginScene())
-		{
-			// Set the used graphics root signature
-			renderer->setGraphicsRootSignature(mRootSignature);
+		// Set the used graphics root signature
+		renderer->setGraphicsRootSignature(mRootSignature);
 
-			// Set diffuse map
-			renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
-			renderer->setGraphicsRootDescriptorTable(1, mTexture2D);
+		// Set diffuse map
+		renderer->setGraphicsRootDescriptorTable(0, mSamplerState);
+		renderer->setGraphicsRootDescriptorTable(1, mTexture2D);
 
-			// Set the used pipeline state object (PSO)
-			renderer->setPipelineState(mPipelineStatePostProcessing);
+		// Set the used pipeline state object (PSO)
+		renderer->setPipelineState(mPipelineStatePostProcessing);
 
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				renderer->iaSetVertexArray(mVertexArrayPostProcessing);
+		{ // Setup input assembly (IA)
+			// Set the used vertex array
+			renderer->iaSetVertexArray(mVertexArrayPostProcessing);
 
-				// Set the primitive topology used for draw calls
-				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_STRIP);
-			}
-
-			// Render the specified geometric primitive, based on indexing into an array of vertices
-			renderer->draw(0, 4);
-
-			// End scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-			renderer->endScene();
+			// Set the primitive topology used for draw calls
+			renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_STRIP);
 		}
+
+		// Render the specified geometric primitive, based on indexing into an array of vertices
+		renderer->draw(0, 4);
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)

@@ -270,69 +270,58 @@ void VertexBuffer::onDraw()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
-		// Begin scene rendering
-		// -> Required for Direct3D 9
-		// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-		if (renderer->beginScene())
+		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+
+		// Set the used graphics root signature
+		renderer->setGraphicsRootSignature(mRootSignature);
+
+		// First lower triangle using one vertex buffer object (VBO)
+		if (nullptr != mPipelineStateVBO)
 		{
-			// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-			renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+			// Begin debug event
+			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw using one VBO")
 
-			// Set the used graphics root signature
-			renderer->setGraphicsRootSignature(mRootSignature);
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineStateVBO);
 
-			// First lower triangle using one vertex buffer object (VBO)
-			if (nullptr != mPipelineStateVBO)
-			{
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw using one VBO")
+			{ // Setup input assembly (IA)
+				// Set the used vertex array
+				renderer->iaSetVertexArray(mVertexArrayVBO);
 
-				// Set the used pipeline state object (PSO)
-				renderer->setPipelineState(mPipelineStateVBO);
-
-				{ // Setup input assembly (IA)
-					// Set the used vertex array
-					renderer->iaSetVertexArray(mVertexArrayVBO);
-
-					// Set the primitive topology used for draw calls
-					renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-				}
-
-				// Render the specified geometric primitive, based on an array of vertices
-				renderer->draw(0, 3);
-
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(renderer)
+				// Set the primitive topology used for draw calls
+				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 			}
 
-			// Second upper triangle using multiple vertex buffer object (VBO)
-			if (nullptr != mPipelineStateVBOs)
-			{
-				// Begin debug event
-				RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw using multiple VBOs")
+			// Render the specified geometric primitive, based on an array of vertices
+			renderer->draw(0, 3);
 
-				// Set the used pipeline state object (PSO)
-				renderer->setPipelineState(mPipelineStateVBOs);
+			// End debug event
+			RENDERER_END_DEBUG_EVENT(renderer)
+		}
 
-				{ // Setup input assembly (IA)
-					// Set the used vertex array
-					renderer->iaSetVertexArray(mVertexArrayVBOs);
+		// Second upper triangle using multiple vertex buffer object (VBO)
+		if (nullptr != mPipelineStateVBOs)
+		{
+			// Begin debug event
+			RENDERER_BEGIN_DEBUG_EVENT(renderer, L"Draw using multiple VBOs")
 
-					// Set the primitive topology used for draw calls
-					renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-				}
+			// Set the used pipeline state object (PSO)
+			renderer->setPipelineState(mPipelineStateVBOs);
 
-				// Render the specified geometric primitive, based on an array of vertices
-				renderer->draw(0, 3);
+			{ // Setup input assembly (IA)
+				// Set the used vertex array
+				renderer->iaSetVertexArray(mVertexArrayVBOs);
 
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(renderer)
+				// Set the primitive topology used for draw calls
+				renderer->iaSetPrimitiveTopology(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 			}
 
-			// End scene rendering
-			// -> Required for Direct3D 9
-			// -> Not required for Direct3D 10, Direct3D 11, Direct3D 12, OpenGL and OpenGL ES 2
-			renderer->endScene();
+			// Render the specified geometric primitive, based on an array of vertices
+			renderer->draw(0, 3);
+
+			// End debug event
+			RENDERER_END_DEBUG_EVENT(renderer)
 		}
 
 		// End debug event
