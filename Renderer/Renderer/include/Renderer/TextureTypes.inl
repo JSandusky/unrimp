@@ -43,7 +43,8 @@ namespace Renderer
 			true,	// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - when being uncompressed
 			true,	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - when being uncompressed
 			true,	// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices
-			false	// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
+			false,	// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
+			false	// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];
 	}
@@ -63,7 +64,8 @@ namespace Renderer
 			sizeof(uint8_t) * 1,	// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - when being uncompressed
 			sizeof(uint8_t) * 2,	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - when being uncompressed
 			sizeof(uint8_t) * 3,	// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - when being uncompressed
-			sizeof(float)			// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
+			sizeof(float),			// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
+			0						// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];
 	}
@@ -119,6 +121,10 @@ namespace Renderer
 			// 32-bit float depth format
 			case D32_FLOAT:
 				return sizeof(float) * width;
+
+			// Unknown
+			case UNKNOWN:
+				return 0;
 
 			default:
 				return 0;
@@ -180,6 +186,10 @@ namespace Renderer
 			// 32-bit float depth format
 			case D32_FLOAT:
 				return sizeof(float) * width * height;
+
+			// Unknown
+			case UNKNOWN:
+				return 0;
 
 			default:
 				return 0;

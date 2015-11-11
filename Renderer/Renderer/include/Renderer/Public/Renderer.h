@@ -777,7 +777,8 @@ namespace Renderer
 				BC4           = 8,
 				BC5           = 9,
 				ETC1          = 10,
-				D32_FLOAT     = 11
+				D32_FLOAT     = 11,
+				UNKNOWN       = 12
 			};
 			inline static bool isCompressed(Enum textureFormat)
 			{
@@ -794,6 +795,7 @@ namespace Renderer
 					true,
 					true,
 					true,
+					false,
 					false
 				};
 				return MAPPING[textureFormat];
@@ -813,7 +815,8 @@ namespace Renderer
 					sizeof(uint8_t) * 1,
 					sizeof(uint8_t) * 2,
 					sizeof(uint8_t) * 3,
-					sizeof(float)
+					sizeof(float),
+					0
 				};
 				return MAPPING[textureFormat];
 			}
@@ -845,6 +848,8 @@ namespace Renderer
 						return (width >> 1);
 					case D32_FLOAT:
 						return sizeof(float) * width;
+					case UNKNOWN:
+						return 0;
 					default:
 						return 0;
 				}
@@ -880,6 +885,8 @@ namespace Renderer
 					}
 					case D32_FLOAT:
 						return sizeof(float) * width * height;
+					case UNKNOWN:
+						return 0;
 					default:
 						return 0;
 				}

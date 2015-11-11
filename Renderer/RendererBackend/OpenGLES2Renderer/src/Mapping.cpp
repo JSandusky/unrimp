@@ -280,7 +280,8 @@ namespace OpenGLES2Renderer
 			GL_3DC_X_AMD,						// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - "GL_AMD_compressed_3DC_texture" OpenGL ES extension
 			GL_3DC_XY_AMD,						// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - "GL_AMD_compressed_3DC_texture" OpenGL ES extension
 			GL_ETC1_RGB8_OES,					// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices
-			GL_FLOAT							// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format	TODO(co) Check this
+			GL_FLOAT,							// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format	TODO(co) Check this
+			0									// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];
 	}
@@ -300,7 +301,8 @@ namespace OpenGLES2Renderer
 			0,			// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - Compressed format, so not supported in here
 			0,			// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - Compressed format, so not supported in here
 			0,			// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - Compressed format, so not supported in here
-			0			// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format	TODO(co) Check this
+			0,			// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format	TODO(co) Check this
+			0			// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];
 	}
@@ -320,7 +322,8 @@ namespace OpenGLES2Renderer
 			0,					// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - Compressed format, so not supported in here
 			0,					// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - Compressed format, so not supported in here
 			0,					// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - Compressed format, so not supported in here
-			0					// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format	TODO(co) Check this
+			0,					// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format	TODO(co) Check this
+			0					// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];
 	}

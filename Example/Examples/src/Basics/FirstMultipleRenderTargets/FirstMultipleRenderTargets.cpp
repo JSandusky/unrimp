@@ -178,7 +178,13 @@ void FirstMultipleRenderTargets::onInitialization()
 				// Create the pipeline state objects (PSO)
 				if (nullptr != programMultipleRenderTargets && nullptr != program)
 				{
-					mPipelineStateMultipleRenderTargets = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, programMultipleRenderTargets, vertexAttributes));
+					{
+						Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programMultipleRenderTargets, vertexAttributes);
+						pipelineState.numberOfRenderTargets = NUMBER_OF_TEXTURES;
+						pipelineState.depthStencilState.depthEnable = 0;
+						pipelineState.depthStencilViewFormat = Renderer::TextureFormat::UNKNOWN;
+						mPipelineStateMultipleRenderTargets = renderer->createPipelineState(pipelineState);
+					}
 					mPipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
 				}
 			}
