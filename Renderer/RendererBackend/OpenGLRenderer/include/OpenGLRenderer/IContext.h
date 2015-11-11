@@ -31,15 +31,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace OpenGLRenderer
-{
-	class Extensions;
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -69,24 +60,6 @@ namespace OpenGLRenderer
 		*    Destructor
 		*/
 		virtual ~IContext();
-
-		/**
-		*  @brief
-		*    Return the available extensions
-		*
-		*  @return
-		*    The available extensions, do not free the memory the reference is pointing to
-		*/
-		inline const Extensions &getExtensions() const;
-
-		/**
-		*  @brief
-		*    Return the available extensions
-		*
-		*  @return
-		*    The available extensions, do not free the memory the reference is pointing to
-		*/
-		inline Extensions &getExtensions();
 
 
 	//[-------------------------------------------------------]
@@ -144,13 +117,6 @@ namespace OpenGLRenderer
 		IContext &operator =(const IContext &source);
 
 
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		Extensions *mExtensions;	///< Extensions instance, always valid
-
-
 	};
 
 
@@ -158,9 +124,3 @@ namespace OpenGLRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "OpenGLRenderer/IContext.inl"

@@ -159,7 +159,6 @@
     <None Include="include\OpenGLRenderer\Detail\IState.inl" />
     <None Include="include\OpenGLRenderer\Detail\RasterizerState.inl" />
     <None Include="include\OpenGLRenderer\Framebuffer.inl" />
-    <None Include="include\OpenGLRenderer\IContext.inl" />
     <None Include="include\OpenGLRenderer\IndexBuffer.inl" />
     <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl" />
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl" />

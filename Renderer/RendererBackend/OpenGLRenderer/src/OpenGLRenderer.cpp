@@ -98,6 +98,7 @@ namespace OpenGLRenderer
 	#endif
 		mOpenGLRuntimeLinking(new OpenGLRuntimeLinking()),
 		mContext(nullptr),
+		mExtensions(nullptr),
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
@@ -119,15 +120,18 @@ namespace OpenGLRenderer
 				#error "Unsupported platform"
 			#endif
 
+			// We're using "this" in here, so we are not allowed to write the following within the initializer list
+			mExtensions = new Extensions(*mContext);
+
 			// Is the context initialized?
 			if (mContext->isInitialized())
 			{
 				// Initialize the OpenGL extensions
-				mContext->getExtensions().initialize();
+				mExtensions->initialize();
 
 				#ifdef RENDERER_OUTPUT_DEBUG
 					// "GL_ARB_debug_output"-extension available?
-					if (mContext->getExtensions().isGL_ARB_debug_output())
+					if (mExtensions->isGL_ARB_debug_output())
 					{
 						// Synchronous debug output, please
 						// -> Makes it easier to find the place causing the issue
@@ -223,6 +227,9 @@ namespace OpenGLRenderer
 			mShaderLanguageGlsl->release();
 		}
 
+		// Destroy the extensions instance
+		delete mExtensions;
+
 		// Destroy the OpenGL context instance
 		delete mContext;
 
@@ -259,7 +266,7 @@ namespace OpenGLRenderer
 		uint32_t numberOfShaderLanguages = 0;
 
 		// "GL_ARB_shader_objects" required
-		if (mContext->getExtensions().isGL_ARB_shader_objects())
+		if (mExtensions->isGL_ARB_shader_objects())
 		{
 			// GLSL supported
 			++numberOfShaderLanguages;
@@ -274,7 +281,7 @@ namespace OpenGLRenderer
 		uint32_t currentIndex = 0;
 
 		// "GL_ARB_shader_objects" required
-		if (mContext->getExtensions().isGL_ARB_shader_objects())
+		if (mExtensions->isGL_ARB_shader_objects())
 		{
 			// GLSL supported
 			if (currentIndex == index)
@@ -291,7 +298,7 @@ namespace OpenGLRenderer
 	Renderer::IShaderLanguage *OpenGLRenderer::getShaderLanguage(const char *shaderLanguageName)
 	{
 		// "GL_ARB_shader_objects" required
-		if (mContext->getExtensions().isGL_ARB_shader_objects())
+		if (mExtensions->isGL_ARB_shader_objects())
 		{
 			// In case "shaderLanguage" is a null pointer, use the default shader language
 			if (nullptr != shaderLanguageName)
@@ -300,7 +307,7 @@ namespace OpenGLRenderer
 				if (shaderLanguageName == ShaderLanguageGlsl::NAME || !stricmp(shaderLanguageName, ShaderLanguageGlsl::NAME))
 				{
 					// "GL_ARB_shader_objects" required
-					if (mContext->getExtensions().isGL_ARB_shader_objects())
+					if (mExtensions->isGL_ARB_shader_objects())
 					{
 						// If required, create the GLSL shader language instance right now
 						if (nullptr == mShaderLanguageGlsl)
@@ -338,10 +345,10 @@ namespace OpenGLRenderer
 	Renderer::IFramebuffer *OpenGLRenderer::createFramebuffer(uint32_t numberOfColorTextures, Renderer::ITexture **colorTextures, Renderer::ITexture *depthStencilTexture)
 	{
 		// "GL_ARB_framebuffer_object" required
-		if (mContext->getExtensions().isGL_ARB_framebuffer_object())
+		if (mExtensions->isGL_ARB_framebuffer_object())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mContext->getExtensions().isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				// -> Validation is done inside the framebuffer implementation
@@ -364,10 +371,10 @@ namespace OpenGLRenderer
 	Renderer::IVertexBuffer *OpenGLRenderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		// "GL_ARB_vertex_buffer_object" required
-		if (mContext->getExtensions().isGL_ARB_vertex_buffer_object())
+		if (mExtensions->isGL_ARB_vertex_buffer_object())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mContext->getExtensions().isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new VertexBufferDsa(*this, numberOfBytes, data, bufferUsage);
@@ -388,10 +395,10 @@ namespace OpenGLRenderer
 	Renderer::IIndexBuffer *OpenGLRenderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		// "GL_ARB_vertex_buffer_object" required
-		if (mContext->getExtensions().isGL_ARB_vertex_buffer_object())
+		if (mExtensions->isGL_ARB_vertex_buffer_object())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mContext->getExtensions().isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new IndexBufferDsa(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
@@ -411,16 +418,13 @@ namespace OpenGLRenderer
 
 	Renderer::IVertexArray *OpenGLRenderer::createVertexArray(const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
 	{
-		// Get the extensions instance
-		const Extensions &extensions = mContext->getExtensions();
-
 		// Is "GL_ARB_vertex_array_object" there?
-		if (extensions.isGL_ARB_vertex_array_object())
+		if (mExtensions->isGL_ARB_vertex_array_object())
 		{
 			// Effective vertex array object (VAO)
 
 			// Is "GL_EXT_direct_state_access" there?
-			if (extensions.isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
@@ -444,10 +448,10 @@ namespace OpenGLRenderer
 	Renderer::ITextureBuffer *OpenGLRenderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
 	{
 		// "GL_ARB_texture_buffer_object" required
-		if (mContext->getExtensions().isGL_ARB_texture_buffer_object())
+		if (mExtensions->isGL_ARB_texture_buffer_object())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mContext->getExtensions().isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new TextureBufferDsa(*this, numberOfBytes, textureFormat, data, bufferUsage);
@@ -473,7 +477,7 @@ namespace OpenGLRenderer
 		if (width > 0 && height > 0)
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mContext->getExtensions().isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new Texture2DDsa(*this, width, height, textureFormat, data, flags);
@@ -495,10 +499,10 @@ namespace OpenGLRenderer
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
 
 		// Check whether or not the given texture dimension is valid, "GL_EXT_texture_array" required
-		if (width > 0 && height > 0 && numberOfSlices > 0 && mContext->getExtensions().isGL_EXT_texture_array())
+		if (width > 0 && height > 0 && numberOfSlices > 0 && mExtensions->isGL_EXT_texture_array())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mContext->getExtensions().isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new Texture2DArrayDsa(*this, width, height, numberOfSlices, textureFormat, data, flags);
@@ -528,7 +532,7 @@ namespace OpenGLRenderer
 	Renderer::ISamplerState *OpenGLRenderer::createSamplerState(const Renderer::SamplerState &samplerState)
 	{
 		// Is "GL_ARB_sampler_objects" there?
-		if (mContext->getExtensions().isGL_ARB_sampler_objects())
+		if (mExtensions->isGL_ARB_sampler_objects())
 		{
 			// Effective sampler object (SO)
 			return new SamplerStateSo(*this, samplerState);
@@ -536,7 +540,7 @@ namespace OpenGLRenderer
 		else
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (mContext->getExtensions().isGL_EXT_direct_state_access())
+			if (mExtensions->isGL_EXT_direct_state_access())
 			{
 				// Direct state access (DSA) version to emulate a sampler object
 				return new SamplerStateDsa(*this, samplerState);
@@ -640,7 +644,7 @@ namespace OpenGLRenderer
 					// Evaluate the internal uniform buffer type of the new uniform buffer to set
 					// -> "GL_ARB_uniform_buffer_object" required
 					if (static_cast<UniformBuffer*>(resource)->getInternalResourceType() == UniformBuffer::InternalResourceType::GLSL &&
-						mContext->getExtensions().isGL_ARB_uniform_buffer_object())
+						mExtensions->isGL_ARB_uniform_buffer_object())
 					{
 						// Attach the buffer to the given UBO binding point
 						// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
@@ -656,7 +660,7 @@ namespace OpenGLRenderer
 					// In OpenGL, all shaders share the same texture units (= "Renderer::RootParameter::shaderVisibility" stays unused)
 
 					// Is "GL_EXT_direct_state_access" there?
-					if (mContext->getExtensions().isGL_EXT_direct_state_access())
+					if (mExtensions->isGL_EXT_direct_state_access())
 					{
 						// Effective direct state access (DSA)
 
@@ -685,7 +689,7 @@ namespace OpenGLRenderer
 							const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex);
 
 							// Is "GL_ARB_sampler_objects" there?
-							if (mContext->getExtensions().isGL_ARB_sampler_objects())
+							if (mExtensions->isGL_ARB_sampler_objects())
 							{
 								// Effective sampler object (SO)
 								glBindSampler(descriptorRange->baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
@@ -703,7 +707,7 @@ namespace OpenGLRenderer
 								glActiveTextureARB(unit);
 
 								// Is "GL_EXT_direct_state_access" there?
-								if (mContext->getExtensions().isGL_EXT_direct_state_access())
+								if (mExtensions->isGL_EXT_direct_state_access())
 								{
 									// Direct state access (DSA) version to emulate a sampler object
 									static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
@@ -726,7 +730,7 @@ namespace OpenGLRenderer
 						// Traditional bind version
 
 						// "GL_ARB_multitexture" required
-						if (mContext->getExtensions().isGL_ARB_multitexture())
+						if (mExtensions->isGL_ARB_multitexture())
 						{
 							#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 								// Backup the currently active OpenGL texture
@@ -760,13 +764,13 @@ namespace OpenGLRenderer
 								const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex);
 
 								// Is "GL_ARB_sampler_objects" there?
-								if (mContext->getExtensions().isGL_ARB_sampler_objects())
+								if (mExtensions->isGL_ARB_sampler_objects())
 								{
 									// Effective sampler object (SO)
 									glBindSampler(descriptorRange->baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
 								}
 								// Is "GL_EXT_direct_state_access" there?
-								else if (mContext->getExtensions().isGL_EXT_direct_state_access())
+								else if (mExtensions->isGL_EXT_direct_state_access())
 								{
 									// Direct state access (DSA) version to emulate a sampler object
 									static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
@@ -1032,7 +1036,7 @@ namespace OpenGLRenderer
 						glBindFramebuffer(GL_FRAMEBUFFER, framebuffer->getOpenGLFramebuffer());
 
 						// Define the OpenGL buffers to draw into, "GL_ARB_draw_buffers"-extension required
-						if (mContext->getExtensions().isGL_ARB_draw_buffers())
+						if (mExtensions->isGL_ARB_draw_buffers())
 						{
 							static const GLenum OPENGL_DRAW_BUFFER[16] =
 							{
@@ -1184,7 +1188,7 @@ namespace OpenGLRenderer
 		// Tessellation support: "glPatchParameteri()" is called within "OpenGLRenderer::iaSetPrimitiveTopology()"
 
 		// Is currently a vertex array set? Do also check whether or not the required "GL_ARB_draw_instanced" extension is there.
-		if (nullptr != mVertexArray && mContext->getExtensions().isGL_ARB_draw_instanced())
+		if (nullptr != mVertexArray && mExtensions->isGL_ARB_draw_instanced())
 		{
 			// Draw
 			glDrawArraysInstancedARB(mOpenGLPrimitiveTopology, static_cast<GLint>(startVertexLocation), static_cast<GLsizei>(numberOfVertices), static_cast<GLsizei>(numberOfInstances));
@@ -1208,7 +1212,7 @@ namespace OpenGLRenderer
 				if (baseVertexLocation > 0)
 				{
 					// Is the "GL_ARB_draw_elements_base_vertex" extension there?
-					if (mContext->getExtensions().isGL_ARB_draw_elements_base_vertex())
+					if (mExtensions->isGL_ARB_draw_elements_base_vertex())
 					{
 						// Draw with base vertex location
 						glDrawElementsBaseVertex(mOpenGLPrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(startIndexLocation * sizeof(int)), static_cast<GLint>(baseVertexLocation));
@@ -1234,7 +1238,7 @@ namespace OpenGLRenderer
 		// "minimumIndex" & "numberOfVertices" are currently not used, might be used later on with the "GL_EXT_draw_range_elements"-extension if it's useful
 
 		// Is currently an vertex array set? Do also check for the required "GL_ARB_draw_instanced" extension.
-		if (nullptr != mVertexArray && mContext->getExtensions().isGL_ARB_draw_instanced())
+		if (nullptr != mVertexArray && mExtensions->isGL_ARB_draw_instanced())
 		{
 			// Get the used index buffer
 			IndexBuffer *indexBuffer = mVertexArray->getIndexBuffer();
@@ -1244,7 +1248,7 @@ namespace OpenGLRenderer
 				if (baseVertexLocation > 0)
 				{
 					// Is the "GL_ARB_draw_elements_base_vertex" extension there?
-					if (mContext->getExtensions().isGL_ARB_draw_elements_base_vertex())
+					if (mExtensions->isGL_ARB_draw_elements_base_vertex())
 					{
 						// Draw with base vertex location
 						glDrawElementsInstancedBaseVertex(mOpenGLPrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(startIndexLocation * sizeof(int)), static_cast<GLsizei>(numberOfInstances), static_cast<GLint>(baseVertexLocation));
@@ -1420,7 +1424,7 @@ namespace OpenGLRenderer
 		mCapabilities.maximumNumberOfViewports = 1;	// TODO(co) GL_ARB_viewport_array
 
 		// Maximum number of simultaneous render targets (if <1 render to texture is not supported, "GL_ARB_draw_buffers" required)
-		if (mContext->getExtensions().isGL_ARB_draw_buffers())
+		if (mExtensions->isGL_ARB_draw_buffers())
 		{
 			glGetIntegerv(GL_MAX_DRAW_BUFFERS_ARB, &openGLValue);
 			mCapabilities.maximumNumberOfSimultaneousRenderTargets = static_cast<uint32_t>(openGLValue);
@@ -1428,7 +1432,7 @@ namespace OpenGLRenderer
 		else
 		{
 			// "GL_ARB_framebuffer_object"-extension for render to texture required
-			mCapabilities.maximumNumberOfSimultaneousRenderTargets = static_cast<uint32_t>(mContext->getExtensions().isGL_ARB_framebuffer_object());
+			mCapabilities.maximumNumberOfSimultaneousRenderTargets = static_cast<uint32_t>(mExtensions->isGL_ARB_framebuffer_object());
 		}
 
 		// Maximum texture dimension
@@ -1437,7 +1441,7 @@ namespace OpenGLRenderer
 		mCapabilities.maximumTextureDimension = static_cast<uint32_t>(openGLValue);
 
 		// Maximum number of 2D texture array slices (usually 512, in case there's no support for 2D texture arrays it's 0)
-		if (mContext->getExtensions().isGL_EXT_texture_array())
+		if (mExtensions->isGL_EXT_texture_array())
 		{
 			glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS_EXT, &openGLValue);
 			mCapabilities.maximumNumberOf2DTextureArraySlices = static_cast<uint32_t>(openGLValue);
@@ -1448,10 +1452,10 @@ namespace OpenGLRenderer
 		}
 
 		// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
-		mCapabilities.uniformBuffer = mContext->getExtensions().isGL_ARB_uniform_buffer_object();
+		mCapabilities.uniformBuffer = mExtensions->isGL_ARB_uniform_buffer_object();
 
 		// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
-		if (mContext->getExtensions().isGL_ARB_texture_buffer_object())
+		if (mExtensions->isGL_ARB_texture_buffer_object())
 		{
 			glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE_EXT, &openGLValue);
 			mCapabilities.maximumTextureBufferSize = static_cast<uint32_t>(openGLValue);
@@ -1468,19 +1472,19 @@ namespace OpenGLRenderer
 		mCapabilities.instancedArrays = true;
 
 		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex, "GL_ARB_instanced_arrays" required)
-		mCapabilities.instancedArrays = mContext->getExtensions().isGL_ARB_instanced_arrays();
+		mCapabilities.instancedArrays = mExtensions->isGL_ARB_instanced_arrays();
 
 		// Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID, "GL_ARB_draw_instanced" required)
-		mCapabilities.drawInstanced = mContext->getExtensions().isGL_ARB_draw_instanced();
+		mCapabilities.drawInstanced = mExtensions->isGL_ARB_draw_instanced();
 
 		// Base vertex supported for draw calls?
-		mCapabilities.baseVertex = mContext->getExtensions().isGL_ARB_draw_elements_base_vertex();
+		mCapabilities.baseVertex = mExtensions->isGL_ARB_draw_elements_base_vertex();
 
 		// Is there support for vertex shaders (VS)?
-		mCapabilities.vertexShader = mContext->getExtensions().isGL_ARB_vertex_shader();
+		mCapabilities.vertexShader = mExtensions->isGL_ARB_vertex_shader();
 
 		// Maximum number of vertices per patch (usually 0 for no tessellation support or 32 which is the maximum number of supported vertices per patch)
-		if (mContext->getExtensions().isGL_ARB_tessellation_shader())
+		if (mExtensions->isGL_ARB_tessellation_shader())
 		{
 			glGetIntegerv(GL_MAX_PATCH_VERTICES, &openGLValue);
 			mCapabilities.maximumNumberOfPatchVertices = static_cast<uint32_t>(openGLValue);
@@ -1491,7 +1495,7 @@ namespace OpenGLRenderer
 		}
 
 		// Maximum number of vertices a geometry shader can emit (usually 0 for no geometry shader support or 1024)
-		if (mContext->getExtensions().isGL_ARB_geometry_shader4())
+		if (mExtensions->isGL_ARB_geometry_shader4())
 		{
 			glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES_ARB, &openGLValue);
 			mCapabilities.maximumNumberOfGsOutputVertices = static_cast<uint32_t>(openGLValue);
@@ -1502,7 +1506,7 @@ namespace OpenGLRenderer
 		}
 
 		// Is there support for fragment shaders (FS)?
-		mCapabilities.fragmentShader = mContext->getExtensions().isGL_ARB_fragment_shader();
+		mCapabilities.fragmentShader = mExtensions->isGL_ARB_fragment_shader();
 	}
 
 	void OpenGLRenderer::iaUnsetVertexArray()
@@ -1547,7 +1551,7 @@ namespace OpenGLRenderer
 			{
 				case Program::InternalResourceType::GLSL:
 					// "GL_ARB_shader_objects" required
-					if (mContext->getExtensions().isGL_ARB_shader_objects())
+					if (mExtensions->isGL_ARB_shader_objects())
 					{
 						// Backup OpenGL program identifier
 						mOpenGLProgram = static_cast<ProgramGlsl*>(program)->getOpenGLProgram();
@@ -1562,7 +1566,7 @@ namespace OpenGLRenderer
 		{
 			// TODO(co) GLSL buffer settings
 			// "GL_ARB_shader_objects" required
-			if (mContext->getExtensions().isGL_ARB_shader_objects())
+			if (mExtensions->isGL_ARB_shader_objects())
 			{
 				// Unbind the program
 				glUseProgramObjectARB(0);

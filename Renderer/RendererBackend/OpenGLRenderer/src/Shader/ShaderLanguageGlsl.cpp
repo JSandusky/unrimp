@@ -131,7 +131,7 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
-		if (openGLRenderer.getContext().getExtensions().isGL_ARB_vertex_shader())
+		if (openGLRenderer.getExtensions().isGL_ARB_vertex_shader())
 		{
 			return new VertexShaderGlsl(openGLRenderer, bytecode, numberOfBytes);
 		}
@@ -146,7 +146,7 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
-		if (openGLRenderer.getContext().getExtensions().isGL_ARB_vertex_shader())
+		if (openGLRenderer.getExtensions().isGL_ARB_vertex_shader())
 		{
 			return new VertexShaderGlsl(openGLRenderer, sourceCode);
 		}
@@ -161,7 +161,7 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
-		if (openGLRenderer.getContext().getExtensions().isGL_ARB_tessellation_shader())
+		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
 			return new TessellationControlShaderGlsl(openGLRenderer, bytecode, numberOfBytes);
 		}
@@ -176,7 +176,7 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
-		if (openGLRenderer.getContext().getExtensions().isGL_ARB_tessellation_shader())
+		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
 			return new TessellationControlShaderGlsl(openGLRenderer, sourceCode);
 		}
@@ -191,7 +191,7 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
-		if (openGLRenderer.getContext().getExtensions().isGL_ARB_tessellation_shader())
+		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
 			return new TessellationEvaluationShaderGlsl(openGLRenderer, bytecode, numberOfBytes);
 		}
@@ -206,7 +206,7 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's tessellation support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
-		if (openGLRenderer.getContext().getExtensions().isGL_ARB_tessellation_shader())
+		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
 			return new TessellationEvaluationShaderGlsl(openGLRenderer, sourceCode);
 		}
@@ -221,7 +221,7 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
-		if (openGLRenderer.getContext().getExtensions().isGL_ARB_geometry_shader4())
+		if (openGLRenderer.getExtensions().isGL_ARB_geometry_shader4())
 		{
 			// In modern GLSL, "geometry shader input primitive topology" & "geometry shader output primitive topology" & "number of output vertices" can be directly set within GLSL by writing e.g.
 			//   "layout(triangles) in;"
@@ -240,7 +240,7 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
-		if (openGLRenderer.getContext().getExtensions().isGL_ARB_geometry_shader4())
+		if (openGLRenderer.getExtensions().isGL_ARB_geometry_shader4())
 		{
 			// In modern GLSL, "geometry shader input primitive topology" & "geometry shader output primitive topology" & "number of output vertices" can be directly set within GLSL by writing e.g.
 			//   "layout(triangles) in;"
@@ -259,7 +259,7 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's fragment shader support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
-		if (openGLRenderer.getContext().getExtensions().isGL_ARB_fragment_shader())
+		if (openGLRenderer.getExtensions().isGL_ARB_fragment_shader())
 		{
 			return new FragmentShaderGlsl(openGLRenderer, bytecode, numberOfBytes);
 		}
@@ -274,7 +274,7 @@ namespace OpenGLRenderer
 	{
 		// Check whether or not there's fragment shader support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
-		if (openGLRenderer.getContext().getExtensions().isGL_ARB_fragment_shader())
+		if (openGLRenderer.getExtensions().isGL_ARB_fragment_shader())
 		{
 			return new FragmentShaderGlsl(openGLRenderer, sourceCode);
 		}
@@ -315,7 +315,7 @@ namespace OpenGLRenderer
 		}
 
 		// Is "GL_EXT_direct_state_access" there?
-		else if (openGLRenderer.getContext().getExtensions().isGL_EXT_direct_state_access())
+		else if (openGLRenderer.getExtensions().isGL_EXT_direct_state_access())
 		{
 			// Effective direct state access (DSA)
 			return new ProgramGlslDsa(openGLRenderer, rootSignature, vertexAttributes, static_cast<VertexShaderGlsl*>(vertexShader), static_cast<TessellationControlShaderGlsl*>(tessellationControlShader), static_cast<TessellationEvaluationShaderGlsl*>(tessellationEvaluationShader), static_cast<GeometryShaderGlsl*>(geometryShader), static_cast<FragmentShaderGlsl*>(fragmentShader));
@@ -362,10 +362,10 @@ namespace OpenGLRenderer
 	{
 		// "GL_ARB_uniform_buffer_object" required
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
-		if (openGLRenderer.getContext().getExtensions().isGL_ARB_uniform_buffer_object())
+		if (openGLRenderer.getExtensions().isGL_ARB_uniform_buffer_object())
 		{
 			// Is "GL_EXT_direct_state_access" there?
-			if (openGLRenderer.getContext().getExtensions().isGL_EXT_direct_state_access())
+			if (openGLRenderer.getExtensions().isGL_EXT_direct_state_access())
 			{
 				// Effective direct state access (DSA)
 				return new UniformBufferGlslDsa(openGLRenderer, numberOfBytes, data, bufferUsage);

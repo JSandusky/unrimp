@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 			glVertexAttribPointerARB(attributeLocation, Mapping::getOpenGLSize(attribute->vertexAttributeFormat), Mapping::getOpenGLType(attribute->vertexAttributeFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
 
 			// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
-			if (attribute->instancesPerElement > 0 && openGLRenderer.getContext().getExtensions().isGL_ARB_instanced_arrays())
+			if (attribute->instancesPerElement > 0 && openGLRenderer.getExtensions().isGL_ARB_instanced_arrays())
 			{
 				glVertexAttribDivisorARB(attributeLocation, attribute->instancesPerElement);
 			}

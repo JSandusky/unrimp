@@ -50,7 +50,7 @@ namespace OpenGLRenderer
 		mAttributes(mNumberOfAttributes ? new Renderer::VertexAttribute[mNumberOfAttributes] : nullptr),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
 		mVertexBuffers(numberOfVertexBuffers ? new Renderer::VertexArrayVertexBuffer[numberOfVertexBuffers] : nullptr),
-		mIsGL_ARB_instanced_arrays(openGLRenderer.getContext().getExtensions().isGL_ARB_instanced_arrays())
+		mIsGL_ARB_instanced_arrays(openGLRenderer.getExtensions().isGL_ARB_instanced_arrays())
 	{
 		// Copy over the data
 		if (nullptr != mAttributes)

@@ -22,7 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/IContext.h"
-#include "OpenGLRenderer/Extensions.h"
 
 
 //[-------------------------------------------------------]
@@ -37,19 +36,16 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	IContext::~IContext()
 	{
-		// Destroy the extensions instance
-		delete mExtensions;
+		// Nothing here
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	IContext::IContext() :
-		mExtensions(nullptr)
+	IContext::IContext()
 	{
-		// We're using "this" in here, so we are not allowed to write the following within the initializer list
-		mExtensions = new Extensions(*this);
+		// Nothing here
 	}
 
 	IContext::IContext(const IContext &)

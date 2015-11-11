@@ -442,9 +442,6 @@
     <None Include="include\OpenGLRenderer\Framebuffer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\IContext.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\IndexBuffer.inl">
       <Filter>Source Files</Filter>
     </None>

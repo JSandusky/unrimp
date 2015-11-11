@@ -41,6 +41,7 @@ namespace OpenGLRenderer
 {
 	class IContext;
 	class SwapChain;
+	class Extensions;
 	class VertexArray;
 	class RootSignature;
 	class OpenGLRuntimeLinking;
@@ -103,6 +104,24 @@ namespace OpenGLRenderer
 		*    The OpenGL context instance, do not free the memory the reference is pointing to
 		*/
 		inline const IContext &getContext() const;
+
+		/**
+		*  @brief
+		*    Return the available extensions
+		*
+		*  @return
+		*    The available extensions, do not free the memory the reference is pointing to
+		*/
+		inline const Extensions &getExtensions() const;
+
+		/**
+		*  @brief
+		*    Return the available extensions
+		*
+		*  @return
+		*    The available extensions, do not free the memory the reference is pointing to
+		*/
+		inline Extensions &getExtensions();
 
 
 	//[-------------------------------------------------------]
@@ -243,6 +262,7 @@ namespace OpenGLRenderer
 	private:
 		OpenGLRuntimeLinking	  *mOpenGLRuntimeLinking;	///< OpenGL runtime linking instance, always valid
 		IContext				  *mContext;				///< OpenGL context instance, always valid
+		Extensions				  *mExtensions;				///< Extensions instance, always valid
 		Renderer::IShaderLanguage *mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
 		RootSignature			  *mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState	  *mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer

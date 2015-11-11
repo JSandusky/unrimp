@@ -121,7 +121,7 @@ namespace OpenGLRenderer
 		}
 
 		// Build mipmaps automatically on the GPU? (or GPU driver)
-		if ((flags & Renderer::TextureFlag::GENERATE_MIPMAPS) && openGLRenderer.getContext().getExtensions().isGL_ARB_framebuffer_object())
+		if ((flags & Renderer::TextureFlag::GENERATE_MIPMAPS) && openGLRenderer.getExtensions().isGL_ARB_framebuffer_object())
 		{
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);

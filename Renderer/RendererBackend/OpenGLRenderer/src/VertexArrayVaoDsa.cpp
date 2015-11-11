@@ -60,7 +60,7 @@ namespace OpenGLRenderer
 			glVertexArrayVertexAttribOffsetEXT(mOpenGLVertexArray, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLArrayBuffer(), attributeLocation, Mapping::getOpenGLSize(attribute->vertexAttributeFormat), Mapping::getOpenGLType(attribute->vertexAttributeFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), static_cast<GLintptr>(attribute->alignedByteOffset));
 
 			// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
-			if (attribute->instancesPerElement > 0 && openGLRenderer.getContext().getExtensions().isGL_ARB_instanced_arrays())
+			if (attribute->instancesPerElement > 0 && openGLRenderer.getExtensions().isGL_ARB_instanced_arrays())
 			{
 				// Sadly, DSA has no support for "GL_ARB_instanced_arrays", so, we have to use the bind way
 				// -> Keep the bind-horror as local as possible
