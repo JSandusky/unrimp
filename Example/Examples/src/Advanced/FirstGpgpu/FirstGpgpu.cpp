@@ -66,8 +66,19 @@ int FirstGpgpu::run()
 		// Call initialization method
 		onInitialization();
 
-		// Let the application to it's job
-		onDoJob();
+		// Begin scene rendering
+		// -> Required for Direct3D 9 and Direct3D 12
+		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+		if (mRenderer->beginScene())
+		{
+			// Let the application to it's job
+			onDoJob();
+
+			// End scene rendering
+			// -> Required for Direct3D 9 and Direct3D 12
+			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			mRenderer->endScene();
+		}
 
 		// Call de-initialization method
 		onDeinitialization();
@@ -98,7 +109,8 @@ void FirstGpgpu::onInitialization()
 		// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
 		// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 		// -> Not required for OpenGL and OpenGL ES 2
-		Renderer::ITexture *texture2D = mTexture2D[i] = mRenderer->createTexture2D(64, 64, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+		// -> The optimized texture clear value is a Direct3D 12 related option
+		Renderer::ITexture *texture2D = mTexture2D[i] = mRenderer->createTexture2D(64, 64, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLUE));
 
 		// Create the framebuffer object (FBO) instance
 		mFramebuffer[i] = mRenderer->createFramebuffer(1, &texture2D);
@@ -308,15 +320,6 @@ void FirstGpgpu::generate2DTextureContent()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT(mRenderer, L"Generate the content of the 2D texture to process later on")
 
-		// TODO(co) Unbind our texture from the texture unit before rendering into it
-		// -> Direct3D 9, OpenGL and OpenGL ES 2 don't mind as long as the texture is not used inside the shader while rendering into it
-		// -> Direct3D 10 & 11 go crazy if you're going to render into a texture which is still bound at a texture unit:
-		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets: Resource being set to OM RenderTarget slot 0 is still bound on input! [ STATE_SETTING WARNING #9: DEVICE_OMSETRENDERTARGETS_HAZARD ]"
-		//    "D3D11: WARNING: ID3D11DeviceContext::OMSetRenderTargets[AndUnorderedAccessViews]: Forcing PS shader resource slot 0 to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD ]"
-
-		// Backup the currently used render target
-		Renderer::IRenderTargetPtr previousRenderTarget(mRenderer->omGetRenderTarget());
-
 		// Set the render target to render into
 		mRenderer->omSetRenderTarget(mFramebuffer[0]);
 
@@ -353,9 +356,6 @@ void FirstGpgpu::generate2DTextureContent()
 
 		// Render the specified geometric primitive, based on indexing into an array of vertices
 		mRenderer->draw(0, 3);
-
-		// Restore the previously set render target
-		mRenderer->omSetRenderTarget(previousRenderTarget);
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(mRenderer)
