@@ -273,6 +273,18 @@
     <ClInclude Include="src\Manager\Resource\Font\Shader\Font_GLSL_110.h">
       <Filter>Source Files\Manager\Resource\Font\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneNode.h">
+      <Filter>Source Files\Manager\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneCamera.h">
+      <Filter>Source Files\Manager\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneItem.h">
+      <Filter>Source Files\Manager\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneMesh.h">
+      <Filter>Source Files\Manager\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -343,6 +355,18 @@
     </ClCompile>
     <ClCompile Include="src\Manager\Asset\Serializer\AssetPackageSerializer.cpp">
       <Filter>Source Files\Manager\Asset\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Scene\SceneNode.cpp">
+      <Filter>Source Files\Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Scene\SceneCamera.cpp">
+      <Filter>Source Files\Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Scene\SceneItem.cpp">
+      <Filter>Source Files\Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Scene\SceneMesh.cpp">
+      <Filter>Source Files\Manager\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -79,7 +79,11 @@
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Texture\Loader\KtxTextureResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Texture\TextureResource.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Texture\TextureResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneCamera.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneManager.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneMesh.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneNode.h" />
     <ClInclude Include="include\RendererRuntime\PlatformTypes.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />
@@ -114,7 +118,11 @@
     <ClCompile Include="src\Manager\Resource\Texture\Loader\KtxTextureResourceLoader.cpp" />
     <ClCompile Include="src\Manager\Resource\Texture\TextureResource.cpp" />
     <ClCompile Include="src\Manager\Resource\Texture\TextureResourceManager.cpp" />
+    <ClCompile Include="src\Manager\Scene\SceneCamera.cpp" />
+    <ClCompile Include="src\Manager\Scene\SceneItem.cpp" />
     <ClCompile Include="src\Manager\Scene\SceneManager.cpp" />
+    <ClCompile Include="src\Manager\Scene\SceneMesh.cpp" />
+    <ClCompile Include="src\Manager\Scene\SceneNode.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BC90A670-6608-479F-88A4-3F64CE7823E1}</ProjectGuid>
