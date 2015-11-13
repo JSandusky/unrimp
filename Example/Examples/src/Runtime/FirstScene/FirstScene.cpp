@@ -380,9 +380,9 @@ void FirstScene::onDraw()
 		{ // Set uniform
 			// Calculate the object space to clip space matrix
 			glm::mat4 viewSpaceToClipSpace		= glm::perspective(45.0f, aspectRatio, 0.1f, 100.f);
-			glm::mat4 viewTranslate				= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -7.0f, -25.0f));
-			glm::mat4 worldSpaceToViewSpace		= glm::rotate(viewTranslate, mGlobalTimer, glm::vec3(0.0f, 1.0f, 0.0f));
-			glm::mat4 objectSpaceToWorldSpace	= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+			glm::mat4 viewTranslate				= glm::translate(glm::mat4(1.0f), RendererRuntime::Vector3(0.0f, -7.0f, -25.0f));
+			glm::mat4 worldSpaceToViewSpace		= glm::rotate(viewTranslate, mGlobalTimer, RendererRuntime::Vector3(0.0f, 1.0f, 0.0f));
+			glm::mat4 objectSpaceToWorldSpace	= glm::scale(glm::mat4(1.0f), RendererRuntime::Vector3(0.5f));
 			glm::mat4 objectSpaceToViewSpace	= worldSpaceToViewSpace * objectSpaceToWorldSpace;
 			glm::mat4 objectSpaceToClipSpace	= viewSpaceToClipSpace * objectSpaceToViewSpace;
 
@@ -421,7 +421,7 @@ void FirstScene::onDraw()
 		}
 
 		// Draw text
-		mFontResource->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
+		mFontResource->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), RendererRuntime::Vector3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)

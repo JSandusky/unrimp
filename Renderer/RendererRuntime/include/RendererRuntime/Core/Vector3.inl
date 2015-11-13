@@ -28,6 +28,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline Vector3::Vector3(float _x) :
+		glm::vec3(_x)
+	{
+		// Nothing here
+	}
+
 	inline Vector3::Vector3(float _x, float _y, float _z) :
 		glm::vec3(_x, _y, _z)
 	{

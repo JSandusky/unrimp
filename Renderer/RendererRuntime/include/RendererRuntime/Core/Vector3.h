@@ -80,6 +80,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		Vector3();
+		inline explicit Vector3(float x);
 		inline Vector3(float x, float y, float z);
 
 
