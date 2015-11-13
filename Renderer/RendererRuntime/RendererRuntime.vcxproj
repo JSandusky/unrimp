@@ -85,11 +85,11 @@
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />
     <ClInclude Include="include\RendererRuntime\WindowsHeader.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="src\Manager\Resource\Font\Font_GLSL_110.h" />
-    <ClInclude Include="src\Manager\Resource\Font\Font_GLSL_ES2.h" />
-    <ClInclude Include="src\Manager\Resource\Font\Font_HLSL_D3D10_D3D11_D3D12.h" />
-    <ClInclude Include="src\Manager\Resource\Font\Font_HLSL_D3D9.h" />
-    <ClInclude Include="src\Manager\Resource\Font\Font_Null.h" />
+    <ClInclude Include="src\Manager\Resource\Font\Shader\Font_GLSL_110.h" />
+    <ClInclude Include="src\Manager\Resource\Font\Shader\Font_GLSL_ES2.h" />
+    <ClInclude Include="src\Manager\Resource\Font\Shader\Font_HLSL_D3D10_D3D11_D3D12.h" />
+    <ClInclude Include="src\Manager\Resource\Font\Shader\Font_HLSL_D3D9.h" />
+    <ClInclude Include="src\Manager\Resource\Font\Shader\Font_Null.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererBackendManager.cpp" />
