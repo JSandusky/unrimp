@@ -46,6 +46,7 @@
 	#include "Runtime/FirstMesh/FirstMesh.h"
 	#include "Runtime/FirstCommandBucket/FirstCommandBucket.h"
 	#include "Runtime/FirstCompositor/FirstCompositor.h"
+	#include "Runtime/FirstScene/FirstScene.h"
 #endif
 #include <algorithm>
 #include <array>
@@ -113,6 +114,7 @@ ExampleRunner::ExampleRunner()
 		addExample("FirstMesh",					&RunExample<FirstMesh>,						supportsAllRenderer);
 		addExample("FirstCommandBucket",		&RunExample<FirstCommandBucket>,			supportsAllRenderer);
 		addExample("FirstCompositor",			&RunExample<FirstCompositor>,				supportsAllRenderer);
+		addExample("FirstScene",				&RunExample<FirstScene>,					supportsAllRenderer);
 	#endif
 
 	#ifndef RENDERER_NO_NULL

@@ -357,6 +357,12 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_HLSL_D3D9.h" />
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_Null.h" />
+    <ClInclude Include="src\Runtime\FirstScene\FirstScene.h" />
+    <ClInclude Include="src\Runtime\FirstScene\FirstScene_GLSL_110.h" />
+    <ClInclude Include="src\Runtime\FirstScene\FirstScene_GLSL_ES2.h" />
+    <ClInclude Include="src\Runtime\FirstScene\FirstScene_HLSL_D3D10_D3D11_D3D12.h" />
+    <ClInclude Include="src\Runtime\FirstScene\FirstScene_HLSL_D3D9.h" />
+    <ClInclude Include="src\Runtime\FirstScene\FirstScene_Null.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Advanced\FirstGpgpu\FirstGpgpu.cpp" />
@@ -418,6 +424,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClCompile Include="src\Runtime\FirstCompositor\FirstCompositor.cpp" />
     <ClCompile Include="src\Runtime\FirstFont\FirstFont.cpp" />
     <ClCompile Include="src\Runtime\FirstMesh\FirstMesh.cpp" />
+    <ClCompile Include="src\Runtime\FirstScene\FirstScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />

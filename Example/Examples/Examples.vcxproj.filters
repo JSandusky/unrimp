@@ -73,6 +73,9 @@
     <Filter Include="Runtime\FirstMesh">
       <UniqueIdentifier>{3a403f45-e8a0-447e-aaae-b8fc6a461cca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Runtime\FirstScene">
+      <UniqueIdentifier>{c5a02232-ac29-4332-a85f-aeadfdfa3ed1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Framework\IApplication.h">
@@ -456,6 +459,24 @@
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D10_D3D11_D3D12.h">
       <Filter>Basics\FirstRenderToTexture</Filter>
     </ClInclude>
+    <ClInclude Include="src\Runtime\FirstScene\FirstScene_GLSL_110.h">
+      <Filter>Runtime\FirstScene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstScene\FirstScene_GLSL_ES2.h">
+      <Filter>Runtime\FirstScene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstScene\FirstScene_HLSL_D3D9.h">
+      <Filter>Runtime\FirstScene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstScene\FirstScene_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Runtime\FirstScene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstScene\FirstScene_Null.h">
+      <Filter>Runtime\FirstScene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstScene\FirstScene.h">
+      <Filter>Runtime\FirstScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -566,6 +587,9 @@
     </ClCompile>
     <ClCompile Include="src\Runtime\FirstMesh\FirstMesh.cpp">
       <Filter>Runtime\FirstMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Runtime\FirstScene\FirstScene.cpp">
+      <Filter>Runtime\FirstScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

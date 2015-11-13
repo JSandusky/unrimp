@@ -136,6 +136,7 @@ if(RENDERER_RUNTIME)
 		src/FirstMesh/FirstMesh.cpp
 		src/FirstCommandBucket/FirstCommandBucket.cpp
 		src/FirstCompositor/FirstCompositor.cpp
+		src/FirstScene/FirstScene.cpp
 	)
 endif()
 
