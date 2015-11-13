@@ -30,7 +30,7 @@
 #include "Framework/IApplicationRendererRuntime.h"
 
 #include <RendererRuntime/Command/CommandBucket.h>
-#include <RendererRuntime/Resource/Font/FontResource.h>
+#include <RendererRuntime/Manager/Resource/Font/FontResource.h>
 
 
 //[-------------------------------------------------------]

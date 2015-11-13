@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
 
-#include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Manager/Asset/AssetPackage.h>
 
 #include <fstream>
 

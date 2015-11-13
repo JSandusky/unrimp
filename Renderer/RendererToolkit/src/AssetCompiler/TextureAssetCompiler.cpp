@@ -27,7 +27,7 @@
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
 #include "RendererToolkit/PlatformTypes.h"
 
-#include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Manager/Asset/AssetPackage.h>
 
 // General STB image definitions
 #define STBI_NO_STDIO
