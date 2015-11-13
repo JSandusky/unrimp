@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Manager/Manager.h"
 #include "RendererRuntime/Manager/Asset/Asset.h"
 #include "RendererRuntime/Manager/Resource/IResourceLoader.h"
 

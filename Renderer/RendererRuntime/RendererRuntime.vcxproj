@@ -47,7 +47,6 @@
     <ClInclude Include="include\RendererRuntime\Backend\RendererRuntimeImpl.h" />
     <ClInclude Include="include\RendererRuntime\Command\CommandBucket.h" />
     <ClInclude Include="include\RendererRuntime\Command\Material.h" />
-    <ClInclude Include="include\RendererRuntime\Core\Manager.h" />
     <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h" />
     <ClInclude Include="include\RendererRuntime\Core\Serializer.h" />
     <ClInclude Include="include\RendererRuntime\Core\StringId.h" />
@@ -58,6 +57,7 @@
     <ClInclude Include="include\RendererRuntime\Manager\Asset\AssetPackage.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Asset\AssetPackageSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Compositor\CompositorManager.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Manager.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Font\FontResource.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Font\FontResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Font\FontResourceManager.h" />
@@ -78,6 +78,7 @@
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Texture\Loader\KtxTextureResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Texture\TextureResource.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Texture\TextureResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneManager.h" />
     <ClInclude Include="include\RendererRuntime\PlatformTypes.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />

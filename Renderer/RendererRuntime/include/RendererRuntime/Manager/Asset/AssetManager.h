@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Manager/Manager.h"
 #include "RendererRuntime/Manager/Asset/Asset.h"
 
 // Disable warnings in external headers, we can't fix them
