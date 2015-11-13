@@ -22,7 +22,10 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\RendererRuntime\Backend\RendererBackendManager.inl" />
     <None Include="include\RendererRuntime\Backend\RendererRuntimeImpl.inl" />
+    <None Include="include\RendererRuntime\Core\Quaternion.inl" />
     <None Include="include\RendererRuntime\Core\StringId.inl" />
+    <None Include="include\RendererRuntime\Core\Transform.inl" />
+    <None Include="include\RendererRuntime\Core\Vector3.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
     <None Include="include\RendererRuntime\Manager\Asset\AssetManager.inl" />
     <None Include="include\RendererRuntime\Manager\Asset\AssetPackage.inl" />
@@ -48,8 +51,12 @@
     <ClInclude Include="include\RendererRuntime\Command\CommandBucket.h" />
     <ClInclude Include="include\RendererRuntime\Command\Material.h" />
     <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Quaternion.h" />
     <ClInclude Include="include\RendererRuntime\Core\Serializer.h" />
+    <ClInclude Include="include\RendererRuntime\Core\String.h" />
     <ClInclude Include="include\RendererRuntime\Core\StringId.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Transform.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Vector3.h" />
     <ClInclude Include="include\RendererRuntime\Export.h" />
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Asset\Asset.h" />
@@ -99,6 +106,10 @@
     <ClCompile Include="src\Backend\RendererBackendManager.cpp" />
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp" />
     <ClCompile Include="src\Command\CommandBucket.cpp" />
+    <ClCompile Include="src\Core\Quaternion.cpp" />
+    <ClCompile Include="src\Core\String.cpp" />
+    <ClCompile Include="src\Core\Transform.cpp" />
+    <ClCompile Include="src\Core\Vector3.cpp" />
     <ClCompile Include="src\Manager\Asset\AssetManager.cpp" />
     <ClCompile Include="src\Manager\Asset\AssetPackage.cpp" />
     <ClCompile Include="src\Manager\Asset\Serializer\AssetPackageSerializer.cpp" />
@@ -195,8 +206,8 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;GLM_COMPILER_VC2005;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -226,8 +237,8 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;GLM_COMPILER_VC2005;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -259,8 +270,8 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_COMPILER_VC2005;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -303,8 +314,8 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\include\;..\..\External\glm\include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_COMPILER_VC2005;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

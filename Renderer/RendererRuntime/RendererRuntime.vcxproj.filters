@@ -132,6 +132,15 @@
     <None Include="include\RendererRuntime\Manager\Asset\Serializer\AssetPackageSerializer.inl">
       <Filter>Source Files\Manager\Asset\Serializer</Filter>
     </None>
+    <None Include="include\RendererRuntime\Core\Transform.inl">
+      <Filter>Source Files\Core</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Core\Vector3.inl">
+      <Filter>Source Files\Core</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Core\Quaternion.inl">
+      <Filter>Source Files\Core</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -285,6 +294,18 @@
     <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneMesh.h">
       <Filter>Source Files\Manager\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\String.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Vector3.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Quaternion.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Transform.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -367,6 +388,18 @@
     </ClCompile>
     <ClCompile Include="src\Manager\Scene\SceneMesh.cpp">
       <Filter>Source Files\Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\String.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Vector3.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Quaternion.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Transform.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

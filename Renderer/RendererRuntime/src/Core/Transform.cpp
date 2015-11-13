@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Scene/SceneItem.h"
+#include "RendererRuntime/Core/Transform.h"
 
 
 //[-------------------------------------------------------]
@@ -38,35 +38,9 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
-	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class SceneManager;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-
-
-	};
+	const Transform Transform::IDENTITY;
 
 
 //[-------------------------------------------------------]

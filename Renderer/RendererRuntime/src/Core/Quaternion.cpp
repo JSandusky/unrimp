@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Scene/SceneItem.h"
+#include "RendererRuntime/Core/Quaternion.h"
 
 
 //[-------------------------------------------------------]
@@ -38,35 +38,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
+	const Quaternion Quaternion::IDENTITY(1.0f, 0.0f, 0.0f, 0.0f);
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	Quaternion::Quaternion()
 	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class SceneManager;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-
-
-	};
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]

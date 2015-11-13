@@ -19,18 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Scene/SceneItem.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -38,35 +26,39 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
+	inline Transform::Transform() :
+		position(Vector3::ZERO),
+		rotation(Quaternion::IDENTITY),
+		scale(Vector3::UNIT_XYZ)
 	{
+		// Nothing here
+	}
 
+	inline Transform::Transform(const Vector3& _position) :
+		position(_position),
+		rotation(Quaternion::IDENTITY),
+		scale(Vector3::UNIT_XYZ)
+	{
+		// Nothing here
+	}
 
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class SceneManager;
+	inline Transform::Transform(const Vector3& _position, const Quaternion& _rotation) :
+		position(_position),
+		rotation(_rotation),
+		scale(Vector3::UNIT_XYZ)
+	{
+		// Nothing here
+	}
 
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-
-
-	};
+	inline Transform::Transform(const Vector3& _position, const Quaternion& _rotation, const Vector3& _scale) :
+		position(_position),
+		rotation(_rotation),
+		scale(_scale)
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]

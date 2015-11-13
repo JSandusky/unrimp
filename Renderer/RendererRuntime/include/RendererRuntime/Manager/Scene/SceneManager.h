@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Manager/Manager.h"
 
 
@@ -35,6 +36,10 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class SceneNode;
+	class SceneMesh;
+	class Transform;
+	class SceneCamera;
 	class IRendererRuntime;
 }
 
@@ -57,6 +62,18 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		RENDERERRUNTIME_API_EXPORT SceneNode* createSceneNode(const Transform& transform);
+		RENDERERRUNTIME_API_EXPORT void destroySceneNode(SceneNode& sceneNode);
+		RENDERERRUNTIME_API_EXPORT SceneCamera* createSceneCamera();
+		RENDERERRUNTIME_API_EXPORT void destroySceneCamera(SceneCamera& sceneCamera);
+		RENDERERRUNTIME_API_EXPORT SceneMesh* createSceneMesh();
+		RENDERERRUNTIME_API_EXPORT void destroySceneMesh(SceneMesh& sceneMesh);
 
 
 	//[-------------------------------------------------------]

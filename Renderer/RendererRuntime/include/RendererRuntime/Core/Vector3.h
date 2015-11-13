@@ -27,7 +27,15 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Scene/SceneItem.h"
+#include "RendererRuntime/Export.h"
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	#include <glm/glm.hpp>
+#pragma warning(pop)
+#pragma warning(push)
+	#pragma warning(disable: 4608)	// warning C4608: 'glm::tvec3<float,0>::<unnamed-tag>::s' has already been initialized by another union member in the initializer list, 'glm::tvec3<float,0>::<unnamed-tag>::b'
 
 
 //[-------------------------------------------------------]
@@ -40,30 +48,39 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
+	/**
+	*  @brief
+	*    "glm::vec3" as easy-to-handle class
+	*
+	*  @remarks
+	*    Using "glm::vec3" directly has several drawbacks such as
+	*    - No simple forward declaration of "glm::vec3" possible
+	*    - In each compilation module ("cpp") an own "glm::vec3" template instance is created,
+	*      the linker later on then tries to merge those instances which is rather inefficient
+	*    - Due to "wall" compiler warnings, we need to disable warnings when including external headers
+	*   which are a problem for large scale projects. Additionally, there are handy default instances.
+	*/
+	class RENDERERRUNTIME_API_EXPORT Vector3 : public glm::vec3
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-		friend class SceneManager;
+	public:
+		static const Vector3 ZERO;		///< Zero vector
+		static const Vector3 UNIT_X;	///< Unit vector x-axis
+		static const Vector3 UNIT_Y;	///< Unit vector y-axis
+		static const Vector3 UNIT_Z;	///< Unit vector z-axis
+		static const Vector3 UNIT_XYZ;	///< Sum of unit vectors
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
+	public:
+		Vector3();
+		inline Vector3(float x, float y, float z);
 
 
 	};
@@ -73,3 +90,13 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(pop)
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/Vector3.inl"

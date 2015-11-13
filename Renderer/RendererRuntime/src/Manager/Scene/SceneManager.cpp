@@ -22,6 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Manager/Scene/SceneManager.h"
+#include "RendererRuntime/Manager/Scene/SceneNode.h"
+#include "RendererRuntime/Manager/Scene/SceneMesh.h"
+#include "RendererRuntime/Manager/Scene/SceneCamera.h"
 
 
 //[-------------------------------------------------------]
@@ -29,6 +32,40 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	SceneNode* SceneManager::createSceneNode(const Transform& transform)
+	{
+		return new SceneNode(transform);
+	}
+
+	void SceneManager::destroySceneNode(SceneNode& sceneNode)
+	{
+		delete &sceneNode;
+	}
+
+	SceneCamera* SceneManager::createSceneCamera()
+	{
+		return new SceneCamera();
+	}
+
+	void SceneManager::destroySceneCamera(SceneCamera& sceneCamera)
+	{
+		delete &sceneCamera;
+	}
+
+	SceneMesh* SceneManager::createSceneMesh()
+	{
+		return new SceneMesh();
+	}
+
+	void SceneManager::destroySceneMesh(SceneMesh& sceneMesh)
+	{
+		delete &sceneMesh;
+	}
 
 
 	//[-------------------------------------------------------]

@@ -27,7 +27,13 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Scene/SceneItem.h"
+#include "RendererRuntime/Export.h"
+
+#include <string>
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4251)	// warning C4251: 'std::_String_alloc<std::_String_base_types<_Elem,_Alloc>>::_Mypair': class 'std::_Compressed_pair<std::_Wrap_alloc<std::allocator<char>>,std::_String_val<std::_Simple_types<char>>,true>' needs to have dll-interface to be used by clients of class 'std::_String_alloc<std::_String_base_types<_Elem,_Alloc>>'
 
 
 //[-------------------------------------------------------]
@@ -40,30 +46,34 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
+	/**
+	*  @brief
+	*    "std::string" as easy-to-handle class
+	*
+	*  @remarks
+	*    Using "std::string" directly has several drawbacks such as
+	*    - No simple forward declaration of "std::string" possible
+	*    - In each compilation module ("cpp") an own "std::string" template instance is created,
+	*      the linker later on then tries to merge those instances which is rather inefficient
+	*    - Due to "wall" compiler warnings, we need to disable warnings when including external headers
+	*   which are a problem for large scale projects. Additionally, there are handy default instances.
+	*/
+	class RENDERERRUNTIME_API_EXPORT String : public std::string
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-		friend class SceneManager;
+	public:
+		static const String EMPTY;	///< Empty string
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
+	public:
+		String();
 
 
 	};
@@ -73,3 +83,7 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(pop)

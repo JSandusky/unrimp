@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Scene/SceneItem.h"
+#include "RendererRuntime/Core/Vector3.h"
 
 
 //[-------------------------------------------------------]
@@ -38,35 +38,22 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
+	const Vector3 Vector3::ZERO(0.0f, 0.0f, 0.0f);
+	const Vector3 Vector3::UNIT_X(1.0f, 0.0f, 0.0f);
+	const Vector3 Vector3::UNIT_Y(0.0f, 1.0f, 0.0f);
+	const Vector3 Vector3::UNIT_Z(0.0f, 0.0f, 1.0f);
+	const Vector3 Vector3::UNIT_XYZ(1.0f, 1.0f, 1.0f);
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	Vector3::Vector3()
 	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class SceneManager;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-
-
-	};
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]

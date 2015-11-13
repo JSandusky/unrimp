@@ -27,7 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Scene/SceneItem.h"
+#include "RendererRuntime/Core/Vector3.h"
+#include "RendererRuntime/Core/Quaternion.h"
 
 
 //[-------------------------------------------------------]
@@ -40,30 +41,38 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
+	/**
+	*  @brief
+	*    Transform class containing position, rotation and scale
+	*/
+	class RENDERERRUNTIME_API_EXPORT Transform
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-		friend class SceneManager;
+	public:
+		static const Transform IDENTITY;	///< Identity transform
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public data                                           ]
 	//[-------------------------------------------------------]
-	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
+	public:
+		Vector3		position;
+		Quaternion	rotation;
+		Vector3		scale;
 
 
 	//[-------------------------------------------------------]
-	//[ Private data                                          ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	private:
+	public:
+		inline Transform();
+		inline explicit Transform(const Vector3& position);
+		inline Transform(const Vector3& position, const Quaternion& rotation);
+		inline Transform(const Vector3& position, const Quaternion& rotation, const Vector3& scale);
 
 
 	};
@@ -73,3 +82,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/Transform.inl"

@@ -27,7 +27,13 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Scene/SceneItem.h"
+#include "RendererRuntime/Export.h"
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	#include <glm/gtc/quaternion.hpp>
+#pragma warning(pop)
 
 
 //[-------------------------------------------------------]
@@ -40,30 +46,35 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
+	/**
+	*  @brief
+	*    "glm::quat" as easy-to-handle class
+	*
+	*  @remarks
+	*    Using "glm::quat" directly has several drawbacks such as
+	*    - No simple forward declaration of "glm::quat" possible
+	*    - In each compilation module ("cpp") an own "glm::quat" template instance is created,
+	*      the linker later on then tries to merge those instances which is rather inefficient
+	*    - Due to "wall" compiler warnings, we need to disable warnings when including external headers
+	*   which are a problem for large scale projects. Additionally, there are handy default instances.
+	*/
+	class RENDERERRUNTIME_API_EXPORT Quaternion : public glm::quat
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-		friend class SceneManager;
+	public:
+		static const Quaternion IDENTITY;	///< Identity quaternion
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
+	public:
+		Quaternion();
+		inline Quaternion(float w, float x, float y, float z);
 
 
 	};
@@ -73,3 +84,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/Quaternion.inl"
