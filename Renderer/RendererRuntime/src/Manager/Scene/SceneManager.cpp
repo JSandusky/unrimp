@@ -25,6 +25,8 @@
 #include "RendererRuntime/Manager/Scene/SceneNode.h"
 #include "RendererRuntime/Manager/Scene/SceneMesh.h"
 #include "RendererRuntime/Manager/Scene/SceneCamera.h"
+#include "RendererRuntime/Manager/Resource/Mesh/MeshResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -57,9 +59,12 @@ namespace RendererRuntime
 		delete &sceneCamera;
 	}
 
-	SceneMesh* SceneManager::createSceneMesh()
+	SceneMesh* SceneManager::createSceneMesh(AssetId meshAssetId)
 	{
-		return new SceneMesh();
+		// Create mesh instance
+		// TODO(co) Performance: Cache mesh resource manager and renderer instance inside the scene manager
+		MeshResource* meshResource = mRendererRuntime.getMeshResourceManager().loadMeshResourceByAssetId(mRendererRuntime.getRenderer(), meshAssetId);
+		return (nullptr != meshResource) ? new SceneMesh(*meshResource) : nullptr;
 	}
 
 	void SceneManager::destroySceneMesh(SceneMesh& sceneMesh)

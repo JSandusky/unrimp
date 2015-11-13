@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
 #include "RendererRuntime/Manager/Manager.h"
+#include "RendererRuntime/Manager/Asset/Asset.h"
 
 
 //[-------------------------------------------------------]
@@ -72,7 +73,7 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT void destroySceneNode(SceneNode& sceneNode);
 		RENDERERRUNTIME_API_EXPORT SceneCamera* createSceneCamera();
 		RENDERERRUNTIME_API_EXPORT void destroySceneCamera(SceneCamera& sceneCamera);
-		RENDERERRUNTIME_API_EXPORT SceneMesh* createSceneMesh();
+		RENDERERRUNTIME_API_EXPORT SceneMesh* createSceneMesh(AssetId meshAssetId);
 		RENDERERRUNTIME_API_EXPORT void destroySceneMesh(SceneMesh& sceneMesh);
 
 

@@ -69,18 +69,18 @@ namespace RendererRuntime
 			{
 				meshResource = new MeshResource(assetId);
 				mResources.push_back(meshResource);
-			}
 
-			{
-				// Prepare the resource loader
-				MeshResourceLoader* meshResourceLoader = static_cast<MeshResourceLoader*>(acquireResourceLoaderInstance(MeshResourceLoader::TYPE_ID));
-				meshResourceLoader->initialize(*asset, *meshResource, renderer);
+				{
+					// Prepare the resource loader
+					MeshResourceLoader* meshResourceLoader = static_cast<MeshResourceLoader*>(acquireResourceLoaderInstance(MeshResourceLoader::TYPE_ID));
+					meshResourceLoader->initialize(*asset, *meshResource, renderer);
 
-				// Commit resource streamer asset load request
-				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-				resourceStreamerLoadRequest.resource = meshResource;
-				resourceStreamerLoadRequest.resourceLoader = meshResourceLoader;
-				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+					// Commit resource streamer asset load request
+					ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+					resourceStreamerLoadRequest.resource = meshResource;
+					resourceStreamerLoadRequest.resourceLoader = meshResourceLoader;
+					mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+				}
 			}
 
 			// TODO(co) No raw pointers in here

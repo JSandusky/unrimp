@@ -34,7 +34,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	SceneMesh::SceneMesh()
+	SceneMesh::SceneMesh(MeshResource& meshResource) :
+		mMeshResource(&meshResource)
 	{
 		// Nothing in here
 	}

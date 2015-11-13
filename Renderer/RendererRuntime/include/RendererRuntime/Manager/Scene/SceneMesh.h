@@ -28,6 +28,16 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Manager/Scene/SceneItem.h"
+#include "RendererRuntime/Manager/Asset/Asset.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class MeshResource;
+}
 
 
 //[-------------------------------------------------------]
@@ -54,7 +64,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		SceneMesh();
+		explicit SceneMesh(MeshResource& meshResource);
 		virtual ~SceneMesh();
 		SceneMesh(const SceneMesh&) = delete;
 		SceneMesh& operator=(const SceneMesh&) = delete;
@@ -64,6 +74,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		MeshResource* mMeshResource;	///< Mesh resource, can be a null pointer
 
 
 	};

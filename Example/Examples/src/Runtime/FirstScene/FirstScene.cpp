@@ -260,7 +260,7 @@ void FirstScene::onInitialization()
 		RendererRuntime::SceneManager& sceneManager = rendererRuntime->getSceneManager();
 
 		// Scene node
-		RendererRuntime::SceneNode* sceneNode = sceneManager.createSceneNode(RendererRuntime::Transform());
+		RendererRuntime::SceneNode* sceneNode = sceneManager.createSceneNode(RendererRuntime::Transform::IDENTITY);
 		sceneManager.destroySceneNode(*sceneNode);
 
 		// Scene camera
@@ -268,8 +268,11 @@ void FirstScene::onInitialization()
 		sceneManager.destroySceneCamera(*sceneCamera);
 
 		// Scene mesh
-		RendererRuntime::SceneMesh* sceneMesh = sceneManager.createSceneMesh();
-		sceneManager.destroySceneMesh(*sceneMesh);
+		RendererRuntime::SceneMesh* sceneMesh = sceneManager.createSceneMesh("Example/Mesh/Character/ImrodLowPoly");
+		if (nullptr != sceneMesh)
+		{
+			sceneManager.destroySceneMesh(*sceneMesh);
+		}
 	}
 }
 
