@@ -28,17 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Manager/Resource/IResourceLoader.h"
-#include "RendererRuntime/Manager/Asset/Asset.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class FontResource;
-	class RendererRuntimeImpl;
-}
 
 
 //[-------------------------------------------------------]
@@ -51,14 +40,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class FontResourceLoader : protected IResourceLoader
+	class ShaderResourceLoader : protected IResourceLoader
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class FontResourceManager;
+		friend class ShaderResourceManager;
 
 
 	//[-------------------------------------------------------]
@@ -82,24 +71,10 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline FontResourceLoader(IResourceManager& resourceManager, RendererRuntimeImpl& rendererRuntimeImpl);
-		inline virtual ~FontResourceLoader();
-		FontResourceLoader(const FontResourceLoader&) = delete;
-		FontResourceLoader& operator=(const FontResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, FontResource& fontResource);
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		RendererRuntimeImpl& mRendererRuntimeImpl;	///< Renderer runtime implementation instance, do not destroy the instance
-		// Resource source and destination
-		Asset		  mAsset;		///< In order to be multi-threading safe in here, we need an asset copy
-		FontResource* mFontResource;
-		// Temporary data
-		uint32_t mNumberOfGlyphTextureAtlasDataBytes;
-		uint8_t* mGlyphTextureAtlasData;
+		inline ShaderResourceLoader(IResourceManager& resourceManager);
+		inline virtual ~ShaderResourceLoader();
+		ShaderResourceLoader(const ShaderResourceLoader&) = delete;
+		ShaderResourceLoader& operator=(const ShaderResourceLoader&) = delete;
 
 
 	};
@@ -114,4 +89,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Resource/Font/FontResourceLoader.inl"
+#include "RendererRuntime/Manager/Resource/Shader/Loader/ShaderResourceLoader.inl"

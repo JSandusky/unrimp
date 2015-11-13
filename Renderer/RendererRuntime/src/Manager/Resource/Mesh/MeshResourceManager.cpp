@@ -22,8 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Manager/Resource/Mesh/MeshResourceManager.h"
-#include "RendererRuntime/Manager/Resource/Mesh/MeshResourceLoader.h"
 #include "RendererRuntime/Manager/Resource/Mesh/MeshResource.h"
+#include "RendererRuntime/Manager/Resource/Mesh/Loader/MeshResourceLoader.h"
 #include "RendererRuntime/Manager/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Manager/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"

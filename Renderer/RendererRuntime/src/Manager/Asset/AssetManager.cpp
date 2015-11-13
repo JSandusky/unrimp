@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Manager/Asset/AssetManager.h"
 #include "RendererRuntime/Manager/Asset/AssetPackage.h"
-#include "RendererRuntime/Manager/Asset/AssetPackageSerializer.h"
+#include "RendererRuntime/Manager/Asset/Serializer/AssetPackageSerializer.h"
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)

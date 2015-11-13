@@ -19,16 +19,26 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Asset/AssetPackageSerializer.h"
-#include "RendererRuntime/Manager/Asset/AssetPackage.h"
+#include "RendererRuntime/Core/Serializer.h"
 
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#include <fstream>
-#pragma warning(pop)
+#include <iosfwd>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class AssetPackage;
+}
 
 
 //[-------------------------------------------------------]
@@ -39,37 +49,43 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	class AssetPackageSerializer : protected Serializer
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class AssetManager;
+
+
+	// TODO(co) Work-in-progress
+	private:
+		AssetPackage* loadAssetPackage(std::istream& istream);
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	// TODO(co) Work-in-progress
-	AssetPackage* AssetPackageSerializer::loadAssetPackage(std::istream& istream)
-	{
-		AssetPackage* assetPackage = new AssetPackage;
+	private:
+		inline AssetPackageSerializer();
+		inline ~AssetPackageSerializer();
+		AssetPackageSerializer(const AssetPackageSerializer&) = delete;
+		AssetPackageSerializer& operator=(const AssetPackageSerializer&) = delete;
 
-		// Read in the asset package header
-		#pragma pack(push)
-		#pragma pack(1)
-			struct AssetPackageHeader
-			{
-				uint32_t formatType;
-				uint16_t formatVersion;
-				uint32_t numberOfAssets;
-			};
-		#pragma pack(pop)
-		AssetPackageHeader assetPackageHeader;
-		istream.read(reinterpret_cast<char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
 
-		// Read in the asset package content in one single burst
-		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage->getWritableSortedAssetVector();
-		sortedAssetVector.resize(assetPackageHeader.numberOfAssets);
-		istream.read(reinterpret_cast<char*>(sortedAssetVector.data()), sizeof(Asset) * assetPackageHeader.numberOfAssets);
-
-		// Done
-		return assetPackage;
-	}
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Manager/Asset/Serializer/AssetPackageSerializer.inl"

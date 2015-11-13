@@ -50,6 +50,21 @@
     <Filter Include="Source Files\Manager\Resource\Texture\Loader">
       <UniqueIdentifier>{1911f465-6b59-4225-b286-7cfab58a3417}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Manager\Resource\Font\Loader">
+      <UniqueIdentifier>{24ee8a7b-40c1-4c76-9580-d5071563bda5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Manager\Resource\Material\Loader">
+      <UniqueIdentifier>{d2dbd943-1630-45d1-bc74-fbad32ae7905}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Manager\Resource\Mesh\Loader">
+      <UniqueIdentifier>{86d7c6bb-18c2-41fd-a4ce-c0993bd158e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Manager\Resource\Shader\Loader">
+      <UniqueIdentifier>{d76c4bee-05be-4884-aa25-4d6aee293512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Manager\Asset\Serializer">
+      <UniqueIdentifier>{534c1d11-6add-4364-90ac-ec603eedc7a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -72,9 +87,6 @@
     <None Include="include\RendererRuntime\Manager\Asset\AssetPackage.inl">
       <Filter>Source Files\Manager\Asset</Filter>
     </None>
-    <None Include="include\RendererRuntime\Manager\Asset\AssetPackageSerializer.inl">
-      <Filter>Source Files\Manager\Asset</Filter>
-    </None>
     <None Include="include\RendererRuntime\Manager\Resource\IResource.inl">
       <Filter>Source Files\Manager\Resource</Filter>
     </None>
@@ -90,15 +102,6 @@
     <None Include="include\RendererRuntime\Manager\Resource\Font\FontResource.inl">
       <Filter>Source Files\Manager\Resource\Font</Filter>
     </None>
-    <None Include="include\RendererRuntime\Manager\Resource\Font\FontResourceLoader.inl">
-      <Filter>Source Files\Manager\Resource\Font</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Manager\Resource\Mesh\MeshResourceLoader.inl">
-      <Filter>Source Files\Manager\Resource\Mesh</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Manager\Resource\Shader\ShaderResourceLoader.inl">
-      <Filter>Source Files\Manager\Resource\Shader</Filter>
-    </None>
     <None Include="include\RendererRuntime\Manager\Resource\Texture\TextureResource.inl">
       <Filter>Source Files\Manager\Resource\Texture</Filter>
     </None>
@@ -113,6 +116,18 @@
     </None>
     <None Include="include\RendererRuntime\Manager\Resource\Texture\Loader\KtxTextureResourceLoader.inl">
       <Filter>Source Files\Manager\Resource\Texture\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Manager\Resource\Font\Loader\FontResourceLoader.inl">
+      <Filter>Source Files\Manager\Resource\Font\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Manager\Resource\Mesh\Loader\MeshResourceLoader.inl">
+      <Filter>Source Files\Manager\Resource\Mesh\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Manager\Resource\Shader\Loader\ShaderResourceLoader.inl">
+      <Filter>Source Files\Manager\Resource\Shader\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Manager\Asset\Serializer\AssetPackageSerializer.inl">
+      <Filter>Source Files\Manager\Asset\Serializer</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -177,9 +192,6 @@
     <ClInclude Include="include\RendererRuntime\Manager\Asset\AssetPackage.h">
       <Filter>Source Files\Manager\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Manager\Asset\AssetPackageSerializer.h">
-      <Filter>Source Files\Manager\Asset</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Manager\Asset\Asset.h">
       <Filter>Source Files\Manager\Asset</Filter>
     </ClInclude>
@@ -198,9 +210,6 @@
     <ClInclude Include="include\RendererRuntime\Manager\Resource\IResource.h">
       <Filter>Source Files\Manager\Resource</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Manager\Resource\Font\FontResourceLoader.h">
-      <Filter>Source Files\Manager\Resource\Font</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Font\FontResourceManager.h">
       <Filter>Source Files\Manager\Resource\Font</Filter>
     </ClInclude>
@@ -210,22 +219,13 @@
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Material\MaterialResourceManager.h">
       <Filter>Source Files\Manager\Resource\Material</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Manager\Resource\Material\MaterialResourceLoader.h">
-      <Filter>Source Files\Manager\Resource\Material</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Mesh\MeshResource.h">
-      <Filter>Source Files\Manager\Resource\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Manager\Resource\Mesh\MeshResourceLoader.h">
       <Filter>Source Files\Manager\Resource\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Mesh\MeshResourceManager.h">
       <Filter>Source Files\Manager\Resource\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Shader\ShaderResourceManager.h">
-      <Filter>Source Files\Manager\Resource\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Manager\Resource\Shader\ShaderResourceLoader.h">
       <Filter>Source Files\Manager\Resource\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Texture\TextureResource.h">
@@ -252,6 +252,24 @@
     <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneManager.h">
       <Filter>Source Files\Manager\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Resource\Font\Loader\FontResourceLoader.h">
+      <Filter>Source Files\Manager\Resource\Font\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Resource\Font\Loader\FontResourceManager.h">
+      <Filter>Source Files\Manager\Resource\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Resource\Material\Loader\MaterialResourceLoader.h">
+      <Filter>Source Files\Manager\Resource\Material\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Resource\Mesh\Loader\MeshResourceLoader.h">
+      <Filter>Source Files\Manager\Resource\Mesh\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Resource\Shader\Loader\ShaderResourceLoader.h">
+      <Filter>Source Files\Manager\Resource\Shader\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Asset\Serializer\AssetPackageSerializer.h">
+      <Filter>Source Files\Manager\Asset\Serializer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -264,9 +282,6 @@
       <Filter>Source Files\Backend</Filter>
     </ClCompile>
     <ClCompile Include="src\Manager\Asset\AssetPackage.cpp">
-      <Filter>Source Files\Manager\Asset</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Manager\Asset\AssetPackageSerializer.cpp">
       <Filter>Source Files\Manager\Asset</Filter>
     </ClCompile>
     <ClCompile Include="src\Manager\Asset\AssetManager.cpp">
@@ -287,17 +302,11 @@
     <ClCompile Include="src\Manager\Resource\Font\FontResource.cpp">
       <Filter>Source Files\Manager\Resource\Font</Filter>
     </ClCompile>
-    <ClCompile Include="src\Manager\Resource\Font\FontResourceLoader.cpp">
-      <Filter>Source Files\Manager\Resource\Font</Filter>
-    </ClCompile>
     <ClCompile Include="src\Manager\Resource\Font\FontResourceManager.cpp">
       <Filter>Source Files\Manager\Resource\Font</Filter>
     </ClCompile>
     <ClCompile Include="src\Manager\Resource\Material\MaterialResourceManager.cpp">
       <Filter>Source Files\Manager\Resource\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Manager\Resource\Mesh\MeshResourceLoader.cpp">
-      <Filter>Source Files\Manager\Resource\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="src\Manager\Resource\Mesh\MeshResourceManager.cpp">
       <Filter>Source Files\Manager\Resource\Mesh</Filter>
@@ -322,6 +331,15 @@
     </ClCompile>
     <ClCompile Include="src\Manager\Resource\Texture\Loader\CrnTextureResourceLoader.cpp">
       <Filter>Source Files\Manager\Resource\Texture\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Resource\Font\Loader\FontResourceLoader.cpp">
+      <Filter>Source Files\Manager\Resource\Font\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Resource\Mesh\Loader\MeshResourceLoader.cpp">
+      <Filter>Source Files\Manager\Resource\Mesh\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Asset\Serializer\AssetPackageSerializer.cpp">
+      <Filter>Source Files\Manager\Asset\Serializer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

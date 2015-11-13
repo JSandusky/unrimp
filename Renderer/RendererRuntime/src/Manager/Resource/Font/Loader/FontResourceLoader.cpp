@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Resource/Font/FontResourceLoader.h"
+#include "RendererRuntime/Manager/Resource/Font/Loader/FontResourceLoader.h"
 #include "RendererRuntime/Manager/Resource/Font/FontResource.h"
 #include "RendererRuntime/Backend/RendererRuntimeImpl.h"
 

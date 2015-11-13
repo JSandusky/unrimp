@@ -131,4 +131,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Resource/Mesh/MeshResourceLoader.inl"
+#include "RendererRuntime/Manager/Resource/Mesh/Loader/MeshResourceLoader.inl"
