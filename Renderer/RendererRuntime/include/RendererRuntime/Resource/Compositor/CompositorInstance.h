@@ -52,7 +52,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorWorkspace : protected NonCopyable
+	class CompositorInstance : protected NonCopyable
 	{
 
 
@@ -60,17 +60,17 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT CompositorWorkspace(IRendererRuntime& rendererRuntime, AssetId compositorAssetId);
-		RENDERERRUNTIME_API_EXPORT virtual ~CompositorWorkspace();
+		RENDERERRUNTIME_API_EXPORT CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId);
+		RENDERERRUNTIME_API_EXPORT virtual ~CompositorInstance();
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		CompositorWorkspace();
-		CompositorWorkspace(const CompositorWorkspace&) = delete;
-		CompositorWorkspace& operator=(const CompositorWorkspace&) = delete;
+		CompositorInstance();
+		CompositorInstance(const CompositorInstance&) = delete;
+		CompositorInstance& operator=(const CompositorInstance&) = delete;
 
 
 	//[-------------------------------------------------------]

@@ -354,9 +354,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.h">
       <Filter>Source Files\Resource\Compositor\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorWorkspace.h">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.h">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
@@ -365,6 +362,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.h">
       <Filter>Source Files\Resource\Scene\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorInstance.h">
+      <Filter>Source Files\Resource\Compositor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -491,9 +491,6 @@
     <ClCompile Include="src\Resource\Compositor\Loader\CompositorResourceLoader.cpp">
       <Filter>Source Files\Resource\Compositor\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\CompositorWorkspace.cpp">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Scene\SceneResourceManager.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
@@ -502,6 +499,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\SceneResource.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Compositor\CompositorInstance.cpp">
+      <Filter>Source Files\Resource\Compositor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

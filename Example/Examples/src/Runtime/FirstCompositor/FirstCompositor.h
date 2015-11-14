@@ -37,7 +37,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class CompositorWorkspace;
+	class CompositorInstance;
 }
 
 
@@ -93,8 +93,8 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::CompositorWorkspace* mCompositorWorkspace;
-	RendererRuntime::FontResource*		  mFontResource;	///< Font resource, can be a null pointer
+	RendererRuntime::CompositorInstance* mCompositorInstance;
+	RendererRuntime::FontResource*		 mFontResource;	///< Font resource, can be a null pointer
 
 
 };
