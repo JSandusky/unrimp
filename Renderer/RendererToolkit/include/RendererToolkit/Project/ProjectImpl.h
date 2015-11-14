@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Project/IProject.h"
 
-#include <RendererRuntime/Manager/Asset/AssetPackage.h>
+#include <RendererRuntime/Asset/AssetPackage.h>
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)

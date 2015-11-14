@@ -32,7 +32,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Manager/Asset/Asset.h"
+#include "RendererRuntime/Asset/Asset.h"
 
 #include <Renderer/Public/Renderer.h>
 

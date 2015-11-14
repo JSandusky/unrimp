@@ -22,15 +22,15 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Backend/RendererRuntimeImpl.h"
-#include "RendererRuntime/Manager/Asset/AssetManager.h"
-#include "RendererRuntime/Manager/Scene/SceneManager.h"
-#include "RendererRuntime/Manager/Compositor/CompositorManager.h"
-#include "RendererRuntime/Manager/Resource/ResourceStreamer.h"
-#include "RendererRuntime/Manager/Resource/Font/FontResourceManager.h"
-#include "RendererRuntime/Manager/Resource/Mesh/MeshResourceManager.h"
-#include "RendererRuntime/Manager/Resource/Shader/ShaderResourceManager.h"
-#include "RendererRuntime/Manager/Resource/Texture/TextureResourceManager.h"
-#include "RendererRuntime/Manager/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/Resource/ResourceStreamer.h"
+#include "RendererRuntime/Resource/Scene/SceneManager.h"
+#include "RendererRuntime/Resource/Font/FontResourceManager.h"
+#include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
+#include "RendererRuntime/Resource/Compositor/CompositorManager.h"
+#include "RendererRuntime/Resource/Shader/ShaderResourceManager.h"
+#include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 
 #include <cstring>
 
@@ -216,11 +216,11 @@ namespace RendererRuntime
 					// Get the shader source code (outsourced to keep an overview)
 					const char *vertexShaderSourceCode = nullptr;
 					const char *fragmentShaderSourceCode = nullptr;
-					#include "../Manager/Resource/Font/Shader/Font_GLSL_110.h"
-					#include "../Manager/Resource/Font/Shader/Font_GLSL_ES2.h"
-					#include "../Manager/Resource/Font/Shader/Font_HLSL_D3D9.h"
-					#include "../Manager/Resource/Font/Shader/Font_HLSL_D3D10_D3D11_D3D12.h"
-					#include "../Manager/Resource/Font/Shader/Font_Null.h"
+					#include "../Resource/Font/Shader/Font_GLSL_110.h"
+					#include "../Resource/Font/Shader/Font_GLSL_ES2.h"
+					#include "../Resource/Font/Shader/Font_HLSL_D3D9.h"
+					#include "../Resource/Font/Shader/Font_HLSL_D3D10_D3D11_D3D12.h"
+					#include "../Resource/Font/Shader/Font_Null.h"
 
 					// Create the program
 					program = shaderLanguage->createProgram(

@@ -28,12 +28,12 @@
 #include <RendererToolkit/Public/RendererToolkit.h>
 
 #include <RendererRuntime/Core/Vector3.h>
-#include <RendererRuntime/Manager/Asset/AssetManager.h>
-#include <RendererRuntime/Manager/Resource/Mesh/MeshResource.h>
-#include <RendererRuntime/Manager/Resource/Mesh/MeshResourceManager.h>
-#include <RendererRuntime/Manager/Resource/Font/FontResourceManager.h>
-#include <RendererRuntime/Manager/Resource/Texture/TextureResource.h>
-#include <RendererRuntime/Manager/Resource/Texture/TextureResourceManager.h>
+#include <RendererRuntime/Asset/AssetManager.h>
+#include <RendererRuntime/Resource/Mesh/MeshResource.h>
+#include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
+#include <RendererRuntime/Resource/Font/FontResourceManager.h>
+#include <RendererRuntime/Resource/Texture/TextureResource.h>
+#include <RendererRuntime/Resource/Texture/TextureResourceManager.h>
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>

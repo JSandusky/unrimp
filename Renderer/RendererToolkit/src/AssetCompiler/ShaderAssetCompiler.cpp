@@ -27,7 +27,7 @@
 #include "RendererToolkit/AssetCompiler/ShaderAssetCompiler.h"
 #include "RendererToolkit/PlatformTypes.h"
 
-#include <RendererRuntime/Manager/Asset/AssetPackage.h>
+#include <RendererRuntime/Asset/AssetPackage.h>
 
 #define DIRECT3D11_DEFINERUNTIMELINKING
 #include <Direct3D11Renderer/D3D11.h>

@@ -30,7 +30,7 @@
 #include "Framework/Stopwatch.h"
 #include "Framework/IApplicationRendererRuntime.h"
 
-#include <RendererRuntime/Manager/Resource/Font/FontResource.h>
+#include <RendererRuntime/Resource/Font/FontResource.h>
 
 
 //[-------------------------------------------------------]

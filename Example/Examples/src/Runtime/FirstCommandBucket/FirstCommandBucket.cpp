@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 
-#include <RendererRuntime/Manager/Resource/Font/FontResourceManager.h>
+#include <RendererRuntime/Resource/Font/FontResourceManager.h>
 
 
 //[-------------------------------------------------------]
@@ -39,7 +39,7 @@
 #include "Framework/Color4.h"
 
 #include <RendererRuntime/Core/Vector3.h>
-#include <RendererRuntime/Manager/Asset/AssetManager.h>
+#include <RendererRuntime/Asset/AssetManager.h>
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
