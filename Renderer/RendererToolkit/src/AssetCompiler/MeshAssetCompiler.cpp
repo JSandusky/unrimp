@@ -89,7 +89,7 @@ namespace RendererToolkit
 			test	  = jsonConfigurationObject->optValue<uint32_t>("Test", test);
 		}
 
-		// Open the input file
+		// Open the input and output file
 		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
 		const std::string assetFilename = assetOutputDirectory + assetName + ".mesh";

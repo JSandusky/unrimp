@@ -33,10 +33,12 @@
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherLinux.h" />
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherOSX.h" />
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherWin32.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\FontAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\IAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MeshAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\SceneAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\ShaderAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\IRendererToolkit.h" />
@@ -64,9 +66,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherWin32.cpp" />
+    <ClCompile Include="src\AssetCompiler\CompositorAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\FontAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MaterialAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp" />
+    <ClCompile Include="src\AssetCompiler\SceneAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\ShaderAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\TextureAssetCompiler.cpp">
       <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</TreatWarningAsError>

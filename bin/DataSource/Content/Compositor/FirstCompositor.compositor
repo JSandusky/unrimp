@@ -1,0 +1,18 @@
+{
+	"Format":
+	{
+		"Type": "CompositorAsset",
+		"Version": "1"
+	},
+	"CompositorAsset":
+	{
+		"Shader": "3",
+		"Properties":
+		{
+			"DiffuseMap": "4",
+			"EmissiveMap": "5",
+			"NormalMap": "6",
+			"SpecularMap": "7"
+		}
+	}
+}

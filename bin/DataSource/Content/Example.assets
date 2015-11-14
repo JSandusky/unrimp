@@ -13,6 +13,8 @@
 		"4": "Texture/Imrod_Diffuse.asset",
 		"5": "Texture/Imrod_Illumination.asset",
 		"6": "Texture/Imrod_norm.asset",
-		"7": "Texture/Imrod_spec.asset"
+		"7": "Texture/Imrod_spec.asset",
+		"8": "Scene/FirstScene.asset",
+		"9": "Compositor/FirstCompositor.asset"
 	}
 }

@@ -25,9 +25,11 @@
 #include "RendererToolkit/Project/ProjectAssetMonitor.h"
 #include "RendererToolkit/AssetCompiler/FontAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
+#include "RendererToolkit/AssetCompiler/SceneAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/ShaderAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
+#include "RendererToolkit/AssetCompiler/CompositorAssetCompiler.h"
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -178,6 +180,14 @@ namespace RendererToolkit
 		else if ("Mesh" == assetType)
 		{
 			MeshAssetCompiler().compile(input, configuration, output);
+		}
+		else if ("Scene" == assetType)
+		{
+			SceneAssetCompiler().compile(input, configuration, output);
+		}
+		else if ("Compositor" == assetType)
+		{
+			CompositorAssetCompiler().compile(input, configuration, output);
 		}
 		else
 		{

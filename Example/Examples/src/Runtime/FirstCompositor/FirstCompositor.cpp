@@ -78,7 +78,7 @@ void FirstCompositor::onInitialization()
 	{
 		// TODO(co) Under construction: Will probably become "mount asset package"
 		// Add used asset package
-		rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/AssetPackage.assets");
+		rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/Content/AssetPackage.assets");
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
