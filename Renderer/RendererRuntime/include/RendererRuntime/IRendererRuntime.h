@@ -45,12 +45,12 @@ namespace RendererRuntime
 	class SceneManager;
 	class IRendererRuntime;
 	class ResourceStreamer;
-	class CompositorManager;
 	class FontResourceManager;
 	class MeshResourceManager;
 	class ShaderResourceManager;
 	class TextureResourceManager;
 	class MaterialResourceManager;
+	class CompositorResourceManager;
 }
 
 
@@ -102,15 +102,6 @@ namespace RendererRuntime
 		*    The asset manager instance, do not release the returned instance
 		*/
 		inline AssetManager& getAssetManager() const;
-
-		/**
-		*  @brief
-		*    Return the compositor manager instance
-		*
-		*  @return
-		*    The compositor manager instance, do not release the returned instance
-		*/
-		inline CompositorManager& getCompositorManager() const;
 
 		/**
 		*  @brief
@@ -178,6 +169,15 @@ namespace RendererRuntime
 		*/
 		inline MeshResourceManager& getMeshResourceManager() const;
 
+		/**
+		*  @brief
+		*    Return the compositor resource manager instance
+		*
+		*  @return
+		*    The compositor resource manager instance, do not release the returned instance
+		*/
+		inline CompositorResourceManager& getCompositorResourceManager() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
@@ -240,16 +240,16 @@ namespace RendererRuntime
 	protected:
 		Renderer::IRenderer* mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
 		// Managers
-		AssetManager*	   mAssetManager;
-		CompositorManager* mCompositorManager;
-		SceneManager*	   mSceneManager;
+		AssetManager* mAssetManager;
+		SceneManager* mSceneManager;
 		// Resource
-		ResourceStreamer*		 mResourceStreamer;
-		TextureResourceManager*	 mTextureResourceManager;
-		ShaderResourceManager*	 mShaderResourceManager;
-		MaterialResourceManager* mMaterialResourceManager;
-		FontResourceManager*	 mFontResourceManager;
-		MeshResourceManager*	 mMeshResourceManager;
+		ResourceStreamer*			mResourceStreamer;
+		TextureResourceManager*		mTextureResourceManager;
+		ShaderResourceManager*		mShaderResourceManager;
+		MaterialResourceManager*	mMaterialResourceManager;
+		FontResourceManager*		mFontResourceManager;
+		MeshResourceManager*		mMeshResourceManager;
+		CompositorResourceManager*	mCompositorResourceManager;
 
 
 	};

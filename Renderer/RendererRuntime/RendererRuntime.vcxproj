@@ -30,6 +30,7 @@
     <None Include="include\RendererRuntime\Core\Transform.inl" />
     <None Include="include\RendererRuntime\Core\Vector3.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
+    <None Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Font\FontResource.inl" />
     <None Include="include\RendererRuntime\Resource\Font\Loader\FontResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\IResource.inl" />
@@ -67,9 +68,10 @@
     <ClInclude Include="include\RendererRuntime\PlatformTypes.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorNode.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorWorkspace.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResource.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorPassClear.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\CompositorPass.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Quad\CompositorPassQuad.h" />
@@ -122,9 +124,10 @@
     <ClCompile Include="src\Core\String.cpp" />
     <ClCompile Include="src\Core\Transform.cpp" />
     <ClCompile Include="src\Core\Vector3.cpp" />
-    <ClCompile Include="src\Resource\Compositor\CompositorManager.cpp" />
     <ClCompile Include="src\Resource\Compositor\CompositorNode.cpp" />
-    <ClCompile Include="src\Resource\Compositor\CompositorWorkspace.cpp" />
+    <ClCompile Include="src\Resource\Compositor\CompositorResource.cpp" />
+    <ClCompile Include="src\Resource\Compositor\CompositorResourceManager.cpp" />
+    <ClCompile Include="src\Resource\Compositor\Loader\CompositorResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Compositor\Pass\Clear\CompositorPassClear.cpp" />
     <ClCompile Include="src\Resource\Compositor\Pass\CompositorPass.cpp" />
     <ClCompile Include="src\Resource\Compositor\Pass\Quad\CompositorPassQuad.cpp" />

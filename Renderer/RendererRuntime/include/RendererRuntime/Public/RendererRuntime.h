@@ -46,12 +46,12 @@ namespace RendererRuntime
 	class SceneManager;
 	class IRendererRuntime;
 	class ResourceStreamer;
-	class CompositorManager;
 	class FontResourceManager;
 	class MeshResourceManager;
 	class ShaderResourceManager;
 	class TextureResourceManager;
 	class MaterialResourceManager;
+	class CompositorResourceManager;
 }
 
 
@@ -77,10 +77,6 @@ namespace RendererRuntime
 		inline AssetManager& getAssetManager() const
 		{
 			return *mAssetManager;
-		}
-		inline CompositorManager& getCompositorManager() const
-		{
-			return *mCompositorManager;
 		}
 		inline SceneManager& getSceneManager() const
 		{
@@ -110,6 +106,10 @@ namespace RendererRuntime
 		{
 			return *mMeshResourceManager;
 		}
+		inline CompositorResourceManager& getCompositorResourceManager() const
+		{
+			return *mCompositorResourceManager;
+		}
 	public:
 		virtual void reloadResourceByAssetId(AssetId assetId) const = 0;
 		virtual void update() const = 0;
@@ -118,16 +118,16 @@ namespace RendererRuntime
 		explicit IRendererRuntime(const IRendererRuntime &source);
 		IRendererRuntime &operator =(const IRendererRuntime &source);
 	private:
-		Renderer::IRenderer*	 mRenderer;
-		AssetManager*			 mAssetManager;
-		CompositorManager*		 mCompositorManager;
-		SceneManager*			 mSceneManager;
-		ResourceStreamer*		 mResourceStreamer;
-		TextureResourceManager*	 mTextureResourceManager;
-		ShaderResourceManager*   mShaderResourceManager;
-		MaterialResourceManager* mMaterialResourceManager;
-		FontResourceManager*	 mFontResourceManager;
-		MeshResourceManager*	 mMeshResourceManager;
+		Renderer::IRenderer*		mRenderer;
+		AssetManager*				mAssetManager;
+		SceneManager*				mSceneManager;
+		ResourceStreamer*			mResourceStreamer;
+		TextureResourceManager*		mTextureResourceManager;
+		ShaderResourceManager*		mShaderResourceManager;
+		MaterialResourceManager*	mMaterialResourceManager;
+		FontResourceManager*		mFontResourceManager;
+		MeshResourceManager*		mMeshResourceManager;
+		CompositorResourceManager*	mCompositorResourceManager;
 	};
 	typedef Renderer::SmartRefCount<IRendererRuntime> IRendererRuntimePtr;
 

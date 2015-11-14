@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Resource/IResource.h"
 
 
 //[-------------------------------------------------------]
@@ -40,18 +40,39 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorWorkspace : protected NonCopyable
+	class CompositorResource : public IResource
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class CompositorResourceLoader;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Constructor
+		*/
+		explicit CompositorResource(ResourceId resourceId);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		virtual ~CompositorResource();
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorWorkspace();
-		virtual ~CompositorWorkspace();
-		CompositorWorkspace(const CompositorWorkspace&) = delete;
-		CompositorWorkspace& operator=(const CompositorWorkspace&) = delete;
+		CompositorResource(const CompositorResource&) = delete;
+		CompositorResource& operator=(const CompositorResource&) = delete;
 
 
 	};

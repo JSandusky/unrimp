@@ -27,7 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Resource/IResourceManager.h"
 
 
 //[-------------------------------------------------------]
@@ -36,6 +37,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	class CompositorResource;
 }
 
 
@@ -49,7 +51,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorManager : private Manager
+	class CompositorResourceManager : private IResourceManager
 	{
 
 
@@ -60,13 +62,29 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		// TODO(co) Work-in-progress
+		RENDERERRUNTIME_API_EXPORT CompositorResource* loadCompositorResourceByAssetId(AssetId assetId);
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void reloadResourceByAssetId(AssetId assetId) override;
+		virtual void update() override;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		CompositorManager(IRendererRuntime& rendererRuntime);
-		~CompositorManager();
-		CompositorManager(const CompositorManager&) = delete;
-		CompositorManager& operator=(const CompositorManager&) = delete;
+		CompositorResourceManager(IRendererRuntime& rendererRuntime);
+		~CompositorResourceManager();
+		CompositorResourceManager(const CompositorResourceManager&) = delete;
+		CompositorResourceManager& operator=(const CompositorResourceManager&) = delete;
 
 
 	//[-------------------------------------------------------]
@@ -74,6 +92,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+
+		// TODO(co) Implement decent resource handling
+		std::vector<CompositorResource*> mResources;
 
 
 	};

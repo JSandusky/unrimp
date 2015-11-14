@@ -83,6 +83,9 @@
     <Filter Include="Source Files\Resource\Scene\Memory">
       <UniqueIdentifier>{95ea971e-e627-43a8-9e26-3a88a526443a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Compositor\Loader">
+      <UniqueIdentifier>{7062a97d-d5d8-499e-933c-fd3a54a9a481}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -156,6 +159,9 @@
     <None Include="include\RendererRuntime\Resource\IResource.inl">
       <Filter>Source Files\Resource</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.inl">
+      <Filter>Source Files\Resource\Compositor\Loader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -226,12 +232,6 @@
       <Filter>Source Files\Asset\Serializer</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorNode.h">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorWorkspace.h">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorManager.h">
       <Filter>Source Files\Resource\Compositor</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\CompositorPass.h">
@@ -348,6 +348,15 @@
     <ClInclude Include="include\RendererRuntime\Resource\IResource.h">
       <Filter>Source Files\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceManager.h">
+      <Filter>Source Files\Resource\Compositor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResource.h">
+      <Filter>Source Files\Resource\Compositor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.h">
+      <Filter>Source Files\Resource\Compositor\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -379,12 +388,6 @@
     </ClCompile>
     <ClCompile Include="src\Asset\Serializer\AssetPackageSerializer.cpp">
       <Filter>Source Files\Asset\Serializer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\CompositorWorkspace.cpp">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\CompositorManager.cpp">
-      <Filter>Source Files\Resource\Compositor</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Compositor\CompositorNode.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
@@ -472,6 +475,15 @@
     </ClCompile>
     <ClCompile Include="src\Resource\ResourceStreamer.cpp">
       <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Compositor\CompositorResource.cpp">
+      <Filter>Source Files\Resource\Compositor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Compositor\CompositorResourceManager.cpp">
+      <Filter>Source Files\Resource\Compositor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Compositor\Loader\CompositorResourceLoader.cpp">
+      <Filter>Source Files\Resource\Compositor\Loader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

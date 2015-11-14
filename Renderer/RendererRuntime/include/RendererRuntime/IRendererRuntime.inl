@@ -43,11 +43,6 @@ namespace RendererRuntime
 		return *mAssetManager;
 	}
 
-	inline CompositorManager& IRendererRuntime::getCompositorManager() const
-	{
-		return *mCompositorManager;
-	}
-
 	inline SceneManager& IRendererRuntime::getSceneManager() const
 	{
 		return *mSceneManager;
@@ -78,6 +73,11 @@ namespace RendererRuntime
 		return *mMeshResourceManager;
 	}
 
+	inline CompositorResourceManager& IRendererRuntime::getCompositorResourceManager() const
+	{
+		return *mCompositorResourceManager;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
@@ -86,7 +86,6 @@ namespace RendererRuntime
 		mRenderer(nullptr),
 		// Managers
 		mAssetManager(nullptr),
-		mCompositorManager(nullptr),
 		mSceneManager(nullptr),
 		// Resource managers
 		mResourceStreamer(nullptr),
@@ -94,7 +93,8 @@ namespace RendererRuntime
 		mShaderResourceManager(nullptr),
 		mMaterialResourceManager(nullptr),
 		mFontResourceManager(nullptr),
-		mMeshResourceManager(nullptr)
+		mMeshResourceManager(nullptr),
+		mCompositorResourceManager(nullptr)
 	{
 		// Nothing to do in here
 	}
@@ -103,7 +103,6 @@ namespace RendererRuntime
 		mRenderer(nullptr),
 		// Managers
 		mAssetManager(nullptr),
-		mCompositorManager(nullptr),
 		mSceneManager(nullptr),
 		// Resource managers
 		mResourceStreamer(nullptr),
@@ -111,7 +110,8 @@ namespace RendererRuntime
 		mShaderResourceManager(nullptr),
 		mMaterialResourceManager(nullptr),
 		mFontResourceManager(nullptr),
-		mMeshResourceManager(nullptr)
+		mMeshResourceManager(nullptr),
+		mCompositorResourceManager(nullptr)
 	{
 		// Not supported
 	}

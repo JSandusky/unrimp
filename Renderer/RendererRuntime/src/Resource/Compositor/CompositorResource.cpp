@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorWorkspace.h"
+#include "RendererRuntime/Resource/Compositor/CompositorResource.h"
 
 
 //[-------------------------------------------------------]
@@ -32,14 +32,15 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorWorkspace::CompositorWorkspace()
+	CompositorResource::CompositorResource(ResourceId resourceId) :
+		IResource(resourceId)
 	{
 		// Nothing here
 	}
 
-	CompositorWorkspace::~CompositorWorkspace()
+	CompositorResource::~CompositorResource()
 	{
 		// Nothing here
 	}
