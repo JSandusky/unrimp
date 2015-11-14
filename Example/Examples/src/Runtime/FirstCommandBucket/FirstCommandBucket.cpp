@@ -38,7 +38,6 @@
 #include "Runtime/FirstCommandBucket/FirstCommandBucket.h"
 #include "Framework/Color4.h"
 
-#include <RendererRuntime/Core/Vector3.h>
 #include <RendererRuntime/Asset/AssetManager.h>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -252,7 +251,7 @@ void FirstCommandBucket::onDraw()
 		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
 
 		// Draw text
-//		mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), RendererRuntime::Vector3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
+//		mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
 
 		// Set the used graphics root signature
 		renderer->setGraphicsRootSignature(mRootSignature);

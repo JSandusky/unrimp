@@ -27,7 +27,6 @@
 #include "Advanced/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.h"
 #include "Framework/Color4.h"
 
-#include <RendererRuntime/Core/Vector3.h>
 #include <RendererRuntime/Asset/AssetManager.h>
 #include <RendererRuntime/Resource/Font/FontResourceManager.h>
 
@@ -254,21 +253,21 @@ void InstancedCubes::onDraw()
 
 				// Number of cubes
 				sprintf(text, "Number of cubes: %d", mNumberOfCubeInstances);
-				mFontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), RendererRuntime::Vector3(-0.95f, 0.9f, 0.0f))), 0.0025f, 0.0025f);
+				mFontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.9f, 0.0f))), 0.0025f, 0.0025f);
 
 				// Frames per second
 				sprintf(text, "Frames per second: %.2f", mFramesPerSecond);
-				mFontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), RendererRuntime::Vector3(-0.95f, 0.85f, 0.0f))), 0.0025f, 0.0025f);
+				mFontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.85f, 0.0f))), 0.0025f, 0.0025f);
 
 				// Cubes per second
 				// -> In every frame we draw n-cubes...
 				// -> TODO(co) This number can get huge... had over 1 million cubes with >25 FPS... million cubes at ~2.4 FPS...
 				sprintf(text, "Cubes per second: %u", static_cast<uint32_t>(mFramesPerSecond) * mNumberOfCubeInstances);
-				mFontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), RendererRuntime::Vector3(-0.95f, 0.8f, 0.0f))), 0.0025f, 0.0025f);
+				mFontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.8f, 0.0f))), 0.0025f, 0.0025f);
 			}
 			else
 			{
-				mFontResource->drawText("No cube renderer instance", Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), RendererRuntime::Vector3(-0.95f, 0.9f, 0.0f))), 0.0025f, 0.0025f);
+				mFontResource->drawText("No cube renderer instance", Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.9f, 0.0f))), 0.0025f, 0.0025f);
 			}
 		}
 

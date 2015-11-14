@@ -36,7 +36,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline Transform::Transform(const Vector3& _position) :
+	inline Transform::Transform(const glm::vec3& _position) :
 		position(_position),
 		rotation(Quaternion::IDENTITY),
 		scale(Vector3::UNIT_XYZ)
@@ -44,7 +44,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline Transform::Transform(const Vector3& _position, const Quaternion& _rotation) :
+	inline Transform::Transform(const glm::vec3& _position, const glm::quat& _rotation) :
 		position(_position),
 		rotation(_rotation),
 		scale(Vector3::UNIT_XYZ)
@@ -52,7 +52,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline Transform::Transform(const Vector3& _position, const Quaternion& _rotation, const Vector3& _scale) :
+	inline Transform::Transform(const glm::vec3& _position, const glm::quat& _rotation, const glm::vec3& _scale) :
 		position(_position),
 		rotation(_rotation),
 		scale(_scale)

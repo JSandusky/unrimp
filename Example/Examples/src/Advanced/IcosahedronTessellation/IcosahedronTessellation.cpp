@@ -25,8 +25,6 @@
 #include "Advanced/IcosahedronTessellation/IcosahedronTessellation.h"
 #include "Framework/Color4.h"
 
-#include <RendererRuntime/Core/Vector3.h>
-
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -182,16 +180,16 @@ void IcosahedronTessellation::onInitialization()
 			mUniformBufferDynamicTcs = shaderLanguage->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 			{	// "ObjectSpaceToClipSpaceMatrix"
 				// TODO(co) Cleanup, correct aspect ratio
-				glm::mat4 View = glm::translate(glm::mat4(1.0f), RendererRuntime::Vector3(0.0f, 0.0f, -3.0f));
-				glm::mat4 Model = glm::scale(glm::mat4(1.0f), RendererRuntime::Vector3(1.0f));
+				glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
+				glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 				glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.001f, 1000.0f);
 				glm::mat4 MVP = Projection * View; 
 //				glm::mat4 MVP = Projection * View * Model; 
 				mUniformBufferStaticTes = shaderLanguage->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(MVP), Renderer::BufferUsage::STATIC_DRAW);
 				{	// "NormalMatrix"
 
-					View = glm::translate(glm::mat4(1.0f), RendererRuntime::Vector3(0.0f, 0.0f, 0.0f));
-					Model = glm::scale(glm::mat4(1.0f), RendererRuntime::Vector3(1.0f));
+					View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+					Model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 					Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.001f, 1000.0f);
 					MVP = Projection * View; 
 					glm::mat3 nMVP(MVP);

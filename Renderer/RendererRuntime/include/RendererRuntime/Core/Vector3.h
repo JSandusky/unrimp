@@ -35,7 +35,7 @@
 	#include <glm/glm.hpp>
 #pragma warning(pop)
 #pragma warning(push)
-	#pragma warning(disable: 4608)	// warning C4608: 'glm::tvec3<float,0>::<unnamed-tag>::s' has already been initialized by another union member in the initializer list, 'glm::tvec3<float,0>::<unnamed-tag>::b'
+	#pragma warning(disable: 4251)	// warning C4251: "needs to have dll-interface to be used by clients of class "
 
 
 //[-------------------------------------------------------]
@@ -50,17 +50,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    "glm::vec3" as easy-to-handle class
-	*
-	*  @remarks
-	*    Using "glm::vec3" directly has several drawbacks such as
-	*    - No simple forward declaration of "glm::vec3" possible
-	*    - In each compilation module ("cpp") an own "glm::vec3" template instance is created,
-	*      the linker later on then tries to merge those instances which is rather inefficient
-	*    - Due to "wall" compiler warnings, we need to disable warnings when including external headers
-	*   which are a problem for large scale projects. Additionally, there are handy default instances.
+	*    "glm::vec3" constants
 	*/
-	class RENDERERRUNTIME_API_EXPORT Vector3 : public glm::vec3
+	class RENDERERRUNTIME_API_EXPORT Vector3
 	{
 
 
@@ -68,20 +60,11 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const Vector3 ZERO;		///< Zero vector
-		static const Vector3 UNIT_X;	///< Unit vector x-axis
-		static const Vector3 UNIT_Y;	///< Unit vector y-axis
-		static const Vector3 UNIT_Z;	///< Unit vector z-axis
-		static const Vector3 UNIT_XYZ;	///< Sum of unit vectors
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		Vector3();
-		inline explicit Vector3(float x);
-		inline Vector3(float x, float y, float z);
+		static const glm::vec3 ZERO;		///< Zero vector
+		static const glm::vec3 UNIT_X;		///< Unit vector x-axis
+		static const glm::vec3 UNIT_Y;		///< Unit vector y-axis
+		static const glm::vec3 UNIT_Z;		///< Unit vector z-axis
+		static const glm::vec3 UNIT_XYZ;	///< Sum of unit vectors
 
 
 	};
@@ -95,9 +78,3 @@ namespace RendererRuntime
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(pop)
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/Vector3.inl"

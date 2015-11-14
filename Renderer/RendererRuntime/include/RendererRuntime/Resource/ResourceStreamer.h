@@ -76,7 +76,7 @@ namespace RendererRuntime
 	*    A resource must master the following stages in order to archive the inner wisdom:
 	*    1. Asynchronous deserialization
 	*    2. Asynchronous processing
-	*    3. Synchronous renderer backend dispatch
+	*    3. Synchronous renderer backend dispatch TODO(co) Asynchronous renderer backend dispatch if supported by the renderer API
 	*/
 	class ResourceStreamer : private NonCopyable
 	{

@@ -34,6 +34,8 @@
 	#pragma warning(disable: 4201)	// warning C4201: nonstandard extension used: nameless struct/union
 	#include <glm/gtc/quaternion.hpp>
 #pragma warning(pop)
+#pragma warning(push)
+	#pragma warning(disable: 4251)	// warning C4251: "needs to have dll-interface to be used by clients of class "
 
 
 //[-------------------------------------------------------]
@@ -48,17 +50,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    "glm::quat" as easy-to-handle class
-	*
-	*  @remarks
-	*    Using "glm::quat" directly has several drawbacks such as
-	*    - No simple forward declaration of "glm::quat" possible
-	*    - In each compilation module ("cpp") an own "glm::quat" template instance is created,
-	*      the linker later on then tries to merge those instances which is rather inefficient
-	*    - Due to "wall" compiler warnings, we need to disable warnings when including external headers
-	*   which are a problem for large scale projects. Additionally, there are handy default instances.
+	*    "glm::quat" constants
 	*/
-	class RENDERERRUNTIME_API_EXPORT Quaternion : public glm::quat
+	class RENDERERRUNTIME_API_EXPORT Quaternion
 	{
 
 
@@ -66,15 +60,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const Quaternion IDENTITY;	///< Identity quaternion
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		Quaternion();
-		inline Quaternion(float w, float x, float y, float z);
+		static const glm::quat IDENTITY;	///< Identity quaternion
 
 
 	};
@@ -86,7 +72,5 @@ namespace RendererRuntime
 } // RendererRuntime
 
 
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/Quaternion.inl"
+// Disable warnings in external headers, we can't fix them
+#pragma warning(pop)

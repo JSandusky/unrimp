@@ -31,6 +31,11 @@
 #include "RendererRuntime/Core/Quaternion.h"
 
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4251)	// warning C4251: "needs to have dll-interface to be used by clients of class "
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
@@ -60,9 +65,9 @@ namespace RendererRuntime
 	//[ Public data                                           ]
 	//[-------------------------------------------------------]
 	public:
-		Vector3		position;
-		Quaternion	rotation;
-		Vector3		scale;
+		glm::vec3	position;
+		glm::quat	rotation;
+		glm::vec3	scale;
 
 
 	//[-------------------------------------------------------]
@@ -70,9 +75,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline Transform();
-		inline explicit Transform(const Vector3& position);
-		inline Transform(const Vector3& position, const Quaternion& rotation);
-		inline Transform(const Vector3& position, const Quaternion& rotation, const Vector3& scale);
+		inline explicit Transform(const glm::vec3& position);
+		inline Transform(const glm::vec3& position, const glm::quat& rotation);
+		inline Transform(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& scale);
 
 
 	};
@@ -88,3 +93,7 @@ namespace RendererRuntime
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Transform.inl"
+
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(pop)

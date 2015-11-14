@@ -108,12 +108,6 @@
     <None Include="include\RendererRuntime\Core\Transform.inl">
       <Filter>Source Files\Core</Filter>
     </None>
-    <None Include="include\RendererRuntime\Core\Vector3.inl">
-      <Filter>Source Files\Core</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Core\Quaternion.inl">
-      <Filter>Source Files\Core</Filter>
-    </None>
     <None Include="include\RendererRuntime\Asset\AssetManager.inl">
       <Filter>Source Files\Asset</Filter>
     </None>

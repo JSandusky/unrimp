@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 
-#include <RendererRuntime/Core/Vector3.h>
 #include <RendererRuntime/Resource/Font/FontResourceManager.h>
 
 
@@ -128,7 +127,7 @@ void FirstCompositor::onDraw()
 		// Draw text
 		if (nullptr != mFontResource)
 		{
-			mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), RendererRuntime::Vector3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
+			mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
 		}
 
 		// End debug event
