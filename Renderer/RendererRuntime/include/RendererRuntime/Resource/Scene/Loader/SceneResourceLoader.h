@@ -27,7 +27,22 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneItem.h"
+#include "RendererRuntime/Resource/IResourceLoader.h"
+#include "RendererRuntime/Asset/Asset.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class IRenderer;
+}
+namespace RendererRuntime
+{
+	class SceneResource;
+	class IRendererRuntime;
+}
 
 
 //[-------------------------------------------------------]
@@ -40,30 +55,52 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
+	class SceneResourceLoader : protected IResourceLoader
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneResource;
+		friend class SceneResourceManager;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
+	public:
+		static const ResourceLoaderTypeId TYPE_ID;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		virtual void onDeserialization() override;
+		virtual void onProcessing() override;
+		virtual void onRendererBackendDispatch() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		inline SceneResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
+		virtual ~SceneResourceLoader();
+		SceneResourceLoader(const SceneResourceLoader&) = delete;
+		SceneResourceLoader& operator=(const SceneResourceLoader&) = delete;
+		inline void initialize(const Asset& asset, SceneResource& sceneResource);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		// Resource source and destination
+		Asset			mAsset;	///< In order to be multi-threading safe in here, we need an asset copy
+		SceneResource*	mSceneResource;
 
 
 	};
@@ -73,3 +110,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.inl"

@@ -56,7 +56,7 @@ namespace RendererRuntime
 	const Asset* AssetPackage::getAssetByAssetId(AssetId assetId) const
 	{
 		SortedAssetVector::const_iterator iterator = std::lower_bound(mSortedAssetVector.cbegin(), mSortedAssetVector.cend(), assetId, detail::OrderByAssetId());
-		return (iterator != mSortedAssetVector.end()) ? iterator._Ptr : nullptr;
+		return (iterator != mSortedAssetVector.end() && iterator._Ptr->assetId == assetId) ? iterator._Ptr : nullptr;
 	}
 
 

@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneManager.h"
+#include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/SceneNode.h"
 #include "RendererRuntime/Resource/Scene/SceneMesh.h"
 #include "RendererRuntime/Resource/Scene/SceneCamera.h"
@@ -39,35 +39,40 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SceneNode* SceneManager::createSceneNode(const Transform& transform)
+	SceneResource::~SceneResource()
+	{
+		// Nothing in here
+	}
+
+	SceneNode* SceneResource::createSceneNode(const Transform& transform)
 	{
 		return new SceneNode(transform);
 	}
 
-	void SceneManager::destroySceneNode(SceneNode& sceneNode)
+	void SceneResource::destroySceneNode(SceneNode& sceneNode)
 	{
 		delete &sceneNode;
 	}
 
-	SceneCamera* SceneManager::createSceneCamera()
+	SceneCamera* SceneResource::createSceneCamera()
 	{
 		return new SceneCamera();
 	}
 
-	void SceneManager::destroySceneCamera(SceneCamera& sceneCamera)
+	void SceneResource::destroySceneCamera(SceneCamera& sceneCamera)
 	{
 		delete &sceneCamera;
 	}
 
-	SceneMesh* SceneManager::createSceneMesh(AssetId meshAssetId)
+	SceneMesh* SceneResource::createSceneMesh(AssetId meshAssetId)
 	{
 		// Create mesh instance
-		// TODO(co) Performance: Cache mesh resource manager and renderer instance inside the scene manager
+		// TODO(co) Performance: Cache mesh resource manager and renderer instance inside the scene resource manager
 		MeshResource* meshResource = mRendererRuntime.getMeshResourceManager().loadMeshResourceByAssetId(mRendererRuntime.getRenderer(), meshAssetId);
 		return (nullptr != meshResource) ? new SceneMesh(*meshResource) : nullptr;
 	}
 
-	void SceneManager::destroySceneMesh(SceneMesh& sceneMesh)
+	void SceneResource::destroySceneMesh(SceneMesh& sceneMesh)
 	{
 		delete &sceneMesh;
 	}
@@ -76,13 +81,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	SceneManager::SceneManager(IRendererRuntime& rendererRuntime) :
+	SceneResource::SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
+		IResource(resourceId),
 		mRendererRuntime(rendererRuntime)
-	{
-		// Nothing in here
-	}
-
-	SceneManager::~SceneManager()
 	{
 		// Nothing in here
 	}

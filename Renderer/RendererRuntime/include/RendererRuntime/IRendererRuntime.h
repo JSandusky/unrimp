@@ -42,11 +42,11 @@ namespace Renderer
 namespace RendererRuntime
 {
 	class AssetManager;
-	class SceneManager;
 	class IRendererRuntime;
 	class ResourceStreamer;
 	class FontResourceManager;
 	class MeshResourceManager;
+	class SceneResourceManager;
 	class ShaderResourceManager;
 	class TextureResourceManager;
 	class MaterialResourceManager;
@@ -102,15 +102,6 @@ namespace RendererRuntime
 		*    The asset manager instance, do not release the returned instance
 		*/
 		inline AssetManager& getAssetManager() const;
-
-		/**
-		*  @brief
-		*    Return the scene manager instance
-		*
-		*  @return
-		*    The scene manager instance, do not release the returned instance
-		*/
-		inline SceneManager& getSceneManager() const;
 
 		//[-------------------------------------------------------]
 		//[ Resource                                              ]
@@ -168,6 +159,15 @@ namespace RendererRuntime
 		*    The mesh resource manager instance, do not release the returned instance
 		*/
 		inline MeshResourceManager& getMeshResourceManager() const;
+
+		/**
+		*  @brief
+		*    Return the scene resource manager instance
+		*
+		*  @return
+		*    The scene resource manager instance, do not release the returned instance
+		*/
+		inline SceneResourceManager& getSceneResourceManager() const;
 
 		/**
 		*  @brief
@@ -241,7 +241,6 @@ namespace RendererRuntime
 		Renderer::IRenderer* mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
 		// Managers
 		AssetManager* mAssetManager;
-		SceneManager* mSceneManager;
 		// Resource
 		ResourceStreamer*			mResourceStreamer;
 		TextureResourceManager*		mTextureResourceManager;
@@ -249,6 +248,7 @@ namespace RendererRuntime
 		MaterialResourceManager*	mMaterialResourceManager;
 		FontResourceManager*		mFontResourceManager;
 		MeshResourceManager*		mMeshResourceManager;
+		SceneResourceManager*		mSceneResourceManager;
 		CompositorResourceManager*	mCompositorResourceManager;
 
 

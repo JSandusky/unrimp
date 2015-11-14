@@ -39,6 +39,7 @@
 namespace RendererRuntime
 {
 	class MeshResource;
+	class SceneResource;
 	class TextureResource;
 }
 namespace RendererToolkit
@@ -57,7 +58,7 @@ namespace RendererToolkit
 *  @remarks
 *    Demonstrates:
 *    - Compositor
-*    - Scene manager
+*    - Scene resource manager
 */
 class FirstScene : public IApplicationRendererRuntime
 {
@@ -98,6 +99,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	RendererRuntime::SceneResource*		  mSceneResource;
 	Renderer::IUniformBufferPtr			  mUniformBuffer;			///< Uniform buffer object (UBO), can be a null pointer
 	Renderer::IRootSignaturePtr			  mRootSignature;			///< Root signature, can be a null pointer
 	Renderer::IPipelineStatePtr			  mPipelineState;			///< Pipeline state object (PSO), can be a null pointer

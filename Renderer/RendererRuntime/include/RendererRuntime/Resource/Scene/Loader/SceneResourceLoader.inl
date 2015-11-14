@@ -19,18 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneItem.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -38,35 +26,21 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
+	inline SceneResourceLoader::SceneResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+		IResourceLoader(resourceManager),
+		mRendererRuntime(rendererRuntime),
+		mSceneResource(nullptr)
 	{
+		// Nothing here
+	}
 
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class SceneResource;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-
-
-	};
+	inline void SceneResourceLoader::initialize(const Asset& asset, SceneResource& sceneResource)
+	{
+		mAsset			= asset;
+		mSceneResource	= &sceneResource;
+	}
 
 
 //[-------------------------------------------------------]

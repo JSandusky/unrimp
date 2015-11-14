@@ -30,7 +30,8 @@
 #include <RendererRuntime/Core/Transform.h>
 #include <RendererRuntime/Asset/AssetManager.h>
 #include <RendererRuntime/Resource/Mesh/MeshResource.h>
-#include <RendererRuntime/Resource/Scene/SceneManager.h>
+#include <RendererRuntime/Resource/Scene/SceneResource.h>
+#include <RendererRuntime/Resource/Scene/SceneResourceManager.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/Font/FontResourceManager.h>
 #include <RendererRuntime/Resource/Texture/TextureResource.h>
@@ -45,6 +46,7 @@
 //[-------------------------------------------------------]
 FirstScene::FirstScene(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
+	mSceneResource(nullptr),
 	mFontResource(nullptr),
 	mMeshResource(nullptr),
 	mDiffuseTextureResource(nullptr),
@@ -257,21 +259,22 @@ void FirstScene::onInitialization()
 
 	// TODO(co) Just a first scene test
 	{ // Build scene
-		RendererRuntime::SceneManager& sceneManager = rendererRuntime->getSceneManager();
+		// Create the scene resource
+		mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId("Example/Scene/Default/FirstScene");
 
 		// Scene node
-		RendererRuntime::SceneNode* sceneNode = sceneManager.createSceneNode(RendererRuntime::Transform::IDENTITY);
-		sceneManager.destroySceneNode(*sceneNode);
+		RendererRuntime::SceneNode* sceneNode = mSceneResource->createSceneNode(RendererRuntime::Transform::IDENTITY);
+		mSceneResource->destroySceneNode(*sceneNode);
 
 		// Scene camera
-		RendererRuntime::SceneCamera* sceneCamera = sceneManager.createSceneCamera();
-		sceneManager.destroySceneCamera(*sceneCamera);
+		RendererRuntime::SceneCamera* sceneCamera = mSceneResource->createSceneCamera();
+		mSceneResource->destroySceneCamera(*sceneCamera);
 
 		// Scene mesh
-		RendererRuntime::SceneMesh* sceneMesh = sceneManager.createSceneMesh("Example/Mesh/Character/ImrodLowPoly");
+		RendererRuntime::SceneMesh* sceneMesh = mSceneResource->createSceneMesh("Example/Mesh/Character/ImrodLowPoly");
 		if (nullptr != sceneMesh)
 		{
-			sceneManager.destroySceneMesh(*sceneMesh);
+			mSceneResource->destroySceneMesh(*sceneMesh);
 		}
 	}
 }
@@ -304,6 +307,7 @@ void FirstScene::onDeinitialization()
 	mProgram = nullptr;
 	mRootSignature = nullptr;
 	mUniformBuffer = nullptr;
+	delete mSceneResource;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())

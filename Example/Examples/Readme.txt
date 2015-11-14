@@ -176,7 +176,7 @@ Standalone renderer examples.
 		- Compositor
 	- "FirstScene" demonstrates:
 		- Compositor
-		- Scene manager
+		- Scene resource manager
 
 
 == Preprocessor Definitions ==

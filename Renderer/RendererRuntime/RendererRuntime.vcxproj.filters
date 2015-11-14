@@ -86,6 +86,9 @@
     <Filter Include="Source Files\Resource\Compositor\Loader">
       <UniqueIdentifier>{7062a97d-d5d8-499e-933c-fd3a54a9a481}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Scene\Loader">
+      <UniqueIdentifier>{6711877d-d37a-4be7-b23b-b6854c62b396}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -161,6 +164,9 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.inl">
       <Filter>Source Files\Resource\Compositor\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.inl">
+      <Filter>Source Files\Resource\Scene\Loader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -285,9 +291,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.h">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneManager.h">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneMesh.h">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
@@ -359,6 +362,15 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorWorkspace.h">
       <Filter>Source Files\Resource\Compositor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.h">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResource.h">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.h">
+      <Filter>Source Files\Resource\Scene\Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -434,9 +446,6 @@
     <ClCompile Include="src\Resource\Scene\SceneItem.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\SceneManager.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Scene\SceneMesh.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
@@ -490,6 +499,15 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Compositor\CompositorWorkspace.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\SceneResourceManager.cpp">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Loader\SceneResourceLoader.cpp">
+      <Filter>Source Files\Resource\Scene\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\SceneResource.cpp">
+      <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

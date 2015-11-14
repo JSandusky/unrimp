@@ -27,7 +27,18 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneItem.h"
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Resource/IResourceManager.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class SceneResource;
+	class IRendererRuntime;
+}
 
 
 //[-------------------------------------------------------]
@@ -40,30 +51,51 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
+	class SceneResourceManager : private IResourceManager
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneResource;
+		friend class RendererRuntimeImpl;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
+	public:
+		// TODO(co) Work-in-progress
+		RENDERERRUNTIME_API_EXPORT SceneResource* loadSceneResourceByAssetId(AssetId assetId);
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void reloadResourceByAssetId(AssetId assetId) override;
+		virtual void update() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		SceneResourceManager(IRendererRuntime& rendererRuntime);
+		~SceneResourceManager();
+		SceneResourceManager(const SceneResourceManager&) = delete;
+		SceneResourceManager& operator=(const SceneResourceManager&) = delete;
+		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+
+		// TODO(co) Implement decent resource handling
+		std::vector<SceneResource*> mResources;
 
 
 	};

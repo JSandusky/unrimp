@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
+#include "RendererRuntime/Resource/IResource.h"
 #include "RendererRuntime/Core/Manager.h"
 #include "RendererRuntime/Asset/Asset.h"
 
@@ -55,7 +56,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneManager : private Manager
+	class SceneResource : public IResource
 	{
 
 
@@ -63,12 +64,14 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
+		friend class SceneResourceManager;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		virtual ~SceneResource();
 		RENDERERRUNTIME_API_EXPORT SceneNode* createSceneNode(const Transform& transform);
 		RENDERERRUNTIME_API_EXPORT void destroySceneNode(SceneNode& sceneNode);
 		RENDERERRUNTIME_API_EXPORT SceneCamera* createSceneCamera();
@@ -81,10 +84,9 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		SceneManager(IRendererRuntime& rendererRuntime);
-		~SceneManager();
-		SceneManager(const SceneManager&) = delete;
-		SceneManager& operator=(const SceneManager&) = delete;
+		SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId);
+		SceneResource(const SceneResource&) = delete;
+		SceneResource& operator=(const SceneResource&) = delete;
 
 
 	//[-------------------------------------------------------]

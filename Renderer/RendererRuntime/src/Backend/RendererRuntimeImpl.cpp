@@ -24,9 +24,9 @@
 #include "RendererRuntime/Backend/RendererRuntimeImpl.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/Resource/ResourceStreamer.h"
-#include "RendererRuntime/Resource/Scene/SceneManager.h"
 #include "RendererRuntime/Resource/Font/FontResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
+#include "RendererRuntime/Resource/Scene/SceneResourceManager.h"
 #include "RendererRuntime/Resource/Shader/ShaderResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
@@ -99,7 +99,6 @@ namespace RendererRuntime
 
 		// Create the manager instances
 		mAssetManager = new AssetManager(*this);
-		mSceneManager = new SceneManager(*this);
 
 		// Create the resource manager instances
 		mResourceStreamer = new ResourceStreamer(*this);
@@ -108,6 +107,7 @@ namespace RendererRuntime
 		mMaterialResourceManager = new MaterialResourceManager(*this);
 		mFontResourceManager = new FontResourceManager(*this);
 		mMeshResourceManager = new MeshResourceManager(*this);
+		mSceneResourceManager = new SceneResourceManager(*this);
 		mCompositorResourceManager = new CompositorResourceManager(*this);
 	}
 
@@ -151,10 +151,10 @@ namespace RendererRuntime
 
 		// Destroy the manager instances
 		delete mAssetManager;
-		delete mSceneManager;
 
 		// Destroy the resource manager instances
 		delete mCompositorResourceManager;
+		delete mSceneResourceManager;
 		delete mMeshResourceManager;
 		delete mFontResourceManager;
 		delete mMaterialResourceManager;

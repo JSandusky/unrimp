@@ -19,15 +19,12 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneItem.h"
+#include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.h"
+#include "RendererRuntime/Resource/Scene/SceneResource.h"
+
+#include <fstream>
 
 
 //[-------------------------------------------------------]
@@ -38,35 +35,64 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
+	const ResourceLoaderTypeId SceneResourceLoader::TYPE_ID("scene");
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	ResourceLoaderTypeId SceneResourceLoader::getResourceLoaderTypeId() const
 	{
+		return TYPE_ID;
+	}
+
+	void SceneResourceLoader::onDeserialization()
+	{
+		// TODO(co) Error handling
+		try
+		{
+			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
+
+			// Read in the scene header
+			#pragma pack(push)
+			#pragma pack(1)
+				struct SceneHeader
+				{
+					uint32_t formatType;
+					uint16_t formatVersion;
+				};
+			#pragma pack(pop)
+			SceneHeader sceneHeader;
+			ifstream.read(reinterpret_cast<char*>(&sceneHeader), sizeof(SceneHeader));
+
+			// TODO(co)
+		}
+		catch (const std::exception& e)
+		{
+			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load scene asset %d: %s", mAsset.assetId, e.what());
+		}
+	}
+
+	void SceneResourceLoader::onProcessing()
+	{
+		// Nothing here
+	}
+
+	void SceneResourceLoader::onRendererBackendDispatch()
+	{
+		// Nothing here
+	}
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-		friend class SceneResource;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-
-
-	};
+	SceneResourceLoader::~SceneResourceLoader()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]
