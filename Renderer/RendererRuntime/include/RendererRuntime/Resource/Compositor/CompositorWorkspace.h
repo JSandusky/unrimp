@@ -19,9 +19,27 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorNode.h"
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Asset/Asset.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+	class CompositorResource;
+}
 
 
 //[-------------------------------------------------------]
@@ -32,17 +50,37 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	CompositorNode::CompositorNode()
+	class CompositorWorkspace : protected NonCopyable
 	{
-		// Nothing here
-	}
 
-	CompositorNode::~CompositorNode()
-	{
-		// Nothing here
-	}
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		RENDERERRUNTIME_API_EXPORT CompositorWorkspace(IRendererRuntime& rendererRuntime, AssetId compositorAssetId);
+		RENDERERRUNTIME_API_EXPORT virtual ~CompositorWorkspace();
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		CompositorWorkspace();
+		CompositorWorkspace(const CompositorWorkspace&) = delete;
+		CompositorWorkspace& operator=(const CompositorWorkspace&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		CompositorResource* mCompositorResource;
+
+
+	};
 
 
 //[-------------------------------------------------------]

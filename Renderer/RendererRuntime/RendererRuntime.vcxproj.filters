@@ -357,6 +357,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.h">
       <Filter>Source Files\Resource\Compositor\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorWorkspace.h">
+      <Filter>Source Files\Resource\Compositor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -484,6 +487,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Compositor\Loader\CompositorResourceLoader.cpp">
       <Filter>Source Files\Resource\Compositor\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Compositor\CompositorWorkspace.cpp">
+      <Filter>Source Files\Resource\Compositor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

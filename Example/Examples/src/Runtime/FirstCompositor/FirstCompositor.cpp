@@ -40,6 +40,7 @@
 #include "Framework/Color4.h"
 
 #include <RendererRuntime/Asset/AssetManager.h>
+#include <RendererRuntime/Resource/Compositor/CompositorWorkspace.h>
 
 #include <glm/gtc/type_ptr.hpp> 
 #include <glm/gtc/matrix_transform.hpp>
@@ -50,6 +51,7 @@
 //[-------------------------------------------------------]
 FirstCompositor::FirstCompositor(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
+	mCompositorWorkspace(nullptr),
 	mFontResource(nullptr)
 {
 	// Nothing to do in here
@@ -81,6 +83,9 @@ void FirstCompositor::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
+		// Create the compositor workspace
+		mCompositorWorkspace = new RendererRuntime::CompositorWorkspace(*rendererRuntime, "Example/Compositor/Default/FirstCompositor");
+
 		// Create the font resource
 		mFontResource = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
 
@@ -95,6 +100,7 @@ void FirstCompositor::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// TODO(co) Implement decent resource handling
+	delete mCompositorWorkspace;
 	mFontResource = nullptr;
 
 	// End debug event
@@ -113,11 +119,17 @@ void FirstCompositor::onDraw()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
+		// TODO(co)
+		// mCompositorWorkspace->update();
+
 		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
 
 		// Draw text
-		mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), RendererRuntime::Vector3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
+		if (nullptr != mFontResource)
+		{
+			mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), RendererRuntime::Vector3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
+		}
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)

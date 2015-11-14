@@ -33,6 +33,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class CompositorWorkspace;
+}
+
+
+//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 /**
@@ -84,7 +93,8 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::FontResource* mFontResource;	///< Font resource, can be a null pointer
+	RendererRuntime::CompositorWorkspace* mCompositorWorkspace;
+	RendererRuntime::FontResource*		  mFontResource;	///< Font resource, can be a null pointer
 
 
 };

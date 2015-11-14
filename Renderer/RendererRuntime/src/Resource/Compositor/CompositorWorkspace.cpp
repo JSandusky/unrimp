@@ -21,7 +21,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorNode.h"
+#include "RendererRuntime/Resource/Compositor/CompositorWorkspace.h"
+#include "RendererRuntime/Resource/Compositor/CompositorResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -32,14 +34,24 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorNode::CompositorNode()
+	CompositorWorkspace::CompositorWorkspace(IRendererRuntime& rendererRuntime, AssetId compositorAssetId) :
+		mCompositorResource(rendererRuntime.getCompositorResourceManager().loadCompositorResourceByAssetId(compositorAssetId))
 	{
 		// Nothing here
 	}
 
-	CompositorNode::~CompositorNode()
+	CompositorWorkspace::~CompositorWorkspace()
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	CompositorWorkspace::CompositorWorkspace()
 	{
 		// Nothing here
 	}

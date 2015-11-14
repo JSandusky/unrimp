@@ -71,6 +71,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorNode.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorWorkspace.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorPassClear.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\CompositorPass.h" />
@@ -127,6 +128,7 @@
     <ClCompile Include="src\Resource\Compositor\CompositorNode.cpp" />
     <ClCompile Include="src\Resource\Compositor\CompositorResource.cpp" />
     <ClCompile Include="src\Resource\Compositor\CompositorResourceManager.cpp" />
+    <ClCompile Include="src\Resource\Compositor\CompositorWorkspace.cpp" />
     <ClCompile Include="src\Resource\Compositor\Loader\CompositorResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Compositor\Pass\Clear\CompositorPassClear.cpp" />
     <ClCompile Include="src\Resource\Compositor\Pass\CompositorPass.cpp" />
