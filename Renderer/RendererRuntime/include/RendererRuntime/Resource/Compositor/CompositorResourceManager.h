@@ -85,6 +85,7 @@ namespace RendererRuntime
 		~CompositorResourceManager();
 		CompositorResourceManager(const CompositorResourceManager&) = delete;
 		CompositorResourceManager& operator=(const CompositorResourceManager&) = delete;
+		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]

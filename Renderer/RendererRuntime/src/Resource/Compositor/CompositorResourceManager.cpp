@@ -28,6 +28,8 @@
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+#include <assert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -121,6 +123,24 @@ namespace RendererRuntime
 	CompositorResourceManager::~CompositorResourceManager()
 	{
 		// Nothing in here
+	}
+
+	IResourceLoader* CompositorResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	{
+		// Can we recycle an already existing resource loader instance?
+		IResourceLoader* resourceLoader = IResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
+
+		// We need to create a new resource loader instance
+		if (nullptr == resourceLoader)
+		{
+			// We only support our own compositor format
+			assert(resourceLoaderTypeId == CompositorResourceLoader::TYPE_ID);
+			resourceLoader = new CompositorResourceLoader(*this, mRendererRuntime);
+			mUsedResourceLoaderInstances.push_back(resourceLoader);
+		}
+
+		// Done
+		return resourceLoader;
 	}
 
 
