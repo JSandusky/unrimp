@@ -64,6 +64,12 @@
     <ClInclude Include="include\RendererRuntime\Manager\Asset\AssetPackage.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Asset\Serializer\AssetPackageSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Compositor\CompositorManager.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Compositor\CompositorNode.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Compositor\CompositorWorkspace.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Compositor\Pass\Clear\CompositorPassClear.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Compositor\Pass\CompositorPass.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Compositor\Pass\Quad\CompositorPassQuad.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Compositor\Pass\Scene\CompositorPassScene.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Manager.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Font\FontResource.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Font\FontResourceManager.h" />
@@ -86,6 +92,10 @@
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Texture\Loader\KtxTextureResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Texture\TextureResource.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Resource\Texture\TextureResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\Memory\SceneItemMemoryManager.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\Memory\SceneNodeMemoryManager.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\Renderable.h" />
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\RenderQueue.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneCamera.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Manager\Scene\SceneManager.h" />
@@ -114,6 +124,12 @@
     <ClCompile Include="src\Manager\Asset\AssetPackage.cpp" />
     <ClCompile Include="src\Manager\Asset\Serializer\AssetPackageSerializer.cpp" />
     <ClCompile Include="src\Manager\Compositor\CompositorManager.cpp" />
+    <ClCompile Include="src\Manager\Compositor\CompositorNode.cpp" />
+    <ClCompile Include="src\Manager\Compositor\CompositorWorkspace.cpp" />
+    <ClCompile Include="src\Manager\Compositor\Pass\Clear\CompositorPassClear.cpp" />
+    <ClCompile Include="src\Manager\Compositor\Pass\CompositorPass.cpp" />
+    <ClCompile Include="src\Manager\Compositor\Pass\Quad\CompositorPassQuad.cpp" />
+    <ClCompile Include="src\Manager\Compositor\Pass\Scene\CompositorPassScene.cpp" />
     <ClCompile Include="src\Manager\Resource\Font\FontResource.cpp" />
     <ClCompile Include="src\Manager\Resource\Font\FontResourceManager.cpp" />
     <ClCompile Include="src\Manager\Resource\Font\Loader\FontResourceLoader.cpp" />
@@ -129,6 +145,10 @@
     <ClCompile Include="src\Manager\Resource\Texture\Loader\KtxTextureResourceLoader.cpp" />
     <ClCompile Include="src\Manager\Resource\Texture\TextureResource.cpp" />
     <ClCompile Include="src\Manager\Resource\Texture\TextureResourceManager.cpp" />
+    <ClCompile Include="src\Manager\Scene\Memory\SceneItemMemoryManager.cpp" />
+    <ClCompile Include="src\Manager\Scene\Memory\SceneNodeMemoryManager.cpp" />
+    <ClCompile Include="src\Manager\Scene\Renderable.cpp" />
+    <ClCompile Include="src\Manager\Scene\RenderQueue.cpp" />
     <ClCompile Include="src\Manager\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\Manager\Scene\SceneItem.cpp" />
     <ClCompile Include="src\Manager\Scene\SceneManager.cpp" />

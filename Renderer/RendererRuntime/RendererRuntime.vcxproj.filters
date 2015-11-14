@@ -68,6 +68,21 @@
     <Filter Include="Source Files\Manager\Resource\Font\Shader">
       <UniqueIdentifier>{ad195530-5585-4497-8368-be0c6c1dac76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Manager\Scene\Memory">
+      <UniqueIdentifier>{95ea971e-e627-43a8-9e26-3a88a526443a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Manager\Compositor\Pass">
+      <UniqueIdentifier>{f1cf82ad-dfc3-489c-a506-610fc4374678}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Manager\Compositor\Pass\Clear">
+      <UniqueIdentifier>{36795d3c-9e3c-469e-b44c-78ac2644b7a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Manager\Compositor\Pass\Scene">
+      <UniqueIdentifier>{67a66c2e-1bef-4c0d-ba34-06fe8b837226}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Manager\Compositor\Pass\Quad">
+      <UniqueIdentifier>{d4d38ae2-9fa6-49f7-8254-bf182fed6f43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -306,6 +321,36 @@
     <ClInclude Include="include\RendererRuntime\Core\Transform.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\Memory\SceneNodeMemoryManager.h">
+      <Filter>Source Files\Manager\Scene\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\Memory\SceneItemMemoryManager.h">
+      <Filter>Source Files\Manager\Scene\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\Renderable.h">
+      <Filter>Source Files\Manager\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Scene\RenderQueue.h">
+      <Filter>Source Files\Manager\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Compositor\CompositorNode.h">
+      <Filter>Source Files\Manager\Compositor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Compositor\CompositorWorkspace.h">
+      <Filter>Source Files\Manager\Compositor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Compositor\Pass\Clear\CompositorPassClear.h">
+      <Filter>Source Files\Manager\Compositor\Pass\Clear</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Compositor\Pass\Quad\CompositorPassQuad.h">
+      <Filter>Source Files\Manager\Compositor\Pass\Quad</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Compositor\Pass\Scene\CompositorPassScene.h">
+      <Filter>Source Files\Manager\Compositor\Pass\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Manager\Compositor\Pass\CompositorPass.h">
+      <Filter>Source Files\Manager\Compositor\Pass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -400,6 +445,36 @@
     </ClCompile>
     <ClCompile Include="src\Core\Transform.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Scene\Memory\SceneNodeMemoryManager.cpp">
+      <Filter>Source Files\Manager\Scene\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Scene\Memory\SceneItemMemoryManager.cpp">
+      <Filter>Source Files\Manager\Scene\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Scene\RenderQueue.cpp">
+      <Filter>Source Files\Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Scene\Renderable.cpp">
+      <Filter>Source Files\Manager\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Compositor\Pass\Clear\CompositorPassClear.cpp">
+      <Filter>Source Files\Manager\Compositor\Pass\Clear</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Compositor\Pass\Quad\CompositorPassQuad.cpp">
+      <Filter>Source Files\Manager\Compositor\Pass\Quad</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Compositor\Pass\Scene\CompositorPassScene.cpp">
+      <Filter>Source Files\Manager\Compositor\Pass\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Compositor\Pass\CompositorPass.cpp">
+      <Filter>Source Files\Manager\Compositor\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Compositor\CompositorWorkspace.cpp">
+      <Filter>Source Files\Manager\Compositor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\Compositor\CompositorNode.cpp">
+      <Filter>Source Files\Manager\Compositor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
