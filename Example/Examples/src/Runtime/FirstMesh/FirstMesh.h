@@ -41,10 +41,6 @@ namespace RendererRuntime
 	class MeshResource;
 	class TextureResource;
 }
-namespace RendererToolkit
-{
-	class IProject;
-}
 
 
 //[-------------------------------------------------------]
@@ -126,9 +122,6 @@ private:
 	// For timing
 	Stopwatch mStopwatch;	///< Stopwatch instance
 	float	  mGlobalTimer;	///< Global timer
-
-	// TODO(co) First asset hot-reloading test
-	RendererToolkit::IProject* mProject;
 
 
 };

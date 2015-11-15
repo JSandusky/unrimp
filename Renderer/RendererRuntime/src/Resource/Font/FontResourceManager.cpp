@@ -42,7 +42,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	FontResource* FontResourceManager::loadFontResourceByAssetId(AssetId assetId)
+	FontResource* FontResourceManager::loadFontResourceByAssetId(AssetId assetId, bool reload)
 	{
 		const Asset* asset = mRendererRuntimeImpl.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
@@ -63,22 +63,26 @@ namespace RendererRuntime
 			}
 
 			// Create the resource instance
+			bool load = reload;
 			if (nullptr == fontResource)
 			{
 				fontResource = new FontResource(mRendererRuntimeImpl, assetId);
 				mResources.push_back(fontResource);
+				load = true;
+			}
 
-				{
-					// Prepare the resource loader
-					FontResourceLoader* fontResourceLoader = static_cast<FontResourceLoader*>(acquireResourceLoaderInstance(FontResourceLoader::TYPE_ID));
-					fontResourceLoader->initialize(*asset, *fontResource);
+			// Load the resource, if required
+			if (load)
+			{
+				// Prepare the resource loader
+				FontResourceLoader* fontResourceLoader = static_cast<FontResourceLoader*>(acquireResourceLoaderInstance(FontResourceLoader::TYPE_ID));
+				fontResourceLoader->initialize(*asset, *fontResource);
 
-					// Commit resource streamer asset load request
-					ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-					resourceStreamerLoadRequest.resource = fontResource;
-					resourceStreamerLoadRequest.resourceLoader = fontResourceLoader;
-					mRendererRuntimeImpl.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
-				}
+				// Commit resource streamer asset load request
+				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+				resourceStreamerLoadRequest.resource = fontResource;
+				resourceStreamerLoadRequest.resourceLoader = fontResourceLoader;
+				mRendererRuntimeImpl.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 			}
 
 			// TODO(co) No raw pointers in here
@@ -100,7 +104,7 @@ namespace RendererRuntime
 		{
 			if (mResources[i]->getResourceId() == assetId)
 			{
-				loadFontResourceByAssetId(assetId);
+				loadFontResourceByAssetId(assetId, true);
 				break;
 			}
 		}

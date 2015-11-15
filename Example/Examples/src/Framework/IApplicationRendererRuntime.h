@@ -43,6 +43,7 @@ namespace RendererToolkit
 {
 	class IRendererToolkit;
 	#ifdef SHARED_LIBRARIES
+		class IProject;
 		class RendererToolkitInstance;
 	#endif
 }
@@ -128,6 +129,7 @@ private:
 	RendererRuntime::RendererRuntimeInstance* mRendererRuntimeInstance;	///< Renderer runtime instance, can be a null pointer
 	#ifdef SHARED_LIBRARIES
 		RendererToolkit::RendererToolkitInstance* mRendererToolkitInstance;	///< Renderer toolkit instance, can be a null pointer
+		RendererToolkit::IProject*				  mProject;	// TODO(co) First asset hot-reloading test
 	#endif
 
 

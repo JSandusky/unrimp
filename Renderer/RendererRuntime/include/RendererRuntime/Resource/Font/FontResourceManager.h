@@ -66,7 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT FontResource* loadFontResourceByAssetId(AssetId assetId);
+		RENDERERRUNTIME_API_EXPORT FontResource* loadFontResourceByAssetId(AssetId assetId, bool reload = false);
 
 
 	//[-------------------------------------------------------]

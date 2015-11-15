@@ -67,7 +67,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT CompositorResource* loadCompositorResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr);
+		RENDERERRUNTIME_API_EXPORT CompositorResource* loadCompositorResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);
 
 
 	//[-------------------------------------------------------]

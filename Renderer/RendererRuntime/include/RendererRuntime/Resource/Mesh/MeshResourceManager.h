@@ -70,7 +70,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT MeshResource* loadMeshResourceByAssetId(Renderer::IRenderer& renderer, AssetId assetId);
+		RENDERERRUNTIME_API_EXPORT MeshResource* loadMeshResourceByAssetId(Renderer::IRenderer& renderer, AssetId assetId, bool reload = false);
 
 
 	//[-------------------------------------------------------]

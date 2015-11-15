@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 
+#include <exception>
+
 
 //[-------------------------------------------------------]
 //[ Preprocessor                                          ]
@@ -40,6 +42,7 @@
 #endif
 
 #include <RendererRuntime/Public/RendererRuntimeInstance.h>
+#include <RendererRuntime/Asset/AssetManager.h>
 
 
 //[-------------------------------------------------------]
@@ -85,6 +88,39 @@ void IApplicationRendererRuntime::onInitialization()
 	{
 		// Create the renderer runtime instance
 		mRendererRuntimeInstance = new RendererRuntime::RendererRuntimeInstance(*renderer);
+
+		{
+			RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+			if (nullptr != rendererRuntime)
+			{
+				// TODO(co) Under construction: Will probably become "mount asset package"
+				// Add used asset package
+			//	rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataMobile/Content/AssetPackage.assets");
+				rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/Content/AssetPackage.assets");
+
+				// TODO(co) First asset hot-reloading test
+				RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
+				if (nullptr != rendererToolkit)
+				{
+					mProject = rendererToolkit->createProject();
+					if (nullptr != mProject)
+					{
+						try
+						{
+							mProject->loadByFilename("../DataSource/Example.project");
+							// TODO(co) Renderer check
+						//	mProject->startupAssetMonitor(*rendererRuntime, "OpenGLES2_100");
+							mProject->startupAssetMonitor(*rendererRuntime, "Direct3D11_50");
+						}
+						catch (const std::exception& e)
+						{
+							const char* text = e.what();
+							text = text;
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -94,6 +130,11 @@ void IApplicationRendererRuntime::onDeinitialization()
 	delete mRendererRuntimeInstance;
 	mRendererRuntimeInstance = nullptr;
 	#ifdef SHARED_LIBRARIES
+		if (nullptr != mProject)
+		{
+			delete mProject;
+			mProject = nullptr;
+		}
 		if (nullptr != mRendererToolkitInstance)
 		{
 			delete mRendererToolkitInstance;
@@ -121,6 +162,10 @@ void IApplicationRendererRuntime::onUpdate()
 IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererName) :
 	IApplicationRenderer(rendererName),
 	mRendererRuntimeInstance(nullptr)
+	#ifdef SHARED_LIBRARIES
+		, mRendererToolkitInstance(nullptr)
+		, mProject(nullptr)
+	#endif
 {
 	// Nothing to do in here
 }

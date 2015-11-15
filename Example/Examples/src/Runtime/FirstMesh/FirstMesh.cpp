@@ -25,9 +25,6 @@
 #include "Runtime/FirstMesh/FirstMesh.h"
 #include "Framework/Color4.h"
 
-#include <RendererToolkit/Public/RendererToolkit.h>
-
-#include <RendererRuntime/Asset/AssetManager.h>
 #include <RendererRuntime/Resource/Mesh/MeshResource.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/Font/FontResourceManager.h>
@@ -51,8 +48,7 @@ FirstMesh::FirstMesh(const char *rendererName) :
 	mEmissiveTextureResource(nullptr),
 	mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
 	mObjectSpaceToViewSpaceMatrixUniformHandle(NULL_HANDLE),
-	mGlobalTimer(0.0f),
-	mProject(nullptr)
+	mGlobalTimer(0.0f)
 {
 	// Nothing to do in here
 }
@@ -77,32 +73,6 @@ void FirstMesh::onInitialization()
 	if (nullptr != rendererRuntime)
 	{
 		Renderer::IRendererPtr renderer(getRenderer());
-
-		// TODO(co) Under construction: Will probably become "mount asset package"
-		// Add used asset package
-	//	rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataMobile/Content/AssetPackage.assets");
-		rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/Content/AssetPackage.assets");
-
-		// TODO(co) First asset hot-reloading test
-		RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
-		if (nullptr != rendererToolkit)
-		{
-			mProject = rendererToolkit->createProject();
-			if (nullptr != mProject)
-			{
-				try
-				{
-					mProject->loadByFilename("../DataSource/Example.project");
-				//	mProject->startupAssetMonitor(*rendererRuntime, "OpenGLES2_100");
-					mProject->startupAssetMonitor(*rendererRuntime, "Direct3D11_50");
-				}
-				catch (const std::exception& e)
-				{
-					const char* text = e.what();
-					text = text;
-				}
-			}
-		}
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
@@ -256,13 +226,6 @@ void FirstMesh::onInitialization()
 
 void FirstMesh::onDeinitialization()
 {
-	// TODO(co) First asset hot-reloading test
-	if (nullptr != mProject)
-	{
-		delete mProject;
-		mProject = nullptr;
-	}
-
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 

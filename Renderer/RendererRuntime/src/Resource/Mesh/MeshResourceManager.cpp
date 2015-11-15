@@ -42,7 +42,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	MeshResource* MeshResourceManager::loadMeshResourceByAssetId(Renderer::IRenderer& renderer, AssetId assetId)
+	MeshResource* MeshResourceManager::loadMeshResourceByAssetId(Renderer::IRenderer& renderer, AssetId assetId, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
@@ -65,22 +65,26 @@ namespace RendererRuntime
 			}
 
 			// Create the resource instance
+			bool load = reload;
 			if (nullptr == meshResource)
 			{
 				meshResource = new MeshResource(assetId);
 				mResources.push_back(meshResource);
+				load = true;
+			}
 
-				{
-					// Prepare the resource loader
-					MeshResourceLoader* meshResourceLoader = static_cast<MeshResourceLoader*>(acquireResourceLoaderInstance(MeshResourceLoader::TYPE_ID));
-					meshResourceLoader->initialize(*asset, *meshResource, renderer);
+			// Load the resource, if required
+			if (load)
+			{
+				// Prepare the resource loader
+				MeshResourceLoader* meshResourceLoader = static_cast<MeshResourceLoader*>(acquireResourceLoaderInstance(MeshResourceLoader::TYPE_ID));
+				meshResourceLoader->initialize(*asset, *meshResource, renderer);
 
-					// Commit resource streamer asset load request
-					ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-					resourceStreamerLoadRequest.resource = meshResource;
-					resourceStreamerLoadRequest.resourceLoader = meshResourceLoader;
-					mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
-				}
+				// Commit resource streamer asset load request
+				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+				resourceStreamerLoadRequest.resource = meshResource;
+				resourceStreamerLoadRequest.resourceLoader = meshResourceLoader;
+				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 			}
 
 			// TODO(co) No raw pointers in here
@@ -102,7 +106,7 @@ namespace RendererRuntime
 		{
 			if (mResources[i]->getResourceId() == assetId)
 			{
-				loadMeshResourceByAssetId(*mRenderer, assetId);
+				loadMeshResourceByAssetId(*mRenderer, assetId, true);
 				break;
 			}
 		}

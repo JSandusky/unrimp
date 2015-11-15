@@ -66,7 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT SceneResource* loadSceneResourceByAssetId(AssetId assetId);
+		RENDERERRUNTIME_API_EXPORT SceneResource* loadSceneResourceByAssetId(AssetId assetId, bool reload = false);
 
 
 	//[-------------------------------------------------------]

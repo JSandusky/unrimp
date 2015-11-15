@@ -36,7 +36,6 @@
 #include "Runtime/FirstFont/FirstFont.h"
 #include "Framework/Color4.h"
 
-#include <RendererRuntime/Asset/AssetManager.h>
 #include <RendererRuntime/Resource/Font/FontResourceManager.h>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -72,10 +71,6 @@ void FirstFont::onInitialization()
 	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
 	if (nullptr != rendererRuntime)
 	{
-		// TODO(co) Under construction: Will probably become "mount asset package"
-		// Add used asset package
-		rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/AssetPackage.assets");
-
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 

@@ -27,7 +27,6 @@
 #include "Advanced/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.h"
 #include "Framework/Color4.h"
 
-#include <RendererRuntime/Asset/AssetManager.h>
 #include <RendererRuntime/Resource/Font/FontResourceManager.h>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -83,10 +82,6 @@ void InstancedCubes::onInitialization()
 			RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
 			if (nullptr != rendererRuntime)
 			{
-				// TODO(co) Under construction: Will probably become "mount asset package"
-				// Add used asset package
-				rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/AssetPackage.assets");
-
 				// Create the font resource
 				mFontResource = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
 			}

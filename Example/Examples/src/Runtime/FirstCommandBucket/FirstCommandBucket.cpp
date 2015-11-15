@@ -38,8 +38,6 @@
 #include "Runtime/FirstCommandBucket/FirstCommandBucket.h"
 #include "Framework/Color4.h"
 
-#include <RendererRuntime/Asset/AssetManager.h>
-
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -77,10 +75,6 @@ void FirstCommandBucket::onInitialization()
 	{
 		// Get the renderer instance (at this point in time we know it must be valid)
 		Renderer::IRendererPtr renderer(getRenderer());
-
-		// TODO(co) Under construction: Will probably become "mount asset package"
-		// Add used asset package
-		rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/AssetPackage.assets");
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)

@@ -367,16 +367,22 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void RendererRuntimeImpl::reloadResourceByAssetId(AssetId assetId) const
 	{
+		// TODO(co) Keep a list of resource manager instances to make such handling simpler
+
 		// Inform the individual resource manager instances
 		mTextureResourceManager->reloadResourceByAssetId(assetId);
 		mShaderResourceManager->reloadResourceByAssetId(assetId);
 		mMaterialResourceManager->reloadResourceByAssetId(assetId);
 		mFontResourceManager->reloadResourceByAssetId(assetId);
 		mMeshResourceManager->reloadResourceByAssetId(assetId);
+		mSceneResourceManager->reloadResourceByAssetId(assetId);
+		mCompositorResourceManager->reloadResourceByAssetId(assetId);
 	}
 
 	void RendererRuntimeImpl::update() const
 	{
+		// TODO(co) Keep a list of resource manager instances to make such handling simpler
+
 		// Inform the individual resource manager instances
 		mResourceStreamer->rendererBackendDispatch();
 		mTextureResourceManager->update();
@@ -384,6 +390,8 @@ namespace RendererRuntime
 		mMaterialResourceManager->update();
 		mFontResourceManager->update();
 		mMeshResourceManager->update();
+		mSceneResourceManager->update();
+		mCompositorResourceManager->update();
 	}
 
 

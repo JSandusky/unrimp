@@ -41,7 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SceneResource* SceneResourceManager::loadSceneResourceByAssetId(AssetId assetId)
+	SceneResource* SceneResourceManager::loadSceneResourceByAssetId(AssetId assetId, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
@@ -62,22 +62,26 @@ namespace RendererRuntime
 			}
 
 			// Create the resource instance
+			bool load = reload;
 			if (nullptr == sceneResource)
 			{
 				sceneResource = new SceneResource(mRendererRuntime, assetId);
 				mResources.push_back(sceneResource);
+				load = true;
+			}
 
-				{
-					// Prepare the resource loader
-					SceneResourceLoader* sceneResourceLoader = static_cast<SceneResourceLoader*>(acquireResourceLoaderInstance(SceneResourceLoader::TYPE_ID));
-					sceneResourceLoader->initialize(*asset, *sceneResource);
+			// Load the resource, if required
+			if (load)
+			{
+				// Prepare the resource loader
+				SceneResourceLoader* sceneResourceLoader = static_cast<SceneResourceLoader*>(acquireResourceLoaderInstance(SceneResourceLoader::TYPE_ID));
+				sceneResourceLoader->initialize(*asset, *sceneResource);
 
-					// Commit resource streamer asset load request
-					ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-					resourceStreamerLoadRequest.resource = sceneResource;
-					resourceStreamerLoadRequest.resourceLoader = sceneResourceLoader;
-					mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
-				}
+				// Commit resource streamer asset load request
+				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+				resourceStreamerLoadRequest.resource = sceneResource;
+				resourceStreamerLoadRequest.resourceLoader = sceneResourceLoader;
+				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 			}
 
 			// TODO(co) No raw pointers in here
@@ -99,7 +103,7 @@ namespace RendererRuntime
 		{
 			if (mResources[i]->getResourceId() == assetId)
 			{
-				loadSceneResourceByAssetId(assetId);
+				loadSceneResourceByAssetId(assetId, true);
 				break;
 			}
 		}

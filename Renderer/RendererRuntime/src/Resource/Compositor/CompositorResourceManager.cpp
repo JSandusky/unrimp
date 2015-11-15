@@ -41,7 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorResource* CompositorResourceManager::loadCompositorResourceByAssetId(AssetId assetId, IResourceListener* resourceListener)
+	CompositorResource* CompositorResourceManager::loadCompositorResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
@@ -62,22 +62,26 @@ namespace RendererRuntime
 			}
 
 			// Create the resource instance
+			bool load = reload;
 			if (nullptr == compositorResource)
 			{
 				compositorResource = new CompositorResource(assetId, resourceListener);
 				mResources.push_back(compositorResource);
+				load = true;
+			}
 
-				{
-					// Prepare the resource loader
-					CompositorResourceLoader* compositorResourceLoader = static_cast<CompositorResourceLoader*>(acquireResourceLoaderInstance(CompositorResourceLoader::TYPE_ID));
-					compositorResourceLoader->initialize(*asset, *compositorResource);
+			// Load the resource, if required
+			if (load)
+			{
+				// Prepare the resource loader
+				CompositorResourceLoader* compositorResourceLoader = static_cast<CompositorResourceLoader*>(acquireResourceLoaderInstance(CompositorResourceLoader::TYPE_ID));
+				compositorResourceLoader->initialize(*asset, *compositorResource);
 
-					// Commit resource streamer asset load request
-					ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-					resourceStreamerLoadRequest.resource = compositorResource;
-					resourceStreamerLoadRequest.resourceLoader = compositorResourceLoader;
-					mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
-				}
+				// Commit resource streamer asset load request
+				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+				resourceStreamerLoadRequest.resource = compositorResource;
+				resourceStreamerLoadRequest.resourceLoader = compositorResourceLoader;
+				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 			}
 
 			// TODO(co) No raw pointers in here
@@ -99,7 +103,7 @@ namespace RendererRuntime
 		{
 			if (mResources[i]->getResourceId() == assetId)
 			{
-				loadCompositorResourceByAssetId(assetId);
+				loadCompositorResourceByAssetId(assetId, nullptr, true);
 				break;
 			}
 		}
