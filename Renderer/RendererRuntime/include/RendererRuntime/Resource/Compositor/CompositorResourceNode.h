@@ -19,9 +19,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/Clear/CompositorPassClear.h"
+#include "RendererRuntime/Core/NonCopyable.h"
 
 
 //[-------------------------------------------------------]
@@ -32,17 +38,23 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	CompositorPassClear::CompositorPassClear()
+	class CompositorResourceNode : protected NonCopyable
 	{
-		// Nothing here
-	}
 
-	CompositorPassClear::~CompositorPassClear()
-	{
-		// Nothing here
-	}
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		CompositorResourceNode();
+		virtual ~CompositorResourceNode();
+		CompositorResourceNode(const CompositorResourceNode&) = delete;
+		CompositorResourceNode& operator=(const CompositorResourceNode&) = delete;
+
+
+	};
 
 
 //[-------------------------------------------------------]

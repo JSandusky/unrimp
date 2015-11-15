@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/CompositorPass.h"
+#include "RendererRuntime/Resource/Compositor/Pass/CompositorResourcePass.h"
 
 
 //[-------------------------------------------------------]
@@ -40,7 +40,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorPassClear : public CompositorPass
+	class CompositorResourcePassQuad : public CompositorResourcePass
 	{
 
 
@@ -48,10 +48,10 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorPassClear();
-		virtual ~CompositorPassClear();
-		CompositorPassClear(const CompositorPassClear&) = delete;
-		CompositorPassClear& operator=(const CompositorPassClear&) = delete;
+		CompositorResourcePassQuad();
+		virtual ~CompositorResourcePassQuad();
+		CompositorResourcePassQuad(const CompositorResourcePassQuad&) = delete;
+		CompositorResourcePassQuad& operator=(const CompositorResourcePassQuad&) = delete;
 
 
 	};

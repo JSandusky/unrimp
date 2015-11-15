@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/Scene/CompositorPassScene.h"
+#include "RendererRuntime/Resource/Compositor/CompositorInstanceChannel.h"
 
 
 //[-------------------------------------------------------]
@@ -34,12 +34,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	CompositorPassScene::CompositorPassScene()
+	CompositorInstanceChannel::CompositorInstanceChannel()
 	{
 		// Nothing here
 	}
 
-	CompositorPassScene::~CompositorPassScene()
+	CompositorInstanceChannel::~CompositorInstanceChannel()
 	{
 		// Nothing here
 	}

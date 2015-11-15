@@ -6,13 +6,34 @@
 	},
 	"CompositorAsset":
 	{
-		"Shader": "3",
-		"Properties":
+		"Nodes":
 		{
-			"DiffuseMap": "4",
-			"EmissiveMap": "5",
-			"NormalMap": "6",
-			"SpecularMap": "7"
+			"FirstCompositorNode":
+			{
+				"InputChannels":
+				{
+					"0": "InputRenderTarget",
+					"1": "OutputRenderTarget"
+				},
+				"Targets":
+				{
+					"OutputRenderTarget":
+					{
+						"Passes":
+						{
+							"Clear":
+							{
+								"Buffers": "Color"
+							}
+						}
+					}
+				},
+				"OutputChannels":
+				{
+					"0": "OutputRenderTarget",
+					"1": "InputRenderTarget"
+				}
+			}
 		}
 	}
 }

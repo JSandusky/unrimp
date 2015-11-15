@@ -19,9 +19,24 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorPassQuad.h"
+#include "RendererRuntime/Resource/Compositor/Pass/CompositorInstancePass.h"
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class CompositorResourcePassScene;
+}
 
 
 //[-------------------------------------------------------]
@@ -32,17 +47,30 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	CompositorPassQuad::CompositorPassQuad()
+	class CompositorInstancePassScene : public CompositorInstancePass
 	{
-		// Nothing here
-	}
 
-	CompositorPassQuad::~CompositorPassQuad()
-	{
-		// Nothing here
-	}
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::CompositorInstancePass methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void execute() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		explicit CompositorInstancePassScene(const CompositorResourcePassScene& compositorResourcePassScene);
+		virtual ~CompositorInstancePassScene();
+		CompositorInstancePassScene(const CompositorInstancePassScene&) = delete;
+		CompositorInstancePassScene& operator=(const CompositorInstancePassScene&) = delete;
+
+
+	};
 
 
 //[-------------------------------------------------------]

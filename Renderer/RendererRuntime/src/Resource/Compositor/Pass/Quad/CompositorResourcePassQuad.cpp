@@ -19,15 +19,9 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorResourcePassQuad.h"
 
 
 //[-------------------------------------------------------]
@@ -38,23 +32,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class CompositorPass : protected NonCopyable
-	{
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	protected:
-		CompositorPass();
-		virtual ~CompositorPass();
-		CompositorPass(const CompositorPass&) = delete;
-		CompositorPass& operator=(const CompositorPass&) = delete;
+	CompositorResourcePassQuad::CompositorResourcePassQuad()
+	{
+		// Nothing here
+	}
 
-
-	};
+	CompositorResourcePassQuad::~CompositorResourcePassQuad()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]

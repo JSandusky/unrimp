@@ -27,23 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Asset/Asset.h"
-#include "RendererRuntime/Resource/IResourceListener.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderTarget;
-}
-namespace RendererRuntime
-{
-	class IRendererRuntime;
-	class CompositorResource;
-}
+#include "RendererRuntime/Resource/Compositor/Pass/CompositorResourcePass.h"
 
 
 //[-------------------------------------------------------]
@@ -56,41 +40,18 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorInstance : protected IResourceListener
+	class CompositorResourcePassClear : public CompositorResourcePass
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		RENDERERRUNTIME_API_EXPORT CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId, Renderer::IRenderTarget& renderTarget);
-		RENDERERRUNTIME_API_EXPORT virtual ~CompositorInstance();
-		RENDERERRUNTIME_API_EXPORT void execute();
-
-
-	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void onLoadingStateChange(IResource::LoadingState::Enum loadingState) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		CompositorInstance() = delete;
-		CompositorInstance(const CompositorInstance&) = delete;
-		CompositorInstance& operator=(const CompositorInstance&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		Renderer::IRenderTarget& mRenderTarget;
-		CompositorResource*		 mCompositorResource;
+		CompositorResourcePassClear();
+		virtual ~CompositorResourcePassClear();
+		CompositorResourcePassClear(const CompositorResourcePassClear&) = delete;
+		CompositorResourcePassClear& operator=(const CompositorResourcePassClear&) = delete;
 
 
 	};

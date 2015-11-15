@@ -19,15 +19,9 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/CompositorPass.h"
+#include "RendererRuntime/Resource/Compositor/Pass/CompositorResourcePass.h"
 
 
 //[-------------------------------------------------------]
@@ -38,23 +32,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class CompositorPassQuad : public CompositorPass
-	{
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	protected:
-		CompositorPassQuad();
-		virtual ~CompositorPassQuad();
-		CompositorPassQuad(const CompositorPassQuad&) = delete;
-		CompositorPassQuad& operator=(const CompositorPassQuad&) = delete;
+	CompositorResourcePass::CompositorResourcePass()
+	{
+		// Nothing here
+	}
 
-
-	};
+	CompositorResourcePass::~CompositorResourcePass()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]

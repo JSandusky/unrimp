@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorNode.h"
+#include "RendererRuntime/Resource/Compositor/Pass/CompositorInstancePass.h"
 
 
 //[-------------------------------------------------------]
@@ -34,12 +34,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	CompositorNode::CompositorNode()
+	CompositorInstancePass::CompositorInstancePass(const CompositorResourcePass& compositorResourcePass) :
+		mCompositorResourcePass(compositorResourcePass)
 	{
 		// Nothing here
 	}
 
-	CompositorNode::~CompositorNode()
+	CompositorInstancePass::~CompositorInstancePass()
 	{
 		// Nothing here
 	}

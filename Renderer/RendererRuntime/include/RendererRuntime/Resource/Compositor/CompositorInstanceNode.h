@@ -27,22 +27,15 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Asset/Asset.h"
-#include "RendererRuntime/Resource/IResourceListener.h"
+#include "RendererRuntime/Core/NonCopyable.h"
 
 
 //[-------------------------------------------------------]
-//[ Forward declarations                                  ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderTarget;
-}
 namespace RendererRuntime
 {
-	class IRendererRuntime;
-	class CompositorResource;
+	class CompositorResourceNode;
 }
 
 
@@ -56,41 +49,25 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorInstance : protected IResourceListener
+	class CompositorInstanceNode : protected NonCopyable
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		RENDERERRUNTIME_API_EXPORT CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId, Renderer::IRenderTarget& renderTarget);
-		RENDERERRUNTIME_API_EXPORT virtual ~CompositorInstance();
-		RENDERERRUNTIME_API_EXPORT void execute();
-
-
-	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void onLoadingStateChange(IResource::LoadingState::Enum loadingState) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		CompositorInstance() = delete;
-		CompositorInstance(const CompositorInstance&) = delete;
-		CompositorInstance& operator=(const CompositorInstance&) = delete;
+		explicit CompositorInstanceNode(const CompositorResourceNode& compositorResourceNode);
+		virtual ~CompositorInstanceNode();
+		CompositorInstanceNode(const CompositorInstanceNode&) = delete;
+		CompositorInstanceNode& operator=(const CompositorInstanceNode&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IRenderTarget& mRenderTarget;
-		CompositorResource*		 mCompositorResource;
+		const CompositorResourceNode& mCompositorResourceNode;
 
 
 	};

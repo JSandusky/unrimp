@@ -19,9 +19,24 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/CompositorPass.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class CompositorResourcePass;
+}
 
 
 //[-------------------------------------------------------]
@@ -32,17 +47,37 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	CompositorPass::CompositorPass()
+	class CompositorInstancePass : protected NonCopyable
 	{
-		// Nothing here
-	}
 
-	CompositorPass::~CompositorPass()
-	{
-		// Nothing here
-	}
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::CompositorInstancePass methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void execute() = 0;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		explicit CompositorInstancePass(const CompositorResourcePass& compositorResourcePass);
+		virtual ~CompositorInstancePass();
+		CompositorInstancePass(const CompositorInstancePass&) = delete;
+		CompositorInstancePass& operator=(const CompositorInstancePass&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		const CompositorResourcePass& mCompositorResourcePass;
+
+
+	};
 
 
 //[-------------------------------------------------------]

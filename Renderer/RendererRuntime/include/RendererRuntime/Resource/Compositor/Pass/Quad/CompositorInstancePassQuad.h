@@ -27,7 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/CompositorPass.h"
+#include "RendererRuntime/Resource/Compositor/Pass/CompositorInstancePass.h"
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class CompositorResourcePassQuad;
+}
 
 
 //[-------------------------------------------------------]
@@ -40,18 +49,25 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorPassScene : public CompositorPass
+	class CompositorInstancePassQuad : public CompositorInstancePass
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::CompositorInstancePass methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void execute() override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorPassScene();
-		virtual ~CompositorPassScene();
-		CompositorPassScene(const CompositorPassScene&) = delete;
-		CompositorPassScene& operator=(const CompositorPassScene&) = delete;
+		explicit CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad);
+		virtual ~CompositorInstancePassQuad();
+		CompositorInstancePassQuad(const CompositorInstancePassQuad&) = delete;
+		CompositorInstancePassQuad& operator=(const CompositorInstancePassQuad&) = delete;
 
 
 	};

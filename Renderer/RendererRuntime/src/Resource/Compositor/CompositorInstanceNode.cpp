@@ -19,15 +19,9 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Resource/Compositor/CompositorInstanceNode.h"
 
 
 //[-------------------------------------------------------]
@@ -38,23 +32,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class CompositorNode : protected NonCopyable
-	{
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	protected:
-		CompositorNode();
-		virtual ~CompositorNode();
-		CompositorNode(const CompositorNode&) = delete;
-		CompositorNode& operator=(const CompositorNode&) = delete;
+	CompositorInstanceNode::CompositorInstanceNode(const CompositorResourceNode& compositorResourceNode) :
+		mCompositorResourceNode(compositorResourceNode)
+	{
+		// Nothing here
+	}
 
-
-	};
+	CompositorInstanceNode::~CompositorInstanceNode()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]

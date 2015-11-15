@@ -19,31 +19,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Asset/Asset.h"
-#include "RendererRuntime/Resource/IResourceListener.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderTarget;
-}
-namespace RendererRuntime
-{
-	class IRendererRuntime;
-	class CompositorResource;
-}
+#include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorInstancePassQuad.h"
+#include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorResourcePassQuad.h"
 
 
 //[-------------------------------------------------------]
@@ -54,46 +33,27 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Protected virtual RendererRuntime::CompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	class CompositorInstance : protected IResourceListener
+	void CompositorInstancePassQuad::execute()
 	{
+		// TODO(co)
+	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	public:
-		RENDERERRUNTIME_API_EXPORT CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId, Renderer::IRenderTarget& renderTarget);
-		RENDERERRUNTIME_API_EXPORT virtual ~CompositorInstance();
-		RENDERERRUNTIME_API_EXPORT void execute();
+	CompositorInstancePassQuad::CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad) :
+		CompositorInstancePass(compositorResourcePassQuad)
+	{
+		// Nothing here
+	}
 
-
-	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::IResourceListener methods ]
-	//[-------------------------------------------------------]
-	protected:
-		virtual void onLoadingStateChange(IResource::LoadingState::Enum loadingState) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		CompositorInstance() = delete;
-		CompositorInstance(const CompositorInstance&) = delete;
-		CompositorInstance& operator=(const CompositorInstance&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		Renderer::IRenderTarget& mRenderTarget;
-		CompositorResource*		 mCompositorResource;
-
-
-	};
+	CompositorInstancePassQuad::~CompositorInstancePassQuad()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]
