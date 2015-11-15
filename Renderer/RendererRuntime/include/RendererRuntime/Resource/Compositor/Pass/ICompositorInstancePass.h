@@ -27,7 +27,18 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.h"
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class CompositorInstanceNode;
+	class ICompositorResourcePass;
+}
 
 
 //[-------------------------------------------------------]
@@ -40,38 +51,47 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorResourcePassQuad : public ICompositorResourcePass
+	class ICompositorInstancePass : protected NonCopyable
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Friends methods                                       ]
 	//[-------------------------------------------------------]
-		friend class CompositorPassFactory;	// The only one allowed to create instances of this class
+		friend class CompositorInstanceNode;	// Needs to execute compositor node instances
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		static const CompositorPassTypeId TYPE_ID;
+		RENDERERRUNTIME_API_EXPORT const ICompositorResourcePass& getCompositorResourcePass() const;
+		RENDERERRUNTIME_API_EXPORT const CompositorInstanceNode& getCompositorInstanceNode() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	public:
-		virtual CompositorPassTypeId getTypeId() const override;
+	protected:
+		virtual void execute() = 0;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorResourcePassQuad();
-		virtual ~CompositorResourcePassQuad();
-		CompositorResourcePassQuad(const CompositorResourcePassQuad&) = delete;
-		CompositorResourcePassQuad& operator=(const CompositorResourcePassQuad&) = delete;
+		RENDERERRUNTIME_API_EXPORT ICompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorInstanceNode& compositorInstanceNode);
+		RENDERERRUNTIME_API_EXPORT virtual ~ICompositorInstancePass();
+		ICompositorInstancePass(const ICompositorInstancePass&) = delete;
+		ICompositorInstancePass& operator=(const ICompositorInstancePass&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		const ICompositorResourcePass& mCompositorResourcePass;
+		const CompositorInstanceNode&  mCompositorInstanceNode;
 
 
 	};

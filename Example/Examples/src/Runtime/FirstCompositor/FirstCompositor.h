@@ -29,12 +29,11 @@
 //[-------------------------------------------------------]
 #include "Framework/IApplicationRendererRuntime.h"
 
-#include <RendererRuntime/Resource/Font/FontResource.h>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+class CompositorPassFactoryFirst;
 namespace RendererRuntime
 {
 	class CompositorInstance;
@@ -51,9 +50,6 @@ namespace RendererRuntime
 *  @remarks
 *    Demonstrates:
 *    - Compositor
-*
-*  @todo
-*    - TODO(co) Under construction
 */
 class FirstCompositor : public IApplicationRendererRuntime
 {
@@ -94,7 +90,7 @@ public:
 //[-------------------------------------------------------]
 private:
 	RendererRuntime::CompositorInstance* mCompositorInstance;
-	RendererRuntime::FontResource*		 mFontResource;	///< Font resource, can be a null pointer
+	CompositorPassFactoryFirst*			 mCompositorPassFactoryFirst;
 
 
 };

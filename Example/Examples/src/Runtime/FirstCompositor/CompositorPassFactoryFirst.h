@@ -19,44 +19,46 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorInstancePassQuad.h"
-#include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorResourcePassQuad.h"
+#include <RendererRuntime/Resource/Compositor/Pass/CompositorPassFactory.h>
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Classes                                               ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+class CompositorPassFactoryFirst : public RendererRuntime::CompositorPassFactory
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
-	//[-------------------------------------------------------]
-	void CompositorInstancePassQuad::execute()
-	{
-		// TODO(co)
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	CompositorInstancePassQuad::CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorInstanceNode& compositorInstanceNode) :
-		ICompositorInstancePass(compositorResourcePassQuad, compositorInstanceNode)
-	{
-		// Nothing here
-	}
-
-	CompositorInstancePassQuad::~CompositorInstancePassQuad()
-	{
-		// Nothing here
-	}
+//[-------------------------------------------------------]
+//[ Public methods                                        ]
+//[-------------------------------------------------------]
+public:
+	CompositorPassFactoryFirst();
+	virtual ~CompositorPassFactoryFirst();
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Protected virtual RendererRuntime::CompositorPassFactory methods ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+protected:
+	virtual RendererRuntime::ICompositorResourcePass* createCompositorResourcePass(RendererRuntime::CompositorPassTypeId compositorPassTypeId) override;
+	virtual RendererRuntime::ICompositorInstancePass* createCompositorInstancePass(const RendererRuntime::ICompositorResourcePass& compositorResourcePass, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode) override;
+
+
+//[-------------------------------------------------------]
+//[ Protected methods                                     ]
+//[-------------------------------------------------------]
+protected:
+	CompositorPassFactoryFirst(const CompositorPassFactoryFirst&) = delete;
+	CompositorPassFactoryFirst& operator=(const CompositorPassFactoryFirst&) = delete;
+
+
+};

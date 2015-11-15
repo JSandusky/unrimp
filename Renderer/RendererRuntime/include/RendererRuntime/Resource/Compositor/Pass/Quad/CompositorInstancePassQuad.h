@@ -27,11 +27,11 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/CompositorInstancePass.h"
+#include "RendererRuntime/Resource/Compositor/Pass/ICompositorInstancePass.h"
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
@@ -49,12 +49,18 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorInstancePassQuad : public CompositorInstancePass
+	class CompositorInstancePassQuad : public ICompositorInstancePass
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::CompositorInstancePass methods ]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class CompositorPassFactory;	// The only one allowed to create instances of this class
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	protected:
 		virtual void execute() override;
@@ -64,7 +70,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		explicit CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad);
+		CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorInstanceNode& compositorInstanceNode);
 		virtual ~CompositorInstancePassQuad();
 		CompositorInstancePassQuad(const CompositorInstancePassQuad&) = delete;
 		CompositorInstancePassQuad& operator=(const CompositorInstancePassQuad&) = delete;

@@ -349,6 +349,9 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D9.h" />
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_Null.h" />
+    <ClInclude Include="src\Runtime\FirstCompositor\CompositorInstancePassFirst.h" />
+    <ClInclude Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.h" />
+    <ClInclude Include="src\Runtime\FirstCompositor\CompositorResourcePassFirst.h" />
     <ClInclude Include="src\Runtime\FirstCompositor\FirstCompositor.h" />
     <ClInclude Include="src\Runtime\FirstFont\FirstFont.h" />
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh.h" />
@@ -421,6 +424,9 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Runtime\FirstCommandBucket\FirstCommandBucket.cpp" />
+    <ClCompile Include="src\Runtime\FirstCompositor\CompositorInstancePassFirst.cpp" />
+    <ClCompile Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.cpp" />
+    <ClCompile Include="src\Runtime\FirstCompositor\CompositorResourcePassFirst.cpp" />
     <ClCompile Include="src\Runtime\FirstCompositor\FirstCompositor.cpp" />
     <ClCompile Include="src\Runtime\FirstFont\FirstFont.cpp" />
     <ClCompile Include="src\Runtime\FirstMesh\FirstMesh.cpp" />

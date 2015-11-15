@@ -477,6 +477,15 @@
     <ClInclude Include="src\Runtime\FirstScene\FirstScene.h">
       <Filter>Runtime\FirstScene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Runtime\FirstCompositor\CompositorInstancePassFirst.h">
+      <Filter>Runtime\FirstCompositor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstCompositor\CompositorResourcePassFirst.h">
+      <Filter>Runtime\FirstCompositor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.h">
+      <Filter>Runtime\FirstCompositor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -590,6 +599,15 @@
     </ClCompile>
     <ClCompile Include="src\Runtime\FirstScene\FirstScene.cpp">
       <Filter>Runtime\FirstScene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Runtime\FirstCompositor\CompositorResourcePassFirst.cpp">
+      <Filter>Runtime\FirstCompositor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Runtime\FirstCompositor\CompositorInstancePassFirst.cpp">
+      <Filter>Runtime\FirstCompositor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.cpp">
+      <Filter>Runtime\FirstCompositor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

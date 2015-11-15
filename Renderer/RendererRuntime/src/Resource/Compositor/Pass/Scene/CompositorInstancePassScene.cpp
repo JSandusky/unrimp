@@ -33,7 +33,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::CompositorInstancePass methods ]
+	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	void CompositorInstancePassScene::execute()
 	{
@@ -44,8 +44,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	CompositorInstancePassScene::CompositorInstancePassScene(const CompositorResourcePassScene& compositorResourcePassScene) :
-		CompositorInstancePass(compositorResourcePassScene)
+	CompositorInstancePassScene::CompositorInstancePassScene(const CompositorResourcePassScene& compositorResourcePassScene, const CompositorInstanceNode& compositorInstanceNode) :
+		ICompositorInstancePass(compositorResourcePassScene, compositorInstanceNode)
 	{
 		// Nothing here
 	}

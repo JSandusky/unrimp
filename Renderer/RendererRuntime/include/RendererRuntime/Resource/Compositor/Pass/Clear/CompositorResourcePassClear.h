@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/CompositorResourcePass.h"
+#include "RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.h"
 
 
 //[-------------------------------------------------------]
@@ -40,8 +40,28 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorResourcePassClear : public CompositorResourcePass
+	class CompositorResourcePassClear : public ICompositorResourcePass
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class CompositorPassFactory;	// The only one allowed to create instances of this class
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const CompositorPassTypeId TYPE_ID;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual CompositorPassTypeId getTypeId() const override;
 
 
 	//[-------------------------------------------------------]

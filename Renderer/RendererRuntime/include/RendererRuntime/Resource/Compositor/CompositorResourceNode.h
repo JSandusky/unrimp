@@ -45,6 +45,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Friends methods                                       ]
+	//[-------------------------------------------------------]
+		friend class CompositorInstance;	// TODO(co) Just a first test, remove this
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:

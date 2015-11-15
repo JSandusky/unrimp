@@ -31,6 +31,8 @@
 #include "RendererRuntime/Asset/Asset.h"
 #include "RendererRuntime/Resource/IResourceListener.h"
 
+#include <vector>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -43,6 +45,7 @@ namespace RendererRuntime
 {
 	class IRendererRuntime;
 	class CompositorResource;
+	class CompositorInstanceNode;
 }
 
 
@@ -66,6 +69,7 @@ namespace RendererRuntime
 	public:
 		RENDERERRUNTIME_API_EXPORT CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId, Renderer::IRenderTarget& renderTarget);
 		RENDERERRUNTIME_API_EXPORT virtual ~CompositorInstance();
+		RENDERERRUNTIME_API_EXPORT const IRendererRuntime& getRendererRuntime() const;
 		RENDERERRUNTIME_API_EXPORT void execute();
 
 
@@ -86,11 +90,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<CompositorInstanceNode*> CompositorInstanceNodes;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		IRendererRuntime&		 mRendererRuntime;
 		Renderer::IRenderTarget& mRenderTarget;
 		CompositorResource*		 mCompositorResource;
+		CompositorInstanceNodes	 mSequentialCompositorInstanceNodes;
 
 
 	};

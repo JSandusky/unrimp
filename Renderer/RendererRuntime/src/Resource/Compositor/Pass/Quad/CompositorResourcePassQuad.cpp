@@ -32,6 +32,21 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const CompositorPassTypeId CompositorResourcePassQuad::TYPE_ID("Quad");
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[-------------------------------------------------------]
+	CompositorPassTypeId CompositorResourcePassQuad::getTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	CompositorResourcePassQuad::CompositorResourcePassQuad()

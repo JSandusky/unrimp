@@ -23,8 +23,6 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 
-#include <RendererRuntime/Resource/Font/FontResourceManager.h>
-
 
 //[-------------------------------------------------------]
 //[ Preprocessor                                          ]
@@ -36,12 +34,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Runtime/FirstCompositor/FirstCompositor.h"
-#include "Framework/Color4.h"
+#include "Runtime/FirstCompositor/CompositorPassFactoryFirst.h"
 
 #include <RendererRuntime/Resource/Compositor/CompositorInstance.h>
-
-#include <glm/gtc/type_ptr.hpp> 
-#include <glm/gtc/matrix_transform.hpp>
+#include <RendererRuntime/Resource/Compositor/CompositorResourceManager.h>
 
 
 //[-------------------------------------------------------]
@@ -50,7 +46,7 @@
 FirstCompositor::FirstCompositor(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
 	mCompositorInstance(nullptr),
-	mFontResource(nullptr)
+	mCompositorPassFactoryFirst(nullptr)
 {
 	// Nothing to do in here
 }
@@ -81,13 +77,14 @@ void FirstCompositor::onInitialization()
 			Renderer::ISwapChainPtr swapChain(getRenderer()->getMainSwapChain());
 			if (nullptr != swapChain)
 			{
+				// Create and set the compositor pass factors
+				mCompositorPassFactoryFirst = new CompositorPassFactoryFirst();
+				rendererRuntime->getCompositorResourceManager().setCompositorPassFactory(mCompositorPassFactoryFirst);
+
 				// Create the compositor instance
 				mCompositorInstance = new RendererRuntime::CompositorInstance(*rendererRuntime, "Example/Compositor/Default/FirstCompositor", *swapChain);
 			}
 		}
-
-		// Create the font resource
-		mFontResource = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -101,7 +98,14 @@ void FirstCompositor::onDeinitialization()
 
 	// TODO(co) Implement decent resource handling
 	delete mCompositorInstance;
-	mFontResource = nullptr;
+	mCompositorInstance = nullptr;
+	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+	if (nullptr != rendererRuntime)
+	{
+		rendererRuntime->getCompositorResourceManager().setCompositorPassFactory(nullptr);
+	}
+	delete mCompositorPassFactoryFirst;
+	mCompositorPassFactoryFirst = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -118,15 +122,6 @@ void FirstCompositor::onDrawRequest()
 		// Execute the compositor instance
 		mCompositorInstance->execute();
 	}
-
-	// TODO(co)
-	/*
-		// Draw text
-		if (nullptr != mFontResource)
-		{
-			mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
-		}
-		*/
 }
 
 

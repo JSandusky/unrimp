@@ -32,6 +32,21 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const CompositorPassTypeId CompositorResourcePassScene::TYPE_ID("Scene");
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[-------------------------------------------------------]
+	CompositorPassTypeId CompositorResourcePassScene::getTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	CompositorResourcePassScene::CompositorResourcePassScene()

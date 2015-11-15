@@ -21,31 +21,51 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/CompositorResourcePass.h"
+#include "PrecompiledHeader.h"
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Preprocessor                                          ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+#ifndef RENDERER_NO_RUNTIME
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "Runtime/FirstCompositor/CompositorResourcePassFirst.h"
+
+
+//[-------------------------------------------------------]
+//[ Public definitions                                    ]
+//[-------------------------------------------------------]
+const RendererRuntime::CompositorPassTypeId CompositorResourcePassFirst::TYPE_ID("First");
+
+
+//[-------------------------------------------------------]
+//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+//[-------------------------------------------------------]
+RendererRuntime::CompositorPassTypeId CompositorResourcePassFirst::getTypeId() const
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	CompositorResourcePass::CompositorResourcePass()
-	{
-		// Nothing here
-	}
-
-	CompositorResourcePass::~CompositorResourcePass()
-	{
-		// Nothing here
-	}
+	return TYPE_ID;
+}
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Protected methods                                     ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+CompositorResourcePassFirst::CompositorResourcePassFirst()
+{
+	// Nothing here
+}
+
+CompositorResourcePassFirst::~CompositorResourcePassFirst()
+{
+	// Nothing here
+}
+
+
+//[-------------------------------------------------------]
+//[ Preprocessor                                          ]
+//[-------------------------------------------------------]
+#endif // RENDERER_NO_RUNTIME

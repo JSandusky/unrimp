@@ -41,6 +41,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	ICompositorPassFactory* CompositorResourceManager::getCompositorPassFactory() const
+	{
+		return mCompositorPassFactory;
+	}
+
+	void CompositorResourceManager::setCompositorPassFactory(ICompositorPassFactory* compositorPassFactory)
+	{
+		mCompositorPassFactory = compositorPassFactory;
+	}
+
 	CompositorResource* CompositorResourceManager::loadCompositorResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
@@ -119,7 +129,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	CompositorResourceManager::CompositorResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+		mRendererRuntime(rendererRuntime),
+		mCompositorPassFactory(nullptr)
 	{
 		// Nothing in here
 	}

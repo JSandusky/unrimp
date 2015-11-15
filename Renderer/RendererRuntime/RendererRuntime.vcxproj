@@ -77,8 +77,10 @@
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorInstancePassClear.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorResourcePassClear.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\CompositorInstancePass.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\CompositorResourcePass.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\CompositorPassFactory.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorInstancePass.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorPassFactory.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorResourcePass.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Quad\CompositorInstancePassQuad.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Quad\CompositorResourcePassQuad.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Scene\CompositorInstancePassScene.h" />
@@ -143,8 +145,10 @@
     <ClCompile Include="src\Resource\Compositor\Loader\CompositorResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Compositor\Pass\Clear\CompositorInstancePassClear.cpp" />
     <ClCompile Include="src\Resource\Compositor\Pass\Clear\CompositorResourcePassClear.cpp" />
-    <ClCompile Include="src\Resource\Compositor\Pass\CompositorInstancePass.cpp" />
-    <ClCompile Include="src\Resource\Compositor\Pass\CompositorResourcePass.cpp" />
+    <ClCompile Include="src\Resource\Compositor\Pass\CompositorPassFactory.cpp" />
+    <ClCompile Include="src\Resource\Compositor\Pass\ICompositorInstancePass.cpp" />
+    <ClCompile Include="src\Resource\Compositor\Pass\ICompositorPassFactory.cpp" />
+    <ClCompile Include="src\Resource\Compositor\Pass\ICompositorResourcePass.cpp" />
     <ClCompile Include="src\Resource\Compositor\Pass\Quad\CompositorInstancePassQuad.cpp" />
     <ClCompile Include="src\Resource\Compositor\Pass\Quad\CompositorResourcePassQuad.cpp" />
     <ClCompile Include="src\Resource\Compositor\Pass\Scene\CompositorInstancePassScene.cpp" />

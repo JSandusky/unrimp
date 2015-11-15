@@ -27,15 +27,20 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/NonCopyable.h"
+
+#include <vector>
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class CompositorInstance;
 	class CompositorResourceNode;
+	class ICompositorInstancePass;
 }
 
 
@@ -54,13 +59,35 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Friends methods                                       ]
+	//[-------------------------------------------------------]
+		friend class CompositorInstance;	// Needs to create and execute compositor node instances
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		RENDERERRUNTIME_API_EXPORT const CompositorResourceNode& getCompositorResourceNode() const;
+		RENDERERRUNTIME_API_EXPORT const CompositorInstance& getCompositorInstance() const;
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		explicit CompositorInstanceNode(const CompositorResourceNode& compositorResourceNode);
+		CompositorInstanceNode(const CompositorResourceNode& compositorResourceNode, const CompositorInstance& compositorInstance);
 		virtual ~CompositorInstanceNode();
 		CompositorInstanceNode(const CompositorInstanceNode&) = delete;
 		CompositorInstanceNode& operator=(const CompositorInstanceNode&) = delete;
+		void execute();
+
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<ICompositorInstancePass*> CompositorInstancePasses;
 
 
 	//[-------------------------------------------------------]
@@ -68,6 +95,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		const CompositorResourceNode& mCompositorResourceNode;
+		const CompositorInstance&	  mCompositorInstance;
+		CompositorInstancePasses	  mCompositorInstancePasses;
 
 
 	};

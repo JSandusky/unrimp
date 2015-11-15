@@ -19,68 +19,61 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
+//[ Includes                                              ]
 //[-------------------------------------------------------]
-#pragma once
+#include "PrecompiledHeader.h"
+
+
+//[-------------------------------------------------------]
+//[ Preprocessor                                          ]
+//[-------------------------------------------------------]
+#ifndef RENDERER_NO_RUNTIME
 
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "Runtime/FirstCompositor/CompositorInstancePassFirst.h"
+#include "Runtime/FirstCompositor/CompositorResourcePassFirst.h"
+#include "Framework/Color4.h"
+
+#include <RendererRuntime/IRendererRuntime.h>
+#include <RendererRuntime/Resource/Font/FontResourceManager.h>
+#include <RendererRuntime/Resource/Compositor/CompositorInstance.h>
+#include <RendererRuntime/Resource/Compositor/CompositorInstanceNode.h>
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+void CompositorInstancePassFirst::execute()
 {
-	class CompositorResourcePass;
+	// Draw text
+	if (nullptr != mFontResource)
+	{
+		mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
+	}
 }
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Protected methods                                     ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+CompositorInstancePassFirst::CompositorInstancePassFirst(const CompositorResourcePassFirst& compositorResourcePassFirst, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode) :
+	ICompositorInstancePass(compositorResourcePassFirst, compositorInstanceNode),
+	mFontResource(nullptr)
 {
+	// Create the font resource
+	mFontResource = getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
+}
 
-
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class CompositorInstancePass : protected NonCopyable
-	{
-
-
-	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::CompositorInstancePass methods ]
-	//[-------------------------------------------------------]
-	protected:
-		virtual void execute() = 0;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		explicit CompositorInstancePass(const CompositorResourcePass& compositorResourcePass);
-		virtual ~CompositorInstancePass();
-		CompositorInstancePass(const CompositorInstancePass&) = delete;
-		CompositorInstancePass& operator=(const CompositorInstancePass&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		const CompositorResourcePass& mCompositorResourcePass;
-
-
-	};
+CompositorInstancePassFirst::~CompositorInstancePassFirst()
+{
+	// Nothing here
+}
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Preprocessor                                          ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+#endif // RENDERER_NO_RUNTIME

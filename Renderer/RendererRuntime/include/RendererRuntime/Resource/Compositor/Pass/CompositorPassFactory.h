@@ -19,10 +19,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorInstancePassQuad.h"
-#include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorResourcePassQuad.h"
+#include "RendererRuntime/Resource/Compositor/Pass/ICompositorPassFactory.h"
 
 
 //[-------------------------------------------------------]
@@ -33,27 +38,31 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassQuad::execute()
+	class CompositorPassFactory : public ICompositorPassFactory
 	{
-		// TODO(co)
-	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::CompositorPassFactory methods ]
+	//[-------------------------------------------------------]
+	protected:
+		RENDERERRUNTIME_API_EXPORT virtual ICompositorResourcePass* createCompositorResourcePass(CompositorPassTypeId compositorPassTypeId) override;
+		RENDERERRUNTIME_API_EXPORT virtual ICompositorInstancePass* createCompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorInstanceNode& compositorInstanceNode) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	CompositorInstancePassQuad::CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorInstanceNode& compositorInstanceNode) :
-		ICompositorInstancePass(compositorResourcePassQuad, compositorInstanceNode)
-	{
-		// Nothing here
-	}
+	protected:
+		RENDERERRUNTIME_API_EXPORT CompositorPassFactory();
+		RENDERERRUNTIME_API_EXPORT virtual ~CompositorPassFactory();
+		CompositorPassFactory(const CompositorPassFactory&) = delete;
+		CompositorPassFactory& operator=(const CompositorPassFactory&) = delete;
 
-	CompositorInstancePassQuad::~CompositorInstancePassQuad()
-	{
-		// Nothing here
-	}
+
+	};
 
 
 //[-------------------------------------------------------]

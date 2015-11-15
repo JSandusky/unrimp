@@ -32,6 +32,21 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const CompositorPassTypeId CompositorResourcePassClear::TYPE_ID("Clear");
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[-------------------------------------------------------]
+	CompositorPassTypeId CompositorResourcePassClear::getTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	CompositorResourcePassClear::CompositorResourcePassClear()

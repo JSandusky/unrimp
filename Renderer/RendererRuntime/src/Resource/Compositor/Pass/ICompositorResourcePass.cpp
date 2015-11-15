@@ -21,8 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorInstancePassQuad.h"
-#include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorResourcePassQuad.h"
+#include "RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.h"
 
 
 //[-------------------------------------------------------]
@@ -33,24 +32,14 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
-	//[-------------------------------------------------------]
-	void CompositorInstancePassQuad::execute()
-	{
-		// TODO(co)
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	CompositorInstancePassQuad::CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorInstanceNode& compositorInstanceNode) :
-		ICompositorInstancePass(compositorResourcePassQuad, compositorInstanceNode)
+	ICompositorResourcePass::ICompositorResourcePass()
 	{
 		// Nothing here
 	}
 
-	CompositorInstancePassQuad::~CompositorInstancePassQuad()
+	ICompositorResourcePass::~ICompositorResourcePass()
 	{
 		// Nothing here
 	}

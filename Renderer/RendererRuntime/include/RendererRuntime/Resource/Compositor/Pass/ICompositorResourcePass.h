@@ -27,6 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 
 
@@ -38,20 +40,33 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId CompositorPassTypeId;	///< Compositor pass type identifier, internally just a POD "uint32_t"
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorResourcePass : protected NonCopyable
+	class ICompositorResourcePass : protected NonCopyable
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual CompositorPassTypeId getTypeId() const = 0;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorResourcePass();
-		virtual ~CompositorResourcePass();
-		CompositorResourcePass(const CompositorResourcePass&) = delete;
-		CompositorResourcePass& operator=(const CompositorResourcePass&) = delete;
+		RENDERERRUNTIME_API_EXPORT ICompositorResourcePass();
+		RENDERERRUNTIME_API_EXPORT virtual ~ICompositorResourcePass();
+		ICompositorResourcePass(const ICompositorResourcePass&) = delete;
+		ICompositorResourcePass& operator=(const ICompositorResourcePass&) = delete;
 
 
 	};

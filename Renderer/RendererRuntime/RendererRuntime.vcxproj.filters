@@ -363,12 +363,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorInstanceNode.h">
       <Filter>Source Files\Resource\Compositor</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\CompositorResourcePass.h">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\CompositorInstancePass.h">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Scene\CompositorInstancePassScene.h">
       <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
     </ClInclude>
@@ -389,6 +383,18 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorInstanceChannel.h">
       <Filter>Source Files\Resource\Compositor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorPassFactory.h">
+      <Filter>Source Files\Resource\Compositor\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\CompositorPassFactory.h">
+      <Filter>Source Files\Resource\Compositor\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorInstancePass.h">
+      <Filter>Source Files\Resource\Compositor\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorResourcePass.h">
+      <Filter>Source Files\Resource\Compositor\Pass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -521,12 +527,6 @@
     <ClCompile Include="src\Resource\Compositor\CompositorInstanceNode.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\CompositorInstancePass.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\CompositorResourcePass.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Compositor\Pass\Clear\CompositorInstancePassClear.cpp">
       <Filter>Source Files\Resource\Compositor\Pass\Clear</Filter>
     </ClCompile>
@@ -547,6 +547,18 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Compositor\CompositorInstanceChannel.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Compositor\Pass\CompositorPassFactory.cpp">
+      <Filter>Source Files\Resource\Compositor\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Compositor\Pass\ICompositorPassFactory.cpp">
+      <Filter>Source Files\Resource\Compositor\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Compositor\Pass\ICompositorResourcePass.cpp">
+      <Filter>Source Files\Resource\Compositor\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Compositor\Pass\ICompositorInstancePass.cpp">
+      <Filter>Source Files\Resource\Compositor\Pass</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

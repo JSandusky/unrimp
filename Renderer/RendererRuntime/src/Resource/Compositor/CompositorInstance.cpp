@@ -23,7 +23,10 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Compositor/CompositorInstance.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResource.h"
+#include "RendererRuntime/Resource/Compositor/CompositorInstanceNode.h"
+#include "RendererRuntime/Resource/Compositor/CompositorResourceNode.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResourceManager.h"
+#include "RendererRuntime/Resource/Compositor/Pass/ICompositorPassFactory.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <Renderer/Public/Renderer.h>
@@ -40,6 +43,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	CompositorInstance::CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId, Renderer::IRenderTarget& renderTarget) :
+		mRendererRuntime(rendererRuntime),
 		mRenderTarget(renderTarget),
 		mCompositorResource(nullptr)
 	{
@@ -54,6 +58,11 @@ namespace RendererRuntime
 	{
 		// Release reference from the render target
 		mRenderTarget.release();
+	}
+
+	const IRendererRuntime& CompositorInstance::getRendererRuntime() const
+	{
+		return mRendererRuntime;
 	}
 
 	void CompositorInstance::execute()
@@ -87,11 +96,11 @@ namespace RendererRuntime
 
 				{ // Draw
 					// TODO(co)
-					NOP;
-
-					// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-					const float color[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-					renderer.clear(Renderer::ClearFlag::COLOR_DEPTH, color, 1.0f, 0);
+					const size_t numberOfSequentialCompositorInstanceNodes = mSequentialCompositorInstanceNodes.size();
+					for (size_t i = 0; i < numberOfSequentialCompositorInstanceNodes; ++i)
+					{
+						mSequentialCompositorInstanceNodes[i]->execute();
+					}
 				}
 
 				// End scene rendering
@@ -117,7 +126,17 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorInstance::onLoadingStateChange(IResource::LoadingState::Enum loadingState)
 	{
-		// TODO(co)
+		// TODO(co) Just a first test
+		ICompositorPassFactory* compositorPassFactory = mRendererRuntime.getCompositorResourceManager().getCompositorPassFactory();
+
+		if (mSequentialCompositorInstanceNodes.empty())
+		{
+			CompositorInstanceNode* compositorInstanceNode = new CompositorInstanceNode(*(new CompositorResourceNode()), *this);
+			compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory->createCompositorInstancePass(*compositorPassFactory->createCompositorResourcePass("Clear"), *compositorInstanceNode));
+			compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory->createCompositorInstancePass(*compositorPassFactory->createCompositorResourcePass("First"), *compositorInstanceNode));
+			mSequentialCompositorInstanceNodes.push_back(compositorInstanceNode);
+		}
+
 		loadingState = loadingState;
 		NOP;
 	}

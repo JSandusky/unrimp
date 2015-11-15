@@ -27,57 +27,51 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.h"
+#include <RendererRuntime/Resource/Compositor/Pass/ICompositorInstancePass.h>
+#include <RendererRuntime/Resource/Font/FontResource.h>
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+class CompositorResourcePassFirst;
+
+
+//[-------------------------------------------------------]
+//[ Classes                                               ]
+//[-------------------------------------------------------]
+class CompositorInstancePassFirst : public RendererRuntime::ICompositorInstancePass
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class CompositorResourcePassQuad : public ICompositorResourcePass
-	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class CompositorPassFactory;	// The only one allowed to create instances of this class
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		static const CompositorPassTypeId TYPE_ID;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
-	//[-------------------------------------------------------]
-	public:
-		virtual CompositorPassTypeId getTypeId() const override;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		CompositorResourcePassQuad();
-		virtual ~CompositorResourcePassQuad();
-		CompositorResourcePassQuad(const CompositorResourcePassQuad&) = delete;
-		CompositorResourcePassQuad& operator=(const CompositorResourcePassQuad&) = delete;
-
-
-	};
+//[-------------------------------------------------------]
+//[ Friends                                               ]
+//[-------------------------------------------------------]
+	friend class CompositorPassFactoryFirst;	// The only one allowed to create instances of this class
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+protected:
+	virtual void execute() override;
+
+
+//[-------------------------------------------------------]
+//[ Protected methods                                     ]
+//[-------------------------------------------------------]
+protected:
+	CompositorInstancePassFirst(const CompositorResourcePassFirst& compositorResourcePassFirst, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode);
+	virtual ~CompositorInstancePassFirst();
+	CompositorInstancePassFirst(const CompositorInstancePassFirst&) = delete;
+	CompositorInstancePassFirst& operator=(const CompositorInstancePassFirst&) = delete;
+
+
+//[-------------------------------------------------------]
+//[ Private data                                          ]
+//[-------------------------------------------------------]
+private:
+	RendererRuntime::FontResource* mFontResource;	///< Font resource, can be a null pointer
+
+
+};

@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Compositor/Pass/Clear/CompositorInstancePassClear.h"
 #include "RendererRuntime/Resource/Compositor/Pass/Clear/CompositorResourcePassClear.h"
+#include "RendererRuntime/Resource/Compositor/CompositorInstanceNode.h"
+#include "RendererRuntime/Resource/Compositor/CompositorInstance.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -33,19 +36,24 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::CompositorInstancePass methods ]
+	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	void CompositorInstancePassClear::execute()
 	{
-		// TODO(co)
+		// TODO(co) Just a test, backup instances later on
+		Renderer::IRenderer& renderer = getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getRenderer();
+
+		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
+		const float color[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+		renderer.clear(Renderer::ClearFlag::COLOR_DEPTH, color, 1.0f, 0);
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	CompositorInstancePassClear::CompositorInstancePassClear(const CompositorResourcePassClear& compositorResourcePassClear) :
-		CompositorInstancePass(compositorResourcePassClear)
+	CompositorInstancePassClear::CompositorInstancePassClear(const CompositorResourcePassClear& compositorResourcePassClear, const CompositorInstanceNode& compositorInstanceNode) :
+		ICompositorInstancePass(compositorResourcePassClear, compositorInstanceNode)
 	{
 		// Nothing here
 	}
