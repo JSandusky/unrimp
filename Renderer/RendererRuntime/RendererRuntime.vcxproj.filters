@@ -162,6 +162,9 @@
     <None Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.inl">
       <Filter>Source Files\Resource\Scene\Loader</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\IResourceListener.inl">
+      <Filter>Source Files\Resource</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -366,6 +369,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorInstance.h">
       <Filter>Source Files\Resource\Compositor</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h">
+      <Filter>Source Files\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -502,6 +508,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Compositor\CompositorInstance.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\IResource.cpp">
+      <Filter>Source Files\Resource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

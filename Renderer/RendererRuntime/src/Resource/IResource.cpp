@@ -19,9 +19,16 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorResource.h"
+#include "RendererRuntime/Resource/IResource.h"
+#include "RendererRuntime/Resource/IResourceListener.h"
 
 
 //[-------------------------------------------------------]
@@ -32,17 +39,15 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	CompositorResource::CompositorResource(ResourceId resourceId, IResourceListener* resourceListener) :
-		IResource(resourceId, resourceListener)
+	void IResource::setLoadingState(LoadingState::Enum loadingState)
 	{
-		// Nothing here
-	}
-
-	CompositorResource::~CompositorResource()
-	{
-		// Nothing here
+		mLoadingState = loadingState;
+		if (nullptr != mResourceListener)
+		{
+			mResourceListener->onLoadingStateChange(loadingState);
+		}
 	}
 
 

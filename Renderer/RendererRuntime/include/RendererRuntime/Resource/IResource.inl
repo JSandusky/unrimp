@@ -41,9 +41,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IResource::IResource(ResourceId resourceId) :
+	inline IResource::IResource(ResourceId resourceId, IResourceListener* resourceListener) :
 		mResourceId(resourceId),
-		mLoadingState(LoadingState::UNLOADED)
+		mLoadingState(LoadingState::UNLOADED),
+		mResourceListener(resourceListener)
 	{
 		// Nothing here
 	}

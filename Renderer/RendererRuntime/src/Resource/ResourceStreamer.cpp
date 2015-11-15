@@ -43,7 +43,7 @@ namespace RendererRuntime
 	void ResourceStreamer::commitLoadRequest(const LoadRequest& loadRequest)
 	{
 		// Update the resource loading state
-		loadRequest.resource->mLoadingState = IResource::LoadingState::LOADING;
+		loadRequest.resource->setLoadingState(IResource::LoadingState::LOADING);
 
 		// Push the load request into the queue of the first resource streamer pipeline stage
 		// -> Resource streamer stage: 1. Asynchronous deserialization
@@ -76,7 +76,7 @@ namespace RendererRuntime
 			resourceLoader->onRendererBackendDispatch();
 
 			// Update the resource loading state
-			loadRequest.resource->mLoadingState = IResource::LoadingState::LOADED;
+			loadRequest.resource->setLoadingState(IResource::LoadingState::LOADED);
 
 			// Release the resource loader instance
 			resourceLoader->getResourceManager().releaseResourceLoaderInstance(*resourceLoader);

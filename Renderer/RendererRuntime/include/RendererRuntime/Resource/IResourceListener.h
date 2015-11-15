@@ -19,9 +19,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorResource.h"
+#include "RendererRuntime/Resource/IResource.h"
 
 
 //[-------------------------------------------------------]
@@ -32,21 +38,45 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	CompositorResource::CompositorResource(ResourceId resourceId, IResourceListener* resourceListener) :
-		IResource(resourceId, resourceListener)
+	class IResourceListener : protected NonCopyable
 	{
-		// Nothing here
-	}
 
-	CompositorResource::~CompositorResource()
-	{
-		// Nothing here
-	}
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class IResource;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void onLoadingStateChange(IResource::LoadingState::Enum loadingState) = 0;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		inline IResourceListener();
+		inline virtual ~IResourceListener();
+		IResourceListener(const IResourceListener&) = delete;
+		IResourceListener& operator=(const IResourceListener&) = delete;
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/IResourceListener.inl"

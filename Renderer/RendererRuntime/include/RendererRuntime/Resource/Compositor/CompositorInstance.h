@@ -28,8 +28,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Core/NonCopyable.h"
 #include "RendererRuntime/Asset/Asset.h"
+#include "RendererRuntime/Resource/IResourceListener.h"
 
 
 //[-------------------------------------------------------]
@@ -52,7 +52,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorInstance : protected NonCopyable
+	class CompositorInstance : protected IResourceListener
 	{
 
 
@@ -62,6 +62,13 @@ namespace RendererRuntime
 	public:
 		RENDERERRUNTIME_API_EXPORT CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId);
 		RENDERERRUNTIME_API_EXPORT virtual ~CompositorInstance();
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void onLoadingStateChange(IResource::LoadingState::Enum loadingState) override;
 
 
 	//[-------------------------------------------------------]

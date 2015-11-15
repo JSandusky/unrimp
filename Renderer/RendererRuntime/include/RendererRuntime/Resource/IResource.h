@@ -32,6 +32,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IResourceListener;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -85,10 +94,17 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit IResource(ResourceId resourceId);
+		inline IResource(ResourceId resourceId, IResourceListener* resourceListener = nullptr);
 		inline virtual ~IResource();
 		IResource(const IResource&) = delete;
 		IResource& operator=(const IResource&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		void setLoadingState(LoadingState::Enum loadingState);
 
 
 	//[-------------------------------------------------------]
@@ -97,6 +113,7 @@ namespace RendererRuntime
 	private:
 		ResourceId		   mResourceId;
 		LoadingState::Enum mLoadingState;
+		IResourceListener* mResourceListener;
 
 
 	};

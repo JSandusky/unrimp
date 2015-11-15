@@ -37,14 +37,26 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	CompositorInstance::CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId) :
-		mCompositorResource(rendererRuntime.getCompositorResourceManager().loadCompositorResourceByAssetId(compositorAssetId))
+		mCompositorResource(nullptr)
 	{
-		// Nothing here
+		// Load the compositor resource
+		mCompositorResource = rendererRuntime.getCompositorResourceManager().loadCompositorResourceByAssetId(compositorAssetId, this);
 	}
 
 	CompositorInstance::~CompositorInstance()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	void CompositorInstance::onLoadingStateChange(IResource::LoadingState::Enum loadingState)
+	{
+		// TODO(co)
+		loadingState = loadingState;
+		NOP;
 	}
 
 

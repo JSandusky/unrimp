@@ -17,13 +17,6 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 \*********************************************************/
 
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorResource.h"
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
@@ -32,15 +25,14 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	CompositorResource::CompositorResource(ResourceId resourceId, IResourceListener* resourceListener) :
-		IResource(resourceId, resourceListener)
+	inline IResourceListener::IResourceListener()
 	{
 		// Nothing here
 	}
 
-	CompositorResource::~CompositorResource()
+	inline IResourceListener::~IResourceListener()
 	{
 		// Nothing here
 	}

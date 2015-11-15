@@ -58,7 +58,7 @@ namespace RendererRuntime
 		*  @brief
 		*    Constructor
 		*/
-		explicit CompositorResource(ResourceId resourceId);
+		CompositorResource(ResourceId resourceId, IResourceListener* resourceListener);
 
 		/**
 		*  @brief

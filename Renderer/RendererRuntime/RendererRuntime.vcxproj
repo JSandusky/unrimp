@@ -32,6 +32,7 @@
     <None Include="include\RendererRuntime\Resource\Font\FontResource.inl" />
     <None Include="include\RendererRuntime\Resource\Font\Loader\FontResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\IResource.inl" />
+    <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.inl" />
@@ -80,6 +81,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\Loader\FontResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResource.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\Loader\MaterialResourceLoader.h" />
@@ -138,6 +140,7 @@
     <ClCompile Include="src\Resource\Font\FontResource.cpp" />
     <ClCompile Include="src\Resource\Font\FontResourceManager.cpp" />
     <ClCompile Include="src\Resource\Font\Loader\FontResourceLoader.cpp" />
+    <ClCompile Include="src\Resource\IResource.cpp" />
     <ClCompile Include="src\Resource\IResourceManager.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp" />
     <ClCompile Include="src\Resource\Mesh\Loader\MeshResourceLoader.cpp" />

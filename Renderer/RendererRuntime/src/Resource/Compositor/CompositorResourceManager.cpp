@@ -41,7 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorResource* CompositorResourceManager::loadCompositorResourceByAssetId(AssetId assetId)
+	CompositorResource* CompositorResourceManager::loadCompositorResourceByAssetId(AssetId assetId, IResourceListener* resourceListener)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
@@ -64,7 +64,7 @@ namespace RendererRuntime
 			// Create the resource instance
 			if (nullptr == compositorResource)
 			{
-				compositorResource = new CompositorResource(assetId);
+				compositorResource = new CompositorResource(assetId, resourceListener);
 				mResources.push_back(compositorResource);
 
 				{
