@@ -55,6 +55,11 @@ namespace RendererRuntime
 		mCompositorResourcePasses.reserve(compositorResourcePasses);
 	}
 
+	inline const CompositorResourceTarget::CompositorResourcePasses& CompositorResourceTarget::getCompositorResourcePasses() const
+	{
+		return mCompositorResourcePasses;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

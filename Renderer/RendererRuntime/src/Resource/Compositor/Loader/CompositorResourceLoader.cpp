@@ -70,7 +70,14 @@ namespace
 				RendererRuntime::ICompositorResourcePass* compositorResourcePass = compositorResourceTarget.addCompositorResourcePass(compositorPassFactory, passHeader.typeId);
 
 				// Deserialize the compositor resource pass
-				compositorResourcePass->deserialize(passHeader.numberOfBytes, data);
+				if (nullptr != compositorResourcePass)
+				{
+					compositorResourcePass->deserialize(passHeader.numberOfBytes, data);
+				}
+				else
+				{
+					// TODO(co) Error handling
+				}
 
 				// Cleanup
 				delete [] data;

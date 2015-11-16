@@ -58,19 +58,39 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::vector<CompositorChannelId>	  CompositorChannels;	// TODO(co) Get rid of "std::vector" and dynamic memory handling in here? (need to introduce a maximum number of input channels for this)
+		typedef std::vector<CompositorResourceTarget> CompositorResourceTargets;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
 		inline CompositorResourceNodeId getCompositorResourceNodeId() const;
 
+		//[-------------------------------------------------------]
+		//[ Input channels                                        ]
+		//[-------------------------------------------------------]
 		inline void setNumberOfInputChannels(uint32_t numberOfInputChannels);
 		inline void addInputChannel(CompositorChannelId compositorChannelId);
+		inline const CompositorChannels& getInputChannels() const;
 
+		//[-------------------------------------------------------]
+		//[ Targets                                               ]
+		//[-------------------------------------------------------]
 		inline void setNumberOfCompositorResourceTargets(uint32_t numberOfCompositorResourceTargets);
 		inline CompositorResourceTarget& addCompositorResourceTarget(CompositorChannelId compositorChannelId);
+		inline const CompositorResourceTargets& getCompositorResourceTargets() const;
 
+		//[-------------------------------------------------------]
+		//[ Output channels                                       ]
+		//[-------------------------------------------------------]
 		inline void setNumberOfOutputChannels(uint32_t numberOfOutputChannels);
 		inline void addOutputChannel(CompositorChannelId compositorChannelId);
+		inline const CompositorChannels& getOutputChannels() const;
 
 
 	//[-------------------------------------------------------]
@@ -81,14 +101,6 @@ namespace RendererRuntime
 		virtual ~CompositorResourceNode();
 		CompositorResourceNode(const CompositorResourceNode&) = delete;
 		CompositorResourceNode& operator=(const CompositorResourceNode&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::vector<CompositorChannelId>	  CompositorChannels;	// TODO(co) Get rid of "std::vector" and dynamic memory handling in here? (need to introduce a maximum number of input channels for this)
-		typedef std::vector<CompositorResourceTarget> CompositorResourceTargets;
 
 
 	//[-------------------------------------------------------]

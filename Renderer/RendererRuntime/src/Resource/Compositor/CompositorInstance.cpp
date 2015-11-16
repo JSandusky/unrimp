@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/Compositor/CompositorResourceNode.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResourceManager.h"
 #include "RendererRuntime/Resource/Compositor/Pass/ICompositorPassFactory.h"
+#include "RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <Renderer/Public/Renderer.h>
@@ -58,6 +59,9 @@ namespace RendererRuntime
 	{
 		// Release reference from the render target
 		mRenderTarget.release();
+
+		// Cleanup
+		destroySequentialCompositorInstanceNodes();
 	}
 
 	const IRendererRuntime& CompositorInstance::getRendererRuntime() const
@@ -126,19 +130,66 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void CompositorInstance::onLoadingStateChange(IResource::LoadingState::Enum loadingState)
 	{
-		// TODO(co) Just a first test
-		ICompositorPassFactory* compositorPassFactory = mRendererRuntime.getCompositorResourceManager().getCompositorPassFactory();
-
-		if (mSequentialCompositorInstanceNodes.empty())
+		if (loadingState == IResource::LoadingState::LOADED)
 		{
-			CompositorInstanceNode* compositorInstanceNode = new CompositorInstanceNode(*(new CompositorResourceNode(0)), *this);
-			compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory->createCompositorInstancePass(*compositorPassFactory->createCompositorResourcePass("Clear"), *compositorInstanceNode));
-			compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory->createCompositorInstancePass(*compositorPassFactory->createCompositorResourcePass("First"), *compositorInstanceNode));
-			mSequentialCompositorInstanceNodes.push_back(compositorInstanceNode);
-		}
+			// TODO(co) Just a first test
+			ICompositorPassFactory* compositorPassFactory = mRendererRuntime.getCompositorResourceManager().getCompositorPassFactory();
 
-		loadingState = loadingState;
-		NOP;
+			destroySequentialCompositorInstanceNodes();
+
+			// Compositor resource nodes
+			const CompositorResource::CompositorResourceNodes& compositorResourceNodes = mCompositorResource->getCompositorResourceNodes();
+			const size_t numberOfCompositorResourceNodes = compositorResourceNodes.size();
+			for (size_t nodeIndex = 0; nodeIndex < numberOfCompositorResourceNodes; ++nodeIndex)
+			{
+				// Get the compositor resource node instance
+				const CompositorResourceNode* compositorResourceNode = compositorResourceNodes[nodeIndex];
+
+				// Create the compositor instance node instance
+				CompositorInstanceNode* compositorInstanceNode = new CompositorInstanceNode(*compositorResourceNode, *this);
+				mSequentialCompositorInstanceNodes.push_back(compositorInstanceNode);
+
+				{ // Compositor resource node targets
+					const CompositorResourceNode::CompositorResourceTargets& compositorResourceTargets = compositorResourceNode->getCompositorResourceTargets();
+					const size_t numberOfCompositorResourceTargets = compositorResourceTargets.size();
+					for (size_t targetIndex = 0; targetIndex < numberOfCompositorResourceTargets; ++targetIndex)
+					{
+						// Get the compositor resource target instance
+						const CompositorResourceTarget& compositorResourceTarget = compositorResourceTargets[targetIndex];
+
+						{ // Compositor resource node target passes
+							const CompositorResourceTarget::CompositorResourcePasses& compositorResourcePasses = compositorResourceTarget.getCompositorResourcePasses();
+							const size_t numberOfCompositorResourcePasses = compositorResourcePasses.size();
+							for (size_t passIndex = 0; passIndex < numberOfCompositorResourcePasses; ++passIndex)
+							{
+								// Get the compositor resource target instance
+								const ICompositorResourcePass* compositorResourcePass = compositorResourcePasses[passIndex];
+
+								// Create the compositor instance pass
+								if (nullptr != compositorResourcePass)
+								{
+									compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory->createCompositorInstancePass(*compositorResourcePass, *compositorInstanceNode));
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	void CompositorInstance::destroySequentialCompositorInstanceNodes()
+	{
+		const size_t numberOfSequentialCompositorInstanceNodes = mSequentialCompositorInstanceNodes.size();
+		for (size_t i = 0; i < numberOfSequentialCompositorInstanceNodes; ++i)
+		{
+			delete mSequentialCompositorInstanceNodes[i];
+		}
+		mSequentialCompositorInstanceNodes.clear();
 	}
 
 

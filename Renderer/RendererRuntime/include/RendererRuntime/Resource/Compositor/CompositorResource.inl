@@ -33,6 +33,11 @@ namespace RendererRuntime
 		mCompositorResourceNodes.reserve(numberOfCompositorResourceNodes);
 	}
 
+	inline const CompositorResource::CompositorResourceNodes& CompositorResource::getCompositorResourceNodes() const
+	{
+		return mCompositorResourceNodes;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

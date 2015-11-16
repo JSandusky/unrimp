@@ -39,7 +39,7 @@
 //[-------------------------------------------------------]
 //[ Public definitions                                    ]
 //[-------------------------------------------------------]
-const RendererRuntime::CompositorPassTypeId CompositorResourcePassFirst::TYPE_ID("First");
+const RendererRuntime::CompositorPassTypeId CompositorResourcePassFirst::TYPE_ID("FirstCompositorExample");
 
 
 //[-------------------------------------------------------]

@@ -43,6 +43,11 @@ namespace RendererRuntime
 		mInputChannels.push_back(compositorChannelId);
 	}
 
+	inline const CompositorResourceNode::CompositorChannels& CompositorResourceNode::getInputChannels() const
+	{
+		return mInputChannels;
+	}
+
 	inline void CompositorResourceNode::setNumberOfCompositorResourceTargets(uint32_t numberOfCompositorResourceTargets)
 	{
 		mCompositorResourceTargets.reserve(numberOfCompositorResourceTargets);
@@ -55,6 +60,11 @@ namespace RendererRuntime
 		return mCompositorResourceTargets.back();
 	}
 
+	inline const CompositorResourceNode::CompositorResourceTargets& CompositorResourceNode::getCompositorResourceTargets() const
+	{
+		return mCompositorResourceTargets;
+	}
+
 	inline void CompositorResourceNode::setNumberOfOutputChannels(uint32_t numberOfOutputChannels)
 	{
 		mOutputChannels.reserve(numberOfOutputChannels);
@@ -63,6 +73,11 @@ namespace RendererRuntime
 	inline void CompositorResourceNode::addOutputChannel(CompositorChannelId compositorChannelId)
 	{
 		mOutputChannels.push_back(compositorChannelId);
+	}
+
+	inline const CompositorResourceNode::CompositorChannels& CompositorResourceNode::getOutputChannels() const
+	{
+		return mOutputChannels;
 	}
 
 

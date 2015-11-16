@@ -87,6 +87,7 @@ namespace RendererRuntime
 		CompositorInstance() = delete;
 		CompositorInstance(const CompositorInstance&) = delete;
 		CompositorInstance& operator=(const CompositorInstance&) = delete;
+		void destroySequentialCompositorInstanceNodes();
 
 
 	//[-------------------------------------------------------]

@@ -65,6 +65,13 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::vector<ICompositorResourcePass*> CompositorResourcePasses;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -74,8 +81,12 @@ namespace RendererRuntime
 
 		inline CompositorChannelId getCompositorChannelId() const;
 
+		//[-------------------------------------------------------]
+		//[ Passes                                                ]
+		//[-------------------------------------------------------]
 		inline void setNumberOfCompositorResourcePasses(uint32_t numberOfCompositorResourcePasses);
 		ICompositorResourcePass* addCompositorResourcePass(const ICompositorPassFactory& compositorPassFactory, CompositorPassTypeId compositorPassTypeId);
+		inline const CompositorResourcePasses& getCompositorResourcePasses() const;
 		void removeAllCompositorResourcePasses();
 
 
@@ -84,13 +95,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		CompositorResourceTarget& operator=(const CompositorResourceTarget&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::vector<ICompositorResourcePass*> CompositorResourcePasses;
 
 
 	//[-------------------------------------------------------]

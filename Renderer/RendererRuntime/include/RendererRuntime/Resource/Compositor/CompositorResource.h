@@ -68,6 +68,13 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::vector<CompositorResourceNode*> CompositorResourceNodes;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -85,6 +92,7 @@ namespace RendererRuntime
 
 		inline void setNumberOfCompositorResourceNodes(uint32_t numberOfCompositorResourceNodes);
 		CompositorResourceNode* addCompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId);
+		inline const CompositorResourceNodes& getCompositorResourceNodes() const;
 
 
 	//[-------------------------------------------------------]
@@ -93,13 +101,6 @@ namespace RendererRuntime
 	protected:
 		CompositorResource(const CompositorResource&) = delete;
 		CompositorResource& operator=(const CompositorResource&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::vector<CompositorResourceNode*> CompositorResourceNodes;
 
 
 	//[-------------------------------------------------------]

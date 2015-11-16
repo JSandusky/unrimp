@@ -23,9 +23,9 @@
 						{
 							"Clear":
 							{
-								"Color": "1.0 0.5 0.5 1.0"
+								"Color": "0.5 0.5 0.5 1.0"
 							},
-							"First":
+							"FirstCompositorExample":
 							{
 							}
 						}
