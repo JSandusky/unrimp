@@ -24,6 +24,7 @@
 #include "RendererToolkit/AssetCompiler/FontAssetCompiler.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Resource/Font/Loader/FontFileFormat.h>
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -359,30 +360,9 @@ namespace RendererToolkit
 		}
 
 		// Fill the font header
-		// -> The FreeType library measures font size in terms of 1/64ths of pixels, so we have to adjust with /64
-		// -> Font file format content:
-		//    - Font header
-		//    - Font glyph definitions
-		//    - Font data
-		#pragma pack(push)
-		#pragma pack(1)
-			struct FontHeader
-			{
-				uint32_t formatType;
-				uint16_t formatVersion;
-				uint32_t size;
-				uint32_t resolution;
-				float	 ascender;
-				float	 descender;
-				float	 height;
-				uint32_t numberOfFontGlyphs;
-				uint32_t glyphTextureAtlasSizeX;
-				uint32_t glyphTextureAtlasSizeY;
-			};
-		#pragma pack(pop)
-		FontHeader fontHeader;
-		fontHeader.formatType			  = RendererRuntime::StringId("Font");
-		fontHeader.formatVersion		  = 1;
+		RendererRuntime::v1Font::Header fontHeader;
+		fontHeader.formatType			  = RendererRuntime::v1Font::FORMAT_TYPE;
+		fontHeader.formatVersion		  = RendererRuntime::v1Font::FORMAT_VERSION;
 		fontHeader.size					  = size;
 		fontHeader.resolution			  = resolution;
 		fontHeader.ascender				  = static_cast<float>(ftFace->size->metrics.ascender) / 64.0f;
@@ -393,7 +373,7 @@ namespace RendererToolkit
 		fontHeader.glyphTextureAtlasSizeY = detail::getNearestPowerOfTwo(static_cast<uint32_t>(glyphTextureAtlasPadding + glyphsPerRow * (fontHeader.height + glyphTextureAtlasPadding)), false);
 
 		// Write down the font header
-		ofstream.write(reinterpret_cast<const char*>(&fontHeader), sizeof(FontHeader));
+		ofstream.write(reinterpret_cast<const char*>(&fontHeader), sizeof(RendererRuntime::v1Font::Header));
 
 		{ // Fill the font glyphs and data
 			// Allocate memory for the glyph texture atlas and initialize it with zero to avoid sampling artefacts later on

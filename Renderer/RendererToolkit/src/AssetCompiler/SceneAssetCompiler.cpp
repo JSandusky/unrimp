@@ -24,6 +24,7 @@
 #include "RendererToolkit/AssetCompiler/SceneAssetCompiler.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h>
 
 #include <fstream>
 
@@ -79,23 +80,12 @@ namespace RendererToolkit
 		std::ofstream ofstream(assetFilename, std::ios::binary);
 
 		{ // TODO(co) Implement me
-			// Fill the scene header
-			// -> Scene file format content:
-			//    - Scene header
-			#pragma pack(push)
-			#pragma pack(1)
-				struct SceneHeader
-				{
-					uint32_t formatType;
-					uint16_t formatVersion;
-				};
-			#pragma pack(pop)
-			SceneHeader sceneHeader;
-			sceneHeader.formatType	  = RendererRuntime::StringId("Scene");
-			sceneHeader.formatVersion = 1;
+			RendererRuntime::v1Scene::Header sceneHeader;
+			sceneHeader.formatType	  = RendererRuntime::v1Scene::FORMAT_TYPE;
+			sceneHeader.formatVersion = RendererRuntime::v1Scene::FORMAT_VERSION;
 
 			// Write down the font header
-			ofstream.write(reinterpret_cast<const char*>(&sceneHeader), sizeof(sceneHeader));
+			ofstream.write(reinterpret_cast<const char*>(&sceneHeader), sizeof(RendererRuntime::v1Scene::Header));
 		}
 
 		{ // Update the output asset package

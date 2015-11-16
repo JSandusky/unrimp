@@ -24,6 +24,7 @@
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h>
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -119,27 +120,9 @@ namespace RendererToolkit
 			uint8_t numberOfVertexAttributes = 3;
 
 			{ // Mesh header
-				// Fill the mesh header
-				// -> Mesh file format content:
-				//    - Mesh header
-				//    - Vertex and index buffer data
-				//    - Vertex array attribute definitions
-				#pragma pack(push)
-				#pragma pack(1)
-					struct MeshHeader
-					{
-						uint32_t formatType;
-						uint16_t formatVersion;
-						uint8_t  numberOfBytesPerVertex;
-						uint32_t numberOfVertices;
-						uint8_t  indexBufferFormat;
-						uint32_t numberOfIndices;
-						uint8_t  numberOfVertexAttributes;
-					};
-				#pragma pack(pop)
-				MeshHeader meshHeader;
-				meshHeader.formatType				= RendererRuntime::StringId("Mesh");
-				meshHeader.formatVersion			= 1;
+				RendererRuntime::v1Mesh::Header meshHeader;
+				meshHeader.formatType				= RendererRuntime::v1Mesh::FORMAT_TYPE;
+				meshHeader.formatVersion			= RendererRuntime::v1Mesh::FORMAT_VERSION;
 				meshHeader.numberOfBytesPerVertex	= NUMBER_OF_BYTES_PER_VERTEX;
 				meshHeader.numberOfVertices			= numberOfVertices;
 				meshHeader.indexBufferFormat		= Renderer::IndexBufferFormat::UNSIGNED_SHORT;
@@ -147,7 +130,7 @@ namespace RendererToolkit
 				meshHeader.numberOfVertexAttributes = numberOfVertexAttributes;
 
 				// Write down the mesh header
-				ofstream.write(reinterpret_cast<const char*>(&meshHeader), sizeof(MeshHeader));
+				ofstream.write(reinterpret_cast<const char*>(&meshHeader), sizeof(RendererRuntime::v1Mesh::Header));
 			}
 
 			{ // Vertex and index buffer data

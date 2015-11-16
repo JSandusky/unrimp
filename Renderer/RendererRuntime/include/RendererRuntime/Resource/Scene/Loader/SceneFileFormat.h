@@ -19,13 +19,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.h"
-#include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
-#include "RendererRuntime/Resource/Scene/SceneResource.h"
-
-#include <fstream>
+#include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
 //[-------------------------------------------------------]
@@ -33,62 +35,30 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	const ResourceLoaderTypeId SceneResourceLoader::TYPE_ID("scene");
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
-	//[-------------------------------------------------------]
-	ResourceLoaderTypeId SceneResourceLoader::getResourceLoaderTypeId() const
+	// -> Scene file format content:
+	//    - Scene header
+	namespace v1Scene
 	{
-		return TYPE_ID;
-	}
-
-	void SceneResourceLoader::onDeserialization()
-	{
-		// TODO(co) Error handling
-		try
-		{
-			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
-
-			// Read in the scene header
-			v1Scene::Header sceneHeader;
-			ifstream.read(reinterpret_cast<char*>(&sceneHeader), sizeof(v1Scene::Header));
-
-			// TODO(co)
-		}
-		catch (const std::exception& e)
-		{
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load scene asset %d: %s", mAsset.assetId, e.what());
-		}
-	}
-
-	void SceneResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
-	void SceneResourceLoader::onRendererBackendDispatch()
-	{
-		// Nothing here
-	}
 
 
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	SceneResourceLoader::~SceneResourceLoader()
-	{
-		// Nothing here
-	}
+		//[-------------------------------------------------------]
+		//[ Definitions                                           ]
+		//[-------------------------------------------------------]
+		static const uint32_t FORMAT_TYPE	 = StringId("Scene");
+		static const uint32_t FORMAT_VERSION = 1;
+
+		#pragma pack(push)
+		#pragma pack(1)
+			struct Header
+			{
+				uint32_t formatType;
+				uint16_t formatVersion;
+			};
+		#pragma pack(pop)
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
+	} // v1Scene
 } // RendererRuntime

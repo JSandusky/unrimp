@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Font/Loader/FontResourceLoader.h"
+#include "RendererRuntime/Resource/Font/Loader/FontFileFormat.h"
 #include "RendererRuntime/Resource/Font/FontResource.h"
 #include "RendererRuntime/Backend/RendererRuntimeImpl.h"
 
@@ -57,24 +58,8 @@ namespace RendererRuntime
 			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
 
 			// Read in the font header
-			#pragma pack(push)
-			#pragma pack(1)
-				struct FontHeader
-				{
-					uint32_t formatType;
-					uint16_t formatVersion;
-					uint32_t size;
-					uint32_t resolution;
-					float	 ascender;
-					float	 descender;
-					float	 height;
-					uint32_t numberOfFontGlyphs;
-					uint32_t glyphTextureAtlasSizeX;
-					uint32_t glyphTextureAtlasSizeY;
-				};
-			#pragma pack(pop)
-			FontHeader fontHeader;
-			ifstream.read(reinterpret_cast<char*>(&fontHeader), sizeof(FontHeader));
+			v1Font::Header fontHeader;
+			ifstream.read(reinterpret_cast<char*>(&fontHeader), sizeof(v1Font::Header));
 			mFontResource->mSize					= fontHeader.size;
 			mFontResource->mResolution				= fontHeader.resolution;
 			mFontResource->mAscender				= fontHeader.ascender;

@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Mesh/Loader/MeshResourceLoader.h"
+#include "RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 
 #include <fstream>
@@ -56,21 +57,8 @@ namespace RendererRuntime
 			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
 
 			// Read in the mesh header
-			#pragma pack(push)
-			#pragma pack(1)
-				struct MeshHeader
-				{
-					uint32_t formatType;
-					uint16_t formatVersion;
-					uint8_t  numberOfBytesPerVertex;
-					uint32_t numberOfVertices;
-					uint8_t  indexBufferFormat;
-					uint32_t numberOfIndices;
-					uint8_t  numberOfVertexAttributes;
-				};
-			#pragma pack(pop)
-			MeshHeader meshHeader;
-			ifstream.read(reinterpret_cast<char*>(&meshHeader), sizeof(MeshHeader));
+			v1Mesh::Header meshHeader;
+			ifstream.read(reinterpret_cast<char*>(&meshHeader), sizeof(v1Mesh::Header));
 			mMeshResource->mNumberOfVertices = meshHeader.numberOfVertices;
 			mMeshResource->mNumberOfIndices  = meshHeader.numberOfIndices;
 

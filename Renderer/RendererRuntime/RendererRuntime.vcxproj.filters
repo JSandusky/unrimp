@@ -396,6 +396,18 @@
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorResourcePass.h">
       <Filter>Source Files\Resource\Compositor\Pass</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshFileFormat.h">
+      <Filter>Source Files\Resource\Mesh\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Font\Loader\FontFileFormat.h">
+      <Filter>Source Files\Resource\Font\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorFileFormat.h">
+      <Filter>Source Files\Resource\Compositor\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneFileFormat.h">
+      <Filter>Source Files\Resource\Scene\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">

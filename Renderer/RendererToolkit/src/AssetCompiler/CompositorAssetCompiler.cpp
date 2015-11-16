@@ -24,6 +24,7 @@
 #include "RendererToolkit/AssetCompiler/CompositorAssetCompiler.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Resource/Compositor/Loader/CompositorFileFormat.h>
 
 #include <fstream>
 
@@ -79,23 +80,12 @@ namespace RendererToolkit
 		std::ofstream ofstream(assetFilename, std::ios::binary);
 
 		{ // TODO(co) Implement me
-			// Fill the compositor header
-			// -> Compositor file format content:
-			//    - Compositor header
-			#pragma pack(push)
-			#pragma pack(1)
-				struct CompositorHeader
-				{
-					uint32_t formatType;
-					uint16_t formatVersion;
-				};
-			#pragma pack(pop)
-			CompositorHeader compositorHeader;
-			compositorHeader.formatType	   = RendererRuntime::StringId("Compositor");
-			compositorHeader.formatVersion = 1;
+			RendererRuntime::v1Compositor::Header compositorHeader;
+			compositorHeader.formatType	   = RendererRuntime::v1Compositor::FORMAT_TYPE;
+			compositorHeader.formatVersion = RendererRuntime::v1Compositor::FORMAT_VERSION;
 
 			// Write down the font header
-			ofstream.write(reinterpret_cast<const char*>(&compositorHeader), sizeof(CompositorHeader));
+			ofstream.write(reinterpret_cast<const char*>(&compositorHeader), sizeof(RendererRuntime::v1Compositor::Header));
 		}
 
 		{ // Update the output asset package

@@ -74,6 +74,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceNode.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorInstancePassClear.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorResourcePassClear.h" />
@@ -87,6 +88,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Scene\CompositorResourcePassScene.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Font\Loader\FontFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Font\Loader\FontResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
@@ -94,10 +96,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\IResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\Loader\MaterialResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ResourceStreamer.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Memory\SceneItemMemoryManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Memory\SceneNodeMemoryManager.h" />

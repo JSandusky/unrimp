@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Compositor/Loader/CompositorResourceLoader.h"
+#include "RendererRuntime/Resource/Compositor/Loader/CompositorFileFormat.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResource.h"
 
 #include <fstream>
@@ -56,16 +57,8 @@ namespace RendererRuntime
 			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
 
 			// Read in the compositor header
-			#pragma pack(push)
-			#pragma pack(1)
-				struct CompositorHeader
-				{
-					uint32_t formatType;
-					uint16_t formatVersion;
-				};
-			#pragma pack(pop)
-			CompositorHeader compositorHeader;
-			ifstream.read(reinterpret_cast<char*>(&compositorHeader), sizeof(CompositorHeader));
+			v1Compositor::Header compositorHeader;
+			ifstream.read(reinterpret_cast<char*>(&compositorHeader), sizeof(v1Compositor::Header));
 
 			// TODO(co)
 		}
