@@ -22,6 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorResourcePassQuad.h"
+#include "RendererRuntime/Resource/Compositor/Loader/CompositorFileFormat.h"
+
+#include <cassert>
 
 
 //[-------------------------------------------------------]
@@ -43,6 +46,13 @@ namespace RendererRuntime
 	CompositorPassTypeId CompositorResourcePassQuad::getTypeId() const
 	{
 		return TYPE_ID;
+	}
+
+	void CompositorResourcePassQuad::deserialize(uint32_t numberOfBytes, const uint8_t*)
+	{
+		assert(sizeof(v1Compositor::PassQuad) == numberOfBytes);
+
+		// TODO(co)
 	}
 
 

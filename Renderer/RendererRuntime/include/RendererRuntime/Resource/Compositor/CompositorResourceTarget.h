@@ -27,7 +27,20 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.h"
+#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+
+#include <vector>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class ICompositorPassFactory;
+	class ICompositorResourcePass;
+}
 
 
 //[-------------------------------------------------------]
@@ -38,55 +51,54 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId CompositorChannelId;	///< Compositor channel identifier, internally just a POD "uint32_t"
+	typedef StringId CompositorPassTypeId;	///< Compositor pass type identifier, internally just a POD "uint32_t"
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorResourcePassClear : public ICompositorResourcePass
+	class CompositorResourceTarget : protected NonCopyable
 	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class CompositorPassFactory;	// The only one allowed to create instances of this class
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		static const CompositorPassTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		const float* getClearColor() const;
+		inline explicit CompositorResourceTarget(CompositorChannelId compositorChannelId);
+		inline explicit CompositorResourceTarget(const CompositorResourceTarget& compositorResourceTarget);
+		inline ~CompositorResourceTarget();
+
+		inline CompositorChannelId getCompositorChannelId() const;
+
+		inline void setNumberOfCompositorResourcePasses(uint32_t numberOfCompositorResourcePasses);
+		ICompositorResourcePass* addCompositorResourcePass(const ICompositorPassFactory& compositorPassFactory, CompositorPassTypeId compositorPassTypeId);
+		void removeAllCompositorResourcePasses();
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	public:
-		virtual CompositorPassTypeId getTypeId() const override;
-		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
+	private:
+		CompositorResourceTarget& operator=(const CompositorResourceTarget&) = delete;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
-	protected:
-		CompositorResourcePassClear();
-		virtual ~CompositorResourcePassClear();
-		CompositorResourcePassClear(const CompositorResourcePassClear&) = delete;
-		CompositorResourcePassClear& operator=(const CompositorResourcePassClear&) = delete;
+	private:
+		typedef std::vector<ICompositorResourcePass*> CompositorResourcePasses;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		float mColor[4];
+		CompositorChannelId		 mCompositorChannelId;
+		CompositorResourcePasses mCompositorResourcePasses;
 
 
 	};
@@ -96,3 +108,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/CompositorResourceTarget.inl"

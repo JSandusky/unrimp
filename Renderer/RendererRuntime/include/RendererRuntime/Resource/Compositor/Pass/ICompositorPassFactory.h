@@ -64,17 +64,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Friends methods                                       ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class CompositorInstance;	// Needs to create compositor pass instances
+		friend class CompositorInstance;		// Needs to create compositor pass instances // TODO(co) Remove this
+		friend class CompositorResourceTarget;	// Needs to create compositor pass instances
 
 
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorPassFactory methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual ICompositorResourcePass* createCompositorResourcePass(CompositorPassTypeId compositorPassTypeId) = 0;
-		virtual ICompositorInstancePass* createCompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorInstanceNode& compositorInstanceNode) = 0;
+		virtual ICompositorResourcePass* createCompositorResourcePass(CompositorPassTypeId compositorPassTypeId) const = 0;
+		virtual ICompositorInstancePass* createCompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorInstanceNode& compositorInstanceNode) const = 0;
 
 
 	//[-------------------------------------------------------]

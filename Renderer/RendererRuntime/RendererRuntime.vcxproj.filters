@@ -165,6 +165,15 @@
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl">
       <Filter>Source Files\Resource</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\CompositorResourceNode.inl">
+      <Filter>Source Files\Resource\Compositor</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\CompositorResource.inl">
+      <Filter>Source Files\Resource\Compositor</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\CompositorResourceTarget.inl">
+      <Filter>Source Files\Resource\Compositor</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -408,6 +417,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneFileFormat.h">
       <Filter>Source Files\Resource\Scene\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceTarget.h">
+      <Filter>Source Files\Resource\Compositor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -571,6 +583,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Compositor\Pass\ICompositorInstancePass.cpp">
       <Filter>Source Files\Resource\Compositor\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Compositor\CompositorResourceTarget.cpp">
+      <Filter>Source Files\Resource\Compositor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

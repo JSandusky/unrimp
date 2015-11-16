@@ -22,6 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Compositor/Pass/Clear/CompositorResourcePassClear.h"
+#include "RendererRuntime/Resource/Compositor/Loader/CompositorFileFormat.h"
+
+#include <cassert>
 
 
 //[-------------------------------------------------------]
@@ -38,11 +41,27 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	const float* CompositorResourcePassClear::getClearColor() const
+	{
+		return mColor;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
 	CompositorPassTypeId CompositorResourcePassClear::getTypeId() const
 	{
 		return TYPE_ID;
+	}
+
+	void CompositorResourcePassClear::deserialize(uint32_t numberOfBytes, const uint8_t* data)
+	{
+		assert(sizeof(v1Compositor::PassClear) == numberOfBytes);
+		const v1Compositor::PassClear* passClear = reinterpret_cast<const v1Compositor::PassClear*>(data);
+		memcpy(mColor, passClear->color, sizeof(float) * 4);
 	}
 
 
@@ -51,7 +70,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorResourcePassClear::CompositorResourcePassClear()
 	{
-		// Nothing here
+		memset(mColor, 0, sizeof(float) * 4);
 	}
 
 	CompositorResourcePassClear::~CompositorResourcePassClear()

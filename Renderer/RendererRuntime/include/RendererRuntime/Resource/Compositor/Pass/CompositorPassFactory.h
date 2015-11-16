@@ -48,8 +48,8 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::CompositorPassFactory methods ]
 	//[-------------------------------------------------------]
 	protected:
-		RENDERERRUNTIME_API_EXPORT virtual ICompositorResourcePass* createCompositorResourcePass(CompositorPassTypeId compositorPassTypeId) override;
-		RENDERERRUNTIME_API_EXPORT virtual ICompositorInstancePass* createCompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorInstanceNode& compositorInstanceNode) override;
+		RENDERERRUNTIME_API_EXPORT virtual ICompositorResourcePass* createCompositorResourcePass(CompositorPassTypeId compositorPassTypeId) const override;
+		RENDERERRUNTIME_API_EXPORT virtual ICompositorInstancePass* createCompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorInstanceNode& compositorInstanceNode) const override;
 
 
 	//[-------------------------------------------------------]

@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorResourceNode.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,17 +26,11 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorResourceNode::CompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId) :
-		mCompositorResourceNodeId(compositorResourceNodeId)
+	inline void CompositorResource::setNumberOfCompositorResourceNodes(uint32_t numberOfCompositorResourceNodes)
 	{
-		// Nothing here
-	}
-
-	CompositorResourceNode::~CompositorResourceNode()
-	{
-		// Nothing here
+		mCompositorResourceNodes.reserve(numberOfCompositorResourceNodes);
 	}
 
 

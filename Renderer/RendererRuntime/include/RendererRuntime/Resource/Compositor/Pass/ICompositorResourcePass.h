@@ -53,10 +53,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class CompositorResourceTarget;	// Needs to destroy compositor resource pass instances
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
 	public:
 		virtual CompositorPassTypeId getTypeId() const = 0;
+		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) = 0;
 
 
 	//[-------------------------------------------------------]

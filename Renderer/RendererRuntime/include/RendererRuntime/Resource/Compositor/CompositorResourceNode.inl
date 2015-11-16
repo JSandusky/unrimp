@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorResourceNode.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,17 +26,43 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorResourceNode::CompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId) :
-		mCompositorResourceNodeId(compositorResourceNodeId)
+	inline CompositorResourceNodeId CompositorResourceNode::getCompositorResourceNodeId() const
 	{
-		// Nothing here
+		return mCompositorResourceNodeId;
 	}
 
-	CompositorResourceNode::~CompositorResourceNode()
+	inline void CompositorResourceNode::setNumberOfInputChannels(uint32_t numberOfInputChannels)
 	{
-		// Nothing here
+		mInputChannels.reserve(numberOfInputChannels);
+	}
+
+	inline void CompositorResourceNode::addInputChannel(CompositorChannelId compositorChannelId)
+	{
+		mInputChannels.push_back(compositorChannelId);
+	}
+
+	inline void CompositorResourceNode::setNumberOfCompositorResourceTargets(uint32_t numberOfCompositorResourceTargets)
+	{
+		mCompositorResourceTargets.reserve(numberOfCompositorResourceTargets);
+	}
+
+	inline CompositorResourceTarget& CompositorResourceNode::addCompositorResourceTarget(CompositorChannelId compositorChannelId)
+	{
+		// TODO(co) Ensure move copy constructor is used
+		mCompositorResourceTargets.push_back(CompositorResourceTarget(compositorChannelId));
+		return mCompositorResourceTargets.back();
+	}
+
+	inline void CompositorResourceNode::setNumberOfOutputChannels(uint32_t numberOfOutputChannels)
+	{
+		mOutputChannels.reserve(numberOfOutputChannels);
+	}
+
+	inline void CompositorResourceNode::addOutputChannel(CompositorChannelId compositorChannelId)
+	{
+		mOutputChannels.push_back(compositorChannelId);
 	}
 
 

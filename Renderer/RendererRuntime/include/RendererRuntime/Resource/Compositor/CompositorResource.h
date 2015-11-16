@@ -29,12 +29,29 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/IResource.h"
 
+#include <vector>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class CompositorResourceNode;
+}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId CompositorResourceNodeId;	///< Compositor resource node identifier, internally just a POD "uint32_t"
 
 
 	//[-------------------------------------------------------]
@@ -66,6 +83,9 @@ namespace RendererRuntime
 		*/
 		virtual ~CompositorResource();
 
+		inline void setNumberOfCompositorResourceNodes(uint32_t numberOfCompositorResourceNodes);
+		CompositorResourceNode* addCompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId);
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
@@ -75,6 +95,20 @@ namespace RendererRuntime
 		CompositorResource& operator=(const CompositorResource&) = delete;
 
 
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<CompositorResourceNode*> CompositorResourceNodes;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		CompositorResourceNodes mCompositorResourceNodes;
+
+
 	};
 
 
@@ -82,3 +116,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/CompositorResource.inl"

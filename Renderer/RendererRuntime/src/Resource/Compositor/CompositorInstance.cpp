@@ -131,7 +131,7 @@ namespace RendererRuntime
 
 		if (mSequentialCompositorInstanceNodes.empty())
 		{
-			CompositorInstanceNode* compositorInstanceNode = new CompositorInstanceNode(*(new CompositorResourceNode()), *this);
+			CompositorInstanceNode* compositorInstanceNode = new CompositorInstanceNode(*(new CompositorResourceNode(0)), *this);
 			compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory->createCompositorInstancePass(*compositorPassFactory->createCompositorResourcePass("Clear"), *compositorInstanceNode));
 			compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory->createCompositorInstancePass(*compositorPassFactory->createCompositorResourcePass("First"), *compositorInstanceNode));
 			mSequentialCompositorInstanceNodes.push_back(compositorInstanceNode);

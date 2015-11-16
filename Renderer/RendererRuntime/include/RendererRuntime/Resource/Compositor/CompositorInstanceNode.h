@@ -59,7 +59,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Friends methods                                       ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class CompositorInstance;	// Needs to create and execute compositor node instances
 

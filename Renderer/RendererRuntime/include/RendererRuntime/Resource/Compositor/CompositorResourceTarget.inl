@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorResourceNode.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,17 +26,33 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorResourceNode::CompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId) :
-		mCompositorResourceNodeId(compositorResourceNodeId)
+	inline CompositorResourceTarget::CompositorResourceTarget(CompositorChannelId compositorChannelId) :
+		mCompositorChannelId(compositorChannelId)
 	{
 		// Nothing here
 	}
 
-	CompositorResourceNode::~CompositorResourceNode()
+	inline CompositorResourceTarget::CompositorResourceTarget(const CompositorResourceTarget& compositorResourceTarget) :
+		mCompositorChannelId(compositorResourceTarget.mCompositorChannelId)
 	{
 		// Nothing here
+	}
+
+	inline CompositorResourceTarget::~CompositorResourceTarget()
+	{
+		removeAllCompositorResourcePasses();
+	}
+
+	inline CompositorChannelId CompositorResourceTarget::getCompositorChannelId() const
+	{
+		return mCompositorChannelId;
+	}
+
+	inline void CompositorResourceTarget::setNumberOfCompositorResourcePasses(uint32_t compositorResourcePasses)
+	{
+		mCompositorResourcePasses.reserve(compositorResourcePasses);
 	}
 
 

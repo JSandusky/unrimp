@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Compositor/CompositorResource.h"
+#include "RendererRuntime/Resource/Compositor/CompositorResourceNode.h"
 
 
 //[-------------------------------------------------------]
@@ -43,6 +44,15 @@ namespace RendererRuntime
 	CompositorResource::~CompositorResource()
 	{
 		// Nothing here
+	}
+
+	CompositorResourceNode* CompositorResource::addCompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId)
+	{
+		// TODO(co) Compositor resource node management inside "CompositorResourceManager"
+		mCompositorResourceNodes.push_back(new CompositorResourceNode(compositorResourceNodeId));
+
+		// TODO(co)
+		return nullptr;
 	}
 
 

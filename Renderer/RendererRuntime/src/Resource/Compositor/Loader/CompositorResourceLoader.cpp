@@ -23,9 +23,113 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Compositor/Loader/CompositorResourceLoader.h"
 #include "RendererRuntime/Resource/Compositor/Loader/CompositorFileFormat.h"
+#include "RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResource.h"
+#include "RendererRuntime/Resource/Compositor/CompositorResourceNode.h"
+#include "RendererRuntime/Resource/Compositor/CompositorResourceManager.h"
 
 #include <fstream>
+
+
+// TODO(co) Possible performance improvement: Inside "CompositorResourceLoader::onDeserialization()" load everything directly into memory,
+// (compositor hasn't much data), create the instances inside "CompositorResourceLoader::onProcessing()" while other stuff can continue reading
+// from disk.
+// TODO(co) Error handling
+
+
+//[-------------------------------------------------------]
+//[ Global functions in anonymous namespace               ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+		void nodeTargetDeserialization(std::istream& istream, RendererRuntime::CompositorResourceNode& compositorResourceNode, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
+		{
+			// Read in the compositor target
+			RendererRuntime::v1Compositor::Target target;
+			istream.read(reinterpret_cast<char*>(&target), sizeof(RendererRuntime::v1Compositor::Target));
+
+			// Create the compositor resource target instance
+			RendererRuntime::CompositorResourceTarget& compositorResourceTarget = compositorResourceNode.addCompositorResourceTarget(target.channelId);
+
+			// Read in the compositor node target passes
+			compositorResourceTarget.setNumberOfCompositorResourcePasses(target.numberOfPasses);
+			for (uint32_t i = 0; i < target.numberOfPasses; ++i)
+			{
+				// Read the pass header
+				RendererRuntime::v1Compositor::PassHeader passHeader;
+				istream.read(reinterpret_cast<char*>(&passHeader), sizeof(RendererRuntime::v1Compositor::PassHeader));
+
+				// Load in the compositor resource pass data
+				// TODO(co) Get rid of the new/delete in here
+				uint8_t* data = new uint8_t[passHeader.numberOfBytes];
+				istream.read(reinterpret_cast<char*>(data), passHeader.numberOfBytes);
+
+				// Create the compositor resource pass
+				RendererRuntime::ICompositorResourcePass* compositorResourcePass = compositorResourceTarget.addCompositorResourcePass(compositorPassFactory, passHeader.typeId);
+
+				// Deserialize the compositor resource pass
+				compositorResourcePass->deserialize(passHeader.numberOfBytes, data);
+
+				// Cleanup
+				delete [] data;
+			}
+		}
+
+		void nodeDeserialization(std::istream& istream, RendererRuntime::CompositorResource& compositorResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
+		{
+			// Read in the compositor node
+			RendererRuntime::v1Compositor::Node node;
+			istream.read(reinterpret_cast<char*>(&node), sizeof(RendererRuntime::v1Compositor::Node));
+
+			// Create the compositor resource node instance
+			// TODO(co) Handle already existing compositor resource nodes
+			RendererRuntime::CompositorResourceNode* compositorResourceNode = compositorResource.addCompositorResourceNode(node.id);
+
+			// Read in the compositor node input channels
+			// TODO(co) Read all input channels in a single burst? (need to introduce a maximum number of input channels for this)
+			compositorResourceNode->setNumberOfInputChannels(node.numberOfInputChannels);
+			for (uint32_t i = 0; i < node.numberOfInputChannels; ++i)
+			{
+				RendererRuntime::CompositorChannelId channelId;
+				istream.read(reinterpret_cast<char*>(&channelId), sizeof(RendererRuntime::CompositorChannelId));
+				compositorResourceNode->addInputChannel(channelId);
+			}
+
+			// Read in the compositor node targets
+			compositorResourceNode->setNumberOfCompositorResourceTargets(node.numberOfTargets);
+			for (uint32_t i = 0; i < node.numberOfTargets; ++i)
+			{
+				nodeTargetDeserialization(istream, *compositorResourceNode, compositorPassFactory);
+			}
+
+			// Read in the compositor node output channels
+			// TODO(co) Read all output channels in a single burst? (need to introduce a maximum number of output channels for this)
+			compositorResourceNode->setNumberOfOutputChannels(node.numberOfOutputChannels);
+			for (uint32_t i = 0; i < node.numberOfOutputChannels; ++i)
+			{
+				RendererRuntime::CompositorChannelId channelId;
+				istream.read(reinterpret_cast<char*>(&channelId), sizeof(RendererRuntime::CompositorChannelId));
+				compositorResourceNode->addOutputChannel(channelId);
+			}
+		}
+
+		void nodesDeserialization(std::istream& istream, RendererRuntime::CompositorResource& compositorResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
+		{
+			// Read in the compositor nodes
+			RendererRuntime::v1Compositor::Nodes nodes;
+			istream.read(reinterpret_cast<char*>(&nodes), sizeof(RendererRuntime::v1Compositor::Nodes));
+
+			// Read in the compositor nodes
+			compositorResource.setNumberOfCompositorResourceNodes(nodes.numberOfNodes);
+			for (uint32_t i = 0; i < nodes.numberOfNodes; ++i)
+			{
+				nodeDeserialization(istream, compositorResource, compositorPassFactory);
+			}
+		}
+	}
+}
 
 
 //[-------------------------------------------------------]
@@ -51,20 +155,29 @@ namespace RendererRuntime
 
 	void CompositorResourceLoader::onDeserialization()
 	{
-		// TODO(co) Error handling
-		try
+		ICompositorPassFactory* compositorPassFactory = static_cast<CompositorResourceManager&>(getResourceManager()).getCompositorPassFactory();
+		if (nullptr != compositorPassFactory)
 		{
-			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
+			try
+			{
+				std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
 
-			// Read in the compositor header
-			v1Compositor::Header compositorHeader;
-			ifstream.read(reinterpret_cast<char*>(&compositorHeader), sizeof(v1Compositor::Header));
+				// Read in the compositor header
+				v1Compositor::Header compositorHeader;
+				ifstream.read(reinterpret_cast<char*>(&compositorHeader), sizeof(v1Compositor::Header));
 
-			// TODO(co)
+				// Read in the compositor nodes
+				::detail::nodesDeserialization(ifstream, *mCompositorResource, *compositorPassFactory);
+			}
+			catch (const std::exception& e)
+			{
+				RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load compositor asset %d: %s", mAsset.assetId, e.what());
+			}
 		}
-		catch (const std::exception& e)
+		else
 		{
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load compositor asset %d: %s", mAsset.assetId, e.what());
+			// Error!
+			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load compositor asset %d: The compositor resource manager has no compositor pass factory set", mAsset.assetId);
 		}
 	}
 

@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Resource/Compositor/CompositorResourceTarget.h"
 
 
 //[-------------------------------------------------------]
@@ -38,6 +38,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId CompositorResourceNodeId;	///< Compositor resource node identifier, internally just a POD "uint32_t"
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	class CompositorResourceNode : protected NonCopyable
@@ -45,19 +51,54 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Friends methods                                       ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class CompositorInstance;	// TODO(co) Just a first test, remove this
+		friend class CompositorResource;	// TODO(co) Just a first test, remove this
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		inline CompositorResourceNodeId getCompositorResourceNodeId() const;
+
+		inline void setNumberOfInputChannels(uint32_t numberOfInputChannels);
+		inline void addInputChannel(CompositorChannelId compositorChannelId);
+
+		inline void setNumberOfCompositorResourceTargets(uint32_t numberOfCompositorResourceTargets);
+		inline CompositorResourceTarget& addCompositorResourceTarget(CompositorChannelId compositorChannelId);
+
+		inline void setNumberOfOutputChannels(uint32_t numberOfOutputChannels);
+		inline void addOutputChannel(CompositorChannelId compositorChannelId);
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorResourceNode();
+		explicit CompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId);
 		virtual ~CompositorResourceNode();
 		CompositorResourceNode(const CompositorResourceNode&) = delete;
 		CompositorResourceNode& operator=(const CompositorResourceNode&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<CompositorChannelId>	  CompositorChannels;	// TODO(co) Get rid of "std::vector" and dynamic memory handling in here? (need to introduce a maximum number of input channels for this)
+		typedef std::vector<CompositorResourceTarget> CompositorResourceTargets;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		CompositorResourceNodeId  mCompositorResourceNodeId;
+		CompositorChannels		  mInputChannels;
+		CompositorResourceTargets mCompositorResourceTargets;
+		CompositorChannels		  mOutputChannels;
 
 
 	};
@@ -67,3 +108,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/CompositorResourceNode.inl"

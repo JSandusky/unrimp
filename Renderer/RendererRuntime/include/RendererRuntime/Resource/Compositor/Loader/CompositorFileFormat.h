@@ -35,6 +35,16 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId CompositorResourceNodeId;	///< Compositor resource node identifier, internally just a POD "uint32_t"
+	typedef StringId CompositorChannelId;		///< Compositor channel identifier, internally just a POD "uint32_t"
+	typedef StringId CompositorPassTypeId;		///< Compositor pass type identifier, internally just a POD "uint32_t"
+
+
 	// -> Compositor file format content:
 	//    - Compositor header
 	namespace v1Compositor
@@ -53,6 +63,49 @@ namespace RendererRuntime
 			{
 				uint32_t formatType;
 				uint16_t formatVersion;
+			};
+
+			struct Nodes
+			{
+				uint32_t numberOfNodes;
+			};
+
+			struct Node
+			{
+				CompositorResourceNodeId id;
+				uint32_t				 numberOfInputChannels;
+				uint32_t				 numberOfTargets;
+				uint32_t				 numberOfOutputChannels;
+			};
+
+			struct Channel
+			{
+				CompositorChannelId id;
+			};
+
+			struct Target
+			{
+				CompositorChannelId channelId;
+				uint32_t			numberOfPasses;
+			};
+
+			struct PassHeader
+			{
+				CompositorPassTypeId typeId;
+				uint32_t			 numberOfBytes;
+			};
+
+			struct PassClear
+			{
+				float color[4];
+			};
+
+			struct PassQuad
+			{
+			};
+
+			struct PassScene
+			{
 			};
 		#pragma pack(pop)
 

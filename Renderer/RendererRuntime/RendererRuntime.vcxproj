@@ -28,6 +28,9 @@
     <None Include="include\RendererRuntime\Core\StringId.inl" />
     <None Include="include\RendererRuntime\Core\Transform.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
+    <None Include="include\RendererRuntime\Resource\Compositor\CompositorResource.inl" />
+    <None Include="include\RendererRuntime\Resource\Compositor\CompositorResourceNode.inl" />
+    <None Include="include\RendererRuntime\Resource\Compositor\CompositorResourceTarget.inl" />
     <None Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Font\FontResource.inl" />
     <None Include="include\RendererRuntime\Resource\Font\Loader\FontResourceLoader.inl" />
@@ -74,6 +77,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceNode.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceTarget.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorInstancePassClear.h" />
@@ -146,6 +150,7 @@
     <ClCompile Include="src\Resource\Compositor\CompositorResource.cpp" />
     <ClCompile Include="src\Resource\Compositor\CompositorResourceManager.cpp" />
     <ClCompile Include="src\Resource\Compositor\CompositorResourceNode.cpp" />
+    <ClCompile Include="src\Resource\Compositor\CompositorResourceTarget.cpp" />
     <ClCompile Include="src\Resource\Compositor\Loader\CompositorResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Compositor\Pass\Clear\CompositorInstancePassClear.cpp" />
     <ClCompile Include="src\Resource\Compositor\Pass\Clear\CompositorResourcePassClear.cpp" />

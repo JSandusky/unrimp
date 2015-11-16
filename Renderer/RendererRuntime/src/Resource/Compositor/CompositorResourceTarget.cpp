@@ -21,57 +21,40 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "PrecompiledHeader.h"
+#include "RendererRuntime/Resource/Compositor/CompositorResourceTarget.h"
+#include "RendererRuntime/Resource/Compositor/Pass/ICompositorPassFactory.h"
+#include "RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.h"
 
 
 //[-------------------------------------------------------]
-//[ Preprocessor                                          ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-#ifndef RENDERER_NO_RUNTIME
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "Runtime/FirstCompositor/CompositorResourcePassFirst.h"
-
-
-//[-------------------------------------------------------]
-//[ Public definitions                                    ]
-//[-------------------------------------------------------]
-const RendererRuntime::CompositorPassTypeId CompositorResourcePassFirst::TYPE_ID("First");
-
-
-//[-------------------------------------------------------]
-//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
-//[-------------------------------------------------------]
-RendererRuntime::CompositorPassTypeId CompositorResourcePassFirst::getTypeId() const
+namespace RendererRuntime
 {
-	return TYPE_ID;
-}
 
-void CompositorResourcePassFirst::deserialize(uint32_t, const uint8_t*)
-{
-	// TODO(co)
-//	assert(sizeof(v1Compositor::PassQuad) == numberOfBytes);
-}
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	ICompositorResourcePass* CompositorResourceTarget::addCompositorResourcePass(const ICompositorPassFactory& compositorPassFactory, CompositorPassTypeId compositorPassTypeId)
+	{
+		ICompositorResourcePass* compositorResourcePass = compositorPassFactory.createCompositorResourcePass(compositorPassTypeId);
+		mCompositorResourcePasses.push_back(compositorResourcePass);
+		return compositorResourcePass;
+	}
+
+	void CompositorResourceTarget::removeAllCompositorResourcePasses()
+	{
+		const size_t numberOfCompositorResourcePasses = mCompositorResourcePasses.size();
+		for (size_t i = 0; i < numberOfCompositorResourcePasses; ++i)
+		{
+			delete mCompositorResourcePasses[i];
+		}
+		mCompositorResourcePasses.clear();
+	}
 
 
 //[-------------------------------------------------------]
-//[ Protected methods                                     ]
+//[ Namespace                                             ]
 //[-------------------------------------------------------]
-CompositorResourcePassFirst::CompositorResourcePassFirst()
-{
-	// Nothing here
-}
-
-CompositorResourcePassFirst::~CompositorResourcePassFirst()
-{
-	// Nothing here
-}
-
-
-//[-------------------------------------------------------]
-//[ Preprocessor                                          ]
-//[-------------------------------------------------------]
-#endif // RENDERER_NO_RUNTIME
+} // RendererRuntime

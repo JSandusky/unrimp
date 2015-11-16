@@ -44,8 +44,7 @@ namespace RendererRuntime
 		Renderer::IRenderer& renderer = getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getRenderer();
 
 		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-		const float color[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
-		renderer.clear(Renderer::ClearFlag::COLOR_DEPTH, color, 1.0f, 0);
+		renderer.clear(Renderer::ClearFlag::COLOR_DEPTH, static_cast<const CompositorResourcePassClear&>(mCompositorResourcePass).getClearColor(), 1.0f, 0);
 	}
 
 

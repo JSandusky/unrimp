@@ -49,8 +49,8 @@ public:
 //[ Protected virtual RendererRuntime::CompositorPassFactory methods ]
 //[-------------------------------------------------------]
 protected:
-	virtual RendererRuntime::ICompositorResourcePass* createCompositorResourcePass(RendererRuntime::CompositorPassTypeId compositorPassTypeId) override;
-	virtual RendererRuntime::ICompositorInstancePass* createCompositorInstancePass(const RendererRuntime::ICompositorResourcePass& compositorResourcePass, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode) override;
+	virtual RendererRuntime::ICompositorResourcePass* createCompositorResourcePass(RendererRuntime::CompositorPassTypeId compositorPassTypeId) const override;
+	virtual RendererRuntime::ICompositorInstancePass* createCompositorInstancePass(const RendererRuntime::ICompositorResourcePass& compositorResourcePass, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode) const override;
 
 
 //[-------------------------------------------------------]

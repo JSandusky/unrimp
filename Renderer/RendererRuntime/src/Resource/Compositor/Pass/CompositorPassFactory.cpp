@@ -40,7 +40,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::CompositorPassFactory methods ]
 	//[-------------------------------------------------------]
-	ICompositorResourcePass* CompositorPassFactory::createCompositorResourcePass(CompositorPassTypeId compositorPassTypeId)
+	ICompositorResourcePass* CompositorPassFactory::createCompositorResourcePass(CompositorPassTypeId compositorPassTypeId) const
 	{
 		ICompositorResourcePass* compositorResourcePass = nullptr;
 
@@ -62,7 +62,7 @@ namespace RendererRuntime
 		return compositorResourcePass;
 	}
 
-	ICompositorInstancePass* CompositorPassFactory::createCompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorInstanceNode& compositorInstanceNode)
+	ICompositorInstancePass* CompositorPassFactory::createCompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorInstanceNode& compositorInstanceNode) const
 	{
 		ICompositorInstancePass* compositorInstancePass = nullptr;
 

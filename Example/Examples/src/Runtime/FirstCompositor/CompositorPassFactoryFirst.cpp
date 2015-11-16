@@ -55,7 +55,7 @@ CompositorPassFactoryFirst::~CompositorPassFactoryFirst()
 //[-------------------------------------------------------]
 //[ Protected virtual RendererRuntime::CompositorPassFactory methods ]
 //[-------------------------------------------------------]
-RendererRuntime::ICompositorResourcePass* CompositorPassFactoryFirst::createCompositorResourcePass(RendererRuntime::CompositorPassTypeId compositorPassTypeId)
+RendererRuntime::ICompositorResourcePass* CompositorPassFactoryFirst::createCompositorResourcePass(RendererRuntime::CompositorPassTypeId compositorPassTypeId) const
 {
 	// First, let the base implementation try to create an instance
 	RendererRuntime::ICompositorResourcePass* compositorResourcePass = CompositorPassFactory::createCompositorResourcePass(compositorPassTypeId);
@@ -72,7 +72,7 @@ RendererRuntime::ICompositorResourcePass* CompositorPassFactoryFirst::createComp
 	return compositorResourcePass;
 }
 
-RendererRuntime::ICompositorInstancePass* CompositorPassFactoryFirst::createCompositorInstancePass(const RendererRuntime::ICompositorResourcePass& compositorResourcePass, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode)
+RendererRuntime::ICompositorInstancePass* CompositorPassFactoryFirst::createCompositorInstancePass(const RendererRuntime::ICompositorResourcePass& compositorResourcePass, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode) const
 {
 	// First, let the base implementation try to create an instance
 	RendererRuntime::ICompositorInstancePass* compositorInstancePass = CompositorPassFactory::createCompositorInstancePass(compositorResourcePass, compositorInstanceNode);

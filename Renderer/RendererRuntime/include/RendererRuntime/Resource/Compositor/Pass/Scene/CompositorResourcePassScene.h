@@ -62,6 +62,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		virtual CompositorPassTypeId getTypeId() const override;
+		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
 
 
 	//[-------------------------------------------------------]

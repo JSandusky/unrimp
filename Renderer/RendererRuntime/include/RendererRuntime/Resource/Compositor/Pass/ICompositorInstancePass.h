@@ -56,7 +56,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Friends methods                                       ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class CompositorInstanceNode;	// Needs to execute compositor node instances
 
@@ -87,9 +87,9 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private data                                          ]
+	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
-	private:
+	protected:
 		const ICompositorResourcePass& mCompositorResourcePass;
 		const CompositorInstanceNode&  mCompositorInstanceNode;
 
