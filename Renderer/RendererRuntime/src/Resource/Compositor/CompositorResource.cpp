@@ -49,10 +49,9 @@ namespace RendererRuntime
 	CompositorResourceNode* CompositorResource::addCompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId)
 	{
 		// TODO(co) Compositor resource node management inside "CompositorResourceManager"
-		mCompositorResourceNodes.push_back(new CompositorResourceNode(compositorResourceNodeId));
-
-		// TODO(co)
-		return nullptr;
+		CompositorResourceNode* compositorResourceNode = new CompositorResourceNode(compositorResourceNodeId);
+		mCompositorResourceNodes.push_back(compositorResourceNode);
+		return compositorResourceNode;
 	}
 
 

@@ -54,7 +54,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const CompositorPassTypeId TYPE_ID;
+		RENDERERRUNTIME_API_EXPORT static const CompositorPassTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]

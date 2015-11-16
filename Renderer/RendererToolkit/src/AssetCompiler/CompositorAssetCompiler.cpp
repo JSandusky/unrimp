@@ -25,6 +25,15 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Resource/Compositor/Loader/CompositorFileFormat.h>
+#include <RendererRuntime/Resource/Compositor/Pass/Quad/CompositorResourcePassQuad.h>
+#include <RendererRuntime/Resource/Compositor/Pass/Clear/CompositorResourcePassClear.h>
+#include <RendererRuntime/Resource/Compositor/Pass/Scene/CompositorResourcePassScene.h>
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4251)	// warning C4251: 'Poco::StringTokenizer::_tokens': class 'std::vector<std::string,std::allocator<_Kty>>' needs to have dll-interface to be used by clients of class 'Poco::StringTokenizer'
+	#include <Poco/StringTokenizer.h>
+#pragma warning(pop)
 
 #include <fstream>
 
@@ -79,13 +88,181 @@ namespace RendererToolkit
 		const std::string assetFilename = assetOutputDirectory + assetName + ".compositor";
 		std::ofstream ofstream(assetFilename, std::ios::binary);
 
-		{ // TODO(co) Implement me
-			RendererRuntime::v1Compositor::Header compositorHeader;
-			compositorHeader.formatType	   = RendererRuntime::v1Compositor::FORMAT_TYPE;
-			compositorHeader.formatVersion = RendererRuntime::v1Compositor::FORMAT_VERSION;
+		{ // Compositor
+			// Parse JSON
+			Poco::JSON::Parser jsonParser;
+			jsonParser.parse(ifstream);
+			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
+		
+			{ // Check whether or not the file format matches
+				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
+				if (jsonFormatObject->get("Type").convert<std::string>() != "CompositorAsset")
+				{
+					throw std::exception("Invalid JSON format type, must be \"CompositorAsset\"");
+				}
+				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
+				{
+					throw std::exception("Invalid JSON format version, must be 1");
+				}
+			}
 
-			// Write down the font header
-			ofstream.write(reinterpret_cast<const char*>(&compositorHeader), sizeof(RendererRuntime::v1Compositor::Header));
+			{ // Write down the compositor resource header
+				RendererRuntime::v1Compositor::Header compositorHeader;
+				compositorHeader.formatType	   = RendererRuntime::v1Compositor::FORMAT_TYPE;
+				compositorHeader.formatVersion = RendererRuntime::v1Compositor::FORMAT_VERSION;
+				ofstream.write(reinterpret_cast<const char*>(&compositorHeader), sizeof(RendererRuntime::v1Compositor::Header));
+			}
+
+			Poco::JSON::Object::Ptr jsonCompositorObject = jsonRootObject->get("CompositorAsset").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonCompositorNodesObject = jsonCompositorObject->get("Nodes").extract<Poco::JSON::Object::Ptr>();
+
+			{ // Write down the compositor resource nodes
+				RendererRuntime::v1Compositor::Nodes nodes;
+				nodes.numberOfNodes = jsonCompositorNodesObject->size();
+				ofstream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1Compositor::Nodes));
+
+				// Loop through all compositor resource nodes
+				Poco::JSON::Object::ConstIterator nodesIterator = jsonCompositorNodesObject->begin();
+				Poco::JSON::Object::ConstIterator nodesIteratorEnd = jsonCompositorNodesObject->end();
+				while (nodesIterator != nodesIteratorEnd)
+				{
+					Poco::JSON::Object::Ptr jsonCompositorNodeObject = nodesIterator->second.extract<Poco::JSON::Object::Ptr>();
+					Poco::JSON::Object::Ptr jsonInputChannelsObject = jsonCompositorNodeObject->get("InputChannels").extract<Poco::JSON::Object::Ptr>();
+					Poco::JSON::Object::Ptr jsonTargetsObject = jsonCompositorNodeObject->get("Targets").extract<Poco::JSON::Object::Ptr>();
+					Poco::JSON::Object::Ptr jsonOutputChannelsObject = jsonCompositorNodeObject->get("OutputChannels").extract<Poco::JSON::Object::Ptr>();
+
+					{ // Write down the compositor resource node
+						RendererRuntime::v1Compositor::Node node;
+						node.id						= RendererRuntime::StringId(nodesIterator->first.c_str());
+						node.numberOfInputChannels	= jsonInputChannelsObject->size();
+						node.numberOfTargets		= jsonTargetsObject->size();
+						node.numberOfOutputChannels	= jsonOutputChannelsObject->size();
+						ofstream.write(reinterpret_cast<const char*>(&node), sizeof(RendererRuntime::v1Compositor::Node));
+					}
+
+					{ // Write down the compositor resource node input channels
+						Poco::JSON::Object::ConstIterator channelsIterator = jsonInputChannelsObject->begin();
+						Poco::JSON::Object::ConstIterator channelsIteratorEnd = jsonInputChannelsObject->end();
+						while (channelsIterator != channelsIteratorEnd)
+						{
+							RendererRuntime::v1Compositor::Channel channel;
+							channel.id = RendererRuntime::StringId(channelsIterator->second.convert<std::string>().c_str());
+							ofstream.write(reinterpret_cast<const char*>(&channel), sizeof(RendererRuntime::v1Compositor::Channel));
+
+							// Next compositor resource node input channel, please
+							++channelsIterator;
+						}
+					}
+
+					{ // Write down the compositor resource node targets
+						Poco::JSON::Object::ConstIterator targetsIterator = jsonTargetsObject->begin();
+						Poco::JSON::Object::ConstIterator targetsIteratorEnd = jsonTargetsObject->end();
+						while (targetsIterator != targetsIteratorEnd)
+						{
+							Poco::JSON::Object::Ptr jsonCompositorTargetObject = targetsIterator->second.extract<Poco::JSON::Object::Ptr>();
+							Poco::JSON::Object::Ptr jsonPassesObject = jsonCompositorTargetObject->get("Passes").extract<Poco::JSON::Object::Ptr>();
+
+							{ // Write down the compositor resource node target
+								RendererRuntime::v1Compositor::Target target;
+								target.channelId	  = RendererRuntime::StringId(targetsIterator->first.c_str());
+								target.numberOfPasses = jsonPassesObject->size();
+								ofstream.write(reinterpret_cast<const char*>(&target), sizeof(RendererRuntime::v1Compositor::Target));
+							}
+
+							{ // Write down the compositor resource node target passes
+								Poco::JSON::Object::ConstIterator passesIterator = jsonPassesObject->begin();
+								Poco::JSON::Object::ConstIterator passesIteratorEnd = jsonPassesObject->end();
+								while (passesIterator != passesIteratorEnd)
+								{
+									Poco::JSON::Object::Ptr jsonPassObject = passesIterator->second.extract<Poco::JSON::Object::Ptr>();
+									const RendererRuntime::CompositorPassTypeId typeId = RendererRuntime::StringId(passesIterator->first.c_str());
+
+									// Get the compositor resource node target pass type specific data number of bytes
+									// TODO(co) Make this more generic via compositor pass factory
+									uint32_t numberOfBytes = 0;
+									if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == typeId)
+									{
+										numberOfBytes = sizeof(RendererRuntime::v1Compositor::PassClear);
+									}
+									else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == typeId)
+									{
+										numberOfBytes = sizeof(RendererRuntime::v1Compositor::PassQuad);
+									}
+									else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == typeId)
+									{
+										numberOfBytes = sizeof(RendererRuntime::v1Compositor::PassScene);
+									}
+
+									{ // Write down the compositor resource node target pass header
+										RendererRuntime::v1Compositor::PassHeader passHeader;
+										passHeader.typeId		 = typeId;
+										passHeader.numberOfBytes = numberOfBytes;
+										ofstream.write(reinterpret_cast<const char*>(&passHeader), sizeof(RendererRuntime::v1Compositor::PassHeader));
+									}
+
+									// Write down the compositor resource node target pass type specific data, if there is any
+									if (0 != numberOfBytes)
+									{
+										if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == typeId)
+										{
+											RendererRuntime::v1Compositor::PassClear passClear;
+
+											// Parse the color string
+											Poco::StringTokenizer stringTokenizer(jsonPassObject->get("Color").convert<std::string>(), " ");
+											if (stringTokenizer.count() == 4)
+											{
+												for (size_t i = 0; i < 4; ++i)
+												{
+													passClear.color[i] = static_cast<float>(std::atof(stringTokenizer[i].c_str()));
+												}
+											}
+											else
+											{
+												// TODO(co) Error handling
+											}
+
+											ofstream.write(reinterpret_cast<const char*>(&passClear), sizeof(RendererRuntime::v1Compositor::PassClear));
+										}
+										else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == typeId)
+										{
+											RendererRuntime::v1Compositor::PassQuad passQuad;
+											ofstream.write(reinterpret_cast<const char*>(&passQuad), sizeof(RendererRuntime::v1Compositor::PassQuad));
+										}
+										else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == typeId)
+										{
+											RendererRuntime::v1Compositor::PassScene passScene;
+											ofstream.write(reinterpret_cast<const char*>(&passScene), sizeof(RendererRuntime::v1Compositor::PassScene));
+										}
+									}
+
+									// Next compositor resource node target pass, please
+									++passesIterator;
+								}
+							}
+
+							// Next compositor resource node target, please
+							++targetsIterator;
+						}
+					}
+
+					{ // Write down the compositor resource node output channels
+						Poco::JSON::Object::ConstIterator channelsIterator = jsonOutputChannelsObject->begin();
+						Poco::JSON::Object::ConstIterator channelsIteratorEnd = jsonOutputChannelsObject->end();
+						while (channelsIterator != channelsIteratorEnd)
+						{
+							RendererRuntime::v1Compositor::Channel channel;
+							channel.id = RendererRuntime::StringId(channelsIterator->second.convert<std::string>().c_str());
+							ofstream.write(reinterpret_cast<const char*>(&channel), sizeof(RendererRuntime::v1Compositor::Channel));
+
+							// Next compositor resource node output channel, please
+							++channelsIterator;
+						}
+					}
+
+					// Next compositor resource node, please
+					++nodesIterator;
+				}
+			}
 		}
 
 		{ // Update the output asset package
