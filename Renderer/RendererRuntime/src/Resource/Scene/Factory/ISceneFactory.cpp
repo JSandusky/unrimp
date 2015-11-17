@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/Factory/ISceneFactory.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -26,11 +32,16 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ISceneResource& ISceneItem::getSceneResource() const
+	ISceneFactory::ISceneFactory()
 	{
-		return mSceneResource;
+		// Nothing here
+	}
+
+	ISceneFactory::~ISceneFactory()
+	{
+		// Nothing here
 	}
 
 

@@ -28,9 +28,30 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ISceneResource& ISceneItem::getSceneResource() const
+	inline const IRendererRuntime& ISceneResource::getRendererRuntime() const
 	{
-		return mSceneResource;
+		return mRendererRuntime;
+	}
+
+	inline void ISceneResource::destroyAllSceneNodesAndItems()
+	{
+		destroyAllSceneNodes();
+		destroyAllSceneItems();
+	}
+
+	inline const ISceneResource::SceneNodes& ISceneResource::getSceneNodes() const
+	{
+		return mSceneNodes;
+	}
+
+	template <typename T> T* ISceneResource::createSceneItem()
+	{
+		return static_cast<T*>(createSceneItem(T::TYPE_ID));
+	}
+
+	inline const ISceneResource::SceneItems& ISceneResource::getSceneItems() const
+	{
+		return mSceneItems;
 	}
 
 

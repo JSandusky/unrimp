@@ -34,7 +34,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const SceneItemTypeId CameraSceneItem::TYPE_ID("Camera");
+	const SceneItemTypeId CameraSceneItem::TYPE_ID("CameraSceneItem");
 
 
 	//[-------------------------------------------------------]
@@ -49,7 +49,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	CameraSceneItem::CameraSceneItem(SceneResource& sceneResource) :
+	CameraSceneItem::CameraSceneItem(ISceneResource& sceneResource) :
 		ISceneItem(sceneResource)
 	{
 		// Nothing in here

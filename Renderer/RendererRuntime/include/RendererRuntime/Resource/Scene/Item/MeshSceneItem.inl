@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return mMeshResource;
 	}
 
+	inline void MeshSceneItem::setMeshResource(MeshResource* meshResource)
+	{
+		mMeshResource = meshResource;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

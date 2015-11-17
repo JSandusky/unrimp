@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
-#include "RendererRuntime/Resource/Scene/SceneResource.h"
+#include "RendererRuntime/Resource/Scene/ISceneResource.h"
 
 #include <fstream>
 

@@ -39,7 +39,7 @@ namespace
 {
 	namespace detail
 	{
-		static const RendererRuntime::CompositorPassFactory compositorPassFactory;
+		static const RendererRuntime::CompositorPassFactory defaultCompositorPassFactory;
 	}
 }
 
@@ -133,7 +133,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorResourceManager::CompositorResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mCompositorPassFactory(&::detail::compositorPassFactory)
+		mCompositorPassFactory(&::detail::defaultCompositorPassFactory)
 	{
 		// Nothing in here
 	}

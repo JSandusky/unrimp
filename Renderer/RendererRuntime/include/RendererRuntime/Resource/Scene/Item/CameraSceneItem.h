@@ -48,7 +48,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneResource;
+		friend class SceneFactory;	// Needs to be able to create scene item instances
 
 
 	//[-------------------------------------------------------]
@@ -69,7 +69,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		explicit CameraSceneItem(SceneResource& sceneResource);
+		explicit CameraSceneItem(ISceneResource& sceneResource);
 		virtual ~CameraSceneItem();
 		CameraSceneItem(const CameraSceneItem&) = delete;
 		CameraSceneItem& operator=(const CameraSceneItem&) = delete;

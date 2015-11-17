@@ -23,12 +23,25 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Scene/SceneResourceManager.h"
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
+#include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.h"
 #include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <assert.h>
+
+
+//[-------------------------------------------------------]
+//[ Global variables in anonymous namespace               ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+		static const RendererRuntime::SceneFactory defaultSceneFactory;
+	}
+}
 
 
 //[-------------------------------------------------------]
@@ -41,23 +54,36 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SceneResource* SceneResourceManager::loadSceneResourceByAssetId(AssetId assetId, bool reload)
+	void SceneResourceManager::setSceneFactory(const ISceneFactory* sceneFactory)
+	{
+		// There must always be a valid scene factory instance
+		mSceneFactory = (nullptr != sceneFactory) ? sceneFactory : &::detail::defaultSceneFactory;
+
+		// Tell the scene resource instances about the new scene factory in town
+		const size_t numberOfSceneResources = mSceneResources.size();
+		for (size_t i = 0; i < numberOfSceneResources; ++i)
+		{
+			mSceneResources[i]->mSceneFactory = mSceneFactory;
+		}
+	}
+
+	ISceneResource* SceneResourceManager::loadSceneResourceByAssetId(AssetId assetId, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
 		{
 			// Get or create the instance
-			SceneResource* sceneResource = nullptr;
-			const size_t numberOfResources = mResources.size();
+			ISceneResource* sceneResource = nullptr;
+			const size_t numberOfResources = mSceneResources.size();
 			for (size_t i = 0; i < numberOfResources; ++i)
 			{
-				SceneResource* currentSceneResource = mResources[i];
+				ISceneResource* currentSceneResource = mSceneResources[i];
 				if (currentSceneResource->getResourceId() == assetId)
 				{
 					sceneResource = currentSceneResource;
 
 					// Get us out of the loop
-					i = mResources.size();
+					i = mSceneResources.size();
 				}
 			}
 
@@ -65,8 +91,9 @@ namespace RendererRuntime
 			bool load = reload;
 			if (nullptr == sceneResource)
 			{
-				sceneResource = new SceneResource(mRendererRuntime, assetId);
-				mResources.push_back(sceneResource);
+				assert(nullptr != mSceneFactory);
+				sceneResource = mSceneFactory->createSceneResource(SceneResource::TYPE_ID, mRendererRuntime, assetId);
+				mSceneResources.push_back(sceneResource);
 				load = true;
 			}
 
@@ -99,9 +126,10 @@ namespace RendererRuntime
 	void SceneResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		for (size_t i = 0; i < mResources.size(); ++i)
+		const size_t numberOfSceneResources = mSceneResources.size();
+		for (size_t i = 0; i < numberOfSceneResources; ++i)
 		{
-			if (mResources[i]->getResourceId() == assetId)
+			if (mSceneResources[i]->getResourceId() == assetId)
 			{
 				loadSceneResourceByAssetId(assetId, true);
 				break;
@@ -119,7 +147,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	SceneResourceManager::SceneResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+		mRendererRuntime(rendererRuntime),
+		mSceneFactory(&::detail::defaultSceneFactory)
 	{
 		// Nothing in here
 	}

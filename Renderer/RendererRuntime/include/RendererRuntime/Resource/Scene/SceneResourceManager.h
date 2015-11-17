@@ -36,7 +36,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class SceneResource;
+	class ISceneFactory;
+	class ISceneResource;
 	class IRendererRuntime;
 }
 
@@ -66,7 +67,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT SceneResource* loadSceneResourceByAssetId(AssetId assetId, bool reload = false);
+		inline const ISceneFactory* getSceneFactory() const;
+		RENDERERRUNTIME_API_EXPORT void setSceneFactory(const ISceneFactory* sceneFactory);
+		RENDERERRUNTIME_API_EXPORT ISceneResource* loadSceneResourceByAssetId(AssetId assetId, bool reload = false);
 
 
 	//[-------------------------------------------------------]
@@ -89,13 +92,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<ISceneResource*> SceneResources;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-
-		// TODO(co) Implement decent resource handling
-		std::vector<SceneResource*> mResources;
+		IRendererRuntime&	 mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		const ISceneFactory* mSceneFactory;		///< Scene factory, can be a null pointer, do not destroy the instance
+		SceneResources		 mSceneResources;
 
 
 	};
@@ -105,3 +114,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/SceneResourceManager.inl"

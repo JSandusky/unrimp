@@ -28,20 +28,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline void SceneResource::destroyAllSceneNodesAndItems()
+	inline const ISceneFactory* SceneResourceManager::getSceneFactory() const
 	{
-		destroyAllSceneNodes();
-		destroyAllSceneItems();
-	}
-
-	inline const SceneResource::SceneNodes& SceneResource::getSceneNodes() const
-	{
-		return mSceneNodes;
-	}
-
-	inline const SceneResource::SceneItems& SceneResource::getSceneItems() const
-	{
-		return mSceneItems;
+		return mSceneFactory;
 	}
 
 

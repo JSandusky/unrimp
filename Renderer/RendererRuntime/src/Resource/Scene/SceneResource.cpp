@@ -22,11 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
-#include "RendererRuntime/Resource/Scene/Node/SceneNode.h"
-#include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
-#include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
-#include "RendererRuntime/IRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -37,103 +32,36 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const SceneResourceTypeId SceneResource::TYPE_ID("SceneResource");
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	SceneResource::~SceneResource()
 	{
-		// Destroy all scene nodes and scene instances
-		destroyAllSceneNodesAndItems();
-	}
-
-	ISceneNode* SceneResource::createSceneNode(const Transform& transform)
-	{
-		SceneNode* sceneNode = new SceneNode(transform);
-		mSceneNodes.push_back(sceneNode);
-		return sceneNode;
-	}
-
-	void SceneResource::destroySceneNode(ISceneNode& sceneNode)
-	{
-		SceneNodes::iterator iterator = std::find(mSceneNodes.begin(), mSceneNodes.end(), &sceneNode);
-		if (iterator != mSceneNodes.end())
-		{
-			mSceneNodes.erase(iterator);
-			delete &sceneNode;
-		}
-		else
-		{
-			// TODO(co) Error handling
-		}
-	}
-
-	void SceneResource::destroyAllSceneNodes()
-	{
-		const size_t numberOfSceneNodes = mSceneNodes.size();
-		for (size_t i = 0; i < numberOfSceneNodes; ++i)
-		{
-			delete mSceneNodes[i];
-		}
-		mSceneNodes.clear();
-	}
-
-	CameraSceneItem* SceneResource::createCameraSceneItem()
-	{
-		CameraSceneItem* cameraSceneItem = new CameraSceneItem(*this);
-		mSceneItems.push_back(cameraSceneItem);
-		return cameraSceneItem;
-	}
-
-	void SceneResource::destroyCameraSceneItem(CameraSceneItem& cameraSceneItem)
-	{
-		destroySceneItem(cameraSceneItem);
-	}
-
-	MeshSceneItem* SceneResource::createMeshSceneItem(AssetId meshAssetId)
-	{
-		// Create mesh instance
-		// TODO(co) Performance: Cache mesh resource manager and renderer instance inside the scene resource manager
-		MeshResource* meshResource = mRendererRuntime.getMeshResourceManager().loadMeshResourceByAssetId(mRendererRuntime.getRenderer(), meshAssetId);
-		return (nullptr != meshResource) ? new MeshSceneItem(*this, *meshResource) : nullptr;
-	}
-
-	void SceneResource::destroyMeshSceneItem(MeshSceneItem& meshSceneItem)
-	{
-		destroySceneItem(meshSceneItem);
-	}
-
-	void SceneResource::destroyAllSceneItems()
-	{
-		const size_t numberOfSceneItems = mSceneItems.size();
-		for (size_t i = 0; i < numberOfSceneItems; ++i)
-		{
-			delete mSceneItems[i];
-		}
-		mSceneItems.clear();
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	SceneResource::SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
-		IResource(resourceId),
-		mRendererRuntime(rendererRuntime)
-	{
 		// Nothing in here
 	}
 
-	void SceneResource::destroySceneItem(ISceneItem& sceneItem)
+
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneResource methods        ]
+	//[-------------------------------------------------------]
+	SceneResourceTypeId SceneResource::getSceneResourceTypeId() const
 	{
-		SceneItems::iterator iterator = std::find(mSceneItems.begin(), mSceneItems.end(), &sceneItem);
-		if (iterator != mSceneItems.end())
-		{
-			mSceneItems.erase(iterator);
-			delete &sceneItem;
-		}
-		else
-		{
-			// TODO(co) Error handling
-		}
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	SceneResource::SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
+		ISceneResource(rendererRuntime, resourceId)
+	{
+		// Nothing in here
 	}
 
 

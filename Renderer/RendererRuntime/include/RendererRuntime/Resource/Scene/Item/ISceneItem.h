@@ -36,7 +36,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class SceneResource;
+	class ISceneResource;
 }
 
 
@@ -63,14 +63,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneResource;	// Needs to be able to destroy scene items
+		friend class ISceneResource;	// Needs to be able to destroy scene items
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline SceneResource& getSceneResource() const;
+		inline ISceneResource& getSceneResource() const;
 
 
 	//[-------------------------------------------------------]
@@ -84,7 +84,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		explicit ISceneItem(SceneResource& sceneResource);
+		explicit ISceneItem(ISceneResource& sceneResource);
 		virtual ~ISceneItem();
 		ISceneItem(const ISceneItem&) = delete;
 		ISceneItem& operator=(const ISceneItem&) = delete;
@@ -94,7 +94,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		SceneResource& mSceneResource;
+		ISceneResource& mSceneResource;
 
 
 	};

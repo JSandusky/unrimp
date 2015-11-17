@@ -53,7 +53,7 @@ CompositorPassFactoryFirst::~CompositorPassFactoryFirst()
 
 
 //[-------------------------------------------------------]
-//[ Protected virtual RendererRuntime::CompositorPassFactory methods ]
+//[ Protected virtual RendererRuntime::ICompositorPassFactory methods ]
 //[-------------------------------------------------------]
 RendererRuntime::ICompositorResourcePass* CompositorPassFactoryFirst::createCompositorResourcePass(RendererRuntime::CompositorPassTypeId compositorPassTypeId) const
 {

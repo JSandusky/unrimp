@@ -27,22 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/IResourceLoader.h"
-#include "RendererRuntime/Asset/Asset.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderer;
-}
-namespace RendererRuntime
-{
-	class ISceneResource;
-	class IRendererRuntime;
-}
+#include "RendererRuntime/Resource/Scene/Factory/ISceneFactory.h"
 
 
 //[-------------------------------------------------------]
@@ -55,52 +40,33 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneResourceLoader : protected IResourceLoader
+	class SceneFactory : public ISceneFactory
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class SceneResourceManager;
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		static const ResourceLoaderTypeId TYPE_ID;
+		RENDERERRUNTIME_API_EXPORT SceneFactory();
+		RENDERERRUNTIME_API_EXPORT virtual ~SceneFactory();
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[ Protected virtual RendererRuntime::ISceneFactory methods ]
 	//[-------------------------------------------------------]
-	public:
-		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void onDeserialization() override;
-		virtual void onProcessing() override;
-		virtual void onRendererBackendDispatch() override;
+	protected:
+		RENDERERRUNTIME_API_EXPORT virtual ISceneResource* createSceneResource(SceneResourceTypeId sceneResourceTypeId, IRendererRuntime& rendererRuntime, ResourceId resourceId) const override;
+		RENDERERRUNTIME_API_EXPORT virtual ISceneNode* createSceneNode(SceneNodeTypeId sceneNodeTypeId, const Transform& transform) const override;
+		RENDERERRUNTIME_API_EXPORT virtual ISceneItem* createSceneItem(const SceneItemTypeId& sceneItemTypeId, ISceneResource& sceneResource) const override;
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	private:
-		inline SceneResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		virtual ~SceneResourceLoader();
-		SceneResourceLoader(const SceneResourceLoader&) = delete;
-		SceneResourceLoader& operator=(const SceneResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, ISceneResource& sceneResource);
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		// Resource source and destination
-		Asset			mAsset;	///< In order to be multi-threading safe in here, we need an asset copy
-		ISceneResource*	mSceneResource;
+	protected:
+		SceneFactory(const SceneFactory&) = delete;
+		SceneFactory& operator=(const SceneFactory&) = delete;
 
 
 	};
@@ -110,9 +76,3 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.inl"

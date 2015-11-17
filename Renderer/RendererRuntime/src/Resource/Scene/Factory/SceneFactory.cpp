@@ -19,16 +19,13 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
+#include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
+#include "RendererRuntime/Resource/Scene/SceneResource.h"
+#include "RendererRuntime/Resource/Scene/Node/SceneNode.h"
+#include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -39,52 +36,70 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	class SceneNode : public ISceneNode
+	SceneFactory::SceneFactory()
 	{
+		// Nothing here
+	}
+
+	SceneFactory::~SceneFactory()
+	{
+		// Nothing here
+	}
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Protected virtual RendererRuntime::ISceneFactory methods ]
 	//[-------------------------------------------------------]
-		friend class SceneFactory;	// Needs to be able to create scene node instances
+	ISceneResource* SceneFactory::createSceneResource(SceneResourceTypeId sceneResourceTypeId, IRendererRuntime& rendererRuntime, ResourceId resourceId) const
+	{
+		ISceneResource* sceneResource = nullptr;
 
+		// Evaluate the scene node type
+		if (sceneResourceTypeId == SceneResource::TYPE_ID)
+		{
+			sceneResource = new SceneResource(rendererRuntime, resourceId);
+		}
 
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		RENDERERRUNTIME_API_EXPORT static const SceneNodeTypeId TYPE_ID;
+		// Done
+		return sceneResource;
+	}
 
+	ISceneNode* SceneFactory::createSceneNode(SceneNodeTypeId sceneNodeTypeId, const Transform& transform) const
+	{
+		ISceneNode* sceneNode = nullptr;
 
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneNode methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual SceneNodeTypeId getSceneNodeTypeId() const override;
+		// Evaluate the scene node type
+		if (sceneNodeTypeId == SceneNode::TYPE_ID)
+		{
+			sceneNode = new SceneNode(transform);
+		}
 
+		// Done
+		return sceneNode;
+	}
 
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		explicit SceneNode(const Transform& transform);
-		virtual ~SceneNode();
-		SceneNode(const SceneNode&) = delete;
-		SceneNode& operator=(const SceneNode&) = delete;
+	ISceneItem* SceneFactory::createSceneItem(const SceneItemTypeId& sceneItemTypeId, ISceneResource& sceneResource) const
+	{
+		ISceneItem* sceneItem = nullptr;
 
+		// Evaluate the scene item type
+		if (sceneItemTypeId == MeshSceneItem::TYPE_ID)
+		{
+			sceneItem = new MeshSceneItem(sceneResource);
+		}
+		else if (sceneItemTypeId == CameraSceneItem::TYPE_ID)
+		{
+			sceneItem = new CameraSceneItem(sceneResource);
+		}
 
-	};
+		// Done
+		return sceneItem;
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Node/SceneNode.inl"

@@ -37,7 +37,7 @@
 namespace RendererRuntime
 {
 	class ISceneNode;
-	class SceneResource;
+	class ISceneResource;
 	class CameraSceneItem;
 	class CompositorInstance;
 }
@@ -95,7 +95,7 @@ public:
 //[-------------------------------------------------------]
 private:
 	RendererRuntime::CompositorInstance* mCompositorInstance;
-	RendererRuntime::SceneResource*		 mSceneResource;
+	RendererRuntime::ISceneResource*	 mSceneResource;
 	RendererRuntime::CameraSceneItem*	 mCameraSceneItem;
 	RendererRuntime::ISceneNode*		 mSceneNode;
 	// For timing

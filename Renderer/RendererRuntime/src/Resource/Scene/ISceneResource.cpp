@@ -21,9 +21,11 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
-#include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
+#include "RendererRuntime/Resource/Scene/SceneResourceManager.h"
+#include "RendererRuntime/Resource/Scene/Node/SceneNode.h"
+#include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
+#include "RendererRuntime/Resource/Scene/Factory/ISceneFactory.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -35,41 +37,86 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	const SceneItemTypeId MeshSceneItem::TYPE_ID("MeshSceneItem");
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void MeshSceneItem::setMeshResourceByAssetId(AssetId meshAssetId)
+	ISceneResource::~ISceneResource()
 	{
-		const IRendererRuntime& rendererRuntime = getSceneResource().getRendererRuntime();
-		setMeshResource(rendererRuntime.getMeshResourceManager().loadMeshResourceByAssetId(rendererRuntime.getRenderer(), meshAssetId));
+		// Destroy all scene nodes and scene instances
+		destroyAllSceneNodesAndItems();
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneItem methods            ]
-	//[-------------------------------------------------------]
-	SceneItemTypeId MeshSceneItem::getSceneItemTypeId() const
+	ISceneNode* ISceneResource::createSceneNode(const Transform& transform)
 	{
-		return TYPE_ID;
+		assert(nullptr != mSceneFactory);
+		ISceneNode* sceneNode = mSceneFactory->createSceneNode(SceneNode::TYPE_ID, transform);
+		mSceneNodes.push_back(sceneNode);
+		return sceneNode;
+	}
+
+	void ISceneResource::destroySceneNode(ISceneNode& sceneNode)
+	{
+		SceneNodes::iterator iterator = std::find(mSceneNodes.begin(), mSceneNodes.end(), &sceneNode);
+		if (iterator != mSceneNodes.end())
+		{
+			mSceneNodes.erase(iterator);
+			delete &sceneNode;
+		}
+		else
+		{
+			// TODO(co) Error handling
+		}
+	}
+
+	void ISceneResource::destroyAllSceneNodes()
+	{
+		const size_t numberOfSceneNodes = mSceneNodes.size();
+		for (size_t i = 0; i < numberOfSceneNodes; ++i)
+		{
+			delete mSceneNodes[i];
+		}
+		mSceneNodes.clear();
+	}
+
+	ISceneItem* ISceneResource::createSceneItem(SceneItemTypeId sceneItemTypeId)
+	{
+		assert(nullptr != mSceneFactory);
+		ISceneItem* sceneItem = mSceneFactory->createSceneItem(sceneItemTypeId, *this);
+		mSceneItems.push_back(sceneItem);
+		return sceneItem;
+	}
+
+	void ISceneResource::destroySceneItem(ISceneItem& sceneItem)
+	{
+		SceneItems::iterator iterator = std::find(mSceneItems.begin(), mSceneItems.end(), &sceneItem);
+		if (iterator != mSceneItems.end())
+		{
+			mSceneItems.erase(iterator);
+			delete &sceneItem;
+		}
+		else
+		{
+			// TODO(co) Error handling
+		}
+	}
+
+	void ISceneResource::destroyAllSceneItems()
+	{
+		const size_t numberOfSceneItems = mSceneItems.size();
+		for (size_t i = 0; i < numberOfSceneItems; ++i)
+		{
+			delete mSceneItems[i];
+		}
+		mSceneItems.clear();
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	MeshSceneItem::MeshSceneItem(ISceneResource& sceneResource) :
-		ISceneItem(sceneResource),
-		mMeshResource(nullptr)
-	{
-		// Nothing in here
-	}
-
-	MeshSceneItem::~MeshSceneItem()
+	ISceneResource::ISceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
+		IResource(resourceId),
+		mRendererRuntime(rendererRuntime),
+		mSceneFactory(mRendererRuntime.getSceneResourceManager().getSceneFactory())
 	{
 		// Nothing in here
 	}

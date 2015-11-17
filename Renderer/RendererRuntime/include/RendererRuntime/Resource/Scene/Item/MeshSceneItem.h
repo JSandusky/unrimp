@@ -58,7 +58,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneResource;
+		friend class SceneFactory;	// Needs to be able to create scene item instances
 
 
 	//[-------------------------------------------------------]
@@ -73,6 +73,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline MeshResource* getMeshResource() const;
+		inline void setMeshResource(MeshResource* meshResource);
+		RENDERERRUNTIME_API_EXPORT void setMeshResourceByAssetId(AssetId meshAssetId);
 
 
 	//[-------------------------------------------------------]
@@ -86,7 +88,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		MeshSceneItem(SceneResource& sceneResource, MeshResource& meshResource);
+		MeshSceneItem(ISceneResource& sceneResource);
 		virtual ~MeshSceneItem();
 		MeshSceneItem(const MeshSceneItem&) = delete;
 		MeshSceneItem& operator=(const MeshSceneItem&) = delete;

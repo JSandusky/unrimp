@@ -27,20 +27,22 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/IResourceLoader.h"
-#include "RendererRuntime/Asset/Asset.h"
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Resource/IResource.h"
+#include "RendererRuntime/Core/Manager.h"
+
+#include <vector>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderer;
-}
 namespace RendererRuntime
 {
-	class ISceneResource;
+	class Transform;
+	class ISceneNode;
+	class ISceneItem;
+	class ISceneFactory;
 	class IRendererRuntime;
 }
 
@@ -53,54 +55,83 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId SceneItemTypeId;		///< Scene item type identifier, internally just a POD "uint32_t"
+	typedef StringId SceneResourceTypeId;	///< Scene resource type identifier, internally just a POD "uint32_t"
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneResourceLoader : protected IResourceLoader
+	class ISceneResource : public IResource
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneResourceManager;
+		friend class SceneResourceManager;	// Needs to be able to update the scene factory instance
 
 
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const ResourceLoaderTypeId TYPE_ID;
+		typedef std::vector<ISceneNode*> SceneNodes;
+		typedef std::vector<ISceneItem*> SceneItems;
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void onDeserialization() override;
-		virtual void onProcessing() override;
-		virtual void onRendererBackendDispatch() override;
+		virtual ~ISceneResource();
+		inline const IRendererRuntime& getRendererRuntime() const;
+		inline void destroyAllSceneNodesAndItems();
+
+		//[-------------------------------------------------------]
+		//[ Node                                                  ]
+		//[-------------------------------------------------------]
+		RENDERERRUNTIME_API_EXPORT ISceneNode* createSceneNode(const Transform& transform);
+		RENDERERRUNTIME_API_EXPORT void destroySceneNode(ISceneNode& sceneNode);
+		RENDERERRUNTIME_API_EXPORT void destroyAllSceneNodes();
+		inline const SceneNodes& getSceneNodes() const;
+
+		//[-------------------------------------------------------]
+		//[ Item                                                  ]
+		//[-------------------------------------------------------]
+		RENDERERRUNTIME_API_EXPORT ISceneItem* createSceneItem(SceneItemTypeId sceneItemTypeId);
+		template <typename T> T* createSceneItem();
+		RENDERERRUNTIME_API_EXPORT void destroySceneItem(ISceneItem& sceneItem);
+		RENDERERRUNTIME_API_EXPORT void destroyAllSceneItems();
+		inline const SceneItems& getSceneItems() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public RendererRuntime::ISceneResource methods        ]
 	//[-------------------------------------------------------]
-	private:
-		inline SceneResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		virtual ~SceneResourceLoader();
-		SceneResourceLoader(const SceneResourceLoader&) = delete;
-		SceneResourceLoader& operator=(const SceneResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, ISceneResource& sceneResource);
+	public:
+		virtual SceneResourceTypeId getSceneResourceTypeId() const = 0;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		ISceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId);
+		ISceneResource(const ISceneResource&) = delete;
+		ISceneResource& operator=(const ISceneResource&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		// Resource source and destination
-		Asset			mAsset;	///< In order to be multi-threading safe in here, we need an asset copy
-		ISceneResource*	mSceneResource;
+		IRendererRuntime&	 mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		const ISceneFactory* mSceneFactory;		///< Scene factory instance, always valid, do not destroy the instance
+		SceneNodes			 mSceneNodes;
+		SceneItems			 mSceneItems;
 
 
 	};
@@ -115,4 +146,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.inl"
+#include "RendererRuntime/Resource/Scene/ISceneResource.inl"

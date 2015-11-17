@@ -41,12 +41,13 @@
     <None Include="include\RendererRuntime\Resource\IResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\ResourceStreamer.inl" />
+    <None Include="include\RendererRuntime\Resource\Scene\ISceneResource.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Node\ISceneNode.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Node\SceneNode.inl" />
-    <None Include="include\RendererRuntime\Resource\Scene\SceneResource.inl" />
+    <None Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Shader\Loader\ShaderResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.inl" />
@@ -111,6 +112,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ResourceStreamer.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Factory\ISceneFactory.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Factory\SceneFactory.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\CameraSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.h" />
@@ -184,6 +188,9 @@
     <ClCompile Include="src\Resource\Mesh\MeshResource.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResourceManager.cpp" />
     <ClCompile Include="src\Resource\ResourceStreamer.cpp" />
+    <ClCompile Include="src\Resource\Scene\Factory\ISceneFactory.cpp" />
+    <ClCompile Include="src\Resource\Scene\Factory\SceneFactory.cpp" />
+    <ClCompile Include="src\Resource\Scene\ISceneResource.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\CameraSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\ISceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\MeshSceneItem.cpp" />

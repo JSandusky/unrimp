@@ -95,6 +95,9 @@
     <Filter Include="Source Files\Resource\Scene\Node">
       <UniqueIdentifier>{202404c2-378a-4e32-9829-1f2c5ddf3535}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Scene\Factory">
+      <UniqueIdentifier>{f6cc6cf4-b0c0-4602-8735-8bcba5778271}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -183,9 +186,6 @@
     <None Include="include\RendererRuntime\Resource\Compositor\CompositorResourceManager.inl">
       <Filter>Source Files\Resource\Compositor</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Scene\SceneResource.inl">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.inl">
       <Filter>Source Files\Resource\Scene\Item</Filter>
     </None>
@@ -197,6 +197,12 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Scene\Node\ISceneNode.inl">
       <Filter>Source Files\Resource\Scene\Node</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.inl">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\ISceneResource.inl">
+      <Filter>Source Files\Resource\Scene</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -462,6 +468,15 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Node\ISceneNode.h">
       <Filter>Source Files\Resource\Scene\Node</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Factory\ISceneFactory.h">
+      <Filter>Source Files\Resource\Scene\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Factory\SceneFactory.h">
+      <Filter>Source Files\Resource\Scene\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneResource.h">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -631,6 +646,15 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Node\SceneNode.cpp">
       <Filter>Source Files\Resource\Scene\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Factory\SceneFactory.cpp">
+      <Filter>Source Files\Resource\Scene\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Factory\ISceneFactory.cpp">
+      <Filter>Source Files\Resource\Scene\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\ISceneResource.cpp">
+      <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

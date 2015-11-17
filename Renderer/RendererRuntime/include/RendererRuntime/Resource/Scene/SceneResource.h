@@ -27,26 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/IResource.h"
-#include "RendererRuntime/Core/Manager.h"
-#include "RendererRuntime/Asset/Asset.h"
-
-#include <vector>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class Transform;
-	class ISceneNode;
-	class ISceneItem;
-	class MeshSceneItem;
-	class CameraSceneItem;
-	class IRendererRuntime;
-}
+#include "RendererRuntime/Resource/Scene/ISceneResource.h"
 
 
 //[-------------------------------------------------------]
@@ -59,23 +40,21 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneResource : public IResource
+	class SceneResource : public ISceneResource
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class RendererRuntimeImpl;
-		friend class SceneResourceManager;
+		friend class SceneFactory;	// Needs to be able to create scene resource instances
 
 
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::vector<ISceneNode*> SceneNodes;
-		typedef std::vector<ISceneItem*> SceneItems;
+		RENDERERRUNTIME_API_EXPORT static const SceneResourceTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]
@@ -83,44 +62,22 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		virtual ~SceneResource();
-		inline void destroyAllSceneNodesAndItems();
-
-		//[-------------------------------------------------------]
-		//[ Node                                                  ]
-		//[-------------------------------------------------------]
-		RENDERERRUNTIME_API_EXPORT ISceneNode* createSceneNode(const Transform& transform);
-		RENDERERRUNTIME_API_EXPORT void destroySceneNode(ISceneNode& sceneNode);
-		RENDERERRUNTIME_API_EXPORT void destroyAllSceneNodes();
-		inline const SceneNodes& getSceneNodes() const;
-
-		//[-------------------------------------------------------]
-		//[ Item                                                  ]
-		//[-------------------------------------------------------]
-		RENDERERRUNTIME_API_EXPORT CameraSceneItem* createCameraSceneItem();
-		RENDERERRUNTIME_API_EXPORT void destroyCameraSceneItem(CameraSceneItem& cameraSceneItem);
-		RENDERERRUNTIME_API_EXPORT MeshSceneItem* createMeshSceneItem(AssetId meshAssetId);
-		RENDERERRUNTIME_API_EXPORT void destroyMeshSceneItem(MeshSceneItem& meshSceneItem);
-		RENDERERRUNTIME_API_EXPORT void destroyAllSceneItems();
-		inline const SceneItems& getSceneItems() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public RendererRuntime::ISceneResource methods        ]
 	//[-------------------------------------------------------]
-	private:
+	public:
+		virtual SceneResourceTypeId getSceneResourceTypeId() const override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
 		SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId);
 		SceneResource(const SceneResource&) = delete;
 		SceneResource& operator=(const SceneResource&) = delete;
-		void destroySceneItem(ISceneItem& sceneItem);
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		SceneNodes		  mSceneNodes;
-		SceneItems		  mSceneItems;
 
 
 	};
@@ -130,9 +87,3 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneResource.inl"

@@ -25,7 +25,7 @@
 #include "RendererRuntime/Resource/Compositor/Pass/Scene/CompositorResourcePassScene.h"
 #include "RendererRuntime/Resource/Compositor/CompositorInstanceNode.h"
 #include "RendererRuntime/Resource/Compositor/CompositorInstance.h"
-#include "RendererRuntime/Resource/Scene/SceneResource.h"
+#include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
@@ -271,7 +271,7 @@ namespace
 				renderer.setPipelineState(mPipelineState);
 
 				// Loop through all scene nodes
-				const RendererRuntime::SceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
+				const RendererRuntime::ISceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
 				const size_t numberOfSceneNodes = sceneNodes.size();
 				for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
 				{

@@ -34,7 +34,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const SceneNodeTypeId SceneNode::TYPE_ID("Node");
+	const SceneNodeTypeId SceneNode::TYPE_ID("SceneNode");
 
 
 	//[-------------------------------------------------------]
