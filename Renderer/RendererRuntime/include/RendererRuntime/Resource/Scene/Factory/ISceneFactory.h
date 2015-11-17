@@ -42,6 +42,7 @@ namespace RendererRuntime
 	class ISceneItem;
 	class ISceneResource;
 	class IRendererRuntime;
+	class IResourceListener;
 }
 
 
@@ -79,7 +80,7 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::ISceneFactory methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual ISceneResource* createSceneResource(SceneResourceTypeId sceneResourceTypeId, IRendererRuntime& rendererRuntime, ResourceId resourceId) const = 0;
+		virtual ISceneResource* createSceneResource(SceneResourceTypeId sceneResourceTypeId, IRendererRuntime& rendererRuntime, ResourceId resourceId, IResourceListener* resourceListener = nullptr) const = 0;
 		virtual ISceneNode* createSceneNode(SceneNodeTypeId sceneNodeTypeId, const Transform& transform) const = 0;
 		virtual ISceneItem* createSceneItem(const SceneItemTypeId& sceneItemTypeId, ISceneResource& sceneResource) const = 0;
 

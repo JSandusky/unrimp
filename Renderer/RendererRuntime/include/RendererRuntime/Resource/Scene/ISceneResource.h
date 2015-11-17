@@ -119,7 +119,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		ISceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId);
+		ISceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId, IResourceListener* resourceListener = nullptr);
 		ISceneResource(const ISceneResource&) = delete;
 		ISceneResource& operator=(const ISceneResource&) = delete;
 

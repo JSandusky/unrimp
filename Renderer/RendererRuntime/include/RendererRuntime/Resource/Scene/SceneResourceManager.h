@@ -39,6 +39,7 @@ namespace RendererRuntime
 	class ISceneFactory;
 	class ISceneResource;
 	class IRendererRuntime;
+	class IResourceListener;
 }
 
 
@@ -69,7 +70,7 @@ namespace RendererRuntime
 		// TODO(co) Work-in-progress
 		inline const ISceneFactory& getSceneFactory() const;
 		RENDERERRUNTIME_API_EXPORT void setSceneFactory(const ISceneFactory* sceneFactory);
-		RENDERERRUNTIME_API_EXPORT ISceneResource* loadSceneResourceByAssetId(AssetId assetId, bool reload = false);
+		RENDERERRUNTIME_API_EXPORT ISceneResource* loadSceneResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);
 
 
 	//[-------------------------------------------------------]

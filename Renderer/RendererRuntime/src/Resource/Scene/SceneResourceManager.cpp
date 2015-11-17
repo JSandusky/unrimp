@@ -67,7 +67,7 @@ namespace RendererRuntime
 		}
 	}
 
-	ISceneResource* SceneResourceManager::loadSceneResourceByAssetId(AssetId assetId, bool reload)
+	ISceneResource* SceneResourceManager::loadSceneResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
@@ -92,7 +92,7 @@ namespace RendererRuntime
 			if (nullptr == sceneResource)
 			{
 				assert(nullptr != mSceneFactory);
-				sceneResource = mSceneFactory->createSceneResource(SceneResource::TYPE_ID, mRendererRuntime, assetId);
+				sceneResource = mSceneFactory->createSceneResource(SceneResource::TYPE_ID, mRendererRuntime, assetId, resourceListener);
 				mSceneResources.push_back(sceneResource);
 				load = true;
 			}
@@ -133,7 +133,7 @@ namespace RendererRuntime
 			if (sceneResource->getResourceId() == assetId)
 			{
 				sceneResource->destroyAllSceneNodesAndItems();
-				loadSceneResourceByAssetId(assetId, true);
+				loadSceneResourceByAssetId(assetId, nullptr, true);
 				break;
 			}
 		}

@@ -30,6 +30,8 @@
 #include "Framework/Stopwatch.h"
 #include "Framework/IApplicationRendererRuntime.h"
 
+#include <RendererRuntime/Resource/IResourceListener.h>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -55,7 +57,7 @@ namespace RendererRuntime
 *    - Compositor
 *    - Scene
 */
-class FirstScene : public IApplicationRendererRuntime
+class FirstScene : public IApplicationRendererRuntime, public RendererRuntime::IResourceListener
 {
 
 
@@ -91,11 +93,27 @@ public:
 
 
 //[-------------------------------------------------------]
+//[ Protected virtual RendererRuntime::IResourceListener methods ]
+//[-------------------------------------------------------]
+protected:
+	virtual void onLoadingStateChange(RendererRuntime::IResource::LoadingState::Enum loadingState) override;
+
+
+//[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+private:
+	FirstScene(const FirstScene&) = delete;
+	FirstScene& operator=(const FirstScene&) = delete;
+
+
+//[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
 	RendererRuntime::CompositorInstance* mCompositorInstance;
 	RendererRuntime::ISceneResource*	 mSceneResource;
+	// Crazy raw-pointers to point-of-interest scene stuff
 	RendererRuntime::CameraSceneItem*	 mCameraSceneItem;
 	RendererRuntime::ISceneNode*		 mSceneNode;
 	// For timing

@@ -114,8 +114,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	ISceneResource::ISceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
-		IResource(resourceId),
+	ISceneResource::ISceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId, IResourceListener* resourceListener) :
+		IResource(resourceId, resourceListener),
 		mRendererRuntime(rendererRuntime),
 		mSceneFactory(&mRendererRuntime.getSceneResourceManager().getSceneFactory())
 	{

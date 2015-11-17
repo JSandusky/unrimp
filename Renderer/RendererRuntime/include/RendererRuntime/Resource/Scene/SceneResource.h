@@ -75,7 +75,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId);
+		SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId, IResourceListener* resourceListener = nullptr);
 		SceneResource(const SceneResource&) = delete;
 		SceneResource& operator=(const SceneResource&) = delete;
 
