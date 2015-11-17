@@ -8,16 +8,16 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "9",
+			"AssetId": "10",
 			"AssetType": "Compositor",
 			"AssetCategory": "Default",
-			"AssetName": "FirstCompositor",
-			"FileDependencies": [ "FirstCompositor.compositor" ],
+			"AssetName": "FirstScene",
+			"FileDependencies": [ "FirstScene.compositor" ],
 			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
 		},
 		"CompositorAssetCompiler":
 		{
-			"InputFile": "FirstCompositor.compositor"
+			"InputFile": "FirstScene.compositor"
 		}
 	}
 }

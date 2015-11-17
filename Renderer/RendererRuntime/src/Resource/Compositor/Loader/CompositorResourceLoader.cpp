@@ -162,7 +162,7 @@ namespace RendererRuntime
 
 	void CompositorResourceLoader::onDeserialization()
 	{
-		ICompositorPassFactory* compositorPassFactory = static_cast<CompositorResourceManager&>(getResourceManager()).getCompositorPassFactory();
+		const ICompositorPassFactory* compositorPassFactory = static_cast<CompositorResourceManager&>(getResourceManager()).getCompositorPassFactory();
 		if (nullptr != compositorPassFactory)
 		{
 			try

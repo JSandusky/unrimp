@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
-#ifndef RENDERER_NO_OPENGL
-if (0 == strcmp(renderer->getName(), "OpenGL"))
+#ifndef RENDERER_NO_DIRECT3D9
+if (0 == strcmp(renderer.getName(), "Direct3D9"))
 {
 
 
@@ -36,55 +36,65 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
-STRINGIFY(
+vertexShaderSourceCode = STRINGIFY(
 // Attribute input/output
-attribute vec3 Position;	// Object space vertex position
-attribute vec2 TexCoord;	// 16 bit texture coordinate
-varying   vec2 TexCoordVs;	// Texture coordinate
-attribute vec4 QTangent;	// 16 bit QTangent
-varying   vec3 TangentVs;	// Tangent space to view space, x-axis
-varying   vec3 BinormalVs;	// Tangent space to view space, y-axis
-varying   vec3 NormalVs;	// Tangent space to view space, z-axis
+struct VS_INPUT
+{
+	float3 Position : POSITION;		// Object space vertex position
+	float2 TexCoord : TEXCOORD0;	// 16 bit texture coordinate
+	float4 QTangent : NORMAL;		// 16 bit QTangent
+};
+struct VS_OUTPUT
+{
+	float4   Position     : SV_POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	float2   TexCoord     : TEXCOORD0;		// Texture coordinate
+	float3x3 TangentFrame : TEXCOORD1;		// Tangent frame
+};
 
 // Uniforms
-uniform mat4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
-uniform mat3 ObjectSpaceToViewSpaceMatrix;	// Object space to view space matrix
+uniform float4x4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
+uniform float3x3 ObjectSpaceToViewSpaceMatrix;	// Object space to view space matrix
 
 // Functions
-mat3 GetTangentFrame(mat3 objectSpaceToViewSpaceMatrix, vec4 q)
+float2x3 QuaternionToTangentBitangent(float4 q)
 {
-	// Quaternion to tangent bitangent
-	vec3 tBt0 = vec3(1.0 - 2.0*(q.y*q.y + q.z*q.z),	2.0*(q.x*q.y + q.w*q.z),		2.0*(q.x*q.z - q.w*q.y));
-	vec3 tBt1 = vec3(2.0*(q.x*q.y - q.w*q.z),		1.0 - 2.0*(q.x*q.x + q.z*q.z),	2.0*(q.y*q.z + q.w*q.x));
+	return float2x3(
+		1 - 2*(q.y*q.y + q.z*q.z),	2*(q.x*q.y + q.w*q.z),		2*(q.x*q.z - q.w*q.y),
+		2*(q.x*q.y - q.w*q.z),		1 - 2*(q.x*q.x + q.z*q.z),	2*(q.y*q.z + q.w*q.x)
+	);
+}
 
-	vec3 t = objectSpaceToViewSpaceMatrix * tBt0;
-	vec3 b = objectSpaceToViewSpaceMatrix * tBt1;
+float3x3 GetTangentFrame(float3x3 objectSpaceToViewSpaceMatrix, float4 qtangent)
+{
+	float2x3 tBt = QuaternionToTangentBitangent(qtangent);
+	float3 t = mul(tBt[0], objectSpaceToViewSpaceMatrix);
+	float3 b = mul(tBt[1], objectSpaceToViewSpaceMatrix);
 
-	return mat3(
+	return float3x3(
 		t,
 		b,
-		cross(t, b) * ((q.w < 0.0) ? -1.0 : 1.0)
+		cross(t, b) * (qtangent.w < 0 ? -1 : 1)
 	);
 }
 
 // Programs
-void main()
+VS_OUTPUT main(VS_INPUT input)
 {
+	VS_OUTPUT output;
+
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = ObjectSpaceToClipSpaceMatrix * vec4(Position, 1.0);
+	output.Position = mul(float4(input.Position, 1.0f), ObjectSpaceToClipSpaceMatrix);
 
 	// Pass through the decoded 16 bit texture coordinate
-	TexCoordVs = TexCoord / 32767.0;
+	output.TexCoord = input.TexCoord / 32767.0f;
 
 	// Calculate the tangent space to view space tangent, binormal and normal
 	// - 16 bit QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 	//   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
-	mat3 tangentFrame = GetTangentFrame(ObjectSpaceToViewSpaceMatrix, QTangent / 32767.0);
-	TangentVs = tangentFrame[0];
-	BinormalVs = tangentFrame[1];
-	NormalVs = tangentFrame[2];
+	output.TangentFrame = GetTangentFrame(ObjectSpaceToViewSpaceMatrix, input.QTangent / 32767.0);
+
+	// Done
+	return output;
 }
 );	// STRINGIFY
 
@@ -93,53 +103,54 @@ void main()
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
-STRINGIFY(
+// "pixel shader" in Direct3D terminology
+fragmentShaderSourceCode = STRINGIFY(
 // Attribute input/output
-varying vec2 TexCoordVs;	// Texture coordinate
-varying vec3 TangentVs;		// Tangent space to view space, x-axis
-varying vec3 BinormalVs;	// Tangent space to view space, y-axis
-varying vec3 NormalVs;		// Tangent space to view space, z-axis
+struct VS_OUTPUT
+{
+	float4   Position     : SV_POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	float2   TexCoord     : TEXCOORD0;		// Texture coordinate
+	float3x3 TangentFrame : TEXCOORD1;		// Tangent frame
+};
 
 // Uniforms
-uniform sampler2D DiffuseMap;
-uniform sampler2D EmissiveMap;
-uniform sampler2D NormalMap;	// Tangent space normal map
-uniform sampler2D SpecularMap;
+uniform sampler2D DiffuseMap  : register(s0);
+uniform sampler2D EmissiveMap : register(s1);
+uniform sampler2D NormalMap   : register(s2);	// Tangent space normal map
+uniform sampler2D SpecularMap : register(s3);
 
 // Programs
-void main()
+float4 main(VS_OUTPUT input) : SV_Target
 {
 	// Build in variables
-	vec3 ViewSpaceLightDirection = normalize(vec3(0.5, 0.5, 1.0));	// View space light direction
-	vec3 ViewSpaceViewVector     = vec3(0.0, 0.0, 1.0);				// In view space, we always look along the positive z-axis
+	float3 ViewSpaceLightDirection = normalize(float3(0.5f, 0.5f, 1.0f));	// View space light direction
+	float3 ViewSpaceViewVector     = float3(0.0f, 0.0f, 1.0f);				// In view space, we always look along the positive z-axis
 
 	// Get the per fragment normal [0..1] by using a tangent space normal map
-	vec3 normal = texture2D(NormalMap, TexCoordVs).rgb;
+	float3 normal = tex2D(NormalMap, input.TexCoord).rgb;
 
 	// Transform the normal from [0..1] to [-1..1]
-	normal = (normal - 0.5) * 2.0;
+	normal = (normal - 0.5f) * 2.0f;
 
 	// Transform the tangent space normal into view space
-	normal = normalize(normal.x * TangentVs + normal.y * BinormalVs + normal.z * NormalVs);
+	normal = normalize(mul(normal, input.TangentFrame));
 
 	// Perform standard Blinn-Phong diffuse and specular lighting
 
 	// Calculate the diffuse lighting
-	float diffuseLight = max(dot(normal, ViewSpaceLightDirection), 0.0);
+	float diffuseLight = max(dot(normal, ViewSpaceLightDirection), 0.0f);
 
 	// Calculate the specular lighting
-	vec3 viewSpaceHalfVector = normalize(ViewSpaceLightDirection + ViewSpaceViewVector);
-	float specularLight = (diffuseLight > 0.0) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0), 128.0) : 0.0;
+	float3 viewSpaceHalfVector = normalize(ViewSpaceLightDirection + ViewSpaceViewVector);
+	float specularLight = (diffuseLight > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
 
 	// Calculate the fragment color
-	vec4 color = diffuseLight * texture2D(DiffuseMap, TexCoordVs);			// Diffuse term
-	color.rgb += specularLight * texture2D(SpecularMap, TexCoordVs).rgb;	// Specular term
-	color.rgb += texture2D(EmissiveMap, TexCoordVs).rgb;					// Emissive term
+	float4 color = diffuseLight * tex2D(DiffuseMap, input.TexCoord).rgba;	// Diffuse term
+	color.rgb += specularLight * tex2D(SpecularMap, input.TexCoord).rgb;	// Specular term
+	color.rgb += tex2D(EmissiveMap, input.TexCoord).rgb;					// Emissive term
 
 	// Done
-	gl_FragColor = min(color, vec4(1.0, 1.0, 1.0, 1.0));
+	return min(color, float4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 );	// STRINGIFY
 

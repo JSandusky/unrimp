@@ -68,8 +68,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT ICompositorPassFactory* getCompositorPassFactory() const;
-		RENDERERRUNTIME_API_EXPORT void setCompositorPassFactory(ICompositorPassFactory* compositorPassFactory);
+		inline const ICompositorPassFactory* getCompositorPassFactory() const;
+		inline void setCompositorPassFactory(const ICompositorPassFactory* compositorPassFactory);
 		RENDERERRUNTIME_API_EXPORT CompositorResource* loadCompositorResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);
 
 
@@ -96,8 +96,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
-		ICompositorPassFactory* mCompositorPassFactory;	///< Compositor pass factory, can be a null pointer, do not destroy the instance
+		IRendererRuntime&			  mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
+		const ICompositorPassFactory* mCompositorPassFactory;	///< Compositor pass factory, can be a null pointer, do not destroy the instance
 
 		// TODO(co) Implement decent resource handling
 		std::vector<CompositorResource*> mResources;
@@ -110,3 +110,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/CompositorResourceManager.inl"

@@ -33,7 +33,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-class CompositorPassFactoryFirst;
 namespace RendererRuntime
 {
 	class CompositorInstance;
@@ -90,7 +89,6 @@ public:
 //[-------------------------------------------------------]
 private:
 	RendererRuntime::CompositorInstance* mCompositorInstance;
-	CompositorPassFactoryFirst*			 mCompositorPassFactoryFirst;
 
 
 };

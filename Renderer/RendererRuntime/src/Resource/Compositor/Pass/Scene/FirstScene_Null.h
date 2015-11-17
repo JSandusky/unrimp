@@ -19,13 +19,11 @@
 
 
 #ifndef RENDERER_NO_NULL
-	if (0 == strcmp(renderer->getName(), "Null"))
+	if (0 == strcmp(renderer.getName(), "Null"))
 	{
 		vertexShaderSourceCode = fragmentShaderSourceCode = "42";
 	}
 	else
 #endif
 {
-	// Error! (unsupported renderer)
-	OUTPUT_DEBUG_STRING("Error: Unsupported renderer\n")
 }

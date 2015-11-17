@@ -15,6 +15,7 @@
 		"6": "Texture/Imrod_norm.asset",
 		"7": "Texture/Imrod_spec.asset",
 		"8": "Scene/FirstScene.asset",
-		"9": "Compositor/FirstCompositor.asset"
+		"9": "Compositor/FirstCompositor.asset",
+		"10": "Compositor/FirstScene.asset"
 	}
 }

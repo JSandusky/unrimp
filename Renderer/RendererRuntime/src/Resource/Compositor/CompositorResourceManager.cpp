@@ -23,12 +23,25 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Compositor/CompositorResourceManager.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResource.h"
+#include "RendererRuntime/Resource/Compositor/Pass/CompositorPassFactory.h"
 #include "RendererRuntime/Resource/Compositor/Loader/CompositorResourceLoader.h"
 #include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <assert.h>
+
+
+//[-------------------------------------------------------]
+//[ Global variables in anonymous namespace               ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+		static const RendererRuntime::CompositorPassFactory compositorPassFactory;
+	}
+}
 
 
 //[-------------------------------------------------------]
@@ -41,16 +54,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ICompositorPassFactory* CompositorResourceManager::getCompositorPassFactory() const
-	{
-		return mCompositorPassFactory;
-	}
-
-	void CompositorResourceManager::setCompositorPassFactory(ICompositorPassFactory* compositorPassFactory)
-	{
-		mCompositorPassFactory = compositorPassFactory;
-	}
-
 	CompositorResource* CompositorResourceManager::loadCompositorResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
@@ -130,7 +133,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorResourceManager::CompositorResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mCompositorPassFactory(nullptr)
+		mCompositorPassFactory(&::detail::compositorPassFactory)
 	{
 		// Nothing in here
 	}

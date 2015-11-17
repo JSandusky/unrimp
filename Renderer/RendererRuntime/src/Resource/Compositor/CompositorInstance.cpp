@@ -133,7 +133,7 @@ namespace RendererRuntime
 		if (loadingState == IResource::LoadingState::LOADED)
 		{
 			// TODO(co) Just a first test
-			ICompositorPassFactory* compositorPassFactory = mRendererRuntime.getCompositorResourceManager().getCompositorPassFactory();
+			const ICompositorPassFactory* compositorPassFactory = mRendererRuntime.getCompositorResourceManager().getCompositorPassFactory();
 
 			destroySequentialCompositorInstanceNodes();
 

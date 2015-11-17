@@ -41,12 +41,23 @@
 
 
 //[-------------------------------------------------------]
+//[ Global variables in anonymous namespace               ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+		static const CompositorPassFactoryFirst compositorPassFactoryFirst;
+	}
+}
+
+
+//[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FirstCompositor::FirstCompositor(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mCompositorInstance(nullptr),
-	mCompositorPassFactoryFirst(nullptr)
+	mCompositorInstance(nullptr)
 {
 	// Nothing to do in here
 }
@@ -70,45 +81,31 @@ void FirstCompositor::onInitialization()
 	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
 	if (nullptr != rendererRuntime)
 	{
-		// Begin debug event
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
+		// Get the main swap chain and ensure there's one
+		Renderer::ISwapChainPtr swapChain(getRenderer()->getMainSwapChain());
+		if (nullptr != swapChain)
+		{
+			// Set our custom compositor pass factory
+			rendererRuntime->getCompositorResourceManager().setCompositorPassFactory(&::detail::compositorPassFactoryFirst);
 
-		{ // Get the main swap chain and ensure there's one
-			Renderer::ISwapChainPtr swapChain(getRenderer()->getMainSwapChain());
-			if (nullptr != swapChain)
-			{
-				// Create and set the compositor pass factors
-				mCompositorPassFactoryFirst = new CompositorPassFactoryFirst();
-				rendererRuntime->getCompositorResourceManager().setCompositorPassFactory(mCompositorPassFactoryFirst);
-
-				// Create the compositor instance
-				mCompositorInstance = new RendererRuntime::CompositorInstance(*rendererRuntime, "Example/Compositor/Default/FirstCompositor", *swapChain);
-			}
+			// Create the compositor instance
+			mCompositorInstance = new RendererRuntime::CompositorInstance(*rendererRuntime, "Example/Compositor/Default/FirstCompositor", *swapChain);
 		}
-
-		// End debug event
-		RENDERER_END_DEBUG_EVENT(getRenderer())
 	}
 }
 
 void FirstCompositor::onDeinitialization()
 {
-	// Begin debug event
-	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
-
 	// TODO(co) Implement decent resource handling
 	delete mCompositorInstance;
 	mCompositorInstance = nullptr;
+
+	// Be polite and unset our custom compositor pass factory
 	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
 	if (nullptr != rendererRuntime)
 	{
 		rendererRuntime->getCompositorResourceManager().setCompositorPassFactory(nullptr);
 	}
-	delete mCompositorPassFactoryFirst;
-	mCompositorPassFactoryFirst = nullptr;
-
-	// End debug event
-	RENDERER_END_DEBUG_EVENT(getRenderer())
 
 	// Call the base implementation
 	IApplicationRendererRuntime::onDeinitialization();

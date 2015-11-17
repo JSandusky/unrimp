@@ -30,17 +30,14 @@
 #include "Framework/Stopwatch.h"
 #include "Framework/IApplicationRendererRuntime.h"
 
-#include <RendererRuntime/Resource/Font/FontResource.h>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class MeshResource;
 	class SceneResource;
-	class TextureResource;
+	class CompositorInstance;
 }
 
 
@@ -54,7 +51,7 @@ namespace RendererRuntime
 *  @remarks
 *    Demonstrates:
 *    - Compositor
-*    - Scene resource manager
+*    - Scene
 */
 class FirstScene : public IApplicationRendererRuntime
 {
@@ -88,28 +85,15 @@ public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
 	virtual void onUpdate() override;
-	virtual void onDraw() override;
+	virtual void onDrawRequest() override;
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::SceneResource*		  mSceneResource;
-	Renderer::IUniformBufferPtr			  mUniformBuffer;			///< Uniform buffer object (UBO), can be a null pointer
-	Renderer::IRootSignaturePtr			  mRootSignature;			///< Root signature, can be a null pointer
-	Renderer::IPipelineStatePtr			  mPipelineState;			///< Pipeline state object (PSO), can be a null pointer
-	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
-	RendererRuntime::FontResource*		  mFontResource;			///< Font resource, can be a null pointer
-	RendererRuntime::MeshResource*		  mMeshResource;			///< Mesh resource, can be a null pointer
-	RendererRuntime::TextureResource*	  mDiffuseTextureResource;
-	RendererRuntime::TextureResource*	  mNormalTextureResource;
-	RendererRuntime::TextureResource*	  mSpecularTextureResource;
-	RendererRuntime::TextureResource*	  mEmissiveTextureResource;
-	Renderer::ISamplerStatePtr			  mSamplerState;			///< Sampler state, can be a null pointer
-	// Optimization: Cache data to not bother the renderer API to much
-	handle	 mObjectSpaceToClipSpaceMatrixUniformHandle;	///< Object space to clip space matrix uniform handle, can be NULL_HANDLE
-	handle	 mObjectSpaceToViewSpaceMatrixUniformHandle;	///< Object space to view space matrix uniform handle, can be NULL_HANDLE
+	RendererRuntime::CompositorInstance* mCompositorInstance;
+	RendererRuntime::SceneResource*		 mSceneResource;
 	// For timing
 	Stopwatch mStopwatch;	///< Stopwatch instance
 	float	  mGlobalTimer;	///< Global timer

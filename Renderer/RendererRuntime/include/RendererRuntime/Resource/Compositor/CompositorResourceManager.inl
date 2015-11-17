@@ -19,18 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/ICompositorPassFactory.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -38,37 +26,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class CompositorPassFactory : public ICompositorPassFactory
-	{
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	public:
-		RENDERERRUNTIME_API_EXPORT CompositorPassFactory();
-		RENDERERRUNTIME_API_EXPORT virtual ~CompositorPassFactory();
+	inline const ICompositorPassFactory* CompositorResourceManager::getCompositorPassFactory() const
+	{
+		return mCompositorPassFactory;
+	}
 
-
-	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::CompositorPassFactory methods ]
-	//[-------------------------------------------------------]
-	protected:
-		RENDERERRUNTIME_API_EXPORT virtual ICompositorResourcePass* createCompositorResourcePass(CompositorPassTypeId compositorPassTypeId) const override;
-		RENDERERRUNTIME_API_EXPORT virtual ICompositorInstancePass* createCompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorInstanceNode& compositorInstanceNode) const override;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		CompositorPassFactory(const CompositorPassFactory&) = delete;
-		CompositorPassFactory& operator=(const CompositorPassFactory&) = delete;
-
-
-	};
+	inline void CompositorResourceManager::setCompositorPassFactory(const ICompositorPassFactory* compositorPassFactory)
+	{
+		mCompositorPassFactory = compositorPassFactory;
+	}
 
 
 //[-------------------------------------------------------]
