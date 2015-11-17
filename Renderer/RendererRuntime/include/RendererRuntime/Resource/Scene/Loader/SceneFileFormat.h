@@ -91,7 +91,6 @@ namespace RendererRuntime
 
 			struct CameraItem
 			{
-				AssetId meshAssetId;
 			};
 		#pragma pack(pop)
 
