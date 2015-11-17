@@ -67,7 +67,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
-		inline const ISceneFactory* getSceneFactory() const;
+		inline const ISceneFactory& getSceneFactory() const;
 		RENDERERRUNTIME_API_EXPORT void setSceneFactory(const ISceneFactory* sceneFactory);
 		RENDERERRUNTIME_API_EXPORT ISceneResource* loadSceneResourceByAssetId(AssetId assetId, bool reload = false);
 
@@ -103,7 +103,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime&	 mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		const ISceneFactory* mSceneFactory;		///< Scene factory, can be a null pointer, do not destroy the instance
+		const ISceneFactory* mSceneFactory;		///< Scene factory, always valid, do not destroy the instance
 		SceneResources		 mSceneResources;
 
 

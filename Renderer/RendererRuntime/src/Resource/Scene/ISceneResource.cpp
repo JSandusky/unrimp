@@ -117,7 +117,7 @@ namespace RendererRuntime
 	ISceneResource::ISceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
 		IResource(resourceId),
 		mRendererRuntime(rendererRuntime),
-		mSceneFactory(mRendererRuntime.getSceneResourceManager().getSceneFactory())
+		mSceneFactory(&mRendererRuntime.getSceneResourceManager().getSceneFactory())
 	{
 		// Nothing in here
 	}

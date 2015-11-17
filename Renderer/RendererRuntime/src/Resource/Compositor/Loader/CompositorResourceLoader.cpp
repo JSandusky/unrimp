@@ -162,29 +162,21 @@ namespace RendererRuntime
 
 	void CompositorResourceLoader::onDeserialization()
 	{
-		const ICompositorPassFactory* compositorPassFactory = static_cast<CompositorResourceManager&>(getResourceManager()).getCompositorPassFactory();
-		if (nullptr != compositorPassFactory)
+		const ICompositorPassFactory& compositorPassFactory = static_cast<CompositorResourceManager&>(getResourceManager()).getCompositorPassFactory();
+		try
 		{
-			try
-			{
-				std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
+			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
 
-				// Read in the compositor header
-				v1Compositor::Header compositorHeader;
-				ifstream.read(reinterpret_cast<char*>(&compositorHeader), sizeof(v1Compositor::Header));
+			// Read in the compositor header
+			v1Compositor::Header compositorHeader;
+			ifstream.read(reinterpret_cast<char*>(&compositorHeader), sizeof(v1Compositor::Header));
 
-				// Read in the compositor nodes
-				::detail::nodesDeserialization(ifstream, *mCompositorResource, *compositorPassFactory);
-			}
-			catch (const std::exception& e)
-			{
-				RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load compositor asset %d: %s", mAsset.assetId, e.what());
-			}
+			// Read in the compositor nodes
+			::detail::nodesDeserialization(ifstream, *mCompositorResource, compositorPassFactory);
 		}
-		else
+		catch (const std::exception& e)
 		{
-			// Error!
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load compositor asset %d: The compositor resource manager has no compositor pass factory set", mAsset.assetId);
+			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load compositor asset %d: %s", mAsset.assetId, e.what());
 		}
 	}
 

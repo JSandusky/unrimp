@@ -133,7 +133,7 @@ namespace RendererRuntime
 		if (loadingState == IResource::LoadingState::LOADED)
 		{
 			// TODO(co) Just a first test
-			const ICompositorPassFactory* compositorPassFactory = mRendererRuntime.getCompositorResourceManager().getCompositorPassFactory();
+			const ICompositorPassFactory& compositorPassFactory = mRendererRuntime.getCompositorResourceManager().getCompositorPassFactory();
 
 			destroySequentialCompositorInstanceNodes();
 
@@ -168,7 +168,7 @@ namespace RendererRuntime
 								// Create the compositor instance pass
 								if (nullptr != compositorResourcePass)
 								{
-									compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory->createCompositorInstancePass(*compositorResourcePass, *compositorInstanceNode));
+									compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory.createCompositorInstancePass(*compositorResourcePass, *compositorInstanceNode));
 								}
 							}
 						}

@@ -28,9 +28,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const ISceneFactory* SceneResourceManager::getSceneFactory() const
+	inline const ISceneFactory& SceneResourceManager::getSceneFactory() const
 	{
-		return mSceneFactory;
+		// We know that this pointer is always valid
+		return *mSceneFactory;
 	}
 
 
