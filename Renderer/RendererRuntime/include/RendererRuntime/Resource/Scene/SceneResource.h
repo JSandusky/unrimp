@@ -40,8 +40,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class SceneNode;
 	class Transform;
+	class ISceneNode;
 	class ISceneItem;
 	class MeshSceneItem;
 	class CameraSceneItem;
@@ -74,7 +74,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::vector<SceneNode*>  SceneNodes;
+		typedef std::vector<ISceneNode*> SceneNodes;
 		typedef std::vector<ISceneItem*> SceneItems;
 
 
@@ -88,8 +88,8 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Node                                                  ]
 		//[-------------------------------------------------------]
-		RENDERERRUNTIME_API_EXPORT SceneNode* createSceneNode(const Transform& transform);
-		RENDERERRUNTIME_API_EXPORT void destroySceneNode(SceneNode& sceneNode);
+		RENDERERRUNTIME_API_EXPORT ISceneNode* createSceneNode(const Transform& transform);
+		RENDERERRUNTIME_API_EXPORT void destroySceneNode(ISceneNode& sceneNode);
 		RENDERERRUNTIME_API_EXPORT void destroyAllSceneNodes();
 		inline const SceneNodes& getSceneNodes() const;
 

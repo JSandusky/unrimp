@@ -25,7 +25,7 @@
 #include "RendererRuntime/Resource/Compositor/Pass/Scene/CompositorResourcePassScene.h"
 #include "RendererRuntime/Resource/Compositor/CompositorInstanceNode.h"
 #include "RendererRuntime/Resource/Compositor/CompositorInstance.h"
-#include "RendererRuntime/Resource/Scene/SceneNode.h"
+#include "RendererRuntime/Resource/Scene/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/MeshSceneItem.h"
 #include "RendererRuntime/Resource/Scene/CameraSceneItem.h"
@@ -275,20 +275,20 @@ namespace
 				const size_t numberOfSceneNodes = sceneNodes.size();
 				for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
 				{
-					RendererRuntime::SceneNode* sceneNode = sceneNodes[sceneNodeIndex];
+					RendererRuntime::ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
 					const RendererRuntime::Transform& transform = sceneNode->getTransform();
 
 					// Loop through all scene items attached to the current scene node
-					const RendererRuntime::SceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
+					const RendererRuntime::ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
 					const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
 					for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
 					{
 						RendererRuntime::ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
 
-						// TODO(co) As mentioned, just a first test
-						RendererRuntime::MeshSceneItem* meshSceneItem = dynamic_cast<RendererRuntime::MeshSceneItem*>(sceneItem);
-						if (nullptr != meshSceneItem)
+						if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
 						{
+							RendererRuntime::MeshSceneItem* meshSceneItem = static_cast<RendererRuntime::MeshSceneItem*>(sceneItem);
+
 							{ // Set uniform
 								// Calculate the object space to clip space matrix
 								glm::mat4 viewSpaceToClipSpace		= glm::perspective(45.0f, aspectRatio, 0.1f, 100.f);

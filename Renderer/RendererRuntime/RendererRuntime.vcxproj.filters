@@ -189,6 +189,9 @@
     <None Include="include\RendererRuntime\Resource\Scene\MeshSceneItem.inl">
       <Filter>Source Files\Resource\Scene</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Scene\ISceneNode.inl">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -450,6 +453,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\MeshSceneItem.h">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneNode.h">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -615,6 +621,9 @@
       <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\MeshSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\ISceneNode.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
   </ItemGroup>

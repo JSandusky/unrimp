@@ -19,13 +19,31 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/ISceneNode.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
 
 
-	// TODO(co) Remove if not required
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	ISceneNode::ISceneNode(const Transform& transform) :
+		mTransform(transform)
+	{
+		// Nothing in here
+	}
+
+	ISceneNode::~ISceneNode()
+	{
+		// Nothing in here
+	}
 
 
 //[-------------------------------------------------------]

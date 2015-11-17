@@ -32,6 +32,21 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const SceneItemTypeId MeshSceneItem::TYPE_ID("Mesh");
+
+
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[-------------------------------------------------------]
+	SceneItemTypeId MeshSceneItem::getSceneItemTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	MeshSceneItem::MeshSceneItem(SceneResource& sceneResource, MeshResource& meshResource) :

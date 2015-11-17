@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 
 
@@ -47,6 +48,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId SceneItemTypeId;	///< Scene item type identifier, internally just a POD "uint32_t"
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	class ISceneItem : protected NonCopyable
@@ -64,6 +71,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline SceneResource& getSceneResource() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[-------------------------------------------------------]
+	public:
+		virtual SceneItemTypeId getSceneItemTypeId() const = 0;
 
 
 	//[-------------------------------------------------------]

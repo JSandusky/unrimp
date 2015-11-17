@@ -32,10 +32,25 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const SceneNodeTypeId SceneNode::TYPE_ID("Node");
+
+
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneNode methods            ]
+	//[-------------------------------------------------------]
+	SceneNodeTypeId SceneNode::getSceneNodeTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	SceneNode::SceneNode(const Transform& transform) :
-		mTransform(transform)
+		ISceneNode(transform)
 	{
 		// Nothing in here
 	}

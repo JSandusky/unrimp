@@ -42,6 +42,7 @@
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\ResourceStreamer.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\ISceneItem.inl" />
+    <None Include="include\RendererRuntime\Resource\Scene\ISceneNode.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\MeshSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\SceneNode.inl" />
@@ -112,6 +113,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\ResourceStreamer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\CameraSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneItem.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneNode.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Memory\SceneItemMemoryManager.h" />
@@ -184,6 +186,7 @@
     <ClCompile Include="src\Resource\ResourceStreamer.cpp" />
     <ClCompile Include="src\Resource\Scene\CameraSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\ISceneItem.cpp" />
+    <ClCompile Include="src\Resource\Scene\ISceneNode.cpp" />
     <ClCompile Include="src\Resource\Scene\Loader\SceneResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Scene\Memory\SceneItemMemoryManager.cpp" />
     <ClCompile Include="src\Resource\Scene\Memory\SceneNodeMemoryManager.cpp" />

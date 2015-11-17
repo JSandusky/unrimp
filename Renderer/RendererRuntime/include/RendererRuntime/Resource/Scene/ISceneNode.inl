@@ -25,7 +25,28 @@ namespace RendererRuntime
 {
 
 
-	// TODO(co) Remove if not required
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline const Transform& ISceneNode::getTransform() const
+	{
+		return mTransform;
+	}
+
+	inline void ISceneNode::setRotation(const glm::quat& rotation)
+	{
+		mTransform.rotation = rotation;
+	}
+
+	inline void ISceneNode::attachSceneItem(ISceneItem& sceneItem)
+	{
+		mAttachedSceneItems.push_back(&sceneItem);
+	}
+
+	inline const ISceneNode::AttachedSceneItems& ISceneNode::getAttachedSceneItems() const
+	{
+		return mAttachedSceneItems;
+	}
 
 
 //[-------------------------------------------------------]

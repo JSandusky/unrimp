@@ -45,14 +45,14 @@ namespace RendererRuntime
 		destroyAllSceneNodesAndItems();
 	}
 
-	SceneNode* SceneResource::createSceneNode(const Transform& transform)
+	ISceneNode* SceneResource::createSceneNode(const Transform& transform)
 	{
 		SceneNode* sceneNode = new SceneNode(transform);
 		mSceneNodes.push_back(sceneNode);
 		return sceneNode;
 	}
 
-	void SceneResource::destroySceneNode(SceneNode& sceneNode)
+	void SceneResource::destroySceneNode(ISceneNode& sceneNode)
 	{
 		SceneNodes::iterator iterator = std::find(mSceneNodes.begin(), mSceneNodes.end(), &sceneNode);
 		if (iterator != mSceneNodes.end())

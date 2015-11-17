@@ -27,19 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/Transform.h"
-#include "RendererRuntime/Core/NonCopyable.h"
-
-#include <vector>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class ISceneItem;
-}
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Resource/Scene/ISceneNode.h"
 
 
 //[-------------------------------------------------------]
@@ -52,7 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneNode : protected NonCopyable
+	class SceneNode : public ISceneNode
 	{
 
 
@@ -66,24 +55,14 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::vector<ISceneItem*> AttachedSceneItems;
+		RENDERERRUNTIME_API_EXPORT static const SceneNodeTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public RendererRuntime::ISceneNode methods            ]
 	//[-------------------------------------------------------]
 	public:
-		//[-------------------------------------------------------]
-		//[ Transform                                             ]
-		//[-------------------------------------------------------]
-		inline const Transform& getTransform() const;
-		inline void setRotation(const glm::quat& rotation);
-
-		//[-------------------------------------------------------]
-		//[ Attached scene items                                  ]
-		//[-------------------------------------------------------]
-		inline void attachSceneItem(ISceneItem& sceneItem);
-		inline const AttachedSceneItems& getAttachedSceneItems() const;
+		virtual SceneNodeTypeId getSceneNodeTypeId() const override;
 
 
 	//[-------------------------------------------------------]
@@ -94,14 +73,6 @@ namespace RendererRuntime
 		virtual ~SceneNode();
 		SceneNode(const SceneNode&) = delete;
 		SceneNode& operator=(const SceneNode&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		Transform		   mTransform;
-		AttachedSceneItems mAttachedSceneItems;
 
 
 	};

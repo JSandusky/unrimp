@@ -27,9 +27,11 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/Scene/ISceneItem.h"
-#include "RendererRuntime/Asset/Asset.h"
+#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Core/Transform.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -37,7 +39,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class MeshResource;
+	class ISceneItem;
 }
 
 
@@ -49,9 +51,15 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId SceneNodeTypeId;	///< Scene node type identifier, internally just a POD "uint32_t"
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MeshSceneItem : public ISceneItem
+	class ISceneNode : protected NonCopyable
 	{
 
 
@@ -65,38 +73,49 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT static const SceneItemTypeId TYPE_ID;
+		typedef std::vector<ISceneItem*> AttachedSceneItems;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline MeshResource* getMeshResource() const;
+		//[-------------------------------------------------------]
+		//[ Transform                                             ]
+		//[-------------------------------------------------------]
+		inline const Transform& getTransform() const;
+		inline void setRotation(const glm::quat& rotation);
+
+		//[-------------------------------------------------------]
+		//[ Attached scene items                                  ]
+		//[-------------------------------------------------------]
+		inline void attachSceneItem(ISceneItem& sceneItem);
+		inline const AttachedSceneItems& getAttachedSceneItems() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[ Public RendererRuntime::ISceneNode methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual SceneItemTypeId getSceneItemTypeId() const override;
+		virtual SceneNodeTypeId getSceneNodeTypeId() const = 0;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		MeshSceneItem(SceneResource& sceneResource, MeshResource& meshResource);
-		virtual ~MeshSceneItem();
-		MeshSceneItem(const MeshSceneItem&) = delete;
-		MeshSceneItem& operator=(const MeshSceneItem&) = delete;
+		explicit ISceneNode(const Transform& transform);
+		virtual ~ISceneNode();
+		ISceneNode(const ISceneNode&) = delete;
+		ISceneNode& operator=(const ISceneNode&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MeshResource* mMeshResource;	///< Mesh resource, can be a null pointer
+		Transform		   mTransform;
+		AttachedSceneItems mAttachedSceneItems;
 
 
 	};
@@ -111,4 +130,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/MeshSceneItem.inl"
+#include "RendererRuntime/Resource/Scene/ISceneNode.inl"

@@ -25,7 +25,7 @@
 #include "Runtime/FirstScene/FirstScene.h"
 
 #include <RendererRuntime/Core/Transform.h>
-#include <RendererRuntime/Resource/Scene/SceneNode.h>
+#include <RendererRuntime/Resource/Scene/ISceneNode.h>
 #include <RendererRuntime/Resource/Scene/MeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/SceneResource.h>
 #include <RendererRuntime/Resource/Scene/SceneResourceManager.h>
@@ -96,7 +96,7 @@ void FirstScene::onInitialization()
 
 			{ // Second fixed mesh
 				// Scene node
-				RendererRuntime::SceneNode* sceneNode = mSceneResource->createSceneNode(RendererRuntime::Transform(glm::vec3(0.0f, -15.0f, -25.0f), RendererRuntime::Quaternion::IDENTITY, glm::vec3(0.25f)));
+				RendererRuntime::ISceneNode* sceneNode = mSceneResource->createSceneNode(RendererRuntime::Transform(glm::vec3(0.0f, -15.0f, -25.0f), RendererRuntime::Quaternion::IDENTITY, glm::vec3(0.25f)));
 
 				// Mesh scene item
 				RendererRuntime::MeshSceneItem* meshSceneItem = mSceneResource->createMeshSceneItem("Example/Mesh/Character/ImrodLowPoly");

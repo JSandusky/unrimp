@@ -36,7 +36,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class SceneNode;
+	class ISceneNode;
 	class SceneResource;
 	class CameraSceneItem;
 	class CompositorInstance;
@@ -97,7 +97,7 @@ private:
 	RendererRuntime::CompositorInstance* mCompositorInstance;
 	RendererRuntime::SceneResource*		 mSceneResource;
 	RendererRuntime::CameraSceneItem*	 mCameraSceneItem;
-	RendererRuntime::SceneNode*			 mSceneNode;
+	RendererRuntime::ISceneNode*		 mSceneNode;
 	// For timing
 	Stopwatch mStopwatch;	///< Stopwatch instance
 	float	  mGlobalTimer;	///< Global timer
