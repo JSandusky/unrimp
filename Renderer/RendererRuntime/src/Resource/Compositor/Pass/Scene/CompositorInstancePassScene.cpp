@@ -25,6 +25,10 @@
 #include "RendererRuntime/Resource/Compositor/Pass/Scene/CompositorResourcePassScene.h"
 #include "RendererRuntime/Resource/Compositor/CompositorInstanceNode.h"
 #include "RendererRuntime/Resource/Compositor/CompositorInstance.h"
+#include "RendererRuntime/Resource/Scene/SceneNode.h"
+#include "RendererRuntime/Resource/Scene/SceneResource.h"
+#include "RendererRuntime/Resource/Scene/SceneItemMesh.h"
+#include "RendererRuntime/Resource/Scene/SceneItemCamera.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
@@ -38,6 +42,7 @@
 	#pragma warning(disable: 4201)	// warning C4201: nonstandard extension used: nameless struct/union
 	#include <glm/gtc/type_ptr.hpp>
 	#include <glm/gtc/matrix_transform.hpp>
+	#include <glm/gtx/quaternion.hpp>
 #pragma warning(pop)
 
 
@@ -52,7 +57,6 @@ namespace
 		Renderer::IRootSignaturePtr			  mRootSignature;			///< Root signature, can be a null pointer
 		Renderer::IPipelineStatePtr			  mPipelineState;			///< Pipeline state object (PSO), can be a null pointer
 		Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
-		RendererRuntime::MeshResource*		  mMeshResource;			///< Mesh resource, can be a null pointer
 		RendererRuntime::TextureResource*	  mDiffuseTextureResource;
 		RendererRuntime::TextureResource*	  mNormalTextureResource;
 		RendererRuntime::TextureResource*	  mSpecularTextureResource;
@@ -184,9 +188,6 @@ namespace
 					}
 				}
 
-				// Create mesh instance
-				mMeshResource = rendererRuntime.getMeshResourceManager().loadMeshResourceByAssetId(renderer, "Example/Mesh/Character/ImrodLowPoly");
-
 				{ // Load in the diffuse, emissive, normal and specular texture
 				  // -> The tangent space normal map is stored with three components, two would be enough to recalculate the third component within the fragment shader
 				  // -> The specular map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
@@ -215,7 +216,6 @@ namespace
 			mNormalTextureResource = nullptr;
 			mSpecularTextureResource = nullptr;
 			mEmissiveTextureResource = nullptr;
-			mMeshResource = nullptr;
 
 			// Release the used resources
 			mPipelineState = nullptr;
@@ -224,7 +224,7 @@ namespace
 			mUniformBuffer = nullptr;
 		}
 
-		void draw(Renderer::IRenderer& renderer)
+		void draw(Renderer::IRenderer& renderer, RendererRuntime::SceneItemCamera& sceneItemCamera)
 		{
 			// Due to background texture loading, some textures might not be ready, yet
 			// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
@@ -270,47 +270,70 @@ namespace
 				// Set the used pipeline state object (PSO)
 				renderer.setPipelineState(mPipelineState);
 
-				{ // Set uniform
-					// Calculate the object space to clip space matrix
-					glm::mat4 viewSpaceToClipSpace		= glm::perspective(45.0f, aspectRatio, 0.1f, 100.f);
-					glm::mat4 viewTranslate				= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -7.0f, -25.0f));
-					glm::mat4 worldSpaceToViewSpace		= glm::rotate(viewTranslate, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-					glm::mat4 objectSpaceToWorldSpace	= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-					glm::mat4 objectSpaceToViewSpace	= worldSpaceToViewSpace * objectSpaceToWorldSpace;
-					glm::mat4 objectSpaceToClipSpace	= viewSpaceToClipSpace * objectSpaceToViewSpace;
-
-					// Upload the uniform data
-					// -> Two versions: One using an uniform buffer and one setting an individual uniform
-					if (nullptr != mUniformBuffer)
-					{
-						struct UniformBlockDynamicVs
-						{
-							float objectSpaceToClipSpaceMatrix[4 * 4];	// Object space to clip space matrix
-							float objectSpaceToViewSpaceMatrix[4 * 4];	// Object space to view space matrix
-						};
-						UniformBlockDynamicVs uniformBlockDynamicVS;
-						memcpy(uniformBlockDynamicVS.objectSpaceToClipSpaceMatrix, glm::value_ptr(objectSpaceToClipSpace), sizeof(float) * 4 * 4);
-
-						// TODO(co) float3x3 (currently there are alignment issues when using Direct3D, have a look into possible solutions)
-						glm::mat3 objectSpaceToViewSpace3x3 = glm::mat3(objectSpaceToViewSpace);
-						objectSpaceToViewSpace = glm::mat4(objectSpaceToViewSpace3x3);
-						memcpy(uniformBlockDynamicVS.objectSpaceToViewSpaceMatrix, glm::value_ptr(objectSpaceToViewSpace), sizeof(float) * 4 * 4);
-
-						// Copy data
-						mUniformBuffer->copyDataFrom(sizeof(UniformBlockDynamicVs), &uniformBlockDynamicVS);
-					}
-					else
-					{
-						// Set uniforms
-						mProgram->setUniformMatrix4fv(mObjectSpaceToClipSpaceMatrixUniformHandle, glm::value_ptr(objectSpaceToClipSpace));
-						mProgram->setUniformMatrix3fv(mObjectSpaceToViewSpaceMatrixUniformHandle, glm::value_ptr(glm::mat3(objectSpaceToViewSpace)));
-					}
-				}
-
-				// Draw mesh instance
-				if (nullptr != mMeshResource)
+				// Loop through all scene nodes
+				const RendererRuntime::SceneResource::SceneNodes& sceneNodes = sceneItemCamera.getSceneResource().getSceneNodes();
+				const size_t numberOfSceneNodes = sceneNodes.size();
+				for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
 				{
-					mMeshResource->draw();
+					RendererRuntime::SceneNode* sceneNode = sceneNodes[sceneNodeIndex];
+					const RendererRuntime::Transform& transform = sceneNode->getTransform();
+
+					// Loop through all scene items attached to the current scene node
+					const RendererRuntime::SceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
+					const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
+					for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
+					{
+						RendererRuntime::ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
+
+						// TODO(co) As mentioned, just a first test
+						RendererRuntime::SceneItemMesh* sceneItemMesh = dynamic_cast<RendererRuntime::SceneItemMesh*>(sceneItem);
+						if (nullptr != sceneItemMesh)
+						{
+							{ // Set uniform
+								// Calculate the object space to clip space matrix
+								glm::mat4 viewSpaceToClipSpace		= glm::perspective(45.0f, aspectRatio, 0.1f, 100.f);
+								glm::mat4 viewTranslate				= glm::translate(glm::mat4(1.0f), transform.position);
+								glm::mat4 worldSpaceToViewSpace		= viewTranslate * glm::toMat4(transform.rotation);
+								glm::mat4 objectSpaceToWorldSpace	= glm::scale(glm::mat4(1.0f), transform.scale);
+								glm::mat4 objectSpaceToViewSpace	= worldSpaceToViewSpace * objectSpaceToWorldSpace;
+								glm::mat4 objectSpaceToClipSpace	= viewSpaceToClipSpace * objectSpaceToViewSpace;
+
+								// Upload the uniform data
+								// -> Two versions: One using an uniform buffer and one setting an individual uniform
+								if (nullptr != mUniformBuffer)
+								{
+									struct UniformBlockDynamicVs
+									{
+										float objectSpaceToClipSpaceMatrix[4 * 4];	// Object space to clip space matrix
+										float objectSpaceToViewSpaceMatrix[4 * 4];	// Object space to view space matrix
+									};
+									UniformBlockDynamicVs uniformBlockDynamicVS;
+									memcpy(uniformBlockDynamicVS.objectSpaceToClipSpaceMatrix, glm::value_ptr(objectSpaceToClipSpace), sizeof(float) * 4 * 4);
+
+									// TODO(co) float3x3 (currently there are alignment issues when using Direct3D, have a look into possible solutions)
+									glm::mat3 objectSpaceToViewSpace3x3 = glm::mat3(objectSpaceToViewSpace);
+									objectSpaceToViewSpace = glm::mat4(objectSpaceToViewSpace3x3);
+									memcpy(uniformBlockDynamicVS.objectSpaceToViewSpaceMatrix, glm::value_ptr(objectSpaceToViewSpace), sizeof(float) * 4 * 4);
+
+									// Copy data
+									mUniformBuffer->copyDataFrom(sizeof(UniformBlockDynamicVs), &uniformBlockDynamicVS);
+								}
+								else
+								{
+									// Set uniforms
+									mProgram->setUniformMatrix4fv(mObjectSpaceToClipSpaceMatrixUniformHandle, glm::value_ptr(objectSpaceToClipSpace));
+									mProgram->setUniformMatrix3fv(mObjectSpaceToViewSpaceMatrixUniformHandle, glm::value_ptr(glm::mat3(objectSpaceToViewSpace)));
+								}
+							}
+
+							// Draw mesh instance
+							RendererRuntime::MeshResource* meshResource = sceneItemMesh->getMeshResource();
+							if (nullptr != meshResource)
+							{
+								meshResource->draw();
+							}
+						}
+					}
 				}
 
 				// End debug event
@@ -331,10 +354,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassScene::execute()
+	void CompositorInstancePassScene::execute(SceneItemCamera* sceneItemCamera)
 	{
 		// TODO(co) Just a first test
-		::detail::draw(getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getRenderer());
+		if (nullptr != sceneItemCamera)
+		{
+			::detail::draw(getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getRenderer(), *sceneItemCamera);
+		}
 	}
 
 

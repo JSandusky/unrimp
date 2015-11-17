@@ -27,7 +27,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Core/Transform.h"
 #include "RendererRuntime/Core/NonCopyable.h"
+
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -35,7 +38,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class Transform;
+	class ISceneItem;
 }
 
 
@@ -60,6 +63,30 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::vector<ISceneItem*> AttachedSceneItems;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		//[-------------------------------------------------------]
+		//[ Transform                                             ]
+		//[-------------------------------------------------------]
+		inline const Transform& getTransform() const;
+		inline void setRotation(const glm::quat& rotation);
+
+		//[-------------------------------------------------------]
+		//[ Attached scene items                                  ]
+		//[-------------------------------------------------------]
+		inline void attachSceneItem(ISceneItem& sceneItem);
+		inline const AttachedSceneItems& getAttachedSceneItems() const;
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
@@ -73,6 +100,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		Transform		   mTransform;
+		AttachedSceneItems mAttachedSceneItems;
 
 
 	};
@@ -82,3 +111,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/SceneNode.inl"

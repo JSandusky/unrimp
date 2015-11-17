@@ -177,6 +177,18 @@
     <None Include="include\RendererRuntime\Resource\Compositor\CompositorResourceManager.inl">
       <Filter>Source Files\Resource\Compositor</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Scene\SceneNode.inl">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\SceneResource.inl">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\ISceneItem.inl">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\SceneItemMesh.inl">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -285,9 +297,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.h">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneMesh.h">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneNode.h">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
@@ -295,12 +304,6 @@
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\RenderQueue.h">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneCamera.h">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneItem.h">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Memory\SceneNodeMemoryManager.h">
@@ -438,6 +441,15 @@
     <ClInclude Include="src\Resource\Compositor\Pass\Scene\FirstScene_GLSL_ES2.h">
       <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneItem.h">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneItemMesh.h">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneItemCamera.h">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -490,15 +502,6 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Mesh\Loader\MeshResourceLoader.cpp">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\SceneCamera.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\SceneItem.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\SceneMesh.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\SceneNode.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
@@ -604,6 +607,15 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Compositor\CompositorResourceTarget.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\ISceneItem.cpp">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\SceneItemMesh.cpp">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\SceneItemCamera.cpp">
+      <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

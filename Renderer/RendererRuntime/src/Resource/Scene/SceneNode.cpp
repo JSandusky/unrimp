@@ -34,7 +34,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	SceneNode::SceneNode(const Transform&)	// TODO(co) Use transform
+	SceneNode::SceneNode(const Transform& transform) :
+		mTransform(transform)
 	{
 		// Nothing in here
 	}

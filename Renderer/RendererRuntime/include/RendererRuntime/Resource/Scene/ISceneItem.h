@@ -27,10 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/NonCopyable.h"
-
-#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -38,10 +35,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class SceneItemCamera;
-	class CompositorInstance;
-	class CompositorResourceNode;
-	class ICompositorInstancePass;
+	class SceneResource;
 }
 
 
@@ -55,49 +49,38 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorInstanceNode : protected NonCopyable
+	class ISceneItem : protected NonCopyable
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class CompositorInstance;	// Needs to create and execute compositor node instances
+		friend class SceneResource;	// Needs to be able to destroy scene items
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT const CompositorResourceNode& getCompositorResourceNode() const;
-		RENDERERRUNTIME_API_EXPORT const CompositorInstance& getCompositorInstance() const;
+		inline SceneResource& getSceneResource() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorInstanceNode(const CompositorResourceNode& compositorResourceNode, const CompositorInstance& compositorInstance);
-		virtual ~CompositorInstanceNode();
-		CompositorInstanceNode(const CompositorInstanceNode&) = delete;
-		CompositorInstanceNode& operator=(const CompositorInstanceNode&) = delete;
-		void execute(SceneItemCamera* sceneItemCamera);
-
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::vector<ICompositorInstancePass*> CompositorInstancePasses;
+		explicit ISceneItem(SceneResource& sceneResource);
+		virtual ~ISceneItem();
+		ISceneItem(const ISceneItem&) = delete;
+		ISceneItem& operator=(const ISceneItem&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		const CompositorResourceNode& mCompositorResourceNode;
-		const CompositorInstance&	  mCompositorInstance;
-		CompositorInstancePasses	  mCompositorInstancePasses;
+		SceneResource& mSceneResource;
 
 
 	};
@@ -107,3 +90,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/ISceneItem.inl"

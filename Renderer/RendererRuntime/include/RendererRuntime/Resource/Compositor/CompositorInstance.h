@@ -43,6 +43,7 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
+	class SceneItemCamera;
 	class IRendererRuntime;
 	class CompositorResource;
 	class CompositorInstanceNode;
@@ -70,7 +71,7 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId, Renderer::IRenderTarget& renderTarget);
 		RENDERERRUNTIME_API_EXPORT virtual ~CompositorInstance();
 		RENDERERRUNTIME_API_EXPORT const IRendererRuntime& getRendererRuntime() const;
-		RENDERERRUNTIME_API_EXPORT void execute();
+		RENDERERRUNTIME_API_EXPORT void execute(SceneItemCamera* sceneItemCamera);
 
 
 	//[-------------------------------------------------------]

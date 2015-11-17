@@ -19,13 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorInstanceNode.h"
-#include "RendererRuntime/Resource/Compositor/Pass/ICompositorInstancePass.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -35,39 +28,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	const CompositorResourceNode& CompositorInstanceNode::getCompositorResourceNode() const
+	inline MeshResource* SceneItemMesh::getMeshResource() const
 	{
-		return mCompositorResourceNode;
-	}
-
-	const CompositorInstance& CompositorInstanceNode::getCompositorInstance() const
-	{
-		return mCompositorInstance;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	CompositorInstanceNode::CompositorInstanceNode(const CompositorResourceNode& compositorResourceNode, const CompositorInstance& compositorInstance) :
-		mCompositorResourceNode(compositorResourceNode),
-		mCompositorInstance(compositorInstance)
-	{
-		// Nothing here
-	}
-
-	CompositorInstanceNode::~CompositorInstanceNode()
-	{
-		// Nothing here
-	}
-
-	void CompositorInstanceNode::execute(SceneItemCamera* sceneItemCamera)
-	{
-		const size_t numberOfCompositorInstancePasses = mCompositorInstancePasses.size();
-		for (size_t i = 0; i < numberOfCompositorInstancePasses; ++i)
-		{
-			mCompositorInstancePasses[i]->execute(sceneItemCamera);
-		}
+		return mMeshResource;
 	}
 
 

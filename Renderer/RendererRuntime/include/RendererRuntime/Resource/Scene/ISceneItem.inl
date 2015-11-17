@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneCamera.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,16 +26,11 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SceneCamera::SceneCamera()
+	inline SceneResource& ISceneItem::getSceneResource() const
 	{
-		// Nothing in here
-	}
-
-	SceneCamera::~SceneCamera()
-	{
-		// Nothing in here
+		return mSceneResource;
 	}
 
 

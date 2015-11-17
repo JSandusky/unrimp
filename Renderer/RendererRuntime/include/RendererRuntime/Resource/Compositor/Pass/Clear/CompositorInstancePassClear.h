@@ -63,7 +63,7 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void execute() override;
+		virtual void execute(SceneItemCamera* sceneItemCamera) override;
 
 
 	//[-------------------------------------------------------]

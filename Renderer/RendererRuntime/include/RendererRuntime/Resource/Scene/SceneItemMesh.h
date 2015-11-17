@@ -27,7 +27,17 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneItem.h"
+#include "RendererRuntime/Resource/Scene/ISceneItem.h"
+#include "RendererRuntime/Asset/Asset.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class MeshResource;
+}
 
 
 //[-------------------------------------------------------]
@@ -40,7 +50,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneCamera : public SceneItem
+	class SceneItemMesh : public ISceneItem
 	{
 
 
@@ -51,19 +61,27 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		inline MeshResource* getMeshResource() const;
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		SceneCamera();
-		virtual ~SceneCamera();
-		SceneCamera(const SceneCamera&) = delete;
-		SceneCamera& operator=(const SceneCamera&) = delete;
+		SceneItemMesh(SceneResource& sceneResource, MeshResource& meshResource);
+		virtual ~SceneItemMesh();
+		SceneItemMesh(const SceneItemMesh&) = delete;
+		SceneItemMesh& operator=(const SceneItemMesh&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		MeshResource* mMeshResource;	///< Mesh resource, can be a null pointer
 
 
 	};
@@ -73,3 +91,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/SceneItemMesh.inl"

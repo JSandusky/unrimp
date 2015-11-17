@@ -19,18 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -38,29 +26,23 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	class SceneItem : protected NonCopyable
+	inline void SceneResource::destroyAllSceneNodesAndItems()
 	{
+		destroyAllSceneNodes();
+		destroyAllSceneItems();
+	}
 
+	inline const SceneResource::SceneNodes& SceneResource::getSceneNodes() const
+	{
+		return mSceneNodes;
+	}
 
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		SceneItem();
-		virtual ~SceneItem();
-		SceneItem(const SceneItem&) = delete;
-		SceneItem& operator=(const SceneItem&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-
-
-	};
+	inline const SceneResource::SceneItems& SceneResource::getSceneItems() const
+	{
+		return mSceneItems;
+	}
 
 
 //[-------------------------------------------------------]

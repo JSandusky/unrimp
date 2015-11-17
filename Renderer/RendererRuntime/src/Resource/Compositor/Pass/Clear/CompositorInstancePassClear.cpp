@@ -38,7 +38,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassClear::execute()
+	void CompositorInstancePassClear::execute(SceneItemCamera*)
 	{
 		// TODO(co) Just a test, backup instances later on
 		Renderer::IRenderer& renderer = getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getRenderer();

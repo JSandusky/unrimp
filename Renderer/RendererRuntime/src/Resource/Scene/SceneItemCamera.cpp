@@ -19,24 +19,9 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/ICompositorInstancePass.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class CompositorResourcePassQuad;
-}
+#include "RendererRuntime/Resource/Scene/SceneItemCamera.h"
 
 
 //[-------------------------------------------------------]
@@ -47,36 +32,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class CompositorInstancePassQuad : public ICompositorInstancePass
-	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class CompositorPassFactory;	// The only one allowed to create instances of this class
-
-
-	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
-	//[-------------------------------------------------------]
-	protected:
-		virtual void execute(SceneItemCamera* sceneItemCamera) override;
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	protected:
-		CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorInstanceNode& compositorInstanceNode);
-		virtual ~CompositorInstancePassQuad();
-		CompositorInstancePassQuad(const CompositorInstancePassQuad&) = delete;
-		CompositorInstancePassQuad& operator=(const CompositorInstancePassQuad&) = delete;
+	SceneItemCamera::SceneItemCamera(SceneResource& sceneResource) :
+		ISceneItem(sceneResource)
+	{
+		// Nothing in here
+	}
 
-
-	};
+	SceneItemCamera::~SceneItemCamera()
+	{
+		// Nothing in here
+	}
 
 
 //[-------------------------------------------------------]

@@ -23,8 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/SceneNode.h"
-#include "RendererRuntime/Resource/Scene/SceneMesh.h"
-#include "RendererRuntime/Resource/Scene/SceneCamera.h"
+#include "RendererRuntime/Resource/Scene/SceneItemMesh.h"
+#include "RendererRuntime/Resource/Scene/SceneItemCamera.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -41,40 +41,74 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	SceneResource::~SceneResource()
 	{
-		// Nothing in here
+		// Destroy all scene nodes and scene instances
+		destroyAllSceneNodesAndItems();
 	}
 
 	SceneNode* SceneResource::createSceneNode(const Transform& transform)
 	{
-		return new SceneNode(transform);
+		SceneNode* sceneNode = new SceneNode(transform);
+		mSceneNodes.push_back(sceneNode);
+		return sceneNode;
 	}
 
 	void SceneResource::destroySceneNode(SceneNode& sceneNode)
 	{
-		delete &sceneNode;
+		SceneNodes::iterator iterator = std::find(mSceneNodes.begin(), mSceneNodes.end(), &sceneNode);
+		if (iterator != mSceneNodes.end())
+		{
+			mSceneNodes.erase(iterator);
+			delete &sceneNode;
+		}
+		else
+		{
+			// TODO(co) Error handling
+		}
 	}
 
-	SceneCamera* SceneResource::createSceneCamera()
+	void SceneResource::destroyAllSceneNodes()
 	{
-		return new SceneCamera();
+		const size_t numberOfSceneNodes = mSceneNodes.size();
+		for (size_t i = 0; i < numberOfSceneNodes; ++i)
+		{
+			delete mSceneNodes[i];
+		}
+		mSceneNodes.clear();
 	}
 
-	void SceneResource::destroySceneCamera(SceneCamera& sceneCamera)
+	SceneItemCamera* SceneResource::createSceneItemCamera()
 	{
-		delete &sceneCamera;
+		SceneItemCamera* sceneItemCamera = new SceneItemCamera(*this);
+		mSceneItems.push_back(sceneItemCamera);
+		return sceneItemCamera;
 	}
 
-	SceneMesh* SceneResource::createSceneMesh(AssetId meshAssetId)
+	void SceneResource::destroySceneItemCamera(SceneItemCamera& sceneItemCamera)
+	{
+		destroySceneItem(sceneItemCamera);
+	}
+
+	SceneItemMesh* SceneResource::createSceneItemMesh(AssetId meshAssetId)
 	{
 		// Create mesh instance
 		// TODO(co) Performance: Cache mesh resource manager and renderer instance inside the scene resource manager
 		MeshResource* meshResource = mRendererRuntime.getMeshResourceManager().loadMeshResourceByAssetId(mRendererRuntime.getRenderer(), meshAssetId);
-		return (nullptr != meshResource) ? new SceneMesh(*meshResource) : nullptr;
+		return (nullptr != meshResource) ? new SceneItemMesh(*this, *meshResource) : nullptr;
 	}
 
-	void SceneResource::destroySceneMesh(SceneMesh& sceneMesh)
+	void SceneResource::destroySceneItemMesh(SceneItemMesh& sceneItemMesh)
 	{
-		delete &sceneMesh;
+		destroySceneItem(sceneItemMesh);
+	}
+
+	void SceneResource::destroyAllSceneItems()
+	{
+		const size_t numberOfSceneItems = mSceneItems.size();
+		for (size_t i = 0; i < numberOfSceneItems; ++i)
+		{
+			delete mSceneItems[i];
+		}
+		mSceneItems.clear();
 	}
 
 
@@ -86,6 +120,20 @@ namespace RendererRuntime
 		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing in here
+	}
+
+	void SceneResource::destroySceneItem(ISceneItem& sceneItem)
+	{
+		SceneItems::iterator iterator = std::find(mSceneItems.begin(), mSceneItems.end(), &sceneItem);
+		if (iterator != mSceneItems.end())
+		{
+			mSceneItems.erase(iterator);
+			delete &sceneItem;
+		}
+		else
+		{
+			// TODO(co) Error handling
+		}
 	}
 
 

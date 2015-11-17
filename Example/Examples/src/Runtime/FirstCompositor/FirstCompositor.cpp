@@ -117,7 +117,7 @@ void FirstCompositor::onDrawRequest()
 	if (nullptr != mCompositorInstance)
 	{
 		// Execute the compositor instance
-		mCompositorInstance->execute();
+		mCompositorInstance->execute(nullptr);
 	}
 }
 

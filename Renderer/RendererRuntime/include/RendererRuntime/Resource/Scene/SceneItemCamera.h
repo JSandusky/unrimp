@@ -27,17 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneItem.h"
-#include "RendererRuntime/Asset/Asset.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class MeshResource;
-}
+#include "RendererRuntime/Resource/Scene/ISceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -50,7 +40,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneMesh : public SceneItem
+	class SceneItemCamera : public ISceneItem
 	{
 
 
@@ -64,17 +54,10 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		explicit SceneMesh(MeshResource& meshResource);
-		virtual ~SceneMesh();
-		SceneMesh(const SceneMesh&) = delete;
-		SceneMesh& operator=(const SceneMesh&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		MeshResource* mMeshResource;	///< Mesh resource, can be a null pointer
+		explicit SceneItemCamera(SceneResource& sceneResource);
+		virtual ~SceneItemCamera();
+		SceneItemCamera(const SceneItemCamera&) = delete;
+		SceneItemCamera& operator=(const SceneItemCamera&) = delete;
 
 
 	};

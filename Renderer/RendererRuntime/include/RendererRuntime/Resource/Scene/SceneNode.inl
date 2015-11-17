@@ -19,13 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorInstanceNode.h"
-#include "RendererRuntime/Resource/Compositor/Pass/ICompositorInstancePass.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -35,39 +28,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	const CompositorResourceNode& CompositorInstanceNode::getCompositorResourceNode() const
+	inline const Transform& SceneNode::getTransform() const
 	{
-		return mCompositorResourceNode;
+		return mTransform;
 	}
 
-	const CompositorInstance& CompositorInstanceNode::getCompositorInstance() const
+	inline void SceneNode::setRotation(const glm::quat& rotation)
 	{
-		return mCompositorInstance;
+		mTransform.rotation = rotation;
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	CompositorInstanceNode::CompositorInstanceNode(const CompositorResourceNode& compositorResourceNode, const CompositorInstance& compositorInstance) :
-		mCompositorResourceNode(compositorResourceNode),
-		mCompositorInstance(compositorInstance)
+	inline void SceneNode::attachSceneItem(ISceneItem& sceneItem)
 	{
-		// Nothing here
+		mAttachedSceneItems.push_back(&sceneItem);
 	}
 
-	CompositorInstanceNode::~CompositorInstanceNode()
+	inline const SceneNode::AttachedSceneItems& SceneNode::getAttachedSceneItems() const
 	{
-		// Nothing here
-	}
-
-	void CompositorInstanceNode::execute(SceneItemCamera* sceneItemCamera)
-	{
-		const size_t numberOfCompositorInstancePasses = mCompositorInstancePasses.size();
-		for (size_t i = 0; i < numberOfCompositorInstancePasses; ++i)
-		{
-			mCompositorInstancePasses[i]->execute(sceneItemCamera);
-		}
+		return mAttachedSceneItems;
 	}
 
 

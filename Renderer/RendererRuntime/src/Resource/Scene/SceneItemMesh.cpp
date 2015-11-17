@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneMesh.h"
+#include "RendererRuntime/Resource/Scene/SceneItemMesh.h"
 
 
 //[-------------------------------------------------------]
@@ -34,13 +34,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	SceneMesh::SceneMesh(MeshResource& meshResource) :
+	SceneItemMesh::SceneItemMesh(SceneResource& sceneResource, MeshResource& meshResource) :
+		ISceneItem(sceneResource),
 		mMeshResource(&meshResource)
 	{
 		// Nothing in here
 	}
 
-	SceneMesh::~SceneMesh()
+	SceneItemMesh::~SceneItemMesh()
 	{
 		// Nothing in here
 	}

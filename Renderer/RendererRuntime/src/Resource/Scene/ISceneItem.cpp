@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneItem.h"
+#include "RendererRuntime/Resource/Scene/ISceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -34,12 +34,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	SceneItem::SceneItem()
+	ISceneItem::ISceneItem(SceneResource& sceneResource) :
+		mSceneResource(sceneResource)
 	{
 		// Nothing in here
 	}
 
-	SceneItem::~SceneItem()
+	ISceneItem::~ISceneItem()
 	{
 		// Nothing in here
 	}
