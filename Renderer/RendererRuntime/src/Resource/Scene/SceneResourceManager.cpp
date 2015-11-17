@@ -129,8 +129,10 @@ namespace RendererRuntime
 		const size_t numberOfSceneResources = mSceneResources.size();
 		for (size_t i = 0; i < numberOfSceneResources; ++i)
 		{
-			if (mSceneResources[i]->getResourceId() == assetId)
+			ISceneResource* sceneResource = mSceneResources[i];
+			if (sceneResource->getResourceId() == assetId)
 			{
+				sceneResource->destroyAllSceneNodesAndItems();
 				loadSceneResourceByAssetId(assetId, true);
 				break;
 			}

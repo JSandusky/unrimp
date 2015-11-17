@@ -147,7 +147,7 @@ void FirstScene::onUpdate()
 void FirstScene::onDrawRequest()
 {
 	// Is there a compositor instance?
-	if (nullptr != mCompositorInstance)
+	if (nullptr != mCompositorInstance && mSceneResource->getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
 	{
 		// Execute the compositor instance
 		mCompositorInstance->execute(mCameraSceneItem);
