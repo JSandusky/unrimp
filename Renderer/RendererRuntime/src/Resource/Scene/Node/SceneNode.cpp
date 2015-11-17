@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/CameraSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Node/SceneNode.h"
 
 
 //[-------------------------------------------------------]
@@ -34,13 +34,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const SceneItemTypeId CameraSceneItem::TYPE_ID("Camera");
+	const SceneNodeTypeId SceneNode::TYPE_ID("Node");
 
 
 	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[ Public RendererRuntime::ISceneNode methods            ]
 	//[-------------------------------------------------------]
-	SceneItemTypeId CameraSceneItem::getSceneItemTypeId() const
+	SceneNodeTypeId SceneNode::getSceneNodeTypeId() const
 	{
 		return TYPE_ID;
 	}
@@ -49,13 +49,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	CameraSceneItem::CameraSceneItem(SceneResource& sceneResource) :
-		ISceneItem(sceneResource)
+	SceneNode::SceneNode(const Transform& transform) :
+		ISceneNode(transform)
 	{
 		// Nothing in here
 	}
 
-	CameraSceneItem::~CameraSceneItem()
+	SceneNode::~SceneNode()
 	{
 		// Nothing in here
 	}

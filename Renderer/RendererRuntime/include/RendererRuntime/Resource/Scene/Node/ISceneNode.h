@@ -130,4 +130,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/ISceneNode.inl"
+#include "RendererRuntime/Resource/Scene/Node/ISceneNode.inl"

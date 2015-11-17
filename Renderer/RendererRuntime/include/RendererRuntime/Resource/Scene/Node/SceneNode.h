@@ -28,17 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/Scene/ISceneItem.h"
-#include "RendererRuntime/Asset/Asset.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class MeshResource;
-}
+#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 
 
 //[-------------------------------------------------------]
@@ -51,7 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MeshSceneItem : public ISceneItem
+	class SceneNode : public ISceneNode
 	{
 
 
@@ -65,38 +55,24 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT static const SceneItemTypeId TYPE_ID;
+		RENDERERRUNTIME_API_EXPORT static const SceneNodeTypeId TYPE_ID;
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		inline MeshResource* getMeshResource() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[ Public RendererRuntime::ISceneNode methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual SceneItemTypeId getSceneItemTypeId() const override;
+		virtual SceneNodeTypeId getSceneNodeTypeId() const override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		MeshSceneItem(SceneResource& sceneResource, MeshResource& meshResource);
-		virtual ~MeshSceneItem();
-		MeshSceneItem(const MeshSceneItem&) = delete;
-		MeshSceneItem& operator=(const MeshSceneItem&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		MeshResource* mMeshResource;	///< Mesh resource, can be a null pointer
+		explicit SceneNode(const Transform& transform);
+		virtual ~SceneNode();
+		SceneNode(const SceneNode&) = delete;
+		SceneNode& operator=(const SceneNode&) = delete;
 
 
 	};
@@ -111,4 +87,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/MeshSceneItem.inl"
+#include "RendererRuntime/Resource/Scene/Node/SceneNode.inl"

@@ -27,8 +27,17 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/Scene/ISceneNode.h"
+#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class SceneResource;
+}
 
 
 //[-------------------------------------------------------]
@@ -39,40 +48,53 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId SceneItemTypeId;	///< Scene item type identifier, internally just a POD "uint32_t"
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneNode : public ISceneNode
+	class ISceneItem : protected NonCopyable
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class SceneResource;
+		friend class SceneResource;	// Needs to be able to destroy scene items
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		RENDERERRUNTIME_API_EXPORT static const SceneNodeTypeId TYPE_ID;
-
-
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneNode methods            ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual SceneNodeTypeId getSceneNodeTypeId() const override;
+		inline SceneResource& getSceneResource() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[-------------------------------------------------------]
+	public:
+		virtual SceneItemTypeId getSceneItemTypeId() const = 0;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		explicit SceneNode(const Transform& transform);
-		virtual ~SceneNode();
-		SceneNode(const SceneNode&) = delete;
-		SceneNode& operator=(const SceneNode&) = delete;
+		explicit ISceneItem(SceneResource& sceneResource);
+		virtual ~ISceneItem();
+		ISceneItem(const ISceneItem&) = delete;
+		ISceneItem& operator=(const ISceneItem&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		SceneResource& mSceneResource;
 
 
 	};
@@ -87,4 +109,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneNode.inl"
+#include "RendererRuntime/Resource/Scene/Item/ISceneItem.inl"

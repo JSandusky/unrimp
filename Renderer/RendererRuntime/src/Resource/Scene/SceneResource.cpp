@@ -22,9 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
-#include "RendererRuntime/Resource/Scene/SceneNode.h"
-#include "RendererRuntime/Resource/Scene/MeshSceneItem.h"
-#include "RendererRuntime/Resource/Scene/CameraSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Node/SceneNode.h"
+#include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 

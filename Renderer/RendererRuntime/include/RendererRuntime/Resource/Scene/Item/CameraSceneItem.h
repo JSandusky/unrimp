@@ -19,9 +19,16 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/ISceneNode.h"
+#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -32,18 +39,43 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	class CameraSceneItem : public ISceneItem
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class SceneResource;
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		RENDERERRUNTIME_API_EXPORT static const SceneItemTypeId TYPE_ID;
+
+
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[-------------------------------------------------------]
+	public:
+		virtual SceneItemTypeId getSceneItemTypeId() const override;
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	ISceneNode::ISceneNode(const Transform& transform) :
-		mTransform(transform)
-	{
-		// Nothing in here
-	}
+	protected:
+		explicit CameraSceneItem(SceneResource& sceneResource);
+		virtual ~CameraSceneItem();
+		CameraSceneItem(const CameraSceneItem&) = delete;
+		CameraSceneItem& operator=(const CameraSceneItem&) = delete;
 
-	ISceneNode::~ISceneNode()
-	{
-		// Nothing in here
-	}
+
+	};
 
 
 //[-------------------------------------------------------]

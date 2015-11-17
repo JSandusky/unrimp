@@ -19,16 +19,9 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/Scene/ISceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -39,43 +32,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class CameraSceneItem : public ISceneItem
-	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class SceneResource;
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		RENDERERRUNTIME_API_EXPORT static const SceneItemTypeId TYPE_ID;
-
-
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneItem methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual SceneItemTypeId getSceneItemTypeId() const override;
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	protected:
-		explicit CameraSceneItem(SceneResource& sceneResource);
-		virtual ~CameraSceneItem();
-		CameraSceneItem(const CameraSceneItem&) = delete;
-		CameraSceneItem& operator=(const CameraSceneItem&) = delete;
+	ISceneItem::ISceneItem(SceneResource& sceneResource) :
+		mSceneResource(sceneResource)
+	{
+		// Nothing in here
+	}
 
-
-	};
+	ISceneItem::~ISceneItem()
+	{
+		// Nothing in here
+	}
 
 
 //[-------------------------------------------------------]

@@ -89,6 +89,12 @@
     <Filter Include="Source Files\Resource\Scene\Loader">
       <UniqueIdentifier>{6711877d-d37a-4be7-b23b-b6854c62b396}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Scene\Item">
+      <UniqueIdentifier>{0fc2aed3-9119-4664-b7e9-99a3d25e9428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\Scene\Node">
+      <UniqueIdentifier>{202404c2-378a-4e32-9829-1f2c5ddf3535}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -177,20 +183,20 @@
     <None Include="include\RendererRuntime\Resource\Compositor\CompositorResourceManager.inl">
       <Filter>Source Files\Resource\Compositor</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Scene\SceneNode.inl">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\Scene\SceneResource.inl">
       <Filter>Source Files\Resource\Scene</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Scene\ISceneItem.inl">
-      <Filter>Source Files\Resource\Scene</Filter>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Scene\MeshSceneItem.inl">
-      <Filter>Source Files\Resource\Scene</Filter>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Scene\ISceneNode.inl">
-      <Filter>Source Files\Resource\Scene</Filter>
+    <None Include="include\RendererRuntime\Resource\Scene\Node\SceneNode.inl">
+      <Filter>Source Files\Resource\Scene\Node</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Node\ISceneNode.inl">
+      <Filter>Source Files\Resource\Scene\Node</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -299,9 +305,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.h">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneNode.h">
-      <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Renderable.h">
       <Filter>Source Files\Resource\Scene</Filter>
@@ -444,17 +447,20 @@
     <ClInclude Include="src\Resource\Compositor\Pass\Scene\FirstScene_GLSL_ES2.h">
       <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneItem.h">
-      <Filter>Source Files\Resource\Scene</Filter>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\CameraSceneItem.h">
-      <Filter>Source Files\Resource\Scene</Filter>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\CameraSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\MeshSceneItem.h">
-      <Filter>Source Files\Resource\Scene</Filter>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneNode.h">
-      <Filter>Source Files\Resource\Scene</Filter>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Node\SceneNode.h">
+      <Filter>Source Files\Resource\Scene\Node</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Node\ISceneNode.h">
+      <Filter>Source Files\Resource\Scene\Node</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -508,9 +514,6 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Mesh\Loader\MeshResourceLoader.cpp">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\SceneNode.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Renderable.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
@@ -614,17 +617,20 @@
     <ClCompile Include="src\Resource\Compositor\CompositorResourceTarget.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\ISceneItem.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
+    <ClCompile Include="src\Resource\Scene\Item\ISceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\CameraSceneItem.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
+    <ClCompile Include="src\Resource\Scene\Item\MeshSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\MeshSceneItem.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
+    <ClCompile Include="src\Resource\Scene\Item\CameraSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\ISceneNode.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
+    <ClCompile Include="src\Resource\Scene\Node\ISceneNode.cpp">
+      <Filter>Source Files\Resource\Scene\Node</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Node\SceneNode.cpp">
+      <Filter>Source Files\Resource\Scene\Node</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

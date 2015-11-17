@@ -25,10 +25,10 @@
 #include "Runtime/FirstScene/FirstScene.h"
 
 #include <RendererRuntime/Core/Transform.h>
-#include <RendererRuntime/Resource/Scene/ISceneNode.h>
-#include <RendererRuntime/Resource/Scene/MeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/SceneResource.h>
 #include <RendererRuntime/Resource/Scene/SceneResourceManager.h>
+#include <RendererRuntime/Resource/Scene/Node/ISceneNode.h>
+#include <RendererRuntime/Resource/Scene/Item/MeshSceneItem.h>
 #include <RendererRuntime/Resource/Compositor/CompositorInstance.h>
 #include <RendererRuntime/Resource/Compositor/CompositorResourceManager.h>
 

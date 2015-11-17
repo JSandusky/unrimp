@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/MeshSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 
 
 //[-------------------------------------------------------]
@@ -32,31 +32,15 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	const SceneItemTypeId MeshSceneItem::TYPE_ID("Mesh");
-
-
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneItem methods            ]
-	//[-------------------------------------------------------]
-	SceneItemTypeId MeshSceneItem::getSceneItemTypeId() const
-	{
-		return TYPE_ID;
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	MeshSceneItem::MeshSceneItem(SceneResource& sceneResource, MeshResource& meshResource) :
-		ISceneItem(sceneResource),
-		mMeshResource(&meshResource)
+	ISceneNode::ISceneNode(const Transform& transform) :
+		mTransform(transform)
 	{
 		// Nothing in here
 	}
 
-	MeshSceneItem::~MeshSceneItem()
+	ISceneNode::~ISceneNode()
 	{
 		// Nothing in here
 	}
