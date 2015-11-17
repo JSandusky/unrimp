@@ -44,9 +44,9 @@ namespace RendererRuntime
 		return mSceneNodes;
 	}
 
-	template <typename T> T* ISceneResource::createSceneItem()
+	template <typename T> T* ISceneResource::createSceneItem(ISceneNode& sceneNode)
 	{
-		return static_cast<T*>(createSceneItem(T::TYPE_ID));
+		return static_cast<T*>(createSceneItem(T::TYPE_ID, sceneNode));
 	}
 
 	inline const ISceneResource::SceneItems& ISceneResource::getSceneItems() const

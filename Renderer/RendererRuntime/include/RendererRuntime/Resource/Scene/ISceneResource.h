@@ -101,8 +101,8 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Item                                                  ]
 		//[-------------------------------------------------------]
-		RENDERERRUNTIME_API_EXPORT ISceneItem* createSceneItem(SceneItemTypeId sceneItemTypeId);
-		template <typename T> T* createSceneItem();
+		RENDERERRUNTIME_API_EXPORT ISceneItem* createSceneItem(SceneItemTypeId sceneItemTypeId, ISceneNode& sceneNode);
+		template <typename T> T* createSceneItem(ISceneNode& sceneNode);
 		RENDERERRUNTIME_API_EXPORT void destroySceneItem(ISceneItem& sceneItem);
 		RENDERERRUNTIME_API_EXPORT void destroyAllSceneItems();
 		inline const SceneItems& getSceneItems() const;

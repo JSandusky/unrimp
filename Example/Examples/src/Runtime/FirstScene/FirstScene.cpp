@@ -81,18 +81,17 @@ void FirstScene::onInitialization()
 			mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId("Example/Scene/Default/FirstScene");
 
 			// Camera scene item
-			mCameraSceneItem = mSceneResource->createSceneItem<RendererRuntime::CameraSceneItem>();
+			mCameraSceneItem = mSceneResource->createSceneItem<RendererRuntime::CameraSceneItem>(*mSceneResource->createSceneNode(RendererRuntime::Transform::IDENTITY));
 
 			{ // First rotating mesh
 				// Scene node
 				mSceneNode = mSceneResource->createSceneNode(RendererRuntime::Transform(glm::vec3(0.0f, -7.0f, -25.0f), RendererRuntime::Quaternion::IDENTITY, glm::vec3(0.5f)));
 
 				// Mesh scene item
-				RendererRuntime::MeshSceneItem* meshSceneItem = mSceneResource->createSceneItem<RendererRuntime::MeshSceneItem>();
+				RendererRuntime::MeshSceneItem* meshSceneItem = mSceneResource->createSceneItem<RendererRuntime::MeshSceneItem>(*mSceneNode);
 				if (nullptr != meshSceneItem)
 				{
 					meshSceneItem->setMeshResourceByAssetId("Example/Mesh/Character/ImrodLowPoly");
-					mSceneNode->attachSceneItem(*meshSceneItem);
 				}
 			}
 
@@ -101,11 +100,10 @@ void FirstScene::onInitialization()
 				RendererRuntime::ISceneNode* sceneNode = mSceneResource->createSceneNode(RendererRuntime::Transform(glm::vec3(0.0f, -15.0f, -25.0f), RendererRuntime::Quaternion::IDENTITY, glm::vec3(0.25f)));
 
 				// Mesh scene item
-				RendererRuntime::MeshSceneItem* meshSceneItem = mSceneResource->createSceneItem<RendererRuntime::MeshSceneItem>();
+				RendererRuntime::MeshSceneItem* meshSceneItem = mSceneResource->createSceneItem<RendererRuntime::MeshSceneItem>(*sceneNode);
 				if (nullptr != meshSceneItem)
 				{
 					meshSceneItem->setMeshResourceByAssetId("Example/Mesh/Character/ImrodLowPoly");
-					sceneNode->attachSceneItem(*meshSceneItem);
 				}
 			}
 		}

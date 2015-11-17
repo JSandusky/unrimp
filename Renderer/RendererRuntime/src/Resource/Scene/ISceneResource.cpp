@@ -77,10 +77,11 @@ namespace RendererRuntime
 		mSceneNodes.clear();
 	}
 
-	ISceneItem* ISceneResource::createSceneItem(SceneItemTypeId sceneItemTypeId)
+	ISceneItem* ISceneResource::createSceneItem(SceneItemTypeId sceneItemTypeId, ISceneNode& sceneNode)
 	{
 		assert(nullptr != mSceneFactory);
 		ISceneItem* sceneItem = mSceneFactory->createSceneItem(sceneItemTypeId, *this);
+		sceneNode.attachSceneItem(*sceneItem);
 		mSceneItems.push_back(sceneItem);
 		return sceneItem;
 	}
