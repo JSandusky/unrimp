@@ -133,7 +133,7 @@ void FirstScene::onLoadingStateChange(RendererRuntime::IResource::LoadingState::
 	if (RendererRuntime::IResource::LoadingState::LOADED == loadingState)
 	{
 		// TODO(co) Just a first scene test
-		{ // Build scene
+	/*	{ // Build scene
 			// Camera scene item
 			mSceneResource->createSceneItem<RendererRuntime::CameraSceneItem>(*mSceneResource->createSceneNode(RendererRuntime::Transform::IDENTITY));
 
@@ -161,6 +161,7 @@ void FirstScene::onLoadingStateChange(RendererRuntime::IResource::LoadingState::
 				}
 			}
 		}
+		*/
 
 		{ // Loop through all scene nodes and grab the first found camera and mesh
 			const RendererRuntime::ISceneResource::SceneNodes& sceneNodes = mSceneResource->getSceneNodes();

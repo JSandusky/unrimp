@@ -6,13 +6,47 @@
 	},
 	"SceneAsset":
 	{
-		"Shader": "3",
-		"Properties":
+		"Nodes":
 		{
-			"DiffuseMap": "4",
-			"EmissiveMap": "5",
-			"NormalMap": "6",
-			"SpecularMap": "7"
+			"0":
+			{
+				"Items":
+				{
+					"CameraSceneItem":
+					{
+					}
+				}
+			},
+			"1":
+			{
+				"Properties":
+				{
+					"Position": "0.0 -7.0 -25.0",
+					"Scale": "0.5 0.5 0.5"
+				},
+				"Items":
+				{
+					"MeshSceneItem":
+					{
+						"MeshAssetId": "2"
+					}
+				}
+			},
+			"2":
+			{
+				"Properties":
+				{
+					"Position": "0.0 -15.0 -25.0",
+					"Scale": "0.25 0.25 0.25"
+				},
+				"Items":
+				{
+					"MeshSceneItem":
+					{
+						"MeshAssetId": "2"
+					}
+				}
+			}
 		}
 	}
 }

@@ -46,14 +46,14 @@ namespace
 	{
 		void nodeTargetDeserialization(std::istream& istream, RendererRuntime::CompositorResourceNode& compositorResourceNode, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
 		{
-			// Read in the compositor target
+			// Read in the compositor resource target
 			RendererRuntime::v1Compositor::Target target;
 			istream.read(reinterpret_cast<char*>(&target), sizeof(RendererRuntime::v1Compositor::Target));
 
 			// Create the compositor resource target instance
 			RendererRuntime::CompositorResourceTarget& compositorResourceTarget = compositorResourceNode.addCompositorResourceTarget(target.channelId);
 
-			// Read in the compositor node target passes
+			// Read in the compositor resource node target passes
 			compositorResourceTarget.setNumberOfCompositorResourcePasses(target.numberOfPasses);
 			for (uint32_t i = 0; i < target.numberOfPasses; ++i)
 			{
@@ -86,7 +86,7 @@ namespace
 
 		void nodeDeserialization(std::istream& istream, RendererRuntime::CompositorResource& compositorResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
 		{
-			// Read in the compositor node
+			// Read in the compositor resource node
 			RendererRuntime::v1Compositor::Node node;
 			istream.read(reinterpret_cast<char*>(&node), sizeof(RendererRuntime::v1Compositor::Node));
 
@@ -94,7 +94,7 @@ namespace
 			// TODO(co) Handle already existing compositor resource nodes
 			RendererRuntime::CompositorResourceNode* compositorResourceNode = compositorResource.addCompositorResourceNode(node.id);
 
-			// Read in the compositor node input channels
+			// Read in the compositor resource node input channels
 			// TODO(co) Read all input channels in a single burst? (need to introduce a maximum number of input channels for this)
 			compositorResourceNode->setNumberOfInputChannels(node.numberOfInputChannels);
 			for (uint32_t i = 0; i < node.numberOfInputChannels; ++i)
@@ -104,14 +104,14 @@ namespace
 				compositorResourceNode->addInputChannel(channelId);
 			}
 
-			// Read in the compositor node targets
+			// Read in the compositor resource node targets
 			compositorResourceNode->setNumberOfCompositorResourceTargets(node.numberOfTargets);
 			for (uint32_t i = 0; i < node.numberOfTargets; ++i)
 			{
 				nodeTargetDeserialization(istream, *compositorResourceNode, compositorPassFactory);
 			}
 
-			// Read in the compositor node output channels
+			// Read in the compositor resource node output channels
 			// TODO(co) Read all output channels in a single burst? (need to introduce a maximum number of output channels for this)
 			compositorResourceNode->setNumberOfOutputChannels(node.numberOfOutputChannels);
 			for (uint32_t i = 0; i < node.numberOfOutputChannels; ++i)
@@ -124,11 +124,11 @@ namespace
 
 		void nodesDeserialization(std::istream& istream, RendererRuntime::CompositorResource& compositorResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
 		{
-			// Read in the compositor nodes
+			// Read in the compositor resource nodes
 			RendererRuntime::v1Compositor::Nodes nodes;
 			istream.read(reinterpret_cast<char*>(&nodes), sizeof(RendererRuntime::v1Compositor::Nodes));
 
-			// Read in the compositor nodes
+			// Read in the compositor resource nodes
 			compositorResource.setNumberOfCompositorResourceNodes(nodes.numberOfNodes);
 			for (uint32_t i = 0; i < nodes.numberOfNodes; ++i)
 			{
@@ -171,7 +171,7 @@ namespace RendererRuntime
 			v1Compositor::Header compositorHeader;
 			ifstream.read(reinterpret_cast<char*>(&compositorHeader), sizeof(v1Compositor::Header));
 
-			// Read in the compositor nodes
+			// Read in the compositor resource nodes
 			::detail::nodesDeserialization(ifstream, *mCompositorResource, compositorPassFactory);
 		}
 		catch (const std::exception& e)

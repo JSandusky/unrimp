@@ -27,6 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Core/Transform.h"
+
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
@@ -35,6 +38,15 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId SceneItemTypeId;	///< Scene item type identifier, internally just a POD "uint32_t"
+	typedef StringId AssetId;			///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
+
+
 	// -> Scene file format content:
 	//    - Scene header
 	namespace v1Scene
@@ -53,6 +65,33 @@ namespace RendererRuntime
 			{
 				uint32_t formatType;
 				uint16_t formatVersion;
+			};
+
+			struct Nodes
+			{
+				uint32_t numberOfNodes;
+			};
+
+			struct Node
+			{
+				Transform transform;
+				uint32_t  numberOfItems;
+			};
+
+			struct ItemHeader
+			{
+				SceneItemTypeId typeId;
+				uint32_t		numberOfBytes;
+			};
+
+			struct MeshItem
+			{
+				AssetId meshAssetId;
+			};
+
+			struct CameraItem
+			{
+				AssetId meshAssetId;
 			};
 		#pragma pack(pop)
 

@@ -78,6 +78,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		virtual SceneItemTypeId getSceneItemTypeId() const = 0;
+		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) = 0;
 
 
 	//[-------------------------------------------------------]

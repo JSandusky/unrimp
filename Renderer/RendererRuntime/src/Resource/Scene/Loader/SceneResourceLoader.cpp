@@ -23,9 +23,87 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
+#include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 
 #include <fstream>
+
+
+// TODO(co) Possible performance improvement: Inside "SceneResourceLoader::onDeserialization()" load everything directly into memory,
+// create the instances inside "SceneResourceLoader::onProcessing()" while other stuff can continue reading from disk.
+// TODO(co) Error handling
+
+
+//[-------------------------------------------------------]
+//[ Global functions in anonymous namespace               ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+		void itemDeserialization(std::istream& istream, RendererRuntime::ISceneResource& sceneResource, RendererRuntime::ISceneNode& sceneNode)
+		{
+			// Read the scene item header
+			RendererRuntime::v1Scene::ItemHeader itemHeader;
+			istream.read(reinterpret_cast<char*>(&itemHeader), sizeof(RendererRuntime::v1Scene::ItemHeader));
+
+			// Create the scene item
+			RendererRuntime::ISceneItem* sceneItem = sceneResource.createSceneItem(itemHeader.typeId, sceneNode);
+			if (nullptr != sceneItem)
+			{
+				// Load in the scene item data
+				// TODO(co) Get rid of the new/delete in here
+				uint8_t* data = new uint8_t[itemHeader.numberOfBytes];
+				istream.read(reinterpret_cast<char*>(data), itemHeader.numberOfBytes);
+
+				// Deserialize the scene item
+				sceneItem->deserialize(itemHeader.numberOfBytes, data);
+
+				// Cleanup
+				delete [] data;
+			}
+			else
+			{
+				// TODO(co) Error handling
+			}
+		}
+
+		void nodeDeserialization(std::istream& istream, RendererRuntime::ISceneResource& sceneResource)
+		{
+			// Read in the scene node
+			RendererRuntime::v1Scene::Node node;
+			istream.read(reinterpret_cast<char*>(&node), sizeof(RendererRuntime::v1Scene::Node));
+
+			// Create the scene node
+			RendererRuntime::ISceneNode* sceneNode = sceneResource.createSceneNode(node.transform);
+			if (nullptr != sceneNode)
+			{
+				// Read in the scene items
+				for (uint32_t i = 0; i < node.numberOfItems; ++i)
+				{
+					itemDeserialization(istream, sceneResource, *sceneNode);
+				}
+			}
+			else
+			{
+				// TODO(co) Error handling
+			}
+		}
+
+		void nodesDeserialization(std::istream& istream, RendererRuntime::ISceneResource& sceneResource)
+		{
+			// Read in the scene nodes
+			RendererRuntime::v1Scene::Nodes nodes;
+			istream.read(reinterpret_cast<char*>(&nodes), sizeof(RendererRuntime::v1Scene::Nodes));
+
+			// Read in the scene nodes
+			for (uint32_t i = 0; i < nodes.numberOfNodes; ++i)
+			{
+				nodeDeserialization(istream, sceneResource);
+			}
+		}
+	}
+}
 
 
 //[-------------------------------------------------------]
@@ -60,7 +138,8 @@ namespace RendererRuntime
 			v1Scene::Header sceneHeader;
 			ifstream.read(reinterpret_cast<char*>(&sceneHeader), sizeof(v1Scene::Header));
 
-			// TODO(co)
+			// Read in the scene resource nodes
+			::detail::nodesDeserialization(ifstream, *mSceneResource);
 		}
 		catch (const std::exception& e)
 		{

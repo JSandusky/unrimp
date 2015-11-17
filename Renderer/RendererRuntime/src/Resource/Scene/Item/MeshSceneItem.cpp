@@ -24,7 +24,10 @@
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
 #include "RendererRuntime/Resource/Scene/ISceneResource.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
+#include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
 #include "RendererRuntime/IRendererRuntime.h"
+
+#include <cassert>
 
 
 //[-------------------------------------------------------]
@@ -47,6 +50,13 @@ namespace RendererRuntime
 	{
 		const IRendererRuntime& rendererRuntime = getSceneResource().getRendererRuntime();
 		setMeshResource(rendererRuntime.getMeshResourceManager().loadMeshResourceByAssetId(rendererRuntime.getRenderer(), meshAssetId));
+	}
+
+	void MeshSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t* data)
+	{
+		assert(sizeof(v1Scene::MeshItem) == numberOfBytes);
+		const v1Scene::MeshItem* meshItem = reinterpret_cast<const v1Scene::MeshItem*>(data);
+		setMeshResourceByAssetId(meshItem->meshAssetId);
 	}
 
 
