@@ -36,7 +36,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class SceneItemCamera;
+	class CameraSceneItem;
 	class CompositorInstanceNode;
 	class ICompositorResourcePass;
 }
@@ -74,7 +74,7 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void execute(SceneItemCamera* sceneItemCamera) = 0;
+		virtual void execute(CameraSceneItem* cameraSceneItem) = 0;
 
 
 	//[-------------------------------------------------------]

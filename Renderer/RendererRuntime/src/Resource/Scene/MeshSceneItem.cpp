@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/MeshSceneItem.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -26,11 +32,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline MeshResource* SceneItemMesh::getMeshResource() const
+	MeshSceneItem::MeshSceneItem(SceneResource& sceneResource, MeshResource& meshResource) :
+		ISceneItem(sceneResource),
+		mMeshResource(&meshResource)
 	{
-		return mMeshResource;
+		// Nothing in here
+	}
+
+	MeshSceneItem::~MeshSceneItem()
+	{
+		// Nothing in here
 	}
 
 

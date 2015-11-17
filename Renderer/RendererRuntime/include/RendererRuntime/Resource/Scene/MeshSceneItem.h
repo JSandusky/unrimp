@@ -50,7 +50,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneItemMesh : public ISceneItem
+	class MeshSceneItem : public ISceneItem
 	{
 
 
@@ -71,10 +71,10 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		SceneItemMesh(SceneResource& sceneResource, MeshResource& meshResource);
-		virtual ~SceneItemMesh();
-		SceneItemMesh(const SceneItemMesh&) = delete;
-		SceneItemMesh& operator=(const SceneItemMesh&) = delete;
+		MeshSceneItem(SceneResource& sceneResource, MeshResource& meshResource);
+		virtual ~MeshSceneItem();
+		MeshSceneItem(const MeshSceneItem&) = delete;
+		MeshSceneItem& operator=(const MeshSceneItem&) = delete;
 
 
 	//[-------------------------------------------------------]
@@ -96,4 +96,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneItemMesh.inl"
+#include "RendererRuntime/Resource/Scene/MeshSceneItem.inl"

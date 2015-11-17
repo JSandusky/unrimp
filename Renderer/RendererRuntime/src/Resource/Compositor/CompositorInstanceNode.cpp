@@ -61,12 +61,12 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	void CompositorInstanceNode::execute(SceneItemCamera* sceneItemCamera)
+	void CompositorInstanceNode::execute(CameraSceneItem* cameraSceneItem)
 	{
 		const size_t numberOfCompositorInstancePasses = mCompositorInstancePasses.size();
 		for (size_t i = 0; i < numberOfCompositorInstancePasses; ++i)
 		{
-			mCompositorInstancePasses[i]->execute(sceneItemCamera);
+			mCompositorInstancePasses[i]->execute(cameraSceneItem);
 		}
 	}
 

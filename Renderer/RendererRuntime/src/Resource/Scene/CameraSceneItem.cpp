@@ -19,15 +19,9 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/ISceneItem.h"
+#include "RendererRuntime/Resource/Scene/CameraSceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -38,29 +32,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	class SceneItemCamera : public ISceneItem
-	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class SceneResource;
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	protected:
-		explicit SceneItemCamera(SceneResource& sceneResource);
-		virtual ~SceneItemCamera();
-		SceneItemCamera(const SceneItemCamera&) = delete;
-		SceneItemCamera& operator=(const SceneItemCamera&) = delete;
+	CameraSceneItem::CameraSceneItem(SceneResource& sceneResource) :
+		ISceneItem(sceneResource)
+	{
+		// Nothing in here
+	}
 
-
-	};
+	CameraSceneItem::~CameraSceneItem()
+	{
+		// Nothing in here
+	}
 
 
 //[-------------------------------------------------------]

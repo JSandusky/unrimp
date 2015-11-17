@@ -23,8 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/SceneNode.h"
-#include "RendererRuntime/Resource/Scene/SceneItemMesh.h"
-#include "RendererRuntime/Resource/Scene/SceneItemCamera.h"
+#include "RendererRuntime/Resource/Scene/MeshSceneItem.h"
+#include "RendererRuntime/Resource/Scene/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -76,29 +76,29 @@ namespace RendererRuntime
 		mSceneNodes.clear();
 	}
 
-	SceneItemCamera* SceneResource::createSceneItemCamera()
+	CameraSceneItem* SceneResource::createCameraSceneItem()
 	{
-		SceneItemCamera* sceneItemCamera = new SceneItemCamera(*this);
-		mSceneItems.push_back(sceneItemCamera);
-		return sceneItemCamera;
+		CameraSceneItem* cameraSceneItem = new CameraSceneItem(*this);
+		mSceneItems.push_back(cameraSceneItem);
+		return cameraSceneItem;
 	}
 
-	void SceneResource::destroySceneItemCamera(SceneItemCamera& sceneItemCamera)
+	void SceneResource::destroyCameraSceneItem(CameraSceneItem& cameraSceneItem)
 	{
-		destroySceneItem(sceneItemCamera);
+		destroySceneItem(cameraSceneItem);
 	}
 
-	SceneItemMesh* SceneResource::createSceneItemMesh(AssetId meshAssetId)
+	MeshSceneItem* SceneResource::createMeshSceneItem(AssetId meshAssetId)
 	{
 		// Create mesh instance
 		// TODO(co) Performance: Cache mesh resource manager and renderer instance inside the scene resource manager
 		MeshResource* meshResource = mRendererRuntime.getMeshResourceManager().loadMeshResourceByAssetId(mRendererRuntime.getRenderer(), meshAssetId);
-		return (nullptr != meshResource) ? new SceneItemMesh(*this, *meshResource) : nullptr;
+		return (nullptr != meshResource) ? new MeshSceneItem(*this, *meshResource) : nullptr;
 	}
 
-	void SceneResource::destroySceneItemMesh(SceneItemMesh& sceneItemMesh)
+	void SceneResource::destroyMeshSceneItem(MeshSceneItem& meshSceneItem)
 	{
-		destroySceneItem(sceneItemMesh);
+		destroySceneItem(meshSceneItem);
 	}
 
 	void SceneResource::destroyAllSceneItems()

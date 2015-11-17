@@ -35,7 +35,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassQuad::execute(SceneItemCamera*)
+	void CompositorInstancePassQuad::execute(CameraSceneItem*)
 	{
 		// TODO(co)
 	}

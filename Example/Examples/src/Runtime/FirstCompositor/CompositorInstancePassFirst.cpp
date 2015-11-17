@@ -46,7 +46,7 @@
 //[-------------------------------------------------------]
 //[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 //[-------------------------------------------------------]
-void CompositorInstancePassFirst::execute(RendererRuntime::SceneItemCamera*)
+void CompositorInstancePassFirst::execute(RendererRuntime::CameraSceneItem*)
 {
 	// Draw text
 	if (nullptr != mFontResource)

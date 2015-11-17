@@ -26,7 +26,7 @@
 
 #include <RendererRuntime/Core/Transform.h>
 #include <RendererRuntime/Resource/Scene/SceneNode.h>
-#include <RendererRuntime/Resource/Scene/SceneItemMesh.h>
+#include <RendererRuntime/Resource/Scene/MeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/SceneResource.h>
 #include <RendererRuntime/Resource/Scene/SceneResourceManager.h>
 #include <RendererRuntime/Resource/Compositor/CompositorInstance.h>
@@ -40,7 +40,7 @@ FirstScene::FirstScene(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
 	mCompositorInstance(nullptr),
 	mSceneResource(nullptr),
-	mSceneItemCamera(nullptr),
+	mCameraSceneItem(nullptr),
 	mSceneNode(nullptr),
 	mGlobalTimer(0.0f)
 {
@@ -79,18 +79,18 @@ void FirstScene::onInitialization()
 			// Create the scene resource
 			mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId("Example/Scene/Default/FirstScene");
 
-			// Scene item camera
-			mSceneItemCamera = mSceneResource->createSceneItemCamera();
+			// Camera scene item
+			mCameraSceneItem = mSceneResource->createCameraSceneItem();
 
 			{ // First rotating mesh
 				// Scene node
 				mSceneNode = mSceneResource->createSceneNode(RendererRuntime::Transform(glm::vec3(0.0f, -7.0f, -25.0f), RendererRuntime::Quaternion::IDENTITY, glm::vec3(0.5f)));
 
-				// Scene item mesh
-				RendererRuntime::SceneItemMesh* sceneItemMesh = mSceneResource->createSceneItemMesh("Example/Mesh/Character/ImrodLowPoly");
-				if (nullptr != sceneItemMesh)
+				// Mesh scene item
+				RendererRuntime::MeshSceneItem* meshSceneItem = mSceneResource->createMeshSceneItem("Example/Mesh/Character/ImrodLowPoly");
+				if (nullptr != meshSceneItem)
 				{
-					mSceneNode->attachSceneItem(*sceneItemMesh);
+					mSceneNode->attachSceneItem(*meshSceneItem);
 				}
 			}
 
@@ -98,11 +98,11 @@ void FirstScene::onInitialization()
 				// Scene node
 				RendererRuntime::SceneNode* sceneNode = mSceneResource->createSceneNode(RendererRuntime::Transform(glm::vec3(0.0f, -15.0f, -25.0f), RendererRuntime::Quaternion::IDENTITY, glm::vec3(0.25f)));
 
-				// Scene item mesh
-				RendererRuntime::SceneItemMesh* sceneItemMesh = mSceneResource->createSceneItemMesh("Example/Mesh/Character/ImrodLowPoly");
-				if (nullptr != sceneItemMesh)
+				// Mesh scene item
+				RendererRuntime::MeshSceneItem* meshSceneItem = mSceneResource->createMeshSceneItem("Example/Mesh/Character/ImrodLowPoly");
+				if (nullptr != meshSceneItem)
 				{
-					sceneNode->attachSceneItem(*sceneItemMesh);
+					sceneNode->attachSceneItem(*meshSceneItem);
 				}
 			}
 		}
@@ -149,6 +149,6 @@ void FirstScene::onDrawRequest()
 	if (nullptr != mCompositorInstance)
 	{
 		// Execute the compositor instance
-		mCompositorInstance->execute(mSceneItemCamera);
+		mCompositorInstance->execute(mCameraSceneItem);
 	}
 }

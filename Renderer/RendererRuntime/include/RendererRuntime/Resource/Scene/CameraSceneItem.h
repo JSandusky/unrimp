@@ -19,9 +19,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/SceneItemMesh.h"
+#include "RendererRuntime/Resource/Scene/ISceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -32,19 +38,29 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	class CameraSceneItem : public ISceneItem
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class SceneResource;
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	SceneItemMesh::SceneItemMesh(SceneResource& sceneResource, MeshResource& meshResource) :
-		ISceneItem(sceneResource),
-		mMeshResource(&meshResource)
-	{
-		// Nothing in here
-	}
+	protected:
+		explicit CameraSceneItem(SceneResource& sceneResource);
+		virtual ~CameraSceneItem();
+		CameraSceneItem(const CameraSceneItem&) = delete;
+		CameraSceneItem& operator=(const CameraSceneItem&) = delete;
 
-	SceneItemMesh::~SceneItemMesh()
-	{
-		// Nothing in here
-	}
+
+	};
 
 
 //[-------------------------------------------------------]

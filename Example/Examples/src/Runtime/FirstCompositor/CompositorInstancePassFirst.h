@@ -54,7 +54,7 @@ class CompositorInstancePassFirst : public RendererRuntime::ICompositorInstanceP
 //[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 //[-------------------------------------------------------]
 protected:
-	virtual void execute(RendererRuntime::SceneItemCamera* sceneItemCamera) override;
+	virtual void execute(RendererRuntime::CameraSceneItem* cameraSceneItem) override;
 
 
 //[-------------------------------------------------------]

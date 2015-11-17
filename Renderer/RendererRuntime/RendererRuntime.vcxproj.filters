@@ -186,7 +186,7 @@
     <None Include="include\RendererRuntime\Resource\Scene\ISceneItem.inl">
       <Filter>Source Files\Resource\Scene</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Scene\SceneItemMesh.inl">
+    <None Include="include\RendererRuntime\Resource\Scene\MeshSceneItem.inl">
       <Filter>Source Files\Resource\Scene</Filter>
     </None>
   </ItemGroup>
@@ -444,10 +444,10 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneItem.h">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneItemMesh.h">
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\CameraSceneItem.h">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneItemCamera.h">
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\MeshSceneItem.h">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
   </ItemGroup>
@@ -611,10 +611,10 @@
     <ClCompile Include="src\Resource\Scene\ISceneItem.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\SceneItemMesh.cpp">
+    <ClCompile Include="src\Resource\Scene\CameraSceneItem.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\SceneItemCamera.cpp">
+    <ClCompile Include="src\Resource\Scene\MeshSceneItem.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
   </ItemGroup>

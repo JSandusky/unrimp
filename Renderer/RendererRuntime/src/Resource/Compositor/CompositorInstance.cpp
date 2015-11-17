@@ -69,7 +69,7 @@ namespace RendererRuntime
 		return mRendererRuntime;
 	}
 
-	void CompositorInstance::execute(SceneItemCamera* sceneItemCamera)
+	void CompositorInstance::execute(CameraSceneItem* cameraSceneItem)
 	{
 		// Is the compositor resource ready?
 		if (nullptr != mCompositorResource && mCompositorResource->getLoadingState() == IResource::LoadingState::LOADED)
@@ -103,7 +103,7 @@ namespace RendererRuntime
 					const size_t numberOfSequentialCompositorInstanceNodes = mSequentialCompositorInstanceNodes.size();
 					for (size_t i = 0; i < numberOfSequentialCompositorInstanceNodes; ++i)
 					{
-						mSequentialCompositorInstanceNodes[i]->execute(sceneItemCamera);
+						mSequentialCompositorInstanceNodes[i]->execute(cameraSceneItem);
 					}
 				}
 

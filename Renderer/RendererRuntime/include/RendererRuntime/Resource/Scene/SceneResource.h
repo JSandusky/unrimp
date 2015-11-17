@@ -43,8 +43,8 @@ namespace RendererRuntime
 	class SceneNode;
 	class Transform;
 	class ISceneItem;
-	class SceneItemMesh;
-	class SceneItemCamera;
+	class MeshSceneItem;
+	class CameraSceneItem;
 	class IRendererRuntime;
 }
 
@@ -96,10 +96,10 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Item                                                  ]
 		//[-------------------------------------------------------]
-		RENDERERRUNTIME_API_EXPORT SceneItemCamera* createSceneItemCamera();
-		RENDERERRUNTIME_API_EXPORT void destroySceneItemCamera(SceneItemCamera& sceneItemCamera);
-		RENDERERRUNTIME_API_EXPORT SceneItemMesh* createSceneItemMesh(AssetId meshAssetId);
-		RENDERERRUNTIME_API_EXPORT void destroySceneItemMesh(SceneItemMesh& sceneItemMesh);
+		RENDERERRUNTIME_API_EXPORT CameraSceneItem* createCameraSceneItem();
+		RENDERERRUNTIME_API_EXPORT void destroyCameraSceneItem(CameraSceneItem& cameraSceneItem);
+		RENDERERRUNTIME_API_EXPORT MeshSceneItem* createMeshSceneItem(AssetId meshAssetId);
+		RENDERERRUNTIME_API_EXPORT void destroyMeshSceneItem(MeshSceneItem& meshSceneItem);
 		RENDERERRUNTIME_API_EXPORT void destroyAllSceneItems();
 		inline const SceneItems& getSceneItems() const;
 

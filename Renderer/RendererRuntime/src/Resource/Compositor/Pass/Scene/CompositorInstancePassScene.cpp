@@ -27,8 +27,8 @@
 #include "RendererRuntime/Resource/Compositor/CompositorInstance.h"
 #include "RendererRuntime/Resource/Scene/SceneNode.h"
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
-#include "RendererRuntime/Resource/Scene/SceneItemMesh.h"
-#include "RendererRuntime/Resource/Scene/SceneItemCamera.h"
+#include "RendererRuntime/Resource/Scene/MeshSceneItem.h"
+#include "RendererRuntime/Resource/Scene/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
@@ -224,7 +224,7 @@ namespace
 			mUniformBuffer = nullptr;
 		}
 
-		void draw(Renderer::IRenderer& renderer, RendererRuntime::SceneItemCamera& sceneItemCamera)
+		void draw(Renderer::IRenderer& renderer, RendererRuntime::CameraSceneItem& cameraSceneItem)
 		{
 			// Due to background texture loading, some textures might not be ready, yet
 			// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
@@ -271,7 +271,7 @@ namespace
 				renderer.setPipelineState(mPipelineState);
 
 				// Loop through all scene nodes
-				const RendererRuntime::SceneResource::SceneNodes& sceneNodes = sceneItemCamera.getSceneResource().getSceneNodes();
+				const RendererRuntime::SceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
 				const size_t numberOfSceneNodes = sceneNodes.size();
 				for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
 				{
@@ -286,8 +286,8 @@ namespace
 						RendererRuntime::ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
 
 						// TODO(co) As mentioned, just a first test
-						RendererRuntime::SceneItemMesh* sceneItemMesh = dynamic_cast<RendererRuntime::SceneItemMesh*>(sceneItem);
-						if (nullptr != sceneItemMesh)
+						RendererRuntime::MeshSceneItem* meshSceneItem = dynamic_cast<RendererRuntime::MeshSceneItem*>(sceneItem);
+						if (nullptr != meshSceneItem)
 						{
 							{ // Set uniform
 								// Calculate the object space to clip space matrix
@@ -327,7 +327,7 @@ namespace
 							}
 
 							// Draw mesh instance
-							RendererRuntime::MeshResource* meshResource = sceneItemMesh->getMeshResource();
+							RendererRuntime::MeshResource* meshResource = meshSceneItem->getMeshResource();
 							if (nullptr != meshResource)
 							{
 								meshResource->draw();
@@ -354,12 +354,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorInstancePass methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstancePassScene::execute(SceneItemCamera* sceneItemCamera)
+	void CompositorInstancePassScene::execute(CameraSceneItem* cameraSceneItem)
 	{
 		// TODO(co) Just a first test
-		if (nullptr != sceneItemCamera)
+		if (nullptr != cameraSceneItem)
 		{
-			::detail::draw(getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getRenderer(), *sceneItemCamera);
+			::detail::draw(getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getRenderer(), *cameraSceneItem);
 		}
 	}
 
