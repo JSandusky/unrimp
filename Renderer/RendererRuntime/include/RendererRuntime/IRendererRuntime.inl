@@ -63,6 +63,11 @@ namespace RendererRuntime
 		return *mFontResourceManager;
 	}
 
+	inline SkeletonResourceManager& IRendererRuntime::getSkeletonResourceManager() const
+	{
+		return *mSkeletonResourceManager;
+	}
+
 	inline MeshResourceManager& IRendererRuntime::getMeshResourceManager() const
 	{
 		return *mMeshResourceManager;

@@ -29,6 +29,7 @@
 #include "RendererToolkit/AssetCompiler/ShaderAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
+#include "RendererToolkit/AssetCompiler/SkeletonAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/CompositorAssetCompiler.h"
 
 // Disable warnings in external headers, we can't fix them
@@ -176,6 +177,10 @@ namespace RendererToolkit
 		else if ("Material" == assetType)
 		{
 			MaterialAssetCompiler().compile(input, configuration, output);
+		}
+		else if ("Skeleton" == assetType)
+		{
+			SkeletonAssetCompiler().compile(input, configuration, output);
 		}
 		else if ("Mesh" == assetType)
 		{

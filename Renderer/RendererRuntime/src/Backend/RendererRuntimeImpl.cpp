@@ -30,6 +30,7 @@
 #include "RendererRuntime/Resource/Shader/ShaderResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResourceManager.h"
 
 #include <cstring>
@@ -106,6 +107,7 @@ namespace RendererRuntime
 		mShaderResourceManager = new ShaderResourceManager(*this);
 		mMaterialResourceManager = new MaterialResourceManager(*this);
 		mFontResourceManager = new FontResourceManager(*this);
+		mSkeletonResourceManager = new SkeletonResourceManager(*this);
 		mMeshResourceManager = new MeshResourceManager(*this);
 		mSceneResourceManager = new SceneResourceManager(*this);
 		mCompositorResourceManager = new CompositorResourceManager(*this);
@@ -115,6 +117,7 @@ namespace RendererRuntime
 		mResourceManagers.push_back(mShaderResourceManager);
 		mResourceManagers.push_back(mMaterialResourceManager);
 		mResourceManagers.push_back(mFontResourceManager);
+		mResourceManagers.push_back(mSkeletonResourceManager);
 		mResourceManagers.push_back(mMeshResourceManager);
 		mResourceManagers.push_back(mSceneResourceManager);
 		mResourceManagers.push_back(mCompositorResourceManager);

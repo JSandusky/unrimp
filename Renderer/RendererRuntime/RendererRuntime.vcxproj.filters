@@ -98,6 +98,12 @@
     <Filter Include="Source Files\Resource\Scene\Factory">
       <UniqueIdentifier>{f6cc6cf4-b0c0-4602-8735-8bcba5778271}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Skeleton">
+      <UniqueIdentifier>{aadea28a-6667-4752-9162-a39f8cd37a2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\Skeleton\Loader">
+      <UniqueIdentifier>{77c4e926-a1fc-4e05-b527-e4ada8ad1691}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -477,6 +483,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\ISceneResource.h">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Skeleton\SkeletonResourceManager.h">
+      <Filter>Source Files\Resource\Skeleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonResourceLoader.h">
+      <Filter>Source Files\Resource\Skeleton\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -655,6 +667,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\ISceneResource.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Skeleton\SkeletonResourceManager.cpp">
+      <Filter>Source Files\Resource\Skeleton</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

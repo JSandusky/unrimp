@@ -50,6 +50,7 @@ namespace RendererRuntime
 	class SceneResourceManager;
 	class ShaderResourceManager;
 	class TextureResourceManager;
+	class SkeletonResourceManager;
 	class MaterialResourceManager;
 	class CompositorResourceManager;
 }
@@ -98,6 +99,10 @@ namespace RendererRuntime
 		{
 			return *mFontResourceManager;
 		}
+		inline SkeletonResourceManager& getSkeletonResourceManager() const
+		{
+			return *mSkeletonResourceManager;
+		}
 		inline MeshResourceManager& getMeshResourceManager() const
 		{
 			return *mMeshResourceManager;
@@ -125,6 +130,7 @@ namespace RendererRuntime
 		ShaderResourceManager*		mShaderResourceManager;
 		MaterialResourceManager*	mMaterialResourceManager;
 		FontResourceManager*		mFontResourceManager;
+		SkeletonResourceManager*	mSkeletonResourceManager;
 		MeshResourceManager*		mMeshResourceManager;
 		SceneResourceManager*		mSceneResourceManager;
 		CompositorResourceManager*	mCompositorResourceManager;

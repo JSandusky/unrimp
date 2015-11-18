@@ -1,0 +1,23 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "11",
+			"AssetType": "Skeleton",
+			"AssetCategory": "Character",
+			"AssetName": "FirstSkeleton",
+			"FileDependencies": [ "FirstSkeleton.skeleton" ],
+			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
+		},
+		"SkeletonAssetCompiler":
+		{
+			"InputFile": "FirstSkeleton.skeleton"
+		}
+	}
+}

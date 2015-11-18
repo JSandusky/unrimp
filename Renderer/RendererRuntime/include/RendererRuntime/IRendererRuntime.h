@@ -53,6 +53,7 @@ namespace RendererRuntime
 	class ShaderResourceManager;
 	class TextureResourceManager;
 	class MaterialResourceManager;
+	class SkeletonResourceManager;
 	class CompositorResourceManager;
 }
 
@@ -163,6 +164,15 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the skeleton resource manager instance
+		*
+		*  @return
+		*    The skeleton resource manager instance, do not release the returned instance
+		*/
+		inline SkeletonResourceManager& getSkeletonResourceManager() const;
+
+		/**
+		*  @brief
 		*    Return the mesh resource manager instance
 		*
 		*  @return
@@ -269,6 +279,7 @@ namespace RendererRuntime
 		ShaderResourceManager*		mShaderResourceManager;
 		MaterialResourceManager*	mMaterialResourceManager;
 		FontResourceManager*		mFontResourceManager;
+		SkeletonResourceManager*	mSkeletonResourceManager;
 		MeshResourceManager*		mMeshResourceManager;
 		SceneResourceManager*		mSceneResourceManager;
 		CompositorResourceManager*	mCompositorResourceManager;
