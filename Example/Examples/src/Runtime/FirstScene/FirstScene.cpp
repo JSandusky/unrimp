@@ -82,11 +82,9 @@ void FirstScene::onInitialization()
 
 void FirstScene::onDeinitialization()
 {
-	// TODO(co) Implement decent resource handling
+	// Release the used resources
 	delete mCompositorInstance;
 	mCompositorInstance = nullptr;
-
-	// Release the used resources
 	delete mSceneResource;
 
 	// Call the base implementation
@@ -132,66 +130,34 @@ void FirstScene::onLoadingStateChange(RendererRuntime::IResource::LoadingState::
 {
 	if (RendererRuntime::IResource::LoadingState::LOADED == loadingState)
 	{
-		// TODO(co) Just a first scene test
-	/*	{ // Build scene
-			// Camera scene item
-			mSceneResource->createSceneItem<RendererRuntime::CameraSceneItem>(*mSceneResource->createSceneNode(RendererRuntime::Transform::IDENTITY));
+		// Loop through all scene nodes and grab the first found camera and mesh
+		const RendererRuntime::ISceneResource::SceneNodes& sceneNodes = mSceneResource->getSceneNodes();
+		const size_t numberOfSceneNodes = sceneNodes.size();
+		for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
+		{
+			RendererRuntime::ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
 
-			{ // First rotating mesh
-				// Scene node
-				RendererRuntime::ISceneNode* sceneNode = mSceneResource->createSceneNode(RendererRuntime::Transform(glm::vec3(0.0f, -7.0f, -25.0f), RendererRuntime::Quaternion::IDENTITY, glm::vec3(0.5f)));
-
-				// Mesh scene item
-				RendererRuntime::MeshSceneItem* meshSceneItem = mSceneResource->createSceneItem<RendererRuntime::MeshSceneItem>(*sceneNode);
-				if (nullptr != meshSceneItem)
-				{
-					meshSceneItem->setMeshResourceByAssetId("Example/Mesh/Character/ImrodLowPoly");
-				}
-			}
-
-			{ // Second fixed mesh
-				// Scene node
-				RendererRuntime::ISceneNode* sceneNode = mSceneResource->createSceneNode(RendererRuntime::Transform(glm::vec3(0.0f, -15.0f, -25.0f), RendererRuntime::Quaternion::IDENTITY, glm::vec3(0.25f)));
-
-				// Mesh scene item
-				RendererRuntime::MeshSceneItem* meshSceneItem = mSceneResource->createSceneItem<RendererRuntime::MeshSceneItem>(*sceneNode);
-				if (nullptr != meshSceneItem)
-				{
-					meshSceneItem->setMeshResourceByAssetId("Example/Mesh/Character/ImrodLowPoly");
-				}
-			}
-		}
-		*/
-
-		{ // Loop through all scene nodes and grab the first found camera and mesh
-			const RendererRuntime::ISceneResource::SceneNodes& sceneNodes = mSceneResource->getSceneNodes();
-			const size_t numberOfSceneNodes = sceneNodes.size();
-			for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
+			// Loop through all scene items attached to the current scene node
+			const RendererRuntime::ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
+			const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
+			for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
 			{
-				RendererRuntime::ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
+				RendererRuntime::ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
 
-				// Loop through all scene items attached to the current scene node
-				const RendererRuntime::ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
-				const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
-				for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
+				if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
 				{
-					RendererRuntime::ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
-
-					if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
+					// Grab the first found mesh scene item scene node
+					if (nullptr == mSceneNode)
 					{
-						// Grab the first found mesh scene item scene node
-						if (nullptr == mSceneNode)
-						{
-							mSceneNode = sceneNode;
-						}
+						mSceneNode = sceneNode;
 					}
-					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::CameraSceneItem::TYPE_ID)
+				}
+				else if (sceneItem->getSceneItemTypeId() == RendererRuntime::CameraSceneItem::TYPE_ID)
+				{
+					// Grab the first found camera scene item
+					if (nullptr == mCameraSceneItem)
 					{
-						// Grab the first found camera scene item
-						if (nullptr == mCameraSceneItem)
-						{
-							mCameraSceneItem = static_cast<RendererRuntime::CameraSceneItem*>(sceneItem);
-						}
+						mCameraSceneItem = static_cast<RendererRuntime::CameraSceneItem*>(sceneItem);
 					}
 				}
 			}

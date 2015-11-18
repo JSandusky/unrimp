@@ -52,8 +52,7 @@ RendererRuntime::CompositorPassTypeId CompositorResourcePassFirst::getTypeId() c
 
 void CompositorResourcePassFirst::deserialize(uint32_t, const uint8_t*)
 {
-	// TODO(co)
-//	assert(sizeof(v1Compositor::PassQuad) == numberOfBytes);
+	// Nothing here
 }
 
 
