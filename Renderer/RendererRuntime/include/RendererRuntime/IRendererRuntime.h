@@ -31,6 +31,8 @@
 
 #include <Renderer/Public/Renderer.h>
 
+#include <vector>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -44,6 +46,7 @@ namespace RendererRuntime
 	class AssetManager;
 	class IRendererRuntime;
 	class ResourceStreamer;
+	class IResourceManager;
 	class FontResourceManager;
 	class MeshResourceManager;
 	class SceneResourceManager;
@@ -70,6 +73,13 @@ namespace RendererRuntime
 	*/
 	class IRendererRuntime : public Renderer::RefCount<IRendererRuntime>
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::vector<IResourceManager*> ResourceManagers;
 
 
 	//[-------------------------------------------------------]
@@ -178,6 +188,15 @@ namespace RendererRuntime
 		*/
 		inline CompositorResourceManager& getCompositorResourceManager() const;
 
+		/**
+		*  @brief
+		*    Return a list of all resource manager instances
+		*
+		*  @return
+		*    List of all resource manager instances, do not release the returned instances
+		*/
+		inline const ResourceManagers& getResourceManagers() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
@@ -250,6 +269,7 @@ namespace RendererRuntime
 		MeshResourceManager*		mMeshResourceManager;
 		SceneResourceManager*		mSceneResourceManager;
 		CompositorResourceManager*	mCompositorResourceManager;
+		ResourceManagers			mResourceManagers;
 
 
 	};

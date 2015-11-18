@@ -78,6 +78,11 @@ namespace RendererRuntime
 		return *mCompositorResourceManager;
 	}
 
+	inline const IRendererRuntime::ResourceManagers& IRendererRuntime::getResourceManagers() const
+	{
+		return mResourceManagers;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]

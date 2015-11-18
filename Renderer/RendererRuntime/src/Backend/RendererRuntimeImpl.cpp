@@ -109,6 +109,15 @@ namespace RendererRuntime
 		mMeshResourceManager = new MeshResourceManager(*this);
 		mSceneResourceManager = new SceneResourceManager(*this);
 		mCompositorResourceManager = new CompositorResourceManager(*this);
+
+		// Register the resource managers inside the resource managers list
+		mResourceManagers.push_back(mTextureResourceManager);
+		mResourceManagers.push_back(mShaderResourceManager);
+		mResourceManagers.push_back(mMaterialResourceManager);
+		mResourceManagers.push_back(mFontResourceManager);
+		mResourceManagers.push_back(mMeshResourceManager);
+		mResourceManagers.push_back(mSceneResourceManager);
+		mResourceManagers.push_back(mCompositorResourceManager);
 	}
 
 	RendererRuntimeImpl::~RendererRuntimeImpl()
@@ -152,15 +161,13 @@ namespace RendererRuntime
 		// Destroy the manager instances
 		delete mAssetManager;
 
-		// Destroy the resource manager instances
-		delete mCompositorResourceManager;
-		delete mSceneResourceManager;
-		delete mMeshResourceManager;
-		delete mFontResourceManager;
-		delete mMaterialResourceManager;
-		delete mShaderResourceManager;
-		delete mTextureResourceManager;
-		delete mResourceStreamer;
+		{ // Destroy the resource manager instances in reverse order
+			const int numberOfResourceManagers = static_cast<int>(mResourceManagers.size());
+			for (int i = numberOfResourceManagers - 1; i >= 0; --i)
+			{
+				delete mResourceManagers[static_cast<size_t>(i)];
+			}
+		}
 
 		// Release our renderer reference
 		mRenderer->release();
@@ -367,31 +374,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void RendererRuntimeImpl::reloadResourceByAssetId(AssetId assetId) const
 	{
-		// TODO(co) Keep a list of resource manager instances to make such handling simpler
-
 		// Inform the individual resource manager instances
-		mTextureResourceManager->reloadResourceByAssetId(assetId);
-		mShaderResourceManager->reloadResourceByAssetId(assetId);
-		mMaterialResourceManager->reloadResourceByAssetId(assetId);
-		mFontResourceManager->reloadResourceByAssetId(assetId);
-		mMeshResourceManager->reloadResourceByAssetId(assetId);
-		mSceneResourceManager->reloadResourceByAssetId(assetId);
-		mCompositorResourceManager->reloadResourceByAssetId(assetId);
+		const size_t numberOfResourceManagers = mResourceManagers.size();
+		for (size_t i = 0; i < numberOfResourceManagers; ++i)
+		{
+			mResourceManagers[i]->reloadResourceByAssetId(assetId);
+		}
 	}
 
 	void RendererRuntimeImpl::update() const
 	{
-		// TODO(co) Keep a list of resource manager instances to make such handling simpler
+		mResourceStreamer->rendererBackendDispatch();
 
 		// Inform the individual resource manager instances
-		mResourceStreamer->rendererBackendDispatch();
-		mTextureResourceManager->update();
-		mShaderResourceManager->update();
-		mMaterialResourceManager->update();
-		mFontResourceManager->update();
-		mMeshResourceManager->update();
-		mSceneResourceManager->update();
-		mCompositorResourceManager->update();
+		const size_t numberOfResourceManagers = mResourceManagers.size();
+		for (size_t i = 0; i < numberOfResourceManagers; ++i)
+		{
+			mResourceManagers[i]->update();
+		}
 	}
 
 
