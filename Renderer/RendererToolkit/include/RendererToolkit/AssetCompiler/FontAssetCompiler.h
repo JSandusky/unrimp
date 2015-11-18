@@ -52,6 +52,13 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const AssetCompilerTypeId TYPE_ID;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -63,6 +70,7 @@ namespace RendererToolkit
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
 	public:
+		virtual AssetCompilerTypeId getAssetCompilerTypeId() const override;
 		virtual void compile(const Input& input, const Configuration& configuration, Output& output) override;
 
 

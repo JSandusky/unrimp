@@ -36,6 +36,12 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const AssetCompilerTypeId MaterialAssetCompiler::TYPE_ID("Material");
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	MaterialAssetCompiler::MaterialAssetCompiler()
@@ -50,6 +56,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
+	AssetCompilerTypeId MaterialAssetCompiler::getAssetCompilerTypeId() const
+	{
+		return TYPE_ID;
+	}
+
 	void MaterialAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
 		// Input, configuration and output

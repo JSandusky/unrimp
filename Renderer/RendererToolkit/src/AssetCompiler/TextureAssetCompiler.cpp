@@ -580,6 +580,12 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const AssetCompilerTypeId TextureAssetCompiler::TYPE_ID("Texture");
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	TextureAssetCompiler::TextureAssetCompiler()
@@ -596,6 +602,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
+	AssetCompilerTypeId TextureAssetCompiler::getAssetCompilerTypeId() const
+	{
+		return TYPE_ID;
+	}
+
 	void TextureAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
 		// Input, configuration and output

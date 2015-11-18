@@ -54,6 +54,12 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const AssetCompilerTypeId MeshAssetCompiler::TYPE_ID("Mesh");
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	MeshAssetCompiler::MeshAssetCompiler()
@@ -68,6 +74,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
+	AssetCompilerTypeId MeshAssetCompiler::getAssetCompilerTypeId() const
+	{
+		return TYPE_ID;
+	}
+
 	void MeshAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
 		// Input, configuration and output

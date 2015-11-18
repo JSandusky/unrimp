@@ -27,6 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include <RendererRuntime/Core/StringId.h>
+
 #include <Renderer/Public/Renderer.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -58,6 +60,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererToolkit
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef RendererRuntime::StringId AssetCompilerTypeId;	///< Asset compiler type identifier, internally just a POD "uint32_t"
 
 
 	//[-------------------------------------------------------]
@@ -93,6 +101,7 @@ namespace RendererToolkit
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
 	public:
+		virtual AssetCompilerTypeId getAssetCompilerTypeId() const = 0;
 		virtual void compile(const Input& input, const Configuration& configuration, Output& output) = 0;
 
 

@@ -45,6 +45,12 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const AssetCompilerTypeId SceneAssetCompiler::TYPE_ID("Scene");
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	SceneAssetCompiler::SceneAssetCompiler()
@@ -59,6 +65,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
+	AssetCompilerTypeId SceneAssetCompiler::getAssetCompilerTypeId() const
+	{
+		return TYPE_ID;
+	}
+
 	void SceneAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
 		// Input, configuration and output

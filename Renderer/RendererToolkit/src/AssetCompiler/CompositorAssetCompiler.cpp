@@ -46,6 +46,12 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const AssetCompilerTypeId CompositorAssetCompiler::TYPE_ID("Compositor");
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	CompositorAssetCompiler::CompositorAssetCompiler()
@@ -60,6 +66,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
+	AssetCompilerTypeId CompositorAssetCompiler::getAssetCompilerTypeId() const
+	{
+		return TYPE_ID;
+	}
+
 	void CompositorAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
 		// Input, configuration and output

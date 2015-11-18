@@ -157,15 +157,16 @@ namespace RendererToolkit
 
 		// Evaluate the asset type and continue with the processing in the asset type specific way
 		// TODO(co) Currently this is fixed build in, later on me might want to have this dynamic so we can plugin additional asset compilers
-		if ("Font" == assetType)
+		const AssetCompilerTypeId assetCompilerTypeId(assetType.c_str());
+		if (FontAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
 			FontAssetCompiler().compile(input, configuration, output);
 		}
-		else if ("Texture" == assetType)
+		else if (TextureAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
 			TextureAssetCompiler().compile(input, configuration, output);
 		}
-		else if ("Shader" == assetType)
+		else if (ShaderAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
 			// TODO(co) Due to the HLSL compiler usage, this is currently MS Windows only (maybe there are Linux HLSL cross-compilers?)
 			#ifdef WIN32
@@ -174,23 +175,23 @@ namespace RendererToolkit
 				#error "Unsupported platform"
 			#endif
 		}
-		else if ("Material" == assetType)
+		else if (MaterialAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
 			MaterialAssetCompiler().compile(input, configuration, output);
 		}
-		else if ("Skeleton" == assetType)
+		else if (SkeletonAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
 			SkeletonAssetCompiler().compile(input, configuration, output);
 		}
-		else if ("Mesh" == assetType)
+		else if (MeshAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
 			MeshAssetCompiler().compile(input, configuration, output);
 		}
-		else if ("Scene" == assetType)
+		else if (SceneAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
 			SceneAssetCompiler().compile(input, configuration, output);
 		}
-		else if ("Compositor" == assetType)
+		else if (CompositorAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
 			CompositorAssetCompiler().compile(input, configuration, output);
 		}
