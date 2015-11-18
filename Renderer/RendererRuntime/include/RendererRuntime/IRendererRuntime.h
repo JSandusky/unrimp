@@ -208,8 +208,11 @@ namespace RendererRuntime
 		*
 		*  @param[in] assetId
 		*    ID of the asset which has been changed and hence the according resource needs to be reloaded
+		*
+		*  @note
+		*    - This method is most likely called by a background thread
 		*/
-		virtual void reloadResourceByAssetId(AssetId assetId) const = 0;
+		virtual void reloadResourceByAssetId(AssetId assetId) = 0;
 
 		/**
 		*  @brief
@@ -218,7 +221,7 @@ namespace RendererRuntime
 		*  @note
 		*    - Call this once per frame
 		*/
-		virtual void update() const = 0;
+		virtual void update() = 0;
 
 
 	//[-------------------------------------------------------]

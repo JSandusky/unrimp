@@ -29,6 +29,14 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/IRendererRuntime.h"
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4265)	// warning C4265: '<x>': class has virtual functions, but destructor is not virtual
+
+	#include <mutex>
+#pragma warning(pop)
+#include <unordered_set>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -160,8 +168,8 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void reloadResourceByAssetId(AssetId assetId) const override;
-		virtual void update() const override;
+		virtual void reloadResourceByAssetId(AssetId assetId) override;
+		virtual void update() override;
 
 
 	//[-------------------------------------------------------]
@@ -191,6 +199,13 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::unordered_set<uint32_t> ResourcesToReload;	///< Set of "AssetId" (type not used directly or we would need to define a hash-function for it)
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
@@ -200,6 +215,9 @@ namespace RendererRuntime
 		Renderer::IUniformBuffer *mFontFragmentShaderUniformBuffer;	///< Font fragment shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontFragmentShaderUniformBuffer()"
 		Renderer::IVertexArray	 *mFontVertexArray;					///< Vertex array object (VAO, we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexArray()"
 		Renderer::ISamplerState	 *mFontSamplerState;				///< Font sampler state (we keep a reference to it), can be a null pointer, do only access it by using "getFontSamplerState()"
+		// Resource hot-reloading
+		std::mutex				  mResourcesToReloadMutex;
+		ResourcesToReload		  mResourcesToReload;
 
 
 	};

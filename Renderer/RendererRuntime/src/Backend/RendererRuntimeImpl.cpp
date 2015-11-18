@@ -372,18 +372,33 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
 	//[-------------------------------------------------------]
-	void RendererRuntimeImpl::reloadResourceByAssetId(AssetId assetId) const
+	void RendererRuntimeImpl::reloadResourceByAssetId(AssetId assetId)
 	{
-		// Inform the individual resource manager instances
-		const size_t numberOfResourceManagers = mResourceManagers.size();
-		for (size_t i = 0; i < numberOfResourceManagers; ++i)
-		{
-			mResourceManagers[i]->reloadResourceByAssetId(assetId);
-		}
+		// TODO(co) If required later on, change this method to a "were's one, there are many"-signature (meaning passing multiple asset IDs at once)
+		std::unique_lock<std::mutex> resourcesToReloadMutexLock(mResourcesToReloadMutex);
+		mResourcesToReload.insert(assetId);
 	}
 
-	void RendererRuntimeImpl::update() const
+	void RendererRuntimeImpl::update()
 	{
+		{ // Handle resource reloading requests
+			std::unique_lock<std::mutex> resourcesToReloadMutexLock(mResourcesToReloadMutex);
+			if (!mResourcesToReload.empty())
+			{
+				const size_t numberOfResourceManagers = mResourceManagers.size();
+				for (uint32_t assetId : mResourcesToReload)
+				{
+					// Inform the individual resource manager instances
+					for (size_t i = 0; i < numberOfResourceManagers; ++i)
+					{
+						mResourceManagers[i]->reloadResourceByAssetId(assetId);
+					}
+				}
+				mResourcesToReload.clear();
+			}
+		}
+
+		// Resource streamer update
 		mResourceStreamer->rendererBackendDispatch();
 
 		// Inform the individual resource manager instances
