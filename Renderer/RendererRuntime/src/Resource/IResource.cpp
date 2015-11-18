@@ -39,7 +39,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	void IResource::setLoadingState(LoadingState::Enum loadingState)
 	{

@@ -37,6 +37,9 @@ namespace RendererRuntime
 	{
 		destroyAllSceneNodes();
 		destroyAllSceneItems();
+
+		// Update the resource loading state
+		setLoadingState(IResource::LoadingState::UNLOADED);
 	}
 
 	inline const ISceneResource::SceneNodes& ISceneResource::getSceneNodes() const

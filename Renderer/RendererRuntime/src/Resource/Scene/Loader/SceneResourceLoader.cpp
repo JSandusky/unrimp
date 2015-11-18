@@ -49,7 +49,7 @@ namespace
 
 			// Create the scene item
 			RendererRuntime::ISceneItem* sceneItem = sceneResource.createSceneItem(itemHeader.typeId, sceneNode);
-			if (nullptr != sceneItem)
+			if (nullptr != sceneItem && 0 != itemHeader.numberOfBytes)
 			{
 				// Load in the scene item data
 				// TODO(co) Get rid of the new/delete in here

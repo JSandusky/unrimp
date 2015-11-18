@@ -137,6 +137,8 @@ namespace RendererToolkit
 						{
 							Poco::JSON::Object::Ptr jsonPropertiesObject = jsonSceneNodeObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
 
+							// TODO(co) Add parser helpers for such kind of tasks
+
 							{ // Parse the position string
 								Poco::Dynamic::Var position = jsonPropertiesObject->get("Position");
 								if (!position.isEmpty())
@@ -213,7 +215,7 @@ namespace RendererToolkit
 							uint32_t numberOfBytes = 0;
 							if (RendererRuntime::CameraSceneItem::TYPE_ID == typeId)
 							{
-								numberOfBytes = sizeof(RendererRuntime::v1Scene::CameraItem);
+								// Nothing here
 							}
 							else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId)
 							{

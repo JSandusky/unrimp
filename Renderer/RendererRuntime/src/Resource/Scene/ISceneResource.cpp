@@ -81,8 +81,15 @@ namespace RendererRuntime
 	{
 		assert(nullptr != mSceneFactory);
 		ISceneItem* sceneItem = mSceneFactory->createSceneItem(sceneItemTypeId, *this);
-		sceneNode.attachSceneItem(*sceneItem);
-		mSceneItems.push_back(sceneItem);
+		if (nullptr != sceneItem)
+		{
+			sceneNode.attachSceneItem(*sceneItem);
+			mSceneItems.push_back(sceneItem);
+		}
+		else
+		{
+			// TODO(co) Error handling
+		}
 		return sceneItem;
 	}
 

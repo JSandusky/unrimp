@@ -61,26 +61,27 @@ namespace
 				RendererRuntime::v1Compositor::PassHeader passHeader;
 				istream.read(reinterpret_cast<char*>(&passHeader), sizeof(RendererRuntime::v1Compositor::PassHeader));
 
-				// Load in the compositor resource pass data
-				// TODO(co) Get rid of the new/delete in here
-				uint8_t* data = new uint8_t[passHeader.numberOfBytes];
-				istream.read(reinterpret_cast<char*>(data), passHeader.numberOfBytes);
-
 				// Create the compositor resource pass
 				RendererRuntime::ICompositorResourcePass* compositorResourcePass = compositorResourceTarget.addCompositorResourcePass(compositorPassFactory, passHeader.typeId);
 
 				// Deserialize the compositor resource pass
-				if (nullptr != compositorResourcePass)
+				if (nullptr != compositorResourcePass && 0 != passHeader.numberOfBytes)
 				{
+					// Load in the compositor resource pass data
+					// TODO(co) Get rid of the new/delete in here
+					uint8_t* data = new uint8_t[passHeader.numberOfBytes];
+					istream.read(reinterpret_cast<char*>(data), passHeader.numberOfBytes);
+
+					// Deserialize the compositor resource pass
 					compositorResourcePass->deserialize(passHeader.numberOfBytes, data);
+
+					// Cleanup
+					delete [] data;
 				}
 				else
 				{
 					// TODO(co) Error handling
 				}
-
-				// Cleanup
-				delete [] data;
 			}
 		}
 

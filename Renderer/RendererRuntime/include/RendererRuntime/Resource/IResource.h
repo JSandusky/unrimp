@@ -98,12 +98,6 @@ namespace RendererRuntime
 		inline virtual ~IResource();
 		IResource(const IResource&) = delete;
 		IResource& operator=(const IResource&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
 		void setLoadingState(LoadingState::Enum loadingState);
 
 
