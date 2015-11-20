@@ -45,6 +45,8 @@
 	#include <Poco/JSON/Parser.h>
 #pragma warning(pop)
 
+#include <unordered_map>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -66,6 +68,7 @@ namespace RendererToolkit
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
 	typedef RendererRuntime::StringId AssetCompilerTypeId;	///< Asset compiler type identifier, internally just a POD "uint32_t"
+	typedef std::unordered_map<uint32_t, uint32_t> SourceAssetIdToCompiledAssetId;	// Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
 
 
 	//[-------------------------------------------------------]
@@ -81,9 +84,22 @@ namespace RendererToolkit
 	public:
 		struct Input
 		{
-			std::string projectName;
-			std::string assetInputDirectory;
-			std::string assetOutputDirectory;
+			std::string							  projectName;
+			std::string							  assetInputDirectory;
+			std::string							  assetOutputDirectory;
+			const SourceAssetIdToCompiledAssetId& sourceAssetIdToCompiledAssetId;
+
+			Input() = delete;
+			Input(const std::string _projectName, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId) :
+				projectName(_projectName),
+				assetInputDirectory(_assetInputDirectory),
+				assetOutputDirectory(_assetOutputDirectory),
+				sourceAssetIdToCompiledAssetId(_sourceAssetIdToCompiledAssetId)
+			{
+				// Nothing here
+			}
+			Input(const Input&) = delete;
+			Input& operator=(const Input&) = delete;
 		};
 		struct Configuration
 		{

@@ -249,8 +249,15 @@ namespace RendererToolkit
 								}
 								else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId)
 								{
+									// Map the source asset ID to the compiled asset ID
+									const uint32_t sourceAssetId = static_cast<uint32_t>(std::atoi(jsonItemObject->get("MeshAssetId").convert<std::string>().c_str()));
+									SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(sourceAssetId);
+									const uint32_t compiledAssetId = (iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
+									// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
+
+									// Write the mesh item data
 									RendererRuntime::v1Scene::MeshItem meshItem;
-									meshItem.meshAssetId = static_cast<uint32_t>(std::atoi(jsonItemObject->get("MeshAssetId").convert<std::string>().c_str()));
+									meshItem.meshAssetId = compiledAssetId;
 									ofstream.write(reinterpret_cast<const char*>(&meshItem), sizeof(RendererRuntime::v1Scene::MeshItem));
 								}
 							}
