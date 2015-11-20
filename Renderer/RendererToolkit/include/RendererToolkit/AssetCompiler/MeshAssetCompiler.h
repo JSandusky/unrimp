@@ -29,16 +29,6 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
-#include <assimp/vector3.h>	// Required by "assimp/matrix4x4.h" below
-#include <assimp/matrix4x4.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-struct aiNode;
-struct aiScene;
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -75,54 +65,6 @@ namespace RendererToolkit
 	public:
 		virtual AssetCompilerTypeId getAssetCompilerTypeId() const override;
 		virtual void compile(const Input& input, const Configuration& configuration, Output& output) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		/**
-		*  @brief
-		*    Get the total number of vertices and indices by using a given Assimp node
-		*
-		*  @param[in]  assimpScene
-		*    Assimp scene
-		*  @param[in]  assimpNode
-		*    Assimp node to gather the data from
-		*  @param[out] numberOfVertices
-		*    Receives the number of vertices
-		*  @param[out] numberOfIndices
-		*    Receives the number of indices
-		*/
-		void getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint32_t &numberOfVertices, uint32_t &numberOfIndices);
-
-		/**
-		*  @brief
-		*    Fill the mesh data recursively
-		*
-		*  @param[in]  assimpScene
-		*    Assimp scene
-		*  @param[in]  assimpNode
-		*    Assimp node to gather the data from
-		*  @param[in]  vertexBuffer
-		*    Vertex buffer to fill
-		*  @param[in]  indexBuffer
-		*    Index buffer to fill
-		*  @param[in]  assimpTransformation
-		*    Current absolute Assimp transformation matrix (local to global space)
-		*  @param[out] numberOfVertices
-		*    Receives the number of processed vertices
-		*  @param[out] numberOfIndices
-		*    Receives the number of processed indices
-		*/
-		void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint8_t *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices);
-
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		static const uint32_t NUMBER_OF_BYTES_PER_VERTEX = 24;	///< Number of bytes per vertex (3 float position, 2 short texture coordinate, 4 short qtangent)
 
 
 	};

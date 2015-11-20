@@ -47,6 +47,212 @@
 
 
 //[-------------------------------------------------------]
+//[ Global functions in anonymous namespace               ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+		static const uint32_t NUMBER_OF_BYTES_PER_VERTEX = 24;	///< Number of bytes per vertex (3 float position, 2 short texture coordinate, 4 short qtangent)
+
+		/**
+		*  @brief
+		*    Get the total number of vertices and indices by using a given Assimp node
+		*
+		*  @param[in]  assimpScene
+		*    Assimp scene
+		*  @param[in]  assimpNode
+		*    Assimp node to gather the data from
+		*  @param[out] numberOfVertices
+		*    Receives the number of vertices
+		*  @param[out] numberOfIndices
+		*    Receives the number of indices
+		*/
+		void getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
+		{
+			// Loop through all meshes this node is using
+			for (uint32_t i = 0; i < assimpNode.mNumMeshes; ++i)
+			{
+				// Get the used mesh
+				const aiMesh &assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
+
+				// Update the number of vertices
+				numberOfVertices += assimpMesh.mNumVertices;
+
+				// Loop through all mesh faces and update the number of indices
+				for (uint32_t j = 0; j < assimpMesh.mNumFaces; ++j)
+				{
+					numberOfIndices += assimpMesh.mFaces[j].mNumIndices;
+				}
+			}
+
+			// Loop through all child nodes recursively
+			for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
+			{
+				getNumberOfVerticesAndIndicesRecursive(assimpScene, *assimpNode.mChildren[i], numberOfVertices, numberOfIndices);
+			}
+		}
+
+		/**
+		*  @brief
+		*    Fill the mesh data recursively
+		*
+		*  @param[in]  assimpScene
+		*    Assimp scene
+		*  @param[in]  assimpNode
+		*    Assimp node to gather the data from
+		*  @param[in]  vertexBuffer
+		*    Vertex buffer to fill
+		*  @param[in]  indexBuffer
+		*    Index buffer to fill
+		*  @param[in]  assimpTransformation
+		*    Current absolute Assimp transformation matrix (local to global space)
+		*  @param[out] numberOfVertices
+		*    Receives the number of processed vertices
+		*  @param[out] numberOfIndices
+		*    Receives the number of processed indices
+		*/
+		void fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint8_t *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
+		{
+			// Get the absolute transformation matrix of this Assimp node
+			const aiMatrix4x4 currentAssimpTransformation = assimpTransformation * assimpNode.mTransformation;
+			const aiMatrix3x3 currentAssimpNormalTransformation = aiMatrix3x3(currentAssimpTransformation);
+
+			// Loop through all meshes this node is using
+			for (uint32_t i = 0; i < assimpNode.mNumMeshes; ++i)
+			{
+				// Get the used mesh
+				const aiMesh &assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
+
+				// Get the start vertex inside the our vertex buffer
+				const uint32_t starVertex = numberOfVertices;
+
+				// Loop through the Assimp mesh vertices
+				uint8_t *currentVertexBuffer = vertexBuffer + numberOfVertices * NUMBER_OF_BYTES_PER_VERTEX;
+				for (uint32_t j = 0; j < assimpMesh.mNumVertices; ++j)
+				{
+					{ // 32 bit position
+						// Get the Assimp mesh vertex position
+						aiVector3D assimpVertex = assimpMesh.mVertices[j];
+
+						// Transform the Assimp mesh vertex position into global space
+						assimpVertex *= currentAssimpTransformation;
+
+						// Set our vertex buffer position
+						float *currentVertexBufferFloat = reinterpret_cast<float*>(currentVertexBuffer);
+						*currentVertexBufferFloat = assimpVertex.x;
+						++currentVertexBufferFloat;
+						*currentVertexBufferFloat = assimpVertex.y;
+						++currentVertexBufferFloat;
+						*currentVertexBufferFloat = assimpVertex.z;
+						currentVertexBuffer += sizeof(float) * 3;
+					}
+
+					{ // 16 bit texture coordinate
+						// Get the Assimp mesh vertex texture coordinate
+						aiVector3D assimpTexCoord = assimpMesh.mTextureCoords[0][j];
+
+						// Set our vertex buffer 16 bit texture coordinate
+						short *currentVertexBufferShort = reinterpret_cast<short*>(currentVertexBuffer);
+						*currentVertexBufferShort = static_cast<short>(assimpTexCoord.x * SHRT_MAX);
+						++currentVertexBufferShort;
+						*currentVertexBufferShort = static_cast<short>(assimpTexCoord.y * SHRT_MAX);
+						currentVertexBuffer += sizeof(short) * 2;
+					}
+
+					{ // 16 bit QTangent
+					  // - QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
+					  //   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
+						// Get the Assimp mesh vertex tangent, binormal and normal
+						aiVector3D tangent = assimpMesh.mTangents[j];
+						aiVector3D binormal = assimpMesh.mBitangents[j];
+						aiVector3D normal = assimpMesh.mNormals[j];
+
+						// Transform the Assimp mesh vertex data into global space
+						tangent *= currentAssimpNormalTransformation;
+						binormal *= currentAssimpNormalTransformation;
+						normal *= currentAssimpNormalTransformation;
+
+						// Generate tangent frame rotation matrix
+						glm::mat3 tangentFrame(
+							tangent.x,  tangent.y,  tangent.z,
+							binormal.x, binormal.y, binormal.z,
+							normal.x,   normal.y,   normal.z
+						);
+
+						// Flip y axis in case the tangent frame encodes a reflection
+						const float scale = (glm::determinant(tangentFrame) > 0) ? 1.0f : -1.0f;
+						tangentFrame[2][0] *= scale;
+						tangentFrame[2][1] *= scale;
+						tangentFrame[2][2] *= scale;
+
+						glm::quat tangentFrameQuaternion(tangentFrame);
+
+						{ // Make sure we don't end up with 0 as w component
+							const float threshold = 1.0f / SHRT_MAX; // 16 bit quantization QTangent
+							const float renomalization = sqrt(1.0f - threshold * threshold);
+
+							if (abs(tangentFrameQuaternion.w) < threshold)
+							{
+								tangentFrameQuaternion.x *= renomalization;
+								tangentFrameQuaternion.y *= renomalization;
+								tangentFrameQuaternion.z *= renomalization;
+								tangentFrameQuaternion.w =  (tangentFrameQuaternion.w > 0) ? threshold : -threshold;
+							}
+						}
+
+						{ // Encode reflection into quaternion's w element by making sign of w negative if y axis needs to be flipped, positive otherwise
+							const float qs = (scale < 0.0f && tangentFrameQuaternion.w > 0.0f) || (scale > 0.0f && tangentFrameQuaternion.w < 0.0f) ? -1.0f : 1.0f;
+							tangentFrameQuaternion.x *= qs;
+							tangentFrameQuaternion.y *= qs;
+							tangentFrameQuaternion.z *= qs;
+							tangentFrameQuaternion.w *= qs;
+						}
+
+						// Set our vertex buffer 16 bit qtangent
+						short *currentVertexBufferShort = reinterpret_cast<short*>(currentVertexBuffer);
+						*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.x * SHRT_MAX);
+						++currentVertexBufferShort;
+						*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.y * SHRT_MAX);
+						++currentVertexBufferShort;
+						*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.z * SHRT_MAX);
+						++currentVertexBufferShort;
+						*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.w * SHRT_MAX);
+						currentVertexBuffer += sizeof(short) * 4;
+					}
+				}
+				numberOfVertices += assimpMesh.mNumVertices;
+
+				// Loop through all Assimp mesh faces
+				uint16_t *currentIndexBuffer = indexBuffer + numberOfIndices;
+				for (uint32_t j = 0; j < assimpMesh.mNumFaces; ++j)
+				{
+					// Get the Assimp face
+					const aiFace &assimpFace = assimpMesh.mFaces[j];
+
+					// Loop through all indices of the Assimp face and set our indices
+					for (uint32_t assimpIndex = 0; assimpIndex < assimpFace.mNumIndices; ++assimpIndex, ++currentIndexBuffer)
+					{
+						//					  Assimp mesh vertex index	 								 Where the Assimp mesh starts within the our vertex buffer
+						*currentIndexBuffer = static_cast<uint16_t>(assimpFace.mIndices[assimpIndex] + starVertex);
+					}
+
+					// Update the number if processed indices
+					numberOfIndices += assimpFace.mNumIndices;
+				}
+			}
+
+			// Loop through all child nodes recursively
+			for (uint32_t assimpChild = 0; assimpChild < assimpNode.mNumChildren; ++assimpChild)
+			{
+				fillMeshRecursive(assimpScene, *assimpNode.mChildren[assimpChild], vertexBuffer, indexBuffer, currentAssimpTransformation, numberOfVertices, numberOfIndices);
+			}
+		}
+	}
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -125,7 +331,7 @@ namespace RendererToolkit
 			// Get the total number of vertices and indices by using the Assimp root node
 			uint32_t numberOfVertices = 0;
 			uint32_t numberOfIndices = 0;
-			getNumberOfVerticesAndIndicesRecursive(*assimpScene, *assimpScene->mRootNode, numberOfVertices, numberOfIndices);
+			::detail::getNumberOfVerticesAndIndicesRecursive(*assimpScene, *assimpScene->mRootNode, numberOfVertices, numberOfIndices);
 
 			// TODO(co) Will change when skinned
 			uint8_t numberOfVertexAttributes = 3;
@@ -134,7 +340,7 @@ namespace RendererToolkit
 				RendererRuntime::v1Mesh::Header meshHeader;
 				meshHeader.formatType				= RendererRuntime::v1Mesh::FORMAT_TYPE;
 				meshHeader.formatVersion			= RendererRuntime::v1Mesh::FORMAT_VERSION;
-				meshHeader.numberOfBytesPerVertex	= NUMBER_OF_BYTES_PER_VERTEX;
+				meshHeader.numberOfBytesPerVertex	= ::detail::NUMBER_OF_BYTES_PER_VERTEX;
 				meshHeader.numberOfVertices			= numberOfVertices;
 				meshHeader.indexBufferFormat		= Renderer::IndexBufferFormat::UNSIGNED_SHORT;
 				meshHeader.numberOfIndices			= numberOfIndices;
@@ -146,13 +352,13 @@ namespace RendererToolkit
 
 			{ // Vertex and index buffer data
 				// Allocate memory for the local vertex and index buffer data
-				uint8_t *vertexBufferData = new uint8_t[NUMBER_OF_BYTES_PER_VERTEX * numberOfVertices];
+				uint8_t *vertexBufferData = new uint8_t[::detail::NUMBER_OF_BYTES_PER_VERTEX * numberOfVertices];
 				uint16_t *indexBufferData = new uint16_t[numberOfIndices];
 
 				{ // Fill the mesh data recursively
 					uint32_t numberOfFilledVertices = 0;
 					uint32_t numberOfFilledIndices  = 0;
-					fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, vertexBufferData, indexBufferData, aiMatrix4x4(), numberOfFilledVertices, numberOfFilledIndices);
+					::detail::fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, vertexBufferData, indexBufferData, aiMatrix4x4(), numberOfFilledVertices, numberOfFilledIndices);
 
 					// TODO(co) ?
 					numberOfVertices = numberOfFilledVertices;
@@ -160,7 +366,7 @@ namespace RendererToolkit
 				}
 
 				// Write down the vertex and index buffer
-				ofstream.write(reinterpret_cast<const char*>(vertexBufferData), NUMBER_OF_BYTES_PER_VERTEX * numberOfVertices);
+				ofstream.write(reinterpret_cast<const char*>(vertexBufferData), ::detail::NUMBER_OF_BYTES_PER_VERTEX * numberOfVertices);
 				ofstream.write(reinterpret_cast<const char*>(indexBufferData), sizeof(uint16_t) * numberOfIndices);
 
 				// Destroy local vertex and input buffer data
@@ -229,172 +435,6 @@ namespace RendererToolkit
 			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
 			strcpy(outputAsset.assetFilename, assetFilename.c_str());	// TODO(co) Buffer overflow test
 			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
-		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	void MeshAssetCompiler::getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
-	{
-		// Loop through all meshes this node is using
-		for (uint32_t i = 0; i < assimpNode.mNumMeshes; ++i)
-		{
-			// Get the used mesh
-			const aiMesh &assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
-
-			// Update the number of vertices
-			numberOfVertices += assimpMesh.mNumVertices;
-
-			// Loop through all mesh faces and update the number of indices
-			for (uint32_t j = 0; j < assimpMesh.mNumFaces; ++j)
-			{
-				numberOfIndices += assimpMesh.mFaces[j].mNumIndices;
-			}
-		}
-
-		// Loop through all child nodes recursively
-		for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
-		{
-			getNumberOfVerticesAndIndicesRecursive(assimpScene, *assimpNode.mChildren[i], numberOfVertices, numberOfIndices);
-		}
-	}
-
-	void MeshAssetCompiler::fillMeshRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint8_t *vertexBuffer, uint16_t *indexBuffer, const aiMatrix4x4 &assimpTransformation, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
-	{
-		// Get the absolute transformation matrix of this Assimp node
-		const aiMatrix4x4 currentAssimpTransformation = assimpTransformation * assimpNode.mTransformation;
-		const aiMatrix3x3 currentAssimpNormalTransformation = aiMatrix3x3(currentAssimpTransformation);
-
-		// Loop through all meshes this node is using
-		for (uint32_t i = 0; i < assimpNode.mNumMeshes; ++i)
-		{
-			// Get the used mesh
-			const aiMesh &assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
-
-			// Get the start vertex inside the our vertex buffer
-			const uint32_t starVertex = numberOfVertices;
-
-			// Loop through the Assimp mesh vertices
-			uint8_t *currentVertexBuffer = vertexBuffer + numberOfVertices * NUMBER_OF_BYTES_PER_VERTEX;
-			for (uint32_t j = 0; j < assimpMesh.mNumVertices; ++j)
-			{
-				{ // 32 bit position
-					// Get the Assimp mesh vertex position
-					aiVector3D assimpVertex = assimpMesh.mVertices[j];
-
-					// Transform the Assimp mesh vertex position into global space
-					assimpVertex *= currentAssimpTransformation;
-
-					// Set our vertex buffer position
-					float *currentVertexBufferFloat = reinterpret_cast<float*>(currentVertexBuffer);
-					*currentVertexBufferFloat = assimpVertex.x;
-					++currentVertexBufferFloat;
-					*currentVertexBufferFloat = assimpVertex.y;
-					++currentVertexBufferFloat;
-					*currentVertexBufferFloat = assimpVertex.z;
-					currentVertexBuffer += sizeof(float) * 3;
-				}
-
-				{ // 16 bit texture coordinate
-					// Get the Assimp mesh vertex texture coordinate
-					aiVector3D assimpTexCoord = assimpMesh.mTextureCoords[0][j];
-
-					// Set our vertex buffer 16 bit texture coordinate
-					short *currentVertexBufferShort = reinterpret_cast<short*>(currentVertexBuffer);
-					*currentVertexBufferShort = static_cast<short>(assimpTexCoord.x * SHRT_MAX);
-					++currentVertexBufferShort;
-					*currentVertexBufferShort = static_cast<short>(assimpTexCoord.y * SHRT_MAX);
-					currentVertexBuffer += sizeof(short) * 2;
-				}
-
-				{ // 16 bit QTangent
-				  // - QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
-				  //   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
-					// Get the Assimp mesh vertex tangent, binormal and normal
-					aiVector3D tangent = assimpMesh.mTangents[j];
-					aiVector3D binormal = assimpMesh.mBitangents[j];
-					aiVector3D normal = assimpMesh.mNormals[j];
-
-					// Transform the Assimp mesh vertex data into global space
-					tangent *= currentAssimpNormalTransformation;
-					binormal *= currentAssimpNormalTransformation;
-					normal *= currentAssimpNormalTransformation;
-
-					// Generate tangent frame rotation matrix
-					glm::mat3 tangentFrame(
-						tangent.x,  tangent.y,  tangent.z,
-						binormal.x, binormal.y, binormal.z,
-						normal.x,   normal.y,   normal.z
-					);
-
-					// Flip y axis in case the tangent frame encodes a reflection
-					const float scale = (glm::determinant(tangentFrame) > 0) ? 1.0f : -1.0f;
-					tangentFrame[2][0] *= scale;
-					tangentFrame[2][1] *= scale;
-					tangentFrame[2][2] *= scale;
-
-					glm::quat tangentFrameQuaternion(tangentFrame);
-
-					{ // Make sure we don't end up with 0 as w component
-						const float threshold = 1.0f / SHRT_MAX; // 16 bit quantization QTangent
-						const float renomalization = sqrt(1.0f - threshold * threshold);
-
-						if (abs(tangentFrameQuaternion.w) < threshold)
-						{
-							tangentFrameQuaternion.x *= renomalization;
-							tangentFrameQuaternion.y *= renomalization;
-							tangentFrameQuaternion.z *= renomalization;
-							tangentFrameQuaternion.w =  (tangentFrameQuaternion.w > 0) ? threshold : -threshold;
-						}
-					}
-
-					{ // Encode reflection into quaternion's w element by making sign of w negative if y axis needs to be flipped, positive otherwise
-						const float qs = (scale < 0.0f && tangentFrameQuaternion.w > 0.0f) || (scale > 0.0f && tangentFrameQuaternion.w < 0.0f) ? -1.0f : 1.0f;
-						tangentFrameQuaternion.x *= qs;
-						tangentFrameQuaternion.y *= qs;
-						tangentFrameQuaternion.z *= qs;
-						tangentFrameQuaternion.w *= qs;
-					}
-
-					// Set our vertex buffer 16 bit qtangent
-					short *currentVertexBufferShort = reinterpret_cast<short*>(currentVertexBuffer);
-					*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.x * SHRT_MAX);
-					++currentVertexBufferShort;
-					*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.y * SHRT_MAX);
-					++currentVertexBufferShort;
-					*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.z * SHRT_MAX);
-					++currentVertexBufferShort;
-					*currentVertexBufferShort = static_cast<short>(tangentFrameQuaternion.w * SHRT_MAX);
-					currentVertexBuffer += sizeof(short) * 4;
-				}
-			}
-			numberOfVertices += assimpMesh.mNumVertices;
-
-			// Loop through all Assimp mesh faces
-			uint16_t *currentIndexBuffer = indexBuffer + numberOfIndices;
-			for (uint32_t j = 0; j < assimpMesh.mNumFaces; ++j)
-			{
-				// Get the Assimp face
-				const aiFace &assimpFace = assimpMesh.mFaces[j];
-
-				// Loop through all indices of the Assimp face and set our indices
-				for (uint32_t assimpIndex = 0; assimpIndex < assimpFace.mNumIndices; ++assimpIndex, ++currentIndexBuffer)
-				{
-					//					  Assimp mesh vertex index	 								 Where the Assimp mesh starts within the our vertex buffer
-					*currentIndexBuffer = static_cast<uint16_t>(assimpFace.mIndices[assimpIndex] + starVertex);
-				}
-
-				// Update the number if processed indices
-				numberOfIndices += assimpFace.mNumIndices;
-			}
-		}
-
-		// Loop through all child nodes recursively
-		for (uint32_t assimpChild = 0; assimpChild < assimpNode.mNumChildren; ++assimpChild)
-		{
-			fillMeshRecursive(assimpScene, *assimpNode.mChildren[assimpChild], vertexBuffer, indexBuffer, currentAssimpTransformation, numberOfVertices, numberOfIndices);
 		}
 	}
 
