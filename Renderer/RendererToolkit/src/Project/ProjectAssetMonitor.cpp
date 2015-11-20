@@ -78,6 +78,47 @@ namespace RendererToolkit
 
 			FileWatchListener& operator=(const FileWatchListener&) = delete;
 
+			void processFileActions()
+			{
+				if (!mFileActions.empty())
+				{
+					const size_t numberOfFileActions = mFileActions.size();
+					for (size_t fileActionIndex = 0; fileActionIndex < numberOfFileActions; ++fileActionIndex)
+					{
+						const FileAction& fileAction = mFileActions[fileActionIndex];
+
+						// Get the corresponding asset
+						// TODO(co) The current simple solution is not sufficient for large scale projects having ten thousands of assets: Add more efficient asset search
+						// TODO(co) Add support for asset "FileDependencies". The current solution is just a quick'n'dirty prototype which will not work when multiple or other named asset data files are involved.
+						std::string test = Poco::Path(fileAction.filename).setExtension("").toString(Poco::Path::PATH_UNIX) + ".asset";
+
+						const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mProjectAssetMonitor.mProjectImpl.getAssetPackage().getSortedAssetVector();
+						const size_t numberOfAssets = sortedAssetVector.size();
+						for (size_t i = 0; i < numberOfAssets; ++i)
+						{
+							const RendererRuntime::Asset& asset = sortedAssetVector[i];
+							if (test == asset.assetFilename)
+							{
+								// TODO(co) Performance: Add asset compiler queue so we can compile more then one asset at a time in background
+								// TODO(co) At the moment, we only support modifying already existing asset data, we should add support for changes inside the runtime asset package as well
+								RendererRuntime::AssetPackage outputAssetPackage;
+								mProjectAssetMonitor.mProjectImpl.compileAsset(asset, mProjectAssetMonitor.mRendererTarget.c_str(), outputAssetPackage);
+
+								// Inform the asset manager about the modified assets (just pass them individually, there's no real benefit in trying to apply "were's one, there are many" in this situation)
+								const RendererRuntime::AssetPackage::SortedAssetVector& sortedOutputAssetVector = outputAssetPackage.getSortedAssetVector();
+								const size_t numberOfOutputAssets = sortedOutputAssetVector.size();
+								for (size_t outputAssetIndex = 0; outputAssetIndex < numberOfOutputAssets; ++outputAssetIndex)
+								{
+									mProjectAssetMonitor.mRendererRuntime.reloadResourceByAssetId(sortedOutputAssetVector[outputAssetIndex].assetId);
+								}
+								break;
+							}
+						}
+					}
+					mFileActions.clear();
+				}
+			}
+
 
 		//[-------------------------------------------------------]
 		//[ Public virtual FW::FileWatchListener methods          ]
@@ -87,35 +128,38 @@ namespace RendererToolkit
 			{
 				if (FW::Action::Modified == action)
 				{
-					// Get the corresponding asset
-					// TODO(co) The current simple solution is not sufficient for larg scale projects having ten thousands of assets: Add more efficient asset search
-					// TODO(co) Add support for asset "FileDependencies". The current solution is just a quick'n'dirty prototype which will not work when multiple or other named asset data files are involved.
-					std::string test = Poco::Path(filename).setExtension("").toString(Poco::Path::PATH_UNIX) + ".asset";
-
-					const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mProjectAssetMonitor.mProjectImpl.getAssetPackage().getSortedAssetVector();
-					const size_t numberOfAssets = sortedAssetVector.size();
-					for (size_t i = 0; i < numberOfAssets; ++i)
+					// Sadly, we can and will get multiple modified events for one and the same modification, so we need to handle it in here
+					const size_t numberOfFileActions = mFileActions.size();
+					for (size_t fileActionIndex = 0; fileActionIndex < numberOfFileActions; ++fileActionIndex)
 					{
-						const RendererRuntime::Asset& asset = sortedAssetVector[i];
-						if (test == asset.assetFilename)
+						const FileAction& fileAction = mFileActions[fileActionIndex];
+						if (fileAction.action == action && fileAction.filename == filename)
 						{
-							// TODO(co) Performance: Add asset compiler queue so we can compile more then one asset at a time in background
-							// TODO(co) At the moment, we only support modifying already existing asset data, we should add support for changes inside the runtime asset package as well
-							RendererRuntime::AssetPackage outputAssetPackage;
-							mProjectAssetMonitor.mProjectImpl.compileAsset(asset, mProjectAssetMonitor.mRendererTarget.c_str(), outputAssetPackage);
-
-							// Inform the asset manager about the modified assets (just pass them individually, there's no real benefit in trying to apply "were's one, there are many" in this situation)
-							const RendererRuntime::AssetPackage::SortedAssetVector& sortedOutputAssetVector = outputAssetPackage.getSortedAssetVector();
-							const size_t numberOfOutputAssets = sortedOutputAssetVector.size();
-							for (size_t outputAssetIndex = 0; outputAssetIndex < numberOfOutputAssets; ++outputAssetIndex)
-							{
-								mProjectAssetMonitor.mRendererRuntime.reloadResourceByAssetId(sortedOutputAssetVector[outputAssetIndex].assetId);
-							}
-							break;
+							// No duplicates, please
+							return;
 						}
 					}
+					mFileActions.push_back(FileAction(filename, action));
 				}
 			}
+
+
+		//[-------------------------------------------------------]
+		//[ Private definitions                                   ]
+		//[-------------------------------------------------------]
+		private:
+			struct FileAction
+			{
+				FW::String filename;
+				FW::Action action;
+				FileAction(const FW::String& _filename, FW::Action _action) :
+					filename(_filename),
+					action(_action)
+				{
+					// Nothing here
+				}
+			};
+			typedef std::vector<FileAction> FileActions;
 
 
 		//[-------------------------------------------------------]
@@ -123,6 +167,7 @@ namespace RendererToolkit
 		//[-------------------------------------------------------]
 		private:
 			ProjectAssetMonitor& mProjectAssetMonitor;
+			FileActions			 mFileActions;
 
 
 		};
@@ -162,6 +207,10 @@ namespace RendererToolkit
 		while (!mShutdownThread)
 		{
 			fileWatcher.update();
+			fileWatchListener.processFileActions();
+			#ifdef _WIN32
+				::Sleep(100);
+			#endif
 		}
 	}
 
