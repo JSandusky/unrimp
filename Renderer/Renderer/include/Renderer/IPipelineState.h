@@ -79,7 +79,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IPipelineState(IRenderer &renderer);
+		inline explicit IPipelineState(IRenderer& renderer);
 
 		/**
 		*  @brief
@@ -88,7 +88,7 @@ namespace Renderer
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		inline explicit IPipelineState(const IPipelineState &source);
+		inline explicit IPipelineState(const IPipelineState& source);
 
 		/**
 		*  @brief
@@ -100,7 +100,7 @@ namespace Renderer
 		*  @return
 		*    Reference to this instance
 		*/
-		inline IPipelineState &operator =(const IPipelineState &source);
+		inline IPipelineState &operator =(const IPipelineState& source);
 
 
 	};

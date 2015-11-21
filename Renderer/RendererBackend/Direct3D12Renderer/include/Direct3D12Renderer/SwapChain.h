@@ -76,7 +76,7 @@ namespace Direct3D12Renderer
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/
-		SwapChain(Direct3D12Renderer &direct3D12Renderer, handle nativeWindowHandle);
+		SwapChain(Direct3D12Renderer& direct3D12Renderer, handle nativeWindowHandle);
 
 		/**
 		*  @brief
@@ -91,7 +91,7 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The DXGI swap chain 3 instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline IDXGISwapChain3 *getDxgiSwapChain3() const;
+		inline IDXGISwapChain3* getDxgiSwapChain3() const;
 
 		/**
 		*  @brief
@@ -103,7 +103,7 @@ namespace Direct3D12Renderer
 		*  @note
 		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
-		inline ID3D12DescriptorHeap *getD3D12DescriptorHeapRenderTargetView() const;
+		inline ID3D12DescriptorHeap* getD3D12DescriptorHeapRenderTargetView() const;
 
 		/**
 		*  @brief
@@ -115,7 +115,7 @@ namespace Direct3D12Renderer
 		*  @note
 		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
-		inline ID3D12DescriptorHeap *getD3D12DescriptorHeapDepthStencilView() const;
+		inline ID3D12DescriptorHeap* getD3D12DescriptorHeapDepthStencilView() const;
 
 		/**
 		*  @brief
@@ -151,21 +151,21 @@ namespace Direct3D12Renderer
 		*  @note
 		*    - It's highly recommended to not keep any references to the returned instance, else issues may occur when resizing the swap chain
 		*/
-		inline ID3D12Resource *getBackD3D12ResourceRenderTarget() const;
+		inline ID3D12Resource* getBackD3D12ResourceRenderTarget() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void setDebugName(const char *name) override;
+		virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const override;
+		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
 	//[-------------------------------------------------------]
@@ -212,7 +212,7 @@ namespace Direct3D12Renderer
 		*  @note
 		*    - "mDxgiSwapChain3" must be valid when calling this method
 		*/
-		void getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const;
+		void getSafeWidthAndHeight(uint32_t& width, uint32_t& height) const;
 
 		/**
 		*  @brief

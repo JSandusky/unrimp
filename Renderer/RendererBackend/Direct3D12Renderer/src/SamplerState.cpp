@@ -37,7 +37,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SamplerState::SamplerState(Direct3D12Renderer &direct3D12Renderer, const Renderer::SamplerState &samplerState) :
+	SamplerState::SamplerState(Direct3D12Renderer& direct3D12Renderer, const Renderer::SamplerState& samplerState) :
 		ISamplerState(direct3D12Renderer),
 		mD3D12DescriptorHeap(nullptr)
 	{

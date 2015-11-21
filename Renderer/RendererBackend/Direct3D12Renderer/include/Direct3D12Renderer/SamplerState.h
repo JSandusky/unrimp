@@ -75,7 +75,7 @@ namespace Direct3D12Renderer
 		*  @param[in] samplerState
 		*    Sampler state to use
 		*/
-		SamplerState(Direct3D12Renderer &direct3D12Renderer, const Renderer::SamplerState &samplerState);
+		SamplerState(Direct3D12Renderer& direct3D12Renderer, const Renderer::SamplerState& samplerState);
 
 		/**
 		*  @brief

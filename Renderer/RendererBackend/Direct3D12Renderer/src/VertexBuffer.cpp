@@ -38,7 +38,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum) :
+	VertexBuffer::VertexBuffer(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage::Enum) :
 		IVertexBuffer(direct3D12Renderer),
 		mNumberOfBytes(numberOfBytes),
 		mD3D12Resource(nullptr)

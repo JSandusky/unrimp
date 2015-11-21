@@ -84,7 +84,7 @@ namespace Direct3D12Renderer
 		*  @param[in] textureUsage
 		*    Indication of the texture usage (only relevant for Direct3D, OpenGL has no texture usage indication)
 		*/
-		Texture2DArray(Direct3D12Renderer &direct3D12Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage = Renderer::TextureUsage::DEFAULT);
+		Texture2DArray(Direct3D12Renderer& direct3D12Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void* data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage = Renderer::TextureUsage::DEFAULT);
 
 		/**
 		*  @brief

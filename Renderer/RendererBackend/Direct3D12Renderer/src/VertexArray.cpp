@@ -40,7 +40,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, IndexBuffer *indexBuffer) :
+	VertexArray::VertexArray(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
 		IVertexArray(direct3D12Renderer),
 		mIndexBuffer(indexBuffer),
 		mNumberOfSlots(numberOfVertexBuffers),

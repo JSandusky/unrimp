@@ -42,7 +42,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D12Renderer &direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue) :
+	Texture2D::Texture2D(Direct3D12Renderer& direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void* data, uint32_t flags, Renderer::TextureUsage::Enum, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue) :
 		ITexture2D(direct3D12Renderer, width, height),
 		mDxgiFormat(Mapping::getDirect3D12Format(textureFormat)),
 		mD3D12Resource(nullptr),

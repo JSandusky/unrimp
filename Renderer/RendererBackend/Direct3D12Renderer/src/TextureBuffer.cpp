@@ -38,7 +38,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage::Enum) :
+	TextureBuffer::TextureBuffer(Direct3D12Renderer& direct3D12Renderer, uint32_t, Renderer::TextureFormat::Enum, const void*, Renderer::BufferUsage::Enum) :
 		ITextureBuffer(direct3D12Renderer)
 		// TODO(co) Direct3D 12 update
 	//	mD3D12Buffer(nullptr),
@@ -147,7 +147,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
-	void TextureBuffer::copyDataFrom(uint32_t, const void *)
+	void TextureBuffer::copyDataFrom(uint32_t, const void*)
 	{
 		// TODO(co) Direct3D 12 update
 		/*

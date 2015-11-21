@@ -225,7 +225,7 @@ namespace Renderer
 		};
 		struct MappedSubresource
 		{
-			void	 *data;
+			void*	  data;
 			uint32_t  rowPitch;
 			uint32_t  depthPitch;
 		};
@@ -440,7 +440,7 @@ namespace Renderer
 				initialize(*this, _numberOfDescriptorRanges, _descriptorRanges);
 			}
 			static inline void initialize(
-				RootDescriptorTable &rootDescriptorTable,
+				RootDescriptorTable& rootDescriptorTable,
 				uint32_t _numberOfDescriptorRanges,
 				const DescriptorRange* _descriptorRanges)
 			{
@@ -722,7 +722,7 @@ namespace Renderer
 				initialize(*this, _numberOfParameters, _parameters, _numberOfStaticSamplers, _staticSamplers, _flags);
 			}
 			static inline void initialize(
-				RootSignature &rootSignature,
+				RootSignature& rootSignature,
 				uint32_t _numberOfParameters,
 				const RootParameter* _parameters,
 				uint32_t _numberOfStaticSamplers = 0,
@@ -981,7 +981,7 @@ namespace Renderer
 		};
 		struct BlendStateBuilder
 		{
-			static inline const BlendState &getDefaultBlendState()
+			static inline const BlendState& getDefaultBlendState()
 			{
 				static const BlendState BLEND_STATE =
 				{
@@ -1193,7 +1193,7 @@ namespace Renderer
 		};
 		struct RasterizerStateBuilder
 		{
-			static inline const RasterizerState &getDefaultRasterizerState()
+			static inline const RasterizerState& getDefaultRasterizerState()
 			{
 				static const RasterizerState RASTERIZER_STATE =
 				{
@@ -1260,7 +1260,7 @@ namespace Renderer
 		};
 		struct DepthStencilStateBuilder
 		{
-			static inline const DepthStencilState &getDefaultDepthStencilState()
+			static inline const DepthStencilState& getDefaultDepthStencilState()
 			{
 				static const DepthStencilState DEPTH_STENCIL_STATE =
 				{
@@ -1383,11 +1383,11 @@ namespace Renderer
 			virtual ~RefCount()
 			{
 			}
-			virtual const AType *getPointer() const
+			virtual const AType* getPointer() const
 			{
 				return static_cast<const AType*>(this);
 			}
-			virtual AType *getPointer()
+			virtual AType* getPointer()
 			{
 				return static_cast<AType*>(this);
 			}
@@ -1429,12 +1429,12 @@ namespace Renderer
 				mPtr(nullptr)
 			{
 			}
-			explicit SmartRefCount(AType *ptr) :
+			explicit SmartRefCount(AType* ptr) :
 				mPtr(nullptr)
 			{
 				setPtr(ptr);
 			}
-			SmartRefCount(const SmartRefCount<AType> &ptr) :
+			SmartRefCount(const SmartRefCount<AType>& ptr) :
 				mPtr(nullptr)
 			{
 				setPtr(ptr.getPtr());
@@ -1443,7 +1443,7 @@ namespace Renderer
 			{
 				setPtr(nullptr);
 			}
-			SmartRefCount<AType> &operator =(AType *ptr)
+			SmartRefCount<AType>& operator =(AType* ptr)
 			{
 				if (getPointer() != ptr)
 				{
@@ -1451,7 +1451,7 @@ namespace Renderer
 				}
 				return *this;
 			}
-			SmartRefCount<AType> &operator =(const SmartRefCount<AType> &ptr)
+			SmartRefCount<AType>& operator =(const SmartRefCount<AType>& ptr)
 			{
 				if (getPointer() != ptr.getPointer())
 				{
@@ -1459,11 +1459,11 @@ namespace Renderer
 				}
 				return *this;
 			}
-			AType *getPointer() const
+			AType* getPointer() const
 			{
 				return mPtr ? static_cast<AType*>(mPtr->getPointer()) : nullptr;
 			}
-			AType *operator ->() const
+			AType* operator ->() const
 			{
 				return getPointer();
 			}
@@ -1475,24 +1475,24 @@ namespace Renderer
 			{
 				return (nullptr == getPointer());
 			}
-			bool operator ==(AType *ptr) const
+			bool operator ==(AType* ptr) const
 			{
 				return (getPointer() == ptr);
 			}
-			bool operator ==(const SmartRefCount<AType> &ptr) const
+			bool operator ==(const SmartRefCount<AType>& ptr) const
 			{
 				return (getPointer() == ptr.getPointer());
 			}
-			bool operator !=(AType *ptr) const
+			bool operator !=(AType* ptr) const
 			{
 				return (getPointer() != ptr);
 			}
-			bool operator !=(const SmartRefCount<AType> &ptr) const
+			bool operator !=(const SmartRefCount<AType>& ptr) const
 			{
 				return (getPointer() != ptr.getPointer());
 			}
 		private:
-			void setPtr(AType *ptr)
+			void setPtr(AType* ptr)
 			{
 				if (nullptr != mPtr)
 				{
@@ -1504,12 +1504,12 @@ namespace Renderer
 				}
 				mPtr = ptr;
 			}
-			AType *getPtr() const
+			AType* getPtr() const
 			{
 				return mPtr;
 			}
 		private:
-			AType *mPtr;
+			AType* mPtr;
 		};
 	#endif
 
@@ -1554,7 +1554,7 @@ namespace Renderer
 			{
 			}
 		private:
-			inline explicit Capabilities(const Capabilities &) :
+			inline explicit Capabilities(const Capabilities& ) :
 				maximumNumberOfViewports(0),
 				maximumNumberOfSimultaneousRenderTargets(0),
 				maximumTextureDimension(0),
@@ -1570,7 +1570,7 @@ namespace Renderer
 				maximumNumberOfGsOutputVertices(0)
 			{
 			}
-			inline Capabilities &operator =(const Capabilities &)
+			inline Capabilities& operator =(const Capabilities&)
 			{
 				return *this;
 			}
@@ -1663,7 +1663,7 @@ namespace Renderer
 		{
 		}
 	private:
-		inline explicit Statistics(const Statistics &) :
+		inline explicit Statistics(const Statistics&) :
 			currentNumberOfRootSignatures(0),
 			numberOfCreatedRootSignatures(0),
 			currentNumberOfPrograms(0),
@@ -1702,7 +1702,7 @@ namespace Renderer
 			numberOfCreatedFragmentShaders(0)
 		{
 		}
-		inline Statistics &operator =(const Statistics &)
+		inline Statistics& operator =(const Statistics&)
 		{
 			return *this;
 		}
@@ -1720,11 +1720,11 @@ namespace Renderer
 		{
 		public:
 			virtual ~IRenderer();
-			inline const Capabilities &getCapabilities() const
+			inline const Capabilities& getCapabilities() const
 			{
 				return mCapabilities;
 			}
-			inline const Statistics &getStatistics() const
+			inline const Statistics& getStatistics() const
 			{
 				return mStatistics;
 			}
@@ -1755,34 +1755,34 @@ namespace Renderer
 				}
 			}
 		public:
-			virtual const char *getName() const = 0;
+			virtual const char* getName() const = 0;
 			virtual bool isInitialized() const = 0;
-			virtual ISwapChain *getMainSwapChain() const = 0;
+			virtual ISwapChain* getMainSwapChain() const = 0;
 			virtual uint32_t getNumberOfShaderLanguages() const = 0;
-			virtual const char *getShaderLanguageName(uint32_t index) const = 0;
-			virtual IShaderLanguage *getShaderLanguage(const char *shaderLanguageName = nullptr) = 0;
-			virtual ISwapChain *createSwapChain(handle nativeWindowHandle) = 0;
-			virtual IFramebuffer *createFramebuffer(uint32_t numberOfColorTextures, ITexture **colorTextures, ITexture *depthStencilTexture = nullptr) = 0;
-			virtual IVertexBuffer *createVertexBuffer(uint32_t numberOfBytes, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-			virtual IIndexBuffer *createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-			virtual IVertexArray *createVertexArray(const VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
-			virtual ITextureBuffer *createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-			virtual ITexture2D *createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
-			virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
-			virtual IRootSignature *createRootSignature(const RootSignature &rootSignature) = 0;
-			virtual IPipelineState *createPipelineState(const PipelineState &pipelineState) = 0;
-			virtual ISamplerState *createSamplerState(const SamplerState &samplerState) = 0;
-			virtual bool map(IResource &resource, uint32_t subresource, MapType::Enum mapType, uint32_t mapFlags, MappedSubresource &mappedSubresource) = 0;
-			virtual void unmap(IResource &resource, uint32_t subresource) = 0;
-			virtual void setGraphicsRootSignature(IRootSignature *rootSignature) = 0;
+			virtual const char* getShaderLanguageName(uint32_t index) const = 0;
+			virtual IShaderLanguage* getShaderLanguage(const char* shaderLanguageName = nullptr) = 0;
+			virtual ISwapChain* createSwapChain(handle nativeWindowHandle) = 0;
+			virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorTextures, ITexture** colorTextures, ITexture* depthStencilTexture = nullptr) = 0;
+			virtual IVertexBuffer* createVertexBuffer(uint32_t numberOfBytes, const void* data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IIndexBuffer* createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void* data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IVertexArray* createVertexArray(const VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer* vertexBuffers, IIndexBuffer* indexBuffer = nullptr) = 0;
+			virtual ITextureBuffer* createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void* data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void* data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
+			virtual ITexture2DArray* createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void* data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
+			virtual IRootSignature* createRootSignature(const RootSignature& rootSignature) = 0;
+			virtual IPipelineState* createPipelineState(const PipelineState& pipelineState) = 0;
+			virtual ISamplerState* createSamplerState(const SamplerState& samplerState) = 0;
+			virtual bool map(IResource& resource, uint32_t subresource, MapType::Enum mapType, uint32_t mapFlags, MappedSubresource& mappedSubresource) = 0;
+			virtual void unmap(IResource& resource, uint32_t subresource) = 0;
+			virtual void setGraphicsRootSignature(IRootSignature* rootSignature) = 0;
 			virtual void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, IResource* resource) = 0;
-			virtual void setPipelineState(IPipelineState *pipelineState) = 0;
-			virtual void iaSetVertexArray(IVertexArray *vertexArray) = 0;
+			virtual void setPipelineState(IPipelineState* pipelineState) = 0;
+			virtual void iaSetVertexArray(IVertexArray* vertexArray) = 0;
 			virtual void iaSetPrimitiveTopology(PrimitiveTopology::Enum primitiveTopology) = 0;
-			virtual void rsSetViewports(uint32_t numberOfViewports, const Viewport *viewports) = 0;
-			virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle *scissorRectangles) = 0;
-			virtual IRenderTarget *omGetRenderTarget() = 0;
-			virtual void omSetRenderTarget(IRenderTarget *renderTarget) = 0;
+			virtual void rsSetViewports(uint32_t numberOfViewports, const Viewport* viewports) = 0;
+			virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles) = 0;
+			virtual IRenderTarget* omGetRenderTarget() = 0;
+			virtual void omSetRenderTarget(IRenderTarget* renderTarget) = 0;
 			virtual void clear(uint32_t flags, const float color[4], float z, uint32_t stencil) = 0;
 			virtual bool beginScene() = 0;
 			virtual void endScene() = 0;
@@ -1793,13 +1793,13 @@ namespace Renderer
 			virtual void flush() = 0;
 			virtual void finish() = 0;
 			virtual bool isDebugEnabled() = 0;
-			virtual void setDebugMarker(const wchar_t *name) = 0;
-			virtual void beginDebugEvent(const wchar_t *name) = 0;
+			virtual void setDebugMarker(const wchar_t* name) = 0;
+			virtual void beginDebugEvent(const wchar_t* name) = 0;
 			virtual void endDebugEvent() = 0;
 		protected:
 			IRenderer();
-			explicit IRenderer(const IRenderer &source);
-			IRenderer &operator =(const IRenderer &source);
+			explicit IRenderer(const IRenderer& source);
+			IRenderer& operator =(const IRenderer& source);
 		protected:
 			Capabilities mCapabilities;
 		private:
@@ -1815,42 +1815,42 @@ namespace Renderer
 		{
 		public:
 			virtual ~IShaderLanguage();
-			inline IRenderer &getRenderer() const
+			inline IRenderer& getRenderer() const
 			{
 				return *mRenderer;
 			}
-			inline IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader)
+			inline IProgram* createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, IFragmentShader* fragmentShader)
 			{
 				return createProgram(rootSignature, vertexAttributes, vertexShader, nullptr, nullptr, nullptr, fragmentShader);
 			}
-			inline IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader)
+			inline IProgram* createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, IGeometryShader* geometryShader, IFragmentShader* fragmentShader)
 			{
 				return createProgram(rootSignature, vertexAttributes, vertexShader, nullptr, nullptr, geometryShader, fragmentShader);
 			}
-			inline IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IFragmentShader *fragmentShader)
+			inline IProgram* createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, ITessellationControlShader* tessellationControlShader, ITessellationEvaluationShader* tessellationEvaluationShader, IFragmentShader* fragmentShader)
 			{
 				return createProgram(rootSignature, vertexAttributes, vertexShader, tessellationControlShader, tessellationEvaluationShader, nullptr, fragmentShader);
 			}
 		public:
-			virtual const char *getShaderLanguageName() const = 0;
-			virtual IVertexShader *createVertexShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes) = 0;
-			virtual IVertexShader *createVertexShaderFromSourceCode(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
-			virtual ITessellationControlShader *createTessellationControlShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes) = 0;
-			virtual ITessellationControlShader *createTessellationControlShaderFromSourceCode(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
-			virtual ITessellationEvaluationShader *createTessellationEvaluationShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes) = 0;
-			virtual ITessellationEvaluationShader *createTessellationEvaluationShaderFromSourceCode(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
-			virtual IGeometryShader *createGeometryShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes, GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) = 0;
-			virtual IGeometryShader *createGeometryShaderFromSourceCode(const char *sourceCode, GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
-			virtual IFragmentShader *createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes) = 0;
-			virtual IFragmentShader *createFragmentShaderFromSourceCode(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
-			virtual IProgram *createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, ITessellationControlShader *tessellationControlShader, ITessellationEvaluationShader *tessellationEvaluationShader, IGeometryShader *geometryShader, IFragmentShader *fragmentShader) = 0;
-			virtual IUniformBuffer *createUniformBuffer(uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual const char* getShaderLanguageName() const = 0;
+			virtual IVertexShader* createVertexShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
+			virtual IVertexShader* createVertexShaderFromSourceCode(const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
+			virtual ITessellationControlShader* createTessellationControlShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
+			virtual ITessellationControlShader* createTessellationControlShaderFromSourceCode(const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
+			virtual ITessellationEvaluationShader* createTessellationEvaluationShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
+			virtual ITessellationEvaluationShader* createTessellationEvaluationShaderFromSourceCode(const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
+			virtual IGeometryShader* createGeometryShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes, GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) = 0;
+			virtual IGeometryShader* createGeometryShaderFromSourceCode(const char* sourceCode, GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
+			virtual IFragmentShader* createFragmentShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
+			virtual IFragmentShader* createFragmentShaderFromSourceCode(const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
+			virtual IProgram* createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, ITessellationControlShader* tessellationControlShader, ITessellationEvaluationShader* tessellationEvaluationShader, IGeometryShader* geometryShader, IFragmentShader* fragmentShader) = 0;
+			virtual IUniformBuffer* createUniformBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
 		protected:
-			explicit IShaderLanguage(IRenderer &renderer);
-			explicit IShaderLanguage(const IShaderLanguage &source);
-			IShaderLanguage &operator =(const IShaderLanguage &source);
+			explicit IShaderLanguage(IRenderer& renderer);
+			explicit IShaderLanguage(const IShaderLanguage& source);
+			IShaderLanguage& operator =(const IShaderLanguage& source);
 		private:
-			IRenderer *mRenderer;
+			IRenderer* mRenderer;
 		};
 		typedef SmartRefCount<IShaderLanguage> IShaderLanguagePtr;
 	#endif
@@ -1866,19 +1866,19 @@ namespace Renderer
 			{
 				return mResourceType;
 			}
-			inline IRenderer &getRenderer() const
+			inline IRenderer& getRenderer() const
 			{
 				return *mRenderer;
 			}
 		public:
-			virtual void setDebugName(const char *name) = 0;
+			virtual void setDebugName(const char* name) = 0;
 		protected:
-			IResource(ResourceType::Enum resourceType, IRenderer &renderer);
-			explicit IResource(const IResource &source);
-			IResource &operator =(const IResource &source);
+			IResource(ResourceType::Enum resourceType, IRenderer& renderer);
+			explicit IResource(const IResource& source);
+			IResource& operator =(const IResource& source);
 		private:
 			ResourceType::Enum  mResourceType;
-			IRenderer		   *mRenderer;
+			IRenderer*			mRenderer;
 		};
 		typedef SmartRefCount<IResource> IResourcePtr;
 	#endif
@@ -1891,9 +1891,9 @@ namespace Renderer
 		public:
 			virtual ~IRootSignature();
 		protected:
-			explicit IRootSignature(IRenderer &renderer);
-			explicit IRootSignature(const IRootSignature &source);
-			IRootSignature &operator =(const IRootSignature &source);
+			explicit IRootSignature(IRenderer& renderer);
+			explicit IRootSignature(const IRootSignature& source);
+			IRootSignature& operator =(const IRootSignature& source);
 		};
 		typedef SmartRefCount<IRootSignature> IRootSignaturePtr;
 	#endif
@@ -1906,18 +1906,18 @@ namespace Renderer
 		public:
 			virtual ~IProgram();
 		public:
-			virtual handle getUniformHandle(const char *uniformName) = 0;
+			virtual handle getUniformHandle(const char* uniformName) = 0;
 			virtual void setUniform1i(handle uniformHandle, int value) = 0;
 			virtual void setUniform1f(handle uniformHandle, float value) = 0;
-			virtual void setUniform2fv(handle uniformHandle, const float *value) = 0;
-			virtual void setUniform3fv(handle uUniformHandle, const float *value) = 0;
-			virtual void setUniform4fv(handle uniformHandle, const float *value) = 0;
-			virtual void setUniformMatrix3fv(handle uniformHandle, const float *value) = 0;
-			virtual void setUniformMatrix4fv(handle uniformHandle, const float *value) = 0;
+			virtual void setUniform2fv(handle uniformHandle, const float* value) = 0;
+			virtual void setUniform3fv(handle uUniformHandle, const float* value) = 0;
+			virtual void setUniform4fv(handle uniformHandle, const float* value) = 0;
+			virtual void setUniformMatrix3fv(handle uniformHandle, const float* value) = 0;
+			virtual void setUniformMatrix4fv(handle uniformHandle, const float* value) = 0;
 		protected:
-			explicit IProgram(IRenderer &renderer);
-			explicit IProgram(const IProgram &source);
-			IProgram &operator =(const IProgram &source);
+			explicit IProgram(IRenderer& renderer);
+			explicit IProgram(const IProgram& source);
+			IProgram& operator =(const IProgram& source);
 		};
 		typedef SmartRefCount<IProgram> IProgramPtr;
 	#endif
@@ -1930,9 +1930,9 @@ namespace Renderer
 		public:
 			virtual ~IVertexArray();
 		protected:
-			explicit IVertexArray(IRenderer &renderer);
-			explicit IVertexArray(const IVertexArray &source);
-			IVertexArray &operator =(const IVertexArray &source);
+			explicit IVertexArray(IRenderer& renderer);
+			explicit IVertexArray(const IVertexArray& source);
+			IVertexArray& operator =(const IVertexArray& source);
 		};
 		typedef SmartRefCount<IVertexArray> IVertexArrayPtr;
 	#endif
@@ -1945,11 +1945,11 @@ namespace Renderer
 		public:
 			virtual ~IRenderTarget();
 		public:
-			virtual void getWidthAndHeight(uint32_t &width, uint32_t &height) const = 0;
+			virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const = 0;
 		protected:
-			IRenderTarget(ResourceType::Enum resourceType, IRenderer &renderer);
-			explicit IRenderTarget(const IRenderTarget &source);
-			IRenderTarget &operator =(const IRenderTarget &source);
+			IRenderTarget(ResourceType::Enum resourceType, IRenderer& renderer);
+			explicit IRenderTarget(const IRenderTarget& source);
+			IRenderTarget& operator =(const IRenderTarget& source);
 		};
 		typedef SmartRefCount<IRenderTarget> IRenderTargetPtr;
 	#endif
@@ -1968,9 +1968,9 @@ namespace Renderer
 			virtual bool getFullscreenState() const = 0;
 			virtual void setFullscreenState(bool fullscreen) = 0;
 		protected:
-			explicit ISwapChain(IRenderer &renderer);
-			explicit ISwapChain(const ISwapChain &source);
-			ISwapChain &operator =(const ISwapChain &source);
+			explicit ISwapChain(IRenderer& renderer);
+			explicit ISwapChain(const ISwapChain& source);
+			ISwapChain& operator =(const ISwapChain& source);
 		};
 		typedef SmartRefCount<ISwapChain> ISwapChainPtr;
 	#endif
@@ -1983,9 +1983,9 @@ namespace Renderer
 		public:
 			virtual ~IFramebuffer();
 		protected:
-			explicit IFramebuffer(IRenderer &renderer);
-			explicit IFramebuffer(const IFramebuffer &source);
-			IFramebuffer &operator =(const IFramebuffer &source);
+			explicit IFramebuffer(IRenderer& renderer);
+			explicit IFramebuffer(const IFramebuffer& source);
+			IFramebuffer& operator =(const IFramebuffer& source);
 		};
 		typedef SmartRefCount<IFramebuffer> IFramebufferPtr;
 	#endif
@@ -1998,9 +1998,9 @@ namespace Renderer
 		public:
 			virtual ~IBuffer();
 		protected:
-			IBuffer(ResourceType::Enum resourceType, IRenderer &renderer);
-			explicit IBuffer(const IBuffer &source);
-			IBuffer &operator =(const IBuffer &source);
+			IBuffer(ResourceType::Enum resourceType, IRenderer& renderer);
+			explicit IBuffer(const IBuffer& source);
+			IBuffer& operator =(const IBuffer& source);
 		};
 		typedef SmartRefCount<IBuffer> IBufferPtr;
 	#endif
@@ -2013,9 +2013,9 @@ namespace Renderer
 		public:
 			virtual ~IIndexBuffer();
 		protected:
-			explicit IIndexBuffer(IRenderer &renderer);
-			explicit IIndexBuffer(const IIndexBuffer &source);
-			IIndexBuffer &operator =(const IIndexBuffer &source);
+			explicit IIndexBuffer(IRenderer& renderer);
+			explicit IIndexBuffer(const IIndexBuffer& source);
+			IIndexBuffer& operator =(const IIndexBuffer& source);
 		};
 		typedef SmartRefCount<IIndexBuffer> IIndexBufferPtr;
 	#endif
@@ -2028,9 +2028,9 @@ namespace Renderer
 		public:
 			virtual ~IVertexBuffer();
 		protected:
-			explicit IVertexBuffer(IRenderer &renderer);
-			explicit IVertexBuffer(const IVertexBuffer &source);
-			IVertexBuffer &operator =(const IVertexBuffer &source);
+			explicit IVertexBuffer(IRenderer& renderer);
+			explicit IVertexBuffer(const IVertexBuffer& source);
+			IVertexBuffer& operator =(const IVertexBuffer& source);
 		};
 		typedef SmartRefCount<IVertexBuffer> IVertexBufferPtr;
 	#endif
@@ -2043,11 +2043,11 @@ namespace Renderer
 		public:
 			virtual ~IUniformBuffer();
 		public:
-			virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) = 0;
+			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
-			explicit IUniformBuffer(IRenderer &renderer);
-			explicit IUniformBuffer(const IUniformBuffer &source);
-			IUniformBuffer &operator =(const IUniformBuffer &source);
+			explicit IUniformBuffer(IRenderer& renderer);
+			explicit IUniformBuffer(const IUniformBuffer& source);
+			IUniformBuffer& operator =(const IUniformBuffer& source);
 		};
 		typedef SmartRefCount<IUniformBuffer> IUniformBufferPtr;
 	#endif
@@ -2060,9 +2060,9 @@ namespace Renderer
 		public:
 			virtual ~ITexture();
 		protected:
-			ITexture(ResourceType::Enum resourceType, IRenderer &renderer);
-			explicit ITexture(const ITexture &source);
-			ITexture &operator =(const ITexture &source);
+			ITexture(ResourceType::Enum resourceType, IRenderer& renderer);
+			explicit ITexture(const ITexture& source);
+			ITexture& operator =(const ITexture& source);
 		};
 		typedef SmartRefCount<ITexture> ITexturePtr;
 	#endif
@@ -2075,11 +2075,11 @@ namespace Renderer
 		public:
 			virtual ~ITextureBuffer();
 		public:
-			virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) = 0;
+			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
-			explicit ITextureBuffer(IRenderer &renderer);
-			explicit ITextureBuffer(const ITextureBuffer &source);
-			ITextureBuffer &operator =(const ITextureBuffer &source);
+			explicit ITextureBuffer(IRenderer& renderer);
+			explicit ITextureBuffer(const ITextureBuffer& source);
+			ITextureBuffer& operator =(const ITextureBuffer& source);
 		};
 		typedef SmartRefCount<ITextureBuffer> ITextureBufferPtr;
 	#endif
@@ -2100,9 +2100,9 @@ namespace Renderer
 				return mHeight;
 			}
 		protected:
-			ITexture2D(IRenderer &renderer, uint32_t width, uint32_t height);
-			explicit ITexture2D(const ITexture2D &source);
-			ITexture2D &operator =(const ITexture2D &source);
+			ITexture2D(IRenderer& renderer, uint32_t width, uint32_t height);
+			explicit ITexture2D(const ITexture2D& source);
+			ITexture2D& operator =(const ITexture2D& source);
 		private:
 			uint32_t mWidth;
 			uint32_t mHeight;
@@ -2130,9 +2130,9 @@ namespace Renderer
 				return mNumberOfSlices;
 			}
 		protected:
-			ITexture2DArray(IRenderer &renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices);
-			explicit ITexture2DArray(const ITexture2DArray &source);
-			ITexture2DArray &operator =(const ITexture2DArray &source);
+			ITexture2DArray(IRenderer& renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices);
+			explicit ITexture2DArray(const ITexture2DArray& source);
+			ITexture2DArray& operator =(const ITexture2DArray& source);
 		private:
 			uint32_t mWidth;
 			uint32_t mHeight;
@@ -2149,9 +2149,9 @@ namespace Renderer
 		public:
 			virtual ~IState();
 		protected:
-			IState(ResourceType::Enum resourceType, IRenderer &renderer);
-			explicit IState(const IState &source);
-			IState &operator =(const IState &source);
+			IState(ResourceType::Enum resourceType, IRenderer& renderer);
+			explicit IState(const IState& source);
+			IState& operator =(const IState& source);
 		};
 		typedef SmartRefCount<IState> IStatePtr;
 	#endif
@@ -2164,9 +2164,9 @@ namespace Renderer
 		public:
 			virtual ~IPipelineState();
 		protected:
-			explicit IPipelineState(IRenderer &renderer);
-			explicit IPipelineState(const IPipelineState &source);
-			IPipelineState &operator =(const IPipelineState &source);
+			explicit IPipelineState(IRenderer& renderer);
+			explicit IPipelineState(const IPipelineState& source);
+			IPipelineState& operator =(const IPipelineState& source);
 		};
 		typedef SmartRefCount<IPipelineState> IPipelineStatePtr;
 	#endif
@@ -2177,7 +2177,7 @@ namespace Renderer
 		class ISamplerState : public IState
 		{
 		public:
-			static inline const SamplerState &getDefaultSamplerState()
+			static inline const SamplerState& getDefaultSamplerState()
 			{
 				static const Renderer::SamplerState SAMPLER_STATE =
 				{
@@ -2202,9 +2202,9 @@ namespace Renderer
 		public:
 			virtual ~ISamplerState();
 		protected:
-			explicit ISamplerState(IRenderer &renderer);
-			explicit ISamplerState(const ISamplerState &source);
-			ISamplerState &operator =(const ISamplerState &source);
+			explicit ISamplerState(IRenderer& renderer);
+			explicit ISamplerState(const ISamplerState& source);
+			ISamplerState& operator =(const ISamplerState& source);
 		};
 		typedef SmartRefCount<ISamplerState> ISamplerStatePtr;
 	#endif
@@ -2217,11 +2217,11 @@ namespace Renderer
 		public:
 			virtual ~IShader();
 		public:
-			virtual const char *getShaderLanguageName() const = 0;
+			virtual const char* getShaderLanguageName() const = 0;
 		protected:
-			IShader(ResourceType::Enum resourceType, IRenderer &renderer);
-			explicit IShader(const IShader &source);
-			IShader &operator =(const IShader &source);
+			IShader(ResourceType::Enum resourceType, IRenderer& renderer);
+			explicit IShader(const IShader& source);
+			IShader& operator =(const IShader& source);
 		};
 		typedef SmartRefCount<IShader> IShaderPtr;
 	#endif
@@ -2234,9 +2234,9 @@ namespace Renderer
 		public:
 			virtual ~IVertexShader();
 		protected:
-			explicit IVertexShader(IRenderer &renderer);
-			explicit IVertexShader(const IVertexShader &source);
-			IVertexShader &operator =(const IVertexShader &source);
+			explicit IVertexShader(IRenderer& renderer);
+			explicit IVertexShader(const IVertexShader& source);
+			IVertexShader& operator =(const IVertexShader& source);
 		};
 		typedef SmartRefCount<IVertexShader> IVertexShaderPtr;
 	#endif
@@ -2249,9 +2249,9 @@ namespace Renderer
 		public:
 			virtual ~ITessellationControlShader();
 		protected:
-			explicit ITessellationControlShader(IRenderer &renderer);
-			explicit ITessellationControlShader(const ITessellationControlShader &source);
-			ITessellationControlShader &operator =(const ITessellationControlShader &source);
+			explicit ITessellationControlShader(IRenderer& renderer);
+			explicit ITessellationControlShader(const ITessellationControlShader& source);
+			ITessellationControlShader& operator =(const ITessellationControlShader& source);
 		};
 		typedef SmartRefCount<ITessellationControlShader> ITessellationControlShaderPtr;
 	#endif
@@ -2264,9 +2264,9 @@ namespace Renderer
 		public:
 			virtual ~ITessellationEvaluationShader();
 		protected:
-			explicit ITessellationEvaluationShader(IRenderer &renderer);
-			explicit ITessellationEvaluationShader(const ITessellationEvaluationShader &source);
-			ITessellationEvaluationShader &operator =(const ITessellationEvaluationShader &source);
+			explicit ITessellationEvaluationShader(IRenderer& renderer);
+			explicit ITessellationEvaluationShader(const ITessellationEvaluationShader& source);
+			ITessellationEvaluationShader& operator =(const ITessellationEvaluationShader& source);
 		};
 		typedef SmartRefCount<ITessellationEvaluationShader> ITessellationEvaluationShaderPtr;
 	#endif
@@ -2279,9 +2279,9 @@ namespace Renderer
 		public:
 			virtual ~IGeometryShader();
 		protected:
-			explicit IGeometryShader(IRenderer &renderer);
-			explicit IGeometryShader(const IGeometryShader &source);
-			IGeometryShader &operator =(const IGeometryShader &source);
+			explicit IGeometryShader(IRenderer& renderer);
+			explicit IGeometryShader(const IGeometryShader& source);
+			IGeometryShader& operator =(const IGeometryShader& source);
 		};
 		typedef SmartRefCount<IGeometryShader> IGeometryShaderPtr;
 	#endif
@@ -2294,9 +2294,9 @@ namespace Renderer
 		public:
 			virtual ~IFragmentShader();
 		protected:
-			explicit IFragmentShader(IRenderer &renderer);
-			explicit IFragmentShader(const IFragmentShader &source);
-			IFragmentShader &operator =(const IFragmentShader &source);
+			explicit IFragmentShader(IRenderer& renderer);
+			explicit IFragmentShader(const IFragmentShader& source);
+			IFragmentShader& operator =(const IFragmentShader& source);
 		};
 		typedef SmartRefCount<IFragmentShader> IFragmentShaderPtr;
 	#endif

@@ -37,7 +37,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Direct3D12Renderer &direct3D12Renderer, handle nativeWindowHandle) :
+	SwapChain::SwapChain(Direct3D12Renderer& direct3D12Renderer, handle nativeWindowHandle) :
 		ISwapChain(direct3D12Renderer),
 		mDxgiSwapChain3(nullptr),
 		mD3D12DescriptorHeapRenderTargetView(nullptr),
@@ -55,7 +55,7 @@ namespace Direct3D12Renderer
 		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);
 
 		// Get our IDXGI factory instance
-		IDXGIFactory4 &dxgiFactory4 = direct3D12Renderer.getDxgiFactory4Safe();
+		IDXGIFactory4& dxgiFactory4 = direct3D12Renderer.getDxgiFactory4Safe();
 
 		// Get the width and height of the given native window and ensure they are never ever zero
 		// -> See "getSafeWidthAndHeight()"-method comments for details
@@ -236,7 +236,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	void SwapChain::getWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain3)
@@ -390,7 +390,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void SwapChain::getSafeWidthAndHeight(uint32_t &width, uint32_t &height) const
+	void SwapChain::getSafeWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
 		// Get the Direct3D 12 swap chain description
 		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
