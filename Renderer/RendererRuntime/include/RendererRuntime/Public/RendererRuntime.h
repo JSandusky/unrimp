@@ -53,6 +53,7 @@ namespace RendererRuntime
 	class SkeletonResourceManager;
 	class MaterialResourceManager;
 	class CompositorResourceManager;
+	class MaterialBlueprintResourceManager;
 }
 
 
@@ -97,6 +98,10 @@ namespace RendererRuntime
 		{
 			return *mShaderResourceManager;
 		}
+		inline MaterialBlueprintResourceManager& getMaterialBlueprintResourceManager() const
+		{
+			return *mMaterialBlueprintResourceManager;
+		}
 		inline MaterialResourceManager& getMaterialResourceManager() const
 		{
 			return *mMaterialResourceManager;
@@ -129,17 +134,18 @@ namespace RendererRuntime
 		explicit IRendererRuntime(const IRendererRuntime &source);
 		IRendererRuntime &operator =(const IRendererRuntime &source);
 	private:
-		Renderer::IRenderer*		mRenderer;
-		AssetManager*				mAssetManager;
-		ResourceStreamer*			mResourceStreamer;
-		TextureResourceManager*		mTextureResourceManager;
-		ShaderResourceManager*		mShaderResourceManager;
-		MaterialResourceManager*	mMaterialResourceManager;
-		FontResourceManager*		mFontResourceManager;
-		SkeletonResourceManager*	mSkeletonResourceManager;
-		MeshResourceManager*		mMeshResourceManager;
-		SceneResourceManager*		mSceneResourceManager;
-		CompositorResourceManager*	mCompositorResourceManager;
+		Renderer::IRenderer*				mRenderer;
+		AssetManager*						mAssetManager;
+		ResourceStreamer*					mResourceStreamer;
+		TextureResourceManager*				mTextureResourceManager;
+		ShaderResourceManager*				mShaderResourceManager;
+		MaterialBlueprintResourceManager*	mMaterialBlueprintResourceManager;
+		MaterialResourceManager*			mMaterialResourceManager;
+		FontResourceManager*				mFontResourceManager;
+		SkeletonResourceManager*			mSkeletonResourceManager;
+		MeshResourceManager*				mMeshResourceManager;
+		SceneResourceManager*				mSceneResourceManager;
+		CompositorResourceManager*			mCompositorResourceManager;
 	};
 	typedef Renderer::SmartRefCount<IRendererRuntime> IRendererRuntimePtr;
 

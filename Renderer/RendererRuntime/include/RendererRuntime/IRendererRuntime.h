@@ -55,6 +55,7 @@ namespace RendererRuntime
 	class MaterialResourceManager;
 	class SkeletonResourceManager;
 	class CompositorResourceManager;
+	class MaterialBlueprintResourceManager;
 }
 
 
@@ -149,6 +150,15 @@ namespace RendererRuntime
 		*    The shader resource manager instance, do not release the returned instance
 		*/
 		inline ShaderResourceManager& getShaderResourceManager() const;
+
+		/**
+		*  @brief
+		*    Return the material blueprint resource manager instance
+		*
+		*  @return
+		*    The material blueprint resource manager instance, do not release the returned instance
+		*/
+		inline MaterialBlueprintResourceManager& getMaterialBlueprintResourceManager() const;
 
 		/**
 		*  @brief
@@ -280,16 +290,17 @@ namespace RendererRuntime
 		// Managers
 		AssetManager* mAssetManager;
 		// Resource
-		ResourceStreamer*			mResourceStreamer;
-		TextureResourceManager*		mTextureResourceManager;
-		ShaderResourceManager*		mShaderResourceManager;
-		MaterialResourceManager*	mMaterialResourceManager;
-		FontResourceManager*		mFontResourceManager;
-		SkeletonResourceManager*	mSkeletonResourceManager;
-		MeshResourceManager*		mMeshResourceManager;
-		SceneResourceManager*		mSceneResourceManager;
-		CompositorResourceManager*	mCompositorResourceManager;
-		ResourceManagers			mResourceManagers;
+		ResourceStreamer*					mResourceStreamer;
+		TextureResourceManager*				mTextureResourceManager;
+		ShaderResourceManager*				mShaderResourceManager;
+		MaterialBlueprintResourceManager*	mMaterialBlueprintResourceManager;
+		MaterialResourceManager*			mMaterialResourceManager;
+		FontResourceManager*				mFontResourceManager;
+		SkeletonResourceManager*			mSkeletonResourceManager;
+		MeshResourceManager*				mMeshResourceManager;
+		SceneResourceManager*				mSceneResourceManager;
+		CompositorResourceManager*			mCompositorResourceManager;
+		ResourceManagers					mResourceManagers;
 
 
 	};

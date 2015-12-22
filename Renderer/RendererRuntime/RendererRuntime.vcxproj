@@ -105,6 +105,8 @@
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\Loader\MaterialResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshFileFormat.h" />
@@ -185,6 +187,7 @@
     <ClCompile Include="src\Resource\Font\Loader\FontResourceLoader.cpp" />
     <ClCompile Include="src\Resource\IResource.cpp" />
     <ClCompile Include="src\Resource\IResourceManager.cpp" />
+    <ClCompile Include="src\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp" />
     <ClCompile Include="src\Resource\Mesh\Loader\MeshResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Mesh\MeshResource.cpp" />

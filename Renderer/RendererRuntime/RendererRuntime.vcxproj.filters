@@ -104,6 +104,12 @@
     <Filter Include="Source Files\Resource\Skeleton\Loader">
       <UniqueIdentifier>{77c4e926-a1fc-4e05-b527-e4ada8ad1691}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\MaterialBlueprint">
+      <UniqueIdentifier>{ffe703e0-afb7-4618-8812-4fffdec0dedd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\MaterialBlueprint\Loader">
+      <UniqueIdentifier>{f55c1486-c1de-43aa-ba88-fc1ac29e1d9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -489,6 +495,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\Skeleton\Loader\SkeletonResourceLoader.h">
       <Filter>Source Files\Resource\Skeleton\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.h">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -670,6 +682,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Skeleton\SkeletonResourceManager.cpp">
       <Filter>Source Files\Resource\Skeleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
