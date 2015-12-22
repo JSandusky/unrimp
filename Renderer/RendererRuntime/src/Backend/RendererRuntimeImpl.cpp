@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/Font/FontResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Scene/SceneResourceManager.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Shader/ShaderResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
@@ -105,6 +106,7 @@ namespace RendererRuntime
 		// Create the resource manager instances
 		mResourceStreamer = new ResourceStreamer(*this);
 		mTextureResourceManager = new TextureResourceManager(*this);
+		mShaderBlueprintResourceManager = new ShaderBlueprintResourceManager(*this);
 		mShaderResourceManager = new ShaderResourceManager(*this);
 		mMaterialBlueprintResourceManager = new MaterialBlueprintResourceManager(*this);
 		mMaterialResourceManager = new MaterialResourceManager(*this);
@@ -116,6 +118,7 @@ namespace RendererRuntime
 
 		// Register the resource managers inside the resource managers list
 		mResourceManagers.push_back(mTextureResourceManager);
+		mResourceManagers.push_back(mShaderBlueprintResourceManager);
 		mResourceManagers.push_back(mShaderResourceManager);
 		mResourceManagers.push_back(mMaterialBlueprintResourceManager);
 		mResourceManagers.push_back(mMaterialResourceManager);

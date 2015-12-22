@@ -53,6 +53,7 @@ namespace RendererRuntime
 	class SkeletonResourceManager;
 	class MaterialResourceManager;
 	class CompositorResourceManager;
+	class ShaderBlueprintResourceManager;
 	class MaterialBlueprintResourceManager;
 }
 
@@ -93,6 +94,10 @@ namespace RendererRuntime
 		inline TextureResourceManager& getTextureResourceManager() const
 		{
 			return *mTextureResourceManager;
+		}
+		inline ShaderBlueprintResourceManager& getShaderBlueprintResourceManager() const
+		{
+			return *mShaderBlueprintResourceManager;
 		}
 		inline ShaderResourceManager& getShaderResourceManager() const
 		{
@@ -138,6 +143,7 @@ namespace RendererRuntime
 		AssetManager*						mAssetManager;
 		ResourceStreamer*					mResourceStreamer;
 		TextureResourceManager*				mTextureResourceManager;
+		ShaderBlueprintResourceManager*		mShaderBlueprintResourceManager;
 		ShaderResourceManager*				mShaderResourceManager;
 		MaterialBlueprintResourceManager*	mMaterialBlueprintResourceManager;
 		MaterialResourceManager*			mMaterialResourceManager;

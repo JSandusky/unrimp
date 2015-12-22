@@ -110,6 +110,12 @@
     <Filter Include="Source Files\Resource\MaterialBlueprint\Loader">
       <UniqueIdentifier>{f55c1486-c1de-43aa-ba88-fc1ac29e1d9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\ShaderBlueprint">
+      <UniqueIdentifier>{6f81f782-9b78-4e97-9f64-44f6d31a943e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\ShaderBlueprint\Loader">
+      <UniqueIdentifier>{225441b9-6043-474b-8eda-a32108dffbbb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -215,6 +221,9 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Scene\ISceneResource.inl">
       <Filter>Source Files\Resource\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.inl">
+      <Filter>Source Files\Resource\ShaderBlueprint\Loader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -501,6 +510,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.h">
       <Filter>Source Files\Resource\MaterialBlueprint\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.h">
+      <Filter>Source Files\Resource\ShaderBlueprint</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.h">
+      <Filter>Source Files\Resource\ShaderBlueprint\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -685,6 +700,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.cpp">
+      <Filter>Source Files\Resource\ShaderBlueprint</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
