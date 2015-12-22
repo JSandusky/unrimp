@@ -683,6 +683,27 @@ namespace OpenGLRenderer
 								// No extension check required, if we in here we already know it must exist
 								glBindMultiTextureEXT(unit, GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
 								break;
+
+							case Renderer::ResourceType::ROOT_SIGNATURE:
+							case Renderer::ResourceType::PROGRAM:
+							case Renderer::ResourceType::VERTEX_ARRAY:
+							case Renderer::ResourceType::SWAP_CHAIN:
+							case Renderer::ResourceType::FRAMEBUFFER:
+							case Renderer::ResourceType::INDEX_BUFFER:
+							case Renderer::ResourceType::VERTEX_BUFFER:
+							case Renderer::ResourceType::UNIFORM_BUFFER:
+							case Renderer::ResourceType::PIPELINE_STATE:
+							case Renderer::ResourceType::RASTERIZER_STATE:
+							case Renderer::ResourceType::DEPTH_STENCIL_STATE:
+							case Renderer::ResourceType::BLEND_STATE:
+							case Renderer::ResourceType::SAMPLER_STATE:
+							case Renderer::ResourceType::VERTEX_SHADER:
+							case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+							case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+							case Renderer::ResourceType::GEOMETRY_SHADER:
+							case Renderer::ResourceType::FRAGMENT_SHADER:
+								RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Invalid resource type")
+								break;
 						}
 
 						{ // Set the OpenGL sampler states
@@ -758,6 +779,27 @@ namespace OpenGLRenderer
 									// No extension check required, if we in here we already know it must exist
 									glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
 									break;
+
+								case Renderer::ResourceType::ROOT_SIGNATURE:
+								case Renderer::ResourceType::PROGRAM:
+								case Renderer::ResourceType::VERTEX_ARRAY:
+								case Renderer::ResourceType::SWAP_CHAIN:
+								case Renderer::ResourceType::FRAMEBUFFER:
+								case Renderer::ResourceType::INDEX_BUFFER:
+								case Renderer::ResourceType::VERTEX_BUFFER:
+								case Renderer::ResourceType::UNIFORM_BUFFER:
+								case Renderer::ResourceType::PIPELINE_STATE:
+								case Renderer::ResourceType::RASTERIZER_STATE:
+								case Renderer::ResourceType::DEPTH_STENCIL_STATE:
+								case Renderer::ResourceType::BLEND_STATE:
+								case Renderer::ResourceType::SAMPLER_STATE:
+								case Renderer::ResourceType::VERTEX_SHADER:
+								case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+								case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+								case Renderer::ResourceType::GEOMETRY_SHADER:
+								case Renderer::ResourceType::FRAGMENT_SHADER:
+									RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Invalid resource type")
+									break;
 							}
 
 							{ // Set the OpenGL sampler states
@@ -797,6 +839,25 @@ namespace OpenGLRenderer
 					mGraphicsRootSignature->setSamplerState(descriptorRange->samplerRootParameterIndex, static_cast<SamplerState*>(resource));
 					break;
 				}
+
+				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::PROGRAM:
+				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::SWAP_CHAIN:
+				case Renderer::ResourceType::FRAMEBUFFER:
+				case Renderer::ResourceType::INDEX_BUFFER:
+				case Renderer::ResourceType::VERTEX_BUFFER:
+				case Renderer::ResourceType::PIPELINE_STATE:
+				case Renderer::ResourceType::RASTERIZER_STATE:
+				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
+				case Renderer::ResourceType::BLEND_STATE:
+				case Renderer::ResourceType::VERTEX_SHADER:
+				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+				case Renderer::ResourceType::GEOMETRY_SHADER:
+				case Renderer::ResourceType::FRAGMENT_SHADER:
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Invalid resource type")
+					break;
 			}
 		}
 		else
@@ -1050,6 +1111,7 @@ namespace OpenGLRenderer
 						break;
 					}
 
+					case Renderer::ResourceType::ROOT_SIGNATURE:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -1058,6 +1120,7 @@ namespace OpenGLRenderer
 					case Renderer::ResourceType::TEXTURE_BUFFER:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::PIPELINE_STATE:
 					case Renderer::ResourceType::RASTERIZER_STATE:
 					case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 					case Renderer::ResourceType::BLEND_STATE:

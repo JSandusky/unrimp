@@ -658,6 +658,27 @@ namespace Direct3D12Renderer
 					}
 					break;
 				}
+
+				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::PROGRAM:
+				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::SWAP_CHAIN:
+				case Renderer::ResourceType::FRAMEBUFFER:
+				case Renderer::ResourceType::INDEX_BUFFER:
+				case Renderer::ResourceType::VERTEX_BUFFER:
+				case Renderer::ResourceType::TEXTURE_BUFFER:
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::PIPELINE_STATE:
+				case Renderer::ResourceType::RASTERIZER_STATE:
+				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
+				case Renderer::ResourceType::BLEND_STATE:
+				case Renderer::ResourceType::VERTEX_SHADER:
+				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+				case Renderer::ResourceType::GEOMETRY_SHADER:
+				case Renderer::ResourceType::FRAGMENT_SHADER:
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Invalid resource type")
+					break;
 			}
 		}
 		else
@@ -799,6 +820,7 @@ namespace Direct3D12Renderer
 						break;
 					}
 
+					case Renderer::ResourceType::ROOT_SIGNATURE:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -807,6 +829,7 @@ namespace Direct3D12Renderer
 					case Renderer::ResourceType::TEXTURE_BUFFER:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::PIPELINE_STATE:
 					case Renderer::ResourceType::RASTERIZER_STATE:
 					case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 					case Renderer::ResourceType::BLEND_STATE:
@@ -900,6 +923,7 @@ namespace Direct3D12Renderer
 						break;
 					}
 
+					case Renderer::ResourceType::ROOT_SIGNATURE:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -908,6 +932,7 @@ namespace Direct3D12Renderer
 					case Renderer::ResourceType::TEXTURE_BUFFER:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::PIPELINE_STATE:
 					case Renderer::ResourceType::RASTERIZER_STATE:
 					case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 					case Renderer::ResourceType::BLEND_STATE:
@@ -1017,6 +1042,7 @@ namespace Direct3D12Renderer
 					break;
 				}
 
+				case Renderer::ResourceType::ROOT_SIGNATURE:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
 				case Renderer::ResourceType::INDEX_BUFFER:
@@ -1025,6 +1051,7 @@ namespace Direct3D12Renderer
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::PIPELINE_STATE:
 				case Renderer::ResourceType::RASTERIZER_STATE:
 				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 				case Renderer::ResourceType::BLEND_STATE:
@@ -1407,7 +1434,9 @@ namespace Direct3D12Renderer
 				break;
 
 			case D3D_FEATURE_LEVEL_11_0:
+			case D3D_FEATURE_LEVEL_11_1:
 			case D3D_FEATURE_LEVEL_12_0:
+			case D3D_FEATURE_LEVEL_12_1:
 				// Maximum number of viewports (always at least 1)
 				// TODO(co) Direct3D 12 update
 				//mCapabilities.maximumNumberOfViewports = D3D12_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;

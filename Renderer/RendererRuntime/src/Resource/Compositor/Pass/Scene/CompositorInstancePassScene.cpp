@@ -40,6 +40,7 @@
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
 	#pragma warning(disable: 4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
 	#include <glm/gtc/type_ptr.hpp>
 	#include <glm/gtc/matrix_transform.hpp>
 	#include <glm/gtx/quaternion.hpp>

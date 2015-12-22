@@ -124,6 +124,7 @@ namespace OpenGLRenderer
 							break;
 						}
 
+						case Renderer::ResourceType::ROOT_SIGNATURE:
 						case Renderer::ResourceType::PROGRAM:
 						case Renderer::ResourceType::VERTEX_ARRAY:
 						case Renderer::ResourceType::SWAP_CHAIN:
@@ -133,6 +134,7 @@ namespace OpenGLRenderer
 						case Renderer::ResourceType::UNIFORM_BUFFER:
 						case Renderer::ResourceType::TEXTURE_BUFFER:
 						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+						case Renderer::ResourceType::PIPELINE_STATE:
 						case Renderer::ResourceType::RASTERIZER_STATE:
 						case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 						case Renderer::ResourceType::BLEND_STATE:
@@ -177,6 +179,7 @@ namespace OpenGLRenderer
 					break;
 				}
 
+				case Renderer::ResourceType::ROOT_SIGNATURE:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
 				case Renderer::ResourceType::SWAP_CHAIN:
@@ -186,6 +189,7 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::UNIFORM_BUFFER:
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::PIPELINE_STATE:
 				case Renderer::ResourceType::RASTERIZER_STATE:
 				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 				case Renderer::ResourceType::BLEND_STATE:

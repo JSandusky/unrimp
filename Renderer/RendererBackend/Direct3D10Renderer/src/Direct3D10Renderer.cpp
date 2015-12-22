@@ -480,10 +480,12 @@ namespace Direct3D10Renderer
 				return result;
 			}
 
+			case Renderer::ResourceType::ROOT_SIGNATURE:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
 			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::RASTERIZER_STATE:
 			case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 			case Renderer::ResourceType::BLEND_STATE:
@@ -571,10 +573,12 @@ namespace Direct3D10Renderer
 				break;
 			}
 
+			case Renderer::ResourceType::ROOT_SIGNATURE:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
 			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::RASTERIZER_STATE:
 			case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 			case Renderer::ResourceType::BLEND_STATE:
@@ -715,6 +719,27 @@ namespace Direct3D10Renderer
 						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 							d3d10ShaderResourceView = static_cast<Texture2DArray*>(resource)->getD3D10ShaderResourceView();
 							break;
+
+						case Renderer::ResourceType::ROOT_SIGNATURE:
+						case Renderer::ResourceType::PROGRAM:
+						case Renderer::ResourceType::VERTEX_ARRAY:
+						case Renderer::ResourceType::SWAP_CHAIN:
+						case Renderer::ResourceType::FRAMEBUFFER:
+						case Renderer::ResourceType::INDEX_BUFFER:
+						case Renderer::ResourceType::VERTEX_BUFFER:
+						case Renderer::ResourceType::UNIFORM_BUFFER:
+						case Renderer::ResourceType::PIPELINE_STATE:
+						case Renderer::ResourceType::RASTERIZER_STATE:
+						case Renderer::ResourceType::DEPTH_STENCIL_STATE:
+						case Renderer::ResourceType::BLEND_STATE:
+						case Renderer::ResourceType::SAMPLER_STATE:
+						case Renderer::ResourceType::VERTEX_SHADER:
+						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+						case Renderer::ResourceType::GEOMETRY_SHADER:
+						case Renderer::ResourceType::FRAGMENT_SHADER:
+							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Invalid resource type")
+							break;
 					}
 					const UINT startSlot = descriptorRange->baseShaderRegister;
 					switch (rootParameter.shaderVisibility)
@@ -784,6 +809,25 @@ namespace Direct3D10Renderer
 					}
 					break;
 				}
+
+				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::PROGRAM:
+				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::SWAP_CHAIN:
+				case Renderer::ResourceType::FRAMEBUFFER:
+				case Renderer::ResourceType::INDEX_BUFFER:
+				case Renderer::ResourceType::VERTEX_BUFFER:
+				case Renderer::ResourceType::PIPELINE_STATE:
+				case Renderer::ResourceType::RASTERIZER_STATE:
+				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
+				case Renderer::ResourceType::BLEND_STATE:
+				case Renderer::ResourceType::VERTEX_SHADER:
+				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+				case Renderer::ResourceType::GEOMETRY_SHADER:
+				case Renderer::ResourceType::FRAGMENT_SHADER:
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Invalid resource type")
+					break;
 			}
 		}
 		else
@@ -940,6 +984,7 @@ namespace Direct3D10Renderer
 						break;
 					}
 
+					case Renderer::ResourceType::ROOT_SIGNATURE:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -948,6 +993,7 @@ namespace Direct3D10Renderer
 					case Renderer::ResourceType::TEXTURE_BUFFER:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::PIPELINE_STATE:
 					case Renderer::ResourceType::RASTERIZER_STATE:
 					case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 					case Renderer::ResourceType::BLEND_STATE:
@@ -1061,6 +1107,7 @@ namespace Direct3D10Renderer
 					break;
 				}
 
+				case Renderer::ResourceType::ROOT_SIGNATURE:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
 				case Renderer::ResourceType::INDEX_BUFFER:
@@ -1069,6 +1116,7 @@ namespace Direct3D10Renderer
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::PIPELINE_STATE:
 				case Renderer::ResourceType::RASTERIZER_STATE:
 				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 				case Renderer::ResourceType::BLEND_STATE:

@@ -232,11 +232,14 @@ namespace RendererRuntime
 					// Get the shader source code (outsourced to keep an overview)
 					const char *vertexShaderSourceCode = nullptr;
 					const char *fragmentShaderSourceCode = nullptr;
-					#include "../Resource/Font/Shader/Font_GLSL_110.h"
-					#include "../Resource/Font/Shader/Font_GLSL_ES2.h"
-					#include "../Resource/Font/Shader/Font_HLSL_D3D9.h"
-					#include "../Resource/Font/Shader/Font_HLSL_D3D10_D3D11_D3D12.h"
-					#include "../Resource/Font/Shader/Font_Null.h"
+					#pragma warning(push)
+						#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+						#include "../Resource/Font/Shader/Font_GLSL_110.h"
+						#include "../Resource/Font/Shader/Font_GLSL_ES2.h"
+						#include "../Resource/Font/Shader/Font_HLSL_D3D9.h"
+						#include "../Resource/Font/Shader/Font_HLSL_D3D10_D3D11_D3D12.h"
+						#include "../Resource/Font/Shader/Font_Null.h"
+					#pragma warning(pop)
 
 					// Create the program
 					program = shaderLanguage->createProgram(

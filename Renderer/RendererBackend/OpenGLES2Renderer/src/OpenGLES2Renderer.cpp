@@ -481,6 +481,26 @@ namespace OpenGLES2Renderer
 					mGraphicsRootSignature->setSamplerState(descriptorRange->samplerRootParameterIndex, static_cast<SamplerState*>(resource));
 					break;
 				}
+
+				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::PROGRAM:
+				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::SWAP_CHAIN:
+				case Renderer::ResourceType::FRAMEBUFFER:
+				case Renderer::ResourceType::INDEX_BUFFER:
+				case Renderer::ResourceType::VERTEX_BUFFER:
+				case Renderer::ResourceType::UNIFORM_BUFFER:
+				case Renderer::ResourceType::PIPELINE_STATE:
+				case Renderer::ResourceType::RASTERIZER_STATE:
+				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
+				case Renderer::ResourceType::BLEND_STATE:
+				case Renderer::ResourceType::VERTEX_SHADER:
+				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+				case Renderer::ResourceType::GEOMETRY_SHADER:
+				case Renderer::ResourceType::FRAGMENT_SHADER:
+					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 2 error: Invalid resource type")
+					break;
 			}
 		}
 		else
@@ -739,6 +759,7 @@ namespace OpenGLES2Renderer
 						break;
 					}
 
+					case Renderer::ResourceType::ROOT_SIGNATURE:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -747,6 +768,7 @@ namespace OpenGLES2Renderer
 					case Renderer::ResourceType::TEXTURE_BUFFER:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::PIPELINE_STATE:
 					case Renderer::ResourceType::RASTERIZER_STATE:
 					case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 					case Renderer::ResourceType::BLEND_STATE:

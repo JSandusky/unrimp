@@ -495,6 +495,7 @@ namespace Direct3D9Renderer
 				return result;
 			}
 
+			case Renderer::ResourceType::ROOT_SIGNATURE:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -502,6 +503,7 @@ namespace Direct3D9Renderer
 			case Renderer::ResourceType::UNIFORM_BUFFER:
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::RASTERIZER_STATE:
 			case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 			case Renderer::ResourceType::BLEND_STATE:
@@ -539,6 +541,7 @@ namespace Direct3D9Renderer
 				static_cast<Texture2D&>(resource).getDirect3DTexture9()->UnlockRect(subresource);
 				break;
 
+			case Renderer::ResourceType::ROOT_SIGNATURE:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -546,6 +549,7 @@ namespace Direct3D9Renderer
 			case Renderer::ResourceType::UNIFORM_BUFFER:
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::RASTERIZER_STATE:
 			case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 			case Renderer::ResourceType::BLEND_STATE:
@@ -736,6 +740,26 @@ namespace Direct3D9Renderer
 					mGraphicsRootSignature->setSamplerState(descriptorRange->samplerRootParameterIndex, static_cast<SamplerState*>(resource));
 					break;
 				}
+
+				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::PROGRAM:
+				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::SWAP_CHAIN:
+				case Renderer::ResourceType::FRAMEBUFFER:
+				case Renderer::ResourceType::INDEX_BUFFER:
+				case Renderer::ResourceType::VERTEX_BUFFER:
+				case Renderer::ResourceType::UNIFORM_BUFFER:
+				case Renderer::ResourceType::PIPELINE_STATE:
+				case Renderer::ResourceType::RASTERIZER_STATE:
+				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
+				case Renderer::ResourceType::BLEND_STATE:
+				case Renderer::ResourceType::VERTEX_SHADER:
+				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+				case Renderer::ResourceType::GEOMETRY_SHADER:
+				case Renderer::ResourceType::FRAGMENT_SHADER:
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Invalid resource type")
+					break;
 			}
 		}
 		else
@@ -936,6 +960,7 @@ namespace Direct3D9Renderer
 						break;
 					}
 
+					case Renderer::ResourceType::ROOT_SIGNATURE:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -944,6 +969,7 @@ namespace Direct3D9Renderer
 					case Renderer::ResourceType::TEXTURE_BUFFER:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::PIPELINE_STATE:
 					case Renderer::ResourceType::RASTERIZER_STATE:
 					case Renderer::ResourceType::DEPTH_STENCIL_STATE:
 					case Renderer::ResourceType::BLEND_STATE:

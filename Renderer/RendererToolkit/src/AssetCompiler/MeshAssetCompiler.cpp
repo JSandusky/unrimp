@@ -28,6 +28,7 @@
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
+	#pragma warning(disable: 4061)	// warning C4061: enumerator 'FORCE_32BIT' in switch of enum 'aiMetadataType' is not explicitly handled by a case label
 	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
 	#include <assimp/scene.h>
 	#include <assimp/Importer.hpp>
@@ -38,6 +39,7 @@
 #pragma warning(push)
 	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 	#pragma warning(disable: 4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
 	#include <glm/glm.hpp>
 	#include <glm/gtc/quaternion.hpp>
 #pragma warning(pop)
