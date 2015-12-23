@@ -26,7 +26,6 @@
 #include "RendererToolkit/AssetCompiler/FontAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/SceneAssetCompiler.h"
-#include "RendererToolkit/AssetCompiler/ShaderAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/SkeletonAssetCompiler.h"
@@ -165,15 +164,6 @@ namespace RendererToolkit
 		else if (TextureAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
 			TextureAssetCompiler().compile(input, configuration, output);
-		}
-		else if (ShaderAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			// TODO(co) Due to the HLSL compiler usage, this is currently MS Windows only (maybe there are Linux HLSL cross-compilers?)
-			#ifdef WIN32
-				ShaderAssetCompiler().compile(input, configuration, output);
-			#else
-				#error "Unsupported platform"
-			#endif
 		}
 		else if (ShaderBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{

@@ -106,8 +106,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_static\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MTd_StaticDebug\;..\..\External\Windows_x86\HLSLCrossCompiler\lib\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeStaticD.lib;RendererToolkitStaticD.lib;zlibstatic.lib;PocoFoundationmtd.lib;freetype_MultiThreadedd.lib;assimpStaticD.lib;libtiff.lib;crnlibD.lib;libHLSLcc_MultiThreadedd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_static\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MTd_StaticDebug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeStaticD.lib;RendererToolkitStaticD.lib;zlibstatic.lib;PocoFoundationmtd.lib;freetype_MultiThreadedd.lib;assimpStaticD.lib;libtiff.lib;crnlibD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMT</IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -181,8 +181,8 @@ copy "..\..\External\Windows_x86\POCO\bin\PocoJSONd.dll" "..\..\bin\$(PlatformTa
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MT_StaticRelease\;..\..\External\Windows_x86\HLSLCrossCompiler\lib\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeStatic.lib;RendererToolkitStatic.lib;zlibstatic.lib;PocoFoundationmt.lib;freetype_MultiThreaded.lib;assimpStatic.lib;libtiff.lib;crnlib.lib;libHLSLcc_MultiThreaded.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\POCO\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MT_StaticRelease\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeStatic.lib;RendererToolkitStatic.lib;zlibstatic.lib;PocoFoundationmt.lib;freetype_MultiThreaded.lib;assimpStatic.lib;libtiff.lib;crnlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
