@@ -312,8 +312,8 @@ namespace RendererToolkit
 		// Open the input and output file
 		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
-		const std::string assetFilename = assetOutputDirectory + assetName + ".mesh";
-		std::ofstream ofstream(assetFilename, std::ios::binary);
+		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".mesh";
+		std::ofstream ofstream(outputAssetFilename, std::ios::binary);
 
 		// Get file size and file data
 		ifstream.seekg(0, std::ifstream::end);
@@ -435,7 +435,7 @@ namespace RendererToolkit
 			// Output asset
 			RendererRuntime::Asset outputAsset;
 			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
-			strcpy(outputAsset.assetFilename, assetFilename.c_str());	// TODO(co) Buffer overflow test
+			strcpy(outputAsset.assetFilename, outputAssetFilename.c_str());	// TODO(co) Buffer overflow test
 			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 		}
 	}

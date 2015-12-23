@@ -86,8 +86,11 @@ namespace RendererToolkit
 		// Open the input file
 		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
-		const std::string assetFilename = assetOutputDirectory + assetName + ".shader_blueprint";
-		std::ofstream ofstream(assetFilename, std::ios::binary);
+		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".shader_blueprint";
+		std::ofstream ofstream(outputAssetFilename, std::ios::binary);
+
+		// TODO(co) At the moment, we just copy over the ASCII shader source code. Later on, we might want to perform optimizations like
+		// stripping away all comments and unnecessary white spaces.
 
 		// TODO(co) Implement me
 
@@ -98,7 +101,7 @@ namespace RendererToolkit
 			// Output asset
 			RendererRuntime::Asset outputAsset;
 			outputAsset.assetId = RendererRuntime::StringId(assetIdAsString.c_str());
-			strcpy(outputAsset.assetFilename, assetFilename.c_str());	// TODO(co) Buffer overflow test
+			strcpy(outputAsset.assetFilename, outputAssetFilename.c_str());	// TODO(co) Buffer overflow test
 			outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 		}
 	}
