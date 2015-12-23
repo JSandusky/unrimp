@@ -55,12 +55,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	FontResource::~FontResource()
-	{
-		// Destroy the glyph texture atlas
-		destroyGlyphTextureAtlas();
-	}
-
 	float FontResource::getTextWidth(const char *text)
 	{
 		float width = 0.0f;

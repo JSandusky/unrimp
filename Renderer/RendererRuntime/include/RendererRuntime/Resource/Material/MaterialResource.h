@@ -27,18 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/IResourceLoader.h"
-#include "RendererRuntime/Asset/Asset.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class RendererRuntimeImpl;
-	class MaterialBlueprintResource;
-}
+#include "RendererRuntime/Resource/IResource.h"
 
 
 //[-------------------------------------------------------]
@@ -51,52 +40,46 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MaterialBlueprintResourceLoader : protected IResourceLoader
+	/**
+	*  @brief
+	*    Material resource
+	*/
+	class MaterialResource : public IResource
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class MaterialBlueprintResourceManager;
+		friend class MaterialResourceLoader;
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		static const ResourceLoaderTypeId TYPE_ID;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
-		virtual void onDeserialization() override;
-		virtual void onProcessing() override;
-		virtual void onRendererBackendDispatch() override;
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] resourceId
+		*    Resource ID
+		*/
+		explicit MaterialResource(ResourceId resourceId);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~MaterialResource();
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline MaterialBlueprintResourceLoader(IResourceManager& resourceManager, RendererRuntimeImpl& rendererRuntimeImpl);
-		inline virtual ~MaterialBlueprintResourceLoader();
-		MaterialBlueprintResourceLoader(const MaterialBlueprintResourceLoader&) = delete;
-		MaterialBlueprintResourceLoader& operator=(const MaterialBlueprintResourceLoader&) = delete;
-		inline void initialize(const Asset& asset, MaterialBlueprintResource& materialBlueprintResource);
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		RendererRuntimeImpl& mRendererRuntimeImpl;	///< Renderer runtime implementation instance, do not destroy the instance
-		// Resource source and destination
-		Asset					   mAsset;		///< In order to be multi-threading safe in here, we need an asset copy
-		MaterialBlueprintResource* mMaterialBlueprintResource;
+		MaterialResource(const MaterialResource&) = delete;
+		MaterialResource& operator=(const MaterialResource&) = delete;
 
 
 	};
@@ -111,4 +94,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.inl"
+#include "RendererRuntime/Resource/Material/MaterialResource.inl"

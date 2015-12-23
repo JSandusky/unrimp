@@ -28,6 +28,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline FontResource::~FontResource()
+	{
+		// Destroy the glyph texture atlas
+		destroyGlyphTextureAtlas();
+	}
+
 	inline uint32_t FontResource::getSize() const
 	{
 		return mSize;

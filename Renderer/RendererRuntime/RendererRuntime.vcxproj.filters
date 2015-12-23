@@ -222,6 +222,18 @@
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.inl">
       <Filter>Source Files\Resource\ShaderBlueprint\Loader</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Material\MaterialResource.inl">
+      <Filter>Source Files\Resource\Material</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResource.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Material\Loader\MaterialResourceLoader.inl">
+      <Filter>Source Files\Resource\Material\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint\Loader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -513,6 +525,18 @@
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.h">
       <Filter>Source Files\Resource\ShaderBlueprint\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResource.h">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResource.h">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Material\Loader\MaterialFileFormat.h">
+      <Filter>Source Files\Resource\Material\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintFileFormat.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -700,6 +724,18 @@
     </ClCompile>
     <ClCompile Include="src\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.cpp">
       <Filter>Source Files\Resource\ShaderBlueprint</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Material\MaterialResource.cpp">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\MaterialBlueprintResource.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Material\Loader\MaterialResourceLoader.cpp">
+      <Filter>Source Files\Resource\Material\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint\Loader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -28,6 +28,17 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/IResourceLoader.h"
+#include "RendererRuntime/Asset/Asset.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class MaterialResource;
+	class RendererRuntimeImpl;
+}
 
 
 //[-------------------------------------------------------]
@@ -71,10 +82,21 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline MaterialResourceLoader(IResourceManager& resourceManager) {}
-		inline virtual ~MaterialResourceLoader() {}
+		inline MaterialResourceLoader(IResourceManager& resourceManager, RendererRuntimeImpl& rendererRuntimeImpl);
+		inline virtual ~MaterialResourceLoader();
 		MaterialResourceLoader(const MaterialResourceLoader&) = delete;
 		MaterialResourceLoader& operator=(const MaterialResourceLoader&) = delete;
+		inline void initialize(const Asset& asset, MaterialResource& materialResource);
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		RendererRuntimeImpl& mRendererRuntimeImpl;	///< Renderer runtime implementation instance, do not destroy the instance
+		// Resource source and destination
+		Asset			  mAsset;		///< In order to be multi-threading safe in here, we need an asset copy
+		MaterialResource* mMaterialResource;
 
 
 	};
@@ -84,3 +106,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Material/Loader/MaterialResourceLoader.inl"
