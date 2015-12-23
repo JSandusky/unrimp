@@ -141,7 +141,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline IShader(ResourceType::Enum resourceType, IRenderer &renderer);
+		inline IShader(ResourceType resourceType, IRenderer &renderer);
 
 		/**
 		*  @brief

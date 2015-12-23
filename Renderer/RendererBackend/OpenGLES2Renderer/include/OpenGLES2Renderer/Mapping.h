@@ -70,7 +70,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 magnification filter mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2MagFilterMode(Renderer::FilterMode::Enum filterMode);
+		static int getOpenGLES2MagFilterMode(Renderer::FilterMode filterMode);
 
 		/**
 		*  @brief
@@ -84,7 +84,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 minification filter mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2MinFilterMode(Renderer::FilterMode::Enum filterMode, bool hasMipmaps);
+		static int getOpenGLES2MinFilterMode(Renderer::FilterMode filterMode, bool hasMipmaps);
 
 		/**
 		*  @brief
@@ -96,7 +96,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 compare mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2CompareMode(Renderer::FilterMode::Enum filterMode);
+		static int getOpenGLES2CompareMode(Renderer::FilterMode filterMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureAddressMode                          ]
@@ -111,7 +111,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 texture address mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2TextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode);
+		static int getOpenGLES2TextureAddressMode(Renderer::TextureAddressMode textureAddressMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::ComparisonFunc                              ]
@@ -126,7 +126,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 comparison function (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2ComparisonFunc(Renderer::ComparisonFunc::Enum comparisonFunc);
+		static int getOpenGLES2ComparisonFunc(Renderer::ComparisonFunc comparisonFunc);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::VertexAttributeFormat                       ]
@@ -141,7 +141,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 size (number of elements, type GLint not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES2Size(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
+		static int getOpenGLES2Size(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
 		/**
 		*  @brief
@@ -153,7 +153,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2Type(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
+		static uint32_t getOpenGLES2Type(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]
@@ -168,7 +168,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 usage (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2Type(Renderer::BufferUsage::Enum bufferUsage);
+		static uint32_t getOpenGLES2Type(Renderer::BufferUsage bufferUsage);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]
@@ -237,7 +237,7 @@ namespace OpenGLES2Renderer
 		*  @return
 		*    OpenGL ES 2 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLES2Type(Renderer::PrimitiveTopology::Enum primitive);
+		static uint32_t getOpenGLES2Type(Renderer::PrimitiveTopology primitive);
 
 
 	};

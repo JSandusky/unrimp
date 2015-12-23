@@ -44,7 +44,7 @@ namespace
 		{
 			{ // Attribute 0
 				// Data destination
-				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 				"Position",									// name[32] (char)
 				"POSITION",									// semanticName[32] (char)
 				0,											// semanticIndex (uint32_t)
@@ -56,7 +56,7 @@ namespace
 			},
 			{ // Attribute 1
 				// Data destination
-				Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 				"TexCoord",									// name[32] (char)
 				"TEXCOORD",									// semanticName[32] (char)
 				0,											// semanticIndex (uint32_t)
@@ -68,7 +68,7 @@ namespace
 			},
 			{ // Attribute 2
 				// Data destination
-				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 				"Normal",									// name[32] (char)
 				"NORMAL",									// semanticName[32] (char)
 				0,											// semanticIndex (uint32_t)

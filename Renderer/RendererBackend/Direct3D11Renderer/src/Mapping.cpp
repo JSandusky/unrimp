@@ -35,7 +35,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t Mapping::getDirect3D11Format(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat)
+	uint32_t Mapping::getDirect3D11Format(Renderer::VertexAttributeFormat vertexAttributeFormat)
 	{
 		// DXGI_FORMAT
 		static const uint32_t MAPPING[] =
@@ -48,10 +48,10 @@ namespace Direct3D11Renderer
 			DXGI_FORMAT_R16G16_SINT,		// Renderer::VertexAttributeFormat::SHORT_2
 			DXGI_FORMAT_R16G16B16A16_SINT	// Renderer::VertexAttributeFormat::SHORT_4
 		};
-		return MAPPING[vertexAttributeFormat];
+		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	uint32_t Mapping::getDirect3D11UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum bufferUsage, uint32_t &cpuAccessFlags)
+	uint32_t Mapping::getDirect3D11UsageAndCPUAccessFlags(Renderer::BufferUsage bufferUsage, uint32_t &cpuAccessFlags)
 	{
 		// Direct3D 11 only supports a subset of the OpenGL usage indications
 		// -> See "D3D11_USAGE enumeration "-documentation at http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259%28v=vs.85%29.aspx

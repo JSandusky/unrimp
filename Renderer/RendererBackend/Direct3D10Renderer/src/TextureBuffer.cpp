@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	TextureBuffer::TextureBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage) :
 		ITextureBuffer(direct3D10Renderer),
 		mD3D10Buffer(nullptr),
 		mD3D10ShaderResourceViewTexture(nullptr)

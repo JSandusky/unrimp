@@ -40,19 +40,19 @@ namespace Renderer
 
 		// Return default values
 		static const RasterizerState RASTERIZER_STATE =
-		{																															//	Direct3D 11	Direct3D 10	Direct3D 9		OpenGL
-			FillMode::SOLID,					// fillMode (Renderer::FillMode::Enum)												"SOLID"			"SOLID"		"SOLID"			"SOLID"
-			CullMode::BACK,						// cullMode (Renderer::CullMode::Enum)												"BACK"			"Back"		"BACK" (CCW)	"BACK"
-			false,								// frontCounterClockwise (int)														"false"			"false"		"false" (CCW)	"true"
-			0,									// depthBias (int)																	"0"				"0"			"0"				TODO(co)
-			0.0f,								// depthBiasClamp (float)															"0.0f"			"0.0f"		<unsupported>	TODO(co)
-			0.0f,								// slopeScaledDepthBias (float)														"0.0f"			"0.0f"		"0.0f"			TODO(co)
-			true,								// depthClipEnable (int)															"true"			"true"		<unsupported>	TODO(co)
-			false,								// multisampleEnable (int)															"false"			"false"		"true"			"true"
-			false,								// antialiasedLineEnable (int)														"false"			"false"		"false"			"false"
+		{																														//	Direct3D 11	Direct3D 10	Direct3D 9		OpenGL
+			FillMode::SOLID,					// fillMode (Renderer::FillMode)												"SOLID"			"SOLID"		"SOLID"			"SOLID"
+			CullMode::BACK,						// cullMode (Renderer::CullMode)												"BACK"			"Back"		"BACK" (CCW)	"BACK"
+			false,								// frontCounterClockwise (int)													"false"			"false"		"false" (CCW)	"true"
+			0,									// depthBias (int)																"0"				"0"			"0"				TODO(co)
+			0.0f,								// depthBiasClamp (float)														"0.0f"			"0.0f"		<unsupported>	TODO(co)
+			0.0f,								// slopeScaledDepthBias (float)													"0.0f"			"0.0f"		"0.0f"			TODO(co)
+			true,								// depthClipEnable (int)														"true"			"true"		<unsupported>	TODO(co)
+			false,								// multisampleEnable (int)														"false"			"false"		"true"			"true"
+			false,								// antialiasedLineEnable (int)													"false"			"false"		"false"			"false"
 			0,									// forcedSampleCount (unsigned int)
-			ConservativeRasterizationMode::OFF,	// conservativeRasterizationMode (Renderer::ConservativeRasterizationMode::Enum)
-			false								// scissorEnable (int)																"false"			"false"		"false"			"false"
+			ConservativeRasterizationMode::OFF,	// conservativeRasterizationMode (Renderer::ConservativeRasterizationMode)
+			false								// scissorEnable (int)															"false"			"false"		"false"			"false"
 		};
 		return RASTERIZER_STATE;
 	}

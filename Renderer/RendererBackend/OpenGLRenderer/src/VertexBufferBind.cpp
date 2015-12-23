@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBufferBind::VertexBufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	VertexBufferBind::VertexBufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
 		VertexBuffer(openGLRenderer)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
@@ -48,7 +48,7 @@ namespace OpenGLRenderer
 		// Bind this OpenGL array buffer and upload the data
 		glBindBufferARB(GL_ARRAY_BUFFER_ARB, mOpenGLArrayBuffer);
 		// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
-		glBufferDataARB(GL_ARRAY_BUFFER_ARB, static_cast<GLsizeiptrARB>(numberOfBytes), data, bufferUsage);
+		glBufferDataARB(GL_ARRAY_BUFFER_ARB, static_cast<GLsizeiptrARB>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL array buffer

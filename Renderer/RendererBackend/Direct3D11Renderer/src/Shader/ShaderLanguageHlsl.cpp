@@ -150,7 +150,7 @@ namespace Direct3D11Renderer
 		return new TessellationEvaluationShaderHlsl(getDirect3D11Renderer(), sourceCode);
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, const char *, const char *, const char *)
 	{
 		// Ignore "gsInputPrimitiveTopology", it's directly set within HLSL
 		// Ignore "gsOutputPrimitiveTopology", it's directly set within HLSL
@@ -160,7 +160,7 @@ namespace Direct3D11Renderer
 		return new GeometryShaderHlsl(getDirect3D11Renderer(), bytecode, numberOfBytes);
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromSourceCode(const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromSourceCode(const char *sourceCode, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, const char *, const char *, const char *)
 	{
 		// Ignore "gsInputPrimitiveTopology", it's directly set within HLSL
 		// Ignore "gsOutputPrimitiveTopology", it's directly set within HLSL
@@ -246,7 +246,7 @@ namespace Direct3D11Renderer
 		return nullptr;
 	}
 
-	Renderer::IUniformBuffer *ShaderLanguageHlsl::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IUniformBuffer *ShaderLanguageHlsl::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
 	{
 		return new UniformBuffer(getDirect3D11Renderer(), numberOfBytes, data, bufferUsage);
 	}

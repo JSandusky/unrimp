@@ -37,7 +37,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBufferBind::TextureBufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	TextureBufferBind::TextureBufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage) :
 		TextureBuffer(openGLRenderer)
 	{
 		{ // Buffer part
@@ -50,7 +50,7 @@ namespace OpenGLRenderer
 			// Bind this OpenGL texture buffer and upload the data
 			glBindBufferARB(GL_TEXTURE_BUFFER_ARB, mOpenGLTextureBuffer);
 			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
-			glBufferDataARB(GL_TEXTURE_BUFFER_ARB, static_cast<GLsizeiptrARB>(numberOfBytes), data, bufferUsage);
+			glBufferDataARB(GL_TEXTURE_BUFFER_ARB, static_cast<GLsizeiptrARB>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 
 			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 				// Be polite and restore the previous bound OpenGL texture buffer

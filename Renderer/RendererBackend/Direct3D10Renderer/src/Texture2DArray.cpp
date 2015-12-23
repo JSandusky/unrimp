@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DArray::Texture2DArray(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage) :
+	Texture2DArray::Texture2DArray(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture2DArray(direct3D10Renderer, width, height, numberOfSlices),
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{

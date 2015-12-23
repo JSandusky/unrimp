@@ -40,23 +40,23 @@ namespace Renderer
 		// Return default values
 		static const DepthStencilState DEPTH_STENCIL_STATE =
 		{																				//	Direct3D 11		Direct3D 10	Direct3D 9				OpenGL
-			true,						// depthEnable (int)								"true"			"true"		"true"					TODO(co)
-			DepthWriteMask::ALL,		// depthWriteMask (Renderer::DepthWriteMask::Enum)	"ALL"			"ALL"		"ALL"					TODO(co)
-			ComparisonFunc::LESS,		// depthFunc (Renderer::ComparisonFunc::Enum)		"LESS"			"LESS"		"LESS_EQUAL"			TODO(co)
-			false,						// stencilEnable (int)								"false"			"false"		"false"					TODO(co)
-			0xff,						// stencilReadMask (uint8_t)						"0xff"			"0xff"		"0xffffffff"			TODO(co)
-			0xff,						// stencilWriteMask (uint8_t)						"0xff"			"0xff"		"0xffffffff"			TODO(co)
+			true,						// depthEnable (int)							"true"			"true"		"true"					TODO(co)
+			DepthWriteMask::ALL,		// depthWriteMask (Renderer::DepthWriteMask)	"ALL"			"ALL"		"ALL"					TODO(co)
+			ComparisonFunc::LESS,		// depthFunc (Renderer::ComparisonFunc)			"LESS"			"LESS"		"LESS_EQUAL"			TODO(co)
+			false,						// stencilEnable (int)							"false"			"false"		"false"					TODO(co)
+			0xff,						// stencilReadMask (uint8_t)					"0xff"			"0xff"		"0xffffffff"			TODO(co)
+			0xff,						// stencilWriteMask (uint8_t)					"0xff"			"0xff"		"0xffffffff"			TODO(co)
 			{ // sFrontFace (Renderer::DepthStencilOpDesc)
-				StencilOp::KEEP,		// stencilFailOp (Renderer::StencilOp::Enum)		"KEEP"			"KEEP"		"KEEP" (both sides)		TODO(co)
-				StencilOp::KEEP,		// stencilDepthFailOp (Renderer::StencilOp::Enum)	"KEEP"			"KEEP"		"KEEP" (both sides)		TODO(co)
-				StencilOp::KEEP,		// stencilPassOp (Renderer::StencilOp::Enum)		"KEEP"			"KEEP"		"KEEP" (both sides)		TODO(co)
-				ComparisonFunc::ALWAYS	// stencilFunc (Renderer::ComparisonFunc::Enum)		"ALWAYS"		"ALWAYS"	"ALWAYS" (both sides)
+				StencilOp::KEEP,		// stencilFailOp (Renderer::StencilOp			"KEEP"			"KEEP"		"KEEP" (both sides)		TODO(co)
+				StencilOp::KEEP,		// stencilDepthFailOp (Renderer::StencilOp)		"KEEP"			"KEEP"		"KEEP" (both sides)		TODO(co)
+				StencilOp::KEEP,		// stencilPassOp (Renderer::StencilOp)			"KEEP"			"KEEP"		"KEEP" (both sides)		TODO(co)
+				ComparisonFunc::ALWAYS	// stencilFunc (Renderer::ComparisonFunc)		"ALWAYS"		"ALWAYS"	"ALWAYS" (both sides)
 			},
 			{ // sBackFace (Renderer::DepthStencilOpDesc)
-				StencilOp::KEEP,		// stencilFailOp (Renderer::StencilOp::Enum)		"KEEP"			"KEEP"		"KEEP" (both sides)		TODO(co)
-				StencilOp::KEEP,		// stencilDepthFailOp (Renderer::StencilOp::Enum)	"KEEP"			"KEEP"		"KEEP" (both sides)		TODO(co)
-				StencilOp::KEEP,		// stencilPassOp (Renderer::StencilOp::Enum)		"KEEP"			"KEEP"		"KEEP" (both sides)		TODO(co)
-				ComparisonFunc::ALWAYS	// stencilFunc (Renderer::ComparisonFunc::Enum)		"ALWAYS"		"ALWAYS"	"ALWAYS" (both sides)	TODO(co)
+				StencilOp::KEEP,		// stencilFailOp (Renderer::StencilOp)			"KEEP"			"KEEP"		"KEEP" (both sides)		TODO(co)
+				StencilOp::KEEP,		// stencilDepthFailOp (Renderer::StencilOp)		"KEEP"			"KEEP"		"KEEP" (both sides)		TODO(co)
+				StencilOp::KEEP,		// stencilPassOp (Renderer::StencilOp)			"KEEP"			"KEEP"		"KEEP" (both sides)		TODO(co)
+				ComparisonFunc::ALWAYS	// stencilFunc (Renderer::ComparisonFunc)		"ALWAYS"		"ALWAYS"	"ALWAYS" (both sides)	TODO(co)
 			}
 		};
 		return DEPTH_STENCIL_STATE;

@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBufferGlslBind::UniformBufferGlslBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	UniformBufferGlslBind::UniformBufferGlslBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
 		UniformBufferGlsl(openGLRenderer)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
@@ -48,7 +48,7 @@ namespace OpenGLRenderer
 		// Bind this OpenGL uniform buffer and upload the data
 		glBindBufferARB(GL_UNIFORM_BUFFER, mOpenGLUniformBuffer);
 		// -> Usage: These constants directly map to GL_ARB_vertex_buffer_object and OpenGL ES 2 constants, do not change them
-		glBufferDataARB(GL_UNIFORM_BUFFER, static_cast<GLsizeiptrARB>(numberOfBytes), data, bufferUsage);
+		glBufferDataARB(GL_UNIFORM_BUFFER, static_cast<GLsizeiptrARB>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL uniform buffer

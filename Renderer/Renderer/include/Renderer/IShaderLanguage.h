@@ -379,7 +379,7 @@ namespace Renderer
 		*      highly recommended to provide this information anyway to be able to switch the internal implementation (e.g. using
 		*      OpenGL instead of Direct3D)
 		*/
-		virtual IGeometryShader *createGeometryShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes, GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
+		virtual IGeometryShader *createGeometryShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
 
 		/**
 		*  @brief
@@ -414,7 +414,7 @@ namespace Renderer
 		*  @see
 		*    - "Renderer::IShaderLanguage::createVertexShader()" for more information
 		*/
-		virtual IGeometryShader *createGeometryShaderFromSourceCode(const char *sourceCode, GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
+		virtual IGeometryShader *createGeometryShaderFromSourceCode(const char *sourceCode, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
 
 		/**
 		*  @brief
@@ -507,7 +507,7 @@ namespace Renderer
 		*  @note
 		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
 		*/
-		virtual IUniformBuffer *createUniformBuffer(uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
+		virtual IUniformBuffer *createUniformBuffer(uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
 
 
 	//[-------------------------------------------------------]

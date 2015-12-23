@@ -251,12 +251,12 @@ namespace OpenGLES2Renderer
 		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
 	}
 
-	Renderer::IVertexBuffer *OpenGLES2Renderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IVertexBuffer *OpenGLES2Renderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
 	{
 		return new VertexBuffer(*this, numberOfBytes, data, bufferUsage);
 	}
 
-	Renderer::IIndexBuffer *OpenGLES2Renderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IIndexBuffer *OpenGLES2Renderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage)
 	{
 		return new IndexBuffer(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
 	}
@@ -278,13 +278,13 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	Renderer::ITextureBuffer *OpenGLES2Renderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage::Enum)
+	Renderer::ITextureBuffer *OpenGLES2Renderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage)
 	{
 		// OpenGL ES 2 has no texture buffer support
 		return nullptr;
 	}
 
-	Renderer::ITexture2D *OpenGLES2Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITexture2D *OpenGLES2Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 2 has no texture usage indication
 
@@ -299,7 +299,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	Renderer::ITexture2DArray *OpenGLES2Renderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum)
+	Renderer::ITexture2DArray *OpenGLES2Renderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 2 has no texture usage indication
 
@@ -333,7 +333,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool OpenGLES2Renderer::map(Renderer::IResource &, uint32_t, Renderer::MapType::Enum, uint32_t, Renderer::MappedSubresource &)
+	bool OpenGLES2Renderer::map(Renderer::IResource &, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource &)
 	{
 		// TODO(co) Implement me
 		return false;
@@ -413,7 +413,7 @@ namespace OpenGLES2Renderer
 			// Check the type of resource to set
 			// TODO(co) Some additional resource type root signature security checks in debug build?
 			// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
-			const Renderer::ResourceType::Enum resourceType = resource->getResourceType();
+			const Renderer::ResourceType resourceType = resource->getResourceType();
 			switch (resourceType)
 			{
 				case Renderer::ResourceType::TEXTURE_BUFFER:
@@ -617,7 +617,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	void OpenGLES2Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology::Enum primitiveTopology)
+	void OpenGLES2Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
 	{
 		// Map and backup the set OpenGL ES 2 primitive topology
 		mOpenGLES2PrimitiveTopology = Mapping::getOpenGLES2Type(primitiveTopology);

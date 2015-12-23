@@ -40,98 +40,98 @@ namespace Renderer
 		// Return default values
 		// TODO(co) Finish default state comments
 		static const BlendState BLEND_STATE =
-		{																															//	Direct3D 11	Direct3D 10	Direct3D 9			OpenGL
-			false,							// alphaToCoverageEnable (int)																"false"			"false"
-			false,							// independentBlendEnable (int)																"false"			"false"
+		{																																//	Direct3D 11	Direct3D 10	Direct3D 9			OpenGL
+			false,								// alphaToCoverageEnable (int)																"false"			"false"
+			false,								// independentBlendEnable (int)																"false"			"false"
 			
 			{ // renderTarget[8]
 				// renderTarget[0]
 				{ 
-					false,					// blendEnable (int)																		"false"			"false"
-					Blend::ONE,				// srcBlend (Renderer::Blend)																"ONE"			"ONE"
-					Blend::ZERO,			// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
-					Blend::ONE,				// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
-					Blend::ZERO,			// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
-					ColorWriteEnable::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnable"-flags		"ALL"			"ALL"
+					false,						// blendEnable (int)																		"false"			"false"
+					Blend::ONE,					// srcBlend (Renderer::Blend)																"ONE"			"ONE"
+					Blend::ZERO,				// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
+					Blend::ONE,					// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
+					Blend::ZERO,				// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
+					ColorWriteEnableFlag::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnableFlag"-flags	"ALL"			"ALL"
 				},
 				// renderTarget[1]
 				{
-					false,					// blendEnable (int)																		"false"			"false"
-					Blend::ONE,				// srcBlend (Renderer::Blend)																"ONE"			"ONE"
-					Blend::ZERO,			// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
-					Blend::ONE,				// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
-					Blend::ZERO,			// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
-					ColorWriteEnable::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnable"-flags		"ALL"			"ALL"
+					false,						// blendEnable (int)																		"false"			"false"
+					Blend::ONE,					// srcBlend (Renderer::Blend)																"ONE"			"ONE"
+					Blend::ZERO,				// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
+					Blend::ONE,					// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
+					Blend::ZERO,				// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
+					ColorWriteEnableFlag::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnableFlag"-flags	"ALL"			"ALL"
 				},
 				// renderTarget[2]
 				{
-					false,					// blendEnable (int)																		"false"			"false"
-					Blend::ONE,				// srcBlend (Renderer::Blend)																"ONE"			"ONE"
-					Blend::ZERO,			// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
-					Blend::ONE,				// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
-					Blend::ZERO,			// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
-					ColorWriteEnable::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnable"-flags		"ALL"			"ALL"
+					false,						// blendEnable (int)																		"false"			"false"
+					Blend::ONE,					// srcBlend (Renderer::Blend)																"ONE"			"ONE"
+					Blend::ZERO,				// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
+					Blend::ONE,					// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
+					Blend::ZERO,				// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
+					ColorWriteEnableFlag::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnableFlag"-flags	"ALL"			"ALL"
 				},
 				// renderTarget[3]
 				{
-					false,					// blendEnable (int)																		"false"			"false"
-					Blend::ONE,				// srcBlend (Renderer::Blend)																"ONE"			"ONE"
-					Blend::ZERO,			// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
-					Blend::ONE,				// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
-					Blend::ZERO,			// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
-					ColorWriteEnable::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnable"-flags		"ALL"			"ALL"
+					false,						// blendEnable (int)																		"false"			"false"
+					Blend::ONE,					// srcBlend (Renderer::Blend)																"ONE"			"ONE"
+					Blend::ZERO,				// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
+					Blend::ONE,					// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
+					Blend::ZERO,				// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
+					ColorWriteEnableFlag::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnableFlag"-flags	"ALL"			"ALL"
 				},
 				// renderTarget[4]
 				{
-					false,					// blendEnable (int)																		"false"			"false"
-					Blend::ONE,				// srcBlend (Renderer::Blend)																"ONE"			"ONE"
-					Blend::ZERO,			// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
-					Blend::ONE,				// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
-					Blend::ZERO,			// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
-					ColorWriteEnable::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnable"-flags		"ALL"			"ALL"
+					false,						// blendEnable (int)																		"false"			"false"
+					Blend::ONE,					// srcBlend (Renderer::Blend)																"ONE"			"ONE"
+					Blend::ZERO,				// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
+					Blend::ONE,					// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
+					Blend::ZERO,				// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
+					ColorWriteEnableFlag::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnableFlag"-flags	"ALL"			"ALL"
 				},
 				// renderTarget[5]
 				{
-					false,					// blendEnable (int)																		"false"			"false"
-					Blend::ONE,				// srcBlend (Renderer::Blend)																"ONE"			"ONE"
-					Blend::ZERO,			// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
-					Blend::ONE,				// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
-					Blend::ZERO,			// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
-					ColorWriteEnable::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnable"-flags		"ALL"			"ALL"
+					false,						// blendEnable (int)																		"false"			"false"
+					Blend::ONE,					// srcBlend (Renderer::Blend)																"ONE"			"ONE"
+					Blend::ZERO,				// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
+					Blend::ONE,					// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
+					Blend::ZERO,				// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
+					ColorWriteEnableFlag::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnableFlag"-flags	"ALL"			"ALL"
 				},
 				// renderTarget[6]
 				{
-					false,					// blendEnable (int)																		"false"			"false"
-					Blend::ONE,				// srcBlend (Renderer::Blend)																"ONE"			"ONE"
-					Blend::ZERO,			// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
-					Blend::ONE,				// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
-					Blend::ZERO,			// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
-					ColorWriteEnable::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnable"-flags		"ALL"			"ALL"
+					false,						// blendEnable (int)																		"false"			"false"
+					Blend::ONE,					// srcBlend (Renderer::Blend)																"ONE"			"ONE"
+					Blend::ZERO,				// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
+					Blend::ONE,					// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
+					Blend::ZERO,				// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
+					ColorWriteEnableFlag::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnableFlag"-flags	"ALL"			"ALL"
 				},
 				// renderTarget[7]
 				{
-					false,					// blendEnable (int)																		"false"			"false"
-					Blend::ONE,				// srcBlend (Renderer::Blend)																"ONE"			"ONE"
-					Blend::ZERO,			// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
-					Blend::ONE,				// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
-					Blend::ZERO,			// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
-					BlendOp::ADD,			// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
-					ColorWriteEnable::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnable"-flags		"ALL"			"ALL"
+					false,						// blendEnable (int)																		"false"			"false"
+					Blend::ONE,					// srcBlend (Renderer::Blend)																"ONE"			"ONE"
+					Blend::ZERO,				// destBlend (Renderer::Blend)																"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOp (Renderer::BlendOp)																"ADD"			"ADD"
+					Blend::ONE,					// srcBlendAlpha (Renderer::Blend)															"ONE"			"ONE"
+					Blend::ZERO,				// destBlendAlpha (Renderer::Blend)															"ZERO"			"ZERO"
+					BlendOp::ADD,				// blendOpAlpha (Renderer::BlendOp)															"ADD"			"ADD"
+					ColorWriteEnableFlag::ALL,	// renderTargetWriteMask (uint8_t), combination of "Renderer::ColorWriteEnableFlag"-flags	"ALL"			"ALL"
 				},
 			},
 		};

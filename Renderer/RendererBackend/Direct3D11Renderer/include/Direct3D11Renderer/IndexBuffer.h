@@ -79,7 +79,7 @@ namespace Direct3D11Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		IndexBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		IndexBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief

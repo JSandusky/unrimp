@@ -64,16 +64,13 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_PRIMITIVE_TOPOLOGY_TYPE"-documentation for details
 	*/
-	struct PrimitiveTopologyType
+	enum class PrimitiveTopologyType
 	{
-		enum Enum
-		{
-			UNDEFINED	= 0,	///< The shader has not been initialized with an input primitive type
-			POINT		= 1,	///< Interpret the input primitive as a point
-			LINE		= 2,	///< Interpret the input primitive as a line
-			TRIANGLE	= 3,	///< Interpret the input primitive as a triangle
-			PATCH		= 4		///< Interpret the input primitive as a control point patch
-		};
+		UNDEFINED	= 0,	///< The shader has not been initialized with an input primitive type
+		POINT		= 1,	///< Interpret the input primitive as a point
+		LINE		= 2,	///< Interpret the input primitive as a line
+		TRIANGLE	= 3,	///< Interpret the input primitive as a triangle
+		PATCH		= 4		///< Interpret the input primitive as a control point patch
 	};
 
 	/**
@@ -85,16 +82,16 @@ namespace Renderer
 	*/
 	struct PipelineState
 	{
-		IRootSignature*				rootSignature;				///< Root signature (pipeline state instances keep a reference to the program), must be valid
-		IProgram*					program;					///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
-		VertexAttributes			vertexAttributes;			///< Vertex attributes
-		PrimitiveTopologyType::Enum	primitiveTopologyType;		///< Primitive topology type
-		RasterizerState				rasterizerState;			///< Rasterizer state
-		DepthStencilState			depthStencilState;			///< Depth stencil state
-		BlendState					blendState;					///< Blend state
-		uint32_t					numberOfRenderTargets;		///< Number of render targets
-		TextureFormat::Enum			renderTargetViewFormats[8];	///< Render target view formats
-		TextureFormat::Enum			depthStencilViewFormat;		///< Depth stencil view formats
+		IRootSignature*			rootSignature;				///< Root signature (pipeline state instances keep a reference to the program), must be valid
+		IProgram*				program;					///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
+		VertexAttributes		vertexAttributes;			///< Vertex attributes
+		PrimitiveTopologyType	primitiveTopologyType;		///< Primitive topology type
+		RasterizerState			rasterizerState;			///< Rasterizer state
+		DepthStencilState		depthStencilState;			///< Depth stencil state
+		BlendState				blendState;					///< Blend state
+		uint32_t				numberOfRenderTargets;		///< Number of render targets
+		TextureFormat::Enum		renderTargetViewFormats[8];	///< Render target view formats
+		TextureFormat::Enum		depthStencilViewFormat;		///< Depth stencil view formats
 	};
 	struct PipelineStateBuilder : public PipelineState
 	{

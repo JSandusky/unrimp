@@ -72,7 +72,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline IState(ResourceType::Enum resourceType, IRenderer &renderer);
+		inline IState(ResourceType resourceType, IRenderer &renderer);
 
 		/**
 		*  @brief

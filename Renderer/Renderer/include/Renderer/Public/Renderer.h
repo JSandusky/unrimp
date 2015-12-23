@@ -126,16 +126,13 @@ namespace Renderer
 	// Renderer/RendererTypes.h
 	#ifndef __RENDERER_RENDERER_TYPES_H__
 	#define __RENDERER_RENDERER_TYPES_H__
-		struct MapType
+		enum class MapType
 		{
-			enum Enum
-			{
-				READ			   = 1,
-				WRITE			   = 2,
-				READ_WRITE		   = 3,
-				WRITE_DISCARD	   = 4,
-				WRITE_NO_OVERWRITE = 5
-			};
+			READ			   = 1,
+			WRITE			   = 2,
+			READ_WRITE		   = 3,
+			WRITE_DISCARD	   = 4,
+			WRITE_NO_OVERWRITE = 5
 		};
 		struct MapFlag
 		{
@@ -154,65 +151,59 @@ namespace Renderer
 				COLOR_DEPTH = COLOR | DEPTH
 			};
 		};
-		struct PrimitiveTopology
+		enum class PrimitiveTopology
 		{
-			enum Enum
-			{
-				UNKNOWN        = 0,
-				POINT_LIST     = 1,
-				LINE_LIST      = 2,
-				LINE_STRIP     = 3,
-				TRIANGLE_LIST  = 4,
-				TRIANGLE_STRIP = 5,
-				PATCH_LIST_1   = 33,
-				PATCH_LIST_2   = 34,
-				PATCH_LIST_3   = 35,
-				PATCH_LIST_4   = 36,
-				PATCH_LIST_5   = 37,
-				PATCH_LIST_6   = 38,
-				PATCH_LIST_7   = 39,
-				PATCH_LIST_8   = 40,
-				PATCH_LIST_9   = 41,
-				PATCH_LIST_10  = 42,
-				PATCH_LIST_11  = 43,
-				PATCH_LIST_12  = 44,
-				PATCH_LIST_13  = 45,
-				PATCH_LIST_14  = 46,
-				PATCH_LIST_15  = 47,
-				PATCH_LIST_16  = 48,
-				PATCH_LIST_17  = 49,
-				PATCH_LIST_18  = 50,
-				PATCH_LIST_19  = 51,
-				PATCH_LIST_20  = 52,
-				PATCH_LIST_21  = 53,
-				PATCH_LIST_22  = 54,
-				PATCH_LIST_23  = 55,
-				PATCH_LIST_24  = 56,
-				PATCH_LIST_25  = 57,
-				PATCH_LIST_26  = 58,
-				PATCH_LIST_27  = 59,
-				PATCH_LIST_28  = 60,
-				PATCH_LIST_29  = 61,
-				PATCH_LIST_30  = 62,
-				PATCH_LIST_31  = 63,
-				PATCH_LIST_32  = 64
-			};
+			UNKNOWN        = 0,
+			POINT_LIST     = 1,
+			LINE_LIST      = 2,
+			LINE_STRIP     = 3,
+			TRIANGLE_LIST  = 4,
+			TRIANGLE_STRIP = 5,
+			PATCH_LIST_1   = 33,
+			PATCH_LIST_2   = 34,
+			PATCH_LIST_3   = 35,
+			PATCH_LIST_4   = 36,
+			PATCH_LIST_5   = 37,
+			PATCH_LIST_6   = 38,
+			PATCH_LIST_7   = 39,
+			PATCH_LIST_8   = 40,
+			PATCH_LIST_9   = 41,
+			PATCH_LIST_10  = 42,
+			PATCH_LIST_11  = 43,
+			PATCH_LIST_12  = 44,
+			PATCH_LIST_13  = 45,
+			PATCH_LIST_14  = 46,
+			PATCH_LIST_15  = 47,
+			PATCH_LIST_16  = 48,
+			PATCH_LIST_17  = 49,
+			PATCH_LIST_18  = 50,
+			PATCH_LIST_19  = 51,
+			PATCH_LIST_20  = 52,
+			PATCH_LIST_21  = 53,
+			PATCH_LIST_22  = 54,
+			PATCH_LIST_23  = 55,
+			PATCH_LIST_24  = 56,
+			PATCH_LIST_25  = 57,
+			PATCH_LIST_26  = 58,
+			PATCH_LIST_27  = 59,
+			PATCH_LIST_28  = 60,
+			PATCH_LIST_29  = 61,
+			PATCH_LIST_30  = 62,
+			PATCH_LIST_31  = 63,
+			PATCH_LIST_32  = 64
 		};
-		struct ComparisonFunc
+		enum class ComparisonFunc
 		{
-			enum Enum
-			{
-				NEVER		  = 1,
-				LESS		  = 2,
-				EQUAL		  = 3,
-				LESS_EQUAL	  = 4,
-				GREATER		  = 5,
-				NOT_EQUAL	  = 6,
-				GREATER_EQUAL = 7,
-				ALWAYS		  = 8
-			};
+			NEVER		  = 1,
+			LESS		  = 2,
+			EQUAL		  = 3,
+			LESS_EQUAL	  = 4,
+			GREATER		  = 5,
+			NOT_EQUAL	  = 6,
+			GREATER_EQUAL = 7,
+			ALWAYS		  = 8
 		};
-		struct ColorWriteEnable
+		struct ColorWriteEnableFlag
 		{
 			enum Enum
 			{
@@ -250,108 +241,96 @@ namespace Renderer
 	// Renderer/ResourceType.h
 	#ifndef __RENDERER_RESOURCE_TYPES_H__
 	#define __RENDERER_RESOURCE_TYPES_H__
-		struct ResourceType
+		enum class ResourceType
 		{
-			enum Enum
-			{
-				ROOT_SIGNATURE				   = 0,
-				PROGRAM						   = 1,
-				VERTEX_ARRAY				   = 2,
-				SWAP_CHAIN					   = 3,
-				FRAMEBUFFER					   = 4,
-				INDEX_BUFFER				   = 5,
-				VERTEX_BUFFER				   = 6,
-				UNIFORM_BUFFER				   = 7,
-				TEXTURE_BUFFER				   = 8,
-				TEXTURE_2D					   = 9,
-				TEXTURE_2D_ARRAY			   = 10,
-				PIPELINE_STATE				   = 11,
-				SAMPLER_STATE				   = 12,
-				VERTEX_SHADER				   = 13,
-				TESSELLATION_CONTROL_SHADER	   = 14,
-				TESSELLATION_EVALUATION_SHADER = 15,
-				GEOMETRY_SHADER				   = 16,
-				FRAGMENT_SHADER				   = 17
-			};
+			ROOT_SIGNATURE				   = 0,
+			PROGRAM						   = 1,
+			VERTEX_ARRAY				   = 2,
+			SWAP_CHAIN					   = 3,
+			FRAMEBUFFER					   = 4,
+			INDEX_BUFFER				   = 5,
+			VERTEX_BUFFER				   = 6,
+			UNIFORM_BUFFER				   = 7,
+			TEXTURE_BUFFER				   = 8,
+			TEXTURE_2D					   = 9,
+			TEXTURE_2D_ARRAY			   = 10,
+			PIPELINE_STATE				   = 11,
+			SAMPLER_STATE				   = 12,
+			VERTEX_SHADER				   = 13,
+			TESSELLATION_CONTROL_SHADER	   = 14,
+			TESSELLATION_EVALUATION_SHADER = 15,
+			GEOMETRY_SHADER				   = 16,
+			FRAGMENT_SHADER				   = 17
 		};
 	#endif
 
 	// Renderer/SamplerStateTypes.h
 	#ifndef __RENDERER_SAMPLERSTATE_TYPES_H__
 	#define __RENDERER_SAMPLERSTATE_TYPES_H__
-		struct FilterMode
+		enum class FilterMode
 		{
-			enum Enum
-			{
-				MIN_MAG_MIP_POINT					 	   = 0,
-				MIN_MAG_POINT_MIP_LINEAR			 	   = 0x1,
-				MIN_POINT_MAG_LINEAR_MIP_POINT		 	   = 0x4,
-				MIN_POINT_MAG_MIP_LINEAR			 	   = 0x5,
-				MIN_LINEAR_MAG_MIP_POINT			 	   = 0x10,
-				MIN_LINEAR_MAG_POINT_MIP_LINEAR		 	   = 0x11,
-				MIN_MAG_LINEAR_MIP_POINT			 	   = 0x14,
-				MIN_MAG_MIP_LINEAR					 	   = 0x15,
-				ANISOTROPIC								   = 0x55,
-				COMPARISON_MIN_MAG_MIP_POINT			   = 0x80,
-				COMPARISON_MIN_MAG_POINT_MIP_LINEAR		   = 0x81,
-				COMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT  = 0x84,
-				COMPARISON_MIN_POINT_MAG_MIP_LINEAR		   = 0x85,
-				COMPARISON_MIN_LINEAR_MAG_MIP_POINT		   = 0x90,
-				COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR = 0x91,
-				COMPARISON_MIN_MAG_LINEAR_MIP_POINT		   = 0x94,
-				COMPARISON_MIN_MAG_MIP_LINEAR			   = 0x95,
-				COMPARISON_ANISOTROPIC					   = 0xd5
-			};
+			MIN_MAG_MIP_POINT					 	   = 0,
+			MIN_MAG_POINT_MIP_LINEAR			 	   = 0x1,
+			MIN_POINT_MAG_LINEAR_MIP_POINT		 	   = 0x4,
+			MIN_POINT_MAG_MIP_LINEAR			 	   = 0x5,
+			MIN_LINEAR_MAG_MIP_POINT			 	   = 0x10,
+			MIN_LINEAR_MAG_POINT_MIP_LINEAR		 	   = 0x11,
+			MIN_MAG_LINEAR_MIP_POINT			 	   = 0x14,
+			MIN_MAG_MIP_LINEAR					 	   = 0x15,
+			ANISOTROPIC								   = 0x55,
+			COMPARISON_MIN_MAG_MIP_POINT			   = 0x80,
+			COMPARISON_MIN_MAG_POINT_MIP_LINEAR		   = 0x81,
+			COMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT  = 0x84,
+			COMPARISON_MIN_POINT_MAG_MIP_LINEAR		   = 0x85,
+			COMPARISON_MIN_LINEAR_MAG_MIP_POINT		   = 0x90,
+			COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR = 0x91,
+			COMPARISON_MIN_MAG_LINEAR_MIP_POINT		   = 0x94,
+			COMPARISON_MIN_MAG_MIP_LINEAR			   = 0x95,
+			COMPARISON_ANISOTROPIC					   = 0xd5
 		};
-		struct TextureAddressMode
+		enum class TextureAddressMode
 		{
-			enum Enum
-			{
-				WRAP		= 1,
-				MIRROR		= 2,
-				CLAMP		= 3,
-				BORDER		= 4,
-				MIRROR_ONCE	= 5
-			};
+			WRAP		= 1,
+			MIRROR		= 2,
+			CLAMP		= 3,
+			BORDER		= 4,
+			MIRROR_ONCE	= 5
 		};
 		struct SamplerState
 		{
-			FilterMode::Enum		 filter;
-			TextureAddressMode::Enum addressU;
-			TextureAddressMode::Enum addressV;
-			TextureAddressMode::Enum addressW;
-			float					 mipLODBias;
-			uint32_t				 maxAnisotropy;
-			ComparisonFunc::Enum	 comparisonFunc;
-			float					 borderColor[4];
-			float					 minLOD;
-			float					 maxLOD;
+			FilterMode		   filter;
+			TextureAddressMode addressU;
+			TextureAddressMode addressV;
+			TextureAddressMode addressW;
+			float			   mipLODBias;
+			uint32_t		   maxAnisotropy;
+			ComparisonFunc	   comparisonFunc;
+			float			   borderColor[4];
+			float			   minLOD;
+			float			   maxLOD;
 		};
 	#endif
 
 	// Renderer/RootSignatureTypes.h
 	#ifndef __RENDERER_ROOTSIGNATURE_TYPES_H__
 	#define __RENDERER_ROOTSIGNATURE_TYPES_H__
-		struct DescriptorRangeType
+		enum class DescriptorRangeType
 		{
-			enum Enum
-			{
-				SRV     = 0,
-				UAV     = SRV + 1,
-				CBV     = UAV + 1,
-				SAMPLER = CBV + 1
-			};
+			SRV     = 0,
+			UAV     = SRV + 1,
+			CBV     = UAV + 1,
+			SAMPLER = CBV + 1
 		};
 		struct DescriptorRange
 		{
 			static const uint32_t NAME_LENGTH = 32;
-			DescriptorRangeType::Enum rangeType;
-			uint32_t				  numberOfDescriptors;
-			uint32_t				  baseShaderRegister;
-			uint32_t				  registerSpace;
-			uint32_t				  offsetInDescriptorsFromTableStart;
-			char					  baseShaderRegisterName[NAME_LENGTH];
-			uint32_t				  samplerRootParameterIndex;
+			DescriptorRangeType   rangeType;
+			uint32_t			  numberOfDescriptors;
+			uint32_t			  baseShaderRegister;
+			uint32_t			  registerSpace;
+			uint32_t			  offsetInDescriptorsFromTableStart;
+			char				  baseShaderRegisterName[NAME_LENGTH];
+			uint32_t			  samplerRootParameterIndex;
 		};
 		struct DescriptorRangeBuilder : public DescriptorRange
 		{
@@ -363,7 +342,7 @@ namespace Renderer
 			{
 			}
 			DescriptorRangeBuilder(
-				DescriptorRangeType::Enum _rangeType,
+				DescriptorRangeType _rangeType,
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
 				char	 _baseShaderRegisterName[NAME_LENGTH],
@@ -382,7 +361,7 @@ namespace Renderer
 				initialize(*this, DescriptorRangeType::SAMPLER, _numberOfDescriptors, _baseShaderRegister, "", 0, _registerSpace, _offsetInDescriptorsFromTableStart);
 			}
 			inline void initialize(
-				DescriptorRangeType::Enum _rangeType,
+				DescriptorRangeType _rangeType,
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
 				char	 _baseShaderRegisterName[NAME_LENGTH],
@@ -394,7 +373,7 @@ namespace Renderer
 			}
 			static inline void initialize(
 				DescriptorRange& range,
-				DescriptorRangeType::Enum _rangeType,
+				DescriptorRangeType _rangeType,
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
 				char	 _baseShaderRegisterName[NAME_LENGTH],
@@ -445,16 +424,13 @@ namespace Renderer
 				rootDescriptorTable.descriptorRanges = _descriptorRanges;
 			}
 		};
-		struct RootParameterType
+		enum class RootParameterType
 		{
-			enum Enum
-			{
-				DESCRIPTOR_TABLE = 0,
-				CONSTANTS_32BIT  = DESCRIPTOR_TABLE + 1,
-				CBV              = CONSTANTS_32BIT + 1,
-				SRV              = CBV + 1,
-				UAV              = SRV + 1
-			};
+			DESCRIPTOR_TABLE = 0,
+			CONSTANTS_32BIT  = DESCRIPTOR_TABLE + 1,
+			CBV              = CONSTANTS_32BIT + 1,
+			SRV              = CBV + 1,
+			UAV              = SRV + 1
 		};
 		struct RootConstants
 		{
@@ -526,28 +502,25 @@ namespace Renderer
 				table.registerSpace = _registerSpace;
 			}
 		};
-		struct ShaderVisibility
+		enum class ShaderVisibility
 		{
-			enum Enum
-			{
-				ALL                     = 0,
-				VERTEX                  = 1,
-				TESSELLATION_CONTROL    = 2,
-				TESSELLATION_EVALUATION = 3,
-				GEOMETRY                = 4,
-				FRAGMENT                = 5
-			};
+			ALL                     = 0,
+			VERTEX                  = 1,
+			TESSELLATION_CONTROL    = 2,
+			TESSELLATION_EVALUATION = 3,
+			GEOMETRY                = 4,
+			FRAGMENT                = 5
 		};
 		struct RootParameter
 		{
-			RootParameterType::Enum	parameterType;
+			RootParameterType		parameterType;
 			union
 			{
 				RootDescriptorTable	descriptorTable;
 				RootConstants		constants;
 				RootDescriptor		descriptor;
 			};
-			ShaderVisibility::Enum	shaderVisibility;
+			ShaderVisibility		shaderVisibility;
 		};
 		struct RootParameterBuilder : public RootParameter
 		{
@@ -561,7 +534,7 @@ namespace Renderer
 				RootParameter& rootParam,
 				uint32_t numberOfDescriptorRanges,
 				const DescriptorRange* descriptorRanges,
-				ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+				ShaderVisibility visibility = ShaderVisibility::ALL)
 			{
 				rootParam.parameterType = RootParameterType::DESCRIPTOR_TABLE;
 				rootParam.shaderVisibility = visibility;
@@ -572,7 +545,7 @@ namespace Renderer
 				uint32_t numberOf32BitValues,
 				uint32_t shaderRegister,
 				uint32_t registerSpace = 0,
-				ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+				ShaderVisibility visibility = ShaderVisibility::ALL)
 			{
 				rootParam.parameterType = RootParameterType::CONSTANTS_32BIT;
 				rootParam.shaderVisibility = visibility;
@@ -582,7 +555,7 @@ namespace Renderer
 				RootParameter& rootParam,
 				uint32_t shaderRegister,
 				uint32_t registerSpace = 0,
-				ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+				ShaderVisibility visibility = ShaderVisibility::ALL)
 			{
 				rootParam.parameterType = RootParameterType::CBV;
 				rootParam.shaderVisibility = visibility;
@@ -592,7 +565,7 @@ namespace Renderer
 				RootParameter& rootParam,
 				uint32_t shaderRegister,
 				uint32_t registerSpace = 0,
-				ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+				ShaderVisibility visibility = ShaderVisibility::ALL)
 			{
 				rootParam.parameterType = RootParameterType::SRV;
 				rootParam.shaderVisibility = visibility;
@@ -602,7 +575,7 @@ namespace Renderer
 				RootParameter& rootParam,
 				uint32_t shaderRegister,
 				uint32_t registerSpace = 0,
-				ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+				ShaderVisibility visibility = ShaderVisibility::ALL)
 			{
 				rootParam.parameterType = RootParameterType::UAV;
 				rootParam.shaderVisibility = visibility;
@@ -611,7 +584,7 @@ namespace Renderer
 			inline void initializeAsDescriptorTable(
 				uint32_t numberOfDescriptorRanges,
 				const DescriptorRange* descriptorRanges,
-				ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+				ShaderVisibility visibility = ShaderVisibility::ALL)
 			{
 				initializeAsDescriptorTable(*this, numberOfDescriptorRanges, descriptorRanges, visibility);
 			}
@@ -619,28 +592,28 @@ namespace Renderer
 				uint32_t numberOf32BitValues,
 				uint32_t shaderRegister,
 				uint32_t registerSpace = 0,
-				ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+				ShaderVisibility visibility = ShaderVisibility::ALL)
 			{
 				initializeAsConstants(*this, numberOf32BitValues, shaderRegister, registerSpace, visibility);
 			}
 			inline void initializeAsConstantBufferView(
 				uint32_t shaderRegister,
 				uint32_t registerSpace = 0,
-				ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+				ShaderVisibility visibility = ShaderVisibility::ALL)
 			{
 				initializeAsConstantBufferView(*this, shaderRegister, registerSpace, visibility);
 			}
 			inline void initializeAsShaderResourceView(
 				uint32_t shaderRegister,
 				uint32_t registerSpace = 0,
-				ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+				ShaderVisibility visibility = ShaderVisibility::ALL)
 			{
 				initializeAsShaderResourceView(*this, shaderRegister, registerSpace, visibility);
 			}
 			inline void initializeAsUnorderedAccessView(
 				uint32_t shaderRegister,
 				uint32_t registerSpace = 0,
-				ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+				ShaderVisibility visibility = ShaderVisibility::ALL)
 			{
 				initializeAsUnorderedAccessView(*this, shaderRegister, registerSpace, visibility);
 			}
@@ -659,30 +632,27 @@ namespace Renderer
 				ALLOW_STREAM_OUTPUT                             = 0x40
 			};
 		};
-		struct StaticBorderColor
+		enum class StaticBorderColor
 		{
-			enum Enum
-			{
-				TRANSPARENT_BLACK = 0,
-				OPAQUE_BLACK      = TRANSPARENT_BLACK + 1,
-				OPAQUE_WHITE      = OPAQUE_BLACK + 1
-			};
+			TRANSPARENT_BLACK = 0,
+			OPAQUE_BLACK      = TRANSPARENT_BLACK + 1,
+			OPAQUE_WHITE      = OPAQUE_BLACK + 1
 		};
 		struct StaticSampler
 		{
-			FilterMode::Enum		 filter;
-			TextureAddressMode::Enum addressU;
-			TextureAddressMode::Enum addressV;
-			TextureAddressMode::Enum addressW;
-			float					 mipLodBias;
-			uint32_t				 maxAnisotropy;
-			ComparisonFunc::Enum	 comparisonFunc;
-			StaticBorderColor::Enum  borderColor;
-			float					 minLod;
-			float					 maxLod;
-			uint32_t				 shaderRegister;
-			uint32_t				 registerSpace;
-			ShaderVisibility::Enum	 shaderVisibility;
+			FilterMode			filter;
+			TextureAddressMode	addressU;
+			TextureAddressMode	addressV;
+			TextureAddressMode	addressW;
+			float				mipLodBias;
+			uint32_t			maxAnisotropy;
+			ComparisonFunc		comparisonFunc;
+			StaticBorderColor	borderColor;
+			float				minLod;
+			float				maxLod;
+			uint32_t			shaderRegister;
+			uint32_t			registerSpace;
+			ShaderVisibility	shaderVisibility;
 		};
 		struct RootSignature
 		{
@@ -739,20 +709,17 @@ namespace Renderer
 	// Renderer/BufferTypes.h
 	#ifndef __RENDERER_BUFFER_TYPES_H__
 	#define __RENDERER_BUFFER_TYPES_H__
-		struct BufferUsage
+		enum class BufferUsage
 		{
-			enum Enum
-			{
-				STREAM_DRAW  = 0x88E0,
-				STREAM_READ  = 0x88E1,
-				STREAM_COPY  = 0x88E2,
-				STATIC_DRAW  = 0x88E4,
-				STATIC_READ  = 0x88E5,
-				STATIC_COPY  = 0x88E6,
-				DYNAMIC_DRAW = 0x88E8,
-				DYNAMIC_READ = 0x88E9,
-				DYNAMIC_COPY = 0x88EA
-			};
+			STREAM_DRAW  = 0x88E0,
+			STREAM_READ  = 0x88E1,
+			STREAM_COPY  = 0x88E2,
+			STATIC_DRAW  = 0x88E4,
+			STATIC_READ  = 0x88E5,
+			STATIC_COPY  = 0x88E6,
+			DYNAMIC_DRAW = 0x88E8,
+			DYNAMIC_READ = 0x88E9,
+			DYNAMIC_COPY = 0x88EA
 		};
 	#endif
 
@@ -898,15 +865,12 @@ namespace Renderer
 				RENDER_TARGET         = 1<<2
 			};
 		};
-		struct TextureUsage
+		enum class TextureUsage
 		{
-			enum Enum
-			{
-				DEFAULT   = 0,
-				IMMUTABLE = 1,
-				DYNAMIC   = 2,
-				STAGING   = 3
-			};
+			DEFAULT   = 0,
+			IMMUTABLE = 1,
+			DYNAMIC   = 2,
+			STAGING   = 3
 		};
 		struct OptimizedTextureClearValue
 		{
@@ -925,50 +889,44 @@ namespace Renderer
 	// Renderer/BlendStateTypes.h
 	#ifndef __RENDERER_BLENDSTATE_TYPES_H__
 	#define __RENDERER_BLENDSTATE_TYPES_H__
-		struct Blend
+		enum class Blend
 		{
-			enum Enum
-			{
-				ZERO		     = 1,
-				ONE			     = 2,
-				SRC_COLOR	     = 3,
-				INV_SRC_COLOR    = 4,
-				SRC_ALPHA	     = 5,
-				INV_SRC_ALPHA    = 6,
-				DEST_ALPHA	     = 7,
-				INV_DEST_ALPHA   = 8,
-				DEST_COLOR	     = 9,
-				INV_DEST_COLOR   = 10,
-				SRC_ALPHA_SAT    = 11,
-				BLEND_FACTOR     = 14,
-				INV_BLEND_FACTOR = 15,
-				SRC_1_COLOR	     = 16,
-				INV_SRC_1_COLOR  = 17,
-				SRC_1_ALPHA	     = 18,
-				INV_SRC_1_ALPHA  = 19
-			};
+			ZERO		     = 1,
+			ONE			     = 2,
+			SRC_COLOR	     = 3,
+			INV_SRC_COLOR    = 4,
+			SRC_ALPHA	     = 5,
+			INV_SRC_ALPHA    = 6,
+			DEST_ALPHA	     = 7,
+			INV_DEST_ALPHA   = 8,
+			DEST_COLOR	     = 9,
+			INV_DEST_COLOR   = 10,
+			SRC_ALPHA_SAT    = 11,
+			BLEND_FACTOR     = 14,
+			INV_BLEND_FACTOR = 15,
+			SRC_1_COLOR	     = 16,
+			INV_SRC_1_COLOR  = 17,
+			SRC_1_ALPHA	     = 18,
+			INV_SRC_1_ALPHA  = 19
 		};
-		struct BlendOp
+		enum class BlendOp
 		{
-			enum Enum
-			{
-				ADD			 = 1,
-				SUBTRACT	 = 2,
-				REV_SUBTRACT = 3,
-				MIN			 = 4,
-				MAX			 = 5
-			};
+			ADD			 = 1,
+			SUBTRACT	 = 2,
+			REV_SUBTRACT = 3,
+			MIN			 = 4,
+			MAX			 = 5
 		};
 		struct RenderTargetBlendDesc
 		{
-			int			  blendEnable;
-			Blend::Enum	  srcBlend;
-			Blend::Enum	  destBlend;
-			BlendOp::Enum blendOp;
-			Blend::Enum	  srcBlendAlpha;
-			Blend::Enum	  destBlendAlpha;
-			BlendOp::Enum blendOpAlpha;
-			uint8_t		  renderTargetWriteMask;
+			int		blendEnable;
+			Blend	srcBlend;
+			Blend	destBlend;
+			BlendOp	blendOp;
+			Blend	srcBlendAlpha;
+			Blend	destBlendAlpha;
+			BlendOp	blendOpAlpha;
+			uint8_t	renderTargetWriteMask;
 		};
 		struct BlendState
 		{
@@ -993,7 +951,7 @@ namespace Renderer
 							Blend::ONE,
 							Blend::ZERO,
 							BlendOp::ADD,
-							ColorWriteEnable::ALL,
+							ColorWriteEnableFlag::ALL,
 						},
 						{
 							false,
@@ -1003,7 +961,7 @@ namespace Renderer
 							Blend::ONE,
 							Blend::ZERO,
 							BlendOp::ADD,
-							ColorWriteEnable::ALL,
+							ColorWriteEnableFlag::ALL,
 						},
 						{
 							false,
@@ -1013,7 +971,7 @@ namespace Renderer
 							Blend::ONE,
 							Blend::ZERO,
 							BlendOp::ADD,
-							ColorWriteEnable::ALL,
+							ColorWriteEnableFlag::ALL,
 						},
 						{
 							false,
@@ -1023,7 +981,7 @@ namespace Renderer
 							Blend::ONE,
 							Blend::ZERO,
 							BlendOp::ADD,
-							ColorWriteEnable::ALL,
+							ColorWriteEnableFlag::ALL,
 						},
 						{
 							false,
@@ -1033,7 +991,7 @@ namespace Renderer
 							Blend::ONE,
 							Blend::ZERO,
 							BlendOp::ADD,
-							ColorWriteEnable::ALL,
+							ColorWriteEnableFlag::ALL,
 						},
 						{
 							false,
@@ -1043,7 +1001,7 @@ namespace Renderer
 							Blend::ONE,
 							Blend::ZERO,
 							BlendOp::ADD,
-							ColorWriteEnable::ALL,
+							ColorWriteEnableFlag::ALL,
 						},
 						{
 							false,
@@ -1053,7 +1011,7 @@ namespace Renderer
 							Blend::ONE,
 							Blend::ZERO,
 							BlendOp::ADD,
-							ColorWriteEnable::ALL,
+							ColorWriteEnableFlag::ALL,
 						},
 						{
 							false,
@@ -1063,7 +1021,7 @@ namespace Renderer
 							Blend::ONE,
 							Blend::ZERO,
 							BlendOp::ADD,
-							ColorWriteEnable::ALL,
+							ColorWriteEnableFlag::ALL,
 						},
 					}
 				};
@@ -1075,30 +1033,27 @@ namespace Renderer
 	// Renderer/VertexArrayTypes.h
 	#ifndef __RENDERER_VERTEXARRAY_TYPES_H__
 	#define __RENDERER_VERTEXARRAY_TYPES_H__
-		struct VertexAttributeFormat
+		enum class VertexAttributeFormat
 		{
-			enum Enum
-			{
-				FLOAT_1			= 0,
-				FLOAT_2			= 1,
-				FLOAT_3			= 2,
-				FLOAT_4			= 3,
-				UNSIGNED_BYTE_4 = 4,
-				SHORT_2			= 5,
-				SHORT_4			= 6
-			};
+			FLOAT_1			= 0,
+			FLOAT_2			= 1,
+			FLOAT_3			= 2,
+			FLOAT_4			= 3,
+			UNSIGNED_BYTE_4 = 4,
+			SHORT_2			= 5,
+			SHORT_4			= 6
 		};
 		#pragma pack(push)
 		#pragma pack(1)
 			struct VertexAttribute
 			{
-				VertexAttributeFormat::Enum  vertexAttributeFormat;
-				char						 name[32];
-				char						 semanticName[32];
-				uint32_t					 semanticIndex;
-				uint32_t					 inputSlot;
-				uint32_t					 alignedByteOffset;
-				uint32_t					 instancesPerElement;
+				VertexAttributeFormat vertexAttributeFormat;
+				char				  name[32];
+				char				  semanticName[32];
+				uint32_t			  semanticIndex;
+				uint32_t			  inputSlot;
+				uint32_t			  alignedByteOffset;
+				uint32_t			  instancesPerElement;
 			};
 			struct VertexAttributes
 			{
@@ -1148,45 +1103,36 @@ namespace Renderer
 	// Renderer/RasterizerStateTypes.h
 	#ifndef __RENDERER_RASTERIZERSTATE_TYPES_H__
 	#define __RENDERER_RASTERIZERSTATE_TYPES_H__
-		struct FillMode
+		enum class FillMode
 		{
-			enum Enum
-			{
-				WIREFRAME = 2,
-				SOLID     = 3
-			};
+			WIREFRAME = 2,
+			SOLID     = 3
 		};
-		struct CullMode
+		enum class CullMode
 		{
-			enum Enum
-			{
-				NONE  = 1,
-				FRONT = 2,
-				BACK  = 3
-			};
+			NONE  = 1,
+			FRONT = 2,
+			BACK  = 3
 		};
-		struct ConservativeRasterizationMode
+		enum class ConservativeRasterizationMode
 		{
-			enum Enum
-			{
-				OFF	= 0,
-				ON	= 1
-			};
+			OFF	= 0,
+			ON	= 1
 		};
 		struct RasterizerState
 		{
-			FillMode::Enum						fillMode;
-			CullMode::Enum						cullMode;
-			int									frontCounterClockwise;
-			int									depthBias;
-			float								depthBiasClamp;
-			float								slopeScaledDepthBias;
-			int									depthClipEnable;
-			int									multisampleEnable;
-			int									antialiasedLineEnable;
-			unsigned int						forcedSampleCount;
-			ConservativeRasterizationMode::Enum	conservativeRasterizationMode;
-			int									scissorEnable;
+			FillMode						fillMode;
+			CullMode						cullMode;
+			int								frontCounterClockwise;
+			int								depthBias;
+			float							depthBiasClamp;
+			float							slopeScaledDepthBias;
+			int								depthClipEnable;
+			int								multisampleEnable;
+			int								antialiasedLineEnable;
+			unsigned int					forcedSampleCount;
+			ConservativeRasterizationMode	conservativeRasterizationMode;
+			int								scissorEnable;
 		};
 		struct RasterizerStateBuilder
 		{
@@ -1215,45 +1161,39 @@ namespace Renderer
 	// Renderer/DepthStencilStateTypes.h
 	#ifndef __RENDERER_DEPTHSTENCILSTATE_TYPES_H__
 	#define __RENDERER_DEPTHSTENCILSTATE_TYPES_H__
-		struct DepthWriteMask
+		enum class DepthWriteMask
 		{
-			enum Enum
-			{
-				ZERO = 0,
-				ALL  = 1
-			};
+			ZERO = 0,
+			ALL  = 1
 		};
-		struct StencilOp
+		enum class StencilOp
 		{
-			enum Enum
-			{
-				KEEP	 = 1,
-				ZERO	 = 2,
-				REPLACE	 = 3,
-				INCR_SAT = 4,
-				DECR_SAT = 5,
-				INVERT	 = 6,
-				INCREASE = 7,
-				DECREASE = 8
-			};
+			KEEP	 = 1,
+			ZERO	 = 2,
+			REPLACE	 = 3,
+			INCR_SAT = 4,
+			DECR_SAT = 5,
+			INVERT	 = 6,
+			INCREASE = 7,
+			DECREASE = 8
 		};
 		struct DepthStencilOpDesc
 		{
-			StencilOp::Enum		 stencilFailOp;
-			StencilOp::Enum		 stencilDepthFailOp;
-			StencilOp::Enum		 stencilPassOp;
-			ComparisonFunc::Enum stencilFunc;
+			StencilOp		stencilFailOp;
+			StencilOp		stencilDepthFailOp;
+			StencilOp		stencilPassOp;
+			ComparisonFunc	stencilFunc;
 		};
 		struct DepthStencilState
 		{
-			int					 depthEnable;
-			DepthWriteMask::Enum depthWriteMask;
-			ComparisonFunc::Enum depthFunc;
-			int					 stencilEnable;
-			uint8_t				 stencilReadMask;
-			uint8_t				 stencilWriteMask;
-			DepthStencilOpDesc	 frontFace;
-			DepthStencilOpDesc	 backFace;
+			int					depthEnable;
+			DepthWriteMask		depthWriteMask;
+			ComparisonFunc		depthFunc;
+			int					stencilEnable;
+			uint8_t				stencilReadMask;
+			uint8_t				stencilWriteMask;
+			DepthStencilOpDesc	frontFace;
+			DepthStencilOpDesc	backFace;
 		};
 		struct DepthStencilStateBuilder
 		{
@@ -1288,29 +1228,26 @@ namespace Renderer
 	// Renderer/PipelineStateTypes.h
 	#ifndef __RENDERER_PIPELINESTATE_TYPES_H__
 	#define __RENDERER_PIPELINESTATE_TYPES_H__
-		struct PrimitiveTopologyType
+		enum class PrimitiveTopologyType
 		{
-			enum Enum
-			{
-				UNDEFINED	= 0,
-				POINT		= 1,
-				LINE		= 2,
-				TRIANGLE	= 3,
-				PATCH		= 4
-			};
+			UNDEFINED	= 0,
+			POINT		= 1,
+			LINE		= 2,
+			TRIANGLE	= 3,
+			PATCH		= 4
 		};
 		struct PipelineState
 		{
-			IRootSignature*				rootSignature;
-			IProgram*					program;
-			VertexAttributes			vertexAttributes;
-			PrimitiveTopologyType::Enum primitiveTopologyType;
-			RasterizerState				rasterizerState;
-			DepthStencilState			depthStencilState;
-			BlendState					blendState;
-			uint32_t					numberOfRenderTargets;
-			TextureFormat::Enum			renderTargetViewFormats[8];
-			TextureFormat::Enum			depthStencilViewFormat;
+			IRootSignature*		  rootSignature;
+			IProgram*			  program;
+			VertexAttributes	  vertexAttributes;
+			PrimitiveTopologyType primitiveTopologyType;
+			RasterizerState		  rasterizerState;
+			DepthStencilState	  depthStencilState;
+			BlendState			  blendState;
+			uint32_t			  numberOfRenderTargets;
+			TextureFormat::Enum	  renderTargetViewFormats[8];
+			TextureFormat::Enum	  depthStencilViewFormat;
 		};
 		struct PipelineStateBuilder : public PipelineState
 		{
@@ -1340,25 +1277,19 @@ namespace Renderer
 	// Renderer/GeometryShaderTypes.h
 	#ifndef __RENDERER_GEOMETRYSHADER_TYPES_H__
 	#define __RENDERER_GEOMETRYSHADER_TYPES_H__
-		struct GsInputPrimitiveTopology
+		enum class GsInputPrimitiveTopology
 		{
-			enum Enum
-			{
-				POINTS				= 0x0000,
-				LINES				= 0x0001,
-				LINES_ADJACENCY		= 0x000A,
-				TRIANGLES			= 0x0004,
-				TRIANGLES_ADJACENCY	= 0x000C
-			};
+			POINTS				= 0x0000,
+			LINES				= 0x0001,
+			LINES_ADJACENCY		= 0x000A,
+			TRIANGLES			= 0x0004,
+			TRIANGLES_ADJACENCY	= 0x000C
 		};
-		struct GsOutputPrimitiveTopology
+		enum class GsOutputPrimitiveTopology
 		{
-			enum Enum
-			{
-				POINTS		   = 0x0000,
-				LINES		   = 0x0001,
-				TRIANGLE_STRIP = 0x0005
-			};
+			POINTS		   = 0x0000,
+			LINES		   = 0x0001,
+			TRIANGLE_STRIP = 0x0005
 		};
 	#endif
 
@@ -1760,22 +1691,22 @@ namespace Renderer
 			virtual IShaderLanguage* getShaderLanguage(const char* shaderLanguageName = nullptr) = 0;
 			virtual ISwapChain* createSwapChain(handle nativeWindowHandle) = 0;
 			virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorTextures, ITexture** colorTextures, ITexture* depthStencilTexture = nullptr) = 0;
-			virtual IVertexBuffer* createVertexBuffer(uint32_t numberOfBytes, const void* data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-			virtual IIndexBuffer* createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void* data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IVertexBuffer* createVertexBuffer(uint32_t numberOfBytes, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IIndexBuffer* createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual IVertexArray* createVertexArray(const VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer* vertexBuffers, IIndexBuffer* indexBuffer = nullptr) = 0;
-			virtual ITextureBuffer* createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void* data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-			virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void* data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
-			virtual ITexture2DArray* createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void* data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
+			virtual ITextureBuffer* createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
+			virtual ITexture2DArray* createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
 			virtual IRootSignature* createRootSignature(const RootSignature& rootSignature) = 0;
 			virtual IPipelineState* createPipelineState(const PipelineState& pipelineState) = 0;
 			virtual ISamplerState* createSamplerState(const SamplerState& samplerState) = 0;
-			virtual bool map(IResource& resource, uint32_t subresource, MapType::Enum mapType, uint32_t mapFlags, MappedSubresource& mappedSubresource) = 0;
+			virtual bool map(IResource& resource, uint32_t subresource, MapType mapType, uint32_t mapFlags, MappedSubresource& mappedSubresource) = 0;
 			virtual void unmap(IResource& resource, uint32_t subresource) = 0;
 			virtual void setGraphicsRootSignature(IRootSignature* rootSignature) = 0;
 			virtual void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, IResource* resource) = 0;
 			virtual void setPipelineState(IPipelineState* pipelineState) = 0;
 			virtual void iaSetVertexArray(IVertexArray* vertexArray) = 0;
-			virtual void iaSetPrimitiveTopology(PrimitiveTopology::Enum primitiveTopology) = 0;
+			virtual void iaSetPrimitiveTopology(PrimitiveTopology primitiveTopology) = 0;
 			virtual void rsSetViewports(uint32_t numberOfViewports, const Viewport* viewports) = 0;
 			virtual void rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles) = 0;
 			virtual IRenderTarget* omGetRenderTarget() = 0;
@@ -1836,12 +1767,12 @@ namespace Renderer
 			virtual ITessellationControlShader* createTessellationControlShaderFromSourceCode(const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
 			virtual ITessellationEvaluationShader* createTessellationEvaluationShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
 			virtual ITessellationEvaluationShader* createTessellationEvaluationShaderFromSourceCode(const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
-			virtual IGeometryShader* createGeometryShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes, GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) = 0;
-			virtual IGeometryShader* createGeometryShaderFromSourceCode(const char* sourceCode, GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
+			virtual IGeometryShader* createGeometryShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) = 0;
+			virtual IGeometryShader* createGeometryShaderFromSourceCode(const char* sourceCode, GsInputPrimitiveTopology gsInputPrimitiveTopology, GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
 			virtual IFragmentShader* createFragmentShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
 			virtual IFragmentShader* createFragmentShaderFromSourceCode(const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
 			virtual IProgram* createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, ITessellationControlShader* tessellationControlShader, ITessellationEvaluationShader* tessellationEvaluationShader, IGeometryShader* geometryShader, IFragmentShader* fragmentShader) = 0;
-			virtual IUniformBuffer* createUniformBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IUniformBuffer* createUniformBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
 		protected:
 			explicit IShaderLanguage(IRenderer& renderer);
 			explicit IShaderLanguage(const IShaderLanguage& source);
@@ -1859,7 +1790,7 @@ namespace Renderer
 		{
 		public:
 			virtual ~IResource();
-			inline ResourceType::Enum getResourceType() const
+			inline ResourceType getResourceType() const
 			{
 				return mResourceType;
 			}
@@ -1870,11 +1801,11 @@ namespace Renderer
 		public:
 			virtual void setDebugName(const char* name) = 0;
 		protected:
-			IResource(ResourceType::Enum resourceType, IRenderer& renderer);
+			IResource(ResourceType resourceType, IRenderer& renderer);
 			explicit IResource(const IResource& source);
 			IResource& operator =(const IResource& source);
 		private:
-			ResourceType::Enum  mResourceType;
+			ResourceType  mResourceType;
 			IRenderer*			mRenderer;
 		};
 		typedef SmartRefCount<IResource> IResourcePtr;
@@ -1944,7 +1875,7 @@ namespace Renderer
 		public:
 			virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const = 0;
 		protected:
-			IRenderTarget(ResourceType::Enum resourceType, IRenderer& renderer);
+			IRenderTarget(ResourceType resourceType, IRenderer& renderer);
 			explicit IRenderTarget(const IRenderTarget& source);
 			IRenderTarget& operator =(const IRenderTarget& source);
 		};
@@ -1995,7 +1926,7 @@ namespace Renderer
 		public:
 			virtual ~IBuffer();
 		protected:
-			IBuffer(ResourceType::Enum resourceType, IRenderer& renderer);
+			IBuffer(ResourceType resourceType, IRenderer& renderer);
 			explicit IBuffer(const IBuffer& source);
 			IBuffer& operator =(const IBuffer& source);
 		};
@@ -2057,7 +1988,7 @@ namespace Renderer
 		public:
 			virtual ~ITexture();
 		protected:
-			ITexture(ResourceType::Enum resourceType, IRenderer& renderer);
+			ITexture(ResourceType resourceType, IRenderer& renderer);
 			explicit ITexture(const ITexture& source);
 			ITexture& operator =(const ITexture& source);
 		};
@@ -2146,7 +2077,7 @@ namespace Renderer
 		public:
 			virtual ~IState();
 		protected:
-			IState(ResourceType::Enum resourceType, IRenderer& renderer);
+			IState(ResourceType resourceType, IRenderer& renderer);
 			explicit IState(const IState& source);
 			IState& operator =(const IState& source);
 		};
@@ -2216,7 +2147,7 @@ namespace Renderer
 		public:
 			virtual const char* getShaderLanguageName() const = 0;
 		protected:
-			IShader(ResourceType::Enum resourceType, IRenderer& renderer);
+			IShader(ResourceType resourceType, IRenderer& renderer);
 			explicit IShader(const IShader& source);
 			IShader& operator =(const IShader& source);
 		};

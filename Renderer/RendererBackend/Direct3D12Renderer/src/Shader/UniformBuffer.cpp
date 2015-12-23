@@ -38,7 +38,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum) :
+	UniformBuffer::UniformBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage) :
 		Renderer::IUniformBuffer(direct3D12Renderer),
 		mD3D12Resource(nullptr),
 		mD3D12DescriptorHeap(nullptr),

@@ -38,34 +38,31 @@ namespace Renderer
 	*  @brief
 	*    Resource type
 	*/
-	struct ResourceType
+	enum class ResourceType
 	{
-		enum Enum
-		{
-			ROOT_SIGNATURE				   = 0,		///< Root signature
-			PROGRAM						   = 1,		///< Program
-			VERTEX_ARRAY				   = 2,		///< Vertex array object (VAO, input-assembler (IA) stage)
-			// IRenderTarget
-			SWAP_CHAIN					   = 3,		///< Swap chain
-			FRAMEBUFFER					   = 4,		///< Framebuffer object (FBO)
-			// IBuffer
-			INDEX_BUFFER				   = 5,		///< Index buffer object (IBO, input-assembler (IA) stage)
-			VERTEX_BUFFER				   = 6,		///< Vertex buffer object (VBO, input-assembler (IA) stage)
-			UNIFORM_BUFFER				   = 7,		///< Uniform buffer object (UBO, "constant buffer" in Direct3D terminology)
-			// ITexture
-			TEXTURE_BUFFER				   = 8,		///< Texture buffer object (TBO)
-			TEXTURE_2D					   = 9,		///< Texture 2D
-			TEXTURE_2D_ARRAY			   = 10,	///< Texture 2D array
-			// IState
-			PIPELINE_STATE				   = 11,	///< Pipeline state (PSO)
-			SAMPLER_STATE				   = 12,	///< Sampler state
-			// IShader
-			VERTEX_SHADER				   = 13,	///< Vertex shader (VS)
-			TESSELLATION_CONTROL_SHADER	   = 14,	///< Tessellation control shader (TCS, "hull shader" in Direct3D terminology)
-			TESSELLATION_EVALUATION_SHADER = 15,	///< Tessellation evaluation shader (TES, "domain shader" in Direct3D terminology)
-			GEOMETRY_SHADER				   = 16,	///< Geometry shader (GS)
-			FRAGMENT_SHADER				   = 17		///< Fragment shader (FS, "pixel shader" in Direct3D terminology)
-		};
+		ROOT_SIGNATURE				   = 0,		///< Root signature
+		PROGRAM						   = 1,		///< Program
+		VERTEX_ARRAY				   = 2,		///< Vertex array object (VAO, input-assembler (IA) stage)
+		// IRenderTarget
+		SWAP_CHAIN					   = 3,		///< Swap chain
+		FRAMEBUFFER					   = 4,		///< Framebuffer object (FBO)
+		// IBuffer
+		INDEX_BUFFER				   = 5,		///< Index buffer object (IBO, input-assembler (IA) stage)
+		VERTEX_BUFFER				   = 6,		///< Vertex buffer object (VBO, input-assembler (IA) stage)
+		UNIFORM_BUFFER				   = 7,		///< Uniform buffer object (UBO, "constant buffer" in Direct3D terminology)
+		// ITexture
+		TEXTURE_BUFFER				   = 8,		///< Texture buffer object (TBO)
+		TEXTURE_2D					   = 9,		///< Texture 2D
+		TEXTURE_2D_ARRAY			   = 10,	///< Texture 2D array
+		// IState
+		PIPELINE_STATE				   = 11,	///< Pipeline state (PSO)
+		SAMPLER_STATE				   = 12,	///< Sampler state
+		// IShader
+		VERTEX_SHADER				   = 13,	///< Vertex shader (VS)
+		TESSELLATION_CONTROL_SHADER	   = 14,	///< Tessellation control shader (TCS, "hull shader" in Direct3D terminology)
+		TESSELLATION_EVALUATION_SHADER = 15,	///< Tessellation evaluation shader (TES, "domain shader" in Direct3D terminology)
+		GEOMETRY_SHADER				   = 16,	///< Geometry shader (GS)
+		FRAGMENT_SHADER				   = 17		///< Fragment shader (FS, "pixel shader" in Direct3D terminology)
 	};
 
 

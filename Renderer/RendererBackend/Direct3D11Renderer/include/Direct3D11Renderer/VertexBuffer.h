@@ -76,7 +76,7 @@ namespace Direct3D11Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		VertexBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage::Enum bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		VertexBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief

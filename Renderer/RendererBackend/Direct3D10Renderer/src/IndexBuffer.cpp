@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	IndexBuffer::IndexBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
 		IIndexBuffer(direct3D10Renderer),
 		mD3D10Buffer(nullptr),
 		mDXGIFormat(DXGI_FORMAT_UNKNOWN)

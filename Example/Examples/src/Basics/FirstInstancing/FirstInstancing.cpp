@@ -91,7 +91,7 @@ void FirstInstancing::onInitialization()
 				{
 					{ // Attribute 0
 						// Data destination
-						Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+						Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 						"Position",									// name[32] (char)
 						"POSITION",									// semanticName[32] (char)
 						0,											// semanticIndex (uint32_t)
@@ -103,7 +103,7 @@ void FirstInstancing::onInitialization()
 					},
 					{ // Attribute 1
 						// Data destination
-						Renderer::VertexAttributeFormat::FLOAT_1,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+						Renderer::VertexAttributeFormat::FLOAT_1,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 						"InstanceID",								// name[32] (char)
 						"TEXCOORD",									// semanticName[32] (char)
 						0,											// semanticIndex (uint32_t)
@@ -198,7 +198,7 @@ void FirstInstancing::onInitialization()
 				{
 					{ // Attribute 0
 						// Data destination
-						Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+						Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 						"Position",									// name[32] (char)
 						"POSITION",									// semanticName[32] (char)
 						0,											// semanticIndex (uint32_t)

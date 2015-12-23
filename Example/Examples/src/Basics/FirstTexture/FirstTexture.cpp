@@ -136,7 +136,7 @@ void FirstTexture::onInitialization()
 		{
 			{ // Attribute 0
 				// Data destination
-				Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat::Enum)
+				Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 				"Position",									// name[32] (char)
 				"POSITION",									// semanticName[32] (char)
 				0,											// semanticIndex (uint32_t)

@@ -35,7 +35,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	int Mapping::getOpenGLMagFilterMode(Renderer::FilterMode::Enum filterMode)
+	int Mapping::getOpenGLMagFilterMode(Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -98,7 +98,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	int Mapping::getOpenGLMinFilterMode(Renderer::FilterMode::Enum filterMode, bool hasMipmaps)
+	int Mapping::getOpenGLMinFilterMode(Renderer::FilterMode filterMode, bool hasMipmaps)
 	{
 		switch (filterMode)
 		{
@@ -161,7 +161,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	int Mapping::getOpenGLCompareMode(Renderer::FilterMode::Enum filterMode)
+	int Mapping::getOpenGLCompareMode(Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -192,7 +192,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	int Mapping::getOpenGLTextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode)
+	int Mapping::getOpenGLTextureAddressMode(Renderer::TextureAddressMode textureAddressMode)
 	{
 		static const GLint MAPPING[] =
 		{
@@ -202,10 +202,10 @@ namespace OpenGLRenderer
 			GL_CLAMP_TO_BORDER,	// Renderer::TextureAddressMode::BORDER
 			GL_MIRRORED_REPEAT	// Renderer::TextureAddressMode::MIRROR_ONCE	// TODO(co) OpenGL equivalent? GL_ATI_texture_mirror_once ?
 		};
-		return MAPPING[textureAddressMode - 1];	// Lookout! The "Renderer::TextureAddressMode::Enum"-values start with 1, not 0
+		return MAPPING[static_cast<int>(textureAddressMode) - 1];	// Lookout! The "Renderer::TextureAddressMode"-values start with 1, not 0
 	}
 
-	int Mapping::getOpenGLComparisonFunc(Renderer::ComparisonFunc::Enum comparisonFunc)
+	int Mapping::getOpenGLComparisonFunc(Renderer::ComparisonFunc comparisonFunc)
 	{
 		static const GLint MAPPING[] =
 		{
@@ -218,10 +218,10 @@ namespace OpenGLRenderer
 			GL_GEQUAL,		// Renderer::ComparisonFunc::GREATER_EQUAL
 			GL_ALWAYS		// Renderer::ComparisonFunc::ALWAYS
 		};
-		return MAPPING[comparisonFunc - 1];	// Lookout! The "Renderer::ComparisonFunc::Enum"-values start with 1, not 0
+		return MAPPING[static_cast<int>(comparisonFunc) - 1];	// Lookout! The "Renderer::ComparisonFunc"-values start with 1, not 0
 	}
 
-	int Mapping::getOpenGLSize(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat)
+	int Mapping::getOpenGLSize(Renderer::VertexAttributeFormat vertexAttributeFormat)
 	{
 		static const GLint MAPPING[] =
 		{
@@ -233,10 +233,10 @@ namespace OpenGLRenderer
 			2,	// Renderer::VertexAttributeFormat::SHORT_2
 			4	// Renderer::VertexAttributeFormat::SHORT_4
 		};
-		return MAPPING[vertexAttributeFormat];
+		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	uint32_t Mapping::getOpenGLType(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat)
+	uint32_t Mapping::getOpenGLType(Renderer::VertexAttributeFormat vertexAttributeFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -248,7 +248,7 @@ namespace OpenGLRenderer
 			GL_SHORT,			// Renderer::VertexAttributeFormat::SHORT_2
 			GL_SHORT			// Renderer::VertexAttributeFormat::SHORT_4
 		};
-		return MAPPING[vertexAttributeFormat];
+		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
 	uint32_t Mapping::getOpenGLType(Renderer::IndexBufferFormat::Enum indexBufferFormat)
@@ -325,7 +325,7 @@ namespace OpenGLRenderer
 		return MAPPING[textureFormat];
 	}
 
-	uint32_t Mapping::getOpenGLType(Renderer::PrimitiveTopology::Enum primitive)
+	uint32_t Mapping::getOpenGLType(Renderer::PrimitiveTopology primitive)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -335,7 +335,7 @@ namespace OpenGLRenderer
 			GL_TRIANGLES,		// Renderer::PrimitiveTopology::TRIANGLE_LIST
 			GL_TRIANGLE_STRIP	// Renderer::PrimitiveTopology::TRIANGLE_STRIP
 		};
-		return MAPPING[primitive - 1];	// Lookout! The "Renderer::PrimitiveTopology::Enum"-values start with 1, not 0
+		return MAPPING[static_cast<int>(primitive) - 1];	// Lookout! The "Renderer::PrimitiveTopology"-values start with 1, not 0
 	}
 
 

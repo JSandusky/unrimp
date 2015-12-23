@@ -37,7 +37,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	int Mapping::getOpenGLES2MagFilterMode(Renderer::FilterMode::Enum filterMode)
+	int Mapping::getOpenGLES2MagFilterMode(Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -100,7 +100,7 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	int Mapping::getOpenGLES2MinFilterMode(Renderer::FilterMode::Enum filterMode, bool hasMipmaps)
+	int Mapping::getOpenGLES2MinFilterMode(Renderer::FilterMode filterMode, bool hasMipmaps)
 	{
 		switch (filterMode)
 		{
@@ -163,13 +163,13 @@ namespace OpenGLES2Renderer
 		}
 	}
 
-	int Mapping::getOpenGLES2CompareMode(Renderer::FilterMode::Enum)
+	int Mapping::getOpenGLES2CompareMode(Renderer::FilterMode)
 	{
 		// "GL_COMPARE_REF_TO_TEXTURE" is not supported by OpenGL ES 2
 		return GL_NONE;
 	}
 
-	int Mapping::getOpenGLES2TextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode)
+	int Mapping::getOpenGLES2TextureAddressMode(Renderer::TextureAddressMode textureAddressMode)
 	{
 		static const GLint MAPPING[] =
 		{
@@ -179,10 +179,10 @@ namespace OpenGLES2Renderer
 			GL_CLAMP_TO_EDGE,	// Renderer::TextureAddressMode::BORDER - Not supported by OpenGL ES 2
 			GL_MIRRORED_REPEAT	// Renderer::TextureAddressMode::MIRROR_ONCE	// TODO(co) OpenGL ES 2 equivalent?
 		};
-		return MAPPING[textureAddressMode - 1];	// Lookout! The "Renderer::TextureAddressMode::Enum"-values start with 1, not 0
+		return MAPPING[static_cast<int>(textureAddressMode) - 1];	// Lookout! The "Renderer::TextureAddressMode"-values start with 1, not 0
 	}
 
-	int Mapping::getOpenGLES2ComparisonFunc(Renderer::ComparisonFunc::Enum comparisonFunc)
+	int Mapping::getOpenGLES2ComparisonFunc(Renderer::ComparisonFunc comparisonFunc)
 	{
 		static const GLint MAPPING[] =
 		{
@@ -195,10 +195,10 @@ namespace OpenGLES2Renderer
 			GL_GEQUAL,		// Renderer::ComparisonFunc::GREATER_EQUAL
 			GL_ALWAYS		// Renderer::ComparisonFunc::ALWAYS
 		};
-		return MAPPING[comparisonFunc - 1];	// Lookout! The "Renderer::ComparisonFunc::Enum"-values start with 1, not 0
+		return MAPPING[static_cast<int>(comparisonFunc) - 1];	// Lookout! The "Renderer::ComparisonFunc"-values start with 1, not 0
 	}
 
-	int Mapping::getOpenGLES2Size(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat)
+	int Mapping::getOpenGLES2Size(Renderer::VertexAttributeFormat vertexAttributeFormat)
 	{
 		static const GLint MAPPING[] =
 		{
@@ -210,10 +210,10 @@ namespace OpenGLES2Renderer
 			2,	// Renderer::VertexAttributeFormat::SHORT_2
 			4	// Renderer::VertexAttributeFormat::SHORT_4
 		};
-		return MAPPING[vertexAttributeFormat];
+		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	uint32_t Mapping::getOpenGLES2Type(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat)
+	uint32_t Mapping::getOpenGLES2Type(Renderer::VertexAttributeFormat vertexAttributeFormat)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -225,10 +225,10 @@ namespace OpenGLES2Renderer
 			GL_SHORT,			// Renderer::VertexAttributeFormat::SHORT_2
 			GL_SHORT			// Renderer::VertexAttributeFormat::SHORT_4
 		};
-		return MAPPING[vertexAttributeFormat];
+		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	uint32_t Mapping::getOpenGLES2Type(Renderer::BufferUsage::Enum bufferUsage)
+	uint32_t Mapping::getOpenGLES2Type(Renderer::BufferUsage bufferUsage)
 	{
 		// OpenGL ES 2 only supports: "STREAM_DRAW", "STATIC_DRAW" and "DYNAMIC_DRAW"
 
@@ -328,7 +328,7 @@ namespace OpenGLES2Renderer
 		return MAPPING[textureFormat];
 	}
 
-	uint32_t Mapping::getOpenGLES2Type(Renderer::PrimitiveTopology::Enum prmitive)
+	uint32_t Mapping::getOpenGLES2Type(Renderer::PrimitiveTopology prmitive)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -338,7 +338,7 @@ namespace OpenGLES2Renderer
 			GL_TRIANGLES,		// Renderer::PrimitiveTopology::TRIANGLE_LIST
 			GL_TRIANGLE_STRIP	// Renderer::PrimitiveTopology::TRIANGLE_STRIP
 		};
-		return MAPPING[prmitive - 1];	// Lookout! The "Renderer::PrimitiveTopology::Enum"-values start with 1, not 0
+		return MAPPING[static_cast<int>(prmitive) - 1];	// Lookout! The "Renderer::PrimitiveTopology"-values start with 1, not 0
 	}
 
 

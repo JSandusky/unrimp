@@ -37,7 +37,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IState::IState(ResourceType::Enum resourceType, IRenderer &renderer) :
+	inline IState::IState(ResourceType resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing to do in here

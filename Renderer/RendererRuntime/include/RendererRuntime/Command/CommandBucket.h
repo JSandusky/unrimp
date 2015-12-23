@@ -136,7 +136,7 @@ namespace RendererRuntime
 
 			// Input-assembler (IA) stage
 			Renderer::IVertexArray*			  iaVertexArray;
-			Renderer::PrimitiveTopology::Enum iaPrimitiveTopology;
+			Renderer::PrimitiveTopology iaPrimitiveTopology;
 			// Material
 			Material* material;
 			// Draw call specific
@@ -151,7 +151,7 @@ namespace RendererRuntime
 
 			// Input-assembler (IA) stage
 			Renderer::IVertexArray*			  iaVertexArray;
-			Renderer::PrimitiveTopology::Enum iaPrimitiveTopology;
+			Renderer::PrimitiveTopology iaPrimitiveTopology;
 			// Material
 			Material* material;
 			// Draw call specific

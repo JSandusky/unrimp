@@ -35,7 +35,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t Mapping::getDirect3D12Format(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat)
+	uint32_t Mapping::getDirect3D12Format(Renderer::VertexAttributeFormat vertexAttributeFormat)
 	{
 		// DXGI_FORMAT
 		static const uint32_t MAPPING[] =
@@ -48,10 +48,10 @@ namespace Direct3D12Renderer
 			DXGI_FORMAT_R16G16_SINT,		// Renderer::VertexAttributeFormat::SHORT_2
 			DXGI_FORMAT_R16G16B16A16_SINT	// Renderer::VertexAttributeFormat::SHORT_4
 		};
-		return MAPPING[vertexAttributeFormat];
+		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	uint32_t Mapping::getDirect3D12UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum, uint32_t &)
+	uint32_t Mapping::getDirect3D12UsageAndCPUAccessFlags(Renderer::BufferUsage, uint32_t &)
 	{
 		// TODO(co) Direct3D 12
 		/*

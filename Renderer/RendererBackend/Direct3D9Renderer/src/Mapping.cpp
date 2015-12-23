@@ -35,7 +35,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t Mapping::getDirect3D9MagFilterMode(Renderer::FilterMode::Enum filterMode)
+	uint32_t Mapping::getDirect3D9MagFilterMode(Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -98,7 +98,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	uint32_t Mapping::getDirect3D9MinFilterMode(Renderer::FilterMode::Enum filterMode)
+	uint32_t Mapping::getDirect3D9MinFilterMode(Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -161,7 +161,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	uint32_t Mapping::getDirect3D9MipFilterMode(Renderer::FilterMode::Enum filterMode)
+	uint32_t Mapping::getDirect3D9MipFilterMode(Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -224,7 +224,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	uint32_t Mapping::getDirect3D9TextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode)
+	uint32_t Mapping::getDirect3D9TextureAddressMode(Renderer::TextureAddressMode textureAddressMode)
 	{
 		static const uint32_t MAPPING[] =
 		{
@@ -234,11 +234,11 @@ namespace Direct3D9Renderer
 			D3DTADDRESS_BORDER,		// Renderer::TextureAddressMode::BORDER
 			D3DTADDRESS_MIRRORONCE	// Renderer::TextureAddressMode::MIRROR_ONCE
 		};
-		return MAPPING[textureAddressMode - 1];	// Lookout! The "Renderer::TextureAddressMode::Enum"-values start with 1, not 0
+		return MAPPING[static_cast<int>(textureAddressMode) - 1];	// Lookout! The "Renderer::TextureAddressMode"-values start with 1, not 0
 	}
 
 	/*TODO(co)
-	GLint Mapping::getDirect3D9ComparisonFunc(Renderer::ComparisonFunc::Enum comparisonFunc)
+	GLint Mapping::getDirect3D9ComparisonFunc(Renderer::ComparisonFunc comparisonFunc)
 	{
 		static const GLint MAPPING[] =
 		{
@@ -254,7 +254,7 @@ namespace Direct3D9Renderer
 		return MAPPING[comparisonFunc];
 	}*/
 
-	uint8_t Mapping::getDirect3D9Type(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat)
+	uint8_t Mapping::getDirect3D9Type(Renderer::VertexAttributeFormat vertexAttributeFormat)
 	{
 		// BYTE
 		static const uint8_t MAPPING[] =
@@ -267,7 +267,7 @@ namespace Direct3D9Renderer
 			D3DDECLTYPE_SHORT2,	// Renderer::VertexAttributeFormat::SHORT_2
 			D3DDECLTYPE_SHORT4	// Renderer::VertexAttributeFormat::SHORT_4
 		};
-		return MAPPING[vertexAttributeFormat];
+		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
 	uint32_t Mapping::getDirect3D9Semantic(const char *semanticName)
@@ -332,7 +332,7 @@ namespace Direct3D9Renderer
 		return direct3D9Semantic;
 	}
 
-	uint32_t Mapping::getDirect3D9Usage(Renderer::BufferUsage::Enum bufferUsage)
+	uint32_t Mapping::getDirect3D9Usage(Renderer::BufferUsage bufferUsage)
 	{
 		// Direct3D 9 only supports a subset of the OpenGL usage indications
 		// -> See "D3DUSAGE"-documentation at http://msdn.microsoft.com/en-us/library/windows/desktop/bb172625%28v=vs.85%29.aspx

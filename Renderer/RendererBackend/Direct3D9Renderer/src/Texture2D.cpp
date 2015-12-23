@@ -38,7 +38,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D9Renderer &direct3D9Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage) :
+	Texture2D::Texture2D(Direct3D9Renderer &direct3D9Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture2D(direct3D9Renderer, width, height),
 		mDirect3DTexture9(nullptr)
 	{

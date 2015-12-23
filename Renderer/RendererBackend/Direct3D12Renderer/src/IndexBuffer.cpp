@@ -38,7 +38,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum) :
+	IndexBuffer::IndexBuffer(Direct3D12Renderer &direct3D12Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage) :
 		IIndexBuffer(direct3D12Renderer),
 		mD3D12Resource(nullptr)
 	{

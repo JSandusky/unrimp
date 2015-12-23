@@ -38,7 +38,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	TextureBuffer::TextureBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage) :
 		ITextureBuffer(direct3D11Renderer),
 		mD3D11Buffer(nullptr),
 		mD3D11ShaderResourceViewTexture(nullptr)

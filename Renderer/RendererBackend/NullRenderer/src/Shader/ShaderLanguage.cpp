@@ -103,13 +103,13 @@ namespace NullRenderer
 		return new TessellationEvaluationShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::IGeometryShader *ShaderLanguage::createGeometryShaderFromBytecode(const uint8_t *, uint32_t, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguage::createGeometryShaderFromBytecode(const uint8_t *, uint32_t, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfGsOutputVertices", we know there's geometry shader support
 		return new GeometryShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::IGeometryShader *ShaderLanguage::createGeometryShaderFromSourceCode(const char *, Renderer::GsInputPrimitiveTopology::Enum, Renderer::GsOutputPrimitiveTopology::Enum, uint32_t, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguage::createGeometryShaderFromSourceCode(const char *, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfGsOutputVertices", we know there's geometry shader support
 		return new GeometryShader(reinterpret_cast<NullRenderer&>(getRenderer()));
@@ -190,7 +190,7 @@ namespace NullRenderer
 		return nullptr;
 	}
 
-	Renderer::IUniformBuffer *ShaderLanguage::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage::Enum)
+	Renderer::IUniformBuffer *ShaderLanguage::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage)
 	{
 		return new UniformBuffer(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}

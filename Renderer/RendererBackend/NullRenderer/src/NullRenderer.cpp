@@ -246,12 +246,12 @@ namespace NullRenderer
 		return new Framebuffer(*this);
 	}
 
-	Renderer::IVertexBuffer *NullRenderer::createVertexBuffer(uint32_t, const void *, Renderer::BufferUsage::Enum)
+	Renderer::IVertexBuffer *NullRenderer::createVertexBuffer(uint32_t, const void *, Renderer::BufferUsage)
 	{
 		return new VertexBuffer(*this);
 	}
 
-	Renderer::IIndexBuffer *NullRenderer::createIndexBuffer(uint32_t, Renderer::IndexBufferFormat::Enum, const void *, Renderer::BufferUsage::Enum)
+	Renderer::IIndexBuffer *NullRenderer::createIndexBuffer(uint32_t, Renderer::IndexBufferFormat::Enum, const void *, Renderer::BufferUsage)
 	{
 		return new IndexBuffer(*this);
 	}
@@ -279,17 +279,17 @@ namespace NullRenderer
 		return new VertexArray(*this);
 	}
 
-	Renderer::ITextureBuffer *NullRenderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage::Enum)
+	Renderer::ITextureBuffer *NullRenderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage)
 	{
 		return new TextureBuffer(*this);
 	}
 
-	Renderer::ITexture2D *NullRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage::Enum, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITexture2D *NullRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)
 	{
 		return new Texture2D(*this, width, height);
 	}
 
-	Renderer::ITexture2DArray *NullRenderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage::Enum)
+	Renderer::ITexture2DArray *NullRenderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage)
 	{
 		return new Texture2DArray(*this, width, height, numberOfSlices);
 	}
@@ -313,7 +313,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool NullRenderer::map(Renderer::IResource &, uint32_t, Renderer::MapType::Enum, uint32_t, Renderer::MappedSubresource &)
+	bool NullRenderer::map(Renderer::IResource &, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource &)
 	{
 		// Not supported by the null renderer
 		return false;
@@ -421,7 +421,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology::Enum)
+	void NullRenderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology)
 	{
 		// Nothing to do in here
 	}

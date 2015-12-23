@@ -38,7 +38,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	IndexBuffer::IndexBuffer(Direct3D9Renderer &direct3D9Renderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage) :
 		IIndexBuffer(direct3D9Renderer),
 		mDirect3DIndexBuffer9(nullptr)
 	{

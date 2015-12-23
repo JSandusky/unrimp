@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/RendererTypes.h"	// For "Renderer::ColorWriteEnable"
+#include "Renderer/RendererTypes.h"	// For "Renderer::ColorWriteEnableFlag"
 
 
 //[-------------------------------------------------------]
@@ -50,28 +50,25 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_BLEND"-documentation for details
 	*/
-	struct Blend
+	enum class Blend
 	{
-		enum Enum
-		{
-			ZERO			 = 1,
-			ONE				 = 2,
-			SRC_COLOR		 = 3,
-			INV_SRC_COLOR	 = 4,
-			SRC_ALPHA		 = 5,
-			INV_SRC_ALPHA	 = 6,
-			DEST_ALPHA		 = 7,
-			INV_DEST_ALPHA	 = 8,
-			DEST_COLOR		 = 9,
-			INV_DEST_COLOR	 = 10,
-			SRC_ALPHA_SAT	 = 11,
-			BLEND_FACTOR	 = 14,
-			INV_BLEND_FACTOR = 15,
-			SRC_1_COLOR		 = 16,
-			INV_SRC_1_COLOR	 = 17,
-			SRC_1_ALPHA		 = 18,
-			INV_SRC_1_ALPHA	 = 19
-		};
+		ZERO			 = 1,
+		ONE				 = 2,
+		SRC_COLOR		 = 3,
+		INV_SRC_COLOR	 = 4,
+		SRC_ALPHA		 = 5,
+		INV_SRC_ALPHA	 = 6,
+		DEST_ALPHA		 = 7,
+		INV_DEST_ALPHA	 = 8,
+		DEST_COLOR		 = 9,
+		INV_DEST_COLOR	 = 10,
+		SRC_ALPHA_SAT	 = 11,
+		BLEND_FACTOR	 = 14,
+		INV_BLEND_FACTOR = 15,
+		SRC_1_COLOR		 = 16,
+		INV_SRC_1_COLOR	 = 17,
+		SRC_1_ALPHA		 = 18,
+		INV_SRC_1_ALPHA	 = 19
 	};
 
 	/**
@@ -84,16 +81,13 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_BLEND_OP"-documentation for details
 	*/
-	struct BlendOp
+	enum class BlendOp
 	{
-		enum Enum
-		{
-			ADD			 = 1,
-			SUBTRACT	 = 2,
-			REV_SUBTRACT = 3,
-			MIN			 = 4,
-			MAX			 = 5
-		};
+		ADD			 = 1,
+		SUBTRACT	 = 2,
+		REV_SUBTRACT = 3,
+		MIN			 = 4,
+		MAX			 = 5
 	};
 
 
@@ -114,14 +108,14 @@ namespace Renderer
 	*/
 	struct RenderTargetBlendDesc
 	{
-		int			  blendEnable;				///< Boolean value. Default: "false"
-		Blend::Enum	  srcBlend;					///< Default: "Renderer::Blend::ONE"
-		Blend::Enum	  destBlend;				///< Default: "Renderer::Blend::ZERO"
-		BlendOp::Enum blendOp;					///< Default: "Renderer::BlendOp::ADD"
-		Blend::Enum	  srcBlendAlpha;			///< Default: "Renderer::Blend::ONE"
-		Blend::Enum	  destBlendAlpha;			///< Default: "Renderer::Blend::ZERO"
-		BlendOp::Enum blendOpAlpha;				///< Default: "Renderer::BlendOp::ADD"
-		uint8_t		  renderTargetWriteMask;	///< Combination of "Renderer::ColorWriteEnable"-flags. Default: "Renderer::ColorWriteEnable::ALL"
+		int		blendEnable;			///< Boolean value. Default: "false"
+		Blend	srcBlend;				///< Default: "Renderer::Blend::ONE"
+		Blend	destBlend;				///< Default: "Renderer::Blend::ZERO"
+		BlendOp	blendOp;				///< Default: "Renderer::BlendOp::ADD"
+		Blend	srcBlendAlpha;			///< Default: "Renderer::Blend::ONE"
+		Blend	destBlendAlpha;			///< Default: "Renderer::Blend::ZERO"
+		BlendOp	blendOpAlpha;			///< Default: "Renderer::BlendOp::ADD"
+		uint8_t	renderTargetWriteMask;	///< Combination of "Renderer::ColorWriteEnableFlag"-flags. Default: "Renderer::ColorWriteEnableFlag::ALL"
 	};
 
 	/**

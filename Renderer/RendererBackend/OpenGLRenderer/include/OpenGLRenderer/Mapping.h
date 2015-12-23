@@ -69,7 +69,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL magnification filter mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLMagFilterMode(Renderer::FilterMode::Enum filterMode);
+		static int getOpenGLMagFilterMode(Renderer::FilterMode filterMode);
 
 		/**
 		*  @brief
@@ -83,7 +83,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL minification filter mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLMinFilterMode(Renderer::FilterMode::Enum filterMode, bool hasMipmaps);
+		static int getOpenGLMinFilterMode(Renderer::FilterMode filterMode, bool hasMipmaps);
 
 		/**
 		*  @brief
@@ -95,7 +95,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL compare mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLCompareMode(Renderer::FilterMode::Enum filterMode);
+		static int getOpenGLCompareMode(Renderer::FilterMode filterMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureAddressMode                          ]
@@ -110,7 +110,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL texture address mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLTextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode);
+		static int getOpenGLTextureAddressMode(Renderer::TextureAddressMode textureAddressMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::ComparisonFunc                              ]
@@ -125,7 +125,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL comparison function (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLComparisonFunc(Renderer::ComparisonFunc::Enum comparisonFunc);
+		static int getOpenGLComparisonFunc(Renderer::ComparisonFunc comparisonFunc);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::VertexAttributeFormat                       ]
@@ -140,7 +140,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL size (number of elements, type GLint not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLSize(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
+		static int getOpenGLSize(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
 		/**
 		*  @brief
@@ -152,7 +152,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLType(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
+		static uint32_t getOpenGLType(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]
@@ -221,7 +221,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLType(Renderer::PrimitiveTopology::Enum prmitive);
+		static uint32_t getOpenGLType(Renderer::PrimitiveTopology prmitive);
 
 
 	};

@@ -70,7 +70,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 magnification filter mode
 		*/
-		static uint32_t getDirect3D9MagFilterMode(Renderer::FilterMode::Enum filterMode);
+		static uint32_t getDirect3D9MagFilterMode(Renderer::FilterMode filterMode);
 
 		/**
 		*  @brief
@@ -82,7 +82,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 minification filter mode
 		*/
-		static uint32_t getDirect3D9MinFilterMode(Renderer::FilterMode::Enum filterMode);
+		static uint32_t getDirect3D9MinFilterMode(Renderer::FilterMode filterMode);
 
 		/**
 		*  @brief
@@ -94,7 +94,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 mipmapping filter mode
 		*/
-		static uint32_t getDirect3D9MipFilterMode(Renderer::FilterMode::Enum filterMode);
+		static uint32_t getDirect3D9MipFilterMode(Renderer::FilterMode filterMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureAddressMode                          ]
@@ -109,7 +109,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 texture address mode
 		*/
-		static uint32_t getDirect3D9TextureAddressMode(Renderer::TextureAddressMode::Enum textureAddressMode);
+		static uint32_t getDirect3D9TextureAddressMode(Renderer::TextureAddressMode textureAddressMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::ComparisonFunc                              ]
@@ -125,7 +125,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 comparison function
 		*/
-	//	static GLint getDirect3D9ComparisonFunc(Renderer::ComparisonFunc::Enum comparisonFunc);
+	//	static GLint getDirect3D9ComparisonFunc(Renderer::ComparisonFunc comparisonFunc);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::VertexAttributeFormat and semantic          ]
@@ -140,7 +140,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 type (type "BYTE" not used in here in order to keep the header slim)
 		*/
-		static uint8_t getDirect3D9Type(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
+		static uint8_t getDirect3D9Type(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
 		/**
 		*  @brief
@@ -167,7 +167,7 @@ namespace Direct3D9Renderer
 		*  @return
 		*    Direct3D 9 usage
 		*/
-		static uint32_t getDirect3D9Usage(Renderer::BufferUsage::Enum bufferUsage);
+		static uint32_t getDirect3D9Usage(Renderer::BufferUsage bufferUsage);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]

@@ -363,12 +363,12 @@ namespace Direct3D12Renderer
 		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
 	}
 
-	Renderer::IVertexBuffer *Direct3D12Renderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IVertexBuffer *Direct3D12Renderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
 	{
 		return new VertexBuffer(*this, numberOfBytes, data, bufferUsage);
 	}
 
-	Renderer::IIndexBuffer *Direct3D12Renderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IIndexBuffer *Direct3D12Renderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage)
 	{
 		return new IndexBuffer(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
 	}
@@ -379,17 +379,17 @@ namespace Direct3D12Renderer
 		return new VertexArray(*this, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 	}
 
-	Renderer::ITextureBuffer *Direct3D12Renderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::ITextureBuffer *Direct3D12Renderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)
 	{
 		return new TextureBuffer(*this, numberOfBytes, textureFormat, data, bufferUsage);
 	}
 
-	Renderer::ITexture2D *Direct3D12Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue)
+	Renderer::ITexture2D *Direct3D12Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage textureUsage, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue)
 	{
 		return new Texture2D(*this, width, height, textureFormat, data, flags, textureUsage, optimizedTextureClearValue);
 	}
 
-	Renderer::ITexture2DArray *Direct3D12Renderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum textureUsage)
+	Renderer::ITexture2DArray *Direct3D12Renderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage textureUsage)
 	{
 		return new Texture2DArray(*this, width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
 	}
@@ -413,11 +413,11 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool Direct3D12Renderer::map(Renderer::IResource &, uint32_t, Renderer::MapType::Enum, uint32_t, Renderer::MappedSubresource &)
+	bool Direct3D12Renderer::map(Renderer::IResource &, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource &)
 	{
 		// TODO(co) Direct3D 12 update
 		/*
-		// The "Renderer::MapType::Enum" values directly map to Direct3D 10 & 11 & 12 constants, do not change them
+		// The "Renderer::MapType" values directly map to Direct3D 10 & 11 & 12 constants, do not change them
 		// The "Renderer::MappedSubresource" structure directly maps to Direct3D 12, do not change it
 
 		// Evaluate the resource type
@@ -720,10 +720,10 @@ namespace Direct3D12Renderer
 		}
 	}
 
-	void Direct3D12Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology::Enum primitiveTopology)
+	void Direct3D12Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
 	{
 		// Set primitive topology
-		// -> The "Renderer::PrimitiveTopology::Enum" values directly map to Direct3D 9 & 10 & 11 && 12 constants, do not change them
+		// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 && 12 constants, do not change them
 		mD3D12GraphicsCommandList->IASetPrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(primitiveTopology));
 	}
 

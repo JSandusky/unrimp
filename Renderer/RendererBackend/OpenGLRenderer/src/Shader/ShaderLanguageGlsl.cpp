@@ -217,7 +217,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *, const char *, const char *)
 	{
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
@@ -236,7 +236,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromSourceCode(const char *sourceCode, Renderer::GsInputPrimitiveTopology::Enum gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology::Enum gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *, const char *, const char *)
+	Renderer::IGeometryShader *ShaderLanguageGlsl::createGeometryShaderFromSourceCode(const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, const char *, const char *, const char *)
 	{
 		// Check whether or not there's geometry shader support
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();
@@ -358,7 +358,7 @@ namespace OpenGLRenderer
 		return nullptr;
 	}
 
-	Renderer::IUniformBuffer *ShaderLanguageGlsl::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IUniformBuffer *ShaderLanguageGlsl::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
 	{
 		// "GL_ARB_uniform_buffer_object" required
 		OpenGLRenderer &openGLRenderer = getOpenGLRenderer();

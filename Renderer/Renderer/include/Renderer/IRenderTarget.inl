@@ -37,7 +37,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IRenderTarget::IRenderTarget(ResourceType::Enum resourceType, IRenderer &renderer) :
+	inline IRenderTarget::IRenderTarget(ResourceType resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing to do in here

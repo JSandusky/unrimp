@@ -37,7 +37,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IShader::IShader(ResourceType::Enum resourceType, IRenderer &renderer) :
+	inline IShader::IShader(ResourceType resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing to do in here

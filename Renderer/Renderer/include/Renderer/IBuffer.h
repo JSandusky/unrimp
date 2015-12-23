@@ -72,7 +72,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline IBuffer(ResourceType::Enum resourceType, IRenderer &renderer);
+		inline IBuffer(ResourceType resourceType, IRenderer &renderer);
 
 		/**
 		*  @brief

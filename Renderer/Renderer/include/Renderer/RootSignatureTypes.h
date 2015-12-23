@@ -52,15 +52,12 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_DESCRIPTOR_RANGE_TYPE"-documentation for details
 	*/
-	struct DescriptorRangeType
+	enum class DescriptorRangeType
 	{
-		enum Enum
-		{
-			SRV     = 0,
-			UAV     = SRV + 1,
-			CBV     = UAV + 1,
-			SAMPLER = CBV + 1
-		};
+		SRV     = 0,
+		UAV     = SRV + 1,
+		CBV     = UAV + 1,
+		SAMPLER = CBV + 1
 	};
 
 	/**
@@ -75,16 +72,16 @@ namespace Renderer
 	*/
 	struct DescriptorRange
 	{
-		DescriptorRangeType::Enum rangeType;
-		uint32_t				  numberOfDescriptors;
-		uint32_t				  baseShaderRegister;					///< When using explicit binding locations
-		uint32_t				  registerSpace;
-		uint32_t				  offsetInDescriptorsFromTableStart;
+		DescriptorRangeType rangeType;
+		uint32_t			numberOfDescriptors;
+		uint32_t			baseShaderRegister;					///< When using explicit binding locations
+		uint32_t			registerSpace;
+		uint32_t			offsetInDescriptorsFromTableStart;
 
 		// The rest is not part of "D3D12_DESCRIPTOR_RANGE" and was added to support OpenGL and Direct3D 9 as well
 		static const uint32_t NAME_LENGTH = 32;
-		char					  baseShaderRegisterName[NAME_LENGTH];	///< When not using explicit binding locations (OpenGL ES 2, legacy GLSL profiles)
-		uint32_t				  samplerRootParameterIndex;			///< In case this is a texture, the sampler root parameter index is required for OpenGL, OpenGL ES 2 and DirectX 9
+		char				  baseShaderRegisterName[NAME_LENGTH];	///< When not using explicit binding locations (OpenGL ES 2, legacy GLSL profiles)
+		uint32_t			  samplerRootParameterIndex;			///< In case this is a texture, the sampler root parameter index is required for OpenGL, OpenGL ES 2 and DirectX 9
 	};
 	struct DescriptorRangeBuilder : public DescriptorRange
 	{
@@ -96,7 +93,7 @@ namespace Renderer
 		{
 		}
 		DescriptorRangeBuilder(
-			DescriptorRangeType::Enum _rangeType,
+			DescriptorRangeType _rangeType,
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
 			char	 _baseShaderRegisterName[NAME_LENGTH],
@@ -115,7 +112,7 @@ namespace Renderer
 			initialize(*this, DescriptorRangeType::SAMPLER, _numberOfDescriptors, _baseShaderRegister, "", 0, _registerSpace, _offsetInDescriptorsFromTableStart);
 		}
 		inline void initialize(
-			DescriptorRangeType::Enum _rangeType,
+			DescriptorRangeType _rangeType,
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
 			char	 _baseShaderRegisterName[NAME_LENGTH],
@@ -127,7 +124,7 @@ namespace Renderer
 		}
 		static inline void initialize(
 			DescriptorRange& range,
-			DescriptorRangeType::Enum _rangeType,
+			DescriptorRangeType _rangeType,
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
 			char	 _baseShaderRegisterName[NAME_LENGTH],
@@ -200,16 +197,13 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_ROOT_PARAMETER_TYPE"-documentation for details
 	*/
-	struct RootParameterType
+	enum class RootParameterType
 	{
-		enum Enum
-		{
-			DESCRIPTOR_TABLE = 0,
-			CONSTANTS_32BIT  = DESCRIPTOR_TABLE + 1,
-			CBV              = CONSTANTS_32BIT + 1,
-			SRV              = CBV + 1,
-			UAV              = SRV + 1
-		};
+		DESCRIPTOR_TABLE = 0,
+		CONSTANTS_32BIT  = DESCRIPTOR_TABLE + 1,
+		CBV              = CONSTANTS_32BIT + 1,
+		SRV              = CBV + 1,
+		UAV              = SRV + 1
 	};
 
 	/**
@@ -314,17 +308,14 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_SHADER_VISIBILITY"-documentation for details
 	*/
-	struct ShaderVisibility
+	enum class ShaderVisibility
 	{
-		enum Enum
-		{
-			ALL                     = 0,
-			VERTEX                  = 1,
-			TESSELLATION_CONTROL    = 2,
-			TESSELLATION_EVALUATION = 3,
-			GEOMETRY                = 4,
-			FRAGMENT                = 5
-		};
+		ALL                     = 0,
+		VERTEX                  = 1,
+		TESSELLATION_CONTROL    = 2,
+		TESSELLATION_EVALUATION = 3,
+		GEOMETRY                = 4,
+		FRAGMENT                = 5
 	};
 
 	/**
@@ -339,14 +330,14 @@ namespace Renderer
 	*/
 	struct RootParameter
 	{
-		RootParameterType::Enum	parameterType;
+		RootParameterType		parameterType;
 		union
 		{
 			RootDescriptorTable	descriptorTable;
 			RootConstants		constants;
 			RootDescriptor		descriptor;
 		};
-		ShaderVisibility::Enum	shaderVisibility;
+		ShaderVisibility		shaderVisibility;
 	};
 	struct RootParameterBuilder : public RootParameter
 	{
@@ -360,7 +351,7 @@ namespace Renderer
 			RootParameter& rootParam,
 			uint32_t numberOfDescriptorRanges,
 			const DescriptorRange* descriptorRanges,
-			ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+			ShaderVisibility visibility = ShaderVisibility::ALL)
 		{
 			rootParam.parameterType = RootParameterType::DESCRIPTOR_TABLE;
 			rootParam.shaderVisibility = visibility;
@@ -371,7 +362,7 @@ namespace Renderer
 			uint32_t numberOf32BitValues,
 			uint32_t shaderRegister,
 			uint32_t registerSpace = 0,
-			ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+			ShaderVisibility visibility = ShaderVisibility::ALL)
 		{
 			rootParam.parameterType = RootParameterType::CONSTANTS_32BIT;
 			rootParam.shaderVisibility = visibility;
@@ -381,7 +372,7 @@ namespace Renderer
 			RootParameter& rootParam,
 			uint32_t shaderRegister,
 			uint32_t registerSpace = 0,
-			ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+			ShaderVisibility visibility = ShaderVisibility::ALL)
 		{
 			rootParam.parameterType = RootParameterType::CBV;
 			rootParam.shaderVisibility = visibility;
@@ -391,7 +382,7 @@ namespace Renderer
 			RootParameter& rootParam,
 			uint32_t shaderRegister,
 			uint32_t registerSpace = 0,
-			ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+			ShaderVisibility visibility = ShaderVisibility::ALL)
 		{
 			rootParam.parameterType = RootParameterType::SRV;
 			rootParam.shaderVisibility = visibility;
@@ -401,7 +392,7 @@ namespace Renderer
 			RootParameter& rootParam,
 			uint32_t shaderRegister,
 			uint32_t registerSpace = 0,
-			ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+			ShaderVisibility visibility = ShaderVisibility::ALL)
 		{
 			rootParam.parameterType = RootParameterType::UAV;
 			rootParam.shaderVisibility = visibility;
@@ -410,7 +401,7 @@ namespace Renderer
 		inline void initializeAsDescriptorTable(
 			uint32_t numberOfDescriptorRanges,
 			const DescriptorRange* descriptorRanges,
-			ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+			ShaderVisibility visibility = ShaderVisibility::ALL)
 		{
 			initializeAsDescriptorTable(*this, numberOfDescriptorRanges, descriptorRanges, visibility);
 		}
@@ -418,28 +409,28 @@ namespace Renderer
 			uint32_t numberOf32BitValues,
 			uint32_t shaderRegister,
 			uint32_t registerSpace = 0,
-			ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+			ShaderVisibility visibility = ShaderVisibility::ALL)
 		{
 			initializeAsConstants(*this, numberOf32BitValues, shaderRegister, registerSpace, visibility);
 		}
 		inline void initializeAsConstantBufferView(
 			uint32_t shaderRegister,
 			uint32_t registerSpace = 0,
-			ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+			ShaderVisibility visibility = ShaderVisibility::ALL)
 		{
 			initializeAsConstantBufferView(*this, shaderRegister, registerSpace, visibility);
 		}
 		inline void initializeAsShaderResourceView(
 			uint32_t shaderRegister,
 			uint32_t registerSpace = 0,
-			ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+			ShaderVisibility visibility = ShaderVisibility::ALL)
 		{
 			initializeAsShaderResourceView(*this, shaderRegister, registerSpace, visibility);
 		}
 		inline void initializeAsUnorderedAccessView(
 			uint32_t shaderRegister,
 			uint32_t registerSpace = 0,
-			ShaderVisibility::Enum visibility = ShaderVisibility::ALL)
+			ShaderVisibility visibility = ShaderVisibility::ALL)
 		{
 			initializeAsUnorderedAccessView(*this, shaderRegister, registerSpace, visibility);
 		}
@@ -480,14 +471,11 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_STATIC_BORDER_COLOR"-documentation for details
 	*/
-	struct StaticBorderColor
+	enum class StaticBorderColor
 	{
-		enum Enum
-		{
-			TRANSPARENT_BLACK = 0,
-			OPAQUE_BLACK      = TRANSPARENT_BLACK + 1,
-			OPAQUE_WHITE      = OPAQUE_BLACK + 1
-		};
+		TRANSPARENT_BLACK = 0,
+		OPAQUE_BLACK      = TRANSPARENT_BLACK + 1,
+		OPAQUE_WHITE      = OPAQUE_BLACK + 1
 	};
 
 	/**
@@ -502,19 +490,19 @@ namespace Renderer
 	*/
 	struct StaticSampler
 	{
-		FilterMode::Enum		 filter;
-		TextureAddressMode::Enum addressU;
-		TextureAddressMode::Enum addressV;
-		TextureAddressMode::Enum addressW;
-		float					 mipLodBias;
-		uint32_t				 maxAnisotropy;
-		ComparisonFunc::Enum	 comparisonFunc;
-		StaticBorderColor::Enum  borderColor;
-		float					 minLod;
-		float					 maxLod;
-		uint32_t				 shaderRegister;
-		uint32_t				 registerSpace;
-		ShaderVisibility::Enum	 shaderVisibility;
+		FilterMode			filter;
+		TextureAddressMode	addressU;
+		TextureAddressMode	addressV;
+		TextureAddressMode	addressW;
+		float				mipLodBias;
+		uint32_t			maxAnisotropy;
+		ComparisonFunc		comparisonFunc;
+		StaticBorderColor	borderColor;
+		float				minLod;
+		float				maxLod;
+		uint32_t			shaderRegister;
+		uint32_t			registerSpace;
+		ShaderVisibility	shaderVisibility;
 	};
 
 	/**

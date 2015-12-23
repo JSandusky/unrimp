@@ -303,7 +303,7 @@ namespace Renderer
 		*  @return
 		*    The created VBO instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual IVertexBuffer *createVertexBuffer(uint32_t numberOfBytes, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+		virtual IVertexBuffer *createVertexBuffer(uint32_t numberOfBytes, const void *data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 
 		/**
 		*  @brief
@@ -321,7 +321,7 @@ namespace Renderer
 		*  @return
 		*    The created IBO instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual IIndexBuffer *createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+		virtual IIndexBuffer *createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 
 		/**
 		*  @brief
@@ -365,7 +365,7 @@ namespace Renderer
 		*  @note
 		*    - Only supported if "Renderer::Capabilities::maximumTextureBufferSize" is not 0
 		*/
-		virtual ITextureBuffer *createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void *data = nullptr, BufferUsage::Enum bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+		virtual ITextureBuffer *createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void *data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 
 		/**
 		*  @brief
@@ -398,7 +398,7 @@ namespace Renderer
 		*  @note
 		*    - Only supported if "Renderer::Capabilities::maximumNumberOf2DTextureArraySlices" is not 0
 		*/
-		virtual ITexture2D *createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
+		virtual ITexture2D *createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
 
 		/**
 		*  @brief
@@ -429,7 +429,7 @@ namespace Renderer
 		*    - Mip1: Face0, Face1, Face2, Face3, Face4, Face5
 		*    (DDS-texture layout is using face-major order)
 		*/
-		virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage::Enum textureUsage = TextureUsage::DEFAULT) = 0;
+		virtual ITexture2DArray *createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, void *data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
 
 		/**
 		*  @brief
@@ -488,7 +488,7 @@ namespace Renderer
 		*  @return
 		*    "true" if all went fine, else "false"
 		*/
-		virtual bool map(IResource &resource, uint32_t subresource, MapType::Enum mapType, uint32_t mapFlags, MappedSubresource &mappedSubresource) = 0;
+		virtual bool map(IResource &resource, uint32_t subresource, MapType mapType, uint32_t mapFlags, MappedSubresource &mappedSubresource) = 0;
 
 		/**
 		*  @brief
@@ -555,7 +555,7 @@ namespace Renderer
 		*  @param[in] primitiveTopology
 		*    Member of the primitive topology enumerated type, describing the type of primitive to render (default: "Renderer::PrimitiveTopology::UNKNOWN")
 		*/
-		virtual void iaSetPrimitiveTopology(PrimitiveTopology::Enum primitiveTopology) = 0;
+		virtual void iaSetPrimitiveTopology(PrimitiveTopology primitiveTopology) = 0;
 
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]

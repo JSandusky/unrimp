@@ -56,7 +56,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline ITexture::ITexture(ResourceType::Enum resourceType, IRenderer &renderer) :
+	inline ITexture::ITexture(ResourceType resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
 		// Nothing to do in here

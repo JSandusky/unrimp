@@ -58,13 +58,13 @@ namespace Renderer
 		// Return default values
 		static const Renderer::SamplerState SAMPLER_STATE =
 		{																										//	Direct3D 11					Direct3D 10						Direct3D 9				OpenGL
-			Renderer::FilterMode::MIN_MAG_MIP_LINEAR,	// filter (Renderer::FilterMode::Enum)					"MIN_MAG_MIP_LINEAR"			"MIN_MAG_MIP_LINEAR"			"MIN_MAG_MIP_POINT"		"MIN_POINT_MAG_MIP_LINEAR"
-			Renderer::TextureAddressMode::CLAMP,		// addressU (Renderer::TextureAddressMode::Enum)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
-			Renderer::TextureAddressMode::CLAMP,		// addressV (Renderer::TextureAddressMode::Enum)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
-			Renderer::TextureAddressMode::CLAMP,		// addressW (Renderer::TextureAddressMode::Enum)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
+			Renderer::FilterMode::MIN_MAG_MIP_LINEAR,	// filter (Renderer::FilterMode)					"MIN_MAG_MIP_LINEAR"			"MIN_MAG_MIP_LINEAR"			"MIN_MAG_MIP_POINT"		"MIN_POINT_MAG_MIP_LINEAR"
+			Renderer::TextureAddressMode::CLAMP,		// addressU (Renderer::TextureAddressMode)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
+			Renderer::TextureAddressMode::CLAMP,		// addressV (Renderer::TextureAddressMode)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
+			Renderer::TextureAddressMode::CLAMP,		// addressW (Renderer::TextureAddressMode)		"CLAMP"							"CLAMP"							"WRAP"					"WRAP"
 			0.0f,										// mipLODBias (float)									"0.0f"							"0.0f"							"0.0f"					"0.0f"
 			16,											// maxAnisotropy (uint32_t)								"16"							"16"							"1"						"1"
-			Renderer::ComparisonFunc::NEVER,			// comparisonFunc (Renderer::ComparisonFunc::Enum)		"NEVER"							"NEVER"							<unsupported>			"LESS_EQUAL"
+			Renderer::ComparisonFunc::NEVER,			// comparisonFunc (Renderer::ComparisonFunc)		"NEVER"							"NEVER"							<unsupported>			"LESS_EQUAL"
 			{
 				0.0f,									// borderColor[0] (float)								"0.0f"							"0.0f"							"0.0f"					"0.0f"
 				0.0f,									// borderColor[1] (float)								"0.0f"							"0.0f"							"0.0f"					"0.0f"

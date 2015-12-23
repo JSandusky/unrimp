@@ -42,22 +42,19 @@ namespace Renderer
 	*    - Direct3D and OpenGL ES 2 have less fine granular usage settings, in this case the usage will be mapped to the closed match
 	*    - Original OpenGL "GL_ARB_vertex_buffer_object" extension comments from http://www.opengl.org/registry/specs/ARB/vertex_buffer_object.txt are used in here
 	*    - These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
-	*    - Most commong usages: "STREAM_DRAW", "STATIC_DRAW" and "DYNAMIC_DRAW"
+	*    - Most common usages: "STREAM_DRAW", "STATIC_DRAW" and "DYNAMIC_DRAW"
 	*/
-	struct BufferUsage
+	enum class BufferUsage
 	{
-		enum Enum
-		{
-			STREAM_DRAW  = 0x88E0,	///< The data store contents will be specified once by the application, and used at most a few times as the source of a OpenGL (drawing) command. (also exists in OpenGL ES 2)
-			STREAM_READ  = 0x88E1,	///< The data store contents will be specified once by reading data from the OpenGL, and queried at most a few times by the application.
-			STREAM_COPY  = 0x88E2,	///< The data store contents will be specified once by reading data from the OpenGL, and used at most a few times as the source of a OpenGL (drawing) command.
-			STATIC_DRAW  = 0x88E4,	///< The data store contents will be specified once by the application, and used many times as the source for OpenGL (drawing) commands. (also exists in OpenGL ES 2)
-			STATIC_READ  = 0x88E5,	///< The data store contents will be specified once by reading data from the OpenGL, and queried many times by the application.
-			STATIC_COPY  = 0x88E6,	///< The data store contents will be specified once by reading data from the OpenGL, and used many times as the source for OpenGL (drawing) commands.
-			DYNAMIC_DRAW = 0x88E8,	///< The data store contents will be respecified repeatedly by the application, and used many times as the source for OpenGL (drawing) commands. (also exists in OpenGL ES 2)
-			DYNAMIC_READ = 0x88E9,	///< The data store contents will be respecified repeatedly by reading data from the OpenGL, and queried many times by the application.
-			DYNAMIC_COPY = 0x88EA	///< The data store contents will be respecified repeatedly by reading data from the OpenGL, and used many times as the source for OpenGL (drawing) commands.
-		};
+		STREAM_DRAW  = 0x88E0,	///< The data store contents will be specified once by the application, and used at most a few times as the source of a OpenGL (drawing) command. (also exists in OpenGL ES 2)
+		STREAM_READ  = 0x88E1,	///< The data store contents will be specified once by reading data from the OpenGL, and queried at most a few times by the application.
+		STREAM_COPY  = 0x88E2,	///< The data store contents will be specified once by reading data from the OpenGL, and used at most a few times as the source of a OpenGL (drawing) command.
+		STATIC_DRAW  = 0x88E4,	///< The data store contents will be specified once by the application, and used many times as the source for OpenGL (drawing) commands. (also exists in OpenGL ES 2)
+		STATIC_READ  = 0x88E5,	///< The data store contents will be specified once by reading data from the OpenGL, and queried many times by the application.
+		STATIC_COPY  = 0x88E6,	///< The data store contents will be specified once by reading data from the OpenGL, and used many times as the source for OpenGL (drawing) commands.
+		DYNAMIC_DRAW = 0x88E8,	///< The data store contents will be respecified repeatedly by the application, and used many times as the source for OpenGL (drawing) commands. (also exists in OpenGL ES 2)
+		DYNAMIC_READ = 0x88E9,	///< The data store contents will be respecified repeatedly by reading data from the OpenGL, and queried many times by the application.
+		DYNAMIC_COPY = 0x88EA	///< The data store contents will be respecified repeatedly by reading data from the OpenGL, and used many times as the source for OpenGL (drawing) commands.
 	};
 
 

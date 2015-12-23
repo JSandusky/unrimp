@@ -33,7 +33,7 @@ namespace Renderer
 		// Nothing to do in here
 	}
 
-	inline ResourceType::Enum IResource::getResourceType() const
+	inline ResourceType IResource::getResourceType() const
 	{
 		return mResourceType;
 	}
@@ -56,7 +56,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IResource::IResource(ResourceType::Enum resourceType, IRenderer &renderer) :
+	inline IResource::IResource(ResourceType resourceType, IRenderer &renderer) :
 		mResourceType(resourceType),
 		mRenderer(&renderer)
 	{

@@ -38,7 +38,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	VertexBuffer::VertexBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
 		IVertexBuffer(direct3D11Renderer),
 		mD3D11Buffer(nullptr)
 	{

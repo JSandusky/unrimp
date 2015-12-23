@@ -75,7 +75,7 @@ namespace Renderer
 		*  @return
 		*    The resource type
 		*/
-		inline ResourceType::Enum getResourceType() const;
+		inline ResourceType getResourceType() const;
 
 		/**
 		*  @brief
@@ -120,7 +120,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline IResource(ResourceType::Enum resourceType, IRenderer &renderer);
+		inline IResource(ResourceType resourceType, IRenderer &renderer);
 
 		/**
 		*  @brief
@@ -148,7 +148,7 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ResourceType::Enum  mResourceType;	///< The resource type
+		ResourceType  mResourceType;	///< The resource type
 		IRenderer		   *mRenderer;		///< The owner renderer instance, always valid
 
 

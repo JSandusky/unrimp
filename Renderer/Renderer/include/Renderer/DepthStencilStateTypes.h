@@ -50,13 +50,10 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_DEPTH_WRITE_MASK"-documentation for details
 	*/
-	struct DepthWriteMask
+	enum class DepthWriteMask
 	{
-		enum Enum
-		{
-			ZERO = 0,
-			ALL  = 1
-		};
+		ZERO = 0,
+		ALL  = 1
 	};
 
 	/**
@@ -69,19 +66,16 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_STENCIL_OP"-documentation for details
 	*/
-	struct StencilOp
+	enum class StencilOp
 	{
-		enum Enum
-		{
-			KEEP	 = 1,
-			ZERO	 = 2,
-			REPLACE	 = 3,
-			INCR_SAT = 4,
-			DERC_SAT = 5,
-			INVERT	 = 6,
-			INCREASE = 7,
-			DECREASE = 8
-		};
+		KEEP	 = 1,
+		ZERO	 = 2,
+		REPLACE	 = 3,
+		INCR_SAT = 4,
+		DERC_SAT = 5,
+		INVERT	 = 6,
+		INCREASE = 7,
+		DECREASE = 8
 	};
 
 
@@ -101,10 +95,10 @@ namespace Renderer
 	*/
 	struct DepthStencilOpDesc
 	{
-		StencilOp::Enum		 stencilFailOp;			///< Default: "Renderer::StencilOp::KEEP"
-		StencilOp::Enum		 stencilDepthFailOp;	///< Default: "Renderer::StencilOp::KEEP"
-		StencilOp::Enum		 stencilPassOp;			///< Default: "Renderer::StencilOp::KEEP"
-		ComparisonFunc::Enum stencilFunc;			///< Default: "Renderer::ComparisonFunc::ALWAYS"
+		StencilOp		stencilFailOp;		///< Default: "Renderer::StencilOp::KEEP"
+		StencilOp		stencilDepthFailOp;	///< Default: "Renderer::StencilOp::KEEP"
+		StencilOp		stencilPassOp;		///< Default: "Renderer::StencilOp::KEEP"
+		ComparisonFunc	stencilFunc;		///< Default: "Renderer::ComparisonFunc::ALWAYS"
 	};
 
 	/**
@@ -121,14 +115,14 @@ namespace Renderer
 	*/
 	struct DepthStencilState
 	{
-		int					 depthEnable;		///< Boolean value. Default: "true"
-		DepthWriteMask::Enum depthWriteMask;	///< Default: "Renderer::DepthWriteMask::ALL"
-		ComparisonFunc::Enum depthFunc;			///< Default: "Renderer::ComparisonFunc::LESS"
-		int					 stencilEnable;		///< Boolean value. Default: "false"
-		uint8_t				 stencilReadMask;	///< Default: "0xff"
-		uint8_t				 stencilWriteMask;	///< Default: "0xff"
-		DepthStencilOpDesc	 frontFace;			///< Default: See "Renderer::DepthStencilOpDesc"
-		DepthStencilOpDesc	 backFace;			///< Default: See "Renderer::DepthStencilOpDesc"
+		int					depthEnable;		///< Boolean value. Default: "true"
+		DepthWriteMask		depthWriteMask;		///< Default: "Renderer::DepthWriteMask::ALL"
+		ComparisonFunc		depthFunc;			///< Default: "Renderer::ComparisonFunc::LESS"
+		int					stencilEnable;		///< Boolean value. Default: "false"
+		uint8_t				stencilReadMask;	///< Default: "0xff"
+		uint8_t				stencilWriteMask;	///< Default: "0xff"
+		DepthStencilOpDesc	frontFace;			///< Default: See "Renderer::DepthStencilOpDesc"
+		DepthStencilOpDesc	backFace;			///< Default: See "Renderer::DepthStencilOpDesc"
 	};
 	struct DepthStencilStateBuilder
 	{

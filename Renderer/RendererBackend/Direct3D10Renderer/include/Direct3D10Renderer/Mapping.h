@@ -68,7 +68,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    Direct3D 10 format (type "DXGI_FORMAT" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getDirect3D10Format(Renderer::VertexAttributeFormat::Enum vertexAttributeFormat);
+		static uint32_t getDirect3D10Format(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]
@@ -85,7 +85,7 @@ namespace Direct3D10Renderer
 		*  @return
 		*    Direct3D 10 usage (type "D3D10_USAGE" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getDirect3D10UsageAndCPUAccessFlags(Renderer::BufferUsage::Enum bufferUsage, uint32_t &cpuAccessFlags);
+		static uint32_t getDirect3D10UsageAndCPUAccessFlags(Renderer::BufferUsage bufferUsage, uint32_t &cpuAccessFlags);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]

@@ -94,7 +94,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline ITexture(ResourceType::Enum resourceType, IRenderer &renderer);
+		inline ITexture(ResourceType resourceType, IRenderer &renderer);
 
 		/**
 		*  @brief

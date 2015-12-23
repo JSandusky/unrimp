@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage) :
+	VertexBuffer::VertexBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
 		IVertexBuffer(direct3D10Renderer),
 		mD3D10Buffer(nullptr)
 	{

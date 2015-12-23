@@ -88,7 +88,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline IRenderTarget(ResourceType::Enum resourceType, IRenderer &renderer);
+		inline IRenderTarget(ResourceType resourceType, IRenderer &renderer);
 
 		/**
 		*  @brief

@@ -368,7 +368,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IVertexBuffer *OpenGLRenderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IVertexBuffer *OpenGLRenderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
 	{
 		// "GL_ARB_vertex_buffer_object" required
 		if (mExtensions->isGL_ARB_vertex_buffer_object())
@@ -392,7 +392,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IIndexBuffer *OpenGLRenderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::IIndexBuffer *OpenGLRenderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage)
 	{
 		// "GL_ARB_vertex_buffer_object" required
 		if (mExtensions->isGL_ARB_vertex_buffer_object())
@@ -445,7 +445,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITextureBuffer *OpenGLRenderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage::Enum bufferUsage)
+	Renderer::ITextureBuffer *OpenGLRenderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)
 	{
 		// "GL_ARB_texture_buffer_object" required
 		if (mExtensions->isGL_ARB_texture_buffer_object())
@@ -469,7 +469,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITexture2D *OpenGLRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITexture2D *OpenGLRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
 
@@ -494,7 +494,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::ITexture2DArray *OpenGLRenderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage::Enum)
+	Renderer::ITexture2DArray *OpenGLRenderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL has no texture usage indication
 
@@ -557,7 +557,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool OpenGLRenderer::map(Renderer::IResource &, uint32_t, Renderer::MapType::Enum, uint32_t, Renderer::MappedSubresource &)
+	bool OpenGLRenderer::map(Renderer::IResource &, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource &)
 	{
 		// TODO(co) Implement me
 		return false;
@@ -637,7 +637,7 @@ namespace OpenGLRenderer
 			// Check the type of resource to set
 			// TODO(co) Some additional resource type root signature security checks in debug build?
 			// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
-			const Renderer::ResourceType::Enum resourceType = resource->getResourceType();
+			const Renderer::ResourceType resourceType = resource->getResourceType();
 			switch (resourceType)
 			{
 				case Renderer::ResourceType::UNIFORM_BUFFER:
@@ -935,7 +935,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology::Enum primitiveTopology)
+	void OpenGLRenderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
 	{
 		// Tessellation support: Up to 32 vertices per patch are supported "Renderer::PrimitiveTopology::PATCH_LIST_1" ... "Renderer::PrimitiveTopology::PATCH_LIST_32"
 		if (primitiveTopology >= Renderer::PrimitiveTopology::PATCH_LIST_1)
@@ -944,7 +944,7 @@ namespace OpenGLRenderer
 
 			// Get number of vertices that will be used to make up a single patch primitive
 			// -> There's no need to check for the "GL_ARB_tessellation_shader" extension, it's there if "Renderer::Capabilities::maximumNumberOfPatchVertices" is not 0
-			const GLint numberOfVerticesPerPatch = primitiveTopology - Renderer::PrimitiveTopology::PATCH_LIST_1 + 1;
+			const GLint numberOfVerticesPerPatch = static_cast<int>(primitiveTopology) - static_cast<int>(Renderer::PrimitiveTopology::PATCH_LIST_1) + 1;
 			if (numberOfVerticesPerPatch <= static_cast<GLint>(mCapabilities.maximumNumberOfPatchVertices))
 			{
 				// Set number of vertices that will be used to make up a single patch primitive
