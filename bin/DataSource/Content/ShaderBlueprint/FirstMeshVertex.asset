@@ -1,0 +1,23 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "12",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Default",
+			"AssetName": "FirstMeshVertex",
+			"FileDependencies": [ "FirstMeshVertex.shader_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "FirstMeshVertex.shader_blueprint"
+		}
+	}
+}

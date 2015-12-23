@@ -1,0 +1,23 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "14",
+			"AssetType": "MaterialBlueprint",
+			"AssetCategory": "Default",
+			"AssetName": "FirstMesh",
+			"FileDependencies": [ "FirstMesh.material_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
+		},
+		"MaterialBlueprintAssetCompiler":
+		{
+			"InputFile": "FirstMesh.material_blueprint"
+		}
+	}
+}

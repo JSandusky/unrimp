@@ -1,0 +1,23 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "13",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Default",
+			"AssetName": "FirstMeshFragment",
+			"FileDependencies": [ "FirstMeshFragment.shader_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "FirstMeshFragment.shader_blueprint"
+		}
+	}
+}

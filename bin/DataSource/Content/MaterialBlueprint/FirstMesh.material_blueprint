@@ -1,0 +1,236 @@
+{
+	"Format":
+	{
+		"Type": "MaterialBlueprintAsset",
+		"Version": "1"
+	},
+	"MaterialBlueprintAsset":
+	{
+		"Properties":
+		{
+			"DiffuseMap":
+			{
+				"Usage": "DYNAMIC",
+				"ValueType": "TEXTURE",
+				"DefaultValue": "",
+				"Description": "Diffuse map",
+				"SamplerState":
+				{
+					"Filter": "MIN_MAG_MIP_LINEAR",
+					"AddressU": "CLAMP",
+					"AddressV": "CLAMP",
+					"AddressW": "CLAMP",
+					"MipLODBias": "0.0",
+					"MaxAnisotropy": "16",
+					"ComparisonFunc": "NEVER",
+					"BorderColor": "0.0 0.0 0.0 0.0",
+					"MinLOD": "-3.402823466e+38",
+					"MaxLOD": "3.402823466e+38"
+				}
+			},
+			"EmissiveMap":
+			{
+				"Usage": "DYNAMIC",
+				"ValueType": "TEXTURE",
+				"DefaultValue": "",
+				"Description": "Emissive map",
+				"SamplerState":
+				{
+					"Filter": "MIN_MAG_MIP_LINEAR",
+					"AddressU": "CLAMP",
+					"AddressV": "CLAMP",
+					"AddressW": "CLAMP",
+					"MipLODBias": "0.0",
+					"MaxAnisotropy": "16",
+					"ComparisonFunc": "NEVER",
+					"BorderColor": "0.0 0.0 0.0 0.0",
+					"MinLOD": "-3.402823466e+38",
+					"MaxLOD": "3.402823466e+38"
+				}
+			},
+			"NormalMap":
+			{
+				"Usage": "DYNAMIC",
+				"ValueType": "TEXTURE",
+				"DefaultValue": "",
+				"Description": "Normal map",
+				"SamplerState":
+				{
+					"Filter": "MIN_MAG_MIP_LINEAR",
+					"AddressU": "CLAMP",
+					"AddressV": "CLAMP",
+					"AddressW": "CLAMP",
+					"MipLODBias": "0.0",
+					"MaxAnisotropy": "16",
+					"ComparisonFunc": "NEVER",
+					"BorderColor": "0.0 0.0 0.0 0.0",
+					"MinLOD": "-3.402823466e+38",
+					"MaxLOD": "3.402823466e+38"
+				}
+			},
+			"SpecularMap":
+			{
+				"Usage": "DYNAMIC",
+				"ValueType": "TEXTURE",
+				"DefaultValue": "",
+				"Description": "Specular map",
+				"SamplerState":
+				{
+					"Filter": "MIN_MAG_MIP_LINEAR",
+					"AddressU": "CLAMP",
+					"AddressV": "CLAMP",
+					"AddressW": "CLAMP",
+					"MipLODBias": "0.0",
+					"MaxAnisotropy": "16",
+					"ComparisonFunc": "NEVER",
+					"BorderColor": "0.0 0.0 0.0 0.0",
+					"MinLOD": "-3.402823466e+38",
+					"MaxLOD": "3.402823466e+38"
+				}
+			}
+		},
+		"PipelineState":
+		{
+			"RasterizerState":
+			{
+				"FillMode": "SOLID",
+				"CullMode": "BACK",
+				"FrontCounterClockwise": "FALSE",
+				"DepthBias": "0",
+				"DepthBiasClamp": "0.0",
+				"SlopeScaledDepthBias": "0.0",
+				"DepthClipEnable": "TRUE",
+				"ScissorEnable": "FALSE",
+				"MultisampleEnable": "FALSE",
+				"AntialiasedLineEnable": "FALSE"
+			},
+			"DepthStencilState":
+			{
+				"DepthEnable": "TRUE",
+				"DepthWriteMask": "ALL",
+				"DepthFunc": "LESS",
+				"StencilEnable": "FALSE",
+				"StencilReadMask": "255",
+				"StencilWriteMask": "255",
+				"FrontFace":
+				{
+					"StencilFailOp": "KEEP",
+					"StencilDepthFailOp": "KEEP",
+					"StencilPassOp": "KEEP",
+					"StencilFunc": "ALWAYS"
+				},
+				"BackFace":
+				{
+					"StencilFailOp": "KEEP",
+					"StencilDepthFailOp": "KEEP",
+					"StencilPassOp": "KEEP",
+					"StencilFunc": "ALWAYS"
+				}
+			},
+			"BlendState":
+			{
+				"AlphaToCoverageEnable": "FALSE",
+				"IndependentBlendEnable": "FALSE",
+				"RenderTarget[0]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[1]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[2]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[3]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[4]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[5]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[6]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[7]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				}
+			},
+			"ShaderBlueprints":
+			{
+				"Vertex":
+				{
+					"ShaderBlueprint": "12"
+				},
+				"Fragment":
+				{
+					"ShaderBlueprint": "13"
+				}
+			}
+		}
+	}
+}
