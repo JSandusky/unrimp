@@ -265,16 +265,13 @@ namespace Renderer
 				TEXTURE_BUFFER				   = 8,
 				TEXTURE_2D					   = 9,
 				TEXTURE_2D_ARRAY			   = 10,
-				RASTERIZER_STATE			   = 11,
-				PIPELINE_STATE				   = 12,
-				DEPTH_STENCIL_STATE			   = 13,
-				BLEND_STATE					   = 14,
-				SAMPLER_STATE				   = 15,
-				VERTEX_SHADER				   = 16,
-				TESSELLATION_CONTROL_SHADER	   = 17,
-				TESSELLATION_EVALUATION_SHADER = 18,
-				GEOMETRY_SHADER				   = 19,
-				FRAGMENT_SHADER				   = 20
+				PIPELINE_STATE				   = 11,
+				SAMPLER_STATE				   = 12,
+				VERTEX_SHADER				   = 13,
+				TESSELLATION_CONTROL_SHADER	   = 14,
+				TESSELLATION_EVALUATION_SHADER = 15,
+				GEOMETRY_SHADER				   = 16,
+				FRAGMENT_SHADER				   = 17
 			};
 		};
 	#endif

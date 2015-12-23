@@ -504,9 +504,6 @@ namespace Direct3D9Renderer
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 			case Renderer::ResourceType::PIPELINE_STATE:
-			case Renderer::ResourceType::RASTERIZER_STATE:
-			case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-			case Renderer::ResourceType::BLEND_STATE:
 			case Renderer::ResourceType::SAMPLER_STATE:
 			case Renderer::ResourceType::VERTEX_SHADER:
 			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
@@ -550,9 +547,6 @@ namespace Direct3D9Renderer
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 			case Renderer::ResourceType::PIPELINE_STATE:
-			case Renderer::ResourceType::RASTERIZER_STATE:
-			case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-			case Renderer::ResourceType::BLEND_STATE:
 			case Renderer::ResourceType::SAMPLER_STATE:
 			case Renderer::ResourceType::VERTEX_SHADER:
 			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
@@ -750,9 +744,6 @@ namespace Direct3D9Renderer
 				case Renderer::ResourceType::VERTEX_BUFFER:
 				case Renderer::ResourceType::UNIFORM_BUFFER:
 				case Renderer::ResourceType::PIPELINE_STATE:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
 				case Renderer::ResourceType::VERTEX_SHADER:
 				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
@@ -970,9 +961,6 @@ namespace Direct3D9Renderer
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 					case Renderer::ResourceType::PIPELINE_STATE:
-					case Renderer::ResourceType::RASTERIZER_STATE:
-					case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-					case Renderer::ResourceType::BLEND_STATE:
 					case Renderer::ResourceType::SAMPLER_STATE:
 					case Renderer::ResourceType::VERTEX_SHADER:
 					case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:

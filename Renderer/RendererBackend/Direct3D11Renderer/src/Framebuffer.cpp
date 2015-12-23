@@ -120,9 +120,6 @@ namespace Direct3D11Renderer
 						case Renderer::ResourceType::TEXTURE_BUFFER:
 						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 						case Renderer::ResourceType::PIPELINE_STATE:
-						case Renderer::ResourceType::RASTERIZER_STATE:
-						case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-						case Renderer::ResourceType::BLEND_STATE:
 						case Renderer::ResourceType::SAMPLER_STATE:
 						case Renderer::ResourceType::VERTEX_SHADER:
 						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
@@ -195,9 +192,6 @@ namespace Direct3D11Renderer
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::PIPELINE_STATE:
-				case Renderer::ResourceType::RASTERIZER_STATE:
-				case Renderer::ResourceType::DEPTH_STENCIL_STATE:
-				case Renderer::ResourceType::BLEND_STATE:
 				case Renderer::ResourceType::SAMPLER_STATE:
 				case Renderer::ResourceType::VERTEX_SHADER:
 				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
