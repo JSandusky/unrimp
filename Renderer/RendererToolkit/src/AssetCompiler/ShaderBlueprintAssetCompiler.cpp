@@ -25,6 +25,7 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 
+#include <memory>
 #include <fstream>
 
 
@@ -91,8 +92,18 @@ namespace RendererToolkit
 
 		// TODO(co) At the moment, we just copy over the ASCII shader source code. Later on, we might want to perform optimizations like
 		// stripping away all comments and unnecessary white spaces.
+		{
+			// Get file size and file data
+			std::unique_ptr<uint8_t[]> buffer;
+			ifstream.seekg(0, std::ifstream::end);
+			const std::streampos numberOfBytes = ifstream.tellg();
+			ifstream.seekg(0, std::ifstream::beg);
+			buffer = std::unique_ptr<uint8_t[]>(new uint8_t[static_cast<size_t>(numberOfBytes)]);
+			ifstream.read((char*)buffer.get(), numberOfBytes);
 
-		// TODO(co) Implement me
+			// Dump the unchanged content into the output file stream
+			ofstream.write((char*)buffer.get(), numberOfBytes);
+		}
 
 		{ // Update the output asset package
 			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
