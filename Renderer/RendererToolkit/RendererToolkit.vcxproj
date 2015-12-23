@@ -37,9 +37,11 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\FontAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\IAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialBlueprintAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MeshAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SceneAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\ShaderAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\ShaderBlueprintAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SkeletonAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\IRendererToolkit.h" />
@@ -70,9 +72,11 @@
     <ClCompile Include="src\AssetCompiler\CompositorAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\FontAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MaterialAssetCompiler.cpp" />
+    <ClCompile Include="src\AssetCompiler\MaterialBlueprintAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\SceneAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\ShaderAssetCompiler.cpp" />
+    <ClCompile Include="src\AssetCompiler\ShaderBlueprintAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\SkeletonAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\TextureAssetCompiler.cpp">
       <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</TreatWarningAsError>

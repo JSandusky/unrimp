@@ -17,9 +17,6 @@
     <Filter Include="Source Files\Backend">
       <UniqueIdentifier>{6c6ab4e8-c525-497d-8574-4dff5c7a3b8b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Manager">
-      <UniqueIdentifier>{32c5501f-cf1e-4855-9284-a6d4886618a3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Asset">
       <UniqueIdentifier>{e365c668-c101-42ff-9599-bc8ae75788e6}</UniqueIdentifier>
     </Filter>

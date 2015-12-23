@@ -31,6 +31,8 @@
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/SkeletonAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/CompositorAssetCompiler.h"
+#include "RendererToolkit/AssetCompiler/ShaderBlueprintAssetCompiler.h"
+#include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -172,6 +174,14 @@ namespace RendererToolkit
 			#else
 				#error "Unsupported platform"
 			#endif
+		}
+		else if (ShaderBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
+		{
+			ShaderBlueprintAssetCompiler().compile(input, configuration, output);
+		}
+		else if (MaterialBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
+		{
+			MaterialBlueprintAssetCompiler().compile(input, configuration, output);
 		}
 		else if (MaterialAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{

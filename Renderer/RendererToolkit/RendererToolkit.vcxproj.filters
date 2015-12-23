@@ -110,6 +110,12 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SkeletonAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\ShaderBlueprintAssetCompiler.h">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialBlueprintAssetCompiler.h">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -155,6 +161,12 @@
       <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\SkeletonAssetCompiler.cpp">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetCompiler\ShaderBlueprintAssetCompiler.cpp">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetCompiler\MaterialBlueprintAssetCompiler.cpp">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
   </ItemGroup>
