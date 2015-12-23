@@ -6,7 +6,7 @@
 	},
 	"MaterialAsset":
 	{
-		"Shader": "3",
+		"MaterialBlueprint": "14",
 		"Properties":
 		{
 			"DiffuseMap": "4",
