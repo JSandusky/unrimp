@@ -94,15 +94,15 @@ namespace RendererToolkit
 		}
 
 		// Open the input file
-		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
+		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".compositor";
-		std::ofstream ofstream(outputAssetFilename, std::ios::binary);
+		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
 		{ // Compositor
 			// Parse JSON
 			Poco::JSON::Parser jsonParser;
-			jsonParser.parse(ifstream);
+			jsonParser.parse(inputFileStream);
 			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
 		
 			{ // Check whether or not the file format matches
@@ -121,7 +121,7 @@ namespace RendererToolkit
 				RendererRuntime::v1Compositor::Header compositorHeader;
 				compositorHeader.formatType	   = RendererRuntime::v1Compositor::FORMAT_TYPE;
 				compositorHeader.formatVersion = RendererRuntime::v1Compositor::FORMAT_VERSION;
-				ofstream.write(reinterpret_cast<const char*>(&compositorHeader), sizeof(RendererRuntime::v1Compositor::Header));
+				outputFileStream.write(reinterpret_cast<const char*>(&compositorHeader), sizeof(RendererRuntime::v1Compositor::Header));
 			}
 
 			Poco::JSON::Object::Ptr jsonCompositorObject = jsonRootObject->get("CompositorAsset").extract<Poco::JSON::Object::Ptr>();
@@ -130,7 +130,7 @@ namespace RendererToolkit
 			{ // Write down the compositor resource nodes
 				RendererRuntime::v1Compositor::Nodes nodes;
 				nodes.numberOfNodes = jsonCompositorNodesObject->size();
-				ofstream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1Compositor::Nodes));
+				outputFileStream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1Compositor::Nodes));
 
 				// Loop through all compositor resource nodes
 				Poco::JSON::Object::ConstIterator nodesIterator = jsonCompositorNodesObject->begin();
@@ -148,7 +148,7 @@ namespace RendererToolkit
 						node.numberOfInputChannels	= jsonInputChannelsObject->size();
 						node.numberOfTargets		= jsonTargetsObject->size();
 						node.numberOfOutputChannels	= jsonOutputChannelsObject->size();
-						ofstream.write(reinterpret_cast<const char*>(&node), sizeof(RendererRuntime::v1Compositor::Node));
+						outputFileStream.write(reinterpret_cast<const char*>(&node), sizeof(RendererRuntime::v1Compositor::Node));
 					}
 
 					{ // Write down the compositor resource node input channels
@@ -158,7 +158,7 @@ namespace RendererToolkit
 						{
 							RendererRuntime::v1Compositor::Channel channel;
 							channel.id = RendererRuntime::StringId(channelsIterator->second.convert<std::string>().c_str());
-							ofstream.write(reinterpret_cast<const char*>(&channel), sizeof(RendererRuntime::v1Compositor::Channel));
+							outputFileStream.write(reinterpret_cast<const char*>(&channel), sizeof(RendererRuntime::v1Compositor::Channel));
 
 							// Next compositor resource node input channel, please
 							++channelsIterator;
@@ -177,7 +177,7 @@ namespace RendererToolkit
 								RendererRuntime::v1Compositor::Target target;
 								target.channelId	  = RendererRuntime::StringId(targetsIterator->first.c_str());
 								target.numberOfPasses = jsonPassesObject->size();
-								ofstream.write(reinterpret_cast<const char*>(&target), sizeof(RendererRuntime::v1Compositor::Target));
+								outputFileStream.write(reinterpret_cast<const char*>(&target), sizeof(RendererRuntime::v1Compositor::Target));
 							}
 
 							{ // Write down the compositor resource node target passes
@@ -208,7 +208,7 @@ namespace RendererToolkit
 										RendererRuntime::v1Compositor::PassHeader passHeader;
 										passHeader.typeId		 = typeId;
 										passHeader.numberOfBytes = numberOfBytes;
-										ofstream.write(reinterpret_cast<const char*>(&passHeader), sizeof(RendererRuntime::v1Compositor::PassHeader));
+										outputFileStream.write(reinterpret_cast<const char*>(&passHeader), sizeof(RendererRuntime::v1Compositor::PassHeader));
 									}
 
 									// Write down the compositor resource node target pass type specific data, if there is any
@@ -232,17 +232,17 @@ namespace RendererToolkit
 												// TODO(co) Error handling
 											}
 
-											ofstream.write(reinterpret_cast<const char*>(&passClear), sizeof(RendererRuntime::v1Compositor::PassClear));
+											outputFileStream.write(reinterpret_cast<const char*>(&passClear), sizeof(RendererRuntime::v1Compositor::PassClear));
 										}
 										else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == typeId)
 										{
 											RendererRuntime::v1Compositor::PassQuad passQuad;
-											ofstream.write(reinterpret_cast<const char*>(&passQuad), sizeof(RendererRuntime::v1Compositor::PassQuad));
+											outputFileStream.write(reinterpret_cast<const char*>(&passQuad), sizeof(RendererRuntime::v1Compositor::PassQuad));
 										}
 										else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == typeId)
 										{
 											RendererRuntime::v1Compositor::PassScene passScene;
-											ofstream.write(reinterpret_cast<const char*>(&passScene), sizeof(RendererRuntime::v1Compositor::PassScene));
+											outputFileStream.write(reinterpret_cast<const char*>(&passScene), sizeof(RendererRuntime::v1Compositor::PassScene));
 										}
 									}
 
@@ -263,7 +263,7 @@ namespace RendererToolkit
 						{
 							RendererRuntime::v1Compositor::Channel channel;
 							channel.id = RendererRuntime::StringId(channelsIterator->second.convert<std::string>().c_str());
-							ofstream.write(reinterpret_cast<const char*>(&channel), sizeof(RendererRuntime::v1Compositor::Channel));
+							outputFileStream.write(reinterpret_cast<const char*>(&channel), sizeof(RendererRuntime::v1Compositor::Channel));
 
 							// Next compositor resource node output channel, please
 							++channelsIterator;

@@ -84,10 +84,10 @@ namespace RendererToolkit
 		}
 
 		// Open the input file
-		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
+		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material_blueprint";
-		std::ofstream ofstream(outputAssetFilename, std::ios::binary);
+		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
 		// TODO(co) Implement me
 

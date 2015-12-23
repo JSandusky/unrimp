@@ -56,8 +56,8 @@ namespace RendererRuntime
 	{
 		try
 		{
-			std::ifstream ifstream(filename, std::ios::binary);
-			mAssetPackageVector.push_back(AssetPackageSerializer().loadAssetPackage(ifstream));
+			std::ifstream inputFileStream(filename, std::ios::binary);
+			mAssetPackageVector.push_back(AssetPackageSerializer().loadAssetPackage(inputFileStream));
 		}
 		catch (const std::exception& e)
 		{

@@ -54,11 +54,11 @@ namespace RendererRuntime
 		// TODO(co) Error handling
 		try
 		{
-			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
+			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
 
 			// Read in the mesh header
 			v1Mesh::Header meshHeader;
-			ifstream.read(reinterpret_cast<char*>(&meshHeader), sizeof(v1Mesh::Header));
+			inputFileStream.read(reinterpret_cast<char*>(&meshHeader), sizeof(v1Mesh::Header));
 			mMeshResource->mNumberOfVertices = meshHeader.numberOfVertices;
 			mMeshResource->mNumberOfIndices  = meshHeader.numberOfIndices;
 
@@ -82,8 +82,8 @@ namespace RendererRuntime
 			}
 
 			// Read in the vertex and index buffer
-			ifstream.read(reinterpret_cast<char*>(mVertexBufferData), mNumberOfUsedVertexBufferDataBytes);
-			ifstream.read(reinterpret_cast<char*>(mIndexBufferData), mNumberOfUsedIndexBufferDataBytes);
+			inputFileStream.read(reinterpret_cast<char*>(mVertexBufferData), mNumberOfUsedVertexBufferDataBytes);
+			inputFileStream.read(reinterpret_cast<char*>(mIndexBufferData), mNumberOfUsedIndexBufferDataBytes);
 
 			// Read in the vertex attributes
 			mNumberOfUsedVertexAttributes = meshHeader.numberOfVertexAttributes;
@@ -93,7 +93,7 @@ namespace RendererRuntime
 				delete [] mVertexAttributes;
 				mVertexAttributes = new Renderer::VertexAttribute[mNumberOfVertexAttributes];
 			}
-			ifstream.read(reinterpret_cast<char*>(mVertexAttributes), sizeof(Renderer::VertexAttribute) * mNumberOfUsedVertexAttributes);
+			inputFileStream.read(reinterpret_cast<char*>(mVertexAttributes), sizeof(Renderer::VertexAttribute) * mNumberOfUsedVertexAttributes);
 		}
 		catch (const std::exception& e)
 		{

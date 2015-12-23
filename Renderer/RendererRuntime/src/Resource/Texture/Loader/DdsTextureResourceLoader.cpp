@@ -135,13 +135,13 @@ namespace RendererRuntime
 		// TODO(co) Cleanup and complete, currently just a prototype
 		try
 		{
-			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
+			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
 
 			#define MCHAR4(a, b, c, d) (a | (b << 8) | (c << 16) | (d << 24))
 
 			// Read the header
 			detail::DdsHeader ddsHeader;
-			ifstream.read(reinterpret_cast<char*>(&ddsHeader), sizeof(detail::DdsHeader));
+			inputFileStream.read(reinterpret_cast<char*>(&ddsHeader), sizeof(detail::DdsHeader));
 			if (ddsHeader.magic[0] == 'D' && ddsHeader.magic[1] == 'D' && ddsHeader.magic[2] == 'S' && ddsHeader.magic[3] == ' ' &&
 				// Note that if "size" is "DDS " this is not a valid dds file according
 				// to the file spec. Some broken tool out there seems to produce files
@@ -166,7 +166,7 @@ namespace RendererRuntime
 					{
 						// Read the DX10 header
 						detail::DdsHeaderDX10 ddsHeaderDX10;
-						ifstream.read(reinterpret_cast<char*>(&ddsHeaderDX10), sizeof(detail::DdsHeaderDX10));
+						inputFileStream.read(reinterpret_cast<char*>(&ddsHeaderDX10), sizeof(detail::DdsHeaderDX10));
 
 						// Get the color format and compression
 						switch (ddsHeaderDX10.DXGIFormat)
@@ -496,7 +496,7 @@ namespace RendererRuntime
 
 					// TODO(co)
 					// A simple one: Just read in the whole compressed data
-					ifstream.read(reinterpret_cast<char*>(mImageData), mNumberOfUsedImageDataBytes);
+					inputFileStream.read(reinterpret_cast<char*>(mImageData), mNumberOfUsedImageDataBytes);
 
 
 

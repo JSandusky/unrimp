@@ -42,7 +42,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	AssetPackage* AssetPackageSerializer::loadAssetPackage(std::istream& istream)
+	AssetPackage* AssetPackageSerializer::loadAssetPackage(std::istream& inputStream)
 	{
 		AssetPackage* assetPackage = new AssetPackage;
 
@@ -57,12 +57,12 @@ namespace RendererRuntime
 			};
 		#pragma pack(pop)
 		AssetPackageHeader assetPackageHeader;
-		istream.read(reinterpret_cast<char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
+		inputStream.read(reinterpret_cast<char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
 
 		// Read in the asset package content in one single burst
 		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage->getWritableSortedAssetVector();
 		sortedAssetVector.resize(assetPackageHeader.numberOfAssets);
-		istream.read(reinterpret_cast<char*>(sortedAssetVector.data()), sizeof(Asset) * assetPackageHeader.numberOfAssets);
+		inputStream.read(reinterpret_cast<char*>(sortedAssetVector.data()), sizeof(Asset) * assetPackageHeader.numberOfAssets);
 
 		// Done
 		return assetPackage;

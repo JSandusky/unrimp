@@ -93,15 +93,15 @@ namespace RendererToolkit
 		}
 
 		// Open the input file
-		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
+		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".scene";
-		std::ofstream ofstream(outputAssetFilename, std::ios::binary);
+		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
 		{ // Scene
 			// Parse JSON
 			Poco::JSON::Parser jsonParser;
-			jsonParser.parse(ifstream);
+			jsonParser.parse(inputFileStream);
 			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
 		
 			{ // Check whether or not the file format matches
@@ -120,7 +120,7 @@ namespace RendererToolkit
 				RendererRuntime::v1Scene::Header sceneHeader;
 				sceneHeader.formatType	  = RendererRuntime::v1Scene::FORMAT_TYPE;
 				sceneHeader.formatVersion = RendererRuntime::v1Scene::FORMAT_VERSION;
-				ofstream.write(reinterpret_cast<const char*>(&sceneHeader), sizeof(RendererRuntime::v1Scene::Header));
+				outputFileStream.write(reinterpret_cast<const char*>(&sceneHeader), sizeof(RendererRuntime::v1Scene::Header));
 			}
 
 			Poco::JSON::Object::Ptr jsonSceneObject = jsonRootObject->get("SceneAsset").extract<Poco::JSON::Object::Ptr>();
@@ -129,7 +129,7 @@ namespace RendererToolkit
 			{ // Write down the scene nodes
 				RendererRuntime::v1Scene::Nodes nodes;
 				nodes.numberOfNodes = jsonSceneNodesObject->size();
-				ofstream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1Scene::Nodes));
+				outputFileStream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1Scene::Nodes));
 
 				// Loop through all scene nodes
 				Poco::JSON::Object::ConstIterator nodesIterator = jsonSceneNodesObject->begin();
@@ -210,7 +210,7 @@ namespace RendererToolkit
 
 						// Write down the scene node
 						node.numberOfItems = jsonItemsObject->size();
-						ofstream.write(reinterpret_cast<const char*>(&node), sizeof(RendererRuntime::v1Scene::Node));
+						outputFileStream.write(reinterpret_cast<const char*>(&node), sizeof(RendererRuntime::v1Scene::Node));
 					}
 
 					{ // Write down the scene items
@@ -237,7 +237,7 @@ namespace RendererToolkit
 								RendererRuntime::v1Scene::ItemHeader itemHeader;
 								itemHeader.typeId		 = typeId;
 								itemHeader.numberOfBytes = numberOfBytes;
-								ofstream.write(reinterpret_cast<const char*>(&itemHeader), sizeof(RendererRuntime::v1Scene::ItemHeader));
+								outputFileStream.write(reinterpret_cast<const char*>(&itemHeader), sizeof(RendererRuntime::v1Scene::ItemHeader));
 							}
 
 							// Write down the scene item type specific data, if there is any
@@ -258,7 +258,7 @@ namespace RendererToolkit
 									// Write the mesh item data
 									RendererRuntime::v1Scene::MeshItem meshItem;
 									meshItem.meshAssetId = compiledAssetId;
-									ofstream.write(reinterpret_cast<const char*>(&meshItem), sizeof(RendererRuntime::v1Scene::MeshItem));
+									outputFileStream.write(reinterpret_cast<const char*>(&meshItem), sizeof(RendererRuntime::v1Scene::MeshItem));
 								}
 							}
 

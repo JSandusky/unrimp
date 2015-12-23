@@ -44,11 +44,11 @@ namespace
 {
 	namespace detail
 	{
-		void nodeTargetDeserialization(std::istream& istream, RendererRuntime::CompositorResourceNode& compositorResourceNode, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
+		void nodeTargetDeserialization(std::istream& inputStream, RendererRuntime::CompositorResourceNode& compositorResourceNode, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
 		{
 			// Read in the compositor resource target
 			RendererRuntime::v1Compositor::Target target;
-			istream.read(reinterpret_cast<char*>(&target), sizeof(RendererRuntime::v1Compositor::Target));
+			inputStream.read(reinterpret_cast<char*>(&target), sizeof(RendererRuntime::v1Compositor::Target));
 
 			// Create the compositor resource target instance
 			RendererRuntime::CompositorResourceTarget& compositorResourceTarget = compositorResourceNode.addCompositorResourceTarget(target.channelId);
@@ -59,7 +59,7 @@ namespace
 			{
 				// Read the pass header
 				RendererRuntime::v1Compositor::PassHeader passHeader;
-				istream.read(reinterpret_cast<char*>(&passHeader), sizeof(RendererRuntime::v1Compositor::PassHeader));
+				inputStream.read(reinterpret_cast<char*>(&passHeader), sizeof(RendererRuntime::v1Compositor::PassHeader));
 
 				// Create the compositor resource pass
 				RendererRuntime::ICompositorResourcePass* compositorResourcePass = compositorResourceTarget.addCompositorResourcePass(compositorPassFactory, passHeader.typeId);
@@ -70,7 +70,7 @@ namespace
 					// Load in the compositor resource pass data
 					// TODO(co) Get rid of the new/delete in here
 					uint8_t* data = new uint8_t[passHeader.numberOfBytes];
-					istream.read(reinterpret_cast<char*>(data), passHeader.numberOfBytes);
+					inputStream.read(reinterpret_cast<char*>(data), passHeader.numberOfBytes);
 
 					// Deserialize the compositor resource pass
 					compositorResourcePass->deserialize(passHeader.numberOfBytes, data);
@@ -85,11 +85,11 @@ namespace
 			}
 		}
 
-		void nodeDeserialization(std::istream& istream, RendererRuntime::CompositorResource& compositorResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
+		void nodeDeserialization(std::istream& inputStream, RendererRuntime::CompositorResource& compositorResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
 		{
 			// Read in the compositor resource node
 			RendererRuntime::v1Compositor::Node node;
-			istream.read(reinterpret_cast<char*>(&node), sizeof(RendererRuntime::v1Compositor::Node));
+			inputStream.read(reinterpret_cast<char*>(&node), sizeof(RendererRuntime::v1Compositor::Node));
 
 			// Create the compositor resource node instance
 			// TODO(co) Handle already existing compositor resource nodes
@@ -101,7 +101,7 @@ namespace
 			for (uint32_t i = 0; i < node.numberOfInputChannels; ++i)
 			{
 				RendererRuntime::CompositorChannelId channelId;
-				istream.read(reinterpret_cast<char*>(&channelId), sizeof(RendererRuntime::CompositorChannelId));
+				inputStream.read(reinterpret_cast<char*>(&channelId), sizeof(RendererRuntime::CompositorChannelId));
 				compositorResourceNode->addInputChannel(channelId);
 			}
 
@@ -109,7 +109,7 @@ namespace
 			compositorResourceNode->setNumberOfCompositorResourceTargets(node.numberOfTargets);
 			for (uint32_t i = 0; i < node.numberOfTargets; ++i)
 			{
-				nodeTargetDeserialization(istream, *compositorResourceNode, compositorPassFactory);
+				nodeTargetDeserialization(inputStream, *compositorResourceNode, compositorPassFactory);
 			}
 
 			// Read in the compositor resource node output channels
@@ -118,22 +118,22 @@ namespace
 			for (uint32_t i = 0; i < node.numberOfOutputChannels; ++i)
 			{
 				RendererRuntime::CompositorChannelId channelId;
-				istream.read(reinterpret_cast<char*>(&channelId), sizeof(RendererRuntime::CompositorChannelId));
+				inputStream.read(reinterpret_cast<char*>(&channelId), sizeof(RendererRuntime::CompositorChannelId));
 				compositorResourceNode->addOutputChannel(channelId);
 			}
 		}
 
-		void nodesDeserialization(std::istream& istream, RendererRuntime::CompositorResource& compositorResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
+		void nodesDeserialization(std::istream& inputStream, RendererRuntime::CompositorResource& compositorResource, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
 		{
 			// Read in the compositor resource nodes
 			RendererRuntime::v1Compositor::Nodes nodes;
-			istream.read(reinterpret_cast<char*>(&nodes), sizeof(RendererRuntime::v1Compositor::Nodes));
+			inputStream.read(reinterpret_cast<char*>(&nodes), sizeof(RendererRuntime::v1Compositor::Nodes));
 
 			// Read in the compositor resource nodes
 			compositorResource.setNumberOfCompositorResourceNodes(nodes.numberOfNodes);
 			for (uint32_t i = 0; i < nodes.numberOfNodes; ++i)
 			{
-				nodeDeserialization(istream, compositorResource, compositorPassFactory);
+				nodeDeserialization(inputStream, compositorResource, compositorPassFactory);
 			}
 		}
 	}
@@ -166,14 +166,14 @@ namespace RendererRuntime
 		const ICompositorPassFactory& compositorPassFactory = static_cast<CompositorResourceManager&>(getResourceManager()).getCompositorPassFactory();
 		try
 		{
-			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
+			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
 
 			// Read in the compositor header
 			v1Compositor::Header compositorHeader;
-			ifstream.read(reinterpret_cast<char*>(&compositorHeader), sizeof(v1Compositor::Header));
+			inputFileStream.read(reinterpret_cast<char*>(&compositorHeader), sizeof(v1Compositor::Header));
 
 			// Read in the compositor resource nodes
-			::detail::nodesDeserialization(ifstream, *mCompositorResource, compositorPassFactory);
+			::detail::nodesDeserialization(inputFileStream, *mCompositorResource, compositorPassFactory);
 		}
 		catch (const std::exception& e)
 		{

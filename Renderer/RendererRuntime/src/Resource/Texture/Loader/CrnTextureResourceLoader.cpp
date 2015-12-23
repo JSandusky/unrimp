@@ -67,19 +67,19 @@ namespace RendererRuntime
 		// TODO(co) Error handling
 		try
 		{
-			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
+			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
 
 			// Load the source image file into memory: Get file size and file data
-			ifstream.seekg(0, std::istream::end);
-			mNumberOfUsedFileDataBytes = static_cast<uint32_t>(ifstream.tellg());
-			ifstream.seekg(0, std::istream::beg);
+			inputFileStream.seekg(0, std::istream::end);
+			mNumberOfUsedFileDataBytes = static_cast<uint32_t>(inputFileStream.tellg());
+			inputFileStream.seekg(0, std::istream::beg);
 			if (mNumberOfFileDataBytes < mNumberOfUsedFileDataBytes)
 			{
 				mNumberOfFileDataBytes = mNumberOfUsedFileDataBytes;
 				delete [] mFileData;
 				mFileData = new uint8_t[mNumberOfFileDataBytes];
 			}
-			ifstream.read(reinterpret_cast<char*>(mFileData), mNumberOfFileDataBytes);
+			inputFileStream.read(reinterpret_cast<char*>(mFileData), mNumberOfFileDataBytes);
 		}
 		catch (const std::exception& e)
 		{

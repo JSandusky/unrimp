@@ -55,11 +55,11 @@ namespace RendererRuntime
 		// TODO(co) Error handling
 		try
 		{
-			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
+			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
 
 			// Read in the font header
 			v1Font::Header fontHeader;
-			ifstream.read(reinterpret_cast<char*>(&fontHeader), sizeof(v1Font::Header));
+			inputFileStream.read(reinterpret_cast<char*>(&fontHeader), sizeof(v1Font::Header));
 			mFontResource->mSize					= fontHeader.size;
 			mFontResource->mResolution				= fontHeader.resolution;
 			mFontResource->mAscender				= fontHeader.ascender;
@@ -71,7 +71,7 @@ namespace RendererRuntime
 
 			// Read in the font glyphs
 			mFontResource->mFontGlyphs = new FontResource::FontGlyphTexture[mFontResource->mNumberOfFontGlyphs];
-			ifstream.read(reinterpret_cast<char*>(mFontResource->mFontGlyphs), sizeof(FontResource::FontGlyphTexture) * mFontResource->mNumberOfFontGlyphs);
+			inputFileStream.read(reinterpret_cast<char*>(mFontResource->mFontGlyphs), sizeof(FontResource::FontGlyphTexture) * mFontResource->mNumberOfFontGlyphs);
 
 			// Allocate memory for the glyph texture atlas and read in the data
 			const uint32_t totalNumberOfBytes = fontHeader.glyphTextureAtlasSizeX * fontHeader.glyphTextureAtlasSizeY; // Alpha, one byte
@@ -83,7 +83,7 @@ namespace RendererRuntime
 			}
 
 			// Read in the font data
-			ifstream.read(reinterpret_cast<char*>(mGlyphTextureAtlasData), totalNumberOfBytes);
+			inputFileStream.read(reinterpret_cast<char*>(mGlyphTextureAtlasData), totalNumberOfBytes);
 		}
 		catch (const std::exception& e)
 		{

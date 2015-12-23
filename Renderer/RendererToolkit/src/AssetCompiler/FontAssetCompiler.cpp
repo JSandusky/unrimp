@@ -333,21 +333,21 @@ namespace RendererToolkit
 		}
 
 		// Open the input file and output file
-		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
+		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".font";
-		std::ofstream ofstream(outputAssetFilename, std::ios::binary);
+		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
 		// Create the FreeType library face (aka "The Font")
 		FT_Face ftFace;
 		std::unique_ptr<FT_Byte[]> buffer;
 		{
 			// Get file size and file data
-			ifstream.seekg(0, std::ifstream::end);
-			const FT_Long numberOfBytes = static_cast<FT_Long>(ifstream.tellg());
-			ifstream.seekg(0, std::ifstream::beg);
+			inputFileStream.seekg(0, std::ifstream::end);
+			const FT_Long numberOfBytes = static_cast<FT_Long>(inputFileStream.tellg());
+			inputFileStream.seekg(0, std::ifstream::beg);
 			buffer = std::unique_ptr<FT_Byte[]>(new FT_Byte[static_cast<size_t>(numberOfBytes)]);
-			ifstream.read((char*)buffer.get(), numberOfBytes);
+			inputFileStream.read((char*)buffer.get(), numberOfBytes);
 
 			// Create the FreeType library face
 			if (0 != FT_New_Memory_Face(*mFtLibrary, buffer.get(), numberOfBytes, 0, &ftFace))
@@ -384,7 +384,7 @@ namespace RendererToolkit
 		fontHeader.glyphTextureAtlasSizeY = detail::getNearestPowerOfTwo(static_cast<uint32_t>(glyphTextureAtlasPadding + glyphsPerRow * (fontHeader.height + glyphTextureAtlasPadding)), false);
 
 		// Write down the font header
-		ofstream.write(reinterpret_cast<const char*>(&fontHeader), sizeof(RendererRuntime::v1Font::Header));
+		outputFileStream.write(reinterpret_cast<const char*>(&fontHeader), sizeof(RendererRuntime::v1Font::Header));
 
 		{ // Fill the font glyphs and data
 			// Allocate memory for the glyph texture atlas and initialize it with zero to avoid sampling artefacts later on
@@ -407,14 +407,14 @@ namespace RendererToolkit
 				}
 
 				// Write down the font glyphs
-				ofstream.write(reinterpret_cast<const char*>(fontGlyphTextures), sizeof(detail::FontGlyphTexture) * fontHeader.numberOfFontGlyphs);
+				outputFileStream.write(reinterpret_cast<const char*>(fontGlyphTextures), sizeof(detail::FontGlyphTexture) * fontHeader.numberOfFontGlyphs);
 
 				// Free allocated memory
 				delete [] fontGlyphTextures;
 			}
 
 			// Write down the font data
-			ofstream.write(reinterpret_cast<const char*>(glyphTextureAtlasData), totalNumberOfBytes);
+			outputFileStream.write(reinterpret_cast<const char*>(glyphTextureAtlasData), totalNumberOfBytes);
 
 			// Free allocated memory
 			delete [] glyphTextureAtlasData;

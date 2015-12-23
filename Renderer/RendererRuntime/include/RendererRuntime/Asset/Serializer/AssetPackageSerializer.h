@@ -63,7 +63,7 @@ namespace RendererRuntime
 
 	// TODO(co) Work-in-progress
 	private:
-		AssetPackage* loadAssetPackage(std::istream& istream);
+		AssetPackage* loadAssetPackage(std::istream& inputStream);
 
 
 	//[-------------------------------------------------------]

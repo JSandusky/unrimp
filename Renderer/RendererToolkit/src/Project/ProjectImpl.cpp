@@ -98,11 +98,11 @@ namespace RendererToolkit
 	{
 		// Open the input stream
 		const std::string absoluteAssetFilename = mProjectDirectory + asset.assetFilename;
-		std::ifstream ifstream(absoluteAssetFilename, std::ios::binary);
+		std::ifstream inputFileStream(absoluteAssetFilename, std::ios::binary);
 
 		// Parse JSON
 		Poco::JSON::Parser jsonParser;
-		jsonParser.parse(ifstream);
+		jsonParser.parse(inputFileStream);
 		Poco::JSON::Object::Ptr jsonAssetRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
 
 		{ // Check whether or not the file format matches
@@ -210,11 +210,11 @@ namespace RendererToolkit
 		clear();
 
 		// Open the input stream
-		std::ifstream ifstream(filename, std::ios::binary);
+		std::ifstream inputFileStream(filename, std::ios::binary);
 
 		// Parse JSON
 		Poco::JSON::Parser jsonParser;
-		jsonParser.parse(ifstream);
+		jsonParser.parse(inputFileStream);
 		Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
 		
 		{ // Check whether or not the file format matches
@@ -264,7 +264,7 @@ namespace RendererToolkit
 			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), detail::orderByAssetId);
 
 			// Open the output file
-			std::ofstream ofstream("../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", std::ios::binary);
+			std::ofstream outputFileStream("../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", std::ios::binary);
 
 			// Write down the asset package header
 			#pragma pack(push)
@@ -280,10 +280,10 @@ namespace RendererToolkit
 			assetPackageHeader.formatType	  = RendererRuntime::StringId("AssetPackage");
 			assetPackageHeader.formatVersion  = 1;
 			assetPackageHeader.numberOfAssets = sortedAssetVector.size();
-			ofstream.write(reinterpret_cast<const char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
+			outputFileStream.write(reinterpret_cast<const char*>(&assetPackageHeader), sizeof(AssetPackageHeader));
 
 			// Write down the asset package content in one single burst
-			ofstream.write(reinterpret_cast<const char*>(sortedAssetVector.data()), sizeof(RendererRuntime::Asset) * assetPackageHeader.numberOfAssets);
+			outputFileStream.write(reinterpret_cast<const char*>(sortedAssetVector.data()), sizeof(RendererRuntime::Asset) * assetPackageHeader.numberOfAssets);
 		}
 	}
 
@@ -322,11 +322,11 @@ namespace RendererToolkit
 	void ProjectImpl::readAssetsByFilename(const std::string& filename)
 	{
 		// Open the input stream
-		std::ifstream ifstream(mProjectDirectory + filename, std::ios::binary);
+		std::ifstream inputFileStream(mProjectDirectory + filename, std::ios::binary);
 
 		// Parse JSON
 		Poco::JSON::Parser jsonParser;
-		jsonParser.parse(ifstream);
+		jsonParser.parse(inputFileStream);
 		Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
 		
 		{ // Check whether or not the file format matches
@@ -381,11 +381,11 @@ namespace RendererToolkit
 	void ProjectImpl::readTargetsByFilename(const std::string& filename)
 	{
 		// Open the input stream
-		std::ifstream ifstream(mProjectDirectory + filename, std::ios::binary);
+		std::ifstream inputFileStream(mProjectDirectory + filename, std::ios::binary);
 
 		// Parse JSON
 		Poco::JSON::Parser jsonParser;
-		jsonParser.parse(ifstream);
+		jsonParser.parse(inputFileStream);
 		Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
 
 		{ // Check whether or not the file format matches
@@ -421,11 +421,11 @@ namespace RendererToolkit
 			const RendererRuntime::Asset& asset = sortedAssetVector[i];
 
 			// Open the input stream
-			std::ifstream ifstream(mProjectDirectory + asset.assetFilename, std::ios::binary);
+			std::ifstream inputFileStream(mProjectDirectory + asset.assetFilename, std::ios::binary);
 
 			// Parse JSON
 			Poco::JSON::Parser jsonParser;
-			jsonParser.parse(ifstream);
+			jsonParser.parse(inputFileStream);
 			Poco::JSON::Object::Ptr jsonAssetRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
 
 			{ // Check whether or not the file format matches

@@ -310,17 +310,17 @@ namespace RendererToolkit
 		}
 
 		// Open the input and output file
-		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
+		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".mesh";
-		std::ofstream ofstream(outputAssetFilename, std::ios::binary);
+		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
 		// Get file size and file data
-		ifstream.seekg(0, std::ifstream::end);
-		const size_t numberOfBytes = static_cast<size_t>(ifstream.tellg());
-		ifstream.seekg(0, std::ifstream::beg);
+		inputFileStream.seekg(0, std::ifstream::end);
+		const size_t numberOfBytes = static_cast<size_t>(inputFileStream.tellg());
+		inputFileStream.seekg(0, std::ifstream::beg);
 		std::unique_ptr<uint8_t[]> buffer = std::unique_ptr<uint8_t[]>(new uint8_t[numberOfBytes]);
-		ifstream.read((char*)buffer.get(), numberOfBytes);
+		inputFileStream.read((char*)buffer.get(), numberOfBytes);
 
 		// Create an instance of the Assimp importer class
 		Assimp::Importer assimpImporter;
@@ -349,7 +349,7 @@ namespace RendererToolkit
 				meshHeader.numberOfVertexAttributes = numberOfVertexAttributes;
 
 				// Write down the mesh header
-				ofstream.write(reinterpret_cast<const char*>(&meshHeader), sizeof(RendererRuntime::v1Mesh::Header));
+				outputFileStream.write(reinterpret_cast<const char*>(&meshHeader), sizeof(RendererRuntime::v1Mesh::Header));
 			}
 
 			{ // Vertex and index buffer data
@@ -368,8 +368,8 @@ namespace RendererToolkit
 				}
 
 				// Write down the vertex and index buffer
-				ofstream.write(reinterpret_cast<const char*>(vertexBufferData), ::detail::NUMBER_OF_BYTES_PER_VERTEX * numberOfVertices);
-				ofstream.write(reinterpret_cast<const char*>(indexBufferData), sizeof(uint16_t) * numberOfIndices);
+				outputFileStream.write(reinterpret_cast<const char*>(vertexBufferData), ::detail::NUMBER_OF_BYTES_PER_VERTEX * numberOfVertices);
+				outputFileStream.write(reinterpret_cast<const char*>(indexBufferData), sizeof(uint16_t) * numberOfIndices);
 
 				// Destroy local vertex and input buffer data
 				delete [] vertexBufferData;
@@ -420,7 +420,7 @@ namespace RendererToolkit
 				};
 
 				// Write down the vertex array attributes
-				ofstream.write(reinterpret_cast<const char*>(vertexAttributes), sizeof(Renderer::VertexAttribute) * numberOfVertexAttributes);
+				outputFileStream.write(reinterpret_cast<const char*>(vertexAttributes), sizeof(Renderer::VertexAttribute) * numberOfVertexAttributes);
 			}
 		}
 		else

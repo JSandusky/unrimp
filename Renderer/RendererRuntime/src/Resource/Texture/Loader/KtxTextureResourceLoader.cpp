@@ -55,7 +55,7 @@ namespace RendererRuntime
 		// TODO(co) Error handling
 		try
 		{
-			std::ifstream ifstream(mAsset.assetFilename, std::ios::binary);
+			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
 
 			// Read in the image header
 			#pragma pack(push)
@@ -79,8 +79,8 @@ namespace RendererRuntime
 				};
 			#pragma pack(pop)
 			KtxHeader ktxHeader;
-			ifstream.read(reinterpret_cast<char*>(&ktxHeader), sizeof(KtxHeader));
-			ifstream.ignore(ktxHeader.bytesOfKeyValueData);
+			inputFileStream.read(reinterpret_cast<char*>(&ktxHeader), sizeof(KtxHeader));
+			inputFileStream.ignore(ktxHeader.bytesOfKeyValueData);
 			mWidth = ktxHeader.pixelWidth;
 			mHeight = ktxHeader.pixelHeight;
 			mTextureFormat = Renderer::TextureFormat::ETC1;	// TODO(co) Make this dynamic
@@ -111,8 +111,8 @@ namespace RendererRuntime
 			for (uint32_t mipmap = 0; mipmap < ktxHeader.numberOfMipmapLevels; ++mipmap)
 			{
 				uint32_t imageSize = 0;
-				ifstream.read(reinterpret_cast<char*>(&imageSize), sizeof(uint32_t));
-				ifstream.read(reinterpret_cast<char*>(currentImageData), imageSize);
+				inputFileStream.read(reinterpret_cast<char*>(&imageSize), sizeof(uint32_t));
+				inputFileStream.read(reinterpret_cast<char*>(currentImageData), imageSize);
 
 				// Move on to the next mipmap
 				currentImageData += imageSize;

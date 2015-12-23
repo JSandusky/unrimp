@@ -826,10 +826,10 @@ namespace RendererToolkit
 	  /*
 		
 		// Open the input file
-//		std::ifstream ifstream(assetInputDirectory + inputFile, std::ios::binary);
+//		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
 		const std::string assetFilename = assetOutputDirectory + assetName + ".dds";	// TODO(co) Make this dynamic
-		std::ofstream ofstream(assetFilename, std::ios::binary);
+		std::ofstream outputFileStream(assetFilename, std::ios::binary);
 
 		// "crunch"-settings
 		float	   bitrate = 0.0f;
@@ -886,11 +886,11 @@ namespace RendererToolkit
 		crn_uint8 *pSrc_file_data = nullptr;
 		{
 			// Get file size and file data
-			ifstream.seekg(0, std::ifstream::end);
-			src_file_size = static_cast<crn_uint32>(ifstream.tellg());
-			ifstream.seekg(0, std::ifstream::beg);
+			inputFileStream.seekg(0, std::ifstream::end);
+			src_file_size = static_cast<crn_uint32>(inputFileStream.tellg());
+			inputFileStream.seekg(0, std::ifstream::beg);
 			pSrc_file_data = new crn_uint8[static_cast<size_t>(src_file_size)];
-			ifstream.read((char*)pSrc_file_data, src_file_size);
+			inputFileStream.read((char*)pSrc_file_data, src_file_size);
 		}
 		crn_uint32 *pSrc_image = (crn_uint32*)stbi_load_from_memory(pSrc_file_data, src_file_size, &width, &height, &actual_comps, 4);
 		if (!pSrc_image)
@@ -990,7 +990,7 @@ comp_params.m_quality_level = cCRNMinQualityLevel;
 		}
 
 		// Write the output file.
-		ofstream.write(reinterpret_cast<const char*>(pOutput_file_data), output_file_size);
+		outputFileStream.write(reinterpret_cast<const char*>(pOutput_file_data), output_file_size);
 
 		crn_free_block(pOutput_file_data);
 		stbi_image_free(pSrc_image);
