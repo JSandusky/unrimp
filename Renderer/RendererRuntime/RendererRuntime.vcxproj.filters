@@ -50,9 +50,6 @@
     <Filter Include="Source Files\Resource\Shader">
       <UniqueIdentifier>{3d1b62cd-f101-4735-8f76-8a10d6af8e9a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resource\Shader\Loader">
-      <UniqueIdentifier>{d76c4bee-05be-4884-aa25-4d6aee293512}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Resource\Texture">
       <UniqueIdentifier>{a1d11784-7b08-49e8-bd1e-791f2d4265da}</UniqueIdentifier>
     </Filter>
@@ -149,9 +146,6 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.inl">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Shader\Loader\ShaderResourceLoader.inl">
-      <Filter>Source Files\Resource\Shader\Loader</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Texture\TextureResource.inl">
       <Filter>Source Files\Resource\Texture</Filter>
@@ -368,9 +362,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderResourceManager.h">
       <Filter>Source Files\Resource\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Shader\Loader\ShaderResourceLoader.h">
-      <Filter>Source Files\Resource\Shader\Loader</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h">
       <Filter>Source Files\Resource\Texture</Filter>
@@ -758,11 +749,11 @@
     <ClCompile Include="src\Resource\ShaderBlueprint\ShaderBlueprintResource.cpp">
       <Filter>Source Files\Resource\ShaderBlueprint</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Shader\Loader\ShaderBlueprintResourceLoader.cpp">
-      <Filter>Source Files\Resource\ShaderBlueprint\Loader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Material\MaterialInstance.cpp">
       <Filter>Source Files\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.cpp">
+      <Filter>Source Files\Resource\ShaderBlueprint\Loader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
