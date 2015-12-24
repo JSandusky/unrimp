@@ -28,9 +28,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialBlueprintResource::~MaterialBlueprintResource()
+	inline Renderer::IRootSignature* MaterialBlueprintResource::getRootSignature() const
 	{
-		// Nothing here
+		return mRootSignature;
 	}
 
 

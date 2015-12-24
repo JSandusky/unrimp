@@ -33,6 +33,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class IRootSignature;
+}
 namespace RendererRuntime
 {
 	class ShaderBlueprintResource;
@@ -80,7 +84,16 @@ namespace RendererRuntime
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~MaterialBlueprintResource();
+		virtual ~MaterialBlueprintResource();
+
+		/**
+		*  @brief
+		*    Return the root signature
+		*
+		*  @return
+		*    The root signature, can be a null pointer, do not destroy the instance
+		*/
+		inline Renderer::IRootSignature* getRootSignature() const;
 
 
 	//[-------------------------------------------------------]
@@ -95,11 +108,12 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ShaderBlueprintResource* mVertexShaderBlueprint;
-		ShaderBlueprintResource* mTessellationControlShaderBlueprint;
-		ShaderBlueprintResource* mTessellationEvaluationShaderBlueprint;
-		ShaderBlueprintResource* mGeometryShaderBlueprint;
-		ShaderBlueprintResource* mFragmentShaderBlueprint;
+		Renderer::IRootSignature* mRootSignature;			///< Root signature, can be a null pointer
+		ShaderBlueprintResource*  mVertexShaderBlueprint;
+		ShaderBlueprintResource*  mTessellationControlShaderBlueprint;
+		ShaderBlueprintResource*  mTessellationEvaluationShaderBlueprint;
+		ShaderBlueprintResource*  mGeometryShaderBlueprint;
+		ShaderBlueprintResource*  mFragmentShaderBlueprint;
 
 
 	};

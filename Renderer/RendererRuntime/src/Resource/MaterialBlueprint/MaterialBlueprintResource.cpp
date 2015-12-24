@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 
+#include <Renderer/Public/Renderer.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -36,6 +38,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MaterialBlueprintResource::MaterialBlueprintResource(ResourceId resourceId) :
 		IResource(resourceId),
+		mRootSignature(nullptr),
 		mVertexShaderBlueprint(nullptr),
 		mTessellationControlShaderBlueprint(nullptr),
 		mTessellationEvaluationShaderBlueprint(nullptr),
@@ -43,6 +46,14 @@ namespace RendererRuntime
 		mFragmentShaderBlueprint(nullptr)
 	{
 		// Nothing here
+	}
+
+	MaterialBlueprintResource::~MaterialBlueprintResource()
+	{
+		if (nullptr != mRootSignature)
+		{
+			mRootSignature->release();
+		}
 	}
 
 
