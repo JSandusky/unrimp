@@ -135,6 +135,15 @@ namespace RendererRuntime
 		return mPipelineState;
 	}
 
+	void MaterialResource::releasePipelineState()
+	{
+		if (nullptr != mPipelineState)
+		{
+			mPipelineState->release();
+			mPipelineState = nullptr;
+		}
+	}
+
 	bool MaterialResource::setGraphicsRootDescriptorTable(Renderer::IRenderer& renderer) const
 	{
 		// Due to background texture loading, some textures might not be ready, yet

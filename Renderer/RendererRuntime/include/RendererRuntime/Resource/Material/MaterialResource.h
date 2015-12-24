@@ -108,6 +108,7 @@ namespace RendererRuntime
 		Renderer::IPipelineState* getPipelineState();
 
 		// TODO(co)
+		void releasePipelineState();
 		bool setGraphicsRootDescriptorTable(Renderer::IRenderer& renderer) const;
 
 

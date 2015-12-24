@@ -95,6 +95,7 @@ namespace RendererRuntime
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 
 		// TODO(co) Implement decent resource handling
+	public:
 		std::vector<MaterialBlueprintResource*> mResources;
 
 

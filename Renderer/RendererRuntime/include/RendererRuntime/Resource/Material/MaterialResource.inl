@@ -30,7 +30,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline MaterialResource::~MaterialResource()
 	{
-		// Nothing here
+		releasePipelineState();
 	}
 
 	inline MaterialBlueprintResource* MaterialResource::getMaterialBlueprintResource() const
