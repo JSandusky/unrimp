@@ -24,6 +24,7 @@
 #include "RendererToolkit/AssetCompiler/ShaderBlueprintAssetCompiler.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintFileFormat.h>
 
 #include <memory>
 #include <fstream>
@@ -90,9 +91,10 @@ namespace RendererToolkit
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".shader_blueprint";
 		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-		// TODO(co) At the moment, we just copy over the ASCII shader source code. Later on, we might want to perform optimizations like
-		// stripping away all comments and unnecessary white spaces.
-		{
+		{ // Shader blueprint
+			// TODO(co) At the moment, we just copy over the ASCII shader source code. Later on, we might want to perform optimizations like
+			// stripping away all comments and unnecessary white spaces.
+
 			// Get file size and file data
 			std::unique_ptr<uint8_t[]> buffer;
 			inputFileStream.seekg(0, std::ifstream::end);
@@ -100,6 +102,16 @@ namespace RendererToolkit
 			inputFileStream.seekg(0, std::ifstream::beg);
 			buffer = std::unique_ptr<uint8_t[]>(new uint8_t[static_cast<size_t>(numberOfBytes)]);
 			inputFileStream.read((char*)buffer.get(), numberOfBytes);
+
+			{ // Shader blueprint header
+				RendererRuntime::v1ShaderBlueprint::Header shaderBlueprintHeader;
+				shaderBlueprintHeader.formatType					= RendererRuntime::v1ShaderBlueprint::FORMAT_TYPE;
+				shaderBlueprintHeader.formatVersion					= RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION;
+				shaderBlueprintHeader.numberOfShaderSourceCodeBytes	= static_cast<uint32_t>(numberOfBytes);
+
+				// Write down the shader blueprint header
+				outputFileStream.write(reinterpret_cast<const char*>(&shaderBlueprintHeader), sizeof(RendererRuntime::v1ShaderBlueprint::Header));
+			}
 
 			// Dump the unchanged content into the output file stream
 			outputFileStream.write((char*)buffer.get(), numberOfBytes);
