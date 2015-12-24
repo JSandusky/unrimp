@@ -234,6 +234,12 @@
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\Loader</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Material\MaterialProperty.inl">
+      <Filter>Source Files\Resource\Material</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintProperty.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -537,6 +543,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintFileFormat.h">
       <Filter>Source Files\Resource\MaterialBlueprint\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialProperty.h">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintProperty.h">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -736,6 +748,12 @@
     </ClCompile>
     <ClCompile Include="src\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Material\MaterialProperty.cpp">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\MaterialBlueprintProperty.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
