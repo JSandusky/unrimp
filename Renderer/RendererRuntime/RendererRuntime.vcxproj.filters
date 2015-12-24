@@ -243,6 +243,9 @@
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResource.inl">
       <Filter>Source Files\Resource\ShaderBlueprint</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Material\MaterialInstance.inl">
+      <Filter>Source Files\Resource\Material</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -558,6 +561,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Loader\ShaderBlueprintFileFormat.h">
       <Filter>Source Files\Resource\ShaderBlueprint\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialInstance.h">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -769,6 +775,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Shader\Loader\ShaderBlueprintResourceLoader.cpp">
       <Filter>Source Files\Resource\ShaderBlueprint\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Material\MaterialInstance.cpp">
+      <Filter>Source Files\Resource\Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
