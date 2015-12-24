@@ -70,15 +70,12 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		struct LoadingState
+		enum class LoadingState
 		{
-			enum Enum
-			{
-				UNLOADED,	///< Not loaded
-				LOADING,	///< Loading is in progress
-				LOADED,		///< Fully loaded
-				UNLOADING	///< Currently unloading	// TODO(co) Currently unused
-			};
+			UNLOADED,	///< Not loaded
+			LOADING,	///< Loading is in progress
+			LOADED,		///< Fully loaded
+			UNLOADING	///< Currently unloading	// TODO(co) Currently unused
 		};
 
 
@@ -87,7 +84,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline ResourceId getResourceId() const;
-		inline LoadingState::Enum getLoadingState() const;
+		inline LoadingState getLoadingState() const;
 
 
 	//[-------------------------------------------------------]
@@ -98,7 +95,7 @@ namespace RendererRuntime
 		inline virtual ~IResource();
 		IResource(const IResource&) = delete;
 		IResource& operator=(const IResource&) = delete;
-		void setLoadingState(LoadingState::Enum loadingState);
+		void setLoadingState(LoadingState loadingState);
 
 
 	//[-------------------------------------------------------]
@@ -106,7 +103,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		ResourceId		   mResourceId;
-		LoadingState::Enum mLoadingState;
+		LoadingState	   mLoadingState;
 		IResourceListener* mResourceListener;
 
 

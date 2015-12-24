@@ -128,7 +128,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::IResourceListener methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstance::onLoadingStateChange(IResource::LoadingState::Enum loadingState)
+	void CompositorInstance::onLoadingStateChange(IResource::LoadingState loadingState)
 	{
 		if (loadingState == IResource::LoadingState::LOADED)
 		{

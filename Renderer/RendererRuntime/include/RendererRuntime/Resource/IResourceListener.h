@@ -54,7 +54,7 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::IResourceListener methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void onLoadingStateChange(IResource::LoadingState::Enum loadingState) = 0;
+		virtual void onLoadingStateChange(IResource::LoadingState loadingState) = 0;
 
 
 	//[-------------------------------------------------------]

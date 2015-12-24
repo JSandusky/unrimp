@@ -126,7 +126,7 @@ void FirstScene::onDrawRequest()
 //[-------------------------------------------------------]
 //[ Protected virtual RendererRuntime::IResourceListener methods ]
 //[-------------------------------------------------------]
-void FirstScene::onLoadingStateChange(RendererRuntime::IResource::LoadingState::Enum loadingState)
+void FirstScene::onLoadingStateChange(RendererRuntime::IResource::LoadingState loadingState)
 {
 	if (RendererRuntime::IResource::LoadingState::LOADED == loadingState)
 	{

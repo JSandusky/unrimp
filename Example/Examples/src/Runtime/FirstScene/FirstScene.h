@@ -96,7 +96,7 @@ public:
 //[ Protected virtual RendererRuntime::IResourceListener methods ]
 //[-------------------------------------------------------]
 protected:
-	virtual void onLoadingStateChange(RendererRuntime::IResource::LoadingState::Enum loadingState) override;
+	virtual void onLoadingStateChange(RendererRuntime::IResource::LoadingState loadingState) override;
 
 
 //[-------------------------------------------------------]

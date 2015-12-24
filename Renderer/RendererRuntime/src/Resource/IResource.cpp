@@ -41,7 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	void IResource::setLoadingState(LoadingState::Enum loadingState)
+	void IResource::setLoadingState(LoadingState loadingState)
 	{
 		mLoadingState = loadingState;
 		if (nullptr != mResourceListener)

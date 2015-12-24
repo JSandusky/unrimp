@@ -32,7 +32,7 @@ namespace RendererRuntime
 		return mResourceId;
 	}
 
-	inline IResource::LoadingState::Enum IResource::getLoadingState() const
+	inline IResource::LoadingState IResource::getLoadingState() const
 	{
 		return mLoadingState;
 	}
