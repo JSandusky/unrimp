@@ -24,6 +24,7 @@
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h>
 
 #include <fstream>
 
@@ -33,6 +34,19 @@
 //[-------------------------------------------------------]
 namespace RendererToolkit
 {
+
+
+	namespace detail
+	{
+		uint32_t getCompiledAssetId(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonShaderBlueprintsObject, const std::string& propertyName)
+		{
+			const uint32_t sourceAssetId = static_cast<uint32_t>(std::atoi(jsonShaderBlueprintsObject->get(propertyName).convert<std::string>().c_str()));
+			SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(sourceAssetId);
+			const uint32_t compiledAssetId = (iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
+			// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
+			return compiledAssetId;
+		}
+	}
 
 
 	//[-------------------------------------------------------]
@@ -89,7 +103,51 @@ namespace RendererToolkit
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material_blueprint";
 		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-		// TODO(co) Implement me
+		{ // Material blueprint
+			// Parse JSON
+			Poco::JSON::Parser jsonParser;
+			jsonParser.parse(inputFileStream);
+			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
+
+			{ // Check whether or not the file format matches
+				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
+				if (jsonFormatObject->get("Type").convert<std::string>() != "MaterialBlueprintAsset")
+				{
+					throw std::exception("Invalid JSON format type, must be \"MaterialBlueprintAsset\"");
+				}
+				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
+				{
+					throw std::exception("Invalid JSON format version, must be 1");
+				}
+			}
+
+			Poco::JSON::Object::Ptr jsonMaterialBlueprintObject = jsonRootObject->get("MaterialBlueprintAsset").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonPropertiesObject = jsonMaterialBlueprintObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonPipelineStateObject = jsonMaterialBlueprintObject->get("PipelineState").extract<Poco::JSON::Object::Ptr>();
+
+			{ // Material blueprint header
+				RendererRuntime::v1MaterialBlueprint::Header materialBlueprintHeader;
+				materialBlueprintHeader.formatType		= RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE;
+				materialBlueprintHeader.formatVersion	= RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION;
+
+				// Write down the material blueprint header
+				outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintHeader), sizeof(RendererRuntime::v1MaterialBlueprint::Header));
+			}
+
+			{ // Shader blueprints
+				Poco::JSON::Object::Ptr jsonShaderBlueprintsObject = jsonPipelineStateObject->get("ShaderBlueprints").extract<Poco::JSON::Object::Ptr>();
+
+				RendererRuntime::v1MaterialBlueprint::ShaderBlueprints shaderBlueprints;
+				shaderBlueprints.vertexShaderBlueprintAssetId				  = detail::getCompiledAssetId(input, jsonShaderBlueprintsObject, "VertexShaderBlueprintAssetId");
+				shaderBlueprints.tessellationControlShaderBlueprintAssetId	  = 0; // TODO(co) Add shader type
+				shaderBlueprints.tessellationEvaluationShaderBlueprintAssetId = 0; // TODO(co) Add shader type
+				shaderBlueprints.geometryShaderBlueprintAssetId				  = 0; // TODO(co) Add shader type
+				shaderBlueprints.fragmentShaderBlueprintAssetId				  = detail::getCompiledAssetId(input, jsonShaderBlueprintsObject, "FragmentShaderBlueprintAssetId");
+
+				// Write down the shader blueprints
+				outputFileStream.write(reinterpret_cast<const char*>(&shaderBlueprints), sizeof(RendererRuntime::v1MaterialBlueprint::ShaderBlueprints));
+			}
+		}
 
 		{ // Update the output asset package
 			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
