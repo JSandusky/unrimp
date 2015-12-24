@@ -53,6 +53,16 @@ namespace RendererRuntime
 		return *mTextureResourceManager;
 	}
 
+	inline ShaderBlueprintResourceManager& IRendererRuntime::getShaderBlueprintResourceManager() const
+	{
+		return *mShaderBlueprintResourceManager;
+	}
+
+	inline ShaderResourceManager& IRendererRuntime::getShaderResourceManager() const
+	{
+		return *mShaderResourceManager;
+	}
+
 	inline MaterialBlueprintResourceManager& IRendererRuntime::getMaterialBlueprintResourceManager() const
 	{
 		return *mMaterialBlueprintResourceManager;

@@ -22,6 +22,13 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintResourceLoader.h"
+#include "RendererRuntime/Resource/ResourceStreamer.h"
+#include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
+
+#include <assert.h>
 
 
 //[-------------------------------------------------------]
@@ -32,12 +39,75 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	// TODO(co) Work-in-progress
+	ShaderBlueprintResource* ShaderBlueprintResourceManager::loadShaderBlueprintResourceByAssetId(AssetId assetId, bool reload)
+	{
+		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
+		if (nullptr != asset)
+		{
+			// Get or create the instance
+			ShaderBlueprintResource* shaderBlueprintResource = nullptr;
+			const size_t numberOfResources = mResources.size();
+			for (size_t i = 0; i < numberOfResources; ++i)
+			{
+				ShaderBlueprintResource* currentShaderBlueprintResource = mResources[i];
+				if (currentShaderBlueprintResource->getResourceId() == assetId)
+				{
+					shaderBlueprintResource = currentShaderBlueprintResource;
+
+					// Get us out of the loop
+					i = mResources.size();
+				}
+			}
+
+			// Create the resource instance
+			bool load = reload;
+			if (nullptr == shaderBlueprintResource)
+			{
+				shaderBlueprintResource = new ShaderBlueprintResource(assetId);
+				mResources.push_back(shaderBlueprintResource);
+				load = true;
+			}
+
+			// Load the resource, if required
+			if (load)
+			{
+				// Prepare the resource loader
+				ShaderBlueprintResourceLoader* shaderBlueprintResourceLoader = static_cast<ShaderBlueprintResourceLoader*>(acquireResourceLoaderInstance(ShaderBlueprintResourceLoader::TYPE_ID));
+				shaderBlueprintResourceLoader->initialize(*asset, *shaderBlueprintResource);
+
+				// Commit resource streamer asset load request
+				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+				resourceStreamerLoadRequest.resource = shaderBlueprintResource;
+				resourceStreamerLoadRequest.resourceLoader = shaderBlueprintResourceLoader;
+				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+			}
+
+			// TODO(co) No raw pointers in here
+			return shaderBlueprintResource;
+		}
+
+		// Error!
+		return nullptr;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	void ShaderBlueprintResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) Implement me
-		assetId = assetId;
+		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
+		for (size_t i = 0; i < mResources.size(); ++i)
+		{
+			if (mResources[i]->getResourceId() == assetId)
+			{
+				loadShaderBlueprintResourceByAssetId(assetId, true);
+				break;
+			}
+		}
 	}
 
 	void ShaderBlueprintResourceManager::update()
@@ -58,6 +128,24 @@ namespace RendererRuntime
 	ShaderBlueprintResourceManager::~ShaderBlueprintResourceManager()
 	{
 		// Nothing in here
+	}
+
+	IResourceLoader* ShaderBlueprintResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	{
+		// Can we recycle an already existing resource loader instance?
+		IResourceLoader* resourceLoader = IResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
+
+		// We need to create a new resource loader instance
+		if (nullptr == resourceLoader)
+		{
+			// We only support our own shader blueprint format
+			assert(resourceLoaderTypeId == ShaderBlueprintResourceLoader::TYPE_ID);
+			resourceLoader = new ShaderBlueprintResourceLoader(*this, mRendererRuntime);
+			mUsedResourceLoaderInstances.push_back(resourceLoader);
+		}
+
+		// Done
+		return resourceLoader;
 	}
 
 

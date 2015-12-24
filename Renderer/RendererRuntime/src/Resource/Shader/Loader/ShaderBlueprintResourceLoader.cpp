@@ -19,17 +19,13 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintResourceLoader.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintFileFormat.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
+#include <fstream>
 
 
 //[-------------------------------------------------------]
@@ -40,45 +36,52 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
+	const ResourceLoaderTypeId ShaderBlueprintResourceLoader::TYPE_ID("shader_blueprint");
 
 
-	// -> Material blueprint file format content:
-	//    - Material blueprint header
-	//    - Material blueprint properties
-	namespace v1MaterialBlueprint
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	ResourceLoaderTypeId ShaderBlueprintResourceLoader::getResourceLoaderTypeId() const
 	{
+		return TYPE_ID;
+	}
 
+	void ShaderBlueprintResourceLoader::onDeserialization()
+	{
+		// TODO(co) Error handling
+		try
+		{
+			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
 
-		//[-------------------------------------------------------]
-		//[ Definitions                                           ]
-		//[-------------------------------------------------------]
-		static const uint32_t FORMAT_TYPE	 = StringId("MaterialBlueprint");
-		static const uint32_t FORMAT_VERSION = 1;
+			// Read in the shader blueprint header
+			v1ShaderBlueprint::Header shaderBlueprintHeader;
+			inputFileStream.read(reinterpret_cast<char*>(&shaderBlueprintHeader), sizeof(v1ShaderBlueprint::Header));
 
-		#pragma pack(push)
-		#pragma pack(1)
-			struct Header
-			{
-				uint32_t formatType;
-				uint16_t formatVersion;
-			};
+			// Read the shader blueprint ASCII source code
+			mShaderBlueprintResource->mShaderSourceCode.reserve(shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
+			inputFileStream.read(const_cast<char*>(mShaderBlueprintResource->mShaderSourceCode.data()), sizeof(shaderBlueprintHeader.numberOfShaderSourceCodeBytes));
+		}
+		catch (const std::exception& e)
+		{
+			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load shader blueprint asset %d: %s", mAsset.assetId, e.what());
+		}
+	}
 
-			struct ShaderBlueprints
-			{
-				AssetId vertexShaderBlueprintAssetId;
-				AssetId tessellationControlShaderBlueprintAssetId;
-				AssetId tessellationEvaluationShaderBlueprintAssetId;
-				AssetId geometryShaderBlueprintAssetId;
-				AssetId fragmentShaderBlueprintAssetId;
-			};
-		#pragma pack(pop)
+	void ShaderBlueprintResourceLoader::onProcessing()
+	{
+		// Nothing here
+	}
+
+	void ShaderBlueprintResourceLoader::onRendererBackendDispatch()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-	} // v1Material
 } // RendererRuntime

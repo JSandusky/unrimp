@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class ShaderBlueprintResource;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -80,6 +89,17 @@ namespace RendererRuntime
 	private:
 		MaterialBlueprintResource(const MaterialBlueprintResource&) = delete;
 		MaterialBlueprintResource& operator=(const MaterialBlueprintResource&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		ShaderBlueprintResource* mVertexShaderBlueprint;
+		ShaderBlueprintResource* mTessellationControlShaderBlueprint;
+		ShaderBlueprintResource* mTessellationEvaluationShaderBlueprint;
+		ShaderBlueprintResource* mGeometryShaderBlueprint;
+		ShaderBlueprintResource* mFragmentShaderBlueprint;
 
 
 	};

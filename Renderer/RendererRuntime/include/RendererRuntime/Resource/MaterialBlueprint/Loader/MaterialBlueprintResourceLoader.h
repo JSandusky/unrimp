@@ -97,6 +97,12 @@ namespace RendererRuntime
 		// Resource source and destination
 		Asset					   mAsset;		///< In order to be multi-threading safe in here, we need an asset copy
 		MaterialBlueprintResource* mMaterialBlueprintResource;
+		// Temporary data
+		AssetId mVertexShaderBlueprintAssetId;
+		AssetId mTessellationControlShaderBlueprintAssetId;
+		AssetId mTessellationEvaluationShaderBlueprintAssetId;
+		AssetId mGeometryShaderBlueprintAssetId;
+		AssetId mFragmentShaderBlueprintAssetId;
 
 
 	};

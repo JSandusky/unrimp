@@ -28,8 +28,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline ShaderBlueprintResourceLoader::ShaderBlueprintResourceLoader(IResourceManager& resourceManager) :
-		IResourceLoader(resourceManager)
+	inline ShaderBlueprintResourceLoader::ShaderBlueprintResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+		IResourceLoader(resourceManager),
+		mRendererRuntime(rendererRuntime),
+		mShaderBlueprintResource(nullptr)
 	{
 		// Nothing here
 	}
@@ -37,6 +39,12 @@ namespace RendererRuntime
 	inline ShaderBlueprintResourceLoader::~ShaderBlueprintResourceLoader()
 	{
 		// Nothing here
+	}
+
+	inline void ShaderBlueprintResourceLoader::initialize(const Asset& asset, ShaderBlueprintResource& shaderBlueprintResource)
+	{
+		mAsset					 = asset;
+		mShaderBlueprintResource = &shaderBlueprintResource;
 	}
 
 

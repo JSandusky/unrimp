@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/IResourceManager.h"
 
 
@@ -36,6 +37,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	class ShaderBlueprintResource;
 }
 
 
@@ -64,6 +66,14 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		// TODO(co) Work-in-progress
+		RENDERERRUNTIME_API_EXPORT ShaderBlueprintResource* loadShaderBlueprintResourceByAssetId(AssetId assetId, bool reload = false);
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
@@ -79,6 +89,7 @@ namespace RendererRuntime
 		virtual ~ShaderBlueprintResourceManager();
 		ShaderBlueprintResourceManager(const ShaderBlueprintResourceManager&) = delete;
 		ShaderBlueprintResourceManager& operator=(const ShaderBlueprintResourceManager&) = delete;
+		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
@@ -86,6 +97,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+
+		// TODO(co) Implement decent resource handling
+		std::vector<ShaderBlueprintResource*> mResources;
 
 
 	};

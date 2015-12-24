@@ -27,8 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
-
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
@@ -39,23 +37,17 @@ namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
-
-
-	// -> Material blueprint file format content:
-	//    - Material blueprint header
-	//    - Material blueprint properties
-	namespace v1MaterialBlueprint
+	// -> Shader blueprint file format content:
+	//    - Shader blueprint header
+	//    - Shader blueprint ASCII source code
+	namespace v1ShaderBlueprint
 	{
 
 
 		//[-------------------------------------------------------]
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
-		static const uint32_t FORMAT_TYPE	 = StringId("MaterialBlueprint");
+		static const uint32_t FORMAT_TYPE	 = StringId("ShaderBlueprint");
 		static const uint32_t FORMAT_VERSION = 1;
 
 		#pragma pack(push)
@@ -64,15 +56,7 @@ namespace RendererRuntime
 			{
 				uint32_t formatType;
 				uint16_t formatVersion;
-			};
-
-			struct ShaderBlueprints
-			{
-				AssetId vertexShaderBlueprintAssetId;
-				AssetId tessellationControlShaderBlueprintAssetId;
-				AssetId tessellationEvaluationShaderBlueprintAssetId;
-				AssetId geometryShaderBlueprintAssetId;
-				AssetId fragmentShaderBlueprintAssetId;
+				uint32_t numberOfShaderSourceCodeBytes;
 			};
 		#pragma pack(pop)
 
@@ -80,5 +64,5 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-	} // v1Material
+	} // v1Shader
 } // RendererRuntime

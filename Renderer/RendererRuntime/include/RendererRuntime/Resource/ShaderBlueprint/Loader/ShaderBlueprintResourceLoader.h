@@ -28,6 +28,17 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/IResourceLoader.h"
+#include "RendererRuntime/Asset/Asset.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+	class ShaderBlueprintResource;
+}
 
 
 //[-------------------------------------------------------]
@@ -71,10 +82,21 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline ShaderBlueprintResourceLoader(IResourceManager& resourceManager);
+		inline ShaderBlueprintResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~ShaderBlueprintResourceLoader();
 		ShaderBlueprintResourceLoader(const ShaderBlueprintResourceLoader&) = delete;
 		ShaderBlueprintResourceLoader& operator=(const ShaderBlueprintResourceLoader&) = delete;
+		inline void initialize(const Asset& asset, ShaderBlueprintResource& shaderBlueprintResource);
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		// Resource source and destination
+		Asset					 mAsset;		///< In order to be multi-threading safe in here, we need an asset copy
+		ShaderBlueprintResource* mShaderBlueprintResource;
 
 
 	};

@@ -19,17 +19,9 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
-
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 
 
 //[-------------------------------------------------------]
@@ -40,45 +32,16 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
-
-
-	// -> Material blueprint file format content:
-	//    - Material blueprint header
-	//    - Material blueprint properties
-	namespace v1MaterialBlueprint
+	ShaderBlueprintResource::ShaderBlueprintResource(ResourceId resourceId) :
+		IResource(resourceId)
 	{
-
-
-		//[-------------------------------------------------------]
-		//[ Definitions                                           ]
-		//[-------------------------------------------------------]
-		static const uint32_t FORMAT_TYPE	 = StringId("MaterialBlueprint");
-		static const uint32_t FORMAT_VERSION = 1;
-
-		#pragma pack(push)
-		#pragma pack(1)
-			struct Header
-			{
-				uint32_t formatType;
-				uint16_t formatVersion;
-			};
-
-			struct ShaderBlueprints
-			{
-				AssetId vertexShaderBlueprintAssetId;
-				AssetId tessellationControlShaderBlueprintAssetId;
-				AssetId tessellationEvaluationShaderBlueprintAssetId;
-				AssetId geometryShaderBlueprintAssetId;
-				AssetId fragmentShaderBlueprintAssetId;
-			};
-		#pragma pack(pop)
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-	} // v1Material
 } // RendererRuntime

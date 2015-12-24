@@ -27,9 +27,18 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Resource/IResource.h"
 
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
+#include <string>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class ShaderBlueprintResource;
+}
 
 
 //[-------------------------------------------------------]
@@ -40,45 +49,76 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
-
-
-	// -> Material blueprint file format content:
-	//    - Material blueprint header
-	//    - Material blueprint properties
-	namespace v1MaterialBlueprint
+	/**
+	*  @brief
+	*    Shader blueprint resource
+	*/
+	class ShaderBlueprintResource : public IResource
 	{
 
 
-		//[-------------------------------------------------------]
-		//[ Definitions                                           ]
-		//[-------------------------------------------------------]
-		static const uint32_t FORMAT_TYPE	 = StringId("MaterialBlueprint");
-		static const uint32_t FORMAT_VERSION = 1;
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class ShaderBlueprintResourceLoader;
 
-		#pragma pack(push)
-		#pragma pack(1)
-			struct Header
-			{
-				uint32_t formatType;
-				uint16_t formatVersion;
-			};
 
-			struct ShaderBlueprints
-			{
-				AssetId vertexShaderBlueprintAssetId;
-				AssetId tessellationControlShaderBlueprintAssetId;
-				AssetId tessellationEvaluationShaderBlueprintAssetId;
-				AssetId geometryShaderBlueprintAssetId;
-				AssetId fragmentShaderBlueprintAssetId;
-			};
-		#pragma pack(pop)
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] resourceId
+		*    Resource ID
+		*/
+		explicit ShaderBlueprintResource(ResourceId resourceId);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~ShaderBlueprintResource();
+
+		/**
+		*  @brief
+		*    Return the shader source code
+		*
+		*  @return
+		*    The shader ASCII source code
+		*/
+		inline const std::string& getShaderSourceCode() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		ShaderBlueprintResource(const ShaderBlueprintResource&) = delete;
+		ShaderBlueprintResource& operator=(const ShaderBlueprintResource&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		std::string mShaderSourceCode;
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-	} // v1Material
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.inl"

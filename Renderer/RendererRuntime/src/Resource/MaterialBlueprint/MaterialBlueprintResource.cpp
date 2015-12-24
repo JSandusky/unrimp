@@ -35,7 +35,12 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	MaterialBlueprintResource::MaterialBlueprintResource(ResourceId resourceId) :
-		IResource(resourceId)
+		IResource(resourceId),
+		mVertexShaderBlueprint(nullptr),
+		mTessellationControlShaderBlueprint(nullptr),
+		mTessellationEvaluationShaderBlueprint(nullptr),
+		mGeometryShaderBlueprint(nullptr),
+		mFragmentShaderBlueprint(nullptr)
 	{
 		// Nothing here
 	}
