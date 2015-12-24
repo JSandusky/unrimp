@@ -35,7 +35,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	MaterialResource::MaterialResource(ResourceId resourceId) :
-		IResource(resourceId)
+		IResource(resourceId),
+		mMaterialBlueprintResource(nullptr)
 	{
 		// Nothing here
 	}

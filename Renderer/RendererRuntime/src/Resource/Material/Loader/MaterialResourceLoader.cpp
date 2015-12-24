@@ -24,7 +24,8 @@
 #include "RendererRuntime/Resource/Material/Loader/MaterialResourceLoader.h"
 #include "RendererRuntime/Resource/Material/Loader/MaterialFileFormat.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
-#include "RendererRuntime/Backend/RendererRuntimeImpl.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 #include <fstream>
 
@@ -60,6 +61,9 @@ namespace RendererRuntime
 			// Read in the material header
 			v1Material::Header materialHeader;
 			inputFileStream.read(reinterpret_cast<char*>(&materialHeader), sizeof(v1Material::Header));
+			mMaterialBlueprintAssetId = materialHeader.materialBlueprintAssetId;
+
+			// TODO(co) Material properties
 		}
 		catch (const std::exception& e)
 		{
@@ -74,7 +78,8 @@ namespace RendererRuntime
 
 	void MaterialResourceLoader::onRendererBackendDispatch()
 	{
-		// Nothing here
+		// Get the used material blueprint resource
+		mMaterialResource->mMaterialBlueprintResource = mRendererRuntime.getMaterialBlueprintResourceManager().loadMaterialBlueprintResourceByAssetId(mMaterialBlueprintAssetId);
 	}
 
 

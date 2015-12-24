@@ -33,6 +33,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline MaterialBlueprintResource* MaterialResource::getMaterialBlueprintResource() const
+	{
+		return mMaterialBlueprintResource;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

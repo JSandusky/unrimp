@@ -22,6 +22,13 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.h"
+#include "RendererRuntime/Resource/ResourceStreamer.h"
+#include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
+
+#include <assert.h>
 
 
 //[-------------------------------------------------------]
@@ -32,12 +39,75 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	// TODO(co) Work-in-progress
+	MaterialBlueprintResource* MaterialBlueprintResourceManager::loadMaterialBlueprintResourceByAssetId(AssetId assetId, bool reload)
+	{
+		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
+		if (nullptr != asset)
+		{
+			// Get or create the instance
+			MaterialBlueprintResource* materialBlueprintResource = nullptr;
+			const size_t numberOfResources = mResources.size();
+			for (size_t i = 0; i < numberOfResources; ++i)
+			{
+				MaterialBlueprintResource* currentMaterialBlueprintResource = mResources[i];
+				if (currentMaterialBlueprintResource->getResourceId() == assetId)
+				{
+					materialBlueprintResource = currentMaterialBlueprintResource;
+
+					// Get us out of the loop
+					i = mResources.size();
+				}
+			}
+
+			// Create the resource instance
+			bool load = reload;
+			if (nullptr == materialBlueprintResource)
+			{
+				materialBlueprintResource = new MaterialBlueprintResource(assetId);
+				mResources.push_back(materialBlueprintResource);
+				load = true;
+			}
+
+			// Load the resource, if required
+			if (load)
+			{
+				// Prepare the resource loader
+				MaterialBlueprintResourceLoader* materialBlueprintResourceLoader = static_cast<MaterialBlueprintResourceLoader*>(acquireResourceLoaderInstance(MaterialBlueprintResourceLoader::TYPE_ID));
+				materialBlueprintResourceLoader->initialize(*asset, *materialBlueprintResource);
+
+				// Commit resource streamer asset load request
+				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+				resourceStreamerLoadRequest.resource = materialBlueprintResource;
+				resourceStreamerLoadRequest.resourceLoader = materialBlueprintResourceLoader;
+				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+			}
+
+			// TODO(co) No raw pointers in here
+			return materialBlueprintResource;
+		}
+
+		// Error!
+		return nullptr;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	void MaterialBlueprintResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) Implement me
-		assetId = assetId;
+		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
+		for (size_t i = 0; i < mResources.size(); ++i)
+		{
+			if (mResources[i]->getResourceId() == assetId)
+			{
+				loadMaterialBlueprintResourceByAssetId(assetId, true);
+				break;
+			}
+		}
 	}
 
 	void MaterialBlueprintResourceManager::update()
@@ -58,6 +128,24 @@ namespace RendererRuntime
 	MaterialBlueprintResourceManager::~MaterialBlueprintResourceManager()
 	{
 		// Nothing in here
+	}
+
+	IResourceLoader* MaterialBlueprintResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	{
+		// Can we recycle an already existing resource loader instance?
+		IResourceLoader* resourceLoader = IResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
+
+		// We need to create a new resource loader instance
+		if (nullptr == resourceLoader)
+		{
+			// We only support our own material blueprint format
+			assert(resourceLoaderTypeId == MaterialBlueprintResourceLoader::TYPE_ID);
+			resourceLoader = new MaterialBlueprintResourceLoader(*this, mRendererRuntime);
+			mUsedResourceLoaderInstances.push_back(resourceLoader);
+		}
+
+		// Done
+		return resourceLoader;
 	}
 
 

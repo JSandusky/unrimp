@@ -28,9 +28,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline MaterialResourceLoader::MaterialResourceLoader(IResourceManager& resourceManager, RendererRuntimeImpl& rendererRuntimeImpl) :
+	inline MaterialResourceLoader::MaterialResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		IResourceLoader(resourceManager),
-		mRendererRuntimeImpl(rendererRuntimeImpl),
+		mRendererRuntime(rendererRuntime),
 		mMaterialResource(nullptr)
 	{
 		// Nothing here

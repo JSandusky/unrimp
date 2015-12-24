@@ -28,9 +28,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline MaterialBlueprintResourceLoader::MaterialBlueprintResourceLoader(IResourceManager& resourceManager, RendererRuntimeImpl& rendererRuntimeImpl) :
+	inline MaterialBlueprintResourceLoader::MaterialBlueprintResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		IResourceLoader(resourceManager),
-		mRendererRuntimeImpl(rendererRuntimeImpl),
+		mRendererRuntime(rendererRuntime),
 		mMaterialBlueprintResource(nullptr)
 	{
 		// Nothing here

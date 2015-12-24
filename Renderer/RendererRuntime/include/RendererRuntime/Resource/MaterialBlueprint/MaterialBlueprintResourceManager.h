@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/IResourceManager.h"
 
 
@@ -36,6 +37,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	class MaterialBlueprintResource;
 }
 
 
@@ -60,6 +62,14 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		// TODO(co) Work-in-progress
+		RENDERERRUNTIME_API_EXPORT MaterialBlueprintResource* loadMaterialBlueprintResourceByAssetId(AssetId assetId, bool reload = false);
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
@@ -75,6 +85,7 @@ namespace RendererRuntime
 		virtual ~MaterialBlueprintResourceManager();
 		MaterialBlueprintResourceManager(const MaterialBlueprintResourceManager&) = delete;
 		MaterialBlueprintResourceManager& operator=(const MaterialBlueprintResourceManager&) = delete;
+		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
 
 
 	//[-------------------------------------------------------]
@@ -82,6 +93,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+
+		// TODO(co) Implement decent resource handling
+		std::vector<MaterialBlueprintResource*> mResources;
 
 
 	};

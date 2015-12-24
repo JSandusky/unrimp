@@ -22,6 +22,13 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Resource/Material/Loader/MaterialResourceLoader.h"
+#include "RendererRuntime/Resource/ResourceStreamer.h"
+#include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
+
+#include <assert.h>
 
 
 //[-------------------------------------------------------]
@@ -32,12 +39,75 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	// TODO(co) Work-in-progress
+	MaterialResource* MaterialResourceManager::loadMaterialResourceByAssetId(AssetId assetId, bool reload)
+	{
+		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
+		if (nullptr != asset)
+		{
+			// Get or create the instance
+			MaterialResource* materialResource = nullptr;
+			const size_t numberOfResources = mResources.size();
+			for (size_t i = 0; i < numberOfResources; ++i)
+			{
+				MaterialResource* currentMaterialResource = mResources[i];
+				if (currentMaterialResource->getResourceId() == assetId)
+				{
+					materialResource = currentMaterialResource;
+
+					// Get us out of the loop
+					i = mResources.size();
+				}
+			}
+
+			// Create the resource instance
+			bool load = reload;
+			if (nullptr == materialResource)
+			{
+				materialResource = new MaterialResource(assetId);
+				mResources.push_back(materialResource);
+				load = true;
+			}
+
+			// Load the resource, if required
+			if (load)
+			{
+				// Prepare the resource loader
+				MaterialResourceLoader* materialResourceLoader = static_cast<MaterialResourceLoader*>(acquireResourceLoaderInstance(MaterialResourceLoader::TYPE_ID));
+				materialResourceLoader->initialize(*asset, *materialResource);
+
+				// Commit resource streamer asset load request
+				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+				resourceStreamerLoadRequest.resource = materialResource;
+				resourceStreamerLoadRequest.resourceLoader = materialResourceLoader;
+				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+			}
+
+			// TODO(co) No raw pointers in here
+			return materialResource;
+		}
+
+		// Error!
+		return nullptr;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	void MaterialResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) Implement me
-		assetId = assetId;
+		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
+		for (size_t i = 0; i < mResources.size(); ++i)
+		{
+			if (mResources[i]->getResourceId() == assetId)
+			{
+				loadMaterialResourceByAssetId(assetId, true);
+				break;
+			}
+		}
 	}
 
 	void MaterialResourceManager::update()
@@ -58,6 +128,24 @@ namespace RendererRuntime
 	MaterialResourceManager::~MaterialResourceManager()
 	{
 		// Nothing in here
+	}
+
+	IResourceLoader* MaterialResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
+	{
+		// Can we recycle an already existing resource loader instance?
+		IResourceLoader* resourceLoader = IResourceManager::acquireResourceLoaderInstance(resourceLoaderTypeId);
+
+		// We need to create a new resource loader instance
+		if (nullptr == resourceLoader)
+		{
+			// We only support our own material format
+			assert(resourceLoaderTypeId == MaterialResourceLoader::TYPE_ID);
+			resourceLoader = new MaterialResourceLoader(*this, mRendererRuntime);
+			mUsedResourceLoaderInstances.push_back(resourceLoader);
+		}
+
+		// Done
+		return resourceLoader;
 	}
 
 

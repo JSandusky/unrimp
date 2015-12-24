@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class MaterialBlueprintResource;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -73,6 +82,15 @@ namespace RendererRuntime
 		*/
 		inline virtual ~MaterialResource();
 
+		/**
+		*  @brief
+		*    Return the used material blueprint resource
+		*
+		*  @return
+		*    The used material blueprint resource, can be a null pointer, don't destroy the instance
+		*/
+		inline MaterialBlueprintResource* getMaterialBlueprintResource() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -80,6 +98,13 @@ namespace RendererRuntime
 	private:
 		MaterialResource(const MaterialResource&) = delete;
 		MaterialResource& operator=(const MaterialResource&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		MaterialBlueprintResource* mMaterialBlueprintResource;	///< Material blueprint resource, can be a null pointer, don't destroy the instance
 
 
 	};

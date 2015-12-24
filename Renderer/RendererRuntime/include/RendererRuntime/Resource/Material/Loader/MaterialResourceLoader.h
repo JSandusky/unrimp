@@ -36,8 +36,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IRendererRuntime;
 	class MaterialResource;
-	class RendererRuntimeImpl;
 }
 
 
@@ -82,7 +82,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline MaterialResourceLoader(IResourceManager& resourceManager, RendererRuntimeImpl& rendererRuntimeImpl);
+		inline MaterialResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~MaterialResourceLoader();
 		MaterialResourceLoader(const MaterialResourceLoader&) = delete;
 		MaterialResourceLoader& operator=(const MaterialResourceLoader&) = delete;
@@ -93,10 +93,12 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		RendererRuntimeImpl& mRendererRuntimeImpl;	///< Renderer runtime implementation instance, do not destroy the instance
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 		// Resource source and destination
 		Asset			  mAsset;		///< In order to be multi-threading safe in here, we need an asset copy
 		MaterialResource* mMaterialResource;
+		// Temporary data
+		AssetId mMaterialBlueprintAssetId;
 
 
 	};
