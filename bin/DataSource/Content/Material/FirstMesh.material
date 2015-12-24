@@ -6,7 +6,7 @@
 	},
 	"MaterialAsset":
 	{
-		"MaterialBlueprint": "14",
+		"MaterialBlueprintAssetId": "14",
 		"Properties":
 		{
 			"DiffuseMap": "4",
