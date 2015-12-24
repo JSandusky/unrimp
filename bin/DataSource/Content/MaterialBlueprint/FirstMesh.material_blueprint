@@ -224,11 +224,11 @@
 			{
 				"Vertex":
 				{
-					"ShaderBlueprint": "12"
+					"ShaderBlueprintAssetId": "12"
 				},
 				"Fragment":
 				{
-					"ShaderBlueprint": "13"
+					"ShaderBlueprintAssetId": "13"
 				}
 			}
 		}
