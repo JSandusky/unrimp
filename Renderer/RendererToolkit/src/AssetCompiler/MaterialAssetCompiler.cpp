@@ -24,6 +24,7 @@
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Resource/Material/Loader/MaterialFileFormat.h>
 
 #include <fstream>
 
@@ -89,7 +90,44 @@ namespace RendererToolkit
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material";
 		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
-		// TODO(co) Implement me
+		{ // Material
+			// Parse JSON
+			Poco::JSON::Parser jsonParser;
+			jsonParser.parse(inputFileStream);
+			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
+
+			{ // Check whether or not the file format matches
+				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
+				if (jsonFormatObject->get("Type").convert<std::string>() != "MaterialAsset")
+				{
+					throw std::exception("Invalid JSON format type, must be \"MaterialAsset\"");
+				}
+				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
+				{
+					throw std::exception("Invalid JSON format version, must be 1");
+				}
+			}
+
+			Poco::JSON::Object::Ptr jsonMaterialObject = jsonRootObject->get("MaterialAsset").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonPropertiesObject = jsonMaterialObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
+
+			{ // Material header
+				// Material blueprint: Map the source asset ID to the compiled asset ID
+				const uint32_t sourceAssetId = static_cast<uint32_t>(std::atoi(jsonMaterialObject->get("MaterialBlueprintAssetId").convert<std::string>().c_str()));
+				SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(sourceAssetId);
+				const uint32_t compiledAssetId = (iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
+				// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
+
+				RendererRuntime::v1Material::Header materialHeader;
+				materialHeader.formatType				= RendererRuntime::v1Material::FORMAT_TYPE;
+				materialHeader.formatVersion			= RendererRuntime::v1Material::FORMAT_VERSION;
+				materialHeader.materialBlueprintAssetId	= compiledAssetId;
+				materialHeader.numberOfProperties		= 0;	// TODO(co) Material properties
+
+				// Write down the material header
+				outputFileStream.write(reinterpret_cast<const char*>(&materialHeader), sizeof(RendererRuntime::v1Material::Header));
+			}
+		}
 
 		{ // Update the output asset package
 			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
