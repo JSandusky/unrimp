@@ -60,9 +60,17 @@ namespace RendererRuntime
 			v1ShaderBlueprint::Header shaderBlueprintHeader;
 			inputFileStream.read(reinterpret_cast<char*>(&shaderBlueprintHeader), sizeof(v1ShaderBlueprint::Header));
 
+			// Allocate more temporary memory, if required
+			if (mMaximumNumberOfShaderSourceCodeBytes < shaderBlueprintHeader.numberOfShaderSourceCodeBytes)
+			{
+				mMaximumNumberOfShaderSourceCodeBytes = shaderBlueprintHeader.numberOfShaderSourceCodeBytes;
+				delete [] mShaderSourceCode;
+				mShaderSourceCode = new char[mMaximumNumberOfShaderSourceCodeBytes];
+			}
+
 			// Read the shader blueprint ASCII source code
-			mShaderBlueprintResource->mShaderSourceCode.reserve(shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
-			inputFileStream.read(const_cast<char*>(mShaderBlueprintResource->mShaderSourceCode.data()), sizeof(shaderBlueprintHeader.numberOfShaderSourceCodeBytes));
+			inputFileStream.read(mShaderSourceCode, shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
+			mShaderBlueprintResource->mShaderSourceCode.assign(mShaderSourceCode, mShaderSourceCode + shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
 		}
 		catch (const std::exception& e)
 		{

@@ -97,6 +97,9 @@ namespace RendererRuntime
 		// Resource source and destination
 		Asset					 mAsset;		///< In order to be multi-threading safe in here, we need an asset copy
 		ShaderBlueprintResource* mShaderBlueprintResource;
+		// Temporary data
+		uint32_t mMaximumNumberOfShaderSourceCodeBytes;
+		char*	 mShaderSourceCode;
 
 
 	};

@@ -31,14 +31,16 @@ namespace RendererRuntime
 	inline ShaderBlueprintResourceLoader::ShaderBlueprintResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		IResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime),
-		mShaderBlueprintResource(nullptr)
+		mShaderBlueprintResource(nullptr),
+		mMaximumNumberOfShaderSourceCodeBytes(0),
+		mShaderSourceCode(nullptr)
 	{
 		// Nothing here
 	}
 
 	inline ShaderBlueprintResourceLoader::~ShaderBlueprintResourceLoader()
 	{
-		// Nothing here
+		delete [] mShaderSourceCode;
 	}
 
 	inline void ShaderBlueprintResourceLoader::initialize(const Asset& asset, ShaderBlueprintResource& shaderBlueprintResource)

@@ -109,6 +109,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		Renderer::IRootSignature* mRootSignature;			///< Root signature, can be a null pointer
+
+	// TODO(co) Make this private
+	public:
 		ShaderBlueprintResource*  mVertexShaderBlueprint;
 		ShaderBlueprintResource*  mTessellationControlShaderBlueprint;
 		ShaderBlueprintResource*  mTessellationEvaluationShaderBlueprint;

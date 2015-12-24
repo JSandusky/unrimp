@@ -22,6 +22,11 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
+#include "RendererRuntime/Resource/Texture/TextureResource.h"
+
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
@@ -36,9 +41,119 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MaterialResource::MaterialResource(ResourceId resourceId) :
 		IResource(resourceId),
-		mMaterialBlueprintResource(nullptr)
+		mMaterialBlueprintResource(nullptr),
+		mPipelineState(nullptr),
+		mDiffuseTextureResource(nullptr),
+		mNormalTextureResource(nullptr),
+		mSpecularTextureResource(nullptr),
+		mEmissiveTextureResource(nullptr),
+		mSamplerState(nullptr)
 	{
 		// Nothing here
+	}
+
+	Renderer::IPipelineState* MaterialResource::getPipelineState()
+	{
+		if (nullptr == mPipelineState && nullptr != mMaterialBlueprintResource && IResource::LoadingState::LOADED == mMaterialBlueprintResource->getLoadingState())
+		{
+			const ShaderBlueprintResource* vertexShaderBlueprint = mMaterialBlueprintResource->mVertexShaderBlueprint;
+			const ShaderBlueprintResource* fragmentShaderBlueprint = mMaterialBlueprintResource->mFragmentShaderBlueprint;
+			if (nullptr != vertexShaderBlueprint && IResource::LoadingState::LOADED == vertexShaderBlueprint->getLoadingState() &&
+				nullptr != fragmentShaderBlueprint && IResource::LoadingState::LOADED == fragmentShaderBlueprint->getLoadingState())
+			{
+				Renderer::IRootSignature* rootSignature = mMaterialBlueprintResource->getRootSignature();
+				if (nullptr != rootSignature)
+				{
+					Renderer::IRenderer& renderer = rootSignature->getRenderer();
+
+					// Decide which shader language should be used (for example "GLSL" or "HLSL")
+					Renderer::IShaderLanguagePtr shaderLanguage(renderer.getShaderLanguage());
+					if (nullptr != shaderLanguage)
+					{
+						// TODO(co) We need a central vertex input layout management
+						// Vertex input layout
+						const Renderer::VertexAttribute vertexAttributesLayout[] =
+						{
+							{ // Attribute 0
+								// Data destination
+								Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+								"Position",									// name[32] (char)
+								"POSITION",									// semanticName[32] (char)
+								0,											// semanticIndex (uint32_t)
+								// Data source
+								0,											// inputSlot (uint32_t)
+								0,											// alignedByteOffset (uint32_t)
+								// Data source, instancing part
+								0											// instancesPerElement (uint32_t)
+							},
+							{ // Attribute 1
+								// Data destination
+								Renderer::VertexAttributeFormat::SHORT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+								"TexCoord",									// name[32] (char)
+								"TEXCOORD",									// semanticName[32] (char)
+								0,											// semanticIndex (uint32_t)
+								// Data source
+								0,											// inputSlot (uint32_t)
+								sizeof(float) * 3,							// alignedByteOffset (uint32_t)
+								// Data source, instancing part
+								0											// instancesPerElement (uint32_t)
+							},
+							{ // Attribute 2
+								// Data destination
+								Renderer::VertexAttributeFormat::SHORT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+								"QTangent",									// name[32] (char)
+								"NORMAL",									// semanticName[32] (char)
+								0,											// semanticIndex (uint32_t)
+								// Data source
+								0,											// inputSlot (uint32_t)
+								sizeof(float) * 3 + sizeof(short) * 2,		// alignedByteOffset (uint32_t)
+								// Data source, instancing part
+								0											// instancesPerElement (uint32_t)
+							}
+						};
+						const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
+
+						// Create the program
+						Renderer::IProgram* program = shaderLanguage->createProgram(
+							*rootSignature,
+							vertexAttributes,
+							shaderLanguage->createVertexShaderFromSourceCode(vertexShaderBlueprint->getShaderSourceCode().c_str()),
+							shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderBlueprint->getShaderSourceCode().c_str()));
+
+						// Is there a valid program?
+						if (nullptr != program)
+						{
+							// Create the pipeline state object (PSO)
+							mPipelineState = renderer.createPipelineState(Renderer::PipelineStateBuilder(rootSignature, program, vertexAttributes));
+						}
+					}
+				}
+			}
+		}
+
+		// Done
+		return mPipelineState;
+	}
+
+	bool MaterialResource::setGraphicsRootDescriptorTable(Renderer::IRenderer& renderer) const
+	{
+		// Due to background texture loading, some textures might not be ready, yet
+		// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
+		if (nullptr == mDiffuseTextureResource->getTexture() || nullptr == mNormalTextureResource->getTexture() ||
+			nullptr == mSpecularTextureResource->getTexture() || nullptr == mEmissiveTextureResource->getTexture())
+		{
+			return false;
+		}
+
+		// Graphics root descriptor table: Set sampler and textures
+		renderer.setGraphicsRootDescriptorTable(1, mSamplerState);
+		renderer.setGraphicsRootDescriptorTable(2, mDiffuseTextureResource->getTexture());
+		renderer.setGraphicsRootDescriptorTable(3, mNormalTextureResource->getTexture());
+		renderer.setGraphicsRootDescriptorTable(4, mSpecularTextureResource->getTexture());
+		renderer.setGraphicsRootDescriptorTable(5, mEmissiveTextureResource->getTexture());
+
+		// Done
+		return true;
 	}
 
 

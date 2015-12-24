@@ -25,6 +25,7 @@
 #include "RendererRuntime/Resource/Material/Loader/MaterialFileFormat.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <fstream>
@@ -80,6 +81,24 @@ namespace RendererRuntime
 	{
 		// Get the used material blueprint resource
 		mMaterialResource->mMaterialBlueprintResource = mRendererRuntime.getMaterialBlueprintResourceManager().loadMaterialBlueprintResourceByAssetId(mMaterialBlueprintAssetId);
+
+		// TODO(co)
+		{ // Load in the diffuse, emissive, normal and specular texture
+			// -> The tangent space normal map is stored with three components, two would be enough to recalculate the third component within the fragment shader
+			// -> The specular map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
+			RendererRuntime::TextureResourceManager& textureResourceManager = mRendererRuntime.getTextureResourceManager();
+			mMaterialResource->mDiffuseTextureResource  = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_Diffuse");
+			mMaterialResource->mNormalTextureResource   = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_Illumination");
+			mMaterialResource->mSpecularTextureResource = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_norm");
+			mMaterialResource->mEmissiveTextureResource = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_spec");
+		}
+
+		{ // Create sampler state
+			Renderer::SamplerState samplerStateSettings = Renderer::ISamplerState::getDefaultSamplerState();
+			samplerStateSettings.addressU = Renderer::TextureAddressMode::WRAP;
+			samplerStateSettings.addressV = Renderer::TextureAddressMode::WRAP;
+			mMaterialResource->mSamplerState = mRendererRuntime.getRenderer().createSamplerState(samplerStateSettings);
+		}
 	}
 
 

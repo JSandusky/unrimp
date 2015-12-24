@@ -1806,7 +1806,7 @@ namespace Renderer
 			IResource& operator =(const IResource& source);
 		private:
 			ResourceType  mResourceType;
-			IRenderer*			mRenderer;
+			IRenderer*	  mRenderer;
 		};
 		typedef SmartRefCount<IResource> IResourcePtr;
 	#endif

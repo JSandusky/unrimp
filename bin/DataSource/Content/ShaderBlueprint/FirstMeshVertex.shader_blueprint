@@ -26,7 +26,7 @@ struct VS_INPUT
 {
 	float3 Position : POSITION;		// Object space vertex position
 	int2   TexCoord : TEXCOORD0;	// 16 bit texture coordinate
-	int2   QTangent : NORMAL;		// 16 bit QTangent
+	int4   QTangent : NORMAL;		// 16 bit QTangent
 };
 struct VS_OUTPUT
 {
@@ -64,7 +64,7 @@ float3x3 GetTangentFrame(float3x3 objectSpaceToViewSpaceMatrix, float4 qtangent)
 	);
 }
 
-VS_OUTPUT VertexShaderMain(VS_INPUT input)
+VS_OUTPUT main(VS_INPUT input)
 {
 	VS_OUTPUT output;
 

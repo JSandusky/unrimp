@@ -111,6 +111,7 @@ namespace RendererRuntime
 
 			// Create the instance
 			mMaterialBlueprintResource->mRootSignature = mRendererRuntime.getRenderer().createRootSignature(rootSignature);
+			mMaterialBlueprintResource->mRootSignature->addReference();
 		}
 
 		// Get the used shader blueprint resources

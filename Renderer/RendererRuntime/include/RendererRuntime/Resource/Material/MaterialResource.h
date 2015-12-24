@@ -33,8 +33,15 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class IRenderer;
+	class ISamplerState;
+	class IPipelineState;
+}
 namespace RendererRuntime
 {
+	class TextureResource;
 	class MaterialBlueprintResource;
 }
 
@@ -91,6 +98,18 @@ namespace RendererRuntime
 		*/
 		inline MaterialBlueprintResource* getMaterialBlueprintResource() const;
 
+		/**
+		*  @brief
+		*    Return the pipeline state object (PSO)
+		*
+		*  @return
+		*    The pipeline state object (PSO), can be a null pointer, don't destroy the instance
+		*/
+		Renderer::IPipelineState* getPipelineState();
+
+		// TODO(co)
+		bool setGraphicsRootDescriptorTable(Renderer::IRenderer& renderer) const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -105,6 +124,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		MaterialBlueprintResource* mMaterialBlueprintResource;	///< Material blueprint resource, can be a null pointer, don't destroy the instance
+
+		// TODO(co)
+		Renderer::IPipelineState*			  mPipelineState;			///< Pipeline state object (PSO), can be a null pointer
+		RendererRuntime::TextureResource*	  mDiffuseTextureResource;
+		RendererRuntime::TextureResource*	  mNormalTextureResource;
+		RendererRuntime::TextureResource*	  mSpecularTextureResource;
+		RendererRuntime::TextureResource*	  mEmissiveTextureResource;
+		Renderer::ISamplerState*			  mSamplerState;			///< Sampler state, can be a null pointer
 
 
 	};

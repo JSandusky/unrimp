@@ -480,21 +480,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceTarget.h">
       <Filter>Source Files\Resource\Compositor</Filter>
     </ClInclude>
-    <ClInclude Include="src\Resource\Compositor\Pass\Scene\FirstScene_HLSL_D3D9.h">
-      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resource\Compositor\Pass\Scene\FirstScene_HLSL_D3D10_D3D11_D3D12.h">
-      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resource\Compositor\Pass\Scene\FirstScene_Null.h">
-      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resource\Compositor\Pass\Scene\FirstScene_GLSL_110.h">
-      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resource\Compositor\Pass\Scene\FirstScene_GLSL_ES2.h">
-      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.h">
       <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClInclude>
