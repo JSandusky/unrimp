@@ -62,42 +62,44 @@ namespace Direct3D11Renderer
 		const VertexShaderHlsl* vertexShaderHlsl = static_cast<ProgramHlsl*>(mProgram)->getVertexShaderHlsl();
 		if (nullptr != vertexShaderHlsl)
 		{
-			const uint32_t numberOfAttributes = pipelineState.vertexAttributes.numberOfAttributes;
-			const Renderer::VertexAttribute* attributes = pipelineState.vertexAttributes.attributes;
-
-			// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
-			D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescs   = numberOfAttributes ? new D3D11_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D11_INPUT_ELEMENT_DESC[1];
-			D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDesc    = d3d11InputElementDescs;
-			D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescEnd = d3d11InputElementDescs + numberOfAttributes;
-			for (; d3d11InputElementDesc < d3d11InputElementDescEnd; ++d3d11InputElementDesc, ++attributes)
+			ID3DBlob* d3dBlobVertexShader = vertexShaderHlsl->getD3DBlobVertexShader();
+			if (nullptr != d3dBlobVertexShader)
 			{
-				// Fill the "D3D11_INPUT_ELEMENT_DESC"-content
-				d3d11InputElementDesc->SemanticName      = attributes->semanticName;																	// Semantic name (LPCSTR)
-				d3d11InputElementDesc->SemanticIndex     = attributes->semanticIndex;																	// Semantic index (UINT)
-				d3d11InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(attributes->vertexAttributeFormat));	// Format (DXGI_FORMAT)
-				d3d11InputElementDesc->InputSlot         = static_cast<UINT>(attributes->inputSlot);													// Input slot (UINT)
-				d3d11InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;																// Aligned byte offset (UINT)
+				const uint32_t numberOfAttributes = pipelineState.vertexAttributes.numberOfAttributes;
+				const Renderer::VertexAttribute* attributes = pipelineState.vertexAttributes.attributes;
 
-				// Per-instance instead of per-vertex?
-				if (attributes->instancesPerElement > 0)
+				// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
+				D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescs   = numberOfAttributes ? new D3D11_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D11_INPUT_ELEMENT_DESC[1];
+				D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDesc    = d3d11InputElementDescs;
+				D3D11_INPUT_ELEMENT_DESC *d3d11InputElementDescEnd = d3d11InputElementDescs + numberOfAttributes;
+				for (; d3d11InputElementDesc < d3d11InputElementDescEnd; ++d3d11InputElementDesc, ++attributes)
 				{
-					d3d11InputElementDesc->InputSlotClass       = D3D11_INPUT_PER_INSTANCE_DATA;	// Input classification (D3D11_INPUT_CLASSIFICATION)
-					d3d11InputElementDesc->InstanceDataStepRate = attributes->instancesPerElement;	// Instance data step rate (UINT)
-				}
-				else
-				{
-					d3d11InputElementDesc->InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;	// Input classification (D3D11_INPUT_CLASSIFICATION)
-					d3d11InputElementDesc->InstanceDataStepRate = 0;							// Instance data step rate (UINT)
-				}
-			}
+					// Fill the "D3D11_INPUT_ELEMENT_DESC"-content
+					d3d11InputElementDesc->SemanticName      = attributes->semanticName;																	// Semantic name (LPCSTR)
+					d3d11InputElementDesc->SemanticIndex     = attributes->semanticIndex;																	// Semantic index (UINT)
+					d3d11InputElementDesc->Format            = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(attributes->vertexAttributeFormat));	// Format (DXGI_FORMAT)
+					d3d11InputElementDesc->InputSlot         = static_cast<UINT>(attributes->inputSlot);													// Input slot (UINT)
+					d3d11InputElementDesc->AlignedByteOffset = attributes->alignedByteOffset;																// Aligned byte offset (UINT)
 
-			{ // Create the Direct3D 11 input layout
-				ID3DBlob* d3dBlobVertexShader = vertexShaderHlsl->getD3DBlobVertexShader();
+					// Per-instance instead of per-vertex?
+					if (attributes->instancesPerElement > 0)
+					{
+						d3d11InputElementDesc->InputSlotClass       = D3D11_INPUT_PER_INSTANCE_DATA;	// Input classification (D3D11_INPUT_CLASSIFICATION)
+						d3d11InputElementDesc->InstanceDataStepRate = attributes->instancesPerElement;	// Instance data step rate (UINT)
+					}
+					else
+					{
+						d3d11InputElementDesc->InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;	// Input classification (D3D11_INPUT_CLASSIFICATION)
+						d3d11InputElementDesc->InstanceDataStepRate = 0;							// Instance data step rate (UINT)
+					}
+				}
+
+				// Create the Direct3D 11 input layout
 				direct3D11Renderer.getD3D11Device()->CreateInputLayout(d3d11InputElementDescs, numberOfAttributes, d3dBlobVertexShader->GetBufferPointer(), d3dBlobVertexShader->GetBufferSize(), &mD3D11InputLayout);
-			}
 
-			// Destroy Direct3D 11 input element descriptions
-			delete [] d3d11InputElementDescs;
+				// Destroy Direct3D 11 input element descriptions
+				delete [] d3d11InputElementDescs;
+			}
 		}
 		else
 		{
