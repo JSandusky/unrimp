@@ -35,16 +35,11 @@ namespace RendererRuntime
 		mMaximumNumberOfRootParameters(0),
 		mRootParameters(nullptr),
 		mMaximumNumberOfDescriptorRanges(0),
-		mDescriptorRanges(nullptr)
+		mDescriptorRanges(nullptr),
+		mMaximumNumberOfMaterialBlueprintSamplerStates(0),
+		mMaterialBlueprintSamplerStates(nullptr)
 	{
 		// Nothing here
-	}
-
-	inline MaterialBlueprintResourceLoader::~MaterialBlueprintResourceLoader()
-	{
-		// Free temporary data
-		delete [] mRootParameters;
-		delete [] mDescriptorRanges;
 	}
 
 	inline void MaterialBlueprintResourceLoader::initialize(const Asset& asset, MaterialBlueprintResource& materialBlueprintResource)

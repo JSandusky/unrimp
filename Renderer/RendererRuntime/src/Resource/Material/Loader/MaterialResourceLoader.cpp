@@ -96,13 +96,6 @@ namespace RendererRuntime
 			mMaterialResource->mSpecularTextureResource = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_norm");
 			mMaterialResource->mEmissiveTextureResource = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_spec");
 		}
-
-		{ // Create sampler state
-			Renderer::SamplerState samplerStateSettings = Renderer::ISamplerState::getDefaultSamplerState();
-			samplerStateSettings.addressU = Renderer::TextureAddressMode::WRAP;
-			samplerStateSettings.addressV = Renderer::TextureAddressMode::WRAP;
-			mMaterialResource->mSamplerState = mRendererRuntime.getRenderer().createSamplerState(samplerStateSettings);
-		}
 	}
 
 

@@ -31,6 +31,8 @@
 
 #include <Renderer/Public/Renderer.h>
 
+#include <vector>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -70,6 +72,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		struct SamplerState
+		{
+			uint32_t				   samplerRootParameterIndex;
+			Renderer::ISamplerStatePtr samplerStatePtr;
+		};
+		
+		typedef std::vector<SamplerState> SamplerStates;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -106,6 +121,15 @@ namespace RendererRuntime
 		*/
 		inline const Renderer::PipelineState& getPipelineState() const;
 
+		/**
+		*  @brief
+		*    Return the sampler states
+		*
+		*  @return
+		*    The sampler states
+		*/
+		inline const SamplerStates& getSamplerStates() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -121,6 +145,7 @@ namespace RendererRuntime
 	private:
 		Renderer::IRootSignature* mRootSignature;			///< Root signature, can be a null pointer
 		Renderer::PipelineState	  mPipelineState;
+		SamplerStates			  mSamplerStates;
 
 	// TODO(co) Make this private
 	public:

@@ -40,6 +40,10 @@ namespace RendererRuntime
 {
 	class IRendererRuntime;
 	class MaterialBlueprintResource;
+	namespace v1MaterialBlueprint
+	{
+		struct SamplerState;
+	}
 }
 
 
@@ -85,7 +89,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline MaterialBlueprintResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~MaterialBlueprintResourceLoader();
+		virtual ~MaterialBlueprintResourceLoader();
 		MaterialBlueprintResourceLoader(const MaterialBlueprintResourceLoader&) = delete;
 		MaterialBlueprintResourceLoader& operator=(const MaterialBlueprintResourceLoader&) = delete;
 		inline void initialize(const Asset& asset, MaterialBlueprintResource& materialBlueprintResource);
@@ -96,20 +100,28 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+
 		// Resource source and destination
 		Asset					   mAsset;		///< In order to be multi-threading safe in here, we need an asset copy
 		MaterialBlueprintResource* mMaterialBlueprintResource;
-		// Temporary data
+
+		// Temporary data: Root signature
 		uint32_t				   mMaximumNumberOfRootParameters;
 		Renderer::RootParameter*   mRootParameters;
 		uint32_t				   mMaximumNumberOfDescriptorRanges;
 		Renderer::DescriptorRange* mDescriptorRanges;
 		Renderer::RootSignature	   mRootSignature;
-		AssetId					   mVertexShaderBlueprintAssetId;
-		AssetId					   mTessellationControlShaderBlueprintAssetId;
-		AssetId					   mTessellationEvaluationShaderBlueprintAssetId;
-		AssetId					   mGeometryShaderBlueprintAssetId;
-		AssetId					   mFragmentShaderBlueprintAssetId;
+
+		// Temporary data: Sampler states
+		uint32_t						   mMaximumNumberOfMaterialBlueprintSamplerStates;
+		v1MaterialBlueprint::SamplerState* mMaterialBlueprintSamplerStates;
+
+		// Temporary data: Shader blueprints
+		AssetId mVertexShaderBlueprintAssetId;
+		AssetId mTessellationControlShaderBlueprintAssetId;
+		AssetId mTessellationEvaluationShaderBlueprintAssetId;
+		AssetId mGeometryShaderBlueprintAssetId;
+		AssetId mFragmentShaderBlueprintAssetId;
 
 
 	};

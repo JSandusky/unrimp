@@ -38,7 +38,6 @@
 namespace Renderer
 {
 	class IRenderer;
-	class ISamplerState;
 	class IPipelineState;
 }
 namespace RendererRuntime
@@ -140,11 +139,10 @@ namespace RendererRuntime
 		Renderer::IPipelineState*  mPipelineStateObject;		///< Pipeline state object (PSO), can be a null pointer
 
 		// TODO(co)
-		RendererRuntime::TextureResource*	  mDiffuseTextureResource;
-		RendererRuntime::TextureResource*	  mNormalTextureResource;
-		RendererRuntime::TextureResource*	  mSpecularTextureResource;
-		RendererRuntime::TextureResource*	  mEmissiveTextureResource;
-		Renderer::ISamplerState*			  mSamplerState;			///< Sampler state, can be a null pointer
+		RendererRuntime::TextureResource* mDiffuseTextureResource;
+		RendererRuntime::TextureResource* mNormalTextureResource;
+		RendererRuntime::TextureResource* mSpecularTextureResource;
+		RendererRuntime::TextureResource* mEmissiveTextureResource;
 
 
 	};

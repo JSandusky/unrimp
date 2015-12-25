@@ -26,6 +26,8 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
 
+#include <assert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -45,8 +47,7 @@ namespace RendererRuntime
 		mDiffuseTextureResource(nullptr),
 		mNormalTextureResource(nullptr),
 		mSpecularTextureResource(nullptr),
-		mEmissiveTextureResource(nullptr),
-		mSamplerState(nullptr)
+		mEmissiveTextureResource(nullptr)
 	{
 		// Nothing here
 	}
@@ -153,6 +154,8 @@ namespace RendererRuntime
 
 	bool MaterialResource::setGraphicsRootDescriptorTable(Renderer::IRenderer& renderer) const
 	{
+		assert(nullptr != mMaterialBlueprintResource);
+
 		// Due to background texture loading, some textures might not be ready, yet
 		// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
 		if (nullptr == mDiffuseTextureResource->getTexture() || nullptr == mNormalTextureResource->getTexture() ||
@@ -161,8 +164,17 @@ namespace RendererRuntime
 			return false;
 		}
 
-		// Graphics root descriptor table: Set sampler and textures
-		renderer.setGraphicsRootDescriptorTable(1, mSamplerState);
+		{ // Graphics root descriptor table: Set sampler states
+			const MaterialBlueprintResource::SamplerStates& samplerStates = mMaterialBlueprintResource->getSamplerStates();
+			const size_t numberOfSamplerStates = samplerStates.size();
+			for (size_t i = 0; i < numberOfSamplerStates; ++i)
+			{
+				const MaterialBlueprintResource::SamplerState& samplerState = samplerStates[i];
+				renderer.setGraphicsRootDescriptorTable(samplerState.samplerRootParameterIndex, samplerState.samplerStatePtr);
+			}
+		}
+
+		// Graphics root descriptor table: Set textures
 		renderer.setGraphicsRootDescriptorTable(2, mDiffuseTextureResource->getTexture());
 		renderer.setGraphicsRootDescriptorTable(3, mNormalTextureResource->getTexture());
 		renderer.setGraphicsRootDescriptorTable(4, mSpecularTextureResource->getTexture());

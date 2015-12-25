@@ -58,10 +58,9 @@ namespace RendererRuntime
 		{
 			std::ifstream inputFileStream(mAsset.assetFilename, std::ios::binary);
 
-			{ // Read in the material blueprint header
-				v1MaterialBlueprint::Header materialBlueprintHeader;
-				inputFileStream.read(reinterpret_cast<char*>(&materialBlueprintHeader), sizeof(v1MaterialBlueprint::Header));
-			}
+			// Read in the material blueprint header
+			v1MaterialBlueprint::Header materialBlueprintHeader;
+			inputFileStream.read(reinterpret_cast<char*>(&materialBlueprintHeader), sizeof(v1MaterialBlueprint::Header));
 
 			{ // Read in the root signature
 				// Read in the root signature header
@@ -113,6 +112,22 @@ namespace RendererRuntime
 			// Read in the pipeline state
 			inputFileStream.read(reinterpret_cast<char*>(&mMaterialBlueprintResource->mPipelineState), sizeof(Renderer::PipelineState));
 
+			{ // Read in the sampler states
+				// Allocate memory for the temporary data
+				if (mMaximumNumberOfMaterialBlueprintSamplerStates < materialBlueprintHeader.numberOfSamplerStates)
+				{
+					delete [] mMaterialBlueprintSamplerStates;
+					mMaximumNumberOfMaterialBlueprintSamplerStates = materialBlueprintHeader.numberOfSamplerStates;
+					mMaterialBlueprintSamplerStates = new v1MaterialBlueprint::SamplerState[mMaximumNumberOfMaterialBlueprintSamplerStates];
+				}
+
+				// Read in the sampler states
+				inputFileStream.read(reinterpret_cast<char*>(mMaterialBlueprintSamplerStates), sizeof(v1MaterialBlueprint::SamplerState) * materialBlueprintHeader.numberOfSamplerStates);
+
+				// Allocate material blueprint resource sampler states
+				mMaterialBlueprintResource->mSamplerStates.resize(materialBlueprintHeader.numberOfSamplerStates);
+			}
+
 			{ // Read in the shader blueprints
 				v1MaterialBlueprint::ShaderBlueprints shaderBlueprints;
 				inputFileStream.read(reinterpret_cast<char*>(&shaderBlueprints), sizeof(v1MaterialBlueprint::ShaderBlueprints));
@@ -122,8 +137,6 @@ namespace RendererRuntime
 				mGeometryShaderBlueprintAssetId				  = shaderBlueprints.geometryShaderBlueprintAssetId;
 				mFragmentShaderBlueprintAssetId				  = shaderBlueprints.fragmentShaderBlueprintAssetId;
 			}
-
-			// TODO(co) The rest of the material blueprint
 		}
 		catch (const std::exception& e)
 		{
@@ -138,9 +151,23 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResourceLoader::onRendererBackendDispatch()
 	{
+		Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
+
 		// Create the root signature
-		mMaterialBlueprintResource->mRootSignature = mRendererRuntime.getRenderer().createRootSignature(mRootSignature);
+		mMaterialBlueprintResource->mRootSignature = renderer.createRootSignature(mRootSignature);
 		mMaterialBlueprintResource->mRootSignature->addReference();
+
+		{ // Create the sampler states
+			MaterialBlueprintResource::SamplerStates& samplerStates = mMaterialBlueprintResource->mSamplerStates;
+			const size_t numberOfSamplerStates = samplerStates.size();
+			const v1MaterialBlueprint::SamplerState* materialBlueprintSamplerState = mMaterialBlueprintSamplerStates;
+			for (size_t i = 0; i < numberOfSamplerStates; ++i, ++materialBlueprintSamplerState)
+			{
+				MaterialBlueprintResource::SamplerState& samplerState = samplerStates[i];
+				samplerState.samplerRootParameterIndex = materialBlueprintSamplerState->samplerRootParameterIndex;
+				samplerState.samplerStatePtr = renderer.createSamplerState(*materialBlueprintSamplerState);
+			}
+		}
 
 		// Get the used shader blueprint resources
 		ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
@@ -149,6 +176,18 @@ namespace RendererRuntime
 		mMaterialBlueprintResource->mTessellationEvaluationShaderBlueprint = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mTessellationEvaluationShaderBlueprintAssetId);
 		mMaterialBlueprintResource->mGeometryShaderBlueprint			   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mGeometryShaderBlueprintAssetId);
 		mMaterialBlueprintResource->mFragmentShaderBlueprint			   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mFragmentShaderBlueprintAssetId);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	MaterialBlueprintResourceLoader::~MaterialBlueprintResourceLoader()
+	{
+		// Free temporary data
+		delete [] mRootParameters;
+		delete [] mDescriptorRanges;
+		delete [] mMaterialBlueprintSamplerStates;
 	}
 
 

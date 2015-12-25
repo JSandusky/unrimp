@@ -38,6 +38,11 @@ namespace RendererRuntime
 		return mPipelineState;
 	}
 
+	inline const MaterialBlueprintResource::SamplerStates& MaterialBlueprintResource::getSamplerStates() const
+	{
+		return mSamplerStates;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
