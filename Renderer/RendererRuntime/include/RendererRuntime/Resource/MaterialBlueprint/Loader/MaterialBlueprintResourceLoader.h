@@ -42,6 +42,7 @@ namespace RendererRuntime
 	class MaterialBlueprintResource;
 	namespace v1MaterialBlueprint
 	{
+		struct Texture;
 		struct SamplerState;
 	}
 }
@@ -115,6 +116,10 @@ namespace RendererRuntime
 		// Temporary data: Sampler states
 		uint32_t						   mMaximumNumberOfMaterialBlueprintSamplerStates;
 		v1MaterialBlueprint::SamplerState* mMaterialBlueprintSamplerStates;
+
+		// Temporary data: Textures
+		uint32_t					  mMaximumNumberOfMaterialBlueprintTextures;
+		v1MaterialBlueprint::Texture* mMaterialBlueprintTextures;
 
 		// Temporary data: Shader blueprints
 		AssetId mVertexShaderBlueprintAssetId;

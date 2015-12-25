@@ -43,6 +43,11 @@ namespace RendererRuntime
 		return mSamplerStates;
 	}
 
+	inline const MaterialBlueprintResource::Textures& MaterialBlueprintResource::getTextures() const
+	{
+		return mTextures;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

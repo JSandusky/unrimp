@@ -109,9 +109,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline IRendererRuntime::IRendererRuntime() :
 		mRenderer(nullptr),
-		// Managers
+		// Asset
 		mAssetManager(nullptr),
-		// Resource managers
+		// Resource
 		mResourceStreamer(nullptr),
 		mTextureResourceManager(nullptr),
 		mShaderResourceManager(nullptr),
@@ -126,9 +126,9 @@ namespace RendererRuntime
 
 	inline IRendererRuntime::IRendererRuntime(const IRendererRuntime &) :
 		mRenderer(nullptr),
-		// Managers
+		// Asset
 		mAssetManager(nullptr),
-		// Resource managers
+		// Resource
 		mResourceStreamer(nullptr),
 		mTextureResourceManager(nullptr),
 		mShaderResourceManager(nullptr),

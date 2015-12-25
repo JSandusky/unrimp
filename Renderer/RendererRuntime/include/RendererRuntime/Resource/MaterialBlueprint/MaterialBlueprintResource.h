@@ -43,6 +43,7 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
+	class TextureResource;
 	class ShaderBlueprintResource;
 }
 
@@ -52,6 +53,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
 
 
 	//[-------------------------------------------------------]
@@ -80,8 +87,15 @@ namespace RendererRuntime
 			uint32_t				   samplerRootParameterIndex;
 			Renderer::ISamplerStatePtr samplerStatePtr;
 		};
-		
+		struct Texture
+		{
+			uint32_t		 textureRootParameterIndex;
+			AssetId			 textureAssetId;
+			TextureResource* textureResource;	// TODO(co) Implement decent resource management
+		};
+
 		typedef std::vector<SamplerState> SamplerStates;
+		typedef std::vector<Texture> Textures;
 
 
 	//[-------------------------------------------------------]
@@ -130,6 +144,15 @@ namespace RendererRuntime
 		*/
 		inline const SamplerStates& getSamplerStates() const;
 
+		/**
+		*  @brief
+		*    Return the textures
+		*
+		*  @return
+		*    The textures
+		*/
+		inline const Textures& getTextures() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -143,9 +166,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IRootSignature* mRootSignature;			///< Root signature, can be a null pointer
+		Renderer::IRootSignature* mRootSignature;	///< Root signature, can be a null pointer
 		Renderer::PipelineState	  mPipelineState;
 		SamplerStates			  mSamplerStates;
+		Textures				  mTextures;
 
 	// TODO(co) Make this private
 	public:

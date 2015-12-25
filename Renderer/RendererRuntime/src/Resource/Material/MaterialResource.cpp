@@ -43,11 +43,7 @@ namespace RendererRuntime
 		IResource(resourceId),
 		mMaterialBlueprintResource(nullptr),
 		mPipelineState(Renderer::PipelineStateBuilder()),
-		mPipelineStateObject(nullptr),
-		mDiffuseTextureResource(nullptr),
-		mNormalTextureResource(nullptr),
-		mSpecularTextureResource(nullptr),
-		mEmissiveTextureResource(nullptr)
+		mPipelineStateObject(nullptr)
 	{
 		// Nothing here
 	}
@@ -156,14 +152,6 @@ namespace RendererRuntime
 	{
 		assert(nullptr != mMaterialBlueprintResource);
 
-		// Due to background texture loading, some textures might not be ready, yet
-		// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
-		if (nullptr == mDiffuseTextureResource->getTexture() || nullptr == mNormalTextureResource->getTexture() ||
-			nullptr == mSpecularTextureResource->getTexture() || nullptr == mEmissiveTextureResource->getTexture())
-		{
-			return false;
-		}
-
 		{ // Graphics root descriptor table: Set sampler states
 			const MaterialBlueprintResource::SamplerStates& samplerStates = mMaterialBlueprintResource->getSamplerStates();
 			const size_t numberOfSamplerStates = samplerStates.size();
@@ -174,11 +162,22 @@ namespace RendererRuntime
 			}
 		}
 
-		// Graphics root descriptor table: Set textures
-		renderer.setGraphicsRootDescriptorTable(2, mDiffuseTextureResource->getTexture());
-		renderer.setGraphicsRootDescriptorTable(3, mNormalTextureResource->getTexture());
-		renderer.setGraphicsRootDescriptorTable(4, mSpecularTextureResource->getTexture());
-		renderer.setGraphicsRootDescriptorTable(5, mEmissiveTextureResource->getTexture());
+		{ // Graphics root descriptor table: Set textures
+			const MaterialBlueprintResource::Textures& textures = mMaterialBlueprintResource->getTextures();
+			const size_t numberOfTextures = textures.size();
+			for (size_t i = 0; i < numberOfTextures; ++i)
+			{
+				const MaterialBlueprintResource::Texture& texture = textures[i];
+
+				// Due to background texture loading, some textures might not be ready, yet
+				// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
+				Renderer::ITexturePtr texturePtr = texture.textureResource->getTexture();
+				if (nullptr != texturePtr)
+				{
+					renderer.setGraphicsRootDescriptorTable(texture.textureRootParameterIndex, texturePtr);
+				}
+			}
+		}
 
 		// Done
 		return true;

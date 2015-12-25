@@ -111,7 +111,7 @@ namespace RendererRuntime
 		inline Renderer::IRenderer& getRenderer() const;
 
 		//[-------------------------------------------------------]
-		//[ Managers                                              ]
+		//[ Asset                                                 ]
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
@@ -297,7 +297,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		Renderer::IRenderer* mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
-		// Managers
+		// Asset
 		AssetManager* mAssetManager;
 		// Resource
 		ResourceStreamer*					mResourceStreamer;

@@ -25,6 +25,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <fstream>
@@ -128,6 +129,22 @@ namespace RendererRuntime
 				mMaterialBlueprintResource->mSamplerStates.resize(materialBlueprintHeader.numberOfSamplerStates);
 			}
 
+			{ // Read in the textures
+				// Allocate memory for the temporary data
+				if (mMaximumNumberOfMaterialBlueprintTextures < materialBlueprintHeader.numberOfTextures)
+				{
+					delete [] mMaterialBlueprintTextures;
+					mMaximumNumberOfMaterialBlueprintTextures = materialBlueprintHeader.numberOfTextures;
+					mMaterialBlueprintTextures = new v1MaterialBlueprint::Texture[mMaximumNumberOfMaterialBlueprintTextures];
+				}
+
+				// Read in the textures
+				inputFileStream.read(reinterpret_cast<char*>(mMaterialBlueprintTextures), sizeof(v1MaterialBlueprint::Texture) * materialBlueprintHeader.numberOfTextures);
+
+				// Allocate material blueprint resource textures
+				mMaterialBlueprintResource->mTextures.resize(materialBlueprintHeader.numberOfTextures);
+			}
+
 			{ // Read in the shader blueprints
 				v1MaterialBlueprint::ShaderBlueprints shaderBlueprints;
 				inputFileStream.read(reinterpret_cast<char*>(&shaderBlueprints), sizeof(v1MaterialBlueprint::ShaderBlueprints));
@@ -169,6 +186,20 @@ namespace RendererRuntime
 			}
 		}
 
+		{ // Get the textures
+			TextureResourceManager& textureResourceManager = mRendererRuntime.getTextureResourceManager();
+			MaterialBlueprintResource::Textures& textures = mMaterialBlueprintResource->mTextures;
+			const size_t numberOfTextures = textures.size();
+			const v1MaterialBlueprint::Texture* materialBlueprintTexture = mMaterialBlueprintTextures;
+			for (size_t i = 0; i < numberOfTextures; ++i, ++materialBlueprintTexture)
+			{
+				MaterialBlueprintResource::Texture& texture = textures[i];
+				texture.textureRootParameterIndex = materialBlueprintTexture->textureRootParameterIndex;
+				texture.textureAssetId = materialBlueprintTexture->textureAssetId;
+				texture.textureResource = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);
+			}
+		}
+
 		// Get the used shader blueprint resources
 		ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
 		mMaterialBlueprintResource->mVertexShaderBlueprint				   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mVertexShaderBlueprintAssetId);
@@ -188,6 +219,7 @@ namespace RendererRuntime
 		delete [] mRootParameters;
 		delete [] mDescriptorRanges;
 		delete [] mMaterialBlueprintSamplerStates;
+		delete [] mMaterialBlueprintTextures;
 	}
 
 

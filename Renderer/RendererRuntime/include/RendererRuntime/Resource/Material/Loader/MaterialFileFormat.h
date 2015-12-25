@@ -47,6 +47,7 @@ namespace RendererRuntime
 
 	// -> Material file format content:
 	//    - Material header
+	//    - Used material blueprint
 	//    - Material properties
 	namespace v1Material
 	{

@@ -37,7 +37,9 @@ namespace RendererRuntime
 		mMaximumNumberOfDescriptorRanges(0),
 		mDescriptorRanges(nullptr),
 		mMaximumNumberOfMaterialBlueprintSamplerStates(0),
-		mMaterialBlueprintSamplerStates(nullptr)
+		mMaterialBlueprintSamplerStates(nullptr),
+		mMaximumNumberOfMaterialBlueprintTextures(0),
+		mMaterialBlueprintTextures(nullptr)
 	{
 		// Nothing here
 	}

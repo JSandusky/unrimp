@@ -42,7 +42,6 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
-	class TextureResource;
 	class MaterialBlueprintResource;
 }
 
@@ -137,12 +136,6 @@ namespace RendererRuntime
 		MaterialBlueprintResource* mMaterialBlueprintResource;	///< Material blueprint resource, can be a null pointer, don't destroy the instance
 		Renderer::PipelineState	   mPipelineState;
 		Renderer::IPipelineState*  mPipelineStateObject;		///< Pipeline state object (PSO), can be a null pointer
-
-		// TODO(co)
-		RendererRuntime::TextureResource* mDiffuseTextureResource;
-		RendererRuntime::TextureResource* mNormalTextureResource;
-		RendererRuntime::TextureResource* mSpecularTextureResource;
-		RendererRuntime::TextureResource* mEmissiveTextureResource;
 
 
 	};
