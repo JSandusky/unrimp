@@ -99,6 +99,27 @@ namespace RendererToolkit
 			}
 		}
 
+		void optionalStringProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, char* value, uint32_t maximumLength)
+		{
+			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
+			if (!jsonDynamicVar.isEmpty())
+			{
+				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+				const size_t valueLength = valueAsString.length();
+
+				// +1 for the terminating zero
+				if (valueLength + 1 <= maximumLength)
+				{
+					memcpy(value, valueAsString.data(), valueLength);
+					value[valueLength] = '\0';
+				}
+				else
+				{
+					// TODO(co) Error handling
+				}
+			}
+		}
+
 		void optionalFillModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::FillMode& fillMode)
 		{
 			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
@@ -291,6 +312,281 @@ namespace RendererToolkit
 			}
 		}
 
+		void optionalShaderVisibilityProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::ShaderVisibility& value)
+		{
+			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
+			if (!jsonDynamicVar.isEmpty())
+			{
+				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+
+				if ("ALL" == valueAsString)
+				{
+					value = Renderer::ShaderVisibility::ALL;
+				}
+				else if ("VERTEX" == valueAsString)
+				{
+					value = Renderer::ShaderVisibility::VERTEX;
+				}
+				else if ("TESSELLATION_CONTROL" == valueAsString)
+				{
+					value = Renderer::ShaderVisibility::TESSELLATION_CONTROL;
+				}
+				else if ("TESSELLATION_EVALUATION" == valueAsString)
+				{
+					value = Renderer::ShaderVisibility::TESSELLATION_EVALUATION;
+				}
+				else if ("GEOMETRY" == valueAsString)
+				{
+					value = Renderer::ShaderVisibility::GEOMETRY;
+				}
+				else if ("FRAGMENT" == valueAsString)
+				{
+					value = Renderer::ShaderVisibility::FRAGMENT;
+				}
+				else
+				{
+					// TODO(co) Error handling
+				}
+			}
+		}
+
+		void readRootSignature(Poco::JSON::Object::Ptr jsonRootSignatureObject, std::ofstream& outputFileStream)
+		{
+			Poco::JSON::Object::Ptr jsonRootParametersObject = jsonRootSignatureObject->get("RootParameters").extract<Poco::JSON::Object::Ptr>();
+
+			// First: Collect everything we need instead of directly writing it down using an inefficient data layout
+			// -> We don't care that "Renderer::RootDescriptorTable::descriptorRanges" has unused bogus content, makes loading the root signature much easier because there this content just has to be set
+			std::vector<Renderer::RootParameter> rootParameters;
+			std::vector<Renderer::DescriptorRange> descriptorRanges;
+			{
+				rootParameters.reserve(jsonRootParametersObject->size());
+				descriptorRanges.reserve(jsonRootParametersObject->size());
+
+				Poco::JSON::Object::ConstIterator rootParametersIterator = jsonRootParametersObject->begin();
+				Poco::JSON::Object::ConstIterator rootParametersIteratorEnd = jsonRootParametersObject->end();
+				while (rootParametersIterator != rootParametersIteratorEnd)
+				{
+					Poco::JSON::Object::Ptr jsonRootParameterObject = rootParametersIterator->second.extract<Poco::JSON::Object::Ptr>();
+
+					// TODO(co) Add support for the other root parameter types
+					const std::string rootParameterType = jsonRootParameterObject->getValue<std::string>("ParameterType");
+					if ("DESCRIPTOR_TABLE" == rootParameterType)
+					{
+						Poco::JSON::Object::Ptr jsonDescriptorRangesObject = jsonRootParameterObject->get("DescriptorRanges").extract<Poco::JSON::Object::Ptr>();
+
+						{ // Collect the root parameter
+							Renderer::RootParameter rootParameter;
+							rootParameter.parameterType = Renderer::RootParameterType::DESCRIPTOR_TABLE;
+							rootParameter.descriptorTable.numberOfDescriptorRanges = jsonDescriptorRangesObject->size();
+							optionalShaderVisibilityProperty(jsonRootParameterObject, "ShaderVisibility", rootParameter.shaderVisibility);
+							rootParameters.push_back(rootParameter);
+						}
+
+						{ // Descriptor ranges
+							Poco::JSON::Object::ConstIterator descriptorRangesIterator = jsonDescriptorRangesObject->begin();
+							Poco::JSON::Object::ConstIterator descriptorRangesIteratorEnd = jsonDescriptorRangesObject->end();
+							while (descriptorRangesIterator != descriptorRangesIteratorEnd)
+							{
+								Poco::JSON::Object::Ptr jsonDescriptorRangeObject = descriptorRangesIterator->second.extract<Poco::JSON::Object::Ptr>();
+								Renderer::DescriptorRange descriptorRange;
+
+								{ // Range type
+									const std::string descriptorRangeType = jsonDescriptorRangeObject->getValue<std::string>("RangeType");
+									if ("SRV" == descriptorRangeType)
+									{
+										descriptorRange.rangeType = Renderer::DescriptorRangeType::SRV;
+									}
+									else if ("UAV" == descriptorRangeType)
+									{
+										descriptorRange.rangeType = Renderer::DescriptorRangeType::UAV;
+									}
+									else if ("CBV" == descriptorRangeType)
+									{
+										descriptorRange.rangeType = Renderer::DescriptorRangeType::CBV;
+									}
+									else if ("SAMPLER" == descriptorRangeType)
+									{
+										descriptorRange.rangeType = Renderer::DescriptorRangeType::SAMPLER;
+									}
+									else
+									{
+										// TODO(co) Error handling
+									}
+								}
+
+								// Optional number of descriptors
+								descriptorRange.numberOfDescriptors = 1;
+								optionalIntegerProperty(jsonDescriptorRangeObject, "NumberOfDescriptors", descriptorRange.numberOfDescriptors);
+
+								// Optional base shader register
+								descriptorRange.baseShaderRegister = 0;
+								optionalIntegerProperty(jsonDescriptorRangeObject, "BaseShaderRegister", descriptorRange.baseShaderRegister);
+
+								// Optional register space
+								descriptorRange.registerSpace = 0;
+								optionalIntegerProperty(jsonDescriptorRangeObject, "RegisterSpace", descriptorRange.registerSpace);
+
+								// Optional offset in descriptors from table start
+								descriptorRange.offsetInDescriptorsFromTableStart = 0;
+								optionalIntegerProperty(jsonDescriptorRangeObject, "OffsetInDescriptorsFromTableStart", descriptorRange.offsetInDescriptorsFromTableStart);
+
+								// Optional base shader register name
+								descriptorRange.baseShaderRegisterName[0] = '\0';
+								optionalStringProperty(jsonDescriptorRangeObject, "BaseShaderRegisterName", descriptorRange.baseShaderRegisterName, Renderer::DescriptorRange::NAME_LENGTH);
+
+								// Optional sampler root parameter index
+								descriptorRange.samplerRootParameterIndex = 0;
+								optionalIntegerProperty(jsonDescriptorRangeObject, "SamplerRootParameterIndex", descriptorRange.samplerRootParameterIndex);
+
+								// Collect the descriptor range
+								descriptorRanges.push_back(descriptorRange);
+
+								// Next root descriptor range, please
+								++descriptorRangesIterator;
+							}
+						}
+					}
+					else
+					{
+						// TODO(co) Error handling
+					}
+
+					// Next root parameter, please
+					++rootParametersIterator;
+				}
+			}
+
+			// Now that we have collect everything we need, write it down
+
+			{ // Write down the root signature header
+				RendererRuntime::v1MaterialBlueprint::RootSignatureHeader rootSignatureHeader;
+				rootSignatureHeader.numberOfRootParameters = jsonRootParametersObject->size();
+				rootSignatureHeader.numberOfStaticSamplers = 0;										// TODO(co) Add support for static samplers
+				rootSignatureHeader.flags				   = Renderer::RootSignatureFlags::NONE;	// TODO(co) Add support for flags
+				outputFileStream.write(reinterpret_cast<const char*>(&rootSignatureHeader), sizeof(RendererRuntime::v1MaterialBlueprint::RootSignatureHeader));
+			}
+
+			// Write down the root parameters
+			outputFileStream.write(reinterpret_cast<const char*>(rootParameters.data()), sizeof(Renderer::RootParameter) * rootParameters.size());
+
+			// Write down the descriptor ranges
+			outputFileStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), sizeof(Renderer::DescriptorRange) * descriptorRanges.size());
+		}
+
+		void readPipelineStateObject(Poco::JSON::Object::Ptr jsonPipelineStateObject, std::ofstream& outputFileStream)
+		{
+			// Start with the default settings
+			Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder();
+
+			{ // Optional rasterizer state
+				Poco::Dynamic::Var jsonRasterizerStateDynamicVar = jsonPipelineStateObject->get("RasterizerState");
+				if (!jsonRasterizerStateDynamicVar.isEmpty())
+				{
+					Poco::JSON::Object::Ptr jsonRasterizerStateObject = jsonRasterizerStateDynamicVar.extract<Poco::JSON::Object::Ptr>();
+					Renderer::RasterizerState& rasterizerState = pipelineState.rasterizerState;
+
+					// The optional properties
+					optionalFillModeProperty(jsonRasterizerStateObject, "FillMode", rasterizerState.fillMode);
+					optionalCullModeProperty(jsonRasterizerStateObject, "CullMode", rasterizerState.cullMode);
+					optionalBooleanProperty(jsonRasterizerStateObject, "FrontCounterClockwise", rasterizerState.frontCounterClockwise);
+					optionalIntegerProperty(jsonRasterizerStateObject, "DepthBias", rasterizerState.depthBias);
+					optionalFloatProperty(jsonRasterizerStateObject, "DepthBiasClamp", rasterizerState.depthBiasClamp);
+					optionalFloatProperty(jsonRasterizerStateObject, "SlopeScaledDepthBias", rasterizerState.slopeScaledDepthBias);
+					optionalBooleanProperty(jsonRasterizerStateObject, "DepthClipEnable", rasterizerState.depthClipEnable);
+					optionalBooleanProperty(jsonRasterizerStateObject, "MultisampleEnable", rasterizerState.multisampleEnable);
+					optionalBooleanProperty(jsonRasterizerStateObject, "AntialiasedLineEnable", rasterizerState.antialiasedLineEnable);
+					optionalIntegerProperty(jsonRasterizerStateObject, "ForcedSampleCount", rasterizerState.forcedSampleCount);
+					optionalConservativeRasterizationModeProperty(jsonRasterizerStateObject, "ConservativeRasterizationMode", rasterizerState.conservativeRasterizationMode);
+					optionalBooleanProperty(jsonRasterizerStateObject, "ScissorEnable", rasterizerState.scissorEnable);
+				}
+			}
+
+			{ // Optional depth stencil state
+				Poco::Dynamic::Var jsonDepthStencilStateDynamicVar = jsonPipelineStateObject->get("DepthStencilState");
+				if (!jsonDepthStencilStateDynamicVar.isEmpty())
+				{
+					Poco::JSON::Object::Ptr jsonDepthStencilStateObject = jsonDepthStencilStateDynamicVar.extract<Poco::JSON::Object::Ptr>();
+					Renderer::DepthStencilState& depthStencilState = pipelineState.depthStencilState;
+
+					// The optional properties
+					optionalBooleanProperty(jsonDepthStencilStateObject, "DepthEnable", depthStencilState.depthEnable);
+					optionalDepthWriteMaskProperty(jsonDepthStencilStateObject, "DepthWriteMask", depthStencilState.depthWriteMask);
+
+					// TODO(co) Depth stencil state: Read in the rest of the PSO
+					/*
+					"DepthStencilState":
+					{
+						"DepthFunc": "LESS",
+						"StencilEnable": "FALSE",
+						"StencilReadMask": "255",
+						"StencilWriteMask": "255",
+						"FrontFace":
+						{
+							"StencilFailOp": "KEEP",
+							"StencilDepthFailOp": "KEEP",
+							"StencilPassOp": "KEEP",
+							"StencilFunc": "ALWAYS"
+						},
+						"BackFace":
+						{
+							"StencilFailOp": "KEEP",
+							"StencilDepthFailOp": "KEEP",
+							"StencilPassOp": "KEEP",
+							"StencilFunc": "ALWAYS"
+						}
+					},
+					*/
+				}
+			}
+
+			{ // Optional blend state
+				Poco::Dynamic::Var jsonBlendStateDynamicVar = jsonPipelineStateObject->get("BlendState");
+				if (!jsonBlendStateDynamicVar.isEmpty())
+				{
+					Poco::JSON::Object::Ptr jsonBlendStateObject = jsonBlendStateDynamicVar.extract<Poco::JSON::Object::Ptr>();
+					Renderer::BlendState& blendState = pipelineState.blendState;
+
+					// The optional properties
+					optionalBooleanProperty(jsonBlendStateObject, "AlphaToCoverageEnable", blendState.alphaToCoverageEnable);
+					optionalBooleanProperty(jsonBlendStateObject, "IndependentBlendEnable", blendState.independentBlendEnable);
+
+					// The optional render target properties
+					for (int i = 0; i < 8; ++i)
+					{
+						Poco::Dynamic::Var jsonRenderTargetDynamicVar = jsonBlendStateObject->get("RenderTarget[" + std::to_string(i) + ']');
+						if (!jsonRenderTargetDynamicVar.isEmpty())
+						{
+							Poco::JSON::Object::Ptr jsonRenderTargetObject = jsonRenderTargetDynamicVar.extract<Poco::JSON::Object::Ptr>();
+							Renderer::RenderTargetBlendDesc& renderTargetBlendDesc = blendState.renderTarget[i];
+
+							// The optional properties
+							optionalBooleanProperty(jsonRenderTargetObject, "BlendEnable", renderTargetBlendDesc.blendEnable);
+							optionalBlendProperty(jsonRenderTargetObject, "SrcBlend", renderTargetBlendDesc.srcBlend);
+							optionalBlendProperty(jsonRenderTargetObject, "DestBlend", renderTargetBlendDesc.destBlend);
+							optionalBlendOpProperty(jsonRenderTargetObject, "BlendOp", renderTargetBlendDesc.blendOp);
+							optionalBlendProperty(jsonRenderTargetObject, "SrcBlendAlpha", renderTargetBlendDesc.srcBlendAlpha);
+							optionalBlendProperty(jsonRenderTargetObject, "DestBlendAlpha", renderTargetBlendDesc.destBlendAlpha);
+							optionalBlendOpProperty(jsonRenderTargetObject, "BlendOpAlpha", renderTargetBlendDesc.blendOpAlpha);
+
+							// TODO(co) Blend state: Read in the rest of the PSO
+							/*
+							"RenderTarget[0]":
+							{
+
+								"RenderTargetWriteMask": "ALL"
+							},
+							*/
+
+						}
+					}
+				}
+			}
+
+			// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
+			// Write down the pipeline state object (PSO)
+			outputFileStream.write(reinterpret_cast<const char*>(&pipelineState), sizeof(Renderer::PipelineState));
+		}
+
 	}
 
 
@@ -378,120 +674,11 @@ namespace RendererToolkit
 				outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintHeader), sizeof(RendererRuntime::v1MaterialBlueprint::Header));
 			}
 
-			{ // Pipeline state object (PSO)
-				Poco::JSON::Object::Ptr jsonPipelineStateObject = jsonMaterialBlueprintObject->get("PipelineState").extract<Poco::JSON::Object::Ptr>();
+			// Root signature
+			detail::readRootSignature(jsonMaterialBlueprintObject->get("RootSignature").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
 
-				// Start with the default settings
-				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder();
-
-				{ // Optional rasterizer state
-					Poco::Dynamic::Var jsonRasterizerStateDynamicVar = jsonPipelineStateObject->get("RasterizerState");
-					if (!jsonRasterizerStateDynamicVar.isEmpty())
-					{
-						Poco::JSON::Object::Ptr jsonRasterizerStateObject = jsonRasterizerStateDynamicVar.extract<Poco::JSON::Object::Ptr>();
-						Renderer::RasterizerState& rasterizerState = pipelineState.rasterizerState;
-
-						// The optional properties
-						detail::optionalFillModeProperty(jsonRasterizerStateObject, "FillMode", rasterizerState.fillMode);
-						detail::optionalCullModeProperty(jsonRasterizerStateObject, "CullMode", rasterizerState.cullMode);
-						detail::optionalBooleanProperty(jsonRasterizerStateObject, "FrontCounterClockwise", rasterizerState.frontCounterClockwise);
-						detail::optionalIntegerProperty(jsonRasterizerStateObject, "DepthBias", rasterizerState.depthBias);
-						detail::optionalFloatProperty(jsonRasterizerStateObject, "DepthBiasClamp", rasterizerState.depthBiasClamp);
-						detail::optionalFloatProperty(jsonRasterizerStateObject, "SlopeScaledDepthBias", rasterizerState.slopeScaledDepthBias);
-						detail::optionalBooleanProperty(jsonRasterizerStateObject, "DepthClipEnable", rasterizerState.depthClipEnable);
-						detail::optionalBooleanProperty(jsonRasterizerStateObject, "MultisampleEnable", rasterizerState.multisampleEnable);
-						detail::optionalBooleanProperty(jsonRasterizerStateObject, "AntialiasedLineEnable", rasterizerState.antialiasedLineEnable);
-						detail::optionalIntegerProperty(jsonRasterizerStateObject, "ForcedSampleCount", rasterizerState.forcedSampleCount);
-						detail::optionalConservativeRasterizationModeProperty(jsonRasterizerStateObject, "ConservativeRasterizationMode", rasterizerState.conservativeRasterizationMode);
-						detail::optionalBooleanProperty(jsonRasterizerStateObject, "ScissorEnable", rasterizerState.scissorEnable);
-					}
-				}
-
-				{ // Optional depth stencil state
-					Poco::Dynamic::Var jsonDepthStencilStateDynamicVar = jsonPipelineStateObject->get("DepthStencilState");
-					if (!jsonDepthStencilStateDynamicVar.isEmpty())
-					{
-						Poco::JSON::Object::Ptr jsonDepthStencilStateObject = jsonDepthStencilStateDynamicVar.extract<Poco::JSON::Object::Ptr>();
-						Renderer::DepthStencilState& depthStencilState = pipelineState.depthStencilState;
-
-						// The optional properties
-						detail::optionalBooleanProperty(jsonDepthStencilStateObject, "DepthEnable", depthStencilState.depthEnable);
-						detail::optionalDepthWriteMaskProperty(jsonDepthStencilStateObject, "DepthWriteMask", depthStencilState.depthWriteMask);
-
-						// TODO(co) Depth stencil state: Read in the rest of the PSO
-						/*
-						"DepthStencilState":
-						{
-							"DepthFunc": "LESS",
-							"StencilEnable": "FALSE",
-							"StencilReadMask": "255",
-							"StencilWriteMask": "255",
-							"FrontFace":
-							{
-								"StencilFailOp": "KEEP",
-								"StencilDepthFailOp": "KEEP",
-								"StencilPassOp": "KEEP",
-								"StencilFunc": "ALWAYS"
-							},
-							"BackFace":
-							{
-								"StencilFailOp": "KEEP",
-								"StencilDepthFailOp": "KEEP",
-								"StencilPassOp": "KEEP",
-								"StencilFunc": "ALWAYS"
-							}
-						},
-						*/
-					}
-				}
-
-				{ // Optional blend state
-					Poco::Dynamic::Var jsonBlendStateDynamicVar = jsonPipelineStateObject->get("BlendState");
-					if (!jsonBlendStateDynamicVar.isEmpty())
-					{
-						Poco::JSON::Object::Ptr jsonBlendStateObject = jsonBlendStateDynamicVar.extract<Poco::JSON::Object::Ptr>();
-						Renderer::BlendState& blendState = pipelineState.blendState;
-
-						// The optional properties
-						detail::optionalBooleanProperty(jsonBlendStateObject, "AlphaToCoverageEnable", blendState.alphaToCoverageEnable);
-						detail::optionalBooleanProperty(jsonBlendStateObject, "IndependentBlendEnable", blendState.independentBlendEnable);
-
-						// The optional render target properties
-						for (int i = 0; i < 8; ++i)
-						{
-							Poco::Dynamic::Var jsonRenderTargetDynamicVar = jsonBlendStateObject->get("RenderTarget[" + std::to_string(i) + ']');
-							if (!jsonRenderTargetDynamicVar.isEmpty())
-							{
-								Poco::JSON::Object::Ptr jsonRenderTargetObject = jsonRenderTargetDynamicVar.extract<Poco::JSON::Object::Ptr>();
-								Renderer::RenderTargetBlendDesc& renderTargetBlendDesc = blendState.renderTarget[i];
-
-								// The optional properties
-								detail::optionalBooleanProperty(jsonRenderTargetObject, "BlendEnable", renderTargetBlendDesc.blendEnable);
-								detail::optionalBlendProperty(jsonRenderTargetObject, "SrcBlend", renderTargetBlendDesc.srcBlend);
-								detail::optionalBlendProperty(jsonRenderTargetObject, "DestBlend", renderTargetBlendDesc.destBlend);
-								detail::optionalBlendOpProperty(jsonRenderTargetObject, "BlendOp", renderTargetBlendDesc.blendOp);
-								detail::optionalBlendProperty(jsonRenderTargetObject, "SrcBlendAlpha", renderTargetBlendDesc.srcBlendAlpha);
-								detail::optionalBlendProperty(jsonRenderTargetObject, "DestBlendAlpha", renderTargetBlendDesc.destBlendAlpha);
-								detail::optionalBlendOpProperty(jsonRenderTargetObject, "BlendOpAlpha", renderTargetBlendDesc.blendOpAlpha);
-
-								// TODO(co) Blend state: Read in the rest of the PSO
-								/*
-								"RenderTarget[0]":
-								{
-
-									"RenderTargetWriteMask": "ALL"
-								},
-								*/
-
-							}
-						}
-					}
-				}
-
-				// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
-				// Write down the pipeline state object (PSO)
-				outputFileStream.write(reinterpret_cast<const char*>(&pipelineState), sizeof(Renderer::PipelineState));
-			}
+			// Pipeline state object (PSO)
+			detail::readPipelineStateObject(jsonMaterialBlueprintObject->get("PipelineState").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
 
 			{ // Shader blueprints
 				Poco::JSON::Object::Ptr jsonShaderBlueprintsObject = jsonMaterialBlueprintObject->get("ShaderBlueprints").extract<Poco::JSON::Object::Ptr>();

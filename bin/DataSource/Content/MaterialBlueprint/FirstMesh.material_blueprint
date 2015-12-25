@@ -6,6 +6,100 @@
 	},
 	"MaterialBlueprintAsset":
 	{
+		"RootSignature":
+		{
+			"RootParameters":
+			{
+				"0":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "CBV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "UniformBlockDynamicVs"
+						}
+					},
+					"ShaderVisibility": "VERTEX"
+				},
+				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"2":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "DiffuseMap",
+							"SamplerRootParameterIndex": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"3":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "EmissiveMap",
+							"SamplerRootParameterIndex": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"4":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "2",
+							"BaseShaderRegisterName": "NormalMap",
+							"SamplerRootParameterIndex": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"5":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "3",
+							"BaseShaderRegisterName": "SpecularMap",
+							"SamplerRootParameterIndex": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				}
+			},
+			"Flags": "NONE"
+		},
 		"Properties":
 		{
 			"DiffuseMap":

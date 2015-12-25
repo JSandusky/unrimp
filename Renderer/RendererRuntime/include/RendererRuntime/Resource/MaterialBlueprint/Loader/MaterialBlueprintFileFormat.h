@@ -47,6 +47,7 @@ namespace RendererRuntime
 
 	// -> Material blueprint file format content:
 	//    - Material blueprint header
+	//    - Root signature
 	//    - Material blueprint properties
 	//    - Pipeline state object (PSO)
 	//    - Shader blueprints
@@ -66,6 +67,13 @@ namespace RendererRuntime
 			{
 				uint32_t formatType;
 				uint16_t formatVersion;
+			};
+
+			struct RootSignatureHeader
+			{
+				uint32_t numberOfRootParameters;
+				uint32_t numberOfStaticSamplers;
+				uint32_t flags;
 			};
 
 			struct ShaderBlueprints
