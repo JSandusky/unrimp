@@ -122,7 +122,7 @@ namespace
 				// Graphics root descriptor table: Set material specific tables
 				if (mMaterialResource->setGraphicsRootDescriptorTable(renderer))
 				{
-					Renderer::IPipelineState* pipelineState = mMaterialResource->getPipelineState();
+					Renderer::IPipelineState* pipelineState = mMaterialResource->getPipelineStateObject();
 					if (nullptr != pipelineState)
 					{
 						// Set the used pipeline state object (PSO)

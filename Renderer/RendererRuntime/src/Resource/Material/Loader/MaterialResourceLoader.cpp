@@ -24,6 +24,7 @@
 #include "RendererRuntime/Resource/Material/Loader/MaterialResourceLoader.h"
 #include "RendererRuntime/Resource/Material/Loader/MaterialFileFormat.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -79,6 +80,9 @@ namespace RendererRuntime
 
 	void MaterialResourceLoader::onRendererBackendDispatch()
 	{
+		// TODO(co) Material resource update
+		mMaterialResource->releasePipelineState();
+
 		// Get the used material blueprint resource
 		mMaterialResource->mMaterialBlueprintResource = mRendererRuntime.getMaterialBlueprintResourceManager().loadMaterialBlueprintResourceByAssetId(mMaterialBlueprintAssetId);
 

@@ -26,8 +26,6 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
 
-#include <Renderer/Public/Renderer.h>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -42,7 +40,8 @@ namespace RendererRuntime
 	MaterialResource::MaterialResource(ResourceId resourceId) :
 		IResource(resourceId),
 		mMaterialBlueprintResource(nullptr),
-		mPipelineState(nullptr),
+		mPipelineState(Renderer::PipelineStateBuilder()),
+		mPipelineStateObject(nullptr),
 		mDiffuseTextureResource(nullptr),
 		mNormalTextureResource(nullptr),
 		mSpecularTextureResource(nullptr),
@@ -52,9 +51,9 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	Renderer::IPipelineState* MaterialResource::getPipelineState()
+	Renderer::IPipelineState* MaterialResource::getPipelineStateObject()
 	{
-		if (nullptr == mPipelineState && nullptr != mMaterialBlueprintResource && IResource::LoadingState::LOADED == mMaterialBlueprintResource->getLoadingState())
+		if (nullptr == mPipelineStateObject && nullptr != mMaterialBlueprintResource && IResource::LoadingState::LOADED == mMaterialBlueprintResource->getLoadingState())
 		{
 			const ShaderBlueprintResource* vertexShaderBlueprint = mMaterialBlueprintResource->mVertexShaderBlueprint;
 			const ShaderBlueprintResource* fragmentShaderBlueprint = mMaterialBlueprintResource->mFragmentShaderBlueprint;
@@ -123,8 +122,16 @@ namespace RendererRuntime
 						// Is there a valid program?
 						if (nullptr != program)
 						{
+							// Start with the pipeline state of the material blueprint resource
+							mPipelineState = mMaterialBlueprintResource->getPipelineState();
+
+							// Setup the dynamic part of the pipeline state
+							mPipelineState.rootSignature	= rootSignature;
+							mPipelineState.program			= program;
+							mPipelineState.vertexAttributes = vertexAttributes;
+
 							// Create the pipeline state object (PSO)
-							mPipelineState = renderer.createPipelineState(Renderer::PipelineStateBuilder(rootSignature, program, vertexAttributes));
+							mPipelineStateObject = renderer.createPipelineState(mPipelineState);
 						}
 					}
 				}
@@ -132,15 +139,15 @@ namespace RendererRuntime
 		}
 
 		// Done
-		return mPipelineState;
+		return mPipelineStateObject;
 	}
 
 	void MaterialResource::releasePipelineState()
 	{
-		if (nullptr != mPipelineState)
+		if (nullptr != mPipelineStateObject)
 		{
-			mPipelineState->release();
-			mPipelineState = nullptr;
+			mPipelineStateObject->release();
+			mPipelineStateObject = nullptr;
 		}
 	}
 

@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/IResource.h"
 
+#include <Renderer/Public/Renderer.h>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -95,6 +97,15 @@ namespace RendererRuntime
 		*/
 		inline Renderer::IRootSignature* getRootSignature() const;
 
+		/**
+		*  @brief
+		*    Return the pipeline state
+		*
+		*  @return
+		*    The pipeline state
+		*/
+		inline const Renderer::PipelineState& getPipelineState() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -109,6 +120,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		Renderer::IRootSignature* mRootSignature;			///< Root signature, can be a null pointer
+		Renderer::PipelineState	  mPipelineState;
 
 	// TODO(co) Make this private
 	public:

@@ -48,6 +48,8 @@ namespace RendererRuntime
 	// -> Material blueprint file format content:
 	//    - Material blueprint header
 	//    - Material blueprint properties
+	//    - Pipeline state object (PSO)
+	//    - Shader blueprints
 	namespace v1MaterialBlueprint
 	{
 

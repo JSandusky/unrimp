@@ -28,6 +28,28 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline PipelineStateBuilder::PipelineStateBuilder()
+	{
+		rootSignature						= nullptr;
+		program								= nullptr;
+		vertexAttributes.numberOfAttributes	= 0;
+		vertexAttributes.attributes			= nullptr;
+		primitiveTopologyType				= PrimitiveTopologyType::TRIANGLE;
+		rasterizerState						= RasterizerStateBuilder::getDefaultRasterizerState();
+		depthStencilState					= DepthStencilStateBuilder::getDefaultDepthStencilState();
+		blendState							= BlendStateBuilder::getDefaultBlendState();
+		numberOfRenderTargets				= 1;
+		renderTargetViewFormats[0]			= TextureFormat::R8G8B8A8;
+		renderTargetViewFormats[1]			= TextureFormat::R8G8B8A8;
+		renderTargetViewFormats[2]			= TextureFormat::R8G8B8A8;
+		renderTargetViewFormats[3]			= TextureFormat::R8G8B8A8;
+		renderTargetViewFormats[4]			= TextureFormat::R8G8B8A8;
+		renderTargetViewFormats[5]			= TextureFormat::R8G8B8A8;
+		renderTargetViewFormats[6]			= TextureFormat::R8G8B8A8;
+		renderTargetViewFormats[7]			= TextureFormat::R8G8B8A8;
+		depthStencilViewFormat				= TextureFormat::D32_FLOAT;
+	}
+
 	inline PipelineStateBuilder::PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes)
 	{
 		rootSignature				= _rootSignature;

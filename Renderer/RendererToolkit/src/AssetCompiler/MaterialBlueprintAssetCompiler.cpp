@@ -134,6 +134,16 @@ namespace RendererToolkit
 				outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintHeader), sizeof(RendererRuntime::v1MaterialBlueprint::Header));
 			}
 
+			{ // Pipeline state object (PSO)
+				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder();
+
+				// TODO(co) Read in the rest of the PSO
+
+				// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
+				// Write down the pipeline state object (PSO)
+				outputFileStream.write(reinterpret_cast<const char*>(&pipelineState), sizeof(Renderer::PipelineState));
+			}
+
 			{ // Shader blueprints
 				Poco::JSON::Object::Ptr jsonShaderBlueprintsObject = jsonPipelineStateObject->get("ShaderBlueprints").extract<Poco::JSON::Object::Ptr>();
 

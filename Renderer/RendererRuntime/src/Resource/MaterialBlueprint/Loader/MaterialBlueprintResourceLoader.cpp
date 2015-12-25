@@ -62,6 +62,10 @@ namespace RendererRuntime
 			v1MaterialBlueprint::Header materialBlueprintHeader;
 			inputFileStream.read(reinterpret_cast<char*>(&materialBlueprintHeader), sizeof(v1MaterialBlueprint::Header));
 
+			// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
+			// Read in the pipeline state
+			inputFileStream.read(reinterpret_cast<char*>(&mMaterialBlueprintResource->mPipelineState), sizeof(Renderer::PipelineState));
+
 			{ // Read in the shader blueprints
 				v1MaterialBlueprint::ShaderBlueprints shaderBlueprints;
 				inputFileStream.read(reinterpret_cast<char*>(&shaderBlueprints), sizeof(v1MaterialBlueprint::ShaderBlueprints));

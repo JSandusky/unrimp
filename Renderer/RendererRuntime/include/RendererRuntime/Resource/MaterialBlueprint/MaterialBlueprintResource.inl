@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return mRootSignature;
 	}
 
+	inline const Renderer::PipelineState& MaterialBlueprintResource::getPipelineState() const
+	{
+		return mPipelineState;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
