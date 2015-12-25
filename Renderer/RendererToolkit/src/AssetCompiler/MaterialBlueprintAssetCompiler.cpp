@@ -352,13 +352,12 @@ namespace RendererToolkit
 
 		void readRootSignature(Poco::JSON::Object::Ptr jsonRootSignatureObject, std::ofstream& outputFileStream)
 		{
-			Poco::JSON::Object::Ptr jsonRootParametersObject = jsonRootSignatureObject->get("RootParameters").extract<Poco::JSON::Object::Ptr>();
-
 			// First: Collect everything we need instead of directly writing it down using an inefficient data layout
 			// -> We don't care that "Renderer::RootDescriptorTable::descriptorRanges" has unused bogus content, makes loading the root signature much easier because there this content just has to be set
 			std::vector<Renderer::RootParameter> rootParameters;
 			std::vector<Renderer::DescriptorRange> descriptorRanges;
 			{
+				Poco::JSON::Object::Ptr jsonRootParametersObject = jsonRootSignatureObject->get("RootParameters").extract<Poco::JSON::Object::Ptr>();
 				rootParameters.reserve(jsonRootParametersObject->size());
 				descriptorRanges.reserve(jsonRootParametersObject->size());
 
@@ -460,9 +459,10 @@ namespace RendererToolkit
 
 			{ // Write down the root signature header
 				RendererRuntime::v1MaterialBlueprint::RootSignatureHeader rootSignatureHeader;
-				rootSignatureHeader.numberOfRootParameters = jsonRootParametersObject->size();
-				rootSignatureHeader.numberOfStaticSamplers = 0;										// TODO(co) Add support for static samplers
-				rootSignatureHeader.flags				   = Renderer::RootSignatureFlags::NONE;	// TODO(co) Add support for flags
+				rootSignatureHeader.numberOfRootParameters	 = rootParameters.size();
+				rootSignatureHeader.numberOfDescriptorRanges = descriptorRanges.size();
+				rootSignatureHeader.numberOfStaticSamplers	 = 0;									// TODO(co) Add support for static samplers
+				rootSignatureHeader.flags					 = Renderer::RootSignatureFlags::NONE;	// TODO(co) Add support for flags
 				outputFileStream.write(reinterpret_cast<const char*>(&rootSignatureHeader), sizeof(RendererRuntime::v1MaterialBlueprint::RootSignatureHeader));
 			}
 

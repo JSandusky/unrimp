@@ -40,6 +40,7 @@ namespace RendererRuntime
 
 	inline ShaderBlueprintResourceLoader::~ShaderBlueprintResourceLoader()
 	{
+		// Free temporary data
 		delete [] mShaderSourceCode;
 	}
 

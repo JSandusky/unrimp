@@ -30,6 +30,8 @@
 #include "RendererRuntime/Resource/IResourceLoader.h"
 #include "RendererRuntime/Asset/Asset.h"
 
+#include <Renderer/Public/Renderer.h>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -98,11 +100,16 @@ namespace RendererRuntime
 		Asset					   mAsset;		///< In order to be multi-threading safe in here, we need an asset copy
 		MaterialBlueprintResource* mMaterialBlueprintResource;
 		// Temporary data
-		AssetId mVertexShaderBlueprintAssetId;
-		AssetId mTessellationControlShaderBlueprintAssetId;
-		AssetId mTessellationEvaluationShaderBlueprintAssetId;
-		AssetId mGeometryShaderBlueprintAssetId;
-		AssetId mFragmentShaderBlueprintAssetId;
+		uint32_t				   mMaximumNumberOfRootParameters;
+		Renderer::RootParameter*   mRootParameters;
+		uint32_t				   mMaximumNumberOfDescriptorRanges;
+		Renderer::DescriptorRange* mDescriptorRanges;
+		Renderer::RootSignature	   mRootSignature;
+		AssetId					   mVertexShaderBlueprintAssetId;
+		AssetId					   mTessellationControlShaderBlueprintAssetId;
+		AssetId					   mTessellationEvaluationShaderBlueprintAssetId;
+		AssetId					   mGeometryShaderBlueprintAssetId;
+		AssetId					   mFragmentShaderBlueprintAssetId;
 
 
 	};

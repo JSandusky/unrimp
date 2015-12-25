@@ -72,6 +72,7 @@ namespace RendererRuntime
 			struct RootSignatureHeader
 			{
 				uint32_t numberOfRootParameters;
+				uint32_t numberOfDescriptorRanges;
 				uint32_t numberOfStaticSamplers;
 				uint32_t flags;
 			};

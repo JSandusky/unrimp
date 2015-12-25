@@ -31,14 +31,20 @@ namespace RendererRuntime
 	inline MaterialBlueprintResourceLoader::MaterialBlueprintResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		IResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime),
-		mMaterialBlueprintResource(nullptr)
+		mMaterialBlueprintResource(nullptr),
+		mMaximumNumberOfRootParameters(0),
+		mRootParameters(nullptr),
+		mMaximumNumberOfDescriptorRanges(0),
+		mDescriptorRanges(nullptr)
 	{
 		// Nothing here
 	}
 
 	inline MaterialBlueprintResourceLoader::~MaterialBlueprintResourceLoader()
 	{
-		// Nothing here
+		// Free temporary data
+		delete [] mRootParameters;
+		delete [] mDescriptorRanges;
 	}
 
 	inline void MaterialBlueprintResourceLoader::initialize(const Asset& asset, MaterialBlueprintResource& materialBlueprintResource)
