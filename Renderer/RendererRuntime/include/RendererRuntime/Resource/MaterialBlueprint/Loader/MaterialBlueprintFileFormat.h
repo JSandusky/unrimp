@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/StringId.h"
 
+#include <Renderer/Public/Renderer.h>
+
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
@@ -67,6 +69,8 @@ namespace RendererRuntime
 			{
 				uint32_t formatType;
 				uint16_t formatVersion;
+				uint32_t numberOfParameters;
+				uint32_t numberOfSamplerStates;
 			};
 
 			struct RootSignatureHeader
@@ -75,6 +79,11 @@ namespace RendererRuntime
 				uint32_t numberOfDescriptorRanges;
 				uint32_t numberOfStaticSamplers;
 				uint32_t flags;
+			};
+
+			struct SamplerState : public Renderer::SamplerState
+			{
+				uint32_t samplerRootParameterIndex;
 			};
 
 			struct ShaderBlueprints

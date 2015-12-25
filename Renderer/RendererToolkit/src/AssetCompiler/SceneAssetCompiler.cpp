@@ -159,7 +159,7 @@ namespace RendererToolkit
 									{
 										for (size_t i = 0; i < 3; ++i)
 										{
-											node.transform.position[static_cast<int>(i)] = static_cast<float>(std::atof(stringTokenizer[i].c_str()));
+											node.transform.position[static_cast<int>(i)] = std::stof(stringTokenizer[i].c_str());
 										}
 									}
 									else
@@ -178,7 +178,7 @@ namespace RendererToolkit
 									{
 										for (size_t i = 0; i < 4; ++i)
 										{
-											node.transform.rotation[static_cast<int>(i)] = static_cast<float>(std::atof(stringTokenizer[i].c_str()));
+											node.transform.rotation[static_cast<int>(i)] = std::stof(stringTokenizer[i].c_str());
 										}
 									}
 									else
@@ -197,7 +197,7 @@ namespace RendererToolkit
 									{
 										for (size_t i = 0; i < 3; ++i)
 										{
-											node.transform.scale[static_cast<int>(i)] = static_cast<float>(std::atof(stringTokenizer[i].c_str()));
+											node.transform.scale[static_cast<int>(i)] = std::stof(stringTokenizer[i].c_str());
 										}
 									}
 									else

@@ -26,6 +26,12 @@
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h>
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4251)	// warning C4251: 'Poco::StringTokenizer::_tokens': class 'std::vector<std::string,std::allocator<_Kty>>' needs to have dll-interface to be used by clients of class 'Poco::StringTokenizer'
+	#include <Poco/StringTokenizer.h>
+#pragma warning(pop)
+
 #include <fstream>
 
 
@@ -34,10 +40,13 @@
 //[-------------------------------------------------------]
 namespace RendererToolkit
 {
-
-
 	namespace detail
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
 		uint32_t getCompiledAssetId(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonShaderBlueprintsObject, const std::string& propertyName)
 		{
 			const uint32_t sourceAssetId = static_cast<uint32_t>(std::atoi(jsonShaderBlueprintsObject->get(propertyName).convert<std::string>().c_str()));
@@ -99,6 +108,26 @@ namespace RendererToolkit
 			}
 		}
 
+		void optionalFloat4Property(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, float value[4])
+		{
+			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
+			if (!jsonDynamicVar.isEmpty())
+			{
+				Poco::StringTokenizer stringTokenizer(jsonDynamicVar.convert<std::string>(), " ");
+				if (stringTokenizer.count() == 4)
+				{
+					for (size_t i = 0; i < 4; ++i)
+					{
+						value[i] = std::stof(stringTokenizer[i].c_str());
+					}
+				}
+				else
+				{
+					// TODO(co) Error handling
+				}
+			}
+		}
+
 		void optionalStringProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, char* value, uint32_t maximumLength)
 		{
 			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
@@ -120,195 +149,172 @@ namespace RendererToolkit
 			}
 		}
 
-		void optionalFillModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::FillMode& fillMode)
+		void optionalFillModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::FillMode& value)
 		{
 			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
 			if (!jsonDynamicVar.isEmpty())
 			{
 				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
 
-				if ("WIREFRAME" == valueAsString)
-				{
-					fillMode = Renderer::FillMode::WIREFRAME;
-				}
-				else if ("SOLID" == valueAsString)
-				{
-					fillMode = Renderer::FillMode::SOLID;
-				}
+				// Define helper macros
+				#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::FillMode::name;
+				#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::FillMode::name;
+
+				// Evaluate value
+				IF_VALUE(WIREFRAME)
+				ELSE_IF_VALUE(SOLID)
 				else
 				{
 					// TODO(co) Error handling
 				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
 			}
 		}
 
-		void optionalCullModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::CullMode& cullMode)
+		void optionalCullModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::CullMode& value)
 		{
 			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
 			if (!jsonDynamicVar.isEmpty())
 			{
 				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
 
-				if ("NONE" == valueAsString)
-				{
-					cullMode = Renderer::CullMode::NONE;
-				}
-				else if ("FRONT" == valueAsString)
-				{
-					cullMode = Renderer::CullMode::FRONT;
-				}
-				else if ("BACK" == valueAsString)
-				{
-					cullMode = Renderer::CullMode::BACK;
-				}
+				// Define helper macros
+				#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::CullMode::name;
+				#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::CullMode::name;
+
+				// Evaluate value
+				IF_VALUE(NONE)
+				ELSE_IF_VALUE(FRONT)
+				ELSE_IF_VALUE(BACK)
 				else
 				{
 					// TODO(co) Error handling
 				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
 			}
 		}
 
-		void optionalConservativeRasterizationModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::ConservativeRasterizationMode& conservativeRasterizationMode)
+		void optionalConservativeRasterizationModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::ConservativeRasterizationMode& value)
 		{
 			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
 			if (!jsonDynamicVar.isEmpty())
 			{
 				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
 
-				if ("OFF" == valueAsString)
+				// Define helper macros
+				#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::ConservativeRasterizationMode::name;
+				#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::ConservativeRasterizationMode::name;
+
+				// Evaluate value
+				IF_VALUE(OFF)
+				ELSE_IF_VALUE(ON)
+				else
 				{
-					conservativeRasterizationMode = Renderer::ConservativeRasterizationMode::OFF;
+					// TODO(co) Error handling
 				}
-				else if ("ON" == valueAsString)
-				{
-					conservativeRasterizationMode = Renderer::ConservativeRasterizationMode::ON;
-				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
 			}
 		}
 
-		void optionalDepthWriteMaskProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::DepthWriteMask& depthWriteMask)
+		void optionalDepthWriteMaskProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::DepthWriteMask& value)
 		{
 			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
 			if (!jsonDynamicVar.isEmpty())
 			{
 				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
 
-				if ("ZERO" == valueAsString)
+				// Define helper macros
+				#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::DepthWriteMask::name;
+				#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::DepthWriteMask::name;
+
+				// Evaluate value
+				IF_VALUE(ZERO)
+				ELSE_IF_VALUE(ALL)
+				else
 				{
-					depthWriteMask = Renderer::DepthWriteMask::ZERO;
+					// TODO(co) Error handling
 				}
-				else if ("ALL" == valueAsString)
-				{
-					depthWriteMask = Renderer::DepthWriteMask::ALL;
-				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
 			}
 		}
 
-		void optionalBlendProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::Blend& blend)
+		void optionalBlendProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::Blend& value)
 		{
 			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
 			if (!jsonDynamicVar.isEmpty())
 			{
 				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
 
-				if ("ZERO" == valueAsString)
+				// Define helper macros
+				#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::Blend::name;
+				#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::Blend::name;
+
+				// Evaluate value
+				IF_VALUE(ZERO)
+				ELSE_IF_VALUE(ONE)
+				ELSE_IF_VALUE(SRC_COLOR)
+				ELSE_IF_VALUE(INV_SRC_COLOR)
+				ELSE_IF_VALUE(SRC_ALPHA)
+				ELSE_IF_VALUE(INV_SRC_ALPHA)
+				ELSE_IF_VALUE(DEST_ALPHA)
+				ELSE_IF_VALUE(INV_DEST_ALPHA)
+				ELSE_IF_VALUE(DEST_COLOR)
+				ELSE_IF_VALUE(INV_DEST_COLOR)
+				ELSE_IF_VALUE(SRC_ALPHA_SAT)
+				ELSE_IF_VALUE(BLEND_FACTOR)
+				ELSE_IF_VALUE(INV_BLEND_FACTOR)
+				ELSE_IF_VALUE(SRC_1_COLOR)
+				ELSE_IF_VALUE(INV_SRC_1_COLOR)
+				ELSE_IF_VALUE(SRC_1_ALPHA)
+				ELSE_IF_VALUE(INV_SRC_1_ALPHA)
+				else
 				{
-					blend = Renderer::Blend::ZERO;
+					// TODO(co) Error handling
 				}
-				else if ("ONE" == valueAsString)
-				{
-					blend = Renderer::Blend::ONE;
-				}
-				else if ("SRC_COLOR" == valueAsString)
-				{
-					blend = Renderer::Blend::SRC_COLOR;
-				}
-				else if ("INV_SRC_COLOR" == valueAsString)
-				{
-					blend = Renderer::Blend::INV_SRC_COLOR;
-				}
-				else if ("SRC_ALPHA" == valueAsString)
-				{
-					blend = Renderer::Blend::SRC_ALPHA;
-				}
-				else if ("INV_SRC_ALPHA" == valueAsString)
-				{
-					blend = Renderer::Blend::INV_SRC_ALPHA;
-				}
-				else if ("DEST_ALPHA" == valueAsString)
-				{
-					blend = Renderer::Blend::DEST_ALPHA;
-				}
-				else if ("INV_DEST_ALPHA" == valueAsString)
-				{
-					blend = Renderer::Blend::INV_DEST_ALPHA;
-				}
-				else if ("DEST_COLOR" == valueAsString)
-				{
-					blend = Renderer::Blend::DEST_COLOR;
-				}
-				else if ("INV_DEST_COLOR" == valueAsString)
-				{
-					blend = Renderer::Blend::INV_DEST_COLOR;
-				}
-				else if ("SRC_ALPHA_SAT" == valueAsString)
-				{
-					blend = Renderer::Blend::SRC_ALPHA_SAT;
-				}
-				else if ("BLEND_FACTOR" == valueAsString)
-				{
-					blend = Renderer::Blend::BLEND_FACTOR;
-				}
-				else if ("INV_BLEND_FACTOR" == valueAsString)
-				{
-					blend = Renderer::Blend::INV_BLEND_FACTOR;
-				}
-				else if ("SRC_1_COLOR" == valueAsString)
-				{
-					blend = Renderer::Blend::SRC_1_COLOR;
-				}
-				else if ("INV_SRC_1_COLOR" == valueAsString)
-				{
-					blend = Renderer::Blend::INV_SRC_1_COLOR;
-				}
-				else if ("SRC_1_ALPHA" == valueAsString)
-				{
-					blend = Renderer::Blend::SRC_1_ALPHA;
-				}
-				else if ("INV_SRC_1_ALPHA" == valueAsString)
-				{
-					blend = Renderer::Blend::INV_SRC_1_ALPHA;
-				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
 			}
 		}
 
-		void optionalBlendOpProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::BlendOp& blendOp)
+		void optionalBlendOpProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::BlendOp& value)
 		{
 			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
 			if (!jsonDynamicVar.isEmpty())
 			{
 				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
 
-				if ("ADD" == valueAsString)
+				// Define helper macros
+				#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::BlendOp::name;
+				#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::BlendOp::name;
+
+				// Evaluate value
+				IF_VALUE(ADD)
+				ELSE_IF_VALUE(SUBTRACT)
+				ELSE_IF_VALUE(REV_SUBTRACT)
+				ELSE_IF_VALUE(MIN)
+				ELSE_IF_VALUE(MAX)
+				else
 				{
-					blendOp = Renderer::BlendOp::ADD;
+					// TODO(co) Error handling
 				}
-				else if ("SUBTRACT" == valueAsString)
-				{
-					blendOp = Renderer::BlendOp::SUBTRACT;
-				}
-				else if ("REV_SUBTRACT" == valueAsString)
-				{
-					blendOp = Renderer::BlendOp::REV_SUBTRACT;
-				}
-				else if ("MIN" == valueAsString)
-				{
-					blendOp = Renderer::BlendOp::MIN;
-				}
-				else if ("MAX" == valueAsString)
-				{
-					blendOp = Renderer::BlendOp::MAX;
-				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
 			}
 		}
 
@@ -319,34 +325,125 @@ namespace RendererToolkit
 			{
 				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
 
-				if ("ALL" == valueAsString)
-				{
-					value = Renderer::ShaderVisibility::ALL;
-				}
-				else if ("VERTEX" == valueAsString)
-				{
-					value = Renderer::ShaderVisibility::VERTEX;
-				}
-				else if ("TESSELLATION_CONTROL" == valueAsString)
-				{
-					value = Renderer::ShaderVisibility::TESSELLATION_CONTROL;
-				}
-				else if ("TESSELLATION_EVALUATION" == valueAsString)
-				{
-					value = Renderer::ShaderVisibility::TESSELLATION_EVALUATION;
-				}
-				else if ("GEOMETRY" == valueAsString)
-				{
-					value = Renderer::ShaderVisibility::GEOMETRY;
-				}
-				else if ("FRAGMENT" == valueAsString)
-				{
-					value = Renderer::ShaderVisibility::FRAGMENT;
-				}
+				// Define helper macros
+				#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::ShaderVisibility::name;
+				#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::ShaderVisibility::name;
+
+				// Evaluate value
+				IF_VALUE(ALL)
+				ELSE_IF_VALUE(VERTEX)
+				ELSE_IF_VALUE(TESSELLATION_CONTROL)
+				ELSE_IF_VALUE(TESSELLATION_EVALUATION)
+				ELSE_IF_VALUE(GEOMETRY)
+				ELSE_IF_VALUE(FRAGMENT)
 				else
 				{
 					// TODO(co) Error handling
 				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
+			}
+		}
+
+		void optionalFilterProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::FilterMode& value)
+		{
+			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
+			if (!jsonDynamicVar.isEmpty())
+			{
+				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+
+				// Define helper macros
+				#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::FilterMode::name;
+				#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::FilterMode::name;
+
+				// Evaluate value
+				IF_VALUE(MIN_MAG_MIP_POINT)
+				ELSE_IF_VALUE(MIN_MAG_POINT_MIP_LINEAR)
+				ELSE_IF_VALUE(MIN_POINT_MAG_LINEAR_MIP_POINT)
+				ELSE_IF_VALUE(MIN_POINT_MAG_MIP_LINEAR)
+				ELSE_IF_VALUE(MIN_LINEAR_MAG_MIP_POINT)
+				ELSE_IF_VALUE(MIN_LINEAR_MAG_POINT_MIP_LINEAR)
+				ELSE_IF_VALUE(MIN_MAG_LINEAR_MIP_POINT)
+				ELSE_IF_VALUE(MIN_MAG_MIP_LINEAR)
+				ELSE_IF_VALUE(ANISOTROPIC)
+				ELSE_IF_VALUE(COMPARISON_MIN_MAG_MIP_POINT)
+				ELSE_IF_VALUE(COMPARISON_MIN_MAG_POINT_MIP_LINEAR)
+				ELSE_IF_VALUE(COMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT)
+				ELSE_IF_VALUE(COMPARISON_MIN_POINT_MAG_MIP_LINEAR)
+				ELSE_IF_VALUE(COMPARISON_MIN_LINEAR_MAG_MIP_POINT)
+				ELSE_IF_VALUE(COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR)
+				ELSE_IF_VALUE(COMPARISON_MIN_MAG_LINEAR_MIP_POINT)
+				ELSE_IF_VALUE(COMPARISON_MIN_MAG_MIP_LINEAR)
+				ELSE_IF_VALUE(COMPARISON_ANISOTROPIC)
+				else
+				{
+					// TODO(co) Error handling
+				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
+			}
+		}
+
+		void optionalTextureAddressModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::TextureAddressMode& value)
+		{
+			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
+			if (!jsonDynamicVar.isEmpty())
+			{
+				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+
+				// Define helper macros
+				#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::TextureAddressMode::name;
+				#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::TextureAddressMode::name;
+
+				// Evaluate value
+				IF_VALUE(WRAP)
+				ELSE_IF_VALUE(MIRROR)
+				ELSE_IF_VALUE(CLAMP)
+				ELSE_IF_VALUE(BORDER)
+				ELSE_IF_VALUE(MIRROR_ONCE)
+				else
+				{
+					// TODO(co) Error handling
+				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
+			}
+		}
+
+		void optionalComparisonFuncProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::ComparisonFunc& value)
+		{
+			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
+			if (!jsonDynamicVar.isEmpty())
+			{
+				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+
+				// Define helper macros
+				#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::ComparisonFunc::name;
+				#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::ComparisonFunc::name;
+
+				// Evaluate value
+				IF_VALUE(NEVER)
+				ELSE_IF_VALUE(LESS)
+				ELSE_IF_VALUE(EQUAL)
+				ELSE_IF_VALUE(LESS_EQUAL)
+				ELSE_IF_VALUE(GREATER)
+				ELSE_IF_VALUE(NOT_EQUAL)
+				ELSE_IF_VALUE(GREATER_EQUAL)
+				ELSE_IF_VALUE(ALWAYS)
+				else
+				{
+					// TODO(co) Error handling
+				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
 			}
 		}
 
@@ -587,7 +684,46 @@ namespace RendererToolkit
 			outputFileStream.write(reinterpret_cast<const char*>(&pipelineState), sizeof(Renderer::PipelineState));
 		}
 
-	}
+		void readSamplerStates(Poco::JSON::Object::Ptr jsonSamplerStatesObject, std::ofstream& outputFileStream)
+		{
+			Poco::JSON::Object::ConstIterator rootSamplerStatesIterator = jsonSamplerStatesObject->begin();
+			Poco::JSON::Object::ConstIterator rootSamplerStatesIteratorEnd = jsonSamplerStatesObject->end();
+			while (rootSamplerStatesIterator != rootSamplerStatesIteratorEnd)
+			{
+				Poco::JSON::Object::Ptr jsonSamplerStateObject = rootSamplerStatesIterator->second.extract<Poco::JSON::Object::Ptr>();
+
+				// Start with the default sampler state
+				RendererRuntime::v1MaterialBlueprint::SamplerState materialBlueprintSamplerState;
+				materialBlueprintSamplerState.samplerRootParameterIndex = 0;
+				Renderer::SamplerState& samplerState = materialBlueprintSamplerState;
+				samplerState = Renderer::ISamplerState::getDefaultSamplerState();
+
+				// The optional properties
+				optionalIntegerProperty(jsonSamplerStateObject, "SamplerRootParameterIndex", materialBlueprintSamplerState.samplerRootParameterIndex);
+				optionalFilterProperty(jsonSamplerStateObject, "Filter", samplerState.filter);
+				optionalTextureAddressModeProperty(jsonSamplerStateObject, "AddressU", samplerState.addressU);
+				optionalTextureAddressModeProperty(jsonSamplerStateObject, "AddressV", samplerState.addressV);
+				optionalTextureAddressModeProperty(jsonSamplerStateObject, "AddressW", samplerState.addressW);
+				optionalFloatProperty(jsonSamplerStateObject, "MipLODBias", samplerState.mipLODBias);
+				optionalIntegerProperty(jsonSamplerStateObject, "MaxAnisotropy", samplerState.maxAnisotropy);
+				optionalComparisonFuncProperty(jsonSamplerStateObject, "ComparisonFunc", samplerState.comparisonFunc);
+				optionalFloat4Property(jsonSamplerStateObject, "BorderColor", samplerState.borderColor);
+				optionalFloatProperty(jsonSamplerStateObject, "MinLOD", samplerState.minLOD);
+				optionalFloatProperty(jsonSamplerStateObject, "MaxLOD", samplerState.maxLOD);
+
+				// Write down the sampler state
+				outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintSamplerState), sizeof(RendererRuntime::v1MaterialBlueprint::SamplerState));
+
+				// Next sampler state, please
+				++rootSamplerStatesIterator;
+			}
+		}
+
+
+	//[-------------------------------------------------------]
+	//[ Namespace                                             ]
+	//[-------------------------------------------------------]
+	} // detail
 
 
 	//[-------------------------------------------------------]
@@ -664,11 +800,14 @@ namespace RendererToolkit
 
 			Poco::JSON::Object::Ptr jsonMaterialBlueprintObject = jsonRootObject->get("MaterialBlueprintAsset").extract<Poco::JSON::Object::Ptr>();
 			Poco::JSON::Object::Ptr jsonPropertiesObject = jsonMaterialBlueprintObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonSamplerStatesObject = jsonMaterialBlueprintObject->get("SamplerStates").extract<Poco::JSON::Object::Ptr>();
 
 			{ // Material blueprint header
 				RendererRuntime::v1MaterialBlueprint::Header materialBlueprintHeader;
-				materialBlueprintHeader.formatType		= RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE;
-				materialBlueprintHeader.formatVersion	= RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION;
+				materialBlueprintHeader.formatType			  = RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE;
+				materialBlueprintHeader.formatVersion		  = RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION;
+				materialBlueprintHeader.numberOfParameters	  = jsonPropertiesObject->size();
+				materialBlueprintHeader.numberOfSamplerStates = jsonSamplerStatesObject->size();
 
 				// Write down the material blueprint header
 				outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintHeader), sizeof(RendererRuntime::v1MaterialBlueprint::Header));
@@ -679,6 +818,9 @@ namespace RendererToolkit
 
 			// Pipeline state object (PSO)
 			detail::readPipelineStateObject(jsonMaterialBlueprintObject->get("PipelineState").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
+
+			// Sampler states
+			detail::readSamplerStates(jsonSamplerStatesObject, outputFileStream);
 
 			{ // Shader blueprints
 				Poco::JSON::Object::Ptr jsonShaderBlueprintsObject = jsonMaterialBlueprintObject->get("ShaderBlueprints").extract<Poco::JSON::Object::Ptr>();

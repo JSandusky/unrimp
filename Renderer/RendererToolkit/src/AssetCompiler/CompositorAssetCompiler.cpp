@@ -224,7 +224,7 @@ namespace RendererToolkit
 											{
 												for (size_t i = 0; i < 4; ++i)
 												{
-													passClear.color[i] = static_cast<float>(std::atof(stringTokenizer[i].c_str()));
+													passClear.color[i] = std::stof(stringTokenizer[i].c_str());
 												}
 											}
 											else
