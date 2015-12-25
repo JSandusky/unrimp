@@ -24,6 +24,8 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.h"
+#include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -102,9 +104,20 @@ namespace RendererRuntime
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
 		for (size_t i = 0; i < mResources.size(); ++i)
 		{
-			if (mResources[i]->getResourceId() == assetId)
+			const MaterialBlueprintResource* materialBlueprintResource = mResources[i];
+			if (materialBlueprintResource->getResourceId() == assetId)
 			{
 				loadMaterialBlueprintResourceByAssetId(assetId, true);
+
+				// TODO(co) Cleanup: Update all influenced material resources, probably also other material stuff has to be updated
+				for (auto materialResource : mRendererRuntime.getMaterialResourceManager().mResources)
+				{
+					if (materialResource->getMaterialBlueprintResource() == materialBlueprintResource)
+					{
+						materialResource->releasePipelineState();
+					}
+				}
+
 				break;
 			}
 		}
