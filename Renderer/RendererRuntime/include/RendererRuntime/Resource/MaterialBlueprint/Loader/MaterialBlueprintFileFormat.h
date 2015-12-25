@@ -53,6 +53,7 @@ namespace RendererRuntime
 	//    - Material blueprint properties
 	//    - Pipeline state object (PSO)
 	//    - Sampler states
+	//    - Textures
 	//    - Shader blueprints
 	namespace v1MaterialBlueprint
 	{
@@ -72,6 +73,7 @@ namespace RendererRuntime
 				uint16_t formatVersion;
 				uint32_t numberOfParameters;
 				uint32_t numberOfSamplerStates;
+				uint32_t numberOfTextures;
 			};
 
 			struct RootSignatureHeader
@@ -85,6 +87,12 @@ namespace RendererRuntime
 			struct SamplerState : public Renderer::SamplerState
 			{
 				uint32_t samplerRootParameterIndex;
+			};
+
+			struct Texture
+			{
+				uint32_t textureRootParameterIndex;
+				AssetId  textureAssetId;
 			};
 
 			struct ShaderBlueprints

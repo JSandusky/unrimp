@@ -282,6 +282,29 @@
 				"MaxLOD": "3.402823466e+38"
 			}
 		},
+		"Textures":
+		{
+			"DiffuseMap":
+			{
+				"TextureRootParameterIndex": "2",
+				"TextureAssetId": "4"
+			},
+			"EmissiveMap":
+			{
+				"TextureRootParameterIndex": "3",
+				"TextureAssetId": "5"
+			},
+			"NormalMap":
+			{
+				"TextureRootParameterIndex": "4",
+				"TextureAssetId": "6"
+			},
+			"SpecularMap":
+			{
+				"TextureRootParameterIndex": "5",
+				"TextureAssetId": "6"
+			}
+		},
 		"ShaderBlueprints":
 		{
 			"VertexShaderBlueprintAssetId": "12",

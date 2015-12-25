@@ -719,6 +719,32 @@ namespace RendererToolkit
 			}
 		}
 
+		void readTextures(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonTexturesObject, std::ofstream& outputFileStream)
+		{
+			Poco::JSON::Object::ConstIterator rootTexturesIterator = jsonTexturesObject->begin();
+			Poco::JSON::Object::ConstIterator rootTexturesIteratorEnd = jsonTexturesObject->end();
+			while (rootTexturesIterator != rootTexturesIteratorEnd)
+			{
+				Poco::JSON::Object::Ptr jsonTextureObject = rootTexturesIterator->second.extract<Poco::JSON::Object::Ptr>();
+
+				// Start with the default texture
+				RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture;
+				materialBlueprintTexture.textureRootParameterIndex = 0;
+
+				// The optional properties
+				optionalIntegerProperty(jsonTextureObject, "TextureRootParameterIndex", materialBlueprintTexture.textureRootParameterIndex);
+
+				// The mandatory properties
+				materialBlueprintTexture.textureAssetId = detail::getCompiledAssetId(input, jsonTextureObject, "TextureAssetId");
+
+				// Write down the texture
+				outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
+
+				// Next texture, please
+				++rootTexturesIterator;
+			}
+		}
+
 
 	//[-------------------------------------------------------]
 	//[ Namespace                                             ]
@@ -801,6 +827,7 @@ namespace RendererToolkit
 			Poco::JSON::Object::Ptr jsonMaterialBlueprintObject = jsonRootObject->get("MaterialBlueprintAsset").extract<Poco::JSON::Object::Ptr>();
 			Poco::JSON::Object::Ptr jsonPropertiesObject = jsonMaterialBlueprintObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
 			Poco::JSON::Object::Ptr jsonSamplerStatesObject = jsonMaterialBlueprintObject->get("SamplerStates").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonTexturesObject = jsonMaterialBlueprintObject->get("Textures").extract<Poco::JSON::Object::Ptr>();
 
 			{ // Material blueprint header
 				RendererRuntime::v1MaterialBlueprint::Header materialBlueprintHeader;
@@ -808,6 +835,7 @@ namespace RendererToolkit
 				materialBlueprintHeader.formatVersion		  = RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION;
 				materialBlueprintHeader.numberOfParameters	  = jsonPropertiesObject->size();
 				materialBlueprintHeader.numberOfSamplerStates = jsonSamplerStatesObject->size();
+				materialBlueprintHeader.numberOfTextures	  = jsonTexturesObject->size();
 
 				// Write down the material blueprint header
 				outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintHeader), sizeof(RendererRuntime::v1MaterialBlueprint::Header));
@@ -821,6 +849,9 @@ namespace RendererToolkit
 
 			// Sampler states
 			detail::readSamplerStates(jsonSamplerStatesObject, outputFileStream);
+
+			// Textures
+			detail::readTextures(input, jsonTexturesObject, outputFileStream);
 
 			{ // Shader blueprints
 				Poco::JSON::Object::Ptr jsonShaderBlueprintsObject = jsonMaterialBlueprintObject->get("ShaderBlueprints").extract<Poco::JSON::Object::Ptr>();
