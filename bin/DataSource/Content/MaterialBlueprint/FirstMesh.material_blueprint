@@ -100,9 +100,11 @@
 				"DepthBiasClamp": "0.0",
 				"SlopeScaledDepthBias": "0.0",
 				"DepthClipEnable": "TRUE",
-				"ScissorEnable": "FALSE",
 				"MultisampleEnable": "FALSE",
-				"AntialiasedLineEnable": "FALSE"
+				"AntialiasedLineEnable": "FALSE",
+				"ForcedSampleCount": "0",
+				"ConservativeRasterizationMode": "OFF",
+				"ScissorEnable": "FALSE"
 			},
 			"DepthStencilState":
 			{
@@ -219,12 +221,12 @@
 					"BlendOpAlpha": "ADD",
 					"RenderTargetWriteMask": "ALL"
 				}
-			},
-			"ShaderBlueprints":
-			{
-				"VertexShaderBlueprintAssetId": "12",
-				"FragmentShaderBlueprintAssetId": "13"
 			}
+		},
+		"ShaderBlueprints":
+		{
+			"VertexShaderBlueprintAssetId": "12",
+			"FragmentShaderBlueprintAssetId": "13"
 		}
 	}
 }
