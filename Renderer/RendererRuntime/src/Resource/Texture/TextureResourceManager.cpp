@@ -77,7 +77,7 @@ namespace RendererRuntime
 			{
 				// Prepare the resource loader
 				// -> The totally primitive texture resource loader type detection is sufficient for now
-				const char* filenameExtension = strrchr(asset->assetFilename, '.');
+				const char* filenameExtension = strrchr(&asset->assetFilename[0], '.');
 				if (nullptr != filenameExtension)
 				{
 					ITextureResourceLoader* textureResourceLoader = static_cast<ITextureResourceLoader*>(acquireResourceLoaderInstance(StringId(filenameExtension + 1)));

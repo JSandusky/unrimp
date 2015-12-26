@@ -171,10 +171,13 @@ namespace RendererRuntime
 
 				// Due to background texture loading, some textures might not be ready, yet
 				// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
-				Renderer::ITexturePtr texturePtr = texture.textureResource->getTexture();
-				if (nullptr != texturePtr)
+				if (nullptr != texture.textureResource)
 				{
-					renderer.setGraphicsRootDescriptorTable(texture.textureRootParameterIndex, texturePtr);
+					Renderer::ITexturePtr texturePtr = texture.textureResource->getTexture();
+					if (nullptr != texturePtr)
+					{
+						renderer.setGraphicsRootDescriptorTable(texture.textureRootParameterIndex, texturePtr);
+					}
 				}
 			}
 		}

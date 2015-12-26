@@ -68,6 +68,36 @@ namespace Direct3D10Renderer
 {
 
 
+	namespace detail
+	{
+
+		bool createDevice(UINT flags, ID3D10Device** d3d10Device)
+		{
+			// Driver types
+			static const D3D10_DRIVER_TYPE D3D10_DRIVER_TYPES[] =
+			{
+				D3D10_DRIVER_TYPE_HARDWARE,
+				D3D10_DRIVER_TYPE_WARP,
+				D3D10_DRIVER_TYPE_REFERENCE,
+			};
+			static const UINT NUMBER_OF_DRIVER_TYPES = sizeof(D3D10_DRIVER_TYPES) / sizeof(D3D10_DRIVER_TYPE);
+
+			// Create the Direct3D 10 device
+			for (UINT deviceType = 0; deviceType < NUMBER_OF_DRIVER_TYPES; ++deviceType)
+			{
+				if (SUCCEEDED(D3D10CreateDevice(nullptr, D3D10_DRIVER_TYPES[deviceType], nullptr, flags, D3D10_SDK_VERSION, d3d10Device)))
+				{
+					// Done
+					return true;
+				}
+			}
+
+			// Error!
+			return false;
+		}
+	}
+
+
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
@@ -94,23 +124,12 @@ namespace Direct3D10Renderer
 				flags |= D3D10_CREATE_DEVICE_DEBUG;
 			#endif
 
-				// Driver types
-				static const D3D10_DRIVER_TYPE D3D10_DRIVER_TYPES[] =
-				{
-					D3D10_DRIVER_TYPE_HARDWARE,
-					D3D10_DRIVER_TYPE_WARP,
-					D3D10_DRIVER_TYPE_REFERENCE,
-				};
-				static const UINT NUMBER_OF_DRIVER_TYPES = sizeof(D3D10_DRIVER_TYPES) / sizeof(D3D10_DRIVER_TYPE);
-
 				// Create the Direct3D 10 device
-				for (UINT i = 0; i < NUMBER_OF_DRIVER_TYPES; ++i)
+				if (!detail::createDevice(flags, &mD3D10Device) && (flags & D3D10_CREATE_DEVICE_DEBUG))
 				{
-					if (SUCCEEDED(D3D10CreateDevice(nullptr, D3D10_DRIVER_TYPES[i], nullptr, flags, D3D10_SDK_VERSION, &mD3D10Device)))
-					{
-						// Done
-						i = NUMBER_OF_DRIVER_TYPES;
-					}
+					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Failed to create device instance, retrying without debug flag (maybe no Windows SDK is installed)")
+					flags &= ~D3D10_CREATE_DEVICE_DEBUG;
+					detail::createDevice(flags, &mD3D10Device);
 				}
 			}
 
