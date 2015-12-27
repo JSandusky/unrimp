@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/IResource.h"
+#include "RendererRuntime/Resource/Material/MaterialProperty.h"
 
 #include <Renderer/Public/Renderer.h>
 
@@ -94,6 +95,7 @@ namespace RendererRuntime
 			TextureResource* textureResource;	// TODO(co) Implement decent resource management
 		};
 
+		typedef std::vector<MaterialProperty> MaterialProperties;
 		typedef std::vector<SamplerState> SamplerStates;
 		typedef std::vector<Texture> Textures;
 
@@ -167,6 +169,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		Renderer::IRootSignature* mRootSignature;	///< Root signature, can be a null pointer
+		MaterialProperties		  mMaterialProperties;
 		Renderer::PipelineState	  mPipelineState;
 		SamplerStates			  mSamplerStates;
 		Textures				  mTextures;

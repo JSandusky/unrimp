@@ -71,7 +71,7 @@ namespace RendererRuntime
 			{
 				uint32_t formatType;
 				uint16_t formatVersion;
-				uint32_t numberOfParameters;
+				uint32_t numberOfProperties;
 				uint32_t numberOfSamplerStates;
 				uint32_t numberOfTextures;
 			};

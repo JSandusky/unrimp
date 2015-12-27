@@ -104,30 +104,30 @@
 		{
 			"DiffuseMap":
 			{
-				"Usage": "DYNAMIC",
-				"ValueType": "TEXTURE",
-				"DefaultValue": "",
+				"Usage": "TEXTURE",
+				"ValueType": "ASSET_ID",
+				"DefaultValue": "4",
 				"Description": "Diffuse map"
 			},
 			"EmissiveMap":
 			{
-				"Usage": "DYNAMIC",
-				"ValueType": "TEXTURE",
-				"DefaultValue": "",
+				"Usage": "TEXTURE",
+				"ValueType": "ASSET_ID",
+				"DefaultValue": "5",
 				"Description": "Emissive map"
 			},
 			"NormalMap":
 			{
-				"Usage": "DYNAMIC",
-				"ValueType": "TEXTURE",
-				"DefaultValue": "",
+				"Usage": "TEXTURE",
+				"ValueType": "ASSET_ID",
+				"DefaultValue": "6",
 				"Description": "Normal map"
 			},
 			"SpecularMap":
 			{
-				"Usage": "DYNAMIC",
-				"ValueType": "TEXTURE",
-				"DefaultValue": "",
+				"Usage": "TEXTURE",
+				"ValueType": "ASSET_ID",
+				"DefaultValue": "7",
 				"Description": "Specular map"
 			}
 		},

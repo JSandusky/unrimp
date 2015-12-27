@@ -31,15 +31,7 @@ namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	MaterialProperty::MaterialProperty(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue) :
-		MaterialPropertyValue(materialPropertyValue),
-		mMaterialPropertyId(materialPropertyId)
-	{
-		// Nothing here
-	}
+	// TODO(co)
 
 
 //[-------------------------------------------------------]

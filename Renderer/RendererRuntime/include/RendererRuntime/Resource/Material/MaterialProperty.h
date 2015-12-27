@@ -55,6 +55,27 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Usage
+		*/
+		enum class Usage : uint8_t
+		{
+			UNKNOWN = 0,			///< Usage not known
+			STATIC,					///< Property is considered to not change regularly and results in shader permutations
+			DYNAMIC,				///< Property is considered to change regularly and hence will be handled as shader uniform managed in a combined uniform buffer
+			RASTERIZER_STATE,		///< Pipeline rasterizer state, property is considered to not change regularly
+			DEPTH_STENCIL_STATE,	///< Pipeline depth stencil state, property is considered to not change regularly
+			BLEND_STATE,			///< Pipeline blend state, property is considered to not change regularly
+			SAMPLER_STATE,			///< Sampler state, property is considered to not change regularly
+			TEXTURE					///< Property is a texture reference, property is considered to not change regularly
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -64,16 +85,27 @@ namespace RendererRuntime
 		*
 		*  @param[in] materialPropertyId
 		*    Material property ID
+		*  @param[in] usage
+		*    Material property usage
 		*  @param[in] materialPropertyValue
 		*    Material property value
 		*/
-		MaterialProperty(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue);
+		inline MaterialProperty(MaterialPropertyId materialPropertyId, Usage usage, const MaterialPropertyValue& materialPropertyValue);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
 		inline ~MaterialProperty();
+
+		/**
+		*  @brief
+		*    Return the material blueprint property usage
+		*
+		*  @return
+		*    The material blueprint property usage
+		*/
+		inline Usage getUsage() const;
 
 
 	//[-------------------------------------------------------]
@@ -89,6 +121,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		MaterialPropertyId mMaterialPropertyId;
+		Usage			   mUsage;
 
 
 	};

@@ -31,15 +31,7 @@ namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	MaterialBlueprintProperty::MaterialBlueprintProperty(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue) :
-		MaterialProperty(materialPropertyId, materialPropertyValue),
-		mUsage(Usage::UNKNOWN)
-	{
-		// Nothing here
-	}
+	// TODO(co)
 
 
 //[-------------------------------------------------------]

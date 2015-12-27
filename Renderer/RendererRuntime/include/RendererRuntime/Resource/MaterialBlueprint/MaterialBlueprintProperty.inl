@@ -28,14 +28,15 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialBlueprintProperty::~MaterialBlueprintProperty()
+	inline MaterialBlueprintProperty::MaterialBlueprintProperty(MaterialPropertyId materialPropertyId, Usage usage, const MaterialPropertyValue& materialPropertyValue) :
+		MaterialProperty(materialPropertyId, usage, materialPropertyValue)
 	{
 		// Nothing here
 	}
 
-	inline MaterialBlueprintProperty::Usage MaterialBlueprintProperty::getUsage() const
+	inline MaterialBlueprintProperty::~MaterialBlueprintProperty()
 	{
-		return mUsage;
+		// Nothing here
 	}
 
 

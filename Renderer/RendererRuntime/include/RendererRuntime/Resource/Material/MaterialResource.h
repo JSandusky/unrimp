@@ -28,8 +28,11 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/IResource.h"
+#include "RendererRuntime/Resource/Material/MaterialProperty.h"
 
 #include <Renderer/Public/Renderer.h>
+
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -68,6 +71,13 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class MaterialResourceLoader;
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::vector<MaterialProperty> MaterialProperties;
 
 
 	//[-------------------------------------------------------]
@@ -134,6 +144,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		MaterialBlueprintResource* mMaterialBlueprintResource;	///< Material blueprint resource, can be a null pointer, don't destroy the instance
+		MaterialProperties		   mMaterialProperties;
 		Renderer::PipelineState	   mPipelineState;
 		Renderer::IPipelineState*  mPipelineStateObject;		///< Pipeline state object (PSO), can be a null pointer
 

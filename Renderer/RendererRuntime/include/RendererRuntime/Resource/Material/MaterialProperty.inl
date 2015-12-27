@@ -28,9 +28,22 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline MaterialProperty::MaterialProperty(MaterialPropertyId materialPropertyId, Usage usage, const MaterialPropertyValue& materialPropertyValue) :
+		MaterialPropertyValue(materialPropertyValue),
+		mMaterialPropertyId(materialPropertyId),
+		mUsage(usage)
+	{
+		// Nothing here
+	}
+
 	inline MaterialProperty::~MaterialProperty()
 	{
 		// Nothing here
+	}
+
+	inline MaterialProperty::Usage MaterialProperty::MaterialProperty::getUsage() const
+	{
+		return mUsage;
 	}
 
 
