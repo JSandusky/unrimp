@@ -33,6 +33,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline MaterialBlueprintProperty::Usage MaterialBlueprintProperty::getUsage() const
+	{
+		return mUsage;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

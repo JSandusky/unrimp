@@ -27,8 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Resource/Material/MaterialPropertyValue.h"
 
 
 //[-------------------------------------------------------]
@@ -51,7 +50,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Material property
 	*/
-	class MaterialProperty : public NonCopyable
+	class MaterialProperty : public MaterialPropertyValue
 	{
 
 
@@ -65,8 +64,10 @@ namespace RendererRuntime
 		*
 		*  @param[in] materialPropertyId
 		*    Material property ID
+		*  @param[in] materialPropertyValue
+		*    Material property value
 		*/
-		explicit MaterialProperty(MaterialPropertyId materialPropertyId);
+		MaterialProperty(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue);
 
 		/**
 		*  @brief
@@ -84,7 +85,7 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
 		MaterialPropertyId mMaterialPropertyId;

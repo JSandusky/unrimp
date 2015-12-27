@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Material/MaterialProperty.h"
+#include "RendererRuntime/Resource/Material/MaterialPropertyValue.h"
 
 
 //[-------------------------------------------------------]
@@ -31,15 +31,7 @@ namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	MaterialProperty::MaterialProperty(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue) :
-		MaterialPropertyValue(materialPropertyValue),
-		mMaterialPropertyId(materialPropertyId)
-	{
-		// Nothing here
-	}
+	// TODO(co)
 
 
 //[-------------------------------------------------------]

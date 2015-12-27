@@ -45,6 +45,7 @@
     <None Include="include\RendererRuntime\Resource\Material\Loader\MaterialResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialInstance.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialProperty.inl" />
+    <None Include="include\RendererRuntime\Resource\Material\MaterialPropertyValue.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialResource.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\ResourceStreamer.inl" />
@@ -122,6 +123,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Material\Loader\MaterialResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialInstance.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialProperty.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialPropertyValue.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshFileFormat.h" />
@@ -207,6 +209,7 @@
     <ClCompile Include="src\Resource\Material\Loader\MaterialResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialInstance.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialProperty.cpp" />
+    <ClCompile Include="src\Resource\Material\MaterialPropertyValue.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialResource.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp" />
     <ClCompile Include="src\Resource\Mesh\Loader\MeshResourceLoader.cpp" />
