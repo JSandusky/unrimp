@@ -122,6 +122,9 @@
     <ClInclude Include="include\RendererToolkit\Helper\JsonMaterialHelper.h">
       <Filter>Source Files\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Helper\JsonMaterialBlueprintHelper.h">
+      <Filter>Source Files\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -176,6 +179,9 @@
       <Filter>Source Files\Helper</Filter>
     </ClCompile>
     <ClCompile Include="src\Helper\JsonHelper.cpp">
+      <Filter>Source Files\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Helper\JsonMaterialBlueprintHelper.cpp">
       <Filter>Source Files\Helper</Filter>
     </ClCompile>
   </ItemGroup>

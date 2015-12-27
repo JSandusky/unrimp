@@ -22,8 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
-#include "RendererToolkit/Helper/JsonHelper.h"
 #include "RendererToolkit/Helper/JsonMaterialHelper.h"
+#include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h>
@@ -128,19 +128,19 @@ namespace RendererToolkit
 			}
 
 			// Root signature
-			JsonMaterialHelper::readRootSignature(jsonMaterialBlueprintObject->get("RootSignature").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
+			JsonMaterialBlueprintHelper::readRootSignature(jsonMaterialBlueprintObject->get("RootSignature").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
 
 			// Properties
-			JsonMaterialHelper::readProperties(input, jsonMaterialBlueprintObject->get("Properties").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
+			JsonMaterialBlueprintHelper::readProperties(input, jsonMaterialBlueprintObject->get("Properties").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
 
 			// Pipeline state object (PSO)
-			JsonMaterialHelper::readPipelineStateObject(jsonMaterialBlueprintObject->get("PipelineState").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
+			JsonMaterialBlueprintHelper::readPipelineStateObject(jsonMaterialBlueprintObject->get("PipelineState").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
 
 			// Sampler states
-			JsonMaterialHelper::readSamplerStates(jsonSamplerStatesObject, outputFileStream);
+			JsonMaterialBlueprintHelper::readSamplerStates(jsonSamplerStatesObject, outputFileStream);
 
 			// Textures
-			JsonMaterialHelper::readTextures(input, jsonTexturesObject, outputFileStream);
+			JsonMaterialBlueprintHelper::readTextures(input, jsonTexturesObject, outputFileStream);
 
 			{ // Shader blueprints
 				Poco::JSON::Object::Ptr jsonShaderBlueprintsObject = jsonMaterialBlueprintObject->get("ShaderBlueprints").extract<Poco::JSON::Object::Ptr>();

@@ -29,9 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
-#include <RendererRuntime/Core/NonCopyable.h>
-
-#include <Renderer/Public/Renderer.h>
+#include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h>
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -58,7 +56,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class JsonMaterialHelper : public RendererRuntime::NonCopyable
+	class JsonMaterialBlueprintHelper : public RendererRuntime::NonCopyable
 	{
 
 
@@ -66,25 +64,23 @@ namespace RendererToolkit
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
-		static uint32_t getCompiledAssetId(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonShaderBlueprintsObject, const std::string& propertyName);
-		static void optionalFillModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::FillMode& value);
-		static void optionalCullModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::CullMode& value);
-		static void optionalConservativeRasterizationModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::ConservativeRasterizationMode& value);
-		static void optionalDepthWriteMaskProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::DepthWriteMask& value);
-		static void optionalStencilOpProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::StencilOp& value);
-		static void optionalBlendProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::Blend& value);
-		static void optionalBlendOpProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::BlendOp& value);
-		static void optionalFilterProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::FilterMode& value);
-		static void optionalTextureAddressModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::TextureAddressMode& value);
-		static void optionalComparisonFuncProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::ComparisonFunc& value);
+		static void optionalShaderVisibilityProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::ShaderVisibility& value);
+		static RendererRuntime::MaterialProperty::Usage mandatoryMaterialPropertyUsage(Poco::JSON::Object::Ptr jsonObject);
+		static RendererRuntime::MaterialPropertyValue mandatoryMaterialPropertyValue(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonObject);
+		static void readRootSignature(Poco::JSON::Object::Ptr jsonRootSignatureObject, std::ofstream& outputFileStream);
+		static void readProperties(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPropertiesObject, RendererRuntime::MaterialBlueprintResource::MaterialProperties& materialProperties);
+		static void readProperties(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPropertiesObject, std::ofstream& outputFileStream);
+		static void readPipelineStateObject(Poco::JSON::Object::Ptr jsonPipelineStateObject, std::ofstream& outputFileStream);
+		static void readSamplerStates(Poco::JSON::Object::Ptr jsonSamplerStatesObject, std::ofstream& outputFileStream);
+		static void readTextures(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonTexturesObject, std::ofstream& outputFileStream);
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		JsonMaterialHelper(const JsonMaterialHelper&) = delete;
-		JsonMaterialHelper& operator=(const JsonMaterialHelper&) = delete;
+		JsonMaterialBlueprintHelper(const JsonMaterialBlueprintHelper&) = delete;
+		JsonMaterialBlueprintHelper& operator=(const JsonMaterialBlueprintHelper&) = delete;
 
 
 	};
