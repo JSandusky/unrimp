@@ -231,14 +231,8 @@
     <None Include="include\RendererRuntime\Resource\Material\MaterialProperty.inl">
       <Filter>Source Files\Resource\Material</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintProperty.inl">
-      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResource.inl">
       <Filter>Source Files\Resource\ShaderBlueprint</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Material\MaterialInstance.inl">
-      <Filter>Source Files\Resource\Material</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Material\MaterialPropertyValue.inl">
       <Filter>Source Files\Resource\Material</Filter>
@@ -531,17 +525,11 @@
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialProperty.h">
       <Filter>Source Files\Resource\Material</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintProperty.h">
-      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResource.h">
       <Filter>Source Files\Resource\ShaderBlueprint</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Loader\ShaderBlueprintFileFormat.h">
       <Filter>Source Files\Resource\ShaderBlueprint\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialInstance.h">
-      <Filter>Source Files\Resource\Material</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialPropertyValue.h">
       <Filter>Source Files\Resource\Material</Filter>
@@ -749,14 +737,8 @@
     <ClCompile Include="src\Resource\Material\MaterialProperty.cpp">
       <Filter>Source Files\Resource\Material</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\MaterialBlueprint\MaterialBlueprintProperty.cpp">
-      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\ShaderBlueprint\ShaderBlueprintResource.cpp">
       <Filter>Source Files\Resource\ShaderBlueprint</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Material\MaterialInstance.cpp">
-      <Filter>Source Files\Resource\Material</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.cpp">
       <Filter>Source Files\Resource\ShaderBlueprint\Loader</Filter>

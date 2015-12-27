@@ -40,10 +40,8 @@
     <None Include="include\RendererRuntime\Resource\IResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.inl" />
-    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintProperty.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResource.inl" />
     <None Include="include\RendererRuntime\Resource\Material\Loader\MaterialResourceLoader.inl" />
-    <None Include="include\RendererRuntime\Resource\Material\MaterialInstance.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialProperty.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialPropertyValue.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialResource.inl" />
@@ -116,12 +114,10 @@
     <ClInclude Include="include\RendererRuntime\Resource\IResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintProperty.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\Loader\MaterialFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\Loader\MaterialResourceLoader.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialInstance.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialProperty.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialPropertyValue.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResource.h" />
@@ -203,11 +199,9 @@
     <ClCompile Include="src\Resource\IResource.cpp" />
     <ClCompile Include="src\Resource\IResourceManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.cpp" />
-    <ClCompile Include="src\Resource\MaterialBlueprint\MaterialBlueprintProperty.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\MaterialBlueprintResource.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.cpp" />
     <ClCompile Include="src\Resource\Material\Loader\MaterialResourceLoader.cpp" />
-    <ClCompile Include="src\Resource\Material\MaterialInstance.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialProperty.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialPropertyValue.cpp" />
     <ClCompile Include="src\Resource\Material\MaterialResource.cpp" />
