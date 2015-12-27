@@ -83,6 +83,15 @@ namespace RendererRuntime
 		*  @brief
 		*    Constructor
 		*
+		*  @note
+		*    - For internal usage only
+		*/
+		inline MaterialProperty();
+
+		/**
+		*  @brief
+		*    Constructor
+		*
 		*  @param[in] materialPropertyId
 		*    Material property ID
 		*  @param[in] usage
@@ -112,7 +121,6 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialProperty(const MaterialProperty&) = delete;
 		MaterialProperty& operator=(const MaterialProperty&) = delete;
 
 

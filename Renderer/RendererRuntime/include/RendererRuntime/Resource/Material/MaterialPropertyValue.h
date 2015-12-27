@@ -100,6 +100,7 @@ namespace RendererRuntime
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
+		inline static MaterialPropertyValue fromUnknown();
 		inline static MaterialPropertyValue fromBoolean(bool value);
 		inline static MaterialPropertyValue fromInteger(int value);
 		inline static MaterialPropertyValue fromInteger2(int value0, int value1);

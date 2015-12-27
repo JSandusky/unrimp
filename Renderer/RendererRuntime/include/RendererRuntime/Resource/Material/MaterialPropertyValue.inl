@@ -34,6 +34,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
+	inline MaterialPropertyValue MaterialPropertyValue::fromUnknown()
+	{
+		MaterialPropertyValue materialPropertyValue;
+		materialPropertyValue.mValueType = ValueType::UNKNOWN;
+		return materialPropertyValue;
+	}
+
 	inline MaterialPropertyValue MaterialPropertyValue::fromBoolean(bool value)
 	{
 		MaterialPropertyValue materialPropertyValue;
