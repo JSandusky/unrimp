@@ -77,6 +77,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class MaterialBlueprintResourceLoader;
+		friend class MaterialBlueprintResourceManager;	// TODO(co) Remove this
 
 
 	//[-------------------------------------------------------]
@@ -90,12 +91,13 @@ namespace RendererRuntime
 		};
 		struct Texture
 		{
-			uint32_t		 textureRootParameterIndex;
-			AssetId			 textureAssetId;
-			TextureResource* textureResource;	// TODO(co) Implement decent resource management
+			uint32_t		   textureRootParameterIndex;
+			AssetId			   textureAssetId;
+			MaterialPropertyId materialPropertyId;
+			TextureResource*   textureResource;	// TODO(co) Implement decent resource management
 		};
 
-		typedef std::vector<MaterialProperty> MaterialProperties;
+		typedef std::vector<MaterialProperty> SortedMaterialPropertyVector;
 		typedef std::vector<SamplerState> SamplerStates;
 		typedef std::vector<Texture> Textures;
 
@@ -127,6 +129,15 @@ namespace RendererRuntime
 		*    The root signature, can be a null pointer, do not destroy the instance
 		*/
 		inline Renderer::IRootSignature* getRootSignature() const;
+
+		/**
+		*  @brief
+		*    Return the sorted material property vector
+		*
+		*  @return
+		*    The sorted material property vector
+		*/
+		inline const SortedMaterialPropertyVector& getSortedMaterialPropertyVector() const;
 
 		/**
 		*  @brief
@@ -168,11 +179,11 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IRootSignature* mRootSignature;	///< Root signature, can be a null pointer
-		MaterialProperties		  mMaterialProperties;
-		Renderer::PipelineState	  mPipelineState;
-		SamplerStates			  mSamplerStates;
-		Textures				  mTextures;
+		Renderer::IRootSignature*	 mRootSignature;	///< Root signature, can be a null pointer
+		SortedMaterialPropertyVector mSortedMaterialPropertyVector;
+		Renderer::PipelineState		 mPipelineState;
+		SamplerStates				 mSamplerStates;
+		Textures					 mTextures;
 
 	// TODO(co) Make this private
 	public:

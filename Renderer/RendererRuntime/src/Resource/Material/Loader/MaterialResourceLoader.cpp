@@ -65,7 +65,9 @@ namespace RendererRuntime
 			inputFileStream.read(reinterpret_cast<char*>(&materialHeader), sizeof(v1Material::Header));
 			mMaterialBlueprintAssetId = materialHeader.materialBlueprintAssetId;
 
-			// TODO(co) Material properties
+			// Read properties
+			mMaterialResource->mSortedMaterialPropertyVector.resize(materialHeader.numberOfProperties);
+			inputFileStream.read(reinterpret_cast<char*>(mMaterialResource->mSortedMaterialPropertyVector.data()), sizeof(MaterialProperty) * materialHeader.numberOfProperties);
 		}
 		catch (const std::exception& e)
 		{

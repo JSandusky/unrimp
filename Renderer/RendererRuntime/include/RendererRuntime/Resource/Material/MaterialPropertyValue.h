@@ -184,7 +184,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline MaterialPropertyValue();
-		inline MaterialPropertyValue& operator=(const MaterialPropertyValue&) = delete;
 
 
 	//[-------------------------------------------------------]

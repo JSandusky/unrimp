@@ -89,8 +89,10 @@ namespace
 			mUniformBuffer = nullptr;
 		}
 
-		void draw(Renderer::IRenderer& renderer, RendererRuntime::CameraSceneItem& cameraSceneItem)
+		void draw(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::CameraSceneItem& cameraSceneItem)
 		{
+			Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
+
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
@@ -120,7 +122,7 @@ namespace
 				renderer.setGraphicsRootDescriptorTable(0, mUniformBuffer);
 
 				// Graphics root descriptor table: Set material specific tables
-				if (mMaterialResource->setGraphicsRootDescriptorTable(renderer))
+				if (mMaterialResource->setGraphicsRootDescriptorTable(rendererRuntime))
 				{
 					Renderer::IPipelineState* pipelineState = mMaterialResource->getPipelineStateObject();
 					if (nullptr != pipelineState)
@@ -213,7 +215,7 @@ namespace RendererRuntime
 		// TODO(co) Just a first test
 		if (nullptr != cameraSceneItem)
 		{
-			::detail::draw(getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getRenderer(), *cameraSceneItem);
+			::detail::draw(getCompositorInstanceNode().getCompositorInstance().getRendererRuntime(), *cameraSceneItem);
 		}
 	}
 

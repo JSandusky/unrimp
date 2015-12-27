@@ -104,12 +104,13 @@ namespace RendererRuntime
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
 		for (size_t i = 0; i < mResources.size(); ++i)
 		{
-			const MaterialBlueprintResource* materialBlueprintResource = mResources[i];
+			MaterialBlueprintResource* materialBlueprintResource = mResources[i];
 			if (materialBlueprintResource->getResourceId() == assetId)
 			{
 				loadMaterialBlueprintResourceByAssetId(assetId, true);
 
 				// TODO(co) Cleanup: Update all influenced material resources, probably also other material stuff has to be updated
+				materialBlueprintResource->mTextures.clear();
 				for (auto materialResource : mRendererRuntime.getMaterialResourceManager().mResources)
 				{
 					if (materialResource->getMaterialBlueprintResource() == materialBlueprintResource)

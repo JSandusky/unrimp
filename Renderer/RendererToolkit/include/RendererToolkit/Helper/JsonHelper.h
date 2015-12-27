@@ -27,7 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
+
+#include <RendererRuntime/Core/NonCopyable.h>
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -69,6 +71,8 @@ namespace RendererToolkit
 		static void optionalFloatProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, float& value);
 		static void optionalFloatNProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, float value[], uint32_t numberOfComponents);
 		static void optionalStringProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, char* value, uint32_t maximumLength);
+		static uint32_t getCompiledAssetId(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonShaderBlueprintsObject, const std::string& propertyName);
+		static std::string getAbsoluteAssetFilename(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonShaderBlueprintsObject, const std::string& propertyName);
 
 
 	//[-------------------------------------------------------]

@@ -37,6 +37,28 @@ namespace RendererToolkit
 {
 
 
+	namespace detail
+	{
+		bool orderByMaterialPropertyId(const RendererRuntime::MaterialProperty& left, const RendererRuntime::MaterialProperty& right)
+		{
+			return (left.getMaterialPropertyId() < right.getMaterialPropertyId());
+		}
+
+		struct OrderByMaterialPropertyId
+		{
+			inline bool operator()(const RendererRuntime::MaterialProperty& left, RendererRuntime::MaterialPropertyId right) const
+			{
+				return (left.getMaterialPropertyId() < right);
+			}
+
+			inline bool operator()(RendererRuntime::MaterialPropertyId left, const RendererRuntime::MaterialProperty& right) const
+			{
+				return (left < right.getMaterialPropertyId());
+			}
+		};
+	}
+
+
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
@@ -100,49 +122,52 @@ namespace RendererToolkit
 		return usage;
 	}
 
-	RendererRuntime::MaterialPropertyValue JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonObject)
+	RendererRuntime::MaterialProperty::ValueType JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValueType(Poco::JSON::Object::Ptr jsonObject)
 	{
-		// Get the material property value type, first
 		RendererRuntime::MaterialProperty::ValueType valueType = RendererRuntime::MaterialProperty::ValueType::UNKNOWN;
+		const std::string valueAsString = jsonObject->get("ValueType").convert<std::string>();
+
+		// Define helper macros
+		#define IF_VALUE(name)			 if (#name == valueAsString) valueType = RendererRuntime::MaterialProperty::ValueType::name;
+		#define ELSE_IF_VALUE(name) else if (#name == valueAsString) valueType = RendererRuntime::MaterialProperty::ValueType::name;
+
+		// Evaluate value
+		IF_VALUE(UNKNOWN)
+		ELSE_IF_VALUE(BOOLEAN)
+		ELSE_IF_VALUE(INTEGER)
+		ELSE_IF_VALUE(INTEGER_2)
+		ELSE_IF_VALUE(INTEGER_3)
+		ELSE_IF_VALUE(INTEGER_4)
+		ELSE_IF_VALUE(FLOAT)
+		ELSE_IF_VALUE(FLOAT_2)
+		ELSE_IF_VALUE(FLOAT_3)
+		ELSE_IF_VALUE(FLOAT_4)
+		ELSE_IF_VALUE(FILL_MODE)
+		ELSE_IF_VALUE(CULL_MODE)
+		ELSE_IF_VALUE(CONSERVATIVE_RASTERIZATION_MODE)
+		ELSE_IF_VALUE(DEPTH_WRITE_MASK)
+		ELSE_IF_VALUE(STENCIL_OP)
+		ELSE_IF_VALUE(COMPARISON_FUNC)
+		ELSE_IF_VALUE(BLEND)
+		ELSE_IF_VALUE(BLEND_OP)
+		ELSE_IF_VALUE(FILTER_MODE)
+		ELSE_IF_VALUE(TEXTURE_ADDRESS_MODE)
+		ELSE_IF_VALUE(ASSET_ID)
+		else
 		{
-			const std::string valueAsString = jsonObject->get("ValueType").convert<std::string>();
-
-			// Define helper macros
-			#define IF_VALUE(name)			 if (#name == valueAsString) valueType = RendererRuntime::MaterialProperty::ValueType::name;
-			#define ELSE_IF_VALUE(name) else if (#name == valueAsString) valueType = RendererRuntime::MaterialProperty::ValueType::name;
-
-			// Evaluate value
-			IF_VALUE(UNKNOWN)
-			ELSE_IF_VALUE(BOOLEAN)
-			ELSE_IF_VALUE(INTEGER)
-			ELSE_IF_VALUE(INTEGER_2)
-			ELSE_IF_VALUE(INTEGER_3)
-			ELSE_IF_VALUE(INTEGER_4)
-			ELSE_IF_VALUE(FLOAT)
-			ELSE_IF_VALUE(FLOAT_2)
-			ELSE_IF_VALUE(FLOAT_3)
-			ELSE_IF_VALUE(FLOAT_4)
-			ELSE_IF_VALUE(FILL_MODE)
-			ELSE_IF_VALUE(CULL_MODE)
-			ELSE_IF_VALUE(CONSERVATIVE_RASTERIZATION_MODE)
-			ELSE_IF_VALUE(DEPTH_WRITE_MASK)
-			ELSE_IF_VALUE(STENCIL_OP)
-			ELSE_IF_VALUE(COMPARISON_FUNC)
-			ELSE_IF_VALUE(BLEND)
-			ELSE_IF_VALUE(BLEND_OP)
-			ELSE_IF_VALUE(FILTER_MODE)
-			ELSE_IF_VALUE(TEXTURE_ADDRESS_MODE)
-			ELSE_IF_VALUE(ASSET_ID)
-			else
-			{
-				// TODO(co) Error handling
-			}
-
-			// Undefine helper macros
-			#undef IF_VALUE
-			#undef ELSE_IF_VALUE
+			// TODO(co) Error handling
 		}
 
+		// Undefine helper macros
+		#undef IF_VALUE
+		#undef ELSE_IF_VALUE
+
+		// Done
+		return valueType;
+	}
+
+	RendererRuntime::MaterialPropertyValue JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, const RendererRuntime::MaterialProperty::ValueType valueType)
+	{
 		// Get the material property default value
 		switch (valueType)
 		{
@@ -155,139 +180,139 @@ namespace RendererToolkit
 			case RendererRuntime::MaterialPropertyValue::ValueType::BOOLEAN:
 			{
 				int value = 0;
-				JsonHelper::optionalBooleanProperty(jsonObject, "DefaultValue", value);
+				JsonHelper::optionalBooleanProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromBoolean(0 != value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER:
 			{
 				int value = 0;
-				JsonHelper::optionalIntegerProperty(jsonObject, "DefaultValue", value);
+				JsonHelper::optionalIntegerProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromInteger(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_2:
 			{
 				int value[2] = { 0, 0 };
-				JsonHelper::optionalIntegerNProperty(jsonObject, "DefaultValue", value, 2);
+				JsonHelper::optionalIntegerNProperty(jsonObject, propertyName, value, 2);
 				return RendererRuntime::MaterialPropertyValue::fromInteger2(value[0], value[1]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_3:
 			{
 				int value[3] = { 0, 0, 0 };
-				JsonHelper::optionalIntegerNProperty(jsonObject, "DefaultValue", value, 3);
+				JsonHelper::optionalIntegerNProperty(jsonObject, propertyName, value, 3);
 				return RendererRuntime::MaterialPropertyValue::fromInteger3(value[0], value[1], value[2]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_4:
 			{
 				int value[4] = { 0, 0, 0, 0 };
-				JsonHelper::optionalIntegerNProperty(jsonObject, "DefaultValue", value, 4);
+				JsonHelper::optionalIntegerNProperty(jsonObject, propertyName, value, 4);
 				return RendererRuntime::MaterialPropertyValue::fromInteger4(value[0], value[1], value[2], value[3]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT:
 			{
 				float value = 0.0f;
-				JsonHelper::optionalFloatProperty(jsonObject, "DefaultValue", value);
+				JsonHelper::optionalFloatProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromFloat(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_2:
 			{
 				float value[2] = { 0.0f, 0.0f };
-				JsonHelper::optionalFloatNProperty(jsonObject, "DefaultValue", value, 2);
+				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, value, 2);
 				return RendererRuntime::MaterialPropertyValue::fromFloat2(value[0], value[1]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3:
 			{
 				float value[3] = { 0.0f, 0.0f, 0.0f };
-				JsonHelper::optionalFloatNProperty(jsonObject, "DefaultValue", value, 3);
+				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, value, 3);
 				return RendererRuntime::MaterialPropertyValue::fromFloat3(value[0], value[1], value[2]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4:
 			{
 				float value[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-				JsonHelper::optionalFloatNProperty(jsonObject, "DefaultValue", value, 4);
+				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, value, 4);
 				return RendererRuntime::MaterialPropertyValue::fromFloat4(value[0], value[1], value[2], value[3]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FILL_MODE:
 			{
 				Renderer::FillMode value = Renderer::FillMode::SOLID;
-				JsonMaterialHelper::optionalFillModeProperty(jsonObject, "DefaultValue", value);
+				JsonMaterialHelper::optionalFillModeProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromFillMode(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::CULL_MODE:
 			{
 				Renderer::CullMode value = Renderer::CullMode::BACK;
-				JsonMaterialHelper::optionalCullModeProperty(jsonObject, "DefaultValue", value);
+				JsonMaterialHelper::optionalCullModeProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromCullMode(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
 			{
 				Renderer::ConservativeRasterizationMode value = Renderer::ConservativeRasterizationMode::OFF;
-				JsonMaterialHelper::optionalConservativeRasterizationModeProperty(jsonObject, "DefaultValue", value);
+				JsonMaterialHelper::optionalConservativeRasterizationModeProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromConservativeRasterizationMode(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
 			{
 				Renderer::DepthWriteMask value = Renderer::DepthWriteMask::ALL;
-				JsonMaterialHelper::optionalDepthWriteMaskProperty(jsonObject, "DefaultValue", value);
+				JsonMaterialHelper::optionalDepthWriteMaskProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromDepthWriteMask(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::STENCIL_OP:
 			{
 				Renderer::StencilOp value = Renderer::StencilOp::KEEP;
-				JsonMaterialHelper::optionalStencilOpProperty(jsonObject, "DefaultValue", value);
+				JsonMaterialHelper::optionalStencilOpProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromStencilOp(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::COMPARISON_FUNC:
 			{
 				Renderer::ComparisonFunc value = Renderer::ComparisonFunc::LESS;
-				JsonMaterialHelper::optionalComparisonFuncProperty(jsonObject, "DefaultValue", value);
+				JsonMaterialHelper::optionalComparisonFuncProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromComparisonFunc(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::BLEND:
 			{
 				Renderer::Blend value = Renderer::Blend::ONE;
-				JsonMaterialHelper::optionalBlendProperty(jsonObject, "DefaultValue", value);
+				JsonMaterialHelper::optionalBlendProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromBlend(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::BLEND_OP:
 			{
 				Renderer::BlendOp value = Renderer::BlendOp::ADD;
-				JsonMaterialHelper::optionalBlendOpProperty(jsonObject, "DefaultValue", value);
+				JsonMaterialHelper::optionalBlendOpProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromBlendOp(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FILTER_MODE:
 			{
 				Renderer::FilterMode value = Renderer::FilterMode::MIN_MAG_MIP_LINEAR;
-				JsonMaterialHelper::optionalFilterProperty(jsonObject, "DefaultValue", value);
+				JsonMaterialHelper::optionalFilterProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromFilterMode(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
 			{
 				Renderer::TextureAddressMode value = Renderer::TextureAddressMode::CLAMP;
-				JsonMaterialHelper::optionalTextureAddressModeProperty(jsonObject, "DefaultValue", value);
+				JsonMaterialHelper::optionalTextureAddressModeProperty(jsonObject, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromTextureAddressMode(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::ASSET_ID:
 			{
-				return RendererRuntime::MaterialPropertyValue::fromAssetId(JsonMaterialHelper::getCompiledAssetId(input, jsonObject, "DefaultValue"));
+				return RendererRuntime::MaterialPropertyValue::fromAssetId(JsonHelper::getCompiledAssetId(input, jsonObject, propertyName));
 			}
 		}
 
@@ -418,7 +443,7 @@ namespace RendererToolkit
 		outputFileStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), sizeof(Renderer::DescriptorRange) * descriptorRanges.size());
 	}
 
-	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPropertiesObject, RendererRuntime::MaterialBlueprintResource::MaterialProperties& materialProperties)
+	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPropertiesObject, RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector& sortedMaterialPropertyVector)
 	{
 		Poco::JSON::Object::ConstIterator propertiesIterator = jsonPropertiesObject->begin();
 		Poco::JSON::Object::ConstIterator propertiesIteratorEnd = jsonPropertiesObject->end();
@@ -433,24 +458,18 @@ namespace RendererToolkit
 			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(jsonPropertyObject);
 
 			// Material property default value
-			const RendererRuntime::MaterialPropertyValue materialPropertyValue = mandatoryMaterialPropertyValue(input, jsonPropertyObject);
+			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(jsonPropertyObject);
+			const RendererRuntime::MaterialPropertyValue materialPropertyValue = mandatoryMaterialPropertyValue(input, jsonPropertyObject, "DefaultValue", valueType);
 
 			// Write down the material property
-			materialProperties.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, materialPropertyValue));
+			sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, materialPropertyValue));
 
 			// Next property, please
 			++propertiesIterator;
 		}
-	}
 
-	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPropertiesObject, std::ofstream& outputFileStream)
-	{
-		// Gather all material properties
-		RendererRuntime::MaterialBlueprintResource::MaterialProperties materialProperties;
-		readProperties(input, jsonPropertiesObject, materialProperties);
-
-		// Write down all material properties
-		outputFileStream.write(reinterpret_cast<const char*>(materialProperties.data()), sizeof(RendererRuntime::MaterialProperty) * materialProperties.size());
+		// Ensure the material properties are sorted
+		std::sort(sortedMaterialPropertyVector.begin(), sortedMaterialPropertyVector.end(), detail::orderByMaterialPropertyId);
 	}
 
 	void JsonMaterialBlueprintHelper::readPipelineStateObject(Poco::JSON::Object::Ptr jsonPipelineStateObject, std::ofstream& outputFileStream)
@@ -602,7 +621,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readTextures(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonTexturesObject, std::ofstream& outputFileStream)
+	void JsonMaterialBlueprintHelper::readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector& sortedMaterialPropertyVector, Poco::JSON::Object::Ptr jsonTexturesObject, std::ofstream& outputFileStream)
 	{
 		Poco::JSON::Object::ConstIterator rootTexturesIterator = jsonTexturesObject->begin();
 		Poco::JSON::Object::ConstIterator rootTexturesIteratorEnd = jsonTexturesObject->end();
@@ -617,8 +636,38 @@ namespace RendererToolkit
 			// The optional properties
 			JsonHelper::optionalIntegerProperty(jsonTextureObject, "TextureRootParameterIndex", materialBlueprintTexture.textureRootParameterIndex);
 
-			// The mandatory properties
-			materialBlueprintTexture.textureAssetId = JsonMaterialHelper::getCompiledAssetId(input, jsonTextureObject, "TextureAssetId");
+			{ // Get mandatory asset ID
+			  // -> The character "@" is used to reference a material property value
+				const std::string sourceAssetIdAsString = jsonTextureObject->get("TextureAssetId").convert<std::string>();
+				if (sourceAssetIdAsString.length() > 0 && sourceAssetIdAsString[0] == '@')
+				{
+					// Reference a material property value
+					const RendererRuntime::MaterialPropertyId materialPropertyId(sourceAssetIdAsString.substr(1).c_str());
+					materialBlueprintTexture.materialPropertyId = materialPropertyId;
+
+					// Figure out the material property value
+					RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, detail::OrderByMaterialPropertyId());
+					if (iterator != sortedMaterialPropertyVector.end())
+					{
+						RendererRuntime::MaterialProperty* materialProperty = iterator._Ptr;
+						if (materialProperty->getMaterialPropertyId() == materialPropertyId)
+						{
+							// TODO(co) Error handling: Usage mismatch etc.
+							materialBlueprintTexture.textureAssetId = materialProperty->getAssetIdValue();
+						}
+					}
+				}
+				else
+				{
+					materialBlueprintTexture.materialPropertyId = 0;
+
+					// Map the source asset ID to the compiled asset ID
+					const uint32_t sourceAssetId = static_cast<uint32_t>(std::atoi(sourceAssetIdAsString.c_str()));
+					SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(sourceAssetId);
+					materialBlueprintTexture.textureAssetId = (iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
+					// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
+				}
+			}
 
 			// Write down the texture
 			outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));

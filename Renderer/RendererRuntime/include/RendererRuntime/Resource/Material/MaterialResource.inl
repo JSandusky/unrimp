@@ -38,6 +38,11 @@ namespace RendererRuntime
 		return mMaterialBlueprintResource;
 	}
 
+	inline const MaterialResource::SortedMaterialPropertyVector& MaterialResource::getSortedMaterialPropertyVector() const
+	{
+		return mSortedMaterialPropertyVector;
+	}
+
 	inline const Renderer::PipelineState& MaterialResource::getPipelineState() const
 	{
 		return mPipelineState;

@@ -25,6 +25,10 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
+#include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
+
+#include <algorithm>
 
 #include <assert.h>
 
@@ -34,6 +38,23 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	namespace detail
+	{
+		struct OrderByMaterialPropertyId
+		{
+			inline bool operator()(const MaterialProperty& left, MaterialPropertyId right) const
+			{
+				return (left.getMaterialPropertyId() < right);
+			}
+
+			inline bool operator()(MaterialPropertyId left, const MaterialProperty& right) const
+			{
+				return (left < right.getMaterialPropertyId());
+			}
+		};
+	}
 
 
 	//[-------------------------------------------------------]
@@ -141,6 +162,7 @@ namespace RendererRuntime
 
 	void MaterialResource::releasePipelineState()
 	{
+		mTextures.clear();	// TODO(co) Cleanup
 		if (nullptr != mPipelineStateObject)
 		{
 			mPipelineStateObject->release();
@@ -148,9 +170,12 @@ namespace RendererRuntime
 		}
 	}
 
-	bool MaterialResource::setGraphicsRootDescriptorTable(Renderer::IRenderer& renderer) const
+	bool MaterialResource::setGraphicsRootDescriptorTable(const RendererRuntime::IRendererRuntime& rendererRuntime)
 	{
 		assert(nullptr != mMaterialBlueprintResource);
+
+		// TODO(co) This is experimental and will certainly look different when everything is in place
+		Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
 
 		{ // Graphics root descriptor table: Set sampler states
 			const MaterialBlueprintResource::SamplerStates& samplerStates = mMaterialBlueprintResource->getSamplerStates();
@@ -162,12 +187,51 @@ namespace RendererRuntime
 			}
 		}
 
-		{ // Graphics root descriptor table: Set textures
+		// Need for gathering the textures now?
+		if (mTextures.empty())
+		{
+			TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
 			const MaterialBlueprintResource::Textures& textures = mMaterialBlueprintResource->getTextures();
 			const size_t numberOfTextures = textures.size();
 			for (size_t i = 0; i < numberOfTextures; ++i)
 			{
-				const MaterialBlueprintResource::Texture& texture = textures[i];
+				const MaterialBlueprintResource::Texture& blueprintTexture = textures[i];
+
+				// Start with the material blueprint textures
+				Texture texture;
+				texture.textureRootParameterIndex = blueprintTexture.textureRootParameterIndex;
+				texture.textureAssetId = blueprintTexture.textureAssetId;
+				texture.materialPropertyId = blueprintTexture.materialPropertyId;
+				texture.textureResource = blueprintTexture.textureResource;	// TODO(co) Implement decent resource management
+
+				// Apply material specific modifications
+				if (0 != texture.materialPropertyId)
+				{
+					// Figure out the material property value
+					const MaterialPropertyId materialPropertyId = texture.materialPropertyId;
+					SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(mSortedMaterialPropertyVector.cbegin(), mSortedMaterialPropertyVector.cend(), materialPropertyId, detail::OrderByMaterialPropertyId());
+					if (iterator != mSortedMaterialPropertyVector.end())
+					{
+						MaterialProperty* materialProperty = iterator._Ptr;
+						if (materialProperty->getMaterialPropertyId() == materialPropertyId)
+						{
+							// TODO(co) Error handling: Usage mismatch etc.
+							texture.textureAssetId = materialProperty->getAssetIdValue();
+							texture.textureResource = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);	// TODO(co) Implement decent resource management
+						}
+					}
+				}
+
+				// Insert texture
+				mTextures.push_back(texture);
+			}
+		}
+
+		{ // Graphics root descriptor table: Set textures
+			const size_t numberOfTextures = mTextures.size();
+			for (size_t i = 0; i < numberOfTextures; ++i)
+			{
+				const Texture& texture = mTextures[i];
 
 				// Due to background texture loading, some textures might not be ready, yet
 				// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet

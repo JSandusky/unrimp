@@ -80,7 +80,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef std::unordered_map<uint32_t, uint32_t> SourceAssetIdToCompiledAssetId;	// Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
+	typedef std::unordered_map<uint32_t, uint32_t> SourceAssetIdToCompiledAssetId;		// Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
+	typedef std::unordered_map<uint32_t, std::string> SourceAssetIdToAbsoluteFilename;	// Key = source asset ID, absolute asset filename
 
 
 	//[-------------------------------------------------------]
@@ -145,15 +146,16 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		std::string					   mProjectName;
-		std::string					   mProjectDirectory;
-		RendererRuntime::AssetPackage  mAssetPackage;
-		std::string					   mAssetPackageDirectoryName;	///< Asset package name (includes "/" at the end)
-		SourceAssetIdToCompiledAssetId mSourceAssetIdToCompiledAssetId;
-		Poco::JSON::Object::Ptr		   mJsonTargetsObject;			///< There's no real benefit in trying to store the targets data in custom data structures, so we just stick to the read in JSON object
-		ProjectAssetMonitor*		   mProjectAssetMonitor;
-		std::atomic<bool>			   mShutdownThread;
-		std::thread					   mThread;
+		std::string						mProjectName;
+		std::string						mProjectDirectory;
+		RendererRuntime::AssetPackage	mAssetPackage;
+		std::string						mAssetPackageDirectoryName;	///< Asset package name (includes "/" at the end)
+		SourceAssetIdToCompiledAssetId	mSourceAssetIdToCompiledAssetId;
+		SourceAssetIdToAbsoluteFilename	mSourceAssetIdToAbsoluteFilename;
+		Poco::JSON::Object::Ptr			mJsonTargetsObject;			///< There's no real benefit in trying to store the targets data in custom data structures, so we just stick to the read in JSON object
+		ProjectAssetMonitor*			mProjectAssetMonitor;
+		std::atomic<bool>				mShutdownThread;
+		std::thread						mThread;
 
 
 	};

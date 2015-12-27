@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return mRootSignature;
 	}
 
+	inline const MaterialBlueprintResource::SortedMaterialPropertyVector& MaterialBlueprintResource::getSortedMaterialPropertyVector() const
+	{
+		return mSortedMaterialPropertyVector;
+	}
+
 	inline const Renderer::PipelineState& MaterialBlueprintResource::getPipelineState() const
 	{
 		return mPipelineState;

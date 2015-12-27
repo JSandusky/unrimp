@@ -81,13 +81,16 @@ namespace RendererRuntime
 				if (nullptr != filenameExtension)
 				{
 					ITextureResourceLoader* textureResourceLoader = static_cast<ITextureResourceLoader*>(acquireResourceLoaderInstance(StringId(filenameExtension + 1)));
-					textureResourceLoader->initialize(*asset, *textureResource);
+					if (nullptr != textureResourceLoader)
+					{
+						textureResourceLoader->initialize(*asset, *textureResource);
 
-					// Commit resource streamer asset load request
-					ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-					resourceStreamerLoadRequest.resource = textureResource;
-					resourceStreamerLoadRequest.resourceLoader = textureResourceLoader;
-					mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+						// Commit resource streamer asset load request
+						ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+						resourceStreamerLoadRequest.resource = textureResource;
+						resourceStreamerLoadRequest.resourceLoader = textureResourceLoader;
+						mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+					}
 				}
 				else
 				{

@@ -109,19 +109,21 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the material property ID
+		*
+		*  @return
+		*    The material property ID
+		*/
+		inline MaterialPropertyId getMaterialPropertyId() const;
+
+		/**
+		*  @brief
 		*    Return the material blueprint property usage
 		*
 		*  @return
 		*    The material blueprint property usage
 		*/
 		inline Usage getUsage() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		MaterialProperty& operator=(const MaterialProperty&) = delete;
 
 
 	//[-------------------------------------------------------]

@@ -45,6 +45,8 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
+	class TextureResource;
+	class IRendererRuntime;
 	class MaterialBlueprintResource;
 }
 
@@ -77,7 +79,16 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::vector<MaterialProperty> MaterialProperties;
+		struct Texture
+		{
+			uint32_t		   textureRootParameterIndex;
+			AssetId			   textureAssetId;
+			MaterialPropertyId materialPropertyId;
+			TextureResource*   textureResource;	// TODO(co) Implement decent resource management
+		};
+
+		typedef std::vector<MaterialProperty> SortedMaterialPropertyVector;
+		typedef std::vector<Texture> Textures;
 
 
 	//[-------------------------------------------------------]
@@ -110,6 +121,15 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the sorted material property vector
+		*
+		*  @return
+		*    The sorted material property vector
+		*/
+		inline const SortedMaterialPropertyVector& getSortedMaterialPropertyVector() const;
+
+		/**
+		*  @brief
 		*    Return the pipeline state
 		*
 		*  @return
@@ -128,7 +148,7 @@ namespace RendererRuntime
 
 		// TODO(co)
 		void releasePipelineState();
-		bool setGraphicsRootDescriptorTable(Renderer::IRenderer& renderer) const;
+		bool setGraphicsRootDescriptorTable(const RendererRuntime::IRendererRuntime& rendererRuntime);
 
 
 	//[-------------------------------------------------------]
@@ -143,10 +163,11 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialBlueprintResource* mMaterialBlueprintResource;	///< Material blueprint resource, can be a null pointer, don't destroy the instance
-		MaterialProperties		   mMaterialProperties;
-		Renderer::PipelineState	   mPipelineState;
-		Renderer::IPipelineState*  mPipelineStateObject;		///< Pipeline state object (PSO), can be a null pointer
+		MaterialBlueprintResource*	 mMaterialBlueprintResource;	///< Material blueprint resource, can be a null pointer, don't destroy the instance
+		SortedMaterialPropertyVector mSortedMaterialPropertyVector;
+		Renderer::PipelineState		 mPipelineState;
+		Renderer::IPipelineState*    mPipelineStateObject;			///< Pipeline state object (PSO), can be a null pointer
+		Textures					 mTextures;
 
 
 	};

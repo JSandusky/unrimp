@@ -142,7 +142,7 @@ namespace RendererToolkit
 		Poco::File(assetOutputDirectory).createDirectories();
 
 		// Asset compiler input
-		IAssetCompiler::Input input(mProjectName, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId);
+		IAssetCompiler::Input input(mProjectName, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
 
 		// Asset compiler configuration
 		IAssetCompiler::Configuration configuration;
@@ -316,6 +316,7 @@ namespace RendererToolkit
 		mAssetPackage.clear();
 		mAssetPackageDirectoryName.clear();
 		mSourceAssetIdToCompiledAssetId.clear();
+		mSourceAssetIdToAbsoluteFilename.clear();
 		mJsonTargetsObject = nullptr;
 	}
 
@@ -414,6 +415,8 @@ namespace RendererToolkit
 	void ProjectImpl::buildSourceAssetIdToCompiledAssetId()
 	{
 		assert(0 == mSourceAssetIdToCompiledAssetId.size());
+		assert(0 == mSourceAssetIdToAbsoluteFilename.size());
+
 		const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
 		const size_t numberOfAssets = sortedAssetVector.size();
 		for (size_t i = 0; i < numberOfAssets; ++i)
@@ -454,6 +457,7 @@ namespace RendererToolkit
 
 			// Hash the asset ID and put it into the map
 			mSourceAssetIdToCompiledAssetId.insert(std::make_pair(asset.assetId, RendererRuntime::StringId(compiledAssetIdAsString.c_str())));
+			mSourceAssetIdToAbsoluteFilename.insert(std::make_pair(asset.assetId, mProjectDirectory + asset.assetFilename));
 		}
 	}
 

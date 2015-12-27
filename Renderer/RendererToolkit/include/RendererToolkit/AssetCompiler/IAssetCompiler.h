@@ -68,7 +68,8 @@ namespace RendererToolkit
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
 	typedef RendererRuntime::StringId AssetCompilerTypeId;	///< Asset compiler type identifier, internally just a POD "uint32_t"
-	typedef std::unordered_map<uint32_t, uint32_t> SourceAssetIdToCompiledAssetId;	// Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
+	typedef std::unordered_map<uint32_t, uint32_t> SourceAssetIdToCompiledAssetId;		// Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
+	typedef std::unordered_map<uint32_t, std::string> SourceAssetIdToAbsoluteFilename;	// Key = source asset ID, absolute asset filename
 
 
 	//[-------------------------------------------------------]
@@ -88,13 +89,15 @@ namespace RendererToolkit
 			std::string							  assetInputDirectory;
 			std::string							  assetOutputDirectory;
 			const SourceAssetIdToCompiledAssetId& sourceAssetIdToCompiledAssetId;
+			const SourceAssetIdToAbsoluteFilename& sourceAssetIdToAbsoluteFilename;
 
 			Input() = delete;
-			Input(const std::string _projectName, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId) :
+			Input(const std::string _projectName, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToAbsoluteFilename& _sourceAssetIdToAbsoluteFilename) :
 				projectName(_projectName),
 				assetInputDirectory(_assetInputDirectory),
 				assetOutputDirectory(_assetOutputDirectory),
-				sourceAssetIdToCompiledAssetId(_sourceAssetIdToCompiledAssetId)
+				sourceAssetIdToCompiledAssetId(_sourceAssetIdToCompiledAssetId),
+				sourceAssetIdToAbsoluteFilename(_sourceAssetIdToAbsoluteFilename)
 			{
 				// Nothing here
 			}

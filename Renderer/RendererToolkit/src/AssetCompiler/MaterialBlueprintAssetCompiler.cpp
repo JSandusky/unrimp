@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
+#include "RendererToolkit/Helper/JsonHelper.h"
 #include "RendererToolkit/Helper/JsonMaterialHelper.h"
 #include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
 
@@ -131,7 +132,14 @@ namespace RendererToolkit
 			JsonMaterialBlueprintHelper::readRootSignature(jsonMaterialBlueprintObject->get("RootSignature").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
 
 			// Properties
-			JsonMaterialBlueprintHelper::readProperties(input, jsonMaterialBlueprintObject->get("Properties").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
+			RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector sortedMaterialPropertyVector;
+			{
+				// Gather all material properties
+				JsonMaterialBlueprintHelper::readProperties(input, jsonPropertiesObject, sortedMaterialPropertyVector);
+
+				// Write down all material properties
+				outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
+			}
 
 			// Pipeline state object (PSO)
 			JsonMaterialBlueprintHelper::readPipelineStateObject(jsonMaterialBlueprintObject->get("PipelineState").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
@@ -140,17 +148,17 @@ namespace RendererToolkit
 			JsonMaterialBlueprintHelper::readSamplerStates(jsonSamplerStatesObject, outputFileStream);
 
 			// Textures
-			JsonMaterialBlueprintHelper::readTextures(input, jsonTexturesObject, outputFileStream);
+			JsonMaterialBlueprintHelper::readTextures(input, sortedMaterialPropertyVector, jsonTexturesObject, outputFileStream);
 
 			{ // Shader blueprints
 				Poco::JSON::Object::Ptr jsonShaderBlueprintsObject = jsonMaterialBlueprintObject->get("ShaderBlueprints").extract<Poco::JSON::Object::Ptr>();
 
 				RendererRuntime::v1MaterialBlueprint::ShaderBlueprints shaderBlueprints;
-				shaderBlueprints.vertexShaderBlueprintAssetId				  = JsonMaterialHelper::getCompiledAssetId(input, jsonShaderBlueprintsObject, "VertexShaderBlueprintAssetId");
+				shaderBlueprints.vertexShaderBlueprintAssetId				  = JsonHelper::getCompiledAssetId(input, jsonShaderBlueprintsObject, "VertexShaderBlueprintAssetId");
 				shaderBlueprints.tessellationControlShaderBlueprintAssetId	  = 0; // TODO(co) Add shader type
 				shaderBlueprints.tessellationEvaluationShaderBlueprintAssetId = 0; // TODO(co) Add shader type
 				shaderBlueprints.geometryShaderBlueprintAssetId				  = 0; // TODO(co) Add shader type
-				shaderBlueprints.fragmentShaderBlueprintAssetId				  = JsonMaterialHelper::getCompiledAssetId(input, jsonShaderBlueprintsObject, "FragmentShaderBlueprintAssetId");
+				shaderBlueprints.fragmentShaderBlueprintAssetId				  = JsonHelper::getCompiledAssetId(input, jsonShaderBlueprintsObject, "FragmentShaderBlueprintAssetId");
 
 				// Write down the shader blueprints
 				outputFileStream.write(reinterpret_cast<const char*>(&shaderBlueprints), sizeof(RendererRuntime::v1MaterialBlueprint::ShaderBlueprints));

@@ -22,9 +22,27 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
+#include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
+#include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Resource/Material/Loader/MaterialFileFormat.h>
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4127)	// warning C4127: conditional expression is constant
+	#pragma warning(disable: 4244)	// warning C4244: 'argument': conversion from '<x>' to '<y>', possible loss of data
+	#pragma warning(disable: 4251)	// warning C4251: '<x>': class '<y>' needs to have dll-interface to be used by clients of class '<x>'
+	#pragma warning(disable: 4266)	// warning C4266: '<x>': no override available for virtual member function from base '<y>'; function is hidden
+	#pragma warning(disable: 4365)	// warning C4365: 'return': conversion from '<x>' to '<y>', signed/unsigned mismatch
+	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	#pragma warning(disable: 4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
+	#pragma warning(disable: 4619)	// warning C4619: #pragma warning: there is no warning number '<x>'
+	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#define POCO_NO_UNWINDOWS
+	#include <Poco/Path.h>
+	#include <Poco/File.h>
+#pragma warning(pop)
 
 #include <fstream>
 
@@ -34,6 +52,23 @@
 //[-------------------------------------------------------]
 namespace RendererToolkit
 {
+
+
+	namespace detail
+	{
+		struct OrderByMaterialPropertyId
+		{
+			inline bool operator()(const RendererRuntime::MaterialProperty& left, RendererRuntime::MaterialPropertyId right) const
+			{
+				return (left.getMaterialPropertyId() < right);
+			}
+
+			inline bool operator()(RendererRuntime::MaterialPropertyId left, const RendererRuntime::MaterialProperty& right) const
+			{
+				return (left < right.getMaterialPropertyId());
+			}
+		};
+	}
 
 
 	//[-------------------------------------------------------]
@@ -111,21 +146,72 @@ namespace RendererToolkit
 			Poco::JSON::Object::Ptr jsonMaterialObject = jsonRootObject->get("MaterialAsset").extract<Poco::JSON::Object::Ptr>();
 			Poco::JSON::Object::Ptr jsonPropertiesObject = jsonMaterialObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
 
-			{ // Material header
-				// Material blueprint: Map the source asset ID to the compiled asset ID
-				const uint32_t sourceAssetId = static_cast<uint32_t>(std::atoi(jsonMaterialObject->get("MaterialBlueprintAssetId").convert<std::string>().c_str()));
-				SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(sourceAssetId);
-				const uint32_t compiledAssetId = (iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
-				// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
+			// Gather all material blueprint properties
+			RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector sortedMaterialPropertyVector;
+			{
+				// TODO(co) Error handling and simplification
+				// Parse material blueprint asset JSON
+				const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, jsonMaterialObject, "MaterialBlueprintAssetId");
+				std::ifstream materialBlueprintAssetInputFileStream(absoluteMaterialBlueprintAssetFilename, std::ios::binary);
+				Poco::JSON::Parser materialBlueprintAssetJsonParser;
+				materialBlueprintAssetJsonParser.parse(materialBlueprintAssetInputFileStream);
 
+				// Read configuration
+				std::string materialBlueprintInputFile;
+				{
+					// Read material blueprint asset compiler configuration
+					Poco::JSON::Object::Ptr jsonConfigurationObject = materialBlueprintAssetJsonParser.result().extract<Poco::JSON::Object::Ptr>()->get("Asset").extract<Poco::JSON::Object::Ptr>()->get("MaterialBlueprintAssetCompiler").extract<Poco::JSON::Object::Ptr>();
+					materialBlueprintInputFile = jsonConfigurationObject->getValue<std::string>("InputFile");
+				}
+
+				// Parse material blueprint JSON
+				std::ifstream materialBlueprintInputFileStream(Poco::Path(absoluteMaterialBlueprintAssetFilename).parent().toString(Poco::Path::PATH_UNIX) + materialBlueprintInputFile, std::ios::binary);
+				Poco::JSON::Parser materialBlueprintJsonParser;
+				materialBlueprintJsonParser.parse(materialBlueprintInputFileStream);
+				Poco::JSON::Object::Ptr materialBlueprintJsonRootObject = materialBlueprintJsonParser.result().extract<Poco::JSON::Object::Ptr>();
+				Poco::JSON::Object::Ptr jsonMaterialBlueprintObject = materialBlueprintJsonRootObject->get("MaterialBlueprintAsset").extract<Poco::JSON::Object::Ptr>();
+				JsonMaterialBlueprintHelper::readProperties(input, jsonMaterialBlueprintObject->get("Properties").extract<Poco::JSON::Object::Ptr>(), sortedMaterialPropertyVector);
+			}
+
+			{ // Material header
 				RendererRuntime::v1Material::Header materialHeader;
 				materialHeader.formatType				= RendererRuntime::v1Material::FORMAT_TYPE;
 				materialHeader.formatVersion			= RendererRuntime::v1Material::FORMAT_VERSION;
-				materialHeader.materialBlueprintAssetId	= compiledAssetId;
-				materialHeader.numberOfProperties		= 0;	// TODO(co) Material properties
+				materialHeader.materialBlueprintAssetId	= JsonHelper::getCompiledAssetId(input, jsonMaterialObject, "MaterialBlueprintAssetId");
+				materialHeader.numberOfProperties		= sortedMaterialPropertyVector.size();
 
 				// Write down the material header
 				outputFileStream.write(reinterpret_cast<const char*>(&materialHeader), sizeof(RendererRuntime::v1Material::Header));
+			}
+
+			{ // Properties
+				// Update material property values were required
+				Poco::JSON::Object::ConstIterator propertiesIterator = jsonPropertiesObject->begin();
+				Poco::JSON::Object::ConstIterator propertiesIteratorEnd = jsonPropertiesObject->end();
+				while (propertiesIterator != propertiesIteratorEnd)
+				{
+					// Material property ID
+					const std::string propertyName = propertiesIterator->first;
+					const RendererRuntime::MaterialPropertyId materialPropertyId(propertyName.c_str());
+
+					// Figure out the material property value type by using the material blueprint
+					RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, detail::OrderByMaterialPropertyId());
+					if (iterator != sortedMaterialPropertyVector.end())
+					{
+						RendererRuntime::MaterialProperty* materialProperty = iterator._Ptr;
+						if (materialProperty->getMaterialPropertyId() == materialPropertyId)
+						{
+							// Set the material own property value
+							static_cast<RendererRuntime::MaterialPropertyValue&>(*materialProperty) = JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(input, jsonPropertiesObject, propertyName, materialProperty->getValueType());
+						}
+					}
+
+					// Next property, please
+					++propertiesIterator;
+				}
+
+				// Write down all material properties
+				outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
 			}
 		}
 

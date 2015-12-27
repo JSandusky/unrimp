@@ -284,25 +284,25 @@
 		},
 		"Textures":
 		{
-			"DiffuseMap":
+			"0":
 			{
 				"TextureRootParameterIndex": "2",
-				"TextureAssetId": "4"
+				"TextureAssetId": "@DiffuseMap"
 			},
-			"EmissiveMap":
+			"1":
 			{
 				"TextureRootParameterIndex": "3",
-				"TextureAssetId": "5"
+				"TextureAssetId": "@EmissiveMap"
 			},
-			"NormalMap":
+			"2":
 			{
 				"TextureRootParameterIndex": "4",
-				"TextureAssetId": "6"
+				"TextureAssetId": "@NormalMap"
 			},
-			"SpecularMap":
+			"3":
 			{
 				"TextureRootParameterIndex": "5",
-				"TextureAssetId": "7"
+				"TextureAssetId": "@SpecularMap"
 			}
 		},
 		"ShaderBlueprints":

@@ -110,8 +110,8 @@ namespace RendererRuntime
 			}
 
 			// Read properties
-			mMaterialBlueprintResource->mMaterialProperties.resize(materialBlueprintHeader.numberOfProperties);
-			inputFileStream.read(reinterpret_cast<char*>(mMaterialBlueprintResource->mMaterialProperties.data()), sizeof(MaterialProperty) * materialBlueprintHeader.numberOfProperties);
+			mMaterialBlueprintResource->mSortedMaterialPropertyVector.resize(materialBlueprintHeader.numberOfProperties);
+			inputFileStream.read(reinterpret_cast<char*>(mMaterialBlueprintResource->mSortedMaterialPropertyVector.data()), sizeof(MaterialProperty) * materialBlueprintHeader.numberOfProperties);
 
 			// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
 			// Read in the pipeline state
@@ -200,6 +200,7 @@ namespace RendererRuntime
 				MaterialBlueprintResource::Texture& texture = textures[i];
 				texture.textureRootParameterIndex = materialBlueprintTexture->textureRootParameterIndex;
 				texture.textureAssetId = materialBlueprintTexture->textureAssetId;
+				texture.materialPropertyId = materialBlueprintTexture->materialPropertyId;
 				texture.textureResource = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);
 			}
 		}

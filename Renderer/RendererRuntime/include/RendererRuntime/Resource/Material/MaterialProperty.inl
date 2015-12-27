@@ -49,6 +49,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline MaterialPropertyId MaterialProperty::getMaterialPropertyId() const
+	{
+		return mMaterialPropertyId;
+	}
+
 	inline MaterialProperty::Usage MaterialProperty::MaterialProperty::getUsage() const
 	{
 		return mUsage;
