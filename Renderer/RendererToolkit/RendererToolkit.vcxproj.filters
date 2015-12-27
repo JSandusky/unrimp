@@ -20,6 +20,9 @@
     <Filter Include="External\SimpleFileWatcher">
       <UniqueIdentifier>{eb860d5e-9e94-4150-b677-3b5a5047a3fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Helper">
+      <UniqueIdentifier>{f6aad327-91ba-4137-8b51-4ff62a29c0cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -113,6 +116,12 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialBlueprintAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Helper\JsonHelper.h">
+      <Filter>Source Files\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Helper\JsonMaterialHelper.h">
+      <Filter>Source Files\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -162,6 +171,12 @@
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\MaterialBlueprintAssetCompiler.cpp">
       <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Helper\JsonMaterialHelper.cpp">
+      <Filter>Source Files\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Helper\JsonHelper.cpp">
+      <Filter>Source Files\Helper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

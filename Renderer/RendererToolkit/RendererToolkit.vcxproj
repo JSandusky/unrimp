@@ -43,6 +43,8 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\ShaderBlueprintAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SkeletonAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\Helper\JsonHelper.h" />
+    <ClInclude Include="include\RendererToolkit\Helper\JsonMaterialHelper.h" />
     <ClInclude Include="include\RendererToolkit\IRendererToolkit.h" />
     <ClInclude Include="include\RendererToolkit\PlatformTypes.h" />
     <ClInclude Include="include\RendererToolkit\Project\IProject.h" />
@@ -87,6 +89,8 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
     </ClCompile>
+    <ClCompile Include="src\Helper\JsonHelper.cpp" />
+    <ClCompile Include="src\Helper\JsonMaterialHelper.cpp" />
     <ClCompile Include="src\Project\ProjectAssetMonitor.cpp" />
     <ClCompile Include="src\Project\ProjectImpl.cpp" />
     <ClCompile Include="src\RendererToolkitImpl.cpp" />
