@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/SceneAssetCompiler.h"
+#include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Resource/Scene/Item/MeshSceneItem.h>
@@ -148,64 +149,10 @@ namespace RendererToolkit
 						{
 							Poco::JSON::Object::Ptr jsonPropertiesObject = jsonSceneNodeObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
 
-							// TODO(co) Add parser helpers for such kind of tasks
-
-							{ // Parse the position string
-								Poco::Dynamic::Var position = jsonPropertiesObject->get("Position");
-								if (!position.isEmpty())
-								{
-									Poco::StringTokenizer stringTokenizer(position.convert<std::string>(), " ");
-									if (stringTokenizer.count() == 3)
-									{
-										for (size_t i = 0; i < 3; ++i)
-										{
-											node.transform.position[static_cast<int>(i)] = std::stof(stringTokenizer[i].c_str());
-										}
-									}
-									else
-									{
-										// TODO(co) Error handling
-									}
-								}
-							}
-
-							{ // Parse the rotation string
-								Poco::Dynamic::Var rotation = jsonPropertiesObject->get("Rotation");
-								if (!rotation.isEmpty())
-								{
-									Poco::StringTokenizer stringTokenizer(rotation.convert<std::string>(), " ");
-									if (stringTokenizer.count() == 4)
-									{
-										for (size_t i = 0; i < 4; ++i)
-										{
-											node.transform.rotation[static_cast<int>(i)] = std::stof(stringTokenizer[i].c_str());
-										}
-									}
-									else
-									{
-										// TODO(co) Error handling
-									}
-								}
-							}
-
-							{ // Parse the scale string
-								Poco::Dynamic::Var scale = jsonPropertiesObject->get("Scale");
-								if (!scale.isEmpty())
-								{
-									Poco::StringTokenizer stringTokenizer(scale.convert<std::string>(), " ");
-									if (stringTokenizer.count() == 3)
-									{
-										for (size_t i = 0; i < 3; ++i)
-										{
-											node.transform.scale[static_cast<int>(i)] = std::stof(stringTokenizer[i].c_str());
-										}
-									}
-									else
-									{
-										// TODO(co) Error handling
-									}
-								}
-							}
+							// Position, rotation and scale
+							JsonHelper::optionalFloatNProperty(jsonPropertiesObject, "Position", &node.transform.position.x, 3);
+							JsonHelper::optionalFloatNProperty(jsonPropertiesObject, "Rotation", &node.transform.rotation.x, 4);
+							JsonHelper::optionalFloatNProperty(jsonPropertiesObject, "Scale", &node.transform.scale.x, 3);
 						}
 
 						// Write down the scene node
