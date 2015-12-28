@@ -731,6 +731,48 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	std::string ShaderBuilder::createSourceCode(const ShaderProperties& shaderProperties, const std::string& sourceCode)
+	{
+		mShaderProperties = shaderProperties;
+
+		// TODO(co)
+		/*
+		//Library piece files first
+		LibraryVec::const_iterator itor = mLibrary.begin();
+		LibraryVec::const_iterator end  = mLibrary.end();
+
+		while( itor != end )
+		{
+			processPieces( itor->dataFolder, itor->pieceFiles[i] );
+			++itor;
+		}
+
+		//Main piece files
+		processPieces( mDataFolder, mPieceFiles[i] );
+		*/
+
+		std::string inString;
+		std::string outString;
+
+		inString = sourceCode;
+
+		bool syntaxError = false;
+
+		syntaxError |= parseMath(inString, outString);
+		syntaxError |= parseForEach(outString, inString);
+		syntaxError |= parseProperties(inString, outString);
+		while (!syntaxError && (outString.find("@piece") != std::string::npos || outString.find("@insertpiece") != std::string::npos))
+		{
+			syntaxError |= collectPieces(outString, inString);
+			syntaxError |= insertPieces(inString, outString);
+		}
+		syntaxError |= parseCounter(outString, inString);
+
+		outString.swap(inString);
+
+		return outString;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

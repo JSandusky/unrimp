@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
+#include "RendererRuntime/Resource/Shader/ShaderBuilder.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <algorithm>
@@ -130,12 +131,36 @@ namespace RendererRuntime
 						};
 						const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
 
+						// Gather shader properties from static material properties
+						ShaderProperties shaderProperties;
+						{
+							const size_t numberOfMaterialProperties = mSortedMaterialPropertyVector.size();
+							for (size_t i = 0; i < numberOfMaterialProperties; ++i)
+							{
+								const MaterialProperty& materialProperty = mSortedMaterialPropertyVector[i];
+								if (materialProperty.getUsage() == MaterialProperty::Usage::STATIC)
+								{
+									shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
+								}
+							}
+						}
+
+						// Create the vertex shader
+						Renderer::IVertexShader* vertexShader = nullptr;
+						{
+							ShaderBuilder shaderBuilder;
+							vertexShader = shaderLanguage->createVertexShaderFromSourceCode(shaderBuilder.createSourceCode(shaderProperties, vertexShaderBlueprint->getShaderSourceCode()).c_str());
+						}
+
+						// Create the fragment shader
+						Renderer::IFragmentShader* fragmentShader = nullptr;
+						{
+							ShaderBuilder shaderBuilder;
+							fragmentShader = shaderLanguage->createFragmentShaderFromSourceCode(shaderBuilder.createSourceCode(shaderProperties, fragmentShaderBlueprint->getShaderSourceCode()).c_str());
+						}
+
 						// Create the program
-						Renderer::IProgram* program = shaderLanguage->createProgram(
-							*rootSignature,
-							vertexAttributes,
-							shaderLanguage->createVertexShaderFromSourceCode(vertexShaderBlueprint->getShaderSourceCode().c_str()),
-							shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderBlueprint->getShaderSourceCode().c_str()));
+						Renderer::IProgram* program = shaderLanguage->createProgram(*rootSignature, vertexAttributes, vertexShader, fragmentShader);
 
 						// Is there a valid program?
 						if (nullptr != program)

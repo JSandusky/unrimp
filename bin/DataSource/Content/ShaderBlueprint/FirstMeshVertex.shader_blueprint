@@ -19,9 +19,9 @@
 
 
 //[-------------------------------------------------------]
-//[ Vertex shader source code                             ]
+//[ Input / output                                        ]
 //[-------------------------------------------------------]
-// Attribute input/output
+// Attribute input / output
 struct VS_INPUT
 {
 	float3 Position : POSITION;		// Object space vertex position
@@ -42,7 +42,10 @@ cbuffer UniformBlockDynamicVs : register(b0)
 	float4x4 ObjectSpaceToViewSpaceMatrix;	// Object space to view space matrix
 }
 
-// Functions
+
+//[-------------------------------------------------------]
+//[ Functions                                             ]
+//[-------------------------------------------------------]
 float2x3 QuaternionToTangentBitangent(float4 q)
 {
 	return float2x3(
@@ -64,6 +67,10 @@ float3x3 GetTangentFrame(float3x3 objectSpaceToViewSpaceMatrix, float4 qtangent)
 	);
 }
 
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
 VS_OUTPUT main(VS_INPUT input)
 {
 	VS_OUTPUT output;

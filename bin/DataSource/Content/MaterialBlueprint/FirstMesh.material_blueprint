@@ -102,6 +102,13 @@
 		},
 		"Properties":
 		{
+			"Lighting":
+			{
+				"Usage": "STATIC",
+				"ValueType": "BOOLEAN",
+				"DefaultValue": "TRUE",
+				"Description": "Perform lighting?"
+			},
 			"DiffuseMap":
 			{
 				"Usage": "TEXTURE",

@@ -62,6 +62,9 @@ namespace RendererRuntime
 		ShaderBuilder();
 		~ShaderBuilder();
 
+		// TODO(co) Just a first test
+		std::string createSourceCode(const ShaderProperties& shaderProperties, const std::string& sourceCode);
+
 
 	//[-------------------------------------------------------]
 	//[ Private definitions                                   ]

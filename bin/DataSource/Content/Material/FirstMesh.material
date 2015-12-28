@@ -9,6 +9,7 @@
 		"MaterialBlueprintAssetId": "14",
 		"Properties":
 		{
+			"Lighting": "TRUE",
 			"DiffuseMap": "4",
 			"EmissiveMap": "5",
 			"NormalMap": "6",
