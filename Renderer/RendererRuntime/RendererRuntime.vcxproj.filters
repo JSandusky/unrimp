@@ -237,6 +237,12 @@
     <None Include="include\RendererRuntime\Resource\Material\MaterialPropertyValue.inl">
       <Filter>Source Files\Resource\Material</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Shader\ShaderBuilder.inl">
+      <Filter>Source Files\Resource\Shader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Shader\ShaderProperties.inl">
+      <Filter>Source Files\Resource\Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -534,6 +540,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialPropertyValue.h">
       <Filter>Source Files\Resource\Material</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderBuilder.h">
+      <Filter>Source Files\Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderProperties.h">
+      <Filter>Source Files\Resource\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -745,6 +757,12 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Material\MaterialPropertyValue.cpp">
       <Filter>Source Files\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Shader\ShaderBuilder.cpp">
+      <Filter>Source Files\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Shader\ShaderProperties.cpp">
+      <Filter>Source Files\Resource\Shader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
