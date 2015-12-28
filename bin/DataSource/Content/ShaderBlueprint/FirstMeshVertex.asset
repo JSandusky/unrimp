@@ -12,6 +12,7 @@
 			"AssetType": "ShaderBlueprint",
 			"AssetCategory": "Default",
 			"AssetName": "FirstMeshVertex",
+			"AssetDependencies": [ "15", "16" ],
 			"FileDependencies": [ "FirstMeshVertex.shader_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
 		},

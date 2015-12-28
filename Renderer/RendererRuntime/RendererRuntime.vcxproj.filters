@@ -110,6 +110,12 @@
     <Filter Include="Source Files\Resource\ShaderBlueprint\Loader">
       <UniqueIdentifier>{225441b9-6043-474b-8eda-a32108dffbbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\ShaderPiece">
+      <UniqueIdentifier>{5e07dfb7-da4b-4797-91d5-adb63c948bbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\ShaderPiece\Loader">
+      <UniqueIdentifier>{7d68f9a3-0004-459b-86c8-6b05ba9449a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -242,6 +248,12 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Shader\ShaderProperties.inl">
       <Filter>Source Files\Resource\Shader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.inl">
+      <Filter>Source Files\Resource\ShaderPiece</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.inl">
+      <Filter>Source Files\Resource\ShaderPiece\Loader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -546,6 +558,18 @@
     <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderProperties.h">
       <Filter>Source Files\Resource\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.h">
+      <Filter>Source Files\Resource\ShaderPiece</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.h">
+      <Filter>Source Files\Resource\ShaderPiece</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.h">
+      <Filter>Source Files\Resource\ShaderPiece\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceFileFormat.h">
+      <Filter>Source Files\Resource\ShaderPiece\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -763,6 +787,15 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Shader\ShaderProperties.cpp">
       <Filter>Source Files\Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderPiece\ShaderPieceResource.cpp">
+      <Filter>Source Files\Resource\ShaderPiece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderPiece\ShaderPieceResourceManager.cpp">
+      <Filter>Source Files\Resource\ShaderPiece</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.cpp">
+      <Filter>Source Files\Resource\ShaderPiece\Loader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

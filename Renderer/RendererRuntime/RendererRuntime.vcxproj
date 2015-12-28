@@ -56,6 +56,8 @@
     <None Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResource.inl" />
+    <None Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.inl" />
+    <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.inl" />
     <None Include="include\RendererRuntime\Resource\Shader\ShaderBuilder.inl" />
     <None Include="include\RendererRuntime\Resource\Shader\ShaderProperties.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.inl" />
@@ -149,6 +151,10 @@
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceFileFormat.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderBuilder.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderProperties.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderResourceManager.h" />
@@ -232,6 +238,9 @@
     <ClCompile Include="src\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\ShaderBlueprintResource.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.cpp" />
+    <ClCompile Include="src\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.cpp" />
+    <ClCompile Include="src\Resource\ShaderPiece\ShaderPieceResource.cpp" />
+    <ClCompile Include="src\Resource\ShaderPiece\ShaderPieceResourceManager.cpp" />
     <ClCompile Include="src\Resource\Shader\ShaderBuilder.cpp" />
     <ClCompile Include="src\Resource\Shader\ShaderProperties.cpp" />
     <ClCompile Include="src\Resource\Shader\ShaderResourceManager.cpp" />

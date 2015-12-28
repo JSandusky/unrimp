@@ -19,6 +19,8 @@
 		"11": "Skeleton/FirstSkeleton.asset",
 		"12": "ShaderBlueprint/FirstMeshVertex.asset",
 		"13": "ShaderBlueprint/FirstMeshFragment.asset",
-		"14": "MaterialBlueprint/FirstMesh.asset"
+		"14": "MaterialBlueprint/FirstMesh.asset",
+		"15": "ShaderPiece/Core.asset",
+		"16": "ShaderPiece/FirstMesh.asset"
 	}
 }

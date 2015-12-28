@@ -12,6 +12,7 @@
 			"AssetType": "ShaderBlueprint",
 			"AssetCategory": "Default",
 			"AssetName": "FirstMeshFragment",
+			"AssetDependencies": [ "15" ],
 			"FileDependencies": [ "FirstMeshFragment.shader_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
 		},

@@ -30,6 +30,7 @@
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/SkeletonAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/CompositorAssetCompiler.h"
+#include "RendererToolkit/AssetCompiler/ShaderPieceAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/ShaderBlueprintAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
 
@@ -164,6 +165,10 @@ namespace RendererToolkit
 		else if (TextureAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
 			TextureAssetCompiler().compile(input, configuration, output);
+		}
+		else if (ShaderPieceAssetCompiler::TYPE_ID == assetCompilerTypeId)
+		{
+			ShaderPieceAssetCompiler().compile(input, configuration, output);
 		}
 		else if (ShaderBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{

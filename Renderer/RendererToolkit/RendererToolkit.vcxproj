@@ -41,6 +41,7 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MeshAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SceneAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\ShaderBlueprintAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\ShaderPieceAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SkeletonAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\Helper\JsonHelper.h" />
@@ -78,6 +79,7 @@
     <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\SceneAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\ShaderBlueprintAssetCompiler.cpp" />
+    <ClCompile Include="src\AssetCompiler\ShaderPieceAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\SkeletonAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\TextureAssetCompiler.cpp">
       <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</TreatWarningAsError>

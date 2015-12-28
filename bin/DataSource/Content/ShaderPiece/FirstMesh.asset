@@ -1,0 +1,23 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "16",
+			"AssetType": "ShaderPiece",
+			"AssetCategory": "Default",
+			"AssetName": "FirstMesh",
+			"FileDependencies": [ "FirstMesh.shader_piece" ],
+			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
+		},
+		"ShaderPieceAssetCompiler":
+		{
+			"InputFile": "FirstMesh.shader_piece"
+		}
+	}
+}
