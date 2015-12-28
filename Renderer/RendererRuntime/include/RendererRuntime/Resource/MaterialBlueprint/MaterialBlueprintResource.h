@@ -121,6 +121,9 @@ namespace RendererRuntime
 		*/
 		virtual ~MaterialBlueprintResource();
 
+		// TODO(co) Asynchronous loading completion
+		bool isFullyLoaded() const;
+
 		/**
 		*  @brief
 		*    Return the root signature

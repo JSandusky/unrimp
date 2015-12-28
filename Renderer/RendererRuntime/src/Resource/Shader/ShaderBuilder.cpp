@@ -17,18 +17,49 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 \*********************************************************/
 
+// Heavily basing on the OGRE 2.1 HLMS shader builder which is directly part of the OGRE class "Ogre::Hlms"
+/*
+-----------------------------------------------------------------------------
+This source file is part of OGRE
+    (Object-oriented Graphics Rendering Engine)
+For the latest info, see http://www.ogre3d.org/
+
+Copyright (c) 2000-2014 Torus Knot Software Ltd
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-----------------------------------------------------------------------------
+*/
+
+
+// TODO(co) Use log instead of "printf"
+
 
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Shader/ShaderBuilder.h"
+#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 
 #include <algorithm>
 
 #include <assert.h>
-
-
-// TODO(co) Use log instead of "printf"
 
 
 //[-------------------------------------------------------]
@@ -731,44 +762,51 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	std::string ShaderBuilder::createSourceCode(const ShaderProperties& shaderProperties, const std::string& sourceCode)
+	std::string ShaderBuilder::createSourceCode(const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties)
 	{
-		mShaderProperties = shaderProperties;
-
-		// TODO(co)
-		/*
-		//Library piece files first
-		LibraryVec::const_iterator itor = mLibrary.begin();
-		LibraryVec::const_iterator end  = mLibrary.end();
-
-		while( itor != end )
-		{
-			processPieces( itor->dataFolder, itor->pieceFiles[i] );
-			++itor;
-		}
-
-		//Main piece files
-		processPieces( mDataFolder, mPieceFiles[i] );
-		*/
-
 		std::string inString;
 		std::string outString;
 
-		inString = sourceCode;
+		mShaderProperties = shaderProperties;
 
-		bool syntaxError = false;
+		{ // Process the shader piece resources to include
+			const ShaderBlueprintResource::IncludeShaderPieceResources& includeShaderPieceResources = shaderBlueprintResource.getIncludeShaderPieceResources();
+			const size_t numberOfShaderPieces = includeShaderPieceResources.size();
+			for (size_t i = 0; i < numberOfShaderPieces; ++i)
+			{
+				const ShaderPieceResource* shaderPieceResource = includeShaderPieceResources[i];
 
-		syntaxError |= parseMath(inString, outString);
-		syntaxError |= parseForEach(outString, inString);
-		syntaxError |= parseProperties(inString, outString);
-		while (!syntaxError && (outString.find("@piece") != std::string::npos || outString.find("@insertpiece") != std::string::npos))
-		{
-			syntaxError |= collectPieces(outString, inString);
-			syntaxError |= insertPieces(inString, outString);
+				// Initialize
+				inString = shaderPieceResource->getShaderSourceCode();
+				outString.clear();
+
+				// Process
+				parseMath(inString, outString);
+				parseForEach(outString, inString);
+				parseProperties(inString, outString);
+				collectPieces(outString, inString);
+				parseCounter(inString, outString);
+			}
 		}
-		syntaxError |= parseCounter(outString, inString);
 
-		outString.swap(inString);
+		{ // Process the shader blueprint resource
+			// Initialize
+			inString = shaderBlueprintResource.getShaderSourceCode();
+			outString.clear();
+
+			// Process
+			bool syntaxError = false;
+			syntaxError |= parseMath(inString, outString);
+			syntaxError |= parseForEach(outString, inString);
+			syntaxError |= parseProperties(inString, outString);
+			while (!syntaxError && (outString.find("@piece") != std::string::npos || outString.find("@insertpiece") != std::string::npos))
+			{
+				syntaxError |= collectPieces(outString, inString);
+				syntaxError |= insertPieces(inString, outString);
+			}
+			syntaxError |= parseCounter(outString, inString);
+			outString.swap(inString);
+		}
 
 		return outString;
 	}

@@ -347,7 +347,7 @@ namespace RendererToolkit
 			const FT_Long numberOfBytes = static_cast<FT_Long>(inputFileStream.tellg());
 			inputFileStream.seekg(0, std::ifstream::beg);
 			buffer = std::unique_ptr<FT_Byte[]>(new FT_Byte[static_cast<size_t>(numberOfBytes)]);
-			inputFileStream.read((char*)buffer.get(), numberOfBytes);
+			inputFileStream.read(reinterpret_cast<char*>(buffer.get()), numberOfBytes);
 
 			// Create the FreeType library face
 			if (0 != FT_New_Memory_Face(*mFtLibrary, buffer.get(), numberOfBytes, 0, &ftFace))

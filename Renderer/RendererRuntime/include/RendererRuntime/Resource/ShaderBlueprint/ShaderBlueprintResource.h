@@ -30,6 +30,7 @@
 #include "RendererRuntime/Resource/IResource.h"
 
 #include <string>
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -37,6 +38,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class ShaderPieceResource;
 	class ShaderBlueprintResource;
 }
 
@@ -66,6 +68,13 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::vector<ShaderPieceResource*> IncludeShaderPieceResources;	// TODO(co) Decent resource management
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -83,6 +92,15 @@ namespace RendererRuntime
 		*    Destructor
 		*/
 		inline virtual ~ShaderBlueprintResource();
+
+		/**
+		*  @brief
+		*    Return the shader piece resources to include
+		*
+		*  @return
+		*    The shader piece resources to include
+		*/
+		inline const IncludeShaderPieceResources& getIncludeShaderPieceResources() const;
 
 		/**
 		*  @brief
@@ -106,7 +124,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		std::string mShaderSourceCode;
+		IncludeShaderPieceResources mIncludeShaderPieceResources;
+		std::string					mShaderSourceCode;
 
 
 	};

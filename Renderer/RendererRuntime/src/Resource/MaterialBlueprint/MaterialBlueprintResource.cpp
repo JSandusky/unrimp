@@ -22,6 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
+#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
 
 
 //[-------------------------------------------------------]
@@ -29,6 +31,37 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	namespace detail
+	{
+		bool isFullyLoaded(const ShaderBlueprintResource* shaderBlueprint)
+		{
+			// Check shader blueprint
+			if (nullptr == shaderBlueprint || IResource::LoadingState::LOADED != shaderBlueprint->getLoadingState())
+			{
+				// Not fully loaded
+				return false;
+			}
+
+			{ // Check included shader piece resources
+				const ShaderBlueprintResource::IncludeShaderPieceResources& includeShaderPieceResources = shaderBlueprint->getIncludeShaderPieceResources();
+				const size_t numberOfShaderPieces = includeShaderPieceResources.size();
+				for (size_t i = 0; i < numberOfShaderPieces; ++i)
+				{
+					const ShaderPieceResource* shaderPieceResource = includeShaderPieceResources[i];
+					if (nullptr == shaderPieceResource || IResource::LoadingState::LOADED != shaderPieceResource->getLoadingState())
+					{
+						// Not fully loaded
+						return false;
+					}
+				}
+			}
+
+			// Fully loaded
+			return true;
+		}
+	}
 
 
 	//[-------------------------------------------------------]
@@ -53,6 +86,11 @@ namespace RendererRuntime
 		{
 			mRootSignature->release();
 		}
+	}
+
+	bool MaterialBlueprintResource::isFullyLoaded() const
+	{
+		return (IResource::LoadingState::LOADED == getLoadingState() && nullptr != mRootSignature && detail::isFullyLoaded(mVertexShaderBlueprint) && detail::isFullyLoaded(mFragmentShaderBlueprint));
 	}
 
 

@@ -32,6 +32,8 @@ namespace RendererRuntime
 		IResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime),
 		mShaderBlueprintResource(nullptr),
+		mMaximumNumberOfIncludeShaderPieceAssetIds(0),
+		mIncludeShaderPieceAssetIds(nullptr),
 		mMaximumNumberOfShaderSourceCodeBytes(0),
 		mShaderSourceCode(nullptr)
 	{
@@ -41,6 +43,7 @@ namespace RendererRuntime
 	inline ShaderBlueprintResourceLoader::~ShaderBlueprintResourceLoader()
 	{
 		// Free temporary data
+		delete [] mIncludeShaderPieceAssetIds;
 		delete [] mShaderSourceCode;
 	}
 

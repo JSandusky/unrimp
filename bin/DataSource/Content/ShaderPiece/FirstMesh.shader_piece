@@ -21,4 +21,25 @@
 //[-------------------------------------------------------]
 //[ Pieces                                                ]
 //[-------------------------------------------------------]
+@piece(DefineGetTangentFrame)
+	float2x3 QuaternionToTangentBitangent(float4 q)
+	{
+		return float2x3(
+			1 - 2*(q.y*q.y + q.z*q.z),	2*(q.x*q.y + q.w*q.z),		2*(q.x*q.z - q.w*q.y),
+			2*(q.x*q.y - q.w*q.z),		1 - 2*(q.x*q.x + q.z*q.z),	2*(q.y*q.z + q.w*q.x)
+		);
+	}
 
+	float3x3 GetTangentFrame(float3x3 objectSpaceToViewSpaceMatrix, float4 qtangent)
+	{
+		float2x3 tBt = QuaternionToTangentBitangent(qtangent);
+		float3 t = mul(objectSpaceToViewSpaceMatrix, tBt[0]);
+		float3 b = mul(objectSpaceToViewSpaceMatrix, tBt[1]);
+
+		return float3x3(
+			t,
+			b,
+			cross(t, b) * (qtangent.w < 0 ? -1 : 1)
+		);
+	}
+@end

@@ -96,25 +96,60 @@ namespace RendererToolkit
 			// stripping away all comments and unnecessary white spaces.
 
 			// Get file size and file data
-			std::unique_ptr<uint8_t[]> buffer;
+			std::string sourceCode;
 			inputFileStream.seekg(0, std::ifstream::end);
 			const std::streampos numberOfBytes = inputFileStream.tellg();
 			inputFileStream.seekg(0, std::ifstream::beg);
-			buffer = std::unique_ptr<uint8_t[]>(new uint8_t[static_cast<size_t>(numberOfBytes)]);
-			inputFileStream.read((char*)buffer.get(), numberOfBytes);
+			sourceCode.resize(static_cast<size_t>(numberOfBytes));
+			inputFileStream.read(const_cast<char*>(sourceCode.c_str()), numberOfBytes);
+
+			// Collect shader piece resources to include
+			std::vector<RendererRuntime::AssetId> includeShaderPieceAssetIds;
+			{
+				// Gather "@includepiece(<asset ID>)" and then remove them from the shader source code
+				// TODO(co) This is hacked on-the-fly, we certainly need something more robust
+				size_t includePiecePosition = sourceCode.find("@includepiece");
+				while (std::string::npos != includePiecePosition)
+				{
+					// ( asset ID )
+					size_t openingPosition = sourceCode.find("(", includePiecePosition);
+					size_t closingPosition = sourceCode.find(")", openingPosition);
+					const size_t numberOfCharacters = closingPosition - openingPosition - 1;
+					const std::string assetIdAsString = sourceCode.substr(openingPosition + 1, numberOfCharacters);
+					includeShaderPieceAssetIds.push_back(static_cast<uint32_t>(std::atoi(assetIdAsString.c_str())));
+					for (size_t i = includePiecePosition; i < closingPosition + 1; ++i)
+					{
+						sourceCode[i] = ' ';
+					}
+
+					// Next
+					includePiecePosition = sourceCode.find("@includepiece", closingPosition);
+				}
+
+				// Map the source asset IDs to the compiled asset IDs
+				for (RendererRuntime::AssetId& assetId : includeShaderPieceAssetIds)
+				{
+					SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(assetId);
+					assetId = (iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
+				}
+			}
 
 			{ // Shader blueprint header
 				RendererRuntime::v1ShaderBlueprint::Header shaderBlueprintHeader;
-				shaderBlueprintHeader.formatType					= RendererRuntime::v1ShaderBlueprint::FORMAT_TYPE;
-				shaderBlueprintHeader.formatVersion					= RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION;
-				shaderBlueprintHeader.numberOfShaderSourceCodeBytes	= static_cast<uint32_t>(numberOfBytes);
+				shaderBlueprintHeader.formatType						 = RendererRuntime::v1ShaderBlueprint::FORMAT_TYPE;
+				shaderBlueprintHeader.formatVersion						 = RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION;
+				shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds = includeShaderPieceAssetIds.size();
+				shaderBlueprintHeader.numberOfShaderSourceCodeBytes		 = static_cast<uint32_t>(numberOfBytes);
 
 				// Write down the shader blueprint header
 				outputFileStream.write(reinterpret_cast<const char*>(&shaderBlueprintHeader), sizeof(RendererRuntime::v1ShaderBlueprint::Header));
 			}
 
+			// Write down the asset IDs of the shader pieces to include
+			outputFileStream.write(reinterpret_cast<char*>(includeShaderPieceAssetIds.data()), sizeof(RendererRuntime::AssetId) * includeShaderPieceAssetIds.size());
+
 			// Dump the unchanged content into the output file stream
-			outputFileStream.write((char*)buffer.get(), numberOfBytes);
+			outputFileStream.write(sourceCode.c_str(), numberOfBytes);
 		}
 
 		{ // Update the output asset package

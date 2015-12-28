@@ -35,6 +35,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class ShaderBlueprintResource;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -59,11 +68,31 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		/**
+		*  @brief
+		*    Constructor
+		*/
 		ShaderBuilder();
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
 		~ShaderBuilder();
 
-		// TODO(co) Just a first test
-		std::string createSourceCode(const ShaderProperties& shaderProperties, const std::string& sourceCode);
+		/**
+		*  @brief
+		*    Create shader source code by using the given shader blueprint and shader properties
+		*
+		*  @param[in] shaderBlueprintResource
+		*    Shader blueprint resource to use
+		*  @param[in] shaderProperties
+		*    Shader properties to use
+		*
+		*  @return
+		*    The created shader source code
+		*/
+		std::string createSourceCode(const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties);
 
 
 	//[-------------------------------------------------------]

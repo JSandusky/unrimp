@@ -39,6 +39,7 @@ namespace RendererRuntime
 
 	// -> Shader blueprint file format content:
 	//    - Shader blueprint header
+	//    - Asset IDs of the shader pieces to include
 	//    - Shader blueprint ASCII source code
 	namespace v1ShaderBlueprint
 	{
@@ -56,6 +57,7 @@ namespace RendererRuntime
 			{
 				uint32_t formatType;
 				uint16_t formatVersion;
+				uint32_t numberOfIncludeShaderPieceAssetIds;
 				uint32_t numberOfShaderSourceCodeBytes;
 			};
 		#pragma pack(pop)

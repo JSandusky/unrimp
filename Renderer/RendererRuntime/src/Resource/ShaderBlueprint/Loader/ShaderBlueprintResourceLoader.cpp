@@ -24,6 +24,8 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintResourceLoader.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintFileFormat.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
+#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 #include <fstream>
 
@@ -61,12 +63,22 @@ namespace RendererRuntime
 			inputFileStream.read(reinterpret_cast<char*>(&shaderBlueprintHeader), sizeof(v1ShaderBlueprint::Header));
 
 			// Allocate more temporary memory, if required
+			if (mMaximumNumberOfIncludeShaderPieceAssetIds < shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds)
+			{
+				mMaximumNumberOfIncludeShaderPieceAssetIds = shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds;
+				delete [] mIncludeShaderPieceAssetIds;
+				mIncludeShaderPieceAssetIds = new AssetId[mMaximumNumberOfIncludeShaderPieceAssetIds];
+			}
 			if (mMaximumNumberOfShaderSourceCodeBytes < shaderBlueprintHeader.numberOfShaderSourceCodeBytes)
 			{
 				mMaximumNumberOfShaderSourceCodeBytes = shaderBlueprintHeader.numberOfShaderSourceCodeBytes;
 				delete [] mShaderSourceCode;
 				mShaderSourceCode = new char[mMaximumNumberOfShaderSourceCodeBytes];
 			}
+
+			// Read the asset IDs of the shader pieces to include
+			inputFileStream.read(reinterpret_cast<char*>(mIncludeShaderPieceAssetIds), sizeof(AssetId) * shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
+			mShaderBlueprintResource->mIncludeShaderPieceResources.resize(shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
 
 			// Read the shader blueprint ASCII source code
 			inputFileStream.read(mShaderSourceCode, shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
@@ -85,7 +97,16 @@ namespace RendererRuntime
 
 	void ShaderBlueprintResourceLoader::onRendererBackendDispatch()
 	{
-		// Nothing here
+		{ // Read the shader piece resources to include
+			ShaderPieceResourceManager& shaderPieceResourceManager = mRendererRuntime.getShaderPieceResourceManager();
+			ShaderBlueprintResource::IncludeShaderPieceResources& includeShaderPieceResources = mShaderBlueprintResource->mIncludeShaderPieceResources;
+			const size_t numberOfShaderPieceResources = includeShaderPieceResources.size();
+			const AssetId* includeShaderPieceAssetIds = mIncludeShaderPieceAssetIds;
+			for (size_t i = 0; i < numberOfShaderPieceResources; ++i, ++includeShaderPieceAssetIds)
+			{
+				includeShaderPieceResources[i] = shaderPieceResourceManager.loadShaderPieceResourceByAssetId(*includeShaderPieceAssetIds);
+			}
+		}
 	}
 
 

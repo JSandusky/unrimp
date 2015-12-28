@@ -320,7 +320,7 @@ namespace RendererToolkit
 		const size_t numberOfBytes = static_cast<size_t>(inputFileStream.tellg());
 		inputFileStream.seekg(0, std::ifstream::beg);
 		std::unique_ptr<uint8_t[]> buffer = std::unique_ptr<uint8_t[]>(new uint8_t[numberOfBytes]);
-		inputFileStream.read((char*)buffer.get(), numberOfBytes);
+		inputFileStream.read(reinterpret_cast<char*>(buffer.get()), numberOfBytes);
 
 		// Create an instance of the Assimp importer class
 		Assimp::Importer assimpImporter;

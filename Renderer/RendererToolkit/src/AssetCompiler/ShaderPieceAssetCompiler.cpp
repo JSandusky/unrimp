@@ -96,12 +96,12 @@ namespace RendererToolkit
 			// stripping away all comments and unnecessary white spaces.
 
 			// Get file size and file data
-			std::unique_ptr<uint8_t[]> buffer;
+			std::string sourceCode;
 			inputFileStream.seekg(0, std::ifstream::end);
 			const std::streampos numberOfBytes = inputFileStream.tellg();
 			inputFileStream.seekg(0, std::ifstream::beg);
-			buffer = std::unique_ptr<uint8_t[]>(new uint8_t[static_cast<size_t>(numberOfBytes)]);
-			inputFileStream.read((char*)buffer.get(), numberOfBytes);
+			sourceCode.resize(static_cast<size_t>(numberOfBytes));
+			inputFileStream.read(const_cast<char*>(sourceCode.c_str()), numberOfBytes);
 
 			{ // Shader piece header
 				RendererRuntime::v1ShaderPiece::Header shaderPieceHeader;
@@ -114,7 +114,7 @@ namespace RendererToolkit
 			}
 
 			// Dump the unchanged content into the output file stream
-			outputFileStream.write((char*)buffer.get(), numberOfBytes);
+			outputFileStream.write(sourceCode.c_str(), numberOfBytes);
 		}
 
 		{ // Update the output asset package
