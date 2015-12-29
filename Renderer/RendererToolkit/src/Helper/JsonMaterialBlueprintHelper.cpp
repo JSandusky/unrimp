@@ -142,6 +142,8 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(FLOAT_2)
 		ELSE_IF_VALUE(FLOAT_3)
 		ELSE_IF_VALUE(FLOAT_4)
+		ELSE_IF_VALUE(FLOAT_3_3)
+		ELSE_IF_VALUE(FLOAT_4_4)
 		ELSE_IF_VALUE(FILL_MODE)
 		ELSE_IF_VALUE(CULL_MODE)
 		ELSE_IF_VALUE(CONSERVATIVE_RASTERIZATION_MODE)
@@ -193,23 +195,23 @@ namespace RendererToolkit
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_2:
 			{
-				int value[2] = { 0, 0 };
-				JsonHelper::optionalIntegerNProperty(jsonObject, propertyName, value, 2);
-				return RendererRuntime::MaterialPropertyValue::fromInteger2(value[0], value[1]);
+				int values[2] = { 0, 0 };
+				JsonHelper::optionalIntegerNProperty(jsonObject, propertyName, values, 2);
+				return RendererRuntime::MaterialPropertyValue::fromInteger2(values[0], values[1]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_3:
 			{
-				int value[3] = { 0, 0, 0 };
-				JsonHelper::optionalIntegerNProperty(jsonObject, propertyName, value, 3);
-				return RendererRuntime::MaterialPropertyValue::fromInteger3(value[0], value[1], value[2]);
+				int values[3] = { 0, 0, 0 };
+				JsonHelper::optionalIntegerNProperty(jsonObject, propertyName, values, 3);
+				return RendererRuntime::MaterialPropertyValue::fromInteger3(values[0], values[1], values[2]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_4:
 			{
-				int value[4] = { 0, 0, 0, 0 };
-				JsonHelper::optionalIntegerNProperty(jsonObject, propertyName, value, 4);
-				return RendererRuntime::MaterialPropertyValue::fromInteger4(value[0], value[1], value[2], value[3]);
+				int values[4] = { 0, 0, 0, 0 };
+				JsonHelper::optionalIntegerNProperty(jsonObject, propertyName, values, 4);
+				return RendererRuntime::MaterialPropertyValue::fromInteger4(values[0], values[1], values[2], values[3]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT:
@@ -221,23 +223,37 @@ namespace RendererToolkit
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_2:
 			{
-				float value[2] = { 0.0f, 0.0f };
-				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, value, 2);
-				return RendererRuntime::MaterialPropertyValue::fromFloat2(value[0], value[1]);
+				float values[2] = { 0.0f, 0.0f };
+				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, values, 2);
+				return RendererRuntime::MaterialPropertyValue::fromFloat2(values[0], values[1]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3:
 			{
-				float value[3] = { 0.0f, 0.0f, 0.0f };
-				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, value, 3);
-				return RendererRuntime::MaterialPropertyValue::fromFloat3(value[0], value[1], value[2]);
+				float values[3] = { 0.0f, 0.0f, 0.0f };
+				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, values, 3);
+				return RendererRuntime::MaterialPropertyValue::fromFloat3(values[0], values[1], values[2]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4:
 			{
-				float value[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, value, 4);
-				return RendererRuntime::MaterialPropertyValue::fromFloat4(value[0], value[1], value[2], value[3]);
+				float values[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, values, 4);
+				return RendererRuntime::MaterialPropertyValue::fromFloat4(values[0], values[1], values[2], values[3]);
+			}
+
+			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3_3:
+			{
+				float values[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, values, 9);
+				return RendererRuntime::MaterialPropertyValue::fromFloat3_3(values);
+			}
+
+			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4_4:
+			{
+				float values[16] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
+				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, values, 16);
+				return RendererRuntime::MaterialPropertyValue::fromFloat4_4(values);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FILL_MODE:

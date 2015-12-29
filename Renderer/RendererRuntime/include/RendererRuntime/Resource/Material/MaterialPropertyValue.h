@@ -76,6 +76,8 @@ namespace RendererRuntime
 			FLOAT_2,							///< Float value with two components
 			FLOAT_3,							///< Float value with three components
 			FLOAT_4,							///< Float value with four components
+			FLOAT_3_3,							///< Float value with nine components
+			FLOAT_4_4,							///< Float value with sixteen components
 			// For pipeline rasterizer state property usage
 			FILL_MODE,							//< Pipeline rasterizer state fill mode with possible values: "WIREFRAME", "SOLID"
 			CULL_MODE,							//< Pipeline rasterizer state cull mode with possible values: "NONE", "FRONT", "BACK"
@@ -110,6 +112,8 @@ namespace RendererRuntime
 		inline static MaterialPropertyValue fromFloat2(float value0, float value1);
 		inline static MaterialPropertyValue fromFloat3(float value0, float value1, float value2);
 		inline static MaterialPropertyValue fromFloat4(float value0, float value1, float value2, float value3);
+		inline static MaterialPropertyValue fromFloat3_3(float values[9]);
+		inline static MaterialPropertyValue fromFloat4_4(float values[16]);
 		// For pipeline rasterizer state property usage
 		inline static MaterialPropertyValue fromFillMode(Renderer::FillMode value);
 		inline static MaterialPropertyValue fromCullMode(Renderer::CullMode value);
@@ -160,6 +164,8 @@ namespace RendererRuntime
 		inline const float* getFloat2Value() const;
 		inline const float* getFloat3Value() const;
 		inline const float* getFloat4Value() const;
+		inline const float* getFloat3_3Value() const;
+		inline const float* getFloat4_4Value() const;
 		// For pipeline rasterizer state property usage
 		inline Renderer::FillMode getFillModeValue() const;
 		inline Renderer::CullMode getCullModeValue() const;
@@ -207,6 +213,8 @@ namespace RendererRuntime
 			float									Float2[2];
 			float									Float3[3];
 			float									Float4[4];
+			float									Float3_3[9];
+			float									Float4_4[16];
 			// For pipeline rasterizer state property usage
 			Renderer::FillMode						FillMode;
 			Renderer::CullMode						CullMode;
