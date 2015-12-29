@@ -42,11 +42,17 @@ struct VS_OUTPUT
 	float3x3 TangentFrame : TEXCOORD1;		// Tangent frame
 };
 
-// Uniforms
-cbuffer UniformBlockDynamicVs : register(b0)
+// Uniform buffers
+cbuffer PassUniformBuffer : register(b0)
 {
-	float4x4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
-	float4x4 ObjectSpaceToViewSpaceMatrix;	// Object space to view space matrix
+	float4x4 WorldSpaceToViewSpaceMatrix;
+	float4x4 WorldSpaceToClipSpaceMatrix;
+	float	 StaticPropertyTest;
+}
+cbuffer InstanceUniformBuffer : register(b2)
+{
+	float4x4 ObjectSpaceToWorldSpaceMatrix;
+	int		 MaterialIndex;
 }
 
 
@@ -63,8 +69,11 @@ VS_OUTPUT main(VS_INPUT input)
 {
 	VS_OUTPUT output;
 
+	// Calculate the world space vertex position
+	float4 worldSpacePosition = mul(ObjectSpaceToWorldSpaceMatrix, float4(input.Position * StaticPropertyTest, 1.0f));
+
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	output.Position = mul(ObjectSpaceToClipSpaceMatrix, float4(input.Position, 1.0f));
+	output.Position = mul(WorldSpaceToClipSpaceMatrix, worldSpacePosition);
 
 	// Pass through the decoded 16 bit texture coordinate
 	output.TexCoord = input.TexCoord / 32767.0f;
@@ -73,7 +82,8 @@ VS_OUTPUT main(VS_INPUT input)
 	// - 16 bit QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 	//   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
 	// TODO(co) float3x3
-	output.TangentFrame = GetTangentFrame((float3x3)ObjectSpaceToViewSpaceMatrix, input.QTangent / 32767.0f);
+	float4x4 objectSpaceToViewSpaceMatrix = mul(WorldSpaceToViewSpaceMatrix, ObjectSpaceToWorldSpaceMatrix);
+	output.TangentFrame = GetTangentFrame((float3x3)objectSpaceToViewSpaceMatrix, input.QTangent / 32767.0f);
 
 	// Done
 	return output;

@@ -126,21 +126,21 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the root signature
-		*
-		*  @return
-		*    The root signature, can be a null pointer, do not destroy the instance
-		*/
-		inline Renderer::IRootSignature* getRootSignature() const;
-
-		/**
-		*  @brief
 		*    Return the sorted material property vector
 		*
 		*  @return
 		*    The sorted material property vector
 		*/
 		inline const SortedMaterialPropertyVector& getSortedMaterialPropertyVector() const;
+
+		/**
+		*  @brief
+		*    Return the root signature
+		*
+		*  @return
+		*    The root signature, can be a null pointer, do not destroy the instance
+		*/
+		inline Renderer::IRootSignature* getRootSignature() const;
 
 		/**
 		*  @brief
@@ -182,8 +182,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IRootSignature*	 mRootSignature;	///< Root signature, can be a null pointer
 		SortedMaterialPropertyVector mSortedMaterialPropertyVector;
+		Renderer::IRootSignature*	 mRootSignature;	///< Root signature, can be a null pointer
 		Renderer::PipelineState		 mPipelineState;
 		SamplerStates				 mSamplerStates;
 		Textures					 mTextures;

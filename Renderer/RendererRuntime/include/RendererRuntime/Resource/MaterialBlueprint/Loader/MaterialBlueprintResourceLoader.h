@@ -113,6 +113,13 @@ namespace RendererRuntime
 		Renderer::DescriptorRange* mDescriptorRanges;
 		Renderer::RootSignature	   mRootSignature;
 
+		// Temporary data: Shader blueprints
+		AssetId mVertexShaderBlueprintAssetId;
+		AssetId mTessellationControlShaderBlueprintAssetId;
+		AssetId mTessellationEvaluationShaderBlueprintAssetId;
+		AssetId mGeometryShaderBlueprintAssetId;
+		AssetId mFragmentShaderBlueprintAssetId;
+
 		// Temporary data: Sampler states
 		uint32_t						   mMaximumNumberOfMaterialBlueprintSamplerStates;
 		v1MaterialBlueprint::SamplerState* mMaterialBlueprintSamplerStates;
@@ -120,13 +127,6 @@ namespace RendererRuntime
 		// Temporary data: Textures
 		uint32_t					  mMaximumNumberOfMaterialBlueprintTextures;
 		v1MaterialBlueprint::Texture* mMaterialBlueprintTextures;
-
-		// Temporary data: Shader blueprints
-		AssetId mVertexShaderBlueprintAssetId;
-		AssetId mTessellationControlShaderBlueprintAssetId;
-		AssetId mTessellationEvaluationShaderBlueprintAssetId;
-		AssetId mGeometryShaderBlueprintAssetId;
-		AssetId mFragmentShaderBlueprintAssetId;
 
 
 	};

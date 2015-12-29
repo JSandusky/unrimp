@@ -50,12 +50,12 @@ namespace RendererRuntime
 
 	// -> Material blueprint file format content:
 	//    - Material blueprint header
-	//    - Root signature
 	//    - Material blueprint properties
+	//    - Root signature
 	//    - Pipeline state object (PSO)
+	//      - Shader blueprints, rasterization state etc.
 	//    - Sampler states
 	//    - Textures
-	//    - Shader blueprints
 	namespace v1MaterialBlueprint
 	{
 
@@ -85,6 +85,15 @@ namespace RendererRuntime
 				uint32_t flags;
 			};
 
+			struct ShaderBlueprints
+			{
+				AssetId vertexShaderBlueprintAssetId;
+				AssetId tessellationControlShaderBlueprintAssetId;
+				AssetId tessellationEvaluationShaderBlueprintAssetId;
+				AssetId geometryShaderBlueprintAssetId;
+				AssetId fragmentShaderBlueprintAssetId;
+			};
+
 			struct SamplerState : public Renderer::SamplerState
 			{
 				uint32_t samplerRootParameterIndex;
@@ -95,15 +104,6 @@ namespace RendererRuntime
 				uint32_t		   textureRootParameterIndex;
 				AssetId			   textureAssetId;
 				MaterialPropertyId materialPropertyId;
-			};
-
-			struct ShaderBlueprints
-			{
-				AssetId vertexShaderBlueprintAssetId;
-				AssetId tessellationControlShaderBlueprintAssetId;
-				AssetId tessellationEvaluationShaderBlueprintAssetId;
-				AssetId geometryShaderBlueprintAssetId;
-				AssetId fragmentShaderBlueprintAssetId;
 			};
 		#pragma pack(pop)
 

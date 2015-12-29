@@ -6,6 +6,51 @@
 	},
 	"MaterialBlueprintAsset":
 	{
+		"Properties":
+		{
+			"Lighting":
+			{
+				"Usage": "STATIC",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Perform lighting?"
+			},
+			"DiffuseColor":
+			{
+				"Usage": "DYNAMIC",
+				"ValueType": "FLOAT_4",
+				"Value": "1.0 1.0 1.0 1.0",
+				"Description": "Diffuse color"
+			},
+			"DiffuseMap":
+			{
+				"Usage": "TEXTURE",
+				"ValueType": "ASSET_ID",
+				"Value": "4",
+				"Description": "Diffuse map"
+			},
+			"EmissiveMap":
+			{
+				"Usage": "TEXTURE",
+				"ValueType": "ASSET_ID",
+				"Value": "5",
+				"Description": "Emissive map"
+			},
+			"NormalMap":
+			{
+				"Usage": "TEXTURE",
+				"ValueType": "ASSET_ID",
+				"Value": "6",
+				"Description": "Normal map"
+			},
+			"SpecularMap":
+			{
+				"Usage": "TEXTURE",
+				"ValueType": "ASSET_ID",
+				"Value": "7",
+				"Description": "Specular map"
+			}
+		},
 		"RootSignature":
 		{
 			"RootParameters":
@@ -19,12 +64,40 @@
 						{
 							"RangeType": "CBV",
 							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "UniformBlockDynamicVs"
+							"BaseShaderRegisterName": "PassUniformBuffer"
 						}
 					},
 					"ShaderVisibility": "VERTEX"
 				},
 				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "CBV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "MaterialUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"2":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "CBV",
+							"BaseShaderRegister": "2",
+							"BaseShaderRegisterName": "InstanceUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "ALL"
+				},
+				"3":
 				{
 					"ParameterType": "DESCRIPTOR_TABLE",
 					"DescriptorRanges":
@@ -37,7 +110,7 @@
 					},
 					"ShaderVisibility": "FRAGMENT"
 				},
-				"2":
+				"4":
 				{
 					"ParameterType": "DESCRIPTOR_TABLE",
 					"DescriptorRanges":
@@ -47,37 +120,7 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "DiffuseMap",
-							"SamplerRootParameterIndex": "1"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"3":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "EmissiveMap",
-							"SamplerRootParameterIndex": "1"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"4":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "NormalMap",
-							"SamplerRootParameterIndex": "1"
+							"SamplerRootParameterIndex": "3"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -90,9 +133,39 @@
 						"0":
 						{
 							"RangeType": "SRV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "EmissiveMap",
+							"SamplerRootParameterIndex": "3"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"6":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "2",
+							"BaseShaderRegisterName": "NormalMap",
+							"SamplerRootParameterIndex": "3"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"7":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
 							"BaseShaderRegister": "3",
 							"BaseShaderRegisterName": "SpecularMap",
-							"SamplerRootParameterIndex": "1"
+							"SamplerRootParameterIndex": "3"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -100,46 +173,13 @@
 			},
 			"Flags": "NONE"
 		},
-		"Properties":
-		{
-			"Lighting":
-			{
-				"Usage": "STATIC",
-				"ValueType": "BOOLEAN",
-				"DefaultValue": "TRUE",
-				"Description": "Perform lighting?"
-			},
-			"DiffuseMap":
-			{
-				"Usage": "TEXTURE",
-				"ValueType": "ASSET_ID",
-				"DefaultValue": "4",
-				"Description": "Diffuse map"
-			},
-			"EmissiveMap":
-			{
-				"Usage": "TEXTURE",
-				"ValueType": "ASSET_ID",
-				"DefaultValue": "5",
-				"Description": "Emissive map"
-			},
-			"NormalMap":
-			{
-				"Usage": "TEXTURE",
-				"ValueType": "ASSET_ID",
-				"DefaultValue": "6",
-				"Description": "Normal map"
-			},
-			"SpecularMap":
-			{
-				"Usage": "TEXTURE",
-				"ValueType": "ASSET_ID",
-				"DefaultValue": "7",
-				"Description": "Specular map"
-			}
-		},
 		"PipelineState":
 		{
+			"ShaderBlueprints":
+			{
+				"VertexShaderBlueprintAssetId": "12",
+				"FragmentShaderBlueprintAssetId": "13"
+			},
 			"RasterizerState":
 			{
 				"FillMode": "SOLID",
@@ -272,11 +312,83 @@
 				}
 			}
 		},
+		"UniformBuffers":
+		{
+			"0":
+			{
+				"UniformBufferRootParameterIndex": "0",
+				"Usage": "PASS",
+				"ElementProperties":
+				{
+					"WorldSpaceToViewSpaceMatrix":
+					{
+						"Usage": "DYNAMIC",
+						"ValueType": "FLOAT_4_4",
+						"Value": "@WORLD_SPACE_TO_VIEW_SPACE_MATRIX"
+					},
+					"WorldSpaceToClipSpaceMatrix":
+					{
+						"Usage": "DYNAMIC",
+						"ValueType": "FLOAT_4_4",
+						"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
+					},
+					"StaticPropertyTest":
+					{
+						"Usage": "STATIC",
+						"ValueType": "FLOAT",
+						"Value": "1.0"
+					}
+				},
+				"NumberOfElements": "1"
+			},
+			"1":
+			{
+				"UniformBufferRootParameterIndex": "1",
+				"Usage": "MATERIAL",
+				"ElementProperties":
+				{
+					"DiffuseColor":
+					{
+						"Usage": "DYNAMIC",
+						"ValueType": "FLOAT_4",
+						"Value": "@DiffuseColor"
+					},
+					"StaticPropertyTest":
+					{
+						"Usage": "STATIC",
+						"ValueType": "FLOAT",
+						"Value": "1.0"
+					}
+				},
+				"NumberOfElements": "2"
+			},
+			"2":
+			{
+				"UniformBufferRootParameterIndex": "2",
+				"Usage": "INSTANCE",
+				"ElementProperties":
+				{
+					"ObjectSpaceToWorldSpaceMatrix":
+					{
+						"Usage": "DYNAMIC",
+						"ValueType": "FLOAT_4_4",
+						"Value": "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
+					},
+					"MaterialIndex":
+					{
+						"Usage": "DYNAMIC",
+						"ValueType": "INTEGER",
+						"Value": "@MATERIAL_INDEX"
+					}
+				},
+				"NumberOfElements": "1"
+			}
+		},
 		"SamplerStates":
 		{
 			"0":
 			{
-				"SamplerRootParameterIndex": "1",
+				"SamplerRootParameterIndex": "3",
 				"Filter": "MIN_MAG_MIP_LINEAR",
 				"AddressU": "CLAMP",
 				"AddressV": "CLAMP",
@@ -293,29 +405,24 @@
 		{
 			"0":
 			{
-				"TextureRootParameterIndex": "2",
+				"TextureRootParameterIndex": "4",
 				"TextureAssetId": "@DiffuseMap"
 			},
 			"1":
 			{
-				"TextureRootParameterIndex": "3",
+				"TextureRootParameterIndex": "5",
 				"TextureAssetId": "@EmissiveMap"
 			},
 			"2":
 			{
-				"TextureRootParameterIndex": "4",
+				"TextureRootParameterIndex": "6",
 				"TextureAssetId": "@NormalMap"
 			},
 			"3":
 			{
-				"TextureRootParameterIndex": "5",
+				"TextureRootParameterIndex": "7",
 				"TextureAssetId": "@SpecularMap"
 			}
-		},
-		"ShaderBlueprints":
-		{
-			"VertexShaderBlueprintAssetId": "12",
-			"FragmentShaderBlueprintAssetId": "13"
 		}
 	}
 }

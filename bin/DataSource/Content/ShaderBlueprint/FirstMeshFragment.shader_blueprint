@@ -18,6 +18,10 @@
 \*********************************************************/
 
 
+// TODO(co) Define this outside
+@piece(MaximumNumberOfMaterials)2@end
+
+
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
@@ -34,6 +38,22 @@ struct VS_OUTPUT
 	float2   TexCoord     : TEXCOORD0;		// Texture coordinate
 	float3x3 TangentFrame : TEXCOORD1;		// Tangent frame
 };
+
+// Uniform buffers
+struct Material
+{
+	float4 DiffuseColor;
+	float  StaticPropertyTest;
+};
+cbuffer MaterialUniformBuffer : register(b1)
+{
+	Material Materials[@insertpiece(MaximumNumberOfMaterials)];
+}
+cbuffer InstanceUniformBuffer : register(b2)
+{
+	float4x4 ObjectSpaceToWorldSpaceMatrix;
+	int		 MaterialIndex;
+}
 
 // Textures
 Texture2D DiffuseMap  : register(t0);
@@ -73,6 +93,9 @@ SamplerState SamplerLinear : register(s0);
 //[-------------------------------------------------------]
 float4 main(VS_OUTPUT input) : SV_Target
 {
+	// Get the used material
+	Material material = Materials[MaterialIndex];
+
 	// Build in variables
 	float3 ViewSpaceLightDirection = normalize(float3(0.5f, 0.5f, 1.0f));	// View space light direction
 	float3 ViewSpaceViewVector     = float3(0.0f, 0.0f, 1.0f);				// In view space, we always look along the positive z-axis
@@ -90,10 +113,10 @@ float4 main(VS_OUTPUT input) : SV_Target
 	@insertpiece(CalculateLighting)
 
 	// Calculate the fragment color
-	float4 color = diffuseLight * DiffuseMap.Sample(SamplerLinear, input.TexCoord);		// Diffuse term
-	color.rgb += specularLight * SpecularMap.Sample(SamplerLinear, input.TexCoord).rgb;	// Specular term
-	color.rgb += EmissiveMap.Sample(SamplerLinear, input.TexCoord).rgb;					// Emissive term
+	float4 color = diffuseLight * material.DiffuseColor * DiffuseMap.Sample(SamplerLinear, input.TexCoord);	// Diffuse term
+	color.rgb += specularLight * SpecularMap.Sample(SamplerLinear, input.TexCoord).rgb;				// Specular term
+	color.rgb += EmissiveMap.Sample(SamplerLinear, input.TexCoord).rgb;								// Emissive term
 
 	// Done
-	return min(color, float4(1.0f, 1.0f, 1.0f, 1.0f));
+	return min(color * material.StaticPropertyTest, float4(1.0f, 1.0f, 1.0f, 1.0f));
 }

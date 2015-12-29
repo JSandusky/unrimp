@@ -459,7 +459,7 @@ namespace RendererToolkit
 
 			// Material property default value
 			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(jsonPropertyObject);
-			const RendererRuntime::MaterialPropertyValue materialPropertyValue = mandatoryMaterialPropertyValue(input, jsonPropertyObject, "DefaultValue", valueType);
+			const RendererRuntime::MaterialPropertyValue materialPropertyValue = mandatoryMaterialPropertyValue(input, jsonPropertyObject, "Value", valueType);
 
 			// Write down the material property
 			sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, materialPropertyValue));
@@ -472,8 +472,22 @@ namespace RendererToolkit
 		std::sort(sortedMaterialPropertyVector.begin(), sortedMaterialPropertyVector.end(), detail::orderByMaterialPropertyId);
 	}
 
-	void JsonMaterialBlueprintHelper::readPipelineStateObject(Poco::JSON::Object::Ptr jsonPipelineStateObject, std::ofstream& outputFileStream)
+	void JsonMaterialBlueprintHelper::readPipelineStateObject(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPipelineStateObject, std::ofstream& outputFileStream)
 	{
+		{ // Shader blueprints
+			Poco::JSON::Object::Ptr jsonShaderBlueprintsObject = jsonPipelineStateObject->get("ShaderBlueprints").extract<Poco::JSON::Object::Ptr>();
+
+			RendererRuntime::v1MaterialBlueprint::ShaderBlueprints shaderBlueprints;
+			shaderBlueprints.vertexShaderBlueprintAssetId				  = JsonHelper::getCompiledAssetId(input, jsonShaderBlueprintsObject, "VertexShaderBlueprintAssetId");
+			shaderBlueprints.tessellationControlShaderBlueprintAssetId	  = 0; // TODO(co) Add shader type
+			shaderBlueprints.tessellationEvaluationShaderBlueprintAssetId = 0; // TODO(co) Add shader type
+			shaderBlueprints.geometryShaderBlueprintAssetId				  = 0; // TODO(co) Add shader type
+			shaderBlueprints.fragmentShaderBlueprintAssetId				  = JsonHelper::getCompiledAssetId(input, jsonShaderBlueprintsObject, "FragmentShaderBlueprintAssetId");
+
+			// Write down the shader blueprints
+			outputFileStream.write(reinterpret_cast<const char*>(&shaderBlueprints), sizeof(RendererRuntime::v1MaterialBlueprint::ShaderBlueprints));
+		}
+
 		// Start with the default settings
 		Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder();
 

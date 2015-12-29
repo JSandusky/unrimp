@@ -63,6 +63,10 @@ namespace RendererRuntime
 			v1MaterialBlueprint::Header materialBlueprintHeader;
 			inputFileStream.read(reinterpret_cast<char*>(&materialBlueprintHeader), sizeof(v1MaterialBlueprint::Header));
 
+			// Read properties
+			mMaterialBlueprintResource->mSortedMaterialPropertyVector.resize(materialBlueprintHeader.numberOfProperties);
+			inputFileStream.read(reinterpret_cast<char*>(mMaterialBlueprintResource->mSortedMaterialPropertyVector.data()), sizeof(MaterialProperty) * materialBlueprintHeader.numberOfProperties);
+
 			{ // Read in the root signature
 				// Read in the root signature header
 				v1MaterialBlueprint::RootSignatureHeader rootSignatureHeader;
@@ -109,9 +113,15 @@ namespace RendererRuntime
 				}
 			}
 
-			// Read properties
-			mMaterialBlueprintResource->mSortedMaterialPropertyVector.resize(materialBlueprintHeader.numberOfProperties);
-			inputFileStream.read(reinterpret_cast<char*>(mMaterialBlueprintResource->mSortedMaterialPropertyVector.data()), sizeof(MaterialProperty) * materialBlueprintHeader.numberOfProperties);
+			{ // Read in the shader blueprints
+				v1MaterialBlueprint::ShaderBlueprints shaderBlueprints;
+				inputFileStream.read(reinterpret_cast<char*>(&shaderBlueprints), sizeof(v1MaterialBlueprint::ShaderBlueprints));
+				mVertexShaderBlueprintAssetId				  = shaderBlueprints.vertexShaderBlueprintAssetId;
+				mTessellationControlShaderBlueprintAssetId	  = shaderBlueprints.tessellationControlShaderBlueprintAssetId;
+				mTessellationEvaluationShaderBlueprintAssetId = shaderBlueprints.tessellationEvaluationShaderBlueprintAssetId;
+				mGeometryShaderBlueprintAssetId				  = shaderBlueprints.geometryShaderBlueprintAssetId;
+				mFragmentShaderBlueprintAssetId				  = shaderBlueprints.fragmentShaderBlueprintAssetId;
+			}
 
 			// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
 			// Read in the pipeline state
@@ -148,16 +158,6 @@ namespace RendererRuntime
 				// Allocate material blueprint resource textures
 				mMaterialBlueprintResource->mTextures.resize(materialBlueprintHeader.numberOfTextures);
 			}
-
-			{ // Read in the shader blueprints
-				v1MaterialBlueprint::ShaderBlueprints shaderBlueprints;
-				inputFileStream.read(reinterpret_cast<char*>(&shaderBlueprints), sizeof(v1MaterialBlueprint::ShaderBlueprints));
-				mVertexShaderBlueprintAssetId				  = shaderBlueprints.vertexShaderBlueprintAssetId;
-				mTessellationControlShaderBlueprintAssetId	  = shaderBlueprints.tessellationControlShaderBlueprintAssetId;
-				mTessellationEvaluationShaderBlueprintAssetId = shaderBlueprints.tessellationEvaluationShaderBlueprintAssetId;
-				mGeometryShaderBlueprintAssetId				  = shaderBlueprints.geometryShaderBlueprintAssetId;
-				mFragmentShaderBlueprintAssetId				  = shaderBlueprints.fragmentShaderBlueprintAssetId;
-			}
 		}
 		catch (const std::exception& e)
 		{
@@ -177,6 +177,15 @@ namespace RendererRuntime
 		// Create the root signature
 		mMaterialBlueprintResource->mRootSignature = renderer.createRootSignature(mRootSignature);
 		mMaterialBlueprintResource->mRootSignature->addReference();
+
+		{ // Get the used shader blueprint resources
+			ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
+			mMaterialBlueprintResource->mVertexShaderBlueprint				   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mVertexShaderBlueprintAssetId);
+			mMaterialBlueprintResource->mTessellationControlShaderBlueprint    = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mTessellationControlShaderBlueprintAssetId);
+			mMaterialBlueprintResource->mTessellationEvaluationShaderBlueprint = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mTessellationEvaluationShaderBlueprintAssetId);
+			mMaterialBlueprintResource->mGeometryShaderBlueprint			   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mGeometryShaderBlueprintAssetId);
+			mMaterialBlueprintResource->mFragmentShaderBlueprint			   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mFragmentShaderBlueprintAssetId);
+		}
 
 		{ // Create the sampler states
 			MaterialBlueprintResource::SamplerStates& samplerStates = mMaterialBlueprintResource->mSamplerStates;
@@ -204,14 +213,6 @@ namespace RendererRuntime
 				texture.textureResource = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);
 			}
 		}
-
-		// Get the used shader blueprint resources
-		ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
-		mMaterialBlueprintResource->mVertexShaderBlueprint				   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mVertexShaderBlueprintAssetId);
-		mMaterialBlueprintResource->mTessellationControlShaderBlueprint    = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mTessellationControlShaderBlueprintAssetId);
-		mMaterialBlueprintResource->mTessellationEvaluationShaderBlueprint = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mTessellationEvaluationShaderBlueprintAssetId);
-		mMaterialBlueprintResource->mGeometryShaderBlueprint			   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mGeometryShaderBlueprintAssetId);
-		mMaterialBlueprintResource->mFragmentShaderBlueprint			   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mFragmentShaderBlueprintAssetId);
 	}
 
 

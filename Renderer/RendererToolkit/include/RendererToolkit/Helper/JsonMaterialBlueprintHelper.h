@@ -70,7 +70,7 @@ namespace RendererToolkit
 		static RendererRuntime::MaterialPropertyValue mandatoryMaterialPropertyValue(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, const RendererRuntime::MaterialProperty::ValueType valueType);
 		static void readRootSignature(Poco::JSON::Object::Ptr jsonRootSignatureObject, std::ofstream& outputFileStream);
 		static void readProperties(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPropertiesObject, RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector& sortedMaterialPropertyVector);
-		static void readPipelineStateObject(Poco::JSON::Object::Ptr jsonPipelineStateObject, std::ofstream& outputFileStream);
+		static void readPipelineStateObject(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPipelineStateObject, std::ofstream& outputFileStream);
 		static void readSamplerStates(Poco::JSON::Object::Ptr jsonSamplerStatesObject, std::ofstream& outputFileStream);
 		static void readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector& sortedMaterialPropertyVector, Poco::JSON::Object::Ptr jsonTexturesObject, std::ofstream& outputFileStream);
 

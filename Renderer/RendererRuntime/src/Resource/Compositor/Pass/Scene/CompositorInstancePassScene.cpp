@@ -57,7 +57,10 @@ namespace
 {
 	namespace detail
 	{
-		Renderer::IUniformBufferPtr			  mUniformBuffer;			///< Uniform buffer object (UBO), can be a null pointer
+		static const uint32_t MaximumNumberOfMaterials = 2;
+		Renderer::IUniformBufferPtr			  mPassUniformBuffer;		///< Uniform buffer object (UBO), can be a null pointer
+		Renderer::IUniformBufferPtr			  mMaterialUniformBuffer;	///< Uniform buffer object (UBO), can be a null pointer
+		Renderer::IUniformBufferPtr			  mInstanceUniformBuffer;	///< Uniform buffer object (UBO), can be a null pointer
 		RendererRuntime::MaterialResource*	  mMaterialResource;
 
 		void initialize(const RendererRuntime::IRendererRuntime& rendererRuntime)
@@ -74,8 +77,10 @@ namespace
 				// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
 				if ((0 == strcmp(renderer.getName(), "Direct3D10") || 0 == strcmp(renderer.getName(), "Direct3D11") || 0 == strcmp(renderer.getName(), "Direct3D12")))
 				{
-					// Allocate enough memory for two 4x4 floating point matrices
-					mUniformBuffer = shaderLanguage->createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+					// Allocate enough memory
+					mPassUniformBuffer = shaderLanguage->createUniformBuffer(2 * 4 * 4 * sizeof(float) + sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+					mMaterialUniformBuffer = shaderLanguage->createUniformBuffer(MaximumNumberOfMaterials * (4 * sizeof(float) + sizeof(float)), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+					mInstanceUniformBuffer = shaderLanguage->createUniformBuffer(4 * 4 * sizeof(float) + sizeof(int), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 				}
 
 				// Load the material resource
@@ -86,7 +91,9 @@ namespace
 		void deinitialize()
 		{
 			// Release the used resources
-			mUniformBuffer = nullptr;
+			mPassUniformBuffer = nullptr;
+			mMaterialUniformBuffer = nullptr;
+			mInstanceUniformBuffer = nullptr;
 		}
 
 		void draw(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::CameraSceneItem& cameraSceneItem)
@@ -118,8 +125,10 @@ namespace
 				// Set the used graphics root signature
 				renderer.setGraphicsRootSignature(materialBlueprintResource->getRootSignature());
 
-				// Graphics root descriptor table: Set our uniform buffer
-				renderer.setGraphicsRootDescriptorTable(0, mUniformBuffer);
+				// Graphics root descriptor table: Set our uniform buffers
+				renderer.setGraphicsRootDescriptorTable(0, mPassUniformBuffer);
+				renderer.setGraphicsRootDescriptorTable(1, mMaterialUniformBuffer);
+				renderer.setGraphicsRootDescriptorTable(2, mInstanceUniformBuffer);
 
 				// Graphics root descriptor table: Set material specific tables
 				if (mMaterialResource->setGraphicsRootDescriptorTable(rendererRuntime))
@@ -154,29 +163,62 @@ namespace
 										glm::mat4 viewSpaceToClipSpace		= glm::perspective(45.0f, aspectRatio, 0.1f, 100.f);
 										glm::mat4 viewTranslate				= glm::translate(glm::mat4(1.0f), transform.position);
 										glm::mat4 worldSpaceToViewSpace		= viewTranslate * glm::toMat4(transform.rotation);
+										glm::mat4 worldSpaceToClipSpace		= viewSpaceToClipSpace * worldSpaceToViewSpace;
 										glm::mat4 objectSpaceToWorldSpace	= glm::scale(glm::mat4(1.0f), transform.scale);
 										glm::mat4 objectSpaceToViewSpace	= worldSpaceToViewSpace * objectSpaceToWorldSpace;
 										glm::mat4 objectSpaceToClipSpace	= viewSpaceToClipSpace * objectSpaceToViewSpace;
 
 										// Upload the uniform data
-										// -> Two versions: One using an uniform buffer and one setting an individual uniform
-										if (nullptr != mUniformBuffer)
+										if (nullptr != mPassUniformBuffer)
 										{
-											struct UniformBlockDynamicVs
+											struct PassUniformBuffer
 											{
-												float objectSpaceToClipSpaceMatrix[4 * 4];	// Object space to clip space matrix
-												float objectSpaceToViewSpaceMatrix[4 * 4];	// Object space to view space matrix
+												float worldSpaceToViewSpaceMatrix[4 * 4];
+												float worldSpaceToClipSpaceMatrix[4 * 4];
+												float staticPropertyTest;
 											};
-											UniformBlockDynamicVs uniformBlockDynamicVS;
-											memcpy(uniformBlockDynamicVS.objectSpaceToClipSpaceMatrix, glm::value_ptr(objectSpaceToClipSpace), sizeof(float) * 4 * 4);
-
-											// TODO(co) float3x3 (currently there are alignment issues when using Direct3D, have a look into possible solutions)
-											glm::mat3 objectSpaceToViewSpace3x3 = glm::mat3(objectSpaceToViewSpace);
-											objectSpaceToViewSpace = glm::mat4(objectSpaceToViewSpace3x3);
-											memcpy(uniformBlockDynamicVS.objectSpaceToViewSpaceMatrix, glm::value_ptr(objectSpaceToViewSpace), sizeof(float) * 4 * 4);
+											PassUniformBuffer passUniformBuffer;
+											memcpy(passUniformBuffer.worldSpaceToViewSpaceMatrix, glm::value_ptr(worldSpaceToViewSpace), sizeof(float) * 4 * 4);
+											memcpy(passUniformBuffer.worldSpaceToClipSpaceMatrix, glm::value_ptr(worldSpaceToClipSpace), sizeof(float) * 4 * 4);
+											passUniformBuffer.staticPropertyTest = 1.0f;
 
 											// Copy data
-											mUniformBuffer->copyDataFrom(sizeof(UniformBlockDynamicVs), &uniformBlockDynamicVS);
+											mPassUniformBuffer->copyDataFrom(sizeof(PassUniformBuffer), &passUniformBuffer);
+										}
+										if (nullptr != mMaterialUniformBuffer)
+										{
+											struct MaterialUniformBuffer
+											{
+												float diffuseColor[4];
+												float staticPropertyTest;
+											};
+											MaterialUniformBuffer materialUniformBuffers[MaximumNumberOfMaterials];
+											for (uint32_t i = 0; i < MaximumNumberOfMaterials; ++i)
+											{
+												MaterialUniformBuffer& materialUniformBuffer = materialUniformBuffers[i];
+												materialUniformBuffer.diffuseColor[0] = (0 == i) ? 1.0f : 0.0f;
+												materialUniformBuffer.diffuseColor[1] = 1.0f;
+												materialUniformBuffer.diffuseColor[2] = 1.0f;
+												materialUniformBuffer.diffuseColor[3] = 1.0f;
+												materialUniformBuffer.staticPropertyTest = 1.0f;
+											}
+
+											// Copy data
+											mMaterialUniformBuffer->copyDataFrom(MaximumNumberOfMaterials * sizeof(MaterialUniformBuffer), materialUniformBuffers);
+										}
+										if (nullptr != mInstanceUniformBuffer)
+										{
+											struct InstanceUniformBuffer
+											{
+												float objectSpaceToWorldSpaceMatrix[4 * 4];	// Object space to world space matrix
+												int	  materialIndex;						// Material index
+											};
+											InstanceUniformBuffer instanceUniformBuffer;
+											memcpy(instanceUniformBuffer.objectSpaceToWorldSpaceMatrix, glm::value_ptr(objectSpaceToWorldSpace), sizeof(float) * 4 * 4);
+											instanceUniformBuffer.materialIndex = 0;
+
+											// Copy data
+											mInstanceUniformBuffer->copyDataFrom(sizeof(InstanceUniformBuffer), &instanceUniformBuffer);
 										}
 									}
 

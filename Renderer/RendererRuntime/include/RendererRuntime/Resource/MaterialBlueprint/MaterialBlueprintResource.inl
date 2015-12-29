@@ -28,14 +28,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline Renderer::IRootSignature* MaterialBlueprintResource::getRootSignature() const
-	{
-		return mRootSignature;
-	}
-
 	inline const MaterialBlueprintResource::SortedMaterialPropertyVector& MaterialBlueprintResource::getSortedMaterialPropertyVector() const
 	{
 		return mSortedMaterialPropertyVector;
+	}
+
+	inline Renderer::IRootSignature* MaterialBlueprintResource::getRootSignature() const
+	{
+		return mRootSignature;
 	}
 
 	inline const Renderer::PipelineState& MaterialBlueprintResource::getPipelineState() const
