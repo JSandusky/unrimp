@@ -57,6 +57,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class MaterialProperty;	// Needs access to the constructor for the reference usage
+
+
+	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
@@ -186,16 +192,9 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
-	private:
-		inline MaterialPropertyValue();
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
+	protected:
 		ValueType mValueType;
 
 		/**
@@ -233,6 +232,13 @@ namespace RendererRuntime
 			// For texture property usage
 			uint32_t								AssetId;
 		} mValue;
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		inline MaterialPropertyValue();
 
 
 	};

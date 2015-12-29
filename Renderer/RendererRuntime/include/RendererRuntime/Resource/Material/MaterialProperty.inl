@@ -26,6 +26,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	inline MaterialPropertyValue MaterialProperty::materialPropertyValueFromReference(MaterialPropertyValue::ValueType valueType, uint32_t reference)
+	{
+		MaterialPropertyValue materialPropertyValue;
+		materialPropertyValue.mValueType	 = valueType;
+		materialPropertyValue.mValue.Integer = static_cast<int>(reference);
+		return materialPropertyValue;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline MaterialProperty::MaterialProperty() :
@@ -57,6 +69,12 @@ namespace RendererRuntime
 	inline MaterialProperty::Usage MaterialProperty::MaterialProperty::getUsage() const
 	{
 		return mUsage;
+	}
+
+	inline uint32_t MaterialProperty::getReferenceValue() const
+	{
+		assert(Usage::REFERENCE == mUsage);
+		return static_cast<uint32_t>(mValue.Integer);
 	}
 
 

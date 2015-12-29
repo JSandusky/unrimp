@@ -71,8 +71,16 @@ namespace RendererRuntime
 			DEPTH_STENCIL_STATE,	///< Pipeline depth stencil state, property is considered to not change regularly
 			BLEND_STATE,			///< Pipeline blend state, property is considered to not change regularly
 			SAMPLER_STATE,			///< Sampler state, property is considered to not change regularly
-			TEXTURE					///< Property is a texture reference, property is considered to not change regularly
+			TEXTURE,				///< Property is a texture asset reference, property is considered to not change regularly
+			REFERENCE				///< Property is a generic reference, meaning depends on the context, property is considered to not change regularly
 		};
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		inline static MaterialPropertyValue materialPropertyValueFromReference(ValueType valueType, uint32_t reference);
 
 
 	//[-------------------------------------------------------]
@@ -124,6 +132,11 @@ namespace RendererRuntime
 		*    The material blueprint property usage
 		*/
 		inline Usage getUsage() const;
+
+		//[-------------------------------------------------------]
+		//[ Value getter                                          ]
+		//[-------------------------------------------------------]
+		inline uint32_t getReferenceValue() const;
 
 
 	//[-------------------------------------------------------]

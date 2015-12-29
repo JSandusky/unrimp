@@ -312,116 +312,126 @@
 				}
 			}
 		},
-		"UniformBuffers":
+		"Resources":
 		{
-			"0":
+			"UniformBuffers":
 			{
-				"UniformBufferRootParameterIndex": "0",
-				"Usage": "PASS",
-				"ElementProperties":
+				"0":
 				{
-					"WorldSpaceToViewSpaceMatrix":
+					"UniformBufferRootParameterIndex": "0",
+					"UniformBufferUsage": "PASS",
+					"NumberOfElements": "1",
+					"ElementProperties":
 					{
-						"Usage": "DYNAMIC",
-						"ValueType": "FLOAT_4_4",
-						"Value": "@WORLD_SPACE_TO_VIEW_SPACE_MATRIX"
-					},
-					"WorldSpaceToClipSpaceMatrix":
-					{
-						"Usage": "DYNAMIC",
-						"ValueType": "FLOAT_4_4",
-						"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
-					},
-					"StaticPropertyTest":
-					{
-						"Usage": "STATIC",
-						"ValueType": "FLOAT",
-						"Value": "1.0"
+						"0":
+						{
+							"Name": "WorldSpaceToViewSpaceMatrix",
+							"Usage": "REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_MATRIX"
+						},
+						"1":
+						{
+							"Name": "WorldSpaceToClipSpaceMatrix",
+							"Usage": "REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
+						},
+						"2":
+						{
+							"Name": "StaticPropertyTest",
+							"Usage": "STATIC",
+							"ValueType": "FLOAT",
+							"Value": "1.0"
+						}
 					}
 				},
-				"NumberOfElements": "1"
-			},
-			"1":
-			{
-				"UniformBufferRootParameterIndex": "1",
-				"Usage": "MATERIAL",
-				"ElementProperties":
+				"1":
 				{
-					"DiffuseColor":
+					"UniformBufferRootParameterIndex": "1",
+					"UniformBufferUsage": "MATERIAL",
+					"NumberOfElements": "2",
+					"ElementProperties":
 					{
-						"Usage": "DYNAMIC",
-						"ValueType": "FLOAT_4",
-						"Value": "@DiffuseColor"
-					},
-					"StaticPropertyTest":
-					{
-						"Usage": "STATIC",
-						"ValueType": "FLOAT",
-						"Value": "1.0"
+						"0":
+						{
+							"Name": "DiffuseColor",
+							"Usage": "REFERENCE",
+							"ValueType": "FLOAT_4",
+							"Value": "@DiffuseColor"
+						},
+						"1":
+						{
+							"Name": "StaticPropertyTest",
+							"Usage": "STATIC",
+							"ValueType": "FLOAT",
+							"Value": "1.0"
+						}
 					}
 				},
-				"NumberOfElements": "2"
-			},
-			"2":
-			{
-				"UniformBufferRootParameterIndex": "2",
-				"Usage": "INSTANCE",
-				"ElementProperties":
+				"2":
 				{
-					"ObjectSpaceToWorldSpaceMatrix":
+					"UniformBufferRootParameterIndex": "2",
+					"UniformBufferUsage": "INSTANCE",
+					"NumberOfElements": "1",
+					"ElementProperties":
 					{
-						"Usage": "DYNAMIC",
-						"ValueType": "FLOAT_4_4",
-						"Value": "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
-					},
-					"MaterialIndex":
-					{
-						"Usage": "DYNAMIC",
-						"ValueType": "INTEGER",
-						"Value": "@MATERIAL_INDEX"
+						"0":
+						{
+							"Name": "ObjectSpaceToWorldSpaceMatrix",
+							"Usage": "REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
+						},
+						"1":
+						{
+							"Name": "MaterialIndex",
+							"Usage": "REFERENCE",
+							"ValueType": "INTEGER",
+							"Value": "@MATERIAL_INDEX"
+						}
 					}
+				}
+			},
+			"SamplerStates":
+			{
+				"0":
+				{
+					"SamplerRootParameterIndex": "3",
+					"Filter": "MIN_MAG_MIP_LINEAR",
+					"AddressU": "CLAMP",
+					"AddressV": "CLAMP",
+					"AddressW": "CLAMP",
+					"MipLODBias": "0.0",
+					"MaxAnisotropy": "16",
+					"ComparisonFunc": "NEVER",
+					"BorderColor": "0.0 0.0 0.0 0.0",
+					"MinLOD": "-3.402823466e+38",
+					"MaxLOD": "3.402823466e+38"
+				}
+			},
+			"Textures":
+			{
+				"0":
+				{
+					"TextureRootParameterIndex": "4",
+					"TextureAssetId": "@DiffuseMap"
 				},
-				"NumberOfElements": "1"
-			}
-		},
-		"SamplerStates":
-		{
-			"0":
-			{
-				"SamplerRootParameterIndex": "3",
-				"Filter": "MIN_MAG_MIP_LINEAR",
-				"AddressU": "CLAMP",
-				"AddressV": "CLAMP",
-				"AddressW": "CLAMP",
-				"MipLODBias": "0.0",
-				"MaxAnisotropy": "16",
-				"ComparisonFunc": "NEVER",
-				"BorderColor": "0.0 0.0 0.0 0.0",
-				"MinLOD": "-3.402823466e+38",
-				"MaxLOD": "3.402823466e+38"
-			}
-		},
-		"Textures":
-		{
-			"0":
-			{
-				"TextureRootParameterIndex": "4",
-				"TextureAssetId": "@DiffuseMap"
-			},
-			"1":
-			{
-				"TextureRootParameterIndex": "5",
-				"TextureAssetId": "@EmissiveMap"
-			},
-			"2":
-			{
-				"TextureRootParameterIndex": "6",
-				"TextureAssetId": "@NormalMap"
-			},
-			"3":
-			{
-				"TextureRootParameterIndex": "7",
-				"TextureAssetId": "@SpecularMap"
+				"1":
+				{
+					"TextureRootParameterIndex": "5",
+					"TextureAssetId": "@EmissiveMap"
+				},
+				"2":
+				{
+					"TextureRootParameterIndex": "6",
+					"TextureAssetId": "@NormalMap"
+				},
+				"3":
+				{
+					"TextureRootParameterIndex": "7",
+					"TextureAssetId": "@SpecularMap"
+				}
 			}
 		}
 	}

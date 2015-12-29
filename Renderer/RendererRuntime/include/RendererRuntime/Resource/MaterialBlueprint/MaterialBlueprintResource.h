@@ -84,11 +84,34 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
+		/**
+		*  @brief
+		*    Uniform buffer usage
+		*/
+		enum class UniformBufferUsage : uint8_t
+		{
+			UNKNOWN = 0,	///< Unknown uniform buffer usage
+			PASS,			///< Pass uniform buffer usage
+			MATERIAL,		///< Material uniform buffer usage
+			INSTANCE		///< Instance uniform buffer usage
+		};
+
+		typedef std::vector<MaterialProperty> UniformBufferElementProperties;
+
+		struct UniformBuffer
+		{
+			uint32_t					   uniformBufferRootParameterIndex;
+			UniformBufferUsage			   uniformBufferUsage;
+			uint32_t					   numberOfElements;
+			UniformBufferElementProperties uniformBufferElementProperties;
+		};
+
 		struct SamplerState
 		{
 			uint32_t				   samplerRootParameterIndex;
 			Renderer::ISamplerStatePtr samplerStatePtr;
 		};
+
 		struct Texture
 		{
 			uint32_t		   textureRootParameterIndex;
@@ -98,6 +121,7 @@ namespace RendererRuntime
 		};
 
 		typedef std::vector<MaterialProperty> SortedMaterialPropertyVector;
+		typedef std::vector<UniformBuffer> UniformBuffers;
 		typedef std::vector<SamplerState> SamplerStates;
 		typedef std::vector<Texture> Textures;
 
@@ -153,6 +177,15 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the uniform buffers
+		*
+		*  @return
+		*    The uniform buffers
+		*/
+		inline const UniformBuffers& getUniformBuffers() const;
+
+		/**
+		*  @brief
 		*    Return the sampler states
 		*
 		*  @return
@@ -185,6 +218,7 @@ namespace RendererRuntime
 		SortedMaterialPropertyVector mSortedMaterialPropertyVector;
 		Renderer::IRootSignature*	 mRootSignature;	///< Root signature, can be a null pointer
 		Renderer::PipelineState		 mPipelineState;
+		UniformBuffers				 mUniformBuffers;
 		SamplerStates				 mSamplerStates;
 		Textures					 mTextures;
 

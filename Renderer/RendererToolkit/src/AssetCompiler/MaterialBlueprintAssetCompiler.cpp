@@ -113,16 +113,19 @@ namespace RendererToolkit
 
 			Poco::JSON::Object::Ptr jsonMaterialBlueprintObject = jsonRootObject->get("MaterialBlueprintAsset").extract<Poco::JSON::Object::Ptr>();
 			Poco::JSON::Object::Ptr jsonPropertiesObject = jsonMaterialBlueprintObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonSamplerStatesObject = jsonMaterialBlueprintObject->get("SamplerStates").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonTexturesObject = jsonMaterialBlueprintObject->get("Textures").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonResourcesObject = jsonMaterialBlueprintObject->get("Resources").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonUniformBuffersObject = jsonResourcesObject->get("UniformBuffers").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonSamplerStatesObject = jsonResourcesObject->get("SamplerStates").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonTexturesObject = jsonResourcesObject->get("Textures").extract<Poco::JSON::Object::Ptr>();
 
 			{ // Material blueprint header
 				RendererRuntime::v1MaterialBlueprint::Header materialBlueprintHeader;
-				materialBlueprintHeader.formatType			  = RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE;
-				materialBlueprintHeader.formatVersion		  = RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION;
-				materialBlueprintHeader.numberOfProperties	  = jsonPropertiesObject->size();
-				materialBlueprintHeader.numberOfSamplerStates = jsonSamplerStatesObject->size();
-				materialBlueprintHeader.numberOfTextures	  = jsonTexturesObject->size();
+				materialBlueprintHeader.formatType			   = RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE;
+				materialBlueprintHeader.formatVersion		   = RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION;
+				materialBlueprintHeader.numberOfProperties	   = jsonPropertiesObject->size();
+				materialBlueprintHeader.numberOfUniformBuffers = jsonUniformBuffersObject->size();
+				materialBlueprintHeader.numberOfSamplerStates  = jsonSamplerStatesObject->size();
+				materialBlueprintHeader.numberOfTextures	   = jsonTexturesObject->size();
 
 				// Write down the material blueprint header
 				outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintHeader), sizeof(RendererRuntime::v1MaterialBlueprint::Header));
@@ -144,11 +147,16 @@ namespace RendererToolkit
 			// Pipeline state object (PSO)
 			JsonMaterialBlueprintHelper::readPipelineStateObject(input, jsonMaterialBlueprintObject->get("PipelineState").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
 
-			// Sampler states
-			JsonMaterialBlueprintHelper::readSamplerStates(jsonSamplerStatesObject, outputFileStream);
+			{ // Resources
+				// Uniform buffers
+				JsonMaterialBlueprintHelper::readUniformBuffers(input, jsonUniformBuffersObject, outputFileStream);
 
-			// Textures
-			JsonMaterialBlueprintHelper::readTextures(input, sortedMaterialPropertyVector, jsonTexturesObject, outputFileStream);
+				// Sampler states
+				JsonMaterialBlueprintHelper::readSamplerStates(jsonSamplerStatesObject, outputFileStream);
+
+				// Textures
+				JsonMaterialBlueprintHelper::readTextures(input, sortedMaterialPropertyVector, jsonTexturesObject, outputFileStream);
+			}
 		}
 
 		{ // Update the output asset package

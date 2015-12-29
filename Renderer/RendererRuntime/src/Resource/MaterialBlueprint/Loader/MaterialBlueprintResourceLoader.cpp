@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -113,19 +112,43 @@ namespace RendererRuntime
 				}
 			}
 
-			{ // Read in the shader blueprints
-				v1MaterialBlueprint::ShaderBlueprints shaderBlueprints;
-				inputFileStream.read(reinterpret_cast<char*>(&shaderBlueprints), sizeof(v1MaterialBlueprint::ShaderBlueprints));
-				mVertexShaderBlueprintAssetId				  = shaderBlueprints.vertexShaderBlueprintAssetId;
-				mTessellationControlShaderBlueprintAssetId	  = shaderBlueprints.tessellationControlShaderBlueprintAssetId;
-				mTessellationEvaluationShaderBlueprintAssetId = shaderBlueprints.tessellationEvaluationShaderBlueprintAssetId;
-				mGeometryShaderBlueprintAssetId				  = shaderBlueprints.geometryShaderBlueprintAssetId;
-				mFragmentShaderBlueprintAssetId				  = shaderBlueprints.fragmentShaderBlueprintAssetId;
+			{ // Read in the pipeline state
+				{ // Read in the shader blueprints
+					v1MaterialBlueprint::ShaderBlueprints shaderBlueprints;
+					inputFileStream.read(reinterpret_cast<char*>(&shaderBlueprints), sizeof(v1MaterialBlueprint::ShaderBlueprints));
+					mVertexShaderBlueprintAssetId				  = shaderBlueprints.vertexShaderBlueprintAssetId;
+					mTessellationControlShaderBlueprintAssetId	  = shaderBlueprints.tessellationControlShaderBlueprintAssetId;
+					mTessellationEvaluationShaderBlueprintAssetId = shaderBlueprints.tessellationEvaluationShaderBlueprintAssetId;
+					mGeometryShaderBlueprintAssetId				  = shaderBlueprints.geometryShaderBlueprintAssetId;
+					mFragmentShaderBlueprintAssetId				  = shaderBlueprints.fragmentShaderBlueprintAssetId;
+				}
+
+				// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
+				// Read in the pipeline state
+				inputFileStream.read(reinterpret_cast<char*>(&mMaterialBlueprintResource->mPipelineState), sizeof(Renderer::PipelineState));
 			}
 
-			// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
-			// Read in the pipeline state
-			inputFileStream.read(reinterpret_cast<char*>(&mMaterialBlueprintResource->mPipelineState), sizeof(Renderer::PipelineState));
+			{ // Read in the uniform buffers
+				MaterialBlueprintResource::UniformBuffers& uniformBuffers = mMaterialBlueprintResource->mUniformBuffers;
+				uniformBuffers.resize(materialBlueprintHeader.numberOfUniformBuffers);
+
+				for (uint32_t i = 0; i < materialBlueprintHeader.numberOfUniformBuffers; ++i)
+				{
+					MaterialBlueprintResource::UniformBuffer& uniformBuffer = uniformBuffers[i];
+
+					// Read in the uniform buffer header
+					v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
+					inputFileStream.read(reinterpret_cast<char*>(&uniformBufferHeader), sizeof(v1MaterialBlueprint::UniformBufferHeader));
+					uniformBuffer.uniformBufferRootParameterIndex = uniformBufferHeader.uniformBufferRootParameterIndex;
+					uniformBuffer.uniformBufferUsage			  = uniformBufferHeader.uniformBufferUsage;
+					uniformBuffer.numberOfElements				  = uniformBufferHeader.numberOfElements;
+
+					// Read in the uniform buffer property elements
+					MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = uniformBuffer.uniformBufferElementProperties;
+					uniformBufferElementProperties.resize(uniformBufferHeader.numberOfElementProperties);
+					inputFileStream.read(reinterpret_cast<char*>(uniformBufferElementProperties.data()), sizeof(MaterialProperty) * uniformBufferHeader.numberOfElementProperties);
+				}
+			}
 
 			{ // Read in the sampler states
 				// Allocate memory for the temporary data

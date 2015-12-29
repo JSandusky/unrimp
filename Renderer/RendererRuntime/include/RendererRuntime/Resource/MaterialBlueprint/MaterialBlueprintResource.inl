@@ -43,6 +43,11 @@ namespace RendererRuntime
 		return mPipelineState;
 	}
 
+	inline const MaterialBlueprintResource::UniformBuffers& MaterialBlueprintResource::getUniformBuffers() const
+	{
+		return mUniformBuffers;
+	}
+
 	inline const MaterialBlueprintResource::SamplerStates& MaterialBlueprintResource::getSamplerStates() const
 	{
 		return mSamplerStates;

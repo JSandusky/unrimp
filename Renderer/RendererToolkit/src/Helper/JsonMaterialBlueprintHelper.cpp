@@ -56,6 +56,34 @@ namespace RendererToolkit
 				return (left < right.getMaterialPropertyId());
 			}
 		};
+
+		void optionalUniformBufferUsageProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, RendererRuntime::MaterialBlueprintResource::UniformBufferUsage& value)
+		{
+			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
+			if (!jsonDynamicVar.isEmpty())
+			{
+				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+
+				// Define helper macros
+				#define IF_VALUE(name)			 if (#name == valueAsString) value = RendererRuntime::MaterialBlueprintResource::UniformBufferUsage::name;
+				#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = RendererRuntime::MaterialBlueprintResource::UniformBufferUsage::name;
+
+				// Evaluate value
+				IF_VALUE(UNKNOWN)
+				ELSE_IF_VALUE(PASS)
+				ELSE_IF_VALUE(MATERIAL)
+				ELSE_IF_VALUE(INSTANCE)
+				else
+				{
+					// TODO(co) Error handling
+				}
+
+				// Undefine helper macros
+				#undef IF_VALUE
+				#undef ELSE_IF_VALUE
+			}
+		}
+
 	}
 
 
@@ -109,6 +137,7 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(BLEND_STATE)
 		ELSE_IF_VALUE(SAMPLER_STATE)
 		ELSE_IF_VALUE(TEXTURE)
+		ELSE_IF_VALUE(REFERENCE)
 		else
 		{
 			// TODO(co) Error handling
@@ -459,7 +488,7 @@ namespace RendererToolkit
 		outputFileStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), sizeof(Renderer::DescriptorRange) * descriptorRanges.size());
 	}
 
-	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPropertiesObject, RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector& sortedMaterialPropertyVector)
+	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPropertiesObject, RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector& sortedMaterialPropertyVector, bool sort)
 	{
 		Poco::JSON::Object::ConstIterator propertiesIterator = jsonPropertiesObject->begin();
 		Poco::JSON::Object::ConstIterator propertiesIteratorEnd = jsonPropertiesObject->end();
@@ -472,20 +501,42 @@ namespace RendererToolkit
 
 			// Material property usage
 			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(jsonPropertyObject);
-
-			// Material property default value
 			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(jsonPropertyObject);
-			const RendererRuntime::MaterialPropertyValue materialPropertyValue = mandatoryMaterialPropertyValue(input, jsonPropertyObject, "Value", valueType);
+			if (RendererRuntime::MaterialProperty::Usage::REFERENCE == usage)
+			{
+				// Get the reference value as string
+				static const uint32_t NAME_LENGTH = 128;
+				char referenceAsString[NAME_LENGTH];
+				memset(&referenceAsString[0], 0, sizeof(char) * NAME_LENGTH);
+				JsonHelper::optionalStringProperty(jsonPropertyObject, "Value", referenceAsString, NAME_LENGTH);
 
-			// Write down the material property
-			sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, materialPropertyValue));
+				// The character "@" is used to reference e.g. a material property value
+				if (referenceAsString[0] == '@')
+				{
+					// Write down the material property
+					const RendererRuntime::StringId referenceAsInteger(&referenceAsString[1]);
+					sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, RendererRuntime::MaterialProperty::materialPropertyValueFromReference(valueType, referenceAsInteger)));
+				}
+				else
+				{
+					// TODO(co) Error handling
+				}
+			}
+			else
+			{
+				// Write down the material property
+				sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, mandatoryMaterialPropertyValue(input, jsonPropertyObject, "Value", valueType)));
+			}
 
 			// Next property, please
 			++propertiesIterator;
 		}
 
-		// Ensure the material properties are sorted
-		std::sort(sortedMaterialPropertyVector.begin(), sortedMaterialPropertyVector.end(), detail::orderByMaterialPropertyId);
+		// Ensure the material properties are sorted, if requested
+		if (sort)
+		{
+			std::sort(sortedMaterialPropertyVector.begin(), sortedMaterialPropertyVector.end(), detail::orderByMaterialPropertyId);
+		}
 	}
 
 	void JsonMaterialBlueprintHelper::readPipelineStateObject(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPipelineStateObject, std::ofstream& outputFileStream)
@@ -614,6 +665,37 @@ namespace RendererToolkit
 		// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
 		// Write down the pipeline state object (PSO)
 		outputFileStream.write(reinterpret_cast<const char*>(&pipelineState), sizeof(Renderer::PipelineState));
+	}
+
+	void JsonMaterialBlueprintHelper::readUniformBuffers(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonUniformBuffersObject, std::ofstream& outputFileStream)
+	{
+		Poco::JSON::Object::ConstIterator rootUniformBuffersIterator = jsonUniformBuffersObject->begin();
+		Poco::JSON::Object::ConstIterator rootUniformBuffersIteratorEnd = jsonUniformBuffersObject->end();
+		while (rootUniformBuffersIterator != rootUniformBuffersIteratorEnd)
+		{
+			Poco::JSON::Object::Ptr jsonUniformBufferObject = rootUniformBuffersIterator->second.extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonElementPropertiesObject = jsonUniformBufferObject->get("ElementProperties").extract<Poco::JSON::Object::Ptr>();
+
+			// Write down the uniform buffer header
+			RendererRuntime::v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
+			JsonHelper::optionalIntegerProperty(jsonUniformBufferObject, "UniformBufferRootParameterIndex", uniformBufferHeader.uniformBufferRootParameterIndex);
+			detail::optionalUniformBufferUsageProperty(jsonUniformBufferObject, "UniformBufferUsage", uniformBufferHeader.uniformBufferUsage);
+			JsonHelper::optionalIntegerProperty(jsonUniformBufferObject, "NumberOfElements", uniformBufferHeader.numberOfElements);
+			uniformBufferHeader.numberOfElementProperties = jsonElementPropertiesObject->size();
+			outputFileStream.write(reinterpret_cast<const char*>(&uniformBufferHeader), sizeof(RendererRuntime::v1MaterialBlueprint::UniformBufferHeader));
+
+			{ // Write down the uniform buffer element properties
+				// Gather all element properties, don't sort because the user defined order is important in here (data layout in memory)
+				RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector elementProperties;
+				readProperties(input, jsonElementPropertiesObject, elementProperties, false);
+
+				// Write down all uniform buffer element properties
+				outputFileStream.write(reinterpret_cast<const char*>(elementProperties.data()), sizeof(RendererRuntime::MaterialProperty) * elementProperties.size());
+			}
+
+			// Next uniform buffer, please
+			++rootUniformBuffersIterator;
+		}
 	}
 
 	void JsonMaterialBlueprintHelper::readSamplerStates(Poco::JSON::Object::Ptr jsonSamplerStatesObject, std::ofstream& outputFileStream)

@@ -27,11 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
-
-#include <Renderer/Public/Renderer.h>
-
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 
 
 //[-------------------------------------------------------]
@@ -41,19 +37,13 @@ namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
-	typedef StringId MaterialPropertyId;	///< Material property identifier, internally just a POD "uint32_t", result of hashing the property name
-
-
 	// -> Material blueprint file format content:
 	//    - Material blueprint header
 	//    - Material blueprint properties
 	//    - Root signature
 	//    - Pipeline state object (PSO)
 	//      - Shader blueprints, rasterization state etc.
+	//    - Uniform buffers
 	//    - Sampler states
 	//    - Textures
 	namespace v1MaterialBlueprint
@@ -73,6 +63,7 @@ namespace RendererRuntime
 				uint32_t formatType;
 				uint16_t formatVersion;
 				uint32_t numberOfProperties;
+				uint32_t numberOfUniformBuffers;
 				uint32_t numberOfSamplerStates;
 				uint32_t numberOfTextures;
 			};
@@ -92,6 +83,14 @@ namespace RendererRuntime
 				AssetId tessellationEvaluationShaderBlueprintAssetId;
 				AssetId geometryShaderBlueprintAssetId;
 				AssetId fragmentShaderBlueprintAssetId;
+			};
+
+			struct UniformBufferHeader
+			{
+				uint32_t									  uniformBufferRootParameterIndex;
+				MaterialBlueprintResource::UniformBufferUsage uniformBufferUsage;
+				uint32_t									  numberOfElements;
+				uint32_t									  numberOfElementProperties;
 			};
 
 			struct SamplerState : public Renderer::SamplerState
