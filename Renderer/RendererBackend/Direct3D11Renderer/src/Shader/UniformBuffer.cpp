@@ -42,15 +42,16 @@ namespace Direct3D11Renderer
 		Renderer::IUniformBuffer(direct3D11Renderer),
 		mD3D11Buffer(nullptr)
 	{
-		// TODO(co) Uniform buffer byte alignment: Is it fine to support the user in here (ease of use) or is this 100% the responsibility of the user? (possible negative side effects)
-		// Check the given number of bytes, if we don't do this we might get told
-		//   "... the ByteWidth (value = <x>) must be a multiple of 16 and be less than or equal to 65536"
-		// by Direct3D 11
-		const uint32_t leftOverBytes = (numberOfBytes % 16);
-		if (0 != leftOverBytes)
-		{
-			// Fix the byte alignment
-			numberOfBytes += 16 - (numberOfBytes % 16);
+		{ // Sanity check
+			// Check the given number of bytes, if we don't do this we might get told
+			//   "... the ByteWidth (value = <x>) must be a multiple of 16 and be less than or equal to 65536"
+			// by Direct3D 11
+			const uint32_t leftOverBytes = (numberOfBytes % 16);
+			if (0 != leftOverBytes)
+			{
+				// Fix the byte alignment, no assert because other renderer APIs have another alignment (DirectX 12 e.g. 256)
+				numberOfBytes += 16 - (numberOfBytes % 16);
+			}
 		}
 
 		// Direct3D 11 buffer description

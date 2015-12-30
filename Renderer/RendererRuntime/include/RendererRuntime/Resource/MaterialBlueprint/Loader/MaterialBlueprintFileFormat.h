@@ -91,6 +91,7 @@ namespace RendererRuntime
 				MaterialBlueprintResource::UniformBufferUsage uniformBufferUsage;
 				uint32_t									  numberOfElements;
 				uint32_t									  numberOfElementProperties;
+				uint32_t									  uniformBufferNumberOfBytes;
 			};
 
 			struct SamplerState : public Renderer::SamplerState

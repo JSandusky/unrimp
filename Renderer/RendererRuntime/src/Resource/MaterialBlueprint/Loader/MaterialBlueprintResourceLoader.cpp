@@ -131,7 +131,6 @@ namespace RendererRuntime
 			{ // Read in the uniform buffers
 				MaterialBlueprintResource::UniformBuffers& uniformBuffers = mMaterialBlueprintResource->mUniformBuffers;
 				uniformBuffers.resize(materialBlueprintHeader.numberOfUniformBuffers);
-
 				for (uint32_t i = 0; i < materialBlueprintHeader.numberOfUniformBuffers; ++i)
 				{
 					MaterialBlueprintResource::UniformBuffer& uniformBuffer = uniformBuffers[i];
@@ -142,6 +141,7 @@ namespace RendererRuntime
 					uniformBuffer.uniformBufferRootParameterIndex = uniformBufferHeader.uniformBufferRootParameterIndex;
 					uniformBuffer.uniformBufferUsage			  = uniformBufferHeader.uniformBufferUsage;
 					uniformBuffer.numberOfElements				  = uniformBufferHeader.numberOfElements;
+					uniformBuffer.uniformBufferNumberOfBytes	  = uniformBufferHeader.uniformBufferNumberOfBytes;
 
 					// Read in the uniform buffer property elements
 					MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = uniformBuffer.uniformBufferElementProperties;
@@ -208,6 +208,22 @@ namespace RendererRuntime
 			mMaterialBlueprintResource->mTessellationEvaluationShaderBlueprint = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mTessellationEvaluationShaderBlueprintAssetId);
 			mMaterialBlueprintResource->mGeometryShaderBlueprint			   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mGeometryShaderBlueprintAssetId);
 			mMaterialBlueprintResource->mFragmentShaderBlueprint			   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mFragmentShaderBlueprintAssetId);
+		}
+
+		{ // Create the uniform buffer renderer resources
+			// Decide which shader language should be used (for example "GLSL" or "HLSL")
+			Renderer::IShaderLanguagePtr shaderLanguage(renderer.getShaderLanguage());
+			if (nullptr != shaderLanguage)
+			{
+				MaterialBlueprintResource::UniformBuffers& uniformBuffers = mMaterialBlueprintResource->mUniformBuffers;
+				const size_t numberOfUniformBuffers = uniformBuffers.size();
+				for (size_t i = 0; i < numberOfUniformBuffers; ++i)
+				{
+					// Create the uniform buffer renderer resource (GPU alignment is handled by the renderer backend)
+					MaterialBlueprintResource::UniformBuffer& uniformBuffer = uniformBuffers[i];
+					uniformBuffer.uniformBufferPtr = shaderLanguage->createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+				}
+			}
 		}
 
 		{ // Create the sampler states

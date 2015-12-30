@@ -31,7 +31,86 @@ namespace RendererRuntime
 {
 
 
-	// TODO(co)
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	uint32_t MaterialPropertyValue::getValueTypeNumberOfBytes(ValueType valueType)
+	{
+		switch (valueType)
+		{
+			case ValueType::UNKNOWN:
+				return 0;
+
+			case ValueType::BOOLEAN:
+				return sizeof(bool);
+
+			case ValueType::INTEGER:
+				return sizeof(int);
+
+			case ValueType::INTEGER_2:
+				return sizeof(int) * 2;
+
+			case ValueType::INTEGER_3:
+				return sizeof(int) * 3;
+
+			case ValueType::INTEGER_4:
+				return sizeof(int) * 4;
+
+			case ValueType::FLOAT:
+				return sizeof(float);
+
+			case ValueType::FLOAT_2:
+				return sizeof(float) * 2;
+
+			case ValueType::FLOAT_3:
+				return sizeof(float) * 3;
+
+			case ValueType::FLOAT_4:
+				return sizeof(float) * 4;
+
+			case ValueType::FLOAT_3_3:
+				return sizeof(float) * 3 * 3;
+
+			case ValueType::FLOAT_4_4:
+				return sizeof(float) * 4 * 4;
+
+			case ValueType::FILL_MODE:
+				return sizeof(Renderer::FillMode);
+
+			case ValueType::CULL_MODE:
+				return sizeof(Renderer::CullMode);
+
+			case ValueType::CONSERVATIVE_RASTERIZATION_MODE:
+				return sizeof(Renderer::ConservativeRasterizationMode);
+
+			case ValueType::DEPTH_WRITE_MASK:
+				return sizeof(Renderer::DepthWriteMask);
+
+			case ValueType::STENCIL_OP:
+				return sizeof(Renderer::StencilOp);
+
+			case ValueType::COMPARISON_FUNC:
+				return sizeof(Renderer::ComparisonFunc);
+
+			case ValueType::BLEND:
+				return sizeof(Renderer::Blend);
+
+			case ValueType::BLEND_OP:
+				return sizeof(Renderer::BlendOp);
+
+			case ValueType::FILTER_MODE:
+				return sizeof(Renderer::FilterMode);
+
+			case ValueType::TEXTURE_ADDRESS_MODE:
+				return sizeof(Renderer::TextureAddressMode);
+
+			case ValueType::ASSET_ID:
+				return sizeof(uint32_t);
+		}
+
+		// Error, we should never ever end up in here
+		return 0;
+	}
 
 
 //[-------------------------------------------------------]

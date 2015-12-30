@@ -104,6 +104,8 @@ namespace RendererRuntime
 			UniformBufferUsage			   uniformBufferUsage;
 			uint32_t					   numberOfElements;
 			UniformBufferElementProperties uniformBufferElementProperties;
+			uint32_t					   uniformBufferNumberOfBytes;
+			Renderer::IUniformBufferPtr	   uniformBufferPtr;
 		};
 
 		struct SamplerState

@@ -676,22 +676,29 @@ namespace RendererToolkit
 			Poco::JSON::Object::Ptr jsonUniformBufferObject = rootUniformBuffersIterator->second.extract<Poco::JSON::Object::Ptr>();
 			Poco::JSON::Object::Ptr jsonElementPropertiesObject = jsonUniformBufferObject->get("ElementProperties").extract<Poco::JSON::Object::Ptr>();
 
-			// Write down the uniform buffer header
-			RendererRuntime::v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
-			JsonHelper::optionalIntegerProperty(jsonUniformBufferObject, "UniformBufferRootParameterIndex", uniformBufferHeader.uniformBufferRootParameterIndex);
-			detail::optionalUniformBufferUsageProperty(jsonUniformBufferObject, "UniformBufferUsage", uniformBufferHeader.uniformBufferUsage);
-			JsonHelper::optionalIntegerProperty(jsonUniformBufferObject, "NumberOfElements", uniformBufferHeader.numberOfElements);
-			uniformBufferHeader.numberOfElementProperties = jsonElementPropertiesObject->size();
-			outputFileStream.write(reinterpret_cast<const char*>(&uniformBufferHeader), sizeof(RendererRuntime::v1MaterialBlueprint::UniformBufferHeader));
+			// Gather all element properties, don't sort because the user defined order is important in here (data layout in memory)
+			RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector elementProperties;
+			readProperties(input, jsonElementPropertiesObject, elementProperties, false);
 
-			{ // Write down the uniform buffer element properties
-				// Gather all element properties, don't sort because the user defined order is important in here (data layout in memory)
-				RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector elementProperties;
-				readProperties(input, jsonElementPropertiesObject, elementProperties, false);
-
-				// Write down all uniform buffer element properties
-				outputFileStream.write(reinterpret_cast<const char*>(elementProperties.data()), sizeof(RendererRuntime::MaterialProperty) * elementProperties.size());
+			// Sum up the number of bytes required by all uniform buffer element properties
+			uint32_t numberOfBytesPerElement = 0;
+			for (size_t i = 0; i < elementProperties.size(); ++i)
+			{
+				numberOfBytesPerElement += RendererRuntime::MaterialPropertyValue::getValueTypeNumberOfBytes(elementProperties[i].getValueType());
 			}
+
+			{ // Write down the uniform buffer header
+				RendererRuntime::v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
+				JsonHelper::optionalIntegerProperty(jsonUniformBufferObject, "UniformBufferRootParameterIndex", uniformBufferHeader.uniformBufferRootParameterIndex);
+				detail::optionalUniformBufferUsageProperty(jsonUniformBufferObject, "UniformBufferUsage", uniformBufferHeader.uniformBufferUsage);
+				JsonHelper::optionalIntegerProperty(jsonUniformBufferObject, "NumberOfElements", uniformBufferHeader.numberOfElements);
+				uniformBufferHeader.numberOfElementProperties = jsonElementPropertiesObject->size();
+				uniformBufferHeader.uniformBufferNumberOfBytes = numberOfBytesPerElement * uniformBufferHeader.numberOfElements;
+				outputFileStream.write(reinterpret_cast<const char*>(&uniformBufferHeader), sizeof(RendererRuntime::v1MaterialBlueprint::UniformBufferHeader));
+			}
+
+			// Write down the uniform buffer element properties
+			outputFileStream.write(reinterpret_cast<const char*>(elementProperties.data()), sizeof(RendererRuntime::MaterialProperty) * elementProperties.size());
 
 			// Next uniform buffer, please
 			++rootUniformBuffersIterator;

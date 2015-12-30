@@ -51,6 +51,7 @@ namespace Direct3D12Renderer
 
 		// Constant buffer size is required to be 256-byte aligned
 		// - See "ID3D12Device::CreateConstantBufferView method": https://msdn.microsoft.com/de-de/library/windows/desktop/dn788659%28v=vs.85%29.aspx
+		// - No assert because other renderer APIs have another alignment (DirectX 11 e.g. 16)
 		const uint32_t numberOfBytesOnGpu = (numberOfBytes + 255) & ~255;
 
 		// TODO(co) Add buffer usage setting support

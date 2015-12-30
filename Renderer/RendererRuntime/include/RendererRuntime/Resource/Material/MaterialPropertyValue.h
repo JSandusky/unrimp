@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
 
 #include <Renderer/Public/Renderer.h>
@@ -108,6 +109,7 @@ namespace RendererRuntime
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
+		RENDERERRUNTIME_API_EXPORT static uint32_t getValueTypeNumberOfBytes(ValueType valueType);
 		inline static MaterialPropertyValue fromUnknown();
 		inline static MaterialPropertyValue fromBoolean(bool value);
 		inline static MaterialPropertyValue fromInteger(int value);

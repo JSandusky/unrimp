@@ -45,6 +45,8 @@ namespace OpenGLRenderer
 			glGetIntegerv(GL_UNIFORM_BUFFER_BINDING, &openGLUniformBufferBackup);
 		#endif
 
+		// TODO(co) Review OpenGL uniform buffer alignment topic
+
 		// Bind this OpenGL uniform buffer and upload the data
 		glBindBufferARB(GL_UNIFORM_BUFFER, mOpenGLUniformBuffer);
 		// -> Usage: These constants directly map to GL_ARB_vertex_buffer_object and OpenGL ES 2 constants, do not change them
