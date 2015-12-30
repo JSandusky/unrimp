@@ -29,6 +29,12 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Transform.h"
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#include <glm/gtc/matrix_transform.hpp>
+#pragma warning(pop)
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -41,6 +47,17 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	const Transform Transform::IDENTITY;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	void Transform::getAsMatrix(glm::mat4& objectSpaceToWorldSpace) const
+	{
+		// TODO(co) Optimize
+		static const glm::mat4x4 IDENTITY_MATRIX;	// TODO(co) Does GLM offer such a constant?
+		objectSpaceToWorldSpace = glm::translate(IDENTITY_MATRIX, position) * glm::mat4_cast(rotation) * glm::scale(IDENTITY_MATRIX, scale);
+	}
 
 
 //[-------------------------------------------------------]

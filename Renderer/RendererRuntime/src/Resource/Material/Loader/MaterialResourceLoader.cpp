@@ -86,7 +86,13 @@ namespace RendererRuntime
 		mMaterialResource->releasePipelineState();
 
 		// Get the used material blueprint resource
-		mMaterialResource->mMaterialBlueprintResource = mRendererRuntime.getMaterialBlueprintResourceManager().loadMaterialBlueprintResourceByAssetId(mMaterialBlueprintAssetId);
+		// TODO(co) Decent material resource list management inside the material blueprint resource (link, unlink etc.)
+		MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
+		mMaterialResource->mMaterialBlueprintResource = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(mMaterialBlueprintAssetId);
+		if (nullptr != mMaterialResource->mMaterialBlueprintResource)
+		{
+			mMaterialResource->mMaterialBlueprintResource->linkedMaterialResource(*mMaterialResource);
+		}
 	}
 
 

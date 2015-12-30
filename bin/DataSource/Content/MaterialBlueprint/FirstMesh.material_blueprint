@@ -318,6 +318,7 @@
 			{
 				"0":
 				{
+					"Name": "PassUniformBuffer",
 					"UniformBufferRootParameterIndex": "0",
 					"UniformBufferUsage": "PASS",
 					"NumberOfElements": "1",
@@ -348,6 +349,7 @@
 				},
 				"1":
 				{
+					"Name": "MaterialUniformBuffer",
 					"UniformBufferRootParameterIndex": "1",
 					"UniformBufferUsage": "MATERIAL",
 					"NumberOfElements": "2",
@@ -371,6 +373,7 @@
 				},
 				"2":
 				{
+					"Name": "InstanceUniformBuffer",
 					"UniformBufferRootParameterIndex": "2",
 					"UniformBufferUsage": "INSTANCE",
 					"NumberOfElements": "1",

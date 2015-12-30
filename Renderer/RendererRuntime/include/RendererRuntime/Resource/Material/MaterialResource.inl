@@ -38,6 +38,11 @@ namespace RendererRuntime
 		return mMaterialBlueprintResource;
 	}
 
+	inline uint32_t MaterialResource::getMaterialUniformBufferIndex() const
+	{
+		return mMaterialUniformBufferIndex;
+	}
+
 	inline const MaterialResource::SortedMaterialPropertyVector& MaterialResource::getSortedMaterialPropertyVector() const
 	{
 		return mSortedMaterialPropertyVector;

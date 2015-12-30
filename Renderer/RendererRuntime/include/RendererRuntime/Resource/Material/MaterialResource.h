@@ -73,6 +73,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class MaterialResourceLoader;
+		friend class MaterialBlueprintResource;	///< Sets "RendererRuntime::MaterialResource::mMaterialUniformBufferIndex"
 
 
 	//[-------------------------------------------------------]
@@ -121,12 +122,33 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the material uniform buffer index inside the used material blueprint
+		*
+		*  @return
+		*    The material uniform buffer index inside the used material blueprint
+		*/
+		inline uint32_t getMaterialUniformBufferIndex() const;
+
+		/**
+		*  @brief
 		*    Return the sorted material property vector
 		*
 		*  @return
 		*    The sorted material property vector
 		*/
 		inline const SortedMaterialPropertyVector& getSortedMaterialPropertyVector() const;
+
+		/**
+		*  @brief
+		*    Return a material property by its ID
+		*
+		*  @param[in] materialPropertyId
+		*    ID of the material property to return
+		*
+		*  @return
+		*    The requested material property, null pointer on error, don't destroy the returned instance
+		*/
+		const MaterialProperty* getMaterialPropertyById(MaterialPropertyId materialPropertyId) const;
 
 		/**
 		*  @brief
@@ -148,7 +170,7 @@ namespace RendererRuntime
 
 		// TODO(co)
 		void releasePipelineState();
-		bool setGraphicsRootDescriptorTable(const RendererRuntime::IRendererRuntime& rendererRuntime);
+		void setGraphicsRootDescriptorTable(const IRendererRuntime& rendererRuntime);
 
 
 	//[-------------------------------------------------------]
@@ -164,6 +186,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		MaterialBlueprintResource*	 mMaterialBlueprintResource;	///< Material blueprint resource, can be a null pointer, don't destroy the instance
+		uint32_t					 mMaterialUniformBufferIndex;	///< Material uniform buffer index inside the used material blueprint
 		SortedMaterialPropertyVector mSortedMaterialPropertyVector;
 		Renderer::PipelineState		 mPipelineState;
 		Renderer::IPipelineState*    mPipelineStateObject;			///< Pipeline state object (PSO), can be a null pointer

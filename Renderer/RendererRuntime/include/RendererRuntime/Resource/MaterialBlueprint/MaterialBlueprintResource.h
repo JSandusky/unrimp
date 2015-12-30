@@ -44,7 +44,9 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
+	class Transform;
 	class TextureResource;
+	class MaterialResource;
 	class ShaderBlueprintResource;
 }
 
@@ -78,6 +80,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 		friend class MaterialBlueprintResourceLoader;
 		friend class MaterialBlueprintResourceManager;	// TODO(co) Remove this
+		friend class MaterialResourceLoader;			// TODO(co) Decent material resource list management inside the material blueprint resource (link, unlink etc.) - remove this
 
 
 	//[-------------------------------------------------------]
@@ -97,6 +100,7 @@ namespace RendererRuntime
 		};
 
 		typedef std::vector<MaterialProperty> UniformBufferElementProperties;
+		typedef std::vector<uint8_t> ScratchBuffer;
 
 		struct UniformBuffer
 		{
@@ -105,6 +109,7 @@ namespace RendererRuntime
 			uint32_t					   numberOfElements;
 			UniformBufferElementProperties uniformBufferElementProperties;
 			uint32_t					   uniformBufferNumberOfBytes;
+			ScratchBuffer				   scratchBuffer;
 			Renderer::IUniformBufferPtr	   uniformBufferPtr;
 		};
 
@@ -147,9 +152,6 @@ namespace RendererRuntime
 		*/
 		virtual ~MaterialBlueprintResource();
 
-		// TODO(co) Asynchronous loading completion
-		bool isFullyLoaded() const;
-
 		/**
 		*  @brief
 		*    Return the sorted material property vector
@@ -177,6 +179,9 @@ namespace RendererRuntime
 		*/
 		inline const Renderer::PipelineState& getPipelineState() const;
 
+		//[-------------------------------------------------------]
+		//[ Resource                                              ]
+		//[-------------------------------------------------------]
 		/**
 		*  @brief
 		*    Return the uniform buffers
@@ -204,6 +209,44 @@ namespace RendererRuntime
 		*/
 		inline const Textures& getTextures() const;
 
+		//[-------------------------------------------------------]
+		//[ Misc                                                  ]
+		//[-------------------------------------------------------]
+		// TODO(co) Asynchronous loading completion
+		bool isFullyLoaded() const;
+
+		/**
+		*  @brief
+		*    Fill the pass uniform buffer
+		*
+		*  @param[in] worldSpaceToViewSpaceTransform
+		*    World space to view space transform
+		*/
+		void fillPassUniformBuffer(const Transform& worldSpaceToViewSpaceTransform) const;
+
+		/**
+		*  @brief
+		*    Fill the material uniform buffer
+		*/
+		void fillMaterialUniformBuffer() const;
+
+		/**
+		*  @brief
+		*    Fill the instance uniform buffer
+		*
+		*  @param[in] objectSpaceToWorldSpaceTransform
+		*    Object space to world space transform
+		*  @param[in] materialResource
+		*    Used material resource
+		*/
+		void fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialResource& materialResource) const;
+
+		/**
+		*  @brief
+		*    Bind the material blueprint resource to the used renderer
+		*/
+		void bindToRenderer() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -211,6 +254,14 @@ namespace RendererRuntime
 	private:
 		MaterialBlueprintResource(const MaterialBlueprintResource&) = delete;
 		MaterialBlueprintResource& operator=(const MaterialBlueprintResource&) = delete;
+		void linkedMaterialResource(MaterialResource& materialResource);
+
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<MaterialResource*> LinkedMaterialResources;
 
 
 	//[-------------------------------------------------------]
@@ -220,9 +271,17 @@ namespace RendererRuntime
 		SortedMaterialPropertyVector mSortedMaterialPropertyVector;
 		Renderer::IRootSignature*	 mRootSignature;	///< Root signature, can be a null pointer
 		Renderer::PipelineState		 mPipelineState;
+		// Resource
 		UniformBuffers				 mUniformBuffers;
 		SamplerStates				 mSamplerStates;
 		Textures					 mTextures;
+		// Ease-of-use direct access
+		UniformBuffer* mPassUniformBuffer;		///< Can be a null pointer, don't destroy the instance
+		UniformBuffer* mMaterialUniformBuffer;	///< Can be a null pointer, don't destroy the instance
+		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
+
+		LinkedMaterialResources mLinkedMaterialResources;	// TODO(co) Decent material resource list management inside the material blueprint resource (link, unlink etc.)
+
 
 	// TODO(co) Make this private
 	public:

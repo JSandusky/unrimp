@@ -249,6 +249,11 @@ namespace RendererRuntime
 		return mValueType;
 	}
 
+	inline const uint8_t* MaterialPropertyValue::getData() const
+	{
+		return reinterpret_cast<const uint8_t*>(&mValue);
+	}
+
 	inline bool MaterialPropertyValue::getBooleanValue() const
 	{
 		assert(ValueType::BOOLEAN == mValueType);

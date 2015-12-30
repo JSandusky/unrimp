@@ -64,10 +64,27 @@ namespace RendererRuntime
 	MaterialResource::MaterialResource(ResourceId resourceId) :
 		IResource(resourceId),
 		mMaterialBlueprintResource(nullptr),
+		mMaterialUniformBufferIndex(0),
 		mPipelineState(Renderer::PipelineStateBuilder()),
 		mPipelineStateObject(nullptr)
 	{
 		// Nothing here
+	}
+
+	const MaterialProperty* MaterialResource::getMaterialPropertyById(MaterialPropertyId materialPropertyId) const
+	{
+		SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(mSortedMaterialPropertyVector.cbegin(), mSortedMaterialPropertyVector.cend(), materialPropertyId, detail::OrderByMaterialPropertyId());
+		if (iterator != mSortedMaterialPropertyVector.end())
+		{
+			MaterialProperty* materialProperty = iterator._Ptr;
+			if (materialProperty->getMaterialPropertyId() == materialPropertyId)
+			{
+				return materialProperty;
+			}
+		}
+
+		// Error!
+		return nullptr;
 	}
 
 	Renderer::IPipelineState* MaterialResource::getPipelineStateObject()
@@ -186,7 +203,7 @@ namespace RendererRuntime
 		}
 	}
 
-	bool MaterialResource::setGraphicsRootDescriptorTable(const RendererRuntime::IRendererRuntime& rendererRuntime)
+	void MaterialResource::setGraphicsRootDescriptorTable(const IRendererRuntime& rendererRuntime)
 	{
 		assert(nullptr != mMaterialBlueprintResource);
 
@@ -224,17 +241,12 @@ namespace RendererRuntime
 				if (0 != texture.materialPropertyId)
 				{
 					// Figure out the material property value
-					const MaterialPropertyId materialPropertyId = texture.materialPropertyId;
-					SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(mSortedMaterialPropertyVector.cbegin(), mSortedMaterialPropertyVector.cend(), materialPropertyId, detail::OrderByMaterialPropertyId());
-					if (iterator != mSortedMaterialPropertyVector.end())
+					const MaterialProperty* materialProperty = getMaterialPropertyById(texture.materialPropertyId);
+					if (nullptr != materialProperty)
 					{
-						MaterialProperty* materialProperty = iterator._Ptr;
-						if (materialProperty->getMaterialPropertyId() == materialPropertyId)
-						{
-							// TODO(co) Error handling: Usage mismatch etc.
-							texture.textureAssetId = materialProperty->getAssetIdValue();
-							texture.textureResource = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);	// TODO(co) Implement decent resource management
-						}
+						// TODO(co) Error handling: Usage mismatch etc.
+						texture.textureAssetId = materialProperty->getAssetIdValue();
+						texture.textureResource = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);	// TODO(co) Implement decent resource management
 					}
 				}
 
@@ -261,9 +273,6 @@ namespace RendererRuntime
 				}
 			}
 		}
-
-		// Done
-		return true;
 	}
 
 

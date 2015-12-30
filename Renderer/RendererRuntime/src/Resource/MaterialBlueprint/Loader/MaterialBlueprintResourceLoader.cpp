@@ -221,7 +221,22 @@ namespace RendererRuntime
 				{
 					// Create the uniform buffer renderer resource (GPU alignment is handled by the renderer backend)
 					MaterialBlueprintResource::UniformBuffer& uniformBuffer = uniformBuffers[i];
+					uniformBuffer.scratchBuffer.resize(uniformBuffer.uniformBufferNumberOfBytes);
 					uniformBuffer.uniformBufferPtr = shaderLanguage->createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+
+					// Ease-of-use direct access
+					if (MaterialBlueprintResource::UniformBufferUsage::PASS == uniformBuffer.uniformBufferUsage)
+					{
+						mMaterialBlueprintResource->mPassUniformBuffer = &uniformBuffer;
+					}
+					else if (MaterialBlueprintResource::UniformBufferUsage::MATERIAL == uniformBuffer.uniformBufferUsage)
+					{
+						mMaterialBlueprintResource->mMaterialUniformBuffer = &uniformBuffer;
+					}
+					else if (MaterialBlueprintResource::UniformBufferUsage::INSTANCE == uniformBuffer.uniformBufferUsage)
+					{
+						mMaterialBlueprintResource->mInstanceUniformBuffer = &uniformBuffer;
+					}
 				}
 			}
 		}

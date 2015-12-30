@@ -163,6 +163,7 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Value getter                                          ]
 		//[-------------------------------------------------------]
+		inline const uint8_t* getData() const;
 		inline bool getBooleanValue() const;
 		inline int getIntegerValue() const;
 		inline const int* getInteger2Value() const;
