@@ -176,22 +176,12 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialResource::setGraphicsRootDescriptorTable(const IRendererRuntime& rendererRuntime)
+	void MaterialResource::bindToRenderer(const IRendererRuntime& rendererRuntime)
 	{
 		assert(nullptr != mMaterialBlueprintResource);
 
 		// TODO(co) This is experimental and will certainly look different when everything is in place
 		Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
-
-		{ // Graphics root descriptor table: Set sampler states
-			const MaterialBlueprintResource::SamplerStates& samplerStates = mMaterialBlueprintResource->getSamplerStates();
-			const size_t numberOfSamplerStates = samplerStates.size();
-			for (size_t i = 0; i < numberOfSamplerStates; ++i)
-			{
-				const MaterialBlueprintResource::SamplerState& samplerState = samplerStates[i];
-				renderer.setGraphicsRootDescriptorTable(samplerState.rootParameterIndex, samplerState.samplerStatePtr);
-			}
-		}
 
 		// Need for gathering the textures now?
 		if (mTextures.empty())

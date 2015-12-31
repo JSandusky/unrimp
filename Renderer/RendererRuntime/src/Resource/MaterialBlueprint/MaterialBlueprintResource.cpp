@@ -438,6 +438,15 @@ namespace RendererRuntime
 				renderer.setGraphicsRootDescriptorTable(uniformBuffer.rootParameterIndex, uniformBuffer.uniformBufferPtr);
 			}
 		}
+
+		{ // Graphics root descriptor table: Set our sampler states
+			const size_t numberOfSamplerStates = mSamplerStates.size();
+			for (size_t i = 0; i < numberOfSamplerStates; ++i)
+			{
+				const SamplerState& samplerState = mSamplerStates[i];
+				renderer.setGraphicsRootDescriptorTable(samplerState.rootParameterIndex, samplerState.samplerStatePtr);
+			}
+		}
 	}
 
 

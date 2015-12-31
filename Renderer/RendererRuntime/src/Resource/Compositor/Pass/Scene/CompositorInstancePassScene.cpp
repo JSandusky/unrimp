@@ -67,23 +67,23 @@ namespace
 			const RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = mMaterialResource->getMaterialBlueprintResource();
 			if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
 			{
-				// Fill the pass uniform buffer
-				// TODO(co) Camera usage
-				const RendererRuntime::Transform worldSpaceToViewSpaceTransform;
-				materialBlueprintResource->fillPassUniformBuffer(worldSpaceToViewSpaceTransform);
-
-				// Fill the material uniform buffer
-				materialBlueprintResource->fillMaterialUniformBuffer();
-
-				// Bind the material blueprint resource to the used renderer
-				materialBlueprintResource->bindToRenderer();
-
-				// Graphics root descriptor table: Set material specific tables
-				mMaterialResource->setGraphicsRootDescriptorTable(rendererRuntime);
-
 				Renderer::IPipelineState* pipelineState = mMaterialResource->getPipelineStateObject();
 				if (nullptr != pipelineState)
 				{
+					// Fill the pass uniform buffer
+					// TODO(co) Camera usage
+					const RendererRuntime::Transform worldSpaceToViewSpaceTransform;
+					materialBlueprintResource->fillPassUniformBuffer(worldSpaceToViewSpaceTransform);
+
+					// Fill the material uniform buffer
+					materialBlueprintResource->fillMaterialUniformBuffer();
+
+					// Bind the material blueprint resource to the used renderer
+					materialBlueprintResource->bindToRenderer();
+
+					// Bind the material resource to the used renderer
+					mMaterialResource->bindToRenderer(rendererRuntime);
+
 					// Set the used pipeline state object (PSO)
 					renderer.setPipelineState(pipelineState);
 

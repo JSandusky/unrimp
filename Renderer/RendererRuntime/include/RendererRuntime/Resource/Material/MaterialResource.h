@@ -170,7 +170,7 @@ namespace RendererRuntime
 
 		// TODO(co)
 		void releasePipelineState();
-		void setGraphicsRootDescriptorTable(const IRendererRuntime& rendererRuntime);
+		void bindToRenderer(const IRendererRuntime& rendererRuntime);
 
 
 	//[-------------------------------------------------------]
