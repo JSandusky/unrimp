@@ -39,6 +39,7 @@ namespace RendererToolkit
 
 	namespace detail
 	{
+
 		bool orderByMaterialPropertyId(const RendererRuntime::MaterialProperty& left, const RendererRuntime::MaterialProperty& right)
 		{
 			return (left.getMaterialPropertyId() < right.getMaterialPropertyId());
@@ -682,9 +683,22 @@ namespace RendererToolkit
 
 			// Sum up the number of bytes required by all uniform buffer element properties
 			uint32_t numberOfBytesPerElement = 0;
-			for (size_t i = 0; i < elementProperties.size(); ++i)
+			for (size_t i = 0, numberOfPackageBytes = 0; i < elementProperties.size(); ++i)
 			{
-				numberOfBytesPerElement += RendererRuntime::MaterialPropertyValue::getValueTypeNumberOfBytes(elementProperties[i].getValueType());
+				// Get value type number of bytes
+				const uint32_t valueTypeNumberOfBytes = RendererRuntime::MaterialPropertyValue::getValueTypeNumberOfBytes(elementProperties[i].getValueType());
+				numberOfBytesPerElement += valueTypeNumberOfBytes;
+
+				// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+				if (0 != numberOfPackageBytes && numberOfPackageBytes + valueTypeNumberOfBytes > 16)
+				{
+					// Take the wasted bytes due to aligned packaging into account and restart the package bytes counter
+					numberOfBytesPerElement += 4 * 4 - numberOfPackageBytes;
+					numberOfPackageBytes = 0;
+
+					// TODO(co) Profiling information: We could provide the material blueprint resource writer with information how many bytes get wasted with the defined layout
+				}
+				numberOfPackageBytes += valueTypeNumberOfBytes % 16;
 			}
 
 			{ // Write down the uniform buffer header

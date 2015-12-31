@@ -13,42 +13,42 @@
 				"Usage": "STATIC",
 				"ValueType": "BOOLEAN",
 				"Value": "TRUE",
-				"Description": "Perform lighting?"
+				"Description": "Perform lighting on the material?"
 			},
 			"DiffuseColor":
 			{
 				"Usage": "DYNAMIC",
 				"ValueType": "FLOAT_4",
 				"Value": "1.0 1.0 1.0 1.0",
-				"Description": "Diffuse color"
+				"Description": "Material diffuse color"
 			},
 			"DiffuseMap":
 			{
 				"Usage": "TEXTURE",
 				"ValueType": "ASSET_ID",
 				"Value": "4",
-				"Description": "Diffuse map"
+				"Description": "Material diffuse map"
 			},
 			"EmissiveMap":
 			{
 				"Usage": "TEXTURE",
 				"ValueType": "ASSET_ID",
 				"Value": "5",
-				"Description": "Emissive map"
+				"Description": "Material emissive map"
 			},
 			"NormalMap":
 			{
 				"Usage": "TEXTURE",
 				"ValueType": "ASSET_ID",
 				"Value": "6",
-				"Description": "Normal map"
+				"Description": "Material normal map"
 			},
 			"SpecularMap":
 			{
 				"Usage": "TEXTURE",
 				"ValueType": "ASSET_ID",
 				"Value": "7",
-				"Description": "Specular map"
+				"Description": "Material specular map"
 			}
 		},
 		"RootSignature":
@@ -67,7 +67,7 @@
 							"BaseShaderRegisterName": "PassUniformBuffer"
 						}
 					},
-					"ShaderVisibility": "VERTEX"
+					"ShaderVisibility": "ALL"
 				},
 				"1":
 				{
@@ -339,6 +339,27 @@
 							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
 						},
 						"2":
+						{
+							"Name": "ViewSpaceSunLightDirection",
+							"Usage": "REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@VIEW_SPACE_SUN_LIGHT_DIRECTION"
+						},
+						"3":
+						{
+							"Name": "SunLightColor",
+							"Usage": "STATIC",
+							"ValueType": "FLOAT_3",
+							"Value": "1.0 1.0 1.0"
+						},
+						"4":
+						{
+							"Name": "Wetness",
+							"Usage": "STATIC",
+							"ValueType": "FLOAT",
+							"Value": "1.0"
+						},
+						"5":
 						{
 							"Name": "StaticPropertyTest",
 							"Usage": "STATIC",

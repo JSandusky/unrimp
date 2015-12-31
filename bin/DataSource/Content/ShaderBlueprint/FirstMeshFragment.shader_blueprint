@@ -40,6 +40,15 @@ struct VS_OUTPUT
 };
 
 // Uniform buffers
+cbuffer PassUniformBuffer : register(b0)
+{
+	float4x4 WorldSpaceToViewSpaceMatrix;
+	float4x4 WorldSpaceToClipSpaceMatrix;
+	float3	 ViewSpaceSunLightDirection;
+	float3	 SunLightColor;
+	float	 Wetness;
+	float	 StaticPropertyTest;
+}
 struct Material
 {
 	float4 DiffuseColor;
@@ -73,17 +82,19 @@ SamplerState SamplerLinear : register(s0);
 		// Perform standard Blinn-Phong diffuse and specular lighting
 
 		// Calculate the diffuse lighting
-		float diffuseLight = max(dot(normal, ViewSpaceLightDirection), 0.0f);
+		float diffuseLightFactor = max(dot(normal, ViewSpaceSunLightDirection), 0.0f);
+		float3 diffuseLightColor = SunLightColor * diffuseLightFactor;
 
 		// Calculate the specular lighting
-		float3 viewSpaceHalfVector = normalize(ViewSpaceLightDirection + ViewSpaceViewVector);
-		float specularLight = (diffuseLight > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
+		float3 viewSpaceHalfVector = normalize(ViewSpaceSunLightDirection + ViewSpaceViewVector);
+		float specularLightFactor = (diffuseLightFactor > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
+		float3 specularLightColor = Wetness * SunLightColor * specularLightFactor;
 	@end
 @end
 @property(!Lighting)
 	@piece(CalculateLighting)
-		float diffuseLight = 1.0f;
-		float specularLight = 0.0f;
+		float diffuseLightColor = 1.0f;
+		float specularLightColor = 0.0f;
 	@end
 @end
 
@@ -97,8 +108,7 @@ float4 main(VS_OUTPUT input) : SV_Target
 	Material material = Materials[MaterialIndex];
 
 	// Build in variables
-	float3 ViewSpaceLightDirection = normalize(float3(0.5f, 0.5f, 1.0f));	// View space light direction
-	float3 ViewSpaceViewVector     = float3(0.0f, 0.0f, 1.0f);				// In view space, we always look along the positive z-axis
+	float3 ViewSpaceViewVector = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
 
 	// Get the per fragment normal [0..1] by using a tangent space normal map
 	float3 normal = NormalMap.Sample(SamplerLinear, input.TexCoord).rgb;
@@ -113,10 +123,10 @@ float4 main(VS_OUTPUT input) : SV_Target
 	@insertpiece(CalculateLighting)
 
 	// Calculate the fragment color
-	float4 color = diffuseLight * material.DiffuseColor * DiffuseMap.Sample(SamplerLinear, input.TexCoord);	// Diffuse term
-	color.rgb += specularLight * SpecularMap.Sample(SamplerLinear, input.TexCoord).rgb;				// Specular term
-	color.rgb += EmissiveMap.Sample(SamplerLinear, input.TexCoord).rgb;								// Emissive term
+	float3 color = diffuseLightColor * material.DiffuseColor * DiffuseMap.Sample(SamplerLinear, input.TexCoord);	// Diffuse term
+	color += specularLightColor * SpecularMap.Sample(SamplerLinear, input.TexCoord).rgb;							// Specular term
+	color += EmissiveMap.Sample(SamplerLinear, input.TexCoord).rgb;													// Emissive term
 
 	// Done
-	return min(color * material.StaticPropertyTest, float4(1.0f, 1.0f, 1.0f, 1.0f));
+	return min(float4(color * material.StaticPropertyTest, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));
 }

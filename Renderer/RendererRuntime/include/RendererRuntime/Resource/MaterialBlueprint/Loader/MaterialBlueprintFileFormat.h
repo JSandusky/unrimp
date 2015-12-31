@@ -91,7 +91,7 @@ namespace RendererRuntime
 				MaterialBlueprintResource::UniformBufferUsage uniformBufferUsage;
 				uint32_t									  numberOfElements;
 				uint32_t									  numberOfElementProperties;
-				uint32_t									  uniformBufferNumberOfBytes;
+				uint32_t									  uniformBufferNumberOfBytes;	///< Includes handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
 			};
 
 			struct SamplerState : public Renderer::SamplerState

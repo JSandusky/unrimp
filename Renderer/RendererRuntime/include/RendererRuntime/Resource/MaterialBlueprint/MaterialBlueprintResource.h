@@ -70,6 +70,10 @@ namespace RendererRuntime
 	/**
 	*  @brief
 	*    Material blueprint resource
+	*
+	*  @note
+	*    - Automatic handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+	*    - When writing new material blueprint resources, you might want to take the packing rules for uniform variables into account for an efficient data layout
 	*/
 	class MaterialBlueprintResource : public IResource
 	{
@@ -108,7 +112,7 @@ namespace RendererRuntime
 			UniformBufferUsage			   uniformBufferUsage;
 			uint32_t					   numberOfElements;
 			UniformBufferElementProperties uniformBufferElementProperties;
-			uint32_t					   uniformBufferNumberOfBytes;
+			uint32_t					   uniformBufferNumberOfBytes;	///< Includes handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
 			ScratchBuffer				   scratchBuffer;
 			Renderer::IUniformBufferPtr	   uniformBufferPtr;
 		};

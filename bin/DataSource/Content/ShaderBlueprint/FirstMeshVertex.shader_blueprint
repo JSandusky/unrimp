@@ -47,6 +47,9 @@ cbuffer PassUniformBuffer : register(b0)
 {
 	float4x4 WorldSpaceToViewSpaceMatrix;
 	float4x4 WorldSpaceToClipSpaceMatrix;
+	float3	 ViewSpaceSunLightDirection;
+	float3	 SunLightColor;
+	float	 Wetness;
 	float	 StaticPropertyTest;
 }
 cbuffer InstanceUniformBuffer : register(b2)

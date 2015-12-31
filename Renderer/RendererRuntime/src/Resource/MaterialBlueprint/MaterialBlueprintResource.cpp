@@ -156,12 +156,21 @@ namespace RendererRuntime
 			uint8_t* scratchBufferPointer = scratchBuffer.data();
 			const UniformBufferElementProperties& uniformBufferElementProperties = mPassUniformBuffer->uniformBufferElementProperties;
 			const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
-			for (size_t i = 0; i < numberOfUniformBufferElementProperties; ++i)
+			for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
 			{
 				const MaterialProperty& uniformBufferElementProperty = uniformBufferElementProperties[i];
 
 				// Get value type number of bytes
 				const uint32_t valueTypeNumberOfBytes = uniformBufferElementProperty.getValueTypeNumberOfBytes(uniformBufferElementProperty.getValueType());
+
+				// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+				if (0 != numberOfPackageBytes && numberOfPackageBytes + valueTypeNumberOfBytes > 16)
+				{
+					// Move the scratch buffer pointer to the location of the next aligned package and restart the package bytes counter
+					scratchBufferPointer += 4 * 4 - numberOfPackageBytes;
+					numberOfPackageBytes = 0;
+				}
+				numberOfPackageBytes += valueTypeNumberOfBytes % 16;
 
 				// Copy the property value into the scratch buffer
 				if (MaterialProperty::Usage::REFERENCE == uniformBufferElementProperty.getUsage())
@@ -176,6 +185,14 @@ namespace RendererRuntime
 					else if (detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 					{
 						memcpy(scratchBufferPointer, glm::value_ptr(worldSpaceToClipSpaceMatrix), valueTypeNumberOfBytes);
+					}
+
+					// TODO(co) This is already special and better handled by customized listener
+					else if (StringId("VIEW_SPACE_SUN_LIGHT_DIRECTION") == referenceValue)
+					{
+						glm::vec3 viewSpaceLightDirection(0.5f, 0.5f, 1.0f);
+						viewSpaceLightDirection = glm::normalize(viewSpaceLightDirection);
+						memcpy(scratchBufferPointer, glm::value_ptr(viewSpaceLightDirection), valueTypeNumberOfBytes);
 					}
 				}
 				else
@@ -213,12 +230,21 @@ namespace RendererRuntime
 
 				uint8_t* scratchBufferPointer = scratchBuffer.data() + numberOfBytesPerElement * materialIndex;
 
-				for (size_t i = 0; i < numberOfUniformBufferElementProperties; ++i)
+				for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
 				{
 					const MaterialProperty& uniformBufferElementProperty = uniformBufferElementProperties[i];
 
 					// Get value type number of bytes
 					const uint32_t valueTypeNumberOfBytes = uniformBufferElementProperty.getValueTypeNumberOfBytes(uniformBufferElementProperty.getValueType());
+
+					// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+					if (0 != numberOfPackageBytes && numberOfPackageBytes + valueTypeNumberOfBytes > 16)
+					{
+						// Move the scratch buffer pointer to the location of the next aligned package and restart the package bytes counter
+						scratchBufferPointer += 4 * 4 - numberOfPackageBytes;
+						numberOfPackageBytes = 0;
+					}
+					numberOfPackageBytes += valueTypeNumberOfBytes % 16;
 
 					// Copy the property value into the scratch buffer
 					if (MaterialProperty::Usage::REFERENCE == uniformBufferElementProperty.getUsage())
@@ -262,12 +288,21 @@ namespace RendererRuntime
 			uint8_t* scratchBufferPointer = scratchBuffer.data();
 			const UniformBufferElementProperties& uniformBufferElementProperties = mInstanceUniformBuffer->uniformBufferElementProperties;
 			const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
-			for (size_t i = 0; i < numberOfUniformBufferElementProperties; ++i)
+			for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
 			{
 				const MaterialProperty& uniformBufferElementProperty = uniformBufferElementProperties[i];
 
 				// Get value type number of bytes
 				const uint32_t valueTypeNumberOfBytes = uniformBufferElementProperty.getValueTypeNumberOfBytes(uniformBufferElementProperty.getValueType());
+
+				// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+				if (0 != numberOfPackageBytes && numberOfPackageBytes + valueTypeNumberOfBytes > 16)
+				{
+					// Move the scratch buffer pointer to the location of the next aligned package and restart the package bytes counter
+					scratchBufferPointer += 4 * 4 - numberOfPackageBytes;
+					numberOfPackageBytes = 0;
+				}
+				numberOfPackageBytes += valueTypeNumberOfBytes % 16;
 
 				// Copy the property value into the scratch buffer
 				if (MaterialProperty::Usage::REFERENCE == uniformBufferElementProperty.getUsage())
