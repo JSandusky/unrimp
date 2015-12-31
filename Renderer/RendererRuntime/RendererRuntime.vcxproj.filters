@@ -258,6 +258,12 @@
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.inl">
       <Filter>Source Files\Resource\MaterialBlueprint</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceListener.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\IMaterialBlueprintResourceListener.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -572,6 +578,12 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceFileFormat.h">
       <Filter>Source Files\Resource\ShaderPiece\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceListener.h">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\IMaterialBlueprintResourceListener.h">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

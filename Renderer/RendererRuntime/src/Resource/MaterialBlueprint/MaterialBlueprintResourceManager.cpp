@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
@@ -34,6 +35,18 @@
 
 
 //[-------------------------------------------------------]
+//[ Global variables in anonymous namespace               ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+		static const RendererRuntime::MaterialBlueprintResourceListener defaultMaterialBlueprintResourceListener;
+	}
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -43,6 +56,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	void MaterialBlueprintResourceManager::setMaterialBlueprintResourceListener(const IMaterialBlueprintResourceListener* materialBlueprintResourceListener)
+	{
+		// There must always be a valid material blueprint resource listener instance
+		mMaterialBlueprintResourceListener = (nullptr != materialBlueprintResourceListener) ? materialBlueprintResourceListener : &::detail::defaultMaterialBlueprintResourceListener;
+	}
+
 	// TODO(co) Work-in-progress
 	MaterialBlueprintResource* MaterialBlueprintResourceManager::loadMaterialBlueprintResourceByAssetId(AssetId assetId, bool reload)
 	{
@@ -156,7 +175,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	MaterialBlueprintResourceManager::MaterialBlueprintResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+		mRendererRuntime(rendererRuntime),
+		mMaterialBlueprintResourceListener(&::detail::defaultMaterialBlueprintResourceListener)
 	{
 		// Nothing in here
 	}

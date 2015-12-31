@@ -19,6 +19,18 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/MaterialBlueprint/IMaterialBlueprintResourceListener.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -26,22 +38,51 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Material blueprint resource listener
+	*/
+	class MaterialBlueprintResourceListener : public IMaterialBlueprintResourceListener
+	{
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const IMaterialBlueprintResourceListener& MaterialBlueprintResourceManager::getMaterialBlueprintResourceListener() const
-	{
-		// We know this pointer must always be valid
-		assert(nullptr != mMaterialBlueprintResourceListener);
-		return *mMaterialBlueprintResourceListener;
-	}
+	public:
+		/**
+		*  @brief
+		*    Default constructor
+		*/
+		inline MaterialBlueprintResourceListener();
 
-	inline const MaterialBlueprintResourceManager::SortedGlobalMaterialPropertyVector& MaterialBlueprintResourceManager::getSortedGlobalMaterialPropertyVector() const
-	{
-		return mSortedGlobalMaterialPropertyVector;
-	}
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~MaterialBlueprintResourceListener();
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		MaterialBlueprintResourceListener(const MaterialBlueprintResourceListener&) = delete;
+		MaterialBlueprintResourceListener& operator=(const MaterialBlueprintResourceListener&) = delete;
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceListener.inl"

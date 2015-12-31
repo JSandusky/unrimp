@@ -26,18 +26,16 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline const IMaterialBlueprintResourceListener& MaterialBlueprintResourceManager::getMaterialBlueprintResourceListener() const
+	inline IMaterialBlueprintResourceListener::IMaterialBlueprintResourceListener()
 	{
-		// We know this pointer must always be valid
-		assert(nullptr != mMaterialBlueprintResourceListener);
-		return *mMaterialBlueprintResourceListener;
+		// Nothing here
 	}
 
-	inline const MaterialBlueprintResourceManager::SortedGlobalMaterialPropertyVector& MaterialBlueprintResourceManager::getSortedGlobalMaterialPropertyVector() const
+	inline IMaterialBlueprintResourceListener::~IMaterialBlueprintResourceListener()
 	{
-		return mSortedGlobalMaterialPropertyVector;
+		// Nothing here
 	}
 
 

@@ -39,8 +39,10 @@
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceManager.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\IMaterialBlueprintResourceListener.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResource.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceListener.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Material\Loader\MaterialResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialProperty.inl" />
@@ -117,9 +119,11 @@
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\IMaterialBlueprintResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResource.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\Loader\MaterialFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Material\Loader\MaterialResourceLoader.h" />
