@@ -122,7 +122,97 @@ namespace RendererRuntime
 		return (IResource::LoadingState::LOADED == getLoadingState() && nullptr != mRootSignature && detail::isFullyLoaded(mVertexShaderBlueprint) && detail::isFullyLoaded(mFragmentShaderBlueprint));
 	}
 
-	void MaterialBlueprintResource::fillPassUniformBuffer(const Transform& worldSpaceToViewSpaceTransform) const
+	void MaterialBlueprintResource::fillUnknownUniformBuffers()
+	{
+		const size_t numberOfUniformBuffers = mUniformBuffers.size();
+		for (size_t uniformBufferIndex = 0; uniformBufferIndex < numberOfUniformBuffers; ++uniformBufferIndex)
+		{
+			UniformBuffer& uniformBuffer = mUniformBuffers[uniformBufferIndex];
+			if (uniformBuffer.uniformBufferUsage == UniformBufferUsage::UNKNOWN)
+			{
+				assert(1 == uniformBuffer.numberOfElements);
+
+				// Update the scratch buffer
+				ScratchBuffer& scratchBuffer = uniformBuffer.scratchBuffer;
+				{
+					uint8_t* scratchBufferPointer = scratchBuffer.data();
+					const UniformBufferElementProperties& uniformBufferElementProperties = uniformBuffer.uniformBufferElementProperties;
+					const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
+					for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
+					{
+						const MaterialProperty& uniformBufferElementProperty = uniformBufferElementProperties[i];
+
+						// Get value type number of bytes
+						const uint32_t valueTypeNumberOfBytes = uniformBufferElementProperty.getValueTypeNumberOfBytes(uniformBufferElementProperty.getValueType());
+
+						// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+						if (0 != numberOfPackageBytes && numberOfPackageBytes + valueTypeNumberOfBytes > 16)
+						{
+							// Move the scratch buffer pointer to the location of the next aligned package and restart the package bytes counter
+							scratchBufferPointer += 4 * 4 - numberOfPackageBytes;
+							numberOfPackageBytes = 0;
+						}
+						numberOfPackageBytes += valueTypeNumberOfBytes % 16;
+
+						// Copy the property value into the scratch buffer
+						const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
+						if (MaterialProperty::Usage::UNKNOWN_REFERENCE == usage)	// Most likely the case, so check this first
+						{
+							// Resolve the property reference
+							// TODO(co) Add more of those automatic values, maybe even a listener interface to allow customization
+							const uint32_t referenceValue = uniformBufferElementProperty.getReferenceValue();
+
+							// TODO(co) This is already special and better handled by customized listener
+							if (StringId("TEST_3") == referenceValue)
+							{
+								glm::vec3 test3(0.5f, 1.0f, 0.2f);
+								memcpy(scratchBufferPointer, glm::value_ptr(test3), valueTypeNumberOfBytes);
+							}
+
+							else
+							{
+								// Error, can't resolve reference
+								assert(false);
+							}
+						}
+						else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
+						{
+							// Figure out the global material property value
+							const MaterialProperty* materialProperty = mMaterialBlueprintResourceManager.getGlobalMaterialPropertyById(uniformBufferElementProperty.getReferenceValue());
+							if (nullptr != materialProperty)
+							{
+								// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
+								memcpy(scratchBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
+							}
+							else
+							{
+								// Error, can't resolve reference
+								assert(false);
+							}
+						}
+						else if (!uniformBufferElementProperty.isReferenceUsage())	// TODO(co) Performance: Think about such tests, the toolkit should already take care of this so we have well known verified runtime data
+						{
+							// Just copy over the property value
+							memcpy(scratchBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
+						}
+						else
+						{
+							// Error, invalid property
+							assert(false);
+						}
+
+						// Next property
+						scratchBufferPointer += valueTypeNumberOfBytes;
+					}
+				}
+
+				// Update the uniform buffer by using our scratch buffer
+				uniformBuffer.uniformBufferPtr->copyDataFrom(scratchBuffer.size(), scratchBuffer.data());
+			}
+		}
+	}
+
+	void MaterialBlueprintResource::fillPassUniformBuffer(const Transform& worldSpaceToViewSpaceTransform)
 	{
 		assert(nullptr != mPassUniformBuffer);
 		assert(1 == mPassUniformBuffer->numberOfElements);
@@ -239,7 +329,7 @@ namespace RendererRuntime
 		mPassUniformBuffer->uniformBufferPtr->copyDataFrom(scratchBuffer.size(), scratchBuffer.data());
 	}
 
-	void MaterialBlueprintResource::fillMaterialUniformBuffer() const
+	void MaterialBlueprintResource::fillMaterialUniformBuffer()
 	{
 		assert(nullptr != mMaterialUniformBuffer);
 
@@ -332,7 +422,7 @@ namespace RendererRuntime
 		mMaterialUniformBuffer->uniformBufferPtr->copyDataFrom(scratchBuffer.size(), scratchBuffer.data());
 	}
 
-	void MaterialBlueprintResource::fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialResource& materialResource) const
+	void MaterialBlueprintResource::fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialResource& materialResource)
 	{
 		assert(this == materialResource.getMaterialBlueprintResource());
 		assert(nullptr != mInstanceUniformBuffer);

@@ -98,10 +98,10 @@ namespace RendererRuntime
 		*/
 		enum class UniformBufferUsage : uint8_t
 		{
-			UNKNOWN = 0,	///< Unknown uniform buffer usage
-			PASS,			///< Pass uniform buffer usage
-			MATERIAL,		///< Material uniform buffer usage
-			INSTANCE		///< Instance uniform buffer usage
+			UNKNOWN = 0,	///< Unknown uniform buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "UNKNOWN_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
+			PASS,			///< Pass uniform buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "PASS_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
+			MATERIAL,		///< Material uniform buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "MATERIAL_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
+			INSTANCE		///< Instance uniform buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "INSTANCE_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
 		};
 
 		typedef std::vector<MaterialProperty> UniformBufferElementProperties;
@@ -224,18 +224,27 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Fill the unknown uniform buffers
+		*
+		*  @notes
+		*    - Stick to pass, material and instance uniform buffers and avoid unknown uniform buffers whenever possible
+		*/
+		void fillUnknownUniformBuffers();
+
+		/**
+		*  @brief
 		*    Fill the pass uniform buffer
 		*
 		*  @param[in] worldSpaceToViewSpaceTransform
 		*    World space to view space transform
 		*/
-		void fillPassUniformBuffer(const Transform& worldSpaceToViewSpaceTransform) const;
+		void fillPassUniformBuffer(const Transform& worldSpaceToViewSpaceTransform);
 
 		/**
 		*  @brief
 		*    Fill the material uniform buffer
 		*/
-		void fillMaterialUniformBuffer() const;
+		void fillMaterialUniformBuffer();
 
 		/**
 		*  @brief
@@ -246,7 +255,7 @@ namespace RendererRuntime
 		*  @param[in] materialResource
 		*    Used material resource
 		*/
-		void fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialResource& materialResource) const;
+		void fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialResource& materialResource);
 
 		/**
 		*  @brief

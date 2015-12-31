@@ -73,9 +73,10 @@ namespace RendererRuntime
 			SAMPLER_STATE,			///< Sampler state, property is considered to not change regularly
 			TEXTURE_REFERENCE,		///< Property is a texture asset reference, property is considered to not change regularly
 			GLOBAL_REFERENCE,		///< Property is a global material property reference
-			PASS_REFERENCE,			///< Property is an automatic pass property reference
-			MATERIAL_REFERENCE,		///< Property is a material property reference
-			INSTANCE_REFERENCE		///< Property is an automatic instance property reference
+			UNKNOWN_REFERENCE,		///< Property is an automatic unknown uniform buffer property reference
+			PASS_REFERENCE,			///< Property is an automatic pass uniform buffer property reference
+			MATERIAL_REFERENCE,		///< Property is a material uniform buffer property reference
+			INSTANCE_REFERENCE		///< Property is an automatic instance uniform buffer property reference
 		};
 
 
@@ -84,6 +85,18 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline static MaterialPropertyValue materialPropertyValueFromReference(ValueType valueType, uint32_t reference);
+
+		/**
+		*  @brief
+		*    Return whether or not the provided material blueprint property usage is a reference to something else
+		*
+		*  @param[in] usage
+		*    Usage to check
+		*
+		*  @return
+		*    "true" if the provided material blueprint property usage is a reference to something else, else "false"
+		*/
+		inline static bool isReferenceUsage(Usage usage);
 
 
 	//[-------------------------------------------------------]

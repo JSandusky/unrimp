@@ -64,12 +64,15 @@ namespace
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
-			const RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = mMaterialResource->getMaterialBlueprintResource();
+			RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = mMaterialResource->getMaterialBlueprintResource();
 			if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
 			{
 				Renderer::IPipelineState* pipelineState = mMaterialResource->getPipelineStateObject();
 				if (nullptr != pipelineState)
 				{
+					// Fill the unknown uniform buffers
+					materialBlueprintResource->fillUnknownUniformBuffers();
+
 					// Fill the pass uniform buffer
 					// TODO(co) Camera usage
 					const RendererRuntime::Transform worldSpaceToViewSpaceTransform;

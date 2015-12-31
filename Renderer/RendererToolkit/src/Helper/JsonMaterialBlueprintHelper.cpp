@@ -126,6 +126,7 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(SAMPLER_STATE)
 		ELSE_IF_VALUE(TEXTURE_REFERENCE)
 		ELSE_IF_VALUE(GLOBAL_REFERENCE)
+		ELSE_IF_VALUE(UNKNOWN_REFERENCE)
 		ELSE_IF_VALUE(PASS_REFERENCE)
 		ELSE_IF_VALUE(MATERIAL_REFERENCE)
 		ELSE_IF_VALUE(INSTANCE_REFERENCE)
@@ -493,10 +494,7 @@ namespace RendererToolkit
 			// Material property usage
 			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(jsonPropertyObject);
 			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(jsonPropertyObject);
-			if (RendererRuntime::MaterialProperty::Usage::GLOBAL_REFERENCE == usage ||
-				RendererRuntime::MaterialProperty::Usage::PASS_REFERENCE == usage ||
-				RendererRuntime::MaterialProperty::Usage::MATERIAL_REFERENCE == usage ||
-				RendererRuntime::MaterialProperty::Usage::INSTANCE_REFERENCE == usage)
+			if (RendererRuntime::MaterialProperty::isReferenceUsage(usage))
 			{
 				// Get the reference value as string
 				static const uint32_t NAME_LENGTH = 128;

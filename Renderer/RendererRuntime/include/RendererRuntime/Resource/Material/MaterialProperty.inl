@@ -36,6 +36,11 @@ namespace RendererRuntime
 		return materialPropertyValue;
 	}
 
+	inline bool MaterialProperty::isReferenceUsage(Usage usage)
+	{
+		return (Usage::TEXTURE_REFERENCE == usage || Usage::GLOBAL_REFERENCE == usage || Usage::UNKNOWN_REFERENCE == usage || Usage::PASS_REFERENCE == usage || Usage::MATERIAL_REFERENCE == usage || Usage::INSTANCE_REFERENCE == usage);
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
@@ -73,7 +78,7 @@ namespace RendererRuntime
 
 	inline bool MaterialProperty::isReferenceUsage() const
 	{
-		return (Usage::TEXTURE_REFERENCE == mUsage || Usage::GLOBAL_REFERENCE == mUsage || Usage::PASS_REFERENCE == mUsage || Usage::MATERIAL_REFERENCE == mUsage || Usage::INSTANCE_REFERENCE == mUsage);
+		return isReferenceUsage(mUsage);
 	}
 
 	inline uint32_t MaterialProperty::getReferenceValue() const
