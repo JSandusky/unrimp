@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
@@ -86,8 +87,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	MaterialBlueprintResource::MaterialBlueprintResource(ResourceId resourceId) :
+	MaterialBlueprintResource::MaterialBlueprintResource(MaterialBlueprintResourceManager& materialBlueprintResourceManager, ResourceId resourceId) :
 		IResource(resourceId),
+		mMaterialBlueprintResourceManager(materialBlueprintResourceManager),
 		mRootSignature(nullptr),
 		mPipelineState(Renderer::PipelineStateBuilder()),
 		mVertexShaderBlueprint(nullptr),
@@ -173,7 +175,8 @@ namespace RendererRuntime
 				numberOfPackageBytes += valueTypeNumberOfBytes % 16;
 
 				// Copy the property value into the scratch buffer
-				if (MaterialProperty::Usage::REFERENCE == uniformBufferElementProperty.getUsage())
+				const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
+				if (MaterialProperty::Usage::PASS_REFERENCE == usage)	// Most likely the case, so check this first
 				{
 					// Resolve the property reference
 					// TODO(co) Add more of those automatic values, maybe even a listener interface to allow customization
@@ -194,11 +197,37 @@ namespace RendererRuntime
 						viewSpaceLightDirection = glm::normalize(viewSpaceLightDirection);
 						memcpy(scratchBufferPointer, glm::value_ptr(viewSpaceLightDirection), valueTypeNumberOfBytes);
 					}
+
+					else
+					{
+						// Error, can't resolve reference
+						assert(false);
+					}
 				}
-				else
+				else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
+				{
+					// Figure out the global material property value
+					const MaterialProperty* materialProperty = mMaterialBlueprintResourceManager.getGlobalMaterialPropertyById(uniformBufferElementProperty.getReferenceValue());
+					if (nullptr != materialProperty)
+					{
+						// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
+						memcpy(scratchBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
+					}
+					else
+					{
+						// Error, can't resolve reference
+						assert(false);
+					}
+				}
+				else if (!uniformBufferElementProperty.isReferenceUsage())	// TODO(co) Performance: Think about such tests, the toolkit should already take care of this so we have well known verified runtime data
 				{
 					// Just copy over the property value
 					memcpy(scratchBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
+				}
+				else
+				{
+					// Error, invalid property
+					assert(false);
 				}
 
 				// Next property
@@ -247,23 +276,50 @@ namespace RendererRuntime
 					numberOfPackageBytes += valueTypeNumberOfBytes % 16;
 
 					// Copy the property value into the scratch buffer
-					if (MaterialProperty::Usage::REFERENCE == uniformBufferElementProperty.getUsage())
+					const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
+					if (MaterialProperty::Usage::MATERIAL_REFERENCE == usage)	// Most likely the case, so check this first
 					{
-						// Resolve the property reference
-						const uint32_t referenceValue = uniformBufferElementProperty.getReferenceValue();
-
 						// Figure out the material property value
-						const MaterialProperty* materialProperty = materialResource->getMaterialPropertyById(referenceValue);
+						const MaterialProperty* materialProperty = materialResource->getMaterialPropertyById(uniformBufferElementProperty.getReferenceValue());
 						if (nullptr != materialProperty)
 						{
 							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
 							memcpy(scratchBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
 						}
+						else
+						{
+							// Error, can't resolve reference
+							assert(false);
+						}
+					}
+					else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
+					{
+						// Referencing a global material property inside a material uniform buffer doesn't make really sense performance wise, but don't forbid it
+	
+						// Figure out the global material property value
+						const MaterialProperty* materialProperty = mMaterialBlueprintResourceManager.getGlobalMaterialPropertyById(uniformBufferElementProperty.getReferenceValue());
+						if (nullptr != materialProperty)
+						{
+							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
+							memcpy(scratchBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
+						}
+						else
+						{
+							// Error, can't resolve reference
+							assert(false);
+						}
+					}
+					else if (!uniformBufferElementProperty.isReferenceUsage())	// TODO(co) Performance: Think about such tests, the toolkit should already take care of this so we have well known verified runtime data
+					{
+						// Referencing a static material property inside an material uniform buffer doesn't make really sense performance wise, but don't forbid it
+
+						// Just copy over the property value
+						memcpy(scratchBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
 					}
 					else
 					{
-						// Just copy over the property value
-						memcpy(scratchBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
+						// Error, invalid property
+						assert(false);
 					}
 
 					// Next property
@@ -305,7 +361,8 @@ namespace RendererRuntime
 				numberOfPackageBytes += valueTypeNumberOfBytes % 16;
 
 				// Copy the property value into the scratch buffer
-				if (MaterialProperty::Usage::REFERENCE == uniformBufferElementProperty.getUsage())
+				const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
+				if (MaterialProperty::Usage::INSTANCE_REFERENCE == usage)	// Most likely the case, so check this first
 				{
 					// Resolve the property reference
 					// TODO(co) Add more of those automatic values, maybe even a listener interface to allow customization
@@ -321,11 +378,40 @@ namespace RendererRuntime
 						const int materialIndex = static_cast<int>(materialResource.getMaterialUniformBufferIndex());
 						memcpy(scratchBufferPointer, &materialIndex, valueTypeNumberOfBytes);
 					}
+					else
+					{
+						// Error, can't resolve reference
+						assert(false);
+					}
+				}
+				else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
+				{
+					// Referencing a global material property inside an instance uniform buffer doesn't make really sense performance wise, but don't forbid it
+
+					// Figure out the global material property value
+					const MaterialProperty* materialProperty = mMaterialBlueprintResourceManager.getGlobalMaterialPropertyById(uniformBufferElementProperty.getReferenceValue());
+					if (nullptr != materialProperty)
+					{
+						// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
+						memcpy(scratchBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
+					}
+					else
+					{
+						// Error, can't resolve reference
+						assert(false);
+					}
+				}
+				else if (!uniformBufferElementProperty.isReferenceUsage())	// TODO(co) Performance: Think about such tests, the toolkit should already take care of this so we have well known verified runtime data
+				{
+					// Referencing a static uniform buffer element property inside an instance uniform buffer doesn't make really sense performance wise, but don't forbid it
+
+					// Just copy over the property value
+					memcpy(scratchBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
 				}
 				else
 				{
-					// Just copy over the property value
-					memcpy(scratchBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
+					// Error, invalid property
+					assert(false);
 				}
 
 				// Next property

@@ -41,6 +41,7 @@
     <None Include="include\RendererRuntime\Resource\IResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResource.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Material\Loader\MaterialResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialProperty.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialPropertyValue.inl" />

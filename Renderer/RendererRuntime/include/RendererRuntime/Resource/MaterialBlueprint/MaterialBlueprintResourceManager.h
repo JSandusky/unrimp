@@ -27,8 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/IResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialProperty.h"
 
 
 //[-------------------------------------------------------]
@@ -62,11 +62,53 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		typedef std::vector<MaterialProperty> SortedGlobalMaterialPropertyVector;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
 		RENDERERRUNTIME_API_EXPORT MaterialBlueprintResource* loadMaterialBlueprintResourceByAssetId(AssetId assetId, bool reload = false);
+
+		//[-------------------------------------------------------]
+		//[ Global material properties                            ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the sorted global material property vector
+		*
+		*  @return
+		*    The sorted global material property vector
+		*/
+		inline const SortedGlobalMaterialPropertyVector& getSortedGlobalMaterialPropertyVector() const;
+
+		/**
+		*  @brief
+		*    Return a global material property by its ID
+		*
+		*  @param[in] materialPropertyId
+		*    ID of the global material property to return
+		*
+		*  @return
+		*    The requested global material property, null pointer on error, don't destroy the returned instance
+		*/
+		RENDERERRUNTIME_API_EXPORT const MaterialProperty* getGlobalMaterialPropertyById(MaterialPropertyId materialPropertyId) const;
+
+		/**
+		*  @brief
+		*    Set a global material property value by its ID
+		*
+		*  @param[in] materialPropertyId
+		*    ID of the global material property to set the value from
+		*  @param[in] materialPropertyValue
+		*    The material property value to set
+		*/
+		RENDERERRUNTIME_API_EXPORT void setGlobalMaterialPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue);
 
 
 	//[-------------------------------------------------------]
@@ -92,7 +134,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		IRendererRuntime&				   mRendererRuntime;						///< Renderer runtime instance, do not destroy the instance
+		SortedGlobalMaterialPropertyVector mSortedGlobalMaterialPropertyVector;
+
 
 		// TODO(co) Implement decent resource handling
 	public:
@@ -106,3 +150,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.inl"

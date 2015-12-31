@@ -32,6 +32,7 @@
 #include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
 #include <RendererRuntime/Resource/Compositor/CompositorInstance.h>
 #include <RendererRuntime/Resource/Compositor/CompositorResourceManager.h>
+#include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h>
 
 
 //[-------------------------------------------------------]
@@ -67,6 +68,12 @@ void FirstScene::onInitialization()
 	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
 	if (nullptr != rendererRuntime)
 	{
+		{ // Tell the material blueprint resource manager about our global material properties
+			RendererRuntime::MaterialBlueprintResourceManager& materialBlueprintResourceManager = rendererRuntime->getMaterialBlueprintResourceManager();
+			materialBlueprintResourceManager.setGlobalMaterialPropertyById("SunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(1.0f, 1.0f, 1.0f));
+			materialBlueprintResourceManager.setGlobalMaterialPropertyById("Wetness", RendererRuntime::MaterialPropertyValue::fromFloat(1.0f));
+		}
+
 		// Get the main swap chain and ensure there's one
 		Renderer::ISwapChainPtr swapChain(getRenderer()->getMainSwapChain());
 		if (nullptr != swapChain)

@@ -68,7 +68,7 @@ namespace RendererRuntime
 			bool load = reload;
 			if (nullptr == materialBlueprintResource)
 			{
-				materialBlueprintResource = new MaterialBlueprintResource(assetId);
+				materialBlueprintResource = new MaterialBlueprintResource(*this, assetId);
 				mResources.push_back(materialBlueprintResource);
 				load = true;
 			}
@@ -93,6 +93,28 @@ namespace RendererRuntime
 
 		// Error!
 		return nullptr;
+	}
+
+	const MaterialProperty* MaterialBlueprintResourceManager::getGlobalMaterialPropertyById(MaterialPropertyId materialPropertyId) const
+	{
+		SortedGlobalMaterialPropertyVector::const_iterator iterator = std::lower_bound(mSortedGlobalMaterialPropertyVector.cbegin(), mSortedGlobalMaterialPropertyVector.cend(), materialPropertyId, detail::OrderByMaterialPropertyId());
+		return (iterator != mSortedGlobalMaterialPropertyVector.end() && iterator._Ptr->getMaterialPropertyId() == materialPropertyId) ? iterator._Ptr : nullptr;
+	}
+
+	void MaterialBlueprintResourceManager::setGlobalMaterialPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue)
+	{
+		const MaterialProperty materialProperty(materialPropertyId, MaterialProperty::Usage::DYNAMIC, materialPropertyValue);
+		SortedGlobalMaterialPropertyVector::iterator iterator = std::lower_bound(mSortedGlobalMaterialPropertyVector.begin(), mSortedGlobalMaterialPropertyVector.end(), materialPropertyId, detail::OrderByMaterialPropertyId());
+		if (iterator == mSortedGlobalMaterialPropertyVector.end() || iterator->getMaterialPropertyId() != materialPropertyId)
+		{
+			// Add new global material property
+			mSortedGlobalMaterialPropertyVector.insert(iterator, materialProperty);
+		}
+		else
+		{
+			// Just update the global material property value
+			*iterator = materialProperty;
+		}
 	}
 
 

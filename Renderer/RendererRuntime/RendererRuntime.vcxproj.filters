@@ -255,6 +255,9 @@
     <None Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.inl">
       <Filter>Source Files\Resource\ShaderPiece\Loader</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">

@@ -26,60 +26,11 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public static methods                                 ]
-	//[-------------------------------------------------------]
-	inline MaterialPropertyValue MaterialProperty::materialPropertyValueFromReference(MaterialPropertyValue::ValueType valueType, uint32_t reference)
-	{
-		MaterialPropertyValue materialPropertyValue;
-		materialPropertyValue.mValueType	 = valueType;
-		materialPropertyValue.mValue.Integer = static_cast<int>(reference);
-		return materialPropertyValue;
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialProperty::MaterialProperty() :
-		MaterialPropertyValue(fromUnknown()),
-		mMaterialPropertyId(0),
-		mUsage(Usage::UNKNOWN)
+	inline const MaterialBlueprintResourceManager::SortedGlobalMaterialPropertyVector& MaterialBlueprintResourceManager::getSortedGlobalMaterialPropertyVector() const
 	{
-		// Nothing here
-	}
-
-	inline MaterialProperty::MaterialProperty(MaterialPropertyId materialPropertyId, Usage usage, const MaterialPropertyValue& materialPropertyValue) :
-		MaterialPropertyValue(materialPropertyValue),
-		mMaterialPropertyId(materialPropertyId),
-		mUsage(usage)
-	{
-		// Nothing here
-	}
-
-	inline MaterialProperty::~MaterialProperty()
-	{
-		// Nothing here
-	}
-
-	inline MaterialPropertyId MaterialProperty::getMaterialPropertyId() const
-	{
-		return mMaterialPropertyId;
-	}
-
-	inline MaterialProperty::Usage MaterialProperty::MaterialProperty::getUsage() const
-	{
-		return mUsage;
-	}
-
-	inline bool MaterialProperty::isReferenceUsage() const
-	{
-		return (Usage::TEXTURE_REFERENCE == mUsage || Usage::GLOBAL_REFERENCE == mUsage || Usage::PASS_REFERENCE == mUsage || Usage::MATERIAL_REFERENCE == mUsage || Usage::INSTANCE_REFERENCE == mUsage);
-	}
-
-	inline uint32_t MaterialProperty::getReferenceValue() const
-	{
-		assert(isReferenceUsage());
-		return static_cast<uint32_t>(mValue.Integer);
+		return mSortedGlobalMaterialPropertyVector;
 	}
 
 

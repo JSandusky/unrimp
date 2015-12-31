@@ -45,19 +45,6 @@ namespace RendererToolkit
 			return (left.getMaterialPropertyId() < right.getMaterialPropertyId());
 		}
 
-		struct OrderByMaterialPropertyId
-		{
-			inline bool operator()(const RendererRuntime::MaterialProperty& left, RendererRuntime::MaterialPropertyId right) const
-			{
-				return (left.getMaterialPropertyId() < right);
-			}
-
-			inline bool operator()(RendererRuntime::MaterialPropertyId left, const RendererRuntime::MaterialProperty& right) const
-			{
-				return (left < right.getMaterialPropertyId());
-			}
-		};
-
 		void optionalUniformBufferUsageProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, RendererRuntime::MaterialBlueprintResource::UniformBufferUsage& value)
 		{
 			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
@@ -137,8 +124,11 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(DEPTH_STENCIL_STATE)
 		ELSE_IF_VALUE(BLEND_STATE)
 		ELSE_IF_VALUE(SAMPLER_STATE)
-		ELSE_IF_VALUE(TEXTURE)
-		ELSE_IF_VALUE(REFERENCE)
+		ELSE_IF_VALUE(TEXTURE_REFERENCE)
+		ELSE_IF_VALUE(GLOBAL_REFERENCE)
+		ELSE_IF_VALUE(PASS_REFERENCE)
+		ELSE_IF_VALUE(MATERIAL_REFERENCE)
+		ELSE_IF_VALUE(INSTANCE_REFERENCE)
 		else
 		{
 			// TODO(co) Error handling
@@ -503,7 +493,10 @@ namespace RendererToolkit
 			// Material property usage
 			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(jsonPropertyObject);
 			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(jsonPropertyObject);
-			if (RendererRuntime::MaterialProperty::Usage::REFERENCE == usage)
+			if (RendererRuntime::MaterialProperty::Usage::GLOBAL_REFERENCE == usage ||
+				RendererRuntime::MaterialProperty::Usage::PASS_REFERENCE == usage ||
+				RendererRuntime::MaterialProperty::Usage::MATERIAL_REFERENCE == usage ||
+				RendererRuntime::MaterialProperty::Usage::INSTANCE_REFERENCE == usage)
 			{
 				// Get the reference value as string
 				static const uint32_t NAME_LENGTH = 128;
@@ -779,7 +772,7 @@ namespace RendererToolkit
 					materialBlueprintTexture.materialPropertyId = materialPropertyId;
 
 					// Figure out the material property value
-					RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, detail::OrderByMaterialPropertyId());
+					RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
 					if (iterator != sortedMaterialPropertyVector.end())
 					{
 						RendererRuntime::MaterialProperty* materialProperty = iterator._Ptr;

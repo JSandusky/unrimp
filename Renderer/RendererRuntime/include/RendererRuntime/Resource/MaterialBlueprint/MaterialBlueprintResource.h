@@ -48,6 +48,7 @@ namespace RendererRuntime
 	class TextureResource;
 	class MaterialResource;
 	class ShaderBlueprintResource;
+	class MaterialBlueprintResourceManager;
 }
 
 
@@ -145,10 +146,12 @@ namespace RendererRuntime
 		*  @brief
 		*    Constructor
 		*
+		*  @param[in] materialBlueprintResourceManager
+		*    Owner material blueprint resource manager
 		*  @param[in] resourceId
 		*    Resource ID
 		*/
-		explicit MaterialBlueprintResource(ResourceId resourceId);
+		explicit MaterialBlueprintResource(MaterialBlueprintResourceManager& materialBlueprintResourceManager, ResourceId resourceId);
 
 		/**
 		*  @brief
@@ -272,9 +275,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		SortedMaterialPropertyVector mSortedMaterialPropertyVector;
-		Renderer::IRootSignature*	 mRootSignature;	///< Root signature, can be a null pointer
-		Renderer::PipelineState		 mPipelineState;
+		MaterialBlueprintResourceManager& mMaterialBlueprintResourceManager;	///< Owner material blueprint resource manager
+		SortedMaterialPropertyVector	  mSortedMaterialPropertyVector;
+		Renderer::IRootSignature*		  mRootSignature;						///< Root signature, can be a null pointer
+		Renderer::PipelineState			  mPipelineState;
 		// Resource
 		UniformBuffers				 mUniformBuffers;
 		SamplerStates				 mSamplerStates;

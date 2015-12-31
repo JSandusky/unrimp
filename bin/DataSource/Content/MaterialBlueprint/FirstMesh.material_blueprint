@@ -327,37 +327,37 @@
 						"0":
 						{
 							"Name": "WorldSpaceToViewSpaceMatrix",
-							"Usage": "REFERENCE",
+							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4_4",
 							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_MATRIX"
 						},
 						"1":
 						{
 							"Name": "WorldSpaceToClipSpaceMatrix",
-							"Usage": "REFERENCE",
+							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4_4",
 							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
 						},
 						"2":
 						{
 							"Name": "ViewSpaceSunLightDirection",
-							"Usage": "REFERENCE",
+							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@VIEW_SPACE_SUN_LIGHT_DIRECTION"
 						},
 						"3":
 						{
 							"Name": "SunLightColor",
-							"Usage": "STATIC",
+							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT_3",
-							"Value": "1.0 1.0 1.0"
+							"Value": "@SunLightColor"
 						},
 						"4":
 						{
 							"Name": "Wetness",
-							"Usage": "STATIC",
+							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT",
-							"Value": "1.0"
+							"Value": "@Wetness"
 						},
 						"5":
 						{
@@ -379,7 +379,7 @@
 						"0":
 						{
 							"Name": "DiffuseColor",
-							"Usage": "REFERENCE",
+							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT_4",
 							"Value": "@DiffuseColor"
 						},
@@ -403,14 +403,14 @@
 						"0":
 						{
 							"Name": "ObjectSpaceToWorldSpaceMatrix",
-							"Usage": "REFERENCE",
+							"Usage": "INSTANCE_REFERENCE",
 							"ValueType": "FLOAT_4_4",
 							"Value": "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
 						},
 						"1":
 						{
 							"Name": "MaterialIndex",
-							"Usage": "REFERENCE",
+							"Usage": "INSTANCE_REFERENCE",
 							"ValueType": "INTEGER",
 							"Value": "@MATERIAL_INDEX"
 						}

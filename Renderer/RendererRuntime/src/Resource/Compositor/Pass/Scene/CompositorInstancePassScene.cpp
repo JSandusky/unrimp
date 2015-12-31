@@ -75,7 +75,7 @@ namespace
 				// Fill the material uniform buffer
 				materialBlueprintResource->fillMaterialUniformBuffer();
 
-				// Bind the material blueprint resource to provided renderer
+				// Bind the material blueprint resource to the used renderer
 				materialBlueprintResource->bindToRenderer();
 
 				// Graphics root descriptor table: Set material specific tables

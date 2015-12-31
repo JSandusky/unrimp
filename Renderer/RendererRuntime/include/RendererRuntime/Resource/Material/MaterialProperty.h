@@ -71,8 +71,11 @@ namespace RendererRuntime
 			DEPTH_STENCIL_STATE,	///< Pipeline depth stencil state, property is considered to not change regularly
 			BLEND_STATE,			///< Pipeline blend state, property is considered to not change regularly
 			SAMPLER_STATE,			///< Sampler state, property is considered to not change regularly
-			TEXTURE,				///< Property is a texture asset reference, property is considered to not change regularly
-			REFERENCE				///< Property is a generic reference, meaning depends on the context, property is considered to not change regularly
+			TEXTURE_REFERENCE,		///< Property is a texture asset reference, property is considered to not change regularly
+			GLOBAL_REFERENCE,		///< Property is a global material property reference
+			PASS_REFERENCE,			///< Property is an automatic pass property reference
+			MATERIAL_REFERENCE,		///< Property is a material property reference
+			INSTANCE_REFERENCE		///< Property is an automatic instance property reference
 		};
 
 
@@ -133,6 +136,15 @@ namespace RendererRuntime
 		*/
 		inline Usage getUsage() const;
 
+		/**
+		*  @brief
+		*    Return whether or not the material blueprint property is a reference to something else
+		*
+		*  @return
+		*    "true" if the material blueprint property is a reference to something else, else "false"
+		*/
+		inline bool isReferenceUsage() const;
+
 		//[-------------------------------------------------------]
 		//[ Value getter                                          ]
 		//[-------------------------------------------------------]
@@ -148,6 +160,22 @@ namespace RendererRuntime
 
 
 	};
+
+	namespace detail
+	{
+		struct OrderByMaterialPropertyId
+		{
+			inline bool operator()(const MaterialProperty& left, MaterialPropertyId right) const
+			{
+				return (left.getMaterialPropertyId() < right);
+			}
+
+			inline bool operator()(MaterialPropertyId left, const MaterialProperty& right) const
+			{
+				return (left < right.getMaterialPropertyId());
+			}
+		};
+	}
 
 
 //[-------------------------------------------------------]

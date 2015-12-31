@@ -41,23 +41,6 @@ namespace RendererRuntime
 {
 
 
-	namespace detail
-	{
-		struct OrderByMaterialPropertyId
-		{
-			inline bool operator()(const MaterialProperty& left, MaterialPropertyId right) const
-			{
-				return (left.getMaterialPropertyId() < right);
-			}
-
-			inline bool operator()(MaterialPropertyId left, const MaterialProperty& right) const
-			{
-				return (left < right.getMaterialPropertyId());
-			}
-		};
-	}
-
-
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
@@ -74,17 +57,7 @@ namespace RendererRuntime
 	const MaterialProperty* MaterialResource::getMaterialPropertyById(MaterialPropertyId materialPropertyId) const
 	{
 		SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(mSortedMaterialPropertyVector.cbegin(), mSortedMaterialPropertyVector.cend(), materialPropertyId, detail::OrderByMaterialPropertyId());
-		if (iterator != mSortedMaterialPropertyVector.end())
-		{
-			MaterialProperty* materialProperty = iterator._Ptr;
-			if (materialProperty->getMaterialPropertyId() == materialPropertyId)
-			{
-				return materialProperty;
-			}
-		}
-
-		// Error!
-		return nullptr;
+		return (iterator != mSortedMaterialPropertyVector.end() && iterator._Ptr->getMaterialPropertyId() == materialPropertyId) ? iterator._Ptr : nullptr;
 	}
 
 	Renderer::IPipelineState* MaterialResource::getPipelineStateObject()

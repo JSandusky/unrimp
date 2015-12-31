@@ -54,23 +54,6 @@ namespace RendererToolkit
 {
 
 
-	namespace detail
-	{
-		struct OrderByMaterialPropertyId
-		{
-			inline bool operator()(const RendererRuntime::MaterialProperty& left, RendererRuntime::MaterialPropertyId right) const
-			{
-				return (left.getMaterialPropertyId() < right);
-			}
-
-			inline bool operator()(RendererRuntime::MaterialPropertyId left, const RendererRuntime::MaterialProperty& right) const
-			{
-				return (left < right.getMaterialPropertyId());
-			}
-		};
-	}
-
-
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
@@ -195,7 +178,7 @@ namespace RendererToolkit
 					const RendererRuntime::MaterialPropertyId materialPropertyId(propertyName.c_str());
 
 					// Figure out the material property value type by using the material blueprint
-					RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, detail::OrderByMaterialPropertyId());
+					RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
 					if (iterator != sortedMaterialPropertyVector.end())
 					{
 						RendererRuntime::MaterialProperty* materialProperty = iterator._Ptr;
