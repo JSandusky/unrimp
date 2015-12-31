@@ -494,7 +494,7 @@ namespace RendererToolkit
 			// Material property usage
 			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(jsonPropertyObject);
 			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(jsonPropertyObject);
-			if (RendererRuntime::MaterialProperty::isReferenceUsage(usage))
+			if (RendererRuntime::MaterialProperty::Usage::TEXTURE_REFERENCE != usage && RendererRuntime::MaterialProperty::isReferenceUsage(usage))
 			{
 				// Get the reference value as string
 				static const uint32_t NAME_LENGTH = 128;

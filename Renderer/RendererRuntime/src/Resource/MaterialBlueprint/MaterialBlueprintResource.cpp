@@ -23,18 +23,10 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
-#include "RendererRuntime/Core/Transform.h"
-
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
-	#include <glm/gtc/type_ptr.hpp>
-	#include <glm/gtc/matrix_transform.hpp>
-	#include <glm/gtx/quaternion.hpp>
-#pragma warning(pop)
 
 
 //[-------------------------------------------------------]
@@ -46,14 +38,6 @@ namespace RendererRuntime
 
 	namespace detail
 	{
-
-		// Define constants
-		#define DEFINE_CONSTANT(name) static const StringId name(#name);
-			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
-			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
-			DEFINE_CONSTANT(OBJECT_SPACE_TO_WORLD_SPACE_MATRIX)
-			DEFINE_CONSTANT(MATERIAL_INDEX)
-		#undef DEFINE_CONSTANT
 
 		bool isFullyLoaded(const ShaderBlueprintResource* shaderBlueprint)
 		{
@@ -124,6 +108,9 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResource::fillUnknownUniformBuffers()
 	{
+		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
+		materialBlueprintResourceListener.beginFillUnknown();
+
 		const size_t numberOfUniformBuffers = mUniformBuffers.size();
 		for (size_t uniformBufferIndex = 0; uniformBufferIndex < numberOfUniformBuffers; ++uniformBufferIndex)
 		{
@@ -158,18 +145,7 @@ namespace RendererRuntime
 						const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
 						if (MaterialProperty::Usage::UNKNOWN_REFERENCE == usage)	// Most likely the case, so check this first
 						{
-							// Resolve the property reference
-							// TODO(co) Add more of those automatic values, maybe even a listener interface to allow customization
-							const uint32_t referenceValue = uniformBufferElementProperty.getReferenceValue();
-
-							// TODO(co) This is already special and better handled by customized listener
-							if (StringId("TEST_3") == referenceValue)
-							{
-								glm::vec3 test3(0.5f, 1.0f, 0.2f);
-								memcpy(scratchBufferPointer, glm::value_ptr(test3), valueTypeNumberOfBytes);
-							}
-
-							else
+							if (!materialBlueprintResourceListener.fillUnknownValue(uniformBufferElementProperty.getReferenceValue(), scratchBufferPointer, valueTypeNumberOfBytes))
 							{
 								// Error, can't resolve reference
 								assert(false);
@@ -217,30 +193,8 @@ namespace RendererRuntime
 		assert(nullptr != mPassUniformBuffer);
 		assert(1 == mPassUniformBuffer->numberOfElements);
 
-		Renderer::IRenderer& renderer = mPassUniformBuffer->uniformBufferPtr->getRenderer();
-
-		// Get the aspect ratio
-		float aspectRatio = 4.0f / 3.0f;
-		{
-			// Get the render target with and height
-			uint32_t width  = 1;
-			uint32_t height = 1;
-			Renderer::IRenderTarget *renderTarget = renderer.omGetRenderTarget();
-			if (nullptr != renderTarget)
-			{
-				renderTarget->getWidthAndHeight(width, height);
-
-				// Get the aspect ratio
-				aspectRatio = static_cast<float>(width) / height;
-			}
-		}
-
-		// Calculate standard matrices
-		// TODO(co) Tiny optimization for later on: Calculate only the matrices required
-		const glm::mat4 viewSpaceToClipSpaceMatrix	= glm::perspective(45.0f, aspectRatio, 0.1f, 100.f);	// TODO(co) Use dynamic values
-		const glm::mat4 viewTranslateMatrix			= glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position);
-		const glm::mat4 worldSpaceToViewSpaceMatrix	= viewTranslateMatrix * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
-		const glm::mat4 worldSpaceToClipSpaceMatrix	= viewSpaceToClipSpaceMatrix * worldSpaceToViewSpaceMatrix;
+		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
+		materialBlueprintResourceListener.beginFillPass(mPassUniformBuffer->uniformBufferPtr->getRenderer(), worldSpaceToViewSpaceTransform);
 
 		// Update the scratch buffer
 		ScratchBuffer& scratchBuffer = mPassUniformBuffer->scratchBuffer;
@@ -268,27 +222,7 @@ namespace RendererRuntime
 				const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
 				if (MaterialProperty::Usage::PASS_REFERENCE == usage)	// Most likely the case, so check this first
 				{
-					// Resolve the property reference
-					// TODO(co) Add more of those automatic values, maybe even a listener interface to allow customization
-					const uint32_t referenceValue = uniformBufferElementProperty.getReferenceValue();
-					if (detail::WORLD_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
-					{
-						memcpy(scratchBufferPointer, glm::value_ptr(worldSpaceToViewSpaceMatrix), valueTypeNumberOfBytes);
-					}
-					else if (detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
-					{
-						memcpy(scratchBufferPointer, glm::value_ptr(worldSpaceToClipSpaceMatrix), valueTypeNumberOfBytes);
-					}
-
-					// TODO(co) This is already special and better handled by customized listener
-					else if (StringId("VIEW_SPACE_SUN_LIGHT_DIRECTION") == referenceValue)
-					{
-						glm::vec3 viewSpaceLightDirection(0.5f, 0.5f, 1.0f);
-						viewSpaceLightDirection = glm::normalize(viewSpaceLightDirection);
-						memcpy(scratchBufferPointer, glm::value_ptr(viewSpaceLightDirection), valueTypeNumberOfBytes);
-					}
-
-					else
+					if (!materialBlueprintResourceListener.fillPassValue(uniformBufferElementProperty.getReferenceValue(), scratchBufferPointer, valueTypeNumberOfBytes))
 					{
 						// Error, can't resolve reference
 						assert(false);
@@ -333,6 +267,9 @@ namespace RendererRuntime
 	{
 		assert(nullptr != mMaterialUniformBuffer);
 
+		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
+		materialBlueprintResourceListener.beginFillMaterial();
+
 		// TODO(co) Optimization: Do only update changed materials
 
 		// Update the scratch buffer
@@ -376,7 +313,7 @@ namespace RendererRuntime
 							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
 							memcpy(scratchBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
 						}
-						else
+						else if (!materialBlueprintResourceListener.fillMaterialValue(uniformBufferElementProperty.getReferenceValue(), scratchBufferPointer, valueTypeNumberOfBytes))
 						{
 							// Error, can't resolve reference
 							assert(false);
@@ -428,6 +365,9 @@ namespace RendererRuntime
 		assert(nullptr != mInstanceUniformBuffer);
 		assert(1 == mInstanceUniformBuffer->numberOfElements);	// TODO(co) Implement automatic instancing
 
+		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
+		materialBlueprintResourceListener.beginFillInstance(objectSpaceToWorldSpaceTransform, materialResource);
+
 		// Update the scratch buffer
 		ScratchBuffer& scratchBuffer = mInstanceUniformBuffer->scratchBuffer;
 		{
@@ -454,21 +394,7 @@ namespace RendererRuntime
 				const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
 				if (MaterialProperty::Usage::INSTANCE_REFERENCE == usage)	// Most likely the case, so check this first
 				{
-					// Resolve the property reference
-					// TODO(co) Add more of those automatic values, maybe even a listener interface to allow customization
-					const uint32_t referenceValue = uniformBufferElementProperty.getReferenceValue();
-					if (detail::OBJECT_SPACE_TO_WORLD_SPACE_MATRIX == referenceValue)
-					{
-						glm::mat4 objectSpaceToWorldSpaceMatrix;
-						objectSpaceToWorldSpaceTransform.getAsMatrix(objectSpaceToWorldSpaceMatrix);
-						memcpy(scratchBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceMatrix), valueTypeNumberOfBytes);
-					}
-					else if (detail::MATERIAL_INDEX == referenceValue)
-					{
-						const int materialIndex = static_cast<int>(materialResource.getMaterialUniformBufferIndex());
-						memcpy(scratchBufferPointer, &materialIndex, valueTypeNumberOfBytes);
-					}
-					else
+					if (!materialBlueprintResourceListener.fillInstanceValue(uniformBufferElementProperty.getReferenceValue(), scratchBufferPointer, valueTypeNumberOfBytes))
 					{
 						// Error, can't resolve reference
 						assert(false);

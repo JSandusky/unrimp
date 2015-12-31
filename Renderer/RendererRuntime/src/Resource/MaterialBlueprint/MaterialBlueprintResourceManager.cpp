@@ -22,9 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/ResourceStreamer.h"
@@ -41,7 +41,7 @@ namespace
 {
 	namespace detail
 	{
-		static const RendererRuntime::MaterialBlueprintResourceListener defaultMaterialBlueprintResourceListener;
+		static RendererRuntime::MaterialBlueprintResourceListener defaultMaterialBlueprintResourceListener;
 	}
 }
 
@@ -56,7 +56,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void MaterialBlueprintResourceManager::setMaterialBlueprintResourceListener(const IMaterialBlueprintResourceListener* materialBlueprintResourceListener)
+	void MaterialBlueprintResourceManager::setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener)
 	{
 		// There must always be a valid material blueprint resource listener instance
 		mMaterialBlueprintResourceListener = (nullptr != materialBlueprintResourceListener) ? materialBlueprintResourceListener : &::detail::defaultMaterialBlueprintResourceListener;

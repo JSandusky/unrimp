@@ -24,28 +24,28 @@
 			},
 			"DiffuseMap":
 			{
-				"Usage": "TEXTURE",
+				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "ASSET_ID",
 				"Value": "4",
 				"Description": "Material diffuse map"
 			},
 			"EmissiveMap":
 			{
-				"Usage": "TEXTURE",
+				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "ASSET_ID",
 				"Value": "5",
 				"Description": "Material emissive map"
 			},
 			"NormalMap":
 			{
-				"Usage": "TEXTURE",
+				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "ASSET_ID",
 				"Value": "6",
 				"Description": "Material normal map"
 			},
 			"SpecularMap":
 			{
-				"Usage": "TEXTURE",
+				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "ASSET_ID",
 				"Value": "7",
 				"Description": "Material specular map"

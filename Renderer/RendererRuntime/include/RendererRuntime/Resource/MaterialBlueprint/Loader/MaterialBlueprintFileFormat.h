@@ -43,9 +43,10 @@ namespace RendererRuntime
 	//    - Root signature
 	//    - Pipeline state object (PSO)
 	//      - Shader blueprints, rasterization state etc.
-	//    - Uniform buffers
-	//    - Sampler states
-	//    - Textures
+	//    - Resources
+	//      - Uniform buffers
+	//      - Sampler states
+	//      - Textures
 	namespace v1MaterialBlueprint
 	{
 

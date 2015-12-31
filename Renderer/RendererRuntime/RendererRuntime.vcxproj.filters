@@ -116,6 +116,9 @@
     <Filter Include="Source Files\Resource\ShaderPiece\Loader">
       <UniqueIdentifier>{7d68f9a3-0004-459b-86c8-6b05ba9449a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\MaterialBlueprint\Listener">
+      <UniqueIdentifier>{b9f743ed-1dd8-4d25-8e22-b6ff1079bc9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -258,11 +261,11 @@
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceManager.inl">
       <Filter>Source Files\Resource\MaterialBlueprint</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceListener.inl">
-      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Listener\MaterialBlueprintResourceListener.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint\Listener</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\IMaterialBlueprintResourceListener.inl">
-      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Listener\IMaterialBlueprintResourceListener.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint\Listener</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -579,11 +582,11 @@
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceFileFormat.h">
       <Filter>Source Files\Resource\ShaderPiece\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\MaterialBlueprintResourceListener.h">
-      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Listener\MaterialBlueprintResourceListener.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\Listener</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\IMaterialBlueprintResourceListener.h">
-      <Filter>Source Files\Resource\MaterialBlueprint</Filter>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Listener\IMaterialBlueprintResourceListener.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\Listener</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -811,6 +814,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.cpp">
       <Filter>Source Files\Resource\ShaderPiece\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\Listener\MaterialBlueprintResourceListener.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint\Listener</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,0 +1,146 @@
+/*********************************************************\
+ * Copyright (c) 2012-2015 Christian Ofenberg
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
+#include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Core/Transform.h"
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#include <glm/gtc/type_ptr.hpp>
+	#include <glm/gtc/matrix_transform.hpp>
+	#include <glm/gtx/quaternion.hpp>
+#pragma warning(pop)
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+
+
+	// Define constants
+	namespace detail
+	{
+		#define DEFINE_CONSTANT(name) static const StringId name(#name);
+			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
+			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
+			DEFINE_CONSTANT(OBJECT_SPACE_TO_WORLD_SPACE_MATRIX)
+			DEFINE_CONSTANT(MATERIAL_INDEX)
+		#undef DEFINE_CONSTANT
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
+	//[-------------------------------------------------------]
+	void MaterialBlueprintResourceListener::beginFillPass(Renderer::IRenderer& renderer, const Transform& worldSpaceToViewSpaceTransform)
+	{
+		// Get the aspect ratio
+		float aspectRatio = 4.0f / 3.0f;
+		{
+			// Get the render target with and height
+			uint32_t width  = 1;
+			uint32_t height = 1;
+			Renderer::IRenderTarget *renderTarget = renderer.omGetRenderTarget();
+			if (nullptr != renderTarget)
+			{
+				renderTarget->getWidthAndHeight(width, height);
+
+				// Get the aspect ratio
+				aspectRatio = static_cast<float>(width) / height;
+			}
+		}
+
+		// TODO(co) Tiny optimization for later on: Calculate only the matrices required
+		mViewSpaceToClipSpaceMatrix	 = glm::perspective(45.0f, aspectRatio, 0.1f, 100.0f);	// TODO(co) Use dynamic values
+		mViewTranslateMatrix		 = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position);
+		mWorldSpaceToViewSpaceMatrix = mViewTranslateMatrix * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
+		mWorldSpaceToClipSpaceMatrix = mViewSpaceToClipSpaceMatrix * mWorldSpaceToViewSpaceMatrix;
+	}
+
+	bool MaterialBlueprintResourceListener::fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes)
+	{
+		bool valueFilled = true;
+
+		// Resolve the reference value
+		// TODO(co) Add more of those standard property values
+		if (detail::WORLD_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
+		{
+			memcpy(buffer, glm::value_ptr(mWorldSpaceToViewSpaceMatrix), numberOfBytes);
+		}
+		else if (detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
+		{
+			memcpy(buffer, glm::value_ptr(mWorldSpaceToClipSpaceMatrix), numberOfBytes);
+		}
+
+		// TODO(co) This is just a test, remove later on
+		else if (StringId("VIEW_SPACE_SUN_LIGHT_DIRECTION") == referenceValue)
+		{
+			glm::vec3 viewSpaceLightDirection(0.5f, 0.5f, 1.0f);
+			viewSpaceLightDirection = glm::normalize(viewSpaceLightDirection);
+			memcpy(buffer, glm::value_ptr(viewSpaceLightDirection), numberOfBytes);
+		}
+		else
+		{
+			// Value not filled
+			valueFilled = false;
+		}
+
+		// Done
+		return valueFilled;
+	}
+
+	bool MaterialBlueprintResourceListener::fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes)
+	{
+		bool valueFilled = true;
+
+		// Resolve the reference value
+		if (detail::OBJECT_SPACE_TO_WORLD_SPACE_MATRIX == referenceValue)
+		{
+			glm::mat4 objectSpaceToWorldSpaceMatrix;
+			mObjectSpaceToWorldSpaceTransform->getAsMatrix(objectSpaceToWorldSpaceMatrix);
+			memcpy(buffer, glm::value_ptr(objectSpaceToWorldSpaceMatrix), numberOfBytes);
+		}
+		else if (detail::MATERIAL_INDEX == referenceValue)
+		{
+			const int materialIndex = static_cast<int>(mMaterialResource->getMaterialUniformBufferIndex());
+			memcpy(buffer, &materialIndex, numberOfBytes);
+		}
+		else
+		{
+			// Value not filled
+			valueFilled = false;
+		}
+
+		// Done
+		return valueFilled;
+	}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // RendererRuntime

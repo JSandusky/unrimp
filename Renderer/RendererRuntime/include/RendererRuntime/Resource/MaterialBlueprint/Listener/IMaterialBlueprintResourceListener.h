@@ -27,7 +27,23 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/IMaterialBlueprintResourceListener.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+
+#include <inttypes.h>	// For uint32_t, uint64_t etc.
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class IRenderer;
+}
+namespace RendererRuntime
+{
+	class Transform;
+	class MaterialResource;
+}
 
 
 //[-------------------------------------------------------]
@@ -42,35 +58,42 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Material blueprint resource listener
+	*    Abstract material blueprint resource listener interface
 	*/
-	class MaterialBlueprintResourceListener : public IMaterialBlueprintResourceListener
+	class IMaterialBlueprintResourceListener : public NonCopyable
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Friends methods                                       ]
 	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
-		inline MaterialBlueprintResourceListener();
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~MaterialBlueprintResourceListener();
+		friend class MaterialBlueprintResource;	///< Is calling the private interface methods
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		MaterialBlueprintResourceListener(const MaterialBlueprintResourceListener&) = delete;
-		MaterialBlueprintResourceListener& operator=(const MaterialBlueprintResourceListener&) = delete;
+		inline IMaterialBlueprintResourceListener();
+		inline virtual ~IMaterialBlueprintResourceListener();
+		IMaterialBlueprintResourceListener(const IMaterialBlueprintResourceListener&) = delete;
+		IMaterialBlueprintResourceListener& operator=(const IMaterialBlueprintResourceListener&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
+	//[-------------------------------------------------------]
+	private:
+		virtual void beginFillUnknown() = 0;
+		virtual bool fillUnknownValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
+		virtual void beginFillPass(Renderer::IRenderer& renderer, const Transform& worldSpaceToViewSpaceTransform) = 0;
+		virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
+		virtual void beginFillMaterial() = 0;
+		virtual bool fillMaterialValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
+
+		// TODO(co) It might make sense to remove those instance methods from the interface and directly hard-code them for performance reasons. Profiling later on with real world scenes will show.
+		virtual void beginFillInstance(const Transform& objectSpaceToWorldSpaceTransform, MaterialResource& materialResource) = 0;
+		virtual bool fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
 
 
 	};
@@ -85,4 +108,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceListener.inl"
+#include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.inl"

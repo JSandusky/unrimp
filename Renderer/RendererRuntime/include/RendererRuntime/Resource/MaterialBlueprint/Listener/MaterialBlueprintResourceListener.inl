@@ -28,7 +28,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialBlueprintResourceListener::MaterialBlueprintResourceListener()
+	inline MaterialBlueprintResourceListener::MaterialBlueprintResourceListener() :
+		mObjectSpaceToWorldSpaceTransform(nullptr),
+		mMaterialResource(nullptr)
 	{
 		// Nothing here
 	}
@@ -36,6 +38,42 @@ namespace RendererRuntime
 	inline MaterialBlueprintResourceListener::~MaterialBlueprintResourceListener()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
+	//[-------------------------------------------------------]
+	inline void MaterialBlueprintResourceListener::beginFillUnknown()
+	{
+		// Nothing here
+	}
+
+	inline bool MaterialBlueprintResourceListener::fillUnknownValue(uint32_t, uint8_t*, uint32_t)
+	{
+		// Nothing here
+
+		// Value not filled
+		return false;
+	}
+
+	inline void MaterialBlueprintResourceListener::beginFillMaterial()
+	{
+		// Nothing here
+	}
+
+	inline bool MaterialBlueprintResourceListener::fillMaterialValue(uint32_t, uint8_t*, uint32_t)
+	{
+		// Nothing here
+
+		// Value not filled
+		return false;
+	}
+
+	inline void MaterialBlueprintResourceListener::beginFillInstance(const Transform& objectSpaceToWorldSpaceTransform, MaterialResource& materialResource)
+	{
+		mObjectSpaceToWorldSpaceTransform = &objectSpaceToWorldSpaceTransform;
+		mMaterialResource				  = &materialResource;
 	}
 
 

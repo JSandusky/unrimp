@@ -73,8 +73,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline const IMaterialBlueprintResourceListener& getMaterialBlueprintResourceListener() const;
-		RENDERERRUNTIME_API_EXPORT void setMaterialBlueprintResourceListener(const IMaterialBlueprintResourceListener* materialBlueprintResourceListener);
+		inline IMaterialBlueprintResourceListener& getMaterialBlueprintResourceListener() const;
+		RENDERERRUNTIME_API_EXPORT void setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener);
 
 		// TODO(co) Work-in-progress
 		RENDERERRUNTIME_API_EXPORT MaterialBlueprintResource* loadMaterialBlueprintResourceByAssetId(AssetId assetId, bool reload = false);
@@ -138,9 +138,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&						  mRendererRuntime;						///< Renderer runtime instance, do not destroy the instance
-		const IMaterialBlueprintResourceListener* mMaterialBlueprintResourceListener;	///< Material blueprint resource listener, always valid, do not destroy the instance
-		SortedGlobalMaterialPropertyVector		  mSortedGlobalMaterialPropertyVector;
+		IRendererRuntime&					mRendererRuntime;					///< Renderer runtime instance, do not destroy the instance
+		IMaterialBlueprintResourceListener*	mMaterialBlueprintResourceListener;	///< Material blueprint resource listener, always valid, do not destroy the instance
+		SortedGlobalMaterialPropertyVector	mSortedGlobalMaterialPropertyVector;
 
 
 		// TODO(co) Implement decent resource handling
