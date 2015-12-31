@@ -319,7 +319,7 @@
 				"0":
 				{
 					"Name": "PassUniformBuffer",
-					"UniformBufferRootParameterIndex": "0",
+					"RootParameterIndex": "0",
 					"UniformBufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -371,7 +371,7 @@
 				"1":
 				{
 					"Name": "MaterialUniformBuffer",
-					"UniformBufferRootParameterIndex": "1",
+					"RootParameterIndex": "1",
 					"UniformBufferUsage": "MATERIAL",
 					"NumberOfElements": "2",
 					"ElementProperties":
@@ -395,7 +395,7 @@
 				"2":
 				{
 					"Name": "InstanceUniformBuffer",
-					"UniformBufferRootParameterIndex": "2",
+					"RootParameterIndex": "2",
 					"UniformBufferUsage": "INSTANCE",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -421,7 +421,8 @@
 			{
 				"0":
 				{
-					"SamplerRootParameterIndex": "3",
+					"Name": "SamplerLinear",
+					"RootParameterIndex": "3",
 					"Filter": "MIN_MAG_MIP_LINEAR",
 					"AddressU": "CLAMP",
 					"AddressV": "CLAMP",
@@ -438,22 +439,26 @@
 			{
 				"0":
 				{
-					"TextureRootParameterIndex": "4",
+					"Name": "DiffuseMap",
+					"RootParameterIndex": "4",
 					"TextureAssetId": "@DiffuseMap"
 				},
 				"1":
 				{
-					"TextureRootParameterIndex": "5",
+					"Name": "EmissiveMap",
+					"RootParameterIndex": "5",
 					"TextureAssetId": "@EmissiveMap"
 				},
 				"2":
 				{
-					"TextureRootParameterIndex": "6",
+					"Name": "NormalMap",
+					"RootParameterIndex": "6",
 					"TextureAssetId": "@NormalMap"
 				},
 				"3":
 				{
-					"TextureRootParameterIndex": "7",
+					"Name": "SpecularMap",
+					"RootParameterIndex": "7",
 					"TextureAssetId": "@SpecularMap"
 				}
 			}

@@ -216,7 +216,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfSamplerStates; ++i)
 			{
 				const MaterialBlueprintResource::SamplerState& samplerState = samplerStates[i];
-				renderer.setGraphicsRootDescriptorTable(samplerState.samplerRootParameterIndex, samplerState.samplerStatePtr);
+				renderer.setGraphicsRootDescriptorTable(samplerState.rootParameterIndex, samplerState.samplerStatePtr);
 			}
 		}
 
@@ -232,7 +232,7 @@ namespace RendererRuntime
 
 				// Start with the material blueprint textures
 				Texture texture;
-				texture.textureRootParameterIndex = blueprintTexture.textureRootParameterIndex;
+				texture.rootParameterIndex = blueprintTexture.rootParameterIndex;
 				texture.textureAssetId = blueprintTexture.textureAssetId;
 				texture.materialPropertyId = blueprintTexture.materialPropertyId;
 				texture.textureResource = blueprintTexture.textureResource;	// TODO(co) Implement decent resource management
@@ -268,7 +268,7 @@ namespace RendererRuntime
 					Renderer::ITexturePtr texturePtr = texture.textureResource->getTexture();
 					if (nullptr != texturePtr)
 					{
-						renderer.setGraphicsRootDescriptorTable(texture.textureRootParameterIndex, texturePtr);
+						renderer.setGraphicsRootDescriptorTable(texture.rootParameterIndex, texturePtr);
 					}
 				}
 			}

@@ -82,7 +82,7 @@ namespace RendererRuntime
 	public:
 		struct Texture
 		{
-			uint32_t		   textureRootParameterIndex;
+			uint32_t		   rootParameterIndex;
 			AssetId			   textureAssetId;
 			MaterialPropertyId materialPropertyId;
 			TextureResource*   textureResource;	// TODO(co) Implement decent resource management

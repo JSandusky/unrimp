@@ -87,7 +87,7 @@ namespace RendererRuntime
 
 			struct UniformBufferHeader
 			{
-				uint32_t									  uniformBufferRootParameterIndex;
+				uint32_t									  rootParameterIndex;
 				MaterialBlueprintResource::UniformBufferUsage uniformBufferUsage;
 				uint32_t									  numberOfElements;
 				uint32_t									  numberOfElementProperties;
@@ -96,12 +96,12 @@ namespace RendererRuntime
 
 			struct SamplerState : public Renderer::SamplerState
 			{
-				uint32_t samplerRootParameterIndex;
+				uint32_t rootParameterIndex;
 			};
 
 			struct Texture
 			{
-				uint32_t		   textureRootParameterIndex;
+				uint32_t		   rootParameterIndex;
 				AssetId			   textureAssetId;
 				MaterialPropertyId materialPropertyId;
 			};

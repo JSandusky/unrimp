@@ -349,7 +349,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfUniformBuffers; ++i)
 			{
 				const UniformBuffer& uniformBuffer = mUniformBuffers[i];
-				renderer.setGraphicsRootDescriptorTable(uniformBuffer.uniformBufferRootParameterIndex, uniformBuffer.uniformBufferPtr);
+				renderer.setGraphicsRootDescriptorTable(uniformBuffer.rootParameterIndex, uniformBuffer.uniformBufferPtr);
 			}
 		}
 	}

@@ -703,7 +703,7 @@ namespace RendererToolkit
 
 			{ // Write down the uniform buffer header
 				RendererRuntime::v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
-				JsonHelper::optionalIntegerProperty(jsonUniformBufferObject, "UniformBufferRootParameterIndex", uniformBufferHeader.uniformBufferRootParameterIndex);
+				JsonHelper::optionalIntegerProperty(jsonUniformBufferObject, "RootParameterIndex", uniformBufferHeader.rootParameterIndex);
 				detail::optionalUniformBufferUsageProperty(jsonUniformBufferObject, "UniformBufferUsage", uniformBufferHeader.uniformBufferUsage);
 				JsonHelper::optionalIntegerProperty(jsonUniformBufferObject, "NumberOfElements", uniformBufferHeader.numberOfElements);
 				uniformBufferHeader.numberOfElementProperties = jsonElementPropertiesObject->size();
@@ -729,12 +729,12 @@ namespace RendererToolkit
 
 			// Start with the default sampler state
 			RendererRuntime::v1MaterialBlueprint::SamplerState materialBlueprintSamplerState;
-			materialBlueprintSamplerState.samplerRootParameterIndex = 0;
+			materialBlueprintSamplerState.rootParameterIndex = 0;
 			Renderer::SamplerState& samplerState = materialBlueprintSamplerState;
 			samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 
 			// The optional properties
-			JsonHelper::optionalIntegerProperty(jsonSamplerStateObject, "SamplerRootParameterIndex", materialBlueprintSamplerState.samplerRootParameterIndex);
+			JsonHelper::optionalIntegerProperty(jsonSamplerStateObject, "RootParameterIndex", materialBlueprintSamplerState.rootParameterIndex);
 			JsonMaterialHelper::optionalFilterProperty(jsonSamplerStateObject, "Filter", samplerState.filter);
 			JsonMaterialHelper::optionalTextureAddressModeProperty(jsonSamplerStateObject, "AddressU", samplerState.addressU);
 			JsonMaterialHelper::optionalTextureAddressModeProperty(jsonSamplerStateObject, "AddressV", samplerState.addressV);
@@ -764,10 +764,10 @@ namespace RendererToolkit
 
 			// Start with the default texture
 			RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture;
-			materialBlueprintTexture.textureRootParameterIndex = 0;
+			materialBlueprintTexture.rootParameterIndex = 0;
 
 			// The optional properties
-			JsonHelper::optionalIntegerProperty(jsonTextureObject, "TextureRootParameterIndex", materialBlueprintTexture.textureRootParameterIndex);
+			JsonHelper::optionalIntegerProperty(jsonTextureObject, "RootParameterIndex", materialBlueprintTexture.rootParameterIndex);
 
 			{ // Get mandatory asset ID
 			  // -> The character "@" is used to reference a material property value

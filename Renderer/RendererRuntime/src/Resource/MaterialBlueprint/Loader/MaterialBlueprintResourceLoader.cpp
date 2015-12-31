@@ -138,10 +138,10 @@ namespace RendererRuntime
 					// Read in the uniform buffer header
 					v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
 					inputFileStream.read(reinterpret_cast<char*>(&uniformBufferHeader), sizeof(v1MaterialBlueprint::UniformBufferHeader));
-					uniformBuffer.uniformBufferRootParameterIndex = uniformBufferHeader.uniformBufferRootParameterIndex;
-					uniformBuffer.uniformBufferUsage			  = uniformBufferHeader.uniformBufferUsage;
-					uniformBuffer.numberOfElements				  = uniformBufferHeader.numberOfElements;
-					uniformBuffer.uniformBufferNumberOfBytes	  = uniformBufferHeader.uniformBufferNumberOfBytes;
+					uniformBuffer.rootParameterIndex		 = uniformBufferHeader.rootParameterIndex;
+					uniformBuffer.uniformBufferUsage		 = uniformBufferHeader.uniformBufferUsage;
+					uniformBuffer.numberOfElements			 = uniformBufferHeader.numberOfElements;
+					uniformBuffer.uniformBufferNumberOfBytes = uniformBufferHeader.uniformBufferNumberOfBytes;
 
 					// Read in the uniform buffer property elements
 					MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = uniformBuffer.uniformBufferElementProperties;
@@ -248,7 +248,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfSamplerStates; ++i, ++materialBlueprintSamplerState)
 			{
 				MaterialBlueprintResource::SamplerState& samplerState = samplerStates[i];
-				samplerState.samplerRootParameterIndex = materialBlueprintSamplerState->samplerRootParameterIndex;
+				samplerState.rootParameterIndex = materialBlueprintSamplerState->rootParameterIndex;
 				samplerState.samplerStatePtr = renderer.createSamplerState(*materialBlueprintSamplerState);
 			}
 		}
@@ -261,7 +261,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfTextures; ++i, ++materialBlueprintTexture)
 			{
 				MaterialBlueprintResource::Texture& texture = textures[i];
-				texture.textureRootParameterIndex = materialBlueprintTexture->textureRootParameterIndex;
+				texture.rootParameterIndex = materialBlueprintTexture->rootParameterIndex;
 				texture.textureAssetId = materialBlueprintTexture->textureAssetId;
 				texture.materialPropertyId = materialBlueprintTexture->materialPropertyId;
 				texture.textureResource = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);

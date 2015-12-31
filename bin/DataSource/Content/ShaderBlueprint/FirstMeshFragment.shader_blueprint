@@ -64,14 +64,14 @@ cbuffer InstanceUniformBuffer : register(b2)
 	int		 MaterialIndex;
 }
 
+// Samplers
+SamplerState SamplerLinear : register(s0);
+
 // Textures
 Texture2D DiffuseMap  : register(t0);
 Texture2D EmissiveMap : register(t1);
 Texture2D NormalMap   : register(t2);	// Tangent space normal map
 Texture2D SpecularMap : register(t3);
-
-// Samplers
-SamplerState SamplerLinear : register(s0);
 
 
 //[-------------------------------------------------------]

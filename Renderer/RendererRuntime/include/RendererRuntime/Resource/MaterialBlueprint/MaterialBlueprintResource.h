@@ -108,7 +108,7 @@ namespace RendererRuntime
 
 		struct UniformBuffer
 		{
-			uint32_t					   uniformBufferRootParameterIndex;
+			uint32_t					   rootParameterIndex;
 			UniformBufferUsage			   uniformBufferUsage;
 			uint32_t					   numberOfElements;
 			UniformBufferElementProperties uniformBufferElementProperties;
@@ -119,13 +119,13 @@ namespace RendererRuntime
 
 		struct SamplerState
 		{
-			uint32_t				   samplerRootParameterIndex;
+			uint32_t				   rootParameterIndex;
 			Renderer::ISamplerStatePtr samplerStatePtr;
 		};
 
 		struct Texture
 		{
-			uint32_t		   textureRootParameterIndex;
+			uint32_t		   rootParameterIndex;
 			AssetId			   textureAssetId;
 			MaterialPropertyId materialPropertyId;
 			TextureResource*   textureResource;	// TODO(co) Implement decent resource management
