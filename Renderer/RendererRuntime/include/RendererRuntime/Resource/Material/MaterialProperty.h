@@ -174,22 +174,6 @@ namespace RendererRuntime
 
 	};
 
-	namespace detail
-	{
-		struct OrderByMaterialPropertyId
-		{
-			inline bool operator()(const MaterialProperty& left, MaterialPropertyId right) const
-			{
-				return (left.getMaterialPropertyId() < right);
-			}
-
-			inline bool operator()(MaterialPropertyId left, const MaterialProperty& right) const
-			{
-				return (left < right.getMaterialPropertyId());
-			}
-		};
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

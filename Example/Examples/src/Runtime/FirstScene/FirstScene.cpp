@@ -69,9 +69,9 @@ void FirstScene::onInitialization()
 	if (nullptr != rendererRuntime)
 	{
 		{ // Tell the material blueprint resource manager about our global material properties
-			RendererRuntime::MaterialBlueprintResourceManager& materialBlueprintResourceManager = rendererRuntime->getMaterialBlueprintResourceManager();
-			materialBlueprintResourceManager.setGlobalMaterialPropertyById("SunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(1.0f, 1.0f, 1.0f));
-			materialBlueprintResourceManager.setGlobalMaterialPropertyById("Wetness", RendererRuntime::MaterialPropertyValue::fromFloat(1.0f));
+			RendererRuntime::MaterialProperties& globalMaterialProperties = rendererRuntime->getMaterialBlueprintResourceManager().getGlobalMaterialProperties();
+			globalMaterialProperties.setPropertyById("SunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(1.0f, 1.0f, 1.0f));
+			globalMaterialProperties.setPropertyById("Wetness", RendererRuntime::MaterialPropertyValue::fromFloat(1.0f));
 		}
 
 		// Get the main swap chain and ensure there's one

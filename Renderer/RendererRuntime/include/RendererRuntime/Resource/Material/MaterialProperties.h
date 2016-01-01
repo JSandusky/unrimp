@@ -27,19 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/IResourceManager.h"
-#include "RendererRuntime/Resource/Material/MaterialProperties.h"
+#include "RendererRuntime/Resource/Material/MaterialProperty.h"
 
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class IRendererRuntime;
-	class MaterialBlueprintResource;
-	class IMaterialBlueprintResourceListener;
-}
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -52,71 +42,94 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MaterialBlueprintResourceManager : private IResourceManager
+	/**
+	*  @brief
+	*    Material properties
+	*/
+	class MaterialProperties
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-		friend class RendererRuntimeImpl;
+	public:
+		typedef std::vector<MaterialProperty> SortedPropertyVector;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline IMaterialBlueprintResourceListener& getMaterialBlueprintResourceListener() const;
-		RENDERERRUNTIME_API_EXPORT void setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener);
-
-		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT MaterialBlueprintResource* loadMaterialBlueprintResourceByAssetId(AssetId assetId, bool reload = false);
+		/**
+		*  @brief
+		*    Constructor
+		*/
+		inline MaterialProperties();
 
 		/**
 		*  @brief
-		*    Return the global material properties
+		*    Destructor
+		*/
+		inline ~MaterialProperties();
+
+		/**
+		*  @brief
+		*    Return the properties
 		*
 		*  @return
-		*    The global material properties
+		*    The properties
 		*/
-		inline MaterialProperties& getGlobalMaterialProperties();
-		inline const MaterialProperties& getGlobalMaterialProperties() const;
+		inline const SortedPropertyVector& getSortedPropertyVector() const;
 
+		/**
+		*  @brief
+		*    Return a material property by its ID
+		*
+		*  @param[in] materialPropertyId
+		*    ID of the material property to return
+		*
+		*  @return
+		*    The requested material property, null pointer on error, don't destroy the returned instance
+		*/
+		RENDERERRUNTIME_API_EXPORT const MaterialProperty* getPropertyById(MaterialPropertyId materialPropertyId) const;
 
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void reloadResourceByAssetId(AssetId assetId) override;
-		virtual void update() override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		explicit MaterialBlueprintResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~MaterialBlueprintResourceManager();
-		MaterialBlueprintResourceManager(const MaterialBlueprintResourceManager&) = delete;
-		MaterialBlueprintResourceManager& operator=(const MaterialBlueprintResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
+		/**
+		*  @brief
+		*    Set a material property value by its ID
+		*
+		*  @param[in] materialPropertyId
+		*    ID of the material property to set the value from
+		*  @param[in] materialPropertyValue
+		*    The material property value to set
+		*/
+		RENDERERRUNTIME_API_EXPORT void setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&					mRendererRuntime;					///< Renderer runtime instance, do not destroy the instance
-		IMaterialBlueprintResourceListener*	mMaterialBlueprintResourceListener;	///< Material blueprint resource listener, always valid, do not destroy the instance
-		MaterialProperties					mGlobalMaterialProperties;			///< Global material properties
-
-
-		// TODO(co) Implement decent resource handling
-	public:
-		std::vector<MaterialBlueprintResource*> mResources;
+		SortedPropertyVector mSortedPropertyVector;
 
 
 	};
+
+	namespace detail
+	{
+		struct OrderByMaterialPropertyId
+		{
+			inline bool operator()(const MaterialProperty& left, MaterialPropertyId right) const
+			{
+				return (left.getMaterialPropertyId() < right);
+			}
+
+			inline bool operator()(MaterialPropertyId left, const MaterialProperty& right) const
+			{
+				return (left < right.getMaterialPropertyId());
+			}
+		};
+	}
 
 
 //[-------------------------------------------------------]
@@ -128,4 +141,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.inl"
+#include "RendererRuntime/Resource/Material/MaterialProperties.inl"

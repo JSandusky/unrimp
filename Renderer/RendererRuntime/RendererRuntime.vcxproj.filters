@@ -282,6 +282,9 @@
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Material\MaterialProperties.inl">
+      <Filter>Source Files\Resource\Material</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -615,6 +618,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.h">
       <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialProperties.h">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -856,6 +862,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\ProgramCache.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Material\MaterialProperties.cpp">
+      <Filter>Source Files\Resource\Material</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

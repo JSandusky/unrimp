@@ -38,9 +38,9 @@ namespace RendererRuntime
 		return mPipelineStateCacheManager;
 	}
 
-	inline const MaterialBlueprintResource::SortedMaterialPropertyVector& MaterialBlueprintResource::getSortedMaterialPropertyVector() const
+	inline const MaterialProperties& MaterialBlueprintResource::getMaterialProperties() const
 	{
-		return mSortedMaterialPropertyVector;
+		return mMaterialProperties;
 	}
 
 	inline Renderer::IRootSignature* MaterialBlueprintResource::getRootSignature() const

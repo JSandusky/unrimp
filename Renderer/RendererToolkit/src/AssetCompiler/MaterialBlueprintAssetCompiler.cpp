@@ -132,7 +132,7 @@ namespace RendererToolkit
 			}
 
 			// Properties
-			RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector sortedMaterialPropertyVector;
+			RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
 			{
 				// Gather all material properties
 				JsonMaterialBlueprintHelper::readProperties(input, jsonPropertiesObject, sortedMaterialPropertyVector);

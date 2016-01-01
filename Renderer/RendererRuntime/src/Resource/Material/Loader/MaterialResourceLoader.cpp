@@ -66,8 +66,10 @@ namespace RendererRuntime
 			mMaterialBlueprintAssetId = materialHeader.materialBlueprintAssetId;
 
 			// Read properties
-			mMaterialResource->mSortedMaterialPropertyVector.resize(materialHeader.numberOfProperties);
-			inputFileStream.read(reinterpret_cast<char*>(mMaterialResource->mSortedMaterialPropertyVector.data()), sizeof(MaterialProperty) * materialHeader.numberOfProperties);
+			// TODO(co) Get rid of the evil const-cast
+			MaterialProperties::SortedPropertyVector& sortedPropertyVector = const_cast<MaterialProperties::SortedPropertyVector&>(mMaterialResource->mMaterialProperties.getSortedPropertyVector());
+			sortedPropertyVector.resize(materialHeader.numberOfProperties);
+			inputFileStream.read(reinterpret_cast<char*>(sortedPropertyVector.data()), sizeof(MaterialProperty) * materialHeader.numberOfProperties);
 		}
 		catch (const std::exception& e)
 		{

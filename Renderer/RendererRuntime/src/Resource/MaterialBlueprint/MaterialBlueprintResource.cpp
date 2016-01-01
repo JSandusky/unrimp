@@ -114,6 +114,8 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResource::fillUnknownUniformBuffers()
 	{
+		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager.getGlobalMaterialProperties();
+
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
 		materialBlueprintResourceListener.beginFillUnknown();
 
@@ -160,7 +162,7 @@ namespace RendererRuntime
 						else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
 						{
 							// Figure out the global material property value
-							const MaterialProperty* materialProperty = mMaterialBlueprintResourceManager.getGlobalMaterialPropertyById(uniformBufferElementProperty.getReferenceValue());
+							const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
 							if (nullptr != materialProperty)
 							{
 								// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
@@ -198,6 +200,8 @@ namespace RendererRuntime
 	{
 		assert(nullptr != mPassUniformBuffer);
 		assert(1 == mPassUniformBuffer->numberOfElements);
+
+		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager.getGlobalMaterialProperties();
 
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
 		materialBlueprintResourceListener.beginFillPass(mPassUniformBuffer->uniformBufferPtr->getRenderer(), worldSpaceToViewSpaceTransform);
@@ -237,7 +241,7 @@ namespace RendererRuntime
 				else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
 				{
 					// Figure out the global material property value
-					const MaterialProperty* materialProperty = mMaterialBlueprintResourceManager.getGlobalMaterialPropertyById(uniformBufferElementProperty.getReferenceValue());
+					const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
 					if (nullptr != materialProperty)
 					{
 						// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
@@ -273,6 +277,8 @@ namespace RendererRuntime
 	{
 		assert(nullptr != mMaterialUniformBuffer);
 
+		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager.getGlobalMaterialProperties();
+
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
 		materialBlueprintResourceListener.beginFillMaterial();
 
@@ -290,6 +296,7 @@ namespace RendererRuntime
 				const MaterialResource* materialResource = mLinkedMaterialResources[materialIndex];
 				assert(materialResource->getMaterialUniformBufferIndex() == materialIndex);
 
+				const MaterialProperties& materialProperties = materialResource->getMaterialProperties();
 				uint8_t* scratchBufferPointer = scratchBuffer.data() + numberOfBytesPerElement * materialIndex;
 
 				for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
@@ -313,7 +320,7 @@ namespace RendererRuntime
 					if (MaterialProperty::Usage::MATERIAL_REFERENCE == usage)	// Most likely the case, so check this first
 					{
 						// Figure out the material property value
-						const MaterialProperty* materialProperty = materialResource->getMaterialPropertyById(uniformBufferElementProperty.getReferenceValue());
+						const MaterialProperty* materialProperty = materialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
 						if (nullptr != materialProperty)
 						{
 							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
@@ -330,7 +337,7 @@ namespace RendererRuntime
 						// Referencing a global material property inside a material uniform buffer doesn't make really sense performance wise, but don't forbid it
 	
 						// Figure out the global material property value
-						const MaterialProperty* materialProperty = mMaterialBlueprintResourceManager.getGlobalMaterialPropertyById(uniformBufferElementProperty.getReferenceValue());
+						const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
 						if (nullptr != materialProperty)
 						{
 							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
@@ -370,6 +377,8 @@ namespace RendererRuntime
 		assert(this == materialResource.getMaterialBlueprintResource());
 		assert(nullptr != mInstanceUniformBuffer);
 		assert(1 == mInstanceUniformBuffer->numberOfElements);	// TODO(co) Implement automatic instancing
+
+		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager.getGlobalMaterialProperties();
 
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
 		materialBlueprintResourceListener.beginFillInstance(objectSpaceToWorldSpaceTransform, materialResource);
@@ -411,7 +420,7 @@ namespace RendererRuntime
 					// Referencing a global material property inside an instance uniform buffer doesn't make really sense performance wise, but don't forbid it
 
 					// Figure out the global material property value
-					const MaterialProperty* materialProperty = mMaterialBlueprintResourceManager.getGlobalMaterialPropertyById(uniformBufferElementProperty.getReferenceValue());
+					const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
 					if (nullptr != materialProperty)
 					{
 						// TODO(co) Error handling: Usage mismatch, value type mismatch etc.

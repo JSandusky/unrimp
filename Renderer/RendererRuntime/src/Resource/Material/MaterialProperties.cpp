@@ -19,6 +19,14 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Material/MaterialProperties.h"
+
+#include <algorithm>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -28,24 +36,26 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialResource::~MaterialResource()
+	const MaterialProperty* MaterialProperties::getPropertyById(MaterialPropertyId materialPropertyId) const
 	{
-		// Nothing here
+		SortedPropertyVector::const_iterator iterator = std::lower_bound(mSortedPropertyVector.cbegin(), mSortedPropertyVector.cend(), materialPropertyId, detail::OrderByMaterialPropertyId());
+		return (iterator != mSortedPropertyVector.end() && iterator._Ptr->getMaterialPropertyId() == materialPropertyId) ? iterator._Ptr : nullptr;
 	}
 
-	inline MaterialBlueprintResource* MaterialResource::getMaterialBlueprintResource() const
+	void MaterialProperties::setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue)
 	{
-		return mMaterialBlueprintResource;
-	}
-
-	inline uint32_t MaterialResource::getMaterialUniformBufferIndex() const
-	{
-		return mMaterialUniformBufferIndex;
-	}
-
-	inline const MaterialProperties& MaterialResource::getMaterialProperties() const
-	{
-		return mMaterialProperties;
+		const MaterialProperty materialProperty(materialPropertyId, MaterialProperty::Usage::DYNAMIC, materialPropertyValue);
+		SortedPropertyVector::iterator iterator = std::lower_bound(mSortedPropertyVector.begin(), mSortedPropertyVector.end(), materialPropertyId, detail::OrderByMaterialPropertyId());
+		if (iterator == mSortedPropertyVector.end() || iterator->getMaterialPropertyId() != materialPropertyId)
+		{
+			// Add new material property
+			mSortedPropertyVector.insert(iterator, materialProperty);
+		}
+		else
+		{
+			// Just update the material property value
+			*iterator = materialProperty;
+		}
 	}
 
 

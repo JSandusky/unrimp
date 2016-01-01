@@ -130,7 +130,7 @@ namespace RendererToolkit
 			Poco::JSON::Object::Ptr jsonPropertiesObject = jsonMaterialObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
 
 			// Gather all material blueprint properties
-			RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector sortedMaterialPropertyVector;
+			RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
 			{
 				// TODO(co) Error handling and simplification
 				// Parse material blueprint asset JSON
@@ -178,7 +178,7 @@ namespace RendererToolkit
 					const RendererRuntime::MaterialPropertyId materialPropertyId(propertyName.c_str());
 
 					// Figure out the material property value type by using the material blueprint
-					RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
+					RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
 					if (iterator != sortedMaterialPropertyVector.end())
 					{
 						RendererRuntime::MaterialProperty* materialProperty = iterator._Ptr;

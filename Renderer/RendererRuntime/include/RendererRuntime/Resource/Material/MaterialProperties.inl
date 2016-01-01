@@ -28,24 +28,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialResource::~MaterialResource()
+	inline MaterialProperties::MaterialProperties()
 	{
 		// Nothing here
 	}
 
-	inline MaterialBlueprintResource* MaterialResource::getMaterialBlueprintResource() const
+	inline MaterialProperties::~MaterialProperties()
 	{
-		return mMaterialBlueprintResource;
+		// Nothing here
 	}
 
-	inline uint32_t MaterialResource::getMaterialUniformBufferIndex() const
+	inline const MaterialProperties::SortedPropertyVector& MaterialProperties::getSortedPropertyVector() const
 	{
-		return mMaterialUniformBufferIndex;
-	}
-
-	inline const MaterialProperties& MaterialResource::getMaterialProperties() const
-	{
-		return mMaterialProperties;
+		return mSortedPropertyVector;
 	}
 
 

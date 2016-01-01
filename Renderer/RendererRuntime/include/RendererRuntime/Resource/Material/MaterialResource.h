@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/IResource.h"
-#include "RendererRuntime/Resource/Material/MaterialProperty.h"
+#include "RendererRuntime/Resource/Material/MaterialProperties.h"
 
 #include <vector>
 
@@ -85,7 +85,6 @@ namespace RendererRuntime
 			TextureResource*   textureResource;	// TODO(co) Implement decent resource management
 		};
 
-		typedef std::vector<MaterialProperty> SortedMaterialPropertyVector;
 		typedef std::vector<Texture> Textures;
 
 
@@ -128,24 +127,12 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the sorted material property vector
+		*    Return the material properties
 		*
 		*  @return
-		*    The sorted material property vector
+		*    The material properties
 		*/
-		inline const SortedMaterialPropertyVector& getSortedMaterialPropertyVector() const;
-
-		/**
-		*  @brief
-		*    Return a material property by its ID
-		*
-		*  @param[in] materialPropertyId
-		*    ID of the material property to return
-		*
-		*  @return
-		*    The requested material property, null pointer on error, don't destroy the returned instance
-		*/
-		const MaterialProperty* getMaterialPropertyById(MaterialPropertyId materialPropertyId) const;
+		inline const MaterialProperties& getMaterialProperties() const;
 
 		// TODO(co)
 		void releasePipelineState();
@@ -166,7 +153,7 @@ namespace RendererRuntime
 	private:
 		MaterialBlueprintResource*	 mMaterialBlueprintResource;	///< Material blueprint resource, can be a null pointer, don't destroy the instance
 		uint32_t					 mMaterialUniformBufferIndex;	///< Material uniform buffer index inside the used material blueprint
-		SortedMaterialPropertyVector mSortedMaterialPropertyVector;
+		MaterialProperties			 mMaterialProperties;
 		Textures					 mTextures;
 
 

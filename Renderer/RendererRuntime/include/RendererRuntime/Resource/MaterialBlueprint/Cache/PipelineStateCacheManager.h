@@ -42,8 +42,8 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
-	class MaterialResource;
 	class ShaderProperties;
+	class MaterialProperties;
 	class MaterialBlueprintResource;
 }
 
@@ -79,7 +79,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		Renderer::IPipelineState* getPipelineStateObject(const ShaderProperties& shaderProperties, MaterialResource& materialResource);
+		Renderer::IPipelineState* getPipelineStateObject(const ShaderProperties& shaderProperties, const MaterialProperties& materialProperties);
 		void clearCache();
 
 

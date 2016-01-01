@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/IResource.h"
-#include "RendererRuntime/Resource/Material/MaterialProperty.h"
+#include "RendererRuntime/Resource/Material/MaterialProperties.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCacheManager.h"
 
 #include <Renderer/Public/Renderer.h>
@@ -133,7 +133,6 @@ namespace RendererRuntime
 			TextureResource*   textureResource;	// TODO(co) Implement decent resource management
 		};
 
-		typedef std::vector<MaterialProperty> SortedMaterialPropertyVector;
 		typedef std::vector<UniformBuffer> UniformBuffers;
 		typedef std::vector<SamplerState> SamplerStates;
 		typedef std::vector<Texture> Textures;
@@ -180,12 +179,12 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the sorted material property vector
+		*    Return the material blueprint properties
 		*
 		*  @return
-		*    The sorted material property vector
+		*    The material blueprint properties
 		*/
-		inline const SortedMaterialPropertyVector& getSortedMaterialPropertyVector() const;
+		inline const MaterialProperties& getMaterialProperties() const;
 
 		/**
 		*  @brief
@@ -305,7 +304,7 @@ namespace RendererRuntime
 	private:
 		MaterialBlueprintResourceManager& mMaterialBlueprintResourceManager;	///< Owner material blueprint resource manager
 		PipelineStateCacheManager		  mPipelineStateCacheManager;
-		SortedMaterialPropertyVector	  mSortedMaterialPropertyVector;
+		MaterialProperties				  mMaterialProperties;
 		Renderer::IRootSignature*		  mRootSignature;						///< Root signature, can be a null pointer
 		Renderer::PipelineState			  mPipelineState;
 		// Resource

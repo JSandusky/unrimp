@@ -480,7 +480,7 @@ namespace RendererToolkit
 		outputFileStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), sizeof(Renderer::DescriptorRange) * descriptorRanges.size());
 	}
 
-	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPropertiesObject, RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector& sortedMaterialPropertyVector, bool sort)
+	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPropertiesObject, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, bool sort)
 	{
 		Poco::JSON::Object::ConstIterator propertiesIterator = jsonPropertiesObject->begin();
 		Poco::JSON::Object::ConstIterator propertiesIteratorEnd = jsonPropertiesObject->end();
@@ -669,7 +669,7 @@ namespace RendererToolkit
 			Poco::JSON::Object::Ptr jsonElementPropertiesObject = jsonUniformBufferObject->get("ElementProperties").extract<Poco::JSON::Object::Ptr>();
 
 			// Gather all element properties, don't sort because the user defined order is important in here (data layout in memory)
-			RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector elementProperties;
+			RendererRuntime::MaterialProperties::SortedPropertyVector elementProperties;
 			readProperties(input, jsonElementPropertiesObject, elementProperties, false);
 
 			// Sum up the number of bytes required by all uniform buffer element properties
@@ -745,7 +745,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector& sortedMaterialPropertyVector, Poco::JSON::Object::Ptr jsonTexturesObject, std::ofstream& outputFileStream)
+	void JsonMaterialBlueprintHelper::readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, Poco::JSON::Object::Ptr jsonTexturesObject, std::ofstream& outputFileStream)
 	{
 		Poco::JSON::Object::ConstIterator rootTexturesIterator = jsonTexturesObject->begin();
 		Poco::JSON::Object::ConstIterator rootTexturesIteratorEnd = jsonTexturesObject->end();
@@ -770,7 +770,7 @@ namespace RendererToolkit
 					materialBlueprintTexture.materialPropertyId = materialPropertyId;
 
 					// Figure out the material property value
-					RendererRuntime::MaterialBlueprintResource::SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
+					RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
 					if (iterator != sortedMaterialPropertyVector.end())
 					{
 						RendererRuntime::MaterialProperty* materialProperty = iterator._Ptr;

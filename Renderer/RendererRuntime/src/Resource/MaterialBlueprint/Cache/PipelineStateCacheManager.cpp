@@ -39,7 +39,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Renderer::IPipelineState* PipelineStateCacheManager::getPipelineStateObject(const ShaderProperties& shaderProperties, MaterialResource& materialResource)
+	Renderer::IPipelineState* PipelineStateCacheManager::getPipelineStateObject(const ShaderProperties& shaderProperties, const MaterialProperties& materialProperties)
 	{
 		// TODO(co) Asserts whether or not e.g. the material resource is using the owning material resource blueprint
 		assert(mMaterialBlueprintResource.isFullyLoaded());
@@ -96,11 +96,10 @@ namespace RendererRuntime
 				};
 				const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
 
-				// TODO(co) It's probably sufficient to just pass material shader properties into this method instead the whole material resource instance
 				// Gather shader properties from static material properties
 				ShaderProperties finalShaderProperties = shaderProperties;
 				{
-					const MaterialResource::SortedMaterialPropertyVector& sortedMaterialPropertyVector = materialResource.getSortedMaterialPropertyVector();
+					const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialProperties.getSortedPropertyVector();
 					const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
 					for (size_t i = 0; i < numberOfMaterialProperties; ++i)
 					{

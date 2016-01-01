@@ -35,9 +35,14 @@ namespace RendererRuntime
 		return *mMaterialBlueprintResourceListener;
 	}
 
-	inline const MaterialBlueprintResourceManager::SortedGlobalMaterialPropertyVector& MaterialBlueprintResourceManager::getSortedGlobalMaterialPropertyVector() const
+	inline MaterialProperties& MaterialBlueprintResourceManager::getGlobalMaterialProperties()
 	{
-		return mSortedGlobalMaterialPropertyVector;
+		return mGlobalMaterialProperties;
+	}
+
+	inline const MaterialProperties& MaterialBlueprintResourceManager::getGlobalMaterialProperties() const
+	{
+		return mGlobalMaterialProperties;
 	}
 
 

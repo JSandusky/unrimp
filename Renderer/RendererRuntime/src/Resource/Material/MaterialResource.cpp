@@ -48,12 +48,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	const MaterialProperty* MaterialResource::getMaterialPropertyById(MaterialPropertyId materialPropertyId) const
-	{
-		SortedMaterialPropertyVector::const_iterator iterator = std::lower_bound(mSortedMaterialPropertyVector.cbegin(), mSortedMaterialPropertyVector.cend(), materialPropertyId, detail::OrderByMaterialPropertyId());
-		return (iterator != mSortedMaterialPropertyVector.end() && iterator._Ptr->getMaterialPropertyId() == materialPropertyId) ? iterator._Ptr : nullptr;
-	}
-
 	void MaterialResource::releasePipelineState()
 	{
 		mTextures.clear();	// TODO(co) Cleanup
@@ -87,7 +81,7 @@ namespace RendererRuntime
 				if (0 != texture.materialPropertyId)
 				{
 					// Figure out the material property value
-					const MaterialProperty* materialProperty = getMaterialPropertyById(texture.materialPropertyId);
+					const MaterialProperty* materialProperty = mMaterialProperties.getPropertyById(texture.materialPropertyId);
 					if (nullptr != materialProperty)
 					{
 						// TODO(co) Error handling: Usage mismatch etc.

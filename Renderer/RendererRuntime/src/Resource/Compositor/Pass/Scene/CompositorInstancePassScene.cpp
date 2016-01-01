@@ -71,7 +71,7 @@ namespace
 				// TODO(co) Pass shader properties
 				RendererRuntime::ShaderProperties shaderProperties;
 
-				Renderer::IPipelineState* pipelineState = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateObject(shaderProperties, *mMaterialResource);
+				Renderer::IPipelineState* pipelineState = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateObject(shaderProperties, mMaterialResource->getMaterialProperties());
 				if (nullptr != pipelineState)
 				{
 					// Fill the unknown uniform buffers

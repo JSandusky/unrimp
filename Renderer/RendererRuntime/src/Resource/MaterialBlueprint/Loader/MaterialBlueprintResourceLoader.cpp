@@ -62,9 +62,12 @@ namespace RendererRuntime
 			v1MaterialBlueprint::Header materialBlueprintHeader;
 			inputFileStream.read(reinterpret_cast<char*>(&materialBlueprintHeader), sizeof(v1MaterialBlueprint::Header));
 
-			// Read properties
-			mMaterialBlueprintResource->mSortedMaterialPropertyVector.resize(materialBlueprintHeader.numberOfProperties);
-			inputFileStream.read(reinterpret_cast<char*>(mMaterialBlueprintResource->mSortedMaterialPropertyVector.data()), sizeof(MaterialProperty) * materialBlueprintHeader.numberOfProperties);
+			{ // Read properties
+				// TODO(co) Get rid of the evil const-cast
+				MaterialProperties::SortedPropertyVector& sortedPropertyVector = const_cast<MaterialProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mMaterialProperties.getSortedPropertyVector());
+				sortedPropertyVector.resize(materialBlueprintHeader.numberOfProperties);
+				inputFileStream.read(reinterpret_cast<char*>(sortedPropertyVector.data()), sizeof(MaterialProperty) * materialBlueprintHeader.numberOfProperties);
+			}
 
 			{ // Read in the root signature
 				// Read in the root signature header
