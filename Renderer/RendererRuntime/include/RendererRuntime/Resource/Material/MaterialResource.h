@@ -30,8 +30,6 @@
 #include "RendererRuntime/Resource/IResource.h"
 #include "RendererRuntime/Resource/Material/MaterialProperties.h"
 
-#include <vector>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]

@@ -265,16 +265,14 @@ namespace RendererToolkit
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3_3:
 			{
-				float values[9] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
-				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, values, 9);
-				return RendererRuntime::MaterialPropertyValue::fromFloat3_3(values);
+				// Declaration property only
+				return RendererRuntime::MaterialPropertyValue::fromFloat3_3();
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4_4:
 			{
-				float values[16] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f };
-				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, values, 16);
-				return RendererRuntime::MaterialPropertyValue::fromFloat4_4(values);
+				// Declaration property only
+				return RendererRuntime::MaterialPropertyValue::fromFloat4_4();
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FILL_MODE:

@@ -125,25 +125,19 @@ namespace RendererRuntime
 		return materialPropertyValue;
 	}
 
-	inline MaterialPropertyValue MaterialPropertyValue::fromFloat3_3(float values[9])
+	inline MaterialPropertyValue MaterialPropertyValue::fromFloat3_3()
 	{
 		MaterialPropertyValue materialPropertyValue;
 		materialPropertyValue.mValueType = ValueType::FLOAT_3_3;
-		for (int i = 0; i < 9; ++i)
-		{
-			materialPropertyValue.mValue.Float3_3[i] = values[i];
-		}
+		materialPropertyValue.mValue.Boolean = false;	// Declaration property only
 		return materialPropertyValue;
 	}
 
-	inline MaterialPropertyValue MaterialPropertyValue::fromFloat4_4(float values[16])
+	inline MaterialPropertyValue MaterialPropertyValue::fromFloat4_4()
 	{
 		MaterialPropertyValue materialPropertyValue;
 		materialPropertyValue.mValueType = ValueType::FLOAT_4_4;
-		for (int i = 0; i < 16; ++i)
-		{
-			materialPropertyValue.mValue.Float4_4[i] = values[i];
-		}
+		materialPropertyValue.mValue.Boolean = false;	// Declaration property only
 		return materialPropertyValue;
 	}
 
@@ -306,18 +300,6 @@ namespace RendererRuntime
 	{
 		assert(ValueType::FLOAT_4 == mValueType);
 		return &mValue.Float4[0];
-	}
-
-	inline const float* MaterialPropertyValue::getFloat3_3Value() const
-	{
-		assert(ValueType::FLOAT_3_3 == mValueType);
-		return &mValue.Float3_3[0];
-	}
-
-	inline const float* MaterialPropertyValue::getFloat4_4Value() const
-	{
-		assert(ValueType::FLOAT_4_4 == mValueType);
-		return &mValue.Float4_4[0];
 	}
 
 	inline Renderer::FillMode MaterialPropertyValue::getFillModeValue() const

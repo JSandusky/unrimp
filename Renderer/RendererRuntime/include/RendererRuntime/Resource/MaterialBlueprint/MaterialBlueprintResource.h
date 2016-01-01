@@ -33,8 +33,6 @@
 
 #include <Renderer/Public/Renderer.h>
 
-#include <vector>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
