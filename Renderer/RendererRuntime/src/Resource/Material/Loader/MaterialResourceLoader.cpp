@@ -63,7 +63,21 @@ namespace RendererRuntime
 			// Read in the material header
 			v1Material::Header materialHeader;
 			inputFileStream.read(reinterpret_cast<char*>(&materialHeader), sizeof(v1Material::Header));
-			mMaterialBlueprintAssetId = materialHeader.materialBlueprintAssetId;
+
+			{ // Read techniques
+				mNumberOfTechniques = materialHeader.numberOfTechniques;
+
+				// Allocate memory for the temporary data
+				if (mMaximumNumberOfMaterialTechniques < mNumberOfTechniques)
+				{
+					delete [] mMaterialTechniques;
+					mMaximumNumberOfMaterialTechniques = mNumberOfTechniques;
+					mMaterialTechniques = new v1Material::Technique[mMaximumNumberOfMaterialTechniques];
+				}
+
+				// Read already sorted techniques
+				inputFileStream.read(reinterpret_cast<char*>(mMaterialTechniques), sizeof(v1Material::Technique) * mNumberOfTechniques);
+			}
 
 			// Read properties
 			// TODO(co) Get rid of the evil const-cast
@@ -87,14 +101,38 @@ namespace RendererRuntime
 		// TODO(co) Material resource update
 		mMaterialResource->releasePipelineState();
 
-		// Get the used material blueprint resource
-		// TODO(co) Decent material resource list management inside the material blueprint resource (link, unlink etc.)
-		MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
-		mMaterialResource->mMaterialBlueprintResource = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(mMaterialBlueprintAssetId);
-		if (nullptr != mMaterialResource->mMaterialBlueprintResource)
-		{
-			mMaterialResource->mMaterialBlueprintResource->linkedMaterialResource(*mMaterialResource);
+		{ // Create the material techniques (list is already sorted)
+			MaterialResource::SortedMaterialTechniqueVector& sortedMaterialTechniqueVector = mMaterialResource->mSortedMaterialTechniqueVector;
+			MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
+			const v1Material::Technique* v1MaterialTechnique = mMaterialTechniques;
+			for (size_t i = 0; i < mNumberOfTechniques; ++i, ++v1MaterialTechnique)
+			{
+				sortedMaterialTechniqueVector.emplace_back(MaterialTechnique(v1MaterialTechnique->materialTechniqueId, *mMaterialResource));
+
+				// Get the used material blueprint resource
+				sortedMaterialTechniqueVector[i].mMaterialBlueprintResource = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(v1MaterialTechnique->materialBlueprintAssetId);
+			}
+
+			// Link when done and the memory addresses stay stable
+			for (size_t i = 0; i < mNumberOfTechniques; ++i)
+			{
+				MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[i];
+				if (nullptr != materialTechnique.mMaterialBlueprintResource)
+				{
+					materialTechnique.mMaterialBlueprintResource->linkMaterialTechnique(materialTechnique);
+				}
+			}
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	MaterialResourceLoader::~MaterialResourceLoader()
+	{
+		// Free temporary data
+		delete [] mMaterialTechniques;
 	}
 
 

@@ -22,10 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
-#include "RendererRuntime/Resource/Texture/TextureResource.h"
-#include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
-#include "RendererRuntime/IRendererRuntime.h"
 
 #include <algorithm>
 
@@ -37,81 +33,44 @@ namespace RendererRuntime
 {
 
 
+	namespace detail
+	{
+		struct OrderByMaterialTechniqueId
+		{
+			inline bool operator()(const MaterialTechnique& left, MaterialTechniqueId right) const
+			{
+				return (left.getMaterialTechniqueId() < right);
+			}
+
+			inline bool operator()(MaterialTechniqueId left, const MaterialTechnique& right) const
+			{
+				return (left < right.getMaterialTechniqueId());
+			}
+		};
+	}
+
+
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	MaterialResource::MaterialResource(ResourceId resourceId) :
-		IResource(resourceId),
-		mMaterialBlueprintResource(nullptr),
-		mMaterialUniformBufferIndex(0)
+		IResource(resourceId)
 	{
 		// Nothing here
 	}
 
-	void MaterialResource::releasePipelineState()
+	MaterialTechnique* MaterialResource::getMaterialTechniqueById(MaterialTechniqueId materialTechniqueId) const
 	{
-		mTextures.clear();	// TODO(co) Cleanup
+		SortedMaterialTechniqueVector::const_iterator iterator = std::lower_bound(mSortedMaterialTechniqueVector.cbegin(), mSortedMaterialTechniqueVector.cend(), materialTechniqueId, detail::OrderByMaterialTechniqueId());
+		return (iterator != mSortedMaterialTechniqueVector.end() && iterator._Ptr->getMaterialTechniqueId() == materialTechniqueId) ? iterator._Ptr : nullptr;
 	}
 
-	void MaterialResource::bindToRenderer(const IRendererRuntime& rendererRuntime)
+	void MaterialResource::releasePipelineState()
 	{
-		assert(nullptr != mMaterialBlueprintResource);
-
-		// TODO(co) This is experimental and will certainly look different when everything is in place
-		Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
-
-		// Need for gathering the textures now?
-		if (mTextures.empty())
+		// TODO(co) Cleanup
+		for (MaterialTechnique& materialTechnique : mSortedMaterialTechniqueVector)
 		{
-			TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
-			const MaterialBlueprintResource::Textures& textures = mMaterialBlueprintResource->getTextures();
-			const size_t numberOfTextures = textures.size();
-			for (size_t i = 0; i < numberOfTextures; ++i)
-			{
-				const MaterialBlueprintResource::Texture& blueprintTexture = textures[i];
-
-				// Start with the material blueprint textures
-				Texture texture;
-				texture.rootParameterIndex = blueprintTexture.rootParameterIndex;
-				texture.textureAssetId = blueprintTexture.textureAssetId;
-				texture.materialPropertyId = blueprintTexture.materialPropertyId;
-				texture.textureResource = blueprintTexture.textureResource;	// TODO(co) Implement decent resource management
-
-				// Apply material specific modifications
-				if (0 != texture.materialPropertyId)
-				{
-					// Figure out the material property value
-					const MaterialProperty* materialProperty = mMaterialProperties.getPropertyById(texture.materialPropertyId);
-					if (nullptr != materialProperty)
-					{
-						// TODO(co) Error handling: Usage mismatch etc.
-						texture.textureAssetId = materialProperty->getAssetIdValue();
-						texture.textureResource = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);	// TODO(co) Implement decent resource management
-					}
-				}
-
-				// Insert texture
-				mTextures.push_back(texture);
-			}
-		}
-
-		{ // Graphics root descriptor table: Set textures
-			const size_t numberOfTextures = mTextures.size();
-			for (size_t i = 0; i < numberOfTextures; ++i)
-			{
-				const Texture& texture = mTextures[i];
-
-				// Due to background texture loading, some textures might not be ready, yet
-				// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
-				if (nullptr != texture.textureResource)
-				{
-					Renderer::ITexturePtr texturePtr = texture.textureResource->getTexture();
-					if (nullptr != texturePtr)
-					{
-						renderer.setGraphicsRootDescriptorTable(texture.rootParameterIndex, texturePtr);
-					}
-				}
-			}
+			materialTechnique.mTextures.clear();
 		}
 	}
 

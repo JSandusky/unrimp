@@ -27,9 +27,21 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/IResource.h"
-#include "RendererRuntime/Resource/Material/MaterialTechnique.h"
-#include "RendererRuntime/Resource/Material/MaterialProperties.h"
+#include "RendererRuntime/Core/StringId.h"
+
+#include <vector>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class TextureResource;
+	class IRendererRuntime;
+	class MaterialResource;
+	class MaterialBlueprintResource;
+}
 
 
 //[-------------------------------------------------------]
@@ -40,27 +52,44 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
+	typedef StringId MaterialPropertyId;	///< Material property identifier, internally just a POD "uint32_t", result of hashing the property name
+	typedef StringId MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the property name
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Material resource
+	*    Material technique
 	*/
-	class MaterialResource : public IResource
+	class MaterialTechnique
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class MaterialResourceLoader;
+		friend class MaterialResource;			// TODO(co) Remove
+		friend class MaterialResourceLoader;	// TODO(co) Remove
+		friend class MaterialBlueprintResource;	///< Sets "RendererRuntime::MaterialTechnique::mMaterialUniformBufferIndex"
 
 
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::vector<MaterialTechnique> SortedMaterialTechniqueVector;
+		struct Texture
+		{
+			uint32_t		   rootParameterIndex;
+			AssetId			   textureAssetId;
+			MaterialPropertyId materialPropertyId;
+			TextureResource*   textureResource;	// TODO(co) Implement decent resource management
+		};
+		typedef std::vector<Texture> Textures;
 
 
 	//[-------------------------------------------------------]
@@ -71,68 +100,68 @@ namespace RendererRuntime
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] resourceId
-		*    Resource ID
+		*  @param[in] materialTechniqueId
+		*    Material technique ID
+		*  @param[in] materialResource
+		*    Owner material resource
 		*/
-		explicit MaterialResource(ResourceId resourceId);
+		inline explicit MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~MaterialResource();
+		inline ~MaterialTechnique();
 
 		/**
 		*  @brief
-		*    Return the sorted material technique vector
+		*    Return the material technique ID
 		*
 		*  @return
-		*    The sorted material technique vector
+		*    The material technique ID
 		*/
-		inline const SortedMaterialTechniqueVector& getSortedMaterialTechniqueVector() const;
+		inline MaterialTechniqueId getMaterialTechniqueId() const;
 
 		/**
 		*  @brief
-		*    Return a material technique by its ID
-		*
-		*  @param[in] materialTechniqueId
-		*    ID of the material technique to return
+		*    Return the owner material resource
 		*
 		*  @return
-		*    The requested material technique, null pointer on error, don't destroy the returned instance
+		*    The owner material resource
 		*/
-		MaterialTechnique* getMaterialTechniqueById(MaterialTechniqueId materialTechniqueId) const;
+		inline MaterialResource& getMaterialResource() const;
 
 		/**
 		*  @brief
-		*    Return the material properties
+		*    Return the used material blueprint resource
 		*
 		*  @return
-		*    The material properties
-		*
-		*  @notes
-		*    - Contains all properties of all material blueprints referenced by this material (material property inheritance is handled elsewhere)
+		*    The used material blueprint resource, can be a null pointer, don't destroy the instance
 		*/
-		inline const MaterialProperties& getMaterialProperties() const;
+		inline MaterialBlueprintResource* getMaterialBlueprintResource() const;
+
+		/**
+		*  @brief
+		*    Return the material uniform buffer index inside the used material blueprint
+		*
+		*  @return
+		*    The material uniform buffer index inside the used material blueprint
+		*/
+		inline uint32_t getMaterialUniformBufferIndex() const;
 
 		// TODO(co)
-		void releasePipelineState();
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		MaterialResource(const MaterialResource&) = delete;
-		MaterialResource& operator=(const MaterialResource&) = delete;
+		void bindToRenderer(const IRendererRuntime& rendererRuntime);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		SortedMaterialTechniqueVector mSortedMaterialTechniqueVector;
-		MaterialProperties			  mMaterialProperties;
+		MaterialTechniqueId		   mMaterialTechniqueId;		///< Material technique ID
+		MaterialResource*		   mMaterialResource;			///< Owner material resource, always valid
+		MaterialBlueprintResource* mMaterialBlueprintResource;	///< Material blueprint resource, can be a null pointer, don't destroy the instance
+		uint32_t				   mMaterialUniformBufferIndex;	///< Material uniform buffer index inside the used material blueprint
+		Textures				   mTextures;
 
 
 	};
@@ -147,4 +176,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Material/MaterialResource.inl"
+#include "RendererRuntime/Resource/Material/MaterialTechnique.inl"

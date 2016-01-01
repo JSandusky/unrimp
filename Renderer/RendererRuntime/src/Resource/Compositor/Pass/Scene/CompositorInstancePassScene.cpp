@@ -65,68 +65,72 @@ namespace
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
-			RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = mMaterialResource->getMaterialBlueprintResource();
-			if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
+			RendererRuntime::MaterialTechnique* materialTechnique = mMaterialResource->getMaterialTechniqueById("Default");
+			if (nullptr != materialTechnique)
 			{
-				// TODO(co) Pass shader properties
-				RendererRuntime::ShaderProperties shaderProperties;
-
-				Renderer::IPipelineState* pipelineState = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateObject(shaderProperties, mMaterialResource->getMaterialProperties());
-				if (nullptr != pipelineState)
+				RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = materialTechnique->getMaterialBlueprintResource();
+				if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
 				{
-					// Fill the unknown uniform buffers
-					materialBlueprintResource->fillUnknownUniformBuffers();
+					// TODO(co) Pass shader properties
+					RendererRuntime::ShaderProperties shaderProperties;
 
-					// Fill the pass uniform buffer
-					// TODO(co) Camera usage
-					const RendererRuntime::Transform worldSpaceToViewSpaceTransform;
-					materialBlueprintResource->fillPassUniformBuffer(worldSpaceToViewSpaceTransform);
-
-					// Fill the material uniform buffer
-					materialBlueprintResource->fillMaterialUniformBuffer();
-
-					// Bind the material blueprint resource to the used renderer
-					materialBlueprintResource->bindToRenderer();
-
-					// Bind the material resource to the used renderer
-					mMaterialResource->bindToRenderer(rendererRuntime);
-
-					// Set the used pipeline state object (PSO)
-					renderer.setPipelineState(pipelineState);
-
-					// Loop through all scene nodes
-					const RendererRuntime::ISceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
-					const size_t numberOfSceneNodes = sceneNodes.size();
-					for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
+					Renderer::IPipelineState* pipelineState = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateObject(shaderProperties, mMaterialResource->getMaterialProperties());
+					if (nullptr != pipelineState)
 					{
-						RendererRuntime::ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
-						const RendererRuntime::Transform& transform = sceneNode->getTransform();
+						// Fill the unknown uniform buffers
+						materialBlueprintResource->fillUnknownUniformBuffers();
 
-						// Loop through all scene items attached to the current scene node
-						const RendererRuntime::ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
-						const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
-						for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
+						// Fill the pass uniform buffer
+						// TODO(co) Camera usage
+						const RendererRuntime::Transform worldSpaceToViewSpaceTransform;
+						materialBlueprintResource->fillPassUniformBuffer(worldSpaceToViewSpaceTransform);
+
+						// Fill the material uniform buffer
+						materialBlueprintResource->fillMaterialUniformBuffer();
+
+						// Bind the material blueprint resource to the used renderer
+						materialBlueprintResource->bindToRenderer();
+
+						// Bind the material technique to the used renderer
+						materialTechnique->bindToRenderer(rendererRuntime);
+
+						// Set the used pipeline state object (PSO)
+						renderer.setPipelineState(pipelineState);
+
+						// Loop through all scene nodes
+						const RendererRuntime::ISceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
+						const size_t numberOfSceneNodes = sceneNodes.size();
+						for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
 						{
-							RendererRuntime::ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
-							if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
-							{
-								// Fill the instance uniform buffer
-								materialBlueprintResource->fillInstanceUniformBuffer(transform, *mMaterialResource);
+							RendererRuntime::ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
+							const RendererRuntime::Transform& transform = sceneNode->getTransform();
 
-								// Draw mesh instance
-								RendererRuntime::MeshSceneItem* meshSceneItem = static_cast<RendererRuntime::MeshSceneItem*>(sceneItem);
-								RendererRuntime::MeshResource* meshResource = meshSceneItem->getMeshResource();
-								if (nullptr != meshResource)
+							// Loop through all scene items attached to the current scene node
+							const RendererRuntime::ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
+							const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
+							for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
+							{
+								RendererRuntime::ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
+								if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
 								{
-									meshResource->draw();
+									// Fill the instance uniform buffer
+									materialBlueprintResource->fillInstanceUniformBuffer(transform, *materialTechnique);
+
+									// Draw mesh instance
+									RendererRuntime::MeshSceneItem* meshSceneItem = static_cast<RendererRuntime::MeshSceneItem*>(sceneItem);
+									RendererRuntime::MeshResource* meshResource = meshSceneItem->getMeshResource();
+									if (nullptr != meshResource)
+									{
+										meshResource->draw();
+									}
 								}
 							}
 						}
 					}
-				}
 
-				// End debug event
-				RENDERER_END_DEBUG_EVENT(&renderer)
+					// End debug event
+					RENDERER_END_DEBUG_EVENT(&renderer)
+				}
 			}
 		}
 	}

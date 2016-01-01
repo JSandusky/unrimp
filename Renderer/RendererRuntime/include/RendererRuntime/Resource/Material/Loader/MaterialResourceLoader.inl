@@ -31,12 +31,10 @@ namespace RendererRuntime
 	inline MaterialResourceLoader::MaterialResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		IResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime),
-		mMaterialResource(nullptr)
-	{
-		// Nothing here
-	}
-
-	inline MaterialResourceLoader::~MaterialResourceLoader()
+		mMaterialResource(nullptr),
+		mMaximumNumberOfMaterialTechniques(0),
+		mNumberOfTechniques(0),
+		mMaterialTechniques(nullptr)
 	{
 		// Nothing here
 	}

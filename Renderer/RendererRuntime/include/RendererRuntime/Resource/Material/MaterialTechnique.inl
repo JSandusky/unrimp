@@ -19,20 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
-
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -40,46 +26,44 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	typedef StringId MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t"
-	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
-
-
-	// -> Material file format content:
-	//    - Material header
-	//    - Material techniques
-	//    - Material properties
-	namespace v1Material
+	inline MaterialTechnique::MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource) :
+		mMaterialTechniqueId(materialTechniqueId),
+		mMaterialResource(&materialResource),
+		mMaterialBlueprintResource(nullptr),
+		mMaterialUniformBufferIndex(0)
 	{
+		// Nothing here
+	}
 
+	inline MaterialTechnique::~MaterialTechnique()
+	{
+		// Nothing here
+	}
 
-		//[-------------------------------------------------------]
-		//[ Definitions                                           ]
-		//[-------------------------------------------------------]
-		static const uint32_t FORMAT_TYPE	 = StringId("Material");
-		static const uint32_t FORMAT_VERSION = 1;
+	inline MaterialTechniqueId MaterialTechnique::getMaterialTechniqueId() const
+	{
+		return mMaterialTechniqueId;
+	}
 
-		#pragma pack(push)
-		#pragma pack(1)
-			struct Header
-			{
-				uint32_t formatType;
-				uint16_t formatVersion;
-				uint32_t numberOfTechniques;
-				uint32_t numberOfProperties;
-			};
+	inline MaterialResource& MaterialTechnique::getMaterialResource() const
+	{
+		return *mMaterialResource;
+	}
 
-			struct Technique
-			{
-				MaterialTechniqueId materialTechniqueId;
-				AssetId				materialBlueprintAssetId;
-			};
-		#pragma pack(pop)
+	inline MaterialBlueprintResource* MaterialTechnique::getMaterialBlueprintResource() const
+	{
+		return mMaterialBlueprintResource;
+	}
+
+	inline uint32_t MaterialTechnique::getMaterialUniformBufferIndex() const
+	{
+		return mMaterialUniformBufferIndex;
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-	} // v1Material
 } // RendererRuntime

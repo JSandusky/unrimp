@@ -90,7 +90,7 @@ namespace RendererRuntime
 		virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
 		inline virtual void beginFillMaterial() override;
 		inline virtual bool fillMaterialValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
-		inline virtual void beginFillInstance(const Transform& objectSpaceToWorldSpaceTransform, MaterialResource& materialResource) override;
+		inline virtual void beginFillInstance(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique) override;
 		virtual bool fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
 
 
@@ -105,8 +105,8 @@ namespace RendererRuntime
 		glm::mat4 mWorldSpaceToClipSpaceMatrix;
 
 		// Instance
-		const Transform*  mObjectSpaceToWorldSpaceTransform;
-		MaterialResource* mMaterialResource;
+		const Transform*   mObjectSpaceToWorldSpaceTransform;
+		MaterialTechnique* mMaterialTechnique;
 
 
 	};

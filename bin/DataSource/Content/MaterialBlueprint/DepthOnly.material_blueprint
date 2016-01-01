@@ -1,0 +1,467 @@
+{
+	"Format":
+	{
+		"Type": "MaterialBlueprintAsset",
+		"Version": "1"
+	},
+	"MaterialBlueprintAsset":
+	{
+		"Properties":
+		{
+			"Lighting":
+			{
+				"Usage": "STATIC",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Perform lighting on the material?"
+			},
+			"DiffuseColor":
+			{
+				"Usage": "DYNAMIC",
+				"ValueType": "FLOAT_4",
+				"Value": "1.0 1.0 1.0 1.0",
+				"Description": "Material diffuse color"
+			},
+			"DiffuseMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "ASSET_ID",
+				"Value": "4",
+				"Description": "Material diffuse map"
+			},
+			"EmissiveMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "ASSET_ID",
+				"Value": "5",
+				"Description": "Material emissive map"
+			},
+			"NormalMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "ASSET_ID",
+				"Value": "6",
+				"Description": "Material normal map"
+			},
+			"SpecularMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "ASSET_ID",
+				"Value": "7",
+				"Description": "Material specular map"
+			}
+		},
+		"RootSignature":
+		{
+			"RootParameters":
+			{
+				"0":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "CBV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "PassUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "ALL"
+				},
+				"1":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "CBV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "MaterialUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"2":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "CBV",
+							"BaseShaderRegister": "2",
+							"BaseShaderRegisterName": "InstanceUniformBuffer"
+						}
+					},
+					"ShaderVisibility": "ALL"
+				},
+				"3":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"4":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "DiffuseMap",
+							"SamplerRootParameterIndex": "3"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"5":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "EmissiveMap",
+							"SamplerRootParameterIndex": "3"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"6":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "2",
+							"BaseShaderRegisterName": "NormalMap",
+							"SamplerRootParameterIndex": "3"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"7":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
+							"BaseShaderRegister": "3",
+							"BaseShaderRegisterName": "SpecularMap",
+							"SamplerRootParameterIndex": "3"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				}
+			},
+			"Flags": "NONE"
+		},
+		"PipelineState":
+		{
+			"ShaderBlueprints":
+			{
+				"VertexShaderBlueprintAssetId": "17",
+				"FragmentShaderBlueprintAssetId": "18"
+			},
+			"RasterizerState":
+			{
+				"FillMode": "SOLID",
+				"CullMode": "BACK",
+				"FrontCounterClockwise": "FALSE",
+				"DepthBias": "0",
+				"DepthBiasClamp": "0.0",
+				"SlopeScaledDepthBias": "0.0",
+				"DepthClipEnable": "TRUE",
+				"MultisampleEnable": "FALSE",
+				"AntialiasedLineEnable": "FALSE",
+				"ForcedSampleCount": "0",
+				"ConservativeRasterizationMode": "OFF",
+				"ScissorEnable": "FALSE"
+			},
+			"DepthStencilState":
+			{
+				"DepthEnable": "TRUE",
+				"DepthWriteMask": "ALL",
+				"DepthFunc": "LESS",
+				"StencilEnable": "FALSE",
+				"StencilReadMask": "255",
+				"StencilWriteMask": "255",
+				"FrontFace":
+				{
+					"StencilFailOp": "KEEP",
+					"StencilDepthFailOp": "KEEP",
+					"StencilPassOp": "KEEP",
+					"StencilFunc": "ALWAYS"
+				},
+				"BackFace":
+				{
+					"StencilFailOp": "KEEP",
+					"StencilDepthFailOp": "KEEP",
+					"StencilPassOp": "KEEP",
+					"StencilFunc": "ALWAYS"
+				}
+			},
+			"BlendState":
+			{
+				"AlphaToCoverageEnable": "FALSE",
+				"IndependentBlendEnable": "FALSE",
+				"RenderTarget[0]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[1]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[2]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[3]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[4]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[5]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[6]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				},
+				"RenderTarget[7]":
+				{
+					"BlendEnable": "FALSE",
+					"SrcBlend": "ONE",
+					"DestBlend": "ZERO",
+					"BlendOp": "ADD",
+					"SrcBlendAlpha": "ONE",
+					"DestBlendAlpha": "ZERO",
+					"BlendOpAlpha": "ADD",
+					"RenderTargetWriteMask": "ALL"
+				}
+			}
+		},
+		"Resources":
+		{
+			"UniformBuffers":
+			{
+				"0":
+				{
+					"Name": "PassUniformBuffer",
+					"RootParameterIndex": "0",
+					"UniformBufferUsage": "PASS",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"0":
+						{
+							"Name": "WorldSpaceToViewSpaceMatrix",
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_MATRIX"
+						},
+						"1":
+						{
+							"Name": "WorldSpaceToClipSpaceMatrix",
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
+						},
+						"2":
+						{
+							"Name": "ViewSpaceSunLightDirection",
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@VIEW_SPACE_SUN_LIGHT_DIRECTION"
+						},
+						"3":
+						{
+							"Name": "SunLightColor",
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@SunLightColor"
+						},
+						"4":
+						{
+							"Name": "Wetness",
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@Wetness"
+						},
+						"5":
+						{
+							"Name": "StaticPropertyTest",
+							"Usage": "STATIC",
+							"ValueType": "FLOAT",
+							"Value": "1.0"
+						}
+					}
+				},
+				"1":
+				{
+					"Name": "MaterialUniformBuffer",
+					"RootParameterIndex": "1",
+					"UniformBufferUsage": "MATERIAL",
+					"NumberOfElements": "2",
+					"ElementProperties":
+					{
+						"0":
+						{
+							"Name": "DiffuseColor",
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT_4",
+							"Value": "@DiffuseColor"
+						},
+						"1":
+						{
+							"Name": "StaticPropertyTest",
+							"Usage": "STATIC",
+							"ValueType": "FLOAT",
+							"Value": "1.0"
+						}
+					}
+				},
+				"2":
+				{
+					"Name": "InstanceUniformBuffer",
+					"RootParameterIndex": "2",
+					"UniformBufferUsage": "INSTANCE",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"0":
+						{
+							"Name": "ObjectSpaceToWorldSpaceMatrix",
+							"Usage": "INSTANCE_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
+						},
+						"1":
+						{
+							"Name": "MaterialIndex",
+							"Usage": "INSTANCE_REFERENCE",
+							"ValueType": "INTEGER",
+							"Value": "@MATERIAL_INDEX"
+						}
+					}
+				}
+			},
+			"SamplerStates":
+			{
+				"0":
+				{
+					"Name": "SamplerLinear",
+					"RootParameterIndex": "3",
+					"Filter": "MIN_MAG_MIP_LINEAR",
+					"AddressU": "CLAMP",
+					"AddressV": "CLAMP",
+					"AddressW": "CLAMP",
+					"MipLODBias": "0.0",
+					"MaxAnisotropy": "16",
+					"ComparisonFunc": "NEVER",
+					"BorderColor": "0.0 0.0 0.0 0.0",
+					"MinLOD": "-3.402823466e+38",
+					"MaxLOD": "3.402823466e+38"
+				}
+			},
+			"Textures":
+			{
+				"0":
+				{
+					"Name": "DiffuseMap",
+					"RootParameterIndex": "4",
+					"TextureAssetId": "@DiffuseMap"
+				},
+				"1":
+				{
+					"Name": "EmissiveMap",
+					"RootParameterIndex": "5",
+					"TextureAssetId": "@EmissiveMap"
+				},
+				"2":
+				{
+					"Name": "NormalMap",
+					"RootParameterIndex": "6",
+					"TextureAssetId": "@NormalMap"
+				},
+				"3":
+				{
+					"Name": "SpecularMap",
+					"RootParameterIndex": "7",
+					"TextureAssetId": "@SpecularMap"
+				}
+			}
+		}
+	}
+}

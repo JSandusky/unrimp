@@ -38,6 +38,10 @@ namespace RendererRuntime
 {
 	class IRendererRuntime;
 	class MaterialResource;
+	namespace v1Material
+	{
+		struct Technique;
+	}
 }
 
 
@@ -83,7 +87,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline MaterialResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~MaterialResourceLoader();
+		virtual ~MaterialResourceLoader();
 		MaterialResourceLoader(const MaterialResourceLoader&) = delete;
 		MaterialResourceLoader& operator=(const MaterialResourceLoader&) = delete;
 		inline void initialize(const Asset& asset, MaterialResource& materialResource);
@@ -97,8 +101,10 @@ namespace RendererRuntime
 		// Resource source and destination
 		Asset			  mAsset;		///< In order to be multi-threading safe in here, we need an asset copy
 		MaterialResource* mMaterialResource;
-		// Temporary data
-		AssetId mMaterialBlueprintAssetId;
+		// Temporary data: Techniques
+		uint32_t			   mMaximumNumberOfMaterialTechniques;
+		uint32_t			   mNumberOfTechniques;
+		v1Material::Technique* mMaterialTechniques;
 
 
 	};

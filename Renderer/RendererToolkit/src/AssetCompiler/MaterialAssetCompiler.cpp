@@ -26,6 +26,7 @@
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Resource/Material/MaterialTechnique.h>
 #include <RendererRuntime/Resource/Material/Loader/MaterialFileFormat.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -52,6 +53,17 @@
 //[-------------------------------------------------------]
 namespace RendererToolkit
 {
+
+
+	namespace detail
+	{
+
+		bool orderByMaterialTechniqueId(const RendererRuntime::v1Material::Technique& left, const RendererRuntime::v1Material::Technique& right)
+		{
+			return (left.materialTechniqueId < right.materialTechniqueId);
+		}
+
+	}
 
 
 	//[-------------------------------------------------------]
@@ -127,14 +139,37 @@ namespace RendererToolkit
 			}
 
 			Poco::JSON::Object::Ptr jsonMaterialObject = jsonRootObject->get("MaterialAsset").extract<Poco::JSON::Object::Ptr>();
+			Poco::JSON::Object::Ptr jsonTechniquesObject = jsonMaterialObject->get("Techniques").extract<Poco::JSON::Object::Ptr>();
 			Poco::JSON::Object::Ptr jsonPropertiesObject = jsonMaterialObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
 
-			// Gather all material blueprint properties
+			// Gather the asset IDs of all used material blueprints (one material blueprint per material technique)
+			std::vector<RendererRuntime::v1Material::Technique> techniques;
+			{
+				techniques.reserve(jsonTechniquesObject->size());
+
+				Poco::JSON::Object::ConstIterator rootTechniquesIterator = jsonTechniquesObject->begin();
+				Poco::JSON::Object::ConstIterator rootTechniquesIteratorEnd = jsonTechniquesObject->end();
+				while (rootTechniquesIterator != rootTechniquesIteratorEnd)
+				{
+					// Add technique
+					RendererRuntime::v1Material::Technique technique;
+					technique.materialTechniqueId	   = RendererRuntime::StringId(rootTechniquesIterator->first.c_str());
+					technique.materialBlueprintAssetId = static_cast<uint32_t>(std::atoi(rootTechniquesIterator->second.extract<std::string>().c_str()));
+					techniques.push_back(technique);
+				
+					// Next technique, please
+					++rootTechniquesIterator;
+				}
+			}
+			std::sort(techniques.begin(), techniques.end(), detail::orderByMaterialTechniqueId);
+
+			// Gather all material blueprint properties of all referenced material blueprints
 			RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
+			for (RendererRuntime::v1Material::Technique& technique : techniques)
 			{
 				// TODO(co) Error handling and simplification
 				// Parse material blueprint asset JSON
-				const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, jsonMaterialObject, "MaterialBlueprintAssetId");
+				const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, technique.materialBlueprintAssetId);
 				std::ifstream materialBlueprintAssetInputFileStream(absoluteMaterialBlueprintAssetFilename, std::ios::binary);
 				Poco::JSON::Parser materialBlueprintAssetJsonParser;
 				materialBlueprintAssetJsonParser.parse(materialBlueprintAssetInputFileStream);
@@ -153,19 +188,38 @@ namespace RendererToolkit
 				materialBlueprintJsonParser.parse(materialBlueprintInputFileStream);
 				Poco::JSON::Object::Ptr materialBlueprintJsonRootObject = materialBlueprintJsonParser.result().extract<Poco::JSON::Object::Ptr>();
 				Poco::JSON::Object::Ptr jsonMaterialBlueprintObject = materialBlueprintJsonRootObject->get("MaterialBlueprintAsset").extract<Poco::JSON::Object::Ptr>();
-				JsonMaterialBlueprintHelper::readProperties(input, jsonMaterialBlueprintObject->get("Properties").extract<Poco::JSON::Object::Ptr>(), sortedMaterialPropertyVector);
+				RendererRuntime::MaterialProperties::SortedPropertyVector newSortedMaterialPropertyVector;
+				JsonMaterialBlueprintHelper::readProperties(input, jsonMaterialBlueprintObject->get("Properties").extract<Poco::JSON::Object::Ptr>(), newSortedMaterialPropertyVector);
+
+				// Add properties and avoid duplicates while doing so
+				for (const RendererRuntime::MaterialProperty& materialProperty : newSortedMaterialPropertyVector)
+				{
+					const RendererRuntime::MaterialPropertyId materialPropertyId = materialProperty.getMaterialPropertyId();
+					RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
+					if (iterator == sortedMaterialPropertyVector.end() || iterator._Ptr->getMaterialPropertyId() != materialPropertyId)
+					{
+						// Add new material property
+						sortedMaterialPropertyVector.insert(iterator, materialProperty);
+					}
+				}
+
+				// Transform the source asset ID into a local asset ID
+				technique.materialBlueprintAssetId = JsonHelper::getCompiledAssetId(input, technique.materialBlueprintAssetId);
 			}
 
 			{ // Material header
 				RendererRuntime::v1Material::Header materialHeader;
-				materialHeader.formatType				= RendererRuntime::v1Material::FORMAT_TYPE;
-				materialHeader.formatVersion			= RendererRuntime::v1Material::FORMAT_VERSION;
-				materialHeader.materialBlueprintAssetId	= JsonHelper::getCompiledAssetId(input, jsonMaterialObject, "MaterialBlueprintAssetId");
-				materialHeader.numberOfProperties		= sortedMaterialPropertyVector.size();
+				materialHeader.formatType		  = RendererRuntime::v1Material::FORMAT_TYPE;
+				materialHeader.formatVersion	  = RendererRuntime::v1Material::FORMAT_VERSION;
+				materialHeader.numberOfTechniques = techniques.size();
+				materialHeader.numberOfProperties = sortedMaterialPropertyVector.size();
 
 				// Write down the material header
 				outputFileStream.write(reinterpret_cast<const char*>(&materialHeader), sizeof(RendererRuntime::v1Material::Header));
 			}
+
+			// Write down the material techniques
+			outputFileStream.write(reinterpret_cast<const char*>(techniques.data()), sizeof(RendererRuntime::v1Material::Technique) * techniques.size());
 
 			{ // Properties
 				// Update material property values were required

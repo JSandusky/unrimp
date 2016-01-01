@@ -30,7 +30,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline MaterialBlueprintResourceListener::MaterialBlueprintResourceListener() :
 		mObjectSpaceToWorldSpaceTransform(nullptr),
-		mMaterialResource(nullptr)
+		mMaterialTechnique(nullptr)
 	{
 		// Nothing here
 	}
@@ -70,10 +70,10 @@ namespace RendererRuntime
 		return false;
 	}
 
-	inline void MaterialBlueprintResourceListener::beginFillInstance(const Transform& objectSpaceToWorldSpaceTransform, MaterialResource& materialResource)
+	inline void MaterialBlueprintResourceListener::beginFillInstance(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique)
 	{
 		mObjectSpaceToWorldSpaceTransform = &objectSpaceToWorldSpaceTransform;
-		mMaterialResource				  = &materialResource;
+		mMaterialTechnique				  = &materialTechnique;
 	}
 
 

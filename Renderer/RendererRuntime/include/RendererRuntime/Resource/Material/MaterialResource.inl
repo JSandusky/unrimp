@@ -33,14 +33,9 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline MaterialBlueprintResource* MaterialResource::getMaterialBlueprintResource() const
+	inline const MaterialResource::SortedMaterialTechniqueVector& MaterialResource::getSortedMaterialTechniqueVector() const
 	{
-		return mMaterialBlueprintResource;
-	}
-
-	inline uint32_t MaterialResource::getMaterialUniformBufferIndex() const
-	{
-		return mMaterialUniformBufferIndex;
+		return mSortedMaterialTechniqueVector;
 	}
 
 	inline const MaterialProperties& MaterialResource::getMaterialProperties() const

@@ -71,7 +71,9 @@ namespace RendererToolkit
 		static void optionalFloatProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, float& value);
 		static void optionalFloatNProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, float value[], uint32_t numberOfComponents);
 		static void optionalStringProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, char* value, uint32_t maximumLength);
+		static uint32_t getCompiledAssetId(const IAssetCompiler::Input& input, uint32_t sourceAssetId);	// TODO(co) Move this elsewhere? (not JSON related)
 		static uint32_t getCompiledAssetId(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonShaderBlueprintsObject, const std::string& propertyName);
+		static std::string getAbsoluteAssetFilename(const IAssetCompiler::Input& input, uint32_t sourceAssetId);	// TODO(co) Move this elsewhere? (not JSON related)
 		static std::string getAbsoluteAssetFilename(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonShaderBlueprintsObject, const std::string& propertyName);
 
 

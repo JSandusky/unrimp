@@ -25,6 +25,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
 
@@ -289,14 +290,14 @@ namespace RendererRuntime
 		{
 			const UniformBufferElementProperties& uniformBufferElementProperties = mMaterialUniformBuffer->uniformBufferElementProperties;
 			const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
-			const size_t numberOfLinkedMaterialResources = mLinkedMaterialResources.size();
+			const size_t numberOfLinkedMaterialTechniques = mLinkedMaterialTechniques.size();
 			const uint32_t numberOfBytesPerElement = mMaterialUniformBuffer->uniformBufferNumberOfBytes / mMaterialUniformBuffer->numberOfElements;
-			for (uint32_t materialIndex = 0; materialIndex < numberOfLinkedMaterialResources; ++materialIndex)
+			for (uint32_t materialIndex = 0; materialIndex < numberOfLinkedMaterialTechniques; ++materialIndex)
 			{
-				const MaterialResource* materialResource = mLinkedMaterialResources[materialIndex];
-				assert(materialResource->getMaterialUniformBufferIndex() == materialIndex);
+				const MaterialTechnique* materialTechnique = mLinkedMaterialTechniques[materialIndex];
+				assert(materialTechnique->getMaterialUniformBufferIndex() == materialIndex);
 
-				const MaterialProperties& materialProperties = materialResource->getMaterialProperties();
+				const MaterialProperties& materialProperties = materialTechnique->getMaterialResource().getMaterialProperties();
 				uint8_t* scratchBufferPointer = scratchBuffer.data() + numberOfBytesPerElement * materialIndex;
 
 				for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
@@ -372,16 +373,16 @@ namespace RendererRuntime
 		mMaterialUniformBuffer->uniformBufferPtr->copyDataFrom(scratchBuffer.size(), scratchBuffer.data());
 	}
 
-	void MaterialBlueprintResource::fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialResource& materialResource)
+	void MaterialBlueprintResource::fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique)
 	{
-		assert(this == materialResource.getMaterialBlueprintResource());
+		assert(this == materialTechnique.getMaterialBlueprintResource());
 		assert(nullptr != mInstanceUniformBuffer);
 		assert(1 == mInstanceUniformBuffer->numberOfElements);	// TODO(co) Implement automatic instancing
 
 		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager.getGlobalMaterialProperties();
 
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
-		materialBlueprintResourceListener.beginFillInstance(objectSpaceToWorldSpaceTransform, materialResource);
+		materialBlueprintResourceListener.beginFillInstance(objectSpaceToWorldSpaceTransform, materialTechnique);
 
 		// Update the scratch buffer
 		ScratchBuffer& scratchBuffer = mInstanceUniformBuffer->scratchBuffer;
@@ -484,13 +485,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void MaterialBlueprintResource::linkedMaterialResource(MaterialResource& materialResource)
+	void MaterialBlueprintResource::linkMaterialTechnique(MaterialTechnique& materialTechnique)
 	{
-		LinkedMaterialResources::const_iterator iterator = std::find(mLinkedMaterialResources.cbegin(), mLinkedMaterialResources.cend(), &materialResource);
-		if (mLinkedMaterialResources.cend() == iterator)
+		LinkedMaterialTechniques::const_iterator iterator = std::find(mLinkedMaterialTechniques.cbegin(), mLinkedMaterialTechniques.cend(), &materialTechnique);
+		if (mLinkedMaterialTechniques.cend() == iterator)
 		{
-			materialResource.mMaterialUniformBufferIndex = mLinkedMaterialResources.size();
-			mLinkedMaterialResources.push_back(&materialResource);
+			materialTechnique.mMaterialUniformBufferIndex = mLinkedMaterialTechniques.size();
+			mLinkedMaterialTechniques.push_back(&materialTechnique);
 		}
 	}
 

@@ -1,0 +1,132 @@
+/*********************************************************\
+ * Copyright (c) 2012-2015 Christian Ofenberg
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
+
+
+// TODO(co) Define this outside
+@piece(MaximumNumberOfMaterials)2@end
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+@includepiece(15)	// "Core.shader_piece"
+
+
+//[-------------------------------------------------------]
+//[ Input / output                                        ]
+//[-------------------------------------------------------]
+// Attribute output
+struct VS_OUTPUT
+{
+	float4   Position     : SV_POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	float2   TexCoord     : TEXCOORD0;		// Texture coordinate
+	float3x3 TangentFrame : TEXCOORD1;		// Tangent frame
+};
+
+// Uniform buffers
+cbuffer PassUniformBuffer : register(b0)
+{
+	float4x4 WorldSpaceToViewSpaceMatrix;
+	float4x4 WorldSpaceToClipSpaceMatrix;
+	float3	 ViewSpaceSunLightDirection;
+	float3	 SunLightColor;
+	float	 Wetness;
+	float	 StaticPropertyTest;
+}
+struct Material
+{
+	float4 DiffuseColor;
+	float  StaticPropertyTest;
+};
+cbuffer MaterialUniformBuffer : register(b1)
+{
+	Material Materials[@insertpiece(MaximumNumberOfMaterials)];
+}
+cbuffer InstanceUniformBuffer : register(b2)
+{
+	float4x4 ObjectSpaceToWorldSpaceMatrix;
+	int		 MaterialIndex;
+}
+
+// Samplers
+SamplerState SamplerLinear : register(s0);
+
+// Textures
+Texture2D DiffuseMap  : register(t0);
+Texture2D EmissiveMap : register(t1);
+Texture2D NormalMap   : register(t2);	// Tangent space normal map
+Texture2D SpecularMap : register(t3);
+
+
+//[-------------------------------------------------------]
+//[ Pieces                                                ]
+//[-------------------------------------------------------]
+@property(Lighting)
+	@piece(CalculateLighting)
+		// Perform standard Blinn-Phong diffuse and specular lighting
+
+		// Calculate the diffuse lighting
+		float diffuseLightFactor = max(dot(normal, ViewSpaceSunLightDirection), 0.0f);
+		float3 diffuseLightColor = SunLightColor * diffuseLightFactor;
+
+		// Calculate the specular lighting
+		float3 viewSpaceHalfVector = normalize(ViewSpaceSunLightDirection + ViewSpaceViewVector);
+		float specularLightFactor = (diffuseLightFactor > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
+		float3 specularLightColor = Wetness * SunLightColor * specularLightFactor;
+	@end
+@end
+@property(!Lighting)
+	@piece(CalculateLighting)
+		float diffuseLightColor = 1.0f;
+		float specularLightColor = 0.0f;
+	@end
+@end
+
+
+//[-------------------------------------------------------]
+//[ Main                                                  ]
+//[-------------------------------------------------------]
+float4 main(VS_OUTPUT input) : SV_Target
+{
+	// Get the used material
+	Material material = Materials[MaterialIndex];
+
+	// Build in variables
+	float3 ViewSpaceViewVector = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
+
+	// Get the per fragment normal [0..1] by using a tangent space normal map
+	float3 normal = NormalMap.Sample(SamplerLinear, input.TexCoord).rgb;
+
+	// Transform the normal from [0..1] to [-1..1]
+	normal = (normal - 0.5f) * 2.0f;
+
+	// Transform the tangent space normal into view space
+	normal = normalize(mul(normal, input.TangentFrame));
+
+	// Calculate lighting
+	@insertpiece(CalculateLighting)
+
+	// Calculate the fragment color
+	float3 color = diffuseLightColor * material.DiffuseColor * DiffuseMap.Sample(SamplerLinear, input.TexCoord);	// Diffuse term
+	color += specularLightColor * SpecularMap.Sample(SamplerLinear, input.TexCoord).rgb;							// Specular term
+	color += EmissiveMap.Sample(SamplerLinear, input.TexCoord).rgb;													// Emissive term
+
+	// Done
+	return min(float4(color * material.StaticPropertyTest, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));
+}

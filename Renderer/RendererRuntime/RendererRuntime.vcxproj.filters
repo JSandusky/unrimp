@@ -285,6 +285,9 @@
     <None Include="include\RendererRuntime\Resource\Material\MaterialProperties.inl">
       <Filter>Source Files\Resource\Material</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Material\MaterialTechnique.inl">
+      <Filter>Source Files\Resource\Material</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -621,6 +624,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialProperties.h">
       <Filter>Source Files\Resource\Material</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialTechnique.h">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -864,6 +870,9 @@
       <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Material\MaterialProperties.cpp">
+      <Filter>Source Files\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Material\MaterialTechnique.cpp">
       <Filter>Source Files\Resource\Material</Filter>
     </ClCompile>
   </ItemGroup>

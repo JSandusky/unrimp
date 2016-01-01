@@ -8,17 +8,17 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "14",
+			"AssetId": "19",
 			"AssetType": "MaterialBlueprint",
 			"AssetCategory": "Default",
-			"AssetName": "FirstMesh",
-			"AssetDependencies": [ "12", "13" ],
-			"FileDependencies": [ "FirstMesh.material_blueprint" ],
+			"AssetName": "DepthOnly",
+			"AssetDependencies": [ "17", "18" ],
+			"FileDependencies": [ "DepthOnly.material_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
 		},
 		"MaterialBlueprintAssetCompiler":
 		{
-			"InputFile": "FirstMesh.material_blueprint"
+			"InputFile": "DepthOnly.material_blueprint"
 		}
 	}
 }

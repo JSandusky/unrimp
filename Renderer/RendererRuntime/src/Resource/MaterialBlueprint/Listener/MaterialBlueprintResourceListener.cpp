@@ -22,8 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
-#include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Core/Transform.h"
+
+#include <Renderer/Public/Renderer.h>
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -126,7 +128,7 @@ namespace RendererRuntime
 		}
 		else if (detail::MATERIAL_INDEX == referenceValue)
 		{
-			const int materialIndex = static_cast<int>(mMaterialResource->getMaterialUniformBufferIndex());
+			const int materialIndex = static_cast<int>(mMaterialTechnique->getMaterialUniformBufferIndex());
 			memcpy(buffer, &materialIndex, numberOfBytes);
 		}
 		else

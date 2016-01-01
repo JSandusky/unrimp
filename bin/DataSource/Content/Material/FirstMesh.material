@@ -6,7 +6,11 @@
 	},
 	"MaterialAsset":
 	{
-		"MaterialBlueprintAssetId": "14",
+		"Techniques":
+		{
+			"Default": "14",
+			"DepthOnly": "19"
+		},
 		"Properties":
 		{
 			"Lighting": "TRUE",

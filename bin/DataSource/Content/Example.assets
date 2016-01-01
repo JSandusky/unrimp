@@ -21,6 +21,9 @@
 		"13": "ShaderBlueprint/FirstMeshFragment.asset",
 		"14": "MaterialBlueprint/FirstMesh.asset",
 		"15": "ShaderPiece/Core.asset",
-		"16": "ShaderPiece/FirstMesh.asset"
+		"16": "ShaderPiece/FirstMesh.asset",
+		"17": "ShaderBlueprint/DepthOnlyVertex.asset",
+		"18": "ShaderBlueprint/DepthOnlyFragment.asset",
+		"19": "MaterialBlueprint/DepthOnly.asset"
 	}
 }

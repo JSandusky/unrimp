@@ -45,7 +45,7 @@ namespace RendererRuntime
 {
 	class Transform;
 	class TextureResource;
-	class MaterialResource;
+	class MaterialTechnique;
 	class ShaderBlueprintResource;
 	class MaterialBlueprintResourceManager;
 }
@@ -268,10 +268,10 @@ namespace RendererRuntime
 		*
 		*  @param[in] objectSpaceToWorldSpaceTransform
 		*    Object space to world space transform
-		*  @param[in] materialResource
-		*    Used material resource
+		*  @param[in] materialTechnique
+		*    Used material technique
 		*/
-		void fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialResource& materialResource);
+		void fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique);
 
 		/**
 		*  @brief
@@ -286,14 +286,14 @@ namespace RendererRuntime
 	private:
 		MaterialBlueprintResource(const MaterialBlueprintResource&) = delete;
 		MaterialBlueprintResource& operator=(const MaterialBlueprintResource&) = delete;
-		void linkedMaterialResource(MaterialResource& materialResource);
+		void linkMaterialTechnique(MaterialTechnique& materialTechnique);
 
 
 	//[-------------------------------------------------------]
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		typedef std::vector<MaterialResource*> LinkedMaterialResources;
+		typedef std::vector<MaterialTechnique*> LinkedMaterialTechniques;
 
 
 	//[-------------------------------------------------------]
@@ -306,15 +306,15 @@ namespace RendererRuntime
 		Renderer::IRootSignature*		  mRootSignature;						///< Root signature, can be a null pointer
 		Renderer::PipelineState			  mPipelineState;
 		// Resource
-		UniformBuffers				 mUniformBuffers;
-		SamplerStates				 mSamplerStates;
-		Textures					 mTextures;
+		UniformBuffers mUniformBuffers;
+		SamplerStates  mSamplerStates;
+		Textures	   mTextures;
 		// Ease-of-use direct access
 		UniformBuffer* mPassUniformBuffer;		///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mMaterialUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 
-		LinkedMaterialResources mLinkedMaterialResources;	// TODO(co) Decent material resource list management inside the material blueprint resource (link, unlink etc.)
+		LinkedMaterialTechniques mLinkedMaterialTechniques;	// TODO(co) Decent material technique list management inside the material blueprint resource (link, unlink etc.)
 
 
 	// TODO(co) Make this private

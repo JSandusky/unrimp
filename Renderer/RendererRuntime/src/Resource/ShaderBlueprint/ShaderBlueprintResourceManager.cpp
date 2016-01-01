@@ -126,7 +126,8 @@ namespace RendererRuntime
 				// TODO(co) Cleanup: Update all influenced material resources
 				for (auto materialResource : mRendererRuntime.getMaterialResourceManager().mResources)
 				{
-					if (materialBlueprintResources.find(materialResource->getMaterialBlueprintResource()) != materialBlueprintResources.end())
+					// TODO(co)
+					// if (materialBlueprintResources.find(materialResource->getMaterialBlueprintResource()) != materialBlueprintResources.end())
 					{
 						materialResource->releasePipelineState();
 					}

@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "18",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Default",
+			"AssetName": "DepthOnlyFragment",
+			"AssetDependencies": [ "15" ],
+			"FileDependencies": [ "DepthOnlyFragment.shader_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "DepthOnlyFragment.shader_blueprint"
+		}
+	}
+}

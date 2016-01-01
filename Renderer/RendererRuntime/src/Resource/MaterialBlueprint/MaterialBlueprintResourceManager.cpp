@@ -133,7 +133,8 @@ namespace RendererRuntime
 				materialBlueprintResource->mTextures.clear();
 				for (auto materialResource : mRendererRuntime.getMaterialResourceManager().mResources)
 				{
-					if (materialResource->getMaterialBlueprintResource() == materialBlueprintResource)
+					// TODO(co)
+				//	if (materialResource->getMaterialBlueprintResource() == materialBlueprintResource)
 					{
 						materialResource->releasePipelineState();
 					}

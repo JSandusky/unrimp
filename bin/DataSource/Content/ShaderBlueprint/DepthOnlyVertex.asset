@@ -1,0 +1,24 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "17",
+			"AssetType": "ShaderBlueprint",
+			"AssetCategory": "Default",
+			"AssetName": "DepthOnlyVertex",
+			"AssetDependencies": [ "15", "16" ],
+			"FileDependencies": [ "DepthOnlyVertex.shader_blueprint" ],
+			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
+		},
+		"ShaderBlueprintAssetCompiler":
+		{
+			"InputFile": "DepthOnlyVertex.shader_blueprint"
+		}
+	}
+}
