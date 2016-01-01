@@ -31,6 +31,7 @@
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
+#include "RendererRuntime/Resource/Shader/ShaderProperties.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
@@ -67,7 +68,10 @@ namespace
 			RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = mMaterialResource->getMaterialBlueprintResource();
 			if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
 			{
-				Renderer::IPipelineState* pipelineState = mMaterialResource->getPipelineStateObject();
+				// TODO(co) Pass shader properties
+				RendererRuntime::ShaderProperties shaderProperties;
+
+				Renderer::IPipelineState* pipelineState = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateObject(shaderProperties, *mMaterialResource);
 				if (nullptr != pipelineState)
 				{
 					// Fill the unknown uniform buffers

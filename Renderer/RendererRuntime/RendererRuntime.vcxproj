@@ -39,6 +39,10 @@
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceManager.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCache.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCacheManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Listener\IMaterialBlueprintResourceListener.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Listener\MaterialBlueprintResourceListener.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.inl" />
@@ -119,6 +123,10 @@
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCache.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCacheManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Listener\IMaterialBlueprintResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Listener\MaterialBlueprintResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Loader\MaterialBlueprintFileFormat.h" />
@@ -213,6 +221,10 @@
     <ClCompile Include="src\Resource\Font\Loader\FontResourceLoader.cpp" />
     <ClCompile Include="src\Resource\IResource.cpp" />
     <ClCompile Include="src\Resource\IResourceManager.cpp" />
+    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCache.cpp" />
+    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.cpp" />
+    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\ProgramCache.cpp" />
+    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\ProgramCacheManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Listener\MaterialBlueprintResourceListener.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\MaterialBlueprintResource.cpp" />

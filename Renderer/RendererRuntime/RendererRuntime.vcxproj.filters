@@ -119,6 +119,9 @@
     <Filter Include="Source Files\Resource\MaterialBlueprint\Listener">
       <UniqueIdentifier>{b9f743ed-1dd8-4d25-8e22-b6ff1079bc9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\MaterialBlueprint\Cache">
+      <UniqueIdentifier>{d164b3fc-fc7f-4ffc-9df2-d87d2e315338}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -266,6 +269,18 @@
     </None>
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Listener\IMaterialBlueprintResourceListener.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\Listener</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCache.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCacheManager.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -588,6 +603,18 @@
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Listener\IMaterialBlueprintResourceListener.h">
       <Filter>Source Files\Resource\MaterialBlueprint\Listener</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCache.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCacheManager.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -817,6 +844,18 @@
     </ClCompile>
     <ClCompile Include="src\Resource\MaterialBlueprint\Listener\MaterialBlueprintResourceListener.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\Listener</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\ProgramCacheManager.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCache.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\ProgramCache.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

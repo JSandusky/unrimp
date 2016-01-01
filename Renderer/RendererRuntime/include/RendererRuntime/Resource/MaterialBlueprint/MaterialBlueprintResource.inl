@@ -28,6 +28,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline MaterialBlueprintResourceManager& MaterialBlueprintResource::getMaterialBlueprintResourceManager() const
+	{
+		return mMaterialBlueprintResourceManager;
+	}
+
+	inline PipelineStateCacheManager& MaterialBlueprintResource::getPipelineStateCacheManager()
+	{
+		return mPipelineStateCacheManager;
+	}
+
 	inline const MaterialBlueprintResource::SortedMaterialPropertyVector& MaterialBlueprintResource::getSortedMaterialPropertyVector() const
 	{
 		return mSortedMaterialPropertyVector;

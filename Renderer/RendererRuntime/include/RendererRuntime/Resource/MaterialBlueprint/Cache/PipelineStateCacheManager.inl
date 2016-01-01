@@ -26,26 +26,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline MaterialResource::~MaterialResource()
+	inline PipelineStateCacheManager::PipelineStateCacheManager(MaterialBlueprintResource& materialBlueprintResource) :
+		mMaterialBlueprintResource(materialBlueprintResource),
+		mPipelineStateObject(nullptr)
 	{
 		// Nothing here
 	}
 
-	inline MaterialBlueprintResource* MaterialResource::getMaterialBlueprintResource() const
+	inline PipelineStateCacheManager::~PipelineStateCacheManager()
 	{
-		return mMaterialBlueprintResource;
-	}
-
-	inline uint32_t MaterialResource::getMaterialUniformBufferIndex() const
-	{
-		return mMaterialUniformBufferIndex;
-	}
-
-	inline const MaterialResource::SortedMaterialPropertyVector& MaterialResource::getSortedMaterialPropertyVector() const
-	{
-		return mSortedMaterialPropertyVector;
+		clearCache();
 	}
 
 

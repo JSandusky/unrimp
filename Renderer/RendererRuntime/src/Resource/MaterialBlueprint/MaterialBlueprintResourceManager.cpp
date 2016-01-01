@@ -151,6 +151,7 @@ namespace RendererRuntime
 				loadMaterialBlueprintResourceByAssetId(assetId, true);
 
 				// TODO(co) Cleanup: Update all influenced material resources, probably also other material stuff has to be updated
+				materialBlueprintResource->getPipelineStateCacheManager().clearCache();
 				materialBlueprintResource->mTextures.clear();
 				for (auto materialResource : mRendererRuntime.getMaterialResourceManager().mResources)
 				{

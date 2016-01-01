@@ -19,34 +19,19 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCache.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	inline MaterialResource::~MaterialResource()
-	{
-		// Nothing here
-	}
-
-	inline MaterialBlueprintResource* MaterialResource::getMaterialBlueprintResource() const
-	{
-		return mMaterialBlueprintResource;
-	}
-
-	inline uint32_t MaterialResource::getMaterialUniformBufferIndex() const
-	{
-		return mMaterialUniformBufferIndex;
-	}
-
-	inline const MaterialResource::SortedMaterialPropertyVector& MaterialResource::getSortedMaterialPropertyVector() const
-	{
-		return mSortedMaterialPropertyVector;
-	}
+	// TODO(co)
 
 
 //[-------------------------------------------------------]

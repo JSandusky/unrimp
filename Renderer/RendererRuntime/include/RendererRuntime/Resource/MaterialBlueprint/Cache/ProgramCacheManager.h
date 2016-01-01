@@ -19,6 +19,18 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/Manager.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -26,30 +38,38 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	inline MaterialResource::~MaterialResource()
+	class ProgramCacheManager : private Manager
 	{
-		// Nothing here
-	}
 
-	inline MaterialBlueprintResource* MaterialResource::getMaterialBlueprintResource() const
-	{
-		return mMaterialBlueprintResource;
-	}
 
-	inline uint32_t MaterialResource::getMaterialUniformBufferIndex() const
-	{
-		return mMaterialUniformBufferIndex;
-	}
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class PipelineStateCacheManager;	///< Is creating and using a program cache manager instance
 
-	inline const MaterialResource::SortedMaterialPropertyVector& MaterialResource::getSortedMaterialPropertyVector() const
-	{
-		return mSortedMaterialPropertyVector;
-	}
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		inline ProgramCacheManager();
+		inline ~ProgramCacheManager();
+		ProgramCacheManager(const ProgramCacheManager&) = delete;
+		ProgramCacheManager& operator=(const ProgramCacheManager&) = delete;
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCacheManager.inl"

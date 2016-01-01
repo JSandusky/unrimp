@@ -27,10 +27,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/IResource.h"
-#include "RendererRuntime/Resource/Material/MaterialProperty.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCacheManager.h"
 
-#include <vector>
+// TODO(co) Remove this
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
@@ -38,12 +38,12 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	class IRenderer;
+	class IPipelineState;
 }
 namespace RendererRuntime
 {
-	class TextureResource;
-	class IRendererRuntime;
+	class MaterialResource;
+	class ShaderProperties;
 	class MaterialBlueprintResource;
 }
 
@@ -60,114 +60,49 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Material resource
+	*    Pipeline state cache manager
+	*
+	*  @todo
+	*    - Direct3D 12: Pipeline state object: Add support for "GetCachedBlob" (super efficient material cache), see https://github.com/Microsoft/DirectX-Graphics-Samples/blob/master/Samples/D3D12PipelineStateCache/src/PSOLibrary.cpp
 	*/
-	class MaterialResource : public IResource
+	class PipelineStateCacheManager : private Manager
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class MaterialResourceLoader;
-		friend class MaterialBlueprintResource;	///< Sets "RendererRuntime::MaterialResource::mMaterialUniformBufferIndex"
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		struct Texture
-		{
-			uint32_t		   rootParameterIndex;
-			AssetId			   textureAssetId;
-			MaterialPropertyId materialPropertyId;
-			TextureResource*   textureResource;	// TODO(co) Implement decent resource management
-		};
-
-		typedef std::vector<MaterialProperty> SortedMaterialPropertyVector;
-		typedef std::vector<Texture> Textures;
+		friend class MaterialBlueprintResource;	///< Is creating and using a program cache manager instance
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] resourceId
-		*    Resource ID
-		*/
-		explicit MaterialResource(ResourceId resourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~MaterialResource();
-
-		/**
-		*  @brief
-		*    Return the used material blueprint resource
-		*
-		*  @return
-		*    The used material blueprint resource, can be a null pointer, don't destroy the instance
-		*/
-		inline MaterialBlueprintResource* getMaterialBlueprintResource() const;
-
-		/**
-		*  @brief
-		*    Return the material uniform buffer index inside the used material blueprint
-		*
-		*  @return
-		*    The material uniform buffer index inside the used material blueprint
-		*/
-		inline uint32_t getMaterialUniformBufferIndex() const;
-
-		/**
-		*  @brief
-		*    Return the sorted material property vector
-		*
-		*  @return
-		*    The sorted material property vector
-		*/
-		inline const SortedMaterialPropertyVector& getSortedMaterialPropertyVector() const;
-
-		/**
-		*  @brief
-		*    Return a material property by its ID
-		*
-		*  @param[in] materialPropertyId
-		*    ID of the material property to return
-		*
-		*  @return
-		*    The requested material property, null pointer on error, don't destroy the returned instance
-		*/
-		const MaterialProperty* getMaterialPropertyById(MaterialPropertyId materialPropertyId) const;
-
-		// TODO(co)
-		void releasePipelineState();
-		void bindToRenderer(const IRendererRuntime& rendererRuntime);
+		Renderer::IPipelineState* getPipelineStateObject(const ShaderProperties& shaderProperties, MaterialResource& materialResource);
+		void clearCache();
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialResource(const MaterialResource&) = delete;
-		MaterialResource& operator=(const MaterialResource&) = delete;
+		inline explicit PipelineStateCacheManager(MaterialBlueprintResource& materialBlueprintResource);
+		inline ~PipelineStateCacheManager();
+		PipelineStateCacheManager(const PipelineStateCacheManager&) = delete;
+		PipelineStateCacheManager& operator=(const PipelineStateCacheManager&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialBlueprintResource*	 mMaterialBlueprintResource;	///< Material blueprint resource, can be a null pointer, don't destroy the instance
-		uint32_t					 mMaterialUniformBufferIndex;	///< Material uniform buffer index inside the used material blueprint
-		SortedMaterialPropertyVector mSortedMaterialPropertyVector;
-		Textures					 mTextures;
+		MaterialBlueprintResource& mMaterialBlueprintResource;	///< Owner material blueprint resource
+		ProgramCacheManager		   mProgramCacheManager;
+
+		// TODO(co)
+		Renderer::PipelineState	  mPipelineState;
+		Renderer::IPipelineState* mPipelineStateObject;
 
 
 	};
@@ -182,4 +117,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Material/MaterialResource.inl"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCacheManager.inl"

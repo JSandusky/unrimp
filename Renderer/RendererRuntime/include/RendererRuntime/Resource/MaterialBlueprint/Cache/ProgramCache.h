@@ -19,6 +19,18 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/NonCopyable.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -26,30 +38,32 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	inline MaterialResource::~MaterialResource()
+	class ProgramCache : private NonCopyable
 	{
-		// Nothing here
-	}
 
-	inline MaterialBlueprintResource* MaterialResource::getMaterialBlueprintResource() const
-	{
-		return mMaterialBlueprintResource;
-	}
 
-	inline uint32_t MaterialResource::getMaterialUniformBufferIndex() const
-	{
-		return mMaterialUniformBufferIndex;
-	}
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		inline ProgramCache();
+		inline ~ProgramCache();
+		ProgramCache(const ProgramCache&) = delete;
+		ProgramCache& operator=(const ProgramCache&) = delete;
 
-	inline const MaterialResource::SortedMaterialPropertyVector& MaterialResource::getSortedMaterialPropertyVector() const
-	{
-		return mSortedMaterialPropertyVector;
-	}
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCache.inl"

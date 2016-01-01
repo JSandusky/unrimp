@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/IResource.h"
 #include "RendererRuntime/Resource/Material/MaterialProperty.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCacheManager.h"
 
 #include <Renderer/Public/Renderer.h>
 
@@ -161,6 +162,24 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the owner material blueprint resource manager
+		*
+		*  @return
+		*    The owner material blueprint resource manager
+		*/
+		inline MaterialBlueprintResourceManager& getMaterialBlueprintResourceManager() const;
+
+		/**
+		*  @brief
+		*    Return the pipeline state cache manager
+		*
+		*  @return
+		*    The pipeline state cache manager
+		*/
+		inline PipelineStateCacheManager& getPipelineStateCacheManager();
+
+		/**
+		*  @brief
 		*    Return the sorted material property vector
 		*
 		*  @return
@@ -285,6 +304,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		MaterialBlueprintResourceManager& mMaterialBlueprintResourceManager;	///< Owner material blueprint resource manager
+		PipelineStateCacheManager		  mPipelineStateCacheManager;
 		SortedMaterialPropertyVector	  mSortedMaterialPropertyVector;
 		Renderer::IRootSignature*		  mRootSignature;						///< Root signature, can be a null pointer
 		Renderer::PipelineState			  mPipelineState;
