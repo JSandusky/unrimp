@@ -29,7 +29,6 @@
 #include "RendererRuntime/Resource/Scene/SceneResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
-#include "RendererRuntime/Resource/Shader/ShaderResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
@@ -119,7 +118,6 @@ namespace RendererRuntime
 		mTextureResourceManager = new TextureResourceManager(*this);
 		mShaderPieceResourceManager = new ShaderPieceResourceManager(*this);
 		mShaderBlueprintResourceManager = new ShaderBlueprintResourceManager(*this);
-		mShaderResourceManager = new ShaderResourceManager(*this);
 		mMaterialBlueprintResourceManager = new MaterialBlueprintResourceManager(*this);
 		mMaterialResourceManager = new MaterialResourceManager(*this);
 		mFontResourceManager = new FontResourceManager(*this);
@@ -132,7 +130,6 @@ namespace RendererRuntime
 		mResourceManagers.push_back(mTextureResourceManager);
 		mResourceManagers.push_back(mShaderPieceResourceManager);
 		mResourceManagers.push_back(mShaderBlueprintResourceManager);
-		mResourceManagers.push_back(mShaderResourceManager);
 		mResourceManagers.push_back(mMaterialBlueprintResourceManager);
 		mResourceManagers.push_back(mMaterialResourceManager);
 		mResourceManagers.push_back(mFontResourceManager);

@@ -27,19 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/IResourceManager.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCacheManager.h"
+#include "RendererRuntime/Core/StringId.h"
 
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class IRendererRuntime;
-	class ShaderBlueprintResource;
-}
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -50,20 +40,45 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId ShaderPropertyId;	///< Shader property identifier, internally just a POD "uint32_t", result of hashing the property name
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Shader blueprint resource manager
+	*    Shader properties
 	*/
-	class ShaderBlueprintResourceManager : private IResourceManager
+	class ShaderProperties
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-		friend class RendererRuntimeImpl;
+	public:
+		struct Property
+		{
+			ShaderPropertyId shaderPropertyId;
+			int32_t			 value;
+
+			Property(StringId _shaderPropertyId, int32_t _value) :
+				shaderPropertyId(_shaderPropertyId),
+				value(_value)
+			{
+				// Nothing here
+			}
+
+			bool operator ==(const Property& property) const
+			{
+				return (shaderPropertyId == property.shaderPropertyId && value == property.value);
+			}
+		};
+
+		typedef std::vector<Property> SortedPropertyVector;
 
 
 	//[-------------------------------------------------------]
@@ -72,45 +87,58 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
-		*    Return the shader cache manager
+		*    Constructor
+		*/
+		inline ShaderProperties();
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline ~ShaderProperties();
+
+		/**
+		*  @brief
+		*    Return the properties
 		*
 		*  @return
-		*    The shader cache manager
+		*    The properties
 		*/
-		inline ShaderCacheManager& getShaderCacheManager();
+		inline const SortedPropertyVector& getSortedPropertyVector() const;
 
-		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT ShaderBlueprintResource* loadShaderBlueprintResourceByAssetId(AssetId assetId, bool reload = false);
+		/**
+		*  @brief
+		*    Return the value of a property
+		*
+		*  @param[in] shaderPropertyId
+		*    ID of the shader property to return the value from
+		*  @param[out] value
+		*    Receives the property value
+		*  @param[in] defaultValue
+		*    Default value in case the shader property doesn't exist
+		*
+		*  @return
+		*    "true" if the requested shader property exists, else "false" if the requested shader property doesn't exist and the default value was returned instead
+		*/
+		bool getPropertyValue(ShaderPropertyId shaderPropertyId, int32_t& value, int32_t defaultValue = 0) const;
 
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void reloadResourceByAssetId(AssetId assetId) override;
-		virtual void update() override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		explicit ShaderBlueprintResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~ShaderBlueprintResourceManager();
-		ShaderBlueprintResourceManager(const ShaderBlueprintResourceManager&) = delete;
-		ShaderBlueprintResourceManager& operator=(const ShaderBlueprintResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
+		/**
+		*  @brief
+		*    Set the value of a property
+		*
+		*  @param[in] shaderPropertyId
+		*    ID of the shader property to set the value of
+		*  @param[in] value
+		*    The shader property value to set
+		*/
+		void setPropertyValue(ShaderPropertyId shaderPropertyId, int32_t value);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		ShaderCacheManager mShaderCacheManager;
-
-		// TODO(co) Implement decent resource handling
-		std::vector<ShaderBlueprintResource*> mResources;
+		SortedPropertyVector mSortedPropertyVector;
 
 
 	};
@@ -125,4 +153,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.inl"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.inl"

@@ -21,8 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCache.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCache.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
 
 
@@ -36,10 +35,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	ProgramCache::ProgramCache(ProgramCacheManager& programCacheManager, const ShaderProperties& shaderProperties) :
-		mProgramCacheManager(programCacheManager),
+	ShaderCache::ShaderCache(ShaderCacheManager& shaderCacheManager, const ShaderProperties& shaderProperties) :
+		mShaderCacheManager(shaderCacheManager),
 		mShaderProperties(shaderProperties)
 	{
+		// TODO(co)
+		/*
 		const MaterialBlueprintResource& materialBlueprintResource = programCacheManager.getPipelineStateCacheManager().getMaterialBlueprintResource();
 		const Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
 		Renderer::IRenderer& renderer = rootSignaturePtr->getRenderer();
@@ -69,6 +70,7 @@ namespace RendererRuntime
 			// Create the program
 			mProgramPtr = shaderLanguage->createProgram(*rootSignaturePtr, materialBlueprintResource.getVertexAttributes(), vertexShader, fragmentShader);
 		}
+		*/
 	}
 
 

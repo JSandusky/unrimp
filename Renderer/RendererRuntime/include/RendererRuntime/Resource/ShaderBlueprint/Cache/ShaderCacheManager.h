@@ -27,11 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-#include "RendererRuntime/Resource/Shader/ShaderProperties.h"
-
-#include <map>
-#include <string>
+#include "RendererRuntime/Core/Manager.h"
 
 
 //[-------------------------------------------------------]
@@ -39,7 +35,9 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class ShaderBlueprintResource;
+	class ShaderCache;
+	class ShaderProperties;
+	class ShaderBlueprintResourceManager;
 }
 
 
@@ -53,15 +51,21 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
+	/*
 	*  @brief
-	*    Shader builder
+	*    Shader cache manager
 	*
-	*  @notes
-	*   - Heavily basing on the OGRE 2.1 HLMS shader builder which is directly part of the OGRE class "Ogre::Hlms". So for syntax, have a look into the OGRE 2.1 documentation.
+	*  @see
+	*    - See "RendererRuntime::PipelineStateCacheManager" for additional information
 	*/
-	class ShaderBuilder : private NonCopyable
+	class ShaderCacheManager : private Manager
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class ShaderBlueprintResourceManager;	///< Is creating and using a shader cache manager instance
 
 
 	//[-------------------------------------------------------]
@@ -70,59 +74,44 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
-		*    Constructor
-		*/
-		ShaderBuilder();
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		~ShaderBuilder();
-
-		/**
-		*  @brief
-		*    Create shader source code by using the given shader blueprint and shader properties
+		*    Return the owner shader blueprint resource manager
 		*
-		*  @param[in] shaderBlueprintResource
-		*    Shader blueprint resource to use
+		*  @return
+		*    The owner shader blueprint resource manager
+		*/
+		inline ShaderBlueprintResourceManager& getShaderBlueprintResourceManager() const;
+
+		/**
+		*  @brief
+		*    Get/create shader cache by using the given shader properties
+		*
 		*  @param[in] shaderProperties
 		*    Shader properties to use
 		*
 		*  @return
-		*    The created shader source code
+		*    The shader cache, null pointer on error
 		*/
-		std::string createSourceCode(const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties);
-
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::map<StringId, std::string> PiecesMap;	// TODO(co) Unordered map might perform better
+		ShaderCache* getShaderCache(const ShaderProperties& shaderProperties);
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		ShaderBuilder(const ShaderBuilder&) = delete;
-		ShaderBuilder& operator=(const ShaderBuilder&) = delete;
-		bool parseMath(const std::string& inBuffer, std::string& outBuffer);
-		bool parseForEach(const std::string& inBuffer, std::string& outBuffer) const;
-		bool parseProperties(std::string& inBuffer, std::string& outBuffer) const;
-		bool collectPieces(const std::string& inBuffer, std::string& outBuffer);
-		bool insertPieces(std::string& inBuffer, std::string& outBuffer) const;
-		bool parseCounter(const std::string& inBuffer, std::string& outBuffer);
-		bool parse(const std::string& inBuffer, std::string& outBuffer) const;
+		inline explicit ShaderCacheManager(ShaderBlueprintResourceManager& shaderBlueprintResourceManager);
+		inline ~ShaderCacheManager();
+		ShaderCacheManager(const ShaderCacheManager&) = delete;
+		ShaderCacheManager& operator=(const ShaderCacheManager&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ShaderProperties mShaderProperties;
-		PiecesMap		 mPieces;
+		ShaderBlueprintResourceManager& mShaderBlueprintResourceManager;	///< Owner shader blueprint resource manager
+
+		// TODO(co) Shader cache management
+		ShaderCache* mShaderCache;
 
 
 	};
@@ -137,4 +126,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Shader/ShaderBuilder.inl"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCacheManager.inl"

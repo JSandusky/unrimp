@@ -31,7 +31,7 @@
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
-#include "RendererRuntime/Resource/Shader/ShaderProperties.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"

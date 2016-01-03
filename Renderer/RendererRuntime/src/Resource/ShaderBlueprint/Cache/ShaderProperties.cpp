@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Shader/ShaderProperties.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 
 #include <algorithm>
 

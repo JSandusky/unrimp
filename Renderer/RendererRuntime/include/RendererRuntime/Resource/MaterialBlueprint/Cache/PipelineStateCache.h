@@ -28,8 +28,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
-#include "RendererRuntime/Resource/Shader/ShaderProperties.h"
 #include "RendererRuntime/Resource/Material/MaterialProperties.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 
 #include <Renderer/Public/Renderer.h>
 

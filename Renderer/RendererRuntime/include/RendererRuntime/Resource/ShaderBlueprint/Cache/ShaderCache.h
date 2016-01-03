@@ -27,9 +27,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/IResourceManager.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCacheManager.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
+
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
@@ -37,8 +38,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class IRendererRuntime;
-	class ShaderBlueprintResource;
+	class ShaderCacheManager;
 }
 
 
@@ -52,18 +52,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Shader blueprint resource manager
-	*/
-	class ShaderBlueprintResourceManager : private IResourceManager
+	class ShaderCache : private NonCopyable
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class RendererRuntimeImpl;
+		friend class ShaderCacheManager;	///< Is creating and managing shader cache instances
 
 
 	//[-------------------------------------------------------]
@@ -72,45 +68,31 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
-		*    Return the shader cache manager
+		*    Return shader
 		*
 		*  @return
-		*    The shader cache manager
+		*    The shader
 		*/
-		inline ShaderCacheManager& getShaderCacheManager();
-
-		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT ShaderBlueprintResource* loadShaderBlueprintResourceByAssetId(AssetId assetId, bool reload = false);
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void reloadResourceByAssetId(AssetId assetId) override;
-		virtual void update() override;
+		inline Renderer::IShaderPtr getShaderPtr() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit ShaderBlueprintResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~ShaderBlueprintResourceManager();
-		ShaderBlueprintResourceManager(const ShaderBlueprintResourceManager&) = delete;
-		ShaderBlueprintResourceManager& operator=(const ShaderBlueprintResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
+		ShaderCache(ShaderCacheManager& shaderCacheManager, const ShaderProperties& shaderProperties);
+		inline ~ShaderCache();
+		ShaderCache(const ShaderCache&) = delete;
+		ShaderCache& operator=(const ShaderCache&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		ShaderCacheManager mShaderCacheManager;
-
-		// TODO(co) Implement decent resource handling
-		std::vector<ShaderBlueprintResource*> mResources;
+		ShaderCacheManager&  mShaderCacheManager;	///< Owner shader cache manager
+		ShaderProperties	 mShaderProperties;		///< Shader properties which ended up in this shader
+		Renderer::IShaderPtr mShaderPtr;
 
 
 	};
@@ -125,4 +107,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.inl"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCache.inl"

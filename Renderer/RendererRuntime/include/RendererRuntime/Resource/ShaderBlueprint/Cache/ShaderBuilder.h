@@ -27,9 +27,20 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 
-#include <vector>
+#include <map>
+#include <string>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class ShaderBlueprintResource;
+}
 
 
 //[-------------------------------------------------------]
@@ -40,45 +51,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef StringId ShaderPropertyId;	///< Shader property identifier, internally just a POD "uint32_t", result of hashing the property name
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Shader properties
+	*    Shader builder
+	*
+	*  @notes
+	*   - Heavily basing on the OGRE 2.1 HLMS shader builder which is directly part of the OGRE class "Ogre::Hlms". So for syntax, have a look into the OGRE 2.1 documentation.
 	*/
-	class ShaderProperties
+	class ShaderBuilder : private NonCopyable
 	{
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		struct Property
-		{
-			ShaderPropertyId shaderPropertyId;
-			int32_t			 value;
-
-			Property(StringId _shaderPropertyId, int32_t _value) :
-				shaderPropertyId(_shaderPropertyId),
-				value(_value)
-			{
-				// Nothing here
-			}
-
-			bool operator ==(const Property& property) const
-			{
-				return (shaderPropertyId == property.shaderPropertyId && value == property.value);
-			}
-		};
-
-		typedef std::vector<Property> SortedPropertyVector;
 
 
 	//[-------------------------------------------------------]
@@ -89,56 +72,57 @@ namespace RendererRuntime
 		*  @brief
 		*    Constructor
 		*/
-		inline ShaderProperties();
+		ShaderBuilder();
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		inline ~ShaderProperties();
+		~ShaderBuilder();
 
 		/**
 		*  @brief
-		*    Return the properties
+		*    Create shader source code by using the given shader blueprint and shader properties
+		*
+		*  @param[in] shaderBlueprintResource
+		*    Shader blueprint resource to use
+		*  @param[in] shaderProperties
+		*    Shader properties to use
 		*
 		*  @return
-		*    The properties
+		*    The created shader source code
 		*/
-		inline const SortedPropertyVector& getSortedPropertyVector() const;
+		std::string createSourceCode(const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties);
 
-		/**
-		*  @brief
-		*    Return the value of a property
-		*
-		*  @param[in] shaderPropertyId
-		*    ID of the shader property to return the value from
-		*  @param[out] value
-		*    Receives the property value
-		*  @param[in] defaultValue
-		*    Default value in case the shader property doesn't exist
-		*
-		*  @return
-		*    "true" if the requested shader property exists, else "false" if the requested shader property doesn't exist and the default value was returned instead
-		*/
-		bool getPropertyValue(ShaderPropertyId shaderPropertyId, int32_t& value, int32_t defaultValue = 0) const;
 
-		/**
-		*  @brief
-		*    Set the value of a property
-		*
-		*  @param[in] shaderPropertyId
-		*    ID of the shader property to set the value of
-		*  @param[in] value
-		*    The shader property value to set
-		*/
-		void setPropertyValue(ShaderPropertyId shaderPropertyId, int32_t value);
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::map<StringId, std::string> PiecesMap;	// TODO(co) Unordered map might perform better
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		ShaderBuilder(const ShaderBuilder&) = delete;
+		ShaderBuilder& operator=(const ShaderBuilder&) = delete;
+		bool parseMath(const std::string& inBuffer, std::string& outBuffer);
+		bool parseForEach(const std::string& inBuffer, std::string& outBuffer) const;
+		bool parseProperties(std::string& inBuffer, std::string& outBuffer) const;
+		bool collectPieces(const std::string& inBuffer, std::string& outBuffer);
+		bool insertPieces(std::string& inBuffer, std::string& outBuffer) const;
+		bool parseCounter(const std::string& inBuffer, std::string& outBuffer);
+		bool parse(const std::string& inBuffer, std::string& outBuffer) const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		SortedPropertyVector mSortedPropertyVector;
+		ShaderProperties mShaderProperties;
+		PiecesMap		 mPieces;
 
 
 	};
@@ -153,4 +137,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Shader/ShaderProperties.inl"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.inl"

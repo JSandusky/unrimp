@@ -36,6 +36,11 @@
 #include <unordered_set>
 
 
+// Disable warnings
+// TODO(co) See "RendererRuntime::ShaderBlueprintResourceManager::ShaderBlueprintResourceManager()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)
+#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
@@ -148,7 +153,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	ShaderBlueprintResourceManager::ShaderBlueprintResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+		mRendererRuntime(rendererRuntime),
+		mShaderCacheManager(*this)
 	{
 		// Nothing in here
 	}

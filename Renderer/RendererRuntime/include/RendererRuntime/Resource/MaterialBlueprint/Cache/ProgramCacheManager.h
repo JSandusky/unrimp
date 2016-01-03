@@ -74,7 +74,7 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
-		*    Return the pipeline state cache manager
+		*    Return the owner pipeline state cache manager
 		*
 		*  @return
 		*    The owner pipeline state cache manager

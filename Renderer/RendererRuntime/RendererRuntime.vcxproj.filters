@@ -47,9 +47,6 @@
     <Filter Include="Source Files\Resource\Mesh\Loader">
       <UniqueIdentifier>{86d7c6bb-18c2-41fd-a4ce-c0993bd158e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resource\Shader">
-      <UniqueIdentifier>{3d1b62cd-f101-4735-8f76-8a10d6af8e9a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Resource\Texture">
       <UniqueIdentifier>{a1d11784-7b08-49e8-bd1e-791f2d4265da}</UniqueIdentifier>
     </Filter>
@@ -121,6 +118,9 @@
     </Filter>
     <Filter Include="Source Files\Resource\MaterialBlueprint\Cache">
       <UniqueIdentifier>{d164b3fc-fc7f-4ffc-9df2-d87d2e315338}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\ShaderBlueprint\Cache">
+      <UniqueIdentifier>{1ea55649-e578-4f70-b82a-08a929465a90}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -249,12 +249,6 @@
     <None Include="include\RendererRuntime\Resource\Material\MaterialPropertyValue.inl">
       <Filter>Source Files\Resource\Material</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Shader\ShaderBuilder.inl">
-      <Filter>Source Files\Resource\Shader</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Shader\ShaderProperties.inl">
-      <Filter>Source Files\Resource\Shader</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.inl">
       <Filter>Source Files\Resource\ShaderPiece</Filter>
     </None>
@@ -287,6 +281,21 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Material\MaterialTechnique.inl">
       <Filter>Source Files\Resource\Material</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderCacheManager.inl">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderCache.inl">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.inl">
+      <Filter>Source Files\Resource\ShaderBlueprint</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderBuilder.inl">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderProperties.inl">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -407,9 +416,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Memory\SceneItemMemoryManager.h">
       <Filter>Source Files\Resource\Scene\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderResourceManager.h">
-      <Filter>Source Files\Resource\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h">
       <Filter>Source Files\Resource\Texture</Filter>
@@ -585,12 +591,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialPropertyValue.h">
       <Filter>Source Files\Resource\Material</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderBuilder.h">
-      <Filter>Source Files\Resource\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Shader\ShaderProperties.h">
-      <Filter>Source Files\Resource\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.h">
       <Filter>Source Files\Resource\ShaderPiece</Filter>
     </ClInclude>
@@ -626,6 +626,18 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialTechnique.h">
       <Filter>Source Files\Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderCache.h">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderCacheManager.h">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderBuilder.h">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderProperties.h">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -691,9 +703,6 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Memory\SceneItemMemoryManager.cpp">
       <Filter>Source Files\Resource\Scene\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Shader\ShaderResourceManager.cpp">
-      <Filter>Source Files\Resource\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Texture\TextureResource.cpp">
       <Filter>Source Files\Resource\Texture</Filter>
@@ -839,12 +848,6 @@
     <ClCompile Include="src\Resource\Material\MaterialPropertyValue.cpp">
       <Filter>Source Files\Resource\Material</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Shader\ShaderBuilder.cpp">
-      <Filter>Source Files\Resource\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Shader\ShaderProperties.cpp">
-      <Filter>Source Files\Resource\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\ShaderPiece\ShaderPieceResource.cpp">
       <Filter>Source Files\Resource\ShaderPiece</Filter>
     </ClCompile>
@@ -874,6 +877,18 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Material\MaterialTechnique.cpp">
       <Filter>Source Files\Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderCacheManager.cpp">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderCache.cpp">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderBuilder.cpp">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderProperties.cpp">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

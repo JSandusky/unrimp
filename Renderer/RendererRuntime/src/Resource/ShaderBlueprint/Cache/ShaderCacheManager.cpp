@@ -21,9 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCache.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCacheManager.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCache.h"
 
 
 //[-------------------------------------------------------]
@@ -34,41 +33,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramCache::ProgramCache(ProgramCacheManager& programCacheManager, const ShaderProperties& shaderProperties) :
-		mProgramCacheManager(programCacheManager),
-		mShaderProperties(shaderProperties)
+	ShaderCache* ShaderCacheManager::getShaderCache(const ShaderProperties& shaderProperties)
 	{
-		const MaterialBlueprintResource& materialBlueprintResource = programCacheManager.getPipelineStateCacheManager().getMaterialBlueprintResource();
-		const Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
-		Renderer::IRenderer& renderer = rootSignaturePtr->getRenderer();
-
-		// Decide which shader language should be used (for example "GLSL" or "HLSL")
-		Renderer::IShaderLanguagePtr shaderLanguage(renderer.getShaderLanguage());
-		if (nullptr != shaderLanguage)
+		// TODO(co) Shader cache management
+		if (nullptr == mShaderCache)
 		{
-			// TODO(co) Asynchronous program cache generation, use fallback while the program cache is not available
-
-			// TODO(co) Use shader cache
-
-			// Create the vertex shader
-			Renderer::IVertexShader* vertexShader = nullptr;
-			{
-				ShaderBuilder shaderBuilder;
-				vertexShader = shaderLanguage->createVertexShaderFromSourceCode(shaderBuilder.createSourceCode(*materialBlueprintResource.mVertexShaderBlueprint, shaderProperties).c_str());
-			}
-
-			// Create the fragment shader
-			Renderer::IFragmentShader* fragmentShader = nullptr;
-			{
-				ShaderBuilder shaderBuilder;
-				fragmentShader = shaderLanguage->createFragmentShaderFromSourceCode(shaderBuilder.createSourceCode(*materialBlueprintResource.mFragmentShaderBlueprint, shaderProperties).c_str());
-			}
-
-			// Create the program
-			mProgramPtr = shaderLanguage->createProgram(*rootSignaturePtr, materialBlueprintResource.getVertexAttributes(), vertexShader, fragmentShader);
+			mShaderCache = new ShaderCache(*this, shaderProperties);
 		}
+
+		// Done
+		return mShaderCache;
 	}
 
 

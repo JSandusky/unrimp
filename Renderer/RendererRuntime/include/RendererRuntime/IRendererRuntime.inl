@@ -63,11 +63,6 @@ namespace RendererRuntime
 		return *mShaderBlueprintResourceManager;
 	}
 
-	inline ShaderResourceManager& IRendererRuntime::getShaderResourceManager() const
-	{
-		return *mShaderResourceManager;
-	}
-
 	inline MaterialBlueprintResourceManager& IRendererRuntime::getMaterialBlueprintResourceManager() const
 	{
 		return *mMaterialBlueprintResourceManager;
@@ -119,9 +114,12 @@ namespace RendererRuntime
 		// Resource
 		mResourceStreamer(nullptr),
 		mTextureResourceManager(nullptr),
-		mShaderResourceManager(nullptr),
+		mShaderPieceResourceManager(nullptr),
+		mShaderBlueprintResourceManager(nullptr),
+		mMaterialBlueprintResourceManager(nullptr),
 		mMaterialResourceManager(nullptr),
 		mFontResourceManager(nullptr),
+		mSkeletonResourceManager(nullptr),
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
 		mCompositorResourceManager(nullptr)
@@ -136,9 +134,12 @@ namespace RendererRuntime
 		// Resource
 		mResourceStreamer(nullptr),
 		mTextureResourceManager(nullptr),
-		mShaderResourceManager(nullptr),
+		mShaderPieceResourceManager(nullptr),
+		mShaderBlueprintResourceManager(nullptr),
+		mMaterialBlueprintResourceManager(nullptr),
 		mMaterialResourceManager(nullptr),
 		mFontResourceManager(nullptr),
+		mSkeletonResourceManager(nullptr),
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
 		mCompositorResourceManager(nullptr)

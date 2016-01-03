@@ -53,9 +53,9 @@ THE SOFTWARE.
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Shader/ShaderBuilder.h"
-#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
+#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
 
 #include <algorithm>
 
