@@ -98,27 +98,31 @@ void IApplicationRendererRuntime::onInitialization()
 			//	rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataMobile/Content/AssetPackage.assets");
 				rendererRuntime->getAssetManager().addAssetPackageByFilename("../DataPc/Content/AssetPackage.assets");
 
-				// TODO(co) First asset hot-reloading test
-				RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
-				if (nullptr != rendererToolkit)
+				#ifdef SHARED_LIBRARIES
 				{
-					mProject = rendererToolkit->createProject();
-					if (nullptr != mProject)
+					// TODO(co) First asset hot-reloading test
+					RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
+					if (nullptr != rendererToolkit)
 					{
-						try
+						mProject = rendererToolkit->createProject();
+						if (nullptr != mProject)
 						{
-							mProject->loadByFilename("../DataSource/Example.project");
-							// TODO(co) Renderer check
-						//	mProject->startupAssetMonitor(*rendererRuntime, "OpenGLES2_100");
-							mProject->startupAssetMonitor(*rendererRuntime, "Direct3D11_50");
-						}
-						catch (const std::exception& e)
-						{
-							const char* text = e.what();
-							text = text;
+							try
+							{
+								mProject->loadByFilename("../DataSource/Example.project");
+								// TODO(co) Renderer check
+							//	mProject->startupAssetMonitor(*rendererRuntime, "OpenGLES2_100");
+								mProject->startupAssetMonitor(*rendererRuntime, "Direct3D11_50");
+							}
+							catch (const std::exception& e)
+							{
+								const char* text = e.what();
+								text = text;
+							}
 						}
 					}
 				}
+				#endif
 			}
 		}
 	}

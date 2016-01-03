@@ -10,6 +10,7 @@
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)_static\ExamplesStatic.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)\bin\$(PlatformTarget)_static\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>FirstScene -r Direct3D11</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)_dynamic\Examples.exe</LocalDebuggerCommand>
@@ -21,6 +22,6 @@
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)d_static\ExamplesStaticD.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)\bin\$(PlatformTarget)d_static\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>FirstTriangle</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>FirstScene -r Direct3D11</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>
