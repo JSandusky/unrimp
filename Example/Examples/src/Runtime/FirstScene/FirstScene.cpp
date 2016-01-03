@@ -74,12 +74,12 @@ void FirstScene::onInitialization()
 			globalMaterialProperties.setPropertyById("Wetness", RendererRuntime::MaterialPropertyValue::fromFloat(1.0f));
 		}
 
-		// Get the main swap chain and ensure there's one
-		Renderer::ISwapChainPtr swapChain(getRenderer()->getMainSwapChain());
-		if (nullptr != swapChain)
-		{
-			// Create the compositor instance
-			mCompositorInstance = new RendererRuntime::CompositorInstance(*rendererRuntime, "Example/Compositor/Default/FirstScene", *swapChain);
+		{ // Create the compositor instance
+			Renderer::ISwapChainPtr swapChain(getRenderer()->getMainSwapChain());
+			if (nullptr != swapChain)
+			{
+				mCompositorInstance = new RendererRuntime::CompositorInstance(*rendererRuntime, "Example/Compositor/Default/FirstScene", *swapChain);
+			}
 		}
 
 		// Create the scene resource
@@ -138,19 +138,11 @@ void FirstScene::onLoadingStateChange(RendererRuntime::IResource::LoadingState l
 	if (RendererRuntime::IResource::LoadingState::LOADED == loadingState)
 	{
 		// Loop through all scene nodes and grab the first found camera and mesh
-		const RendererRuntime::ISceneResource::SceneNodes& sceneNodes = mSceneResource->getSceneNodes();
-		const size_t numberOfSceneNodes = sceneNodes.size();
-		for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
+		for (RendererRuntime::ISceneNode* sceneNode : mSceneResource->getSceneNodes())
 		{
-			RendererRuntime::ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
-
 			// Loop through all scene items attached to the current scene node
-			const RendererRuntime::ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
-			const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
-			for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
+			for (RendererRuntime::ISceneItem* sceneItem : sceneNode->getAttachedSceneItems())
 			{
-				RendererRuntime::ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
-
 				if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
 				{
 					// Grab the first found mesh scene item scene node
