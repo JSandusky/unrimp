@@ -13,7 +13,7 @@
 			"AssetCategory": "Default",
 			"AssetName": "FirstCompositor",
 			"FileDependencies": [ "FirstCompositor.compositor" ],
-			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
 		},
 		"CompositorAssetCompiler":
 		{

@@ -13,7 +13,7 @@
 			"AssetCategory": "Character",
 			"AssetName": "FirstSkeleton",
 			"FileDependencies": [ "FirstSkeleton.skeleton" ],
-			"Copyright": "Copyright (c) 2012-2015 Christian Ofenberg"
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
 		},
 		"SkeletonAssetCompiler":
 		{
