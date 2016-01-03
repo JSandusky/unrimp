@@ -67,7 +67,7 @@ SamplerState SamplerLinear : register(s0);
 Texture2D DiffuseMap : register(t0);
 
 // Programs
-float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Target
+float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Fetch the texel at the given texture coordinate and return it's color
 	return DiffuseMap.Sample(SamplerLinear, TexCoord);

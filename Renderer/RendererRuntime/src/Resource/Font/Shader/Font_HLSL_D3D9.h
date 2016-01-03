@@ -100,7 +100,7 @@ uniform sampler2D GlyphMap : register(s0);	// Glyph atlas texture map
 uniform float4	  Color;	// Text color
 
 // Programs
-float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Target
+float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Fetch the texel at the given texture coordinate and return it's color
 	return float4(Color.r, Color.g, Color.b, tex2D(GlyphMap, TexCoord).a * Color.a);

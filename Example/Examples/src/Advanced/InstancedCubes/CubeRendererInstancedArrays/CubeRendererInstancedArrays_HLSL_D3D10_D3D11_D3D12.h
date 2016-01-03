@@ -195,7 +195,7 @@ cbuffer UniformBlockDynamicFs : register(b0)
 };
 
 // Programs
-float4 main(VS_OUTPUT Input) : SV_Target
+float4 main(VS_OUTPUT Input) : SV_TARGET
 {
 	// Simple point light by using Lambert's cosine law
 	float lighting = clamp(dot(Input.Normal, normalize(LightPosition - Input.WorldPosition)), 0.0f, 0.8f);

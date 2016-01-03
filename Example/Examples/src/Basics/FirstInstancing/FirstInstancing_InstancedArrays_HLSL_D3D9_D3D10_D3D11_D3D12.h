@@ -68,7 +68,7 @@ VS_OUTPUT main(VS_INPUT input)
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode = STRINGIFY(
 // Programs
-float4 main(float4 Position : SV_POSITION) : SV_Target
+float4 main(float4 Position : SV_POSITION) : SV_TARGET
 {
 	// Return green
 	return float4(0.0f, 1.0f, 0.0f, 1.0f);

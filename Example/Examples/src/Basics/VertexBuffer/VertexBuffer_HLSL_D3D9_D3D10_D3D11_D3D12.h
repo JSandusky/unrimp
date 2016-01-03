@@ -69,7 +69,7 @@ VS_OUTPUT main(float2 Position : POSITION,	// Clip space vertex position as inpu
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode = STRINGIFY(
 // Programs
-float4 main(float4 Position : SV_POSITION, float3 Color : COLOR) : SV_Target
+float4 main(float4 Position : SV_POSITION, float3 Color : COLOR) : SV_TARGET
 {
 	// Return white
 	return float4(Color, 1.0f);

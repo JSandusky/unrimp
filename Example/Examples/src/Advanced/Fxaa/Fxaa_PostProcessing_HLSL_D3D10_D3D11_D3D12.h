@@ -77,7 +77,7 @@ SamplerState SamplerLinear : register(s0);
 Texture2D DiffuseMap : register(t0);
 
 // Programs
-float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Target
+float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Call the FXAA shader, lucky us that we don't have to write an own implementation
 	FxaaTex tex;

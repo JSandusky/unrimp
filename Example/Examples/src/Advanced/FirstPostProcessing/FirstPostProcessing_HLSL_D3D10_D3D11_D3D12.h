@@ -73,7 +73,7 @@ VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as inpu
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode_SceneRendering = STRINGIFY(
 // Programs
-float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Target
+float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Return the color green
 	return float4(0.0f, 1.0f, 0.0f, 1.0f);
@@ -92,7 +92,7 @@ SamplerState SamplerLinear : register(s0);
 Texture2D DiffuseMap : register(t0);
 
 // Programs
-float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Target
+float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Fetch the texel at the given texture coordinate and return it's color
 	// -> Apply a simple wobble to the texture coordinate so we can see that post-processing is up and running

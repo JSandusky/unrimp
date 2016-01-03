@@ -102,7 +102,7 @@ void main(point GS_INPUT input[1], inout TriangleStream<GS_OUTPUT> OutputStream)
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode = STRINGIFY(
 // Programs
-float4 main(float4 Position : SV_POSITION) : SV_Target
+float4 main(float4 Position : SV_POSITION) : SV_TARGET
 {
 	// Return white
 	return float4(1.0f, 1.0f, 1.0f, 1.0f);

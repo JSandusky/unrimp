@@ -41,7 +41,7 @@ vertexShaderSourceCode = STRINGIFY(
 struct VS_INPUT
 {
 	float2 Position   : POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
-	uint   InstanceID : SV_InstanceID;
+	uint   InstanceID : SV_INSTANCEID;
 };
 struct VS_OUTPUT
 {
@@ -66,7 +66,7 @@ VS_OUTPUT main(VS_INPUT input)
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode = STRINGIFY(
 // Programs
-float4 main(float4 Position : SV_POSITION) : SV_Target
+float4 main(float4 Position : SV_POSITION) : SV_TARGET
 {
 	// Return blue
 	return float4(0.0f, 0.0f, 1.0f, 1.0f);

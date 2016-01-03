@@ -67,8 +67,8 @@ struct VS_OUTPUT
 };
 struct HS_CONSTANT_DATA_OUTPUT
 {
-	float TessLevelOuter[3] : SV_TessFactor;		// Outer tessellation level
-	float TessLevelInner[1] : SV_InsideTessFactor;	// Inner tessellation level
+	float TessLevelOuter[3] : SV_TESSFACTOR;		// Outer tessellation level
+	float TessLevelInner[1] : SV_INSIDETESSFACTOR;	// Inner tessellation level
 };
 struct HS_OUTPUT
 {
@@ -76,7 +76,7 @@ struct HS_OUTPUT
 };
 
 // Program invocation per patch
-	HS_CONSTANT_DATA_OUTPUT ConstantHS(InputPatch<VS_OUTPUT, 3> input, uint PatchID : SV_PrimitiveID)
+	HS_CONSTANT_DATA_OUTPUT ConstantHS(InputPatch<VS_OUTPUT, 3> input, uint PatchID : SV_PRIMITIVEID)
 	{
 		// Inform the tessellator about the desired tessellation level
 		HS_CONSTANT_DATA_OUTPUT output;
@@ -93,7 +93,7 @@ struct HS_OUTPUT
 	[outputtopology("triangle_cw")]
 	[outputcontrolpoints(3)]
 	[patchconstantfunc("ConstantHS")]
-	HS_OUTPUT main(InputPatch<VS_OUTPUT, 3> input, uint InvocationID : SV_OutputControlPointID, uint PatchID : SV_PrimitiveID)
+	HS_OUTPUT main(InputPatch<VS_OUTPUT, 3> input, uint InvocationID : SV_OutputControlPointID, uint PatchID : SV_PRIMITIVEID)
 	{
 		// Pass through the clip space control point position of the patch
 		HS_OUTPUT output;
@@ -112,8 +112,8 @@ tessellationEvaluationShaderSourceCode = STRINGIFY(
 // Attribute input/output
 struct HS_CONSTANT_DATA_OUTPUT
 {
-	float TessLevelOuter[3] : SV_TessFactor;		// Outer tessellation level
-	float TessLevelInner[1] : SV_InsideTessFactor;	// Inner tessellation level
+	float TessLevelOuter[3] : SV_TESSFACTOR;		// Outer tessellation level
+	float TessLevelInner[1] : SV_INSIDETESSFACTOR;	// Inner tessellation level
 };
 struct HS_OUTPUT
 {
@@ -126,7 +126,7 @@ struct DS_OUTPUT
 
 // Programs
 [domain("tri")]
-DS_OUTPUT main(HS_CONSTANT_DATA_OUTPUT inputTess, float3 TessCoord : SV_DomainLocation, const OutputPatch<HS_OUTPUT, 3> input)
+DS_OUTPUT main(HS_CONSTANT_DATA_OUTPUT inputTess, float3 TessCoord : SV_DOMAINLOCATION, const OutputPatch<HS_OUTPUT, 3> input)
 {
 	DS_OUTPUT output;
 
@@ -153,7 +153,7 @@ DS_OUTPUT main(HS_CONSTANT_DATA_OUTPUT inputTess, float3 TessCoord : SV_DomainLo
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode = STRINGIFY(
 // Programs
-float4 main(float4 Position : SV_POSITION) : SV_Target
+float4 main(float4 Position : SV_POSITION) : SV_TARGET
 {
 	// Return white
 	return float4(1.0f, 1.0f, 1.0f, 1.0f);

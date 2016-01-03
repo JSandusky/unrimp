@@ -76,7 +76,7 @@ fragmentShaderSourceCode = STRINGIFY(
 uniform sampler2D DiffuseMap : register(s0);
 
 // Programs
-float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Target
+float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Call the FXAA shader, lucky us that we don't have to write an own implementation
 	return float4(FxaaPixelShader(TexCoord, DiffuseMap, RCPFRAME), 1.0f);

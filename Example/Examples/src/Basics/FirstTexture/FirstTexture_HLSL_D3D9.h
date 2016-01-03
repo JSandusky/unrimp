@@ -66,7 +66,7 @@ fragmentShaderSourceCode = STRINGIFY(
 uniform sampler2D DiffuseMap : register(s0);
 
 // Programs
-float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Target
+float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Fetch the texel at the given texture coordinate and return it's color
 	return tex2D(DiffuseMap, TexCoord).bgra;	// Direct3D 9 is using BGR, the world is using RGB

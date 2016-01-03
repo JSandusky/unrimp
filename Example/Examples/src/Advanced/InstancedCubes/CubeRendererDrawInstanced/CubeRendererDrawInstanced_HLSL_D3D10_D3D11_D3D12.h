@@ -43,7 +43,7 @@ struct VS_INPUT
 	float3 Position   : POSITION;	// Object space vertex position
 	float2 TexCoord   : TEXCOORD0;
 	float3 Normal     : NORMAL;
-	uint   InstanceID : SV_InstanceID;
+	uint   InstanceID : SV_INSTANCEID;
 };
 struct VS_OUTPUT
 {
@@ -207,7 +207,7 @@ cbuffer UniformBlockDynamicFs : register(b0)
 };
 
 // Programs
-float4 main(VS_OUTPUT Input) : SV_Target
+float4 main(VS_OUTPUT Input) : SV_TARGET
 {
 	// Simple point light by using Lambert's cosine law
 	float lighting = clamp(dot(Input.Normal, normalize(LightPosition - Input.WorldPosition)), 0.0f, 0.8f);

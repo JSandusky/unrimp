@@ -74,7 +74,7 @@ fragmentShaderSourceCode_MultipleRenderTargets = STRINGIFY(
 // Attribute output
 struct FS_OUTPUT
 {
-	float4 Color[2] : SV_Target;
+	float4 Color[2] : SV_TARGET;
 };
 
 // Programs
@@ -99,7 +99,7 @@ uniform sampler2D DiffuseMap0 : register(s0);
 uniform sampler2D DiffuseMap1 : register(s1);
 
 // Programs
-float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_Target
+float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Fetch the texel at the given texture coordinate from render target 0 (which should contain a red triangle)
 	float4 color0 = tex2D(DiffuseMap0, TexCoord);

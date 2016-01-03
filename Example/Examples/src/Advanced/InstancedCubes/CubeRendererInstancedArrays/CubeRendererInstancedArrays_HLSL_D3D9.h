@@ -185,7 +185,7 @@ uniform sampler2D DiffuseMap : register(s0);
 uniform float3 LightPosition;	// World space light position
 
 // Programs
-float4 main(VS_OUTPUT Input) : SV_Target
+float4 main(VS_OUTPUT Input) : SV_TARGET
 {
 	// Simple point light by using Lambert's cosine law
 	float lighting = clamp(dot(Input.Normal, normalize(LightPosition - Input.WorldPosition)), 0.0f, 0.8f);

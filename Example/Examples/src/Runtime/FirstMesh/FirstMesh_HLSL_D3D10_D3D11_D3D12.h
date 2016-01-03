@@ -125,7 +125,7 @@ Texture2D NormalMap   : register(t2);	// Tangent space normal map
 Texture2D SpecularMap : register(t3);
 
 // Programs
-float4 main(VS_OUTPUT input) : SV_Target
+float4 main(VS_OUTPUT input) : SV_TARGET
 {
 	// Build in variables
 	float3 ViewSpaceLightDirection = normalize(float3(0.5f, 0.5f, 1.0f));	// View space light direction
