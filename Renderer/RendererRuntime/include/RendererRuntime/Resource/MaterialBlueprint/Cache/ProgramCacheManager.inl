@@ -26,9 +26,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline PipelineStateCacheManager& ProgramCacheManager::getPipelineStateCacheManager() const
+	{
+		return mPipelineStateCacheManager;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline ProgramCacheManager::ProgramCacheManager()
+	inline ProgramCacheManager::ProgramCacheManager(PipelineStateCacheManager& pipelineStateCacheManager) :
+		mPipelineStateCacheManager(pipelineStateCacheManager),
+		mProgramCache(nullptr)
 	{
 		// Nothing here
 	}

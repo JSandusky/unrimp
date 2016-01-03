@@ -80,8 +80,8 @@ namespace
 					// TODO(co) Pass shader properties
 					RendererRuntime::ShaderProperties shaderProperties;
 
-					Renderer::IPipelineState* pipelineState = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateObject(shaderProperties, mMaterialResource->getMaterialProperties());
-					if (nullptr != pipelineState)
+					Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateObjectPtr(shaderProperties, mMaterialResource->getMaterialProperties());
+					if (nullptr != pipelineStatePtr)
 					{
 						// Fill the unknown uniform buffers
 						materialBlueprintResource->fillUnknownUniformBuffers();
@@ -101,7 +101,7 @@ namespace
 						materialTechnique->bindToRenderer(rendererRuntime);
 
 						// Set the used pipeline state object (PSO)
-						renderer.setPipelineState(pipelineState);
+						renderer.setPipelineState(pipelineStatePtr);
 
 						// Loop through all scene nodes
 						const RendererRuntime::ISceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();

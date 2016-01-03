@@ -26,13 +26,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline PipelineStateCache::PipelineStateCache()
+	inline Renderer::IPipelineStatePtr PipelineStateCache::getPipelineStateObjectPtr() const
 	{
-		// Nothing here
+		return mPipelineStateObjectPtr;
 	}
 
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
 	inline PipelineStateCache::~PipelineStateCache()
 	{
 		// Nothing here

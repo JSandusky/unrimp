@@ -201,8 +201,7 @@ namespace RendererRuntime
 		Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
 
 		// Create the root signature
-		mMaterialBlueprintResource->mRootSignature = renderer.createRootSignature(mRootSignature);
-		mMaterialBlueprintResource->mRootSignature->addReference();
+		mMaterialBlueprintResource->mRootSignaturePtr = renderer.createRootSignature(mRootSignature);
 
 		{ // Get the used shader blueprint resources
 			ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();

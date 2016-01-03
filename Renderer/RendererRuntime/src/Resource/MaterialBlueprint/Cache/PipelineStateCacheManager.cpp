@@ -22,11 +22,15 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCacheManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCache.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
-#include "RendererRuntime/Resource/Material/MaterialResource.h"
-#include "RendererRuntime/Resource/Shader/ShaderBuilder.h"
 
 #include <assert.h>
+
+
+// Disable warnings
+// TODO(co) See "RendererRuntime::PipelineStateCacheManager::PipelineStateCacheManager()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)
+#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
 
 
 //[-------------------------------------------------------]
@@ -39,123 +43,41 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Renderer::IPipelineState* PipelineStateCacheManager::getPipelineStateObject(const ShaderProperties& shaderProperties, const MaterialProperties& materialProperties)
+	Renderer::IPipelineStatePtr PipelineStateCacheManager::getPipelineStateObjectPtr(const ShaderProperties& shaderProperties, const MaterialProperties& materialProperties)
 	{
 		// TODO(co) Asserts whether or not e.g. the material resource is using the owning material resource blueprint
 		assert(mMaterialBlueprintResource.isFullyLoaded());
 
-		if (nullptr == mPipelineStateObject)
+		// TODO(co) Pipeline state cache management
+		if (nullptr == mPipelineStateCache)
 		{
-			Renderer::IRootSignature* rootSignature = mMaterialBlueprintResource.getRootSignature();
-			Renderer::IRenderer& renderer = rootSignature->getRenderer();
-
-			// Decide which shader language should be used (for example "GLSL" or "HLSL")
-			Renderer::IShaderLanguagePtr shaderLanguage(renderer.getShaderLanguage());
-			if (nullptr != shaderLanguage)
-			{
-				// TODO(co) We need a central vertex input layout management
-				// Vertex input layout
-				const Renderer::VertexAttribute vertexAttributesLayout[] =
-				{
-					{ // Attribute 0
-						// Data destination
-						Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-						"Position",									// name[32] (char)
-						"POSITION",									// semanticName[32] (char)
-						0,											// semanticIndex (uint32_t)
-						// Data source
-						0,											// inputSlot (uint32_t)
-						0,											// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0											// instancesPerElement (uint32_t)
-					},
-					{ // Attribute 1
-						// Data destination
-						Renderer::VertexAttributeFormat::SHORT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-						"TexCoord",									// name[32] (char)
-						"TEXCOORD",									// semanticName[32] (char)
-						0,											// semanticIndex (uint32_t)
-						// Data source
-						0,											// inputSlot (uint32_t)
-						sizeof(float) * 3,							// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0											// instancesPerElement (uint32_t)
-					},
-					{ // Attribute 2
-						// Data destination
-						Renderer::VertexAttributeFormat::SHORT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-						"QTangent",									// name[32] (char)
-						"NORMAL",									// semanticName[32] (char)
-						0,											// semanticIndex (uint32_t)
-						// Data source
-						0,											// inputSlot (uint32_t)
-						sizeof(float) * 3 + sizeof(short) * 2,		// alignedByteOffset (uint32_t)
-						// Data source, instancing part
-						0											// instancesPerElement (uint32_t)
-					}
-				};
-				const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
-
-				// Gather shader properties from static material properties
-				ShaderProperties finalShaderProperties = shaderProperties;
-				{
-					const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialProperties.getSortedPropertyVector();
-					const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
-					for (size_t i = 0; i < numberOfMaterialProperties; ++i)
-					{
-						const MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
-						if (materialProperty.getUsage() == MaterialProperty::Usage::STATIC)
-						{
-							finalShaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
-						}
-					}
-				}
-
-				// Create the vertex shader
-				Renderer::IVertexShader* vertexShader = nullptr;
-				{
-					ShaderBuilder shaderBuilder;
-					vertexShader = shaderLanguage->createVertexShaderFromSourceCode(shaderBuilder.createSourceCode(*mMaterialBlueprintResource.mVertexShaderBlueprint, finalShaderProperties).c_str());
-				}
-
-				// Create the fragment shader
-				Renderer::IFragmentShader* fragmentShader = nullptr;
-				{
-					ShaderBuilder shaderBuilder;
-					fragmentShader = shaderLanguage->createFragmentShaderFromSourceCode(shaderBuilder.createSourceCode(*mMaterialBlueprintResource.mFragmentShaderBlueprint, finalShaderProperties).c_str());
-				}
-
-				// Create the program
-				Renderer::IProgram* program = shaderLanguage->createProgram(*rootSignature, vertexAttributes, vertexShader, fragmentShader);
-
-				// Is there a valid program?
-				if (nullptr != program)
-				{
-					// Start with the pipeline state of the material blueprint resource
-					mPipelineState = mMaterialBlueprintResource.getPipelineState();
-
-					// Setup the dynamic part of the pipeline state
-					mPipelineState.rootSignature	= rootSignature;
-					mPipelineState.program			= program;
-					mPipelineState.vertexAttributes = vertexAttributes;
-
-					// Create the pipeline state object (PSO)
-					mPipelineStateObject = renderer.createPipelineState(mPipelineState);
-				}
-			}
+			mPipelineStateCache = new PipelineStateCache(*this, shaderProperties, materialProperties);
 		}
 
 		// Done
-		return mPipelineStateObject;
+		return mPipelineStateCache->getPipelineStateObjectPtr();
 	}
 
 	void PipelineStateCacheManager::clearCache()
 	{
-		if (nullptr != mPipelineStateObject)
+		// TODO(co) Pipeline state cache management
+		if (nullptr != mPipelineStateCache)
 		{
-			mPipelineStateObject->release();
-			mPipelineStateObject = nullptr;
+			delete mPipelineStateCache;
+			mPipelineStateCache = nullptr;
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	PipelineStateCacheManager::PipelineStateCacheManager(MaterialBlueprintResource& materialBlueprintResource) :
+		mMaterialBlueprintResource(materialBlueprintResource),
+		mProgramCacheManager(*this),
+		mPipelineStateCache(nullptr)
+	{
+		// Nothing here
 	}
 
 

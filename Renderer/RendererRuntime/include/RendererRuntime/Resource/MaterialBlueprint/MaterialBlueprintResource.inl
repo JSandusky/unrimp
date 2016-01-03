@@ -43,9 +43,14 @@ namespace RendererRuntime
 		return mMaterialProperties;
 	}
 
-	inline Renderer::IRootSignature* MaterialBlueprintResource::getRootSignature() const
+	inline const Renderer::VertexAttributes& MaterialBlueprintResource::getVertexAttributes() const
 	{
-		return mRootSignature;
+		return mVertexAttributes;
+	}
+
+	inline Renderer::IRootSignaturePtr MaterialBlueprintResource::getRootSignaturePtr() const
+	{
+		return mRootSignaturePtr;
 	}
 
 	inline const Renderer::PipelineState& MaterialBlueprintResource::getPipelineState() const

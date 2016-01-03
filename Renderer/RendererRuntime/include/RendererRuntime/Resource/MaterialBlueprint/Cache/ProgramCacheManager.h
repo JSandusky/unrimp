@@ -31,6 +31,17 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class ProgramCache;
+	class ShaderProperties;
+	class PipelineStateCacheManager;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -40,6 +51,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	/*
+	*  @brief
+	*    Program cache manager
+	*
+	*  @see
+	*    - See "RendererRuntime::PipelineStateCacheManager" for additional information
+	*/
 	class ProgramCacheManager : private Manager
 	{
 
@@ -51,13 +69,49 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return the pipeline state cache manager
+		*
+		*  @return
+		*    The owner pipeline state cache manager
+		*/
+		inline PipelineStateCacheManager& getPipelineStateCacheManager() const;
+
+		/**
+		*  @brief
+		*    Get/create program cache by using the owner material blueprint resource and shader properties
+		*
+		*  @param[in] shaderProperties
+		*    Shader properties to use
+		*
+		*  @return
+		*    The program cache, null pointer on error
+		*/
+		ProgramCache* getProgramCache(const ShaderProperties& shaderProperties);
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline ProgramCacheManager();
+		inline explicit ProgramCacheManager(PipelineStateCacheManager& pipelineStateCacheManager);
 		inline ~ProgramCacheManager();
 		ProgramCacheManager(const ProgramCacheManager&) = delete;
 		ProgramCacheManager& operator=(const ProgramCacheManager&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		PipelineStateCacheManager& mPipelineStateCacheManager;	///< Owner pipeline state cache manager
+
+		// TODO(co) Program cache management
+		ProgramCache* mProgramCache;
 
 
 	};

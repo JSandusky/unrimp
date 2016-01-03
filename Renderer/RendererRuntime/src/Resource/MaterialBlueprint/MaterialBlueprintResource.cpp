@@ -45,6 +45,52 @@ namespace
 
 
 		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
+		// TODO(co) We need a central vertex input layout management
+		// Vertex input layout
+		const Renderer::VertexAttribute vertexAttributesLayout[] =
+		{
+			{ // Attribute 0
+				// Data destination
+				Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+				"Position",									// name[32] (char)
+				"POSITION",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				0,											// inputSlot (uint32_t)
+				0,											// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0											// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 1
+				// Data destination
+				Renderer::VertexAttributeFormat::SHORT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+				"TexCoord",									// name[32] (char)
+				"TEXCOORD",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				0,											// inputSlot (uint32_t)
+				sizeof(float) * 3,							// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0											// instancesPerElement (uint32_t)
+			},
+			{ // Attribute 2
+				// Data destination
+				Renderer::VertexAttributeFormat::SHORT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+				"QTangent",									// name[32] (char)
+				"NORMAL",									// semanticName[32] (char)
+				0,											// semanticIndex (uint32_t)
+				// Data source
+				0,											// inputSlot (uint32_t)
+				sizeof(float) * 3 + sizeof(short) * 2,		// alignedByteOffset (uint32_t)
+				// Data source, instancing part
+				0											// instancesPerElement (uint32_t)
+			}
+		};
+
+
+		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
 		bool isFullyLoaded(const RendererRuntime::ShaderBlueprintResource* shaderBlueprint)
@@ -96,7 +142,7 @@ namespace RendererRuntime
 		IResource(resourceId),
 		mMaterialBlueprintResourceManager(materialBlueprintResourceManager),
 		mPipelineStateCacheManager(*this),
-		mRootSignature(nullptr),
+		mVertexAttributes(sizeof(::detail::vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), ::detail::vertexAttributesLayout),
 		mPipelineState(Renderer::PipelineStateBuilder()),
 		mVertexShaderBlueprint(nullptr),
 		mTessellationControlShaderBlueprint(nullptr),
@@ -109,10 +155,7 @@ namespace RendererRuntime
 
 	MaterialBlueprintResource::~MaterialBlueprintResource()
 	{
-		if (nullptr != mRootSignature)
-		{
-			mRootSignature->release();
-		}
+		// Nothing here
 	}
 
 	bool MaterialBlueprintResource::isFullyLoaded() const
@@ -125,7 +168,7 @@ namespace RendererRuntime
 		}
 
 		// Check the rest
-		return (IResource::LoadingState::LOADED == getLoadingState() && nullptr != mRootSignature && ::detail::isFullyLoaded(mVertexShaderBlueprint) && ::detail::isFullyLoaded(mFragmentShaderBlueprint));
+		return (IResource::LoadingState::LOADED == getLoadingState() && nullptr != mRootSignaturePtr && ::detail::isFullyLoaded(mVertexShaderBlueprint) && ::detail::isFullyLoaded(mFragmentShaderBlueprint));
 	}
 
 	void MaterialBlueprintResource::fillUnknownUniformBuffers()
@@ -472,10 +515,10 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResource::bindToRenderer() const
 	{
-		Renderer::IRenderer& renderer = mRootSignature->getRenderer();
+		Renderer::IRenderer& renderer = mRootSignaturePtr->getRenderer();
 
 		// Set the used graphics root signature
-		renderer.setGraphicsRootSignature(mRootSignature);
+		renderer.setGraphicsRootSignature(mRootSignaturePtr);
 
 		{ // Graphics root descriptor table: Set our uniform buffers
 			const size_t numberOfUniformBuffers = mUniformBuffers.size();

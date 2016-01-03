@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCacheManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCache.h"
 
 
 //[-------------------------------------------------------]
@@ -31,7 +32,20 @@ namespace RendererRuntime
 {
 
 
-	// TODO(co)
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	ProgramCache* ProgramCacheManager::getProgramCache(const ShaderProperties& shaderProperties)
+	{
+		// TODO(co) Program cache management
+		if (nullptr == mProgramCache)
+		{
+			mProgramCache = new ProgramCache(*this, shaderProperties);
+		}
+
+		// Done
+		return mProgramCache;
+	}
 
 
 //[-------------------------------------------------------]

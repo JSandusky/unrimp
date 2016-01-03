@@ -37,10 +37,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRootSignature;
-}
 namespace RendererRuntime
 {
 	class Transform;
@@ -186,12 +182,21 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the vertex attributes
+		*
+		*  @return
+		*    The vertex attributes
+		*/
+		inline const Renderer::VertexAttributes& getVertexAttributes() const;
+
+		/**
+		*  @brief
 		*    Return the root signature
 		*
 		*  @return
 		*    The root signature, can be a null pointer, do not destroy the instance
 		*/
-		inline Renderer::IRootSignature* getRootSignature() const;
+		inline Renderer::IRootSignaturePtr getRootSignaturePtr() const;
 
 		/**
 		*  @brief
@@ -303,7 +308,8 @@ namespace RendererRuntime
 		MaterialBlueprintResourceManager& mMaterialBlueprintResourceManager;	///< Owner material blueprint resource manager
 		PipelineStateCacheManager		  mPipelineStateCacheManager;
 		MaterialProperties				  mMaterialProperties;
-		Renderer::IRootSignature*		  mRootSignature;						///< Root signature, can be a null pointer
+		Renderer::VertexAttributes		  mVertexAttributes;
+		Renderer::IRootSignaturePtr		  mRootSignaturePtr;					///< Root signature, can be a null pointer
 		Renderer::PipelineState			  mPipelineState;
 		// Resource
 		UniformBuffers mUniformBuffers;

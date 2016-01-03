@@ -26,13 +26,17 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ProgramCache::ProgramCache()
+	inline Renderer::IProgramPtr ProgramCache::getProgramPtr() const
 	{
-		// Nothing here
+		return mProgramPtr;
 	}
 
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
 	inline ProgramCache::~ProgramCache()
 	{
 		// Nothing here

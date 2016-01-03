@@ -28,6 +28,18 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Resource/Shader/ShaderProperties.h"
+
+#include <Renderer/Public/Renderer.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class ProgramCacheManager;
+}
 
 
 //[-------------------------------------------------------]
@@ -45,13 +57,42 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class ProgramCacheManager;	///< Is creating and managing program cache instances
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return program
+		*
+		*  @return
+		*    The program
+		*/
+		inline Renderer::IProgramPtr getProgramPtr() const;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline ProgramCache();
+		ProgramCache(ProgramCacheManager& programCacheManager, const ShaderProperties& shaderProperties);
 		inline ~ProgramCache();
 		ProgramCache(const ProgramCache&) = delete;
 		ProgramCache& operator=(const ProgramCache&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		ProgramCacheManager&  mProgramCacheManager;	///< Owner program cache manager
+		ShaderProperties	  mShaderProperties;	///< Shader properties which ended up in this program
+		Renderer::IProgramPtr mProgramPtr;
 
 
 	};

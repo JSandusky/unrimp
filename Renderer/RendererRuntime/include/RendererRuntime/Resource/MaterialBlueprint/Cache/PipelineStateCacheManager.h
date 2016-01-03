@@ -29,22 +29,17 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCacheManager.h"
 
-// TODO(co) Remove this
 #include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class IPipelineState;
-}
 namespace RendererRuntime
 {
 	class ShaderProperties;
 	class MaterialProperties;
-	class MaterialBlueprintResource;
+	class PipelineStateCache;
 }
 
 
@@ -62,8 +57,21 @@ namespace RendererRuntime
 	*  @brief
 	*    Pipeline state cache manager
 	*
+	*  @remarks
+	*    The pipeline state cache is the top of the shader related cache hierarchy and maps to Direct3D 12, AMD Mantle,
+	*    Apple Metal and other rendering APIs using pipeline state objects (PSO). The next cache hierarchy level
+	*    is the program cache which maps to linked monolithic OpenGL programs and is also nice as a collection
+	*    of shader compiler results which are fed into pipeline states. The lowest cache hierarchy level is the
+	*    shader cache (vertex shader, fragment shader etc.) which handles the binary results of the shader compiler.
+	*
+	*    Sum up of the cache hierarchy:
+	*    - Pipeline state cache: Maps to Direct3D 12, AMD Mantle, Apple Metal etc.
+	*    - Program cache: Maps to linked monolithic OpenGL programs
+	*    - Shader cache: Maps to Direct3D 9 - 11, separate OpenGL shader objects and is still required for Direct3D 12
+	*      and other similar designed APIs because the binary shaders are required when creating pipeline state objects
+	*
 	*  @todo
-	*    - Direct3D 12: Pipeline state object: Add support for "GetCachedBlob" (super efficient material cache), see https://github.com/Microsoft/DirectX-Graphics-Samples/blob/master/Samples/D3D12PipelineStateCache/src/PSOLibrary.cpp
+	*    - TODO(co) Direct3D 12: Pipeline state object: Add support for "GetCachedBlob" (super efficient material cache), see https://github.com/Microsoft/DirectX-Graphics-Samples/blob/master/Samples/D3D12PipelineStateCache/src/PSOLibrary.cpp
 	*/
 	class PipelineStateCacheManager : private Manager
 	{
@@ -79,7 +87,26 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		Renderer::IPipelineState* getPipelineStateObject(const ShaderProperties& shaderProperties, const MaterialProperties& materialProperties);
+		/**
+		*  @brief
+		*    Return the owner material blueprint resource
+		*
+		*  @return
+		*    The owner material blueprint resource
+		*/
+		inline MaterialBlueprintResource& getMaterialBlueprintResource() const;
+
+		/**
+		*  @brief
+		*    Return the program cache manager
+		*
+		*  @return
+		*    The program cache manager
+		*/
+		inline ProgramCacheManager& getProgramCacheManager();
+
+		// TODO(co)
+		Renderer::IPipelineStatePtr getPipelineStateObjectPtr(const ShaderProperties& shaderProperties, const MaterialProperties& materialProperties);
 		void clearCache();
 
 
@@ -87,7 +114,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline explicit PipelineStateCacheManager(MaterialBlueprintResource& materialBlueprintResource);
+		explicit PipelineStateCacheManager(MaterialBlueprintResource& materialBlueprintResource);
 		inline ~PipelineStateCacheManager();
 		PipelineStateCacheManager(const PipelineStateCacheManager&) = delete;
 		PipelineStateCacheManager& operator=(const PipelineStateCacheManager&) = delete;
@@ -100,9 +127,8 @@ namespace RendererRuntime
 		MaterialBlueprintResource& mMaterialBlueprintResource;	///< Owner material blueprint resource
 		ProgramCacheManager		   mProgramCacheManager;
 
-		// TODO(co)
-		Renderer::PipelineState	  mPipelineState;
-		Renderer::IPipelineState* mPipelineStateObject;
+		// TODO(co) Pipeline state cache management
+		PipelineStateCache* mPipelineStateCache;
 
 
 	};

@@ -26,15 +26,22 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline PipelineStateCacheManager::PipelineStateCacheManager(MaterialBlueprintResource& materialBlueprintResource) :
-		mMaterialBlueprintResource(materialBlueprintResource),
-		mPipelineStateObject(nullptr)
+	inline MaterialBlueprintResource& PipelineStateCacheManager::getMaterialBlueprintResource() const
 	{
-		// Nothing here
+		return mMaterialBlueprintResource;
 	}
 
+	inline ProgramCacheManager& PipelineStateCacheManager::getProgramCacheManager()
+	{
+		return mProgramCacheManager;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
 	inline PipelineStateCacheManager::~PipelineStateCacheManager()
 	{
 		clearCache();

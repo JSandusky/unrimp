@@ -22,6 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCache.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCacheManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCache.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 
 
 //[-------------------------------------------------------]
@@ -31,7 +34,53 @@ namespace RendererRuntime
 {
 
 
-	// TODO(co)
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	PipelineStateCache::PipelineStateCache(PipelineStateCacheManager& pipelineStateCacheManager, const ShaderProperties& shaderProperties, const MaterialProperties& materialProperties) :
+		mPipelineStateCacheManager(pipelineStateCacheManager),
+		mShaderProperties(shaderProperties),
+		mMaterialProperties(materialProperties)
+	{
+		// Gather shader properties from static material properties
+		ShaderProperties finalShaderProperties = shaderProperties;
+		{
+			const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialProperties.getSortedPropertyVector();
+			const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
+			for (size_t i = 0; i < numberOfMaterialProperties; ++i)
+			{
+				const MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
+				if (materialProperty.getUsage() == MaterialProperty::Usage::STATIC)
+				{
+					finalShaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
+				}
+			}
+		}
+
+		// Get the program cache
+		const ProgramCache* programCache = pipelineStateCacheManager.getProgramCacheManager().getProgramCache(finalShaderProperties);
+		if (nullptr != programCache)
+		{
+			Renderer::IProgramPtr programPtr = programCache->getProgramPtr();
+			if (nullptr != programPtr)
+			{
+				const MaterialBlueprintResource& materialBlueprintResource = pipelineStateCacheManager.getMaterialBlueprintResource();
+				Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
+
+				// Start with the pipeline state of the material blueprint resource
+				mPipelineState = materialBlueprintResource.getPipelineState();
+
+				// Setup the dynamic part of the pipeline state
+				mPipelineState.rootSignature	= rootSignaturePtr;
+				mPipelineState.program			= programPtr;
+				mPipelineState.vertexAttributes = materialBlueprintResource.getVertexAttributes();
+
+				// Create the pipeline state object (PSO)
+				// TODO(co) Asynchronous pipeline state object generation, use fallback while the pipeline state object is not available
+				mPipelineStateObjectPtr = rootSignaturePtr->getRenderer().createPipelineState(mPipelineState);
+			}
+		}
+	}
 
 
 //[-------------------------------------------------------]

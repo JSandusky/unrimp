@@ -28,6 +28,19 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Resource/Shader/ShaderProperties.h"
+#include "RendererRuntime/Resource/Material/MaterialProperties.h"
+
+#include <Renderer/Public/Renderer.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class PipelineStateCacheManager;
+}
 
 
 //[-------------------------------------------------------]
@@ -45,13 +58,44 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class PipelineStateCacheManager;	///< Is creating and managing pipeline state cache instances
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return pipeline state object
+		*
+		*  @return
+		*    The pipeline state object
+		*/
+		inline Renderer::IPipelineStatePtr getPipelineStateObjectPtr() const;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline PipelineStateCache();
+		PipelineStateCache(PipelineStateCacheManager& pipelineStateCacheManager, const ShaderProperties& shaderProperties, const MaterialProperties& materialProperties);
 		inline ~PipelineStateCache();
 		PipelineStateCache(const PipelineStateCache&) = delete;
 		PipelineStateCache& operator=(const PipelineStateCache&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		PipelineStateCacheManager&	mPipelineStateCacheManager;	///< Owner pipeline state cache manager
+		ShaderProperties			mShaderProperties;			///< Shader properties which ended up in this pipeline state
+		MaterialProperties			mMaterialProperties;		///< Material properties which ended up in this pipeline state
+		Renderer::PipelineState		mPipelineState;
+		Renderer::IPipelineStatePtr	mPipelineStateObjectPtr;
 
 
 	};
