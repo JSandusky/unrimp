@@ -55,19 +55,35 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace
 {
-
-
 	namespace detail
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
 		bool orderByAssetId(const RendererRuntime::Asset& left, const RendererRuntime::Asset& right)
 		{
 			return (left.assetId < right.assetId);
 		}
-	}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererToolkit
+{
 
 
 	//[-------------------------------------------------------]
@@ -266,7 +282,7 @@ namespace RendererToolkit
 			RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = outputAssetPackage.getWritableSortedAssetVector();
 
 			// Ensure the asset package is sorted
-			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), detail::orderByAssetId);
+			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), ::detail::orderByAssetId);
 
 			// Open the output file
 			std::ofstream outputFileStream("../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", std::ios::binary);
@@ -378,7 +394,7 @@ namespace RendererToolkit
 			++currentAssetIndex;
 			++iterator;
 		}
-		std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), detail::orderByAssetId);
+		std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), ::detail::orderByAssetId);
 
 		// Build the source asset ID to compiled asset ID map
 		buildSourceAssetIdToCompiledAssetId();

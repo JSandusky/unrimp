@@ -27,27 +27,43 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace
 {
-
-
 	namespace detail
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Structures                                            ]
+		//[-------------------------------------------------------]
 		struct OrderByMaterialTechniqueId
 		{
-			inline bool operator()(const MaterialTechnique& left, MaterialTechniqueId right) const
+			inline bool operator()(const RendererRuntime::MaterialTechnique& left, RendererRuntime::MaterialTechniqueId right) const
 			{
 				return (left.getMaterialTechniqueId() < right);
 			}
 
-			inline bool operator()(MaterialTechniqueId left, const MaterialTechnique& right) const
+			inline bool operator()(RendererRuntime::MaterialTechniqueId left, const RendererRuntime::MaterialTechnique& right) const
 			{
 				return (left < right.getMaterialTechniqueId());
 			}
 		};
-	}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
 
 
 	//[-------------------------------------------------------]
@@ -61,7 +77,7 @@ namespace RendererRuntime
 
 	MaterialTechnique* MaterialResource::getMaterialTechniqueById(MaterialTechniqueId materialTechniqueId) const
 	{
-		SortedMaterialTechniqueVector::const_iterator iterator = std::lower_bound(mSortedMaterialTechniqueVector.cbegin(), mSortedMaterialTechniqueVector.cend(), materialTechniqueId, detail::OrderByMaterialTechniqueId());
+		SortedMaterialTechniqueVector::const_iterator iterator = std::lower_bound(mSortedMaterialTechniqueVector.cbegin(), mSortedMaterialTechniqueVector.cend(), materialTechniqueId, ::detail::OrderByMaterialTechniqueId());
 		return (iterator != mSortedMaterialTechniqueVector.end() && iterator._Ptr->getMaterialTechniqueId() == materialTechniqueId) ? iterator._Ptr : nullptr;
 	}
 

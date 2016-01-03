@@ -31,15 +31,17 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace
 {
-
-
 	namespace detail
 	{
 
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
 		bool orderByMaterialPropertyId(const RendererRuntime::MaterialProperty& left, const RendererRuntime::MaterialProperty& right)
 		{
 			return (left.getMaterialPropertyId() < right.getMaterialPropertyId());
@@ -72,7 +74,19 @@ namespace RendererToolkit
 			}
 		}
 
-	}
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererToolkit
+{
 
 
 	//[-------------------------------------------------------]

@@ -37,22 +37,37 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace
 {
-
-
-	// Define constants
 	namespace detail
 	{
-		#define DEFINE_CONSTANT(name) static const StringId name(#name);
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		#define DEFINE_CONSTANT(name) static const RendererRuntime::StringId name(#name);
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(OBJECT_SPACE_TO_WORLD_SPACE_MATRIX)
 			DEFINE_CONSTANT(MATERIAL_INDEX)
 		#undef DEFINE_CONSTANT
-	}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
 
 
 	//[-------------------------------------------------------]
@@ -89,11 +104,11 @@ namespace RendererRuntime
 
 		// Resolve the reference value
 		// TODO(co) Add more of those standard property values
-		if (detail::WORLD_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
+		if (::detail::WORLD_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
 		{
 			memcpy(buffer, glm::value_ptr(mWorldSpaceToViewSpaceMatrix), numberOfBytes);
 		}
-		else if (detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
+		else if (::detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{
 			memcpy(buffer, glm::value_ptr(mWorldSpaceToClipSpaceMatrix), numberOfBytes);
 		}
@@ -120,13 +135,13 @@ namespace RendererRuntime
 		bool valueFilled = true;
 
 		// Resolve the reference value
-		if (detail::OBJECT_SPACE_TO_WORLD_SPACE_MATRIX == referenceValue)
+		if (::detail::OBJECT_SPACE_TO_WORLD_SPACE_MATRIX == referenceValue)
 		{
 			glm::mat4 objectSpaceToWorldSpaceMatrix;
 			mObjectSpaceToWorldSpaceTransform->getAsMatrix(objectSpaceToWorldSpaceMatrix);
 			memcpy(buffer, glm::value_ptr(objectSpaceToWorldSpaceMatrix), numberOfBytes);
 		}
-		else if (detail::MATERIAL_INDEX == referenceValue)
+		else if (::detail::MATERIAL_INDEX == referenceValue)
 		{
 			const int materialIndex = static_cast<int>(mMaterialTechnique->getMaterialUniformBufferIndex());
 			memcpy(buffer, &materialIndex, numberOfBytes);

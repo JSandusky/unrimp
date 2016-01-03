@@ -27,19 +27,35 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		inline bool orderPropertyByShaderPropertyId(const RendererRuntime::ShaderProperties::Property& left, const RendererRuntime::ShaderProperties::Property& right)
+		{
+			return (left.shaderPropertyId < right.shaderPropertyId);
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-
-
-	namespace detail
-	{
-		inline bool orderPropertyByShaderPropertyId( const ShaderProperties::Property& left, const ShaderProperties::Property& right)
-		{
-			return (left.shaderPropertyId < right.shaderPropertyId);
-		}
-	}
 
 
 	//[-------------------------------------------------------]
@@ -48,7 +64,7 @@ namespace RendererRuntime
 	bool ShaderProperties::getPropertyValue(ShaderPropertyId shaderPropertyId, int32_t& value, int32_t defaultValue) const
 	{
 		const Property property(shaderPropertyId, 0);
-		SortedPropertyVector::const_iterator iterator = std::lower_bound(mSortedPropertyVector.begin(), mSortedPropertyVector.end(), property, detail::orderPropertyByShaderPropertyId);
+		SortedPropertyVector::const_iterator iterator = std::lower_bound(mSortedPropertyVector.begin(), mSortedPropertyVector.end(), property, ::detail::orderPropertyByShaderPropertyId);
 		if (iterator != mSortedPropertyVector.end() && iterator->shaderPropertyId == property.shaderPropertyId)
 		{
 			value = iterator->value;
@@ -64,7 +80,7 @@ namespace RendererRuntime
 	void ShaderProperties::setPropertyValue(ShaderPropertyId shaderPropertyId, int32_t value)
 	{
 		const Property property(shaderPropertyId, value);
-		SortedPropertyVector::iterator iterator = std::lower_bound(mSortedPropertyVector.begin(), mSortedPropertyVector.end(), property, detail::orderPropertyByShaderPropertyId);
+		SortedPropertyVector::iterator iterator = std::lower_bound(mSortedPropertyVector.begin(), mSortedPropertyVector.end(), property, ::detail::orderPropertyByShaderPropertyId);
 		if (iterator == mSortedPropertyVector.end() || iterator->shaderPropertyId != property.shaderPropertyId)
 		{
 			// Add new shader property

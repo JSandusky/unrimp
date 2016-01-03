@@ -68,33 +68,48 @@ namespace Direct3D10Renderer
 {
 
 
-	namespace detail
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+	namespace
 	{
-
-		bool createDevice(UINT flags, ID3D10Device** d3d10Device)
+		namespace detail
 		{
-			// Driver types
-			static const D3D10_DRIVER_TYPE D3D10_DRIVER_TYPES[] =
-			{
-				D3D10_DRIVER_TYPE_HARDWARE,
-				D3D10_DRIVER_TYPE_WARP,
-				D3D10_DRIVER_TYPE_REFERENCE,
-			};
-			static const UINT NUMBER_OF_DRIVER_TYPES = sizeof(D3D10_DRIVER_TYPES) / sizeof(D3D10_DRIVER_TYPE);
 
-			// Create the Direct3D 10 device
-			for (UINT deviceType = 0; deviceType < NUMBER_OF_DRIVER_TYPES; ++deviceType)
+
+			//[-------------------------------------------------------]
+			//[ Global functions                                      ]
+			//[-------------------------------------------------------]
+			bool createDevice(UINT flags, ID3D10Device** d3d10Device)
 			{
-				if (SUCCEEDED(D3D10CreateDevice(nullptr, D3D10_DRIVER_TYPES[deviceType], nullptr, flags, D3D10_SDK_VERSION, d3d10Device)))
+				// Driver types
+				static const D3D10_DRIVER_TYPE D3D10_DRIVER_TYPES[] =
 				{
-					// Done
-					return true;
+					D3D10_DRIVER_TYPE_HARDWARE,
+					D3D10_DRIVER_TYPE_WARP,
+					D3D10_DRIVER_TYPE_REFERENCE,
+				};
+				static const UINT NUMBER_OF_DRIVER_TYPES = sizeof(D3D10_DRIVER_TYPES) / sizeof(D3D10_DRIVER_TYPE);
+
+				// Create the Direct3D 10 device
+				for (UINT deviceType = 0; deviceType < NUMBER_OF_DRIVER_TYPES; ++deviceType)
+				{
+					if (SUCCEEDED(D3D10CreateDevice(nullptr, D3D10_DRIVER_TYPES[deviceType], nullptr, flags, D3D10_SDK_VERSION, d3d10Device)))
+					{
+						// Done
+						return true;
+					}
 				}
+
+				// Error!
+				return false;
 			}
 
-			// Error!
-			return false;
-		}
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+		} // detail
 	}
 
 

@@ -27,27 +27,43 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace
 {
-
-
 	namespace detail
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Structures                                            ]
+		//[-------------------------------------------------------]
 		struct OrderByAssetId
 		{
-			inline bool operator()(const Asset& left, AssetId right) const
+			inline bool operator()(const RendererRuntime::Asset& left, RendererRuntime::AssetId right) const
 			{
 				return (left.assetId < right);
 			}
 
-			inline bool operator()(AssetId left, const Asset& right) const
+			inline bool operator()(RendererRuntime::AssetId left, const RendererRuntime::Asset& right) const
 			{
 				return (left < right.assetId);
 			}
 		};
-	}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
 
 
 	//[-------------------------------------------------------]
@@ -55,7 +71,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	const Asset* AssetPackage::getAssetByAssetId(AssetId assetId) const
 	{
-		SortedAssetVector::const_iterator iterator = std::lower_bound(mSortedAssetVector.cbegin(), mSortedAssetVector.cend(), assetId, detail::OrderByAssetId());
+		SortedAssetVector::const_iterator iterator = std::lower_bound(mSortedAssetVector.cbegin(), mSortedAssetVector.cend(), assetId, ::detail::OrderByAssetId());
 		return (iterator != mSortedAssetVector.end() && iterator._Ptr->assetId == assetId) ? iterator._Ptr : nullptr;
 	}
 

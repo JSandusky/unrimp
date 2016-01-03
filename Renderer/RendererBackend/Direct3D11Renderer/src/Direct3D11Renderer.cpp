@@ -70,43 +70,58 @@ namespace Direct3D11Renderer
 {
 
 
-	namespace detail
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+	namespace
 	{
-
-		bool createDevice(UINT flags, ID3D11Device** d3d11Device, ID3D11DeviceContext** d3d11DeviceContext)
+		namespace detail
 		{
-			// Driver types
-			static const D3D_DRIVER_TYPE D3D_DRIVER_TYPES[] =
-			{
-				D3D_DRIVER_TYPE_HARDWARE,
-				D3D_DRIVER_TYPE_WARP,
-				D3D_DRIVER_TYPE_REFERENCE,
-			};
-			static const UINT NUMBER_OF_DRIVER_TYPES = sizeof(D3D_DRIVER_TYPES) / sizeof(D3D_DRIVER_TYPE);
 
-			// Feature levels
-			static const D3D_FEATURE_LEVEL D3D_FEATURE_LEVELS[] =
-			{
-				D3D_FEATURE_LEVEL_11_0,
-				D3D_FEATURE_LEVEL_10_1,
-				D3D_FEATURE_LEVEL_10_0,
-			};
-			static const UINT NUMBER_OF_FEATURE_LEVELS = sizeof(D3D_FEATURE_LEVELS) / sizeof(D3D_FEATURE_LEVEL);
 
-			// Create the Direct3D 11 device
-			for (UINT deviceType = 0; deviceType < NUMBER_OF_DRIVER_TYPES; ++deviceType)
+			//[-------------------------------------------------------]
+			//[ Global functions                                      ]
+			//[-------------------------------------------------------]
+			bool createDevice(UINT flags, ID3D11Device** d3d11Device, ID3D11DeviceContext** d3d11DeviceContext)
 			{
-				D3D_FEATURE_LEVEL d3dFeatureLevel = D3D_FEATURE_LEVEL_11_0;
-				if (SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPES[deviceType], nullptr, flags, D3D_FEATURE_LEVELS, NUMBER_OF_FEATURE_LEVELS, D3D11_SDK_VERSION, d3d11Device, &d3dFeatureLevel, d3d11DeviceContext)))
+				// Driver types
+				static const D3D_DRIVER_TYPE D3D_DRIVER_TYPES[] =
 				{
-					// Done
-					return true;
+					D3D_DRIVER_TYPE_HARDWARE,
+					D3D_DRIVER_TYPE_WARP,
+					D3D_DRIVER_TYPE_REFERENCE,
+				};
+				static const UINT NUMBER_OF_DRIVER_TYPES = sizeof(D3D_DRIVER_TYPES) / sizeof(D3D_DRIVER_TYPE);
+
+				// Feature levels
+				static const D3D_FEATURE_LEVEL D3D_FEATURE_LEVELS[] =
+				{
+					D3D_FEATURE_LEVEL_11_0,
+					D3D_FEATURE_LEVEL_10_1,
+					D3D_FEATURE_LEVEL_10_0,
+				};
+				static const UINT NUMBER_OF_FEATURE_LEVELS = sizeof(D3D_FEATURE_LEVELS) / sizeof(D3D_FEATURE_LEVEL);
+
+				// Create the Direct3D 11 device
+				for (UINT deviceType = 0; deviceType < NUMBER_OF_DRIVER_TYPES; ++deviceType)
+				{
+					D3D_FEATURE_LEVEL d3dFeatureLevel = D3D_FEATURE_LEVEL_11_0;
+					if (SUCCEEDED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPES[deviceType], nullptr, flags, D3D_FEATURE_LEVELS, NUMBER_OF_FEATURE_LEVELS, D3D11_SDK_VERSION, d3d11Device, &d3dFeatureLevel, d3d11DeviceContext)))
+					{
+						// Done
+						return true;
+					}
 				}
+
+				// Error!
+				return false;
 			}
 
-			// Error!
-			return false;
-		}
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+		} // detail
 	}
 
 

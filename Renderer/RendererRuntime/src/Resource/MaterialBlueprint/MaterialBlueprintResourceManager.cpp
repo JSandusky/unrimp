@@ -35,14 +35,24 @@
 
 
 //[-------------------------------------------------------]
-//[ Global variables in anonymous namespace               ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
 namespace
 {
 	namespace detail
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
 		static RendererRuntime::MaterialBlueprintResourceListener defaultMaterialBlueprintResourceListener;
-	}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
 }
 
 

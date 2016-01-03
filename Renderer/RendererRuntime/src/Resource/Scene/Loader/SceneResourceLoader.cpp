@@ -35,12 +35,17 @@
 
 
 //[-------------------------------------------------------]
-//[ Global functions in anonymous namespace               ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
 namespace
 {
 	namespace detail
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
 		void itemDeserialization(std::istream& inputStream, RendererRuntime::ISceneResource& sceneResource, RendererRuntime::ISceneNode& sceneNode)
 		{
 			// Read the scene item header
@@ -102,7 +107,12 @@ namespace
 				nodeDeserialization(inputStream, sceneResource);
 			}
 		}
-	}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
 }
 
 

@@ -39,13 +39,19 @@
 
 
 //[-------------------------------------------------------]
-//[ Global functions in anonymous namespace               ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
 namespace
 {
 	namespace detail
 	{
+
+
+		// TODO(co) Just a first quick'n'dirty placeholder for the real implementation
+
+
 		RendererRuntime::MaterialResource* mMaterialResource = nullptr;
+
 
 		void initialize(const RendererRuntime::IRendererRuntime& rendererRuntime)
 		{
@@ -133,7 +139,12 @@ namespace
 				}
 			}
 		}
-	}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
 }
 
 

@@ -38,12 +38,17 @@
 
 
 //[-------------------------------------------------------]
-//[ Global functions in anonymous namespace               ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
 namespace
 {
 	namespace detail
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
 		void nodeTargetDeserialization(std::istream& inputStream, RendererRuntime::CompositorResourceNode& compositorResourceNode, const RendererRuntime::ICompositorPassFactory& compositorPassFactory)
 		{
 			// Read in the compositor resource target
@@ -136,7 +141,12 @@ namespace
 				nodeDeserialization(inputStream, compositorResource, compositorPassFactory);
 			}
 		}
-	}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
 }
 
 

@@ -49,14 +49,23 @@
 
 
 //[-------------------------------------------------------]
-//[ Global functions in anonymous namespace               ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
 namespace
 {
 	namespace detail
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
 		static const uint32_t NUMBER_OF_BYTES_PER_VERTEX = 24;	///< Number of bytes per vertex (3 float position, 2 short texture coordinate, 4 short qtangent)
 
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
 		/**
 		*  @brief
 		*    Get the total number of vertices and indices by using a given Assimp node
@@ -250,7 +259,12 @@ namespace
 				fillMeshRecursive(assimpScene, *assimpNode.mChildren[assimpChild], vertexBuffer, indexBuffer, currentAssimpTransformation, numberOfVertices, numberOfIndices);
 			}
 		}
-	}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
 }
 
 

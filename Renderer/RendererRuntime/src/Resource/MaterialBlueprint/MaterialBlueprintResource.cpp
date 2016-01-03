@@ -36,31 +36,33 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace
 {
-
-
 	namespace detail
 	{
 
-		bool isFullyLoaded(const ShaderBlueprintResource* shaderBlueprint)
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		bool isFullyLoaded(const RendererRuntime::ShaderBlueprintResource* shaderBlueprint)
 		{
 			// Check shader blueprint
-			if (nullptr == shaderBlueprint || IResource::LoadingState::LOADED != shaderBlueprint->getLoadingState())
+			if (nullptr == shaderBlueprint || RendererRuntime::IResource::LoadingState::LOADED != shaderBlueprint->getLoadingState())
 			{
 				// Not fully loaded
 				return false;
 			}
 
 			{ // Check included shader piece resources
-				const ShaderBlueprintResource::IncludeShaderPieceResources& includeShaderPieceResources = shaderBlueprint->getIncludeShaderPieceResources();
+				const RendererRuntime::ShaderBlueprintResource::IncludeShaderPieceResources& includeShaderPieceResources = shaderBlueprint->getIncludeShaderPieceResources();
 				const size_t numberOfShaderPieces = includeShaderPieceResources.size();
 				for (size_t i = 0; i < numberOfShaderPieces; ++i)
 				{
-					const ShaderPieceResource* shaderPieceResource = includeShaderPieceResources[i];
-					if (nullptr == shaderPieceResource || IResource::LoadingState::LOADED != shaderPieceResource->getLoadingState())
+					const RendererRuntime::ShaderPieceResource* shaderPieceResource = includeShaderPieceResources[i];
+					if (nullptr == shaderPieceResource || RendererRuntime::IResource::LoadingState::LOADED != shaderPieceResource->getLoadingState())
 					{
 						// Not fully loaded
 						return false;
@@ -71,7 +73,20 @@ namespace RendererRuntime
 			// Fully loaded
 			return true;
 		}
-	}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
 
 
 	//[-------------------------------------------------------]
@@ -110,7 +125,7 @@ namespace RendererRuntime
 		}
 
 		// Check the rest
-		return (IResource::LoadingState::LOADED == getLoadingState() && nullptr != mRootSignature && detail::isFullyLoaded(mVertexShaderBlueprint) && detail::isFullyLoaded(mFragmentShaderBlueprint));
+		return (IResource::LoadingState::LOADED == getLoadingState() && nullptr != mRootSignature && ::detail::isFullyLoaded(mVertexShaderBlueprint) && ::detail::isFullyLoaded(mFragmentShaderBlueprint));
 	}
 
 	void MaterialBlueprintResource::fillUnknownUniformBuffers()

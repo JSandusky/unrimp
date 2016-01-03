@@ -30,12 +30,17 @@
 
 
 //[-------------------------------------------------------]
-//[ Global definitions in anonymous namespace             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
 namespace
 {
 	namespace detail
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
 		// Vertex input layout
 		const Renderer::VertexAttribute VertexAttributesLayout[] =
 		{
@@ -53,7 +58,12 @@ namespace
 			}
 		};
 		const Renderer::VertexAttributes VertexAttributes(sizeof(VertexAttributesLayout) / sizeof(Renderer::VertexAttribute), VertexAttributesLayout);
-	}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
 }
 
 

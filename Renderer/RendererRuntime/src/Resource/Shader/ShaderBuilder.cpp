@@ -63,14 +63,14 @@ THE SOFTWARE.
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace
 {
-
-
 	namespace detail
 	{
+
+
 		int setOp(int, int op2)
 		{
 			return op2;
@@ -429,7 +429,7 @@ namespace RendererRuntime
 			return returnValue;
 		}
 
-		bool evaluateExpressionRecursive(const ShaderProperties& shaderProperties, ExpressionVec& expression, bool& outSyntaxError)
+		bool evaluateExpressionRecursive(const RendererRuntime::ShaderProperties& shaderProperties, ExpressionVec& expression, bool& outSyntaxError)
 		{
 			ExpressionVec::iterator itor = expression.begin();
 			ExpressionVec::iterator end  = expression.end();
@@ -476,7 +476,7 @@ namespace RendererRuntime
 				else if (EXPR_VAR == exp.type)
 				{
 					int32_t propertyValue = 0;
-					shaderProperties.getPropertyValue(StringId(exp.value.c_str()), propertyValue);
+					shaderProperties.getPropertyValue(RendererRuntime::StringId(exp.value.c_str()), propertyValue);
 					exp.result = (propertyValue != 0);
 					lastExpWasOperator = false;
 				}
@@ -527,7 +527,7 @@ namespace RendererRuntime
 			return retVal;
 		}
 
-		bool evaluateExpression(const ShaderProperties& shaderProperties, SubStringRef& outSubString, bool& outSyntaxError)
+		bool evaluateExpression(const RendererRuntime::ShaderProperties& shaderProperties, SubStringRef& outSubString, bool& outSyntaxError)
 		{
 			const size_t expEnd = evaluateExpressionEnd(outSubString);
 			if (std::string::npos == expEnd)
@@ -746,7 +746,20 @@ namespace RendererRuntime
 				}
 			}
 		}
-	}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
 
 
 	//[-------------------------------------------------------]
@@ -820,8 +833,8 @@ namespace RendererRuntime
 		outBuffer.clear();
 		outBuffer.reserve(inBuffer.size());
 
-		detail::StringVector argValues;
-		detail::SubStringRef subString(&inBuffer, 0);
+		::detail::StringVector argValues;
+		::detail::SubStringRef subString(&inBuffer, 0);
 
 		size_t pos = subString.find("@");
 		size_t keyword = static_cast<size_t>(~0);
@@ -830,11 +843,11 @@ namespace RendererRuntime
 		{
 			size_t maxSize = subString.findFirstOf(" \t(", pos + 1);
 			maxSize = (std::string::npos == maxSize) ? subString.getSize() : maxSize;
-			detail::SubStringRef keywordStr(&inBuffer, subString.getStart() + pos + 1, subString.getStart() + maxSize);
+			::detail::SubStringRef keywordStr(&inBuffer, subString.getStart() + pos + 1, subString.getStart() + maxSize);
 
 			for (size_t i = 0; i < 8 && static_cast<size_t>(~0) == keyword; ++i)
 			{
-				if (keywordStr.matchEqual(detail::c_operations[i].opName))
+				if (keywordStr.matchEqual(::detail::c_operations[i].opName))
 				{
 					keyword = i;
 				}
@@ -853,7 +866,7 @@ namespace RendererRuntime
 			// Copy what comes before the block
 			copy(outBuffer, subString, pos);
 
-			subString.setStart(subString.getStart() + pos + detail::c_operations[keyword].length);
+			subString.setStart(subString.getStart() + pos + ::detail::c_operations[keyword].length);
 			evaluateParamArgs(subString, argValues, syntaxError);
 
 			syntaxError |= (argValues.size() < 2 || argValues.size() > 3);
@@ -863,11 +876,11 @@ namespace RendererRuntime
 				const unsigned long lineCount = static_cast<unsigned long>(calculateLineCount(subString));
 				if (keyword <= 1)
 				{
-					printf("Syntax error at line %lu: @%s expects one parameter", lineCount, detail::c_operations[keyword].opName);
+					printf("Syntax error at line %lu: @%s expects one parameter", lineCount, ::detail::c_operations[keyword].opName);
 				}
 				else
 				{
-					printf("Syntax error at line %lu: @%s expects two or three parameters", lineCount, detail::c_operations[keyword].opName);
+					printf("Syntax error at line %lu: @%s expects two or three parameters", lineCount, ::detail::c_operations[keyword].opName);
 				}
 			}
 			else
@@ -889,7 +902,7 @@ namespace RendererRuntime
 					mShaderProperties.getPropertyValue(StringId(argValues[idx].c_str()), op2Value);
 				}
 
-				const int result = detail::c_operations[keyword].opFunc(op1Value, op2Value);
+				const int result = ::detail::c_operations[keyword].opFunc(op1Value, op2Value);
 				mShaderProperties.setPropertyValue(dstProperty, result);
 			}
 
@@ -900,11 +913,11 @@ namespace RendererRuntime
 			{
 				size_t maxSize = subString.findFirstOf(" \t(", pos + 1);
 				maxSize = (maxSize == std::string::npos) ? subString.getSize() : maxSize;
-				detail::SubStringRef keywordStr(&inBuffer, subString.getStart() + pos + 1, subString.getStart() + maxSize);
+				::detail::SubStringRef keywordStr(&inBuffer, subString.getStart() + pos + 1, subString.getStart() + maxSize);
 
 				for (size_t i = 0; i < 8 && static_cast<size_t>(~0) == keyword; ++i)
 				{
-					if (keywordStr.matchEqual(detail::c_operations[i].opName))
+					if (keywordStr.matchEqual(::detail::c_operations[i].opName))
 					{
 						keyword = i;
 					}
@@ -927,8 +940,8 @@ namespace RendererRuntime
 		outBuffer.clear();
 		outBuffer.reserve(inBuffer.size());
 
-		detail::StringVector argValues;
-		detail::SubStringRef subString(&inBuffer, 0);
+		::detail::StringVector argValues;
+		::detail::SubStringRef subString(&inBuffer, 0);
 		size_t pos = subString.find("@foreach");
 
 		bool syntaxError = false;
@@ -941,8 +954,8 @@ namespace RendererRuntime
 			subString.setStart(subString.getStart() + pos + sizeof("@foreach"));
 			evaluateParamArgs(subString, argValues, syntaxError);
 
-			detail::SubStringRef blockSubString = subString;
-			detail::findBlockEnd(blockSubString, syntaxError);
+			::detail::SubStringRef blockSubString = subString;
+			::detail::findBlockEnd(blockSubString, syntaxError);
 
 			if (!syntaxError)
 			{
@@ -982,9 +995,9 @@ namespace RendererRuntime
 					}
 				}
 
-				for(int i = start; i < count; ++i)
+				for (int i = start; i < count; ++i)
 				{
-					detail::repeat(outBuffer, blockSubString, blockSubString.getSize(), static_cast<size_t>(i), counterVar);
+					::detail::repeat(outBuffer, blockSubString, blockSubString.getSize(), static_cast<size_t>(i), counterVar);
 				}
 			}
 
@@ -1002,7 +1015,7 @@ namespace RendererRuntime
 		outBuffer.clear();
 		outBuffer.reserve(inBuffer.size());
 
-		detail::SubStringRef subString(&inBuffer, 0);
+		::detail::SubStringRef subString(&inBuffer, 0);
 		size_t pos = subString.find("@property");
 
 		bool syntaxError = false;
@@ -1015,12 +1028,12 @@ namespace RendererRuntime
 			subString.setStart(subString.getStart() + pos + sizeof("@property"));
 			const bool result = evaluateExpression(mShaderProperties, subString, syntaxError);
 
-			detail::SubStringRef blockSubString = subString;
-			detail::findBlockEnd(blockSubString, syntaxError);
+			::detail::SubStringRef blockSubString = subString;
+			::detail::findBlockEnd(blockSubString, syntaxError);
 
 			if (result && !syntaxError)
 			{
-				detail::copy(outBuffer, blockSubString, blockSubString.getSize());
+				::detail::copy(outBuffer, blockSubString, blockSubString.getSize());
 			}
 
 			subString.setStart(blockSubString.getEnd() + sizeof("@end"));
@@ -1043,8 +1056,8 @@ namespace RendererRuntime
 		outBuffer.clear();
 		outBuffer.reserve(inBuffer.size());
 
-		detail::StringVector argValues;
-		detail::SubStringRef subString(&inBuffer, 0);
+		::detail::StringVector argValues;
+		::detail::SubStringRef subString(&inBuffer, 0);
 		size_t pos = subString.find("@piece");
 
 		bool syntaxError = false;
@@ -1052,10 +1065,10 @@ namespace RendererRuntime
 		while (std::string::npos != pos && !syntaxError)
 		{
 			// Copy what comes before the block
-			detail::copy(outBuffer, subString, pos);
+			::detail::copy(outBuffer, subString, pos);
 
 			subString.setStart(subString.getStart() + pos + sizeof("@piece"));
-			detail::evaluateParamArgs(subString, argValues, syntaxError);
+			::detail::evaluateParamArgs(subString, argValues, syntaxError);
 
 			syntaxError |= (argValues.size() != 1);
 
@@ -1074,11 +1087,11 @@ namespace RendererRuntime
 				}
 				else
 				{
-					detail::SubStringRef blockSubString = subString;
-					detail::findBlockEnd(blockSubString, syntaxError);
+					::detail::SubStringRef blockSubString = subString;
+					::detail::findBlockEnd(blockSubString, syntaxError);
 
 					std::string tempBuffer;
-					detail::copy(tempBuffer, blockSubString, blockSubString.getSize());
+					::detail::copy(tempBuffer, blockSubString, blockSubString.getSize());
 					mPieces[pieceName] = tempBuffer;
 
 					subString.setStart(blockSubString.getEnd() + sizeof("@end"));
@@ -1088,7 +1101,7 @@ namespace RendererRuntime
 			pos = subString.find("@piece");
 		}
 
-		detail::copy(outBuffer, subString, subString.getSize());
+		::detail::copy(outBuffer, subString, subString.getSize());
 
 		return syntaxError;
 	}
@@ -1098,8 +1111,8 @@ namespace RendererRuntime
 		outBuffer.clear();
 		outBuffer.reserve(inBuffer.size());
 
-		detail::StringVector argValues;
-		detail::SubStringRef subString(&inBuffer, 0);
+		::detail::StringVector argValues;
+		::detail::SubStringRef subString(&inBuffer, 0);
 		size_t pos = subString.find("@insertpiece");
 
 		bool syntaxError = false;
@@ -1107,10 +1120,10 @@ namespace RendererRuntime
 		while (std::string::npos != pos && !syntaxError)
 		{
 			// Copy what comes before the block
-			detail::copy(outBuffer, subString, pos);
+			::detail::copy(outBuffer, subString, pos);
 
 			subString.setStart(subString.getStart() + pos + sizeof("@insertpiece"));
-			detail::evaluateParamArgs(subString, argValues, syntaxError);
+			::detail::evaluateParamArgs(subString, argValues, syntaxError);
 
 			syntaxError |= (argValues.size() != 1);
 
@@ -1131,7 +1144,7 @@ namespace RendererRuntime
 			pos = subString.find("@insertpiece");
 		}
 
-		detail::copy(outBuffer, subString, subString.getSize());
+		::detail::copy(outBuffer, subString, subString.getSize());
 
 		return syntaxError;
 	}
@@ -1141,8 +1154,8 @@ namespace RendererRuntime
 		outBuffer.clear();
 		outBuffer.reserve(inBuffer.size());
 
-		detail::StringVector argValues;
-		detail::SubStringRef subString(&inBuffer, 0);
+		::detail::StringVector argValues;
+		::detail::SubStringRef subString(&inBuffer, 0);
 
 		size_t pos = subString.find("@");
 		size_t keyword = static_cast<size_t>(~0);
@@ -1151,11 +1164,11 @@ namespace RendererRuntime
 		{
 			size_t maxSize = subString.findFirstOf(" \t(", pos + 1);
 			maxSize = (maxSize == std::string::npos) ? subString.getSize() : maxSize;
-			detail::SubStringRef keywordStr(&inBuffer, subString.getStart() + pos + 1, subString.getStart() + maxSize);
+			::detail::SubStringRef keywordStr(&inBuffer, subString.getStart() + pos + 1, subString.getStart() + maxSize);
 
 			for (size_t i = 0; i < 10 && static_cast<size_t>(~0) == keyword; ++i)
 			{
-				if (keywordStr.matchEqual(detail::c_counterOperations[i].opName))
+				if (keywordStr.matchEqual(::detail::c_counterOperations[i].opName))
 				{
 					keyword = i;
 				}
@@ -1172,9 +1185,9 @@ namespace RendererRuntime
 		while (std::string::npos != pos && !syntaxError)
 		{
 			// Copy what comes before the block
-			detail::copy(outBuffer, subString, pos);
+			::detail::copy(outBuffer, subString, pos);
 
-			subString.setStart(subString.getStart() + pos + detail::c_counterOperations[keyword].length);
+			subString.setStart(subString.getStart() + pos + ::detail::c_counterOperations[keyword].length);
 			evaluateParamArgs(subString, argValues, syntaxError);
 
 			if (keyword <= 1)
@@ -1191,11 +1204,11 @@ namespace RendererRuntime
 				const unsigned long lineCount = static_cast<unsigned long>(calculateLineCount(subString));
 				if (keyword <= 1)
 				{
-					printf("Syntax error at line %lu: @%s expects one parameter", lineCount, detail::c_counterOperations[keyword].opName);
+					printf("Syntax error at line %lu: @%s expects one parameter", lineCount, ::detail::c_counterOperations[keyword].opName);
 				}
 				else
 				{
-					printf("Syntax error at line %lu: @%s expects two or three parameters", lineCount, detail::c_counterOperations[keyword].opName);
+					printf("Syntax error at line %lu: @%s expects two or three parameters", lineCount, ::detail::c_counterOperations[keyword].opName);
 				}
 			}
 			else
@@ -1241,7 +1254,7 @@ namespace RendererRuntime
 						mShaderProperties.getPropertyValue(StringId(argValues[idx].c_str()), op2Value);
 					}
 
-					const int result = detail::c_counterOperations[keyword].opFunc(op1Value, op2Value);
+					const int result = ::detail::c_counterOperations[keyword].opFunc(op1Value, op2Value);
 					mShaderProperties.setPropertyValue(dstProperty, result);
 				}
 			}
@@ -1253,11 +1266,11 @@ namespace RendererRuntime
 			{
 				size_t maxSize = subString.findFirstOf(" \t(", pos + 1);
 				maxSize = (maxSize == std::string::npos) ? subString.getSize() : maxSize;
-				detail::SubStringRef keywordStr(&inBuffer, subString.getStart() + pos + 1, subString.getStart() + maxSize);
+				::detail::SubStringRef keywordStr(&inBuffer, subString.getStart() + pos + 1, subString.getStart() + maxSize);
 
 				for (size_t i = 0; i < 10 && static_cast<size_t>(~0) == keyword; ++i)
 				{
-					if (keywordStr.matchEqual(detail::c_counterOperations[i].opName))
+					if (keywordStr.matchEqual(::detail::c_counterOperations[i].opName))
 					{
 						keyword = i;
 					}
@@ -1270,7 +1283,7 @@ namespace RendererRuntime
 			}
 		}
 
-		detail::copy(outBuffer, subString, subString.getSize());
+		::detail::copy(outBuffer, subString, subString.getSize());
 
 		return syntaxError;
 	}

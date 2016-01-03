@@ -49,21 +49,35 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace
 {
-
-
 	namespace detail
 	{
 
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
 		bool orderByMaterialTechniqueId(const RendererRuntime::v1Material::Technique& left, const RendererRuntime::v1Material::Technique& right)
 		{
 			return (left.materialTechniqueId < right.materialTechniqueId);
 		}
 
-	}
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererToolkit
+{
 
 
 	//[-------------------------------------------------------]

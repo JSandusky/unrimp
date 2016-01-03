@@ -67,154 +67,18 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+namespace
 {
-
-
-	/*
-      //                -------------------------------------------------------------------------------
-      console::message("\nCommand line usage:");
-      console::printf("crunch [options] -file filename");
-      console::printf("-file filename - Required input filename, wildcards, multiple -file params OK.");
-      console::printf("-file @list.txt - List of files to convert.");
-      console::printf("Supported source file formats: dds,ktx,crn,tga,bmp,png,jpg/jpeg,psd");
-      console::printf("Note: Some file format variants are unsupported.");
-      console::printf("See the docs for stb_image.c: http://www.nothings.org/stb_image.c");
-      console::printf("Progressive JPEG files are supported, see: http://code.google.com/p/jpeg-compressor/");
-
-      console::message("\nPath/file related parameters:");
-      console::printf("-out filename - Output filename");
-      console::printf("-outdir dir - Output directory");
-      console::printf("-outsamedir - Write output file to input directory");
-      console::printf("-deep - Recurse subdirectories, default=false");
-      console::printf("-nooverwrite - Don't overwrite existing files");
-      console::printf("-timestamp - Update only changed files");
-      console::printf("-forcewrite - Overwrite read-only files");
-      console::printf("-recreate - Recreate directory structure");
-      console::printf("-fileformat [dds,ktx,crn,tga,bmp,png] - Output file format, default=crn or dds");
-
-      console::message("\nModes:");
-      console::printf("-compare - Compare input and output files (no output files are written).");
-      console::printf("-info - Only display input file statistics (no output files are written).");
-
-      console::message("\nMisc. options:");
-      console::printf("-helperThreads # - Set number of helper threads, 0-16, default=(# of CPU's)-1");
-      console::printf("-noprogress - Disable progress output");
-      console::printf("-quiet - Disable all console output");
-      console::printf("-ignoreerrors - Continue processing files after errors. Note: The default");
-      console::printf("                behavior is to immediately exit whenever an error occurs.");
-      console::printf("-logfile filename - Append output to log file");
-      console::printf("-pause - Wait for keypress on error");
-      console::printf("-window <left> <top> <right> <bottom> - Crop window before processing");
-      console::printf("-clamp <width> <height> - Crop image if larger than width/height");
-      console::printf("-clampscale <width> <height> - Scale image if larger than width/height");
-      console::printf("-nostats - Disable all output file statistics (faster)");
-      console::printf("-imagestats - Print various image qualilty statistics");
-      console::printf("-mipstats - Print statistics for each mipmap, not just the top mip");
-      console::printf("-lzmastats - Print size of output file compressed with LZMA codec");
-      console::printf("-split - Write faces/mip levels to multiple separate output PNG files");
-      console::printf("-yflip - Always flip texture on Y axis before processing");
-      console::printf("-unflip - Unflip texture if read from source file as flipped");
-
-      console::message("\nImage rescaling (mutually exclusive options)");
-      console::printf("-rescale <int> <int> - Rescale image to specified resolution");
-      console::printf("-relscale <float> <float> - Rescale image to specified relative resolution");
-      console::printf("-rescalemode <nearest | hi | lo> - Auto-rescale non-power of two images");
-      console::printf(" nearest - Use nearest power of 2, hi - Use next, lo - Use previous");
-
-      console::message("\nDDS/CRN compression quality control:");
-      console::printf("-quality # (or /q #) - Set Clustered DDS/CRN quality factor [0-255] 255=best");
-      console::printf("       DDS default quality is best possible.");
-      console::printf("       CRN default quality is %u.", cDefaultCRNQualityLevel);
-      console::printf("-bitrate # - Set the desired output bitrate of DDS or CRN output files.");
-      console::printf("             This option causes crunch to find the quality factor");
-      console::printf("             closest to the desired bitrate using a binary search.");
-
-      console::message("\nLow-level CRN specific options:");
-      console::printf("-c # - Color endpoint palette size, 32-8192, default=3072");
-      console::printf("-s # - Color selector palette size, 32-8192, default=3072");
-      console::printf("-ca # - Alpha endpoint palette size, 32-8192, default=3072");
-      console::printf("-sa # - Alpha selector palette size, 32-8192, default=3072");
-
-      //                -------------------------------------------------------------------------------
-      console::message("\nMipmap filtering options:");
-      console::printf("-mipMode [UseSourceOrGenerate,UseSource,Generate,None]");
-      console::printf("         Default mipMode is UseSourceOrGenerate");
-      console::printf(" UseSourceOrGenerate: Use source mipmaps if possible, or create new mipmaps.");
-      console::printf(" UseSource: Always use source mipmaps, if any (never generate new mipmaps)");
-      console::printf(" Generate: Always generate a new mipmap chain (ignore source mipmaps)");
-      console::printf(" None: Do not output any mipmaps");
-      console::printf("-mipFilter [box,tent,lanczos4,mitchell,kaiser], default=kaiser");
-      console::printf("-gamma # - Mipmap gamma correction value, default=2.2, use 1.0 for linear");
-      console::printf("-blurriness # - Scale filter kernel, >1=blur, <1=sharpen, .01-8, default=.9");
-      console::printf("-wrap - Assume texture is tiled when filtering, default=clamping");
-      console::printf("-renormalize - Renormalize filtered normal map texels, default=disabled");
-      console::printf("-maxmips # - Limit number of generated texture mipmap levels, 1-16, default=16");
-      console::printf("-minmipsize # - Smallest allowable mipmap resolution, default=1");
-
-      console::message("\nCompression options:");
-      console::printf("-alphaThreshold # - Set DXT1A alpha threshold, 0-255, default=128");
-      console::printf(" Note: -alphaThreshold also changes the compressor's behavior to");
-      console::printf(" prefer DXT1A over DXT5 for images with alpha channels (.DDS only).");
-      console::printf("-uniformMetrics - Use uniform color metrics, default=use perceptual metrics");
-      console::printf("-noAdaptiveBlocks - Disable adaptive block sizes (i.e. disable macroblocks).");
-      console::printf("-compressor [CRN,CRNF,RYG,ATI] - Set DXTn compressor, default=CRN");
-      console::printf("-dxtQuality [superfast,fast,normal,better,uber] - Endpoint optimizer speed.");
-      console::printf("            Sets endpoint optimizer's max iteration depth. Default=uber.");
-      console::printf("-noendpointcaching - Don't try reusing previous DXT endpoint solutions.");
-      console::printf("-grayscalsampling - Assume shader will convert fetched results to luma (Y).");
-      console::printf("-forceprimaryencoding - Only use DXT1 color4 and DXT5 alpha8 block encodings.");
-      console::printf("-usetransparentindicesforblack - Try DXT1 transparent indices for dark pixels.");
-
-      console::message("\nOuptut pixel format options:");
-      console::printf("-usesourceformat - Use input file's format for output format (when possible).");
-      console::message("\nAll supported texture formats (Note: .CRN only supports DXTn pixel formats):");
-      for (uint32 i = 0; i < pixel_format_helpers::get_num_formats(); i++)
-      {
-         pixel_format fmt = pixel_format_helpers::get_pixel_format_by_index(i);
-         console::printf("-%s", pixel_format_helpers::get_pixel_format_string(fmt));
-      }
-		All support
-		-DXT1
-		-DXT2
-		-DXT3
-		-DXT4
-		-DXT5
-		-3DC
-		-DXN
-		-DXT5A
-		-DXT5_CCxY
-		-DXT5_xGxR
-		-DXT5_xGBR
-		-DXT5_AGBR
-		-DXT1A
-		-ETC1
-		-R8G8B8
-		-L8
-		-A8
-		-A8L8
-		-A8R8G8B8
-
-
-      console::printf("\nFor bugs, support, or feedback: richgel99@gmail.com");
-   }
-	*/
-
-
-	// CRN/DDS compression callback function.
 	namespace detail
 	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
 		const int cDefaultCRNQualityLevel = 128;
-
-		static crn_bool progress_callback_func(crn_uint32 phase_index, crn_uint32 total_phases, crn_uint32 subphase_index, crn_uint32 total_subphases, void* pUser_data_ptr)
-		{
-			int percentage_complete = (int)(.5f + (phase_index + float(subphase_index) / total_subphases) * 100.0f) / total_phases;
-			//printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\bProcessing: %u%%", std::min(100, std::max(0, percentage_complete)));
-			return true;
-		}
-
 		crnlib::command_line_params m_params;
 		enum convert_status
 		{
@@ -224,8 +88,19 @@ namespace RendererToolkit
 			cCSBadParam,
 		};
 
-	   bool parse_mipmap_params(crn_mipmap_params& mip_params)
-	   {
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		static crn_bool progress_callback_func(crn_uint32 phase_index, crn_uint32 total_phases, crn_uint32 subphase_index, crn_uint32 total_subphases, void* pUser_data_ptr)
+		{
+			int percentage_complete = (int)(.5f + (phase_index + float(subphase_index) / total_subphases) * 100.0f) / total_phases;
+			//printf("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\bProcessing: %u%%", std::min(100, std::max(0, percentage_complete)));
+			return true;
+		}
+
+		bool parse_mipmap_params(crn_mipmap_params& mip_params)
+		{
 		  crnlib::dynamic_string val;
 
 		  if (m_params.get_value_as_string("mipMode", 0, val))
@@ -576,7 +451,150 @@ namespace RendererToolkit
 			return cCSSucceeded;
 		}
 
-	}
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererToolkit
+{
+
+
+	/*
+      //                -------------------------------------------------------------------------------
+      console::message("\nCommand line usage:");
+      console::printf("crunch [options] -file filename");
+      console::printf("-file filename - Required input filename, wildcards, multiple -file params OK.");
+      console::printf("-file @list.txt - List of files to convert.");
+      console::printf("Supported source file formats: dds,ktx,crn,tga,bmp,png,jpg/jpeg,psd");
+      console::printf("Note: Some file format variants are unsupported.");
+      console::printf("See the docs for stb_image.c: http://www.nothings.org/stb_image.c");
+      console::printf("Progressive JPEG files are supported, see: http://code.google.com/p/jpeg-compressor/");
+
+      console::message("\nPath/file related parameters:");
+      console::printf("-out filename - Output filename");
+      console::printf("-outdir dir - Output directory");
+      console::printf("-outsamedir - Write output file to input directory");
+      console::printf("-deep - Recurse subdirectories, default=false");
+      console::printf("-nooverwrite - Don't overwrite existing files");
+      console::printf("-timestamp - Update only changed files");
+      console::printf("-forcewrite - Overwrite read-only files");
+      console::printf("-recreate - Recreate directory structure");
+      console::printf("-fileformat [dds,ktx,crn,tga,bmp,png] - Output file format, default=crn or dds");
+
+      console::message("\nModes:");
+      console::printf("-compare - Compare input and output files (no output files are written).");
+      console::printf("-info - Only display input file statistics (no output files are written).");
+
+      console::message("\nMisc. options:");
+      console::printf("-helperThreads # - Set number of helper threads, 0-16, default=(# of CPU's)-1");
+      console::printf("-noprogress - Disable progress output");
+      console::printf("-quiet - Disable all console output");
+      console::printf("-ignoreerrors - Continue processing files after errors. Note: The default");
+      console::printf("                behavior is to immediately exit whenever an error occurs.");
+      console::printf("-logfile filename - Append output to log file");
+      console::printf("-pause - Wait for keypress on error");
+      console::printf("-window <left> <top> <right> <bottom> - Crop window before processing");
+      console::printf("-clamp <width> <height> - Crop image if larger than width/height");
+      console::printf("-clampscale <width> <height> - Scale image if larger than width/height");
+      console::printf("-nostats - Disable all output file statistics (faster)");
+      console::printf("-imagestats - Print various image qualilty statistics");
+      console::printf("-mipstats - Print statistics for each mipmap, not just the top mip");
+      console::printf("-lzmastats - Print size of output file compressed with LZMA codec");
+      console::printf("-split - Write faces/mip levels to multiple separate output PNG files");
+      console::printf("-yflip - Always flip texture on Y axis before processing");
+      console::printf("-unflip - Unflip texture if read from source file as flipped");
+
+      console::message("\nImage rescaling (mutually exclusive options)");
+      console::printf("-rescale <int> <int> - Rescale image to specified resolution");
+      console::printf("-relscale <float> <float> - Rescale image to specified relative resolution");
+      console::printf("-rescalemode <nearest | hi | lo> - Auto-rescale non-power of two images");
+      console::printf(" nearest - Use nearest power of 2, hi - Use next, lo - Use previous");
+
+      console::message("\nDDS/CRN compression quality control:");
+      console::printf("-quality # (or /q #) - Set Clustered DDS/CRN quality factor [0-255] 255=best");
+      console::printf("       DDS default quality is best possible.");
+      console::printf("       CRN default quality is %u.", cDefaultCRNQualityLevel);
+      console::printf("-bitrate # - Set the desired output bitrate of DDS or CRN output files.");
+      console::printf("             This option causes crunch to find the quality factor");
+      console::printf("             closest to the desired bitrate using a binary search.");
+
+      console::message("\nLow-level CRN specific options:");
+      console::printf("-c # - Color endpoint palette size, 32-8192, default=3072");
+      console::printf("-s # - Color selector palette size, 32-8192, default=3072");
+      console::printf("-ca # - Alpha endpoint palette size, 32-8192, default=3072");
+      console::printf("-sa # - Alpha selector palette size, 32-8192, default=3072");
+
+      //                -------------------------------------------------------------------------------
+      console::message("\nMipmap filtering options:");
+      console::printf("-mipMode [UseSourceOrGenerate,UseSource,Generate,None]");
+      console::printf("         Default mipMode is UseSourceOrGenerate");
+      console::printf(" UseSourceOrGenerate: Use source mipmaps if possible, or create new mipmaps.");
+      console::printf(" UseSource: Always use source mipmaps, if any (never generate new mipmaps)");
+      console::printf(" Generate: Always generate a new mipmap chain (ignore source mipmaps)");
+      console::printf(" None: Do not output any mipmaps");
+      console::printf("-mipFilter [box,tent,lanczos4,mitchell,kaiser], default=kaiser");
+      console::printf("-gamma # - Mipmap gamma correction value, default=2.2, use 1.0 for linear");
+      console::printf("-blurriness # - Scale filter kernel, >1=blur, <1=sharpen, .01-8, default=.9");
+      console::printf("-wrap - Assume texture is tiled when filtering, default=clamping");
+      console::printf("-renormalize - Renormalize filtered normal map texels, default=disabled");
+      console::printf("-maxmips # - Limit number of generated texture mipmap levels, 1-16, default=16");
+      console::printf("-minmipsize # - Smallest allowable mipmap resolution, default=1");
+
+      console::message("\nCompression options:");
+      console::printf("-alphaThreshold # - Set DXT1A alpha threshold, 0-255, default=128");
+      console::printf(" Note: -alphaThreshold also changes the compressor's behavior to");
+      console::printf(" prefer DXT1A over DXT5 for images with alpha channels (.DDS only).");
+      console::printf("-uniformMetrics - Use uniform color metrics, default=use perceptual metrics");
+      console::printf("-noAdaptiveBlocks - Disable adaptive block sizes (i.e. disable macroblocks).");
+      console::printf("-compressor [CRN,CRNF,RYG,ATI] - Set DXTn compressor, default=CRN");
+      console::printf("-dxtQuality [superfast,fast,normal,better,uber] - Endpoint optimizer speed.");
+      console::printf("            Sets endpoint optimizer's max iteration depth. Default=uber.");
+      console::printf("-noendpointcaching - Don't try reusing previous DXT endpoint solutions.");
+      console::printf("-grayscalsampling - Assume shader will convert fetched results to luma (Y).");
+      console::printf("-forceprimaryencoding - Only use DXT1 color4 and DXT5 alpha8 block encodings.");
+      console::printf("-usetransparentindicesforblack - Try DXT1 transparent indices for dark pixels.");
+
+      console::message("\nOuptut pixel format options:");
+      console::printf("-usesourceformat - Use input file's format for output format (when possible).");
+      console::message("\nAll supported texture formats (Note: .CRN only supports DXTn pixel formats):");
+      for (uint32 i = 0; i < pixel_format_helpers::get_num_formats(); i++)
+      {
+         pixel_format fmt = pixel_format_helpers::get_pixel_format_by_index(i);
+         console::printf("-%s", pixel_format_helpers::get_pixel_format_string(fmt));
+      }
+		All support
+		-DXT1
+		-DXT2
+		-DXT3
+		-DXT4
+		-DXT5
+		-3DC
+		-DXN
+		-DXT5A
+		-DXT5_CCxY
+		-DXT5_xGxR
+		-DXT5_xGBR
+		-DXT5_AGBR
+		-DXT1A
+		-ETC1
+		-R8G8B8
+		-L8
+		-A8
+		-A8L8
+		-A8R8G8B8
+
+
+      console::printf("\nFor bugs, support, or feedback: richgel99@gmail.com");
+   }
+	*/
+
 
 
 	//[-------------------------------------------------------]

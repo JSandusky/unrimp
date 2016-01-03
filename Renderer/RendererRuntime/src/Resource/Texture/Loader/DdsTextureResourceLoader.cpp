@@ -29,18 +29,16 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace
 {
-
-
 	namespace detail
 	{
 
 
 		//[-------------------------------------------------------]
-		//[ Definitions                                           ]
+		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		static const uint32_t DDSCAPS2_CUBEMAP = 0x00000200;
 		static const uint32_t DDS_FOURCC = 0x00000004;
@@ -112,7 +110,18 @@ namespace RendererRuntime
 		};
 
 
-	}
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
 
 
 	//[-------------------------------------------------------]
@@ -140,8 +149,8 @@ namespace RendererRuntime
 			#define MCHAR4(a, b, c, d) (a | (b << 8) | (c << 16) | (d << 24))
 
 			// Read the header
-			detail::DdsHeader ddsHeader;
-			inputFileStream.read(reinterpret_cast<char*>(&ddsHeader), sizeof(detail::DdsHeader));
+			::detail::DdsHeader ddsHeader;
+			inputFileStream.read(reinterpret_cast<char*>(&ddsHeader), sizeof(::detail::DdsHeader));
 			if (ddsHeader.magic[0] == 'D' && ddsHeader.magic[1] == 'D' && ddsHeader.magic[2] == 'S' && ddsHeader.magic[3] == ' ' &&
 				// Note that if "size" is "DDS " this is not a valid dds file according
 				// to the file spec. Some broken tool out there seems to produce files
@@ -159,14 +168,14 @@ namespace RendererRuntime
 				const uint32_t depth = ddsHeader.depth ? ddsHeader.depth : 1;
 
 				// Is this image compressed?
-				if (ddsHeader.ddpfPixelFormat.flags & detail::DDS_FOURCC)
+				if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_FOURCC)
 				{
 					// The image is compressed
 					if (ddsHeader.ddpfPixelFormat.fourCC == MCHAR4('D', 'X', '1', '0'))
 					{
 						// Read the DX10 header
-						detail::DdsHeaderDX10 ddsHeaderDX10;
-						inputFileStream.read(reinterpret_cast<char*>(&ddsHeaderDX10), sizeof(detail::DdsHeaderDX10));
+						::detail::DdsHeaderDX10 ddsHeaderDX10;
+						inputFileStream.read(reinterpret_cast<char*>(&ddsHeaderDX10), sizeof(::detail::DdsHeaderDX10));
 
 						// Get the color format and compression
 						switch (ddsHeaderDX10.DXGIFormat)
@@ -424,9 +433,9 @@ namespace RendererRuntime
 				else
 				{
 					// The image is not compressed
-					if (ddsHeader.ddpfPixelFormat.flags & detail::DDS_LUMINANCE)
+					if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_LUMINANCE)
 					{
-						if (ddsHeader.ddpfPixelFormat.flags & detail::DDS_ALPHAPIXELS)
+						if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_ALPHAPIXELS)
 						{
 							// TODO(co)
 							// nInternalColorFormat = nColorFormat = ColorGrayscaleA;
@@ -439,7 +448,7 @@ namespace RendererRuntime
 					}
 					else
 					{
-						if (ddsHeader.ddpfPixelFormat.flags & detail::DDS_ALPHAPIXELS)
+						if (ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_ALPHAPIXELS)
 						{
 							// Set color format, please not that all bit mask relevant stuff is done inside "DecompressRGBA()"
 							// TODO(co)
@@ -454,9 +463,9 @@ namespace RendererRuntime
 					}
 
 					// Microsoft bug, they're not following their own documentation
-					if (!(ddsHeader.ddpfPixelFormat.flags & (detail::DDS_LINEARSIZE | detail::DDS_PITCH)) || !ddsHeader.pitchOrLinearSize)
+					if (!(ddsHeader.ddpfPixelFormat.flags & (::detail::DDS_LINEARSIZE | ::detail::DDS_PITCH)) || !ddsHeader.pitchOrLinearSize)
 					{
-						ddsHeader.ddpfPixelFormat.flags |= detail::DDS_LINEARSIZE;
+						ddsHeader.ddpfPixelFormat.flags |= ::detail::DDS_LINEARSIZE;
 					}
 				}
 
@@ -464,7 +473,7 @@ namespace RendererRuntime
 				const uint32_t numberOfMipmaps = (!ddsHeader.mipMapCount) ? 1 : ddsHeader.mipMapCount;
 
 				// Cube map?
-				const uint32_t numberOfFaces = (ddsHeader.ddsCaps.caps2 & detail::DDSCAPS2_CUBEMAP) ? 6u : 1u;
+				const uint32_t numberOfFaces = (ddsHeader.ddsCaps.caps2 & ::detail::DDSCAPS2_CUBEMAP) ? 6u : 1u;
 
 				mWidth = ddsHeader.width;
 				mHeight = ddsHeader.height;

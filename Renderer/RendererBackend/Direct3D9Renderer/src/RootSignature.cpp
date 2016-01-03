@@ -28,14 +28,19 @@
 #include <memory.h>
 
 
-//[-------------------------------------------------------]
-//[ Global functions in anonymous namespace               ]
-//[-------------------------------------------------------]
 #ifndef DIRECT3D9RENDERER_NO_DEBUG
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
 	namespace
 	{
 		namespace detail
 		{
+
+
+			//[-------------------------------------------------------]
+			//[ Global functions                                      ]
+			//[-------------------------------------------------------]
 			void checkSamplerState(const Renderer::RootSignature& rootSignature, uint32_t samplerRootParameterIndex)
 			{
 				if (samplerRootParameterIndex >= rootSignature.numberOfParameters)
@@ -62,7 +67,12 @@
 					return;
 				}
 			}
-		}
+
+
+	//[-------------------------------------------------------]
+	//[ Anonymous detail namespace                            ]
+	//[-------------------------------------------------------]
+		} // detail
 	}
 #endif
 
