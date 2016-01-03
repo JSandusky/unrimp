@@ -685,8 +685,9 @@ namespace RendererToolkit
 			readProperties(input, jsonElementPropertiesObject, elementProperties, false);
 
 			// Sum up the number of bytes required by all uniform buffer element properties
+			uint32_t numberOfPackageBytes = 0;
 			uint32_t numberOfBytesPerElement = 0;
-			for (size_t i = 0, numberOfPackageBytes = 0; i < elementProperties.size(); ++i)
+			for (size_t i = 0; i < elementProperties.size(); ++i)
 			{
 				// Get value type number of bytes
 				const uint32_t valueTypeNumberOfBytes = RendererRuntime::MaterialPropertyValue::getValueTypeNumberOfBytes(elementProperties[i].getValueType());
@@ -702,6 +703,14 @@ namespace RendererToolkit
 					// TODO(co) Profiling information: We could provide the material blueprint resource writer with information how many bytes get wasted with the defined layout
 				}
 				numberOfPackageBytes += valueTypeNumberOfBytes % 16;
+			}
+
+			// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+			// -> Make a "float 4"-full-house, if required
+			if (0 != numberOfPackageBytes)
+			{
+				// Take the wasted bytes due to aligned packaging into account
+				numberOfBytesPerElement += 4 * 4 - numberOfPackageBytes;
 			}
 
 			{ // Write down the uniform buffer header
