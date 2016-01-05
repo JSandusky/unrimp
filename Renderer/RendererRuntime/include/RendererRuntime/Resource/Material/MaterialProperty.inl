@@ -28,7 +28,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	inline MaterialPropertyValue MaterialProperty::materialPropertyValueFromReference(MaterialPropertyValue::ValueType valueType, uint32_t reference)
+	inline MaterialPropertyValue MaterialProperty::materialPropertyValueFromReference(ValueType valueType, uint32_t reference)
 	{
 		MaterialPropertyValue materialPropertyValue;
 		materialPropertyValue.mValueType	 = valueType;

@@ -43,6 +43,11 @@ namespace RendererRuntime
 		return mSortedPropertyVector;
 	}
 
+	inline void MaterialProperties::clear()
+	{
+		mSortedPropertyVector.clear();
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

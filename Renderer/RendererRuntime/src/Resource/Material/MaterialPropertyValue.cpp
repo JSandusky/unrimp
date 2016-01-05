@@ -105,7 +105,7 @@ namespace RendererRuntime
 				return sizeof(Renderer::TextureAddressMode);
 
 			case ValueType::ASSET_ID:
-				return sizeof(uint32_t);
+				return sizeof(AssetId);
 		}
 
 		// Error, we should never ever end up in here

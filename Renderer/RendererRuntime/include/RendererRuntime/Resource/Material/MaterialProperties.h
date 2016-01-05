@@ -84,6 +84,12 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Remove all material properties
+		*/
+		inline void clear();
+
+		/**
+		*  @brief
 		*    Return a material property by its ID
 		*
 		*  @param[in] materialPropertyId
