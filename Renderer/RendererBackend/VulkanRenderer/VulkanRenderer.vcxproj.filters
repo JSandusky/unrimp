@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Windows">
+      <UniqueIdentifier>{21963b69-5a44-449d-b6dc-d9c36f42db44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Linux">
+      <UniqueIdentifier>{81395ef8-6832-484a-93e1-9d63d39f4e46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shader">
+      <UniqueIdentifier>{ff27bada-b551-4241-993e-5bd1a3d26246}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Detail">
+      <UniqueIdentifier>{6794a761-5f92-4fb7-87d1-21e6a12ba69b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\VulkanRenderer\Windows\ContextWindows.h">
+      <Filter>Source Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Linux\ContextLinux.h">
+      <Filter>Source Files\Linux</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Shader\GeometryShaderGlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Shader\ProgramGlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Shader\ShaderLanguageGlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Shader\TessellationControlShaderGlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Shader\TessellationEvaluationShaderGlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Shader\UniformBufferGlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Shader\VertexShaderGlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.h">
+      <Filter>Source Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Texture2DArray.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\TextureBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\VertexArray.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\VertexBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Extensions.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Framebuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\IContext.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\IndexBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Mapping.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\VulkanDebug.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\VulkanRenderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\VulkanRuntimeLinking.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\SamplerState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\SwapChain.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Texture2D.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\PipelineState.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\RootSignature.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Detail\RasterizerState.h">
+      <Filter>Source Files\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Detail\BlendState.h">
+      <Filter>Source Files\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Detail\DepthStencilState.h">
+      <Filter>Source Files\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Detail\IState.h">
+      <Filter>Source Files\Detail</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Windows\ContextWindows.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Windows\ExtensionsWindows.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Linux\ContextLinux.cpp">
+      <Filter>Source Files\Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
+      <Filter>Source Files\Linux</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\ProgramGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\ShaderLanguageGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\TessellationControlShaderGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\UniformBufferGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\VertexShaderGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\FragmentShaderGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\GeometryShaderGlsl.cpp">
+      <Filter>Source Files\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SamplerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SwapChain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture2DArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Extensions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IndexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mapping.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VulkanRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VulkanRuntimeLinking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PipelineState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RootSignature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Detail\DepthStencilState.cpp">
+      <Filter>Source Files\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Detail\RasterizerState.cpp">
+      <Filter>Source Files\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Detail\BlendState.cpp">
+      <Filter>Source Files\Detail</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Readme.txt" />
+    <None Include="CMakeLists.txt" />
+    <None Include="include\VulkanRenderer\Windows\ContextWindows.inl">
+      <Filter>Source Files\Windows</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Linux\ContextLinux.inl">
+      <Filter>Source Files\Linux</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Shader\GeometryShaderGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Shader\ProgramGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Shader\TessellationControlShaderGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Shader\TessellationEvaluationShaderGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Shader\UniformBufferGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Shader\VertexShaderGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.inl">
+      <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Texture2DArray.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\TextureBuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\VertexArray.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\VertexBuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Framebuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\IndexBuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\VulkanRenderer.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\SwapChain.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Texture2D.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\PipelineState.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\RootSignature.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Detail\RasterizerState.inl">
+      <Filter>Source Files\Detail</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Detail\IState.inl">
+      <Filter>Source Files\Detail</Filter>
+    </None>
+  </ItemGroup>
+</Project>

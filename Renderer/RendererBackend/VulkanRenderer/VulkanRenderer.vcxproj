@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_Dynamic|Win32">
+      <Configuration>Debug_Dynamic</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_Static|Win32">
+      <Configuration>Debug_Static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Dynamic|Win32">
+      <Configuration>Release_Dynamic</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Static|Win32">
+      <Configuration>Release_Static</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\VulkanRenderer\Detail\BlendState.h" />
+    <ClInclude Include="include\VulkanRenderer\Detail\DepthStencilState.h" />
+    <ClInclude Include="include\VulkanRenderer\Detail\IState.h" />
+    <ClInclude Include="include\VulkanRenderer\Detail\RasterizerState.h" />
+    <ClInclude Include="include\VulkanRenderer\Extensions.h" />
+    <ClInclude Include="include\VulkanRenderer\Framebuffer.h" />
+    <ClInclude Include="include\VulkanRenderer\IContext.h" />
+    <ClInclude Include="include\VulkanRenderer\IndexBuffer.h" />
+    <ClInclude Include="include\VulkanRenderer\Linux\ContextLinux.h" />
+    <ClInclude Include="include\VulkanRenderer\Mapping.h" />
+    <ClInclude Include="include\VulkanRenderer\VulkanDebug.h" />
+    <ClInclude Include="include\VulkanRenderer\VulkanRenderer.h" />
+    <ClInclude Include="include\VulkanRenderer\VulkanRuntimeLinking.h" />
+    <ClInclude Include="include\VulkanRenderer\PipelineState.h" />
+    <ClInclude Include="include\VulkanRenderer\RootSignature.h" />
+    <ClInclude Include="include\VulkanRenderer\SamplerState.h" />
+    <ClInclude Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.h" />
+    <ClInclude Include="include\VulkanRenderer\Shader\GeometryShaderGlsl.h" />
+    <ClInclude Include="include\VulkanRenderer\Shader\ProgramGlsl.h" />
+    <ClInclude Include="include\VulkanRenderer\Shader\ShaderLanguageGlsl.h" />
+    <ClInclude Include="include\VulkanRenderer\Shader\TessellationControlShaderGlsl.h" />
+    <ClInclude Include="include\VulkanRenderer\Shader\TessellationEvaluationShaderGlsl.h" />
+    <ClInclude Include="include\VulkanRenderer\Shader\UniformBufferGlsl.h" />
+    <ClInclude Include="include\VulkanRenderer\Shader\VertexShaderGlsl.h" />
+    <ClInclude Include="include\VulkanRenderer\SwapChain.h" />
+    <ClInclude Include="include\VulkanRenderer\Texture2D.h" />
+    <ClInclude Include="include\VulkanRenderer\Texture2DArray.h" />
+    <ClInclude Include="include\VulkanRenderer\TextureBuffer.h" />
+    <ClInclude Include="include\VulkanRenderer\VertexArray.h" />
+    <ClInclude Include="include\VulkanRenderer\VertexBuffer.h" />
+    <ClInclude Include="include\VulkanRenderer\Windows\ContextWindows.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Detail\BlendState.cpp" />
+    <ClCompile Include="src\Detail\DepthStencilState.cpp" />
+    <ClCompile Include="src\Detail\RasterizerState.cpp" />
+    <ClCompile Include="src\Extensions.cpp" />
+    <ClCompile Include="src\Framebuffer.cpp" />
+    <ClCompile Include="src\IContext.cpp" />
+    <ClCompile Include="src\IndexBuffer.cpp" />
+    <ClCompile Include="src\Linux\ContextLinux.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\Mapping.cpp" />
+    <ClCompile Include="src\VulkanRenderer.cpp" />
+    <ClCompile Include="src\VulkanRuntimeLinking.cpp" />
+    <ClCompile Include="src\PipelineState.cpp" />
+    <ClCompile Include="src\RootSignature.cpp" />
+    <ClCompile Include="src\SamplerState.cpp" />
+    <ClCompile Include="src\Shader\FragmentShaderGlsl.cpp" />
+    <ClCompile Include="src\Shader\GeometryShaderGlsl.cpp" />
+    <ClCompile Include="src\Shader\ProgramGlsl.cpp" />
+    <ClCompile Include="src\Shader\ShaderLanguageGlsl.cpp" />
+    <ClCompile Include="src\Shader\TessellationControlShaderGlsl.cpp" />
+    <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp" />
+    <ClCompile Include="src\Shader\UniformBufferGlsl.cpp" />
+    <ClCompile Include="src\Shader\VertexShaderGlsl.cpp" />
+    <ClCompile Include="src\SwapChain.cpp" />
+    <ClCompile Include="src\Texture2D.cpp" />
+    <ClCompile Include="src\Texture2DArray.cpp" />
+    <ClCompile Include="src\TextureBuffer.cpp" />
+    <ClCompile Include="src\VertexArray.cpp" />
+    <ClCompile Include="src\VertexBuffer.cpp" />
+    <ClCompile Include="src\Windows\ContextWindows.cpp" />
+    <ClCompile Include="src\Windows\ExtensionsWindows.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CMakeLists.txt" />
+    <None Include="include\VulkanRenderer\Detail\IState.inl" />
+    <None Include="include\VulkanRenderer\Detail\RasterizerState.inl" />
+    <None Include="include\VulkanRenderer\Framebuffer.inl" />
+    <None Include="include\VulkanRenderer\IndexBuffer.inl" />
+    <None Include="include\VulkanRenderer\Linux\ContextLinux.inl" />
+    <None Include="include\VulkanRenderer\VulkanRenderer.inl" />
+    <None Include="include\VulkanRenderer\PipelineState.inl" />
+    <None Include="include\VulkanRenderer\RootSignature.inl" />
+    <None Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.inl" />
+    <None Include="include\VulkanRenderer\Shader\GeometryShaderGlsl.inl" />
+    <None Include="include\VulkanRenderer\Shader\ProgramGlsl.inl" />
+    <None Include="include\VulkanRenderer\Shader\TessellationControlShaderGlsl.inl" />
+    <None Include="include\VulkanRenderer\Shader\TessellationEvaluationShaderGlsl.inl" />
+    <None Include="include\VulkanRenderer\Shader\UniformBufferGlsl.inl" />
+    <None Include="include\VulkanRenderer\Shader\VertexShaderGlsl.inl" />
+    <None Include="include\VulkanRenderer\SwapChain.inl" />
+    <None Include="include\VulkanRenderer\Texture2D.inl" />
+    <None Include="include\VulkanRenderer\Texture2DArray.inl" />
+    <None Include="include\VulkanRenderer\TextureBuffer.inl" />
+    <None Include="include\VulkanRenderer\VertexArray.inl" />
+    <None Include="include\VulkanRenderer\VertexBuffer.inl" />
+    <None Include="include\VulkanRenderer\Windows\ContextWindows.inl" />
+    <None Include="Readme.txt" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{71589F7C-4B9B-4C1A-A762-3B7A9F44A543}</ProjectGuid>
+    <RootNamespace>VulkanRenderer</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+    <TargetName>$(ProjectName)StaticD</TargetName>
+    <OutDir>..\..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+    <TargetName>$(ProjectName)D</TargetName>
+    <OutDir>..\..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>..\..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+    <OutDir>..\..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <TargetName>$(ProjectName)Static</TargetName>
+    <IntDir>..\..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+    <OutDir>..\..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</OutDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <IntDir>..\..\..\tmp\msvc14\$(PlatformName)_$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>md "..\..\..\lib\$(PlatformTarget)d_static\"
+copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_static\
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;VULKANRENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>md "..\..\..\lib\$(PlatformTarget)d_dynamic\"
+copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_dynamic\
+md "..\..\..\bin\$(PlatformTarget)d_dynamic\"
+copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)d_dynamic\
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;VULKANRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CompileAsManaged>false</CompileAsManaged>
+      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>md "..\..\..\lib\$(PlatformTarget)_static\"
+copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_static\
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;VULKANRENDERER_EXPORTS;VULKANRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <CompileAsManaged>false</CompileAsManaged>
+      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+    <PostBuildEvent>
+      <Command>md "..\..\..\lib\$(PlatformTarget)_dynamic\"
+copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_dynamic\
+md "..\..\..\bin\$(PlatformTarget)_dynamic\"
+copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)_dynamic\
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

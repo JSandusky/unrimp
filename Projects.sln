@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "Renderer\Renderer\Renderer.vcxproj", "{625483C5-43B6-47AB-BD4F-099A0B091768}"
 EndProject
@@ -52,6 +52,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{0C1E092E-E60F-4F34-B88D-3D0891AD4CA5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Direct3D12Renderer", "Renderer\RendererBackend\Direct3D12Renderer\Direct3D12Renderer.vcxproj", "{F5898A4D-8D1B-468E-8BD7-0C01516CE183}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VulkanRenderer", "Renderer\RendererBackend\VulkanRenderer\VulkanRenderer.vcxproj", "{71589F7C-4B9B-4C1A-A762-3B7A9F44A543}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -157,6 +159,14 @@ Global
 		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Release_Dynamic|Win32.Build.0 = Release_Dynamic|Win32
 		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Release_Static|Win32.ActiveCfg = Release_Static|Win32
 		{F5898A4D-8D1B-468E-8BD7-0C01516CE183}.Release_Static|Win32.Build.0 = Release_Static|Win32
+		{71589F7C-4B9B-4C1A-A762-3B7A9F44A543}.Debug_Dynamic|Win32.ActiveCfg = Debug_Dynamic|Win32
+		{71589F7C-4B9B-4C1A-A762-3B7A9F44A543}.Debug_Dynamic|Win32.Build.0 = Debug_Dynamic|Win32
+		{71589F7C-4B9B-4C1A-A762-3B7A9F44A543}.Debug_Static|Win32.ActiveCfg = Debug_Static|Win32
+		{71589F7C-4B9B-4C1A-A762-3B7A9F44A543}.Debug_Static|Win32.Build.0 = Debug_Static|Win32
+		{71589F7C-4B9B-4C1A-A762-3B7A9F44A543}.Release_Dynamic|Win32.ActiveCfg = Release_Dynamic|Win32
+		{71589F7C-4B9B-4C1A-A762-3B7A9F44A543}.Release_Dynamic|Win32.Build.0 = Release_Dynamic|Win32
+		{71589F7C-4B9B-4C1A-A762-3B7A9F44A543}.Release_Static|Win32.ActiveCfg = Release_Static|Win32
+		{71589F7C-4B9B-4C1A-A762-3B7A9F44A543}.Release_Static|Win32.Build.0 = Release_Static|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -171,5 +181,6 @@ Global
 		{8AC48118-9381-4BD5-A58A-717E7256FB05} = {0C1E092E-E60F-4F34-B88D-3D0891AD4CA5}
 		{A8D464E0-3B83-44B5-8F8F-80F251B57537} = {0C1E092E-E60F-4F34-B88D-3D0891AD4CA5}
 		{F5898A4D-8D1B-468E-8BD7-0C01516CE183} = {A7092446-3AC9-4A5E-AF7D-3BD29C30D2B2}
+		{71589F7C-4B9B-4C1A-A762-3B7A9F44A543} = {A7092446-3AC9-4A5E-AF7D-3BD29C30D2B2}
 	EndGlobalSection
 EndGlobal

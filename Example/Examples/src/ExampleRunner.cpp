@@ -66,7 +66,7 @@ ExampleRunner::~ExampleRunner() {}
 ExampleRunner::ExampleRunner()
 	:
 	// Case sensitive name of the renderer to instance, might be ignored in case e.g. "RENDERER_ONLY_DIRECT3D12" was set as preprocessor definition
-	// -> Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
+	// -> Example renderer names: "Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"
 	// -> In case the graphics driver supports it, the OpenGL ES 2 renderer can automatically also run on a desktop PC without an emulator (perfect for testing/debugging)
 	m_defaultRendererName(
 		#ifdef RENDERER_ONLY_NULL
@@ -82,16 +82,18 @@ ExampleRunner::ExampleRunner()
 				"Direct3D10"
 			#elif RENDERER_ONLY_DIRECT3D11
 				"Direct3D11"
-			#else 
+			#elif RENDERER_ONLY_DIRECT3D12
 				"Direct3D12"
+			#elif RENDERER_ONLY_VULKAN
+				"Vulkan"
 			#endif
 		#endif
 	)
 {
-	std::array<std::string, 7> supportsAllRenderer = {{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"}};
-	std::array<std::string, 6> doesNotSupportOpenGLES2 = {{"Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"}};
-	std::array<std::string, 5> onlyShaderModel4Plus = {{"Null", "OpenGL", "Direct3D10", "Direct3D11", "Direct3D12"}};
-	std::array<std::string, 4> onlyShaderModel5Plus = {{"Null", "OpenGL", "Direct3D11", "Direct3D12"}};
+	std::array<std::string, 8> supportsAllRenderer = {{"Null", "OpenGL", "OpenGLES2", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
+	std::array<std::string, 7> doesNotSupportOpenGLES2 = {{"Null", "OpenGL", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
+	std::array<std::string, 6> onlyShaderModel4Plus = {{"Null", "OpenGL", "Direct3D10", "Direct3D11", "Direct3D12", "Vulkan"}};
+	std::array<std::string, 5> onlyShaderModel5Plus = {{"Null", "OpenGL", "Direct3D11", "Direct3D12", "Vulkan"}};
 	// Basics
 	addExample("FirstTriangle",					&RunExample<FirstTriangle>,					supportsAllRenderer);
 	addExample("VertexBuffer",					&RunExample<VertexBuffer>,					supportsAllRenderer);

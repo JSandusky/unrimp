@@ -188,6 +188,7 @@ For only supporting a particular renderer:
 - "RENDERER_ONLY_DIRECT3D10":	 Do only support Direct3D 10
 - "RENDERER_ONLY_DIRECT3D11":	 Do only support Direct3D 11
 - "RENDERER_ONLY_DIRECT3D12":	 Do only support Direct3D 12
+- "RENDERER_ONLY_VULKAN":		 Do only support Vulkan
 
 For disabling supporting a particular renderer:
 - "RENDERER_NO_NULL":		Do not support Null
@@ -197,6 +198,7 @@ For disabling supporting a particular renderer:
 - "RENDERER_NO_DIRECT3D10":	Do not support Direct3D 10
 - "RENDERER_NO_DIRECT3D11":	Do not support Direct3D 11
 - "RENDERER_NO_DIRECT3D12":	Do not support Direct3D 12
+- "RENDERER_NO_VULKAN":		Do not support Vulkan
 
 Other
 - "WIN32":					Set as preprocessor definition when building for MS Windows
