@@ -14,7 +14,7 @@
 			"AssetName": "ImrodLowPoly",
 			"AssetDependencies": [ "1" ],
 			"FileDependencies": [ "ImrodLowPoly.obj" ],
-			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/personal_art/imrod.htm ) by Dmitry Parkin: http://www.parkparkin.com"
+			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/gallery/imrod_dw.html ) by Dmitry Parkin: http://www.parkparkin.com"
 		},
 		"MeshAssetCompiler":
 		{

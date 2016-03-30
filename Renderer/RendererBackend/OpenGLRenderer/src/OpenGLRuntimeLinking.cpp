@@ -198,13 +198,6 @@ namespace OpenGLRenderer
 		IMPORT_FUNC(glScissor);
 		IMPORT_FUNC(glFlush);
 		IMPORT_FUNC(glFinish);
-			// TODO(co) Remove those, they are currently only required for "OpenGLRenderer::PrintText()"
-			IMPORT_FUNC(glPopMatrix);
-			IMPORT_FUNC(glRasterPos2f);
-			IMPORT_FUNC(glOrtho);
-			IMPORT_FUNC(glLoadIdentity);
-			IMPORT_FUNC(glPushMatrix);
-			IMPORT_FUNC(glMatrixMode);
 		#ifdef WIN32
 			IMPORT_FUNC(wglGetCurrentDC);
 			IMPORT_FUNC(wglGetProcAddress);

@@ -156,13 +156,6 @@ namespace OpenGLRenderer
 	FNDEF_GL(void,		glScissor,			(GLint, GLint, GLsizei, GLsizei));
 	FNDEF_GL(void,		glFlush,			(void));
 	FNDEF_GL(void,		glFinish,			(void));
-	// TODO(co) Remove those, they are currently only required for "OpenGLRenderer::PrintText()"
-		FNDEF_GL(void,	glPopMatrix,	(void));
-		FNDEF_GL(void,	glRasterPos2f,	(GLfloat, GLfloat));
-		FNDEF_GL(void,	glOrtho,		(GLdouble, GLdouble, GLdouble, GLdouble, GLdouble, GLdouble));
-		FNDEF_GL(void,	glLoadIdentity,	(void));
-		FNDEF_GL(void,	glPushMatrix,	(void));
-		FNDEF_GL(void,	glMatrixMode,	(GLenum));
 	#ifdef WIN32
 		FNDEF_GL(HDC,	wglGetCurrentDC,	(VOID));
 		FNDEF_GL(PROC,	wglGetProcAddress,	(LPCSTR));
@@ -221,13 +214,6 @@ namespace OpenGLRenderer
 	#define glScissor			FNPTR(glScissor)
 	#define glFlush				FNPTR(glFlush)
 	#define glFinish			FNPTR(glFinish)
-	// TODO(co) Remove those, they are currently only required for "OpenGLRenderer::PrintText()"
-		#define glPopMatrix		FNPTR(glPopMatrix)
-		#define glRasterPos2f	FNPTR(glRasterPos2f)
-		#define glOrtho			FNPTR(glOrtho)
-		#define glLoadIdentity	FNPTR(glLoadIdentity)
-		#define glPushMatrix	FNPTR(glPushMatrix)
-		#define glMatrixMode	FNPTR(glMatrixMode)
 	#ifdef WIN32
 		#define wglGetCurrentDC		FNPTR(wglGetCurrentDC)
 		#define wglGetProcAddress	FNPTR(wglGetProcAddress)
