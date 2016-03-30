@@ -39,7 +39,7 @@ namespace Direct3D10Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ProgramHlsl::ProgramHlsl(Direct3D10Renderer &direct3D10Renderer, VertexShaderHlsl *vertexShaderHlsl, GeometryShaderHlsl *geometryShaderHlsl, FragmentShaderHlsl *fragmentShaderHlsl) :
-		Program(direct3D10Renderer, InternalResourceType::HLSL),
+		IProgram(direct3D10Renderer),
 		mDirect3D10Renderer(&direct3D10Renderer),
 		mVertexShaderHlsl(vertexShaderHlsl),
 		mGeometryShaderHlsl(geometryShaderHlsl),
@@ -75,6 +75,17 @@ namespace Direct3D10Renderer
 		{
 			mFragmentShaderHlsl->release();
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	void ProgramHlsl::setDebugName(const char *)
+	{
+		// In here we could assign the given debug name to all shaders assigned to the program,
+		// but this might end up within a naming chaos due to overwriting possible already set
+		// names... don't do this...
 	}
 
 

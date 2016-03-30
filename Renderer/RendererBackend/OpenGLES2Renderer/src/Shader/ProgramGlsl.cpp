@@ -24,6 +24,7 @@
 #include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
 #include "OpenGLES2Renderer/Shader/VertexShaderGlsl.h"
 #include "OpenGLES2Renderer/Shader/FragmentShaderGlsl.h"
+#include "OpenGLES2Renderer/OpenGLES2Renderer.h"
 #include "OpenGLES2Renderer/RootSignature.h"
 #include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
 
@@ -41,9 +42,10 @@ namespace OpenGLES2Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ProgramGlsl::ProgramGlsl(OpenGLES2Renderer &openGLES2Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
-		Program(openGLES2Renderer),
+		IProgram(openGLES2Renderer),
 		mNumberOfRootSignatureParameters(0),
-		mRootSignatureParameterIndexToUniformLocation(nullptr)
+		mRootSignatureParameterIndexToUniformLocation(nullptr),
+		mOpenGLES2Program(0)
 	{
 		// Create the OpenGL ES 2 program
 		mOpenGLES2Program = glCreateProgram();
@@ -173,11 +175,213 @@ namespace OpenGLES2Renderer
 
 	ProgramGlsl::~ProgramGlsl()
 	{
+		// Destroy the OpenGL ES 2 program
+		// -> A value of 0 for program will be silently ignored
+		glDeleteProgram(mOpenGLES2Program);
+
 		// Destroy root signature parameter index to OpenGL ES 2 uniform location mapping, if required
 		if (nullptr != mRootSignatureParameterIndexToUniformLocation)
 		{
 			delete [] mRootSignatureParameterIndexToUniformLocation;
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IProgram methods             ]
+	//[-------------------------------------------------------]
+	handle ProgramGlsl::getUniformHandle(const char *uniformName)
+	{
+		return static_cast<handle>(glGetUniformLocation(mOpenGLES2Program, uniformName));
+	}
+
+	void ProgramGlsl::setUniform1i(handle uniformHandle, int value)
+	{
+		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			// Backup the currently used OpenGL ES 2 program
+			GLint openGLES2ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
+			if (openGLES2ProgramBackup == mOpenGLES2Program)
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUniform1i(static_cast<GLint>(uniformHandle), value);
+			}
+			else
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUseProgram(mOpenGLES2Program);
+				glUniform1i(static_cast<GLint>(uniformHandle), value);
+
+				// Be polite and restore the previous used OpenGL ES 2 program
+				glUseProgram(openGLES2ProgramBackup);
+			}
+		#else
+			// Set uniform, please note that for this our program must be the currently used one
+			glUseProgram(mOpenGLES2Program);
+			glUniform1i(static_cast<GLint>(uniformHandle), value);
+		#endif
+	}
+
+	void ProgramGlsl::setUniform1f(handle uniformHandle, float value)
+	{
+		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			// Backup the currently used OpenGL ES 2 program
+			GLint openGLES2ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
+			if (openGLES2ProgramBackup == mOpenGLES2Program)
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUniform1f(static_cast<GLint>(uniformHandle), value);
+			}
+			else
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUseProgram(mOpenGLES2Program);
+				glUniform1f(static_cast<GLint>(uniformHandle), value);
+
+				// Be polite and restore the previous used OpenGL ES 2 program
+				glUseProgram(openGLES2ProgramBackup);
+			}
+		#else
+			// Set uniform, please note that for this our program must be the currently used one
+			glUseProgram(mOpenGLES2Program);
+			glUniform1f(static_cast<GLint>(uniformHandle), value);
+		#endif
+	}
+
+	void ProgramGlsl::setUniform2fv(handle uniformHandle, const float *value)
+	{
+		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			// Backup the currently used OpenGL ES 2 program
+			GLint openGLES2ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
+			if (openGLES2ProgramBackup == mOpenGLES2Program)
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUniform2fv(static_cast<GLint>(uniformHandle), 1, value);
+			}
+			else
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUseProgram(mOpenGLES2Program);
+				glUniform2fv(static_cast<GLint>(uniformHandle), 1, value);
+
+				// Be polite and restore the previous used OpenGL ES 2 program
+				glUseProgram(openGLES2ProgramBackup);
+			}
+		#else
+			// Set uniform, please note that for this our program must be the currently used one
+			glUseProgram(mOpenGLES2Program);
+			glUniform2fv(static_cast<GLint>(uniformHandle), 1, value);
+		#endif
+	}
+
+	void ProgramGlsl::setUniform3fv(handle uniformHandle, const float *value)
+	{
+		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			// Backup the currently used OpenGL ES 2 program
+			GLint openGLES2ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
+			if (openGLES2ProgramBackup == mOpenGLES2Program)
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUniform3fv(static_cast<GLint>(uniformHandle), 1, value);
+			}
+			else
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUseProgram(mOpenGLES2Program);
+				glUniform3fv(static_cast<GLint>(uniformHandle), 1, value);
+
+				// Be polite and restore the previous used OpenGL ES 2 program
+				glUseProgram(openGLES2ProgramBackup);
+			}
+		#else
+			// Set uniform, please note that for this our program must be the currently used one
+			glUseProgram(mOpenGLES2Program);
+			glUniform3fv(static_cast<GLint>(uniformHandle), 1, value);
+		#endif
+	}
+
+	void ProgramGlsl::setUniform4fv(handle uniformHandle, const float *value)
+	{
+		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			// Backup the currently used OpenGL ES 2 program
+			GLint openGLES2ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
+			if (openGLES2ProgramBackup == mOpenGLES2Program)
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUniform4fv(static_cast<GLint>(uniformHandle), 1, value);
+			}
+			else
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUseProgram(mOpenGLES2Program);
+				glUniform4fv(static_cast<GLint>(uniformHandle), 1, value);
+
+				// Be polite and restore the previous used OpenGL ES 2 program
+				glUseProgram(openGLES2ProgramBackup);
+			}
+		#else
+			// Set uniform, please note that for this our program must be the currently used one
+			glUseProgram(mOpenGLES2Program);
+			glUniform4fv(static_cast<GLint>(uniformHandle), 1, value);
+		#endif
+	}
+
+	void ProgramGlsl::setUniformMatrix3fv(handle uniformHandle, const float *value)
+	{
+		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			// Backup the currently used OpenGL ES 2 program
+			GLint openGLES2ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
+			if (openGLES2ProgramBackup == mOpenGLES2Program)
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUniformMatrix3fv(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+			}
+			else
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUseProgram(mOpenGLES2Program);
+				glUniformMatrix3fv(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+
+				// Be polite and restore the previous used OpenGL ES 2 program
+				glUseProgram(openGLES2ProgramBackup);
+			}
+		#else
+			// Set uniform, please note that for this our program must be the currently used one
+			glUseProgram(mOpenGLES2Program);
+			glUniformMatrix3fv(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+		#endif
+	}
+
+	void ProgramGlsl::setUniformMatrix4fv(handle uniformHandle, const float *value)
+	{
+		#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+			// Backup the currently used OpenGL ES 2 program
+			GLint openGLES2ProgramBackup = 0;
+			glGetIntegerv(GL_CURRENT_PROGRAM, &openGLES2ProgramBackup);
+			if (openGLES2ProgramBackup == mOpenGLES2Program)
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUniformMatrix4fv(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+			}
+			else
+			{
+				// Set uniform, please note that for this our program must be the currently used one
+				glUseProgram(mOpenGLES2Program);
+				glUniformMatrix4fv(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+
+				// Be polite and restore the previous used OpenGL ES 2 program
+				glUseProgram(openGLES2ProgramBackup);
+			}
+		#else
+			// Set uniform, please note that for this our program must be the currently used one
+			glUseProgram(mOpenGLES2Program);
+			glUniformMatrix4fv(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+		#endif
 	}
 
 

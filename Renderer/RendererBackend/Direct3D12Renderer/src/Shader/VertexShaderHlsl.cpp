@@ -37,7 +37,7 @@ namespace Direct3D12Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		VertexShader(direct3D12Renderer),
+		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
 		mD3DBlobVertexShader(nullptr)
 	{
 		// Backup the vertex shader bytecode
@@ -46,7 +46,7 @@ namespace Direct3D12Renderer
 	}
 
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		VertexShader(direct3D12Renderer),
+		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
 		mD3DBlobVertexShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the vertex shader

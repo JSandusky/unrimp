@@ -39,7 +39,7 @@ namespace Direct3D11Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		FragmentShader(direct3D11Renderer),
+		IFragmentShader(direct3D11Renderer),
 		mD3D11PixelShader(nullptr)
 	{
 		// Create the Direct3D 11 vertex shader
@@ -49,7 +49,7 @@ namespace Direct3D11Renderer
 	}
 
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
-		FragmentShader(direct3D11Renderer),
+		IFragmentShader(direct3D11Renderer),
 		mD3D11PixelShader(nullptr)
 	{
 		// Create the Direct3D 11 binary large object for the pixel shader

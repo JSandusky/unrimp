@@ -27,13 +27,17 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D11Renderer/Shader/TessellationControlShader.h"
+#include <Renderer/ITessellationControlShader.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct ID3D11HullShader;
+namespace Direct3D11Renderer
+{
+	class Direct3D11Renderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -50,7 +54,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    HLSL tessellation control shader ("hull shader" in Direct3D terminology) class
 	*/
-	class TessellationControlShaderHlsl : public TessellationControlShader
+	class TessellationControlShaderHlsl : public Renderer::ITessellationControlShader
 	{
 
 

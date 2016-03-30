@@ -27,9 +27,17 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include <Renderer/IGeometryShader.h>
 #include <Renderer/GeometryShaderTypes.h>
 
-#include "OpenGLRenderer/Shader/GeometryShader.h"
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace OpenGLRenderer
+{
+	class OpenGLRenderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -46,7 +54,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    GLSL geometry shader class
 	*/
-	class GeometryShaderGlsl : public GeometryShader
+	class GeometryShaderGlsl : public Renderer::IGeometryShader
 	{
 
 

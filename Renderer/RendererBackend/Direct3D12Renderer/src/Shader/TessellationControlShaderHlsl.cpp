@@ -37,7 +37,7 @@ namespace Direct3D12Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		TessellationControlShader(direct3D12Renderer),
+		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
 		mD3DBlobHullShader(nullptr)
 	{
 		// Backup the hull shader bytecode
@@ -46,7 +46,7 @@ namespace Direct3D12Renderer
 	}
 
 	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		TessellationControlShader(direct3D12Renderer),
+		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
 		mD3DBlobHullShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the hull shader

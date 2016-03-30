@@ -37,7 +37,7 @@
 #include "OpenGLES2Renderer/Framebuffer.h"
 #include "OpenGLES2Renderer/Texture2DArray.h"
 #include "OpenGLES2Renderer/ContextRuntimeLinking.h"
-#include "OpenGLES2Renderer/Shader/Program.h"
+#include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
 #include "OpenGLES2Renderer/Shader/ShaderLanguageGlsl.h"
 
 
@@ -1036,7 +1036,7 @@ namespace OpenGLES2Renderer
 			OPENGLES2RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
 			// Backup OpenGL ES 2 program identifier
-			mOpenGLES2Program = static_cast<Program*>(program)->getOpenGLES2Program();
+			mOpenGLES2Program = static_cast<ProgramGlsl*>(program)->getOpenGLES2Program();
 
 			// Bind the program
 			glUseProgram(mOpenGLES2Program);

@@ -27,9 +27,18 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/ShaderLanguage.h"
+#include <Renderer/IShaderLanguage.h>
 
 #include <Renderer/PlatformTypes.h>	// For "override"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace OpenGLRenderer
+{
+	class OpenGLRenderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -46,7 +55,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    GLSL shader language class
 	*/
-	class ShaderLanguageGlsl : public ShaderLanguage
+	class ShaderLanguageGlsl : public Renderer::IShaderLanguage
 	{
 
 

@@ -21,20 +21,20 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace OpenGLES2Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline UniformBuffer::InternalResourceType::Enum UniformBuffer::getInternalResourceType() const
+	inline uint32_t ProgramGlsl::getOpenGLES2Program() const
 	{
-		return mInternalResourceType;
+		return mOpenGLES2Program;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // OpenGLES2Renderer

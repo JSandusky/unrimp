@@ -37,7 +37,7 @@ namespace Direct3D12Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		FragmentShader(direct3D12Renderer),
+		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
 		mD3DBlobFragmentShader(nullptr)
 	{
 		// Backup the fragment shader bytecode
@@ -46,7 +46,7 @@ namespace Direct3D12Renderer
 	}
 
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		FragmentShader(direct3D12Renderer),
+		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
 		mD3DBlobFragmentShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the fragment shader

@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D11Renderer/Shader/ShaderLanguage.h"
+#include <Renderer/IShaderLanguage.h>
 
 
 //[-------------------------------------------------------]
@@ -35,6 +35,10 @@
 //[-------------------------------------------------------]
 typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
 typedef ID3D10Blob ID3DBlob;
+namespace Direct3D11Renderer
+{
+	class Direct3D11Renderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -51,7 +55,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    HLSL shader language class
 	*/
-	class ShaderLanguageHlsl : public ShaderLanguage
+	class ShaderLanguageHlsl : public Renderer::IShaderLanguage
 	{
 
 

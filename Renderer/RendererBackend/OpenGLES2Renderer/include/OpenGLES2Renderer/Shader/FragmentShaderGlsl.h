@@ -27,7 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Shader/FragmentShader.h"
+#include <Renderer/IFragmentShader.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace OpenGLES2Renderer
+{
+	class OpenGLES2Renderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -44,7 +53,7 @@ namespace OpenGLES2Renderer
 	*  @brief
 	*    GLSL fragment shader ("pixel shader" in Direct3D terminology) class
 	*/
-	class FragmentShaderGlsl : public FragmentShader
+	class FragmentShaderGlsl : public Renderer::IFragmentShader
 	{
 
 

@@ -37,7 +37,7 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
-		FragmentShader(openGLRenderer),
+		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(0)
 	{
 		// TODO(co) Implement me
@@ -45,7 +45,7 @@ namespace OpenGLRenderer
 	}
 
 	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
-		FragmentShader(openGLRenderer),
+		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_FRAGMENT_SHADER_ARB, sourceCode))
 	{
 		// Nothing to do in here

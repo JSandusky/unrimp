@@ -18,9 +18,6 @@
     <None Include="include\Direct3D10Renderer\Shader\GeometryShaderHlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D10Renderer\Shader\Program.inl">
-      <Filter>Source Files\Shader</Filter>
-    </None>
     <None Include="include\Direct3D10Renderer\Shader\ProgramHlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
@@ -80,19 +77,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Direct3D10Renderer\Shader\GeometryShader.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D10Renderer\Shader\GeometryShaderHlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D10Renderer\Shader\Program.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D10Renderer\Shader\ProgramHlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D10Renderer\Shader\ShaderLanguage.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D10Renderer\Shader\ShaderLanguageHlsl.h">
@@ -101,13 +89,7 @@
     <ClInclude Include="include\Direct3D10Renderer\Shader\UniformBuffer.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D10Renderer\Shader\VertexShader.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D10Renderer\Shader\VertexShaderHlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D10Renderer\Shader\FragmentShader.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D10Renderer\Shader\FragmentShaderHlsl.h">
@@ -187,13 +169,7 @@
     <ClCompile Include="src\Shader\GeometryShaderHlsl.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader\Program.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Shader\ProgramHlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\ShaderLanguage.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\ShaderLanguageHlsl.cpp">
@@ -202,19 +178,10 @@
     <ClCompile Include="src\Shader\UniformBuffer.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader\VertexShader.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Shader\VertexShaderHlsl.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader\FragmentShader.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\GeometryShader.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Direct3D9RuntimeLinking.cpp">

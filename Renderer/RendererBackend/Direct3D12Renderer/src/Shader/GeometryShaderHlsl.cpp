@@ -37,7 +37,7 @@ namespace Direct3D12Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		GeometryShader(direct3D12Renderer),
+		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
 		mD3DBlobGeometryShader(nullptr)
 	{
 		// Backup the geometry shader bytecode
@@ -46,7 +46,7 @@ namespace Direct3D12Renderer
 	}
 
 	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		GeometryShader(direct3D12Renderer),
+		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
 		mD3DBlobGeometryShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the geometry shader

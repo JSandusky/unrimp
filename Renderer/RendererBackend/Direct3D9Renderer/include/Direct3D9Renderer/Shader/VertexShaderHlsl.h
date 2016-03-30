@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D9Renderer/Shader/VertexShader.h"
+#include <Renderer/IVertexShader.h>
 
 
 //[-------------------------------------------------------]
@@ -35,6 +35,10 @@
 //[-------------------------------------------------------]
 struct ID3DXConstantTable;
 struct IDirect3DVertexShader9;
+namespace Direct3D9Renderer
+{
+	class Direct3D9Renderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -51,7 +55,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    HLSL vertex shader class
 	*/
-	class VertexShaderHlsl : public VertexShader
+	class VertexShaderHlsl : public Renderer::IVertexShader
 	{
 
 

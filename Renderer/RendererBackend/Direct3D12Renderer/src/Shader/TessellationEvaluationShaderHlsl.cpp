@@ -37,7 +37,7 @@ namespace Direct3D12Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	TessellationEvaluationShaderHlsl::TessellationEvaluationShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		TessellationEvaluationShader(direct3D12Renderer),
+		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
 		mD3DBlobDomainShader(nullptr)
 	{
 		// Backup the domain shader bytecode
@@ -46,7 +46,7 @@ namespace Direct3D12Renderer
 	}
 
 	TessellationEvaluationShaderHlsl::TessellationEvaluationShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		TessellationEvaluationShader(direct3D12Renderer),
+		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
 		mD3DBlobDomainShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the domain shader

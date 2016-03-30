@@ -39,7 +39,7 @@ namespace Direct3D9Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const uint8_t *bytecode, uint32_t) :
-		FragmentShader(direct3D9Renderer),
+		IFragmentShader(direct3D9Renderer),
 		mDirect3DPixelShader9(nullptr),
 		mD3DXConstantTable(nullptr)
 	{
@@ -49,7 +49,7 @@ namespace Direct3D9Renderer
 	}
 
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode) :
-		FragmentShader(direct3D9Renderer),
+		IFragmentShader(direct3D9Renderer),
 		mDirect3DPixelShader9(nullptr),
 		mD3DXConstantTable(nullptr)
 	{

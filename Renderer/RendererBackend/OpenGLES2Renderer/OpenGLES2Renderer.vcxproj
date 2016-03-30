@@ -30,8 +30,7 @@
     <None Include="include\OpenGLES2Renderer\PipelineState.inl" />
     <None Include="include\OpenGLES2Renderer\RootSignature.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.inl" />
-    <None Include="include\OpenGLES2Renderer\Shader\Program.inl" />
-    <None Include="include\OpenGLES2Renderer\Shader\ShaderLanguage.inl" />
+    <None Include="include\OpenGLES2Renderer\Shader\ProgramGlsl.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\VertexShaderGlsl.inl" />
     <None Include="include\OpenGLES2Renderer\SwapChain.inl" />
     <None Include="include\OpenGLES2Renderer\Texture2D.inl" />
@@ -58,13 +57,9 @@
     <ClInclude Include="include\OpenGLES2Renderer\PipelineState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\RootSignature.h" />
     <ClInclude Include="include\OpenGLES2Renderer\SamplerState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Shader\FragmentShader.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Shader\Program.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Shader\ProgramGlsl.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Shader\ShaderLanguage.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Shader\ShaderLanguageGlsl.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Shader\VertexShader.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Shader\VertexShaderGlsl.h" />
     <ClInclude Include="include\OpenGLES2Renderer\SwapChain.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Texture2D.h" />
@@ -89,13 +84,9 @@
     <ClCompile Include="src\PipelineState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
-    <ClCompile Include="src\Shader\FragmentShader.cpp" />
     <ClCompile Include="src\Shader\FragmentShaderGlsl.cpp" />
-    <ClCompile Include="src\Shader\Program.cpp" />
     <ClCompile Include="src\Shader\ProgramGlsl.cpp" />
-    <ClCompile Include="src\Shader\ShaderLanguage.cpp" />
     <ClCompile Include="src\Shader\ShaderLanguageGlsl.cpp" />
-    <ClCompile Include="src\Shader\VertexShader.cpp" />
     <ClCompile Include="src\Shader\VertexShaderGlsl.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />

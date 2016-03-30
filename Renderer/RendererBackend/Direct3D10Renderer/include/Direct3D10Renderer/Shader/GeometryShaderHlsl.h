@@ -27,13 +27,17 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D10Renderer/Shader/GeometryShader.h"
+#include <Renderer/IGeometryShader.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct ID3D10GeometryShader;
+namespace Direct3D10Renderer
+{
+	class Direct3D10Renderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -50,7 +54,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    HLSL geometry shader class
 	*/
-	class GeometryShaderHlsl : public GeometryShader
+	class GeometryShaderHlsl : public Renderer::IGeometryShader
 	{
 
 

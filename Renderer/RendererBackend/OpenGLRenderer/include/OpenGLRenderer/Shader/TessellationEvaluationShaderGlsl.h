@@ -27,7 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/TessellationEvaluationShader.h"
+#include <Renderer/ITessellationEvaluationShader.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace OpenGLRenderer
+{
+	class OpenGLRenderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -44,7 +53,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    GLSL tessellation evaluation shader ("domain shader" in Direct3D terminology) class
 	*/
-	class TessellationEvaluationShaderGlsl : public TessellationEvaluationShader
+	class TessellationEvaluationShaderGlsl : public Renderer::ITessellationEvaluationShader
 	{
 
 

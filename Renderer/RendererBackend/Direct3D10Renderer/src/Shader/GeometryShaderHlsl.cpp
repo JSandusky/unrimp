@@ -39,7 +39,7 @@ namespace Direct3D10Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		GeometryShader(direct3D10Renderer),
+		IGeometryShader(direct3D10Renderer),
 		mD3D10GeometryShader(nullptr)
 	{
 		// Create the Direct3D 10 geometry shader
@@ -49,7 +49,7 @@ namespace Direct3D10Renderer
 	}
 
 	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode) :
-		GeometryShader(direct3D10Renderer),
+		IGeometryShader(direct3D10Renderer),
 		mD3D10GeometryShader(nullptr)
 	{
 		// Create the Direct3D 10 binary large object for the geometry shader

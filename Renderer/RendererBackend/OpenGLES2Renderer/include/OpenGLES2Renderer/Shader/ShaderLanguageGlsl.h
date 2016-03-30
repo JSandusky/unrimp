@@ -27,7 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Shader/ShaderLanguage.h"
+#include <Renderer/IShaderLanguage.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace OpenGLES2Renderer
+{
+	class OpenGLES2Renderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -44,7 +53,7 @@ namespace OpenGLES2Renderer
 	*  @brief
 	*    GLSL shader language class
 	*/
-	class ShaderLanguageGlsl : public ShaderLanguage
+	class ShaderLanguageGlsl : public Renderer::IShaderLanguage
 	{
 
 
@@ -53,6 +62,25 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	public:
 		static const char *NAME;	///< ASCII name of this shader language, always valid (do not free the memory the returned pointer is pointing to)
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Creates, loads and compiles a shader
+		*
+		*  @param[in] shaderType
+		*    Shader type (for example "GL_VERTEX_SHADER", type "GLenum" not used in here in order to keep the header slim)
+		*  @param[in] shaderSource
+		*    Shader ASCII source code, must be a valid pointer (type "GLchar" not used in here in order to keep the header slim)
+		*
+		*  @return
+		*    The OpenGL ES 2 shader, 0 on error, destroy the returned resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
+		*/
+		static uint32_t loadShader(uint32_t shaderType, const char *shaderSource);
 
 
 	//[-------------------------------------------------------]

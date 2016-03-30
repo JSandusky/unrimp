@@ -39,7 +39,7 @@ namespace Direct3D11Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	TessellationEvaluationShaderHlsl::TessellationEvaluationShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		TessellationEvaluationShader(direct3D11Renderer),
+		ITessellationEvaluationShader(direct3D11Renderer),
 		mD3D11DomainShader(nullptr)
 	{
 		// Create the Direct3D 11 domain shader
@@ -49,7 +49,7 @@ namespace Direct3D11Renderer
 	}
 
 	TessellationEvaluationShaderHlsl::TessellationEvaluationShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
-		TessellationEvaluationShader(direct3D11Renderer),
+		ITessellationEvaluationShader(direct3D11Renderer),
 		mD3D11DomainShader(nullptr)
 	{
 		// Create the Direct3D 11 binary large object for the domain shader

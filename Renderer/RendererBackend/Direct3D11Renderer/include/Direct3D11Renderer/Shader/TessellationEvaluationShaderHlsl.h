@@ -27,13 +27,17 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D11Renderer/Shader/TessellationEvaluationShader.h"
+#include <Renderer/ITessellationEvaluationShader.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct ID3D11DomainShader;
+namespace Direct3D11Renderer
+{
+	class Direct3D11Renderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -50,7 +54,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    HLSL tessellation evaluation shader ("domain shader" in Direct3D terminology) class
 	*/
-	class TessellationEvaluationShaderHlsl : public TessellationEvaluationShader
+	class TessellationEvaluationShaderHlsl : public Renderer::ITessellationEvaluationShader
 	{
 
 

@@ -24,9 +24,6 @@
     <None Include="include\Direct3D9Renderer\Shader\FragmentShaderHlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D9Renderer\Shader\Program.inl">
-      <Filter>Source Files\Shader</Filter>
-    </None>
     <None Include="include\Direct3D9Renderer\Direct3D9Renderer.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -59,25 +56,13 @@
     <ClInclude Include="include\Direct3D9Renderer\Shader\ProgramHlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\Shader\ShaderLanguage.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\Shader\ShaderLanguageHlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\Shader\VertexShader.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\Shader\VertexShaderHlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\Shader\FragmentShader.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\Shader\FragmentShaderHlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\Shader\Program.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\Direct3D9Renderer.h">
@@ -142,25 +127,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Shader\Program.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Shader\ProgramHlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\ShaderLanguage.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\ShaderLanguageHlsl.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader\VertexShader.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Shader\VertexShaderHlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\FragmentShader.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp">

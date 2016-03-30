@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D12Renderer/Shader/TessellationControlShader.h"
+#include <Renderer/ITessellationControlShader.h>
 
 
 //[-------------------------------------------------------]
@@ -35,6 +35,10 @@
 //[-------------------------------------------------------]
 typedef __interface ID3D10Blob *LPD3D10BLOB;
 typedef ID3D10Blob ID3DBlob;
+namespace Direct3D12Renderer
+{
+	class Direct3D12Renderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -51,7 +55,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    HLSL tessellation control shader ("hull shader" in Direct3D terminology) class
 	*/
-	class TessellationControlShaderHlsl : public TessellationControlShader
+	class TessellationControlShaderHlsl : public Renderer::ITessellationControlShader
 	{
 
 

@@ -27,7 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/UniformBuffer.h"
+#include <Renderer/IUniformBuffer.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace OpenGLRenderer
+{
+	class OpenGLRenderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -44,7 +53,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Abstract GLSL uniform buffer object (UBO, "constant buffer" in Direct3D terminology) interface
 	*/
-	class UniformBufferGlsl : public UniformBuffer
+	class UniformBufferGlsl : public Renderer::IUniformBuffer
 	{
 
 

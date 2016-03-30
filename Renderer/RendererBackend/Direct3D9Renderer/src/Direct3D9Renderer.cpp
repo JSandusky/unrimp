@@ -1425,22 +1425,14 @@ namespace Direct3D9Renderer
 
 			// TODO(co) HLSL buffer settings, unset previous program
 
-			// Evaluate the internal program type of the new program to set
-			switch (static_cast<Program*>(program)->getInternalResourceType())
-			{
-				case Program::InternalResourceType::HLSL:
-				{
-					// Get shaders
-					const ProgramHlsl		 *programHlsl		 = static_cast<ProgramHlsl*>(program);
-					const VertexShaderHlsl	 *vertexShaderHlsl	 = programHlsl->getVertexShaderHlsl();
-					const FragmentShaderHlsl *fragmentShaderHlsl = programHlsl->getFragmentShaderHlsl();
+			// Get shaders
+			const ProgramHlsl		 *programHlsl		 = static_cast<ProgramHlsl*>(program);
+			const VertexShaderHlsl	 *vertexShaderHlsl	 = programHlsl->getVertexShaderHlsl();
+			const FragmentShaderHlsl *fragmentShaderHlsl = programHlsl->getFragmentShaderHlsl();
 
-					// Set shaders
-					mDirect3DDevice9->SetVertexShader(vertexShaderHlsl  ? vertexShaderHlsl->getDirect3DVertexShader9()  : nullptr);
-					mDirect3DDevice9->SetPixelShader(fragmentShaderHlsl ? fragmentShaderHlsl->getDirect3DPixelShader9() : nullptr);
-					break;
-				}
-			}
+			// Set shaders
+			mDirect3DDevice9->SetVertexShader(vertexShaderHlsl  ? vertexShaderHlsl->getDirect3DVertexShader9()  : nullptr);
+			mDirect3DDevice9->SetPixelShader(fragmentShaderHlsl ? fragmentShaderHlsl->getDirect3DPixelShader9() : nullptr);
 		}
 		else
 		{

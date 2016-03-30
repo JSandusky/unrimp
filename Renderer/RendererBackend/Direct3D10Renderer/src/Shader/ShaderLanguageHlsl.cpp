@@ -84,7 +84,7 @@ namespace Direct3D10Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D10Renderer &direct3D10Renderer) :
-		ShaderLanguage(direct3D10Renderer)
+		IShaderLanguage(direct3D10Renderer)
 	{
 		// Nothing to do in here
 	}
@@ -106,13 +106,13 @@ namespace Direct3D10Renderer
 	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
-		return new VertexShaderHlsl(getDirect3D10Renderer(), bytecode, numberOfBytes);
+		return new VertexShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), bytecode, numberOfBytes);
 	}
 
 	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
-		return new VertexShaderHlsl(getDirect3D10Renderer(), sourceCode);
+		return new VertexShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), sourceCode);
 	}
 
 	Renderer::ITessellationControlShader *ShaderLanguageHlsl::createTessellationControlShaderFromBytecode(const uint8_t *, uint32_t)
@@ -146,7 +146,7 @@ namespace Direct3D10Renderer
 		// Ignore "numberOfOutputVertices", it's directly set within HLSL
 
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfGsOutputVertices", we know there's geometry shader support
-		return new GeometryShaderHlsl(getDirect3D10Renderer(), bytecode, numberOfBytes);
+		return new GeometryShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), bytecode, numberOfBytes);
 	}
 
 	Renderer::IGeometryShader *ShaderLanguageHlsl::createGeometryShaderFromSourceCode(const char *sourceCode, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, const char *, const char *, const char *)
@@ -156,19 +156,19 @@ namespace Direct3D10Renderer
 		// Ignore "numberOfOutputVertices", it's directly set within HLSL
 
 		// There's no need to check for "Renderer::Capabilities::maximumNumberOfGsOutputVertices", we know there's geometry shader support
-		return new GeometryShaderHlsl(getDirect3D10Renderer(), sourceCode);
+		return new GeometryShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), sourceCode);
 	}
 
 	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
-		return new FragmentShaderHlsl(getDirect3D10Renderer(), bytecode, numberOfBytes);
+		return new FragmentShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), bytecode, numberOfBytes);
 	}
 
 	Renderer::IFragmentShader *ShaderLanguageHlsl::createFragmentShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
-		return new FragmentShaderHlsl(getDirect3D10Renderer(), sourceCode);
+		return new FragmentShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), sourceCode);
 	}
 
 	Renderer::IProgram *ShaderLanguageHlsl::createProgram(const Renderer::IRootSignature&, const Renderer::VertexAttributes&, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)
@@ -200,7 +200,7 @@ namespace Direct3D10Renderer
 		else
 		{
 			// Create the program
-			return new ProgramHlsl(getDirect3D10Renderer(), static_cast<VertexShaderHlsl*>(vertexShader), static_cast<GeometryShaderHlsl*>(geometryShader), static_cast<FragmentShaderHlsl*>(fragmentShader));
+			return new ProgramHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), static_cast<VertexShaderHlsl*>(vertexShader), static_cast<GeometryShaderHlsl*>(geometryShader), static_cast<FragmentShaderHlsl*>(fragmentShader));
 		}
 
 		// Error! Shader language mismatch!
@@ -227,7 +227,7 @@ namespace Direct3D10Renderer
 
 	Renderer::IUniformBuffer *ShaderLanguageHlsl::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
 	{
-		return new UniformBuffer(getDirect3D10Renderer(), numberOfBytes, data, bufferUsage);
+		return new UniformBuffer(static_cast<Direct3D10Renderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 	}
 
 

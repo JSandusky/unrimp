@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES2Renderer/Shader/Program.h"
+#include <Renderer/IProgram.h>
 
 
 //[-------------------------------------------------------]
@@ -41,6 +41,7 @@ namespace Renderer
 namespace OpenGLES2Renderer
 {
 	class VertexShaderGlsl;
+	class OpenGLES2Renderer;
 	class FragmentShaderGlsl;
 }
 
@@ -59,7 +60,7 @@ namespace OpenGLES2Renderer
 	*  @brief
 	*    GLSL program class
 	*/
-	class ProgramGlsl : public Program
+	class ProgramGlsl : public Renderer::IProgram
 	{
 
 
@@ -93,6 +94,29 @@ namespace OpenGLES2Renderer
 		*/
 		virtual ~ProgramGlsl();
 
+		/**
+		*  @brief
+		*    Return the OpenGL ES 2 program
+		*
+		*  @return
+		*    The OpenGL ES 2 program, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*/
+		inline uint32_t getOpenGLES2Program() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IProgram methods             ]
+	//[-------------------------------------------------------]
+	public:
+		virtual handle getUniformHandle(const char *uniformName) override;
+		virtual void setUniform1i(handle uniformHandle, int value) override;
+		virtual void setUniform1f(handle uniformHandle, float value) override;
+		virtual void setUniform2fv(handle uniformHandle, const float *value) override;
+		virtual void setUniform3fv(handle uniformHandle, const float *value) override;
+		virtual void setUniform4fv(handle uniformHandle, const float *value) override;
+		virtual void setUniformMatrix3fv(handle uniformHandle, const float *value) override;
+		virtual void setUniformMatrix4fv(handle uniformHandle, const float *value) override;
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
@@ -100,6 +124,7 @@ namespace OpenGLES2Renderer
 	private:
 		uint32_t mNumberOfRootSignatureParameters;				///< Number of root signature parameters
 		int32_t* mRootSignatureParameterIndexToUniformLocation;	///< Root signature parameter index to OpenGL ES 2 uniform location mapping, can be a null pointer (type "GLint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES2Program;								///< OpenGL ES 2 program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};
@@ -109,3 +134,9 @@ namespace OpenGLES2Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLES2Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "OpenGLES2Renderer/Shader/ProgramGlsl.inl"

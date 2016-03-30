@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/Program.h"
+#include <Renderer/IProgram.h>
 
 
 //[-------------------------------------------------------]
@@ -40,6 +40,7 @@ namespace Renderer
 }
 namespace OpenGLRenderer
 {
+	class OpenGLRenderer;
 	class VertexShaderGlsl;
 	class GeometryShaderGlsl;
 	class FragmentShaderGlsl;
@@ -62,7 +63,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    GLSL program class
 	*/
-	class ProgramGlsl : public Program
+	class ProgramGlsl : public Renderer::IProgram
 	{
 
 

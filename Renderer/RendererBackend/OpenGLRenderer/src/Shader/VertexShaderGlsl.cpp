@@ -37,7 +37,7 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	VertexShaderGlsl::VertexShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
-		VertexShader(openGLRenderer),
+		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(0)
 	{
 		// TODO(co) Implement me
@@ -45,7 +45,7 @@ namespace OpenGLRenderer
 	}
 
 	VertexShaderGlsl::VertexShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
-		VertexShader(openGLRenderer),
+		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_VERTEX_SHADER_ARB, sourceCode))
 	{
 		// Nothing to do in here

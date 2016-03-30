@@ -27,13 +27,17 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D10Renderer/Shader/FragmentShader.h"
+#include <Renderer/IFragmentShader.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct ID3D10PixelShader;
+namespace Direct3D10Renderer
+{
+	class Direct3D10Renderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -50,7 +54,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    HLSL fragment shader ("pixel shader" in Direct3D terminology) class
 	*/
-	class FragmentShaderHlsl : public FragmentShader
+	class FragmentShaderHlsl : public Renderer::IFragmentShader
 	{
 
 

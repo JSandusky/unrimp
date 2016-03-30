@@ -39,7 +39,7 @@ namespace Direct3D9Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const uint8_t *bytecode, uint32_t) :
-		VertexShader(direct3D9Renderer),
+		IVertexShader(direct3D9Renderer),
 		mDirect3DVertexShader9(nullptr),
 		mD3DXConstantTable(nullptr)
 	{
@@ -49,7 +49,7 @@ namespace Direct3D9Renderer
 	}
 
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D9Renderer &direct3D9Renderer, const char *sourceCode) :
-		VertexShader(direct3D9Renderer),
+		IVertexShader(direct3D9Renderer),
 		mDirect3DVertexShader9(nullptr),
 		mD3DXConstantTable(nullptr)
 	{

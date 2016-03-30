@@ -47,7 +47,7 @@ namespace OpenGLRenderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	UniformBufferGlsl::UniformBufferGlsl(OpenGLRenderer &openGLRenderer) :
-		UniformBuffer(openGLRenderer, InternalResourceType::GLSL),
+		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLUniformBuffer(0)
 	{
 		// Create the OpenGL uniform buffer

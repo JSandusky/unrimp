@@ -41,7 +41,7 @@ namespace Direct3D12Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ProgramHlsl::ProgramHlsl(Direct3D12Renderer &direct3D12Renderer, VertexShaderHlsl *vertexShaderHlsl, TessellationControlShaderHlsl *tessellationControlShaderHlsl, TessellationEvaluationShaderHlsl *tessellationEvaluationShaderHlsl, GeometryShaderHlsl *geometryShaderHlsl, FragmentShaderHlsl *fragmentShaderHlsl) :
-		Program(direct3D12Renderer, InternalResourceType::HLSL),
+		IProgram(direct3D12Renderer),
 		mVertexShaderHlsl(vertexShaderHlsl),
 		mTessellationControlShaderHlsl(tessellationControlShaderHlsl),
 		mTessellationEvaluationShaderHlsl(tessellationEvaluationShaderHlsl),
@@ -94,6 +94,17 @@ namespace Direct3D12Renderer
 		{
 			mFragmentShaderHlsl->release();
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	void ProgramHlsl::setDebugName(const char *)
+	{
+		// In here we could assign the given debug name to all shaders assigned to the program,
+		// but this might end up within a naming chaos due to overwriting possible already set
+		// names... don't do this...
 	}
 
 

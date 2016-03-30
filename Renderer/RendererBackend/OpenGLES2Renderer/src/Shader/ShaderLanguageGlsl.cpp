@@ -26,6 +26,7 @@
 #include "OpenGLES2Renderer/Shader/FragmentShaderGlsl.h"
 #include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
 #include "OpenGLES2Renderer/Shader/VertexShaderGlsl.h"
+#include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
 
 
 //[-------------------------------------------------------]
@@ -42,10 +43,65 @@ namespace OpenGLES2Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	uint32_t ShaderLanguageGlsl::loadShader(uint32_t shaderType, const char *shaderSource)
+	{
+		// Create the shader object
+		const GLuint openGLES2Shader = glCreateShader(shaderType);
+
+		// Load the shader source
+		glShaderSource(openGLES2Shader, 1, &shaderSource, nullptr);
+
+		// Compile the shader
+		glCompileShader(openGLES2Shader);
+
+		// Check the compile status
+		GLint compiled = GL_FALSE;
+		glGetShaderiv(openGLES2Shader, GL_COMPILE_STATUS, &compiled);
+		if (GL_TRUE == compiled)
+		{
+			// All went fine, return the shader
+			return openGLES2Shader;
+		}
+		else
+		{
+			// Error, failed to compile the shader!
+			#ifdef RENDERER_OUTPUT_DEBUG
+				// Get the length of the information
+				GLint informationLength = 0;
+				glGetShaderiv(openGLES2Shader, GL_INFO_LOG_LENGTH, &informationLength);
+				if (informationLength > 1)
+				{
+					// Allocate memory for the information
+					GLchar *informationLog = new GLchar[static_cast<uint32_t>(informationLength)];
+
+					// Get the information
+					glGetShaderInfoLog(openGLES2Shader, informationLength, nullptr, informationLog);
+
+					// Output the debug string
+					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
+
+					// Cleanup information memory
+					delete [] informationLog;
+				}
+			#endif
+
+			// Destroy the shader
+			// -> A value of 0 for shader will be silently ignored
+			glDeleteShader(openGLES2Shader);
+
+			// Error!
+			return 0;
+		}
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ShaderLanguageGlsl::ShaderLanguageGlsl(OpenGLES2Renderer &openGLES2Renderer) :
-		ShaderLanguage(openGLES2Renderer)
+		IShaderLanguage(openGLES2Renderer)
 	{
 		// Nothing to do in here
 	}
@@ -67,13 +123,13 @@ namespace OpenGLES2Renderer
 	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
-		return new VertexShaderGlsl(getOpenGLES2Renderer(), bytecode, numberOfBytes);
+		return new VertexShaderGlsl(static_cast<OpenGLES2Renderer&>(getRenderer()), bytecode, numberOfBytes);
 	}
 
 	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
-		return new VertexShaderGlsl(getOpenGLES2Renderer(), sourceCode);
+		return new VertexShaderGlsl(static_cast<OpenGLES2Renderer&>(getRenderer()), sourceCode);
 	}
 
 	Renderer::ITessellationControlShader *ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const uint8_t *, uint32_t )
@@ -115,13 +171,13 @@ namespace OpenGLES2Renderer
 	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
-		return new FragmentShaderGlsl(getOpenGLES2Renderer(), bytecode, numberOfBytes);
+		return new FragmentShaderGlsl(static_cast<OpenGLES2Renderer&>(getRenderer()), bytecode, numberOfBytes);
 	}
 
 	Renderer::IFragmentShader *ShaderLanguageGlsl::createFragmentShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
-		return new FragmentShaderGlsl(getOpenGLES2Renderer(), sourceCode);
+		return new FragmentShaderGlsl(static_cast<OpenGLES2Renderer&>(getRenderer()), sourceCode);
 	}
 
 	Renderer::IProgram *ShaderLanguageGlsl::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)
@@ -153,7 +209,7 @@ namespace OpenGLES2Renderer
 		else
 		{
 			// Create the program
-			return new ProgramGlsl(getOpenGLES2Renderer(), rootSignature, vertexAttributes, static_cast<VertexShaderGlsl*>(vertexShader), static_cast<FragmentShaderGlsl*>(fragmentShader));
+			return new ProgramGlsl(static_cast<OpenGLES2Renderer&>(getRenderer()), rootSignature, vertexAttributes, static_cast<VertexShaderGlsl*>(vertexShader), static_cast<FragmentShaderGlsl*>(fragmentShader));
 		}
 
 		// Error! Shader language mismatch!

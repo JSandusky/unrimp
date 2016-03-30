@@ -39,7 +39,7 @@ namespace Direct3D11Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		GeometryShader(direct3D11Renderer),
+		IGeometryShader(direct3D11Renderer),
 		mD3D11GeometryShader(nullptr)
 	{
 		// Create the Direct3D 11 geometry shader
@@ -49,7 +49,7 @@ namespace Direct3D11Renderer
 	}
 
 	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
-		GeometryShader(direct3D11Renderer),
+		IGeometryShader(direct3D11Renderer),
 		mD3D11GeometryShader(nullptr)
 	{
 		// Create the Direct3D 11 binary large object for the geometry shader

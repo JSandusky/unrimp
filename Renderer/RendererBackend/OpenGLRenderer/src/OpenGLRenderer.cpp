@@ -641,10 +641,8 @@ namespace OpenGLRenderer
 			switch (resourceType)
 			{
 				case Renderer::ResourceType::UNIFORM_BUFFER:
-					// Evaluate the internal uniform buffer type of the new uniform buffer to set
-					// -> "GL_ARB_uniform_buffer_object" required
-					if (static_cast<UniformBuffer*>(resource)->getInternalResourceType() == UniformBuffer::InternalResourceType::GLSL &&
-						mExtensions->isGL_ARB_uniform_buffer_object())
+					// "GL_ARB_uniform_buffer_object" required
+					if (mExtensions->isGL_ARB_uniform_buffer_object())
 					{
 						// Attach the buffer to the given UBO binding point
 						// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
@@ -1600,20 +1598,14 @@ namespace OpenGLRenderer
 
 			// TODO(co) GLSL buffer settings, unset previous program
 
-			// Evaluate the internal program type of the new program to set
-			switch (static_cast<Program*>(program)->getInternalResourceType())
+			// "GL_ARB_shader_objects" required
+			if (mExtensions->isGL_ARB_shader_objects())
 			{
-				case Program::InternalResourceType::GLSL:
-					// "GL_ARB_shader_objects" required
-					if (mExtensions->isGL_ARB_shader_objects())
-					{
-						// Backup OpenGL program identifier
-						mOpenGLProgram = static_cast<ProgramGlsl*>(program)->getOpenGLProgram();
+				// Backup OpenGL program identifier
+				mOpenGLProgram = static_cast<ProgramGlsl*>(program)->getOpenGLProgram();
 
-						// Bind the program
-						glUseProgramObjectARB(mOpenGLProgram);
-					}
-					break;
+				// Bind the program
+				glUseProgramObjectARB(mOpenGLProgram);
 			}
 		}
 		else

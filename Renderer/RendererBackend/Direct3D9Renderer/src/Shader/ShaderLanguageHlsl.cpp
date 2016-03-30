@@ -73,7 +73,7 @@ namespace Direct3D9Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D9Renderer &direct3D9Renderer) :
-		ShaderLanguage(direct3D9Renderer),
+		IShaderLanguage(direct3D9Renderer),
 		mDirect3D9Renderer(&direct3D9Renderer)
 	{
 		// Nothing to do in here

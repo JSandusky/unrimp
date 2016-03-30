@@ -40,7 +40,7 @@ namespace Direct3D11Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		VertexShader(direct3D11Renderer),
+		IVertexShader(direct3D11Renderer),
 		mD3DBlobVertexShader(nullptr),
 		mD3D11VertexShader(nullptr)
 	{
@@ -55,7 +55,7 @@ namespace Direct3D11Renderer
 	}
 
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
-		VertexShader(direct3D11Renderer),
+		IVertexShader(direct3D11Renderer),
 		mD3DBlobVertexShader(nullptr),
 		mD3D11VertexShader(nullptr)
 	{

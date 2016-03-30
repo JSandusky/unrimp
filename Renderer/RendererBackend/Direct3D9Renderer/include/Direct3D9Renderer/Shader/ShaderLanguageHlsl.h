@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D9Renderer/Shader/ShaderLanguage.h"
+#include <Renderer/IShaderLanguage.h>
 
 
 //[-------------------------------------------------------]
@@ -35,6 +35,10 @@
 //[-------------------------------------------------------]
 struct ID3DXBuffer;
 struct ID3DXConstantTable;
+namespace Direct3D9Renderer
+{
+	class Direct3D9Renderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -51,7 +55,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    HLSL shader language class
 	*/
-	class ShaderLanguageHlsl : public ShaderLanguage
+	class ShaderLanguageHlsl : public Renderer::IShaderLanguage
 	{
 
 

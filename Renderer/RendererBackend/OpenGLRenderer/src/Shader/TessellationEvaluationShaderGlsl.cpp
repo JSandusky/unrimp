@@ -37,7 +37,7 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t):
-		TessellationEvaluationShader(openGLRenderer),
+		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(0)
 	{
 		// TODO(co) Implement me
@@ -45,7 +45,7 @@ namespace OpenGLRenderer
 	}
 
 	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
-		TessellationEvaluationShader(openGLRenderer),
+		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_TESS_EVALUATION_SHADER, sourceCode))
 	{
 		// Nothing to do in here

@@ -36,9 +36,6 @@
     <None Include="include\Direct3D11Renderer\Shader\GeometryShaderHlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\Shader\Program.inl">
-      <Filter>Source Files\Shader</Filter>
-    </None>
     <None Include="include\Direct3D11Renderer\SamplerState.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -86,19 +83,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Direct3D11Renderer\Shader\ShaderLanguage.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Shader\ShaderLanguageHlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Shader\TessellationControlShader.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Shader\TessellationControlShaderHlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Shader\TessellationEvaluationShader.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Shader\TessellationEvaluationShaderHlsl.h">
@@ -107,25 +95,13 @@
     <ClInclude Include="include\Direct3D11Renderer\Shader\UniformBuffer.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Shader\VertexShader.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Shader\VertexShaderHlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Shader\FragmentShader.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Shader\FragmentShaderHlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Shader\GeometryShader.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Shader\GeometryShaderHlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Shader\Program.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Shader\ProgramHlsl.h">
@@ -202,13 +178,7 @@
     <ClCompile Include="src\Shader\ShaderLanguageHlsl.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader\TessellationControlShader.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Shader\TessellationControlShaderHlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\TessellationEvaluationShader.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\TessellationEvaluationShaderHlsl.cpp">
@@ -217,31 +187,16 @@
     <ClCompile Include="src\Shader\UniformBuffer.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader\VertexShader.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Shader\VertexShaderHlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\FragmentShader.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader\GeometryShader.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Shader\GeometryShaderHlsl.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Shader\Program.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Shader\ProgramHlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\ShaderLanguage.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Direct3D9RuntimeLinking.cpp">

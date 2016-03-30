@@ -27,7 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/TessellationControlShader.h"
+#include <Renderer/ITessellationControlShader.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace OpenGLRenderer
+{
+	class OpenGLRenderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -44,7 +53,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    GLSL tessellation control shader ("hull shader" in Direct3D terminology) class
 	*/
-	class TessellationControlShaderGlsl : public TessellationControlShader
+	class TessellationControlShaderGlsl : public Renderer::ITessellationControlShader
 	{
 
 

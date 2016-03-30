@@ -27,7 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/VertexShader.h"
+#include <Renderer/IVertexShader.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace OpenGLRenderer
+{
+	class OpenGLRenderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -44,7 +53,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    GLSL vertex shader class
 	*/
-	class VertexShaderGlsl : public VertexShader
+	class VertexShaderGlsl : public Renderer::IVertexShader
 	{
 
 

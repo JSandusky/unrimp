@@ -39,7 +39,7 @@ namespace Direct3D10Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		FragmentShader(direct3D10Renderer),
+		IFragmentShader(direct3D10Renderer),
 		mD3D10PixelShader(nullptr)
 	{
 		// Create the Direct3D 10 vertex shader
@@ -49,7 +49,7 @@ namespace Direct3D10Renderer
 	}
 
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D10Renderer &direct3D10Renderer, const char *sourceCode) :
-		FragmentShader(direct3D10Renderer),
+		IFragmentShader(direct3D10Renderer),
 		mD3D10PixelShader(nullptr)
 	{
 		// Create the Direct3D 10 binary large object for the pixel shader

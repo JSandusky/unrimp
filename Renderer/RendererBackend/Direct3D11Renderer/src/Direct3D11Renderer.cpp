@@ -1490,28 +1490,20 @@ namespace Direct3D11Renderer
 
 			// TODO(co) HLSL buffer settings, unset previous program
 
-			// Evaluate the internal program type of the new program to set
-			switch (static_cast<Program*>(program)->getInternalResourceType())
-			{
-				case Program::InternalResourceType::HLSL:
-				{
-					// Get shaders
-					const ProgramHlsl					   *programHlsl						 = static_cast<ProgramHlsl*>(program);
-					const VertexShaderHlsl				   *vertexShaderHlsl				 = programHlsl->getVertexShaderHlsl();
-					const TessellationControlShaderHlsl	   *tessellationControlShaderHlsl	 = programHlsl->getTessellationControlShaderHlsl();
-					const TessellationEvaluationShaderHlsl *tessellationEvaluationShaderHlsl = programHlsl->getTessellationEvaluationShaderHlsl();
-					const GeometryShaderHlsl			   *geometryShaderHlsl				 = programHlsl->getGeometryShaderHlsl();
-					const FragmentShaderHlsl			   *fragmentShaderHlsl				 = programHlsl->getFragmentShaderHlsl();
+			// Get shaders
+			const ProgramHlsl					   *programHlsl						 = static_cast<ProgramHlsl*>(program);
+			const VertexShaderHlsl				   *vertexShaderHlsl				 = programHlsl->getVertexShaderHlsl();
+			const TessellationControlShaderHlsl	   *tessellationControlShaderHlsl	 = programHlsl->getTessellationControlShaderHlsl();
+			const TessellationEvaluationShaderHlsl *tessellationEvaluationShaderHlsl = programHlsl->getTessellationEvaluationShaderHlsl();
+			const GeometryShaderHlsl			   *geometryShaderHlsl				 = programHlsl->getGeometryShaderHlsl();
+			const FragmentShaderHlsl			   *fragmentShaderHlsl				 = programHlsl->getFragmentShaderHlsl();
 
-					// Set shaders
-					mD3D11DeviceContext->VSSetShader(vertexShaderHlsl				  ? vertexShaderHlsl->getD3D11VertexShader()				 : nullptr, nullptr, 0);
-					mD3D11DeviceContext->HSSetShader(tessellationControlShaderHlsl	  ? tessellationControlShaderHlsl->getD3D11HullShader()		 : nullptr, nullptr, 0);
-					mD3D11DeviceContext->DSSetShader(tessellationEvaluationShaderHlsl ? tessellationEvaluationShaderHlsl->getD3D11DomainShader() : nullptr, nullptr, 0);
-					mD3D11DeviceContext->GSSetShader(geometryShaderHlsl				  ? geometryShaderHlsl->getD3D11GeometryShader()			 : nullptr, nullptr, 0);
-					mD3D11DeviceContext->PSSetShader(fragmentShaderHlsl				  ? fragmentShaderHlsl->getD3D11PixelShader()				 : nullptr, nullptr, 0);
-					break;
-				}
-			}
+			// Set shaders
+			mD3D11DeviceContext->VSSetShader(vertexShaderHlsl				  ? vertexShaderHlsl->getD3D11VertexShader()				 : nullptr, nullptr, 0);
+			mD3D11DeviceContext->HSSetShader(tessellationControlShaderHlsl	  ? tessellationControlShaderHlsl->getD3D11HullShader()		 : nullptr, nullptr, 0);
+			mD3D11DeviceContext->DSSetShader(tessellationEvaluationShaderHlsl ? tessellationEvaluationShaderHlsl->getD3D11DomainShader() : nullptr, nullptr, 0);
+			mD3D11DeviceContext->GSSetShader(geometryShaderHlsl				  ? geometryShaderHlsl->getD3D11GeometryShader()			 : nullptr, nullptr, 0);
+			mD3D11DeviceContext->PSSetShader(fragmentShaderHlsl				  ? fragmentShaderHlsl->getD3D11PixelShader()				 : nullptr, nullptr, 0);
 		}
 		else
 		{

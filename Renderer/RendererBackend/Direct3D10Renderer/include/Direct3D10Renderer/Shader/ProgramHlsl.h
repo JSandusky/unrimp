@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D10Renderer/Shader/Program.h"
+#include <Renderer/IProgram.h>
 
 
 //[-------------------------------------------------------]
@@ -35,6 +35,7 @@
 //[-------------------------------------------------------]
 namespace Direct3D10Renderer
 {
+	class Direct3D10Renderer;
 	class VertexShaderHlsl;
 	class GeometryShaderHlsl;
 	class FragmentShaderHlsl;
@@ -55,7 +56,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    HLSL program class
 	*/
-	class ProgramHlsl : public Program
+	class ProgramHlsl : public Renderer::IProgram
 	{
 
 
@@ -113,6 +114,13 @@ namespace Direct3D10Renderer
 		*    The HLSL fragment shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
 		inline FragmentShaderHlsl *getFragmentShaderHlsl() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void setDebugName(const char *name) override;
 
 
 	//[-------------------------------------------------------]

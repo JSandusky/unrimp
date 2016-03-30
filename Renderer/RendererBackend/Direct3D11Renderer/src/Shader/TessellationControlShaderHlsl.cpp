@@ -39,7 +39,7 @@ namespace Direct3D11Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		TessellationControlShader(direct3D11Renderer),
+		ITessellationControlShader(direct3D11Renderer),
 		mD3D11HullShader(nullptr)
 	{
 		// Create the Direct3D 11 hull shader
@@ -49,7 +49,7 @@ namespace Direct3D11Renderer
 	}
 
 	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D11Renderer &direct3D11Renderer, const char *sourceCode) :
-		TessellationControlShader(direct3D11Renderer),
+		ITessellationControlShader(direct3D11Renderer),
 		mD3D11HullShader(nullptr)
 	{
 		// Create the Direct3D 11 binary large object for the hull shader

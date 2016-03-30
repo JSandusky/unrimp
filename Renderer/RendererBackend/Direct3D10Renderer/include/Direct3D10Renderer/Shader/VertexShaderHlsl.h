@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D10Renderer/Shader/VertexShader.h"
+#include <Renderer/IVertexShader.h>
 
 
 //[-------------------------------------------------------]
@@ -36,6 +36,10 @@
 struct ID3D10VertexShader;
 typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
 typedef ID3D10Blob ID3DBlob;
+namespace Direct3D10Renderer
+{
+	class Direct3D10Renderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -52,7 +56,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    HLSL vertex shader class
 	*/
-	class VertexShaderHlsl : public VertexShader
+	class VertexShaderHlsl : public Renderer::IVertexShader
 	{
 
 

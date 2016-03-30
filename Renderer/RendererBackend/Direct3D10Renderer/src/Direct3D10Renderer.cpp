@@ -1392,24 +1392,16 @@ namespace Direct3D10Renderer
 
 			// TODO(co) HLSL buffer settings, unset previous program
 
-			// Evaluate the internal program type of the new program to set
-			switch (static_cast<Program*>(program)->getInternalResourceType())
-			{
-				case Program::InternalResourceType::HLSL:
-				{
-					// Get shaders
-					const ProgramHlsl		 *programHlsl		 = static_cast<ProgramHlsl*>(program);
-					const VertexShaderHlsl	 *vertexShaderHlsl	 = programHlsl->getVertexShaderHlsl();
-					const GeometryShaderHlsl *geometryShaderHlsl = programHlsl->getGeometryShaderHlsl();
-					const FragmentShaderHlsl *fragmentShaderHlsl = programHlsl->getFragmentShaderHlsl();
+			// Get shaders
+			const ProgramHlsl		 *programHlsl		 = static_cast<ProgramHlsl*>(program);
+			const VertexShaderHlsl	 *vertexShaderHlsl	 = programHlsl->getVertexShaderHlsl();
+			const GeometryShaderHlsl *geometryShaderHlsl = programHlsl->getGeometryShaderHlsl();
+			const FragmentShaderHlsl *fragmentShaderHlsl = programHlsl->getFragmentShaderHlsl();
 
-					// Set shaders
-					mD3D10Device->VSSetShader(vertexShaderHlsl	 ? vertexShaderHlsl->  getD3D10VertexShader()	: nullptr);
-					mD3D10Device->GSSetShader(geometryShaderHlsl ? geometryShaderHlsl->getD3D10GeometryShader() : nullptr);
-					mD3D10Device->PSSetShader(fragmentShaderHlsl ? fragmentShaderHlsl->getD3D10PixelShader()	: nullptr);
-					break;
-				}
-			}
+			// Set shaders
+			mD3D10Device->VSSetShader(vertexShaderHlsl	 ? vertexShaderHlsl->  getD3D10VertexShader()	: nullptr);
+			mD3D10Device->GSSetShader(geometryShaderHlsl ? geometryShaderHlsl->getD3D10GeometryShader() : nullptr);
+			mD3D10Device->PSSetShader(fragmentShaderHlsl ? fragmentShaderHlsl->getD3D10PixelShader()	: nullptr);
 		}
 		else
 		{

@@ -38,7 +38,7 @@ namespace OpenGLES2Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	VertexShaderGlsl::VertexShaderGlsl(OpenGLES2Renderer &openGLES2Renderer, const uint8_t *, uint32_t) :
-		VertexShader(openGLES2Renderer),
+		IVertexShader(openGLES2Renderer),
 		mOpenGLES2Shader(0)
 	{
 		// TODO(co) Implement me
@@ -46,8 +46,8 @@ namespace OpenGLES2Renderer
 	}
 
 	VertexShaderGlsl::VertexShaderGlsl(OpenGLES2Renderer &openGLES2Renderer, const char *sourceCode) :
-		VertexShader(openGLES2Renderer),
-		mOpenGLES2Shader(ShaderLanguage::loadShader(GL_VERTEX_SHADER, sourceCode))
+		IVertexShader(openGLES2Renderer),
+		mOpenGLES2Shader(ShaderLanguageGlsl::loadShader(GL_VERTEX_SHADER, sourceCode))
 	{
 		// Nothing to do in here
 	}

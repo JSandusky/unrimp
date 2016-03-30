@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D9Renderer/Shader/FragmentShader.h"
+#include <Renderer/IFragmentShader.h>
 
 
 //[-------------------------------------------------------]
@@ -35,6 +35,10 @@
 //[-------------------------------------------------------]
 struct ID3DXConstantTable;
 struct IDirect3DPixelShader9;
+namespace Direct3D9Renderer
+{
+	class Direct3D9Renderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -51,7 +55,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    HLSL fragment shader ("pixel shader" in Direct3D terminology) class
 	*/
-	class FragmentShaderHlsl : public FragmentShader
+	class FragmentShaderHlsl : public Renderer::IFragmentShader
 	{
 
 

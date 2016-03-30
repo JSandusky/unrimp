@@ -38,7 +38,7 @@ namespace OpenGLES2Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES2Renderer &openGLES2Renderer, const uint8_t *, uint32_t) :
-		FragmentShader(openGLES2Renderer),
+		IFragmentShader(openGLES2Renderer),
 		mOpenGLES2Shader(0)
 	{
 		// TODO(co) Implement me
@@ -46,8 +46,8 @@ namespace OpenGLES2Renderer
 	}
 
 	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES2Renderer &openGLES2Renderer, const char *sourceCode) :
-		FragmentShader(openGLES2Renderer),
-		mOpenGLES2Shader(ShaderLanguage::loadShader(GL_FRAGMENT_SHADER, sourceCode))
+		IFragmentShader(openGLES2Renderer),
+		mOpenGLES2Shader(ShaderLanguageGlsl::loadShader(GL_FRAGMENT_SHADER, sourceCode))
 	{
 		// Nothing to do in here
 	}
