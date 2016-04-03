@@ -42,7 +42,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract root signature interface
+	*    Abstract root signature ("pipeline layout" in Vulkan terminology) interface
 	*/
 	class IRootSignature : public IResource
 	{

@@ -53,7 +53,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL ES 2 root signature class
+	*    OpenGL ES 2 root signature ("pipeline layout" in Vulkan terminology) class
 	*/
 	class RootSignature : public Renderer::IRootSignature
 	{

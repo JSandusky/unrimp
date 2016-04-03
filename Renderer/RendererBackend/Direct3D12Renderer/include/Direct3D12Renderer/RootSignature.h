@@ -56,7 +56,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Direct3D 12 root signature class
+	*    Direct3D 12 root signature ("pipeline layout" in Vulkan terminology) class
 	*/
 	class RootSignature : public Renderer::IRootSignature
 	{

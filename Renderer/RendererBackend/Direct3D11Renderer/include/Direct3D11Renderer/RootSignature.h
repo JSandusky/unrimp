@@ -52,7 +52,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Direct3D 11 root signature class
+	*    Direct3D 11 root signature ("pipeline layout" in Vulkan terminology) class
 	*/
 	class RootSignature : public Renderer::IRootSignature
 	{

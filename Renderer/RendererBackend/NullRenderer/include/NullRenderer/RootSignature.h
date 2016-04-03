@@ -52,7 +52,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Null root signature class
+	*    Null root signature ("pipeline layout" in Vulkan terminology) class
 	*/
 	class RootSignature : public Renderer::IRootSignature
 	{
