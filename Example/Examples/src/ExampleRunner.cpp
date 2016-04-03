@@ -142,6 +142,9 @@ ExampleRunner::ExampleRunner()
 	#ifndef RENDERER_NO_OPENGLES2
 		m_availableRenderer.insert("OpenGLES2");
 	#endif
+	#ifndef RENDERER_NO_VULKAN
+		m_availableRenderer.insert("Vulkan");
+	#endif
 }
 
 int ExampleRunner::runExample(const std::string& rendererName, const std::string& exampleName)

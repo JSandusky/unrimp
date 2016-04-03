@@ -38,6 +38,8 @@
 	#error "Unsupported platform"
 #endif
 
+#include <vector>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -52,6 +54,8 @@ namespace VulkanRenderer
 	VulkanRuntimeLinking::VulkanRuntimeLinking() :
 		mVulkanSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
+		mVkInstance(VK_NULL_HANDLE),
+		mFunctionsRegistered(false),
 		mInitialized(false)
 	{
 		// Nothing to do in here
@@ -59,6 +63,12 @@ namespace VulkanRenderer
 
 	VulkanRuntimeLinking::~VulkanRuntimeLinking()
 	{
+		// Destroy the Vulkan instance
+		if (VK_NULL_HANDLE != mVkInstance)
+		{
+			vkDestroyInstance(mVkInstance, nullptr);
+		}
+
 		// Destroy the shared library instances
 		#ifdef WIN32
 			if (nullptr != mVulkanSharedLibrary)
@@ -88,11 +98,27 @@ namespace VulkanRenderer
 			{
 				// Load the Vulkan entry points
 				mEntryPointsRegistered = loadVulkanEntryPoints();
+				if (mEntryPointsRegistered)
+				{
+					// Create the Vulkan instance
+					// TODO(co) For now, the Vulkan validation layer is always enabled by default
+					const VkResult vkResult = createVulkanInstance(true);
+					if (vkResult == VK_SUCCESS)
+					{
+						// Load instance based Vulkan function pointers
+						mFunctionsRegistered = loadVulkanFunctions();
+					}
+					else
+					{
+						// Error!
+						RENDERER_OUTPUT_DEBUG_PRINTF("Vulkan error: Failed to create the Vulkan instance")
+					}
+				}
 			}
 		}
 
 		// Entry points successfully registered?
-		return mEntryPointsRegistered;
+		return (mEntryPointsRegistered && (VK_NULL_HANDLE != mVkInstance) && mFunctionsRegistered);
 	}
 
 
@@ -103,18 +129,16 @@ namespace VulkanRenderer
 	{
 		// Load the shared library
 		#ifdef WIN32
-			// TODO(co) Implement me
-			// mVulkanSharedLibrary = ::LoadLibraryExA("TODO.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+			mVulkanSharedLibrary = ::LoadLibraryExA("vulkan-1.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
 			if (nullptr == mVulkanSharedLibrary)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Failed to load in the shared library \"TODO.dll\"\n")
+				RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Failed to load in the shared library \"vulkan-1.dll\"\n")
 			}
 		#elif defined LINUX
-			// TODO(co) Implement me
-			// mVulkanSharedLibrary = ::dlopen("TODO.so", RTLD_NOW);
+			mVulkanSharedLibrary = ::dlopen("libvulkan-1.so", RTLD_NOW);
 			if (nullptr == mVulkanSharedLibrary)
 			{
-				std::cout<<"Vulkan error: Failed to load in the shared library \"TODO.so\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+				std::cout<<"Vulkan error: Failed to load in the shared library \"libvulkan-1.so\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 			}
 		#else
 			#error "Unsupported platform"
@@ -173,11 +197,192 @@ namespace VulkanRenderer
 		#endif
 
 		// Load the entry points
-		// TODO(co) Implement me
-		// IMPORT_FUNC(glGetString);
+		IMPORT_FUNC(vkCreateInstance);
+		IMPORT_FUNC(vkDestroyInstance);
+		IMPORT_FUNC(vkGetInstanceProcAddr);
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC
+
+		// Done
+		return result;
+	}
+
+	VkResult VulkanRuntimeLinking::createVulkanInstance(bool enableValidation)
+	{
+		const char* validationLayerNames[] =
+		{
+			"VK_LAYER_GOOGLE_threading",
+			"VK_LAYER_LUNARG_mem_tracker",
+			"VK_LAYER_LUNARG_object_tracker",
+			"VK_LAYER_LUNARG_draw_state",
+			"VK_LAYER_LUNARG_param_checker",
+			"VK_LAYER_LUNARG_swapchain",
+			"VK_LAYER_LUNARG_device_limits",
+			"VK_LAYER_LUNARG_image",
+			"VK_LAYER_GOOGLE_unique_objects",
+		};
+		const uint32_t validationLayerCount = 9;	// TODO(co) Introduce and use "countof()"
+
+		// TODO(co) Make it possible for the user to provide application related information?
+		VkApplicationInfo vkApplicationInfo = {};
+		vkApplicationInfo.sType			   = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+		vkApplicationInfo.pApplicationName = "Unrimp Application";
+		vkApplicationInfo.pEngineName	   = "Unrimp";
+		vkApplicationInfo.apiVersion		= VK_MAKE_VERSION(1, 0, 2);	// TODO(co) Temporary workaround for drivers not supporting SDK 1.0.3 upon launch, use VK_API_VERSION
+
+		// Enable surface extensions depending on OS
+		std::vector<const char*> enabledExtensions = { VK_KHR_SURFACE_EXTENSION_NAME };
+		#if defined(_WIN32)
+			enabledExtensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
+		#elif defined(__ANDROID__)
+			enabledExtensions.push_back(VK_KHR_ANDROID_SURFACE_EXTENSION_NAME);
+		#elif defined(__linux__)
+			enabledExtensions.push_back(VK_KHR_XCB_SURFACE_EXTENSION_NAME);
+		#endif
+
+		VkInstanceCreateInfo vkInstanceCreateInfo = {};
+		vkInstanceCreateInfo.sType			  = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+		vkInstanceCreateInfo.pNext			  = NULL;
+		vkInstanceCreateInfo.pApplicationInfo = &vkApplicationInfo;
+		if (enableValidation)
+		{
+			enabledExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+		}
+		vkInstanceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(enabledExtensions.size());
+		vkInstanceCreateInfo.ppEnabledExtensionNames = enabledExtensions.data();
+		if (enableValidation)
+		{
+			vkInstanceCreateInfo.enabledLayerCount = validationLayerCount;
+			vkInstanceCreateInfo.ppEnabledLayerNames = validationLayerNames;
+		}
+		VkResult vkResult = vkCreateInstance(&vkInstanceCreateInfo, nullptr, &mVkInstance);
+		if (vkResult == VK_ERROR_LAYER_NOT_PRESENT && enableValidation)
+		{
+			// Error! Since the show must go on, try creating a Vulkan instance without validation enabled...
+			RENDERER_OUTPUT_DEBUG_PRINTF("Vulkan error: Failed to create the Vulkan instance with validation enabled, layer is not present")
+			vkResult = createVulkanInstance(false);
+		}
+
+		// Done
+		return vkResult;
+	}
+
+	bool VulkanRuntimeLinking::loadVulkanFunctions()
+	{
+		bool result = true;	// Success by default
+
+		// Define a helper macro
+		#pragma warning(push)
+		#pragma warning(disable: 4191)	// 'reinterpret_cast': unsafe conversion from 'PFN_vkVoidFunction' to '<x>'
+		#define IMPORT_FUNC(funcName)																										\
+			if (result)																														\
+			{																																\
+				##funcName = reinterpret_cast<PFN_##funcName>(vkGetInstanceProcAddr(mVkInstance, #funcName));								\
+				if (NULL == ##funcName)																										\
+				{																															\
+					RENDERER_OUTPUT_DEBUG_PRINTF("Vulkan error: Failed to load instance based Vulkan function pointer \"%s\"", #funcName)	\
+					result = false;																											\
+				}																															\
+			}
+
+		// Load the function pointers
+		IMPORT_FUNC(vkEnumeratePhysicalDevices);
+		IMPORT_FUNC(vkGetPhysicalDeviceProperties);
+		IMPORT_FUNC(vkEnumerateDeviceLayerProperties);
+		IMPORT_FUNC(vkEnumerateDeviceExtensionProperties);
+		IMPORT_FUNC(vkGetPhysicalDeviceQueueFamilyProperties);
+		IMPORT_FUNC(vkGetPhysicalDeviceFeatures);
+		IMPORT_FUNC(vkCreateDevice);
+		IMPORT_FUNC(vkGetPhysicalDeviceFormatProperties);
+		IMPORT_FUNC(vkGetPhysicalDeviceMemoryProperties);
+		IMPORT_FUNC(vkCmdPipelineBarrier);
+		IMPORT_FUNC(vkCreateShaderModule);
+		IMPORT_FUNC(vkCreateBuffer);
+		IMPORT_FUNC(vkGetBufferMemoryRequirements);
+		IMPORT_FUNC(vkMapMemory);
+		IMPORT_FUNC(vkUnmapMemory);
+		IMPORT_FUNC(vkBindBufferMemory);
+		IMPORT_FUNC(vkDestroyBuffer);
+		IMPORT_FUNC(vkAllocateMemory);
+		IMPORT_FUNC(vkFreeMemory);
+		IMPORT_FUNC(vkCreateRenderPass);
+		IMPORT_FUNC(vkCmdBeginRenderPass);
+		IMPORT_FUNC(vkCmdEndRenderPass);
+		IMPORT_FUNC(vkCmdExecuteCommands);
+		IMPORT_FUNC(vkCreateImage);
+		IMPORT_FUNC(vkGetImageMemoryRequirements);
+		IMPORT_FUNC(vkCreateImageView);
+		IMPORT_FUNC(vkDestroyImageView);
+		IMPORT_FUNC(vkBindImageMemory);
+		IMPORT_FUNC(vkGetImageSubresourceLayout);
+		IMPORT_FUNC(vkCmdCopyImage);
+		IMPORT_FUNC(vkCmdBlitImage);
+		IMPORT_FUNC(vkDestroyImage);
+		IMPORT_FUNC(vkCmdClearAttachments);
+		IMPORT_FUNC(vkCmdCopyBuffer);
+		IMPORT_FUNC(vkCreateSampler);
+		IMPORT_FUNC(vkDestroySampler);
+		IMPORT_FUNC(vkCreateSemaphore);
+		IMPORT_FUNC(vkDestroySemaphore);
+		IMPORT_FUNC(vkCreateFence);
+		IMPORT_FUNC(vkDestroyFence);
+		IMPORT_FUNC(vkWaitForFences);
+		IMPORT_FUNC(vkCreateCommandPool);
+		IMPORT_FUNC(vkDestroyCommandPool);
+		IMPORT_FUNC(vkAllocateCommandBuffers);
+		IMPORT_FUNC(vkBeginCommandBuffer);
+		IMPORT_FUNC(vkEndCommandBuffer);
+		IMPORT_FUNC(vkGetDeviceQueue);
+		IMPORT_FUNC(vkQueueSubmit);
+		IMPORT_FUNC(vkQueueWaitIdle);
+		IMPORT_FUNC(vkDeviceWaitIdle);
+		IMPORT_FUNC(vkCreateFramebuffer);
+		IMPORT_FUNC(vkCreatePipelineCache);
+		IMPORT_FUNC(vkCreatePipelineLayout);
+		IMPORT_FUNC(vkCreateGraphicsPipelines);
+		IMPORT_FUNC(vkCreateComputePipelines);
+		IMPORT_FUNC(vkCreateDescriptorPool);
+		IMPORT_FUNC(vkCreateDescriptorSetLayout);
+		IMPORT_FUNC(vkAllocateDescriptorSets);
+		IMPORT_FUNC(vkUpdateDescriptorSets);
+		IMPORT_FUNC(vkCmdBindDescriptorSets);
+		IMPORT_FUNC(vkCmdBindPipeline);
+		IMPORT_FUNC(vkCmdBindVertexBuffers);
+		IMPORT_FUNC(vkCmdBindIndexBuffer);
+		IMPORT_FUNC(vkCmdSetViewport);
+		IMPORT_FUNC(vkCmdSetScissor);
+		IMPORT_FUNC(vkCmdSetLineWidth);
+		IMPORT_FUNC(vkCmdSetDepthBias);
+		IMPORT_FUNC(vkCmdPushConstants);
+		IMPORT_FUNC(vkCmdDrawIndexed);
+		IMPORT_FUNC(vkCmdDraw);
+		IMPORT_FUNC(vkCmdDispatch);
+		IMPORT_FUNC(vkDestroyPipeline);
+		IMPORT_FUNC(vkDestroyPipelineLayout);
+		IMPORT_FUNC(vkDestroyDescriptorSetLayout);
+		IMPORT_FUNC(vkDestroyDevice);
+		IMPORT_FUNC(vkDestroyDescriptorPool);
+		IMPORT_FUNC(vkFreeCommandBuffers);
+		IMPORT_FUNC(vkDestroyRenderPass);
+		IMPORT_FUNC(vkDestroyFramebuffer);
+		IMPORT_FUNC(vkDestroyShaderModule);
+		IMPORT_FUNC(vkDestroyPipelineCache);
+		IMPORT_FUNC(vkCreateQueryPool);
+		IMPORT_FUNC(vkDestroyQueryPool);
+		IMPORT_FUNC(vkGetQueryPoolResults);
+		IMPORT_FUNC(vkCmdBeginQuery);
+		IMPORT_FUNC(vkCmdEndQuery);
+		IMPORT_FUNC(vkCmdResetQueryPool);
+		IMPORT_FUNC(vkCmdCopyQueryPoolResults);
+		#if defined(__ANDROID__)
+			IMPORT_FUNC(vkCreateAndroidSurfaceKHR);
+			IMPORT_FUNC(vkDestroySurfaceKHR);
+		#endif
+
+		// Undefine the helper macro
+		#undef IMPORT_FUNC
+		#pragma warning(pop)
 
 		// Done
 		return result;

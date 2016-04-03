@@ -27,15 +27,19 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#ifdef WIN32
-	// Disable warnings in external headers, we can't fix them
-	__pragma(warning(push))
-		__pragma(warning(disable: 4668))	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-		// TODO(co) Implement me
-	__pragma(warning(pop))
-#else
-	// TODO(co) Implement me
+#if defined(_WIN32)
+	#define VK_USE_PLATFORM_WIN32_KHR
+#elif defined(__ANDROID__)
+	#define VK_USE_PLATFORM_ANDROID_KHR
+#elif defined(__linux__)
+	#define VK_USE_PLATFORM_XLIB_KHR
 #endif
+#define VK_NO_PROTOTYPES
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4668)	// Warning	C4668	'<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#include <vulkan\vulkan.h>
+#pragma warning(pop)
 
 
 //[-------------------------------------------------------]
@@ -104,43 +108,151 @@ namespace VulkanRenderer
 		*/
 		bool loadVulkanEntryPoints();
 
+		/**
+		*  @brief
+		*    Create the Vulkan instance
+		*
+		*  @param[in] enableValidation
+		*    Enable validation layer? (don't do this for shipped products)
+		*
+		*  @return
+		*    Vulkan instance creation result
+		*/
+		VkResult createVulkanInstance(bool enableValidation);
+
+		/**
+		*  @brief
+		*    Load instance based Vulkan function pointers
+		*
+		*  @return
+		*    "true" if all went fine, else "false"
+		*/
+		bool loadVulkanFunctions();
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void *mVulkanSharedLibrary;		///< Vulkan shared library, can be a null pointer
-		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
-		bool  mInitialized;				///< Already initialized?
+		void*	   mVulkanSharedLibrary;	///< Vulkan shared library, can be a null pointer
+		bool	   mEntryPointsRegistered;	///< Entry points successfully registered?
+		VkInstance mVkInstance;				///< Vulkan instance, stores all per-application states
+		bool	   mFunctionsRegistered;	///< Instance based Vulkan function pointers registered?
+		bool	   mInitialized;			///< Already initialized?
 
 
 	};
 
 
 	//[-------------------------------------------------------]
-	//[ Vulkan functions                                      ]
-	//[-------------------------------------------------------]
-	// TODO(co) Implement me
-	#ifdef VULKAN_DEFINERUNTIMELINKING
-		#define FNDEF_VK(retType, funcName, args) retType (GLAPIENTRY *funcPtr_##funcName) args
-	#else
-		#define FNDEF_VK(retType, funcName, args) extern retType (GLAPIENTRY *funcPtr_##funcName) args
-	#endif
-	// FNDEF_GL(GLubyte *,	glGetString,		(GLenum));
-
-
-	//[-------------------------------------------------------]
 	//[ Macros & definitions                                  ]
 	//[-------------------------------------------------------]
 	#ifndef FNPTR
-		#define FNPTR(name) funcPtr_##name
+		#ifdef VULKAN_DEFINERUNTIMELINKING
+			#define FNPTR(name) PFN_##name name;
+		#else
+			#define FNPTR(name) extern PFN_##name name;
+		#endif
 	#endif
 
-	// Redirect vk* function calls to funcPtr_vk*
+	// Global Vulkan function pointers
+	FNPTR(vkCreateInstance)
+	FNPTR(vkDestroyInstance)
+	FNPTR(vkGetInstanceProcAddr)
 
-	// Vulkan
-	// TODO(co) Implement me
-	// #define glGetString			FNPTR(glGetString)
+	// Instance based Vulkan function pointers
+	FNPTR(vkEnumeratePhysicalDevices)
+	FNPTR(vkGetPhysicalDeviceProperties)
+	FNPTR(vkEnumerateDeviceLayerProperties)
+	FNPTR(vkEnumerateDeviceExtensionProperties)
+	FNPTR(vkGetPhysicalDeviceQueueFamilyProperties)
+	FNPTR(vkGetPhysicalDeviceFeatures)
+	FNPTR(vkCreateDevice)
+	FNPTR(vkGetPhysicalDeviceFormatProperties)
+	FNPTR(vkGetPhysicalDeviceMemoryProperties)
+	FNPTR(vkCmdPipelineBarrier)
+	FNPTR(vkCreateShaderModule)
+	FNPTR(vkCreateBuffer)
+	FNPTR(vkGetBufferMemoryRequirements)
+	FNPTR(vkMapMemory)
+	FNPTR(vkUnmapMemory)
+	FNPTR(vkBindBufferMemory)
+	FNPTR(vkDestroyBuffer)
+	FNPTR(vkAllocateMemory)
+	FNPTR(vkFreeMemory)
+	FNPTR(vkCreateRenderPass)
+	FNPTR(vkCmdBeginRenderPass)
+	FNPTR(vkCmdEndRenderPass)
+	FNPTR(vkCmdExecuteCommands)
+	FNPTR(vkCreateImage)
+	FNPTR(vkGetImageMemoryRequirements)
+	FNPTR(vkCreateImageView)
+	FNPTR(vkDestroyImageView)
+	FNPTR(vkBindImageMemory)
+	FNPTR(vkGetImageSubresourceLayout)
+	FNPTR(vkCmdCopyImage)
+	FNPTR(vkCmdBlitImage)
+	FNPTR(vkDestroyImage)
+	FNPTR(vkCmdClearAttachments)
+	FNPTR(vkCmdCopyBuffer)
+	FNPTR(vkCreateSampler)
+	FNPTR(vkDestroySampler)
+	FNPTR(vkCreateSemaphore)
+	FNPTR(vkDestroySemaphore)
+	FNPTR(vkCreateFence)
+	FNPTR(vkDestroyFence)
+	FNPTR(vkWaitForFences)
+	FNPTR(vkCreateCommandPool)
+	FNPTR(vkDestroyCommandPool)
+	FNPTR(vkAllocateCommandBuffers)
+	FNPTR(vkBeginCommandBuffer)
+	FNPTR(vkEndCommandBuffer)
+	FNPTR(vkGetDeviceQueue)
+	FNPTR(vkQueueSubmit)
+	FNPTR(vkQueueWaitIdle)
+	FNPTR(vkDeviceWaitIdle)
+	FNPTR(vkCreateFramebuffer)
+	FNPTR(vkCreatePipelineCache)
+	FNPTR(vkCreatePipelineLayout)
+	FNPTR(vkCreateGraphicsPipelines)
+	FNPTR(vkCreateComputePipelines)
+	FNPTR(vkCreateDescriptorPool)
+	FNPTR(vkCreateDescriptorSetLayout)
+	FNPTR(vkAllocateDescriptorSets)
+	FNPTR(vkUpdateDescriptorSets)
+	FNPTR(vkCmdBindDescriptorSets)
+	FNPTR(vkCmdBindPipeline)
+	FNPTR(vkCmdBindVertexBuffers)
+	FNPTR(vkCmdBindIndexBuffer)
+	FNPTR(vkCmdSetViewport)
+	FNPTR(vkCmdSetScissor)
+	FNPTR(vkCmdSetLineWidth)
+	FNPTR(vkCmdSetDepthBias)
+	FNPTR(vkCmdPushConstants)
+	FNPTR(vkCmdDrawIndexed)
+	FNPTR(vkCmdDraw)
+	FNPTR(vkCmdDispatch)
+	FNPTR(vkDestroyPipeline)
+	FNPTR(vkDestroyPipelineLayout)
+	FNPTR(vkDestroyDescriptorSetLayout)
+	FNPTR(vkDestroyDevice)
+	FNPTR(vkDestroyDescriptorPool)
+	FNPTR(vkFreeCommandBuffers)
+	FNPTR(vkDestroyRenderPass)
+	FNPTR(vkDestroyFramebuffer)
+	FNPTR(vkDestroyShaderModule)
+	FNPTR(vkDestroyPipelineCache)
+	FNPTR(vkCreateQueryPool)
+	FNPTR(vkDestroyQueryPool)
+	FNPTR(vkGetQueryPoolResults)
+	FNPTR(vkCmdBeginQuery)
+	FNPTR(vkCmdEndQuery)
+	FNPTR(vkCmdResetQueryPool)
+	FNPTR(vkCmdCopyQueryPoolResults)
+	#if defined(__ANDROID__)
+		FNPTR(vkCreateAndroidSurfaceKHR)
+		FNPTR(vkDestroySurfaceKHR)
+	#endif
 
 
 //[-------------------------------------------------------]
