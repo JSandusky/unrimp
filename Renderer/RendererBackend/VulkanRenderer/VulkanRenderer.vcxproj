@@ -99,6 +99,7 @@
     <None Include="include\VulkanRenderer\Detail\IState.inl" />
     <None Include="include\VulkanRenderer\Detail\RasterizerState.inl" />
     <None Include="include\VulkanRenderer\Framebuffer.inl" />
+    <None Include="include\VulkanRenderer\IContext.inl" />
     <None Include="include\VulkanRenderer\IndexBuffer.inl" />
     <None Include="include\VulkanRenderer\Linux\ContextLinux.inl" />
     <None Include="include\VulkanRenderer\VulkanRenderer.inl" />
@@ -117,6 +118,7 @@
     <None Include="include\VulkanRenderer\TextureBuffer.inl" />
     <None Include="include\VulkanRenderer\VertexArray.inl" />
     <None Include="include\VulkanRenderer\VertexBuffer.inl" />
+    <None Include="include\VulkanRenderer\VulkanRuntimeLinking.inl" />
     <None Include="include\VulkanRenderer\Windows\ContextWindows.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>

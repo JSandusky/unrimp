@@ -18,6 +18,9 @@
 \*********************************************************/
 
 
+// TODO(co) Remove the platform specific context classes if they're not required
+
+
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
@@ -59,12 +62,14 @@ namespace VulkanRenderer
 		*  @brief
 		*    Constructor
 		*
+		*  @param[in] vulkanRenderer
+		*    Owner Vulkan renderer instance
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
 		*  @param[in] shareContextWindows
 		*    Optional share context, can be a null pointer
 		*/
-		explicit ContextWindows(handle nativeWindowHandle, const ContextWindows* shareContextWindows = nullptr);
+		explicit ContextWindows(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle, const ContextWindows* shareContextWindows = nullptr);
 
 		/**
 		*  @brief
@@ -97,6 +102,32 @@ namespace VulkanRenderer
 	public:
 		inline virtual bool isInitialized() const override;
 		virtual void makeCurrent() const override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		/**
+		*  @brief
+		*    Copy constructor
+		*
+		*  @param[in] source
+		*    Source to copy from
+		*/
+		explicit ContextWindows(const ContextWindows &source) = delete;
+
+		/**
+		*  @brief
+		*    Copy operator
+		*
+		*  @param[in] source
+		*    Source to copy from
+		*
+		*  @return
+		*    Reference to this instance
+		*/
+		ContextWindows &operator =(const ContextWindows &source) = delete;
 
 
 	//[-------------------------------------------------------]

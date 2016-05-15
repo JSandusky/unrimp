@@ -54,10 +54,18 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Vulkan runtime linking
+	*    Vulkan runtime linking for creating and managing the Vulkan instance ("VkInstance")
 	*/
 	class VulkanRuntimeLinking
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		static const uint32_t NUMBER_OF_VALIDATION_LAYERS;
+		static const char*    VALIDATION_LAYER_NAMES[];
 
 
 	//[-------------------------------------------------------]
@@ -84,6 +92,15 @@ namespace VulkanRenderer
 		*    "true" if Vulkan is available, else "false"
 		*/
 		bool isVulkanAvaiable();
+
+		/**
+		*  @brief
+		*    Return the Vulkan instance
+		*
+		*  @return
+		*    Vulkan instance
+		*/
+		inline VkInstance getVkInstance() const;
 
 
 	//[-------------------------------------------------------]
@@ -144,118 +161,138 @@ namespace VulkanRenderer
 	};
 
 
-	//[-------------------------------------------------------]
-	//[ Macros & definitions                                  ]
-	//[-------------------------------------------------------]
-	#ifndef FNPTR
-		#ifdef VULKAN_DEFINERUNTIMELINKING
-			#define FNPTR(name) PFN_##name name;
-		#else
-			#define FNPTR(name) extern PFN_##name name;
-		#endif
-	#endif
-
-	// Global Vulkan function pointers
-	FNPTR(vkCreateInstance)
-	FNPTR(vkDestroyInstance)
-	FNPTR(vkGetInstanceProcAddr)
-
-	// Instance based Vulkan function pointers
-	FNPTR(vkEnumeratePhysicalDevices)
-	FNPTR(vkGetPhysicalDeviceProperties)
-	FNPTR(vkEnumerateDeviceLayerProperties)
-	FNPTR(vkEnumerateDeviceExtensionProperties)
-	FNPTR(vkGetPhysicalDeviceQueueFamilyProperties)
-	FNPTR(vkGetPhysicalDeviceFeatures)
-	FNPTR(vkCreateDevice)
-	FNPTR(vkGetPhysicalDeviceFormatProperties)
-	FNPTR(vkGetPhysicalDeviceMemoryProperties)
-	FNPTR(vkCmdPipelineBarrier)
-	FNPTR(vkCreateShaderModule)
-	FNPTR(vkCreateBuffer)
-	FNPTR(vkGetBufferMemoryRequirements)
-	FNPTR(vkMapMemory)
-	FNPTR(vkUnmapMemory)
-	FNPTR(vkBindBufferMemory)
-	FNPTR(vkDestroyBuffer)
-	FNPTR(vkAllocateMemory)
-	FNPTR(vkFreeMemory)
-	FNPTR(vkCreateRenderPass)
-	FNPTR(vkCmdBeginRenderPass)
-	FNPTR(vkCmdEndRenderPass)
-	FNPTR(vkCmdExecuteCommands)
-	FNPTR(vkCreateImage)
-	FNPTR(vkGetImageMemoryRequirements)
-	FNPTR(vkCreateImageView)
-	FNPTR(vkDestroyImageView)
-	FNPTR(vkBindImageMemory)
-	FNPTR(vkGetImageSubresourceLayout)
-	FNPTR(vkCmdCopyImage)
-	FNPTR(vkCmdBlitImage)
-	FNPTR(vkDestroyImage)
-	FNPTR(vkCmdClearAttachments)
-	FNPTR(vkCmdCopyBuffer)
-	FNPTR(vkCreateSampler)
-	FNPTR(vkDestroySampler)
-	FNPTR(vkCreateSemaphore)
-	FNPTR(vkDestroySemaphore)
-	FNPTR(vkCreateFence)
-	FNPTR(vkDestroyFence)
-	FNPTR(vkWaitForFences)
-	FNPTR(vkCreateCommandPool)
-	FNPTR(vkDestroyCommandPool)
-	FNPTR(vkAllocateCommandBuffers)
-	FNPTR(vkBeginCommandBuffer)
-	FNPTR(vkEndCommandBuffer)
-	FNPTR(vkGetDeviceQueue)
-	FNPTR(vkQueueSubmit)
-	FNPTR(vkQueueWaitIdle)
-	FNPTR(vkDeviceWaitIdle)
-	FNPTR(vkCreateFramebuffer)
-	FNPTR(vkCreatePipelineCache)
-	FNPTR(vkCreatePipelineLayout)
-	FNPTR(vkCreateGraphicsPipelines)
-	FNPTR(vkCreateComputePipelines)
-	FNPTR(vkCreateDescriptorPool)
-	FNPTR(vkCreateDescriptorSetLayout)
-	FNPTR(vkAllocateDescriptorSets)
-	FNPTR(vkUpdateDescriptorSets)
-	FNPTR(vkCmdBindDescriptorSets)
-	FNPTR(vkCmdBindPipeline)
-	FNPTR(vkCmdBindVertexBuffers)
-	FNPTR(vkCmdBindIndexBuffer)
-	FNPTR(vkCmdSetViewport)
-	FNPTR(vkCmdSetScissor)
-	FNPTR(vkCmdSetLineWidth)
-	FNPTR(vkCmdSetDepthBias)
-	FNPTR(vkCmdPushConstants)
-	FNPTR(vkCmdDrawIndexed)
-	FNPTR(vkCmdDraw)
-	FNPTR(vkCmdDispatch)
-	FNPTR(vkDestroyPipeline)
-	FNPTR(vkDestroyPipelineLayout)
-	FNPTR(vkDestroyDescriptorSetLayout)
-	FNPTR(vkDestroyDevice)
-	FNPTR(vkDestroyDescriptorPool)
-	FNPTR(vkFreeCommandBuffers)
-	FNPTR(vkDestroyRenderPass)
-	FNPTR(vkDestroyFramebuffer)
-	FNPTR(vkDestroyShaderModule)
-	FNPTR(vkDestroyPipelineCache)
-	FNPTR(vkCreateQueryPool)
-	FNPTR(vkDestroyQueryPool)
-	FNPTR(vkGetQueryPoolResults)
-	FNPTR(vkCmdBeginQuery)
-	FNPTR(vkCmdEndQuery)
-	FNPTR(vkCmdResetQueryPool)
-	FNPTR(vkCmdCopyQueryPoolResults)
-	#if defined(__ANDROID__)
-		FNPTR(vkCreateAndroidSurfaceKHR)
-		FNPTR(vkDestroySurfaceKHR)
-	#endif
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // VulkanRenderer
+
+
+//[-------------------------------------------------------]
+//[ Macros & definitions                                  ]
+//[-------------------------------------------------------]
+#ifndef FNPTR
+	#ifdef VULKAN_DEFINERUNTIMELINKING
+		#define FNPTR(name) PFN_##name name;
+	#else
+		#define FNPTR(name) extern PFN_##name name;
+	#endif
+#endif
+
+// Global Vulkan function pointers
+FNPTR(vkCreateInstance)
+FNPTR(vkDestroyInstance)
+FNPTR(vkGetInstanceProcAddr)
+
+// Instance based Vulkan function pointers
+FNPTR(vkEnumeratePhysicalDevices)
+FNPTR(vkGetPhysicalDeviceProperties)
+FNPTR(vkEnumerateDeviceLayerProperties)
+FNPTR(vkEnumerateDeviceExtensionProperties)
+FNPTR(vkGetPhysicalDeviceQueueFamilyProperties)
+FNPTR(vkGetPhysicalDeviceFeatures)
+FNPTR(vkCreateDevice)
+FNPTR(vkGetPhysicalDeviceFormatProperties)
+FNPTR(vkGetPhysicalDeviceMemoryProperties)
+FNPTR(vkCmdPipelineBarrier)
+FNPTR(vkCreateShaderModule)
+FNPTR(vkCreateBuffer)
+FNPTR(vkGetBufferMemoryRequirements)
+FNPTR(vkMapMemory)
+FNPTR(vkUnmapMemory)
+FNPTR(vkBindBufferMemory)
+FNPTR(vkDestroyBuffer)
+FNPTR(vkAllocateMemory)
+FNPTR(vkFreeMemory)
+FNPTR(vkCreateRenderPass)
+FNPTR(vkCmdBeginRenderPass)
+FNPTR(vkCmdEndRenderPass)
+FNPTR(vkCmdExecuteCommands)
+FNPTR(vkCreateImage)
+FNPTR(vkGetImageMemoryRequirements)
+FNPTR(vkCreateImageView)
+FNPTR(vkDestroyImageView)
+FNPTR(vkBindImageMemory)
+FNPTR(vkGetImageSubresourceLayout)
+FNPTR(vkCmdCopyImage)
+FNPTR(vkCmdBlitImage)
+FNPTR(vkDestroyImage)
+FNPTR(vkCmdClearAttachments)
+FNPTR(vkCmdCopyBuffer)
+FNPTR(vkCreateSampler)
+FNPTR(vkDestroySampler)
+FNPTR(vkCreateSemaphore)
+FNPTR(vkDestroySemaphore)
+FNPTR(vkCreateFence)
+FNPTR(vkDestroyFence)
+FNPTR(vkWaitForFences)
+FNPTR(vkCreateCommandPool)
+FNPTR(vkDestroyCommandPool)
+FNPTR(vkAllocateCommandBuffers)
+FNPTR(vkBeginCommandBuffer)
+FNPTR(vkEndCommandBuffer)
+FNPTR(vkGetDeviceQueue)
+FNPTR(vkQueueSubmit)
+FNPTR(vkQueueWaitIdle)
+FNPTR(vkDeviceWaitIdle)
+FNPTR(vkCreateFramebuffer)
+FNPTR(vkCreatePipelineCache)
+FNPTR(vkCreatePipelineLayout)
+FNPTR(vkCreateGraphicsPipelines)
+FNPTR(vkCreateComputePipelines)
+FNPTR(vkCreateDescriptorPool)
+FNPTR(vkCreateDescriptorSetLayout)
+FNPTR(vkAllocateDescriptorSets)
+FNPTR(vkUpdateDescriptorSets)
+FNPTR(vkCmdBindDescriptorSets)
+FNPTR(vkCmdBindPipeline)
+FNPTR(vkCmdBindVertexBuffers)
+FNPTR(vkCmdBindIndexBuffer)
+FNPTR(vkCmdSetViewport)
+FNPTR(vkCmdSetScissor)
+FNPTR(vkCmdSetLineWidth)
+FNPTR(vkCmdSetDepthBias)
+FNPTR(vkCmdPushConstants)
+FNPTR(vkCmdDrawIndexed)
+FNPTR(vkCmdDraw)
+FNPTR(vkCmdDispatch)
+FNPTR(vkDestroyPipeline)
+FNPTR(vkDestroyPipelineLayout)
+FNPTR(vkDestroyDescriptorSetLayout)
+FNPTR(vkDestroyDevice)
+FNPTR(vkDestroyDescriptorPool)
+FNPTR(vkFreeCommandBuffers)
+FNPTR(vkDestroyRenderPass)
+FNPTR(vkDestroyFramebuffer)
+FNPTR(vkDestroyShaderModule)
+FNPTR(vkDestroyPipelineCache)
+FNPTR(vkCreateQueryPool)
+FNPTR(vkDestroyQueryPool)
+FNPTR(vkGetQueryPoolResults)
+FNPTR(vkCmdBeginQuery)
+FNPTR(vkCmdEndQuery)
+FNPTR(vkCmdResetQueryPool)
+FNPTR(vkCmdCopyQueryPoolResults)
+FNPTR(vkCreateSwapchainKHR)
+FNPTR(vkDestroySwapchainKHR)
+FNPTR(vkGetSwapchainImagesKHR)
+FNPTR(vkAcquireNextImageKHR)
+FNPTR(vkQueuePresentKHR)
+FNPTR(vkDestroySurfaceKHR)
+FNPTR(vkGetPhysicalDeviceSurfaceFormatsKHR)
+FNPTR(vkGetPhysicalDeviceSurfaceCapabilitiesKHR)
+FNPTR(vkGetPhysicalDeviceSurfacePresentModesKHR)
+#ifdef _WIN32
+	FNPTR(vkCreateWin32SurfaceKHR)
+#else
+	#ifdef __ANDROID__
+		FNPTR(vkCreateAndroidSurfaceKHR)
+	#else
+		FNPTR(vkCreateXcbSurfaceKHR)
+	#endif
+#endif
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "VulkanRenderer/VulkanRuntimeLinking.inl"

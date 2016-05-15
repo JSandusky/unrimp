@@ -49,6 +49,24 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const uint32_t VulkanRuntimeLinking::NUMBER_OF_VALIDATION_LAYERS = 9;	// TODO(co) Introduce and use "countof()"
+	const char*    VulkanRuntimeLinking::VALIDATION_LAYER_NAMES[] =
+	{
+		"VK_LAYER_GOOGLE_threading",
+		"VK_LAYER_LUNARG_mem_tracker",
+		"VK_LAYER_LUNARG_object_tracker",
+		"VK_LAYER_LUNARG_draw_state",
+		"VK_LAYER_LUNARG_param_checker",
+		"VK_LAYER_LUNARG_swapchain",
+		"VK_LAYER_LUNARG_device_limits",
+		"VK_LAYER_LUNARG_image",
+		"VK_LAYER_GOOGLE_unique_objects",
+	};
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	VulkanRuntimeLinking::VulkanRuntimeLinking() :
@@ -210,20 +228,6 @@ namespace VulkanRenderer
 
 	VkResult VulkanRuntimeLinking::createVulkanInstance(bool enableValidation)
 	{
-		const char* validationLayerNames[] =
-		{
-			"VK_LAYER_GOOGLE_threading",
-			"VK_LAYER_LUNARG_mem_tracker",
-			"VK_LAYER_LUNARG_object_tracker",
-			"VK_LAYER_LUNARG_draw_state",
-			"VK_LAYER_LUNARG_param_checker",
-			"VK_LAYER_LUNARG_swapchain",
-			"VK_LAYER_LUNARG_device_limits",
-			"VK_LAYER_LUNARG_image",
-			"VK_LAYER_GOOGLE_unique_objects",
-		};
-		const uint32_t validationLayerCount = 9;	// TODO(co) Introduce and use "countof()"
-
 		// TODO(co) Make it possible for the user to provide application related information?
 		VkApplicationInfo vkApplicationInfo = {};
 		vkApplicationInfo.sType			   = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -243,7 +247,7 @@ namespace VulkanRenderer
 
 		VkInstanceCreateInfo vkInstanceCreateInfo = {};
 		vkInstanceCreateInfo.sType			  = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-		vkInstanceCreateInfo.pNext			  = NULL;
+		vkInstanceCreateInfo.pNext			  = nullptr;
 		vkInstanceCreateInfo.pApplicationInfo = &vkApplicationInfo;
 		if (enableValidation)
 		{
@@ -253,8 +257,8 @@ namespace VulkanRenderer
 		vkInstanceCreateInfo.ppEnabledExtensionNames = enabledExtensions.data();
 		if (enableValidation)
 		{
-			vkInstanceCreateInfo.enabledLayerCount = validationLayerCount;
-			vkInstanceCreateInfo.ppEnabledLayerNames = validationLayerNames;
+			vkInstanceCreateInfo.enabledLayerCount   = NUMBER_OF_VALIDATION_LAYERS;
+			vkInstanceCreateInfo.ppEnabledLayerNames = VALIDATION_LAYER_NAMES;
 		}
 		VkResult vkResult = vkCreateInstance(&vkInstanceCreateInfo, nullptr, &mVkInstance);
 		if (vkResult == VK_ERROR_LAYER_NOT_PRESENT && enableValidation)
@@ -279,7 +283,7 @@ namespace VulkanRenderer
 			if (result)																														\
 			{																																\
 				##funcName = reinterpret_cast<PFN_##funcName>(vkGetInstanceProcAddr(mVkInstance, #funcName));								\
-				if (NULL == ##funcName)																										\
+				if (nullptr == ##funcName)																									\
 				{																															\
 					RENDERER_OUTPUT_DEBUG_PRINTF("Vulkan error: Failed to load instance based Vulkan function pointer \"%s\"", #funcName)	\
 					result = false;																											\
@@ -375,9 +379,23 @@ namespace VulkanRenderer
 		IMPORT_FUNC(vkCmdEndQuery);
 		IMPORT_FUNC(vkCmdResetQueryPool);
 		IMPORT_FUNC(vkCmdCopyQueryPoolResults);
-		#if defined(__ANDROID__)
-			IMPORT_FUNC(vkCreateAndroidSurfaceKHR);
-			IMPORT_FUNC(vkDestroySurfaceKHR);
+		IMPORT_FUNC(vkCreateSwapchainKHR);
+		IMPORT_FUNC(vkDestroySwapchainKHR);
+		IMPORT_FUNC(vkGetSwapchainImagesKHR);
+		IMPORT_FUNC(vkAcquireNextImageKHR);
+		IMPORT_FUNC(vkQueuePresentKHR);
+		IMPORT_FUNC(vkDestroySurfaceKHR);
+		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceFormatsKHR);
+		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
+		IMPORT_FUNC(vkGetPhysicalDeviceSurfacePresentModesKHR);
+		#ifdef _WIN32
+			IMPORT_FUNC(vkCreateWin32SurfaceKHR);
+		#else
+			#ifdef __ANDROID__
+				IMPORT_FUNC(vkCreateAndroidSurfaceKHR);
+			#else
+				IMPORT_FUNC(vkCreateXcbSurfaceKHR);
+			#endif
 		#endif
 
 		// Undefine the helper macro

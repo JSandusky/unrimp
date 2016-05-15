@@ -29,6 +29,17 @@
 //[-------------------------------------------------------]
 #include <Renderer/PlatformTypes.h>
 
+#include "VulkanRenderer/VulkanRuntimeLinking.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace VulkanRenderer
+{
+	class VulkanRenderer;
+}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -64,6 +75,33 @@ namespace VulkanRenderer
 		*/
 		virtual ~IContext();
 
+		/**
+		*  @brief
+		*    Return the Vulkan physical device this context is using
+		*
+		*  @return
+		*    The Vulkan physical device this context is using
+		*/
+		inline VkPhysicalDevice getVkPhysicalDevice() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan device this context is using
+		*
+		*  @return
+		*    The Vulkan device this context is using
+		*/
+		inline VkDevice getVkDevice() const;
+
+		/**
+		*  @brief
+		*    Return the handle to the Vulkan device graphics queue that command buffers are submitted to
+		*
+		*  @return
+		*    Handle to the Vulkan device graphics queue that command buffers are submitted to
+		*/
+		inline VkQueue getGraphicsVkQueue() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual IContext methods                       ]
@@ -91,9 +129,12 @@ namespace VulkanRenderer
 	protected:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] vulkanRenderer
+		*    Owner Vulkan renderer instance
 		*/
-		IContext();
+		explicit IContext(VulkanRenderer& vulkanRenderer);
 
 		/**
 		*  @brief
@@ -102,7 +143,7 @@ namespace VulkanRenderer
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		explicit IContext(const IContext &source);
+		explicit IContext(const IContext &source) = delete;
 
 		/**
 		*  @brief
@@ -114,7 +155,16 @@ namespace VulkanRenderer
 		*  @return
 		*    Reference to this instance
 		*/
-		IContext &operator =(const IContext &source);
+		IContext &operator =(const IContext &source) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		VkPhysicalDevice mVkPhysicalDevice;	///< Vulkan physical device this context is using
+		VkDevice		 mVkDevice;			///< Vulkan device instance this context is using
+		VkQueue			 mGraphicsVkQueue;	///< Handle to the Vulkan device graphics queue that command buffers are submitted to
 
 
 	};
@@ -124,3 +174,9 @@ namespace VulkanRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // VulkanRenderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "VulkanRenderer/IContext.inl"

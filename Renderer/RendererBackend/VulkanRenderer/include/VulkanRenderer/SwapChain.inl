@@ -28,10 +28,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IContext& SwapChain::getContext() const
-	{
-		return *mContext;
-	}
+	// TODO(co) Remove this header if not required
 
 
 //[-------------------------------------------------------]

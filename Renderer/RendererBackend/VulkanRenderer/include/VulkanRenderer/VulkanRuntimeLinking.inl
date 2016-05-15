@@ -19,14 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "VulkanRenderer/Windows/ContextWindows.h"
-#include "VulkanRenderer/Extensions.h"
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace VulkanRenderer
@@ -36,28 +28,9 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ContextWindows::ContextWindows(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle, const ContextWindows*) :
-		IContext(vulkanRenderer),
-		mNativeWindowHandle(nativeWindowHandle),
-		mDummyWindow(NULL_HANDLE),
-		mWindowDeviceContext(NULL_HANDLE),
-		mOwnsRenderContext(true)
+	inline VkInstance VulkanRuntimeLinking::getVkInstance() const
 	{
-		// TODO(co) Implement me
-	}
-
-	ContextWindows::~ContextWindows()
-	{
-		// TODO(co) Implement me
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual VulkanRenderer::IContext methods       ]
-	//[-------------------------------------------------------]
-	void ContextWindows::makeCurrent() const
-	{
-		// TODO(co) Implement me
+		return mVkInstance;
 	}
 
 

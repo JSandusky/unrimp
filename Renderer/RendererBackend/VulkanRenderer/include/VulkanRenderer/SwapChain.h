@@ -29,13 +29,16 @@
 //[-------------------------------------------------------]
 #include <Renderer/ISwapChain.h>
 
+#include "VulkanRenderer/VulkanRuntimeLinking.h"
+
+#include <vector>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace VulkanRenderer
 {
-	class IContext;
 	class VulkanRenderer;
 }
 
@@ -75,31 +78,9 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
-		*    Constructor
-		*
-		*  @param[in] vulkanRenderer
-		*    Owner Vulkan renderer instance
-		*  @param[in] nativeWindowHandle
-		*    Native window handle, must be valid
-		*  @param[in] context
-		*    Context to use
-		*/
-		SwapChain(VulkanRenderer &vulkanRenderer, handle nativeWindowHandle, IContext& context);
-
-		/**
-		*  @brief
 		*    Destructor
 		*/
 		virtual ~SwapChain();
-
-		/**
-		*  @brief
-		*    Return the context
-		*
-		*  @return
-		*    The context
-		*/
-		inline IContext& getContext() const;
 
 
 	//[-------------------------------------------------------]
@@ -121,12 +102,26 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef struct _SwapChainBuffers
+		{
+			VkImage		image;
+			VkImageView view;
+		} SwapChainBuffer;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle    mNativeWindowHandle;	///< Native window handle window, can be a null handle
-		IContext* mContext;				///< Context, must be valid
-		bool	  mOwnsContext;			///< Does this swap chain own the context?
+		handle						 mNativeWindowHandle;	///< Native window handle window, can be a null handle
+		VkSurfaceKHR				 mVkSurfaceKHR;
+		VkSwapchainKHR				 mVkSwapchainKHR;
+		uint32_t					 mSwapchainImageCount;
+		std::vector<VkImage>		 mVkImages;
+		std::vector<SwapChainBuffer> mSwapChainBuffer;
 
 
 	};

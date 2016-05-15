@@ -101,7 +101,7 @@ namespace VulkanRenderer
 		{
 			#ifdef WIN32
 				// TODO(co) Add external context support
-				mContext = new ContextWindows(nativeWindowHandle);
+				mContext = new ContextWindows(*this, nativeWindowHandle);
 			#elif defined LINUX
 				mContext = new ContextLinux(nativeWindowHandle, useExternalContext);
 			#else
@@ -138,7 +138,7 @@ namespace VulkanRenderer
 				if (NULL_HANDLE != nativeWindowHandle)
 				{
 					// Create a main swap chain instance
-					mMainSwapChain = new SwapChain(*this, nativeWindowHandle, *mContext);
+					mMainSwapChain = new SwapChain(*this, nativeWindowHandle);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
 					mMainSwapChain->addReference();	// Internal renderer reference
 				}
@@ -251,7 +251,7 @@ namespace VulkanRenderer
 	Renderer::IShaderLanguage *VulkanRenderer::getShaderLanguage(const char *shaderLanguageName)
 	{
 		// Optimization: Check for shader language name pointer match, first
-		if (shaderLanguageName == ShaderLanguageGlsl::NAME || !stricmp(shaderLanguageName, ShaderLanguageGlsl::NAME))
+		if (nullptr != shaderLanguageName && (shaderLanguageName == ShaderLanguageGlsl::NAME || !stricmp(shaderLanguageName, ShaderLanguageGlsl::NAME)))
 		{
 			// If required, create the GLSL shader language instance right now
 			if (nullptr == mShaderLanguageGlsl)
@@ -602,7 +602,8 @@ namespace VulkanRenderer
 				{
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
-						static_cast<SwapChain*>(mRenderTarget)->getContext().makeCurrent();
+						// TODO(co) Implement me
+						// static_cast<SwapChain*>(mRenderTarget)->getContext().makeCurrent();
 						break;
 					}
 

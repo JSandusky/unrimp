@@ -40,7 +40,7 @@ namespace VulkanRenderer
 	inline bool ContextWindows::isInitialized() const
 	{
 		// TODO(co) Implement me
-		return false;
+		return true;
 	}
 
 

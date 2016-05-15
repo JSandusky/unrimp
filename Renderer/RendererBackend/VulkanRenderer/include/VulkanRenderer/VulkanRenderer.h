@@ -112,6 +112,15 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
+		*    Return the Vulkan runtime linking instance
+		*
+		*  @return
+		*    The Vulkan runtime linking instance, do not free the memory the reference is pointing to
+		*/
+		inline const VulkanRuntimeLinking &getVulkanRuntimeLinking() const;
+
+		/**
+		*  @brief
 		*    Return the Vulkan context instance
 		*
 		*  @return

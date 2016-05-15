@@ -277,5 +277,11 @@
     <None Include="include\VulkanRenderer\Detail\IState.inl">
       <Filter>Source Files\Detail</Filter>
     </None>
+    <None Include="include\VulkanRenderer\VulkanRuntimeLinking.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\IContext.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
