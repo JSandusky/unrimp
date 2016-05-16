@@ -19,6 +19,18 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "VulkanRenderer/VulkanRuntimeLinking.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace VulkanRenderer
@@ -26,12 +38,34 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	inline HDC ContextWindows::getDeviceContext() const
+	/**
+	*  @brief
+	*    Vulkan helper
+	*/
+	class Helper
 	{
-		return mWindowDeviceContext;
-	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Uses a fixed sub resource layout with first mip level and layer
+		*/
+		static void setImageLayout(VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout, VkImageAspectFlags vkImageAspectFlags);
+
+		/**
+		*  @brief
+		*    Put an image memory barrier for setting an image layout on the sub resource into the given command buffer
+		*/
+		static void setImageLayout(VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout, VkImageSubresourceRange vkImageSubresourceRange);
+
+
+	};
 
 
 //[-------------------------------------------------------]

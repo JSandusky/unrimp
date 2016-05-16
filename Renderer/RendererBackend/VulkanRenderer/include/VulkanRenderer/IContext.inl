@@ -43,6 +43,16 @@ namespace VulkanRenderer
 		return mGraphicsVkQueue;
 	}
 
+	inline VkCommandPool IContext::getVkCommandPool() const
+	{
+		return mVkCommandPool;
+	}
+
+	inline VkCommandBuffer IContext::getSetupVkCommandBuffer() const
+	{
+		return mSetupVkCommandBuffer;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

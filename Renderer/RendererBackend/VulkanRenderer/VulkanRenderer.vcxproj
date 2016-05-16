@@ -25,6 +25,7 @@
     <ClInclude Include="include\VulkanRenderer\Detail\RasterizerState.h" />
     <ClInclude Include="include\VulkanRenderer\Extensions.h" />
     <ClInclude Include="include\VulkanRenderer\Framebuffer.h" />
+    <ClInclude Include="include\VulkanRenderer\Helper.h" />
     <ClInclude Include="include\VulkanRenderer\IContext.h" />
     <ClInclude Include="include\VulkanRenderer\IndexBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Linux\ContextLinux.h" />
@@ -57,6 +58,7 @@
     <ClCompile Include="src\Detail\RasterizerState.cpp" />
     <ClCompile Include="src\Extensions.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
+    <ClCompile Include="src\Helper.cpp" />
     <ClCompile Include="src\IContext.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Linux\ContextLinux.cpp">

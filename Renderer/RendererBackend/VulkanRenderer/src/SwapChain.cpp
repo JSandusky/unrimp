@@ -24,6 +24,7 @@
 #include "VulkanRenderer/SwapChain.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/IContext.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -45,8 +46,9 @@ namespace VulkanRenderer
 	{
 		// Get the Vulkan instance and the Vulkan physical device
 		const VkInstance vkInstance = vulkanRenderer.getVulkanRuntimeLinking().getVkInstance();
-		const VkPhysicalDevice vkPhysicalDevice = vulkanRenderer.getContext().getVkPhysicalDevice();
-		const VkDevice vkDevice = vulkanRenderer.getContext().getVkDevice();
+		const IContext& context = vulkanRenderer.getContext();
+		const VkPhysicalDevice vkPhysicalDevice = context.getVkPhysicalDevice();
+		const VkDevice vkDevice = context.getVkDevice();
 
 		// Create Vulkan surface instance depending on OS
 		#ifdef _WIN32
@@ -253,15 +255,8 @@ namespace VulkanRenderer
 
 			mSwapChainBuffer[i].image = mVkImages[i];
 
-			// TODO(co) Transform images from initial (undefined) to present layout
-			/*
-			vkTools::setImageLayout(
-				cmdBuffer, 
-				mSwapChainBuffer[i].image, 
-				VK_IMAGE_ASPECT_COLOR_BIT, 
-				VK_IMAGE_LAYOUT_UNDEFINED, 
-				VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
-			*/
+			// Transform images from initial (undefined) to present layout
+			Helper::setImageLayout(context.getSetupVkCommandBuffer(), mSwapChainBuffer[i].image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_ASPECT_COLOR_BIT);
 
 			colorAttachmentView.image = mSwapChainBuffer[i].image;
 

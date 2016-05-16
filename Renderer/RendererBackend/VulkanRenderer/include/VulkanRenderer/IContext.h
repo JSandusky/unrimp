@@ -102,6 +102,30 @@ namespace VulkanRenderer
 		*/
 		inline VkQueue getGraphicsVkQueue() const;
 
+		/**
+		*  @brief
+		*    Return the used Vulkan command buffer pool instance
+		*
+		*  @return
+		*    The used Vulkan command buffer pool instance
+		*/
+		inline VkCommandPool getVkCommandPool() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan command buffer instance used for setup
+		*
+		*  @return
+		*    The Vulkan command buffer instance used for setup
+		*/
+		inline VkCommandBuffer getSetupVkCommandBuffer() const;
+
+		/**
+		*  @brief
+		*    Flush the used Vulkan command buffer instance
+		*/
+		void flushSetupVkCommandBuffer() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual IContext methods                       ]
@@ -114,7 +138,7 @@ namespace VulkanRenderer
 		*  @return
 		*    "true" if the context is initialized, else "false"
 		*/
-		virtual bool isInitialized() const = 0;
+		virtual bool isInitialized() const;
 
 		/**
 		*  @brief
@@ -162,9 +186,11 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		VkPhysicalDevice mVkPhysicalDevice;	///< Vulkan physical device this context is using
-		VkDevice		 mVkDevice;			///< Vulkan device instance this context is using
-		VkQueue			 mGraphicsVkQueue;	///< Handle to the Vulkan device graphics queue that command buffers are submitted to
+		VkPhysicalDevice mVkPhysicalDevice;		///< Vulkan physical device this context is using
+		VkDevice		 mVkDevice;				///< Vulkan device instance this context is using
+		VkQueue			 mGraphicsVkQueue;		///< Handle to the Vulkan device graphics queue that command buffers are submitted to
+		VkCommandPool	 mVkCommandPool;		///< Vulkan command buffer pool instance
+		VkCommandBuffer  mSetupVkCommandBuffer;	///< Vulkan command buffer instance used for setup
 
 
 	};

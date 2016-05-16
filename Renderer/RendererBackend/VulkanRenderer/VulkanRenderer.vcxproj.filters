@@ -112,6 +112,9 @@
     <ClInclude Include="include\VulkanRenderer\Detail\IState.h">
       <Filter>Source Files\Detail</Filter>
     </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Helper.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -206,6 +209,9 @@
     </ClCompile>
     <ClCompile Include="src\Detail\BlendState.cpp">
       <Filter>Source Files\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Helper.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

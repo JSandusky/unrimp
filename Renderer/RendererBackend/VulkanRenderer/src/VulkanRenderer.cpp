@@ -141,6 +141,9 @@ namespace VulkanRenderer
 					mMainSwapChain = new SwapChain(*this, nativeWindowHandle);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
 					mMainSwapChain->addReference();	// Internal renderer reference
+
+					// Done
+					mContext->flushSetupVkCommandBuffer();
 				}
 			}
 		}

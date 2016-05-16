@@ -100,7 +100,6 @@ namespace VulkanRenderer
 	//[ Public virtual VulkanRenderer::IContext methods       ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual bool isInitialized() const override;
 		virtual void makeCurrent() const override;
 
 
