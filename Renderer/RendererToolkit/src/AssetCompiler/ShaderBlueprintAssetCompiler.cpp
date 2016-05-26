@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/ShaderBlueprintAssetCompiler.h"
+#include "RendererToolkit/Helper/StringHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintFileFormat.h>
@@ -92,16 +93,20 @@ namespace RendererToolkit
 		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
 		{ // Shader blueprint
-			// TODO(co) At the moment, we just copy over the ASCII shader source code. Later on, we might want to perform optimizations like
-			// stripping away all comments and unnecessary white spaces.
-
 			// Get file size and file data
 			std::string sourceCode;
-			inputFileStream.seekg(0, std::ifstream::end);
-			const std::streampos numberOfBytes = inputFileStream.tellg();
-			inputFileStream.seekg(0, std::ifstream::beg);
-			sourceCode.resize(static_cast<size_t>(numberOfBytes));
-			inputFileStream.read(const_cast<char*>(sourceCode.c_str()), numberOfBytes);
+			{
+				std::string originalSourceCode;
+				inputFileStream.seekg(0, std::ifstream::end);
+				const std::streampos numberOfBytes = inputFileStream.tellg();
+				inputFileStream.seekg(0, std::ifstream::beg);
+				originalSourceCode.resize(static_cast<size_t>(numberOfBytes));
+				inputFileStream.read(const_cast<char*>(originalSourceCode.c_str()), numberOfBytes);
+
+				// Strip comments from source code
+				StringHelper::stripCommentsFromSourceCode(originalSourceCode, sourceCode);
+			}
+			const std::streampos numberOfBytes = sourceCode.length();
 
 			// Collect shader piece resources to include
 			std::vector<RendererRuntime::AssetId> includeShaderPieceAssetIds;

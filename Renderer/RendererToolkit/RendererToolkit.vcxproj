@@ -47,6 +47,7 @@
     <ClInclude Include="include\RendererToolkit\Helper\JsonHelper.h" />
     <ClInclude Include="include\RendererToolkit\Helper\JsonMaterialBlueprintHelper.h" />
     <ClInclude Include="include\RendererToolkit\Helper\JsonMaterialHelper.h" />
+    <ClInclude Include="include\RendererToolkit\Helper\StringHelper.h" />
     <ClInclude Include="include\RendererToolkit\IRendererToolkit.h" />
     <ClInclude Include="include\RendererToolkit\PlatformTypes.h" />
     <ClInclude Include="include\RendererToolkit\Project\IProject.h" />
@@ -95,6 +96,7 @@
     <ClCompile Include="src\Helper\JsonHelper.cpp" />
     <ClCompile Include="src\Helper\JsonMaterialBlueprintHelper.cpp" />
     <ClCompile Include="src\Helper\JsonMaterialHelper.cpp" />
+    <ClCompile Include="src\Helper\StringHelper.cpp" />
     <ClCompile Include="src\Project\ProjectAssetMonitor.cpp" />
     <ClCompile Include="src\Project\ProjectImpl.cpp" />
     <ClCompile Include="src\RendererToolkitImpl.cpp" />

@@ -128,6 +128,9 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\ShaderPieceAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Helper\StringHelper.h">
+      <Filter>Source Files\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -189,6 +192,9 @@
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\ShaderPieceAssetCompiler.cpp">
       <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Helper\StringHelper.cpp">
+      <Filter>Source Files\Helper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
