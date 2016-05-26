@@ -42,11 +42,11 @@
 #define GLM_VERSION_MAJOR			0
 #define GLM_VERSION_MINOR			9
 #define GLM_VERSION_PATCH			7
-#define GLM_VERSION_REVISION		4
+#define GLM_VERSION_REVISION		5
 
 #if(defined(GLM_MESSAGES) && !defined(GLM_MESSAGE_VERSION_DISPLAYED))
 #	define GLM_MESSAGE_VERSION_DISPLAYED
-#	pragma message ("GLM: version 0.9.7.4")
+#	pragma message ("GLM: version 0.9.7.5")
 #endif//GLM_MESSAGE
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -423,8 +423,14 @@
 #		define GLM_ARCH (GLM_ARCH_AVX2 | GLM_ARCH_AVX | GLM_ARCH_SSE4 | GLM_ARCH_SSE3 | GLM_ARCH_SSE2)
 #	elif defined(__AVX__)
 #		define GLM_ARCH (GLM_ARCH_AVX | GLM_ARCH_SSE4 | GLM_ARCH_SSE3 | GLM_ARCH_SSE2)
-#	elif _M_IX86_FP == 2
+#	elif defined(_M_X64)
 #		define GLM_ARCH (GLM_ARCH_SSE2)
+#	elif defined(_M_IX86_FP)
+#		if _M_IX86_FP >= 2
+#			define GLM_ARCH (GLM_ARCH_SSE2)
+#		else
+#			define GLM_ARCH (GLM_ARCH_PURE)
+#		endif
 #	else
 #		define GLM_ARCH (GLM_ARCH_PURE)
 #	endif

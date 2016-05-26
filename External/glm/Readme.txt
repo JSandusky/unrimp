@@ -1,4 +1,4 @@
-GLM - OpenGL mathematics library - "glm-0.9.7.4"
+GLM - OpenGL mathematics library - "glm-0.9.7.5"
 - License: "MIT License"
 - Online: http://glm.g-truc.net/
 - Just consisting of headers
