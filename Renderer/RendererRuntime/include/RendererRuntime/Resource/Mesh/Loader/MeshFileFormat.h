@@ -27,6 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Core/StringId.h"
+
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
@@ -35,10 +37,19 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
+
+
 	// Mesh file format content:
 	// - Mesh header
 	// - Vertex and index buffer data
 	// - Vertex array attribute definitions
+	// - Sub-meshes
 	namespace v1Mesh
 	{
 
@@ -53,13 +64,25 @@ namespace RendererRuntime
 		#pragma pack(1)
 			struct Header
 			{
+				// Format
 				uint32_t formatType;
 				uint16_t formatVersion;
+				// Vertex and index data
 				uint8_t  numberOfBytesPerVertex;
 				uint32_t numberOfVertices;
 				uint8_t  indexBufferFormat;
 				uint32_t numberOfIndices;
 				uint8_t  numberOfVertexAttributes;
+				// Sub-meshes
+				uint8_t  numberOfSubMeshes;
+			};
+
+			struct SubMesh
+			{
+				AssetId  materialAssetId;
+				uint8_t  primitiveTopology;	// "Renderer::PrimitiveTopology"-type
+				uint32_t startIndexLocation;
+				uint32_t numberOfIndices;
 			};
 		#pragma pack(pop)
 

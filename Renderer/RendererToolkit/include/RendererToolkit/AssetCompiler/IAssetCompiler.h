@@ -101,6 +101,13 @@ namespace RendererToolkit
 			{
 				// Nothing here
 			}
+			uint32_t getCompiledAssetIdBySourceAssetId(uint32_t sourceAssetId) const
+			{
+				SourceAssetIdToCompiledAssetId::const_iterator iterator = sourceAssetIdToCompiledAssetId.find(sourceAssetId);
+				const uint32_t compiledAssetId = (iterator != sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
+				// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
+				return compiledAssetId;
+			}
 			Input(const Input&) = delete;
 			Input& operator=(const Input&) = delete;
 		};

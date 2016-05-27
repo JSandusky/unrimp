@@ -47,22 +47,7 @@ namespace
 	{
 
 
-		// TODO(co) Just a first quick'n'dirty placeholder for the real implementation
-
-
-		RendererRuntime::MaterialResource* mMaterialResource = nullptr;
-
-
-		void initialize(const RendererRuntime::IRendererRuntime& rendererRuntime)
-		{
-			// Load the material resource
-			mMaterialResource = rendererRuntime.getMaterialResourceManager().loadMaterialResourceByAssetId("Example/Material/Character/FirstMesh");
-		}
-
-		void deinitialize()
-		{
-			// Nothing here
-		}
+		// TODO(co) Just a first quick'n'dirty placeholder for the real implementation using a render queue
 
 		void draw(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::CameraSceneItem& cameraSceneItem)
 		{
@@ -71,73 +56,95 @@ namespace
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
-			RendererRuntime::MaterialTechnique* materialTechnique = mMaterialResource->getMaterialTechniqueById("Default");
-			if (nullptr != materialTechnique)
+			// Loop through all scene nodes
+			const RendererRuntime::ISceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
+			const size_t numberOfSceneNodes = sceneNodes.size();
+			for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
 			{
-				RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = materialTechnique->getMaterialBlueprintResource();
-				if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
+				RendererRuntime::ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
+				const RendererRuntime::Transform& transform = sceneNode->getTransform();
+
+				// Loop through all scene items attached to the current scene node
+				const RendererRuntime::ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
+				const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
+				for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
 				{
-					// TODO(co) Pass shader properties
-					RendererRuntime::ShaderProperties shaderProperties;
-
-					Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateObjectPtr(shaderProperties, mMaterialResource->getMaterialProperties());
-					if (nullptr != pipelineStatePtr)
+					RendererRuntime::ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
+					if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
 					{
-						// Fill the unknown uniform buffers
-						materialBlueprintResource->fillUnknownUniformBuffers();
-
-						// Fill the pass uniform buffer
-						// TODO(co) Camera usage
-						const RendererRuntime::Transform worldSpaceToViewSpaceTransform;
-						materialBlueprintResource->fillPassUniformBuffer(worldSpaceToViewSpaceTransform);
-
-						// Fill the material uniform buffer
-						materialBlueprintResource->fillMaterialUniformBuffer();
-
-						// Bind the material blueprint resource to the used renderer
-						materialBlueprintResource->bindToRenderer();
-
-						// Bind the material technique to the used renderer
-						materialTechnique->bindToRenderer(rendererRuntime);
-
-						// Set the used pipeline state object (PSO)
-						renderer.setPipelineState(pipelineStatePtr);
-
-						// Loop through all scene nodes
-						const RendererRuntime::ISceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
-						const size_t numberOfSceneNodes = sceneNodes.size();
-						for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
+						// Draw mesh instance
+						RendererRuntime::MeshSceneItem* meshSceneItem = static_cast<RendererRuntime::MeshSceneItem*>(sceneItem);
+						RendererRuntime::MeshResource* meshResource = meshSceneItem->getMeshResource();
+						if (nullptr != meshResource)
 						{
-							RendererRuntime::ISceneNode* sceneNode = sceneNodes[sceneNodeIndex];
-							const RendererRuntime::Transform& transform = sceneNode->getTransform();
-
-							// Loop through all scene items attached to the current scene node
-							const RendererRuntime::ISceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
-							const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
-							for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
+							// Setup input assembly (IA): Set the used vertex array
+							Renderer::IVertexArrayPtr vertexArrayPtr = meshResource->getVertexArrayPtr();
+							if (nullptr != vertexArrayPtr)
 							{
-								RendererRuntime::ISceneItem* sceneItem = attachedSceneItems[attachedSceneItemIndex];
-								if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
-								{
-									// Fill the instance uniform buffer
-									materialBlueprintResource->fillInstanceUniformBuffer(transform, *materialTechnique);
+								renderer.iaSetVertexArray(vertexArrayPtr);
+								const uint32_t numberOfVertices = meshResource->getNumberOfVertices();
 
-									// Draw mesh instance
-									RendererRuntime::MeshSceneItem* meshSceneItem = static_cast<RendererRuntime::MeshSceneItem*>(sceneItem);
-									RendererRuntime::MeshResource* meshResource = meshSceneItem->getMeshResource();
-									if (nullptr != meshResource)
+								// Loop through all sub-meshes
+								const RendererRuntime::SubMeshes& subMeshes = meshResource->getSubMeshes();
+								for (const RendererRuntime::SubMesh& subMesh : subMeshes)
+								{
+									// Material resource
+									RendererRuntime::MaterialResource* materialResource = subMesh.getMaterialResource();
+									if (nullptr != materialResource)
 									{
-										meshResource->draw();
+										RendererRuntime::MaterialTechnique* materialTechnique = materialResource->getMaterialTechniqueById("Default");
+										if (nullptr != materialTechnique)
+										{
+											RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = materialTechnique->getMaterialBlueprintResource();
+											if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
+											{
+												// TODO(co) Pass shader properties
+												RendererRuntime::ShaderProperties shaderProperties;
+
+												Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateObjectPtr(shaderProperties, materialResource->getMaterialProperties());
+												if (nullptr != pipelineStatePtr)
+												{
+													// Fill the unknown uniform buffers
+													materialBlueprintResource->fillUnknownUniformBuffers();
+
+													// Fill the pass uniform buffer
+													// TODO(co) Camera usage
+													const RendererRuntime::Transform worldSpaceToViewSpaceTransform;
+													materialBlueprintResource->fillPassUniformBuffer(worldSpaceToViewSpaceTransform);
+
+													// Fill the material uniform buffer
+													materialBlueprintResource->fillMaterialUniformBuffer();
+
+													// Bind the material blueprint resource to the used renderer
+													materialBlueprintResource->bindToRenderer();
+
+													// Bind the material technique to the used renderer
+													materialTechnique->bindToRenderer(rendererRuntime);
+
+													// Set the used pipeline state object (PSO)
+													renderer.setPipelineState(pipelineStatePtr);
+
+													// Fill the instance uniform buffer
+													materialBlueprintResource->fillInstanceUniformBuffer(transform, *materialTechnique);
+
+													// Setup input assembly (IA): Set the primitive topology used for draw calls
+													renderer.iaSetPrimitiveTopology(subMesh.getPrimitiveTopology());
+
+													// Render the specified geometric primitive, based on indexing into an array of vertices
+													renderer.drawIndexed(subMesh.getStartIndexLocation(), subMesh.getNumberOfIndices(), 0, 0, numberOfVertices);
+												}
+											}
+										}
 									}
 								}
 							}
 						}
 					}
-
-					// End debug event
-					RENDERER_END_DEBUG_EVENT(&renderer)
 				}
 			}
+
+			// End debug event
+			RENDERER_END_DEBUG_EVENT(&renderer)
 		}
 
 
@@ -174,14 +181,12 @@ namespace RendererRuntime
 	CompositorInstancePassScene::CompositorInstancePassScene(const CompositorResourcePassScene& compositorResourcePassScene, const CompositorInstanceNode& compositorInstanceNode) :
 		ICompositorInstancePass(compositorResourcePassScene, compositorInstanceNode)
 	{
-		// TODO(co) Just a first test
-		::detail::initialize(getCompositorInstanceNode().getCompositorInstance().getRendererRuntime());
+		// Nothing here
 	}
 
 	CompositorInstancePassScene::~CompositorInstancePassScene()
 	{
-		// TODO(co) Just a first test
-		::detail::deinitialize();
+		// Nothing here
 	}
 
 

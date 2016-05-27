@@ -153,21 +153,9 @@ namespace RendererToolkit
 		}
 	}
 
-	uint32_t JsonHelper::getCompiledAssetId(const IAssetCompiler::Input& input, uint32_t sourceAssetId)
-	{
-		SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(sourceAssetId);
-		const uint32_t compiledAssetId = (iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
-		// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
-		return compiledAssetId;
-	}
-
 	uint32_t JsonHelper::getCompiledAssetId(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonShaderBlueprintsObject, const std::string& propertyName)
 	{
-		const uint32_t sourceAssetId = static_cast<uint32_t>(std::atoi(jsonShaderBlueprintsObject->get(propertyName).convert<std::string>().c_str()));
-		SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(sourceAssetId);
-		const uint32_t compiledAssetId = (iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
-		// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
-		return compiledAssetId;
+		return input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(jsonShaderBlueprintsObject->get(propertyName).convert<std::string>().c_str())));
 	}
 
 	std::string JsonHelper::getAbsoluteAssetFilename(const IAssetCompiler::Input& input, uint32_t sourceAssetId)

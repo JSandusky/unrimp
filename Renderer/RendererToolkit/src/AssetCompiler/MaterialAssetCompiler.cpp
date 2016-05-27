@@ -218,7 +218,7 @@ namespace RendererToolkit
 				}
 
 				// Transform the source asset ID into a local asset ID
-				technique.materialBlueprintAssetId = JsonHelper::getCompiledAssetId(input, technique.materialBlueprintAssetId);
+				technique.materialBlueprintAssetId = input.getCompiledAssetIdBySourceAssetId(technique.materialBlueprintAssetId);
 			}
 
 			{ // Material header

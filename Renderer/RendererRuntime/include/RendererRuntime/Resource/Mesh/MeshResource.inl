@@ -26,35 +26,26 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MeshResourceLoader::MeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
-		IResourceLoader(resourceManager),
-		mRendererRuntime(rendererRuntime),
-		mMeshResource(nullptr),
-		mRenderer(nullptr),
-		mNumberOfVertexBufferDataBytes(0),
-		mNumberOfUsedVertexBufferDataBytes(0),
-		mVertexBufferData(nullptr),
-		mNumberOfIndexBufferDataBytes(0),
-		mNumberOfUsedIndexBufferDataBytes(0),
-		mIndexBufferData(nullptr),
-		mIndexBufferFormat(0),
-		mNumberOfVertexAttributes(0),
-		mNumberOfUsedVertexAttributes(0),
-		mVertexAttributes(nullptr),
-		mNumberOfSubMeshes(0),
-		mNumberOfUsedSubMeshes(0),
-		mSubMeshes(nullptr)
+	inline uint32_t MeshResource::getNumberOfVertices() const
 	{
-		// Nothing here
+		return mNumberOfVertices;
 	}
 
-	inline void MeshResourceLoader::initialize(const Asset& asset, MeshResource& meshResource, Renderer::IRenderer& renderer)
+	inline uint32_t MeshResource::getNumberOfIndices() const
 	{
-		mAsset		  = asset;
-		mMeshResource = &meshResource;
-		mRenderer	  = &renderer;
+		return mNumberOfIndices;
+	}
+
+	inline Renderer::IVertexArrayPtr MeshResource::getVertexArrayPtr() const
+	{
+		return mVertexArray;
+	}
+
+	inline const SubMeshes& MeshResource::getSubMeshes() const
+	{
+		return mSubMeshes;
 	}
 
 

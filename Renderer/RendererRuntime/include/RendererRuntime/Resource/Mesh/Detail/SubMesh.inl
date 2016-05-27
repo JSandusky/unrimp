@@ -26,35 +26,60 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MeshResourceLoader::MeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
-		IResourceLoader(resourceManager),
-		mRendererRuntime(rendererRuntime),
-		mMeshResource(nullptr),
-		mRenderer(nullptr),
-		mNumberOfVertexBufferDataBytes(0),
-		mNumberOfUsedVertexBufferDataBytes(0),
-		mVertexBufferData(nullptr),
-		mNumberOfIndexBufferDataBytes(0),
-		mNumberOfUsedIndexBufferDataBytes(0),
-		mIndexBufferData(nullptr),
-		mIndexBufferFormat(0),
-		mNumberOfVertexAttributes(0),
-		mNumberOfUsedVertexAttributes(0),
-		mVertexAttributes(nullptr),
-		mNumberOfSubMeshes(0),
-		mNumberOfUsedSubMeshes(0),
-		mSubMeshes(nullptr)
+	inline SubMesh::SubMesh() :
+		mMaterialResource(nullptr),
+		mPrimitiveTopology(Renderer::PrimitiveTopology::UNKNOWN),
+		mStartIndexLocation(0),
+		mNumberOfIndices(0)
 	{
 		// Nothing here
 	}
 
-	inline void MeshResourceLoader::initialize(const Asset& asset, MeshResource& meshResource, Renderer::IRenderer& renderer)
+	inline SubMesh::~SubMesh()
 	{
-		mAsset		  = asset;
-		mMeshResource = &meshResource;
-		mRenderer	  = &renderer;
+		// Nothing here
+	}
+
+	inline SubMesh::SubMesh(const SubMesh& subMesh) :
+		mMaterialResource(subMesh.mMaterialResource),
+		mPrimitiveTopology(subMesh.mPrimitiveTopology),
+		mStartIndexLocation(subMesh.mStartIndexLocation),
+		mNumberOfIndices(subMesh.mNumberOfIndices)
+	{
+		// Nothing here
+	}
+
+	inline SubMesh& SubMesh::operator=(const SubMesh& subMesh)
+	{
+		mMaterialResource	= subMesh.mMaterialResource;
+		mPrimitiveTopology	= subMesh.mPrimitiveTopology;
+		mStartIndexLocation = subMesh.mStartIndexLocation;
+		mNumberOfIndices	= subMesh.mNumberOfIndices;
+
+		// Done
+		return *this;
+	}
+
+	inline MaterialResource* SubMesh::getMaterialResource() const
+	{
+		return mMaterialResource;
+	}
+
+	inline Renderer::PrimitiveTopology SubMesh::getPrimitiveTopology() const
+	{
+		return mPrimitiveTopology;
+	}
+
+	inline uint32_t SubMesh::getStartIndexLocation() const
+	{
+		return mStartIndexLocation;
+	}
+
+	inline uint32_t SubMesh::getNumberOfIndices() const
+	{
+		return mNumberOfIndices;
 	}
 
 

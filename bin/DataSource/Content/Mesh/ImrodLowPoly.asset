@@ -13,7 +13,7 @@
 			"AssetCategory": "Character",
 			"AssetName": "ImrodLowPoly",
 			"AssetDependencies": [ "1" ],
-			"FileDependencies": [ "ImrodLowPoly.obj" ],
+			"FileDependencies": [ "ImrodLowPoly.obj", "ImrodLowPoly.mtl" ],
 			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/gallery/imrod_dw.html ) by Dmitry Parkin: http://www.parkparkin.com"
 		},
 		"MeshAssetCompiler":

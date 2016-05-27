@@ -122,6 +122,9 @@
     <Filter Include="Source Files\Resource\ShaderBlueprint\Cache">
       <UniqueIdentifier>{1ea55649-e578-4f70-b82a-08a929465a90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Mesh\Detail">
+      <UniqueIdentifier>{db192051-4582-451e-b568-28c994acb6a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -296,6 +299,12 @@
     </None>
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderProperties.inl">
       <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Mesh\Detail\SubMesh.inl">
+      <Filter>Source Files\Resource\Mesh\Detail</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Mesh\MeshResource.inl">
+      <Filter>Source Files\Resource\Mesh</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -639,6 +648,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderProperties.h">
       <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Mesh\Detail\SubMesh.h">
+      <Filter>Source Files\Resource\Mesh\Detail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -889,6 +901,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderProperties.cpp">
       <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Mesh\Detail\SubMesh.cpp">
+      <Filter>Source Files\Resource\Mesh\Detail</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

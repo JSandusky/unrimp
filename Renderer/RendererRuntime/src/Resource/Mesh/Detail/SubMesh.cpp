@@ -19,43 +19,19 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Mesh/Detail/SubMesh.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline MeshResourceLoader::MeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
-		IResourceLoader(resourceManager),
-		mRendererRuntime(rendererRuntime),
-		mMeshResource(nullptr),
-		mRenderer(nullptr),
-		mNumberOfVertexBufferDataBytes(0),
-		mNumberOfUsedVertexBufferDataBytes(0),
-		mVertexBufferData(nullptr),
-		mNumberOfIndexBufferDataBytes(0),
-		mNumberOfUsedIndexBufferDataBytes(0),
-		mIndexBufferData(nullptr),
-		mIndexBufferFormat(0),
-		mNumberOfVertexAttributes(0),
-		mNumberOfUsedVertexAttributes(0),
-		mVertexAttributes(nullptr),
-		mNumberOfSubMeshes(0),
-		mNumberOfUsedSubMeshes(0),
-		mSubMeshes(nullptr)
-	{
-		// Nothing here
-	}
-
-	inline void MeshResourceLoader::initialize(const Asset& asset, MeshResource& meshResource, Renderer::IRenderer& renderer)
-	{
-		mAsset		  = asset;
-		mMeshResource = &meshResource;
-		mRenderer	  = &renderer;
-	}
+	// TODO(co) Remove if not required
 
 
 //[-------------------------------------------------------]

@@ -43,6 +43,10 @@ namespace RendererRuntime
 {
 	class MeshResource;
 	class IRendererRuntime;
+	namespace v1Mesh
+	{
+		struct SubMesh;
+	}
 }
 
 
@@ -117,6 +121,10 @@ namespace RendererRuntime
 		uint32_t				   mNumberOfVertexAttributes;
 		uint32_t				   mNumberOfUsedVertexAttributes;
 		Renderer::VertexAttribute* mVertexAttributes;
+		// Temporary sub-meshes
+		uint32_t		 mNumberOfSubMeshes;
+		uint32_t		 mNumberOfUsedSubMeshes;
+		v1Mesh::SubMesh* mSubMeshes;
 
 
 	};

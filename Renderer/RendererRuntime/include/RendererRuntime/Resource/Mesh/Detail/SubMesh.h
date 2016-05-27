@@ -27,11 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/IResource.h"
-#include "RendererRuntime/Resource/Mesh/Detail/SubMesh.h"
+#include <Renderer/Public/Renderer.h>
 
-#include <vector>
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class MaterialResource;
+}
 
 
 //[-------------------------------------------------------]
@@ -42,25 +47,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef std::vector<SubMesh> SubMeshes;
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Mesh resource class
+	*    Sub-mesh class
 	*/
-	class MeshResource : public IResource
+	class SubMesh
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
+		friend class MeshResource;
 		friend class MeshResourceLoader;
 
 
@@ -68,49 +68,24 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor
-		*/
-		explicit MeshResource(ResourceId resourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		RENDERERRUNTIME_API_EXPORT virtual ~MeshResource();
-
-		/**
-		*  @brief
-		*    Draw the mesh
-		*/
-		RENDERERRUNTIME_API_EXPORT void draw();
-
-		//[-------------------------------------------------------]
-		//[ Data                                                  ]
-		//[-------------------------------------------------------]
-		inline uint32_t getNumberOfVertices() const;
+		inline SubMesh();
+		inline ~SubMesh();
+		inline SubMesh(const SubMesh& subMesh);
+		inline SubMesh& operator=(const SubMesh& subMesh);
+		inline MaterialResource* getMaterialResource() const;
+		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
+		inline uint32_t getStartIndexLocation() const;
 		inline uint32_t getNumberOfIndices() const;
-		inline Renderer::IVertexArrayPtr getVertexArrayPtr() const;
-		inline const SubMeshes& getSubMeshes() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		MeshResource(const MeshResource&) = delete;
-		MeshResource& operator=(const MeshResource&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t				  mNumberOfVertices;	///< Number of vertices
-		uint32_t				  mNumberOfIndices;		///< Number of indices
-		Renderer::IVertexArrayPtr mVertexArray;			///< Vertex array object (VAO), can be a null pointer
-		SubMeshes				  mSubMeshes;			///< Sub-meshes
+		MaterialResource*			mMaterialResource;	///< Material resource, can be a null pointer
+		Renderer::PrimitiveTopology mPrimitiveTopology;
+		uint32_t					mStartIndexLocation;
+		uint32_t					mNumberOfIndices;
 
 
 	};
@@ -125,4 +100,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Mesh/MeshResource.inl"
+#include "RendererRuntime/Resource/Mesh/Detail/SubMesh.inl"

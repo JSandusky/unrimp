@@ -61,6 +61,7 @@ namespace
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		static const uint32_t NUMBER_OF_BYTES_PER_VERTEX = 24;	///< Number of bytes per vertex (3 float position, 2 short texture coordinate, 4 short qtangent)
+		typedef std::vector<RendererRuntime::v1Mesh::SubMesh> SubMeshes;
 
 
 		//[-------------------------------------------------------]
@@ -78,29 +79,48 @@ namespace
 		*    Receives the number of vertices
 		*  @param[out] numberOfIndices
 		*    Receives the number of indices
+		*  @param[out] subMeshes
+		*    Receives the sub-meshes data
 		*/
-		void getNumberOfVerticesAndIndicesRecursive(const aiScene &assimpScene, const aiNode &assimpNode, uint32_t &numberOfVertices, uint32_t &numberOfIndices)
+		void getNumberOfVerticesAndIndicesRecursive(const RendererToolkit::IAssetCompiler::Input& input, const aiScene& assimpScene, const aiNode& assimpNode, uint32_t& numberOfVertices, uint32_t& numberOfIndices, SubMeshes& subMeshes)
 		{
 			// Loop through all meshes this node is using
 			for (uint32_t i = 0; i < assimpNode.mNumMeshes; ++i)
 			{
 				// Get the used mesh
-				const aiMesh &assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
+				const aiMesh& assimpMesh = *assimpScene.mMeshes[assimpNode.mMeshes[i]];
 
 				// Update the number of vertices
 				numberOfVertices += assimpMesh.mNumVertices;
 
 				// Loop through all mesh faces and update the number of indices
+				const uint32_t previousNumberOfIndices = numberOfIndices;
 				for (uint32_t j = 0; j < assimpMesh.mNumFaces; ++j)
 				{
 					numberOfIndices += assimpMesh.mFaces[j].mNumIndices;
+				}
+
+				{ // Add sub-mesh
+					// Get the source material asset ID
+					// TODO(co) Error handling: Do we need to validate the material index or material name?
+					aiString materialName;
+					assimpScene.mMaterials[assimpMesh.mMaterialIndex]->Get(AI_MATKEY_NAME, materialName);
+					const uint32_t sourceMaterialAssetId = static_cast<uint32_t>(std::atoi(materialName.C_Str()));
+
+					// Add sub-mesh
+					RendererRuntime::v1Mesh::SubMesh subMesh;
+					subMesh.materialAssetId		= input.getCompiledAssetIdBySourceAssetId(sourceMaterialAssetId);
+					subMesh.primitiveTopology	= static_cast<uint8_t>(Renderer::PrimitiveTopology::TRIANGLE_LIST);
+					subMesh.startIndexLocation	= previousNumberOfIndices;
+					subMesh.numberOfIndices		= numberOfIndices - previousNumberOfIndices;
+					subMeshes.push_back(subMesh);
 				}
 			}
 
 			// Loop through all child nodes recursively
 			for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
 			{
-				getNumberOfVerticesAndIndicesRecursive(assimpScene, *assimpNode.mChildren[i], numberOfVertices, numberOfIndices);
+				getNumberOfVerticesAndIndicesRecursive(input, assimpScene, *assimpNode.mChildren[i], numberOfVertices, numberOfIndices, subMeshes);
 			}
 		}
 
@@ -324,30 +344,23 @@ namespace RendererToolkit
 		}
 
 		// Open the input and output file
-		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
 		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".mesh";
 		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
-
-		// Get file size and file data
-		inputFileStream.seekg(0, std::ifstream::end);
-		const size_t numberOfBytes = static_cast<size_t>(inputFileStream.tellg());
-		inputFileStream.seekg(0, std::ifstream::beg);
-		std::unique_ptr<uint8_t[]> buffer = std::unique_ptr<uint8_t[]>(new uint8_t[numberOfBytes]);
-		inputFileStream.read(reinterpret_cast<char*>(buffer.get()), numberOfBytes);
 
 		// Create an instance of the Assimp importer class
 		Assimp::Importer assimpImporter;
 
 		// Load the given mesh
 		// -> "aiProcess_MakeLeftHanded" is added because the rasterizer states directly map to Direct3D
-		const aiScene *assimpScene = assimpImporter.ReadFileFromMemory(buffer.get(), numberOfBytes, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded);
+		const aiScene *assimpScene = assimpImporter.ReadFile(assetInputDirectory + inputFile, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded);
 		if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 		{
 			// Get the total number of vertices and indices by using the Assimp root node
 			uint32_t numberOfVertices = 0;
 			uint32_t numberOfIndices = 0;
-			::detail::getNumberOfVerticesAndIndicesRecursive(*assimpScene, *assimpScene->mRootNode, numberOfVertices, numberOfIndices);
+			::detail::SubMeshes subMeshes;
+			::detail::getNumberOfVerticesAndIndicesRecursive(input, *assimpScene, *assimpScene->mRootNode, numberOfVertices, numberOfIndices, subMeshes);
 
 			// TODO(co) Will change when skinned
 			uint8_t numberOfVertexAttributes = 3;
@@ -361,6 +374,7 @@ namespace RendererToolkit
 				meshHeader.indexBufferFormat		= Renderer::IndexBufferFormat::UNSIGNED_SHORT;
 				meshHeader.numberOfIndices			= numberOfIndices;
 				meshHeader.numberOfVertexAttributes = numberOfVertexAttributes;
+				meshHeader.numberOfSubMeshes		= static_cast<uint8_t>(subMeshes.size());
 
 				// Write down the mesh header
 				outputFileStream.write(reinterpret_cast<const char*>(&meshHeader), sizeof(RendererRuntime::v1Mesh::Header));
@@ -436,6 +450,9 @@ namespace RendererToolkit
 				// Write down the vertex array attributes
 				outputFileStream.write(reinterpret_cast<const char*>(vertexAttributes), sizeof(Renderer::VertexAttribute) * numberOfVertexAttributes);
 			}
+
+			// Write down the sub-meshes
+			outputFileStream.write(reinterpret_cast<const char*>(subMeshes.data()), sizeof(RendererRuntime::v1Mesh::SubMesh) * subMeshes.size());
 		}
 		else
 		{

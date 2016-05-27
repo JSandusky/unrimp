@@ -24,6 +24,8 @@
 #include "RendererRuntime/Resource/Mesh/Loader/MeshResourceLoader.h"
 #include "RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
+#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 #include <fstream>
 
@@ -94,6 +96,16 @@ namespace RendererRuntime
 				mVertexAttributes = new Renderer::VertexAttribute[mNumberOfVertexAttributes];
 			}
 			inputFileStream.read(reinterpret_cast<char*>(mVertexAttributes), sizeof(Renderer::VertexAttribute) * mNumberOfUsedVertexAttributes);
+
+			// Read in the sub-meshes
+			mNumberOfUsedSubMeshes = meshHeader.numberOfSubMeshes;
+			if (mNumberOfSubMeshes < mNumberOfUsedSubMeshes)
+			{
+				mNumberOfSubMeshes = mNumberOfUsedSubMeshes;
+				delete [] mSubMeshes;
+				mSubMeshes = new v1Mesh::SubMesh[mNumberOfSubMeshes];
+			}
+			inputFileStream.read(reinterpret_cast<char*>(mSubMeshes), sizeof(v1Mesh::SubMesh) * mNumberOfUsedSubMeshes);
 		}
 		catch (const std::exception& e)
 		{
@@ -131,6 +143,24 @@ namespace RendererRuntime
 			}
 		};
 		mMeshResource->mVertexArray = mRenderer->createVertexArray(Renderer::VertexAttributes(mNumberOfUsedVertexAttributes, mVertexAttributes), sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+
+		{ // Create sub-meshes
+			MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
+			SubMeshes& subMeshes = mMeshResource->mSubMeshes;
+			subMeshes.resize(mNumberOfUsedSubMeshes);
+			for (uint32_t i = 0; i < mNumberOfUsedSubMeshes; ++i)
+			{
+				// Get source and destination sub-mesh references
+				SubMesh& subMesh = subMeshes[i];
+				const v1Mesh::SubMesh& v1SubMesh = mSubMeshes[i];
+
+				// Setup sub-mesh
+				subMesh.mMaterialResource   = materialResourceManager.loadMaterialResourceByAssetId(v1SubMesh.materialAssetId);
+				subMesh.mPrimitiveTopology  = static_cast<Renderer::PrimitiveTopology>(v1SubMesh.primitiveTopology);
+				subMesh.mStartIndexLocation = v1SubMesh.startIndexLocation;
+				subMesh.mNumberOfIndices	= v1SubMesh.numberOfIndices;
+			}
+		}
 	}
 
 
@@ -142,6 +172,7 @@ namespace RendererRuntime
 		delete [] mVertexBufferData;
 		delete [] mIndexBufferData;
 		delete [] mVertexAttributes;
+		delete [] mSubMeshes;
 	}
 
 
