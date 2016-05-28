@@ -120,29 +120,29 @@ namespace RendererRuntime
 
 	void MeshResourceLoader::onRendererBackendDispatch()
 	{
-		// Create vertex array object (VAO)
+		{ // Create vertex array object (VAO)
+			// Create the vertex buffer object (VBO)
+			Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(mNumberOfUsedVertexBufferDataBytes, mVertexBufferData, Renderer::BufferUsage::STATIC_DRAW));
 
-		// Create the vertex buffer object (VBO)
-		Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(mNumberOfUsedVertexBufferDataBytes, mVertexBufferData, Renderer::BufferUsage::STATIC_DRAW));
+			// Create the index buffer object (IBO)
+			Renderer::IIndexBuffer *indexBuffer = mRenderer->createIndexBuffer(mNumberOfUsedIndexBufferDataBytes, static_cast<Renderer::IndexBufferFormat::Enum>(mIndexBufferFormat), mIndexBufferData, Renderer::BufferUsage::STATIC_DRAW);
 
-		// Create the index buffer object (IBO)
-		Renderer::IIndexBuffer *indexBuffer = mRenderer->createIndexBuffer(mNumberOfUsedIndexBufferDataBytes, static_cast<Renderer::IndexBufferFormat::Enum>(mIndexBufferFormat), mIndexBufferData, Renderer::BufferUsage::STATIC_DRAW);
-
-		// Create vertex array object (VAO)
-		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-		// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-		// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-		//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-		//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-		const uint32_t numberOfVertices = mMeshResource->mNumberOfVertices;
-		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-		{
-			{ // Vertex buffer 0
-				vertexBuffer,																		// vertexBuffer (Renderer::IVertexBuffer *)
-				(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0	// strideInBytes (uint32_t)
-			}
-		};
-		mMeshResource->mVertexArray = mRenderer->createVertexArray(Renderer::VertexAttributes(mNumberOfUsedVertexAttributes, mVertexAttributes), sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+			// Create vertex array object (VAO)
+			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
+			// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
+			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
+			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
+			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
+			const uint32_t numberOfVertices = mMeshResource->mNumberOfVertices;
+			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
+			{
+				{ // Vertex buffer 0
+					vertexBuffer,																		// vertexBuffer (Renderer::IVertexBuffer *)
+					(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0	// strideInBytes (uint32_t)
+				}
+			};
+			mMeshResource->mVertexArray = mRenderer->createVertexArray(Renderer::VertexAttributes(mNumberOfUsedVertexAttributes, mVertexAttributes), sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, indexBuffer);
+		}
 
 		{ // Create sub-meshes
 			MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();

@@ -187,7 +187,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	private:
 		VkPhysicalDevice mVkPhysicalDevice;		///< Vulkan physical device this context is using
-		VkDevice		 mVkDevice;				///< Vulkan device instance this context is using
+		VkDevice		 mVkDevice;				///< Vulkan device instance this context is using (equivalent of a OpenGL context or Direct3D 11 device)
 		VkQueue			 mGraphicsVkQueue;		///< Handle to the Vulkan device graphics queue that command buffers are submitted to
 		VkCommandPool	 mVkCommandPool;		///< Vulkan command buffer pool instance
 		VkCommandBuffer  mSetupVkCommandBuffer;	///< Vulkan command buffer instance used for setup
