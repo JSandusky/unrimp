@@ -116,7 +116,7 @@ namespace RendererRuntime
 		inline const MaterialProperties& getMaterialProperties() const;
 
 		// TODO(co)
-		void releasePipelineState();
+		void releaseTextures();
 
 
 	//[-------------------------------------------------------]

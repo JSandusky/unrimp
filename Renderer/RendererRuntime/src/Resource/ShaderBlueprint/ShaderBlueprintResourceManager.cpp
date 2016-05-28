@@ -24,16 +24,11 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintResourceLoader.h"
-#include "RendererRuntime/Resource/Material/MaterialResource.h"
-#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <assert.h>
-#include <unordered_set>
 
 
 // Disable warnings
@@ -116,28 +111,6 @@ namespace RendererRuntime
 			if (shaderBlueprintResource->getResourceId() == assetId)
 			{
 				loadShaderBlueprintResourceByAssetId(assetId, true);
-
-				// TODO(co) Cleanup: Get all influenced material blueprint resources
-				typedef std::unordered_set<MaterialBlueprintResource*> MaterialBlueprintResources;
-				MaterialBlueprintResources materialBlueprintResources;
-				for (auto materialBlueprintResource : mRendererRuntime.getMaterialBlueprintResourceManager().mResources)
-				{
-					if (materialBlueprintResource->mVertexShaderBlueprint == shaderBlueprintResource || materialBlueprintResource->mFragmentShaderBlueprint == shaderBlueprintResource)
-					{
-						materialBlueprintResources.insert(materialBlueprintResource);
-					}
-				}
-
-				// TODO(co) Cleanup: Update all influenced material resources
-				for (auto materialResource : mRendererRuntime.getMaterialResourceManager().mResources)
-				{
-					// TODO(co)
-					// if (materialBlueprintResources.find(materialResource->getMaterialBlueprintResource()) != materialBlueprintResources.end())
-					{
-						materialResource->releasePipelineState();
-					}
-				}
-
 				break;
 			}
 		}

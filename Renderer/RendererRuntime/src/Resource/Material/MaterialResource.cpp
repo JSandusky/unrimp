@@ -81,7 +81,7 @@ namespace RendererRuntime
 		return (iterator != mSortedMaterialTechniqueVector.end() && iterator._Ptr->getMaterialTechniqueId() == materialTechniqueId) ? iterator._Ptr : nullptr;
 	}
 
-	void MaterialResource::releasePipelineState()
+	void MaterialResource::releaseTextures()
 	{
 		// TODO(co) Cleanup
 		for (MaterialTechnique& materialTechnique : mSortedMaterialTechniqueVector)

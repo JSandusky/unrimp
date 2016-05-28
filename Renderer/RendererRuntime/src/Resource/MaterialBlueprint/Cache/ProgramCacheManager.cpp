@@ -47,6 +47,24 @@ namespace RendererRuntime
 		return mProgramCache;
 	}
 
+	void ProgramCacheManager::clearCache()
+	{
+		if (nullptr != mProgramCache)
+		{
+			delete mProgramCache;
+			mProgramCache = nullptr;
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	ProgramCacheManager::~ProgramCacheManager()
+	{
+		clearCache();
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

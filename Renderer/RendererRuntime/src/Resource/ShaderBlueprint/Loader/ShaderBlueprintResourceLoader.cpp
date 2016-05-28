@@ -25,9 +25,14 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintFileFormat.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <fstream>
+#include <unordered_set>
 
 
 //[-------------------------------------------------------]
@@ -105,6 +110,23 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfShaderPieceResources; ++i, ++includeShaderPieceAssetIds)
 			{
 				includeShaderPieceResources[i] = shaderPieceResourceManager.loadShaderPieceResourceByAssetId(*includeShaderPieceAssetIds);
+			}
+		}
+
+		{ // TODO(co) Cleanup: Get all influenced material blueprint resources
+			typedef std::unordered_set<MaterialBlueprintResource*> MaterialBlueprintResources;
+			MaterialBlueprintResources materialBlueprintResources;
+			for (auto materialBlueprintResource : mRendererRuntime.getMaterialBlueprintResourceManager().mResources)
+			{
+				if (materialBlueprintResource->mVertexShaderBlueprint == mShaderBlueprintResource || materialBlueprintResource->mFragmentShaderBlueprint == mShaderBlueprintResource)
+				{
+					materialBlueprintResources.insert(materialBlueprintResource);
+				}
+			}
+			for (MaterialBlueprintResource* materialBlueprintResource : materialBlueprintResources)
+			{
+				materialBlueprintResource->getPipelineStateCacheManager().clearCache();
+				materialBlueprintResource->getPipelineStateCacheManager().getProgramCacheManager().clearCache();
 			}
 		}
 	}

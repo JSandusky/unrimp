@@ -99,7 +99,7 @@ namespace RendererRuntime
 	void MaterialResourceLoader::onRendererBackendDispatch()
 	{
 		// TODO(co) Material resource update
-		mMaterialResource->releasePipelineState();
+		mMaterialResource->releaseTextures();
 
 		{ // Create the material techniques (list is already sorted)
 			MaterialResource::SortedMaterialTechniqueVector& sortedMaterialTechniqueVector = mMaterialResource->mSortedMaterialTechniqueVector;

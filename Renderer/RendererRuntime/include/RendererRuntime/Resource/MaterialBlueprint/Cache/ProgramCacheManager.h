@@ -93,13 +93,16 @@ namespace RendererRuntime
 		*/
 		ProgramCache* getProgramCache(const ShaderProperties& shaderProperties);
 
+		// TODO(co)
+		void clearCache();
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
 		inline explicit ProgramCacheManager(PipelineStateCacheManager& pipelineStateCacheManager);
-		inline ~ProgramCacheManager();
+		~ProgramCacheManager();
 		ProgramCacheManager(const ProgramCacheManager&) = delete;
 		ProgramCacheManager& operator=(const ProgramCacheManager&) = delete;
 

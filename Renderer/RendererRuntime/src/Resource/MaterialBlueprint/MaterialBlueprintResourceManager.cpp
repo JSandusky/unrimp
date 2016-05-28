@@ -146,7 +146,7 @@ namespace RendererRuntime
 					// TODO(co)
 				//	if (materialResource->getMaterialBlueprintResource() == materialBlueprintResource)
 					{
-						materialResource->releasePipelineState();
+						materialResource->releaseTextures();
 					}
 				}
 
