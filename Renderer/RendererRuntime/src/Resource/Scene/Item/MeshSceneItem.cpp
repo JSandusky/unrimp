@@ -27,8 +27,6 @@
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-#include <cassert>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -46,42 +44,15 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void MeshSceneItem::setMeshResourceByAssetId(AssetId meshAssetId)
+	void MeshSceneItem::setMeshResourceIdByAssetId(AssetId meshAssetId)
 	{
-		const IRendererRuntime& rendererRuntime = getSceneResource().getRendererRuntime();
-		setMeshResource(rendererRuntime.getMeshResourceManager().loadMeshResourceByAssetId(rendererRuntime.getRenderer(), meshAssetId));
+		setMeshResourceId(getSceneResource().getRendererRuntime().getMeshResourceManager().loadMeshResourceByAssetId(meshAssetId));
 	}
 
 	void MeshSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
 		assert(sizeof(v1Scene::MeshItem) == numberOfBytes);
-		const v1Scene::MeshItem* meshItem = reinterpret_cast<const v1Scene::MeshItem*>(data);
-		setMeshResourceByAssetId(meshItem->meshAssetId);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneItem methods            ]
-	//[-------------------------------------------------------]
-	SceneItemTypeId MeshSceneItem::getSceneItemTypeId() const
-	{
-		return TYPE_ID;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	MeshSceneItem::MeshSceneItem(ISceneResource& sceneResource) :
-		ISceneItem(sceneResource),
-		mMeshResource(nullptr)
-	{
-		// Nothing in here
-	}
-
-	MeshSceneItem::~MeshSceneItem()
-	{
-		// Nothing in here
+		setMeshResourceIdByAssetId(reinterpret_cast<const v1Scene::MeshItem*>(data)->meshAssetId);
 	}
 
 

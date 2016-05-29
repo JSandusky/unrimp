@@ -41,7 +41,7 @@
 FirstMesh::FirstMesh(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
 	mFontResource(nullptr),
-	mMeshResource(nullptr),
+	mMeshResourceId(~0u),	// TODO(co) Set mesh resource ID to "uninitialized"
 	mDiffuseTextureResource(nullptr),
 	mNormalTextureResource(nullptr),
 	mSpecularTextureResource(nullptr),
@@ -199,7 +199,7 @@ void FirstMesh::onInitialization()
 			}
 
 			// Create mesh instance
-			mMeshResource = rendererRuntime->getMeshResourceManager().loadMeshResourceByAssetId(*renderer, "Example/Mesh/Character/ImrodLowPoly");
+			mMeshResourceId = rendererRuntime->getMeshResourceManager().loadMeshResourceByAssetId("Example/Mesh/Character/ImrodLowPoly");
 
 			{ // Load in the diffuse, emissive, normal and specular texture
 			  // -> The tangent space normal map is stored with three components, two would be enough to recalculate the third component within the fragment shader
@@ -238,7 +238,7 @@ void FirstMesh::onDeinitialization()
 	mNormalTextureResource = nullptr;
 	mSpecularTextureResource = nullptr;
 	mEmissiveTextureResource = nullptr;
-	mMeshResource = nullptr;
+	mMeshResourceId = ~0u;	// TODO(co) Set mesh resource ID to "uninitialized"
 
 	// Release the used resources
 	mPipelineState = nullptr;
@@ -355,10 +355,16 @@ void FirstMesh::onDraw()
 			}
 		}
 
-		// Draw mesh instance
-		if (nullptr != mMeshResource)
-		{
-			mMeshResource->draw();
+		{ // Draw mesh instance
+			RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+			if (nullptr != rendererRuntime)
+			{
+				const RendererRuntime::MeshResource* meshResource = rendererRuntime->getMeshResourceManager().getMeshResources().tryGetElementById(mMeshResourceId);
+				if (nullptr != meshResource)
+				{
+					meshResource->draw();
+				}
+			}
 		}
 
 		// Draw text

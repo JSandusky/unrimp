@@ -35,6 +35,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -45,6 +54,7 @@ namespace RendererRuntime
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
 	typedef std::vector<SubMesh> SubMeshes;
+	typedef uint32_t			 MeshResourceId;	///< POD mesh resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -63,6 +73,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 		friend class MeshResourceLoader;
 		friend class MeshResourceManager;
+		friend class PackedElementManager<MeshResource, MeshResourceId>;
 
 
 	//[-------------------------------------------------------]
@@ -71,21 +82,9 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
-		*    Constructor
-		*/
-		explicit MeshResource(ResourceId resourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		RENDERERRUNTIME_API_EXPORT virtual ~MeshResource();
-
-		/**
-		*  @brief
 		*    Draw the mesh
 		*/
-		RENDERERRUNTIME_API_EXPORT void draw();
+		RENDERERRUNTIME_API_EXPORT void draw() const;
 
 		//[-------------------------------------------------------]
 		//[ Data                                                  ]
@@ -100,6 +99,27 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		/**
+		*  @brief
+		*    Default constructor
+		*/
+		inline MeshResource();
+
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] meshResourceId
+		*    Mesh resource ID
+		*/
+		inline explicit MeshResource(MeshResourceId meshResourceId);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~MeshResource();
+
 		MeshResource(const MeshResource&) = delete;
 		MeshResource& operator=(const MeshResource&) = delete;
 

@@ -135,10 +135,10 @@ namespace RendererRuntime
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] resourceId
-		*    Resource ID
+		*  @param[in] materialResourceId
+		*    Material resource ID
 		*/
-		inline explicit MaterialResource(ResourceId resourceId);
+		inline explicit MaterialResource(MaterialResourceId materialResourceId);
 
 		/**
 		*  @brief

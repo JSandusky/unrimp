@@ -34,21 +34,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	MeshResource::MeshResource(ResourceId resourceId) :
-		IResource(resourceId, ~0u),	// TODO(co) Set asset ID to "uninitialized"
-		mNumberOfVertices(0),
-		mNumberOfIndices(0)
-	{
-		// Nothing here
-	}
-
-	MeshResource::~MeshResource()
-	{
-		// The renderer resource pointers are released automatically
-		// Nothing to do in here
-	}
-
-	void MeshResource::draw()
+	void MeshResource::draw() const
 	{
 		// Valid mesh?
 		if (nullptr != mVertexArray)

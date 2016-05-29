@@ -28,37 +28,22 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MeshResourceId MeshSceneItem::getMeshResourceId() const
+	inline const MaterialResources& MaterialResourceManager::getMaterialResources() const
 	{
-		return mMeshResourceId;
-	}
-
-	inline void MeshSceneItem::setMeshResourceId(MeshResourceId meshResourceId)
-	{
-		mMeshResourceId = meshResourceId;
+		return mMaterialResources;
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline SceneItemTypeId MeshSceneItem::getSceneItemTypeId() const
-	{
-		return TYPE_ID;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	inline MeshSceneItem::MeshSceneItem(ISceneResource& sceneResource) :
-		ISceneItem(sceneResource),
-		mMeshResourceId(~0u)	// TODO(co) Set mesh resource ID to "uninitialized"
+	inline MaterialResourceManager::MaterialResourceManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
 	{
 		// Nothing in here
 	}
 
-	inline MeshSceneItem::~MeshSceneItem()
+	inline MaterialResourceManager::~MaterialResourceManager()
 	{
 		// Nothing in here
 	}

@@ -38,8 +38,16 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class MeshResource;
 	class TextureResource;
+}
+
+
+//[-------------------------------------------------------]
+//[ Global definitions                                    ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	typedef uint32_t MeshResourceId;	///< POD mesh resource identifier
 }
 
 
@@ -110,7 +118,7 @@ private:
 	Renderer::IPipelineStatePtr			  mPipelineState;			///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
 	RendererRuntime::FontResource*		  mFontResource;			///< Font resource, can be a null pointer
-	RendererRuntime::MeshResource*		  mMeshResource;			///< Mesh resource, can be a null pointer
+	RendererRuntime::MeshResourceId		  mMeshResourceId;			///< Mesh resource ID, can be set to uninitialized value
 	RendererRuntime::TextureResource*	  mDiffuseTextureResource;
 	RendererRuntime::TextureResource*	  mNormalTextureResource;
 	RendererRuntime::TextureResource*	  mSpecularTextureResource;

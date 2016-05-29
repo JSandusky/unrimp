@@ -27,8 +27,6 @@
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-#include <assert.h>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -40,11 +38,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	const MaterialResources& MaterialResourceManager::getMaterialResources() const
-	{
-		return mMaterialResources;
-	}
-
 	// TODO(co) Work-in-progress
 	MaterialResourceId MaterialResourceManager::loadMaterialResourceByAssetId(AssetId assetId, bool reload)
 	{
@@ -126,17 +119,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	MaterialResourceManager::MaterialResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
-	{
-		// Nothing in here
-	}
-
-	MaterialResourceManager::~MaterialResourceManager()
-	{
-		// Nothing in here
-	}
-
 	IResourceLoader* MaterialResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Can we recycle an already existing resource loader instance?

@@ -49,6 +49,31 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline MeshResource::MeshResource() :
+		IResource(~0u, ~0u),	// TODO(co) Set both to "uninitialized"
+		mNumberOfVertices(0),
+		mNumberOfIndices(0)
+	{
+		// Nothing here
+	}
+
+	inline MeshResource::MeshResource(MeshResourceId meshResourceId) :
+		IResource(meshResourceId, ~0u),	// TODO(co) Set asset ID to "uninitialized"
+		mNumberOfVertices(0),
+		mNumberOfIndices(0)
+	{
+		// Nothing here
+	}
+
+	inline MeshResource::~MeshResource()
+	{
+		// Nothing here
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

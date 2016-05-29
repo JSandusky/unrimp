@@ -27,20 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/IResourceManager.h"
+#include "RendererRuntime/Resource/Mesh/MeshResource.h"
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderer;
-}
 namespace RendererRuntime
 {
-	class MeshResource;
 	class IRendererRuntime;
 }
 
@@ -50,6 +46,13 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t										   MeshResourceId;	///< POD mesh resource identifier
+	typedef PackedElementManager<MeshResource, MeshResourceId> MeshResources;
 
 
 	//[-------------------------------------------------------]
@@ -69,8 +72,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT MeshResource* loadMeshResourceByAssetId(Renderer::IRenderer& renderer, AssetId assetId, bool reload = false);
+		inline const MeshResources& getMeshResources() const;
+		RENDERERRUNTIME_API_EXPORT MeshResourceId loadMeshResourceByAssetId(AssetId assetId, bool reload = false);
 
 
 	//[-------------------------------------------------------]
@@ -85,8 +88,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit MeshResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~MeshResourceManager();
+		inline explicit MeshResourceManager(IRendererRuntime& rendererRuntime);
+		inline virtual ~MeshResourceManager();
 		MeshResourceManager(const MeshResourceManager&) = delete;
 		MeshResourceManager& operator=(const MeshResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
@@ -96,11 +99,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-
-		// TODO(co) Implement decent resource handling
-		Renderer::IRenderer* mRenderer;
-		std::vector<MeshResource*> mResources;
+		IRendererRuntime& mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
+		MeshResources	  mMeshResources;
 
 
 	};
@@ -110,3 +110,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Mesh/MeshResourceManager.inl"

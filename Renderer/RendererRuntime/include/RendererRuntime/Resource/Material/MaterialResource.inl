@@ -48,8 +48,8 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline MaterialResource::MaterialResource(ResourceId resourceId) :
-		IResource(resourceId, ~0u)	// TODO(co) Set asset ID to "uninitialized"
+	inline MaterialResource::MaterialResource(MaterialResourceId materialResourceId) :
+		IResource(materialResourceId, ~0u)	// TODO(co) Set asset ID to "uninitialized"
 	{
 		// Nothing here
 	}

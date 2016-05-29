@@ -32,15 +32,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class MeshResource;
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -50,7 +41,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
+	typedef StringId AssetId;			///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
+	typedef uint32_t MeshResourceId;	///< POD mesh resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -77,16 +69,16 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline MeshResource* getMeshResource() const;
-		inline void setMeshResource(MeshResource* meshResource);
-		RENDERERRUNTIME_API_EXPORT void setMeshResourceByAssetId(AssetId meshAssetId);
+		inline MeshResourceId getMeshResourceId() const;
+		inline void setMeshResourceId(MeshResourceId meshResourceId);
+		RENDERERRUNTIME_API_EXPORT void setMeshResourceIdByAssetId(AssetId meshAssetId);
 
 
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual SceneItemTypeId getSceneItemTypeId() const override;
+		inline virtual SceneItemTypeId getSceneItemTypeId() const override;
 		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
 
 
@@ -94,8 +86,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		MeshSceneItem(ISceneResource& sceneResource);
-		virtual ~MeshSceneItem();
+		inline MeshSceneItem(ISceneResource& sceneResource);
+		inline virtual ~MeshSceneItem();
 		MeshSceneItem(const MeshSceneItem&) = delete;
 		MeshSceneItem& operator=(const MeshSceneItem&) = delete;
 
@@ -104,7 +96,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MeshResource* mMeshResource;	///< Mesh resource, can be a null pointer
+		MeshResourceId mMeshResourceId;	///< Mesh resource ID, can be set to uninitialized value
 
 
 	};

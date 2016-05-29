@@ -72,9 +72,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		const MaterialResources& getMaterialResources() const;
-
-		// TODO(co) Work-in-progress
+		inline const MaterialResources& getMaterialResources() const;
 		RENDERERRUNTIME_API_EXPORT MaterialResourceId loadMaterialResourceByAssetId(AssetId assetId, bool reload = false);
 
 
@@ -90,8 +88,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit MaterialResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~MaterialResourceManager();
+		inline explicit MaterialResourceManager(IRendererRuntime& rendererRuntime);
+		inline virtual ~MaterialResourceManager();
 		MaterialResourceManager(const MaterialResourceManager&) = delete;
 		MaterialResourceManager& operator=(const MaterialResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
@@ -112,3 +110,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Material/MaterialResourceManager.inl"

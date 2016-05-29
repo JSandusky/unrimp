@@ -309,6 +309,12 @@
     <None Include="include\RendererRuntime\Core\PackedElementManager.inl">
       <Filter>Source Files\Core</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.inl">
+      <Filter>Source Files\Resource\Material</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.inl">
+      <Filter>Source Files\Resource\Mesh</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">

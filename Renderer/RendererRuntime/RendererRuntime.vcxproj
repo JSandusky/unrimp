@@ -54,10 +54,12 @@
     <None Include="include\RendererRuntime\Resource\Material\MaterialProperty.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialPropertyValue.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialResource.inl" />
+    <None Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Material\MaterialTechnique.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\Detail\SubMesh.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Mesh\MeshResource.inl" />
+    <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\ResourceStreamer.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\ISceneResource.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.inl" />

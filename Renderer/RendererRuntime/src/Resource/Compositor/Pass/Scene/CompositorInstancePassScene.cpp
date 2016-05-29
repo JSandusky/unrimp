@@ -52,6 +52,7 @@ namespace
 		void draw(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::CameraSceneItem& cameraSceneItem)
 		{
 			Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
+			const RendererRuntime::MeshResources& meshResources = rendererRuntime.getMeshResourceManager().getMeshResources();
 			const RendererRuntime::MaterialResources& materialResources = rendererRuntime.getMaterialResourceManager().getMaterialResources();
 
 			// Begin debug event
@@ -75,7 +76,7 @@ namespace
 					{
 						// Draw mesh instance
 						RendererRuntime::MeshSceneItem* meshSceneItem = static_cast<RendererRuntime::MeshSceneItem*>(sceneItem);
-						RendererRuntime::MeshResource* meshResource = meshSceneItem->getMeshResource();
+						const RendererRuntime::MeshResource* meshResource = meshResources.tryGetElementById(meshSceneItem->getMeshResourceId());
 						if (nullptr != meshResource)
 						{
 							// Setup input assembly (IA): Set the used vertex array
