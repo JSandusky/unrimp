@@ -53,7 +53,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfResources; ++i)
 			{
 				FontResource* currentFontResource = mResources[i];
-				if (currentFontResource->getResourceId() == assetId)
+				if (currentFontResource->getAssetId() == assetId)
 				{
 					fontResource = currentFontResource;
 
@@ -67,6 +67,7 @@ namespace RendererRuntime
 			if (nullptr == fontResource)
 			{
 				fontResource = new FontResource(mRendererRuntimeImpl, assetId);
+				fontResource->setAssetId(assetId);
 				mResources.push_back(fontResource);
 				load = true;
 			}
@@ -102,7 +103,7 @@ namespace RendererRuntime
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
 		for (size_t i = 0; i < mResources.size(); ++i)
 		{
-			if (mResources[i]->getResourceId() == assetId)
+			if (mResources[i]->getAssetId() == assetId)
 			{
 				loadFontResourceByAssetId(assetId, true);
 				break;

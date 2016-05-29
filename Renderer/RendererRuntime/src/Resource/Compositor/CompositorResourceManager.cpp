@@ -81,7 +81,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfResources; ++i)
 			{
 				CompositorResource* currentCompositorResource = mResources[i];
-				if (currentCompositorResource->getResourceId() == assetId)
+				if (currentCompositorResource->getAssetId() == assetId)
 				{
 					compositorResource = currentCompositorResource;
 
@@ -95,6 +95,7 @@ namespace RendererRuntime
 			if (nullptr == compositorResource)
 			{
 				compositorResource = new CompositorResource(assetId, resourceListener);
+				compositorResource->setAssetId(assetId);
 				mResources.push_back(compositorResource);
 				load = true;
 			}
@@ -130,7 +131,7 @@ namespace RendererRuntime
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
 		for (size_t i = 0; i < mResources.size(); ++i)
 		{
-			if (mResources[i]->getResourceId() == assetId)
+			if (mResources[i]->getAssetId() == assetId)
 			{
 				loadCompositorResourceByAssetId(assetId, nullptr, true);
 				break;

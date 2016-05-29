@@ -56,7 +56,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId ResourceId;			///< Resource identifier, internally just a POD "uint32_t", in case the resource is an asset instance the resource ID is identical to the asset ID
+	typedef uint32_t ResourceId;			///< POD resource identifier
 	typedef StringId SceneNodeTypeId;		///< Scene node type identifier, internally just a POD "uint32_t"
 	typedef StringId SceneItemTypeId;		///< Scene item type identifier, internally just a POD "uint32_t"
 	typedef StringId SceneResourceTypeId;	///< Scene resource type identifier, internally just a POD "uint32_t"

@@ -62,6 +62,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class MeshResourceLoader;
+		friend class MeshResourceManager;
 
 
 	//[-------------------------------------------------------]

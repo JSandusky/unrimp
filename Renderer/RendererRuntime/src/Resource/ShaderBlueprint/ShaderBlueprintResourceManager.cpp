@@ -58,7 +58,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfResources; ++i)
 			{
 				ShaderBlueprintResource* currentShaderBlueprintResource = mResources[i];
-				if (currentShaderBlueprintResource->getResourceId() == assetId)
+				if (currentShaderBlueprintResource->getAssetId() == assetId)
 				{
 					shaderBlueprintResource = currentShaderBlueprintResource;
 
@@ -72,6 +72,7 @@ namespace RendererRuntime
 			if (nullptr == shaderBlueprintResource)
 			{
 				shaderBlueprintResource = new ShaderBlueprintResource(assetId);
+				shaderBlueprintResource->setAssetId(assetId);
 				mResources.push_back(shaderBlueprintResource);
 				load = true;
 			}
@@ -108,7 +109,7 @@ namespace RendererRuntime
 		for (size_t i = 0; i < mResources.size(); ++i)
 		{
 			ShaderBlueprintResource* shaderBlueprintResource = mResources[i];
-			if (shaderBlueprintResource->getResourceId() == assetId)
+			if (shaderBlueprintResource->getAssetId() == assetId)
 			{
 				loadShaderBlueprintResourceByAssetId(assetId, true);
 				break;

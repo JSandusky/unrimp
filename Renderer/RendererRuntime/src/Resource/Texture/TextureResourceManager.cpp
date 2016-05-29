@@ -54,7 +54,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfResources; ++i)
 			{
 				TextureResource* currentTextureResource = mResources[i];
-				if (currentTextureResource->getResourceId() == assetId)
+				if (currentTextureResource->getAssetId() == assetId)
 				{
 					textureResource = currentTextureResource;
 
@@ -68,6 +68,7 @@ namespace RendererRuntime
 			if (nullptr == textureResource)
 			{
 				textureResource = new TextureResource(assetId);
+				textureResource->setAssetId(assetId);
 				mResources.push_back(textureResource);
 				load = true;
 			}
@@ -115,7 +116,7 @@ namespace RendererRuntime
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
 		for (size_t i = 0; i < mResources.size(); ++i)
 		{
-			if (mResources[i]->getResourceId() == assetId)
+			if (mResources[i]->getAssetId() == assetId)
 			{
 				loadTextureResourceByAssetId(assetId, true);
 				break;

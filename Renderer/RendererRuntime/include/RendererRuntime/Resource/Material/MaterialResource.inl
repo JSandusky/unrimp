@@ -28,11 +28,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialResource::~MaterialResource()
-	{
-		// Nothing here
-	}
-
 	inline const MaterialResource::SortedMaterialTechniqueVector& MaterialResource::getSortedMaterialTechniqueVector() const
 	{
 		return mSortedMaterialTechniqueVector;
@@ -41,6 +36,27 @@ namespace RendererRuntime
 	inline const MaterialProperties& MaterialResource::getMaterialProperties() const
 	{
 		return mMaterialProperties;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline MaterialResource::MaterialResource() :
+		IResource(~0u, ~0u)	// TODO(co) Set both to "uninitialized"
+	{
+		// Nothing here
+	}
+
+	inline MaterialResource::MaterialResource(ResourceId resourceId) :
+		IResource(resourceId, ~0u)	// TODO(co) Set asset ID to "uninitialized"
+	{
+		// Nothing here
+	}
+
+	inline MaterialResource::~MaterialResource()
+	{
+		// Nothing here
 	}
 
 

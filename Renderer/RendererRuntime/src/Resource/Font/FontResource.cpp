@@ -38,7 +38,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	FontResource::FontResource(RendererRuntimeImpl &rendererRuntimeImpl, ResourceId resourceId) :
-		IResource(resourceId),
+		IResource(resourceId, ~0u),	// TODO(co) Set asset ID to "uninitialized"
 		mRendererRuntimeImpl(&rendererRuntimeImpl),
 		mSize(0),
 		mResolution(0),

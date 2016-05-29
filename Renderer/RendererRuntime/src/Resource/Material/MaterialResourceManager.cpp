@@ -22,7 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
-#include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Material/Loader/MaterialResourceLoader.h"
 #include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
@@ -41,24 +40,31 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	const MaterialResources& MaterialResourceManager::getMaterialResources() const
+	{
+		return mMaterialResources;
+	}
+
 	// TODO(co) Work-in-progress
-	MaterialResource* MaterialResourceManager::loadMaterialResourceByAssetId(AssetId assetId, bool reload)
+	MaterialResourceId MaterialResourceManager::loadMaterialResourceByAssetId(AssetId assetId, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
 		{
 			// Get or create the instance
 			MaterialResource* materialResource = nullptr;
-			const size_t numberOfResources = mResources.size();
-			for (size_t i = 0; i < numberOfResources; ++i)
 			{
-				MaterialResource* currentMaterialResource = mResources[i];
-				if (currentMaterialResource->getResourceId() == assetId)
+				const uint32_t numberOfElements = mMaterialResources.getNumberOfElements();
+				for (uint32_t i = 0; i < numberOfElements; ++i)
 				{
-					materialResource = currentMaterialResource;
+					MaterialResource& currentMaterialResource = mMaterialResources.getElementByIndex(i);
+					if (currentMaterialResource.getAssetId() == assetId)
+					{
+						materialResource = &currentMaterialResource;
 
-					// Get us out of the loop
-					i = mResources.size();
+						// Get us out of the loop
+						i = numberOfElements;
+					}
 				}
 			}
 
@@ -66,8 +72,8 @@ namespace RendererRuntime
 			bool load = reload;
 			if (nullptr == materialResource)
 			{
-				materialResource = new MaterialResource(assetId);
-				mResources.push_back(materialResource);
+				materialResource = &mMaterialResources.addElement();
+				materialResource->setAssetId(assetId);
 				load = true;
 			}
 
@@ -85,12 +91,12 @@ namespace RendererRuntime
 				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 			}
 
-			// TODO(co) No raw pointers in here
-			return materialResource;
+			// Done
+			return materialResource->getId();
 		}
 
 		// Error!
-		return nullptr;
+		return ~0u;	// TODO(co) Set material resource ID to "uninitialized"
 	}
 
 
@@ -100,9 +106,10 @@ namespace RendererRuntime
 	void MaterialResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		for (size_t i = 0; i < mResources.size(); ++i)
+		const uint32_t numberOfElements = mMaterialResources.getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			if (mResources[i]->getResourceId() == assetId)
+			if (mMaterialResources.getElementByIndex(i).getAssetId() == assetId)
 			{
 				loadMaterialResourceByAssetId(assetId, true);
 				break;

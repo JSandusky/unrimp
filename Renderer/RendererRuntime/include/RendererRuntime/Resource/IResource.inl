@@ -27,9 +27,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ResourceId IResource::getResourceId() const
+	inline ResourceId IResource::getId() const
 	{
 		return mResourceId;
+	}
+
+	inline AssetId IResource::getAssetId() const
+	{
+		return mAssetId;
 	}
 
 	inline IResource::LoadingState IResource::getLoadingState() const
@@ -41,8 +46,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IResource::IResource(ResourceId resourceId, IResourceListener* resourceListener) :
+	inline IResource::IResource(ResourceId resourceId, AssetId assetId, IResourceListener* resourceListener) :
 		mResourceId(resourceId),
+		mAssetId(assetId),
 		mLoadingState(LoadingState::UNLOADED),
 		mResourceListener(resourceListener)
 	{
@@ -52,6 +58,11 @@ namespace RendererRuntime
 	inline IResource::~IResource()
 	{
 		// Nothing here
+	}
+
+	inline void IResource::setAssetId(AssetId assetId)
+	{
+		mAssetId = assetId;
 	}
 
 

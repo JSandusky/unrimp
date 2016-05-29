@@ -306,6 +306,9 @@
     <None Include="include\RendererRuntime\Resource\Mesh\MeshResource.inl">
       <Filter>Source Files\Resource\Mesh</Filter>
     </None>
+    <None Include="include\RendererRuntime\Core\PackedElementManager.inl">
+      <Filter>Source Files\Core</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -651,6 +654,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Detail\SubMesh.h">
       <Filter>Source Files\Resource\Mesh\Detail</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\PackedElementManager.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -730,9 +736,6 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\IResourceManager.cpp">
-      <Filter>Source Files\Resource</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\ResourceStreamer.cpp">
       <Filter>Source Files\Resource</Filter>
@@ -904,6 +907,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Mesh\Detail\SubMesh.cpp">
       <Filter>Source Files\Resource\Mesh\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\IResourceManager.cpp">
+      <Filter>Source Files\Resource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -86,6 +86,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class FontResourceLoader;
+		friend class FontResourceManager;
 
 
 	//[-------------------------------------------------------]

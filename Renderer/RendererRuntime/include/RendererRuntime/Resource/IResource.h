@@ -50,7 +50,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId ResourceId;	///< Resource identifier, internally just a POD "uint32_t", in case the resource is an asset instance the resource ID is identical to the asset ID
+	typedef StringId AssetId;		///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
+	typedef uint32_t ResourceId;	///< POD resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -83,7 +84,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline ResourceId getResourceId() const;
+		inline ResourceId getId() const;
+		inline AssetId getAssetId() const;
 		inline LoadingState getLoadingState() const;
 
 
@@ -91,10 +93,11 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline IResource(ResourceId resourceId, IResourceListener* resourceListener = nullptr);
+		inline IResource(ResourceId resourceId, AssetId assetId, IResourceListener* resourceListener = nullptr);
 		inline virtual ~IResource();
 		IResource(const IResource&) = delete;
 		IResource& operator=(const IResource&) = delete;
+		inline void setAssetId(AssetId assetId);
 		void setLoadingState(LoadingState loadingState);
 
 
@@ -102,7 +105,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ResourceId		   mResourceId;
+		ResourceId		   mResourceId;			///< Unique resource ID inside the resource manager
+		AssetId			   mAssetId;			///< In case the resource is an instance of an asset, this is the ID of this asset
 		LoadingState	   mLoadingState;
 		IResourceListener* mResourceListener;
 

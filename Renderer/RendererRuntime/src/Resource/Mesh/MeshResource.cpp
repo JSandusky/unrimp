@@ -35,7 +35,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	MeshResource::MeshResource(ResourceId resourceId) :
-		IResource(resourceId),
+		IResource(resourceId, ~0u),	// TODO(co) Set asset ID to "uninitialized"
 		mNumberOfVertices(0),
 		mNumberOfIndices(0)
 	{

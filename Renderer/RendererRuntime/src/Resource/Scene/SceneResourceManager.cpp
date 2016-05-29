@@ -88,7 +88,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfResources; ++i)
 			{
 				ISceneResource* currentSceneResource = mSceneResources[i];
-				if (currentSceneResource->getResourceId() == assetId)
+				if (currentSceneResource->getAssetId() == assetId)
 				{
 					sceneResource = currentSceneResource;
 
@@ -103,6 +103,7 @@ namespace RendererRuntime
 			{
 				assert(nullptr != mSceneFactory);
 				sceneResource = mSceneFactory->createSceneResource(SceneResource::TYPE_ID, mRendererRuntime, assetId, resourceListener);
+				sceneResource->setAssetId(assetId);
 				mSceneResources.push_back(sceneResource);
 				load = true;
 			}
@@ -140,7 +141,7 @@ namespace RendererRuntime
 		for (size_t i = 0; i < numberOfSceneResources; ++i)
 		{
 			ISceneResource* sceneResource = mSceneResources[i];
-			if (sceneResource->getResourceId() == assetId)
+			if (sceneResource->getAssetId() == assetId)
 			{
 				sceneResource->destroyAllSceneNodesAndItems();
 				loadSceneResourceByAssetId(assetId, nullptr, true);

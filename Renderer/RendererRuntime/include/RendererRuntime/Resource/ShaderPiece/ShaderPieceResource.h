@@ -63,6 +63,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class ShaderPieceResourceLoader;
+		friend class ShaderPieceResourceManager;
 
 
 	//[-------------------------------------------------------]

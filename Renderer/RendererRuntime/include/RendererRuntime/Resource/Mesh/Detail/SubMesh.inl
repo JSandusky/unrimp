@@ -29,7 +29,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline SubMesh::SubMesh() :
-		mMaterialResource(nullptr),
+		mMaterialResourceId(~0u),	// TODO(co) Set material resource ID to "uninitialized"
 		mPrimitiveTopology(Renderer::PrimitiveTopology::UNKNOWN),
 		mStartIndexLocation(0),
 		mNumberOfIndices(0)
@@ -43,7 +43,7 @@ namespace RendererRuntime
 	}
 
 	inline SubMesh::SubMesh(const SubMesh& subMesh) :
-		mMaterialResource(subMesh.mMaterialResource),
+		mMaterialResourceId(subMesh.mMaterialResourceId),
 		mPrimitiveTopology(subMesh.mPrimitiveTopology),
 		mStartIndexLocation(subMesh.mStartIndexLocation),
 		mNumberOfIndices(subMesh.mNumberOfIndices)
@@ -53,7 +53,7 @@ namespace RendererRuntime
 
 	inline SubMesh& SubMesh::operator=(const SubMesh& subMesh)
 	{
-		mMaterialResource	= subMesh.mMaterialResource;
+		mMaterialResourceId	= subMesh.mMaterialResourceId;
 		mPrimitiveTopology	= subMesh.mPrimitiveTopology;
 		mStartIndexLocation = subMesh.mStartIndexLocation;
 		mNumberOfIndices	= subMesh.mNumberOfIndices;
@@ -62,9 +62,9 @@ namespace RendererRuntime
 		return *this;
 	}
 
-	inline MaterialResource* SubMesh::getMaterialResource() const
+	inline MaterialResourceId SubMesh::getMaterialResourceId() const
 	{
-		return mMaterialResource;
+		return mMaterialResourceId;
 	}
 
 	inline Renderer::PrimitiveTopology SubMesh::getPrimitiveTopology() const

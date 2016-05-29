@@ -31,19 +31,16 @@
 
 
 //[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class MaterialResource;
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -72,7 +69,7 @@ namespace RendererRuntime
 		inline ~SubMesh();
 		inline SubMesh(const SubMesh& subMesh);
 		inline SubMesh& operator=(const SubMesh& subMesh);
-		inline MaterialResource* getMaterialResource() const;
+		inline MaterialResourceId getMaterialResourceId() const;
 		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
 		inline uint32_t getStartIndexLocation() const;
 		inline uint32_t getNumberOfIndices() const;
@@ -82,7 +79,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialResource*			mMaterialResource;	///< Material resource, can be a null pointer
+		MaterialResourceId			mMaterialResourceId;	///< Material resource ID, can be set to uninitialized value
 		Renderer::PrimitiveTopology mPrimitiveTopology;
 		uint32_t					mStartIndexLocation;
 		uint32_t					mNumberOfIndices;

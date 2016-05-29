@@ -65,6 +65,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class CompositorResourceLoader;
+		friend class CompositorResourceManager;
 
 
 	//[-------------------------------------------------------]

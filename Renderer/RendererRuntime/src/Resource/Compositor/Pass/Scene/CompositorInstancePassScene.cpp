@@ -52,6 +52,7 @@ namespace
 		void draw(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::CameraSceneItem& cameraSceneItem)
 		{
 			Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
+			const RendererRuntime::MaterialResources& materialResources = rendererRuntime.getMaterialResourceManager().getMaterialResources();
 
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
@@ -89,7 +90,7 @@ namespace
 								for (const RendererRuntime::SubMesh& subMesh : subMeshes)
 								{
 									// Material resource
-									RendererRuntime::MaterialResource* materialResource = subMesh.getMaterialResource();
+									const RendererRuntime::MaterialResource* materialResource = materialResources.tryGetElementById(subMesh.getMaterialResourceId());
 									if (nullptr != materialResource)
 									{
 										RendererRuntime::MaterialTechnique* materialTechnique = materialResource->getMaterialTechniqueById("Default");

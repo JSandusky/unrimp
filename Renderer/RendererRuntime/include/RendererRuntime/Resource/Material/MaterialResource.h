@@ -33,10 +33,25 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -54,6 +69,8 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class MaterialResourceLoader;
+		friend class MaterialResourceManager;
+		friend class PackedElementManager<MaterialResource, MaterialResourceId>;
 
 
 	//[-------------------------------------------------------]
@@ -67,21 +84,6 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] resourceId
-		*    Resource ID
-		*/
-		explicit MaterialResource(ResourceId resourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~MaterialResource();
-
 		/**
 		*  @brief
 		*    Return the sorted material technique vector
@@ -123,6 +125,27 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		/**
+		*  @brief
+		*    Default constructor
+		*/
+		inline MaterialResource();
+
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] resourceId
+		*    Resource ID
+		*/
+		inline explicit MaterialResource(ResourceId resourceId);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~MaterialResource();
+
 		MaterialResource(const MaterialResource&) = delete;
 		MaterialResource& operator=(const MaterialResource&) = delete;
 

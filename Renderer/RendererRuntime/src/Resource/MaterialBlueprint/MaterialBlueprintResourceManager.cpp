@@ -84,7 +84,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfResources; ++i)
 			{
 				MaterialBlueprintResource* currentMaterialBlueprintResource = mResources[i];
-				if (currentMaterialBlueprintResource->getResourceId() == assetId)
+				if (currentMaterialBlueprintResource->getAssetId() == assetId)
 				{
 					materialBlueprintResource = currentMaterialBlueprintResource;
 
@@ -98,6 +98,7 @@ namespace RendererRuntime
 			if (nullptr == materialBlueprintResource)
 			{
 				materialBlueprintResource = new MaterialBlueprintResource(*this, assetId);
+				materialBlueprintResource->setAssetId(assetId);
 				mResources.push_back(materialBlueprintResource);
 				load = true;
 			}
@@ -134,19 +135,23 @@ namespace RendererRuntime
 		for (size_t i = 0; i < mResources.size(); ++i)
 		{
 			MaterialBlueprintResource* materialBlueprintResource = mResources[i];
-			if (materialBlueprintResource->getResourceId() == assetId)
+			if (materialBlueprintResource->getAssetId() == assetId)
 			{
 				loadMaterialBlueprintResourceByAssetId(assetId, true);
 
 				// TODO(co) Cleanup: Update all influenced material resources, probably also other material stuff has to be updated
 				materialBlueprintResource->getPipelineStateCacheManager().clearCache();
 				materialBlueprintResource->mTextures.clear();
-				for (auto materialResource : mRendererRuntime.getMaterialResourceManager().mResources)
+				const MaterialResources& materialResources = mRendererRuntime.getMaterialResourceManager().getMaterialResources();
+				const uint32_t numberOfElements = materialResources.getNumberOfElements();
+				for (uint32_t elementIndex = 0; elementIndex < numberOfElements; ++elementIndex)
 				{
+					const MaterialResource& materialResource = materialResources.getElementByIndex(elementIndex);
 					// TODO(co)
 				//	if (materialResource->getMaterialBlueprintResource() == materialBlueprintResource)
 					{
-						materialResource->releaseTextures();
+						// TODO(co) Get rid of const-cast
+						const_cast<MaterialResource&>(materialResource).releaseTextures();
 					}
 				}
 

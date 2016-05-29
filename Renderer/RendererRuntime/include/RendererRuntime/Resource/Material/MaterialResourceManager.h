@@ -27,8 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/IResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialResource.h"
 
 
 //[-------------------------------------------------------]
@@ -36,7 +37,6 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class MaterialResource;
 	class IRendererRuntime;
 }
 
@@ -46,6 +46,13 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t												   MaterialResourceId;	///< POD material resource identifier
+	typedef PackedElementManager<MaterialResource, MaterialResourceId> MaterialResources;
 
 
 	//[-------------------------------------------------------]
@@ -65,8 +72,10 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		const MaterialResources& getMaterialResources() const;
+
 		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT MaterialResource* loadMaterialResourceByAssetId(AssetId assetId, bool reload = false);
+		RENDERERRUNTIME_API_EXPORT MaterialResourceId loadMaterialResourceByAssetId(AssetId assetId, bool reload = false);
 
 
 	//[-------------------------------------------------------]
@@ -92,11 +101,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-
-		// TODO(co) Implement decent resource handling
-	public:
-		std::vector<MaterialResource*> mResources;
+		IRendererRuntime& mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
+		MaterialResources mMaterialResources;
 
 
 	};

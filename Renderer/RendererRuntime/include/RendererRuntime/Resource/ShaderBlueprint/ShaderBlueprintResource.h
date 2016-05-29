@@ -65,6 +65,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class ShaderBlueprintResourceLoader;
+		friend class ShaderBlueprintResourceManager;
 
 
 	//[-------------------------------------------------------]

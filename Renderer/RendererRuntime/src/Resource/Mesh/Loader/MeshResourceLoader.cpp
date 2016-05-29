@@ -155,7 +155,7 @@ namespace RendererRuntime
 				const v1Mesh::SubMesh& v1SubMesh = mSubMeshes[i];
 
 				// Setup sub-mesh
-				subMesh.mMaterialResource   = materialResourceManager.loadMaterialResourceByAssetId(v1SubMesh.materialAssetId);
+				subMesh.mMaterialResourceId = materialResourceManager.loadMaterialResourceByAssetId(v1SubMesh.materialAssetId);
 				subMesh.mPrimitiveTopology  = static_cast<Renderer::PrimitiveTopology>(v1SubMesh.primitiveTopology);
 				subMesh.mStartIndexLocation = v1SubMesh.startIndexLocation;
 				subMesh.mNumberOfIndices	= v1SubMesh.numberOfIndices;

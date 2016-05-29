@@ -36,7 +36,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	CompositorResource::CompositorResource(ResourceId resourceId, IResourceListener* resourceListener) :
-		IResource(resourceId, resourceListener)
+		IResource(resourceId, ~0u, resourceListener)	// TODO(co) Set asset ID to "uninitialized"
 	{
 		// Nothing here
 	}

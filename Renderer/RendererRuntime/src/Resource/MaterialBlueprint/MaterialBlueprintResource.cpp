@@ -139,7 +139,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	MaterialBlueprintResource::MaterialBlueprintResource(MaterialBlueprintResourceManager& materialBlueprintResourceManager, ResourceId resourceId) :
-		IResource(resourceId),
+		IResource(resourceId, ~0u),	// TODO(co) Set asset ID to "uninitialized"
 		mMaterialBlueprintResourceManager(materialBlueprintResourceManager),
 		mPipelineStateCacheManager(*this),
 		mVertexAttributes(sizeof(::detail::vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), ::detail::vertexAttributesLayout),

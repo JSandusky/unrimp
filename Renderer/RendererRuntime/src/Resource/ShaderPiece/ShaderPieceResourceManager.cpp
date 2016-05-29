@@ -54,7 +54,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfResources; ++i)
 			{
 				ShaderPieceResource* currentShaderPieceResource = mResources[i];
-				if (currentShaderPieceResource->getResourceId() == assetId)
+				if (currentShaderPieceResource->getAssetId() == assetId)
 				{
 					shaderPieceResource = currentShaderPieceResource;
 
@@ -68,6 +68,7 @@ namespace RendererRuntime
 			if (nullptr == shaderPieceResource)
 			{
 				shaderPieceResource = new ShaderPieceResource(assetId);
+				shaderPieceResource->setAssetId(assetId);
 				mResources.push_back(shaderPieceResource);
 				load = true;
 			}
@@ -104,7 +105,7 @@ namespace RendererRuntime
 		for (size_t i = 0; i < mResources.size(); ++i)
 		{
 			ShaderPieceResource* shaderPieceResource = mResources[i];
-			if (shaderPieceResource->getResourceId() == assetId)
+			if (shaderPieceResource->getAssetId() == assetId)
 			{
 				loadShaderPieceResourceByAssetId(assetId, true);
 				break;

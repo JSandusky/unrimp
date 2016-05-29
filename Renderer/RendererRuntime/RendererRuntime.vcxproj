@@ -25,6 +25,7 @@
     <None Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.inl" />
     <None Include="include\RendererRuntime\Backend\RendererBackendManager.inl" />
     <None Include="include\RendererRuntime\Backend\RendererRuntimeImpl.inl" />
+    <None Include="include\RendererRuntime\Core\PackedElementManager.inl" />
     <None Include="include\RendererRuntime\Core\StringId.inl" />
     <None Include="include\RendererRuntime\Core\Transform.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
@@ -92,6 +93,7 @@
     <ClInclude Include="include\RendererRuntime\Command\Material.h" />
     <ClInclude Include="include\RendererRuntime\Core\Manager.h" />
     <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h" />
+    <ClInclude Include="include\RendererRuntime\Core\PackedElementManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Quaternion.h" />
     <ClInclude Include="include\RendererRuntime\Core\Serializer.h" />
     <ClInclude Include="include\RendererRuntime\Core\String.h" />
