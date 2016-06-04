@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -53,7 +59,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline MeshSceneItem::MeshSceneItem(ISceneResource& sceneResource) :
 		ISceneItem(sceneResource),
-		mMeshResourceId(~0u)	// TODO(co) Set mesh resource ID to "uninitialized"
+		mMeshResourceId(getUninitialized<MeshResourceId>())
 	{
 		// Nothing in here
 	}

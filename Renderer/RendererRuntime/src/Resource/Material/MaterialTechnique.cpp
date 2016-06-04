@@ -45,8 +45,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void MaterialTechnique::bindToRenderer(const IRendererRuntime& rendererRuntime)
 	{
-		// TODO(co) Set material blueprint resource ID to "uninitialized"
-		assert(~0u != mMaterialBlueprintResourceId);
+		assert(isInitialized(mMaterialBlueprintResourceId));
 
 		// TODO(co) This is experimental and will certainly look different when everything is in place
 		Renderer::IRenderer& renderer = rendererRuntime.getRenderer();

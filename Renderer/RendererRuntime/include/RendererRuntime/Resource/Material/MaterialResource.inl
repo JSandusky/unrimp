@@ -43,13 +43,13 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline MaterialResource::MaterialResource() :
-		IResource(~0u, ~0u)	// TODO(co) Set both to "uninitialized"
+		IResource(getUninitialized<MaterialResourceId>())
 	{
 		// Nothing here
 	}
 
 	inline MaterialResource::MaterialResource(MaterialResourceId materialResourceId) :
-		IResource(materialResourceId, ~0u)	// TODO(co) Set material resource ID to "uninitialized"
+		IResource(materialResourceId)
 	{
 		// Nothing here
 	}

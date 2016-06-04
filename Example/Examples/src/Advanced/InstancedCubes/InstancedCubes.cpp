@@ -42,7 +42,7 @@
 //[-------------------------------------------------------]
 InstancedCubes::InstancedCubes(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mFontResourceId(~0u),	// TODO(co) Set font resource ID to "uninitialized"
+	mFontResourceId(RendererRuntime::getUninitialized<RendererRuntime::FontResourceId>()),
 	mCubeRenderer(nullptr),
 	mNumberOfCubeInstances(1000),
 	mGlobalTimer(0.0f),
@@ -124,7 +124,7 @@ void InstancedCubes::onDeinitialization()
 	}
 
 	// Release the used resources
-	mFontResourceId = ~0u;	// TODO(co) Set font resource ID to "uninitialized"
+	RendererRuntime::setUninitialized(mFontResourceId);
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())

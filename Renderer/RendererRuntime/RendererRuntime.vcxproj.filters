@@ -672,6 +672,9 @@
     <ClInclude Include="include\RendererRuntime\Core\PackedElementManager.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\GetUninitialized.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">

@@ -17,6 +17,13 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 \*********************************************************/
 
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
@@ -46,9 +53,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IResource::IResource(ResourceId resourceId, AssetId assetId) :
+	inline IResource::IResource(ResourceId resourceId) :
 		mResourceId(resourceId),
-		mAssetId(assetId),
+		mAssetId(getUninitialized<AssetId>()),
 		mLoadingState(LoadingState::UNLOADED),
 		mResourceListener(nullptr)
 	{

@@ -105,7 +105,7 @@ namespace RendererRuntime
 		}
 
 		// Error!
-		return ~0u;	// TODO(co) Set texture resource ID to "uninitialized"
+		return getUninitialized<TextureResourceId>();
 	}
 
 

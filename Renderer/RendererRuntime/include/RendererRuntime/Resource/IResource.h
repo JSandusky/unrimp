@@ -93,7 +93,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline IResource(ResourceId resourceId, AssetId assetId);
+		inline explicit IResource(ResourceId resourceId);
 		inline virtual ~IResource();
 		IResource(const IResource&) = delete;
 		IResource& operator=(const IResource&) = delete;

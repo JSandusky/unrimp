@@ -47,7 +47,7 @@
 //[-------------------------------------------------------]
 FirstCommandBucket::FirstCommandBucket(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mFontResourceId(~0u),	// TODO(co) Set font resource ID to "uninitialized"
+	mFontResourceId(RendererRuntime::getUninitialized<RendererRuntime::FontResourceId>()),
 	mSolidCommandBucket(4),
 	mTransparentCommandBucket(2)
 {
@@ -215,7 +215,7 @@ void FirstCommandBucket::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used resources
-	mFontResourceId			= ~0u;	// TODO(co) Set font resource ID to "uninitialized"
+	RendererRuntime::setUninitialized(mFontResourceId);
 	mRootSignature			= nullptr;
 	mUniformBufferDynamicVs = nullptr;
 	mSolidVertexArray		= nullptr;

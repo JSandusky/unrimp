@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -29,7 +35,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline SubMesh::SubMesh() :
-		mMaterialResourceId(~0u),	// TODO(co) Set material resource ID to "uninitialized"
+		mMaterialResourceId(getUninitialized<MaterialResourceId>()),
 		mPrimitiveTopology(Renderer::PrimitiveTopology::UNKNOWN),
 		mStartIndexLocation(0),
 		mNumberOfIndices(0)

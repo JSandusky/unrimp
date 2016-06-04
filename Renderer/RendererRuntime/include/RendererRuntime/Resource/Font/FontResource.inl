@@ -79,7 +79,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline FontResource::FontResource() :
-		IResource(~0u, ~0u),	// TODO(co) Set both to "uninitialized"
+		IResource(getUninitialized<FontResourceId>()),
 		mRendererRuntimeImpl(nullptr),
 		mSize(0),
 		mResolution(0),
@@ -97,7 +97,7 @@ namespace RendererRuntime
 	}
 
 	inline FontResource::FontResource(ResourceId resourceId) :
-		IResource(resourceId, ~0u),	// TODO(co) Set font resource ID to "uninitialized"
+		IResource(resourceId),
 		mRendererRuntimeImpl(nullptr),
 		mSize(0),
 		mResolution(0),

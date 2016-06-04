@@ -115,7 +115,7 @@ namespace RendererRuntime
 		}
 
 		// Error!
-		return ~0u;	// TODO(co) Set compositor resource ID to "uninitialized"
+		return getUninitialized<CompositorResourceId>();
 	}
 
 	void CompositorResourceManager::setCompositorPassFactory(const ICompositorPassFactory* compositorPassFactory)

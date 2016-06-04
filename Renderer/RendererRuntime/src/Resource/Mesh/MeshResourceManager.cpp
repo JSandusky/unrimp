@@ -91,7 +91,7 @@ namespace RendererRuntime
 		}
 
 		// Error!
-		return ~0u;	// TODO(co) Set mesh resource ID to "uninitialized"
+		return getUninitialized<MeshResourceId>();
 	}
 
 

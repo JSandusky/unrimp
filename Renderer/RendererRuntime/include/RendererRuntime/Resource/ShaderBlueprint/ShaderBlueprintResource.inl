@@ -43,13 +43,13 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline ShaderBlueprintResource::ShaderBlueprintResource() :
-		IResource(~0u, ~0u)	// TODO(co) Set both to "uninitialized"
+		IResource(getUninitialized<ShaderBlueprintResourceId>())
 	{
 		// Nothing here
 	}
 
 	inline ShaderBlueprintResource::ShaderBlueprintResource(ShaderBlueprintResourceId shaderBlueprintResourceId) :
-		IResource(shaderBlueprintResourceId, ~0u)	// TODO(co) Set shader blueprint ID to "uninitialized"
+		IResource(shaderBlueprintResourceId)
 	{
 		// Nothing here
 	}

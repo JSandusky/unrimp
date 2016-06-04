@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -31,7 +37,7 @@ namespace RendererRuntime
 	inline MaterialTechnique::MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource) :
 		mMaterialTechniqueId(materialTechniqueId),
 		mMaterialResource(&materialResource),
-		mMaterialBlueprintResourceId(~0u),	// TODO(co) Set material blueprint resource ID to "uninitialized"
+		mMaterialBlueprintResourceId(getUninitialized<MaterialBlueprintResourceId>()),
 		mMaterialUniformBufferIndex(0)
 	{
 		// Nothing here

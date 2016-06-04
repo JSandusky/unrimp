@@ -535,31 +535,31 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	MaterialBlueprintResource::MaterialBlueprintResource() :
-		IResource(~0u, ~0u),	// TODO(co) Set both to "uninitialized"
+		IResource(getUninitialized<MaterialBlueprintResourceId>()),
 		mMaterialBlueprintResourceManager(nullptr),
 		mPipelineStateCacheManager(*this),
 		mVertexAttributes(sizeof(::detail::vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), ::detail::vertexAttributesLayout),
 		mPipelineState(Renderer::PipelineStateBuilder()),
-		mVertexShaderBlueprintId(~0u),					// TODO(co) Set texture resource ID to "uninitialized"
-		mTessellationControlShaderBlueprintId(~0u),		// TODO(co) Set texture resource ID to "uninitialized"
-		mTessellationEvaluationShaderBlueprintId(~0u),	// TODO(co) Set texture resource ID to "uninitialized"
-		mGeometryShaderBlueprintId(~0u),				// TODO(co) Set texture resource ID to "uninitialized"
-		mFragmentShaderBlueprintId(~0u)					// TODO(co) Set texture resource ID to "uninitialized"
+		mVertexShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
+		mTessellationControlShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
+		mTessellationEvaluationShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
+		mGeometryShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
+		mFragmentShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>())
 	{
 		// Nothing here
 	}
 
 	MaterialBlueprintResource::MaterialBlueprintResource(MaterialBlueprintResourceId materialBlueprintResourceId) :
-		IResource(materialBlueprintResourceId, ~0u),	// TODO(co) Set asset ID to "uninitialized"
+		IResource(materialBlueprintResourceId),
 		mMaterialBlueprintResourceManager(nullptr),
 		mPipelineStateCacheManager(*this),
 		mVertexAttributes(sizeof(::detail::vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), ::detail::vertexAttributesLayout),
 		mPipelineState(Renderer::PipelineStateBuilder()),
-		mVertexShaderBlueprintId(~0u),					// TODO(co) Set texture resource ID to "uninitialized"
-		mTessellationControlShaderBlueprintId(~0u),		// TODO(co) Set texture resource ID to "uninitialized"
-		mTessellationEvaluationShaderBlueprintId(~0u),	// TODO(co) Set texture resource ID to "uninitialized"
-		mGeometryShaderBlueprintId(~0u),				// TODO(co) Set texture resource ID to "uninitialized"
-		mFragmentShaderBlueprintId(~0u)					// TODO(co) Set texture resource ID to "uninitialized"
+		mVertexShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
+		mTessellationControlShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
+		mTessellationEvaluationShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
+		mGeometryShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
+		mFragmentShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>())
 	{
 		// Nothing here
 	}

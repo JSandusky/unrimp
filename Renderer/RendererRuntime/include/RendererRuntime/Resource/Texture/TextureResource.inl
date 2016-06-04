@@ -38,13 +38,13 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline TextureResource::TextureResource() :
-		IResource(~0u, ~0u)	// TODO(co) Set both to "uninitialized"
+		IResource(getUninitialized<TextureResourceId>())
 	{
 		// Nothing here
 	}
 
 	inline TextureResource::TextureResource(TextureResourceId textureResourceId) :
-		IResource(textureResourceId, ~0u)	// TODO(co) Set texture resource ID to "uninitialized"
+		IResource(textureResourceId)
 	{
 		// Nothing here
 	}

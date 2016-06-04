@@ -43,13 +43,13 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline CompositorResource::CompositorResource() :
-		IResource(~0u, ~0u)	// TODO(co) Set both to "uninitialized"
+		IResource(getUninitialized<CompositorResourceId>())
 	{
 		// Nothing here
 	}
 
 	inline CompositorResource::CompositorResource(CompositorResourceId compositorResourceId) :
-		IResource(compositorResourceId, ~0u)	// TODO(co) Set asset ID to "uninitialized"
+		IResource(compositorResourceId)
 	{
 		// Nothing here
 	}

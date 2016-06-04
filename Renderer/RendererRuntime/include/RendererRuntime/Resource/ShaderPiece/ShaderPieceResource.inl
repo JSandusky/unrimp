@@ -38,13 +38,13 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline ShaderPieceResource::ShaderPieceResource() :
-		IResource(~0u, ~0u)	// TODO(co) Set both to "uninitialized"
+		IResource(getUninitialized<ShaderPieceResourceId>())
 	{
 		// Nothing here
 	}
 
 	inline ShaderPieceResource::ShaderPieceResource(ShaderPieceResourceId shaderPieceResourceId) :
-		IResource(shaderPieceResourceId, ~0u)	// TODO(co) Set shader piece resource ID to "uninitialized"
+		IResource(shaderPieceResourceId)
 	{
 		// Nothing here
 	}

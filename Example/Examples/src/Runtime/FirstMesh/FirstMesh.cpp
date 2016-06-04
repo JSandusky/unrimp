@@ -40,12 +40,12 @@
 //[-------------------------------------------------------]
 FirstMesh::FirstMesh(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mFontResourceId(~0u),				// TODO(co) Set font resource ID to "uninitialized"
-	mMeshResourceId(~0u),				// TODO(co) Set mesh resource ID to "uninitialized"
-	mDiffuseTextureResourceId(~0u),		// TODO(co) Set texture resource ID to "uninitialized"
-	mNormalTextureResourceId(~0u),		// TODO(co) Set texture resource ID to "uninitialized"
-	mSpecularTextureResourceId(~0u),	// TODO(co) Set texture resource ID to "uninitialized"
-	mEmissiveTextureResourceId(~0u),	// TODO(co) Set texture resource ID to "uninitialized"
+	mFontResourceId(RendererRuntime::getUninitialized<RendererRuntime::FontResourceId>()),
+	mMeshResourceId(RendererRuntime::getUninitialized<RendererRuntime::MeshResourceId>()),
+	mDiffuseTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
+	mNormalTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
+	mSpecularTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
+	mEmissiveTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
 	mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
 	mObjectSpaceToViewSpaceMatrixUniformHandle(NULL_HANDLE),
 	mGlobalTimer(0.0f)
@@ -230,17 +230,17 @@ void FirstMesh::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used renderer resources
-	mSamplerState			   = nullptr;
-	mFontResourceId			   = ~0u;	// TODO(co) Set font resource ID to "uninitialized"
-	mDiffuseTextureResourceId  = ~0u;	// TODO(co) Set texture resource ID to "uninitialized"
-	mNormalTextureResourceId   = ~0u;	// TODO(co) Set texture resource ID to "uninitialized"
-	mSpecularTextureResourceId = ~0u;	// TODO(co) Set texture resource ID to "uninitialized"
-	mEmissiveTextureResourceId = ~0u;	// TODO(co) Set texture resource ID to "uninitialized"
-	mMeshResourceId			   = ~0u;	// TODO(co) Set mesh resource ID to "uninitialized"
-	mPipelineState			   = nullptr;
-	mProgram				   = nullptr;
-	mRootSignature			   = nullptr;
-	mUniformBuffer			   = nullptr;
+	mSamplerState = nullptr;
+	RendererRuntime::setUninitialized(mFontResourceId);
+	RendererRuntime::setUninitialized(mDiffuseTextureResourceId);
+	RendererRuntime::setUninitialized(mNormalTextureResourceId);
+	RendererRuntime::setUninitialized(mSpecularTextureResourceId);
+	RendererRuntime::setUninitialized(mEmissiveTextureResourceId);
+	RendererRuntime::setUninitialized(mMeshResourceId);
+	mPipelineState = nullptr;
+	mProgram	   = nullptr;
+	mRootSignature = nullptr;
+	mUniformBuffer = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())

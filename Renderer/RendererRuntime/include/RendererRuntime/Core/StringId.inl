@@ -107,7 +107,10 @@ namespace RendererRuntime
 	inline uint32_t StringId::calculateFNV(const char* string)
 	{
 		if (string[0] == 0)
-			return MAXIMUM_UINT32_T_VALUE;	// Force "uninitialized" value as hash for empty strings
+		{
+			// Force "uninitialized" value as hash for empty strings
+			return MAXIMUM_UINT32_T_VALUE;
+		}
 
 		const size_t length = strlen(string) + 1;
 		uint32_t hash = 2166136261u;

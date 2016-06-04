@@ -92,7 +92,7 @@ namespace RendererRuntime
 		}
 
 		// Error!
-		return ~0u;	// TODO(co) Set material resource ID to "uninitialized"
+		return getUninitialized<ShaderPieceResourceId>();
 	}
 
 

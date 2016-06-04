@@ -19,58 +19,72 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <limits>	// For "std::numeric_limits()"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	inline uint32_t MeshResource::getNumberOfVertices() const
+	/**
+	*  @brief
+	*    Check whether or not the given variable has not the uninitialized default value
+	*/
+	template <typename TYPE>
+	bool isInitialized(const TYPE& value)
 	{
-		return mNumberOfVertices;
+		return (getUninitialized<TYPE>() != value);
 	}
 
-	inline uint32_t MeshResource::getNumberOfIndices() const
+	/**
+	*  @brief
+	*    Check whether or not the given variable has the uninitialized default value
+	*/
+	template <typename TYPE>
+	bool isUninitialized(const TYPE& value)
 	{
-		return mNumberOfIndices;
+		return (getUninitialized<TYPE>() == value);
 	}
 
-	inline Renderer::IVertexArrayPtr MeshResource::getVertexArrayPtr() const
+	/**
+	*  @brief
+	*    Return uninitialized default value for a given type
+	*/
+	template <typename TYPE>
+	TYPE getUninitialized()
 	{
-		return mVertexArray;
+		return std::numeric_limits<TYPE>::max();
 	}
 
-	inline const SubMeshes& MeshResource::getSubMeshes() const
+	/**
+	*  @brief
+	*    Return uninitialized default value for a type provided by a variable
+	*/
+	template <typename TYPE>
+	TYPE getUninitialized(const TYPE&)
 	{
-		return mSubMeshes;
+		return std::numeric_limits<TYPE>::max();
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline MeshResource::MeshResource() :
-		IResource(getUninitialized<MeshResourceId>()),
-		mNumberOfVertices(0),
-		mNumberOfIndices(0)
+	/**
+	*  @brief
+	*    Set the given variable to uninitialized default value
+	*/
+	template <typename TYPE>
+	void setUninitialized(TYPE& value)
 	{
-		// Nothing here
-	}
-
-	inline MeshResource::MeshResource(MeshResourceId meshResourceId) :
-		IResource(meshResourceId),
-		mNumberOfVertices(0),
-		mNumberOfIndices(0)
-	{
-		// Nothing here
-	}
-
-	inline MeshResource::~MeshResource()
-	{
-		// Nothing here
+		value = getUninitialized<TYPE>();
 	}
 
 

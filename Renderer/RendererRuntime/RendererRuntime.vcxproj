@@ -96,6 +96,7 @@
     <ClInclude Include="include\RendererRuntime\Backend\RendererRuntimeImpl.h" />
     <ClInclude Include="include\RendererRuntime\Command\CommandBucket.h" />
     <ClInclude Include="include\RendererRuntime\Command\Material.h" />
+    <ClInclude Include="include\RendererRuntime\Core\GetUninitialized.h" />
     <ClInclude Include="include\RendererRuntime\Core\Manager.h" />
     <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h" />
     <ClInclude Include="include\RendererRuntime\Core\PackedElementManager.h" />

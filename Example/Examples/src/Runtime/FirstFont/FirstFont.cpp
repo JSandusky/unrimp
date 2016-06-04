@@ -47,7 +47,7 @@
 //[-------------------------------------------------------]
 FirstFont::FirstFont(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mFontResourceId(~0u)	// TODO(co) Set font resource ID to "uninitialized"
+	mFontResourceId(RendererRuntime::getUninitialized<RendererRuntime::FontResourceId>())
 {
 	// Nothing to do in here
 }
@@ -88,7 +88,7 @@ void FirstFont::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used renderer resources
-	mFontResourceId = ~0u;	// TODO(co) Set font resource ID to "uninitialized"
+	RendererRuntime::setUninitialized(mFontResourceId);
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
