@@ -19,19 +19,34 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
 
 
-	// TODO(co) Remove this if not required
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline const ShaderPieceResources& ShaderPieceResourceManager::getShaderPieceResources() const
+	{
+		return mShaderPieceResources;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline ShaderPieceResourceManager::ShaderPieceResourceManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
+	{
+		// Nothing in here
+	}
+
+	inline ShaderPieceResourceManager::~ShaderPieceResourceManager()
+	{
+		// Nothing in here
+	}
 
 
 //[-------------------------------------------------------]

@@ -30,7 +30,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline MaterialBlueprintResourceManager& MaterialBlueprintResource::getMaterialBlueprintResourceManager() const
 	{
-		return mMaterialBlueprintResourceManager;
+		assert(nullptr != mMaterialBlueprintResourceManager);
+		return *mMaterialBlueprintResourceManager;
 	}
 
 	inline PipelineStateCacheManager& MaterialBlueprintResource::getPipelineStateCacheManager()
@@ -71,6 +72,15 @@ namespace RendererRuntime
 	inline const MaterialBlueprintResource::Textures& MaterialBlueprintResource::getTextures() const
 	{
 		return mTextures;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline MaterialBlueprintResource::~MaterialBlueprintResource()
+	{
+		// Nothing here
 	}
 
 

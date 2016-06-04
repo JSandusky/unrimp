@@ -47,7 +47,7 @@
 //[-------------------------------------------------------]
 FirstCommandBucket::FirstCommandBucket(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mFontResource(nullptr),
+	mFontResourceId(~0u),	// TODO(co) Set font resource ID to "uninitialized"
 	mSolidCommandBucket(4),
 	mTransparentCommandBucket(2)
 {
@@ -80,7 +80,7 @@ void FirstCommandBucket::onInitialization()
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
 		// Create the font resource
-		mFontResource = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
+		mFontResourceId = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// Vertex input layout
 		const Renderer::VertexAttribute vertexAttributesLayout[] =
@@ -214,13 +214,11 @@ void FirstCommandBucket::onDeinitialization()
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
-	// TODO(co) Implement decent resource handling
-	mFontResource = nullptr;
-
 	// Release the used resources
-	mRootSignature = nullptr;
+	mFontResourceId			= ~0u;	// TODO(co) Set font resource ID to "uninitialized"
+	mRootSignature			= nullptr;
 	mUniformBufferDynamicVs = nullptr;
-	mSolidVertexArray = nullptr;
+	mSolidVertexArray		= nullptr;
 	mTransparentVertexArray = nullptr;
 	mSolidMaterial.clear();
 	mTransparentMaterial.clear();
@@ -245,6 +243,7 @@ void FirstCommandBucket::onDraw()
 		renderer->clear(Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
 
 		// Draw text
+		// TODO(co)
 //		mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
 
 		// Set the used graphics root signature

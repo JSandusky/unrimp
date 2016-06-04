@@ -35,17 +35,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorResource::CompositorResource(ResourceId resourceId, IResourceListener* resourceListener) :
-		IResource(resourceId, ~0u, resourceListener)	// TODO(co) Set asset ID to "uninitialized"
-	{
-		// Nothing here
-	}
-
-	CompositorResource::~CompositorResource()
-	{
-		// Nothing here
-	}
-
 	CompositorResourceNode* CompositorResource::addCompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId)
 	{
 		// TODO(co) Compositor resource node management inside "CompositorResourceManager"

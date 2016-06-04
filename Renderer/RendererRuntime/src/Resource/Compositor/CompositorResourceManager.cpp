@@ -64,29 +64,25 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void CompositorResourceManager::setCompositorPassFactory(const ICompositorPassFactory* compositorPassFactory)
-	{
-		// There must always be a valid compositor pass factory instance
-		mCompositorPassFactory = (nullptr != compositorPassFactory) ? compositorPassFactory : &::detail::defaultCompositorPassFactory;
-	}
-
-	CompositorResource* CompositorResourceManager::loadCompositorResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
+	CompositorResourceId CompositorResourceManager::loadCompositorResourceByAssetId(AssetId assetId, bool reload, IResourceListener* resourceListener)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
 		{
 			// Get or create the instance
 			CompositorResource* compositorResource = nullptr;
-			const size_t numberOfResources = mResources.size();
-			for (size_t i = 0; i < numberOfResources; ++i)
 			{
-				CompositorResource* currentCompositorResource = mResources[i];
-				if (currentCompositorResource->getAssetId() == assetId)
+				const uint32_t numberOfElements = mCompositorResources.getNumberOfElements();
+				for (uint32_t i = 0; i < numberOfElements; ++i)
 				{
-					compositorResource = currentCompositorResource;
+					CompositorResource& currentCompositorResource = mCompositorResources.getElementByIndex(i);
+					if (currentCompositorResource.getAssetId() == assetId)
+					{
+						compositorResource = &currentCompositorResource;
 
-					// Get us out of the loop
-					i = mResources.size();
+						// Get us out of the loop
+						i = numberOfElements;
+					}
 				}
 			}
 
@@ -94,9 +90,9 @@ namespace RendererRuntime
 			bool load = reload;
 			if (nullptr == compositorResource)
 			{
-				compositorResource = new CompositorResource(assetId, resourceListener);
+				compositorResource = &mCompositorResources.addElement();
 				compositorResource->setAssetId(assetId);
-				mResources.push_back(compositorResource);
+				compositorResource->setResourceListener(resourceListener);
 				load = true;
 			}
 
@@ -114,12 +110,18 @@ namespace RendererRuntime
 				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 			}
 
-			// TODO(co) No raw pointers in here
-			return compositorResource;
+			// Done
+			return compositorResource->getId();
 		}
 
 		// Error!
-		return nullptr;
+		return ~0u;	// TODO(co) Set compositor resource ID to "uninitialized"
+	}
+
+	void CompositorResourceManager::setCompositorPassFactory(const ICompositorPassFactory* compositorPassFactory)
+	{
+		// There must always be a valid compositor pass factory instance
+		mCompositorPassFactory = (nullptr != compositorPassFactory) ? compositorPassFactory : &::detail::defaultCompositorPassFactory;
 	}
 
 
@@ -129,11 +131,12 @@ namespace RendererRuntime
 	void CompositorResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		for (size_t i = 0; i < mResources.size(); ++i)
+		const uint32_t numberOfElements = mCompositorResources.getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			if (mResources[i]->getAssetId() == assetId)
+			if (mCompositorResources.getElementByIndex(i).getAssetId() == assetId)
 			{
-				loadCompositorResourceByAssetId(assetId, nullptr, true);
+				loadCompositorResourceByAssetId(assetId, true);
 				break;
 			}
 		}
@@ -151,11 +154,6 @@ namespace RendererRuntime
 	CompositorResourceManager::CompositorResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
 		mCompositorPassFactory(&::detail::defaultCompositorPassFactory)
-	{
-		// Nothing in here
-	}
-
-	CompositorResourceManager::~CompositorResourceManager()
 	{
 		// Nothing in here
 	}

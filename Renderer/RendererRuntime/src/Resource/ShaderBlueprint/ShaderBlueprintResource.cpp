@@ -31,14 +31,7 @@ namespace RendererRuntime
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	ShaderBlueprintResource::ShaderBlueprintResource(ResourceId resourceId) :
-		IResource(resourceId, ~0u)	// TODO(co) Set asset ID to "uninitialized"
-	{
-		// Nothing here
-	}
+	// TODO(co) Remove if not required
 
 
 //[-------------------------------------------------------]

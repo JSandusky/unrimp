@@ -25,9 +25,7 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintFileFormat.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
-#include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -83,7 +81,7 @@ namespace RendererRuntime
 
 			// Read the asset IDs of the shader pieces to include
 			inputFileStream.read(reinterpret_cast<char*>(mIncludeShaderPieceAssetIds), sizeof(AssetId) * shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
-			mShaderBlueprintResource->mIncludeShaderPieceResources.resize(shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
+			mShaderBlueprintResource->mIncludeShaderPieceResourceIds.resize(shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
 
 			// Read the shader blueprint ASCII source code
 			inputFileStream.read(mShaderSourceCode, shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
@@ -104,26 +102,30 @@ namespace RendererRuntime
 	{
 		{ // Read the shader piece resources to include
 			ShaderPieceResourceManager& shaderPieceResourceManager = mRendererRuntime.getShaderPieceResourceManager();
-			ShaderBlueprintResource::IncludeShaderPieceResources& includeShaderPieceResources = mShaderBlueprintResource->mIncludeShaderPieceResources;
-			const size_t numberOfShaderPieceResources = includeShaderPieceResources.size();
+			ShaderBlueprintResource::IncludeShaderPieceResourceIds& includeShaderPieceResourceIds = mShaderBlueprintResource->mIncludeShaderPieceResourceIds;
+			const size_t numberOfShaderPieceResources = includeShaderPieceResourceIds.size();
 			const AssetId* includeShaderPieceAssetIds = mIncludeShaderPieceAssetIds;
 			for (size_t i = 0; i < numberOfShaderPieceResources; ++i, ++includeShaderPieceAssetIds)
 			{
-				includeShaderPieceResources[i] = shaderPieceResourceManager.loadShaderPieceResourceByAssetId(*includeShaderPieceAssetIds);
+				includeShaderPieceResourceIds[i] = shaderPieceResourceManager.loadShaderPieceResourceByAssetId(*includeShaderPieceAssetIds);
 			}
 		}
 
 		{ // TODO(co) Cleanup: Get all influenced material blueprint resources
-			typedef std::unordered_set<MaterialBlueprintResource*> MaterialBlueprintResources;
-			MaterialBlueprintResources materialBlueprintResources;
-			for (auto materialBlueprintResource : mRendererRuntime.getMaterialBlueprintResourceManager().mResources)
+			typedef std::unordered_set<MaterialBlueprintResource*> MaterialBlueprintResourcePointers;
+			MaterialBlueprintResourcePointers materialBlueprintResourcePointers;
+			const MaterialBlueprintResources& materialBlueprintResources = mRendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources();
+			const uint32_t numberOfElements = materialBlueprintResources.getNumberOfElements();
+			for (uint32_t i = 0; i < numberOfElements; ++i)
 			{
-				if (materialBlueprintResource->mVertexShaderBlueprint == mShaderBlueprintResource || materialBlueprintResource->mFragmentShaderBlueprint == mShaderBlueprintResource)
+				// TODO(co) Get rid of the evil const-cast
+				MaterialBlueprintResource& materialBlueprintResource = const_cast<MaterialBlueprintResource&>(materialBlueprintResources.getElementByIndex(i));
+				if (materialBlueprintResource.mVertexShaderBlueprintId == mShaderBlueprintResource->getId() || materialBlueprintResource.mFragmentShaderBlueprintId == mShaderBlueprintResource->getId())
 				{
-					materialBlueprintResources.insert(materialBlueprintResource);
+					materialBlueprintResourcePointers.insert(&materialBlueprintResource);
 				}
 			}
-			for (MaterialBlueprintResource* materialBlueprintResource : materialBlueprintResources)
+			for (MaterialBlueprintResource* materialBlueprintResource : materialBlueprintResourcePointers)
 			{
 				materialBlueprintResource->getPipelineStateCacheManager().clearCache();
 				materialBlueprintResource->getPipelineStateCacheManager().getProgramCacheManager().clearCache();

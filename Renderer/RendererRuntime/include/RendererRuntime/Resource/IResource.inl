@@ -46,11 +46,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IResource::IResource(ResourceId resourceId, AssetId assetId, IResourceListener* resourceListener) :
+	inline IResource::IResource(ResourceId resourceId, AssetId assetId) :
 		mResourceId(resourceId),
 		mAssetId(assetId),
 		mLoadingState(LoadingState::UNLOADED),
-		mResourceListener(resourceListener)
+		mResourceListener(nullptr)
 	{
 		// Nothing here
 	}
@@ -63,6 +63,11 @@ namespace RendererRuntime
 	inline void IResource::setAssetId(AssetId assetId)
 	{
 		mAssetId = assetId;
+	}
+
+	inline void IResource::setResourceListener(IResourceListener* resourceListener)
+	{
+		mResourceListener = resourceListener;
 	}
 
 

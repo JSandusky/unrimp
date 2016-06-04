@@ -31,11 +31,6 @@
 #include <assert.h>
 
 
-// Disable warnings
-// TODO(co) See "RendererRuntime::ShaderBlueprintResourceManager::ShaderBlueprintResourceManager()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)
-#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
@@ -47,23 +42,25 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	ShaderBlueprintResource* ShaderBlueprintResourceManager::loadShaderBlueprintResourceByAssetId(AssetId assetId, bool reload)
+	ShaderBlueprintResourceId ShaderBlueprintResourceManager::loadShaderBlueprintResourceByAssetId(AssetId assetId, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
 		{
 			// Get or create the instance
 			ShaderBlueprintResource* shaderBlueprintResource = nullptr;
-			const size_t numberOfResources = mResources.size();
-			for (size_t i = 0; i < numberOfResources; ++i)
 			{
-				ShaderBlueprintResource* currentShaderBlueprintResource = mResources[i];
-				if (currentShaderBlueprintResource->getAssetId() == assetId)
+				const uint32_t numberOfElements = mShaderBlueprintResources.getNumberOfElements();
+				for (uint32_t i = 0; i < numberOfElements; ++i)
 				{
-					shaderBlueprintResource = currentShaderBlueprintResource;
+					ShaderBlueprintResource& currentShaderBlueprintResource = mShaderBlueprintResources.getElementByIndex(i);
+					if (currentShaderBlueprintResource.getAssetId() == assetId)
+					{
+						shaderBlueprintResource = &currentShaderBlueprintResource;
 
-					// Get us out of the loop
-					i = mResources.size();
+						// Get us out of the loop
+						i = numberOfElements;
+					}
 				}
 			}
 
@@ -71,9 +68,8 @@ namespace RendererRuntime
 			bool load = reload;
 			if (nullptr == shaderBlueprintResource)
 			{
-				shaderBlueprintResource = new ShaderBlueprintResource(assetId);
+				shaderBlueprintResource = &mShaderBlueprintResources.addElement();
 				shaderBlueprintResource->setAssetId(assetId);
-				mResources.push_back(shaderBlueprintResource);
 				load = true;
 			}
 
@@ -91,12 +87,12 @@ namespace RendererRuntime
 				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 			}
 
-			// TODO(co) No raw pointers in here
-			return shaderBlueprintResource;
+			// Done
+			return shaderBlueprintResource->getId();
 		}
 
 		// Error!
-		return nullptr;
+		return ~0u;	// TODO(co) Set material resource ID to "uninitialized"
 	}
 
 
@@ -106,10 +102,10 @@ namespace RendererRuntime
 	void ShaderBlueprintResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		for (size_t i = 0; i < mResources.size(); ++i)
+		const uint32_t numberOfElements = mShaderBlueprintResources.getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			ShaderBlueprintResource* shaderBlueprintResource = mResources[i];
-			if (shaderBlueprintResource->getAssetId() == assetId)
+			if (mShaderBlueprintResources.getElementByIndex(i).getAssetId() == assetId)
 			{
 				loadShaderBlueprintResourceByAssetId(assetId, true);
 				break;
@@ -126,18 +122,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	ShaderBlueprintResourceManager::ShaderBlueprintResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime),
-		mShaderCacheManager(*this)
-	{
-		// Nothing in here
-	}
-
-	ShaderBlueprintResourceManager::~ShaderBlueprintResourceManager()
-	{
-		// Nothing in here
-	}
-
 	IResourceLoader* ShaderBlueprintResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Can we recycle an already existing resource loader instance?

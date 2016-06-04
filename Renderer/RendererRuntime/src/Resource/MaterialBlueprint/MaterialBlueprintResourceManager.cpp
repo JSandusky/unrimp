@@ -22,10 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
-#include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
@@ -66,30 +64,26 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void MaterialBlueprintResourceManager::setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener)
-	{
-		// There must always be a valid material blueprint resource listener instance
-		mMaterialBlueprintResourceListener = (nullptr != materialBlueprintResourceListener) ? materialBlueprintResourceListener : &::detail::defaultMaterialBlueprintResourceListener;
-	}
-
 	// TODO(co) Work-in-progress
-	MaterialBlueprintResource* MaterialBlueprintResourceManager::loadMaterialBlueprintResourceByAssetId(AssetId assetId, bool reload)
+	MaterialResourceId MaterialBlueprintResourceManager::loadMaterialBlueprintResourceByAssetId(AssetId assetId, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
 		{
 			// Get or create the instance
 			MaterialBlueprintResource* materialBlueprintResource = nullptr;
-			const size_t numberOfResources = mResources.size();
-			for (size_t i = 0; i < numberOfResources; ++i)
 			{
-				MaterialBlueprintResource* currentMaterialBlueprintResource = mResources[i];
-				if (currentMaterialBlueprintResource->getAssetId() == assetId)
+				const uint32_t numberOfElements = mMaterialBlueprintResources.getNumberOfElements();
+				for (uint32_t i = 0; i < numberOfElements; ++i)
 				{
-					materialBlueprintResource = currentMaterialBlueprintResource;
+					MaterialBlueprintResource& currentMaterialBlueprintResource = mMaterialBlueprintResources.getElementByIndex(i);
+					if (currentMaterialBlueprintResource.getAssetId() == assetId)
+					{
+						materialBlueprintResource = &currentMaterialBlueprintResource;
 
-					// Get us out of the loop
-					i = mResources.size();
+						// Get us out of the loop
+						i = numberOfElements;
+					}
 				}
 			}
 
@@ -97,9 +91,9 @@ namespace RendererRuntime
 			bool load = reload;
 			if (nullptr == materialBlueprintResource)
 			{
-				materialBlueprintResource = new MaterialBlueprintResource(*this, assetId);
+				materialBlueprintResource = &mMaterialBlueprintResources.addElement();
+				materialBlueprintResource->mMaterialBlueprintResourceManager = this;
 				materialBlueprintResource->setAssetId(assetId);
-				mResources.push_back(materialBlueprintResource);
 				load = true;
 			}
 
@@ -117,12 +111,18 @@ namespace RendererRuntime
 				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 			}
 
-			// TODO(co) No raw pointers in here
-			return materialBlueprintResource;
+			// Done
+			return materialBlueprintResource->getId();
 		}
 
 		// Error!
-		return nullptr;
+		return ~0u;	// TODO(co) Set material resource ID to "uninitialized"
+	}
+
+	void MaterialBlueprintResourceManager::setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener)
+	{
+		// There must always be a valid material blueprint resource listener instance
+		mMaterialBlueprintResourceListener = (nullptr != materialBlueprintResourceListener) ? materialBlueprintResourceListener : &::detail::defaultMaterialBlueprintResourceListener;
 	}
 
 
@@ -132,19 +132,20 @@ namespace RendererRuntime
 	void MaterialBlueprintResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		for (size_t i = 0; i < mResources.size(); ++i)
+		const uint32_t numberOfElements = mMaterialBlueprintResources.getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			MaterialBlueprintResource* materialBlueprintResource = mResources[i];
-			if (materialBlueprintResource->getAssetId() == assetId)
+			MaterialBlueprintResource& materialBlueprintResource = mMaterialBlueprintResources.getElementByIndex(i);
+			if (materialBlueprintResource.getAssetId() == assetId)
 			{
 				loadMaterialBlueprintResourceByAssetId(assetId, true);
 
 				// TODO(co) Cleanup: Update all influenced material resources, probably also other material stuff has to be updated
-				materialBlueprintResource->getPipelineStateCacheManager().clearCache();
-				materialBlueprintResource->mTextures.clear();
+				materialBlueprintResource.getPipelineStateCacheManager().clearCache();
+				materialBlueprintResource.mTextures.clear();
 				const MaterialResources& materialResources = mRendererRuntime.getMaterialResourceManager().getMaterialResources();
-				const uint32_t numberOfElements = materialResources.getNumberOfElements();
-				for (uint32_t elementIndex = 0; elementIndex < numberOfElements; ++elementIndex)
+				const uint32_t numberOfMaterialResources = materialResources.getNumberOfElements();
+				for (uint32_t elementIndex = 0; elementIndex < numberOfMaterialResources; ++elementIndex)
 				{
 					const MaterialResource& materialResource = materialResources.getElementByIndex(elementIndex);
 					// TODO(co)

@@ -28,19 +28,35 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ShaderBlueprintResource::~ShaderBlueprintResource()
+	inline const ShaderBlueprintResource::IncludeShaderPieceResourceIds& ShaderBlueprintResource::getIncludeShaderPieceResourceIds() const
 	{
-		// Nothing here
-	}
-
-	inline const ShaderBlueprintResource::IncludeShaderPieceResources& ShaderBlueprintResource::getIncludeShaderPieceResources() const
-	{
-		return mIncludeShaderPieceResources;
+		return mIncludeShaderPieceResourceIds;
 	}
 
 	inline const std::string& ShaderBlueprintResource::getShaderSourceCode() const
 	{
 		return mShaderSourceCode;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline ShaderBlueprintResource::ShaderBlueprintResource() :
+		IResource(~0u, ~0u)	// TODO(co) Set both to "uninitialized"
+	{
+		// Nothing here
+	}
+
+	inline ShaderBlueprintResource::ShaderBlueprintResource(ShaderBlueprintResourceId shaderBlueprintResourceId) :
+		IResource(shaderBlueprintResourceId, ~0u)	// TODO(co) Set shader blueprint ID to "uninitialized"
+	{
+		// Nothing here
+	}
+
+	inline ShaderBlueprintResource::~ShaderBlueprintResource()
+	{
+		// Nothing here
 	}
 
 

@@ -22,7 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Font/FontResourceManager.h"
-#include "RendererRuntime/Resource/Font/FontResource.h"
 #include "RendererRuntime/Resource/Font/Loader/FontResourceLoader.h"
 #include "RendererRuntime/Resource/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
@@ -42,23 +41,25 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	FontResource* FontResourceManager::loadFontResourceByAssetId(AssetId assetId, bool reload)
+	FontResourceId FontResourceManager::loadFontResourceByAssetId(AssetId assetId, bool reload)
 	{
 		const Asset* asset = mRendererRuntimeImpl.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
 		{
 			// Get or create the instance
 			FontResource* fontResource = nullptr;
-			const size_t numberOfResources = mResources.size();
-			for (size_t i = 0; i < numberOfResources; ++i)
 			{
-				FontResource* currentFontResource = mResources[i];
-				if (currentFontResource->getAssetId() == assetId)
+				const uint32_t numberOfElements = mFontResources.getNumberOfElements();
+				for (uint32_t i = 0; i < numberOfElements; ++i)
 				{
-					fontResource = currentFontResource;
+					FontResource& currentFontResource = mFontResources.getElementByIndex(i);
+					if (currentFontResource.getAssetId() == assetId)
+					{
+						fontResource = &currentFontResource;
 
-					// Get us out of the loop
-					i = mResources.size();
+						// Get us out of the loop
+						i = numberOfElements;
+					}
 				}
 			}
 
@@ -66,9 +67,9 @@ namespace RendererRuntime
 			bool load = reload;
 			if (nullptr == fontResource)
 			{
-				fontResource = new FontResource(mRendererRuntimeImpl, assetId);
+				fontResource = &mFontResources.addElement();
+				fontResource->mRendererRuntimeImpl = &mRendererRuntimeImpl;
 				fontResource->setAssetId(assetId);
-				mResources.push_back(fontResource);
 				load = true;
 			}
 
@@ -86,12 +87,12 @@ namespace RendererRuntime
 				mRendererRuntimeImpl.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
 			}
 
-			// TODO(co) No raw pointers in here
-			return fontResource;
+			// Done
+			return fontResource->getId();
 		}
 
 		// Error!
-		return nullptr;
+		return ~0u;	// TODO(co) Set material resource ID to "uninitialized"
 	}
 
 
@@ -101,9 +102,10 @@ namespace RendererRuntime
 	void FontResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		for (size_t i = 0; i < mResources.size(); ++i)
+		const uint32_t numberOfElements = mFontResources.getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			if (mResources[i]->getAssetId() == assetId)
+			if (mFontResources.getElementByIndex(i).getAssetId() == assetId)
 			{
 				loadFontResourceByAssetId(assetId, true);
 				break;
@@ -120,21 +122,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	FontResourceManager::FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl) :
-		mRendererRuntimeImpl(rendererRuntimeImpl)
-	{
-		// Nothing in here
-	}
-
-	FontResourceManager::~FontResourceManager()
-	{
-		// TODO(co) Implement decent resource handling
-		for (size_t i = 0; i < mResources.size(); ++i)
-		{
-			delete mResources[i];
-		}
-	}
-
 	IResourceLoader* FontResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Can we recycle an already existing resource loader instance?

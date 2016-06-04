@@ -28,7 +28,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/IResourceManager.h"
+#include "RendererRuntime/Resource/Texture/TextureResource.h"
 
 
 //[-------------------------------------------------------]
@@ -36,7 +38,6 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class TextureResource;
 	class IRendererRuntime;
 }
 
@@ -46,6 +47,13 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t												 TextureResourceId;	///< POD texture resource identifier
+	typedef PackedElementManager<TextureResource, TextureResourceId> TextureResources;
 
 
 	//[-------------------------------------------------------]
@@ -65,8 +73,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT TextureResource* loadTextureResourceByAssetId(AssetId assetId, bool reload = false);
+		inline const TextureResources& getTextureResources() const;
+		RENDERERRUNTIME_API_EXPORT TextureResourceId loadTextureResourceByAssetId(AssetId assetId, bool reload = false);
 
 
 	//[-------------------------------------------------------]
@@ -81,8 +89,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit TextureResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~TextureResourceManager();
+		inline explicit TextureResourceManager(IRendererRuntime& rendererRuntime);
+		inline virtual ~TextureResourceManager();
 		TextureResourceManager(const TextureResourceManager&) = delete;
 		TextureResourceManager& operator=(const TextureResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
@@ -93,9 +101,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-
-		// TODO(co) Implement decent resource handling
-		std::vector<TextureResource*> mResources;
+		TextureResources  mTextureResources;
 
 
 	};
@@ -105,3 +111,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Texture/TextureResourceManager.inl"

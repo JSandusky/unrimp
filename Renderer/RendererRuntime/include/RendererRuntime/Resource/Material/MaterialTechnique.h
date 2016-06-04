@@ -37,7 +37,6 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class TextureResource;
 	class IRendererRuntime;
 	class MaterialResource;
 	class MaterialBlueprintResource;
@@ -54,9 +53,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
-	typedef StringId MaterialPropertyId;	///< Material property identifier, internally just a POD "uint32_t", result of hashing the property name
-	typedef StringId MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the property name
+	typedef StringId AssetId;						///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
+	typedef uint32_t TextureResourceId;				///< POD texture resource identifier
+	typedef StringId MaterialPropertyId;			///< Material property identifier, internally just a POD "uint32_t", result of hashing the property name
+	typedef StringId MaterialTechniqueId;			///< Material technique identifier, internally just a POD "uint32_t", result of hashing the property name
+	typedef uint32_t MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -87,7 +88,7 @@ namespace RendererRuntime
 			uint32_t		   rootParameterIndex;
 			AssetId			   textureAssetId;
 			MaterialPropertyId materialPropertyId;
-			TextureResource*   textureResource;	// TODO(co) Implement decent resource management
+			TextureResourceId  textureResourceId;
 		};
 		typedef std::vector<Texture> Textures;
 
@@ -133,12 +134,12 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the used material blueprint resource
+		*    Return the ID of the used material blueprint resource
 		*
 		*  @return
-		*    The used material blueprint resource, can be a null pointer, don't destroy the instance
+		*    The ID of the used material blueprint resource, can be uninitialized
 		*/
-		inline MaterialBlueprintResource* getMaterialBlueprintResource() const;
+		inline MaterialBlueprintResourceId getMaterialBlueprintResourceId() const;
 
 		/**
 		*  @brief
@@ -157,11 +158,11 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialTechniqueId		   mMaterialTechniqueId;		///< Material technique ID
-		MaterialResource*		   mMaterialResource;			///< Owner material resource, always valid
-		MaterialBlueprintResource* mMaterialBlueprintResource;	///< Material blueprint resource, can be a null pointer, don't destroy the instance
-		uint32_t				   mMaterialUniformBufferIndex;	///< Material uniform buffer index inside the used material blueprint
-		Textures				   mTextures;
+		MaterialTechniqueId			mMaterialTechniqueId;			///< Material technique ID
+		MaterialResource*			mMaterialResource;				///< Owner material resource, always valid
+		MaterialBlueprintResourceId	mMaterialBlueprintResourceId;	///< Material blueprint resource ID, can be set to uninitialized value
+		uint32_t					mMaterialUniformBufferIndex;	///< Material uniform buffer index inside the used material blueprint
+		Textures					mTextures;
 
 
 	};

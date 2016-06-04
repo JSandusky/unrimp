@@ -28,7 +28,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/IResourceManager.h"
+#include "RendererRuntime/Resource/Font/FontResource.h"
 
 
 //[-------------------------------------------------------]
@@ -36,7 +38,6 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class FontResource;
 	class RendererRuntimeImpl;
 }
 
@@ -46,6 +47,13 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t										   FontResourceId;	///< POD font resource identifier
+	typedef PackedElementManager<FontResource, FontResourceId> FontResources;
 
 
 	//[-------------------------------------------------------]
@@ -65,8 +73,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT FontResource* loadFontResourceByAssetId(AssetId assetId, bool reload = false);
+		inline const FontResources& getFontResources() const;
+		RENDERERRUNTIME_API_EXPORT FontResourceId loadFontResourceByAssetId(AssetId assetId, bool reload = false);
 
 
 	//[-------------------------------------------------------]
@@ -81,8 +89,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl);
-		virtual ~FontResourceManager();
+		inline explicit FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl);
+		inline virtual ~FontResourceManager();
 		FontResourceManager(const FontResourceManager&) = delete;
 		FontResourceManager& operator=(const FontResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
@@ -93,9 +101,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		RendererRuntimeImpl& mRendererRuntimeImpl;	///< Renderer runtime implementation instance, do not destroy the instance
-
-		// TODO(co) Implement decent resource handling
-		std::vector<FontResource*> mResources;
+		FontResources		 mFontResources;
 
 
 	};
@@ -105,3 +111,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Font/FontResourceManager.inl"

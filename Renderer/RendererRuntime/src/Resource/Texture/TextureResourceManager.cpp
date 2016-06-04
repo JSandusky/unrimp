@@ -43,23 +43,25 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureResource* TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, bool reload)
+	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
 		{
 			// Get or create the instance
 			TextureResource* textureResource = nullptr;
-			const size_t numberOfResources = mResources.size();
-			for (size_t i = 0; i < numberOfResources; ++i)
 			{
-				TextureResource* currentTextureResource = mResources[i];
-				if (currentTextureResource->getAssetId() == assetId)
+				const uint32_t numberOfElements = mTextureResources.getNumberOfElements();
+				for (uint32_t i = 0; i < numberOfElements; ++i)
 				{
-					textureResource = currentTextureResource;
+					TextureResource& currentTextureResource = mTextureResources.getElementByIndex(i);
+					if (currentTextureResource.getAssetId() == assetId)
+					{
+						textureResource = &currentTextureResource;
 
-					// Get us out of the loop
-					i = mResources.size();
+						// Get us out of the loop
+						i = numberOfElements;
+					}
 				}
 			}
 
@@ -67,9 +69,8 @@ namespace RendererRuntime
 			bool load = reload;
 			if (nullptr == textureResource)
 			{
-				textureResource = new TextureResource(assetId);
+				textureResource = &mTextureResources.addElement();
 				textureResource->setAssetId(assetId);
-				mResources.push_back(textureResource);
 				load = true;
 			}
 
@@ -99,12 +100,12 @@ namespace RendererRuntime
 				}
 			}
 
-			// TODO(co) No raw pointers in here
-			return textureResource;
+			// Done
+			return textureResource->getId();
 		}
 
 		// Error!
-		return nullptr;
+		return ~0u;	// TODO(co) Set texture resource ID to "uninitialized"
 	}
 
 
@@ -114,9 +115,10 @@ namespace RendererRuntime
 	void TextureResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
-		for (size_t i = 0; i < mResources.size(); ++i)
+		const uint32_t numberOfElements = mTextureResources.getNumberOfElements();
+		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			if (mResources[i]->getAssetId() == assetId)
+			if (mTextureResources.getElementByIndex(i).getAssetId() == assetId)
 			{
 				loadTextureResourceByAssetId(assetId, true);
 				break;
@@ -133,21 +135,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
-	{
-		// Nothing in here
-	}
-
-	TextureResourceManager::~TextureResourceManager()
-	{
-		// TODO(co) Implement decent resource handling
-		for (size_t i = 0; i < mResources.size(); ++i)
-		{
-			delete mResources[i];
-		}
-	}
-
 	IResourceLoader* TextureResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Can we recycle an already existing resource loader instance?

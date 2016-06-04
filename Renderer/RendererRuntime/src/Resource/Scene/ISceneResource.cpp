@@ -121,8 +121,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	ISceneResource::ISceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId, IResourceListener* resourceListener) :
-		IResource(resourceId, ~0u, resourceListener),	// TODO(co) Set asset ID to "uninitialized"
+	ISceneResource::ISceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
+		IResource(resourceId, ~0u),	// TODO(co) Set asset ID to "uninitialized"
 		mRendererRuntime(rendererRuntime),
 		mSceneFactory(&mRendererRuntime.getSceneResourceManager().getSceneFactory())
 	{

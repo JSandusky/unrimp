@@ -52,14 +52,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ISceneFactory methods ]
 	//[-------------------------------------------------------]
-	ISceneResource* SceneFactory::createSceneResource(SceneResourceTypeId sceneResourceTypeId, IRendererRuntime& rendererRuntime, ResourceId resourceId, IResourceListener* resourceListener) const
+	ISceneResource* SceneFactory::createSceneResource(SceneResourceTypeId sceneResourceTypeId, IRendererRuntime& rendererRuntime, ResourceId resourceId) const
 	{
 		ISceneResource* sceneResource = nullptr;
 
 		// Evaluate the scene node type
 		if (sceneResourceTypeId == SceneResource::TYPE_ID)
 		{
-			sceneResource = new SceneResource(rendererRuntime, resourceId, resourceListener);
+			sceneResource = new SceneResource(rendererRuntime, resourceId);
 		}
 
 		// Done

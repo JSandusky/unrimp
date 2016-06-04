@@ -91,7 +91,7 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		static const uint32_t MAXIMUM_NUMBER_OF_OBJECTS = 64 * 1024;
+		static const uint32_t MAXIMUM_NUMBER_OF_OBJECTS = 16 * 1024;
 		static const uint32_t INDEX_MASK				= 0xffff;
 		static const uint32_t NEW_OBJECT_ID_ADD			= 0x10000;
 

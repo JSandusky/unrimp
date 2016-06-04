@@ -37,24 +37,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FontResource::FontResource(RendererRuntimeImpl &rendererRuntimeImpl, ResourceId resourceId) :
-		IResource(resourceId, ~0u),	// TODO(co) Set asset ID to "uninitialized"
-		mRendererRuntimeImpl(&rendererRuntimeImpl),
-		mSize(0),
-		mResolution(0),
-		mAscender(0.0f),
-		mDescender(0.0f),
-		mHeight(0.0f),
-		mGlyphTextureAtlasPadding(3),
-		mGlyphTextureAtlasSizeX(0),
-		mGlyphTextureAtlasSizeY(0),
-		mNumberOfFontGlyphs(0),
-		mFontGlyphs(nullptr),
-		mTexture2D(nullptr)
-	{
-		// Nothing here
-	}
-
 	float FontResource::getTextWidth(const char *text)
 	{
 		float width = 0.0f;

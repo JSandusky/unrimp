@@ -27,8 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/IResourceManager.h"
-#include "RendererRuntime/Resource/Material/MaterialProperties.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 
 
 //[-------------------------------------------------------]
@@ -37,7 +38,6 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
-	class MaterialBlueprintResource;
 	class IMaterialBlueprintResourceListener;
 }
 
@@ -47,6 +47,13 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t																	 MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
+	typedef PackedElementManager<MaterialBlueprintResource, MaterialBlueprintResourceId> MaterialBlueprintResources;
 
 
 	//[-------------------------------------------------------]
@@ -66,11 +73,12 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		inline IRendererRuntime& getRendererRuntime() const;
+		inline const MaterialBlueprintResources& getMaterialBlueprintResources() const;
+		RENDERERRUNTIME_API_EXPORT MaterialBlueprintResourceId loadMaterialBlueprintResourceByAssetId(AssetId assetId, bool reload = false);
+
 		inline IMaterialBlueprintResourceListener& getMaterialBlueprintResourceListener() const;
 		RENDERERRUNTIME_API_EXPORT void setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener);
-
-		// TODO(co) Work-in-progress
-		RENDERERRUNTIME_API_EXPORT MaterialBlueprintResource* loadMaterialBlueprintResourceByAssetId(AssetId assetId, bool reload = false);
 
 		/**
 		*  @brief
@@ -107,13 +115,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime&					mRendererRuntime;					///< Renderer runtime instance, do not destroy the instance
+		MaterialBlueprintResources			mMaterialBlueprintResources;
 		IMaterialBlueprintResourceListener*	mMaterialBlueprintResourceListener;	///< Material blueprint resource listener, always valid, do not destroy the instance
 		MaterialProperties					mGlobalMaterialProperties;			///< Global material properties
-
-
-		// TODO(co) Implement decent resource handling
-	public:
-		std::vector<MaterialBlueprintResource*> mResources;
 
 
 	};

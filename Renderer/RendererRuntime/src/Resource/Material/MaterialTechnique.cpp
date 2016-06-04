@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -45,7 +45,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void MaterialTechnique::bindToRenderer(const IRendererRuntime& rendererRuntime)
 	{
-		assert(nullptr != mMaterialBlueprintResource);
+		// TODO(co) Set material blueprint resource ID to "uninitialized"
+		assert(~0u != mMaterialBlueprintResourceId);
 
 		// TODO(co) This is experimental and will certainly look different when everything is in place
 		Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
@@ -53,50 +54,56 @@ namespace RendererRuntime
 		// Need for gathering the textures now?
 		if (mTextures.empty())
 		{
-			TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
-			const MaterialProperties& materialProperties = mMaterialResource->getMaterialProperties();
-			const MaterialBlueprintResource::Textures& textures = mMaterialBlueprintResource->getTextures();
-			const size_t numberOfTextures = textures.size();
-			for (size_t i = 0; i < numberOfTextures; ++i)
+			const MaterialBlueprintResource* materialBlueprintResource = rendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources().tryGetElementById(mMaterialBlueprintResourceId);
+			if (nullptr != materialBlueprintResource)
 			{
-				const MaterialBlueprintResource::Texture& blueprintTexture = textures[i];
-
-				// Start with the material blueprint textures
-				Texture texture;
-				texture.rootParameterIndex = blueprintTexture.rootParameterIndex;
-				texture.textureAssetId = blueprintTexture.textureAssetId;
-				texture.materialPropertyId = blueprintTexture.materialPropertyId;
-				texture.textureResource = blueprintTexture.textureResource;	// TODO(co) Implement decent resource management
-
-				// Apply material specific modifications
-				if (0 != texture.materialPropertyId)
+				TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
+				const MaterialProperties& materialProperties = mMaterialResource->getMaterialProperties();
+				const MaterialBlueprintResource::Textures& textures = materialBlueprintResource->getTextures();
+				const size_t numberOfTextures = textures.size();
+				for (size_t i = 0; i < numberOfTextures; ++i)
 				{
-					// Figure out the material property value
-					const MaterialProperty* materialProperty = materialProperties.getPropertyById(texture.materialPropertyId);
-					if (nullptr != materialProperty)
-					{
-						// TODO(co) Error handling: Usage mismatch etc.
-						texture.textureAssetId = materialProperty->getAssetIdValue();
-						texture.textureResource = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);	// TODO(co) Implement decent resource management
-					}
-				}
+					const MaterialBlueprintResource::Texture& blueprintTexture = textures[i];
 
-				// Insert texture
-				mTextures.push_back(texture);
+					// Start with the material blueprint textures
+					Texture texture;
+					texture.rootParameterIndex = blueprintTexture.rootParameterIndex;
+					texture.textureAssetId	   = blueprintTexture.textureAssetId;
+					texture.materialPropertyId = blueprintTexture.materialPropertyId;
+					texture.textureResourceId  = blueprintTexture.textureResourceId;
+
+					// Apply material specific modifications
+					if (0 != texture.materialPropertyId)
+					{
+						// Figure out the material property value
+						const MaterialProperty* materialProperty = materialProperties.getPropertyById(texture.materialPropertyId);
+						if (nullptr != materialProperty)
+						{
+							// TODO(co) Error handling: Usage mismatch etc.
+							texture.textureAssetId    = materialProperty->getAssetIdValue();
+							texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);
+						}
+					}
+
+					// Insert texture
+					mTextures.push_back(texture);
+				}
 			}
 		}
 
 		{ // Graphics root descriptor table: Set textures
 			const size_t numberOfTextures = mTextures.size();
+			const TextureResources& textureResources = rendererRuntime.getTextureResourceManager().getTextureResources();
 			for (size_t i = 0; i < numberOfTextures; ++i)
 			{
 				const Texture& texture = mTextures[i];
 
 				// Due to background texture loading, some textures might not be ready, yet
 				// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
-				if (nullptr != texture.textureResource)
+				const TextureResource* textureResource  = textureResources.tryGetElementById(texture.textureResourceId);
+				if (nullptr != textureResource)
 				{
-					Renderer::ITexturePtr texturePtr = texture.textureResource->getTexture();
+					Renderer::ITexturePtr texturePtr = textureResource->getTexture();
 					if (nullptr != texturePtr)
 					{
 						renderer.setGraphicsRootDescriptorTable(texture.rootParameterIndex, texturePtr);

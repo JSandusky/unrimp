@@ -38,8 +38,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class ShaderPieceResource;
-	class ShaderBlueprintResource;
+	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
 }
 
 
@@ -48,6 +47,13 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t ShaderPieceResourceId;		///< POD shader piece resource identifier
+	typedef uint32_t ShaderBlueprintResourceId;	///< POD shader blueprint resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -66,13 +72,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 		friend class ShaderBlueprintResourceLoader;
 		friend class ShaderBlueprintResourceManager;
+		friend class PackedElementManager<ShaderBlueprintResource, ShaderBlueprintResourceId>;
 
 
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::vector<ShaderPieceResource*> IncludeShaderPieceResources;	// TODO(co) Decent resource management
+		typedef std::vector<ShaderPieceResourceId> IncludeShaderPieceResourceIds;
 
 
 	//[-------------------------------------------------------]
@@ -81,27 +88,12 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
-		*    Constructor
-		*
-		*  @param[in] resourceId
-		*    Resource ID
-		*/
-		explicit ShaderBlueprintResource(ResourceId resourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~ShaderBlueprintResource();
-
-		/**
-		*  @brief
-		*    Return the shader piece resources to include
+		*    Return the IDs of the shader piece resources to include
 		*
 		*  @return
-		*    The shader piece resources to include
+		*    The IDs of the shader piece resources to include
 		*/
-		inline const IncludeShaderPieceResources& getIncludeShaderPieceResources() const;
+		inline const IncludeShaderPieceResourceIds& getIncludeShaderPieceResourceIds() const;
 
 		/**
 		*  @brief
@@ -117,6 +109,27 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		/**
+		*  @brief
+		*    Default constructor
+		*/
+		inline ShaderBlueprintResource();
+
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] shaderBlueprintResourceId
+		*    Shader blueprint resource ID
+		*/
+		inline explicit ShaderBlueprintResource(ShaderBlueprintResourceId shaderBlueprintResourceId);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~ShaderBlueprintResource();
+
 		ShaderBlueprintResource(const ShaderBlueprintResource&) = delete;
 		ShaderBlueprintResource& operator=(const ShaderBlueprintResource&) = delete;
 
@@ -125,8 +138,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IncludeShaderPieceResources mIncludeShaderPieceResources;
-		std::string					mShaderSourceCode;
+		IncludeShaderPieceResourceIds mIncludeShaderPieceResourceIds;
+		std::string					  mShaderSourceCode;
 
 
 	};

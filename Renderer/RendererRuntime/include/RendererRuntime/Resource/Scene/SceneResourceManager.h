@@ -68,9 +68,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		// TODO(co) Work-in-progress
+		RENDERERRUNTIME_API_EXPORT ISceneResource* loadSceneResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);
+
 		inline const ISceneFactory& getSceneFactory() const;
 		RENDERERRUNTIME_API_EXPORT void setSceneFactory(const ISceneFactory* sceneFactory);
-		RENDERERRUNTIME_API_EXPORT ISceneResource* loadSceneResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);
 
 
 	//[-------------------------------------------------------]
@@ -85,8 +86,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		SceneResourceManager(IRendererRuntime& rendererRuntime);
-		~SceneResourceManager();
+		explicit SceneResourceManager(IRendererRuntime& rendererRuntime);
+		inline virtual ~SceneResourceManager();
 		SceneResourceManager(const SceneResourceManager&) = delete;
 		SceneResourceManager& operator=(const SceneResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);

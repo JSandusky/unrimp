@@ -58,8 +58,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	SceneResource::SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId, IResourceListener* resourceListener) :
-		ISceneResource(rendererRuntime, resourceId, resourceListener)
+	SceneResource::SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
+		ISceneResource(rendererRuntime, resourceId)
 	{
 		// Nothing in here
 	}

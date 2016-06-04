@@ -30,13 +30,20 @@
 #include "Framework/Stopwatch.h"
 #include "Framework/IApplicationRendererRuntime.h"
 
-#include <RendererRuntime/Resource/Font/FontResource.h>
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 class ICubeRenderer;
+
+
+//[-------------------------------------------------------]
+//[ Global definitions                                    ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	typedef uint32_t FontResourceId;	///< POD font resource identifier
+}
 
 
 //[-------------------------------------------------------]
@@ -112,9 +119,9 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::FontResource* mFontResource;			///< Font resource, can be a null pointer
-	ICubeRenderer*				   mCubeRenderer;			///< Cube renderer instance, can be a null pointer
-	uint32_t					   mNumberOfCubeInstances;	///< Number of cube instances
+	RendererRuntime::FontResourceId mFontResourceId;		///< Font resource ID, can be set to uninitialized value
+	ICubeRenderer*					mCubeRenderer;			///< Cube renderer instance, can be a null pointer
+	uint32_t						mNumberOfCubeInstances;	///< Number of cube instances
 	// The rest is for timing and statistics
 	Stopwatch mStopwatch;			///< Stopwatch instance
 	float	  mGlobalTimer;			///< Global timer

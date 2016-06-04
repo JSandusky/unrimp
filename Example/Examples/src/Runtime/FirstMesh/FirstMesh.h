@@ -30,24 +30,15 @@
 #include "Framework/Stopwatch.h"
 #include "Framework/IApplicationRendererRuntime.h"
 
-#include <RendererRuntime/Resource/Font/FontResource.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class TextureResource;
-}
-
 
 //[-------------------------------------------------------]
 //[ Global definitions                                    ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	typedef uint32_t FontResourceId;	///< POD font resource identifier
 	typedef uint32_t MeshResourceId;	///< POD mesh resource identifier
+	typedef uint32_t TextureResourceId;	///< POD texture resource identifier
 }
 
 
@@ -117,12 +108,12 @@ private:
 	Renderer::IRootSignaturePtr			  mRootSignature;			///< Root signature, can be a null pointer
 	Renderer::IPipelineStatePtr			  mPipelineState;			///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
-	RendererRuntime::FontResource*		  mFontResource;			///< Font resource, can be a null pointer
+	RendererRuntime::FontResourceId		  mFontResourceId;			///< Font resource ID, can be set to uninitialized value
 	RendererRuntime::MeshResourceId		  mMeshResourceId;			///< Mesh resource ID, can be set to uninitialized value
-	RendererRuntime::TextureResource*	  mDiffuseTextureResource;
-	RendererRuntime::TextureResource*	  mNormalTextureResource;
-	RendererRuntime::TextureResource*	  mSpecularTextureResource;
-	RendererRuntime::TextureResource*	  mEmissiveTextureResource;
+	RendererRuntime::TextureResourceId	  mDiffuseTextureResourceId;
+	RendererRuntime::TextureResourceId	  mNormalTextureResourceId;
+	RendererRuntime::TextureResourceId	  mSpecularTextureResourceId;
+	RendererRuntime::TextureResourceId	  mEmissiveTextureResourceId;
 	Renderer::ISamplerStatePtr			  mSamplerState;			///< Sampler state, can be a null pointer
 	// Optimization: Cache data to not bother the renderer API to much
 	handle	 mObjectSpaceToClipSpaceMatrixUniformHandle;	///< Object space to clip space matrix uniform handle, can be NULL_HANDLE

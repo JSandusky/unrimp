@@ -42,7 +42,7 @@
 //[-------------------------------------------------------]
 InstancedCubes::InstancedCubes(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mFontResource(nullptr),
+	mFontResourceId(~0u),	// TODO(co) Set font resource ID to "uninitialized"
 	mCubeRenderer(nullptr),
 	mNumberOfCubeInstances(1000),
 	mGlobalTimer(0.0f),
@@ -83,7 +83,7 @@ void InstancedCubes::onInitialization()
 			if (nullptr != rendererRuntime)
 			{
 				// Create the font resource
-				mFontResource = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
+				mFontResourceId = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
 			}
 		}
 
@@ -123,8 +123,8 @@ void InstancedCubes::onDeinitialization()
 		mCubeRenderer = nullptr;
 	}
 
-	// TODO(co) Implement decent resource handling
-	mFontResource = nullptr;
+	// Release the used resources
+	mFontResourceId = ~0u;	// TODO(co) Set font resource ID to "uninitialized"
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -238,31 +238,40 @@ void InstancedCubes::onDraw()
 			mCubeRenderer->draw(mGlobalTimer, mGlobalScale, sin(mGlobalTimer * 0.001f) * SCENE_RADIUS, sin(mGlobalTimer * 0.0005f) * SCENE_RADIUS, cos(mGlobalTimer * 0.0008f) * SCENE_RADIUS);
 		}
 
-		// Display statistics and is there a font resource?
-		if (mDisplayStatistics && nullptr != mFontResource)
+		// Display statistics
+		if (mDisplayStatistics)
 		{
-			// Is there a cube renderer instance?
-			if (nullptr != mCubeRenderer)
+			RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+			if (nullptr != rendererRuntime)
 			{
-				char text[128];
+				// TODO(co) Get rid of the evil const-cast
+				RendererRuntime::FontResource* fontResource = const_cast<RendererRuntime::FontResource*>(rendererRuntime->getFontResourceManager().getFontResources().tryGetElementById(mFontResourceId));
+				if (nullptr != fontResource)
+				{
+					// Is there a cube renderer instance?
+					if (nullptr != mCubeRenderer)
+					{
+						char text[128];
 
-				// Number of cubes
-				sprintf(text, "Number of cubes: %d", mNumberOfCubeInstances);
-				mFontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.9f, 0.0f))), 0.0025f, 0.0025f);
+						// Number of cubes
+						sprintf(text, "Number of cubes: %d", mNumberOfCubeInstances);
+						fontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.9f, 0.0f))), 0.0025f, 0.0025f);
 
-				// Frames per second
-				sprintf(text, "Frames per second: %.2f", mFramesPerSecond);
-				mFontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.85f, 0.0f))), 0.0025f, 0.0025f);
+						// Frames per second
+						sprintf(text, "Frames per second: %.2f", mFramesPerSecond);
+						fontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.85f, 0.0f))), 0.0025f, 0.0025f);
 
-				// Cubes per second
-				// -> In every frame we draw n-cubes...
-				// -> TODO(co) This number can get huge... had over 1 million cubes with >25 FPS... million cubes at ~2.4 FPS...
-				sprintf(text, "Cubes per second: %u", static_cast<uint32_t>(mFramesPerSecond) * mNumberOfCubeInstances);
-				mFontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.8f, 0.0f))), 0.0025f, 0.0025f);
-			}
-			else
-			{
-				mFontResource->drawText("No cube renderer instance", Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.9f, 0.0f))), 0.0025f, 0.0025f);
+						// Cubes per second
+						// -> In every frame we draw n-cubes...
+						// -> TODO(co) This number can get huge... had over 1 million cubes with >25 FPS... million cubes at ~2.4 FPS...
+						sprintf(text, "Cubes per second: %u", static_cast<uint32_t>(mFramesPerSecond) * mNumberOfCubeInstances);
+						fontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.8f, 0.0f))), 0.0025f, 0.0025f);
+					}
+					else
+					{
+						fontResource->drawText("No cube renderer instance", Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.9f, 0.0f))), 0.0025f, 0.0025f);
+					}
+				}
 			}
 		}
 

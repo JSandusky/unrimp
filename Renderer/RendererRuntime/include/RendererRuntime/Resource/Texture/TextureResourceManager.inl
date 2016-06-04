@@ -19,19 +19,34 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
 
 
-	// TODO(co) Remove this if not required
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline const TextureResources& TextureResourceManager::getTextureResources() const
+	{
+		return mTextureResources;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
+	{
+		// Nothing in here
+	}
+
+	inline TextureResourceManager::~TextureResourceManager()
+	{
+		// Nothing in here
+	}
 
 
 //[-------------------------------------------------------]

@@ -28,12 +28,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline FontResource::~FontResource()
-	{
-		// Destroy the glyph texture atlas
-		destroyGlyphTextureAtlas();
-	}
-
 	inline uint32_t FontResource::getSize() const
 	{
 		return mSize;
@@ -78,6 +72,52 @@ namespace RendererRuntime
 	inline bool FontResource::isValid() const
 	{
 		return (0 != mNumberOfFontGlyphs);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline FontResource::FontResource() :
+		IResource(~0u, ~0u),	// TODO(co) Set both to "uninitialized"
+		mRendererRuntimeImpl(nullptr),
+		mSize(0),
+		mResolution(0),
+		mAscender(0.0f),
+		mDescender(0.0f),
+		mHeight(0.0f),
+		mGlyphTextureAtlasPadding(3),
+		mGlyphTextureAtlasSizeX(0),
+		mGlyphTextureAtlasSizeY(0),
+		mNumberOfFontGlyphs(0),
+		mFontGlyphs(nullptr),
+		mTexture2D(nullptr)
+	{
+		// Nothing here
+	}
+
+	inline FontResource::FontResource(ResourceId resourceId) :
+		IResource(resourceId, ~0u),	// TODO(co) Set font resource ID to "uninitialized"
+		mRendererRuntimeImpl(nullptr),
+		mSize(0),
+		mResolution(0),
+		mAscender(0.0f),
+		mDescender(0.0f),
+		mHeight(0.0f),
+		mGlyphTextureAtlasPadding(3),
+		mGlyphTextureAtlasSizeX(0),
+		mGlyphTextureAtlasSizeY(0),
+		mNumberOfFontGlyphs(0),
+		mFontGlyphs(nullptr),
+		mTexture2D(nullptr)
+	{
+		// Nothing here
+	}
+
+	inline FontResource::~FontResource()
+	{
+		// Destroy the glyph texture atlas
+		destroyGlyphTextureAtlas();
 	}
 
 

@@ -40,10 +40,9 @@
 namespace RendererRuntime
 {
 	class Transform;
-	class TextureResource;
 	class MaterialTechnique;
-	class ShaderBlueprintResource;
 	class MaterialBlueprintResourceManager;
+	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
 }
 
 
@@ -57,7 +56,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
+	typedef StringId AssetId;						///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
+	typedef uint32_t TextureResourceId;				///< POD texture resource identifier
+	typedef uint32_t ShaderBlueprintResourceId;		///< POD shader blueprint resource identifier
+	typedef uint32_t MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -81,6 +83,7 @@ namespace RendererRuntime
 		friend class MaterialBlueprintResourceLoader;
 		friend class MaterialBlueprintResourceManager;
 		friend class MaterialResourceLoader;			// TODO(co) Decent material resource list management inside the material blueprint resource (link, unlink etc.) - remove this
+		friend class PackedElementManager<MaterialBlueprintResource, MaterialBlueprintResourceId>;
 
 
 	//[-------------------------------------------------------]
@@ -124,35 +127,18 @@ namespace RendererRuntime
 			uint32_t		   rootParameterIndex;
 			AssetId			   textureAssetId;
 			MaterialPropertyId materialPropertyId;
-			TextureResource*   textureResource;	// TODO(co) Implement decent resource management
+			TextureResourceId  textureResourceId;
 		};
 
 		typedef std::vector<UniformBuffer> UniformBuffers;
-		typedef std::vector<SamplerState> SamplerStates;
-		typedef std::vector<Texture> Textures;
+		typedef std::vector<SamplerState>  SamplerStates;
+		typedef std::vector<Texture>	   Textures;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] materialBlueprintResourceManager
-		*    Owner material blueprint resource manager
-		*  @param[in] resourceId
-		*    Resource ID
-		*/
-		explicit MaterialBlueprintResource(MaterialBlueprintResourceManager& materialBlueprintResourceManager, ResourceId resourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~MaterialBlueprintResource();
-
 		/**
 		*  @brief
 		*    Return the owner material blueprint resource manager
@@ -289,6 +275,27 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		/**
+		*  @brief
+		*    Default constructor
+		*/
+		MaterialBlueprintResource();
+
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] materialBlueprintResourceId
+		*    Material blueprint resource ID
+		*/
+		explicit MaterialBlueprintResource(MaterialBlueprintResourceId materialBlueprintResourceId);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~MaterialBlueprintResource();
+
 		MaterialBlueprintResource(const MaterialBlueprintResource&) = delete;
 		MaterialBlueprintResource& operator=(const MaterialBlueprintResource&) = delete;
 		void linkMaterialTechnique(MaterialTechnique& materialTechnique);
@@ -305,7 +312,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialBlueprintResourceManager& mMaterialBlueprintResourceManager;	///< Owner material blueprint resource manager
+		MaterialBlueprintResourceManager* mMaterialBlueprintResourceManager;	///< Owner material blueprint resource manager, pointer considered to be always valid
 		PipelineStateCacheManager		  mPipelineStateCacheManager;
 		MaterialProperties				  mMaterialProperties;
 		Renderer::VertexAttributes		  mVertexAttributes;
@@ -325,11 +332,11 @@ namespace RendererRuntime
 
 	// TODO(co) Make this private
 	public:
-		ShaderBlueprintResource*  mVertexShaderBlueprint;
-		ShaderBlueprintResource*  mTessellationControlShaderBlueprint;
-		ShaderBlueprintResource*  mTessellationEvaluationShaderBlueprint;
-		ShaderBlueprintResource*  mGeometryShaderBlueprint;
-		ShaderBlueprintResource*  mFragmentShaderBlueprint;
+		ShaderBlueprintResourceId  mVertexShaderBlueprintId;
+		ShaderBlueprintResourceId  mTessellationControlShaderBlueprintId;
+		ShaderBlueprintResourceId  mTessellationEvaluationShaderBlueprintId;
+		ShaderBlueprintResourceId  mGeometryShaderBlueprintId;
+		ShaderBlueprintResourceId  mFragmentShaderBlueprintId;
 
 
 	};

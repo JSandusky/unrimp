@@ -35,6 +35,7 @@
     <None Include="include\RendererRuntime\Resource\Compositor\CompositorResourceTarget.inl" />
     <None Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Font\FontResource.inl" />
+    <None Include="include\RendererRuntime\Resource\Font\FontResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Font\Loader\FontResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\IResource.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
@@ -77,11 +78,13 @@
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.inl" />
+    <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\ITextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\Loader\KtxTextureResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Texture\TextureResource.inl" />
+    <None Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>

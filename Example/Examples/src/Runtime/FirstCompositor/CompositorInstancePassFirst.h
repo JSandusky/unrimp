@@ -28,13 +28,21 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <RendererRuntime/Resource/Compositor/Pass/ICompositorInstancePass.h>
-#include <RendererRuntime/Resource/Font/FontResource.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 class CompositorResourcePassFirst;
+
+
+//[-------------------------------------------------------]
+//[ Global definitions                                    ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	typedef uint32_t FontResourceId;	///< POD font resource identifier
+}
 
 
 //[-------------------------------------------------------]
@@ -71,7 +79,7 @@ protected:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::FontResource* mFontResource;	///< Font resource, can be a null pointer
+	RendererRuntime::FontResourceId mFontResourceId;	///< Font resource ID, can be set to uninitialized value
 
 
 };

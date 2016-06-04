@@ -26,8 +26,9 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
-#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 
 // Disable warnings
@@ -93,21 +94,23 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		bool isFullyLoaded(const RendererRuntime::ShaderBlueprintResource* shaderBlueprint)
+		bool isFullyLoaded(const RendererRuntime::ShaderPieceResourceManager& shaderPieceResourceManager, const RendererRuntime::ShaderBlueprintResourceManager& shaderBlueprintResourceManager, const RendererRuntime::ShaderBlueprintResourceId shaderBlueprintResourceId)
 		{
 			// Check shader blueprint
-			if (nullptr == shaderBlueprint || RendererRuntime::IResource::LoadingState::LOADED != shaderBlueprint->getLoadingState())
+			const RendererRuntime::ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResourceManager.getShaderBlueprintResources().tryGetElementById(shaderBlueprintResourceId);
+			if (nullptr == shaderBlueprintResource || RendererRuntime::IResource::LoadingState::LOADED != shaderBlueprintResource->getLoadingState())
 			{
 				// Not fully loaded
 				return false;
 			}
 
 			{ // Check included shader piece resources
-				const RendererRuntime::ShaderBlueprintResource::IncludeShaderPieceResources& includeShaderPieceResources = shaderBlueprint->getIncludeShaderPieceResources();
+				const RendererRuntime::ShaderBlueprintResource::IncludeShaderPieceResourceIds& includeShaderPieceResources = shaderBlueprintResource->getIncludeShaderPieceResourceIds();
+				const RendererRuntime::ShaderPieceResources& shaderPieceResources = shaderPieceResourceManager.getShaderPieceResources();
 				const size_t numberOfShaderPieces = includeShaderPieceResources.size();
 				for (size_t i = 0; i < numberOfShaderPieces; ++i)
 				{
-					const RendererRuntime::ShaderPieceResource* shaderPieceResource = includeShaderPieceResources[i];
+					const RendererRuntime::ShaderPieceResource* shaderPieceResource = shaderPieceResources.tryGetElementById(includeShaderPieceResources[i]);
 					if (nullptr == shaderPieceResource || RendererRuntime::IResource::LoadingState::LOADED != shaderPieceResource->getLoadingState())
 					{
 						// Not fully loaded
@@ -138,26 +141,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	MaterialBlueprintResource::MaterialBlueprintResource(MaterialBlueprintResourceManager& materialBlueprintResourceManager, ResourceId resourceId) :
-		IResource(resourceId, ~0u),	// TODO(co) Set asset ID to "uninitialized"
-		mMaterialBlueprintResourceManager(materialBlueprintResourceManager),
-		mPipelineStateCacheManager(*this),
-		mVertexAttributes(sizeof(::detail::vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), ::detail::vertexAttributesLayout),
-		mPipelineState(Renderer::PipelineStateBuilder()),
-		mVertexShaderBlueprint(nullptr),
-		mTessellationControlShaderBlueprint(nullptr),
-		mTessellationEvaluationShaderBlueprint(nullptr),
-		mGeometryShaderBlueprint(nullptr),
-		mFragmentShaderBlueprint(nullptr)
-	{
-		// Nothing here
-	}
-
-	MaterialBlueprintResource::~MaterialBlueprintResource()
-	{
-		// Nothing here
-	}
-
 	bool MaterialBlueprintResource::isFullyLoaded() const
 	{
 		// Check uniform buffers
@@ -167,15 +150,20 @@ namespace RendererRuntime
 			return false;
 		}
 
+		// Get the shader piece resource manager instance
+		const ShaderPieceResourceManager& shaderPieceResourceManager = getMaterialBlueprintResourceManager().getRendererRuntime().getShaderPieceResourceManager();
+		const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = getMaterialBlueprintResourceManager().getRendererRuntime().getShaderBlueprintResourceManager();
+
 		// Check the rest
-		return (IResource::LoadingState::LOADED == getLoadingState() && nullptr != mRootSignaturePtr && ::detail::isFullyLoaded(mVertexShaderBlueprint) && ::detail::isFullyLoaded(mFragmentShaderBlueprint));
+		return (IResource::LoadingState::LOADED == getLoadingState() && nullptr != mRootSignaturePtr && ::detail::isFullyLoaded(shaderPieceResourceManager, shaderBlueprintResourceManager, mVertexShaderBlueprintId) && ::detail::isFullyLoaded(shaderPieceResourceManager, shaderBlueprintResourceManager, mFragmentShaderBlueprintId));
 	}
 
 	void MaterialBlueprintResource::fillUnknownUniformBuffers()
 	{
-		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager.getGlobalMaterialProperties();
+		assert(nullptr != mMaterialBlueprintResourceManager);
+		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager->getGlobalMaterialProperties();
 
-		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
+		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager->getMaterialBlueprintResourceListener();
 		materialBlueprintResourceListener.beginFillUnknown();
 
 		const size_t numberOfUniformBuffers = mUniformBuffers.size();
@@ -257,12 +245,13 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResource::fillPassUniformBuffer(const Transform& worldSpaceToViewSpaceTransform)
 	{
+		assert(nullptr != mMaterialBlueprintResourceManager);
 		assert(nullptr != mPassUniformBuffer);
 		assert(1 == mPassUniformBuffer->numberOfElements);
 
-		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager.getGlobalMaterialProperties();
+		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager->getGlobalMaterialProperties();
 
-		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
+		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager->getMaterialBlueprintResourceListener();
 		materialBlueprintResourceListener.beginFillPass(mPassUniformBuffer->uniformBufferPtr->getRenderer(), worldSpaceToViewSpaceTransform);
 
 		// Update the scratch buffer
@@ -334,11 +323,12 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResource::fillMaterialUniformBuffer()
 	{
+		assert(nullptr != mMaterialBlueprintResourceManager);
 		assert(nullptr != mMaterialUniformBuffer);
 
-		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager.getGlobalMaterialProperties();
+		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager->getGlobalMaterialProperties();
 
-		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
+		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager->getMaterialBlueprintResourceListener();
 		materialBlueprintResourceListener.beginFillMaterial();
 
 		// TODO(co) Optimization: Do only update changed materials
@@ -433,13 +423,14 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResource::fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique)
 	{
-		assert(this == materialTechnique.getMaterialBlueprintResource());
+		assert(nullptr != mMaterialBlueprintResourceManager);
+		assert(getId() == materialTechnique.getMaterialBlueprintResourceId());
 		assert(nullptr != mInstanceUniformBuffer);
 		assert(1 == mInstanceUniformBuffer->numberOfElements);	// TODO(co) Implement automatic instancing
 
-		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager.getGlobalMaterialProperties();
+		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager->getGlobalMaterialProperties();
 
-		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager.getMaterialBlueprintResourceListener();
+		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager->getMaterialBlueprintResourceListener();
 		materialBlueprintResourceListener.beginFillInstance(objectSpaceToWorldSpaceTransform, materialTechnique);
 
 		// Update the scratch buffer
@@ -543,6 +534,36 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
+	MaterialBlueprintResource::MaterialBlueprintResource() :
+		IResource(~0u, ~0u),	// TODO(co) Set both to "uninitialized"
+		mMaterialBlueprintResourceManager(nullptr),
+		mPipelineStateCacheManager(*this),
+		mVertexAttributes(sizeof(::detail::vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), ::detail::vertexAttributesLayout),
+		mPipelineState(Renderer::PipelineStateBuilder()),
+		mVertexShaderBlueprintId(~0u),					// TODO(co) Set texture resource ID to "uninitialized"
+		mTessellationControlShaderBlueprintId(~0u),		// TODO(co) Set texture resource ID to "uninitialized"
+		mTessellationEvaluationShaderBlueprintId(~0u),	// TODO(co) Set texture resource ID to "uninitialized"
+		mGeometryShaderBlueprintId(~0u),				// TODO(co) Set texture resource ID to "uninitialized"
+		mFragmentShaderBlueprintId(~0u)					// TODO(co) Set texture resource ID to "uninitialized"
+	{
+		// Nothing here
+	}
+
+	MaterialBlueprintResource::MaterialBlueprintResource(MaterialBlueprintResourceId materialBlueprintResourceId) :
+		IResource(materialBlueprintResourceId, ~0u),	// TODO(co) Set asset ID to "uninitialized"
+		mMaterialBlueprintResourceManager(nullptr),
+		mPipelineStateCacheManager(*this),
+		mVertexAttributes(sizeof(::detail::vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), ::detail::vertexAttributesLayout),
+		mPipelineState(Renderer::PipelineStateBuilder()),
+		mVertexShaderBlueprintId(~0u),					// TODO(co) Set texture resource ID to "uninitialized"
+		mTessellationControlShaderBlueprintId(~0u),		// TODO(co) Set texture resource ID to "uninitialized"
+		mTessellationEvaluationShaderBlueprintId(~0u),	// TODO(co) Set texture resource ID to "uninitialized"
+		mGeometryShaderBlueprintId(~0u),				// TODO(co) Set texture resource ID to "uninitialized"
+		mFragmentShaderBlueprintId(~0u)					// TODO(co) Set texture resource ID to "uninitialized"
+	{
+		// Nothing here
+	}
+
 	void MaterialBlueprintResource::linkMaterialTechnique(MaterialTechnique& materialTechnique)
 	{
 		LinkedMaterialTechniques::const_iterator iterator = std::find(mLinkedMaterialTechniques.cbegin(), mLinkedMaterialTechniques.cend(), &materialTechnique);

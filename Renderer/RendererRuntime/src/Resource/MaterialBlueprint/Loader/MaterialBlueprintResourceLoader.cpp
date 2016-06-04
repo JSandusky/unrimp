@@ -205,11 +205,11 @@ namespace RendererRuntime
 
 		{ // Get the used shader blueprint resources
 			ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
-			mMaterialBlueprintResource->mVertexShaderBlueprint				   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mVertexShaderBlueprintAssetId);
-			mMaterialBlueprintResource->mTessellationControlShaderBlueprint    = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mTessellationControlShaderBlueprintAssetId);
-			mMaterialBlueprintResource->mTessellationEvaluationShaderBlueprint = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mTessellationEvaluationShaderBlueprintAssetId);
-			mMaterialBlueprintResource->mGeometryShaderBlueprint			   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mGeometryShaderBlueprintAssetId);
-			mMaterialBlueprintResource->mFragmentShaderBlueprint			   = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mFragmentShaderBlueprintAssetId);
+			mMaterialBlueprintResource->mVertexShaderBlueprintId				 = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mVertexShaderBlueprintAssetId);
+			mMaterialBlueprintResource->mTessellationControlShaderBlueprintId    = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mTessellationControlShaderBlueprintAssetId);
+			mMaterialBlueprintResource->mTessellationEvaluationShaderBlueprintId = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mTessellationEvaluationShaderBlueprintAssetId);
+			mMaterialBlueprintResource->mGeometryShaderBlueprintId				 = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mGeometryShaderBlueprintAssetId);
+			mMaterialBlueprintResource->mFragmentShaderBlueprintId				 = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mFragmentShaderBlueprintAssetId);
 		}
 
 		{ // Create the uniform buffer renderer resources
@@ -264,9 +264,9 @@ namespace RendererRuntime
 			{
 				MaterialBlueprintResource::Texture& texture = textures[i];
 				texture.rootParameterIndex = materialBlueprintTexture->rootParameterIndex;
-				texture.textureAssetId = materialBlueprintTexture->textureAssetId;
+				texture.textureAssetId     = materialBlueprintTexture->textureAssetId;
 				texture.materialPropertyId = materialBlueprintTexture->materialPropertyId;
-				texture.textureResource = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);
+				texture.textureResourceId  = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);
 			}
 		}
 	}

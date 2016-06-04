@@ -19,19 +19,34 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
 
 
-	// TODO(co) Remove this if not required
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline const FontResources& FontResourceManager::getFontResources() const
+	{
+		return mFontResources;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline FontResourceManager::FontResourceManager(RendererRuntimeImpl& rendererRuntimeImpl) :
+		mRendererRuntimeImpl(rendererRuntimeImpl)
+	{
+		// Nothing in here
+	}
+
+	inline FontResourceManager::~FontResourceManager()
+	{
+		// Nothing in here
+	}
 
 
 //[-------------------------------------------------------]

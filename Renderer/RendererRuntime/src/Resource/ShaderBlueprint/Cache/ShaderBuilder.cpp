@@ -55,7 +55,7 @@ THE SOFTWARE.
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
-#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
+#include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 
 #include <algorithm>
 
@@ -775,7 +775,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	std::string ShaderBuilder::createSourceCode(const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties)
+	std::string ShaderBuilder::createSourceCode(const ShaderPieceResourceManager& shaderPieceResourceManager, const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties)
 	{
 		std::string inString;
 		std::string outString;
@@ -783,22 +783,30 @@ namespace RendererRuntime
 		mShaderProperties = shaderProperties;
 
 		{ // Process the shader piece resources to include
-			const ShaderBlueprintResource::IncludeShaderPieceResources& includeShaderPieceResources = shaderBlueprintResource.getIncludeShaderPieceResources();
-			const size_t numberOfShaderPieces = includeShaderPieceResources.size();
+			const ShaderBlueprintResource::IncludeShaderPieceResourceIds& includeShaderPieceResourceIds = shaderBlueprintResource.getIncludeShaderPieceResourceIds();
+			const ShaderPieceResources& shaderPieceResources = shaderPieceResourceManager.getShaderPieceResources();
+			const size_t numberOfShaderPieces = includeShaderPieceResourceIds.size();
 			for (size_t i = 0; i < numberOfShaderPieces; ++i)
 			{
-				const ShaderPieceResource* shaderPieceResource = includeShaderPieceResources[i];
+				const ShaderPieceResource* shaderPieceResource = shaderPieceResources.tryGetElementById(includeShaderPieceResourceIds[i]);
+				if (nullptr != shaderPieceResource)
+				{
+					// Initialize
+					inString = shaderPieceResource->getShaderSourceCode();
+					outString.clear();
 
-				// Initialize
-				inString = shaderPieceResource->getShaderSourceCode();
-				outString.clear();
-
-				// Process
-				parseMath(inString, outString);
-				parseForEach(outString, inString);
-				parseProperties(inString, outString);
-				collectPieces(outString, inString);
-				parseCounter(inString, outString);
+					// Process
+					parseMath(inString, outString);
+					parseForEach(outString, inString);
+					parseProperties(inString, outString);
+					collectPieces(outString, inString);
+					parseCounter(inString, outString);
+				}
+				else
+				{
+					// TODO(co) Error handling
+					assert(false);
+				}
 			}
 		}
 

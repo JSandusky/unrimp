@@ -33,6 +33,11 @@
 #include <Renderer/Public/Renderer.h>
 
 
+// Disable warnings
+// TODO(co) See "RendererRuntime::CompositorInstance::CompositorInstance()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)
+#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
@@ -46,13 +51,10 @@ namespace RendererRuntime
 	CompositorInstance::CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId, Renderer::IRenderTarget& renderTarget) :
 		mRendererRuntime(rendererRuntime),
 		mRenderTarget(renderTarget),
-		mCompositorResource(nullptr)
+		mCompositorResourceId(rendererRuntime.getCompositorResourceManager().loadCompositorResourceByAssetId(compositorAssetId, false, this))
 	{
 		// Add reference to the render target
 		mRenderTarget.addReference();
-
-		// Load the compositor resource
-		mCompositorResource = rendererRuntime.getCompositorResourceManager().loadCompositorResourceByAssetId(compositorAssetId, this);
 	}
 
 	CompositorInstance::~CompositorInstance()
@@ -72,7 +74,8 @@ namespace RendererRuntime
 	void CompositorInstance::execute(CameraSceneItem* cameraSceneItem)
 	{
 		// Is the compositor resource ready?
-		if (nullptr != mCompositorResource && mCompositorResource->getLoadingState() == IResource::LoadingState::LOADED)
+		const CompositorResource* compositorResource = mRendererRuntime.getCompositorResourceManager().getCompositorResources().tryGetElementById(mCompositorResourceId);
+		if (nullptr != compositorResource && compositorResource->getLoadingState() == IResource::LoadingState::LOADED)
 		{
 			Renderer::IRenderer& renderer = mRenderTarget.getRenderer();
 
@@ -138,37 +141,41 @@ namespace RendererRuntime
 			destroySequentialCompositorInstanceNodes();
 
 			// Compositor resource nodes
-			const CompositorResource::CompositorResourceNodes& compositorResourceNodes = mCompositorResource->getCompositorResourceNodes();
-			const size_t numberOfCompositorResourceNodes = compositorResourceNodes.size();
-			for (size_t nodeIndex = 0; nodeIndex < numberOfCompositorResourceNodes; ++nodeIndex)
+			const CompositorResource* compositorResource = mRendererRuntime.getCompositorResourceManager().getCompositorResources().tryGetElementById(mCompositorResourceId);
+			if (nullptr != compositorResource)
 			{
-				// Get the compositor resource node instance
-				const CompositorResourceNode* compositorResourceNode = compositorResourceNodes[nodeIndex];
+				const CompositorResource::CompositorResourceNodes& compositorResourceNodes = compositorResource->getCompositorResourceNodes();
+				const size_t numberOfCompositorResourceNodes = compositorResourceNodes.size();
+				for (size_t nodeIndex = 0; nodeIndex < numberOfCompositorResourceNodes; ++nodeIndex)
+				{
+					// Get the compositor resource node instance
+					const CompositorResourceNode* compositorResourceNode = compositorResourceNodes[nodeIndex];
 
-				// Create the compositor instance node instance
-				CompositorInstanceNode* compositorInstanceNode = new CompositorInstanceNode(*compositorResourceNode, *this);
-				mSequentialCompositorInstanceNodes.push_back(compositorInstanceNode);
+					// Create the compositor instance node instance
+					CompositorInstanceNode* compositorInstanceNode = new CompositorInstanceNode(*compositorResourceNode, *this);
+					mSequentialCompositorInstanceNodes.push_back(compositorInstanceNode);
 
-				{ // Compositor resource node targets
-					const CompositorResourceNode::CompositorResourceTargets& compositorResourceTargets = compositorResourceNode->getCompositorResourceTargets();
-					const size_t numberOfCompositorResourceTargets = compositorResourceTargets.size();
-					for (size_t targetIndex = 0; targetIndex < numberOfCompositorResourceTargets; ++targetIndex)
-					{
-						// Get the compositor resource target instance
-						const CompositorResourceTarget& compositorResourceTarget = compositorResourceTargets[targetIndex];
+					{ // Compositor resource node targets
+						const CompositorResourceNode::CompositorResourceTargets& compositorResourceTargets = compositorResourceNode->getCompositorResourceTargets();
+						const size_t numberOfCompositorResourceTargets = compositorResourceTargets.size();
+						for (size_t targetIndex = 0; targetIndex < numberOfCompositorResourceTargets; ++targetIndex)
+						{
+							// Get the compositor resource target instance
+							const CompositorResourceTarget& compositorResourceTarget = compositorResourceTargets[targetIndex];
 
-						{ // Compositor resource node target passes
-							const CompositorResourceTarget::CompositorResourcePasses& compositorResourcePasses = compositorResourceTarget.getCompositorResourcePasses();
-							const size_t numberOfCompositorResourcePasses = compositorResourcePasses.size();
-							for (size_t passIndex = 0; passIndex < numberOfCompositorResourcePasses; ++passIndex)
-							{
-								// Get the compositor resource target instance
-								const ICompositorResourcePass* compositorResourcePass = compositorResourcePasses[passIndex];
-
-								// Create the compositor instance pass
-								if (nullptr != compositorResourcePass)
+							{ // Compositor resource node target passes
+								const CompositorResourceTarget::CompositorResourcePasses& compositorResourcePasses = compositorResourceTarget.getCompositorResourcePasses();
+								const size_t numberOfCompositorResourcePasses = compositorResourcePasses.size();
+								for (size_t passIndex = 0; passIndex < numberOfCompositorResourcePasses; ++passIndex)
 								{
-									compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory.createCompositorInstancePass(*compositorResourcePass, *compositorInstanceNode));
+									// Get the compositor resource target instance
+									const ICompositorResourcePass* compositorResourcePass = compositorResourcePasses[passIndex];
+
+									// Create the compositor instance pass
+									if (nullptr != compositorResourcePass)
+									{
+										compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory.createCompositorInstancePass(*compositorResourcePass, *compositorInstanceNode));
+									}
 								}
 							}
 						}

@@ -28,8 +28,23 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline TextureResource::TextureResource(ResourceId resourceId) :
-		IResource(resourceId, ~0u)	// TODO(co) Set asset ID to "uninitialized"
+	inline Renderer::ITexturePtr TextureResource::getTexture() const
+	{
+		return mTexture;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline TextureResource::TextureResource() :
+		IResource(~0u, ~0u)	// TODO(co) Set both to "uninitialized"
+	{
+		// Nothing here
+	}
+
+	inline TextureResource::TextureResource(TextureResourceId textureResourceId) :
+		IResource(textureResourceId, ~0u)	// TODO(co) Set texture resource ID to "uninitialized"
 	{
 		// Nothing here
 	}
@@ -38,11 +53,6 @@ namespace RendererRuntime
 	{
 		// The renderer resource pointers are released automatically
 		// Nothing to do in here
-	}
-
-	inline Renderer::ITexturePtr TextureResource::getTexture() const
-	{
-		return mTexture;
 	}
 
 

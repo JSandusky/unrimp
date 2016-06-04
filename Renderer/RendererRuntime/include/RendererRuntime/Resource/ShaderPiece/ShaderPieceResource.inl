@@ -28,14 +28,30 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ShaderPieceResource::~ShaderPieceResource()
+	inline const std::string& ShaderPieceResource::getShaderSourceCode() const
+	{
+		return mShaderSourceCode;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline ShaderPieceResource::ShaderPieceResource() :
+		IResource(~0u, ~0u)	// TODO(co) Set both to "uninitialized"
 	{
 		// Nothing here
 	}
 
-	inline const std::string& ShaderPieceResource::getShaderSourceCode() const
+	inline ShaderPieceResource::ShaderPieceResource(ShaderPieceResourceId shaderPieceResourceId) :
+		IResource(shaderPieceResourceId, ~0u)	// TODO(co) Set shader piece resource ID to "uninitialized"
 	{
-		return mShaderSourceCode;
+		// Nothing here
+	}
+
+	inline ShaderPieceResource::~ShaderPieceResource()
+	{
+		// Nothing here
 	}
 
 

@@ -28,7 +28,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/IResourceManager.h"
+#include "RendererRuntime/Resource/Compositor/CompositorResource.h"
 
 
 //[-------------------------------------------------------]
@@ -37,8 +39,6 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
-	class IResourceListener;
-	class CompositorResource;
 	class ICompositorPassFactory;
 }
 
@@ -48,6 +48,13 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t													   CompositorResourceId;	///< POD compositor resource identifier
+	typedef PackedElementManager<CompositorResource, CompositorResourceId> CompositorResources;
 
 
 	//[-------------------------------------------------------]
@@ -67,10 +74,11 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		// TODO(co) Work-in-progress
+		inline const CompositorResources& getCompositorResources() const;
+		RENDERERRUNTIME_API_EXPORT CompositorResourceId loadCompositorResourceByAssetId(AssetId assetId, bool reload = false, IResourceListener* resourceListener = nullptr);
+
 		inline const ICompositorPassFactory& getCompositorPassFactory() const;
 		RENDERERRUNTIME_API_EXPORT void setCompositorPassFactory(const ICompositorPassFactory* compositorPassFactory);
-		RENDERERRUNTIME_API_EXPORT CompositorResource* loadCompositorResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);
 
 
 	//[-------------------------------------------------------]
@@ -85,8 +93,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		CompositorResourceManager(IRendererRuntime& rendererRuntime);
-		~CompositorResourceManager();
+		explicit CompositorResourceManager(IRendererRuntime& rendererRuntime);
+		inline ~CompositorResourceManager();
 		CompositorResourceManager(const CompositorResourceManager&) = delete;
 		CompositorResourceManager& operator=(const CompositorResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
@@ -97,10 +105,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime&			  mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
+		CompositorResources			  mCompositorResources;
 		const ICompositorPassFactory* mCompositorPassFactory;	///< Compositor pass factory, always valid, do not destroy the instance
-
-		// TODO(co) Implement decent resource handling
-		std::vector<CompositorResource*> mResources;
 
 
 	};

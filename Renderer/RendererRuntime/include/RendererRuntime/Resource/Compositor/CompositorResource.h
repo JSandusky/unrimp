@@ -38,6 +38,7 @@
 namespace RendererRuntime
 {
 	class CompositorResourceNode;
+	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
 }
 
 
@@ -51,6 +52,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
+	typedef uint32_t CompositorResourceId;		///< POD compositor resource identifier
 	typedef StringId CompositorResourceNodeId;	///< Compositor resource node identifier, internally just a POD "uint32_t"
 
 
@@ -66,6 +68,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 		friend class CompositorResourceLoader;
 		friend class CompositorResourceManager;
+		friend class PackedElementManager<CompositorResource, CompositorResourceId>;
 
 
 	//[-------------------------------------------------------]
@@ -79,27 +82,36 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor
-		*/
-		CompositorResource(ResourceId resourceId, IResourceListener* resourceListener);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~CompositorResource();
-
 		inline void setNumberOfCompositorResourceNodes(uint32_t numberOfCompositorResourceNodes);
 		CompositorResourceNode* addCompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId);
 		inline const CompositorResourceNodes& getCompositorResourceNodes() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	protected:
+	private:
+		/**
+		*  @brief
+		*    Default constructor
+		*/
+		inline CompositorResource();
+
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] compositorResourceId
+		*    Compositor resource ID
+		*/
+		inline explicit CompositorResource(CompositorResourceId compositorResourceId);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~CompositorResource();
+
 		CompositorResource(const CompositorResource&) = delete;
 		CompositorResource& operator=(const CompositorResource&) = delete;
 

@@ -24,7 +24,6 @@
 #include "RendererRuntime/Resource/Material/Loader/MaterialResourceLoader.h"
 #include "RendererRuntime/Resource/Material/Loader/MaterialFileFormat.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -104,22 +103,29 @@ namespace RendererRuntime
 		{ // Create the material techniques (list is already sorted)
 			MaterialResource::SortedMaterialTechniqueVector& sortedMaterialTechniqueVector = mMaterialResource->mSortedMaterialTechniqueVector;
 			MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
-			const v1Material::Technique* v1MaterialTechnique = mMaterialTechniques;
-			for (size_t i = 0; i < mNumberOfTechniques; ++i, ++v1MaterialTechnique)
 			{
-				sortedMaterialTechniqueVector.emplace_back(MaterialTechnique(v1MaterialTechnique->materialTechniqueId, *mMaterialResource));
+				const v1Material::Technique* v1MaterialTechnique = mMaterialTechniques;
+				for (size_t i = 0; i < mNumberOfTechniques; ++i, ++v1MaterialTechnique)
+				{
+					sortedMaterialTechniqueVector.emplace_back(MaterialTechnique(v1MaterialTechnique->materialTechniqueId, *mMaterialResource));
 
-				// Get the used material blueprint resource
-				sortedMaterialTechniqueVector[i].mMaterialBlueprintResource = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(v1MaterialTechnique->materialBlueprintAssetId);
+					// Get the used material blueprint resource
+					sortedMaterialTechniqueVector[i].mMaterialBlueprintResourceId = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(v1MaterialTechnique->materialBlueprintAssetId);
+				}
 			}
 
-			// Link when done and the memory addresses stay stable
-			for (size_t i = 0; i < mNumberOfTechniques; ++i)
-			{
-				MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[i];
-				if (nullptr != materialTechnique.mMaterialBlueprintResource)
+			{ // Link when done and the memory addresses stay stable
+				const MaterialBlueprintResources& materialBlueprintResources = materialBlueprintResourceManager.getMaterialBlueprintResources();
+				for (size_t i = 0; i < mNumberOfTechniques; ++i)
 				{
-					materialTechnique.mMaterialBlueprintResource->linkMaterialTechnique(materialTechnique);
+					MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[i];
+
+					// TODO(co) Get rid of the evil const-cast
+					MaterialBlueprintResource* materialBlueprintResource = const_cast<MaterialBlueprintResource*>(materialBlueprintResources.tryGetElementById(materialTechnique.mMaterialBlueprintResourceId));
+					if (nullptr != materialBlueprintResource)
+					{
+						materialBlueprintResource->linkMaterialTechnique(materialTechnique);
+					}
 				}
 			}
 		}

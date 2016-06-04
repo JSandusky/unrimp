@@ -41,6 +41,7 @@ namespace Renderer
 namespace RendererRuntime
 {
 	class RendererRuntimeImpl;
+	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
 }
 
 
@@ -49,6 +50,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t FontResourceId;	///< POD font resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -87,6 +94,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 		friend class FontResourceLoader;
 		friend class FontResourceManager;
+		friend class PackedElementManager<FontResource, FontResourceId>;
 
 
 	//[-------------------------------------------------------]
@@ -110,24 +118,6 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] rendererRuntimeImpl
-		*    Renderer runtime implementation instance to use
-		*
-		*  @note
-		*    - The font instance keeps a reference to the provided renderer runtime implementation instance
-		*/
-		FontResource(RendererRuntimeImpl &rendererRuntimeImpl, ResourceId resourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~FontResource();
-
 		/**
 		*  @brief
 		*    Return the nominal font size in points (72 points per inch)
@@ -261,6 +251,27 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		/**
+		*  @brief
+		*    Default constructor
+		*/
+		inline FontResource();
+
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] textureResourceId
+		*    Texture resource ID
+		*/
+		inline explicit FontResource(FontResourceId fontResourceId);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~FontResource();
+
 		FontResource(const FontResource&) = delete;
 		FontResource& operator=(const FontResource&) = delete;
 

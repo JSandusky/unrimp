@@ -64,19 +64,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void SceneResourceManager::setSceneFactory(const ISceneFactory* sceneFactory)
-	{
-		// There must always be a valid scene factory instance
-		mSceneFactory = (nullptr != sceneFactory) ? sceneFactory : &::detail::defaultSceneFactory;
-
-		// Tell the scene resource instances about the new scene factory in town
-		const size_t numberOfSceneResources = mSceneResources.size();
-		for (size_t i = 0; i < numberOfSceneResources; ++i)
-		{
-			mSceneResources[i]->mSceneFactory = mSceneFactory;
-		}
-	}
-
 	ISceneResource* SceneResourceManager::loadSceneResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
@@ -102,8 +89,9 @@ namespace RendererRuntime
 			if (nullptr == sceneResource)
 			{
 				assert(nullptr != mSceneFactory);
-				sceneResource = mSceneFactory->createSceneResource(SceneResource::TYPE_ID, mRendererRuntime, assetId, resourceListener);
+				sceneResource = mSceneFactory->createSceneResource(SceneResource::TYPE_ID, mRendererRuntime, assetId);
 				sceneResource->setAssetId(assetId);
+				sceneResource->setResourceListener(resourceListener);
 				mSceneResources.push_back(sceneResource);
 				load = true;
 			}
@@ -128,6 +116,19 @@ namespace RendererRuntime
 
 		// Error!
 		return nullptr;
+	}
+
+	void SceneResourceManager::setSceneFactory(const ISceneFactory* sceneFactory)
+	{
+		// There must always be a valid scene factory instance
+		mSceneFactory = (nullptr != sceneFactory) ? sceneFactory : &::detail::defaultSceneFactory;
+
+		// Tell the scene resource instances about the new scene factory in town
+		const size_t numberOfSceneResources = mSceneResources.size();
+		for (size_t i = 0; i < numberOfSceneResources; ++i)
+		{
+			mSceneResources[i]->mSceneFactory = mSceneFactory;
+		}
 	}
 
 
@@ -162,11 +163,6 @@ namespace RendererRuntime
 	SceneResourceManager::SceneResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
 		mSceneFactory(&::detail::defaultSceneFactory)
-	{
-		// Nothing in here
-	}
-
-	SceneResourceManager::~SceneResourceManager()
 	{
 		// Nothing in here
 	}

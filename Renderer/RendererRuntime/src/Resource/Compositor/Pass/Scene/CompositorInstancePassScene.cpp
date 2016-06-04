@@ -32,9 +32,8 @@
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
-#include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -54,6 +53,7 @@ namespace
 			Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
 			const RendererRuntime::MeshResources& meshResources = rendererRuntime.getMeshResourceManager().getMeshResources();
 			const RendererRuntime::MaterialResources& materialResources = rendererRuntime.getMaterialResourceManager().getMaterialResources();
+			const RendererRuntime::MaterialBlueprintResources& materialBlueprintResources = rendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources();
 
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
@@ -97,7 +97,8 @@ namespace
 										RendererRuntime::MaterialTechnique* materialTechnique = materialResource->getMaterialTechniqueById("Default");
 										if (nullptr != materialTechnique)
 										{
-											RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = materialTechnique->getMaterialBlueprintResource();
+											// TODO(co) Get rid of the evil const-cast
+											RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = const_cast<RendererRuntime::MaterialBlueprintResource*>(materialBlueprintResources.tryGetElementById(materialTechnique->getMaterialBlueprintResourceId()));
 											if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
 											{
 												// TODO(co) Pass shader properties

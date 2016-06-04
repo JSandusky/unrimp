@@ -33,10 +33,25 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t TextureResourceId;	///< POD texture resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -58,24 +73,13 @@ namespace RendererRuntime
 		friend class CrnTextureResourceLoader;	// TODO(co) Get rid of this
 		friend class KtxTextureResourceLoader;	// TODO(co) Get rid of this
 		friend class DdsTextureResourceLoader;	// TODO(co) Get rid of this
+		friend class PackedElementManager<TextureResource, TextureResourceId>;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor
-		*/
-		inline explicit TextureResource(ResourceId resourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~TextureResource();
-
 		inline Renderer::ITexturePtr getTexture() const;
 
 
@@ -83,6 +87,27 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		/**
+		*  @brief
+		*    Default constructor
+		*/
+		inline TextureResource();
+
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] textureResourceId
+		*    Texture resource ID
+		*/
+		inline explicit TextureResource(TextureResourceId textureResourceId);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~TextureResource();
+
 		TextureResource(const TextureResource&) = delete;
 		TextureResource& operator=(const TextureResource&) = delete;
 

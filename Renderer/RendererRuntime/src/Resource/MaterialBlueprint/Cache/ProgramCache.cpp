@@ -22,8 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCache.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -52,18 +54,41 @@ namespace RendererRuntime
 
 			// TODO(co) Use shader cache
 
+			// Get the required resource manager instances
+			const IRendererRuntime& rendererRuntime = programCacheManager.getPipelineStateCacheManager().getMaterialBlueprintResource().getMaterialBlueprintResourceManager().getRendererRuntime();
+			const ShaderPieceResourceManager& shaderPieceResourceManager = rendererRuntime.getShaderPieceResourceManager();
+			const ShaderBlueprintResources& shaderBlueprintResources = rendererRuntime.getShaderBlueprintResourceManager().getShaderBlueprintResources();
+
 			// Create the vertex shader
 			Renderer::IVertexShader* vertexShader = nullptr;
 			{
-				ShaderBuilder shaderBuilder;
-				vertexShader = shaderLanguage->createVertexShaderFromSourceCode(shaderBuilder.createSourceCode(*materialBlueprintResource.mVertexShaderBlueprint, shaderProperties).c_str());
+				const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.mVertexShaderBlueprintId);
+				if (nullptr != shaderBlueprintResource)
+				{
+					ShaderBuilder shaderBuilder;
+					vertexShader = shaderLanguage->createVertexShaderFromSourceCode(shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, shaderProperties).c_str());
+				}
+				else
+				{
+					// TODO(co) Error handling
+					assert(false);
+				}
 			}
 
 			// Create the fragment shader
 			Renderer::IFragmentShader* fragmentShader = nullptr;
 			{
-				ShaderBuilder shaderBuilder;
-				fragmentShader = shaderLanguage->createFragmentShaderFromSourceCode(shaderBuilder.createSourceCode(*materialBlueprintResource.mFragmentShaderBlueprint, shaderProperties).c_str());
+				const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.mFragmentShaderBlueprintId);
+				if (nullptr != shaderBlueprintResource)
+				{
+					ShaderBuilder shaderBuilder;
+					fragmentShader = shaderLanguage->createFragmentShaderFromSourceCode(shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, shaderProperties).c_str());
+				}
+				else
+				{
+					// TODO(co) Error handling
+					assert(false);
+				}
 			}
 
 			// Create the program

@@ -28,6 +28,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline IRendererRuntime& MaterialBlueprintResourceManager::getRendererRuntime() const
+	{
+		return mRendererRuntime;
+	}
+
+	inline const MaterialBlueprintResources& MaterialBlueprintResourceManager::getMaterialBlueprintResources() const
+	{
+		return mMaterialBlueprintResources;
+	}
+
 	inline IMaterialBlueprintResourceListener& MaterialBlueprintResourceManager::getMaterialBlueprintResourceListener() const
 	{
 		// We know this pointer must always be valid

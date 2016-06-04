@@ -40,6 +40,7 @@
 namespace RendererRuntime
 {
 	class ShaderBlueprintResource;
+	class ShaderPieceResourceManager;
 }
 
 
@@ -84,6 +85,8 @@ namespace RendererRuntime
 		*  @brief
 		*    Create shader source code by using the given shader blueprint and shader properties
 		*
+		*  @param[in] shaderPieceResourceManager
+		*    Shader piece resource manager to use
 		*  @param[in] shaderBlueprintResource
 		*    Shader blueprint resource to use
 		*  @param[in] shaderProperties
@@ -92,7 +95,7 @@ namespace RendererRuntime
 		*  @return
 		*    The created shader source code
 		*/
-		std::string createSourceCode(const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties);
+		std::string createSourceCode(const ShaderPieceResourceManager& shaderPieceResourceManager, const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties);
 
 
 	//[-------------------------------------------------------]

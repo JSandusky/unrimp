@@ -37,7 +37,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class ShaderPieceResource;
+	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
 }
 
 
@@ -46,6 +46,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t ShaderPieceResourceId;	///< POD shader piece resource identifier
 
 
 	//[-------------------------------------------------------]
@@ -64,27 +70,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 		friend class ShaderPieceResourceLoader;
 		friend class ShaderPieceResourceManager;
+		friend class PackedElementManager<ShaderPieceResource, ShaderPieceResourceId>;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] resourceId
-		*    Resource ID
-		*/
-		explicit ShaderPieceResource(ResourceId resourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~ShaderPieceResource();
-
 		/**
 		*  @brief
 		*    Return the shader source code
@@ -99,6 +91,27 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		/**
+		*  @brief
+		*    Default constructor
+		*/
+		inline ShaderPieceResource();
+
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] shaderPieceResourceId
+		*    Shader piece resource ID
+		*/
+		inline explicit ShaderPieceResource(ShaderPieceResourceId shaderPieceResourceId);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~ShaderPieceResource();
+
 		ShaderPieceResource(const ShaderPieceResource&) = delete;
 		ShaderPieceResource& operator=(const ShaderPieceResource&) = delete;
 

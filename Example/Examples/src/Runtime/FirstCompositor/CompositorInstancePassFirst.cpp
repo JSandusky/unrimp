@@ -49,9 +49,11 @@
 void CompositorInstancePassFirst::execute(RendererRuntime::CameraSceneItem*)
 {
 	// Draw text
-	if (nullptr != mFontResource)
+	// TODO(co) Get rid of the evil const-cast
+	RendererRuntime::FontResource* fontResource = const_cast<RendererRuntime::FontResource*>(getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getFontResourceManager().getFontResources().tryGetElementById(mFontResourceId));
+	if (nullptr != fontResource)
 	{
-		mFontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
+		fontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
 	}
 }
 
@@ -61,10 +63,9 @@ void CompositorInstancePassFirst::execute(RendererRuntime::CameraSceneItem*)
 //[-------------------------------------------------------]
 CompositorInstancePassFirst::CompositorInstancePassFirst(const CompositorResourcePassFirst& compositorResourcePassFirst, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode) :
 	ICompositorInstancePass(compositorResourcePassFirst, compositorInstanceNode),
-	mFontResource(nullptr)
+	mFontResourceId(getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R"))
 {
-	// Create the font resource
-	mFontResource = getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
+	// Nothing here
 }
 
 CompositorInstancePassFirst::~CompositorInstancePassFirst()

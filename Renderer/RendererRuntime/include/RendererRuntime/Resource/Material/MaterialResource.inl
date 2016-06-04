@@ -49,7 +49,7 @@ namespace RendererRuntime
 	}
 
 	inline MaterialResource::MaterialResource(MaterialResourceId materialResourceId) :
-		IResource(materialResourceId, ~0u)	// TODO(co) Set asset ID to "uninitialized"
+		IResource(materialResourceId, ~0u)	// TODO(co) Set material resource ID to "uninitialized"
 	{
 		// Nothing here
 	}

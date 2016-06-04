@@ -93,12 +93,13 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline IResource(ResourceId resourceId, AssetId assetId, IResourceListener* resourceListener = nullptr);
+		inline IResource(ResourceId resourceId, AssetId assetId);
 		inline virtual ~IResource();
 		IResource(const IResource&) = delete;
 		IResource& operator=(const IResource&) = delete;
 		inline void setAssetId(AssetId assetId);
 		void setLoadingState(LoadingState loadingState);
+		inline void setResourceListener(IResourceListener* resourceListener);
 
 
 	//[-------------------------------------------------------]

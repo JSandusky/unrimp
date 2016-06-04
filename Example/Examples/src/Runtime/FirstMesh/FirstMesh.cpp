@@ -40,12 +40,12 @@
 //[-------------------------------------------------------]
 FirstMesh::FirstMesh(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mFontResource(nullptr),
-	mMeshResourceId(~0u),	// TODO(co) Set mesh resource ID to "uninitialized"
-	mDiffuseTextureResource(nullptr),
-	mNormalTextureResource(nullptr),
-	mSpecularTextureResource(nullptr),
-	mEmissiveTextureResource(nullptr),
+	mFontResourceId(~0u),				// TODO(co) Set font resource ID to "uninitialized"
+	mMeshResourceId(~0u),				// TODO(co) Set mesh resource ID to "uninitialized"
+	mDiffuseTextureResourceId(~0u),		// TODO(co) Set texture resource ID to "uninitialized"
+	mNormalTextureResourceId(~0u),		// TODO(co) Set texture resource ID to "uninitialized"
+	mSpecularTextureResourceId(~0u),	// TODO(co) Set texture resource ID to "uninitialized"
+	mEmissiveTextureResourceId(~0u),	// TODO(co) Set texture resource ID to "uninitialized"
 	mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
 	mObjectSpaceToViewSpaceMatrixUniformHandle(NULL_HANDLE),
 	mGlobalTimer(0.0f)
@@ -78,7 +78,7 @@ void FirstMesh::onInitialization()
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
 		// Create the font resource
-		mFontResource = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
+		mFontResourceId = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
@@ -205,10 +205,10 @@ void FirstMesh::onInitialization()
 			  // -> The tangent space normal map is stored with three components, two would be enough to recalculate the third component within the fragment shader
 			  // -> The specular map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
 				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
-				mDiffuseTextureResource  = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_Diffuse");
-				mNormalTextureResource   = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_Illumination");
-				mSpecularTextureResource = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_norm");
-				mEmissiveTextureResource = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_spec");
+				mDiffuseTextureResourceId  = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_Diffuse");
+				mNormalTextureResourceId   = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_Illumination");
+				mSpecularTextureResourceId = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_norm");
+				mEmissiveTextureResourceId = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_spec");
 			}
 
 			{ // Create sampler state
@@ -230,21 +230,17 @@ void FirstMesh::onDeinitialization()
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(getRenderer())
 
 	// Release the used renderer resources
-	mSamplerState = nullptr;
-
-	// TODO(co) Implement decent resource handling
-	mFontResource = nullptr;
-	mDiffuseTextureResource = nullptr;
-	mNormalTextureResource = nullptr;
-	mSpecularTextureResource = nullptr;
-	mEmissiveTextureResource = nullptr;
-	mMeshResourceId = ~0u;	// TODO(co) Set mesh resource ID to "uninitialized"
-
-	// Release the used resources
-	mPipelineState = nullptr;
-	mProgram = nullptr;
-	mRootSignature = nullptr;
-	mUniformBuffer = nullptr;
+	mSamplerState			   = nullptr;
+	mFontResourceId			   = ~0u;	// TODO(co) Set font resource ID to "uninitialized"
+	mDiffuseTextureResourceId  = ~0u;	// TODO(co) Set texture resource ID to "uninitialized"
+	mNormalTextureResourceId   = ~0u;	// TODO(co) Set texture resource ID to "uninitialized"
+	mSpecularTextureResourceId = ~0u;	// TODO(co) Set texture resource ID to "uninitialized"
+	mEmissiveTextureResourceId = ~0u;	// TODO(co) Set texture resource ID to "uninitialized"
+	mMeshResourceId			   = ~0u;	// TODO(co) Set mesh resource ID to "uninitialized"
+	mPipelineState			   = nullptr;
+	mProgram				   = nullptr;
+	mRootSignature			   = nullptr;
+	mUniformBuffer			   = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -270,10 +266,23 @@ void FirstMesh::onUpdate()
 
 void FirstMesh::onDraw()
 {
+	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+	if (nullptr == rendererRuntime)
+	{
+		return;
+	}
+
 	// Due to background texture loading, some textures might not be ready, yet
 	// TODO(co) Add dummy textures so rendering also works when textures are not ready, yet
-	if (nullptr == mDiffuseTextureResource->getTexture() || nullptr == mNormalTextureResource->getTexture() ||
-		nullptr == mSpecularTextureResource->getTexture() || nullptr == mEmissiveTextureResource->getTexture())
+	const RendererRuntime::TextureResources& textureResources = rendererRuntime->getTextureResourceManager().getTextureResources();
+	const RendererRuntime::TextureResource* diffuseTextureResource  = textureResources.tryGetElementById(mDiffuseTextureResourceId);
+	const RendererRuntime::TextureResource* normalTextureResource   = textureResources.tryGetElementById(mNormalTextureResourceId);
+	const RendererRuntime::TextureResource* specularTextureResource = textureResources.tryGetElementById(mSpecularTextureResourceId);
+	const RendererRuntime::TextureResource* emissiveTextureResource = textureResources.tryGetElementById(mEmissiveTextureResourceId);
+	if (nullptr == diffuseTextureResource || nullptr == diffuseTextureResource->getTexture() ||
+		nullptr == normalTextureResource || nullptr == normalTextureResource->getTexture() ||
+		nullptr == specularTextureResource || nullptr == specularTextureResource->getTexture() ||
+		nullptr == emissiveTextureResource || nullptr == emissiveTextureResource->getTexture())
 	{
 		return;
 	}
@@ -310,10 +319,10 @@ void FirstMesh::onDraw()
 		// Set sampler and textures
 		renderer->setGraphicsRootDescriptorTable(0, mUniformBuffer);
 		renderer->setGraphicsRootDescriptorTable(1, mSamplerState);
-		renderer->setGraphicsRootDescriptorTable(2, mDiffuseTextureResource->getTexture());
-		renderer->setGraphicsRootDescriptorTable(3, mNormalTextureResource->getTexture());
-		renderer->setGraphicsRootDescriptorTable(4, mSpecularTextureResource->getTexture());
-		renderer->setGraphicsRootDescriptorTable(5, mEmissiveTextureResource->getTexture());
+		renderer->setGraphicsRootDescriptorTable(2, diffuseTextureResource->getTexture());
+		renderer->setGraphicsRootDescriptorTable(3, normalTextureResource->getTexture());
+		renderer->setGraphicsRootDescriptorTable(4, specularTextureResource->getTexture());
+		renderer->setGraphicsRootDescriptorTable(5, emissiveTextureResource->getTexture());
 
 		// Set the used pipeline state object (PSO)
 		renderer->setPipelineState(mPipelineState);
@@ -356,19 +365,21 @@ void FirstMesh::onDraw()
 		}
 
 		{ // Draw mesh instance
-			RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
-			if (nullptr != rendererRuntime)
+			const RendererRuntime::MeshResource* meshResource = rendererRuntime->getMeshResourceManager().getMeshResources().tryGetElementById(mMeshResourceId);
+			if (nullptr != meshResource)
 			{
-				const RendererRuntime::MeshResource* meshResource = rendererRuntime->getMeshResourceManager().getMeshResources().tryGetElementById(mMeshResourceId);
-				if (nullptr != meshResource)
-				{
-					meshResource->draw();
-				}
+				meshResource->draw();
 			}
 		}
 
-		// Draw text
-		mFontResource->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
+		{ // Draw text
+			// TODO(co) Get rid of the evil const-cast
+			RendererRuntime::FontResource* fontResource = const_cast<RendererRuntime::FontResource*>(rendererRuntime->getFontResourceManager().getFontResources().tryGetElementById(mFontResourceId));
+			if (nullptr != fontResource)
+			{
+				fontResource->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
+			}
+		}
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(renderer)

@@ -31,7 +31,7 @@ namespace RendererRuntime
 	inline MaterialTechnique::MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource) :
 		mMaterialTechniqueId(materialTechniqueId),
 		mMaterialResource(&materialResource),
-		mMaterialBlueprintResource(nullptr),
+		mMaterialBlueprintResourceId(~0u),	// TODO(co) Set material blueprint resource ID to "uninitialized"
 		mMaterialUniformBufferIndex(0)
 	{
 		// Nothing here
@@ -52,9 +52,9 @@ namespace RendererRuntime
 		return *mMaterialResource;
 	}
 
-	inline MaterialBlueprintResource* MaterialTechnique::getMaterialBlueprintResource() const
+	inline MaterialBlueprintResourceId MaterialTechnique::getMaterialBlueprintResourceId() const
 	{
-		return mMaterialBlueprintResource;
+		return mMaterialBlueprintResourceId;
 	}
 
 	inline uint32_t MaterialTechnique::getMaterialUniformBufferIndex() const

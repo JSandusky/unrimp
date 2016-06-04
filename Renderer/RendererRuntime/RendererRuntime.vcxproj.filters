@@ -315,6 +315,15 @@
     <None Include="include\RendererRuntime\Resource\Mesh\MeshResourceManager.inl">
       <Filter>Source Files\Resource\Mesh</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.inl">
+      <Filter>Source Files\Resource\Texture</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.inl">
+      <Filter>Source Files\Resource\ShaderPiece</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Font\FontResourceManager.inl">
+      <Filter>Source Files\Resource\Font</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">

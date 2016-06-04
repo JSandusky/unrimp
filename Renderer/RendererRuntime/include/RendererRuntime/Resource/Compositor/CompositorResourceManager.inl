@@ -28,10 +28,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline const CompositorResources& CompositorResourceManager::getCompositorResources() const
+	{
+		return mCompositorResources;
+	}
+
 	inline const ICompositorPassFactory& CompositorResourceManager::getCompositorPassFactory() const
 	{
 		// We know that this pointer is always valid
 		return *mCompositorPassFactory;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline CompositorResourceManager::~CompositorResourceManager()
+	{
+		// Nothing in here
 	}
 
 
