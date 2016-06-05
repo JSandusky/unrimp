@@ -86,7 +86,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline MeshSceneItem(ISceneResource& sceneResource);
+		inline explicit MeshSceneItem(ISceneResource& sceneResource);
 		inline virtual ~MeshSceneItem();
 		MeshSceneItem(const MeshSceneItem&) = delete;
 		MeshSceneItem& operator=(const MeshSceneItem&) = delete;

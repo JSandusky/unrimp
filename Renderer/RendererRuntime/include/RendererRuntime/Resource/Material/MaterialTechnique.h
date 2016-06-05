@@ -106,7 +106,7 @@ namespace RendererRuntime
 		*  @param[in] materialResource
 		*    Owner material resource
 		*/
-		inline explicit MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource);
+		inline MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource);
 
 		/**
 		*  @brief
