@@ -111,7 +111,7 @@
 #ifdef WIN32
 	#ifndef RENDERERRUNTIME_OUTPUT_ERROR
 		#define RENDERERRUNTIME_OUTPUT_ERROR
-		#include "RendererRuntime/WindowsHeader.h"
+		#include "RendererRuntime/Core/Platform/WindowsHeader.h"
 		#include <strsafe.h>	// For "StringCbVPrintf()"
 		#define RENDERERRUNTIME_OUTPUT_ERROR_STRING(outputString) OutputDebugString(TEXT(outputString));
 		inline void rendererRuntimeOutputErrorPrintf(LPCTSTR outputString, ...)

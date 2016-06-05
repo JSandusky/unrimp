@@ -34,7 +34,7 @@
 #include "RendererToolkit/AssetCompiler/ShaderBlueprintAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
 
-#include <RendererRuntime/Core/PlatformManager.h>
+#include <RendererRuntime/Core/Platform/PlatformManager.h>
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)

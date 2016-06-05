@@ -131,6 +131,9 @@
     <Filter Include="Source Files\Core\Math">
       <UniqueIdentifier>{b28b82a1-f350-4059-9aed-68e47b9544eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Platform">
+      <UniqueIdentifier>{dfbf6130-7afd-4fde-a417-e692b00ac5dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -337,12 +340,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h">
       <Filter>Source Files\Public</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\PlatformTypes.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\WindowsHeader.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
     <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h">
@@ -681,8 +678,14 @@
     <ClInclude Include="include\RendererRuntime\Core\Math\Quaternion.h">
       <Filter>Source Files\Core\Math</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Core\PlatformManager.h">
-      <Filter>Source Files\Core</Filter>
+    <ClInclude Include="include\RendererRuntime\Core\Platform\PlatformManager.h">
+      <Filter>Source Files\Core\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Platform\PlatformTypes.h">
+      <Filter>Source Files\Core\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Platform\WindowsHeader.h">
+      <Filter>Source Files\Core\Platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -938,8 +941,8 @@
     <ClCompile Include="src\Core\Math\Vector3.cpp">
       <Filter>Source Files\Core\Math</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\PlatformManager.cpp">
-      <Filter>Source Files\Core</Filter>
+    <ClCompile Include="src\Core\Platform\PlatformManager.cpp">
+      <Filter>Source Files\Core\Platform</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

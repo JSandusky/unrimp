@@ -32,7 +32,7 @@
 #ifdef SHARED_LIBRARIES
 	// Dynamically linked libraries
 	#ifdef WIN32
-		#include "RendererRuntime/WindowsHeader.h"
+		#include "RendererRuntime/Core/Platform/WindowsHeader.h"
 
 	#elif defined LINUX
 		#include <dlfcn.h>

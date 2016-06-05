@@ -21,9 +21,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/PlatformManager.h"
+#include "RendererRuntime/Core/Platform/PlatformManager.h"
 #ifdef WIN32
-	#include "RendererRuntime/WindowsHeader.h"
+	#include "RendererRuntime/Core/Platform/WindowsHeader.h"
 #elif LINUX
 	#include <sys/prctl.h>
 #endif

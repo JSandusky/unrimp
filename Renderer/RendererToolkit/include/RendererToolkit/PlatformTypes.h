@@ -30,7 +30,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <RendererRuntime/PlatformTypes.h>
+#include <RendererRuntime/Core/Platform/PlatformTypes.h>
 
 
 //[-------------------------------------------------------]

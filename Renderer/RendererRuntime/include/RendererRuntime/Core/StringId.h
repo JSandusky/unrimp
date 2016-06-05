@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/PlatformTypes.h"
+#include "RendererRuntime/Core/Platform/PlatformTypes.h"
 
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 

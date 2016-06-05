@@ -103,13 +103,14 @@
     <ClInclude Include="include\RendererRuntime\Core\Math\Vector3.h" />
     <ClInclude Include="include\RendererRuntime\Core\NonCopyable.h" />
     <ClInclude Include="include\RendererRuntime\Core\PackedElementManager.h" />
-    <ClInclude Include="include\RendererRuntime\Core\PlatformManager.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Platform\PlatformManager.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Platform\PlatformTypes.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Platform\WindowsHeader.h" />
     <ClInclude Include="include\RendererRuntime\Core\Serializer.h" />
     <ClInclude Include="include\RendererRuntime\Core\String.h" />
     <ClInclude Include="include\RendererRuntime\Core\StringId.h" />
     <ClInclude Include="include\RendererRuntime\Export.h" />
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
-    <ClInclude Include="include\RendererRuntime\PlatformTypes.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorInstance.h" />
@@ -199,7 +200,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\KtxTextureResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h" />
-    <ClInclude Include="include\RendererRuntime\WindowsHeader.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\Resource\Font\Shader\Font_GLSL_110.h" />
     <ClInclude Include="src\Resource\Font\Shader\Font_GLSL_ES2.h" />
@@ -217,7 +217,7 @@
     <ClCompile Include="src\Core\Math\Quaternion.cpp" />
     <ClCompile Include="src\Core\Math\Transform.cpp" />
     <ClCompile Include="src\Core\Math\Vector3.cpp" />
-    <ClCompile Include="src\Core\PlatformManager.cpp" />
+    <ClCompile Include="src\Core\Platform\PlatformManager.cpp" />
     <ClCompile Include="src\Core\String.cpp" />
     <ClCompile Include="src\Resource\Compositor\CompositorInstance.cpp" />
     <ClCompile Include="src\Resource\Compositor\CompositorInstanceChannel.cpp" />
