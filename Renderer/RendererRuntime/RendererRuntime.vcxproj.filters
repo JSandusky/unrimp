@@ -128,6 +128,9 @@
     <Filter Include="Source Files\Resource\Detail">
       <UniqueIdentifier>{9f063880-7d2d-4938-98c3-0d244734a54b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Math">
+      <UniqueIdentifier>{b28b82a1-f350-4059-9aed-68e47b9544eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -143,9 +146,6 @@
     </None>
     <None Include="include\RendererRuntime\Backend\RendererBackendManager.inl">
       <Filter>Source Files\Backend</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Core\Transform.inl">
-      <Filter>Source Files\Core</Filter>
     </None>
     <None Include="include\RendererRuntime\Asset\AssetManager.inl">
       <Filter>Source Files\Asset</Filter>
@@ -327,6 +327,12 @@
     <None Include="include\RendererRuntime\Resource\Detail\IResource.inl">
       <Filter>Source Files\Resource\Detail</Filter>
     </None>
+    <None Include="include\RendererRuntime\Core\PlatformManager.inl">
+      <Filter>Source Files\Core</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Core\Math\Transform.inl">
+      <Filter>Source Files\Core\Math</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -370,15 +376,6 @@
       <Filter>Source Files\Backend</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Core\String.h">
-      <Filter>Source Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Core\Vector3.h">
-      <Filter>Source Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Core\Quaternion.h">
-      <Filter>Source Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Core\Transform.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Core\Manager.h">
@@ -678,6 +675,18 @@
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceLoader.h">
       <Filter>Source Files\Resource\Detail</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\PlatformManager.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Math\Transform.h">
+      <Filter>Source Files\Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Math\Vector3.h">
+      <Filter>Source Files\Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Math\Quaternion.h">
+      <Filter>Source Files\Core\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -690,15 +699,6 @@
       <Filter>Source Files\Backend</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\String.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Vector3.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Quaternion.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Transform.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Asset\AssetManager.cpp">
@@ -931,6 +931,15 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp">
       <Filter>Source Files\Resource\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Math\Quaternion.cpp">
+      <Filter>Source Files\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Math\Transform.cpp">
+      <Filter>Source Files\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Math\Vector3.cpp">
+      <Filter>Source Files\Core\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

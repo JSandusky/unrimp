@@ -27,7 +27,13 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/Vector3.h"
+#include "RendererRuntime/Core/Math/Vector3.h"
+#include "RendererRuntime/Core/Math/Quaternion.h"
+
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4251)	// warning C4251: "needs to have dll-interface to be used by clients of class "
 
 
 //[-------------------------------------------------------]
@@ -38,16 +44,57 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Transform class containing position, rotation and scale
+	*/
+	class RENDERERRUNTIME_API_EXPORT Transform
+	{
+
+
+	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const glm::vec3 Vector3::ZERO(0.0f, 0.0f, 0.0f);
-	const glm::vec3 Vector3::UNIT_X(1.0f, 0.0f, 0.0f);
-	const glm::vec3 Vector3::UNIT_Y(0.0f, 1.0f, 0.0f);
-	const glm::vec3 Vector3::UNIT_Z(0.0f, 0.0f, 1.0f);
-	const glm::vec3 Vector3::UNIT_XYZ(1.0f, 1.0f, 1.0f);
+	public:
+		static const Transform IDENTITY;	///< Identity transform
+
+
+	//[-------------------------------------------------------]
+	//[ Public data                                           ]
+	//[-------------------------------------------------------]
+	public:
+		glm::vec3	position;
+		glm::quat	rotation;
+		glm::vec3	scale;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		inline Transform();
+		inline explicit Transform(const glm::vec3& position);
+		inline Transform(const glm::vec3& position, const glm::quat& rotation);
+		inline Transform(const glm::vec3& position, const glm::quat& rotation, const glm::vec3& scale);
+		void getAsMatrix(glm::mat4& objectSpaceToWorldSpace) const;
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/Math/Transform.inl"
+
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(pop)

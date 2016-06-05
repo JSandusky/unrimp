@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
-#include "RendererRuntime/Core/Transform.h"
+#include "RendererRuntime/Core/Math/Transform.h"
 
 #include <Renderer/Public/Renderer.h>
 

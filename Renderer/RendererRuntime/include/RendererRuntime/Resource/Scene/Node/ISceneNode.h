@@ -28,8 +28,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Core/Transform.h"
 #include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Core/Math/Transform.h"
 
 #include <vector>
 
