@@ -34,6 +34,8 @@
 #include "RendererToolkit/AssetCompiler/ShaderBlueprintAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
 
+#include <RendererRuntime/Core/PlatformManager.h>
+
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
 	#pragma warning(disable: 4127)	// warning C4127: conditional expression is constant
@@ -484,6 +486,8 @@ namespace RendererToolkit
 
 	void ProjectImpl::threadWorker()
 	{
+		RendererRuntime::PlatformManager::setCurrentThreadName("Renderer toolkit: Project worker");
+
 		while (!mShutdownThread)
 		{
 			// TODO(co) Implement me

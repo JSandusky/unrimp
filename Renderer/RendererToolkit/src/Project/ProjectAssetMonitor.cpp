@@ -25,6 +25,7 @@
 #include "RendererToolkit/Project/ProjectImpl.h"
 
 #include <RendererRuntime/Public/RendererRuntime.h>
+#include <RendererRuntime/Core/PlatformManager.h>
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -198,6 +199,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	void ProjectAssetMonitor::threadWorker()
 	{
+		RendererRuntime::PlatformManager::setCurrentThreadName("Renderer toolkit: Project asset monitor");
+
 		// Create the file watcher object
 		FW::FileWatcher fileWatcher;
 		detail::FileWatchListener fileWatchListener(*this);

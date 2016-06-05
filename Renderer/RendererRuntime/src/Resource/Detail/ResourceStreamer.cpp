@@ -25,6 +25,7 @@
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
 #include "RendererRuntime/Resource/Detail/IResource.h"
+#include "RendererRuntime/Core/PlatformManager.h"
 
 // TODO(co) Can we do something about the warning which does not involve using "std::thread"-pointers?
 #pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
@@ -110,6 +111,8 @@ namespace RendererRuntime
 
 	void ResourceStreamer::deserializationThreadWorker()
 	{
+		PlatformManager::setCurrentThreadName("Renderer runtime: Resource streamer stage: 1. Asynchronous deserialization");
+
 		// Resource streamer stage: 1. Asynchronous deserialization
 		while (!mShutdownDeserializationThread)
 		{
@@ -142,6 +145,8 @@ namespace RendererRuntime
 
 	void ResourceStreamer::processingThreadWorker()
 	{
+		PlatformManager::setCurrentThreadName("Renderer runtime: Resource streamer stage: 2. Asynchronous processing");
+
 		// Resource streamer stage: 2. Asynchronous processing
 		while (!mShutdownProcessingThread)
 		{
