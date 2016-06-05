@@ -43,6 +43,7 @@
 namespace RendererRuntime
 {
 	class AssetManager;
+	class ThreadManager;
 	class IRendererRuntime;
 	class ResourceStreamer;
 	class FontResourceManager;
@@ -82,6 +83,10 @@ namespace RendererRuntime
 		inline Renderer::IRenderer& getRenderer() const
 		{
 			return *mRenderer;
+		}
+		inline ThreadManager& getThreadManager() const
+		{
+			return *mThreadManager;
 		}
 		inline AssetManager& getAssetManager() const
 		{
@@ -140,6 +145,7 @@ namespace RendererRuntime
 		IRendererRuntime &operator =(const IRendererRuntime &source);
 	private:
 		Renderer::IRenderer*				mRenderer;
+		ThreadManager*						mThreadManager;
 		AssetManager*						mAssetManager;
 		ResourceStreamer*					mResourceStreamer;
 		TextureResourceManager*				mTextureResourceManager;

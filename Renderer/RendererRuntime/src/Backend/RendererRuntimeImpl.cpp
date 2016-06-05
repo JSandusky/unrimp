@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Backend/RendererRuntimeImpl.h"
 #include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/Core/Thread/ThreadManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Resource/Font/FontResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
@@ -111,6 +112,7 @@ namespace RendererRuntime
 		mRenderer->addReference();
 
 		// Create the manager instances
+		mThreadManager = new ThreadManager();
 		mAssetManager = new AssetManager(*this);
 
 		// Create the resource manager instances
@@ -179,6 +181,7 @@ namespace RendererRuntime
 
 		// Destroy the manager instances
 		delete mAssetManager;
+		delete mThreadManager;
 
 		{ // Destroy the resource manager instances in reverse order
 			const int numberOfResourceManagers = static_cast<int>(mResourceManagers.size());

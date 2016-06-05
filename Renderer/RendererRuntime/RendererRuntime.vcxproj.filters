@@ -339,6 +339,9 @@
     <None Include="include\RendererRuntime\Core\Thread\ThreadPool.inl">
       <Filter>Source Files\Core\Thread</Filter>
     </None>
+    <None Include="include\RendererRuntime\Core\Thread\ThreadManager.inl">
+      <Filter>Source Files\Core\Thread</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -696,6 +699,9 @@
     <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadPool.h">
       <Filter>Source Files\Core\Thread</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadManager.h">
+      <Filter>Source Files\Core\Thread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -952,6 +958,9 @@
     </ClCompile>
     <ClCompile Include="src\Core\Platform\PlatformManager.cpp">
       <Filter>Source Files\Core\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Thread\ThreadManager.cpp">
+      <Filter>Source Files\Core\Thread</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

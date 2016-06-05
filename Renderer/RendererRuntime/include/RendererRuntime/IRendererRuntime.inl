@@ -38,6 +38,11 @@ namespace RendererRuntime
 		return *mRenderer;
 	}
 
+	inline ThreadManager& IRendererRuntime::getThreadManager() const
+	{
+		return *mThreadManager;
+	}
+
 	inline AssetManager& IRendererRuntime::getAssetManager() const
 	{
 		return *mAssetManager;
@@ -108,8 +113,9 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline IRendererRuntime::IRendererRuntime() :
+		// Core
 		mRenderer(nullptr),
-		// Asset
+		mThreadManager(nullptr),
 		mAssetManager(nullptr),
 		// Resource
 		mResourceStreamer(nullptr),
@@ -128,8 +134,9 @@ namespace RendererRuntime
 	}
 
 	inline IRendererRuntime::IRendererRuntime(const IRendererRuntime &) :
+		// Core
 		mRenderer(nullptr),
-		// Asset
+		mThreadManager(nullptr),
 		mAssetManager(nullptr),
 		// Resource
 		mResourceStreamer(nullptr),

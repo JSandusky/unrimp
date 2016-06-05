@@ -28,6 +28,7 @@
     <None Include="include\RendererRuntime\Core\Math\Transform.inl" />
     <None Include="include\RendererRuntime\Core\PackedElementManager.inl" />
     <None Include="include\RendererRuntime\Core\StringId.inl" />
+    <None Include="include\RendererRuntime\Core\Thread\ThreadManager.inl" />
     <None Include="include\RendererRuntime\Core\Thread\ThreadPool.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
     <None Include="include\RendererRuntime\Resource\Compositor\CompositorResource.inl" />
@@ -110,6 +111,7 @@
     <ClInclude Include="include\RendererRuntime\Core\Serializer.h" />
     <ClInclude Include="include\RendererRuntime\Core\String.h" />
     <ClInclude Include="include\RendererRuntime\Core\StringId.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadPool.h" />
     <ClInclude Include="include\RendererRuntime\Export.h" />
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
@@ -221,6 +223,7 @@
     <ClCompile Include="src\Core\Math\Vector3.cpp" />
     <ClCompile Include="src\Core\Platform\PlatformManager.cpp" />
     <ClCompile Include="src\Core\String.cpp" />
+    <ClCompile Include="src\Core\Thread\ThreadManager.cpp" />
     <ClCompile Include="src\Resource\Compositor\CompositorInstance.cpp" />
     <ClCompile Include="src\Resource\Compositor\CompositorInstanceChannel.cpp" />
     <ClCompile Include="src\Resource\Compositor\CompositorInstanceNode.cpp" />

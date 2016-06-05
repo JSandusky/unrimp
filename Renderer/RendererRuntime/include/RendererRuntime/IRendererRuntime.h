@@ -44,6 +44,7 @@ namespace Renderer
 namespace RendererRuntime
 {
 	class AssetManager;
+	class ThreadManager;
 	class IRendererRuntime;
 	class ResourceStreamer;
 	class IResourceManager;
@@ -101,6 +102,9 @@ namespace RendererRuntime
 		*/
 		inline virtual ~IRendererRuntime();
 
+		//[-------------------------------------------------------]
+		//[ Core                                                  ]
+		//[-------------------------------------------------------]
 		/**
 		*  @brief
 		*    Return the used renderer instance
@@ -110,9 +114,15 @@ namespace RendererRuntime
 		*/
 		inline Renderer::IRenderer& getRenderer() const;
 
-		//[-------------------------------------------------------]
-		//[ Asset                                                 ]
-		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the thread manager instance
+		*
+		*  @return
+		*    The thread manager instance, do not release the returned instance
+		*/
+		inline ThreadManager& getThreadManager() const;
+
 		/**
 		*  @brief
 		*    Return the asset manager instance
@@ -296,9 +306,10 @@ namespace RendererRuntime
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
+		// Core
 		Renderer::IRenderer* mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
-		// Asset
-		AssetManager* mAssetManager;
+		ThreadManager*		 mThreadManager;
+		AssetManager*		 mAssetManager;
 		// Resource
 		ResourceStreamer*					mResourceStreamer;
 		TextureResourceManager*				mTextureResourceManager;
