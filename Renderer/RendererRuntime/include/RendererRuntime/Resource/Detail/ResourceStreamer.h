@@ -28,7 +28,17 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
-#include "RendererRuntime/Core/StringId.h"
+
+// Disable warnings in external headers, we can't fix them
+#include <queue>
+#include <atomic>
+#pragma warning(push)
+	#pragma warning(disable: 4265)	// warning C4265: '<x>': class has virtual functions, but destructor is not virtual
+
+	#include <mutex>
+	#include <thread>
+	#include <condition_variable>
+#pragma warning(pop)
 
 
 //[-------------------------------------------------------]
@@ -36,7 +46,9 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class IResourceListener;
+	class IResource;
+	class IResourceLoader;
+	class IRendererRuntime;
 }
 
 
@@ -48,35 +60,42 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef StringId AssetId;		///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>" (Example: "Example/Font/Default/LinBiolinum_R" will result in asset ID 64363173)
-	typedef uint32_t ResourceId;	///< POD resource identifier
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class IResource : protected NonCopyable
+	/**
+	*  @brief
+	*    Resource streamer responsible for getting the resource data into memory
+	*
+	*  @remarks
+	*    By default, asynchronous resource streaming is used. This is also known as
+	*    - Asynchronous content streaming
+	*    - Asynchronous asset loading
+	*    - Asynchronous data streaming
+	*    - Background resource loading
+	*
+	*    A resource must master the following stages in order to archive the inner wisdom:
+	*    1. Asynchronous deserialization
+	*    2. Asynchronous processing
+	*    3. Synchronous renderer backend dispatch TODO(co) Asynchronous renderer backend dispatch if supported by the renderer API
+	*/
+	class ResourceStreamer : private NonCopyable
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class ResourceStreamer;	// Is changing the resource loading state
+		friend class RendererRuntimeImpl;
 
 
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		enum class LoadingState
+		struct LoadRequest
 		{
-			UNLOADED,	///< Not loaded
-			LOADING,	///< Loading is in progress
-			LOADED,		///< Fully loaded
-			UNLOADING	///< Currently unloading	// TODO(co) Currently unused
+			IResource*		 resource;			///< Must be valid, do not destroy the instance
+			IResourceLoader* resourceLoader;	///< Must be valid, do not destroy the instance
 		};
 
 
@@ -84,32 +103,50 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline ResourceId getId() const;
-		inline AssetId getAssetId() const;
-		inline LoadingState getLoadingState() const;
+		void commitLoadRequest(const LoadRequest& loadRequest);
+
+		/**
+		*  @brief
+		*    Resource streamer update performing renderer backend dispatch
+		*
+		*  @note
+		*    - Call this once per frame
+		*/
+		void rendererBackendDispatch();
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	protected:
-		inline explicit IResource(ResourceId resourceId);
-		inline virtual ~IResource();
-		IResource(const IResource&) = delete;
-		IResource& operator=(const IResource&) = delete;
-		inline void setAssetId(AssetId assetId);
-		void setLoadingState(LoadingState loadingState);
-		inline void setResourceListener(IResourceListener* resourceListener);
+	private:
+		explicit ResourceStreamer(IRendererRuntime& rendererRuntime);
+		~ResourceStreamer();
+		ResourceStreamer(const ResourceStreamer&) = delete;
+		ResourceStreamer& operator=(const ResourceStreamer&) = delete;
+		void deserializationThreadWorker();
+		void processingThreadWorker();
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ResourceId		   mResourceId;			///< Unique resource ID inside the resource manager
-		AssetId			   mAssetId;			///< In case the resource is an instance of an asset, this is the ID of this asset
-		LoadingState	   mLoadingState;
-		IResourceListener* mResourceListener;
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		// Resource streamer stage: 1. Asynchronous deserialization
+		std::atomic<bool>		  mShutdownDeserializationThread;
+		std::mutex				  mDeserializationMutex;
+		std::condition_variable	  mDeserializationConditionVariable;
+		std::queue<LoadRequest>	  mDeserializationQueue;
+		std::thread				  mDeserializationThread;
+		// Resource streamer stage: 2. Asynchronous processing
+		std::atomic<bool>		  mShutdownProcessingThread;
+		std::mutex				  mProcessingMutex;
+		std::condition_variable	  mProcessingConditionVariable;
+		std::queue<LoadRequest>	  mProcessingQueue;
+		std::thread				  mProcessingThread;
+		// Resource streamer stage: 3. Synchronous renderer backend dispatch
+		std::mutex				  mRendererBackendDispatchMutex;
+		std::queue<LoadRequest>	  mRendererBackendDispatchQueue;
 
 
 	};
@@ -124,4 +161,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/IResource.inl"
+#include "RendererRuntime/Resource/Detail/ResourceStreamer.inl"

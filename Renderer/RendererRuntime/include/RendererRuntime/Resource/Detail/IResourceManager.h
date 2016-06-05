@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
-#include "RendererRuntime/Resource/IResourceLoader.h"
+#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
 
 #include <vector>
 
@@ -113,4 +113,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/IResourceManager.inl"
+#include "RendererRuntime/Resource/Detail/IResourceManager.inl"

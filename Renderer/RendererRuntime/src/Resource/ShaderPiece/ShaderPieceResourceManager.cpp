@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/Loader/ShaderPieceResourceLoader.h"
-#include "RendererRuntime/Resource/ResourceStreamer.h"
+#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 

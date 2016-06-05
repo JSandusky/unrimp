@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
-#include "RendererRuntime/Resource/IResourceManager.h"
+#include "RendererRuntime/Resource/Detail/IResourceManager.h"
 
 
 //[-------------------------------------------------------]

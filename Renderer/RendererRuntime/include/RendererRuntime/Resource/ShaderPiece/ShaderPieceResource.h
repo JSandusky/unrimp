@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/IResource.h"
+#include "RendererRuntime/Resource/Detail/IResource.h"
 
 #include <string>
 

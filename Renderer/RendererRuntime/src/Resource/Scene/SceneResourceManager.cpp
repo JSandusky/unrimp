@@ -25,7 +25,7 @@
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneResourceLoader.h"
-#include "RendererRuntime/Resource/ResourceStreamer.h"
+#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 

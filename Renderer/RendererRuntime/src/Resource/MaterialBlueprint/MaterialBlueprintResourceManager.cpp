@@ -25,7 +25,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
-#include "RendererRuntime/Resource/ResourceStreamer.h"
+#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 

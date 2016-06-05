@@ -29,8 +29,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/PackedElementManager.h"
-#include "RendererRuntime/Resource/IResourceManager.h"
 #include "RendererRuntime/Resource/Font/FontResource.h"
+#include "RendererRuntime/Resource/Detail/IResourceManager.h"
 
 
 //[-------------------------------------------------------]

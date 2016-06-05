@@ -28,17 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
-
-// Disable warnings in external headers, we can't fix them
-#include <queue>
-#include <atomic>
-#pragma warning(push)
-	#pragma warning(disable: 4265)	// warning C4265: '<x>': class has virtual functions, but destructor is not virtual
-
-	#include <mutex>
-	#include <thread>
-	#include <condition_variable>
-#pragma warning(pop)
+#include "RendererRuntime/Core/StringId.h"
 
 
 //[-------------------------------------------------------]
@@ -46,9 +36,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class IResource;
-	class IResourceLoader;
-	class IRendererRuntime;
+	class IResourceManager;
 }
 
 
@@ -60,93 +48,82 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId ResourceLoaderTypeId;	///< Resource loader type identifier, internally just a POD "uint32_t", usually created by hashing the file format extension (if the resource loader is processing file data in the first place)
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Resource streamer responsible for getting the resource data into memory
-	*
-	*  @remarks
-	*    By default, asynchronous resource streaming is used. This is also known as
-	*    - Asynchronous content streaming
-	*    - Asynchronous asset loading
-	*    - Asynchronous data streaming
-	*    - Background resource loading
-	*
-	*    A resource must master the following stages in order to archive the inner wisdom:
-	*    1. Asynchronous deserialization
-	*    2. Asynchronous processing
-	*    3. Synchronous renderer backend dispatch TODO(co) Asynchronous renderer backend dispatch if supported by the renderer API
-	*/
-	class ResourceStreamer : private NonCopyable
+	class IResourceLoader : protected NonCopyable
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class RendererRuntimeImpl;
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		struct LoadRequest
-		{
-			IResource*		 resource;			///< Must be valid, do not destroy the instance
-			IResourceLoader* resourceLoader;	///< Must be valid, do not destroy the instance
-		};
+		friend class IResourceManager;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		void commitLoadRequest(const LoadRequest& loadRequest);
+		/**
+		*  @brief
+		*    Return the owner resource manager
+		*
+		*  @return
+		*    The owner resource manager
+		*/
+		inline IResourceManager& getResourceManager() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return the resource loader type ID
+		*/
+		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const = 0;
 
 		/**
 		*  @brief
-		*    Resource streamer update performing renderer backend dispatch
-		*
-		*  @note
-		*    - Call this once per frame
+		*    Called when the resource loader has to deserialize (usually from file) the internal data into memory
 		*/
-		void rendererBackendDispatch();
+		virtual void onDeserialization() = 0;
+
+		/**
+		*  @brief
+		*    Called when the resource loader has to perform internal in-memory data processing
+		*/
+		virtual void onProcessing() = 0;
+
+		/**
+		*  @brief
+		*    Called when the resource loader has to dispatch the data to the renderer backend
+		*/
+		virtual void onRendererBackendDispatch() = 0;
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	private:
-		explicit ResourceStreamer(IRendererRuntime& rendererRuntime);
-		~ResourceStreamer();
-		ResourceStreamer(const ResourceStreamer&) = delete;
-		ResourceStreamer& operator=(const ResourceStreamer&) = delete;
-		void deserializationThreadWorker();
-		void processingThreadWorker();
+	protected:
+		inline IResourceLoader(IResourceManager& resourceManager);
+		inline virtual ~IResourceLoader();
+		IResourceLoader(const IResourceLoader&) = delete;
+		IResourceLoader& operator=(const IResourceLoader&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		// Resource streamer stage: 1. Asynchronous deserialization
-		std::atomic<bool>		  mShutdownDeserializationThread;
-		std::mutex				  mDeserializationMutex;
-		std::condition_variable	  mDeserializationConditionVariable;
-		std::queue<LoadRequest>	  mDeserializationQueue;
-		std::thread				  mDeserializationThread;
-		// Resource streamer stage: 2. Asynchronous processing
-		std::atomic<bool>		  mShutdownProcessingThread;
-		std::mutex				  mProcessingMutex;
-		std::condition_variable	  mProcessingConditionVariable;
-		std::queue<LoadRequest>	  mProcessingQueue;
-		std::thread				  mProcessingThread;
-		// Resource streamer stage: 3. Synchronous renderer backend dispatch
-		std::mutex				  mRendererBackendDispatchMutex;
-		std::queue<LoadRequest>	  mRendererBackendDispatchQueue;
+		IResourceManager& mResourceManager;	///< Owner resource manager
 
 
 	};
@@ -161,4 +138,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ResourceStreamer.inl"
+#include "RendererRuntime/Resource/Detail/IResourceLoader.inl"

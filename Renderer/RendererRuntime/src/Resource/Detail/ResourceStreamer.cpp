@@ -21,10 +21,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ResourceStreamer.h"
-#include "RendererRuntime/Resource/IResourceLoader.h"
-#include "RendererRuntime/Resource/IResourceManager.h"
-#include "RendererRuntime/Resource/IResource.h"
+#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
+#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
+#include "RendererRuntime/Resource/Detail/IResourceManager.h"
+#include "RendererRuntime/Resource/Detail/IResource.h"
 
 // TODO(co) Can we do something about the warning which does not involve using "std::thread"-pointers?
 #pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list

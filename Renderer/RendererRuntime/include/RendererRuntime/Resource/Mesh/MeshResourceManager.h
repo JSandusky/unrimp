@@ -28,8 +28,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/PackedElementManager.h"
-#include "RendererRuntime/Resource/IResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
+#include "RendererRuntime/Resource/Detail/IResourceManager.h"
 
 
 //[-------------------------------------------------------]

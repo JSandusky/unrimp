@@ -28,7 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/PackedElementManager.h"
-#include "RendererRuntime/Resource/IResourceManager.h"
+#include "RendererRuntime/Resource/Detail/IResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 
 

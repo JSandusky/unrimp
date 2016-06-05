@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/IResourceLoader.h"
+#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
 #include "RendererRuntime/Asset/Asset.h"
 
 #include <Renderer/Public/Renderer.h>

@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Backend/RendererRuntimeImpl.h"
 #include "RendererRuntime/Asset/AssetManager.h"
-#include "RendererRuntime/Resource/ResourceStreamer.h"
+#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Resource/Font/FontResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Scene/SceneResourceManager.h"

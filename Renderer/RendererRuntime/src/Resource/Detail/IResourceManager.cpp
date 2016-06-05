@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/IResourceManager.h"
-#include "RendererRuntime/Resource/IResourceLoader.h"
+#include "RendererRuntime/Resource/Detail/IResourceManager.h"
+#include "RendererRuntime/Resource/Detail/IResourceLoader.h"
 
 #include <assert.h>
 

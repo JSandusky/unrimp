@@ -125,6 +125,9 @@
     <Filter Include="Source Files\Resource\Mesh\Detail">
       <UniqueIdentifier>{db192051-4582-451e-b568-28c994acb6a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Detail">
+      <UniqueIdentifier>{9f063880-7d2d-4938-98c3-0d244734a54b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -176,18 +179,6 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.inl">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\IResourceLoader.inl">
-      <Filter>Source Files\Resource</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\IResourceManager.inl">
-      <Filter>Source Files\Resource</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\ResourceStreamer.inl">
-      <Filter>Source Files\Resource</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\IResource.inl">
-      <Filter>Source Files\Resource</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.inl">
       <Filter>Source Files\Resource\Compositor\Loader</Filter>
@@ -323,6 +314,18 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Font\FontResourceManager.inl">
       <Filter>Source Files\Resource\Font</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Detail\IResourceLoader.inl">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Detail\IResourceManager.inl">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Detail\IResource.inl">
+      <Filter>Source Files\Resource\Detail</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -461,18 +464,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.h">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\IResourceLoader.h">
-      <Filter>Source Files\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\IResourceManager.h">
-      <Filter>Source Files\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\ResourceStreamer.h">
-      <Filter>Source Files\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\IResource.h">
-      <Filter>Source Files\Resource</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceManager.h">
       <Filter>Source Files\Resource\Compositor</Filter>
@@ -675,6 +666,18 @@
     <ClInclude Include="include\RendererRuntime\Core\GetUninitialized.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceManager.h">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.h">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Detail\IResource.h">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceLoader.h">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -755,9 +758,6 @@
     <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\ResourceStreamer.cpp">
-      <Filter>Source Files\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Compositor\CompositorResource.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
     </ClCompile>
@@ -778,9 +778,6 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Compositor\CompositorInstance.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\IResource.cpp">
-      <Filter>Source Files\Resource</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Compositor\CompositorResourceNode.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
@@ -926,8 +923,14 @@
     <ClCompile Include="src\Resource\Mesh\Detail\SubMesh.cpp">
       <Filter>Source Files\Resource\Mesh\Detail</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\IResourceManager.cpp">
-      <Filter>Source Files\Resource</Filter>
+    <ClCompile Include="src\Resource\Detail\IResource.cpp">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Detail\IResourceManager.cpp">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp">
+      <Filter>Source Files\Resource\Detail</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

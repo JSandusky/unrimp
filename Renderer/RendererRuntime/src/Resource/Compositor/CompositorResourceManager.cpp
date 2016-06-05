@@ -25,7 +25,7 @@
 #include "RendererRuntime/Resource/Compositor/CompositorResource.h"
 #include "RendererRuntime/Resource/Compositor/Pass/CompositorPassFactory.h"
 #include "RendererRuntime/Resource/Compositor/Loader/CompositorResourceLoader.h"
-#include "RendererRuntime/Resource/ResourceStreamer.h"
+#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
