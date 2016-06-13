@@ -319,7 +319,7 @@
 				"0":
 				{
 					"Name": "PassUniformBuffer",
-					"RootParameterIndex": "0",
+					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"UniformBufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -371,7 +371,7 @@
 				"1":
 				{
 					"Name": "MaterialUniformBuffer",
-					"RootParameterIndex": "1",
+					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"UniformBufferUsage": "MATERIAL",
 					"NumberOfElements": "2",
 					"ElementProperties":
@@ -395,7 +395,7 @@
 				"2":
 				{
 					"Name": "InstanceUniformBuffer",
-					"RootParameterIndex": "2",
+					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"UniformBufferUsage": "INSTANCE",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -422,7 +422,7 @@
 				"0":
 				{
 					"Name": "SamplerLinear",
-					"RootParameterIndex": "3",
+					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_LINEAR",
 					"AddressU": "CLAMP",
 					"AddressV": "CLAMP",
@@ -440,7 +440,7 @@
 				"0":
 				{
 					"Name": "DiffuseMap",
-					"RootParameterIndex": "4",
+					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DiffuseMap"
@@ -448,7 +448,7 @@
 				"1":
 				{
 					"Name": "EmissiveMap",
-					"RootParameterIndex": "5",
+					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@EmissiveMap"
@@ -456,7 +456,7 @@
 				"2":
 				{
 					"Name": "NormalMap",
-					"RootParameterIndex": "6",
+					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@NormalMap"
@@ -464,7 +464,7 @@
 				"3":
 				{
 					"Name": "SpecularMap",
-					"RootParameterIndex": "7",
+					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@SpecularMap"

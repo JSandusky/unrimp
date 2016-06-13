@@ -48,6 +48,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class ShaderProperties;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -69,12 +78,12 @@ namespace RendererToolkit
 		static RendererRuntime::MaterialProperty::Usage mandatoryMaterialPropertyUsage(Poco::JSON::Object::Ptr jsonObject);
 		static RendererRuntime::MaterialProperty::ValueType mandatoryMaterialPropertyValueType(Poco::JSON::Object::Ptr jsonObject);
 		static RendererRuntime::MaterialPropertyValue mandatoryMaterialPropertyValue(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, const RendererRuntime::MaterialProperty::ValueType valueType);
-		static void readRootSignature(Poco::JSON::Object::Ptr jsonRootSignatureObject, std::ofstream& outputFileStream);
+		static void readRootSignature(Poco::JSON::Object::Ptr jsonRootSignatureObject, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties);
 		static void readProperties(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPropertiesObject, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, bool sort = true);
 		static void readPipelineStateObject(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPipelineStateObject, std::ofstream& outputFileStream);
-		static void readUniformBuffers(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonUniformBuffersObject, std::ofstream& outputFileStream);
-		static void readSamplerStates(Poco::JSON::Object::Ptr jsonSamplerStatesObject, std::ofstream& outputFileStream);
-		static void readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, Poco::JSON::Object::Ptr jsonTexturesObject, std::ofstream& outputFileStream);
+		static void readUniformBuffers(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonUniformBuffersObject, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties);
+		static void readSamplerStates(Poco::JSON::Object::Ptr jsonSamplerStatesObject, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties);
+		static void readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, Poco::JSON::Object::Ptr jsonTexturesObject, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties);
 
 
 	//[-------------------------------------------------------]

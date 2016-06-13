@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
 
 #include <vector>
@@ -120,7 +121,7 @@ namespace RendererRuntime
 		*  @return
 		*    "true" if the requested shader property exists, else "false" if the requested shader property doesn't exist and the default value was returned instead
 		*/
-		bool getPropertyValue(ShaderPropertyId shaderPropertyId, int32_t& value, int32_t defaultValue = 0) const;
+		RENDERERRUNTIME_API_EXPORT bool getPropertyValue(ShaderPropertyId shaderPropertyId, int32_t& value, int32_t defaultValue = 0) const;
 
 		/**
 		*  @brief
@@ -131,7 +132,7 @@ namespace RendererRuntime
 		*  @param[in] value
 		*    The shader property value to set
 		*/
-		void setPropertyValue(ShaderPropertyId shaderPropertyId, int32_t value);
+		RENDERERRUNTIME_API_EXPORT void setPropertyValue(ShaderPropertyId shaderPropertyId, int32_t value);
 
 
 	//[-------------------------------------------------------]

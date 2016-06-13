@@ -25,7 +25,14 @@
 #include "RendererToolkit/Helper/JsonMaterialHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 
+#include <RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h>
+
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4251)	// warning C4251: 'Poco::StringTokenizer::_tokens': class 'std::vector<std::string,std::allocator<_Kty>>' needs to have dll-interface to be used by clients of class 'Poco::StringTokenizer'
+	#include <Poco/StringTokenizer.h>
+#pragma warning(pop)
 
 #include <fstream>
 
@@ -72,6 +79,50 @@ namespace
 				#undef IF_VALUE
 				#undef ELSE_IF_VALUE
 			}
+		}
+
+		// TODO(co) Currently unused
+		void executeParameterSetInstruction(const std::string& instructionAsString, RendererRuntime::ShaderProperties& shaderProperties)
+		{
+			// "@pset(<parameter name>, <parameter value to set>)" (same syntax as in "RendererRuntime::ShaderBuilder")
+
+			// Gather required data
+			Poco::StringTokenizer stringTokenizer(instructionAsString, ",)");
+			if (stringTokenizer.count() == 2)
+			{
+				const std::string parameterName = stringTokenizer[0];
+				const int32_t parameterValue = std::atoi(stringTokenizer[1].c_str());
+
+				// Execute
+				shaderProperties.setPropertyValue(RendererRuntime::StringId(parameterName.c_str()), parameterValue);
+			}
+			else
+			{
+				// TODO(co) Error handling
+			}
+		}
+
+		int32_t executeCounterInstruction(const std::string& instructionAsString, RendererRuntime::ShaderProperties& shaderProperties)
+		{
+			// "@counter(<parameter name>)" (same syntax as in "RendererRuntime::ShaderBuilder")
+
+			// Get the shader property ID
+			const size_t valueEndIndex = instructionAsString.find(")", 9);
+			const RendererRuntime::ShaderPropertyId shaderPropertyId = RendererRuntime::StringId(instructionAsString.substr(9, valueEndIndex - 9).c_str());
+
+			// Execute
+			int32_t value = 0;
+			shaderProperties.getPropertyValue(shaderPropertyId, value);
+			shaderProperties.setPropertyValue(shaderPropertyId, value + 1);
+
+			// Return the parameter value
+			return value;
+		}
+
+		uint32_t getIntegerFromInstructionString(const std::string& instructionAsString, RendererRuntime::ShaderProperties& shaderProperties)
+		{
+			// Check for instruction "@counter(<parameter name>)" (same syntax as in "RendererRuntime::ShaderBuilder")
+			return static_cast<uint32_t>((strncmp(instructionAsString.c_str(), "@counter(", 7) == 0) ? executeCounterInstruction(instructionAsString, shaderProperties) : std::atoi(instructionAsString.c_str()));
 		}
 
 
@@ -384,7 +435,7 @@ namespace RendererToolkit
 		return RendererRuntime::MaterialPropertyValue::fromBoolean(false);
 	}
 
-	void JsonMaterialBlueprintHelper::readRootSignature(Poco::JSON::Object::Ptr jsonRootSignatureObject, std::ofstream& outputFileStream)
+	void JsonMaterialBlueprintHelper::readRootSignature(Poco::JSON::Object::Ptr jsonRootSignatureObject, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
 		// First: Collect everything we need instead of directly writing it down using an inefficient data layout
 		// -> We don't care that "Renderer::RootDescriptorTable::descriptorRanges" has unused bogus content, makes loading the root signature much easier because there this content just has to be set
@@ -451,9 +502,8 @@ namespace RendererToolkit
 							descriptorRange.numberOfDescriptors = 1;
 							JsonHelper::optionalIntegerProperty(jsonDescriptorRangeObject, "NumberOfDescriptors", descriptorRange.numberOfDescriptors);
 
-							// Optional base shader register
-							descriptorRange.baseShaderRegister = 0;
-							JsonHelper::optionalIntegerProperty(jsonDescriptorRangeObject, "BaseShaderRegister", descriptorRange.baseShaderRegister);
+							// Mandatory base shader register
+							descriptorRange.baseShaderRegister = ::detail::getIntegerFromInstructionString(jsonDescriptorRangeObject->get("BaseShaderRegister").convert<std::string>(), shaderProperties);
 
 							// Optional register space
 							descriptorRange.registerSpace = 0;
@@ -686,7 +736,7 @@ namespace RendererToolkit
 		outputFileStream.write(reinterpret_cast<const char*>(&pipelineState), sizeof(Renderer::PipelineState));
 	}
 
-	void JsonMaterialBlueprintHelper::readUniformBuffers(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonUniformBuffersObject, std::ofstream& outputFileStream)
+	void JsonMaterialBlueprintHelper::readUniformBuffers(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonUniformBuffersObject, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
 		Poco::JSON::Object::ConstIterator rootUniformBuffersIterator = jsonUniformBuffersObject->begin();
 		Poco::JSON::Object::ConstIterator rootUniformBuffersIteratorEnd = jsonUniformBuffersObject->end();
@@ -730,7 +780,7 @@ namespace RendererToolkit
 
 			{ // Write down the uniform buffer header
 				RendererRuntime::v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
-				JsonHelper::optionalIntegerProperty(jsonUniformBufferObject, "RootParameterIndex", uniformBufferHeader.rootParameterIndex);
+				uniformBufferHeader.rootParameterIndex = ::detail::getIntegerFromInstructionString(jsonUniformBufferObject->get("RootParameterIndex").convert<std::string>(), shaderProperties);
 				detail::optionalUniformBufferUsageProperty(jsonUniformBufferObject, "UniformBufferUsage", uniformBufferHeader.uniformBufferUsage);
 				JsonHelper::optionalIntegerProperty(jsonUniformBufferObject, "NumberOfElements", uniformBufferHeader.numberOfElements);
 				uniformBufferHeader.numberOfElementProperties = jsonElementPropertiesObject->size();
@@ -746,7 +796,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readSamplerStates(Poco::JSON::Object::Ptr jsonSamplerStatesObject, std::ofstream& outputFileStream)
+	void JsonMaterialBlueprintHelper::readSamplerStates(Poco::JSON::Object::Ptr jsonSamplerStatesObject, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
 		Poco::JSON::Object::ConstIterator rootSamplerStatesIterator = jsonSamplerStatesObject->begin();
 		Poco::JSON::Object::ConstIterator rootSamplerStatesIteratorEnd = jsonSamplerStatesObject->end();
@@ -761,7 +811,7 @@ namespace RendererToolkit
 			samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 
 			// The optional properties
-			JsonHelper::optionalIntegerProperty(jsonSamplerStateObject, "RootParameterIndex", materialBlueprintSamplerState.rootParameterIndex);
+			materialBlueprintSamplerState.rootParameterIndex = ::detail::getIntegerFromInstructionString(jsonSamplerStateObject->get("RootParameterIndex").convert<std::string>(), shaderProperties);
 			JsonMaterialHelper::optionalFilterProperty(jsonSamplerStateObject, "Filter", samplerState.filter);
 			JsonMaterialHelper::optionalTextureAddressModeProperty(jsonSamplerStateObject, "AddressU", samplerState.addressU);
 			JsonMaterialHelper::optionalTextureAddressModeProperty(jsonSamplerStateObject, "AddressV", samplerState.addressV);
@@ -781,7 +831,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, Poco::JSON::Object::Ptr jsonTexturesObject, std::ofstream& outputFileStream)
+	void JsonMaterialBlueprintHelper::readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, Poco::JSON::Object::Ptr jsonTexturesObject, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
 		Poco::JSON::Object::ConstIterator rootTexturesIterator = jsonTexturesObject->begin();
 		Poco::JSON::Object::ConstIterator rootTexturesIteratorEnd = jsonTexturesObject->end();
@@ -790,7 +840,7 @@ namespace RendererToolkit
 			Poco::JSON::Object::Ptr jsonTextureObject = rootTexturesIterator->second.extract<Poco::JSON::Object::Ptr>();
 
 			// Mandatory root parameter index
-			const uint32_t rootParameterIndex = jsonTextureObject->get("RootParameterIndex").convert<uint32_t>();
+			const uint32_t rootParameterIndex = ::detail::getIntegerFromInstructionString(jsonTextureObject->get("RootParameterIndex").convert<std::string>(), shaderProperties);
 
 			// Mandatory usage
 			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(jsonTextureObject);

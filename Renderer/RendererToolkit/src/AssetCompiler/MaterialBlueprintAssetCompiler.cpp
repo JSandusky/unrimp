@@ -27,6 +27,7 @@
 #include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h>
 
 #include <fstream>
@@ -142,20 +143,21 @@ namespace RendererToolkit
 			}
 
 			// Root signature
-			JsonMaterialBlueprintHelper::readRootSignature(jsonMaterialBlueprintObject->get("RootSignature").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
+			RendererRuntime::ShaderProperties shaderProperties;
+			JsonMaterialBlueprintHelper::readRootSignature(jsonMaterialBlueprintObject->get("RootSignature").extract<Poco::JSON::Object::Ptr>(), outputFileStream, shaderProperties);
 
 			// Pipeline state object (PSO)
 			JsonMaterialBlueprintHelper::readPipelineStateObject(input, jsonMaterialBlueprintObject->get("PipelineState").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
 
 			{ // Resources
 				// Uniform buffers
-				JsonMaterialBlueprintHelper::readUniformBuffers(input, jsonUniformBuffersObject, outputFileStream);
+				JsonMaterialBlueprintHelper::readUniformBuffers(input, jsonUniformBuffersObject, outputFileStream, shaderProperties);
 
 				// Sampler states
-				JsonMaterialBlueprintHelper::readSamplerStates(jsonSamplerStatesObject, outputFileStream);
+				JsonMaterialBlueprintHelper::readSamplerStates(jsonSamplerStatesObject, outputFileStream, shaderProperties);
 
 				// Textures
-				JsonMaterialBlueprintHelper::readTextures(input, sortedMaterialPropertyVector, jsonTexturesObject, outputFileStream);
+				JsonMaterialBlueprintHelper::readTextures(input, sortedMaterialPropertyVector, jsonTexturesObject, outputFileStream, shaderProperties);
 			}
 		}
 
