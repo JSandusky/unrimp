@@ -81,6 +81,11 @@ namespace
 			}
 		}
 
+		uint32_t roundUpToNextIntegerDivisibleByFactor(uint32_t input, uint32_t factor)
+		{
+			return (input + factor - 1) / factor * factor;
+		}
+
 		// TODO(co) Currently unused
 		void executeParameterSetInstruction(const std::string& instructionAsString, RendererRuntime::ShaderProperties& shaderProperties)
 		{
@@ -749,23 +754,44 @@ namespace RendererToolkit
 			RendererRuntime::MaterialProperties::SortedPropertyVector elementProperties;
 			readProperties(input, jsonElementPropertiesObject, elementProperties, false);
 
-			// Sum up the number of bytes required by all uniform buffer element properties
+			// Calculate the uniform buffer size, including handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+			// -> Sum up the number of bytes required by all uniform buffer element properties
 			uint32_t numberOfPackageBytes = 0;
 			uint32_t numberOfBytesPerElement = 0;
-			for (size_t i = 0; i < elementProperties.size(); ++i)
+			const size_t numberOfUniformBufferElementProperties = elementProperties.size();
+			for (size_t i = 0; i < numberOfUniformBufferElementProperties; ++i)
 			{
 				// Get value type number of bytes
 				const uint32_t valueTypeNumberOfBytes = RendererRuntime::MaterialPropertyValue::getValueTypeNumberOfBytes(elementProperties[i].getValueType());
 				numberOfBytesPerElement += valueTypeNumberOfBytes;
 
-				// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
-				if (0 != numberOfPackageBytes && numberOfPackageBytes + valueTypeNumberOfBytes > 16)
+				// Handling of packing rules for uniform variables
+				//  -> We have to take into account HLSL packing (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+				//  -> GLSL is even more restrictive, with aligning e.g. float2 to an offset divisible by 2 * 4 bytes (float2 size) and float3 to an offset divisible by 4 * 4 bytes (float4 size -- yes, there is no actual float3 alignment)
+				if (0 != numberOfPackageBytes)	// No problem if no package was started yet
 				{
-					// Take the wasted bytes due to aligned packaging into account and restart the package bytes counter
-					numberOfBytesPerElement += 4 * 4 - numberOfPackageBytes;
-					numberOfPackageBytes = 0;
+					// Taking into account GLSL rules here, for HLSL this would always be "numberOfPackageBytes"
+					const uint32_t alignmentStartByteOffsetInPackage = ::detail::roundUpToNextIntegerDivisibleByFactor(numberOfPackageBytes, valueTypeNumberOfBytes);
 
-					// TODO(co) Profiling information: We could provide the material blueprint resource writer with information how many bytes get wasted with the defined layout
+					// Check for float4-size package "overflow" (relevant for both HLSL and GLSL)
+					if (numberOfPackageBytes + valueTypeNumberOfBytes > 16)
+					{
+						// Take the wasted bytes due to aligned packaging into account and restart the package bytes counter
+						numberOfBytesPerElement += 4 * 4 - numberOfPackageBytes;
+						numberOfPackageBytes = 0;
+
+						// TODO(co) Profiling information: We could provide the material blueprint resource writer with information how many bytes get wasted with the defined layout
+					}
+
+					// For GLSL, we are running into problems if there is not overflow, but alignment is not correct
+					// TODO(co) Check the documentation, whether there are 16-byte packages at all for GLSL - otherwise this has to be rewritten!
+					else if (numberOfPackageBytes != alignmentStartByteOffsetInPackage)
+					{
+						// TODO(co) Error handling: General error handling strategy required
+						const std::string materialBlueprint = "TODO";
+						const std::string propertyName = "TODO";
+						throw std::runtime_error("Material blueprint " + materialBlueprint + ": Uniform buffer element property alignment is problematic for property " + propertyName + " at offset " + std::to_string(numberOfPackageBytes) + ", which would be aligned to offset " + std::to_string(alignmentStartByteOffsetInPackage));
+					}
 				}
 				numberOfPackageBytes += valueTypeNumberOfBytes % 16;
 			}
