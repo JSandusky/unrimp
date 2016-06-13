@@ -38,7 +38,7 @@ namespace RendererRuntime
 		mMaterialTechniqueId(materialTechniqueId),
 		mMaterialResource(&materialResource),
 		mMaterialBlueprintResourceId(getUninitialized<MaterialBlueprintResourceId>()),
-		mMaterialUniformBufferIndex(0)
+		mMaterialUniformBufferIndex(getUninitialized<uint32_t>())
 	{
 		// Nothing here
 	}

@@ -124,10 +124,20 @@ namespace RendererRuntime
 
 		struct Texture
 		{
-			uint32_t		   rootParameterIndex;
-			AssetId			   textureAssetId;
-			MaterialPropertyId materialPropertyId;
-			TextureResourceId  textureResourceId;
+			// Loaded from material blueprint
+			uint32_t		  rootParameterIndex;
+			MaterialProperty  materialProperty;
+
+			// Derived data
+			TextureResourceId textureResourceId;
+
+			// Constructors
+			Texture() :
+				rootParameterIndex(getUninitialized<uint32_t>()),
+				textureResourceId(getUninitialized<TextureResourceId>())
+			{
+				// Nothing here
+			}
 		};
 
 		typedef std::vector<UniformBuffer> UniformBuffers;

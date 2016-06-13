@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -47,8 +53,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline MaterialProperty::MaterialProperty() :
 		MaterialPropertyValue(fromUnknown()),
-		mMaterialPropertyId(0),
-		mUsage(Usage::UNKNOWN)
+		mMaterialPropertyId(getUninitialized<MaterialPropertyId>()),
+		mUsage(Usage::UNKNOWN),
+		mOverwritten(false)
 	{
 		// Nothing here
 	}
@@ -56,7 +63,8 @@ namespace RendererRuntime
 	inline MaterialProperty::MaterialProperty(MaterialPropertyId materialPropertyId, Usage usage, const MaterialPropertyValue& materialPropertyValue) :
 		MaterialPropertyValue(materialPropertyValue),
 		mMaterialPropertyId(materialPropertyId),
-		mUsage(usage)
+		mUsage(usage),
+		mOverwritten(false)
 	{
 		// Nothing here
 	}
@@ -74,6 +82,11 @@ namespace RendererRuntime
 	inline MaterialProperty::Usage MaterialProperty::MaterialProperty::getUsage() const
 	{
 		return mUsage;
+	}
+
+	inline bool MaterialProperty::isOverwritten() const
+	{
+		return mOverwritten;
 	}
 
 	inline bool MaterialProperty::isReferenceUsage() const

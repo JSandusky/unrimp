@@ -25,28 +25,28 @@
 			"DiffuseMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "ASSET_ID",
+				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "4",
 				"Description": "Material diffuse map"
 			},
 			"EmissiveMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "ASSET_ID",
+				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "5",
 				"Description": "Material emissive map"
 			},
 			"NormalMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "ASSET_ID",
+				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "6",
 				"Description": "Material normal map"
 			},
 			"SpecularMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "ASSET_ID",
+				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "7",
 				"Description": "Material specular map"
 			}
@@ -441,25 +441,33 @@
 				{
 					"Name": "DiffuseMap",
 					"RootParameterIndex": "4",
-					"TextureAssetId": "@DiffuseMap"
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@DiffuseMap"
 				},
 				"1":
 				{
 					"Name": "EmissiveMap",
 					"RootParameterIndex": "5",
-					"TextureAssetId": "@EmissiveMap"
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@EmissiveMap"
 				},
 				"2":
 				{
 					"Name": "NormalMap",
 					"RootParameterIndex": "6",
-					"TextureAssetId": "@NormalMap"
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@NormalMap"
 				},
 				"3":
 				{
 					"Name": "SpecularMap",
 					"RootParameterIndex": "7",
-					"TextureAssetId": "@SpecularMap"
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@SpecularMap"
 				}
 			}
 		}

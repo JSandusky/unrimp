@@ -102,9 +102,21 @@ namespace RendererRuntime
 
 			struct Texture
 			{
-				uint32_t		   rootParameterIndex;
-				AssetId			   textureAssetId;
-				MaterialPropertyId materialPropertyId;
+				uint32_t		 rootParameterIndex;
+				MaterialProperty materialProperty;
+
+				Texture() :
+					rootParameterIndex(getUninitialized<uint32_t>())
+				{
+					// Nothing here
+				}
+
+				Texture(uint32_t _rootParameterIndex, MaterialProperty _materialProperty) :
+					rootParameterIndex(_rootParameterIndex),
+					materialProperty(_materialProperty)
+				{
+					// Nothing here
+				}
 			};
 		#pragma pack(pop)
 

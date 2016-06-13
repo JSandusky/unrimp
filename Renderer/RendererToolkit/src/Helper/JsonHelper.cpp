@@ -153,6 +153,26 @@ namespace RendererToolkit
 		}
 	}
 
+	void JsonHelper::optionalStringNProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, std::string value[], uint32_t numberOfComponents, const std::string& separator)
+	{
+		Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
+		if (!jsonDynamicVar.isEmpty())
+		{
+			Poco::StringTokenizer stringTokenizer(jsonDynamicVar.convert<std::string>(), separator);
+			if (stringTokenizer.count() == numberOfComponents)
+			{
+				for (size_t i = 0; i < numberOfComponents; ++i)
+				{
+					value[i] = stringTokenizer[i];
+				}
+			}
+			else
+			{
+				// TODO(co) Error handling
+			}
+		}
+	}
+
 	uint32_t JsonHelper::getCompiledAssetId(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonShaderBlueprintsObject, const std::string& propertyName)
 	{
 		return input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(jsonShaderBlueprintsObject->get(propertyName).convert<std::string>().c_str())));

@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Resource/Material/MaterialProperty.h"
 
 #include <vector>
 
@@ -85,10 +85,9 @@ namespace RendererRuntime
 	public:
 		struct Texture
 		{
-			uint32_t		   rootParameterIndex;
-			AssetId			   textureAssetId;
-			MaterialPropertyId materialPropertyId;
-			TextureResourceId  textureResourceId;
+			uint32_t		  rootParameterIndex;
+			MaterialProperty  materialProperty;
+			TextureResourceId textureResourceId;
 		};
 		typedef std::vector<Texture> Textures;
 
@@ -146,7 +145,7 @@ namespace RendererRuntime
 		*    Return the material uniform buffer index inside the used material blueprint
 		*
 		*  @return
-		*    The material uniform buffer index inside the used material blueprint
+		*    The material uniform buffer index inside the used material blueprint, can be uninitialized value
 		*/
 		inline uint32_t getMaterialUniformBufferIndex() const;
 
@@ -161,7 +160,7 @@ namespace RendererRuntime
 		MaterialTechniqueId			mMaterialTechniqueId;			///< Material technique ID
 		MaterialResource*			mMaterialResource;				///< Owner material resource, always valid
 		MaterialBlueprintResourceId	mMaterialBlueprintResourceId;	///< Material blueprint resource ID, can be set to uninitialized value
-		uint32_t					mMaterialUniformBufferIndex;	///< Material uniform buffer index inside the used material blueprint
+		uint32_t					mMaterialUniformBufferIndex;	///< Material uniform buffer index inside the used material blueprint, can be set to uninitialized value
 		Textures					mTextures;
 
 

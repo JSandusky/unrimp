@@ -139,6 +139,8 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(BLEND_STATE)
 		ELSE_IF_VALUE(SAMPLER_STATE)
 		ELSE_IF_VALUE(TEXTURE_REFERENCE)
+		ELSE_IF_VALUE(COMPOSITOR_TEXTURE_REFERENCE)
+		ELSE_IF_VALUE(SHADOW_TEXTURE_REFERENCE)
 		ELSE_IF_VALUE(GLOBAL_REFERENCE)
 		ELSE_IF_VALUE(UNKNOWN_REFERENCE)
 		ELSE_IF_VALUE(PASS_REFERENCE)
@@ -189,7 +191,8 @@ namespace RendererToolkit
 		ELSE_IF_VALUE(BLEND_OP)
 		ELSE_IF_VALUE(FILTER_MODE)
 		ELSE_IF_VALUE(TEXTURE_ADDRESS_MODE)
-		ELSE_IF_VALUE(ASSET_ID)
+		ELSE_IF_VALUE(TEXTURE_ASSET_ID)
+		ELSE_IF_VALUE(COMPOSITOR_TEXTURE_REFERENCE)
 		else
 		{
 			// TODO(co) Error handling
@@ -359,9 +362,21 @@ namespace RendererToolkit
 				return RendererRuntime::MaterialPropertyValue::fromTextureAddressMode(value);
 			}
 
-			case RendererRuntime::MaterialPropertyValue::ValueType::ASSET_ID:
+			case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
 			{
-				return RendererRuntime::MaterialPropertyValue::fromAssetId(JsonHelper::getCompiledAssetId(input, jsonObject, propertyName));
+				return RendererRuntime::MaterialPropertyValue::fromTextureAssetId(JsonHelper::getCompiledAssetId(input, jsonObject, propertyName));
+			}
+
+			case RendererRuntime::MaterialPropertyValue::ValueType::COMPOSITOR_TEXTURE_REFERENCE:
+			{
+				// Value string content: "@<texture name>@<MRT-index>"
+				// -> Three values because the first will be an empty string
+				std::string values[3];
+				JsonHelper::optionalStringNProperty(jsonObject, propertyName, values, 3, "@");
+				RendererRuntime::MaterialPropertyValue::CompositorTextureReference compositorTextureReference;
+				compositorTextureReference.compositorTextureId = RendererRuntime::StringId(values[1].c_str()).getId();
+				compositorTextureReference.mrtIndex			   = static_cast<uint32_t>(std::atoi(values[2].c_str()));
+				return RendererRuntime::MaterialPropertyValue::fromCompositorTextureReference(compositorTextureReference);
 			}
 		}
 
@@ -774,48 +789,125 @@ namespace RendererToolkit
 		{
 			Poco::JSON::Object::Ptr jsonTextureObject = rootTexturesIterator->second.extract<Poco::JSON::Object::Ptr>();
 
-			// Start with the default texture
-			RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture;
-			materialBlueprintTexture.rootParameterIndex = 0;
+			// Mandatory root parameter index
+			const uint32_t rootParameterIndex = jsonTextureObject->get("RootParameterIndex").convert<uint32_t>();
 
-			// The optional properties
-			JsonHelper::optionalIntegerProperty(jsonTextureObject, "RootParameterIndex", materialBlueprintTexture.rootParameterIndex);
-
-			{ // Get mandatory asset ID
-			  // -> The character "@" is used to reference a material property value
-				const std::string sourceAssetIdAsString = jsonTextureObject->get("TextureAssetId").convert<std::string>();
-				if (sourceAssetIdAsString.length() > 0 && sourceAssetIdAsString[0] == '@')
+			// Mandatory usage
+			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(jsonTextureObject);
+			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(jsonTextureObject);
+			switch (usage)
+			{
+				case RendererRuntime::MaterialProperty::Usage::STATIC:
 				{
-					// Reference a material property value
-					const RendererRuntime::MaterialPropertyId materialPropertyId(sourceAssetIdAsString.substr(1).c_str());
-					materialBlueprintTexture.materialPropertyId = materialPropertyId;
-
-					// Figure out the material property value
-					RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
-					if (iterator != sortedMaterialPropertyVector.end())
+					if (RendererRuntime::MaterialProperty::ValueType::TEXTURE_ASSET_ID == valueType)
 					{
-						RendererRuntime::MaterialProperty* materialProperty = iterator._Ptr;
-						if (materialProperty->getMaterialPropertyId() == materialPropertyId)
-						{
-							// TODO(co) Error handling: Usage mismatch etc.
-							materialBlueprintTexture.textureAssetId = materialProperty->getAssetIdValue();
-						}
+						// Get mandatory asset ID
+						const std::string sourceAssetIdAsString = jsonTextureObject->get("Value").convert<std::string>();
+
+						// Map the source asset ID to the compiled asset ID
+						const uint32_t sourceAssetId = static_cast<uint32_t>(std::atoi(sourceAssetIdAsString.c_str()));
+						SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(sourceAssetId);
+						const RendererRuntime::MaterialPropertyValue materialPropertyValue = RendererRuntime::MaterialPropertyValue::fromTextureAssetId((iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0);
+
+						// Write down the texture
+						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, materialPropertyValue));
+						outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
+
+						// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
+						break;
+					}
+					else
+					{
+						// TODO(co) Error handling
 					}
 				}
-				else
-				{
-					materialBlueprintTexture.materialPropertyId = 0;
 
-					// Map the source asset ID to the compiled asset ID
-					const uint32_t sourceAssetId = static_cast<uint32_t>(std::atoi(sourceAssetIdAsString.c_str()));
-					SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(sourceAssetId);
-					materialBlueprintTexture.textureAssetId = (iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0;
-					// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
+				case RendererRuntime::MaterialProperty::Usage::COMPOSITOR_TEXTURE_REFERENCE:
+				{
+					if (RendererRuntime::MaterialProperty::ValueType::INTEGER == valueType || RendererRuntime::MaterialProperty::ValueType::COMPOSITOR_TEXTURE_REFERENCE == valueType)
+					{
+						// Write down the texture
+						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, mandatoryMaterialPropertyValue(input, jsonTextureObject, "Value", valueType)));
+						outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
+					}
+					else
+					{
+						// TODO(co) Error handling
+					}
+					break;
+				}
+
+				case RendererRuntime::MaterialProperty::Usage::SHADOW_TEXTURE_REFERENCE:
+				{
+					if (RendererRuntime::MaterialProperty::ValueType::INTEGER == valueType)
+					{
+						// Write down the texture
+						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, mandatoryMaterialPropertyValue(input, jsonTextureObject, "Value", valueType)));
+						outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
+					}
+					else
+					{
+						// TODO(co) Error handling
+					}
+					break;
+				}
+
+				case RendererRuntime::MaterialProperty::Usage::MATERIAL_REFERENCE:
+				{
+					if (RendererRuntime::MaterialProperty::ValueType::TEXTURE_ASSET_ID == valueType)
+					{
+						// Get mandatory asset ID
+						// -> The character "@" is used to reference a material property value
+						const std::string sourceAssetIdAsString = jsonTextureObject->get("Value").convert<std::string>();
+						if (sourceAssetIdAsString.length() > 0 && sourceAssetIdAsString[0] == '@')
+						{
+							// Reference a material property value
+							const RendererRuntime::MaterialPropertyId materialPropertyId(sourceAssetIdAsString.substr(1).c_str());
+
+							// Figure out the material property value
+							RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
+							if (iterator != sortedMaterialPropertyVector.end())
+							{
+								RendererRuntime::MaterialProperty* materialProperty = iterator._Ptr;
+								if (materialProperty->getMaterialPropertyId() == materialPropertyId)
+								{
+									// TODO(co) Error handling: Usage mismatch etc.
+
+									// Write down the texture
+									const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(materialPropertyId, usage, *materialProperty));
+									outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
+								}
+							}
+						}
+						else
+						{
+							// TODO(co) Error handling
+						}
+					}
+					else
+					{
+						// TODO(co) Error handling
+					}
+					break;
+				}
+
+				case RendererRuntime::MaterialProperty::Usage::UNKNOWN:
+				case RendererRuntime::MaterialProperty::Usage::DYNAMIC:
+				case RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE:
+				case RendererRuntime::MaterialProperty::Usage::DEPTH_STENCIL_STATE:
+				case RendererRuntime::MaterialProperty::Usage::BLEND_STATE:
+				case RendererRuntime::MaterialProperty::Usage::SAMPLER_STATE:
+				case RendererRuntime::MaterialProperty::Usage::TEXTURE_REFERENCE:
+				case RendererRuntime::MaterialProperty::Usage::GLOBAL_REFERENCE:
+				case RendererRuntime::MaterialProperty::Usage::UNKNOWN_REFERENCE:
+				case RendererRuntime::MaterialProperty::Usage::PASS_REFERENCE:
+				case RendererRuntime::MaterialProperty::Usage::INSTANCE_REFERENCE:
+				default:
+				{
+					// TODO(co) Error handling
+					break;
 				}
 			}
-
-			// Write down the texture
-			outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
 
 			// Next texture, please
 			++rootTexturesIterator;

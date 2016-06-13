@@ -107,7 +107,14 @@ namespace RendererRuntime
 			FILTER_MODE,						///< Sampler state filter mode with possible values: "MIN_MAG_MIP_POINT", "MIN_MAG_POINT_MIP_LINEAR", "MIN_POINT_MAG_LINEAR_MIP_POINT", "MIN_POINT_MAG_MIP_LINEAR", "MIN_LINEAR_MAG_MIP_POINT", "MIN_LINEAR_MAG_POINT_MIP_LINEAR", "MIN_MAG_LINEAR_MIP_POINT", "MIN_MAG_MIP_LINEAR", "ANISOTROPIC", "COMPARISON_MIN_MAG_MIP_POINT", "COMPARISON_MIN_MAG_POINT_MIP_LINEAR", "COMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT", "COMPARISON_MIN_POINT_MAG_MIP_LINEAR", "COMPARISON_MIN_LINEAR_MAG_MIP_POINT", "COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR", "COMPARISON_MIN_MAG_LINEAR_MIP_POINT", "COMPARISON_MIN_MAG_MIP_LINEAR", "COMPARISON_ANISOTROPIC"
 			TEXTURE_ADDRESS_MODE,				///< Sampler state texture address mode with possible values: "WRAP", "MIRROR", "CLAMP", "BORDER", "MIRROR_ONCE"
 			// For texture property usage
-			ASSET_ID							///< Asset ID
+			TEXTURE_ASSET_ID,					///< Texture asset ID
+			COMPOSITOR_TEXTURE_REFERENCE		///< Compositor name and MRT-index ("Multi Render Target"), value as string example: "@<texture name>@<MRT-index>"
+		};
+
+		struct CompositorTextureReference
+		{
+			uint32_t compositorTextureId;	///< For instance "RendererRuntime::StringId("global_gbuffer")" for addressing the GBuffer MRT texture
+			uint32_t mrtIndex;				///< For instance 0 to index the GBuffer MRT texture containing diffuse information
 		};
 
 
@@ -144,7 +151,8 @@ namespace RendererRuntime
 		inline static MaterialPropertyValue fromFilterMode(Renderer::FilterMode value);
 		inline static MaterialPropertyValue fromTextureAddressMode(Renderer::TextureAddressMode value);
 		// For texture property usage
-		inline static MaterialPropertyValue fromAssetId(AssetId value);
+		inline static MaterialPropertyValue fromTextureAssetId(AssetId value);
+		inline static MaterialPropertyValue fromCompositorTextureReference(const CompositorTextureReference& value);
 
 
 	//[-------------------------------------------------------]
@@ -197,7 +205,8 @@ namespace RendererRuntime
 		inline Renderer::FilterMode getFilterMode() const;
 		inline Renderer::TextureAddressMode getTextureAddressModeValue() const;
 		// For texture property usage
-		inline AssetId getAssetIdValue() const;
+		inline AssetId getTextureAssetIdValue() const;
+		inline const CompositorTextureReference& getCompositorTextureReference() const;
 
 
 	//[-------------------------------------------------------]
@@ -239,7 +248,8 @@ namespace RendererRuntime
 			Renderer::FilterMode					FilterMode;
 			Renderer::TextureAddressMode			TextureAddressMode;
 			// For texture property usage
-			uint32_t								AssetId;
+			uint32_t								TextureAssetId;
+			CompositorTextureReference				CompositorTextureReference;
 		} mValue;
 
 

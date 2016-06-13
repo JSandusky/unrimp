@@ -221,11 +221,19 @@ namespace RendererRuntime
 		return materialPropertyValue;
 	}
 
-	inline MaterialPropertyValue MaterialPropertyValue::fromAssetId(AssetId value)
+	inline MaterialPropertyValue MaterialPropertyValue::fromTextureAssetId(AssetId value)
 	{
 		MaterialPropertyValue materialPropertyValue;
-		materialPropertyValue.mValueType	 = ValueType::ASSET_ID;
-		materialPropertyValue.mValue.AssetId = value;
+		materialPropertyValue.mValueType			= ValueType::TEXTURE_ASSET_ID;
+		materialPropertyValue.mValue.TextureAssetId = value;
+		return materialPropertyValue;
+	}
+
+	inline MaterialPropertyValue MaterialPropertyValue::fromCompositorTextureReference(const CompositorTextureReference& value)
+	{
+		MaterialPropertyValue materialPropertyValue;
+		materialPropertyValue.mValueType						= ValueType::COMPOSITOR_TEXTURE_REFERENCE;
+		materialPropertyValue.mValue.CompositorTextureReference = value;
 		return materialPropertyValue;
 	}
 
@@ -362,10 +370,16 @@ namespace RendererRuntime
 		return mValue.TextureAddressMode;
 	}
 
-	inline AssetId MaterialPropertyValue::getAssetIdValue() const
+	inline AssetId MaterialPropertyValue::getTextureAssetIdValue() const
 	{
-		assert(ValueType::ASSET_ID == mValueType);
-		return mValue.AssetId;
+		assert(ValueType::TEXTURE_ASSET_ID == mValueType);
+		return mValue.TextureAssetId;
+	}
+
+	inline const MaterialPropertyValue::CompositorTextureReference& MaterialPropertyValue::getCompositorTextureReference() const
+	{
+		assert(ValueType::COMPOSITOR_TEXTURE_REFERENCE == mValueType);
+		return mValue.CompositorTextureReference;
 	}
 
 

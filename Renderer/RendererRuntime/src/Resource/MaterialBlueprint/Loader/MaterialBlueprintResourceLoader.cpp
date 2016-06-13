@@ -264,9 +264,11 @@ namespace RendererRuntime
 			{
 				MaterialBlueprintResource::Texture& texture = textures[i];
 				texture.rootParameterIndex = materialBlueprintTexture->rootParameterIndex;
-				texture.textureAssetId     = materialBlueprintTexture->textureAssetId;
-				texture.materialPropertyId = materialBlueprintTexture->materialPropertyId;
-				texture.textureResourceId  = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);
+				const MaterialProperty& materialProperty = texture.materialProperty = materialBlueprintTexture->materialProperty;
+				if (materialProperty.getValueType() == MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
+				{
+					texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(materialProperty.getTextureAssetIdValue());
+				}
 			}
 		}
 	}

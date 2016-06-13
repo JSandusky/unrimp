@@ -67,20 +67,20 @@ namespace RendererRuntime
 					// Start with the material blueprint textures
 					Texture texture;
 					texture.rootParameterIndex = blueprintTexture.rootParameterIndex;
-					texture.textureAssetId	   = blueprintTexture.textureAssetId;
-					texture.materialPropertyId = blueprintTexture.materialPropertyId;
+					texture.materialProperty   = blueprintTexture.materialProperty;
 					texture.textureResourceId  = blueprintTexture.textureResourceId;
 
 					// Apply material specific modifications
-					if (0 != texture.materialPropertyId)
+					const MaterialPropertyId materialPropertyId = texture.materialProperty.getMaterialPropertyId();
+					if (isInitialized(materialPropertyId))
 					{
 						// Figure out the material property value
-						const MaterialProperty* materialProperty = materialProperties.getPropertyById(texture.materialPropertyId);
+						const MaterialProperty* materialProperty = materialProperties.getPropertyById(materialPropertyId);
 						if (nullptr != materialProperty)
 						{
 							// TODO(co) Error handling: Usage mismatch etc.
-							texture.textureAssetId    = materialProperty->getAssetIdValue();
-							texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(texture.textureAssetId);
+							texture.materialProperty = *materialProperty;
+							texture.textureResourceId = textureResourceManager.loadTextureResourceByAssetId(texture.materialProperty.getTextureAssetIdValue());
 						}
 					}
 
