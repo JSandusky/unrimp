@@ -35,6 +35,16 @@
 	#include <ftglyph.h>
 #pragma warning(pop)
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
+	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
+	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
+	#include <rapidjson/document.h>
+#pragma warning(pop)
+
 #include <memory>
 #include <fstream>
 
@@ -311,12 +321,11 @@ namespace RendererToolkit
 	{
 		// Input, configuration and output
 		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
-		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		Poco::JSON::Object::Ptr		   jsonAssetRootObject	= configuration.jsonAssetRootObject;
+		const std::string&			   assetOutputDirectory = input.assetOutputDirectory;
 		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
 
 		// Get the JSON asset object
-		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
+		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
 		// We really need an valid FreeType library instance
 		if (nullptr == mFtLibrary)
@@ -334,19 +343,37 @@ namespace RendererToolkit
 		uint32_t numberOfFontGlyphs		  = 256;
 		{
 			// Read font asset compiler configuration
-			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonAssetObject->get("FontAssetCompiler").extract<Poco::JSON::Object::Ptr>();
-			inputFile				 = jsonConfigurationObject->getValue<std::string>("InputFile");
-			size					 = jsonConfigurationObject->optValue<uint32_t>("Size", size);
-			resolution				 = jsonConfigurationObject->optValue<uint32_t>("Resolution", resolution);
-			glyphTextureAtlasPadding = jsonConfigurationObject->optValue<uint32_t>("GlyphTextureAtlasPadding", glyphTextureAtlasPadding);
-			glyphsPerRow			 = jsonConfigurationObject->optValue<uint32_t>("GlyphsPerRow", glyphsPerRow);
-			glyphsPerColumn			 = jsonConfigurationObject->optValue<uint32_t>("GlyphsPerColumn", glyphsPerColumn);
-			numberOfFontGlyphs		 = jsonConfigurationObject->optValue<uint32_t>("NumberOfFontGlyphs", numberOfFontGlyphs);
+			const rapidjson::Value& rapidJsonValueFontAssetCompiler = rapidJsonValueAsset["FontAssetCompiler"];
+			inputFile = rapidJsonValueFontAssetCompiler["InputFile"].GetString();
+			if (rapidJsonValueFontAssetCompiler.HasMember("Size"))
+			{
+				size = static_cast<uint32_t>(std::atoi(rapidJsonValueFontAssetCompiler["Size"].GetString()));
+			}
+			if (rapidJsonValueFontAssetCompiler.HasMember("Resolution"))
+			{
+				resolution = static_cast<uint32_t>(std::atoi(rapidJsonValueFontAssetCompiler["Resolution"].GetString()));
+			}
+			if (rapidJsonValueFontAssetCompiler.HasMember("GlyphTextureAtlasPadding"))
+			{
+				glyphTextureAtlasPadding = static_cast<uint32_t>(std::atoi(rapidJsonValueFontAssetCompiler["GlyphTextureAtlasPadding"].GetString()));
+			}
+			if (rapidJsonValueFontAssetCompiler.HasMember("GlyphsPerRow"))
+			{
+				glyphsPerRow = static_cast<uint32_t>(std::atoi(rapidJsonValueFontAssetCompiler["GlyphsPerRow"].GetString()));
+			}
+			if (rapidJsonValueFontAssetCompiler.HasMember("GlyphsPerColumn"))
+			{
+				glyphsPerColumn = static_cast<uint32_t>(std::atoi(rapidJsonValueFontAssetCompiler["GlyphsPerColumn"].GetString()));
+			}
+			if (rapidJsonValueFontAssetCompiler.HasMember("NumberOfFontGlyphs"))
+			{
+				numberOfFontGlyphs = static_cast<uint32_t>(std::atoi(rapidJsonValueFontAssetCompiler["NumberOfFontGlyphs"].GetString()));
+			}
 		}
 
 		// Open the input file and output file
 		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
-		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
+		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".font";
 		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
@@ -433,7 +460,7 @@ namespace RendererToolkit
 		}
 
 		{ // Update the output asset package
-			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
+			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/Font/" + assetCategory + '/' + assetName;
 
 			// Output asset

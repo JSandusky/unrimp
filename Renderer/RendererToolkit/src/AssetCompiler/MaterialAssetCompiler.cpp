@@ -31,21 +31,17 @@
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
-	#pragma warning(disable: 4127)	// warning C4127: conditional expression is constant
-	#pragma warning(disable: 4244)	// warning C4244: 'argument': conversion from '<x>' to '<y>', possible loss of data
-	#pragma warning(disable: 4251)	// warning C4251: '<x>': class '<y>' needs to have dll-interface to be used by clients of class '<x>'
-	#pragma warning(disable: 4266)	// warning C4266: '<x>': no override available for virtual member function from base '<y>'; function is hidden
-	#pragma warning(disable: 4365)	// warning C4365: 'return': conversion from '<x>' to '<y>', signed/unsigned mismatch
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#pragma warning(disable: 4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
-	#pragma warning(disable: 4619)	// warning C4619: #pragma warning: there is no warning number '<x>'
-	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-	#define POCO_NO_UNWINDOWS
-	#include <Poco/Path.h>
-	#include <Poco/File.h>
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
+	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
+	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
+	#include <rapidjson/document.h>
 #pragma warning(pop)
 
 #include <fstream>
+#include <algorithm>
+#include <filesystem>
 
 
 //[-------------------------------------------------------]
@@ -91,10 +87,12 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	MaterialAssetCompiler::MaterialAssetCompiler()
 	{
+		// Nothing here
 	}
 
 	MaterialAssetCompiler::~MaterialAssetCompiler()
 	{
+		// Nothing here
 	}
 
 
@@ -111,69 +109,47 @@ namespace RendererToolkit
 		// Input, configuration and output
 		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
 		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		Poco::JSON::Object::Ptr		   jsonAssetRootObject	= configuration.jsonAssetRootObject;
 		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
 
 		// Get the JSON asset object
-		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
+		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
 		// Read configuration
 		// TODO(co) Add required properties
 		std::string inputFile;
-		uint32_t test = 0;
 		{
 			// Read material asset compiler configuration
-			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonAssetObject->get("MaterialAssetCompiler").extract<Poco::JSON::Object::Ptr>();
-			inputFile = jsonConfigurationObject->getValue<std::string>("InputFile");
-			test	  = jsonConfigurationObject->optValue<uint32_t>("Test", test);
+			const rapidjson::Value& rapidJsonValueMaterialAssetCompiler = rapidJsonValueAsset["MaterialAssetCompiler"];
+			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
 		}
 
 		// Open the input file
-		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
-		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
+		const std::string inputFilename = assetInputDirectory + inputFile;
+		std::ifstream inputFileStream(inputFilename, std::ios::binary);
+		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material";
 		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
 		{ // Material
 			// Parse JSON
-			Poco::JSON::Parser jsonParser;
-			jsonParser.parse(inputFileStream);
-			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
+			rapidjson::Document rapidJsonDocument;
+			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialAsset", "1");
 
-			{ // Check whether or not the file format matches
-				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-				if (jsonFormatObject->get("Type").convert<std::string>() != "MaterialAsset")
-				{
-					throw std::exception("Invalid JSON format type, must be \"MaterialAsset\"");
-				}
-				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
-				{
-					throw std::exception("Invalid JSON format version, must be 1");
-				}
-			}
-
-			Poco::JSON::Object::Ptr jsonMaterialObject = jsonRootObject->get("MaterialAsset").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonTechniquesObject = jsonMaterialObject->get("Techniques").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonPropertiesObject = jsonMaterialObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
+			// Mandatory main sections of the material
+			const rapidjson::Value& rapidJsonValueMaterialAsset = rapidJsonDocument["MaterialAsset"];
+			const rapidjson::Value& rapidJsonValueTechniques = rapidJsonValueMaterialAsset["Techniques"];
+			const rapidjson::Value& rapidJsonValueProperties = rapidJsonValueMaterialAsset["Properties"];
 
 			// Gather the asset IDs of all used material blueprints (one material blueprint per material technique)
 			std::vector<RendererRuntime::v1Material::Technique> techniques;
+			techniques.reserve(rapidJsonValueTechniques.MemberCount());
+			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
 			{
-				techniques.reserve(jsonTechniquesObject->size());
-
-				Poco::JSON::Object::ConstIterator rootTechniquesIterator = jsonTechniquesObject->begin();
-				Poco::JSON::Object::ConstIterator rootTechniquesIteratorEnd = jsonTechniquesObject->end();
-				while (rootTechniquesIterator != rootTechniquesIteratorEnd)
-				{
-					// Add technique
-					RendererRuntime::v1Material::Technique technique;
-					technique.materialTechniqueId	   = RendererRuntime::StringId(rootTechniquesIterator->first.c_str());
-					technique.materialBlueprintAssetId = static_cast<uint32_t>(std::atoi(rootTechniquesIterator->second.extract<std::string>().c_str()));
-					techniques.push_back(technique);
-				
-					// Next technique, please
-					++rootTechniquesIterator;
-				}
+				// Add technique
+				RendererRuntime::v1Material::Technique technique;
+				technique.materialTechniqueId	   = RendererRuntime::StringId(rapidJsonMemberIteratorTechniques->name.GetString());
+				technique.materialBlueprintAssetId = static_cast<uint32_t>(std::atoi(rapidJsonMemberIteratorTechniques->value.GetString()));
+				techniques.push_back(technique);
 			}
 			std::sort(techniques.begin(), techniques.end(), detail::orderByMaterialTechniqueId);
 
@@ -182,28 +158,25 @@ namespace RendererToolkit
 			for (RendererRuntime::v1Material::Technique& technique : techniques)
 			{
 				// TODO(co) Error handling and simplification
-				// Parse material blueprint asset JSON
-				const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, technique.materialBlueprintAssetId);
-				std::ifstream materialBlueprintAssetInputFileStream(absoluteMaterialBlueprintAssetFilename, std::ios::binary);
-				Poco::JSON::Parser materialBlueprintAssetJsonParser;
-				materialBlueprintAssetJsonParser.parse(materialBlueprintAssetInputFileStream);
 
-				// Read configuration
+				// Read material blueprint asset compiler configuration
 				std::string materialBlueprintInputFile;
+				const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, technique.materialBlueprintAssetId);
 				{
-					// Read material blueprint asset compiler configuration
-					Poco::JSON::Object::Ptr jsonConfigurationObject = materialBlueprintAssetJsonParser.result().extract<Poco::JSON::Object::Ptr>()->get("Asset").extract<Poco::JSON::Object::Ptr>()->get("MaterialBlueprintAssetCompiler").extract<Poco::JSON::Object::Ptr>();
-					materialBlueprintInputFile = jsonConfigurationObject->getValue<std::string>("InputFile");
+					// Parse material blueprint asset JSON
+					std::ifstream materialBlueprintAssetInputFileStream(absoluteMaterialBlueprintAssetFilename, std::ios::binary);
+					rapidjson::Document rapidJsonDocumentMaterialBlueprintAsset;
+					JsonHelper::parseDocumentByInputFileStream(rapidJsonDocumentMaterialBlueprintAsset, materialBlueprintAssetInputFileStream, absoluteMaterialBlueprintAssetFilename, "Asset", "1");
+					materialBlueprintInputFile = rapidJsonDocumentMaterialBlueprintAsset["Asset"]["MaterialBlueprintAssetCompiler"]["InputFile"].GetString();
 				}
 
 				// Parse material blueprint JSON
-				std::ifstream materialBlueprintInputFileStream(Poco::Path(absoluteMaterialBlueprintAssetFilename).parent().toString(Poco::Path::PATH_UNIX) + materialBlueprintInputFile, std::ios::binary);
-				Poco::JSON::Parser materialBlueprintJsonParser;
-				materialBlueprintJsonParser.parse(materialBlueprintInputFileStream);
-				Poco::JSON::Object::Ptr materialBlueprintJsonRootObject = materialBlueprintJsonParser.result().extract<Poco::JSON::Object::Ptr>();
-				Poco::JSON::Object::Ptr jsonMaterialBlueprintObject = materialBlueprintJsonRootObject->get("MaterialBlueprintAsset").extract<Poco::JSON::Object::Ptr>();
+				const std::string absoluteMaterialBlueprintFilename = std::tr2::sys::path(absoluteMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
+				std::ifstream materialBlueprintInputFileStream(absoluteMaterialBlueprintFilename, std::ios::binary);
+				rapidjson::Document rapidJsonDocumentMaterialBlueprint;
+				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocumentMaterialBlueprint, materialBlueprintInputFileStream, absoluteMaterialBlueprintFilename, "MaterialBlueprintAsset", "1");
 				RendererRuntime::MaterialProperties::SortedPropertyVector newSortedMaterialPropertyVector;
-				JsonMaterialBlueprintHelper::readProperties(input, jsonMaterialBlueprintObject->get("Properties").extract<Poco::JSON::Object::Ptr>(), newSortedMaterialPropertyVector);
+				JsonMaterialBlueprintHelper::readProperties(input, rapidJsonDocumentMaterialBlueprint["MaterialBlueprintAsset"]["Properties"], newSortedMaterialPropertyVector);
 
 				// Add properties and avoid duplicates while doing so
 				for (const RendererRuntime::MaterialProperty& materialProperty : newSortedMaterialPropertyVector)
@@ -235,15 +208,12 @@ namespace RendererToolkit
 			// Write down the material techniques
 			outputFileStream.write(reinterpret_cast<const char*>(techniques.data()), sizeof(RendererRuntime::v1Material::Technique) * techniques.size());
 
-			{ // Properties
-				// Update material property values were required
-				Poco::JSON::Object::ConstIterator propertiesIterator = jsonPropertiesObject->begin();
-				Poco::JSON::Object::ConstIterator propertiesIteratorEnd = jsonPropertiesObject->end();
-				while (propertiesIterator != propertiesIteratorEnd)
+			{ // Properties: Update material property values were required
+				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorProperties = rapidJsonValueProperties.MemberBegin(); rapidJsonMemberIteratorProperties != rapidJsonValueProperties.MemberEnd(); ++rapidJsonMemberIteratorProperties)
 				{
 					// Material property ID
-					const std::string propertyName = propertiesIterator->first;
-					const RendererRuntime::MaterialPropertyId materialPropertyId(propertyName.c_str());
+					const char* propertyName = rapidJsonMemberIteratorProperties->name.GetString();
+					const RendererRuntime::MaterialPropertyId materialPropertyId(propertyName);
 
 					// Figure out the material property value type by using the material blueprint
 					RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
@@ -253,12 +223,9 @@ namespace RendererToolkit
 						if (materialProperty->getMaterialPropertyId() == materialPropertyId)
 						{
 							// Set the material own property value
-							static_cast<RendererRuntime::MaterialPropertyValue&>(*materialProperty) = JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(input, jsonPropertiesObject, propertyName, materialProperty->getValueType());
+							static_cast<RendererRuntime::MaterialPropertyValue&>(*materialProperty) = JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(input, rapidJsonValueProperties, propertyName, materialProperty->getValueType());
 						}
 					}
-
-					// Next property, please
-					++propertiesIterator;
 				}
 
 				// Write down all material properties
@@ -267,7 +234,7 @@ namespace RendererToolkit
 		}
 
 		{ // Update the output asset package
-			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
+			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/Material/" + assetCategory + '/' + assetName;
 
 			// Output asset

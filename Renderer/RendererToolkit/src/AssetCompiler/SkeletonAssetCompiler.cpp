@@ -25,6 +25,16 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
+	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
+	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
+	#include <rapidjson/document.h>
+#pragma warning(pop)
+
 #include <fstream>
 
 
@@ -46,10 +56,12 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	SkeletonAssetCompiler::SkeletonAssetCompiler()
 	{
+		// Nothing here
 	}
 
 	SkeletonAssetCompiler::~SkeletonAssetCompiler()
 	{
+		// Nothing here
 	}
 
 
@@ -66,33 +78,30 @@ namespace RendererToolkit
 		// Input, configuration and output
 		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
 		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		Poco::JSON::Object::Ptr		   jsonAssetRootObject	= configuration.jsonAssetRootObject;
 		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
 
 		// Get the JSON asset object
-		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
+		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
 		// Read configuration
 		// TODO(co) Add required properties
 		std::string inputFile;
-		uint32_t test = 0;
 		{
 			// Read skeleton asset compiler configuration
-			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonAssetObject->get("SkeletonAssetCompiler").extract<Poco::JSON::Object::Ptr>();
-			inputFile = jsonConfigurationObject->getValue<std::string>("InputFile");
-			test	  = jsonConfigurationObject->optValue<uint32_t>("Test", test);
+			const rapidjson::Value& rapidJsonValueSkeletonAssetCompiler = rapidJsonValueAsset["SkeletonAssetCompiler"];
+			inputFile = rapidJsonValueSkeletonAssetCompiler["InputFile"].GetString();
 		}
 
 		// Open the input file
 		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
-		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
+		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".skeleton";
 		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
 		// TODO(co) Implement me
 
 		{ // Update the output asset package
-			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
+			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/Skeleton/" + assetCategory + '/' + assetName;
 
 			// Output asset

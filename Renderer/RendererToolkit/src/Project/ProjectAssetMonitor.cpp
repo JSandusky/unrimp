@@ -27,24 +27,9 @@
 #include <RendererRuntime/Public/RendererRuntime.h>
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
 
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-
-	#pragma warning(disable: 4127)	// warning C4127: conditional expression is constant
-	#pragma warning(disable: 4244)	// warning C4244: 'argument': conversion from '<x>' to '<y>', possible loss of data
-	#pragma warning(disable: 4251)	// warning C4251: '<x>': class '<y>' needs to have dll-interface to be used by clients of class '<x>'
-	#pragma warning(disable: 4266)	// warning C4266: '<x>': no override available for virtual member function from base '<y>'; function is hidden
-	#pragma warning(disable: 4365)	// warning C4365: 'return': conversion from '<x>' to '<y>', signed/unsigned mismatch
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#pragma warning(disable: 4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
-	#pragma warning(disable: 4619)	// warning C4619: #pragma warning: there is no warning number '<x>'
-	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-
-	#define POCO_NO_UNWINDOWS
-	#include <Poco/Path.h>
-#pragma warning(pop)
-
 #include <FileWatcher/FileWatcher.h>
+
+#include <filesystem>
 
 
 //[-------------------------------------------------------]
@@ -91,7 +76,7 @@ namespace RendererToolkit
 						// Get the corresponding asset
 						// TODO(co) The current simple solution is not sufficient for large scale projects having ten thousands of assets: Add more efficient asset search
 						// TODO(co) Add support for asset "FileDependencies". The current solution is just a quick'n'dirty prototype which will not work when multiple or other named asset data files are involved.
-						std::string test = Poco::Path(fileAction.filename).setExtension("").toString(Poco::Path::PATH_UNIX) + ".asset";
+						const std::string test = std::tr2::sys::path(fileAction.filename).replace_extension("asset").generic_string();
 
 						const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mProjectAssetMonitor.mProjectImpl.getAssetPackage().getSortedAssetVector();
 						const size_t numberOfAssets = sortedAssetVector.size();

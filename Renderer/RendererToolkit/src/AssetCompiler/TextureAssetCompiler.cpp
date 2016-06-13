@@ -63,6 +63,16 @@
 
 #include <libtiff/tiffio.h>
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
+	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
+	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
+	#include <rapidjson/document.h>
+#pragma warning(pop)
+
 #include <fstream>
 
 
@@ -630,53 +640,54 @@ namespace RendererToolkit
 		// Input, configuration and output
 		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
 		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		Poco::JSON::Object::Ptr		   jsonAssetRootObject	= configuration.jsonAssetRootObject;
 		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
 
 		// Get the JSON asset object
-		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
+		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
 		// Read configuration
 		// TODO(co) Add required properties
 		std::string inputFile;
-		uint32_t test = 0;
 		{
 			// Read texture asset compiler configuration
-			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonAssetObject->get("TextureAssetCompiler").extract<Poco::JSON::Object::Ptr>();
-			inputFile = jsonConfigurationObject->getValue<std::string>("InputFile");
-			test	  = jsonConfigurationObject->optValue<uint32_t>("Test", test);
+			const rapidjson::Value& rapidJsonValueTextureAssetCompiler = rapidJsonValueAsset["TextureAssetCompiler"];
+			inputFile = rapidJsonValueTextureAssetCompiler["InputFile"].GetString();
 		}
 
 		const std::string inputAssetFilename = assetInputDirectory + inputFile;
-		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
+		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 
 		// TODO(co) Everything rough prototype: Renderer target dependent stuff
 		std::string outputAssetFilename;
 		std::string testString;
 		{
+			const rapidjson::Value& rapidJsonValueTargets = configuration.rapidJsonValueTargets;
+
 			// Get the JSON targets object
 			std::string textureTargetName;
 			{
-				Poco::JSON::Object::Ptr jsonRendererTargetsObject = configuration.jsonTargetsObject->get("RendererTargets").extract<Poco::JSON::Object::Ptr>();
-				Poco::JSON::Object::Ptr jsonRendererTargetObject = jsonRendererTargetsObject->get(configuration.rendererTarget).extract<Poco::JSON::Object::Ptr>();
-				textureTargetName = jsonRendererTargetObject->getValue<std::string>("TextureTarget");
+				const rapidjson::Value& rapidJsonValueRendererTargets = rapidJsonValueTargets["RendererTargets"];
+				const rapidjson::Value& rapidJsonValueRendererTarget = rapidJsonValueRendererTargets[configuration.rendererTarget.c_str()];
+				textureTargetName = rapidJsonValueRendererTarget["TextureTarget"].GetString();
 			}
-			Poco::JSON::Object::Ptr jsonTextureTargetsObject = configuration.jsonTargetsObject->get("TextureTargets").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonTextureTargetObject = jsonTextureTargetsObject->get(textureTargetName).extract<Poco::JSON::Object::Ptr>();
-			const std::string fileFormat = jsonTextureTargetObject->getValue<std::string>("FileFormat");
+			{
+				const rapidjson::Value& rapidJsonValueTextureTargets = rapidJsonValueTargets["TextureTargets"];
+				const rapidjson::Value& rapidJsonValueTextureTarget = rapidJsonValueTextureTargets[textureTargetName.c_str()];
+				const std::string fileFormat = rapidJsonValueTextureTarget["FileFormat"].GetString();
 
-			outputAssetFilename = assetOutputDirectory + assetName + '.' + fileFormat;
-			if (fileFormat == "crn")
-			{
-				testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename);
-			}
-			else if (fileFormat == "dds")
-			{
-				testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename + " -fileformat dds");
-			}
-			else if (fileFormat == "ktx")
-			{
-				testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename + " -fileformat ktx -ETC1");
+				outputAssetFilename = assetOutputDirectory + assetName + '.' + fileFormat;
+				if (fileFormat == "crn")
+				{
+					testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename);
+				}
+				else if (fileFormat == "dds")
+				{
+					testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename + " -fileformat dds");
+				}
+				else if (fileFormat == "ktx")
+				{
+					testString = std::string("-file " + inputAssetFilename + " -out " + outputAssetFilename + " -fileformat ktx -ETC1");
+				}
 			}
 		}
 
@@ -829,7 +840,7 @@ namespace RendererToolkit
 	  detail::convert_file(inputAssetFilename.c_str(), outputAssetFilename.c_str(), out_file_type);
 
 		{ // Update the output asset package
-			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
+			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/Texture/" + assetCategory + '/' + assetName;
 
 			// Output asset
@@ -845,7 +856,7 @@ namespace RendererToolkit
 		
 		// Open the input file
 //		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
-		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
+		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string assetFilename = assetOutputDirectory + assetName + ".dds";	// TODO(co) Make this dynamic
 		std::ofstream outputFileStream(assetFilename, std::ios::binary);
 
@@ -1018,7 +1029,7 @@ comp_params.m_quality_level = cCRNMinQualityLevel;
 
 /*
 		{ // Update the output asset package
-			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
+			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/Texture/" + assetCategory + '/' + assetName;
 
 			// Output asset

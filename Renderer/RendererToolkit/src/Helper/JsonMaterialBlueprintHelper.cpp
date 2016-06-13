@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
 #include "RendererToolkit/Helper/JsonMaterialHelper.h"
+#include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h>
@@ -30,11 +31,17 @@
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
-	#pragma warning(disable: 4251)	// warning C4251: 'Poco::StringTokenizer::_tokens': class 'std::vector<std::string,std::allocator<_Kty>>' needs to have dll-interface to be used by clients of class 'Poco::StringTokenizer'
-	#include <Poco/StringTokenizer.h>
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
+	#pragma warning(disable: 4619)	// warning C4619: #pragma warning: there is no warning number '4351'
+	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
+	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
+	#include <rapidjson/document.h>
 #pragma warning(pop)
 
 #include <fstream>
+#include <algorithm>
 
 
 //[-------------------------------------------------------]
@@ -54,16 +61,17 @@ namespace
 			return (left.getMaterialPropertyId() < right.getMaterialPropertyId());
 		}
 
-		void optionalUniformBufferUsageProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, RendererRuntime::MaterialBlueprintResource::UniformBufferUsage& value)
+		void optionalUniformBufferUsageProperty(const rapidjson::Value& rapidJsonValueUniformBuffer, const char* propertyName, RendererRuntime::MaterialBlueprintResource::UniformBufferUsage& value)
 		{
-			Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
-			if (!jsonDynamicVar.isEmpty())
+			if (rapidJsonValueUniformBuffer.HasMember(propertyName))
 			{
-				const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+				const rapidjson::Value& rapidJsonValueUsage = rapidJsonValueUniformBuffer[propertyName];
+				const char* valueAsString = rapidJsonValueUsage.GetString();
+				const rapidjson::SizeType valueStringLength = rapidJsonValueUsage.GetStringLength();
 
 				// Define helper macros
-				#define IF_VALUE(name)			 if (#name == valueAsString) value = RendererRuntime::MaterialBlueprintResource::UniformBufferUsage::name;
-				#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = RendererRuntime::MaterialBlueprintResource::UniformBufferUsage::name;
+				#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = RendererRuntime::MaterialBlueprintResource::UniformBufferUsage::name;
+				#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = RendererRuntime::MaterialBlueprintResource::UniformBufferUsage::name;
 
 				// Evaluate value
 				IF_VALUE(UNKNOWN)
@@ -92,11 +100,12 @@ namespace
 			// "@pset(<parameter name>, <parameter value to set>)" (same syntax as in "RendererRuntime::ShaderBuilder")
 
 			// Gather required data
-			Poco::StringTokenizer stringTokenizer(instructionAsString, ",)");
-			if (stringTokenizer.count() == 2)
+			std::vector<std::string> elements;
+			RendererToolkit::StringHelper::splitString(instructionAsString, ',', elements);
+			if (elements.size() == 2)
 			{
-				const std::string parameterName = stringTokenizer[0];
-				const int32_t parameterValue = std::atoi(stringTokenizer[1].c_str());
+				const std::string parameterName = elements[0];
+				const int32_t parameterValue = std::atoi(elements[1].c_str());
 
 				// Execute
 				shaderProperties.setPropertyValue(RendererRuntime::StringId(parameterName.c_str()), parameterValue);
@@ -124,10 +133,11 @@ namespace
 			return value;
 		}
 
-		uint32_t getIntegerFromInstructionString(const std::string& instructionAsString, RendererRuntime::ShaderProperties& shaderProperties)
+		uint32_t getIntegerFromInstructionString(const char* instructionAsString, RendererRuntime::ShaderProperties& shaderProperties)
 		{
 			// Check for instruction "@counter(<parameter name>)" (same syntax as in "RendererRuntime::ShaderBuilder")
-			return static_cast<uint32_t>((strncmp(instructionAsString.c_str(), "@counter(", 7) == 0) ? executeCounterInstruction(instructionAsString, shaderProperties) : std::atoi(instructionAsString.c_str()));
+			// -> TODO(co) We might want to get rid of the implicit std::string parameter conversion below
+			return static_cast<uint32_t>((strncmp(instructionAsString, "@counter(", 7) == 0) ? executeCounterInstruction(instructionAsString, shaderProperties) : std::atoi(instructionAsString));
 		}
 
 
@@ -148,16 +158,17 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	void JsonMaterialBlueprintHelper::optionalShaderVisibilityProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::ShaderVisibility& value)
+	void JsonMaterialBlueprintHelper::optionalShaderVisibilityProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::ShaderVisibility& value)
 	{
-		Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
-		if (!jsonDynamicVar.isEmpty())
+		if (rapidJsonValue.HasMember(propertyName))
 		{
-			const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+			const rapidjson::Value& rapidJsonValueUsage = rapidJsonValue[propertyName];
+			const char* valueAsString = rapidJsonValueUsage.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValueUsage.GetStringLength();
 
 			// Define helper macros
-			#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::ShaderVisibility::name;
-			#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::ShaderVisibility::name;
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::ShaderVisibility::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::ShaderVisibility::name;
 
 			// Evaluate value
 			IF_VALUE(ALL)
@@ -177,14 +188,16 @@ namespace RendererToolkit
 		}
 	}
 
-	RendererRuntime::MaterialProperty::Usage JsonMaterialBlueprintHelper::mandatoryMaterialPropertyUsage(Poco::JSON::Object::Ptr jsonObject)
+	RendererRuntime::MaterialProperty::Usage JsonMaterialBlueprintHelper::mandatoryMaterialPropertyUsage(const rapidjson::Value& rapidJsonValue)
 	{
-		const std::string valueAsString = jsonObject->get("Usage").convert<std::string>();
+		const rapidjson::Value& rapidJsonValueUsage = rapidJsonValue["Usage"];
+		const char* valueAsString = rapidJsonValueUsage.GetString();
+		const rapidjson::SizeType valueStringLength = rapidJsonValueUsage.GetStringLength();
 		RendererRuntime::MaterialProperty::Usage usage = RendererRuntime::MaterialProperty::Usage::UNKNOWN;
 
 		// Define helper macros
-		#define IF_VALUE(name)			 if (#name == valueAsString) usage = RendererRuntime::MaterialProperty::Usage::name;
-		#define ELSE_IF_VALUE(name) else if (#name == valueAsString) usage = RendererRuntime::MaterialProperty::Usage::name;
+		#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) usage = RendererRuntime::MaterialProperty::Usage::name;
+		#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) usage = RendererRuntime::MaterialProperty::Usage::name;
 
 		// Evaluate value
 		IF_VALUE(UNKNOWN)
@@ -215,14 +228,16 @@ namespace RendererToolkit
 		return usage;
 	}
 
-	RendererRuntime::MaterialProperty::ValueType JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValueType(Poco::JSON::Object::Ptr jsonObject)
+	RendererRuntime::MaterialProperty::ValueType JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValueType(const rapidjson::Value& rapidJsonValue)
 	{
+		const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue["ValueType"];
+		const char* valueAsString = rapidJsonValueValueType.GetString();
+		const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
 		RendererRuntime::MaterialProperty::ValueType valueType = RendererRuntime::MaterialProperty::ValueType::UNKNOWN;
-		const std::string valueAsString = jsonObject->get("ValueType").convert<std::string>();
 
 		// Define helper macros
-		#define IF_VALUE(name)			 if (#name == valueAsString) valueType = RendererRuntime::MaterialProperty::ValueType::name;
-		#define ELSE_IF_VALUE(name) else if (#name == valueAsString) valueType = RendererRuntime::MaterialProperty::ValueType::name;
+		#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) valueType = RendererRuntime::MaterialProperty::ValueType::name;
+		#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) valueType = RendererRuntime::MaterialProperty::ValueType::name;
 
 		// Evaluate value
 		IF_VALUE(UNKNOWN)
@@ -262,7 +277,7 @@ namespace RendererToolkit
 		return valueType;
 	}
 
-	RendererRuntime::MaterialPropertyValue JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, const RendererRuntime::MaterialProperty::ValueType valueType)
+	RendererRuntime::MaterialPropertyValue JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName, const RendererRuntime::MaterialProperty::ValueType valueType)
 	{
 		// Get the material property default value
 		switch (valueType)
@@ -276,63 +291,63 @@ namespace RendererToolkit
 			case RendererRuntime::MaterialPropertyValue::ValueType::BOOLEAN:
 			{
 				int value = 0;
-				JsonHelper::optionalBooleanProperty(jsonObject, propertyName, value);
+				JsonHelper::optionalBooleanProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromBoolean(0 != value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER:
 			{
 				int value = 0;
-				JsonHelper::optionalIntegerProperty(jsonObject, propertyName, value);
+				JsonHelper::optionalIntegerProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromInteger(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_2:
 			{
 				int values[2] = { 0, 0 };
-				JsonHelper::optionalIntegerNProperty(jsonObject, propertyName, values, 2);
+				JsonHelper::optionalIntegerNProperty(rapidJsonValue, propertyName, values, 2);
 				return RendererRuntime::MaterialPropertyValue::fromInteger2(values[0], values[1]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_3:
 			{
 				int values[3] = { 0, 0, 0 };
-				JsonHelper::optionalIntegerNProperty(jsonObject, propertyName, values, 3);
+				JsonHelper::optionalIntegerNProperty(rapidJsonValue, propertyName, values, 3);
 				return RendererRuntime::MaterialPropertyValue::fromInteger3(values[0], values[1], values[2]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_4:
 			{
 				int values[4] = { 0, 0, 0, 0 };
-				JsonHelper::optionalIntegerNProperty(jsonObject, propertyName, values, 4);
+				JsonHelper::optionalIntegerNProperty(rapidJsonValue, propertyName, values, 4);
 				return RendererRuntime::MaterialPropertyValue::fromInteger4(values[0], values[1], values[2], values[3]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT:
 			{
 				float value = 0.0f;
-				JsonHelper::optionalFloatProperty(jsonObject, propertyName, value);
+				JsonHelper::optionalFloatProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromFloat(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_2:
 			{
 				float values[2] = { 0.0f, 0.0f };
-				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, values, 2);
+				JsonHelper::optionalFloatNProperty(rapidJsonValue, propertyName, values, 2);
 				return RendererRuntime::MaterialPropertyValue::fromFloat2(values[0], values[1]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3:
 			{
 				float values[3] = { 0.0f, 0.0f, 0.0f };
-				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, values, 3);
+				JsonHelper::optionalFloatNProperty(rapidJsonValue, propertyName, values, 3);
 				return RendererRuntime::MaterialPropertyValue::fromFloat3(values[0], values[1], values[2]);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4:
 			{
 				float values[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-				JsonHelper::optionalFloatNProperty(jsonObject, propertyName, values, 4);
+				JsonHelper::optionalFloatNProperty(rapidJsonValue, propertyName, values, 4);
 				return RendererRuntime::MaterialPropertyValue::fromFloat4(values[0], values[1], values[2], values[3]);
 			}
 
@@ -351,76 +366,76 @@ namespace RendererToolkit
 			case RendererRuntime::MaterialPropertyValue::ValueType::FILL_MODE:
 			{
 				Renderer::FillMode value = Renderer::FillMode::SOLID;
-				JsonMaterialHelper::optionalFillModeProperty(jsonObject, propertyName, value);
+				JsonMaterialHelper::optionalFillModeProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromFillMode(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::CULL_MODE:
 			{
 				Renderer::CullMode value = Renderer::CullMode::BACK;
-				JsonMaterialHelper::optionalCullModeProperty(jsonObject, propertyName, value);
+				JsonMaterialHelper::optionalCullModeProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromCullMode(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
 			{
 				Renderer::ConservativeRasterizationMode value = Renderer::ConservativeRasterizationMode::OFF;
-				JsonMaterialHelper::optionalConservativeRasterizationModeProperty(jsonObject, propertyName, value);
+				JsonMaterialHelper::optionalConservativeRasterizationModeProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromConservativeRasterizationMode(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
 			{
 				Renderer::DepthWriteMask value = Renderer::DepthWriteMask::ALL;
-				JsonMaterialHelper::optionalDepthWriteMaskProperty(jsonObject, propertyName, value);
+				JsonMaterialHelper::optionalDepthWriteMaskProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromDepthWriteMask(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::STENCIL_OP:
 			{
 				Renderer::StencilOp value = Renderer::StencilOp::KEEP;
-				JsonMaterialHelper::optionalStencilOpProperty(jsonObject, propertyName, value);
+				JsonMaterialHelper::optionalStencilOpProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromStencilOp(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::COMPARISON_FUNC:
 			{
 				Renderer::ComparisonFunc value = Renderer::ComparisonFunc::LESS;
-				JsonMaterialHelper::optionalComparisonFuncProperty(jsonObject, propertyName, value);
+				JsonMaterialHelper::optionalComparisonFuncProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromComparisonFunc(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::BLEND:
 			{
 				Renderer::Blend value = Renderer::Blend::ONE;
-				JsonMaterialHelper::optionalBlendProperty(jsonObject, propertyName, value);
+				JsonMaterialHelper::optionalBlendProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromBlend(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::BLEND_OP:
 			{
 				Renderer::BlendOp value = Renderer::BlendOp::ADD;
-				JsonMaterialHelper::optionalBlendOpProperty(jsonObject, propertyName, value);
+				JsonMaterialHelper::optionalBlendOpProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromBlendOp(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::FILTER_MODE:
 			{
 				Renderer::FilterMode value = Renderer::FilterMode::MIN_MAG_MIP_LINEAR;
-				JsonMaterialHelper::optionalFilterProperty(jsonObject, propertyName, value);
+				JsonMaterialHelper::optionalFilterProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromFilterMode(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
 			{
 				Renderer::TextureAddressMode value = Renderer::TextureAddressMode::CLAMP;
-				JsonMaterialHelper::optionalTextureAddressModeProperty(jsonObject, propertyName, value);
+				JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromTextureAddressMode(value);
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
 			{
-				return RendererRuntime::MaterialPropertyValue::fromTextureAssetId(JsonHelper::getCompiledAssetId(input, jsonObject, propertyName));
+				return RendererRuntime::MaterialPropertyValue::fromTextureAssetId(JsonHelper::getCompiledAssetId(input, rapidJsonValue, propertyName));
 			}
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::COMPOSITOR_TEXTURE_REFERENCE:
@@ -428,7 +443,7 @@ namespace RendererToolkit
 				// Value string content: "@<texture name>@<MRT-index>"
 				// -> Three values because the first will be an empty string
 				std::string values[3];
-				JsonHelper::optionalStringNProperty(jsonObject, propertyName, values, 3, "@");
+				JsonHelper::optionalStringNProperty(rapidJsonValue, propertyName, values, 3, '@');
 				RendererRuntime::MaterialPropertyValue::CompositorTextureReference compositorTextureReference;
 				compositorTextureReference.compositorTextureId = RendererRuntime::StringId(values[1].c_str()).getId();
 				compositorTextureReference.mrtIndex			   = static_cast<uint32_t>(std::atoi(values[2].c_str()));
@@ -440,107 +455,98 @@ namespace RendererToolkit
 		return RendererRuntime::MaterialPropertyValue::fromBoolean(false);
 	}
 
-	void JsonMaterialBlueprintHelper::readRootSignature(Poco::JSON::Object::Ptr jsonRootSignatureObject, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readRootSignature(const rapidjson::Value& rapidJsonValueRootSignature, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
 		// First: Collect everything we need instead of directly writing it down using an inefficient data layout
 		// -> We don't care that "Renderer::RootDescriptorTable::descriptorRanges" has unused bogus content, makes loading the root signature much easier because there this content just has to be set
 		std::vector<Renderer::RootParameter> rootParameters;
 		std::vector<Renderer::DescriptorRange> descriptorRanges;
 		{
-			Poco::JSON::Object::Ptr jsonRootParametersObject = jsonRootSignatureObject->get("RootParameters").extract<Poco::JSON::Object::Ptr>();
-			rootParameters.reserve(jsonRootParametersObject->size());
-			descriptorRanges.reserve(jsonRootParametersObject->size());
+			const rapidjson::Value& rapidJsonValueRootParameters = rapidJsonValueRootSignature["RootParameters"];
+			rootParameters.reserve(rapidJsonValueRootParameters.MemberCount());
+			descriptorRanges.reserve(rapidJsonValueRootParameters.MemberCount());
 
-			Poco::JSON::Object::ConstIterator rootParametersIterator = jsonRootParametersObject->begin();
-			Poco::JSON::Object::ConstIterator rootParametersIteratorEnd = jsonRootParametersObject->end();
-			while (rootParametersIterator != rootParametersIteratorEnd)
+			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorRootParameters = rapidJsonValueRootParameters.MemberBegin(); rapidJsonMemberIteratorRootParameters != rapidJsonValueRootParameters.MemberEnd(); ++rapidJsonMemberIteratorRootParameters)
 			{
-				Poco::JSON::Object::Ptr jsonRootParameterObject = rootParametersIterator->second.extract<Poco::JSON::Object::Ptr>();
+				const rapidjson::Value& rapidJsonValueRootParameter = rapidJsonMemberIteratorRootParameters->value;
+				const rapidjson::Value& rapidJsonValueParameterType = rapidJsonValueRootParameter["ParameterType"];
+				const char* parameterTypeAsString = rapidJsonValueParameterType.GetString();
+				const rapidjson::SizeType parameterTypeStringLength = rapidJsonValueParameterType.GetStringLength();
 
 				// TODO(co) Add support for the other root parameter types
-				const std::string rootParameterType = jsonRootParameterObject->getValue<std::string>("ParameterType");
-				if ("DESCRIPTOR_TABLE" == rootParameterType)
+				if (strncmp(parameterTypeAsString, "DESCRIPTOR_TABLE", parameterTypeStringLength) == 0)
 				{
-					Poco::JSON::Object::Ptr jsonDescriptorRangesObject = jsonRootParameterObject->get("DescriptorRanges").extract<Poco::JSON::Object::Ptr>();
+					const rapidjson::Value& rapidJsonValueDescriptorRanges = rapidJsonValueRootParameter["DescriptorRanges"];
 
 					{ // Collect the root parameter
 						Renderer::RootParameter rootParameter;
 						rootParameter.parameterType = Renderer::RootParameterType::DESCRIPTOR_TABLE;
-						rootParameter.descriptorTable.numberOfDescriptorRanges = jsonDescriptorRangesObject->size();
-						optionalShaderVisibilityProperty(jsonRootParameterObject, "ShaderVisibility", rootParameter.shaderVisibility);
+						rootParameter.descriptorTable.numberOfDescriptorRanges = rapidJsonValueDescriptorRanges.MemberCount();
+						optionalShaderVisibilityProperty(rapidJsonValueRootParameter, "ShaderVisibility", rootParameter.shaderVisibility);
 						rootParameters.push_back(rootParameter);
 					}
 
-					{ // Descriptor ranges
-						Poco::JSON::Object::ConstIterator descriptorRangesIterator = jsonDescriptorRangesObject->begin();
-						Poco::JSON::Object::ConstIterator descriptorRangesIteratorEnd = jsonDescriptorRangesObject->end();
-						while (descriptorRangesIterator != descriptorRangesIteratorEnd)
-						{
-							Poco::JSON::Object::Ptr jsonDescriptorRangeObject = descriptorRangesIterator->second.extract<Poco::JSON::Object::Ptr>();
-							Renderer::DescriptorRange descriptorRange;
+					// Descriptor ranges
+					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorDescriptorRanges = rapidJsonValueDescriptorRanges.MemberBegin(); rapidJsonMemberIteratorDescriptorRanges != rapidJsonValueDescriptorRanges.MemberEnd(); ++rapidJsonMemberIteratorDescriptorRanges)
+					{
+						const rapidjson::Value& rapidJsonValueDescriptorRange = rapidJsonMemberIteratorDescriptorRanges->value;
+						Renderer::DescriptorRange descriptorRange;
 
-							{ // Range type
-								const std::string descriptorRangeType = jsonDescriptorRangeObject->getValue<std::string>("RangeType");
-								if ("SRV" == descriptorRangeType)
-								{
-									descriptorRange.rangeType = Renderer::DescriptorRangeType::SRV;
-								}
-								else if ("UAV" == descriptorRangeType)
-								{
-									descriptorRange.rangeType = Renderer::DescriptorRangeType::UAV;
-								}
-								else if ("CBV" == descriptorRangeType)
-								{
-									descriptorRange.rangeType = Renderer::DescriptorRangeType::CBV;
-								}
-								else if ("SAMPLER" == descriptorRangeType)
-								{
-									descriptorRange.rangeType = Renderer::DescriptorRangeType::SAMPLER;
-								}
-								else
-								{
-									// TODO(co) Error handling
-								}
+						{ // Range type
+							const rapidjson::Value& rapidJsonValueRangeType = rapidJsonValueDescriptorRange["RangeType"];
+							const char* rangeTypeAsString = rapidJsonValueRangeType.GetString();
+							const rapidjson::SizeType rangeTypeStringLength = rapidJsonValueRangeType.GetStringLength();
+
+							// Define helper macros
+							#define IF_VALUE(name)			 if (strncmp(rangeTypeAsString, #name, rangeTypeStringLength) == 0) descriptorRange.rangeType = Renderer::DescriptorRangeType::name;
+							#define ELSE_IF_VALUE(name) else if (strncmp(rangeTypeAsString, #name, rangeTypeStringLength) == 0) descriptorRange.rangeType = Renderer::DescriptorRangeType::name;
+
+							// Evaluate value
+							IF_VALUE(SRV)
+							ELSE_IF_VALUE(UAV)
+							ELSE_IF_VALUE(CBV)
+							ELSE_IF_VALUE(SAMPLER)
+							else
+							{
+								// TODO(co) Error handling
 							}
 
-							// Optional number of descriptors
-							descriptorRange.numberOfDescriptors = 1;
-							JsonHelper::optionalIntegerProperty(jsonDescriptorRangeObject, "NumberOfDescriptors", descriptorRange.numberOfDescriptors);
-
-							// Mandatory base shader register
-							descriptorRange.baseShaderRegister = ::detail::getIntegerFromInstructionString(jsonDescriptorRangeObject->get("BaseShaderRegister").convert<std::string>(), shaderProperties);
-
-							// Optional register space
-							descriptorRange.registerSpace = 0;
-							JsonHelper::optionalIntegerProperty(jsonDescriptorRangeObject, "RegisterSpace", descriptorRange.registerSpace);
-
-							// Optional offset in descriptors from table start
-							descriptorRange.offsetInDescriptorsFromTableStart = 0;
-							JsonHelper::optionalIntegerProperty(jsonDescriptorRangeObject, "OffsetInDescriptorsFromTableStart", descriptorRange.offsetInDescriptorsFromTableStart);
-
-							// Optional base shader register name
-							descriptorRange.baseShaderRegisterName[0] = '\0';
-							JsonHelper::optionalStringProperty(jsonDescriptorRangeObject, "BaseShaderRegisterName", descriptorRange.baseShaderRegisterName, Renderer::DescriptorRange::NAME_LENGTH);
-
-							// Optional sampler root parameter index
-							descriptorRange.samplerRootParameterIndex = 0;
-							JsonHelper::optionalIntegerProperty(jsonDescriptorRangeObject, "SamplerRootParameterIndex", descriptorRange.samplerRootParameterIndex);
-
-							// Collect the descriptor range
-							descriptorRanges.push_back(descriptorRange);
-
-							// Next root descriptor range, please
-							++descriptorRangesIterator;
+							// Undefine helper macros
+							#undef IF_VALUE
+							#undef ELSE_IF_VALUE
 						}
+
+						// Optional number of descriptors
+						descriptorRange.numberOfDescriptors = 1;
+						JsonHelper::optionalIntegerProperty(rapidJsonValueDescriptorRange, "NumberOfDescriptors", descriptorRange.numberOfDescriptors);
+
+						// Mandatory base shader register
+						descriptorRange.baseShaderRegister = ::detail::getIntegerFromInstructionString(rapidJsonValueDescriptorRange["BaseShaderRegister"].GetString(), shaderProperties);
+
+						// Optional register space
+						descriptorRange.registerSpace = 0;
+						JsonHelper::optionalIntegerProperty(rapidJsonValueDescriptorRange, "RegisterSpace", descriptorRange.registerSpace);
+
+						// Optional offset in descriptors from table start
+						descriptorRange.offsetInDescriptorsFromTableStart = 0;
+						JsonHelper::optionalIntegerProperty(rapidJsonValueDescriptorRange, "OffsetInDescriptorsFromTableStart", descriptorRange.offsetInDescriptorsFromTableStart);
+
+						// Optional base shader register name
+						descriptorRange.baseShaderRegisterName[0] = '\0';
+						JsonHelper::optionalStringProperty(rapidJsonValueDescriptorRange, "BaseShaderRegisterName", descriptorRange.baseShaderRegisterName, Renderer::DescriptorRange::NAME_LENGTH);
+
+						// Optional sampler root parameter index
+						descriptorRange.samplerRootParameterIndex = 0;
+						JsonHelper::optionalIntegerProperty(rapidJsonValueDescriptorRange, "SamplerRootParameterIndex", descriptorRange.samplerRootParameterIndex);
+
+						// Collect the descriptor range
+						descriptorRanges.push_back(descriptorRange);
 					}
 				}
 				else
 				{
 					// TODO(co) Error handling
 				}
-
-				// Next root parameter, please
-				++rootParametersIterator;
 			}
 		}
 
@@ -562,27 +568,25 @@ namespace RendererToolkit
 		outputFileStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), sizeof(Renderer::DescriptorRange) * descriptorRanges.size());
 	}
 
-	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPropertiesObject, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, bool sort)
+	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, bool sort)
 	{
-		Poco::JSON::Object::ConstIterator propertiesIterator = jsonPropertiesObject->begin();
-		Poco::JSON::Object::ConstIterator propertiesIteratorEnd = jsonPropertiesObject->end();
-		while (propertiesIterator != propertiesIteratorEnd)
+		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIterator = rapidJsonValueProperties.MemberBegin(); rapidJsonMemberIterator != rapidJsonValueProperties.MemberEnd(); ++rapidJsonMemberIterator)
 		{
-			Poco::JSON::Object::Ptr jsonPropertyObject = propertiesIterator->second.extract<Poco::JSON::Object::Ptr>();
+			const rapidjson::Value& rapidJsonValueProperty = rapidJsonMemberIterator->value;
 
 			// Material property ID
-			const RendererRuntime::MaterialPropertyId materialPropertyId(propertiesIterator->first.c_str());
+			const RendererRuntime::MaterialPropertyId materialPropertyId(rapidJsonMemberIterator->name.GetString());
 
 			// Material property usage
-			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(jsonPropertyObject);
-			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(jsonPropertyObject);
+			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(rapidJsonValueProperty);
+			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValueProperty);
 			if (RendererRuntime::MaterialProperty::Usage::TEXTURE_REFERENCE != usage && RendererRuntime::MaterialProperty::isReferenceUsage(usage))
 			{
 				// Get the reference value as string
 				static const uint32_t NAME_LENGTH = 128;
 				char referenceAsString[NAME_LENGTH];
 				memset(&referenceAsString[0], 0, sizeof(char) * NAME_LENGTH);
-				JsonHelper::optionalStringProperty(jsonPropertyObject, "Value", referenceAsString, NAME_LENGTH);
+				JsonHelper::optionalStringProperty(rapidJsonValueProperty, "Value", referenceAsString, NAME_LENGTH);
 
 				// The character "@" is used to reference e.g. a material property value
 				if (referenceAsString[0] == '@')
@@ -599,11 +603,8 @@ namespace RendererToolkit
 			else
 			{
 				// Write down the material property
-				sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, mandatoryMaterialPropertyValue(input, jsonPropertyObject, "Value", valueType)));
+				sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, mandatoryMaterialPropertyValue(input, rapidJsonValueProperty, "Value", valueType)));
 			}
-
-			// Next property, please
-			++propertiesIterator;
 		}
 
 		// Ensure the material properties are sorted, if requested
@@ -613,17 +614,17 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readPipelineStateObject(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonPipelineStateObject, std::ofstream& outputFileStream)
+	void JsonMaterialBlueprintHelper::readPipelineStateObject(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValuePipelineState, std::ofstream& outputFileStream)
 	{
 		{ // Shader blueprints
-			Poco::JSON::Object::Ptr jsonShaderBlueprintsObject = jsonPipelineStateObject->get("ShaderBlueprints").extract<Poco::JSON::Object::Ptr>();
+			const rapidjson::Value& rapidJsonValueShaderBlueprints = rapidJsonValuePipelineState["ShaderBlueprints"];
 
 			RendererRuntime::v1MaterialBlueprint::ShaderBlueprints shaderBlueprints;
-			shaderBlueprints.vertexShaderBlueprintAssetId				  = JsonHelper::getCompiledAssetId(input, jsonShaderBlueprintsObject, "VertexShaderBlueprintAssetId");
-			shaderBlueprints.tessellationControlShaderBlueprintAssetId	  = 0; // TODO(co) Add shader type
-			shaderBlueprints.tessellationEvaluationShaderBlueprintAssetId = 0; // TODO(co) Add shader type
-			shaderBlueprints.geometryShaderBlueprintAssetId				  = 0; // TODO(co) Add shader type
-			shaderBlueprints.fragmentShaderBlueprintAssetId				  = JsonHelper::getCompiledAssetId(input, jsonShaderBlueprintsObject, "FragmentShaderBlueprintAssetId");
+			shaderBlueprints.vertexShaderBlueprintAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueShaderBlueprints, "VertexShaderBlueprintAssetId");
+			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "TessellationControlShaderBlueprintAssetId", shaderBlueprints.tessellationControlShaderBlueprintAssetId);
+			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "TessellationEvaluationShaderBlueprintAssetId", shaderBlueprints.tessellationEvaluationShaderBlueprintAssetId);
+			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "GeometryShaderBlueprintAssetId", shaderBlueprints.geometryShaderBlueprintAssetId);
+			JsonHelper::optionalCompiledAssetId(input, rapidJsonValueShaderBlueprints, "FragmentShaderBlueprintAssetId", shaderBlueprints.fragmentShaderBlueprintAssetId);
 
 			// Write down the shader blueprints
 			outputFileStream.write(reinterpret_cast<const char*>(&shaderBlueprints), sizeof(RendererRuntime::v1MaterialBlueprint::ShaderBlueprints));
@@ -632,106 +633,100 @@ namespace RendererToolkit
 		// Start with the default settings
 		Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder();
 
-		{ // Optional rasterizer state
-			Poco::Dynamic::Var jsonRasterizerStateDynamicVar = jsonPipelineStateObject->get("RasterizerState");
-			if (!jsonRasterizerStateDynamicVar.isEmpty())
-			{
-				Poco::JSON::Object::Ptr jsonRasterizerStateObject = jsonRasterizerStateDynamicVar.extract<Poco::JSON::Object::Ptr>();
-				Renderer::RasterizerState& rasterizerState = pipelineState.rasterizerState;
+		// Optional rasterizer state
+		if (rapidJsonValuePipelineState.HasMember("RasterizerState"))
+		{
+			const rapidjson::Value& rapidJsonValueRasterizerState = rapidJsonValuePipelineState["RasterizerState"];
+			Renderer::RasterizerState& rasterizerState = pipelineState.rasterizerState;
 
-				// The optional properties
-				JsonMaterialHelper::optionalFillModeProperty(jsonRasterizerStateObject, "FillMode", rasterizerState.fillMode);
-				JsonMaterialHelper::optionalCullModeProperty(jsonRasterizerStateObject, "CullMode", rasterizerState.cullMode);
-				JsonHelper::optionalBooleanProperty(jsonRasterizerStateObject, "FrontCounterClockwise", rasterizerState.frontCounterClockwise);
-				JsonHelper::optionalIntegerProperty(jsonRasterizerStateObject, "DepthBias", rasterizerState.depthBias);
-				JsonHelper::optionalFloatProperty(jsonRasterizerStateObject, "DepthBiasClamp", rasterizerState.depthBiasClamp);
-				JsonHelper::optionalFloatProperty(jsonRasterizerStateObject, "SlopeScaledDepthBias", rasterizerState.slopeScaledDepthBias);
-				JsonHelper::optionalBooleanProperty(jsonRasterizerStateObject, "DepthClipEnable", rasterizerState.depthClipEnable);
-				JsonHelper::optionalBooleanProperty(jsonRasterizerStateObject, "MultisampleEnable", rasterizerState.multisampleEnable);
-				JsonHelper::optionalBooleanProperty(jsonRasterizerStateObject, "AntialiasedLineEnable", rasterizerState.antialiasedLineEnable);
-				JsonHelper::optionalIntegerProperty(jsonRasterizerStateObject, "ForcedSampleCount", rasterizerState.forcedSampleCount);
-				JsonMaterialHelper::optionalConservativeRasterizationModeProperty(jsonRasterizerStateObject, "ConservativeRasterizationMode", rasterizerState.conservativeRasterizationMode);
-				JsonHelper::optionalBooleanProperty(jsonRasterizerStateObject, "ScissorEnable", rasterizerState.scissorEnable);
-			}
+			// The optional properties
+			JsonMaterialHelper::optionalFillModeProperty(rapidJsonValueRasterizerState, "FillMode", rasterizerState.fillMode);
+			JsonMaterialHelper::optionalCullModeProperty(rapidJsonValueRasterizerState, "CullMode", rasterizerState.cullMode);
+			JsonHelper::optionalBooleanProperty(rapidJsonValueRasterizerState, "FrontCounterClockwise", rasterizerState.frontCounterClockwise);
+			JsonHelper::optionalIntegerProperty(rapidJsonValueRasterizerState, "DepthBias", rasterizerState.depthBias);
+			JsonHelper::optionalFloatProperty(rapidJsonValueRasterizerState, "DepthBiasClamp", rasterizerState.depthBiasClamp);
+			JsonHelper::optionalFloatProperty(rapidJsonValueRasterizerState, "SlopeScaledDepthBias", rasterizerState.slopeScaledDepthBias);
+			JsonHelper::optionalBooleanProperty(rapidJsonValueRasterizerState, "DepthClipEnable", rasterizerState.depthClipEnable);
+			JsonHelper::optionalBooleanProperty(rapidJsonValueRasterizerState, "MultisampleEnable", rasterizerState.multisampleEnable);
+			JsonHelper::optionalBooleanProperty(rapidJsonValueRasterizerState, "AntialiasedLineEnable", rasterizerState.antialiasedLineEnable);
+			JsonHelper::optionalIntegerProperty(rapidJsonValueRasterizerState, "ForcedSampleCount", rasterizerState.forcedSampleCount);
+			JsonMaterialHelper::optionalConservativeRasterizationModeProperty(rapidJsonValueRasterizerState, "ConservativeRasterizationMode", rasterizerState.conservativeRasterizationMode);
+			JsonHelper::optionalBooleanProperty(rapidJsonValueRasterizerState, "ScissorEnable", rasterizerState.scissorEnable);
 		}
 
-		{ // Optional depth stencil state
-			Poco::Dynamic::Var jsonDepthStencilStateDynamicVar = jsonPipelineStateObject->get("DepthStencilState");
-			if (!jsonDepthStencilStateDynamicVar.isEmpty())
+		// Optional depth stencil state
+		if (rapidJsonValuePipelineState.HasMember("DepthStencilState"))
+		{
+			const rapidjson::Value& rapidJsonValueDepthStencilState = rapidJsonValuePipelineState["DepthStencilState"];
+			Renderer::DepthStencilState& depthStencilState = pipelineState.depthStencilState;
+
+			// The optional properties
+			JsonHelper::optionalBooleanProperty(rapidJsonValueDepthStencilState, "DepthEnable", depthStencilState.depthEnable);
+			JsonMaterialHelper::optionalDepthWriteMaskProperty(rapidJsonValueDepthStencilState, "DepthWriteMask", depthStencilState.depthWriteMask);
+
+			// TODO(co) Depth stencil state: Read in the rest of the PSO
+			/*
+			"DepthStencilState":
 			{
-				Poco::JSON::Object::Ptr jsonDepthStencilStateObject = jsonDepthStencilStateDynamicVar.extract<Poco::JSON::Object::Ptr>();
-				Renderer::DepthStencilState& depthStencilState = pipelineState.depthStencilState;
-
-				// The optional properties
-				JsonHelper::optionalBooleanProperty(jsonDepthStencilStateObject, "DepthEnable", depthStencilState.depthEnable);
-				JsonMaterialHelper::optionalDepthWriteMaskProperty(jsonDepthStencilStateObject, "DepthWriteMask", depthStencilState.depthWriteMask);
-
-				// TODO(co) Depth stencil state: Read in the rest of the PSO
-				/*
-				"DepthStencilState":
+				"DepthFunc": "LESS",
+				"StencilEnable": "FALSE",
+				"StencilReadMask": "255",
+				"StencilWriteMask": "255",
+				"FrontFace":
 				{
-					"DepthFunc": "LESS",
-					"StencilEnable": "FALSE",
-					"StencilReadMask": "255",
-					"StencilWriteMask": "255",
-					"FrontFace":
-					{
-						"StencilFailOp": "KEEP",
-						"StencilDepthFailOp": "KEEP",
-						"StencilPassOp": "KEEP",
-						"StencilFunc": "ALWAYS"
-					},
-					"BackFace":
-					{
-						"StencilFailOp": "KEEP",
-						"StencilDepthFailOp": "KEEP",
-						"StencilPassOp": "KEEP",
-						"StencilFunc": "ALWAYS"
-					}
+					"StencilFailOp": "KEEP",
+					"StencilDepthFailOp": "KEEP",
+					"StencilPassOp": "KEEP",
+					"StencilFunc": "ALWAYS"
 				},
-				*/
-			}
+				"BackFace":
+				{
+					"StencilFailOp": "KEEP",
+					"StencilDepthFailOp": "KEEP",
+					"StencilPassOp": "KEEP",
+					"StencilFunc": "ALWAYS"
+				}
+			},
+			*/
 		}
 
-		{ // Optional blend state
-			Poco::Dynamic::Var jsonBlendStateDynamicVar = jsonPipelineStateObject->get("BlendState");
-			if (!jsonBlendStateDynamicVar.isEmpty())
+		// Optional blend state
+		if (rapidJsonValuePipelineState.HasMember("BlendState"))
+		{
+			const rapidjson::Value& rapidJsonValueBlendState = rapidJsonValuePipelineState["BlendState"];
+			Renderer::BlendState& blendState = pipelineState.blendState;
+
+			// The optional properties
+			JsonHelper::optionalBooleanProperty(rapidJsonValueBlendState, "AlphaToCoverageEnable", blendState.alphaToCoverageEnable);
+			JsonHelper::optionalBooleanProperty(rapidJsonValueBlendState, "IndependentBlendEnable", blendState.independentBlendEnable);
+
+			// The optional render target properties
+			for (int i = 0; i < 8; ++i)
 			{
-				Poco::JSON::Object::Ptr jsonBlendStateObject = jsonBlendStateDynamicVar.extract<Poco::JSON::Object::Ptr>();
-				Renderer::BlendState& blendState = pipelineState.blendState;
-
-				// The optional properties
-				JsonHelper::optionalBooleanProperty(jsonBlendStateObject, "AlphaToCoverageEnable", blendState.alphaToCoverageEnable);
-				JsonHelper::optionalBooleanProperty(jsonBlendStateObject, "IndependentBlendEnable", blendState.independentBlendEnable);
-
-				// The optional render target properties
-				for (int i = 0; i < 8; ++i)
+				const std::string renderTarget = "RenderTarget[" + std::to_string(i) + ']';
+				if (rapidJsonValueBlendState.HasMember(renderTarget.c_str()))
 				{
-					Poco::Dynamic::Var jsonRenderTargetDynamicVar = jsonBlendStateObject->get("RenderTarget[" + std::to_string(i) + ']');
-					if (!jsonRenderTargetDynamicVar.isEmpty())
+					const rapidjson::Value& rapidJsonValueRenderTarget = rapidJsonValueBlendState[renderTarget.c_str()];
+					Renderer::RenderTargetBlendDesc& renderTargetBlendDesc = blendState.renderTarget[i];
+
+					// The optional properties
+					JsonHelper::optionalBooleanProperty(rapidJsonValueRenderTarget, "BlendEnable", renderTargetBlendDesc.blendEnable);
+					JsonMaterialHelper::optionalBlendProperty(rapidJsonValueRenderTarget, "SrcBlend", renderTargetBlendDesc.srcBlend);
+					JsonMaterialHelper::optionalBlendProperty(rapidJsonValueRenderTarget, "DestBlend", renderTargetBlendDesc.destBlend);
+					JsonMaterialHelper::optionalBlendOpProperty(rapidJsonValueRenderTarget, "BlendOp", renderTargetBlendDesc.blendOp);
+					JsonMaterialHelper::optionalBlendProperty(rapidJsonValueRenderTarget, "SrcBlendAlpha", renderTargetBlendDesc.srcBlendAlpha);
+					JsonMaterialHelper::optionalBlendProperty(rapidJsonValueRenderTarget, "DestBlendAlpha", renderTargetBlendDesc.destBlendAlpha);
+					JsonMaterialHelper::optionalBlendOpProperty(rapidJsonValueRenderTarget, "BlendOpAlpha", renderTargetBlendDesc.blendOpAlpha);
+
+					// TODO(co) Blend state: Read in the rest of the PSO
+					/*
+					"RenderTarget[0]":
 					{
-						Poco::JSON::Object::Ptr jsonRenderTargetObject = jsonRenderTargetDynamicVar.extract<Poco::JSON::Object::Ptr>();
-						Renderer::RenderTargetBlendDesc& renderTargetBlendDesc = blendState.renderTarget[i];
 
-						// The optional properties
-						JsonHelper::optionalBooleanProperty(jsonRenderTargetObject, "BlendEnable", renderTargetBlendDesc.blendEnable);
-						JsonMaterialHelper::optionalBlendProperty(jsonRenderTargetObject, "SrcBlend", renderTargetBlendDesc.srcBlend);
-						JsonMaterialHelper::optionalBlendProperty(jsonRenderTargetObject, "DestBlend", renderTargetBlendDesc.destBlend);
-						JsonMaterialHelper::optionalBlendOpProperty(jsonRenderTargetObject, "BlendOp", renderTargetBlendDesc.blendOp);
-						JsonMaterialHelper::optionalBlendProperty(jsonRenderTargetObject, "SrcBlendAlpha", renderTargetBlendDesc.srcBlendAlpha);
-						JsonMaterialHelper::optionalBlendProperty(jsonRenderTargetObject, "DestBlendAlpha", renderTargetBlendDesc.destBlendAlpha);
-						JsonMaterialHelper::optionalBlendOpProperty(jsonRenderTargetObject, "BlendOpAlpha", renderTargetBlendDesc.blendOpAlpha);
+						"RenderTargetWriteMask": "ALL"
+					},
+					*/
 
-						// TODO(co) Blend state: Read in the rest of the PSO
-						/*
-						"RenderTarget[0]":
-						{
-
-							"RenderTargetWriteMask": "ALL"
-						},
-						*/
-
-					}
 				}
 			}
 		}
@@ -741,18 +736,16 @@ namespace RendererToolkit
 		outputFileStream.write(reinterpret_cast<const char*>(&pipelineState), sizeof(Renderer::PipelineState));
 	}
 
-	void JsonMaterialBlueprintHelper::readUniformBuffers(const IAssetCompiler::Input& input, Poco::JSON::Object::Ptr jsonUniformBuffersObject, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readUniformBuffers(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueUniformBuffers, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
-		Poco::JSON::Object::ConstIterator rootUniformBuffersIterator = jsonUniformBuffersObject->begin();
-		Poco::JSON::Object::ConstIterator rootUniformBuffersIteratorEnd = jsonUniformBuffersObject->end();
-		while (rootUniformBuffersIterator != rootUniformBuffersIteratorEnd)
+		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorUniformBuffers = rapidJsonValueUniformBuffers.MemberBegin(); rapidJsonMemberIteratorUniformBuffers != rapidJsonValueUniformBuffers.MemberEnd(); ++rapidJsonMemberIteratorUniformBuffers)
 		{
-			Poco::JSON::Object::Ptr jsonUniformBufferObject = rootUniformBuffersIterator->second.extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonElementPropertiesObject = jsonUniformBufferObject->get("ElementProperties").extract<Poco::JSON::Object::Ptr>();
+			const rapidjson::Value& rapidJsonValueUniformBuffer = rapidJsonMemberIteratorUniformBuffers->value;
+			const rapidjson::Value& rapidJsonValueElementProperties = rapidJsonValueUniformBuffer["ElementProperties"];
 
 			// Gather all element properties, don't sort because the user defined order is important in here (data layout in memory)
 			RendererRuntime::MaterialProperties::SortedPropertyVector elementProperties;
-			readProperties(input, jsonElementPropertiesObject, elementProperties, false);
+			readProperties(input, rapidJsonValueElementProperties, elementProperties, false);
 
 			// Calculate the uniform buffer size, including handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
 			// -> Sum up the number of bytes required by all uniform buffer element properties
@@ -806,29 +799,24 @@ namespace RendererToolkit
 
 			{ // Write down the uniform buffer header
 				RendererRuntime::v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
-				uniformBufferHeader.rootParameterIndex = ::detail::getIntegerFromInstructionString(jsonUniformBufferObject->get("RootParameterIndex").convert<std::string>(), shaderProperties);
-				detail::optionalUniformBufferUsageProperty(jsonUniformBufferObject, "UniformBufferUsage", uniformBufferHeader.uniformBufferUsage);
-				JsonHelper::optionalIntegerProperty(jsonUniformBufferObject, "NumberOfElements", uniformBufferHeader.numberOfElements);
-				uniformBufferHeader.numberOfElementProperties = jsonElementPropertiesObject->size();
+				uniformBufferHeader.rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueUniformBuffer["RootParameterIndex"].GetString(), shaderProperties);
+				detail::optionalUniformBufferUsageProperty(rapidJsonValueUniformBuffer, "UniformBufferUsage", uniformBufferHeader.uniformBufferUsage);
+				JsonHelper::optionalIntegerProperty(rapidJsonValueUniformBuffer, "NumberOfElements", uniformBufferHeader.numberOfElements);
+				uniformBufferHeader.numberOfElementProperties = elementProperties.size();
 				uniformBufferHeader.uniformBufferNumberOfBytes = numberOfBytesPerElement * uniformBufferHeader.numberOfElements;
 				outputFileStream.write(reinterpret_cast<const char*>(&uniformBufferHeader), sizeof(RendererRuntime::v1MaterialBlueprint::UniformBufferHeader));
 			}
 
 			// Write down the uniform buffer element properties
 			outputFileStream.write(reinterpret_cast<const char*>(elementProperties.data()), sizeof(RendererRuntime::MaterialProperty) * elementProperties.size());
-
-			// Next uniform buffer, please
-			++rootUniformBuffersIterator;
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readSamplerStates(Poco::JSON::Object::Ptr jsonSamplerStatesObject, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readSamplerStates(const rapidjson::Value& rapidJsonValueSamplerStates, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
-		Poco::JSON::Object::ConstIterator rootSamplerStatesIterator = jsonSamplerStatesObject->begin();
-		Poco::JSON::Object::ConstIterator rootSamplerStatesIteratorEnd = jsonSamplerStatesObject->end();
-		while (rootSamplerStatesIterator != rootSamplerStatesIteratorEnd)
+		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorSamplerStates = rapidJsonValueSamplerStates.MemberBegin(); rapidJsonMemberIteratorSamplerStates != rapidJsonValueSamplerStates.MemberEnd(); ++rapidJsonMemberIteratorSamplerStates)
 		{
-			Poco::JSON::Object::Ptr jsonSamplerStateObject = rootSamplerStatesIterator->second.extract<Poco::JSON::Object::Ptr>();
+			const rapidjson::Value& rapidJsonValueSamplerState = rapidJsonMemberIteratorSamplerStates->value;
 
 			// Start with the default sampler state
 			RendererRuntime::v1MaterialBlueprint::SamplerState materialBlueprintSamplerState;
@@ -837,51 +825,43 @@ namespace RendererToolkit
 			samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 
 			// The optional properties
-			materialBlueprintSamplerState.rootParameterIndex = ::detail::getIntegerFromInstructionString(jsonSamplerStateObject->get("RootParameterIndex").convert<std::string>(), shaderProperties);
-			JsonMaterialHelper::optionalFilterProperty(jsonSamplerStateObject, "Filter", samplerState.filter);
-			JsonMaterialHelper::optionalTextureAddressModeProperty(jsonSamplerStateObject, "AddressU", samplerState.addressU);
-			JsonMaterialHelper::optionalTextureAddressModeProperty(jsonSamplerStateObject, "AddressV", samplerState.addressV);
-			JsonMaterialHelper::optionalTextureAddressModeProperty(jsonSamplerStateObject, "AddressW", samplerState.addressW);
-			JsonHelper::optionalFloatProperty(jsonSamplerStateObject, "MipLODBias", samplerState.mipLODBias);
-			JsonHelper::optionalIntegerProperty(jsonSamplerStateObject, "MaxAnisotropy", samplerState.maxAnisotropy);
-			JsonMaterialHelper::optionalComparisonFuncProperty(jsonSamplerStateObject, "ComparisonFunc", samplerState.comparisonFunc);
-			JsonHelper::optionalFloatNProperty(jsonSamplerStateObject, "BorderColor", samplerState.borderColor, 4);
-			JsonHelper::optionalFloatProperty(jsonSamplerStateObject, "MinLOD", samplerState.minLOD);
-			JsonHelper::optionalFloatProperty(jsonSamplerStateObject, "MaxLOD", samplerState.maxLOD);
+			materialBlueprintSamplerState.rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueSamplerState["RootParameterIndex"].GetString(), shaderProperties);
+			JsonMaterialHelper::optionalFilterProperty(rapidJsonValueSamplerState, "Filter", samplerState.filter);
+			JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValueSamplerState, "AddressU", samplerState.addressU);
+			JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValueSamplerState, "AddressV", samplerState.addressV);
+			JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValueSamplerState, "AddressW", samplerState.addressW);
+			JsonHelper::optionalFloatProperty(rapidJsonValueSamplerState, "MipLODBias", samplerState.mipLODBias);
+			JsonHelper::optionalIntegerProperty(rapidJsonValueSamplerState, "MaxAnisotropy", samplerState.maxAnisotropy);
+			JsonMaterialHelper::optionalComparisonFuncProperty(rapidJsonValueSamplerState, "ComparisonFunc", samplerState.comparisonFunc);
+			JsonHelper::optionalFloatNProperty(rapidJsonValueSamplerState, "BorderColor", samplerState.borderColor, 4);
+			JsonHelper::optionalFloatProperty(rapidJsonValueSamplerState, "MinLOD", samplerState.minLOD);
+			JsonHelper::optionalFloatProperty(rapidJsonValueSamplerState, "MaxLOD", samplerState.maxLOD);
 
 			// Write down the sampler state
 			outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintSamplerState), sizeof(RendererRuntime::v1MaterialBlueprint::SamplerState));
-
-			// Next sampler state, please
-			++rootSamplerStatesIterator;
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, Poco::JSON::Object::Ptr jsonTexturesObject, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueTextures, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
 	{
-		Poco::JSON::Object::ConstIterator rootTexturesIterator = jsonTexturesObject->begin();
-		Poco::JSON::Object::ConstIterator rootTexturesIteratorEnd = jsonTexturesObject->end();
-		while (rootTexturesIterator != rootTexturesIteratorEnd)
+		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTextures = rapidJsonValueTextures.MemberBegin(); rapidJsonMemberIteratorTextures != rapidJsonValueTextures.MemberEnd(); ++rapidJsonMemberIteratorTextures)
 		{
-			Poco::JSON::Object::Ptr jsonTextureObject = rootTexturesIterator->second.extract<Poco::JSON::Object::Ptr>();
+			const rapidjson::Value& rapidJsonValueTexture = rapidJsonMemberIteratorTextures->value;
 
 			// Mandatory root parameter index
-			const uint32_t rootParameterIndex = ::detail::getIntegerFromInstructionString(jsonTextureObject->get("RootParameterIndex").convert<std::string>(), shaderProperties);
+			const uint32_t rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueTexture["RootParameterIndex"].GetString(), shaderProperties);
 
 			// Mandatory usage
-			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(jsonTextureObject);
-			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(jsonTextureObject);
+			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(rapidJsonValueTexture);
+			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValueTexture);
 			switch (usage)
 			{
 				case RendererRuntime::MaterialProperty::Usage::STATIC:
 				{
 					if (RendererRuntime::MaterialProperty::ValueType::TEXTURE_ASSET_ID == valueType)
 					{
-						// Get mandatory asset ID
-						const std::string sourceAssetIdAsString = jsonTextureObject->get("Value").convert<std::string>();
-
-						// Map the source asset ID to the compiled asset ID
-						const uint32_t sourceAssetId = static_cast<uint32_t>(std::atoi(sourceAssetIdAsString.c_str()));
+						// Mandatory asset ID: Map the source asset ID to the compiled asset ID
+						const uint32_t sourceAssetId = static_cast<uint32_t>(std::atoi(rapidJsonValueTexture["Value"].GetString()));
 						SourceAssetIdToCompiledAssetId::const_iterator iterator = input.sourceAssetIdToCompiledAssetId.find(sourceAssetId);
 						const RendererRuntime::MaterialPropertyValue materialPropertyValue = RendererRuntime::MaterialPropertyValue::fromTextureAssetId((iterator != input.sourceAssetIdToCompiledAssetId.cend()) ? iterator->second : 0);
 
@@ -903,7 +883,7 @@ namespace RendererToolkit
 					if (RendererRuntime::MaterialProperty::ValueType::INTEGER == valueType || RendererRuntime::MaterialProperty::ValueType::COMPOSITOR_TEXTURE_REFERENCE == valueType)
 					{
 						// Write down the texture
-						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, mandatoryMaterialPropertyValue(input, jsonTextureObject, "Value", valueType)));
+						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, mandatoryMaterialPropertyValue(input, rapidJsonValueTexture, "Value", valueType)));
 						outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
 					}
 					else
@@ -918,7 +898,7 @@ namespace RendererToolkit
 					if (RendererRuntime::MaterialProperty::ValueType::INTEGER == valueType)
 					{
 						// Write down the texture
-						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, mandatoryMaterialPropertyValue(input, jsonTextureObject, "Value", valueType)));
+						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, mandatoryMaterialPropertyValue(input, rapidJsonValueTexture, "Value", valueType)));
 						outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintTexture), sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
 					}
 					else
@@ -934,7 +914,7 @@ namespace RendererToolkit
 					{
 						// Get mandatory asset ID
 						// -> The character "@" is used to reference a material property value
-						const std::string sourceAssetIdAsString = jsonTextureObject->get("Value").convert<std::string>();
+						const std::string sourceAssetIdAsString = rapidJsonValueTexture["Value"].GetString();
 						if (sourceAssetIdAsString.length() > 0 && sourceAssetIdAsString[0] == '@')
 						{
 							// Reference a material property value
@@ -984,9 +964,6 @@ namespace RendererToolkit
 					break;
 				}
 			}
-
-			// Next texture, please
-			++rootTexturesIterator;
 		}
 	}
 

@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/CompositorAssetCompiler.h"
+#include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Resource/Compositor/Loader/CompositorFileFormat.h>
@@ -31,8 +32,12 @@
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
-	#pragma warning(disable: 4251)	// warning C4251: 'Poco::StringTokenizer::_tokens': class 'std::vector<std::string,std::allocator<_Kty>>' needs to have dll-interface to be used by clients of class 'Poco::StringTokenizer'
-	#include <Poco/StringTokenizer.h>
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
+	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
+	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
+	#include <rapidjson/document.h>
 #pragma warning(pop)
 
 #include <fstream>
@@ -56,10 +61,12 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	CompositorAssetCompiler::CompositorAssetCompiler()
 	{
+		// Nothing here
 	}
 
 	CompositorAssetCompiler::~CompositorAssetCompiler()
 	{
+		// Nothing here
 	}
 
 
@@ -75,47 +82,32 @@ namespace RendererToolkit
 	{
 		// Input, configuration and output
 		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
-		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		Poco::JSON::Object::Ptr		   jsonAssetRootObject	= configuration.jsonAssetRootObject;
+		const std::string&			   assetOutputDirectory = input.assetOutputDirectory;
 		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
 
 		// Get the JSON asset object
-		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
+		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
 		// Read configuration
 		// TODO(co) Add required properties
 		std::string inputFile;
-		uint32_t test = 0;
 		{
-			// Read Compositor asset compiler configuration
-			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonAssetObject->get("CompositorAssetCompiler").extract<Poco::JSON::Object::Ptr>();
-			inputFile = jsonConfigurationObject->getValue<std::string>("InputFile");
-			test	  = jsonConfigurationObject->optValue<uint32_t>("Test", test);
+			// Read compositor asset compiler configuration
+			const rapidjson::Value& rapidJsonValueCompositorAssetCompiler = rapidJsonValueAsset["CompositorAssetCompiler"];
+			inputFile = rapidJsonValueCompositorAssetCompiler["InputFile"].GetString();
 		}
 
 		// Open the input file
-		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
-		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
+		const std::string inputFilename = assetInputDirectory + inputFile;
+		std::ifstream inputFileStream(inputFilename, std::ios::binary);
+		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".compositor";
 		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
 		{ // Compositor
 			// Parse JSON
-			Poco::JSON::Parser jsonParser;
-			jsonParser.parse(inputFileStream);
-			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
-		
-			{ // Check whether or not the file format matches
-				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-				if (jsonFormatObject->get("Type").convert<std::string>() != "CompositorAsset")
-				{
-					throw std::exception("Invalid JSON format type, must be \"CompositorAsset\"");
-				}
-				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
-				{
-					throw std::exception("Invalid JSON format version, must be 1");
-				}
-			}
+			rapidjson::Document rapidJsonDocument;
+			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "CompositorAsset", "1");
 
 			{ // Write down the compositor resource header
 				RendererRuntime::v1Compositor::Header compositorHeader;
@@ -124,160 +116,118 @@ namespace RendererToolkit
 				outputFileStream.write(reinterpret_cast<const char*>(&compositorHeader), sizeof(RendererRuntime::v1Compositor::Header));
 			}
 
-			Poco::JSON::Object::Ptr jsonCompositorObject = jsonRootObject->get("CompositorAsset").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonCompositorNodesObject = jsonCompositorObject->get("Nodes").extract<Poco::JSON::Object::Ptr>();
+			// Mandatory main sections of the material blueprint
+			const rapidjson::Value& rapidJsonValueCompositorAsset = rapidJsonDocument["CompositorAsset"];
+			const rapidjson::Value& rapidJsonValueNodes = rapidJsonValueCompositorAsset["Nodes"];
 
 			{ // Write down the compositor resource nodes
 				RendererRuntime::v1Compositor::Nodes nodes;
-				nodes.numberOfNodes = jsonCompositorNodesObject->size();
+				nodes.numberOfNodes = rapidJsonValueNodes.MemberCount();
 				outputFileStream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1Compositor::Nodes));
 
 				// Loop through all compositor resource nodes
-				Poco::JSON::Object::ConstIterator nodesIterator = jsonCompositorNodesObject->begin();
-				Poco::JSON::Object::ConstIterator nodesIteratorEnd = jsonCompositorNodesObject->end();
-				while (nodesIterator != nodesIteratorEnd)
+				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorNodes = rapidJsonValueNodes.MemberBegin(); rapidJsonMemberIteratorNodes != rapidJsonValueNodes.MemberEnd(); ++rapidJsonMemberIteratorNodes)
 				{
-					Poco::JSON::Object::Ptr jsonCompositorNodeObject = nodesIterator->second.extract<Poco::JSON::Object::Ptr>();
-					Poco::JSON::Object::Ptr jsonInputChannelsObject = jsonCompositorNodeObject->get("InputChannels").extract<Poco::JSON::Object::Ptr>();
-					Poco::JSON::Object::Ptr jsonTargetsObject = jsonCompositorNodeObject->get("Targets").extract<Poco::JSON::Object::Ptr>();
-					Poco::JSON::Object::Ptr jsonOutputChannelsObject = jsonCompositorNodeObject->get("OutputChannels").extract<Poco::JSON::Object::Ptr>();
+					const rapidjson::Value& rapidJsonValueNode = rapidJsonMemberIteratorNodes->value;
+					const rapidjson::Value& rapidJsonValueInputChannels = rapidJsonValueNode["InputChannels"];
+					const rapidjson::Value& rapidJsonValueTargets = rapidJsonValueNode["Targets"];
+					const rapidjson::Value& rapidJsonValueOutputChannels = rapidJsonValueNode["OutputChannels"];
 
 					{ // Write down the compositor resource node
 						RendererRuntime::v1Compositor::Node node;
-						node.id						= RendererRuntime::StringId(nodesIterator->first.c_str());
-						node.numberOfInputChannels	= jsonInputChannelsObject->size();
-						node.numberOfTargets		= jsonTargetsObject->size();
-						node.numberOfOutputChannels	= jsonOutputChannelsObject->size();
+						node.id						= RendererRuntime::StringId(rapidJsonMemberIteratorNodes->name.GetString());
+						node.numberOfInputChannels	= rapidJsonValueInputChannels.MemberCount();
+						node.numberOfTargets		= rapidJsonValueTargets.MemberCount();
+						node.numberOfOutputChannels	= rapidJsonValueOutputChannels.MemberCount();
 						outputFileStream.write(reinterpret_cast<const char*>(&node), sizeof(RendererRuntime::v1Compositor::Node));
 					}
 
-					{ // Write down the compositor resource node input channels
-						Poco::JSON::Object::ConstIterator channelsIterator = jsonInputChannelsObject->begin();
-						Poco::JSON::Object::ConstIterator channelsIteratorEnd = jsonInputChannelsObject->end();
-						while (channelsIterator != channelsIteratorEnd)
-						{
-							RendererRuntime::v1Compositor::Channel channel;
-							channel.id = RendererRuntime::StringId(channelsIterator->second.convert<std::string>().c_str());
-							outputFileStream.write(reinterpret_cast<const char*>(&channel), sizeof(RendererRuntime::v1Compositor::Channel));
-
-							// Next compositor resource node input channel, please
-							++channelsIterator;
-						}
+					// Write down the compositor resource node input channels
+					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorInputChannels = rapidJsonValueInputChannels.MemberBegin(); rapidJsonMemberIteratorInputChannels != rapidJsonValueInputChannels.MemberEnd(); ++rapidJsonMemberIteratorInputChannels)
+					{
+						RendererRuntime::v1Compositor::Channel channel;
+						channel.id = RendererRuntime::StringId(rapidJsonMemberIteratorInputChannels->name.GetString());
+						outputFileStream.write(reinterpret_cast<const char*>(&channel), sizeof(RendererRuntime::v1Compositor::Channel));
 					}
 
-					{ // Write down the compositor resource node targets
-						Poco::JSON::Object::ConstIterator targetsIterator = jsonTargetsObject->begin();
-						Poco::JSON::Object::ConstIterator targetsIteratorEnd = jsonTargetsObject->end();
-						while (targetsIterator != targetsIteratorEnd)
-						{
-							Poco::JSON::Object::Ptr jsonCompositorTargetObject = targetsIterator->second.extract<Poco::JSON::Object::Ptr>();
-							Poco::JSON::Object::Ptr jsonPassesObject = jsonCompositorTargetObject->get("Passes").extract<Poco::JSON::Object::Ptr>();
+					// Write down the compositor resource node targets
+					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTargets = rapidJsonValueTargets.MemberBegin(); rapidJsonMemberIteratorTargets != rapidJsonValueTargets.MemberEnd(); ++rapidJsonMemberIteratorTargets)
+					{
+						const rapidjson::Value& rapidJsonValueTarget = rapidJsonMemberIteratorTargets->value;
+						const rapidjson::Value& rapidJsonValuePasses = rapidJsonValueTarget["Passes"];
 
-							{ // Write down the compositor resource node target
-								RendererRuntime::v1Compositor::Target target;
-								target.channelId	  = RendererRuntime::StringId(targetsIterator->first.c_str());
-								target.numberOfPasses = jsonPassesObject->size();
-								outputFileStream.write(reinterpret_cast<const char*>(&target), sizeof(RendererRuntime::v1Compositor::Target));
+						{ // Write down the compositor resource node target
+							RendererRuntime::v1Compositor::Target target;
+							target.channelId	  = RendererRuntime::StringId(rapidJsonMemberIteratorTargets->name.GetString());
+							target.numberOfPasses = rapidJsonValuePasses.MemberCount();
+							outputFileStream.write(reinterpret_cast<const char*>(&target), sizeof(RendererRuntime::v1Compositor::Target));
+						}
+
+						// Write down the compositor resource node target passes
+						for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorPasses = rapidJsonValuePasses.MemberBegin(); rapidJsonMemberIteratorPasses != rapidJsonValuePasses.MemberEnd(); ++rapidJsonMemberIteratorPasses)
+						{
+							const rapidjson::Value& rapidJsonValuePass = rapidJsonMemberIteratorPasses->value;
+							const RendererRuntime::CompositorPassTypeId typeId = RendererRuntime::StringId(rapidJsonMemberIteratorPasses->name.GetString());
+
+							// Get the compositor resource node target pass type specific data number of bytes
+							// TODO(co) Make this more generic via compositor pass factory
+							uint32_t numberOfBytes = 0;
+							if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == typeId)
+							{
+								numberOfBytes = sizeof(RendererRuntime::v1Compositor::PassClear);
+							}
+							else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == typeId)
+							{
+								numberOfBytes = sizeof(RendererRuntime::v1Compositor::PassQuad);
+							}
+							else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == typeId)
+							{
+								numberOfBytes = sizeof(RendererRuntime::v1Compositor::PassScene);
 							}
 
-							{ // Write down the compositor resource node target passes
-								Poco::JSON::Object::ConstIterator passesIterator = jsonPassesObject->begin();
-								Poco::JSON::Object::ConstIterator passesIteratorEnd = jsonPassesObject->end();
-								while (passesIterator != passesIteratorEnd)
+							{ // Write down the compositor resource node target pass header
+								RendererRuntime::v1Compositor::PassHeader passHeader;
+								passHeader.typeId		 = typeId;
+								passHeader.numberOfBytes = numberOfBytes;
+								outputFileStream.write(reinterpret_cast<const char*>(&passHeader), sizeof(RendererRuntime::v1Compositor::PassHeader));
+							}
+
+							// Write down the compositor resource node target pass type specific data, if there is any
+							if (0 != numberOfBytes)
+							{
+								if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == typeId)
 								{
-									Poco::JSON::Object::Ptr jsonPassObject = passesIterator->second.extract<Poco::JSON::Object::Ptr>();
-									const RendererRuntime::CompositorPassTypeId typeId = RendererRuntime::StringId(passesIterator->first.c_str());
-
-									// Get the compositor resource node target pass type specific data number of bytes
-									// TODO(co) Make this more generic via compositor pass factory
-									uint32_t numberOfBytes = 0;
-									if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == typeId)
-									{
-										numberOfBytes = sizeof(RendererRuntime::v1Compositor::PassClear);
-									}
-									else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == typeId)
-									{
-										numberOfBytes = sizeof(RendererRuntime::v1Compositor::PassQuad);
-									}
-									else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == typeId)
-									{
-										numberOfBytes = sizeof(RendererRuntime::v1Compositor::PassScene);
-									}
-
-									{ // Write down the compositor resource node target pass header
-										RendererRuntime::v1Compositor::PassHeader passHeader;
-										passHeader.typeId		 = typeId;
-										passHeader.numberOfBytes = numberOfBytes;
-										outputFileStream.write(reinterpret_cast<const char*>(&passHeader), sizeof(RendererRuntime::v1Compositor::PassHeader));
-									}
-
-									// Write down the compositor resource node target pass type specific data, if there is any
-									if (0 != numberOfBytes)
-									{
-										if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == typeId)
-										{
-											RendererRuntime::v1Compositor::PassClear passClear;
-
-											// Parse the color string
-											Poco::StringTokenizer stringTokenizer(jsonPassObject->get("Color").convert<std::string>(), " ");
-											if (stringTokenizer.count() == 4)
-											{
-												for (size_t i = 0; i < 4; ++i)
-												{
-													passClear.color[i] = std::stof(stringTokenizer[i].c_str());
-												}
-											}
-											else
-											{
-												// TODO(co) Error handling
-											}
-
-											outputFileStream.write(reinterpret_cast<const char*>(&passClear), sizeof(RendererRuntime::v1Compositor::PassClear));
-										}
-										else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == typeId)
-										{
-											RendererRuntime::v1Compositor::PassQuad passQuad;
-											outputFileStream.write(reinterpret_cast<const char*>(&passQuad), sizeof(RendererRuntime::v1Compositor::PassQuad));
-										}
-										else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == typeId)
-										{
-											RendererRuntime::v1Compositor::PassScene passScene;
-											outputFileStream.write(reinterpret_cast<const char*>(&passScene), sizeof(RendererRuntime::v1Compositor::PassScene));
-										}
-									}
-
-									// Next compositor resource node target pass, please
-									++passesIterator;
+									RendererRuntime::v1Compositor::PassClear passClear;
+									JsonHelper::optionalFloatNProperty(rapidJsonValuePass, "Color", passClear.color, 4);
+									outputFileStream.write(reinterpret_cast<const char*>(&passClear), sizeof(RendererRuntime::v1Compositor::PassClear));
+								}
+								else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == typeId)
+								{
+									RendererRuntime::v1Compositor::PassQuad passQuad;
+									outputFileStream.write(reinterpret_cast<const char*>(&passQuad), sizeof(RendererRuntime::v1Compositor::PassQuad));
+								}
+								else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == typeId)
+								{
+									RendererRuntime::v1Compositor::PassScene passScene;
+									outputFileStream.write(reinterpret_cast<const char*>(&passScene), sizeof(RendererRuntime::v1Compositor::PassScene));
 								}
 							}
-
-							// Next compositor resource node target, please
-							++targetsIterator;
 						}
 					}
 
-					{ // Write down the compositor resource node output channels
-						Poco::JSON::Object::ConstIterator channelsIterator = jsonOutputChannelsObject->begin();
-						Poco::JSON::Object::ConstIterator channelsIteratorEnd = jsonOutputChannelsObject->end();
-						while (channelsIterator != channelsIteratorEnd)
-						{
-							RendererRuntime::v1Compositor::Channel channel;
-							channel.id = RendererRuntime::StringId(channelsIterator->second.convert<std::string>().c_str());
-							outputFileStream.write(reinterpret_cast<const char*>(&channel), sizeof(RendererRuntime::v1Compositor::Channel));
-
-							// Next compositor resource node output channel, please
-							++channelsIterator;
-						}
+					// Write down the compositor resource node output channels
+					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorOutputChannels = rapidJsonValueOutputChannels.MemberBegin(); rapidJsonMemberIteratorOutputChannels != rapidJsonValueOutputChannels.MemberEnd(); ++rapidJsonMemberIteratorOutputChannels)
+					{
+						RendererRuntime::v1Compositor::Channel channel;
+						channel.id = RendererRuntime::StringId(rapidJsonMemberIteratorOutputChannels->name.GetString());
+						outputFileStream.write(reinterpret_cast<const char*>(&channel), sizeof(RendererRuntime::v1Compositor::Channel));
 					}
-
-					// Next compositor resource node, please
-					++nodesIterator;
 				}
 			}
 		}
 
 		{ // Update the output asset package
-			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
+			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/Compositor/" + assetCategory + '/' + assetName;
 
 			// Output asset

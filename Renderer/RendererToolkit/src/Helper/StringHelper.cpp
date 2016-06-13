@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Helper/StringHelper.h"
 
+#include <sstream>
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -81,6 +83,16 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
+	void StringHelper::splitString(const std::string& stringToSplit, char separator, std::vector<std::string>& elements)
+	{
+		std::stringstream stringStream(stringToSplit);
+		std::string item;
+		while (std::getline(stringStream, item, separator))
+		{
+			elements.push_back(item);
+		}
+	}
+
 	void StringHelper::stripCommentsFromSourceCode(const std::string& sourceCode, std::string& targetCode)
 	{
 		const size_t endPosition = sourceCode.length();

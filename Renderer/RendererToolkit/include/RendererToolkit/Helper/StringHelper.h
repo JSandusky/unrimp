@@ -30,6 +30,7 @@
 #include <RendererRuntime/Core/NonCopyable.h>
 
 #include <string>
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -50,6 +51,7 @@ namespace RendererToolkit
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
+		static void splitString(const std::string& stringToSplit, char separator, std::vector<std::string>& elements);
 		static void stripCommentsFromSourceCode(const std::string& sourceCode, std::string& targetCode);
 
 

@@ -30,6 +30,16 @@
 #include <RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h>
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
+	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
+	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
+	#include <rapidjson/document.h>
+#pragma warning(pop)
+
 #include <fstream>
 
 
@@ -51,10 +61,12 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	MaterialBlueprintAssetCompiler::MaterialBlueprintAssetCompiler()
 	{
+		// Nothing here
 	}
 
 	MaterialBlueprintAssetCompiler::~MaterialBlueprintAssetCompiler()
 	{
+		// Nothing here
 	}
 
 
@@ -71,62 +83,48 @@ namespace RendererToolkit
 		// Input, configuration and output
 		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
 		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		Poco::JSON::Object::Ptr		   jsonAssetRootObject	= configuration.jsonAssetRootObject;
 		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
 
 		// Get the JSON asset object
-		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
+		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
 		// Read configuration
 		// TODO(co) Add required properties
 		std::string inputFile;
-		uint32_t test = 0;
 		{
 			// Read material blueprint asset compiler configuration
-			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonAssetObject->get("MaterialBlueprintAssetCompiler").extract<Poco::JSON::Object::Ptr>();
-			inputFile = jsonConfigurationObject->getValue<std::string>("InputFile");
-			test	  = jsonConfigurationObject->optValue<uint32_t>("Test", test);
+			const rapidjson::Value& rapidJsonValueMaterialBlueprintAssetCompiler = rapidJsonValueAsset["MaterialBlueprintAssetCompiler"];
+			inputFile = rapidJsonValueMaterialBlueprintAssetCompiler["InputFile"].GetString();
 		}
 
 		// Open the input file
-		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
-		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
+		const std::string inputFilename = assetInputDirectory + inputFile;
+		std::ifstream inputFileStream(inputFilename, std::ios::binary);
+		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material_blueprint";
 		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
 		{ // Material blueprint
 			// Parse JSON
-			Poco::JSON::Parser jsonParser;
-			jsonParser.parse(inputFileStream);
-			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
+			rapidjson::Document rapidJsonDocument;
+			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialBlueprintAsset", "1");
 
-			{ // Check whether or not the file format matches
-				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-				if (jsonFormatObject->get("Type").convert<std::string>() != "MaterialBlueprintAsset")
-				{
-					throw std::exception("Invalid JSON format type, must be \"MaterialBlueprintAsset\"");
-				}
-				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
-				{
-					throw std::exception("Invalid JSON format version, must be 1");
-				}
-			}
-
-			Poco::JSON::Object::Ptr jsonMaterialBlueprintObject = jsonRootObject->get("MaterialBlueprintAsset").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonPropertiesObject = jsonMaterialBlueprintObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonResourcesObject = jsonMaterialBlueprintObject->get("Resources").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonUniformBuffersObject = jsonResourcesObject->get("UniformBuffers").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonSamplerStatesObject = jsonResourcesObject->get("SamplerStates").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonTexturesObject = jsonResourcesObject->get("Textures").extract<Poco::JSON::Object::Ptr>();
+			// Mandatory main sections of the material blueprint
+			const rapidjson::Value& rapidJsonValueMaterialBlueprintAsset = rapidJsonDocument["MaterialBlueprintAsset"];
+			const rapidjson::Value& rapidJsonValueProperties = rapidJsonValueMaterialBlueprintAsset["Properties"];
+			const rapidjson::Value& rapidJsonValueResources = rapidJsonValueMaterialBlueprintAsset["Resources"];
+			const rapidjson::Value& rapidJsonValueUniformBuffers = rapidJsonValueResources["UniformBuffers"];
+			const rapidjson::Value& rapidJsonValueSamplerStates = rapidJsonValueResources["SamplerStates"];
+			const rapidjson::Value& rapidJsonValueTextures = rapidJsonValueResources["Textures"];
 
 			{ // Material blueprint header
 				RendererRuntime::v1MaterialBlueprint::Header materialBlueprintHeader;
 				materialBlueprintHeader.formatType			   = RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE;
 				materialBlueprintHeader.formatVersion		   = RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION;
-				materialBlueprintHeader.numberOfProperties	   = jsonPropertiesObject->size();
-				materialBlueprintHeader.numberOfUniformBuffers = jsonUniformBuffersObject->size();
-				materialBlueprintHeader.numberOfSamplerStates  = jsonSamplerStatesObject->size();
-				materialBlueprintHeader.numberOfTextures	   = jsonTexturesObject->size();
+				materialBlueprintHeader.numberOfProperties	   = rapidJsonValueProperties.MemberCount();
+				materialBlueprintHeader.numberOfUniformBuffers = rapidJsonValueUniformBuffers.MemberCount();
+				materialBlueprintHeader.numberOfSamplerStates  = rapidJsonValueSamplerStates.MemberCount();
+				materialBlueprintHeader.numberOfTextures	   = rapidJsonValueTextures.MemberCount();
 
 				// Write down the material blueprint header
 				outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintHeader), sizeof(RendererRuntime::v1MaterialBlueprint::Header));
@@ -136,7 +134,7 @@ namespace RendererToolkit
 			RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
 			{
 				// Gather all material properties
-				JsonMaterialBlueprintHelper::readProperties(input, jsonPropertiesObject, sortedMaterialPropertyVector);
+				JsonMaterialBlueprintHelper::readProperties(input, rapidJsonValueProperties, sortedMaterialPropertyVector);
 
 				// Write down all material properties
 				outputFileStream.write(reinterpret_cast<const char*>(sortedMaterialPropertyVector.data()), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
@@ -144,25 +142,25 @@ namespace RendererToolkit
 
 			// Root signature
 			RendererRuntime::ShaderProperties shaderProperties;
-			JsonMaterialBlueprintHelper::readRootSignature(jsonMaterialBlueprintObject->get("RootSignature").extract<Poco::JSON::Object::Ptr>(), outputFileStream, shaderProperties);
+			JsonMaterialBlueprintHelper::readRootSignature(rapidJsonValueMaterialBlueprintAsset["RootSignature"], outputFileStream, shaderProperties);
 
 			// Pipeline state object (PSO)
-			JsonMaterialBlueprintHelper::readPipelineStateObject(input, jsonMaterialBlueprintObject->get("PipelineState").extract<Poco::JSON::Object::Ptr>(), outputFileStream);
+			JsonMaterialBlueprintHelper::readPipelineStateObject(input, rapidJsonValueMaterialBlueprintAsset["PipelineState"], outputFileStream);
 
 			{ // Resources
 				// Uniform buffers
-				JsonMaterialBlueprintHelper::readUniformBuffers(input, jsonUniformBuffersObject, outputFileStream, shaderProperties);
+				JsonMaterialBlueprintHelper::readUniformBuffers(input, rapidJsonValueUniformBuffers, outputFileStream, shaderProperties);
 
 				// Sampler states
-				JsonMaterialBlueprintHelper::readSamplerStates(jsonSamplerStatesObject, outputFileStream, shaderProperties);
+				JsonMaterialBlueprintHelper::readSamplerStates(rapidJsonValueSamplerStates, outputFileStream, shaderProperties);
 
 				// Textures
-				JsonMaterialBlueprintHelper::readTextures(input, sortedMaterialPropertyVector, jsonTexturesObject, outputFileStream, shaderProperties);
+				JsonMaterialBlueprintHelper::readTextures(input, sortedMaterialPropertyVector, rapidJsonValueTextures, outputFileStream, shaderProperties);
 			}
 		}
 
 		{ // Update the output asset package
-			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
+			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/MaterialBlueprint/" + assetCategory + '/' + assetName;
 
 			// Output asset

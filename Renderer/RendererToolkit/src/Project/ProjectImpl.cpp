@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Project/ProjectImpl.h"
 #include "RendererToolkit/Project/ProjectAssetMonitor.h"
+#include "RendererToolkit/Helper/JsonHelper.h"
 #include "RendererToolkit/AssetCompiler/FontAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/SceneAssetCompiler.h"
@@ -38,22 +39,18 @@
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
-	#pragma warning(disable: 4127)	// warning C4127: conditional expression is constant
-	#pragma warning(disable: 4244)	// warning C4244: 'argument': conversion from '<x>' to '<y>', possible loss of data
-	#pragma warning(disable: 4251)	// warning C4251: '<x>': class '<y>' needs to have dll-interface to be used by clients of class '<x>'
-	#pragma warning(disable: 4266)	// warning C4266: '<x>': no override available for virtual member function from base '<y>'; function is hidden
-	#pragma warning(disable: 4365)	// warning C4365: 'return': conversion from '<x>' to '<y>', signed/unsigned mismatch
-	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
-	#pragma warning(disable: 4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
-	#pragma warning(disable: 4619)	// warning C4619: #pragma warning: there is no warning number '<x>'
-	#pragma warning(disable: 4668)	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-	#define POCO_NO_UNWINDOWS
-	#include <Poco/Path.h>
-	#include <Poco/File.h>
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
+	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
+	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
+	#include <rapidjson/document.h>
 #pragma warning(pop)
 
 #include <fstream>
 #include <cassert>
+#include <algorithm>
+#include <filesystem>
 
 
 //[-------------------------------------------------------]
@@ -92,6 +89,7 @@ namespace RendererToolkit
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ProjectImpl::ProjectImpl() :
+		mRapidJsonDocument(nullptr),
 		mProjectAssetMonitor(nullptr),
 		mShutdownThread(false)
 	{
@@ -120,28 +118,15 @@ namespace RendererToolkit
 		std::ifstream inputFileStream(absoluteAssetFilename, std::ios::binary);
 
 		// Parse JSON
-		Poco::JSON::Parser jsonParser;
-		jsonParser.parse(inputFileStream);
-		Poco::JSON::Object::Ptr jsonAssetRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
+		rapidjson::Document rapidJsonDocument;
+		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, absoluteAssetFilename, "Asset", "1");
 
-		{ // Check whether or not the file format matches
-			Poco::JSON::Object::Ptr jsonFormatObject = jsonAssetRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-			if (jsonFormatObject->get("Type").convert<std::string>() != "Asset")
-			{
-				throw std::exception("Invalid JSON format type, must be \"Asset\"");
-			}
-			if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
-			{
-				throw std::exception("Invalid JSON format version, must be 1");
-			}
-		}
-
-		// Read asset metadata
-		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
-		Poco::JSON::Object::Ptr jsonAssetMetadataObject = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>();
+		// Mandatory main sections of the asset
+		const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];
+		const rapidjson::Value& rapidJsonValueAssetMetadata = rapidJsonValueAsset["AssetMetadata"];
 
 		// Check asset ID match: A sanity check in here doesn't hurt
-		const RendererRuntime::AssetId assetId = jsonAssetMetadataObject->getValue<uint32_t>("AssetId");
+		const RendererRuntime::AssetId assetId = static_cast<uint32_t>(std::atoi(rapidJsonValueAssetMetadata["AssetId"].GetString()));
 		if (assetId != asset.assetId)
 		{
 			const std::string message = "Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\": According to the asset package it should be asset ID " + std::to_string(asset.assetId) + " but inside the asset file it's asset ID " + std::to_string(assetId);
@@ -152,22 +137,20 @@ namespace RendererToolkit
 		// TODO(co) Add multithreading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
 
 		// Get the asset input directory and asset output directory
-		const std::string assetInputDirectory = Poco::Path(absoluteAssetFilename).parent().toString(Poco::Path::PATH_UNIX);
-		const std::string assetType = jsonAssetMetadataObject->getValue<std::string>("AssetType");
-		const std::string assetCategory = jsonAssetMetadataObject->getValue<std::string>("AssetCategory");
+		const std::string assetInputDirectory = std::tr2::sys::path(absoluteAssetFilename).parent_path().generic_string() + '/';
+		const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
+		const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
 		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + assetType + '/' + assetCategory + '/';
 
 		// Ensure that the asset output directory exists, else creating output file streams will fail
-		Poco::File(assetOutputDirectory).createDirectories();
+		std::tr2::sys::create_directories(assetOutputDirectory);
 
 		// Asset compiler input
 		IAssetCompiler::Input input(mProjectName, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
 
 		// Asset compiler configuration
-		IAssetCompiler::Configuration configuration;
-		configuration.jsonAssetRootObject = jsonAssetRootObject;
-		configuration.jsonTargetsObject	  = mJsonTargetsObject;
-		configuration.rendererTarget	  = rendererTarget;
+		assert(nullptr != mRapidJsonDocument);
+		const IAssetCompiler::Configuration configuration(rapidJsonDocument, (*mRapidJsonDocument)["Targets"], rendererTarget);
 
 		// Asset compiler output
 		IAssetCompiler::Output output;
@@ -236,33 +219,17 @@ namespace RendererToolkit
 		std::ifstream inputFileStream(filename, std::ios::binary);
 
 		// Parse JSON
-		Poco::JSON::Parser jsonParser;
-		jsonParser.parse(inputFileStream);
-		Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
-		
-		{ // Check whether or not the file format matches
-			Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-			if (jsonFormatObject->get("Type").convert<std::string>() != "Project")
-			{
-				throw std::exception("Invalid JSON format type, must be \"Project\"");
-			}
-			if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
-			{
-				throw std::exception("Invalid JSON format version, must be 1");
-			}
-		}
+		rapidjson::Document rapidJsonDocument;
+		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, filename, "Project", "1");
 
 		// Read project metadata
-		Poco::JSON::Object::Ptr jsonProjectObject = jsonRootObject->get("Project").extract<Poco::JSON::Object::Ptr>();
-		{
-			Poco::JSON::Object::Ptr jsonProjectMetadataObject = jsonProjectObject->get("ProjectMetadata").extract<Poco::JSON::Object::Ptr>();
-			mProjectName = jsonProjectMetadataObject->getValue<std::string>("Name");
-		}
+		const rapidjson::Value& rapidJsonValueProject = rapidJsonDocument["Project"];
+		mProjectName = rapidJsonValueProject["ProjectMetadata"]["Name"].GetString();
 
 		{ // Read project data
-			mProjectDirectory = Poco::Path(filename).parent().toString(Poco::Path::PATH_UNIX);
-			readAssetsByFilename(jsonProjectObject->getValue<std::string>("AssetsFilename"));
-			readTargetsByFilename(jsonProjectObject->getValue<std::string>("TargetsFilename"));
+			mProjectDirectory = std::tr2::sys::path(filename).parent_path().generic_string() + '/';
+			readAssetsByFilename(rapidJsonValueProject["AssetsFilename"].GetString());
+			readTargetsByFilename(rapidJsonValueProject["TargetsFilename"].GetString());
 		}
 	}
 
@@ -340,47 +307,37 @@ namespace RendererToolkit
 		mAssetPackageDirectoryName.clear();
 		mSourceAssetIdToCompiledAssetId.clear();
 		mSourceAssetIdToAbsoluteFilename.clear();
-		mJsonTargetsObject = nullptr;
+		if (nullptr != mRapidJsonDocument)
+		{
+			delete mRapidJsonDocument;
+			mRapidJsonDocument = nullptr;
+		}
 	}
 
 	void ProjectImpl::readAssetsByFilename(const std::string& filename)
 	{
 		// Open the input stream
-		std::ifstream inputFileStream(mProjectDirectory + filename, std::ios::binary);
+		const std::string absoluteFilename = mProjectDirectory + filename;
+		std::ifstream inputFileStream(absoluteFilename, std::ios::binary);
 
 		// Parse JSON
-		Poco::JSON::Parser jsonParser;
-		jsonParser.parse(inputFileStream);
-		Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
-		
-		{ // Check whether or not the file format matches
-			Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-			if (jsonFormatObject->get("Type").convert<std::string>() != "Assets")
-			{
-				throw std::exception("Invalid JSON format type, must be \"Assets\"");
-			}
-			if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
-			{
-				throw std::exception("Invalid JSON format version, must be 1");
-			}
-		}
+		rapidjson::Document rapidJsonDocument;
+		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, absoluteFilename, "Assets", "1");
 
 		// Get the asset package name (includes "/" at the end)
-		mAssetPackageDirectoryName = Poco::Path(filename).parent().toString(Poco::Path::PATH_UNIX);
+		mAssetPackageDirectoryName = std::tr2::sys::path(filename).parent_path().generic_string() + '/';
 
 		// Read project data
-		Poco::JSON::Object::Ptr jsonProjectObject = jsonRootObject->get("Assets").extract<Poco::JSON::Object::Ptr>();
-		const size_t numberOfAssets = jsonProjectObject->size();
+		const rapidjson::Value& rapidJsonValueAssets = rapidJsonDocument["Assets"];
+		const size_t numberOfAssets = rapidJsonValueAssets.MemberCount();
 		RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getWritableSortedAssetVector();
 		sortedAssetVector.resize(numberOfAssets);
-		Poco::JSON::Object::ConstIterator iterator = jsonProjectObject->begin();
-		Poco::JSON::Object::ConstIterator iteratorEnd = jsonProjectObject->end();
 		size_t currentAssetIndex = 0;
-		while (iterator != iteratorEnd)
+		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorAssets = rapidJsonValueAssets.MemberBegin(); rapidJsonMemberIteratorAssets != rapidJsonValueAssets.MemberEnd(); ++rapidJsonMemberIteratorAssets)
 		{
 			// Get asset data
-			const RendererRuntime::AssetId assetId = static_cast<uint32_t>(std::stoi(iterator->first));	// TODO(co) Parsing directly to "uint32_t" from string to be on the safe-side?
-			const std::string assetFilename = mAssetPackageDirectoryName + iterator->second.convert<std::string>();
+			const RendererRuntime::AssetId assetId = static_cast<uint32_t>(std::atoi(rapidJsonMemberIteratorAssets->name.GetString()));
+			const std::string assetFilename = mAssetPackageDirectoryName + rapidJsonMemberIteratorAssets->value.GetString();
 			if (assetFilename.length() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
 			{
 				const std::string message = "Asset filename \"" + assetFilename + "\" of asset ID " + std::to_string(assetId) + " is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
@@ -394,7 +351,6 @@ namespace RendererToolkit
 
 			// Next asset, please
 			++currentAssetIndex;
-			++iterator;
 		}
 		std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), ::detail::orderByAssetId);
 
@@ -405,34 +361,23 @@ namespace RendererToolkit
 	void ProjectImpl::readTargetsByFilename(const std::string& filename)
 	{
 		// Open the input stream
-		std::ifstream inputFileStream(mProjectDirectory + filename, std::ios::binary);
+		const std::string absoluteFilename = mProjectDirectory + filename;
+		std::ifstream inputFileStream(absoluteFilename, std::ios::binary);
 
 		// Parse JSON
-		Poco::JSON::Parser jsonParser;
-		jsonParser.parse(inputFileStream);
-		Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
-
-		{ // Check whether or not the file format matches
-			Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-			if (jsonFormatObject->get("Type").convert<std::string>() != "Targets")
-			{
-				throw std::exception("Invalid JSON format type, must be \"Targets\"");
-			}
-			if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
-			{
-				throw std::exception("Invalid JSON format version, must be 1");
-			}
+		if (nullptr == mRapidJsonDocument)
+		{
+			mRapidJsonDocument = new rapidjson::Document();
 		}
-
-		// Read project data
-		mJsonTargetsObject = jsonRootObject->get("Targets").extract<Poco::JSON::Object::Ptr>();
+		JsonHelper::parseDocumentByInputFileStream(*mRapidJsonDocument, inputFileStream, absoluteFilename, "Targets", "1");
 	}
 
 	std::string ProjectImpl::getRenderTargetDataRootDirectory(const char* rendererTarget) const
 	{
-		Poco::JSON::Object::Ptr jsonRendererTargetsObject = mJsonTargetsObject->get("RendererTargets").extract<Poco::JSON::Object::Ptr>();
-		Poco::JSON::Object::Ptr jsonRendererTargetObject = jsonRendererTargetsObject->get(rendererTarget).extract<Poco::JSON::Object::Ptr>();
-		return "Data" + jsonRendererTargetObject->getValue<std::string>("Platform") + '/';
+		assert(nullptr != mRapidJsonDocument);
+		const rapidjson::Value& rapidJsonValueRendererTargets = (*mRapidJsonDocument)["Targets"]["RendererTargets"];
+		const rapidjson::Value& rapidJsonValueRendererTarget = rapidJsonValueRendererTargets[rendererTarget];
+		return "Data" + std::string(rapidJsonValueRendererTarget["Platform"].GetString()) + '/';
 	}
 
 	void ProjectImpl::buildSourceAssetIdToCompiledAssetId()
@@ -447,33 +392,21 @@ namespace RendererToolkit
 			const RendererRuntime::Asset& asset = sortedAssetVector[i];
 
 			// Open the input stream
-			std::ifstream inputFileStream(mProjectDirectory + asset.assetFilename, std::ios::binary);
+			const std::string absoluteAssetFilename = mProjectDirectory + asset.assetFilename;
+			std::ifstream inputFileStream(absoluteAssetFilename, std::ios::binary);
 
 			// Parse JSON
-			Poco::JSON::Parser jsonParser;
-			jsonParser.parse(inputFileStream);
-			Poco::JSON::Object::Ptr jsonAssetRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
+			rapidjson::Document rapidJsonDocument;
+			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, absoluteAssetFilename, "Asset", "1");
 
-			{ // Check whether or not the file format matches
-				Poco::JSON::Object::Ptr jsonFormatObject = jsonAssetRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-				if (jsonFormatObject->get("Type").convert<std::string>() != "Asset")
-				{
-					throw std::exception("Invalid JSON format type, must be \"Asset\"");
-				}
-				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
-				{
-					throw std::exception("Invalid JSON format version, must be 1");
-				}
-			}
-
-			// Read asset metadata
-			Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonAssetMetadataObject = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>();
+			// Mandatory main sections of the asset
+			const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];
+			const rapidjson::Value& rapidJsonValueAssetMetadata = rapidJsonValueAsset["AssetMetadata"];
 
 			// Get the relevant asset metadata parts
-			const std::string assetCategory = jsonAssetMetadataObject->getValue<std::string>("AssetCategory");
-			const std::string assetType = jsonAssetMetadataObject->getValue<std::string>("AssetType");
-			const std::string assetName = jsonAssetMetadataObject->getValue<std::string>("AssetName");
+			const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
+			const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
+			const std::string assetName = rapidJsonValueAssetMetadata["AssetName"].GetString();
 			
 			// Construct the asset ID as string
 			const std::string compiledAssetIdAsString = mProjectName + '/' + assetType + '/' + assetCategory + '/' + assetName;

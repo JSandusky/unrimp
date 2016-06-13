@@ -26,6 +26,17 @@
 
 #include <RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h>
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
+	#pragma warning(disable: 4619)	// warning C4619: #pragma warning: there is no warning number '4351'
+	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
+	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
+	#include <rapidjson/document.h>
+#pragma warning(pop)
+
 #include <fstream>
 
 
@@ -39,16 +50,17 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	void JsonMaterialHelper::optionalFillModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::FillMode& value)
+	void JsonMaterialHelper::optionalFillModeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::FillMode& value)
 	{
-		Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
-		if (!jsonDynamicVar.isEmpty())
+		if (rapidJsonValue.HasMember(propertyName))
 		{
-			const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+			const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue[propertyName];
+			const char* valueAsString = rapidJsonValueValueType.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
 
 			// Define helper macros
-			#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::FillMode::name;
-			#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::FillMode::name;
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::FillMode::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::FillMode::name;
 
 			// Evaluate value
 			IF_VALUE(WIREFRAME)
@@ -64,16 +76,17 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalCullModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::CullMode& value)
+	void JsonMaterialHelper::optionalCullModeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::CullMode& value)
 	{
-		Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
-		if (!jsonDynamicVar.isEmpty())
+		if (rapidJsonValue.HasMember(propertyName))
 		{
-			const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+			const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue[propertyName];
+			const char* valueAsString = rapidJsonValueValueType.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
 
 			// Define helper macros
-			#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::CullMode::name;
-			#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::CullMode::name;
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::CullMode::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::CullMode::name;
 
 			// Evaluate value
 			IF_VALUE(NONE)
@@ -90,16 +103,17 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalConservativeRasterizationModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::ConservativeRasterizationMode& value)
+	void JsonMaterialHelper::optionalConservativeRasterizationModeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::ConservativeRasterizationMode& value)
 	{
-		Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
-		if (!jsonDynamicVar.isEmpty())
+		if (rapidJsonValue.HasMember(propertyName))
 		{
-			const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+			const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue[propertyName];
+			const char* valueAsString = rapidJsonValueValueType.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
 
 			// Define helper macros
-			#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::ConservativeRasterizationMode::name;
-			#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::ConservativeRasterizationMode::name;
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::ConservativeRasterizationMode::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::ConservativeRasterizationMode::name;
 
 			// Evaluate value
 			IF_VALUE(OFF)
@@ -115,16 +129,17 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalDepthWriteMaskProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::DepthWriteMask& value)
+	void JsonMaterialHelper::optionalDepthWriteMaskProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::DepthWriteMask& value)
 	{
-		Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
-		if (!jsonDynamicVar.isEmpty())
+		if (rapidJsonValue.HasMember(propertyName))
 		{
-			const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+			const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue[propertyName];
+			const char* valueAsString = rapidJsonValueValueType.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
 
 			// Define helper macros
-			#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::DepthWriteMask::name;
-			#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::DepthWriteMask::name;
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::DepthWriteMask::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::DepthWriteMask::name;
 
 			// Evaluate value
 			IF_VALUE(ZERO)
@@ -140,16 +155,17 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalStencilOpProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::StencilOp& value)
+	void JsonMaterialHelper::optionalStencilOpProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::StencilOp& value)
 	{
-		Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
-		if (!jsonDynamicVar.isEmpty())
+		if (rapidJsonValue.HasMember(propertyName))
 		{
-			const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+			const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue[propertyName];
+			const char* valueAsString = rapidJsonValueValueType.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
 
 			// Define helper macros
-			#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::StencilOp::name;
-			#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::StencilOp::name;
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::StencilOp::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::StencilOp::name;
 
 			// Evaluate value
 			IF_VALUE(KEEP)
@@ -171,16 +187,17 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalBlendProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::Blend& value)
+	void JsonMaterialHelper::optionalBlendProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::Blend& value)
 	{
-		Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
-		if (!jsonDynamicVar.isEmpty())
+		if (rapidJsonValue.HasMember(propertyName))
 		{
-			const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+			const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue[propertyName];
+			const char* valueAsString = rapidJsonValueValueType.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
 
 			// Define helper macros
-			#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::Blend::name;
-			#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::Blend::name;
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::Blend::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::Blend::name;
 
 			// Evaluate value
 			IF_VALUE(ZERO)
@@ -211,16 +228,17 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalBlendOpProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::BlendOp& value)
+	void JsonMaterialHelper::optionalBlendOpProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::BlendOp& value)
 	{
-		Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
-		if (!jsonDynamicVar.isEmpty())
+		if (rapidJsonValue.HasMember(propertyName))
 		{
-			const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+			const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue[propertyName];
+			const char* valueAsString = rapidJsonValueValueType.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
 
 			// Define helper macros
-			#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::BlendOp::name;
-			#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::BlendOp::name;
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::BlendOp::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::BlendOp::name;
 
 			// Evaluate value
 			IF_VALUE(ADD)
@@ -239,16 +257,17 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalFilterProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::FilterMode& value)
+	void JsonMaterialHelper::optionalFilterProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::FilterMode& value)
 	{
-		Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
-		if (!jsonDynamicVar.isEmpty())
+		if (rapidJsonValue.HasMember(propertyName))
 		{
-			const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+			const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue[propertyName];
+			const char* valueAsString = rapidJsonValueValueType.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
 
 			// Define helper macros
-			#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::FilterMode::name;
-			#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::FilterMode::name;
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::FilterMode::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::FilterMode::name;
 
 			// Evaluate value
 			IF_VALUE(MIN_MAG_MIP_POINT)
@@ -280,16 +299,17 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalTextureAddressModeProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::TextureAddressMode& value)
+	void JsonMaterialHelper::optionalTextureAddressModeProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::TextureAddressMode& value)
 	{
-		Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
-		if (!jsonDynamicVar.isEmpty())
+		if (rapidJsonValue.HasMember(propertyName))
 		{
-			const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+			const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue[propertyName];
+			const char* valueAsString = rapidJsonValueValueType.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
 
 			// Define helper macros
-			#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::TextureAddressMode::name;
-			#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::TextureAddressMode::name;
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::TextureAddressMode::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::TextureAddressMode::name;
 
 			// Evaluate value
 			IF_VALUE(WRAP)
@@ -308,16 +328,17 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialHelper::optionalComparisonFuncProperty(Poco::JSON::Object::Ptr jsonObject, const std::string& propertyName, Renderer::ComparisonFunc& value)
+	void JsonMaterialHelper::optionalComparisonFuncProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::ComparisonFunc& value)
 	{
-		Poco::Dynamic::Var jsonDynamicVar = jsonObject->get(propertyName);
-		if (!jsonDynamicVar.isEmpty())
+		if (rapidJsonValue.HasMember(propertyName))
 		{
-			const std::string valueAsString = jsonDynamicVar.convert<std::string>();
+			const rapidjson::Value& rapidJsonValueValueType = rapidJsonValue[propertyName];
+			const char* valueAsString = rapidJsonValueValueType.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValueValueType.GetStringLength();
 
 			// Define helper macros
-			#define IF_VALUE(name)			 if (#name == valueAsString) value = Renderer::ComparisonFunc::name;
-			#define ELSE_IF_VALUE(name) else if (#name == valueAsString) value = Renderer::ComparisonFunc::name;
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::ComparisonFunc::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::ComparisonFunc::name;
 
 			// Evaluate value
 			IF_VALUE(NEVER)

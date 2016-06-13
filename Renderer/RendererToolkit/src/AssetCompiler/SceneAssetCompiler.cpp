@@ -31,8 +31,12 @@
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
-	#pragma warning(disable: 4251)	// warning C4251: 'Poco::StringTokenizer::_tokens': class 'std::vector<std::string,std::allocator<_Kty>>' needs to have dll-interface to be used by clients of class 'Poco::StringTokenizer'
-	#include <Poco/StringTokenizer.h>
+	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#pragma warning(disable: 4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#pragma warning(disable: 4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
+	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
+	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
+	#include <rapidjson/document.h>
 #pragma warning(pop)
 
 #include <fstream>
@@ -56,10 +60,12 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	SceneAssetCompiler::SceneAssetCompiler()
 	{
+		// Nothing here
 	}
 
 	SceneAssetCompiler::~SceneAssetCompiler()
 	{
+		// Nothing here
 	}
 
 
@@ -76,46 +82,31 @@ namespace RendererToolkit
 		// Input, configuration and output
 		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
 		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		Poco::JSON::Object::Ptr		   jsonAssetRootObject	= configuration.jsonAssetRootObject;
 		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
 
 		// Get the JSON asset object
-		Poco::JSON::Object::Ptr jsonAssetObject = jsonAssetRootObject->get("Asset").extract<Poco::JSON::Object::Ptr>();
+		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
 		// Read configuration
 		// TODO(co) Add required properties
 		std::string inputFile;
-		uint32_t test = 0;
 		{
-			// Read Scene asset compiler configuration
-			Poco::JSON::Object::Ptr jsonConfigurationObject = jsonAssetObject->get("SceneAssetCompiler").extract<Poco::JSON::Object::Ptr>();
-			inputFile = jsonConfigurationObject->getValue<std::string>("InputFile");
-			test	  = jsonConfigurationObject->optValue<uint32_t>("Test", test);
+			// Read scene asset compiler configuration
+			const rapidjson::Value& rapidJsonValueSceneAssetCompiler = rapidJsonValueAsset["SceneAssetCompiler"];
+			inputFile = rapidJsonValueSceneAssetCompiler["InputFile"].GetString();
 		}
 
 		// Open the input file
-		std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
-		const std::string assetName = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetName");
+		const std::string inputFilename = assetInputDirectory + inputFile;
+		std::ifstream inputFileStream(inputFilename, std::ios::binary);
+		const std::string assetName = rapidJsonValueAsset["AssetMetadata"]["AssetName"].GetString();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".scene";
 		std::ofstream outputFileStream(outputAssetFilename, std::ios::binary);
 
 		{ // Scene
 			// Parse JSON
-			Poco::JSON::Parser jsonParser;
-			jsonParser.parse(inputFileStream);
-			Poco::JSON::Object::Ptr jsonRootObject = jsonParser.result().extract<Poco::JSON::Object::Ptr>();
-		
-			{ // Check whether or not the file format matches
-				Poco::JSON::Object::Ptr jsonFormatObject = jsonRootObject->get("Format").extract<Poco::JSON::Object::Ptr>();
-				if (jsonFormatObject->get("Type").convert<std::string>() != "SceneAsset")
-				{
-					throw std::exception("Invalid JSON format type, must be \"SceneAsset\"");
-				}
-				if (jsonFormatObject->get("Version").convert<uint32_t>() != 1)
-				{
-					throw std::exception("Invalid JSON format version, must be 1");
-				}
-			}
+			rapidjson::Document rapidJsonDocument;
+			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "SceneAsset", "1");
 
 			{ // Write down the scene resource header
 				RendererRuntime::v1Scene::Header sceneHeader;
@@ -124,49 +115,48 @@ namespace RendererToolkit
 				outputFileStream.write(reinterpret_cast<const char*>(&sceneHeader), sizeof(RendererRuntime::v1Scene::Header));
 			}
 
-			Poco::JSON::Object::Ptr jsonSceneObject = jsonRootObject->get("SceneAsset").extract<Poco::JSON::Object::Ptr>();
-			Poco::JSON::Object::Ptr jsonSceneNodesObject = jsonSceneObject->get("Nodes").extract<Poco::JSON::Object::Ptr>();
+			// Mandatory main sections of the material blueprint
+			const rapidjson::Value& rapidJsonValueSceneAsset = rapidJsonDocument["SceneAsset"];
+			const rapidjson::Value& rapidJsonValueNodes = rapidJsonValueSceneAsset["Nodes"];
 
 			{ // Write down the scene nodes
 				RendererRuntime::v1Scene::Nodes nodes;
-				nodes.numberOfNodes = jsonSceneNodesObject->size();
+				nodes.numberOfNodes = rapidJsonValueNodes.MemberCount();
 				outputFileStream.write(reinterpret_cast<const char*>(&nodes), sizeof(RendererRuntime::v1Scene::Nodes));
 
 				// Loop through all scene nodes
-				Poco::JSON::Object::ConstIterator nodesIterator = jsonSceneNodesObject->begin();
-				Poco::JSON::Object::ConstIterator nodesIteratorEnd = jsonSceneNodesObject->end();
-				while (nodesIterator != nodesIteratorEnd)
+				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorNodes = rapidJsonValueNodes.MemberBegin(); rapidJsonMemberIteratorNodes != rapidJsonValueNodes.MemberEnd(); ++rapidJsonMemberIteratorNodes)
 				{
-					Poco::JSON::Object::Ptr jsonSceneNodeObject = nodesIterator->second.extract<Poco::JSON::Object::Ptr>();
-					Poco::JSON::Object::Ptr jsonItemsObject = jsonSceneNodeObject->has("Items") ? jsonSceneNodeObject->get("Items").extract<Poco::JSON::Object::Ptr>() : Poco::JSON::Object::Ptr();
+					const rapidjson::Value& rapidJsonValueNode = rapidJsonMemberIteratorNodes->value;
+					const rapidjson::Value* rapidJsonValueItems = rapidJsonValueNode.HasMember("Items") ? &rapidJsonValueNode["Items"] : nullptr;
 
 					{ // Write down the scene node
 						RendererRuntime::v1Scene::Node node;
 
 						// Get the scene node transform
 						node.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-						if (jsonSceneNodeObject->has("Properties"))
+						if (rapidJsonValueNode.HasMember("Properties"))
 						{
-							Poco::JSON::Object::Ptr jsonPropertiesObject = jsonSceneNodeObject->get("Properties").extract<Poco::JSON::Object::Ptr>();
+							const rapidjson::Value& rapidJsonValueProperties = rapidJsonValueNode["Properties"];
 
 							// Position, rotation and scale
-							JsonHelper::optionalFloatNProperty(jsonPropertiesObject, "Position", &node.transform.position.x, 3);
-							JsonHelper::optionalFloatNProperty(jsonPropertiesObject, "Rotation", &node.transform.rotation.x, 4);
-							JsonHelper::optionalFloatNProperty(jsonPropertiesObject, "Scale", &node.transform.scale.x, 3);
+							JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Position", &node.transform.position.x, 3);
+							JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Rotation", &node.transform.rotation.x, 4);
+							JsonHelper::optionalFloatNProperty(rapidJsonValueProperties, "Scale", &node.transform.scale.x, 3);
 						}
 
 						// Write down the scene node
-						node.numberOfItems = jsonItemsObject->size();
+						node.numberOfItems = (nullptr != rapidJsonValueItems) ? rapidJsonValueItems->MemberCount() : 0;
 						outputFileStream.write(reinterpret_cast<const char*>(&node), sizeof(RendererRuntime::v1Scene::Node));
 					}
 
-					{ // Write down the scene items
-						Poco::JSON::Object::ConstIterator itemsIterator = jsonItemsObject->begin();
-						Poco::JSON::Object::ConstIterator itemsIteratorEnd = jsonItemsObject->end();
-						while (itemsIterator != itemsIteratorEnd)
+					// Write down the scene items
+					if (nullptr != rapidJsonValueItems)
+					{
+						for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorItems = rapidJsonValueItems->MemberBegin(); rapidJsonMemberIteratorItems != rapidJsonValueItems->MemberEnd(); ++rapidJsonMemberIteratorItems)
 						{
-							Poco::JSON::Object::Ptr jsonItemObject = itemsIterator->second.extract<Poco::JSON::Object::Ptr>();
-							const RendererRuntime::SceneItemTypeId typeId = RendererRuntime::StringId(itemsIterator->first.c_str());
+							const rapidjson::Value& rapidJsonValueItem = rapidJsonMemberIteratorItems->value;
+							const RendererRuntime::SceneItemTypeId typeId = RendererRuntime::StringId(rapidJsonMemberIteratorItems->name.GetString());
 
 							// Get the scene item type specific data number of bytes
 							// TODO(co) Make this more generic via scene factory
@@ -197,7 +187,7 @@ namespace RendererToolkit
 								else if (RendererRuntime::MeshSceneItem::TYPE_ID == typeId)
 								{
 									// Map the source asset ID to the compiled asset ID
-									const uint32_t compiledAssetId = JsonHelper::getCompiledAssetId(input, jsonItemObject, "MeshAssetId");
+									const RendererRuntime::AssetId compiledAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "MeshAssetId");
 
 									// Write the mesh item data
 									RendererRuntime::v1Scene::MeshItem meshItem;
@@ -205,20 +195,14 @@ namespace RendererToolkit
 									outputFileStream.write(reinterpret_cast<const char*>(&meshItem), sizeof(RendererRuntime::v1Scene::MeshItem));
 								}
 							}
-
-							// Next scene item, please
-							++itemsIterator;
 						}
 					}
-
-					// Next scene node, please
-					++nodesIterator;
 				}
 			}
 		}
 
 		{ // Update the output asset package
-			const std::string assetCategory = jsonAssetObject->get("AssetMetadata").extract<Poco::JSON::Object::Ptr>()->getValue<std::string>("AssetCategory");
+			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/Scene/" + assetCategory + '/' + assetName;
 
 			// Output asset
