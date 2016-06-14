@@ -17,7 +17,7 @@
 			},
 			"DiffuseColor":
 			{
-				"Usage": "DYNAMIC",
+				"Usage": "SHADER_UNIFORM",
 				"ValueType": "FLOAT_4",
 				"Value": "1.0 1.0 1.0 1.0",
 				"Description": "Material diffuse color"

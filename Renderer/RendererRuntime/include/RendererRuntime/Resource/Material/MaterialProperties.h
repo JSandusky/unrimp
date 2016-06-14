@@ -108,8 +108,10 @@ namespace RendererRuntime
 		*    ID of the material property to set the value from
 		*  @param[in] materialPropertyValue
 		*    The material property value to set
+		*  @param[in] materialPropertyUsage
+		*    The material property usage
 		*/
-		RENDERERRUNTIME_API_EXPORT void setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue);
+		RENDERERRUNTIME_API_EXPORT void setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage = MaterialProperty::Usage::SHADER_UNIFORM);
 
 
 	//[-------------------------------------------------------]

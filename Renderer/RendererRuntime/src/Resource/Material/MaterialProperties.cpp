@@ -42,9 +42,9 @@ namespace RendererRuntime
 		return (iterator != mSortedPropertyVector.end() && iterator._Ptr->getMaterialPropertyId() == materialPropertyId) ? iterator._Ptr : nullptr;
 	}
 
-	void MaterialProperties::setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue)
+	void MaterialProperties::setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage)
 	{
-		const MaterialProperty materialProperty(materialPropertyId, MaterialProperty::Usage::DYNAMIC, materialPropertyValue);
+		const MaterialProperty materialProperty(materialPropertyId, materialPropertyUsage, materialPropertyValue);
 		SortedPropertyVector::iterator iterator = std::lower_bound(mSortedPropertyVector.begin(), mSortedPropertyVector.end(), materialPropertyId, detail::OrderByMaterialPropertyId());
 		if (iterator == mSortedPropertyVector.end() || iterator->getMaterialPropertyId() != materialPropertyId)
 		{
