@@ -203,6 +203,7 @@ namespace RendererToolkit
 		IF_VALUE(UNKNOWN)
 		ELSE_IF_VALUE(STATIC)
 		ELSE_IF_VALUE(DYNAMIC)
+		ELSE_IF_VALUE(SHADER_COMBINATION)
 		ELSE_IF_VALUE(RASTERIZER_STATE)
 		ELSE_IF_VALUE(DEPTH_STENCIL_STATE)
 		ELSE_IF_VALUE(BLEND_STATE)
@@ -949,6 +950,7 @@ namespace RendererToolkit
 
 				case RendererRuntime::MaterialProperty::Usage::UNKNOWN:
 				case RendererRuntime::MaterialProperty::Usage::DYNAMIC:
+				case RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION:
 				case RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE:
 				case RendererRuntime::MaterialProperty::Usage::DEPTH_STENCIL_STATE:
 				case RendererRuntime::MaterialProperty::Usage::BLEND_STATE:

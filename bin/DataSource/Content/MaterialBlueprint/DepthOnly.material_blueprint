@@ -10,7 +10,7 @@
 		{
 			"Lighting":
 			{
-				"Usage": "STATIC",
+				"Usage": "SHADER_COMBINATION",
 				"ValueType": "BOOLEAN",
 				"Value": "TRUE",
 				"Description": "Perform lighting on the material?"

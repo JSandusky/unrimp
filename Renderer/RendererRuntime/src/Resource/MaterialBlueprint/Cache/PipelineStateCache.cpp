@@ -42,7 +42,7 @@ namespace RendererRuntime
 		mShaderProperties(shaderProperties),
 		mMaterialProperties(materialProperties)
 	{
-		// Gather shader properties from static material properties
+		// Gather shader properties from static material properties generating shader combinations
 		ShaderProperties finalShaderProperties = shaderProperties;
 		{
 			const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialProperties.getSortedPropertyVector();
@@ -50,7 +50,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfMaterialProperties; ++i)
 			{
 				const MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
-				if (materialProperty.getUsage() == MaterialProperty::Usage::STATIC)
+				if (materialProperty.getUsage() == MaterialProperty::Usage::SHADER_COMBINATION)
 				{
 					finalShaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
 				}
