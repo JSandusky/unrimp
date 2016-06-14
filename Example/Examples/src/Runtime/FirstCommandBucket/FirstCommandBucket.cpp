@@ -141,7 +141,7 @@ void FirstCommandBucket::onInitialization()
 		{ // Create the root signature
 			// Setup
 			Renderer::DescriptorRangeBuilder ranges[1];
-			ranges[0].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockDynamicVs", 0);
+			ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", 0);
 
 			Renderer::RootParameterBuilder rootParameters[1];
 			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);

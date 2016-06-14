@@ -505,7 +505,7 @@ namespace RendererToolkit
 							// Evaluate value
 							IF_VALUE(SRV)
 							ELSE_IF_VALUE(UAV)
-							ELSE_IF_VALUE(CBV)
+							ELSE_IF_VALUE(UBV)
 							ELSE_IF_VALUE(SAMPLER)
 							else
 							{

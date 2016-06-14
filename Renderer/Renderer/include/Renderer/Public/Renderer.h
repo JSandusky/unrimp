@@ -318,8 +318,8 @@ namespace Renderer
 		{
 			SRV     = 0,
 			UAV     = SRV + 1,
-			CBV     = UAV + 1,
-			SAMPLER = CBV + 1
+			UBV     = UAV + 1,
+			SAMPLER = UBV + 1
 		};
 		struct DescriptorRange
 		{
@@ -428,8 +428,8 @@ namespace Renderer
 		{
 			DESCRIPTOR_TABLE = 0,
 			CONSTANTS_32BIT  = DESCRIPTOR_TABLE + 1,
-			CBV              = CONSTANTS_32BIT + 1,
-			SRV              = CBV + 1,
+			UBV              = CONSTANTS_32BIT + 1,
+			SRV              = UBV + 1,
 			UAV              = SRV + 1
 		};
 		struct RootConstants
@@ -557,7 +557,7 @@ namespace Renderer
 				uint32_t registerSpace = 0,
 				ShaderVisibility visibility = ShaderVisibility::ALL)
 			{
-				rootParam.parameterType = RootParameterType::CBV;
+				rootParam.parameterType = RootParameterType::UBV;
 				rootParam.shaderVisibility = visibility;
 				RootDescriptorBuilder::initialize(rootParam.descriptor, shaderRegister, registerSpace);
 			}

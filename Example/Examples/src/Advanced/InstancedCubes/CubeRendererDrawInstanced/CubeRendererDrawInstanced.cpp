@@ -178,11 +178,11 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 	{ // Create the root signature
 		Renderer::DescriptorRangeBuilder ranges[6];
 		ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "TextureBufferStaticVS", 0);
-		ranges[1].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockStaticVs", 0);
-		ranges[2].initialize(Renderer::DescriptorRangeType::CBV, 1, 1, "UniformBlockDynamicVs", 0);
+		ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticVs", 0);
+		ranges[2].initialize(Renderer::DescriptorRangeType::UBV, 1, 1, "UniformBlockDynamicVs", 0);
 		ranges[3].initializeSampler(1, 0);
 		ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
-		ranges[5].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockDynamicFs", 0);
+		ranges[5].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicFs", 0);
 
 		Renderer::RootParameterBuilder rootParameters[6];
 		rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);

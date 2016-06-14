@@ -139,7 +139,7 @@ void FirstMesh::onInitialization()
 
 			{ // Create the root signature
 				Renderer::DescriptorRangeBuilder ranges[6];
-				ranges[0].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockDynamicVs", 0);
+				ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", 0);
 				ranges[1].initializeSampler(1, 0);
 				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
 				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "EmissiveMap", 0);

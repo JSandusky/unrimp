@@ -62,7 +62,7 @@
 					{
 						"0":
 						{
-							"RangeType": "CBV",
+							"RangeType": "UBV",
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "PassUniformBuffer"
 						}
@@ -76,7 +76,7 @@
 					{
 						"0":
 						{
-							"RangeType": "CBV",
+							"RangeType": "UBV",
 							"BaseShaderRegister": "1",
 							"BaseShaderRegisterName": "MaterialUniformBuffer"
 						}
@@ -90,7 +90,7 @@
 					{
 						"0":
 						{
-							"RangeType": "CBV",
+							"RangeType": "UBV",
 							"BaseShaderRegister": "2",
 							"BaseShaderRegisterName": "InstanceUniformBuffer"
 						}

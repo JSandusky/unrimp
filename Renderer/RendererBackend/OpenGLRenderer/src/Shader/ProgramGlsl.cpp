@@ -150,7 +150,7 @@ namespace OpenGLRenderer
 							const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
 
 							// Ignore sampler range types in here (OpenGL handles samplers in a different way then Direct3D 10>=)
-							if (Renderer::DescriptorRangeType::CBV == descriptorRange->rangeType)
+							if (Renderer::DescriptorRangeType::UBV == descriptorRange->rangeType)
 							{
 								// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
 								// for backward compatibility, ask for the uniform block index

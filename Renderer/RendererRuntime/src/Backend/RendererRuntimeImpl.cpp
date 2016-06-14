@@ -202,10 +202,10 @@ namespace RendererRuntime
 		{
 			// Create the root signature
 			Renderer::DescriptorRangeBuilder ranges[4];
-			ranges[0].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockDynamicVs", 0);
+			ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", 0);
 			ranges[1].initializeSampler(1, 0);
 			ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GlyphMap", 0);
-			ranges[3].initialize(Renderer::DescriptorRangeType::CBV, 1, 0, "UniformBlockDynamicFs", 0);
+			ranges[3].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicFs", 0);
 
 			Renderer::RootParameterBuilder rootParameters[4];
 			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);
