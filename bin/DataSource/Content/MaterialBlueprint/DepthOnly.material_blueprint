@@ -316,100 +316,87 @@
 		{
 			"UniformBuffers":
 			{
-				"0":
+				"PassUniformBuffer":
 				{
-					"Name": "PassUniformBuffer",
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"UniformBufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
-						"0":
+						"WorldSpaceToViewSpaceMatrix":
 						{
-							"Name": "WorldSpaceToViewSpaceMatrix",
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4_4",
 							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_MATRIX"
 						},
-						"1":
+						"WorldSpaceToClipSpaceMatrix":
 						{
-							"Name": "WorldSpaceToClipSpaceMatrix",
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4_4",
 							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
 						},
-						"2":
+						"ViewSpaceSunLightDirection":
 						{
-							"Name": "ViewSpaceSunLightDirection",
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@VIEW_SPACE_SUN_LIGHT_DIRECTION"
 						},
-						"3":
+						"SunLightColor":
 						{
-							"Name": "SunLightColor",
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@SunLightColor"
 						},
-						"4":
+						"Wetness":
 						{
-							"Name": "Wetness",
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT",
 							"Value": "@Wetness"
 						},
-						"5":
+						"StaticPropertyTest":
 						{
-							"Name": "StaticPropertyTest",
 							"Usage": "STATIC",
 							"ValueType": "FLOAT",
 							"Value": "1.0"
 						}
 					}
 				},
-				"1":
+				"MaterialUniformBuffer":
 				{
-					"Name": "MaterialUniformBuffer",
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"UniformBufferUsage": "MATERIAL",
 					"NumberOfElements": "2",
 					"ElementProperties":
 					{
-						"0":
+						"DiffuseColor":
 						{
-							"Name": "DiffuseColor",
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT_4",
 							"Value": "@DiffuseColor"
 						},
-						"1":
+						"StaticPropertyTest":
 						{
-							"Name": "StaticPropertyTest",
 							"Usage": "STATIC",
 							"ValueType": "FLOAT",
 							"Value": "1.0"
 						}
 					}
 				},
-				"2":
+				"InstanceUniformBuffer":
 				{
-					"Name": "InstanceUniformBuffer",
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"UniformBufferUsage": "INSTANCE",
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
-						"0":
+						"ObjectSpaceToWorldSpaceMatrix":
 						{
-							"Name": "ObjectSpaceToWorldSpaceMatrix",
 							"Usage": "INSTANCE_REFERENCE",
 							"ValueType": "FLOAT_4_4",
 							"Value": "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
 						},
-						"1":
+						"MaterialIndex":
 						{
-							"Name": "MaterialIndex",
 							"Usage": "INSTANCE_REFERENCE",
 							"ValueType": "INTEGER",
 							"Value": "@MATERIAL_INDEX"
@@ -419,9 +406,8 @@
 			},
 			"SamplerStates":
 			{
-				"0":
+				"SamplerLinear":
 				{
-					"Name": "SamplerLinear",
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Filter": "MIN_MAG_MIP_LINEAR",
 					"AddressU": "CLAMP",
@@ -437,33 +423,29 @@
 			},
 			"Textures":
 			{
-				"0":
+				"DiffuseMap":
 				{
-					"Name": "DiffuseMap",
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DiffuseMap"
 				},
-				"1":
+				"EmissiveMap":
 				{
-					"Name": "EmissiveMap",
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@EmissiveMap"
 				},
-				"2":
+				"NormalMap":
 				{
-					"Name": "NormalMap",
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@NormalMap"
 				},
-				"3":
+				"SpecularMap":
 				{
-					"Name": "SpecularMap",
 					"RootParameterIndex": "@counter(RootParameterIndex)",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
