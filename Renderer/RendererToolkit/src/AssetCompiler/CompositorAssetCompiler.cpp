@@ -29,6 +29,7 @@
 #include <RendererRuntime/Resource/Compositor/Pass/Quad/CompositorResourcePassQuad.h>
 #include <RendererRuntime/Resource/Compositor/Pass/Clear/CompositorResourcePassClear.h>
 #include <RendererRuntime/Resource/Compositor/Pass/Scene/CompositorResourcePassScene.h>
+#include <RendererRuntime/Resource/Compositor/Pass/DebugGui/CompositorResourcePassDebugGui.h>
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -184,6 +185,10 @@ namespace RendererToolkit
 							{
 								numberOfBytes = sizeof(RendererRuntime::v1Compositor::PassScene);
 							}
+							else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == typeId)
+							{
+								numberOfBytes = sizeof(RendererRuntime::v1Compositor::PassDebugGui);
+							}
 
 							{ // Write down the compositor resource node target pass header
 								RendererRuntime::v1Compositor::PassHeader passHeader;
@@ -210,6 +215,11 @@ namespace RendererToolkit
 								{
 									RendererRuntime::v1Compositor::PassScene passScene;
 									outputFileStream.write(reinterpret_cast<const char*>(&passScene), sizeof(RendererRuntime::v1Compositor::PassScene));
+								}
+								else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == typeId)
+								{
+									RendererRuntime::v1Compositor::PassDebugGui passDebugGui;
+									outputFileStream.write(reinterpret_cast<const char*>(&passDebugGui), sizeof(RendererRuntime::v1Compositor::PassDebugGui));
 								}
 							}
 						}

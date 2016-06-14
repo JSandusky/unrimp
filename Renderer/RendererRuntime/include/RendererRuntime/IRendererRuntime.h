@@ -45,6 +45,7 @@ namespace RendererRuntime
 {
 	class AssetManager;
 	class ThreadManager;
+	class DebugGuiManager;
 	class IRendererRuntime;
 	class ResourceStreamer;
 	class IResourceManager;
@@ -243,6 +244,18 @@ namespace RendererRuntime
 		*/
 		inline const ResourceManagers& getResourceManagers() const;
 
+		//[-------------------------------------------------------]
+		//[ Debug                                                 ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the debug GUI manager instance
+		*
+		*  @return
+		*    The debug GUI manager instance, do not release the returned instance
+		*/
+		inline DebugGuiManager& getDebugGuiManager() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
@@ -323,6 +336,8 @@ namespace RendererRuntime
 		SceneResourceManager*				mSceneResourceManager;
 		CompositorResourceManager*			mCompositorResourceManager;
 		ResourceManagers					mResourceManagers;
+		// Debug
+		DebugGuiManager* mDebugGuiManager;
 
 
 	};

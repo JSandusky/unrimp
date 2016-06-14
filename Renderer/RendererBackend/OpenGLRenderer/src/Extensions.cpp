@@ -619,6 +619,8 @@ namespace OpenGLRenderer
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glNamedBufferDataEXT)
 			IMPORT_FUNC(glNamedBufferSubDataEXT)
+			IMPORT_FUNC(glMapNamedBufferEXT)
+			IMPORT_FUNC(glUnmapNamedBufferEXT)
 			IMPORT_FUNC(glProgramUniform1fEXT)
 			IMPORT_FUNC(glProgramUniform2fvEXT)
 			IMPORT_FUNC(glProgramUniform3fvEXT)

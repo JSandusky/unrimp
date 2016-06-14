@@ -147,7 +147,7 @@ public:
 
 	/**
 	*  @brief
-	*    Called in case a key was releaed
+	*    Called in case a key was released
 	*
 	*  @param[in] key
 	*    Released key

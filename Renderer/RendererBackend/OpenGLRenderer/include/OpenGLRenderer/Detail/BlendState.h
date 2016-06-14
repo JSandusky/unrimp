@@ -70,7 +70,7 @@ namespace OpenGLRenderer
 		*  @param[in] blendState
 		*    Blend state to use
 		*/
-		BlendState(const Renderer::BlendState &blendState);
+		explicit BlendState(const Renderer::BlendState &blendState);
 
 		/**
 		*  @brief
@@ -89,7 +89,9 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::BlendState mBlendState;	///< Blend state
+		Renderer::BlendState mBlendState;		///< Blend state
+		uint32_t			 mOpenGLSrcBlend;	///< OpenGL source blend function (type "GLenum" not used in here in order to keep the header slim)
+		uint32_t			 mOpenGLDstBlend;	///< OpenGL destination blend function (type "GLenum" not used in here in order to keep the header slim)
 
 
 	};

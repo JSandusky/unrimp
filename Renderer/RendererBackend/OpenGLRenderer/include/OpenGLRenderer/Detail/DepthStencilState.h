@@ -70,7 +70,7 @@ namespace OpenGLRenderer
 		*  @param[in] depthStencilState
 		*    Depth stencil state to use
 		*/
-		DepthStencilState(const Renderer::DepthStencilState &depthStencilState);
+		explicit DepthStencilState(const Renderer::DepthStencilState &depthStencilState);
 
 		/**
 		*  @brief

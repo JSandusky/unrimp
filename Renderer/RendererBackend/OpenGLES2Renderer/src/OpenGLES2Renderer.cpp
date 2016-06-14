@@ -333,15 +333,267 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool OpenGLES2Renderer::map(Renderer::IResource &, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource &)
+	bool OpenGLES2Renderer::map(Renderer::IResource& resource, uint32_t, Renderer::MapType mapType, uint32_t, Renderer::MappedSubresource& mappedSubresource)
 	{
-		// TODO(co) Implement me
-		return false;
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+			{
+				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
+
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Backup the currently bound OpenGL ES 2 array element buffer
+					GLint openGLES2ArrayElementBufferBackup = 0;
+					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ArrayElementBufferBackup);
+				#endif
+
+				// Bind this OpenGL ES 2 element buffer and upload the data
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES2ElementArrayBuffer());
+
+				// Map
+				mappedSubresource.data		 = glMapBufferOES(GL_ELEMENT_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Be polite and restore the previous bound OpenGL ES 2 array element buffer
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLES2ArrayElementBufferBackup);
+				#endif
+
+				// Done
+				return true;
+			}
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			{
+				// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
+
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Backup the currently bound OpenGL ES 2 array buffer
+					GLint openGLES2ArrayBufferBackup = 0;
+					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
+				#endif
+
+				// Bind this OpenGL ES 2 array buffer and upload the data
+				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES2ArrayBuffer());
+
+				// Map
+				mappedSubresource.data		 = glMapBufferOES(GL_ARRAY_BUFFER, Mapping::getOpenGLES2MapType(mapType));
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Be polite and restore the previous bound OpenGL ES 2 array buffer
+					glBindBuffer(GL_ARRAY_BUFFER, openGLES2ArrayBufferBackup);
+				#endif
+
+				// Done
+				return true;
+			}
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+				// TODO(co) Implement me
+				// return (S_OK == mD3D11DeviceContext->Map(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+				return false;
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+				// TODO(co) Implement me
+				// return (S_OK == mD3D11DeviceContext->Map(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+				return false;
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				bool result = false;
+
+				// TODO(co) Implement me
+				/*
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Map the Direct3D 11 resource
+					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(this)
+				*/
+
+				// Done
+				return result;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				bool result = false;
+
+				// TODO(co) Implement me
+				/*
+				// Begin debug event
+				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Map the Direct3D 11 resource
+					result = (S_OK == mD3D11DeviceContext->Map(d3d11Resource, subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+
+				// End debug event
+				RENDERER_END_DEBUG_EVENT(this)
+				*/
+
+				// Done
+				return result;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can map, set known return values
+				mappedSubresource.data		 = nullptr;
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				// Error!
+				return false;
+		}
 	}
 
-	void OpenGLES2Renderer::unmap(Renderer::IResource &, uint32_t)
+	void OpenGLES2Renderer::unmap(Renderer::IResource& resource, uint32_t)
 	{
-		// TODO(co) Implement me
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+			{
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Backup the currently bound OpenGL ES 2 array element buffer
+					GLint openGLES2ArrayElementBufferBackup = 0;
+					glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &openGLES2ArrayElementBufferBackup);
+				#endif
+
+				// Bind this OpenGL ES 2 element buffer and upload the data
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<IndexBuffer&>(resource).getOpenGLES2ElementArrayBuffer());
+
+				// Map
+				glUnmapBufferOES(GL_ELEMENT_ARRAY_BUFFER);
+
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Be polite and restore the previous bound OpenGL ES 2 array element buffer
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLES2ArrayElementBufferBackup);
+				#endif
+				break;
+			}
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			{
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Backup the currently bound OpenGL ES 2 array buffer
+					GLint openGLES2ArrayBufferBackup = 0;
+					glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &openGLES2ArrayBufferBackup);
+				#endif
+
+				// Bind this OpenGL ES 2 array buffer and upload the data
+				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer&>(resource).getOpenGLES2ArrayBuffer());
+
+				// Map
+				glUnmapBufferOES(GL_ARRAY_BUFFER);
+
+				#ifndef OPENGLES2RENDERER_NO_STATE_CLEANUP
+					// Be polite and restore the previous bound OpenGL ES 2 array buffer
+					glBindBuffer(GL_ARRAY_BUFFER, openGLES2ArrayBufferBackup);
+				#endif
+				break;
+			}
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+				// TODO(co) Implement me
+				// mD3D11DeviceContext->Unmap(static_cast<UniformBuffer&>(resource).getD3D11Buffer(), subresource);
+				break;
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+				// TODO(co) Implement me
+				// mD3D11DeviceContext->Unmap(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource);
+				break;
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				// TODO(co) Implement me
+				/*
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Unmap the Direct3D 11 resource
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+				*/
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				// TODO(co) Implement me
+				/*
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource *d3d11Resource = nullptr;
+				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Unmap the Direct3D 11 resource
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+				*/
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can unmap
+				break;
+		}
 	}
 
 
@@ -478,7 +730,7 @@ namespace OpenGLES2Renderer
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
 					// Unlike Direct3D >=10, OpenGL ES 2 directly attaches the sampler settings to the texture
-					mGraphicsRootSignature->setSamplerState(descriptorRange->samplerRootParameterIndex, static_cast<SamplerState*>(resource));
+					mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
 					break;
 				}
 

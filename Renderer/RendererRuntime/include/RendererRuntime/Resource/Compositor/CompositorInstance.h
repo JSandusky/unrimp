@@ -76,6 +76,7 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId, Renderer::IRenderTarget& renderTarget);
 		RENDERERRUNTIME_API_EXPORT virtual ~CompositorInstance();
 		RENDERERRUNTIME_API_EXPORT const IRendererRuntime& getRendererRuntime() const;
+		RENDERERRUNTIME_API_EXPORT Renderer::IRenderTarget& getRenderTarget() const;
 		RENDERERRUNTIME_API_EXPORT void execute(CameraSceneItem* cameraSceneItem);
 
 

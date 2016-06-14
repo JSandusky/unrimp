@@ -25,6 +25,7 @@
 #include "Runtime/FirstScene/FirstScene.h"
 
 #include <RendererRuntime/Core/Math/Transform.h>
+#include <RendererRuntime/DebugGui/DebugGuiManager.h>
 #include <RendererRuntime/Resource/Scene/ISceneResource.h>
 #include <RendererRuntime/Resource/Scene/SceneResourceManager.h>
 #include <RendererRuntime/Resource/Scene/Node/ISceneNode.h>
@@ -33,6 +34,8 @@
 #include <RendererRuntime/Resource/Compositor/CompositorInstance.h>
 #include <RendererRuntime/Resource/Compositor/CompositorResourceManager.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h>
+
+#include <imgui/imgui.h>
 
 
 //[-------------------------------------------------------]
@@ -44,7 +47,8 @@ FirstScene::FirstScene(const char *rendererName) :
 	mSceneResource(nullptr),
 	mCameraSceneItem(nullptr),
 	mSceneNode(nullptr),
-	mGlobalTimer(0.0f)
+	mGlobalTimer(0.0f),
+	mPerformRotation(true)
 {
 	// Nothing to do in here
 }
@@ -106,13 +110,13 @@ void FirstScene::onUpdate()
 	// Stop the stopwatch
 	mStopwatch.stop();
 
-	// Update the global timer (FPS independent movement)
-	mGlobalTimer += mStopwatch.getMilliseconds() * 0.0005f;
-
 	// Update the scene node rotation
-	if (nullptr != mSceneNode)
+	if (nullptr != mSceneNode && mPerformRotation)
 	{
 		mSceneNode->setRotation(glm::angleAxis(mGlobalTimer, glm::vec3(0.0f, 1.0f, 0.0f)));
+
+		// Update the global timer (FPS independent movement)
+		mGlobalTimer += mStopwatch.getMilliseconds() * 0.0005f;
 	}
 
 	// Start the stopwatch
@@ -121,10 +125,11 @@ void FirstScene::onUpdate()
 
 void FirstScene::onDrawRequest()
 {
-	// Is there a compositor instance?
+	createDebugGui();
+
+	// Execute the compositor instance
 	if (nullptr != mCompositorInstance && nullptr != mSceneResource && mSceneResource->getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
 	{
-		// Execute the compositor instance
 		mCompositorInstance->execute(mCameraSceneItem);
 	}
 }
@@ -166,5 +171,20 @@ void FirstScene::onLoadingStateChange(RendererRuntime::IResource::LoadingState l
 	{
 		mCameraSceneItem = nullptr;
 		mSceneNode = nullptr;
+	}
+}
+
+
+//[-------------------------------------------------------]
+//[ Private methods                                       ]
+//[-------------------------------------------------------]
+void FirstScene::createDebugGui()
+{
+	if (nullptr != mCompositorInstance && nullptr != mSceneResource)
+	{
+		mSceneResource->getRendererRuntime().getDebugGuiManager().newFrame(mCompositorInstance->getRenderTarget());
+		ImGui::Begin("Options");
+			ImGui::Checkbox("Perform Rotation", &mPerformRotation);
+		ImGui::End();
 	}
 }

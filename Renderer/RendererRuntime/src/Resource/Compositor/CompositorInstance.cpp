@@ -71,6 +71,11 @@ namespace RendererRuntime
 		return mRendererRuntime;
 	}
 
+	Renderer::IRenderTarget& CompositorInstance::getRenderTarget() const
+	{
+		return mRenderTarget;
+	}
+
 	void CompositorInstance::execute(CameraSceneItem* cameraSceneItem)
 	{
 		// Is the compositor resource ready?

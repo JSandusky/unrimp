@@ -141,10 +141,10 @@ void FirstMesh::onInitialization()
 				Renderer::DescriptorRangeBuilder ranges[6];
 				ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", 0);
 				ranges[1].initializeSampler(1, 0);
-				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
-				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "EmissiveMap", 0);
-				ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "NormalMap", 0);
-				ranges[5].initialize(Renderer::DescriptorRangeType::SRV, 1, 3, "SpecularMap", 0);
+				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 1);
+				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "EmissiveMap", 1);
+				ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "NormalMap", 1);
+				ranges[5].initialize(Renderer::DescriptorRangeType::SRV, 1, 3, "SpecularMap", 1);
 
 				Renderer::RootParameterBuilder rootParameters[6];
 				rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);

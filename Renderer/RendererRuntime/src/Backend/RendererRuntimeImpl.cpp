@@ -35,6 +35,7 @@
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResourceManager.h"
+#include "RendererRuntime/DebugGui/Detail/DebugGuiManagerWindows.h"
 
 #include <cstring>
 
@@ -111,7 +112,7 @@ namespace RendererRuntime
 		// Add our renderer reference
 		mRenderer->addReference();
 
-		// Create the manager instances
+		// Create the core manager instances
 		mThreadManager = new ThreadManager();
 		mAssetManager = new AssetManager(*this);
 
@@ -139,10 +140,20 @@ namespace RendererRuntime
 		mResourceManagers.push_back(mMeshResourceManager);
 		mResourceManagers.push_back(mSceneResourceManager);
 		mResourceManagers.push_back(mCompositorResourceManager);
+
+		// Create the debug manager instances
+		#ifdef WIN32
+			mDebugGuiManager = new DebugGuiManagerWindows(*this);
+		#else
+			#error "Unsupported platform"
+		#endif
 	}
 
 	RendererRuntimeImpl::~RendererRuntimeImpl()
 	{
+		// Destroy the debug manager instances
+		delete mDebugGuiManager;
+
 		// Release the font sampler state instance
 		if (nullptr != mFontSamplerState)
 		{
@@ -179,10 +190,6 @@ namespace RendererRuntime
 			mRootFontSignature->release();
 		}
 
-		// Destroy the manager instances
-		delete mAssetManager;
-		delete mThreadManager;
-
 		{ // Destroy the resource manager instances in reverse order
 			const int numberOfResourceManagers = static_cast<int>(mResourceManagers.size());
 			for (int i = numberOfResourceManagers - 1; i >= 0; --i)
@@ -190,6 +197,10 @@ namespace RendererRuntime
 				delete mResourceManagers[static_cast<size_t>(i)];
 			}
 		}
+
+		// Destroy the core manager instances
+		delete mAssetManager;
+		delete mThreadManager;
 
 		// Release our renderer reference
 		mRenderer->release();
@@ -204,7 +215,7 @@ namespace RendererRuntime
 			Renderer::DescriptorRangeBuilder ranges[4];
 			ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", 0);
 			ranges[1].initializeSampler(1, 0);
-			ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GlyphMap", 0);
+			ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GlyphMap", 1);
 			ranges[3].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicFs", 0);
 
 			Renderer::RootParameterBuilder rootParameters[4];

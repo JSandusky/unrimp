@@ -36,6 +36,8 @@
 
 #include <Renderer/Public/Renderer.h>
 
+#include <vector>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -44,8 +46,10 @@ namespace RendererRuntime
 {
 	class AssetManager;
 	class ThreadManager;
+	class DebugGuiManager;
 	class IRendererRuntime;
 	class ResourceStreamer;
+	class IResourceManager;
 	class FontResourceManager;
 	class MeshResourceManager;
 	class SceneResourceManager;
@@ -78,6 +82,8 @@ namespace RendererRuntime
 	// RendererRuntime/IRendererRuntime.h
 	class IRendererRuntime : public Renderer::RefCount<IRendererRuntime>
 	{
+	public:
+		typedef std::vector<IResourceManager*> ResourceManagers;
 	public:
 		virtual ~IRendererRuntime();
 		inline Renderer::IRenderer& getRenderer() const
@@ -136,6 +142,14 @@ namespace RendererRuntime
 		{
 			return *mCompositorResourceManager;
 		}
+		inline const ResourceManagers& getResourceManagers() const
+		{
+			return mResourceManagers;
+		}
+		inline DebugGuiManager& getDebugGuiManager() const
+		{
+			return *mDebugGuiManager;
+		}
 	public:
 		virtual void reloadResourceByAssetId(AssetId assetId) const = 0;
 		virtual void update() const = 0;
@@ -158,6 +172,8 @@ namespace RendererRuntime
 		MeshResourceManager*				mMeshResourceManager;
 		SceneResourceManager*				mSceneResourceManager;
 		CompositorResourceManager*			mCompositorResourceManager;
+		ResourceManagers					mResourceManagers;
+		DebugGuiManager*					mDebugGuiManager;
 	};
 	typedef Renderer::SmartRefCount<IRendererRuntime> IRendererRuntimePtr;
 

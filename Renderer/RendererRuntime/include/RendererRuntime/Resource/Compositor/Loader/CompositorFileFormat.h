@@ -107,6 +107,10 @@ namespace RendererRuntime
 			struct PassScene
 			{
 			};
+
+			struct PassDebugGui
+			{
+			};
 		#pragma pack(pop)
 
 

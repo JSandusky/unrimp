@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Detail/BlendState.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/Mapping.h"
 
 
 //[-------------------------------------------------------]
@@ -36,7 +37,9 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	BlendState::BlendState(const Renderer::BlendState &blendState) :
-		mBlendState(blendState)
+		mBlendState(blendState),
+		mOpenGLSrcBlend(Mapping::getOpenGLBlendType(mBlendState.renderTarget[0].srcBlend)),
+		mOpenGLDstBlend(Mapping::getOpenGLBlendType(mBlendState.renderTarget[0].destBlend))
 	{
 		// Nothing to do in here
 	}
@@ -48,12 +51,11 @@ namespace OpenGLRenderer
 
 	void BlendState::setOpenGLBlendStates() const
 	{
+		// TODO(co) Add support for blend state per render target
 		if (mBlendState.renderTarget[0].blendEnable)
 		{
 			glEnable(GL_BLEND);
-
-			// TODO(co) Add more blend state options: Due to time limitations for now only fixed build in alpha blend setup in order to see a change
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+			glBlendFunc(mOpenGLSrcBlend, mOpenGLDstBlend);
 		}
 		else
 		{

@@ -24,12 +24,16 @@
 #include "PrecompiledHeader.h"
 #include "Framework/ApplicationImplWindows.h"
 #include "Framework/IApplication.h"
+#include "Framework/IApplicationRendererRuntime.h"
+
+#include <RendererRuntime/DebugGui/Detail/DebugGuiManagerWindows.h>
 
 
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 ApplicationImplWindows::ApplicationImplWindows(IApplication &application, const char *windowTitle) :
+	IApplicationImpl(application),
 	mApplication(&application),
 	mNativeWindowHandle(NULL_HANDLE)
 {
@@ -166,11 +170,23 @@ LRESULT CALLBACK ApplicationImplWindows::wndProc(HWND hWnd, UINT message, WPARAM
 	{
 		applicationImplWindows = static_cast<ApplicationImplWindows*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
 	}
-	else
+	else if (NULL_HANDLE != hWnd)
 	{
-		if (NULL_HANDLE != hWnd)
+		applicationImplWindows = reinterpret_cast<ApplicationImplWindows*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
+	}
+
+	// Call the MS Windows callback of the debug GUI
+	if (nullptr != applicationImplWindows)
+	{
+		// TODO(co) Evil cast ahead. Maybe simplify the example application framework? After all, it's just an example framework for Unrimp and nothing too generic.
+		const IApplicationRendererRuntime* applicationRendererRuntime = static_cast<IApplicationRendererRuntime*>(&applicationImplWindows->getApplication());
+		if (nullptr != applicationRendererRuntime)
 		{
-			applicationImplWindows = reinterpret_cast<ApplicationImplWindows*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
+			const RendererRuntime::IRendererRuntime* rendererRuntime = applicationRendererRuntime->getRendererRuntime();
+			if (nullptr != rendererRuntime)
+			{
+				static_cast<RendererRuntime::DebugGuiManagerWindows&>(rendererRuntime->getDebugGuiManager()).wndProc(hWnd, message, wParam, lParam);
+			}
 		}
 	}
 

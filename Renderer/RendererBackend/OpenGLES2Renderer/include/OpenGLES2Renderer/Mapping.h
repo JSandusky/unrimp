@@ -30,6 +30,7 @@
 #include <Renderer/BufferTypes.h>
 #include <Renderer/TextureTypes.h>
 #include <Renderer/RendererTypes.h>
+#include <Renderer/BlendStateTypes.h>
 #include <Renderer/IndexBufferTypes.h>
 #include <Renderer/VertexArrayTypes.h>
 #include <Renderer/SamplerStateTypes.h>
@@ -155,6 +156,18 @@ namespace OpenGLES2Renderer
 		*/
 		static uint32_t getOpenGLES2Type(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
+		/**
+		*  @brief
+		*    Return whether or not "Renderer::VertexAttributeFormat" is a normalized format
+		*
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to check
+		*
+		*  @return
+		*    "1" if the format is normalized, else "0" (type "GLboolean" not used in here in order to keep the header slim)
+		*/
+		static uint32_t isOpenGLES2VertexAttributeFormatNormalized(Renderer::VertexAttributeFormat vertexAttributeFormat);
+
 		//[-------------------------------------------------------]
 		//[ Renderer::BufferUsage                                 ]
 		//[-------------------------------------------------------]
@@ -238,6 +251,36 @@ namespace OpenGLES2Renderer
 		*    OpenGL ES 2 type (type "GLenum" not used in here in order to keep the header slim)
 		*/
 		static uint32_t getOpenGLES2Type(Renderer::PrimitiveTopology primitive);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::MapType                                     ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::MapType" to OpenGL ES 2 type
+		*
+		*  @param[in] mapType
+		*    "Renderer::MapType" to map
+		*
+		*  @return
+		*    OpenGL ES 2 type (type "GLenum" not used in here in order to keep the header slim)
+		*/
+		static uint32_t getOpenGLES2MapType(Renderer::MapType mapType);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::MapType                                     ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::Blend" to OpenGL ES 2 type
+		*
+		*  @param[in] blend
+		*    "Renderer::Blend" to map
+		*
+		*  @return
+		*    OpenGL ES 2 type (type "GLenum" not used in here in order to keep the header slim)
+		*/
+		static uint32_t getOpenGLES2BlendType(Renderer::Blend blend);
 
 
 	};

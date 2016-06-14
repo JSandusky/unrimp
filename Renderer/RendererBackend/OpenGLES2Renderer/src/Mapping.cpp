@@ -206,7 +206,8 @@ namespace OpenGLES2Renderer
 			2,	// Renderer::VertexAttributeFormat::FLOAT_2
 			3,	// Renderer::VertexAttributeFormat::FLOAT_3
 			4,	// Renderer::VertexAttributeFormat::FLOAT_4
-			4,	// Renderer::VertexAttributeFormat::UNSIGNED_BYTE_4
+			4,	// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
+			4,	// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
 			2,	// Renderer::VertexAttributeFormat::SHORT_2
 			4	// Renderer::VertexAttributeFormat::SHORT_4
 		};
@@ -221,9 +222,26 @@ namespace OpenGLES2Renderer
 			GL_FLOAT,			// Renderer::VertexAttributeFormat::FLOAT_2
 			GL_FLOAT,			// Renderer::VertexAttributeFormat::FLOAT_3
 			GL_FLOAT,			// Renderer::VertexAttributeFormat::FLOAT_4
-			GL_UNSIGNED_BYTE,	// Renderer::VertexAttributeFormat::UNSIGNED_BYTE_4
+			GL_UNSIGNED_BYTE,	// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
+			GL_UNSIGNED_BYTE,	// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
 			GL_SHORT,			// Renderer::VertexAttributeFormat::SHORT_2
 			GL_SHORT			// Renderer::VertexAttributeFormat::SHORT_4
+		};
+		return MAPPING[static_cast<int>(vertexAttributeFormat)];
+	}
+
+	uint32_t Mapping::isOpenGLES2VertexAttributeFormatNormalized(Renderer::VertexAttributeFormat vertexAttributeFormat)
+	{
+		static const GLenum MAPPING[] =
+		{
+			0,	// Renderer::VertexAttributeFormat::FLOAT_1
+			0,	// Renderer::VertexAttributeFormat::FLOAT_2
+			0,	// Renderer::VertexAttributeFormat::FLOAT_3
+			0,	// Renderer::VertexAttributeFormat::FLOAT_4
+			1,	// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
+			0,	// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
+			0,	// Renderer::VertexAttributeFormat::SHORT_2
+			0	// Renderer::VertexAttributeFormat::SHORT_4
 		};
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
@@ -339,6 +357,55 @@ namespace OpenGLES2Renderer
 			GL_TRIANGLE_STRIP	// Renderer::PrimitiveTopology::TRIANGLE_STRIP
 		};
 		return MAPPING[static_cast<int>(prmitive) - 1];	// Lookout! The "Renderer::PrimitiveTopology"-values start with 1, not 0
+	}
+
+	uint32_t Mapping::getOpenGLES2MapType(Renderer::MapType mapType)
+	{
+		// The "GL_OES_mapbuffer" OPENGL ES 2 extension only defines "GL_WRITE_ONLY_OES"
+		static const GLenum MAPPING[] =
+		{
+			GL_WRITE_ONLY_OES,	// Renderer::MapType::READ
+			GL_WRITE_ONLY_OES,	// Renderer::MapType::WRITE
+			GL_WRITE_ONLY_OES,	// Renderer::MapType::READ_WRITE
+			GL_WRITE_ONLY_OES,	// Renderer::MapType::WRITE_DISCARD
+			GL_WRITE_ONLY_OES	// Renderer::MapType::WRITE_NO_OVERWRITE
+		};
+		return MAPPING[static_cast<int>(mapType) - 1];	// Lookout! The "Renderer::MapType"-values start with 1, not 0
+	}
+
+	uint32_t Mapping::getOpenGLES2BlendType(Renderer::Blend blend)
+	{
+		if (blend <= Renderer::Blend::SRC_ALPHA_SAT)
+		{
+			static const GLenum MAPPING[] =
+			{
+				GL_ZERO,				// Renderer::Blend::ZERO
+				GL_ONE,					// Renderer::Blend::ONE
+				GL_SRC_COLOR,			// Renderer::Blend::SRC_COLOR
+				GL_ONE_MINUS_SRC_COLOR,	// Renderer::Blend::INV_SRC_COLOR
+				GL_SRC_ALPHA,			// Renderer::Blend::SRC_ALPHA
+				GL_ONE_MINUS_SRC_ALPHA,	// Renderer::Blend::INV_SRC_ALPHA
+				GL_DST_ALPHA,			// Renderer::Blend::DEST_ALPHA
+				GL_ONE_MINUS_DST_ALPHA,	// Renderer::Blend::INV_DEST_ALPHA
+				GL_DST_COLOR,			// Renderer::Blend::DEST_COLOR
+				GL_ONE_MINUS_DST_COLOR,	// Renderer::Blend::INV_DEST_COLOR
+				GL_SRC_ALPHA_SATURATE	// Renderer::Blend::SRC_ALPHA_SAT
+			};
+			return MAPPING[static_cast<int>(blend) - static_cast<int>(Renderer::Blend::ZERO)];
+		}
+		else
+		{
+			static const GLenum MAPPING[] =
+			{
+				GL_SRC_COLOR,			// Renderer::Blend::BLEND_FACTOR		TODO(co) Mapping "Renderer::Blend::BLEND_FACTOR" to OpenGL ES 2 possible?
+				GL_ONE_MINUS_SRC_COLOR,	// Renderer::Blend::INV_BLEND_FACTOR	TODO(co) Mapping "Renderer::Blend::INV_BLEND_FACTOR" to OpenGL ES 2 possible?
+				GL_SRC_COLOR,			// Renderer::Blend::SRC_1_COLOR			TODO(co) Mapping "Renderer::Blend::SRC_1_COLOR" to OpenGL ES 2 possible?
+				GL_ONE_MINUS_SRC_COLOR,	// Renderer::Blend::INV_SRC_1_COLOR		TODO(co) Mapping "Renderer::Blend::INV_SRC_1_COLOR" to OpenGL ES 2 possible?
+				GL_SRC_COLOR,			// Renderer::Blend::SRC_1_ALPHA			TODO(co) Mapping "Renderer::Blend::SRC_1_ALPHA" to OpenGL ES 2 possible?
+				GL_ONE_MINUS_SRC_COLOR,	// Renderer::Blend::INV_SRC_1_ALPHA		TODO(co) Mapping "Renderer::Blend::INV_SRC_1_ALPHA" to OpenGL ES 2 possible?
+			};
+			return MAPPING[static_cast<int>(blend) - static_cast<int>(Renderer::Blend::BLEND_FACTOR)];
+		}
 	}
 
 

@@ -24,6 +24,7 @@
 #include "OpenGLES2Renderer/Detail/BlendState.h"
 #include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
+#include "OpenGLES2Renderer/Mapping.h"
 
 
 //[-------------------------------------------------------]
@@ -37,7 +38,9 @@ namespace OpenGLES2Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	BlendState::BlendState(const Renderer::BlendState &blendState) :
-		mBlendState(blendState)
+		mBlendState(blendState),
+		mOpenGLES2SrcBlend(Mapping::getOpenGLES2BlendType(mBlendState.renderTarget[0].srcBlend)),
+		mOpenGLES2DstBlend(Mapping::getOpenGLES2BlendType(mBlendState.renderTarget[0].destBlend))
 	{
 		// Nothing to do in here
 	}
@@ -52,9 +55,7 @@ namespace OpenGLES2Renderer
 		if (mBlendState.renderTarget[0].blendEnable)
 		{
 			glEnable(GL_BLEND);
-
-			// TODO(co) Add more blend state options: Due to time limitations for now only fixed build in alpha blend setup in order to see a change
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+			glBlendFunc(mOpenGLES2SrcBlend, mOpenGLES2DstBlend);
 		}
 		else
 		{

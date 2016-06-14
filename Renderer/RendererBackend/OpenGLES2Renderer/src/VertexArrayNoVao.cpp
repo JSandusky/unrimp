@@ -111,7 +111,12 @@ namespace OpenGLES2Renderer
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 			const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = mVertexBuffers[attribute->inputSlot];
 			glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES2ArrayBuffer());
-			glVertexAttribPointer(attributeLocation, Mapping::getOpenGLES2Size(attribute->vertexAttributeFormat), Mapping::getOpenGLES2Type(attribute->vertexAttributeFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
+			glVertexAttribPointer(attributeLocation,
+								  Mapping::getOpenGLES2Size(attribute->vertexAttributeFormat),
+								  Mapping::getOpenGLES2Type(attribute->vertexAttributeFormat),
+								  static_cast<GLboolean>(Mapping::isOpenGLES2VertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
+								  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+								  reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
 
 			// Enable OpenGL ES 2 vertex attribute array
 			glEnableVertexAttribArray(attributeLocation);

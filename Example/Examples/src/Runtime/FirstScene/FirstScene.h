@@ -105,6 +105,7 @@ protected:
 private:
 	FirstScene(const FirstScene&) = delete;
 	FirstScene& operator=(const FirstScene&) = delete;
+	void createDebugGui();
 
 
 //[-------------------------------------------------------]
@@ -119,6 +120,8 @@ private:
 	// For timing
 	Stopwatch mStopwatch;	///< Stopwatch instance
 	float	  mGlobalTimer;	///< Global timer
+	// Other states
+	bool mPerformRotation;
 
 
 };

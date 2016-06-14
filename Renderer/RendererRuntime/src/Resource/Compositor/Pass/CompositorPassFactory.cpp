@@ -28,6 +28,8 @@
 #include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorInstancePassQuad.h"
 #include "RendererRuntime/Resource/Compositor/Pass/Scene/CompositorResourcePassScene.h"
 #include "RendererRuntime/Resource/Compositor/Pass/Scene/CompositorInstancePassScene.h"
+#include "RendererRuntime/Resource/Compositor/Pass/DebugGui/CompositorResourcePassDebugGui.h"
+#include "RendererRuntime/Resource/Compositor/Pass/DebugGui/CompositorInstancePassDebugGui.h"
 
 
 //[-------------------------------------------------------]
@@ -71,6 +73,10 @@ namespace RendererRuntime
 		{
 			compositorResourcePass = new CompositorResourcePassScene();
 		}
+		else if (compositorPassTypeId == CompositorResourcePassDebugGui::TYPE_ID)
+		{
+			compositorResourcePass = new CompositorResourcePassDebugGui();
+		}
 
 		// Done
 		return compositorResourcePass;
@@ -93,6 +99,10 @@ namespace RendererRuntime
 		else if (compositorPassTypeId == CompositorResourcePassScene::TYPE_ID)
 		{
 			compositorInstancePass = new CompositorInstancePassScene(static_cast<const CompositorResourcePassScene&>(compositorResourcePass), compositorInstanceNode);
+		}
+		else if (compositorPassTypeId == CompositorResourcePassDebugGui::TYPE_ID)
+		{
+			compositorInstancePass = new CompositorInstancePassDebugGui(static_cast<const CompositorResourcePassDebugGui&>(compositorResourcePass), compositorInstanceNode);
 		}
 
 		// Done

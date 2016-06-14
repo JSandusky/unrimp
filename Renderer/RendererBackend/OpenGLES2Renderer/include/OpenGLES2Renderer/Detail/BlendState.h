@@ -70,7 +70,7 @@ namespace OpenGLES2Renderer
 		*  @param[in] blendState
 		*    Blend state to use
 		*/
-		BlendState(const Renderer::BlendState &blendState);
+		explicit BlendState(const Renderer::BlendState &blendState);
 
 		/**
 		*  @brief
@@ -89,7 +89,9 @@ namespace OpenGLES2Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::BlendState mBlendState;	///< Blend state
+		Renderer::BlendState mBlendState;			///< Blend state
+		uint32_t			 mOpenGLES2SrcBlend;	///< OpenGL ES 2 source blend function (type "GLenum" not used in here in order to keep the header slim)
+		uint32_t			 mOpenGLES2DstBlend;	///< OpenGL ES 2 destination blend function (type "GLenum" not used in here in order to keep the header slim)
 
 
 	};

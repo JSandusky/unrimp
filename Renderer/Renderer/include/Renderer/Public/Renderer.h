@@ -1039,9 +1039,10 @@ namespace Renderer
 			FLOAT_2			= 1,
 			FLOAT_3			= 2,
 			FLOAT_4			= 3,
-			UNSIGNED_BYTE_4 = 4,
-			SHORT_2			= 5,
-			SHORT_4			= 6
+			R8G8B8A8_UNORM	= 4,
+			R8G8B8A8_UINT	= 5,
+			SHORT_2			= 6,
+			SHORT_4			= 7
 		};
 		#pragma pack(push)
 		#pragma pack(1)

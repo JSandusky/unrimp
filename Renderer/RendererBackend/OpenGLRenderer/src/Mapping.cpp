@@ -229,7 +229,8 @@ namespace OpenGLRenderer
 			2,	// Renderer::VertexAttributeFormat::FLOAT_2
 			3,	// Renderer::VertexAttributeFormat::FLOAT_3
 			4,	// Renderer::VertexAttributeFormat::FLOAT_4
-			4,	// Renderer::VertexAttributeFormat::UNSIGNED_BYTE_4
+			4,	// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
+			4,	// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
 			2,	// Renderer::VertexAttributeFormat::SHORT_2
 			4	// Renderer::VertexAttributeFormat::SHORT_4
 		};
@@ -244,9 +245,26 @@ namespace OpenGLRenderer
 			GL_FLOAT,			// Renderer::VertexAttributeFormat::FLOAT_2
 			GL_FLOAT,			// Renderer::VertexAttributeFormat::FLOAT_3
 			GL_FLOAT,			// Renderer::VertexAttributeFormat::FLOAT_4
-			GL_UNSIGNED_BYTE,	// Renderer::VertexAttributeFormat::UNSIGNED_BYTE_4
+			GL_UNSIGNED_BYTE,	// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
+			GL_UNSIGNED_BYTE,	// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
 			GL_SHORT,			// Renderer::VertexAttributeFormat::SHORT_2
 			GL_SHORT			// Renderer::VertexAttributeFormat::SHORT_4
+		};
+		return MAPPING[static_cast<int>(vertexAttributeFormat)];
+	}
+
+	uint32_t Mapping::isOpenGLVertexAttributeFormatNormalized(Renderer::VertexAttributeFormat vertexAttributeFormat)
+	{
+		static const GLenum MAPPING[] =
+		{
+			0,	// Renderer::VertexAttributeFormat::FLOAT_1
+			0,	// Renderer::VertexAttributeFormat::FLOAT_2
+			0,	// Renderer::VertexAttributeFormat::FLOAT_3
+			0,	// Renderer::VertexAttributeFormat::FLOAT_4
+			1,	// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
+			0,	// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
+			0,	// Renderer::VertexAttributeFormat::SHORT_2
+			0	// Renderer::VertexAttributeFormat::SHORT_4
 		};
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
@@ -266,7 +284,7 @@ namespace OpenGLRenderer
 	{
 		static const GLuint MAPPING[] =
 		{
-			GL_R8,										// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "red"
+			GL_ALPHA,									// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "alpha"
 			GL_RGB8,									// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			GL_RGBA8,									// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			GL_RGBA16F_ARB,								// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
@@ -287,7 +305,7 @@ namespace OpenGLRenderer
 	{
 		static const GLuint MAPPING[] =
 		{
-			GL_RED,		// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "red"
+			GL_ALPHA,	// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "alpha"
 			GL_RGB,		// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			GL_RGBA,	// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			GL_RGBA,	// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
@@ -336,6 +354,54 @@ namespace OpenGLRenderer
 			GL_TRIANGLE_STRIP	// Renderer::PrimitiveTopology::TRIANGLE_STRIP
 		};
 		return MAPPING[static_cast<int>(primitive) - 1];	// Lookout! The "Renderer::PrimitiveTopology"-values start with 1, not 0
+	}
+
+	uint32_t Mapping::getOpenGLMapType(Renderer::MapType mapType)
+	{
+		static const GLenum MAPPING[] =
+		{
+			GL_READ_ONLY,	// Renderer::MapType::READ
+			GL_WRITE_ONLY,	// Renderer::MapType::WRITE
+			GL_READ_WRITE,	// Renderer::MapType::READ_WRITE
+			GL_WRITE_ONLY,	// Renderer::MapType::WRITE_DISCARD
+			GL_WRITE_ONLY	// Renderer::MapType::WRITE_NO_OVERWRITE
+		};
+		return MAPPING[static_cast<int>(mapType) - 1];	// Lookout! The "Renderer::MapType"-values start with 1, not 0
+	}
+
+	uint32_t Mapping::getOpenGLBlendType(Renderer::Blend blend)
+	{
+		if (blend <= Renderer::Blend::SRC_ALPHA_SAT)
+		{
+			static const GLenum MAPPING[] =
+			{
+				GL_ZERO,				// Renderer::Blend::ZERO
+				GL_ONE,					// Renderer::Blend::ONE
+				GL_SRC_COLOR,			// Renderer::Blend::SRC_COLOR
+				GL_ONE_MINUS_SRC_COLOR,	// Renderer::Blend::INV_SRC_COLOR
+				GL_SRC_ALPHA,			// Renderer::Blend::SRC_ALPHA
+				GL_ONE_MINUS_SRC_ALPHA,	// Renderer::Blend::INV_SRC_ALPHA
+				GL_DST_ALPHA,			// Renderer::Blend::DEST_ALPHA
+				GL_ONE_MINUS_DST_ALPHA,	// Renderer::Blend::INV_DEST_ALPHA
+				GL_DST_COLOR,			// Renderer::Blend::DEST_COLOR
+				GL_ONE_MINUS_DST_COLOR,	// Renderer::Blend::INV_DEST_COLOR
+				GL_SRC_ALPHA_SATURATE	// Renderer::Blend::SRC_ALPHA_SAT
+			};
+			return MAPPING[static_cast<int>(blend) - static_cast<int>(Renderer::Blend::ZERO)];
+		}
+		else
+		{
+			static const GLenum MAPPING[] =
+			{
+				GL_SRC_COLOR,				// Renderer::Blend::BLEND_FACTOR		TODO(co) Mapping "Renderer::Blend::BLEND_FACTOR" to OpenGL possible?
+				GL_ONE_MINUS_SRC_COLOR,		// Renderer::Blend::INV_BLEND_FACTOR	TODO(co) Mapping "Renderer::Blend::INV_BLEND_FACTOR" to OpenGL possible?
+				GL_SRC1_COLOR,				// Renderer::Blend::SRC_1_COLOR
+				GL_ONE_MINUS_SRC1_COLOR,	// Renderer::Blend::INV_SRC_1_COLOR
+				GL_SRC1_ALPHA,				// Renderer::Blend::SRC_1_ALPHA
+				GL_ONE_MINUS_SRC1_ALPHA,	// Renderer::Blend::INV_SRC_1_ALPHA
+			};
+			return MAPPING[static_cast<int>(blend) - static_cast<int>(Renderer::Blend::BLEND_FACTOR)];
+		}
 	}
 
 

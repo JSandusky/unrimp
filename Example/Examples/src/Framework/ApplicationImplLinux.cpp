@@ -83,6 +83,7 @@ private:
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 ApplicationImplLinux::ApplicationImplLinux(IApplication &application, const char *windowTitle) :
+	IApplicationImpl(application),
 	mApplication(&application),
 	mX11EventLoop(nullptr),
 	mMainWindow(nullptr)

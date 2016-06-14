@@ -44,7 +44,7 @@ namespace Direct3D10Renderer
 			DXGI_FORMAT_R32G32_FLOAT,		// Renderer::VertexAttributeFormat::FLOAT_2
 			DXGI_FORMAT_R32G32B32_FLOAT,	// Renderer::VertexAttributeFormat::FLOAT_3
 			DXGI_FORMAT_R32G32B32A32_FLOAT,	// Renderer::VertexAttributeFormat::FLOAT_4
-			DXGI_FORMAT_R8G8B8A8_UINT,		// Renderer::VertexAttributeFormat::UNSIGNED_BYTE_4
+			DXGI_FORMAT_R8G8B8A8_UNORM,		// Renderer::VertexAttributeFormat::UNSIGNED_BYTE_4
 			DXGI_FORMAT_R16G16_SINT,		// Renderer::VertexAttributeFormat::SHORT_2
 			DXGI_FORMAT_R16G16B16A16_SINT	// Renderer::VertexAttributeFormat::SHORT_4
 		};

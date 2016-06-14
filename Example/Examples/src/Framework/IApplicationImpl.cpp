@@ -33,16 +33,23 @@ IApplicationImpl::~IApplicationImpl()
 	// Nothing to do in here
 }
 
+IApplication& IApplicationImpl::getApplication() const
+{
+	return mApplication;
+}
+
 
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-IApplicationImpl::IApplicationImpl()
+IApplicationImpl::IApplicationImpl(IApplication& application) :
+	mApplication(application)
 {
 	// Nothing to do in here
 }
 
-IApplicationImpl::IApplicationImpl(const IApplicationImpl &)
+IApplicationImpl::IApplicationImpl(const IApplicationImpl& applicationImpl) :
+	mApplication(applicationImpl.mApplication)
 {
 	// Not supported
 }

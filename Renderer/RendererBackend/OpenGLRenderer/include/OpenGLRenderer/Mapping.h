@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include <Renderer/TextureTypes.h>
 #include <Renderer/RendererTypes.h>
+#include <Renderer/BlendStateTypes.h>
 #include <Renderer/IndexBufferTypes.h>
 #include <Renderer/VertexArrayTypes.h>
 #include <Renderer/SamplerStateTypes.h>
@@ -154,6 +155,18 @@ namespace OpenGLRenderer
 		*/
 		static uint32_t getOpenGLType(Renderer::VertexAttributeFormat vertexAttributeFormat);
 
+		/**
+		*  @brief
+		*    Return whether or not "Renderer::VertexAttributeFormat" is a normalized format
+		*
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to check
+		*
+		*  @return
+		*    "1" if the format is normalized, else "0" (type "GLboolean" not used in here in order to keep the header slim)
+		*/
+		static uint32_t isOpenGLVertexAttributeFormatNormalized(Renderer::VertexAttributeFormat vertexAttributeFormat);
+
 		//[-------------------------------------------------------]
 		//[ Renderer::IndexBufferFormat                           ]
 		//[-------------------------------------------------------]
@@ -222,6 +235,36 @@ namespace OpenGLRenderer
 		*    OpenGL type (type "GLenum" not used in here in order to keep the header slim)
 		*/
 		static uint32_t getOpenGLType(Renderer::PrimitiveTopology prmitive);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::MapType                                     ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::MapType" to OpenGL type
+		*
+		*  @param[in] mapType
+		*    "Renderer::MapType" to map
+		*
+		*  @return
+		*    OpenGL type (type "GLenum" not used in here in order to keep the header slim)
+		*/
+		static uint32_t getOpenGLMapType(Renderer::MapType mapType);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::MapType                                     ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::Blend" to OpenGL type
+		*
+		*  @param[in] blend
+		*    "Renderer::Blend" to map
+		*
+		*  @return
+		*    OpenGL type (type "GLenum" not used in here in order to keep the header slim)
+		*/
+		static uint32_t getOpenGLBlendType(Renderer::Blend blend);
 
 
 	};

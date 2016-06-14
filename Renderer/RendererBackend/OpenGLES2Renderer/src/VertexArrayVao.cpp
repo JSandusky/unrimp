@@ -87,7 +87,12 @@ namespace OpenGLES2Renderer
 				// Set the OpenGL ES 2 vertex attribute pointer
 				const Renderer::VertexArrayVertexBuffer& vertexArrayVertexBuffer = vertexBuffers[attribute->inputSlot];
 				glBindBuffer(GL_ARRAY_BUFFER, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLES2ArrayBuffer());
-				glVertexAttribPointer(attributeLocation, Mapping::getOpenGLES2Size(attribute->vertexAttributeFormat), Mapping::getOpenGLES2Type(attribute->vertexAttributeFormat), GL_FALSE, static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes), reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
+				glVertexAttribPointer(attributeLocation,
+									  Mapping::getOpenGLES2Size(attribute->vertexAttributeFormat),
+									  Mapping::getOpenGLES2Type(attribute->vertexAttributeFormat),
+									  static_cast<GLboolean>(Mapping::isOpenGLES2VertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
+									  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+									  reinterpret_cast<GLvoid*>(attribute->alignedByteOffset));
 
 				// Enable OpenGL ES 2 vertex attribute array
 				glEnableVertexAttribArray(attributeLocation);

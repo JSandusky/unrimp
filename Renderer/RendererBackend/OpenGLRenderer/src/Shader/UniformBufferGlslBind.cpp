@@ -76,6 +76,7 @@ namespace OpenGLRenderer
 		#endif
 
 		// Bind this OpenGL uniform buffer and upload the data
+		// -> Subdata is quite optimized for uniform buffers, see http://on-demand.gputechconf.com/siggraph/2014/presentation/SG4117-OpenGL-Scene-Rendering-Techniques.pdf
 		glBindBufferARB(GL_UNIFORM_BUFFER, mOpenGLUniformBuffer);
 		glBufferSubDataARB(GL_UNIFORM_BUFFER, 0, static_cast<GLsizeiptrARB>(numberOfBytes), data);
 

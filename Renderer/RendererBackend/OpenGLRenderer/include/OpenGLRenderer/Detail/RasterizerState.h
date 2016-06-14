@@ -70,7 +70,7 @@ namespace OpenGLRenderer
 		*  @param[in] rasterizerState
 		*    Rasterizer state to use
 		*/
-		RasterizerState(const Renderer::RasterizerState &rasterizerState);
+		explicit RasterizerState(const Renderer::RasterizerState &rasterizerState);
 
 		/**
 		*  @brief

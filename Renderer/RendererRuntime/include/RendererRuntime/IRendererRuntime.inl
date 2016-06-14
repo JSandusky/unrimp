@@ -108,6 +108,11 @@ namespace RendererRuntime
 		return mResourceManagers;
 	}
 
+	inline DebugGuiManager& IRendererRuntime::getDebugGuiManager() const
+	{
+		return *mDebugGuiManager;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
@@ -128,7 +133,9 @@ namespace RendererRuntime
 		mSkeletonResourceManager(nullptr),
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
-		mCompositorResourceManager(nullptr)
+		mCompositorResourceManager(nullptr),
+		// Debug
+		mDebugGuiManager(nullptr)
 	{
 		// Nothing to do in here
 	}
@@ -149,7 +156,8 @@ namespace RendererRuntime
 		mSkeletonResourceManager(nullptr),
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
-		mCompositorResourceManager(nullptr)
+		mCompositorResourceManager(nullptr),
+		mDebugGuiManager(nullptr)
 	{
 		// Not supported
 	}

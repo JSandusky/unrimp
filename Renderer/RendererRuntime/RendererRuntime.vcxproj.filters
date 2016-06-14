@@ -137,6 +137,21 @@
     <Filter Include="Source Files\Core\Thread">
       <UniqueIdentifier>{0617200f-1ac2-4d95-9cfd-66005a40cc09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\DebugGui">
+      <UniqueIdentifier>{10d3bf5b-5f1f-466c-aaac-8b2ad3afa49f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DebugGui\Detail">
+      <UniqueIdentifier>{bc5af0f7-9afb-460a-b758-cefcb497137b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DebugGui\Detail\ImGui">
+      <UniqueIdentifier>{325150df-9fe3-4bef-9abc-f0af2fc83ce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DebugGui\Detail\Shader">
+      <UniqueIdentifier>{f3df438e-432f-4d54-b7a3-d286ebd1175e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\Compositor\Pass\DebugGui">
+      <UniqueIdentifier>{ec0eea0d-8368-4625-b9d8-c8cdd9dbb726}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -702,6 +717,51 @@
     <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadManager.h">
       <Filter>Source Files\Core\Thread</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\DebugGui\DebugGuiManager.h">
+      <Filter>Source Files\DebugGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\ImGui\include\imgui\imgui_internal.h">
+      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\ImGui\include\imgui\stb_rect_pack.h">
+      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\ImGui\include\imgui\stb_textedit.h">
+      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\ImGui\include\imgui\stb_truetype.h">
+      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\ImGui\include\imgui\imconfig.h">
+      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\ImGui\include\imgui\imgui.h">
+      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_HLSL_D3D10_D3D11_D3D12.h">
+      <Filter>Source Files\DebugGui\Detail\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_Null.h">
+      <Filter>Source Files\DebugGui\Detail\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_110.h">
+      <Filter>Source Files\DebugGui\Detail\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_ES2.h">
+      <Filter>Source Files\DebugGui\Detail\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_HLSL_D3D9.h">
+      <Filter>Source Files\DebugGui\Detail\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\DebugGui\CompositorInstancePassDebugGui.h">
+      <Filter>Source Files\Resource\Compositor\Pass\DebugGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\DebugGui\CompositorResourcePassDebugGui.h">
+      <Filter>Source Files\Resource\Compositor\Pass\DebugGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerWindows.h">
+      <Filter>Source Files\DebugGui\Detail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -961,6 +1021,24 @@
     </ClCompile>
     <ClCompile Include="src\Core\Thread\ThreadManager.cpp">
       <Filter>Source Files\Core\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugGui\DebugGuiManager.cpp">
+      <Filter>Source Files\DebugGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\ImGui\src\imgui_draw.cpp">
+      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\ImGui\src\imgui.cpp">
+      <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Compositor\Pass\DebugGui\CompositorInstancePassDebugGui.cpp">
+      <Filter>Source Files\Resource\Compositor\Pass\DebugGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Compositor\Pass\DebugGui\CompositorResourcePassDebugGui.cpp">
+      <Filter>Source Files\Resource\Compositor\Pass\DebugGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerWindows.cpp">
+      <Filter>Source Files\DebugGui\Detail</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

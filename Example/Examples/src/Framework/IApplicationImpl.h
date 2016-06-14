@@ -31,6 +31,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+class IApplication;
+
+
+//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 /**
@@ -50,6 +56,15 @@ public:
 	*    Destructor
 	*/
 	virtual ~IApplicationImpl();
+
+	/**
+	*  @brief
+	*    Return the owner application
+	*
+	*  @return
+	*    The owner application
+	*/
+	IApplication& getApplication() const;
 
 
 //[-------------------------------------------------------]
@@ -73,7 +88,7 @@ public:
 	*    Process OS messages (non-blocking)
 	*
 	*  @return
-	*    "true" in case the applicaton should shut down, else "false"
+	*    "true" in case the application should shut down, else "false"
 	*/
 	virtual bool processMessages() = 0;
 
@@ -110,9 +125,12 @@ public:
 protected:
 	/**
 	*  @brief
-	*    Default constructor
+	*    Constructor
+	*
+	*  @param[in] application
+	*    Owner application
 	*/
-	IApplicationImpl();
+	explicit IApplicationImpl(IApplication& application);
 
 	/**
 	*  @brief
@@ -134,6 +152,13 @@ protected:
 	*    Reference to this instance
 	*/
 	IApplicationImpl &operator =(const IApplicationImpl &source);
+
+
+//[-------------------------------------------------------]
+//[ Private data                                          ]
+//[-------------------------------------------------------]
+private:
+	IApplication& mApplication;
 
 
 };
