@@ -27,6 +27,8 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 
+#include <string>
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -109,11 +111,32 @@ namespace RendererRuntime
 			mIsRunning = true;
 		}
 
+		// Reset the draw text counter
+		mDrawTextCounter = 0;
+
 		// Call the platform specific implementation
 		onNewFrame(renderTarget);
 
 		// Start the frame
 		ImGui::NewFrame();
+	}
+
+	void DebugGuiManager::drawText(const char* text, float x, float y, bool drawBackground)
+	{
+		if (!drawBackground)
+		{
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 0.0f, 0.0f, 0.0f));
+		}
+		// TODO(co) Get rid of "std::to_string()" later on in case it's a problem (memory allocations inside)
+		ImGui::Begin(("RendererRuntime::DebugGuiManager::drawText_" + std::to_string(mDrawTextCounter)).c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoFocusOnAppearing);
+			ImGui::Text(text);
+			ImGui::SetWindowPos(ImVec2(x, y));
+		ImGui::End();
+		if (!drawBackground)
+		{
+			ImGui::PopStyleColor();
+		}
+		++mDrawTextCounter;
 	}
 
 	void DebugGuiManager::renderFrame()
@@ -376,6 +399,7 @@ namespace RendererRuntime
 	DebugGuiManager::DebugGuiManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
 		mIsRunning(false),
+		mDrawTextCounter(0),
 		mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
 		mNumberOfAllocatedVertices(0),
 		mNumberOfAllocatedIndices(0)

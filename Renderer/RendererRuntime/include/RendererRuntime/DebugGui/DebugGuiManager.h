@@ -67,6 +67,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT void newFrame(Renderer::IRenderTarget& renderTarget);
+		RENDERERRUNTIME_API_EXPORT void drawText(const char* text, float x, float y, bool drawBackground = true);
 		RENDERERRUNTIME_API_EXPORT void renderFrame();
 
 
@@ -94,6 +95,7 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime&			mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
 		bool						mIsRunning;			///< The debug GUI manager will be initialized lazy when "RendererRuntime::DebugGuiManager::newFrame()" is called for the first time
+		uint32_t					mDrawTextCounter;
 		// Root signature and pipeline state
 		Renderer::IRootSignaturePtr	mRootSignature;
 		Renderer::IProgramPtr		mProgram;
