@@ -36,7 +36,6 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	typedef uint32_t FontResourceId;	///< POD font resource identifier
 	typedef uint32_t MeshResourceId;	///< POD mesh resource identifier
 	typedef uint32_t TextureResourceId;	///< POD texture resource identifier
 }
@@ -108,7 +107,6 @@ private:
 	Renderer::IRootSignaturePtr			  mRootSignature;			///< Root signature, can be a null pointer
 	Renderer::IPipelineStatePtr			  mPipelineState;			///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
-	RendererRuntime::FontResourceId		  mFontResourceId;			///< Font resource ID, can be set to uninitialized value
 	RendererRuntime::MeshResourceId		  mMeshResourceId;			///< Mesh resource ID, can be set to uninitialized value
 	RendererRuntime::TextureResourceId	  mDiffuseTextureResourceId;
 	RendererRuntime::TextureResourceId	  mNormalTextureResourceId;

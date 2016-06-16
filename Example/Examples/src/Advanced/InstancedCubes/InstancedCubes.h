@@ -38,15 +38,6 @@ class ICubeRenderer;
 
 
 //[-------------------------------------------------------]
-//[ Global definitions                                    ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	typedef uint32_t FontResourceId;	///< POD font resource identifier
-}
-
-
-//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 /**
@@ -68,7 +59,6 @@ namespace RendererRuntime
 *    - Pipeline state object (PSO)
 *    - Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 *    - Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
-*    - Renderer runtime fonts
 */
 class InstancedCubes : public IApplicationRendererRuntime
 {
@@ -119,9 +109,8 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::FontResourceId mFontResourceId;		///< Font resource ID, can be set to uninitialized value
-	ICubeRenderer*					mCubeRenderer;			///< Cube renderer instance, can be a null pointer
-	uint32_t						mNumberOfCubeInstances;	///< Number of cube instances
+	ICubeRenderer* mCubeRenderer;			///< Cube renderer instance, can be a null pointer
+	uint32_t	   mNumberOfCubeInstances;	///< Number of cube instances
 	// The rest is for timing and statistics
 	Stopwatch mStopwatch;			///< Stopwatch instance
 	float	  mGlobalTimer;			///< Global timer

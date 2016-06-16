@@ -6,7 +6,7 @@
 	},
 	"Assets":
 	{
-		"0": "Font/LinBiolinum_R.asset",
+		"0": "MaterialBlueprint/DepthOnly.asset",
 		"1": "Material/FirstMesh.asset",
 		"2": "Mesh/ImrodLowPoly.asset",
 		"4": "Texture/Imrod_Diffuse.asset",
@@ -23,7 +23,6 @@
 		"15": "ShaderPiece/Core.asset",
 		"16": "ShaderPiece/FirstMesh.asset",
 		"17": "ShaderBlueprint/DepthOnlyVertex.asset",
-		"18": "ShaderBlueprint/DepthOnlyFragment.asset",
-		"19": "MaterialBlueprint/DepthOnly.asset"
+		"18": "ShaderBlueprint/DepthOnlyFragment.asset"
 	}
 }

@@ -25,7 +25,6 @@
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/Core/Thread/ThreadManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
-#include "RendererRuntime/Resource/Font/FontResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Scene/SceneResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
@@ -98,13 +97,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RendererRuntimeImpl::RendererRuntimeImpl(Renderer::IRenderer &renderer) :
-		mRootFontSignature(nullptr),
-		mFontPipelineState(nullptr),
-		mFontVertexShaderUniformBuffer(nullptr),
-		mFontFragmentShaderUniformBuffer(nullptr),
-		mFontVertexArray(nullptr),
-		mFontSamplerState(nullptr)
+	RendererRuntimeImpl::RendererRuntimeImpl(Renderer::IRenderer &renderer)
 	{
 		// Backup the given renderer
 		mRenderer = &renderer;
@@ -123,7 +116,6 @@ namespace RendererRuntime
 		mShaderBlueprintResourceManager = new ShaderBlueprintResourceManager(*this);
 		mMaterialBlueprintResourceManager = new MaterialBlueprintResourceManager(*this);
 		mMaterialResourceManager = new MaterialResourceManager(*this);
-		mFontResourceManager = new FontResourceManager(*this);
 		mSkeletonResourceManager = new SkeletonResourceManager(*this);
 		mMeshResourceManager = new MeshResourceManager(*this);
 		mSceneResourceManager = new SceneResourceManager(*this);
@@ -135,7 +127,6 @@ namespace RendererRuntime
 		mResourceManagers.push_back(mShaderBlueprintResourceManager);
 		mResourceManagers.push_back(mMaterialBlueprintResourceManager);
 		mResourceManagers.push_back(mMaterialResourceManager);
-		mResourceManagers.push_back(mFontResourceManager);
 		mResourceManagers.push_back(mSkeletonResourceManager);
 		mResourceManagers.push_back(mMeshResourceManager);
 		mResourceManagers.push_back(mSceneResourceManager);
@@ -154,42 +145,6 @@ namespace RendererRuntime
 		// Destroy the debug manager instances
 		delete mDebugGuiManager;
 
-		// Release the font sampler state instance
-		if (nullptr != mFontSamplerState)
-		{
-			mFontSamplerState->release();
-		}
-
-		// Release the font vertex array instance
-		if (nullptr != mFontVertexArray)
-		{
-			mFontVertexArray->release();
-		}
-
-		// Release the font fragment shader uniform buffer instance
-		if (nullptr != mFontFragmentShaderUniformBuffer)
-		{
-			mFontFragmentShaderUniformBuffer->release();
-		}
-
-		// Release the font vertex shader uniform buffer instance
-		if (nullptr != mFontVertexShaderUniformBuffer)
-		{
-			mFontVertexShaderUniformBuffer->release();
-		}
-
-		// Release the font pipeline state instance
-		if (nullptr != mFontPipelineState)
-		{
-			mFontPipelineState->release();
-		}
-
-		// Release the font root signature instance
-		if (nullptr != mRootFontSignature)
-		{
-			mRootFontSignature->release();
-		}
-
 		{ // Destroy the resource manager instances in reverse order
 			const int numberOfResourceManagers = static_cast<int>(mResourceManagers.size());
 			for (int i = numberOfResourceManagers - 1; i >= 0; --i)
@@ -204,204 +159,6 @@ namespace RendererRuntime
 
 		// Release our renderer reference
 		mRenderer->release();
-	}
-
-	Renderer::IRootSignature *RendererRuntimeImpl::getFontRootSignature()
-	{
-		// Create the font root signature instance right now?
-		if (nullptr == mRootFontSignature)
-		{
-			// Create the root signature
-			Renderer::DescriptorRangeBuilder ranges[4];
-			ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", 0);
-			ranges[1].initializeSampler(1, 0);
-			ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GlyphMap", 1);
-			ranges[3].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicFs", 0);
-
-			Renderer::RootParameterBuilder rootParameters[4];
-			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);
-			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
-			rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::FRAGMENT);
-			rootParameters[3].initializeAsDescriptorTable(1, &ranges[3], Renderer::ShaderVisibility::FRAGMENT);
-
-			// Setup
-			Renderer::RootSignatureBuilder rootSignature;
-			rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-			// Create the instance
-			mRootFontSignature = mRenderer->createRootSignature(rootSignature);
-			if (nullptr != mRootFontSignature)
-			{
-				// Add our internal reference
-				mRootFontSignature->addReference();
-			}
-		}
-
-		// Return the instance of the font root signature
-		return mRootFontSignature;
-	}
-
-	Renderer::IPipelineState *RendererRuntimeImpl::getFontPipelineState()
-	{
-		// Create the font pipeline state instance right now?
-		if (nullptr == mFontPipelineState)
-		{
-			// Decide which shader language should be used (for example "GLSL" or "HLSL")
-			Renderer::IShaderLanguage *shaderLanguage = mRenderer->getShaderLanguage();
-			if (nullptr != shaderLanguage)
-			{
-				// Create the program
-				Renderer::IProgramPtr program;
-				{
-					// Get the shader source code (outsourced to keep an overview)
-					const char *vertexShaderSourceCode = nullptr;
-					const char *fragmentShaderSourceCode = nullptr;
-					#pragma warning(push)
-						#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
-						#include "../Resource/Font/Shader/Font_GLSL_110.h"
-						#include "../Resource/Font/Shader/Font_GLSL_ES2.h"
-						#include "../Resource/Font/Shader/Font_HLSL_D3D9.h"
-						#include "../Resource/Font/Shader/Font_HLSL_D3D10_D3D11_D3D12.h"
-						#include "../Resource/Font/Shader/Font_Null.h"
-					#pragma warning(pop)
-
-					// Create the program
-					program = shaderLanguage->createProgram(
-						*getFontRootSignature(),
-						::detail::VertexAttributes,
-						shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
-						shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
-				}
-
-				// Create the pipeline state object (PSO)
-				if (nullptr != program)
-				{
-					Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(getFontRootSignature(), program, ::detail::VertexAttributes);
-					pipelineState.blendState.renderTarget[0].blendEnable = true;
-					pipelineState.blendState.renderTarget[0].srcBlend	 = Renderer::Blend::SRC_ALPHA;
-					pipelineState.blendState.renderTarget[0].destBlend   = Renderer::Blend::ONE;
-					mFontPipelineState = mRenderer->createPipelineState(pipelineState);
-					if (nullptr != mFontPipelineState)
-					{
-						// Add our internal reference
-						mFontPipelineState->addReference();
-					}
-				}
-			}
-		}
-
-		// Return the instance of the font pipeline state
-		return mFontPipelineState;
-	}
-
-	Renderer::IUniformBuffer *RendererRuntimeImpl::getFontVertexShaderUniformBuffer()
-	{
-		// Create the font vertex shader uniform buffer instance right now?
-		if (nullptr == mFontVertexShaderUniformBuffer)
-		{
-			// Decide which shader language should be used (for example "GLSL" or "HLSL")
-			Renderer::IShaderLanguage *shaderLanguage = mRenderer->getShaderLanguage();
-			if (nullptr != shaderLanguage)
-			{
-				// Create uniform buffer
-				// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
-				// -> Direct3D 10 and Direct3D 11 do not support individual uniforms
-				// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
-				if (0 == strcmp(mRenderer->getName(), "Direct3D10") || 0 == strcmp(mRenderer->getName(), "Direct3D11"))
-				{
-					// Allocate enough memory
-					mFontVertexShaderUniformBuffer = shaderLanguage->createUniformBuffer(sizeof(float) * 4 * 2 + sizeof(float) * 4 * 4, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-				}
-			}
-		}
-
-		// Return the instance of the font vertex shader uniform buffer
-		return mFontVertexShaderUniformBuffer;
-	}
-
-	Renderer::IUniformBuffer *RendererRuntimeImpl::getFontFragmentShaderUniformBuffer()
-	{
-		// Create the font fragment shader uniform buffer instance right now?
-		if (nullptr == mFontFragmentShaderUniformBuffer)
-		{
-			// Decide which shader language should be used (for example "GLSL" or "HLSL")
-			Renderer::IShaderLanguage *shaderLanguage = mRenderer->getShaderLanguage();
-			if (nullptr != shaderLanguage)
-			{
-				// Create uniform buffer
-				// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
-				// -> Direct3D 10 and Direct3D 11 do not support individual uniforms
-				// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
-				if (0 == strcmp(mRenderer->getName(), "Direct3D10") || 0 == strcmp(mRenderer->getName(), "Direct3D11"))
-				{
-					// Allocate enough memory
-					mFontFragmentShaderUniformBuffer = shaderLanguage->createUniformBuffer(sizeof(float) * 4, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-				}
-			}
-		}
-
-		// Return the instance of the font fragment shader uniform buffer
-		return mFontFragmentShaderUniformBuffer;
-	}
-
-	Renderer::IVertexArray *RendererRuntimeImpl::getVertexArray()
-	{
-		// Create the font vertex array instance right now?
-		if (nullptr == mFontVertexArray)
-		{
-			// Create the vertex buffer object (VBO)
-			// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-			static const float VERTEX_POSITION[] =
-			{						// Vertex ID	Triangle strip on screen
-				0.0f, 0.0f,	0.0f,	// 0			  1.......3
-				0.0f, 1.0f,	1.0f,	// 1			  .	  .   .
-				1.0f, 0.0f,	2.0f,	// 2			  0.......2
-				1.0f, 1.0f,	3.0f	// 3
-			};
-			Renderer::IVertexBuffer *vertexBuffer = mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW);
-
-			// Create vertex array object (VAO)
-			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-			// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-			{
-				{ // Vertex buffer 0
-					vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer *)
-					sizeof(float) * 3	// strideInBytes (uint32_t)
-				}
-			};
-			mFontVertexArray = mRenderer->createVertexArray(::detail::VertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
-			if (nullptr != mFontVertexArray)
-			{
-				// Add our internal reference
-				mFontVertexArray->addReference();
-			}
-		}
-
-		// Return the instance of the font vertex array
-		return mFontVertexArray;
-	}
-
-	Renderer::ISamplerState *RendererRuntimeImpl::getFontSamplerState()
-	{
-		// Create the font sampler state instance right now?
-		if (nullptr == mFontSamplerState)
-		{
-			// Create sampler state
-			Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
-			samplerState.addressU = Renderer::TextureAddressMode::CLAMP;
-			samplerState.addressV = Renderer::TextureAddressMode::CLAMP;
-			mFontSamplerState = mRenderer->createSamplerState(samplerState);
-
-			// Add our internal reference
-			mFontSamplerState->addReference();
-		}
-
-		// Return the instance of the font sampler state
-		return mFontSamplerState;
 	}
 
 

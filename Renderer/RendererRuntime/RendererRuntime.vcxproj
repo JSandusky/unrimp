@@ -40,9 +40,6 @@
     <None Include="include\RendererRuntime\Resource\Detail\IResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\IResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl" />
-    <None Include="include\RendererRuntime\Resource\Font\FontResource.inl" />
-    <None Include="include\RendererRuntime\Resource\Font\FontResourceManager.inl" />
-    <None Include="include\RendererRuntime\Resource\Font\Loader\FontResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.inl" />
@@ -150,10 +147,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResource.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Font\Loader\FontFileFormat.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Font\Loader\FontResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.h" />
@@ -220,11 +213,6 @@
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_HLSL_D3D9.h" />
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_Null.h" />
-    <ClInclude Include="src\Resource\Font\Shader\Font_GLSL_110.h" />
-    <ClInclude Include="src\Resource\Font\Shader\Font_GLSL_ES2.h" />
-    <ClInclude Include="src\Resource\Font\Shader\Font_HLSL_D3D10_D3D11_D3D12.h" />
-    <ClInclude Include="src\Resource\Font\Shader\Font_HLSL_D3D9.h" />
-    <ClInclude Include="src\Resource\Font\Shader\Font_Null.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\External\ImGui\src\imgui.cpp" />
@@ -266,9 +254,6 @@
     <ClCompile Include="src\Resource\Detail\IResource.cpp" />
     <ClCompile Include="src\Resource\Detail\IResourceManager.cpp" />
     <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp" />
-    <ClCompile Include="src\Resource\Font\FontResource.cpp" />
-    <ClCompile Include="src\Resource\Font\FontResourceManager.cpp" />
-    <ClCompile Include="src\Resource\Font\Loader\FontResourceLoader.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCache.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\ProgramCache.cpp" />

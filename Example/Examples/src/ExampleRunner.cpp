@@ -42,7 +42,6 @@
 #include "Advanced/InstancedCubes/InstancedCubes.h"
 #include "Advanced/IcosahedronTessellation/IcosahedronTessellation.h"
 #ifndef RENDERER_NO_RUNTIME
-	#include "Runtime/FirstFont/FirstFont.h"
 	#include "Runtime/FirstMesh/FirstMesh.h"
 	#include "Runtime/FirstCommandBucket/FirstCommandBucket.h"
 	#include "Runtime/FirstCompositor/FirstCompositor.h"
@@ -112,7 +111,6 @@ ExampleRunner::ExampleRunner()
 	addExample("IcosahedronTessellation",		&RunExample<IcosahedronTessellation>,		onlyShaderModel5Plus);
 	#ifndef RENDERER_NO_RUNTIME
 		// Renderer runtime
-		addExample("FirstFont",					&RunExample<FirstFont>,						supportsAllRenderer);
 		addExample("FirstMesh",					&RunExample<FirstMesh>,						supportsAllRenderer);
 		addExample("FirstCommandBucket",		&RunExample<FirstCommandBucket>,			supportsAllRenderer);
 		addExample("FirstCompositor",			&RunExample<FirstCompositor>,				supportsAllRenderer);

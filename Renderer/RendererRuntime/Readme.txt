@@ -22,6 +22,10 @@
 Renderer runtime.
 
 
+== Dependencies ==
+- ImGui (directly compiled and linked in)
+
+
 == Preprocessor Definitions ==
 - Set "RENDERERRUNTIME_EXPORTS" as preprocessor definition when building this library as shared library
 - Set "RENDERERRUNTIME_NO_RENDERERMATCHCHECK" as preprocessor definition when building this library to remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)

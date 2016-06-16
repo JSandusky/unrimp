@@ -78,11 +78,6 @@ namespace RendererRuntime
 		return *mMaterialResourceManager;
 	}
 
-	inline FontResourceManager& IRendererRuntime::getFontResourceManager() const
-	{
-		return *mFontResourceManager;
-	}
-
 	inline SkeletonResourceManager& IRendererRuntime::getSkeletonResourceManager() const
 	{
 		return *mSkeletonResourceManager;
@@ -129,7 +124,6 @@ namespace RendererRuntime
 		mShaderBlueprintResourceManager(nullptr),
 		mMaterialBlueprintResourceManager(nullptr),
 		mMaterialResourceManager(nullptr),
-		mFontResourceManager(nullptr),
 		mSkeletonResourceManager(nullptr),
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
@@ -152,7 +146,6 @@ namespace RendererRuntime
 		mShaderBlueprintResourceManager(nullptr),
 		mMaterialBlueprintResourceManager(nullptr),
 		mMaterialResourceManager(nullptr),
-		mFontResourceManager(nullptr),
 		mSkeletonResourceManager(nullptr),
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),

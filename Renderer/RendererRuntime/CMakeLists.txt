@@ -42,8 +42,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 # Cross-platform source codes
 set(SOURCE_CODES
 	src/RendererRuntimeImpl.cpp
-	# Font
-	src/Resource/Font/FontResource.cpp
 )
 
 

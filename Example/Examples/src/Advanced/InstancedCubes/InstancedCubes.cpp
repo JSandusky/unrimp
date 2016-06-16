@@ -27,7 +27,7 @@
 #include "Advanced/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.h"
 #include "Framework/Color4.h"
 
-#include <RendererRuntime/Resource/Font/FontResourceManager.h>
+#include <RendererRuntime/DebugGui/DebugGuiManager.h>
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -42,7 +42,6 @@
 //[-------------------------------------------------------]
 InstancedCubes::InstancedCubes(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mFontResourceId(RendererRuntime::getUninitialized<RendererRuntime::FontResourceId>()),
 	mCubeRenderer(nullptr),
 	mNumberOfCubeInstances(1000),
 	mGlobalTimer(0.0f),
@@ -76,16 +75,6 @@ void InstancedCubes::onInitialization()
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
-		{ // Create the font instance
-			// Get and check the renderer runtime instance
-			RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
-			if (nullptr != rendererRuntime)
-			{
-				// Create the font resource
-				mFontResourceId = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
-			}
-		}
 
 		// Create the cube renderer instance
 		// -> Evaluate the feature set of the used renderer
@@ -122,9 +111,6 @@ void InstancedCubes::onDeinitialization()
 		delete mCubeRenderer;
 		mCubeRenderer = nullptr;
 	}
-
-	// Release the used resources
-	RendererRuntime::setUninitialized(mFontResourceId);
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())
@@ -244,34 +230,33 @@ void InstancedCubes::onDraw()
 			RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
 			if (nullptr != rendererRuntime)
 			{
-				// TODO(co) Get rid of the evil const-cast
-				RendererRuntime::FontResource* fontResource = const_cast<RendererRuntime::FontResource*>(rendererRuntime->getFontResourceManager().getFontResources().tryGetElementById(mFontResourceId));
-				if (nullptr != fontResource)
+				RendererRuntime::DebugGuiManager& debugGuiManager = rendererRuntime->getDebugGuiManager();
+				debugGuiManager.newFrame(*renderer->omGetRenderTarget());
+
+				// Is there a cube renderer instance?
+				if (nullptr != mCubeRenderer)
 				{
-					// Is there a cube renderer instance?
-					if (nullptr != mCubeRenderer)
-					{
-						char text[128];
+					char text[128];
 
-						// Number of cubes
-						sprintf(text, "Number of cubes: %d", mNumberOfCubeInstances);
-						fontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.9f, 0.0f))), 0.0025f, 0.0025f);
+					// Number of cubes
+					sprintf(text, "Number of cubes: %d", mNumberOfCubeInstances);
+					debugGuiManager.drawText(text, 10.0f, 10.0f);
 
-						// Frames per second
-						sprintf(text, "Frames per second: %.2f", mFramesPerSecond);
-						fontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.85f, 0.0f))), 0.0025f, 0.0025f);
+					// Frames per second
+					sprintf(text, "Frames per second: %.2f", mFramesPerSecond);
+					debugGuiManager.drawText(text, 10.0f, 40.0f);
 
-						// Cubes per second
-						// -> In every frame we draw n-cubes...
-						// -> TODO(co) This number can get huge... had over 1 million cubes with >25 FPS... million cubes at ~2.4 FPS...
-						sprintf(text, "Cubes per second: %u", static_cast<uint32_t>(mFramesPerSecond) * mNumberOfCubeInstances);
-						fontResource->drawText(text, Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.8f, 0.0f))), 0.0025f, 0.0025f);
-					}
-					else
-					{
-						fontResource->drawText("No cube renderer instance", Color4::WHITE, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(-0.95f, 0.9f, 0.0f))), 0.0025f, 0.0025f);
-					}
+					// Cubes per second
+					// -> In every frame we draw n-cubes...
+					// -> TODO(co) This number can get huge... had over 1 million cubes with >25 FPS... million cubes at ~2.4 FPS...
+					sprintf(text, "Cubes per second: %u", static_cast<uint32_t>(mFramesPerSecond) * mNumberOfCubeInstances);
+					debugGuiManager.drawText(text, 10.0f, 70.0f);
 				}
+				else
+				{
+					debugGuiManager.drawText("No cube renderer instance", 10.0f, 10.0f);
+				}
+				debugGuiManager.renderFrame();
 			}
 		}
 

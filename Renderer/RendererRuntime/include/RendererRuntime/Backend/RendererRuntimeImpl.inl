@@ -28,10 +28,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline RendererRuntimeImpl::RendererRuntimeImpl(const RendererRuntimeImpl &) :
-		mFontPipelineState(nullptr),
-		mFontVertexArray(nullptr),
-		mFontSamplerState(nullptr)
+	inline RendererRuntimeImpl::RendererRuntimeImpl(const RendererRuntimeImpl &)
 	{
 		// Not supported
 	}

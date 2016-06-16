@@ -34,7 +34,6 @@
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherOSX.h" />
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherWin32.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorAssetCompiler.h" />
-    <ClInclude Include="include\RendererToolkit\AssetCompiler\FontAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\IAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialBlueprintAssetCompiler.h" />
@@ -74,7 +73,6 @@
     </ClCompile>
     <ClCompile Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherWin32.cpp" />
     <ClCompile Include="src\AssetCompiler\CompositorAssetCompiler.cpp" />
-    <ClCompile Include="src\AssetCompiler\FontAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MaterialAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MaterialBlueprintAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp" />
@@ -172,7 +170,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -204,7 +202,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -215,8 +213,8 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeD.lib;zlibstatic.lib;freetype_MultiThreadedDLLd.lib;assimp.lib;libtiff.lib;crnlibD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeD.lib;zlibstatic.lib;assimp.lib;libtiff.lib;crnlibD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
@@ -236,7 +234,7 @@ copy "..\..\External\Windows_x86\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTar
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -281,7 +279,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\freetype\include\freetype\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\libtiff\include\;..\..\External\crunch\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -302,8 +300,8 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\freetype\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntime.lib;zlibstatic.lib;freetype_MultiThreadedDLL.lib;assimp.lib;libtiff.lib;crnlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_x86\zlib\lib\;..\..\External\Windows_x86\Assimp\lib\;..\..\External\Windows_x86\libtiff\lib\;..\..\External\Windows_x86\crunch\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntime.lib;zlibstatic.lib;assimp.lib;libtiff.lib;crnlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>

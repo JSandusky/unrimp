@@ -91,78 +91,6 @@ namespace RendererRuntime
 		*/
 		virtual ~RendererRuntimeImpl();
 
-		/**
-		*  @brief
-		*    Return the font root signature
-		*
-		*  @return
-		*    The font root signature, do not release the returned instance unless you added an own reference to it, can be a null pointer in case on an error
-		*
-		*  @note
-		*    - The font root signature is created by using lazy evaluation, meaning that the font root signature is created the first time it's required
-		*/
-		Renderer::IRootSignature *getFontRootSignature();
-
-		/**
-		*  @brief
-		*    Return the font pipeline state
-		*
-		*  @return
-		*    The font pipeline state, do not release the returned instance unless you added an own reference to it, can be a null pointer in case on an error
-		*
-		*  @note
-		*    - The font pipeline state is created by using lazy evaluation, meaning that the font pipeline state is created the first time it's required
-		*/
-		Renderer::IPipelineState *getFontPipelineState();
-
-		/**
-		*  @brief
-		*    Return the font vertex shader uniform buffer
-		*
-		*  @return
-		*    The font vertex shader uniform buffer, do not release the returned instance unless you added an own reference to it, can be a null pointer in case on an error
-		*
-		*  @note
-		*    - The font vertex shader uniform buffer is created by using lazy evaluation, meaning that the font vertex shader uniform buffer is created the first time it's required
-		*/
-		Renderer::IUniformBuffer *getFontVertexShaderUniformBuffer();
-
-		/**
-		*  @brief
-		*    Return the font fragment shader uniform buffer
-		*
-		*  @return
-		*    The font fragment shader uniform buffer, do not release the returned instance unless you added an own reference to it, can be a null pointer in case on an error
-		*
-		*  @note
-		*    - The font fragment shader uniform buffer is created by using lazy evaluation, meaning that the font fragment shader uniform buffer is created the first time it's required
-		*/
-		Renderer::IUniformBuffer *getFontFragmentShaderUniformBuffer();
-
-		/**
-		*  @brief
-		*    Return the font vertex array
-		*
-		*  @return
-		*    The font vertex array, do not release the returned instance unless you added an own reference to it, can be a null pointer in case on an error
-		*
-		*  @note
-		*    - The font vertex array is created by using lazy evaluation, meaning that the font vertex array is created the first time it's required
-		*/
-		Renderer::IVertexArray *getVertexArray();
-
-		/**
-		*  @brief
-		*    Return the font sampler state
-		*
-		*  @return
-		*    The font sampler state, do not release the returned instance unless you added an own reference to it, can be a null pointer in case on an error
-		*
-		*  @note
-		*    - The font sampler state is created by using lazy evaluation, meaning that the font sampler state is created the first time it's required
-		*/
-		Renderer::ISamplerState *getFontSamplerState();
-
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IRendererRuntime methods ]
@@ -209,15 +137,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IRootSignature *mRootFontSignature;				///< Font root signature, can be a null pointer
-		Renderer::IPipelineState *mFontPipelineState;				///< Font pipeline state (we keep a reference to it), can be a null pointer, do only access it by using "getFontPipelineState()"
-		Renderer::IUniformBuffer *mFontVertexShaderUniformBuffer;	///< Font vertex shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexShaderUniformBuffer()"
-		Renderer::IUniformBuffer *mFontFragmentShaderUniformBuffer;	///< Font fragment shader uniform buffer (we keep a reference to it), can be a null pointer, do only access it by using "getFontFragmentShaderUniformBuffer()"
-		Renderer::IVertexArray	 *mFontVertexArray;					///< Vertex array object (VAO, we keep a reference to it), can be a null pointer, do only access it by using "getFontVertexArray()"
-		Renderer::ISamplerState	 *mFontSamplerState;				///< Font sampler state (we keep a reference to it), can be a null pointer, do only access it by using "getFontSamplerState()"
 		// Resource hot-reloading
-		std::mutex				  mResourcesToReloadMutex;
-		ResourcesToReload		  mResourcesToReload;
+		std::mutex		  mResourcesToReloadMutex;
+		ResourcesToReload mResourcesToReload;
 
 
 	};

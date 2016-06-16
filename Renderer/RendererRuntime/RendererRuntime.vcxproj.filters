@@ -26,15 +26,6 @@
     <Filter Include="Source Files\Resource">
       <UniqueIdentifier>{ff6418b9-ed80-46ad-9b15-bdb2f991416b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resource\Font">
-      <UniqueIdentifier>{b693b060-bfa5-4750-8f07-f18c182f70ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Resource\Font\Loader">
-      <UniqueIdentifier>{24ee8a7b-40c1-4c76-9580-d5071563bda5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Resource\Font\Shader">
-      <UniqueIdentifier>{ad195530-5585-4497-8368-be0c6c1dac76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Resource\Material">
       <UniqueIdentifier>{208509ae-2c81-44da-bdee-447dd8c3fb4f}</UniqueIdentifier>
     </Filter>
@@ -176,12 +167,6 @@
     </None>
     <None Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.inl">
       <Filter>Source Files\Asset\Serializer</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Font\FontResource.inl">
-      <Filter>Source Files\Resource\Font</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Font\Loader\FontResourceLoader.inl">
-      <Filter>Source Files\Resource\Font\Loader</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.inl">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
@@ -333,9 +318,6 @@
     <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.inl">
       <Filter>Source Files\Resource\ShaderPiece</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Font\FontResourceManager.inl">
-      <Filter>Source Files\Resource\Font</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\Detail\IResourceLoader.inl">
       <Filter>Source Files\Resource\Detail</Filter>
     </None>
@@ -410,30 +392,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.h">
       <Filter>Source Files\Asset\Serializer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResource.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Font\FontResourceManager.h">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Font\Loader\FontResourceLoader.h">
-      <Filter>Source Files\Resource\Font\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resource\Font\Shader\Font_GLSL_ES2.h">
-      <Filter>Source Files\Resource\Font\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resource\Font\Shader\Font_HLSL_D3D9.h">
-      <Filter>Source Files\Resource\Font\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resource\Font\Shader\Font_HLSL_D3D10_D3D11_D3D12.h">
-      <Filter>Source Files\Resource\Font\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resource\Font\Shader\Font_Null.h">
-      <Filter>Source Files\Resource\Font\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Resource\Font\Shader\Font_GLSL_110.h">
-      <Filter>Source Files\Resource\Font\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h">
       <Filter>Source Files\Resource\Material</Filter>
@@ -545,9 +503,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshFileFormat.h">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Font\Loader\FontFileFormat.h">
-      <Filter>Source Files\Resource\Font\Loader</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorFileFormat.h">
       <Filter>Source Files\Resource\Compositor\Loader</Filter>
@@ -784,15 +739,6 @@
     </ClCompile>
     <ClCompile Include="src\Asset\Serializer\AssetPackageSerializer.cpp">
       <Filter>Source Files\Asset\Serializer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Font\FontResourceManager.cpp">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Font\FontResource.cpp">
-      <Filter>Source Files\Resource\Font</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Font\Loader\FontResourceLoader.cpp">
-      <Filter>Source Files\Resource\Font\Loader</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp">
       <Filter>Source Files\Resource\Material</Filter>

@@ -353,7 +353,6 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClInclude Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.h" />
     <ClInclude Include="src\Runtime\FirstCompositor\CompositorResourcePassFirst.h" />
     <ClInclude Include="src\Runtime\FirstCompositor\FirstCompositor.h" />
-    <ClInclude Include="src\Runtime\FirstFont\FirstFont.h" />
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh.h" />
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_110.h" />
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_ES2.h" />
@@ -423,7 +422,6 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <ClCompile Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.cpp" />
     <ClCompile Include="src\Runtime\FirstCompositor\CompositorResourcePassFirst.cpp" />
     <ClCompile Include="src\Runtime\FirstCompositor\FirstCompositor.cpp" />
-    <ClCompile Include="src\Runtime\FirstFont\FirstFont.cpp" />
     <ClCompile Include="src\Runtime\FirstMesh\FirstMesh.cpp" />
     <ClCompile Include="src\Runtime\FirstScene\FirstScene.cpp" />
   </ItemGroup>

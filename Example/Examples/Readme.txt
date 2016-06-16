@@ -142,7 +142,6 @@ Standalone renderer examples.
 		- Pipeline state object (PSO)
 		- Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 		- Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
-		- Renderer runtime fonts
 	- "IcosahedronTessellation" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
@@ -152,10 +151,6 @@ Standalone renderer examples.
 		- Root signature
 		- Pipeline state object (PSO)
 - Runtime
-	- "FirstFont" demonstrates:
-		- Renderer runtime fonts
-		- Renderer runtime command buckets
-		- Renderer runtime compositor
 	- "FirstMesh" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)
@@ -174,6 +169,7 @@ Standalone renderer examples.
 		- Command bucket
 	- "FirstCompositor" demonstrates:
 		- Compositor
+		- Debug GUI manager usage
 	- "FirstScene" demonstrates:
 		- Compositor
 		- Scene

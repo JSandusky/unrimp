@@ -37,15 +37,6 @@ class CompositorResourcePassFirst;
 
 
 //[-------------------------------------------------------]
-//[ Global definitions                                    ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	typedef uint32_t FontResourceId;	///< POD font resource identifier
-}
-
-
-//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 class CompositorInstancePassFirst : public RendererRuntime::ICompositorInstancePass
@@ -73,13 +64,6 @@ protected:
 	virtual ~CompositorInstancePassFirst();
 	CompositorInstancePassFirst(const CompositorInstancePassFirst&) = delete;
 	CompositorInstancePassFirst& operator=(const CompositorInstancePassFirst&) = delete;
-
-
-//[-------------------------------------------------------]
-//[ Private data                                          ]
-//[-------------------------------------------------------]
-private:
-	RendererRuntime::FontResourceId mFontResourceId;	///< Font resource ID, can be set to uninitialized value
 
 
 };

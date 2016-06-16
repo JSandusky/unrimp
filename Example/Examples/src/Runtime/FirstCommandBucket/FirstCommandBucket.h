@@ -33,15 +33,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Global definitions                                    ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	typedef uint32_t FontResourceId;	///< POD font resource identifier
-}
-
-
-//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 /**
@@ -93,7 +84,6 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::FontResourceId mFontResourceId;	///< Font resource ID, can be set to uninitialized value
 	// Command buckets
 	RendererRuntime::CommandBucket<int> mSolidCommandBucket;
 	RendererRuntime::CommandBucket<int> mTransparentCommandBucket;

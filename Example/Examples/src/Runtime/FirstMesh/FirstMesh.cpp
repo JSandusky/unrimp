@@ -27,7 +27,6 @@
 
 #include <RendererRuntime/Resource/Mesh/MeshResource.h>
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
-#include <RendererRuntime/Resource/Font/FontResourceManager.h>
 #include <RendererRuntime/Resource/Texture/TextureResource.h>
 #include <RendererRuntime/Resource/Texture/TextureResourceManager.h>
 
@@ -40,7 +39,6 @@
 //[-------------------------------------------------------]
 FirstMesh::FirstMesh(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mFontResourceId(RendererRuntime::getUninitialized<RendererRuntime::FontResourceId>()),
 	mMeshResourceId(RendererRuntime::getUninitialized<RendererRuntime::MeshResourceId>()),
 	mDiffuseTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
 	mNormalTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
@@ -76,9 +74,6 @@ void FirstMesh::onInitialization()
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
-		// Create the font resource
-		mFontResourceId = rendererRuntime->getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R");
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
@@ -231,7 +226,6 @@ void FirstMesh::onDeinitialization()
 
 	// Release the used renderer resources
 	mSamplerState = nullptr;
-	RendererRuntime::setUninitialized(mFontResourceId);
 	RendererRuntime::setUninitialized(mDiffuseTextureResourceId);
 	RendererRuntime::setUninitialized(mNormalTextureResourceId);
 	RendererRuntime::setUninitialized(mSpecularTextureResourceId);
@@ -369,15 +363,6 @@ void FirstMesh::onDraw()
 			if (nullptr != meshResource)
 			{
 				meshResource->draw();
-			}
-		}
-
-		{ // Draw text
-			// TODO(co) Get rid of the evil const-cast
-			RendererRuntime::FontResource* fontResource = const_cast<RendererRuntime::FontResource*>(rendererRuntime->getFontResourceManager().getFontResources().tryGetElementById(mFontResourceId));
-			if (nullptr != fontResource)
-			{
-				fontResource->drawText("Imrod", Color4::RED, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.8f, 0.0f))), 0.003f, 0.003f);
 			}
 		}
 

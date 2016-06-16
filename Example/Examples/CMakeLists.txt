@@ -132,7 +132,6 @@ if(RENDERER_RUNTIME)
 	set(SOURCE_CODES
 		${SOURCE_CODES}
 		src/Framework/IApplicationRendererRuntime.cpp
-		src/FirstFont/FirstFont.cpp
 		src/FirstMesh/FirstMesh.cpp
 		src/FirstCommandBucket/FirstCommandBucket.cpp
 		src/FirstCompositor/FirstCompositor.cpp
@@ -186,9 +185,6 @@ if(STATIC_LIBRARY)
 	endif()
 	if(RENDERER_RUNTIME)
 		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}RendererRuntimeStatic${CMAKE_STATIC_LIBRARY_SUFFIX})
-		if(UNIX)
-			set(LIBRARIES ${LIBRARIES} dl ${FREETYPE_LIBRARY})
-		endif()
 	endif()
 	target_link_libraries(ExamplesStatic ${LIBRARIES})
 	add_dependencies(ExamplesStatic Renderer NullRendererStatic OpenGLRendererStatic OpenGLES2RendererStatic Direct3D9RendererStatic Direct3D10RendererStatic Direct3D11RendererStatic Direct3D12RendererStatic)

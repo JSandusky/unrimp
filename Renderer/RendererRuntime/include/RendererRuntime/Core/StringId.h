@@ -49,7 +49,7 @@ namespace RendererRuntime
 	*  @remarks
 	*    The following example shows how to use the string ID class:
 	*    @code
-	*    uint32_t id = RendererRuntime::StringId("Example/Font/Default/LinBiolinum_R");	// Result will be 64363173
+	*    uint32_t id = RendererRuntime::StringId("Example/Mesh/Default/Squirrel");	// Result will be 2906231359
 	*    @endcode
 	*
 	*  @note

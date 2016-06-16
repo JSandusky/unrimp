@@ -65,9 +65,6 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MeshAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererToolkit\AssetCompiler\FontAssetCompiler.h">
-      <Filter>Source Files\AssetCompiler</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
@@ -137,9 +134,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\TextureAssetCompiler.cpp">
-      <Filter>Source Files\AssetCompiler</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AssetCompiler\FontAssetCompiler.cpp">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\MaterialAssetCompiler.cpp">

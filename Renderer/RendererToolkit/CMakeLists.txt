@@ -20,8 +20,6 @@
 
 cmake_minimum_required(VERSION 2.8.8)
 
-find_package(Freetype REQUIRED) # TODO(co) Remove this, the Unrimp repository comes with a FreeType version which we can guarantee that we're compatible with (which is not the case for system installed library versions)
-
 
 ##################################################
 ## Preprocessor definitions
@@ -36,7 +34,6 @@ endif()
 ##################################################
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${FREETYPE_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/Assimp/include)
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/${OS_ARCHITECTURE}/Assimp/lib)
 
@@ -47,10 +44,6 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../External/${OS_ARCHITECTURE}/Assi
 # Cross-platform source codes
 set(SOURCE_CODES
 	src/RendererToolkitImpl.cpp
-	# Font
-	src/Font/FontGlyphTextureFreeType.cpp
-	src/Font/FontTextureFreeType.cpp
-	src/Font/FreeTypeContext.cpp
 )
 
 
@@ -68,9 +61,6 @@ endif()
 if(SHARED_LIBRARY)
 	add_library(RendererToolkit SHARED ${SOURCE_CODES})
 	set_target_properties(RendererToolkit PROPERTIES COMPILE_FLAGS "-DSHARED_LIBRARIES -DRENDERERTOOLKIT_EXPORTS")
-	if(UNIX)
-		target_link_libraries(RendererToolkit X11 dl ${FREETYPE_LIBRARY})
-	endif()
 	if(WIN32)
 		target_link_libraries(Examples assimp.lib)
 	else()

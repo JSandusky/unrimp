@@ -23,7 +23,11 @@ Renderer toolkit.
 
 
 == Dependencies ==
-- FreeType
+- Assimp
+- crunch
+- libtiff
+- RapidJSON
+- SimpleFileWatcher
 
 
 == Preprocessor Definitions ==

@@ -35,10 +35,9 @@
 //[-------------------------------------------------------]
 #include "Runtime/FirstCompositor/CompositorInstancePassFirst.h"
 #include "Runtime/FirstCompositor/CompositorResourcePassFirst.h"
-#include "Framework/Color4.h"
 
 #include <RendererRuntime/IRendererRuntime.h>
-#include <RendererRuntime/Resource/Font/FontResourceManager.h>
+#include <RendererRuntime/DebugGui/DebugGuiManager.h>
 #include <RendererRuntime/Resource/Compositor/CompositorInstance.h>
 #include <RendererRuntime/Resource/Compositor/CompositorInstanceNode.h>
 
@@ -48,13 +47,12 @@
 //[-------------------------------------------------------]
 void CompositorInstancePassFirst::execute(RendererRuntime::CameraSceneItem*)
 {
-	// Draw text
-	// TODO(co) Get rid of the evil const-cast
-	RendererRuntime::FontResource* fontResource = const_cast<RendererRuntime::FontResource*>(getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getFontResourceManager().getFontResources().tryGetElementById(mFontResourceId));
-	if (nullptr != fontResource)
-	{
-		fontResource->drawText("42", Color4::GREEN, glm::value_ptr(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.3f, 0.0f))), 0.005f, 0.005f);
-	}
+	// Well right now I'm not that creative and the purpose of this example is to show how to add custom compositor passes, so, draw a simple text
+	const RendererRuntime::CompositorInstance& compositorInstance = getCompositorInstanceNode().getCompositorInstance();
+	RendererRuntime::DebugGuiManager& debugGuiManager = compositorInstance.getRendererRuntime().getDebugGuiManager();
+	debugGuiManager.newFrame(compositorInstance.getRenderTarget());
+	debugGuiManager.drawText("42", 100.0f, 100.0f);
+	debugGuiManager.renderFrame();
 }
 
 
@@ -62,8 +60,7 @@ void CompositorInstancePassFirst::execute(RendererRuntime::CameraSceneItem*)
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
 CompositorInstancePassFirst::CompositorInstancePassFirst(const CompositorResourcePassFirst& compositorResourcePassFirst, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode) :
-	ICompositorInstancePass(compositorResourcePassFirst, compositorInstanceNode),
-	mFontResourceId(getCompositorInstanceNode().getCompositorInstance().getRendererRuntime().getFontResourceManager().loadFontResourceByAssetId("Example/Font/Default/LinBiolinum_R"))
+	ICompositorInstancePass(compositorResourcePassFirst, compositorInstanceNode)
 {
 	// Nothing here
 }

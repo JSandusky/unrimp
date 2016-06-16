@@ -24,7 +24,6 @@
 #include "RendererToolkit/Project/ProjectImpl.h"
 #include "RendererToolkit/Project/ProjectAssetMonitor.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
-#include "RendererToolkit/AssetCompiler/FontAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/SceneAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
@@ -159,11 +158,7 @@ namespace RendererToolkit
 		// Evaluate the asset type and continue with the processing in the asset type specific way
 		// TODO(co) Currently this is fixed build in, later on me might want to have this dynamic so we can plugin additional asset compilers
 		const AssetCompilerTypeId assetCompilerTypeId(assetType.c_str());
-		if (FontAssetCompiler::TYPE_ID == assetCompilerTypeId)
-		{
-			FontAssetCompiler().compile(input, configuration, output);
-		}
-		else if (TextureAssetCompiler::TYPE_ID == assetCompilerTypeId)
+		if (TextureAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
 			TextureAssetCompiler().compile(input, configuration, output);
 		}
