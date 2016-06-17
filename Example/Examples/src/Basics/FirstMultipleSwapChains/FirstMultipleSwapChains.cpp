@@ -367,7 +367,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 		// -> In this example this behaviour makes it difficult to catch the desired frame of the desired native OS window
 
 		{ // Draw into the main swap chain
-			Renderer::ISwapChainPtr swapChain(renderer->getMainSwapChain());
+			Renderer::ISwapChain* swapChain = renderer->getMainSwapChain();
 			if (nullptr != swapChain)
 			{
 				// Begin scene rendering

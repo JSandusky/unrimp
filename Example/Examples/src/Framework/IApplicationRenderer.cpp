@@ -91,7 +91,7 @@ void IApplicationRenderer::onDrawRequest()
 	if (nullptr != mRenderer)
 	{
 		// Get the main swap chain and ensure there's one
-		Renderer::ISwapChainPtr swapChain(mRenderer->getMainSwapChain());
+		Renderer::ISwapChain* swapChain = mRenderer->getMainSwapChain();
 		if (nullptr != swapChain)
 		{
 			// Begin scene rendering

@@ -92,7 +92,7 @@ void FirstCompositor::onInitialization()
 	if (nullptr != rendererRuntime)
 	{
 		// Get the main swap chain and ensure there's one
-		Renderer::ISwapChainPtr swapChain(getRenderer()->getMainSwapChain());
+		Renderer::ISwapChain* swapChain = getRenderer()->getMainSwapChain();
 		if (nullptr != swapChain)
 		{
 			// Set our custom compositor pass factory

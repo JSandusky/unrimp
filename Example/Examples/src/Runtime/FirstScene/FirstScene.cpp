@@ -79,7 +79,7 @@ void FirstScene::onInitialization()
 		}
 
 		{ // Create the compositor instance
-			Renderer::ISwapChainPtr swapChain(getRenderer()->getMainSwapChain());
+			Renderer::ISwapChain* swapChain = getRenderer()->getMainSwapChain();
 			if (nullptr != swapChain)
 			{
 				mCompositorInstance = new RendererRuntime::CompositorInstance(*rendererRuntime, "Example/Compositor/Default/FirstScene", *swapChain);
