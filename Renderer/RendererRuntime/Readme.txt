@@ -23,7 +23,9 @@ Renderer runtime.
 
 
 == Dependencies ==
+- GLM (header only library)
 - ImGui (directly compiled and linked in)
+- crunch (header only part of the library, doesn't depend on crn compression library)
 
 
 == Preprocessor Definitions ==

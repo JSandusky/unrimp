@@ -30,6 +30,8 @@
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+#include <glm/detail/setup.hpp>	// For "glm::countof()"
+
 
 // Disable warnings
 // TODO(co) See "RendererRuntime::MaterialBlueprintResource::MaterialBlueprintResource()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)
@@ -539,7 +541,7 @@ namespace RendererRuntime
 		IResource(getUninitialized<MaterialBlueprintResourceId>()),
 		mMaterialBlueprintResourceManager(nullptr),
 		mPipelineStateCacheManager(*this),
-		mVertexAttributes(sizeof(::detail::vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), ::detail::vertexAttributesLayout),
+		mVertexAttributes(glm::countof(::detail::vertexAttributesLayout), ::detail::vertexAttributesLayout),
 		mPipelineState(Renderer::PipelineStateBuilder()),
 		mVertexShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
 		mTessellationControlShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
@@ -554,7 +556,7 @@ namespace RendererRuntime
 		IResource(materialBlueprintResourceId),
 		mMaterialBlueprintResourceManager(nullptr),
 		mPipelineStateCacheManager(*this),
-		mVertexAttributes(sizeof(::detail::vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), ::detail::vertexAttributesLayout),
+		mVertexAttributes(glm::countof(::detail::vertexAttributesLayout), ::detail::vertexAttributesLayout),
 		mPipelineState(Renderer::PipelineStateBuilder()),
 		mVertexShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
 		mTessellationControlShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),

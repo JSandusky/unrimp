@@ -126,7 +126,7 @@ void BatchInstancedArrays::initialize(Renderer::IRootSignature &rootSignature, c
 					sizeof(float) * 4 * 2			// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArray = mRenderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, &indexBuffer);
+			mVertexArray = mRenderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, &indexBuffer);
 		}
 
 		// Free local per instance data

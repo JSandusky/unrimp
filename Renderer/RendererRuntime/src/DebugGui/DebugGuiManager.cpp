@@ -27,6 +27,8 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 
+#include <glm/detail/setup.hpp>	// For "glm::countof()"
+
 #include <string>
 
 
@@ -82,7 +84,7 @@ namespace
 				0													// instancesPerElement (uint32_t)
 			}
 		};
-		const Renderer::VertexAttributes VertexAttributes(sizeof(VertexAttributesLayout) / sizeof(Renderer::VertexAttribute), VertexAttributesLayout);
+		const Renderer::VertexAttributes VertexAttributes(glm::countof(VertexAttributesLayout), VertexAttributesLayout);
 
 
 //[-------------------------------------------------------]
@@ -178,7 +180,7 @@ namespace RendererRuntime
 							sizeof(ImDrawVert)	// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArray = renderer.createVertexArray(::detail::VertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers, mIndexBufferPtr);
+					mVertexArray = renderer.createVertexArray(::detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, mIndexBufferPtr);
 				}
 
 				{ // Copy and convert all vertices and indices into a single contiguous buffer
@@ -310,7 +312,7 @@ namespace RendererRuntime
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
-			rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+			rootSignature.initialize(glm::countof(rootParameters), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 			// Create the instance
 			mRootSignature = renderer.createRootSignature(rootSignature);

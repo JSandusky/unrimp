@@ -23,10 +23,11 @@ Renderer toolkit.
 
 
 == Dependencies ==
+- GLM (header only library)
+- RapidJSON (header only library)
 - Assimp
 - crunch
 - libtiff
-- RapidJSON
 - SimpleFileWatcher
 
 

@@ -29,6 +29,8 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 
+#include <glm/detail/setup.hpp>	// For "glm::countof()"
+
 // General STB image definitions
 #define STBI_NO_STDIO
 #define STBI_NO_HDR
@@ -771,7 +773,7 @@ namespace RendererToolkit
       };
 
       crnlib::vector<crnlib::command_line_params::param_desc> params;
-      params.append(std_params, sizeof(std_params) / sizeof(std_params[0]));
+      params.append(std_params, glm::countof(std_params));
 
       for (uint32 i = 0; i < crnlib::pixel_format_helpers::get_num_formats(); i++)
       {

@@ -36,6 +36,8 @@
 #include "RendererRuntime/Resource/Compositor/CompositorResourceManager.h"
 #include "RendererRuntime/DebugGui/Detail/DebugGuiManagerWindows.h"
 
+#include <glm/detail/setup.hpp>	// For "glm::countof()"
+
 #include <cstring>
 
 
@@ -77,7 +79,7 @@ namespace
 				0											// instancesPerElement (uint32_t)
 			}
 		};
-		const Renderer::VertexAttributes VertexAttributes(sizeof(VertexAttributesLayout) / sizeof(Renderer::VertexAttribute), VertexAttributesLayout);
+		const Renderer::VertexAttributes VertexAttributes(glm::countof(VertexAttributesLayout), VertexAttributesLayout);
 
 
 //[-------------------------------------------------------]

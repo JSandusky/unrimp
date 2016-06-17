@@ -96,7 +96,7 @@ void VertexBuffer::onInitialization()
 				0											// instancesPerElement (uint32_t)
 			}
 		};
-		const Renderer::VertexAttributes vertexAttributesVBO(sizeof(vertexAttributesLayoutVBO) / sizeof(Renderer::VertexAttribute), vertexAttributesLayoutVBO);
+		const Renderer::VertexAttributes vertexAttributesVBO(glm::countof(vertexAttributesLayoutVBO), vertexAttributesLayoutVBO);
 		const Renderer::VertexAttribute vertexAttributesLayoutVBOs[] =
 		{
 			{ // Attribute 0
@@ -124,7 +124,7 @@ void VertexBuffer::onInitialization()
 				0											// instancesPerElement (uint32_t)
 			}
 		};
-		const Renderer::VertexAttributes vertexAttributesVBOs(sizeof(vertexAttributesLayoutVBOs) / sizeof(Renderer::VertexAttribute), vertexAttributesLayoutVBOs);
+		const Renderer::VertexAttributes vertexAttributesVBOs(glm::countof(vertexAttributesLayoutVBOs), vertexAttributesLayoutVBOs);
 
 		// Vertex array object (VAO)
 		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -153,7 +153,7 @@ void VertexBuffer::onInitialization()
 					sizeof(float) * (2 + 3)		// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArrayVBO = renderer->createVertexArray(vertexAttributesVBO, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+			mVertexArrayVBO = renderer->createVertexArray(vertexAttributesVBO, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 		}
 
 		{ // Create vertex array object (VAO) using multiple vertex buffer object (VBO)
@@ -189,7 +189,7 @@ void VertexBuffer::onInitialization()
 					sizeof(float) * 3		// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArrayVBOs = renderer->createVertexArray(vertexAttributesVBOs, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+			mVertexArrayVBOs = renderer->createVertexArray(vertexAttributesVBOs, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 		}
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")

@@ -133,7 +133,7 @@ void FirstGpgpu::onInitialization()
 
 		// Setup
 		Renderer::RootSignatureBuilder rootSignature;
-		rootSignature.initialize(sizeof(rootParameters) / sizeof(Renderer::RootParameter), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+		rootSignature.initialize(glm::countof(rootParameters), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 		// Create the instance
 		mRootSignature = mRenderer->createRootSignature(rootSignature);
@@ -155,7 +155,7 @@ void FirstGpgpu::onInitialization()
 			0											// instancesPerElement (uint32_t)
 		}
 	};
-	const Renderer::VertexAttributes vertexAttributes(sizeof(vertexAttributesLayout) / sizeof(Renderer::VertexAttribute), vertexAttributesLayout);
+	const Renderer::VertexAttributes vertexAttributes(glm::countof(vertexAttributesLayout), vertexAttributesLayout);
 
 	{ // Create vertex array object (VAO) for content generation
 		// Create the vertex buffer object (VBO)
@@ -181,7 +181,7 @@ void FirstGpgpu::onInitialization()
 				sizeof(float) * 2	// strideInBytes (uint32_t)
 			}
 		};
-		mVertexArrayContentGeneration = mRenderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+		mVertexArrayContentGeneration = mRenderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 	}
 
 	{ // Create vertex array object (VAO) for content processing
@@ -209,7 +209,7 @@ void FirstGpgpu::onInitialization()
 				sizeof(float) * 2	// strideInBytes (uint32_t)
 			}
 		};
-		mVertexArrayContentProcessing = mRenderer->createVertexArray(vertexAttributes, sizeof(vertexArrayVertexBuffers) / sizeof(Renderer::VertexArrayVertexBuffer), vertexArrayVertexBuffers);
+		mVertexArrayContentProcessing = mRenderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 	}
 
 	// Create the programs: Decide which shader language should be used (for example "GLSL" or "HLSL")
