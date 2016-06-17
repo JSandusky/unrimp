@@ -117,11 +117,13 @@ private:
 	// Crazy raw-pointers to point-of-interest scene stuff
 	RendererRuntime::CameraSceneItem*	 mCameraSceneItem;
 	RendererRuntime::ISceneNode*		 mSceneNode;
-	// For timing
+	// Timing
 	Stopwatch mStopwatch;	///< Stopwatch instance
 	float	  mGlobalTimer;	///< Global timer
-	// Other states
-	bool mPerformRotation;
+	// States for runtime-fun
+	float mRotationSpeed;
+	float mSunLightColor[3];
+	float mWetness;
 
 
 };

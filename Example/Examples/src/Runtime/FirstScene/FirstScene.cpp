@@ -48,7 +48,9 @@ FirstScene::FirstScene(const char *rendererName) :
 	mCameraSceneItem(nullptr),
 	mSceneNode(nullptr),
 	mGlobalTimer(0.0f),
-	mPerformRotation(true)
+	mRotationSpeed(1.0f),
+	mSunLightColor{1.0f, 1.0f, 1.0f},
+	mWetness(1.0f)
 {
 	// Nothing to do in here
 }
@@ -72,12 +74,6 @@ void FirstScene::onInitialization()
 	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
 	if (nullptr != rendererRuntime)
 	{
-		{ // Tell the material blueprint resource manager about our global material properties
-			RendererRuntime::MaterialProperties& globalMaterialProperties = rendererRuntime->getMaterialBlueprintResourceManager().getGlobalMaterialProperties();
-			globalMaterialProperties.setPropertyById("SunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(1.0f, 1.0f, 1.0f));
-			globalMaterialProperties.setPropertyById("Wetness", RendererRuntime::MaterialPropertyValue::fromFloat(1.0f));
-		}
-
 		{ // Create the compositor instance
 			Renderer::ISwapChain* swapChain = getRenderer()->getMainSwapChain();
 			if (nullptr != swapChain)
@@ -110,13 +106,23 @@ void FirstScene::onUpdate()
 	// Stop the stopwatch
 	mStopwatch.stop();
 
+	{ // Tell the material blueprint resource manager about our global material properties
+		RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+		if (nullptr != rendererRuntime)
+		{
+			RendererRuntime::MaterialProperties& globalMaterialProperties = rendererRuntime->getMaterialBlueprintResourceManager().getGlobalMaterialProperties();
+			globalMaterialProperties.setPropertyById("SunLightColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mSunLightColor[0], mSunLightColor[1], mSunLightColor[2]));
+			globalMaterialProperties.setPropertyById("Wetness", RendererRuntime::MaterialPropertyValue::fromFloat(mWetness));
+		}
+	}
+
 	// Update the scene node rotation
-	if (nullptr != mSceneNode && mPerformRotation)
+	if (nullptr != mSceneNode && mRotationSpeed > 0.0f)
 	{
 		mSceneNode->setRotation(glm::angleAxis(mGlobalTimer, glm::vec3(0.0f, 1.0f, 0.0f)));
 
 		// Update the global timer (FPS independent movement)
-		mGlobalTimer += mStopwatch.getMilliseconds() * 0.0005f;
+		mGlobalTimer += mStopwatch.getMilliseconds() * 0.0005f * mRotationSpeed;
 	}
 
 	// Start the stopwatch
@@ -184,7 +190,9 @@ void FirstScene::createDebugGui()
 	{
 		mSceneResource->getRendererRuntime().getDebugGuiManager().newFrame(mCompositorInstance->getRenderTarget());
 		ImGui::Begin("Options");
-			ImGui::Checkbox("Perform Rotation", &mPerformRotation);
+			ImGui::SliderFloat("Rotation Speed", &mRotationSpeed, 0.0f, 2.0f, "%.3f");
+			ImGui::ColorEdit3("Sun Light Color", mSunLightColor);
+			ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
 		ImGui::End();
 	}
 }
