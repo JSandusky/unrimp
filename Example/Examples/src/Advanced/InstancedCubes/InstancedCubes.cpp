@@ -227,7 +227,7 @@ void InstancedCubes::onDraw()
 		// Display statistics
 		if (mDisplayStatistics)
 		{
-			RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+			RendererRuntime::IRendererRuntime* rendererRuntime =getRendererRuntime();
 			if (nullptr != rendererRuntime)
 			{
 				RendererRuntime::DebugGuiManager& debugGuiManager = rendererRuntime->getDebugGuiManager();

@@ -67,7 +67,7 @@ void FirstMesh::onInitialization()
 	IApplicationRendererRuntime::onInitialization();
 
 	// Get and check the renderer runtime instance
-	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
 		Renderer::IRendererPtr renderer(getRenderer());
@@ -260,7 +260,7 @@ void FirstMesh::onUpdate()
 
 void FirstMesh::onDraw()
 {
-	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr == rendererRuntime)
 	{
 		return;

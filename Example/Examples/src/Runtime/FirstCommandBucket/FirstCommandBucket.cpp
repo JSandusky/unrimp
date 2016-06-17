@@ -67,7 +67,7 @@ void FirstCommandBucket::onInitialization()
 	IApplicationRendererRuntime::onInitialization();
 
 	// Get and check the renderer runtime instance
-	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
 		// Get the renderer instance (at this point in time we know it must be valid)

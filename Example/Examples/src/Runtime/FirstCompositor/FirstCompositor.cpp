@@ -88,7 +88,7 @@ void FirstCompositor::onInitialization()
 	IApplicationRendererRuntime::onInitialization();
 
 	// Get and check the renderer runtime instance
-	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
 		// Get the main swap chain and ensure there's one
@@ -111,7 +111,7 @@ void FirstCompositor::onDeinitialization()
 	mCompositorInstance = nullptr;
 
 	// Be polite and unset our custom compositor pass factory
-	RendererRuntime::IRendererRuntimePtr rendererRuntime(getRendererRuntime());
+	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
 		rendererRuntime->getCompositorResourceManager().setCompositorPassFactory(nullptr);
