@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Core/GetUninitialized.h"
 
 #include <vector>
 
@@ -66,14 +67,21 @@ namespace RendererRuntime
 			ShaderPropertyId shaderPropertyId;
 			int32_t			 value;
 
-			Property(StringId _shaderPropertyId, int32_t _value) :
+			inline Property() :
+				shaderPropertyId(getUninitialized<ShaderPropertyId>()),
+				value(getUninitialized<int32_t>())
+			{
+				// Nothing here
+			}
+
+			inline Property(ShaderPropertyId _shaderPropertyId, int32_t _value) :
 				shaderPropertyId(_shaderPropertyId),
 				value(_value)
 			{
 				// Nothing here
 			}
 
-			bool operator ==(const Property& property) const
+			inline bool operator ==(const Property& property) const
 			{
 				return (shaderPropertyId == property.shaderPropertyId && value == property.value);
 			}
@@ -106,6 +114,13 @@ namespace RendererRuntime
 		*    The properties
 		*/
 		inline const SortedPropertyVector& getSortedPropertyVector() const;
+		inline SortedPropertyVector& getSortedPropertyVector();
+
+		/**
+		*  @brief
+		*    Remove all shader properties
+		*/
+		inline void clear();
 
 		/**
 		*  @brief
@@ -125,6 +140,23 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the value of a property
+		*
+		*  @param[in] shaderPropertyId
+		*    ID of the shader property to return the value from
+		*  @param[in] defaultValue
+		*    Default value in case the shader property doesn't exist
+		*
+		*  @return
+		*    The property value or the default value
+		*
+		*  @note
+		*    - Unsafe because one can't figure out by the return value whether or not the property exists or if it's just the default value
+		*/
+		RENDERERRUNTIME_API_EXPORT int32_t getPropertyValueUnsafe(ShaderPropertyId shaderPropertyId, int32_t defaultValue = 0) const;
+
+		/**
+		*  @brief
 		*    Set the value of a property
 		*
 		*  @param[in] shaderPropertyId
@@ -133,6 +165,17 @@ namespace RendererRuntime
 		*    The shader property value to set
 		*/
 		RENDERERRUNTIME_API_EXPORT void setPropertyValue(ShaderPropertyId shaderPropertyId, int32_t value);
+
+		/**
+		*  @brief
+		*    Set property values by using a given shader properties instance
+		*
+		*  @param[in] shaderProperties
+		*    Shader properties instance to set the shader properties from
+		*/
+		RENDERERRUNTIME_API_EXPORT void setPropertyValues(const ShaderProperties& shaderProperties);
+
+		RENDERERRUNTIME_API_EXPORT bool operator ==(const ShaderProperties& shaderProperties) const;
 
 
 	//[-------------------------------------------------------]

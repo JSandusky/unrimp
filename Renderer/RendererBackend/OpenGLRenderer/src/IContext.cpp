@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/IContext.h"
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 
 //[-------------------------------------------------------]
@@ -43,12 +44,14 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	IContext::IContext()
+	IContext::IContext(OpenGLRuntimeLinking* openGLRuntimeLinking) :
+		mOpenGLRuntimeLinking(openGLRuntimeLinking)
 	{
 		// Nothing here
 	}
 
-	IContext::IContext(const IContext &)
+	IContext::IContext(const IContext& context) :
+		mOpenGLRuntimeLinking(context.mOpenGLRuntimeLinking)
 	{
 		// Not supported
 	}
@@ -57,6 +60,11 @@ namespace OpenGLRenderer
 	{
 		// Not supported
 		return *this;
+	}
+
+	bool IContext::loadOpenGL3EntryPoints() const
+	{
+		return (nullptr != mOpenGLRuntimeLinking) ? mOpenGLRuntimeLinking->loadOpenGL3EntryPoints() : true;
 	}
 
 

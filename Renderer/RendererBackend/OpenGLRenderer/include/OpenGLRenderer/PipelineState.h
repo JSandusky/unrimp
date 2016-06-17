@@ -36,7 +36,10 @@
 namespace Renderer
 {
 	class IProgram;
+	struct BlendState;
 	struct PipelineState;
+	struct RasterizerState;
+	struct DepthStencilState;
 }
 namespace OpenGLRenderer
 {
@@ -91,6 +94,13 @@ namespace OpenGLRenderer
 		*    Bind the pipeline state
 		*/
 		void bindPipelineState() const;
+
+		//[-------------------------------------------------------]
+		//[ Detail state access                                   ]
+		//[-------------------------------------------------------]
+		const Renderer::RasterizerState& getRasterizerState() const;
+		const Renderer::DepthStencilState& getDepthStencilState() const;
+		const Renderer::BlendState& getBlendState() const;
 
 
 	//[-------------------------------------------------------]

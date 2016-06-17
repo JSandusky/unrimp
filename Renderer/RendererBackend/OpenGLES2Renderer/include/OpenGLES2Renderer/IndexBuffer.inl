@@ -38,6 +38,11 @@ namespace OpenGLES2Renderer
 		return mOpenGLES2Type;
 	}
 
+	inline uint32_t IndexBuffer::getIndexSizeInBytes() const
+	{
+		return mIndexSizeInBytes;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

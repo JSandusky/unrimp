@@ -86,6 +86,15 @@ namespace OpenGLRenderer
 		*/
 		inline uint32_t getOpenGLType() const;
 
+		/**
+		*  @brief
+		*    Return the number of bytes of an index
+		*
+		*  @return
+		*    The number of bytes of an index
+		*/
+		inline uint32_t getIndexSizeInBytes() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
@@ -109,6 +118,7 @@ namespace OpenGLRenderer
 	protected:
 		uint32_t mOpenGLElementArrayBuffer;	///< OpenGL element array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t mOpenGLType;				///< OpenGL element array buffer data type (type "GLenum" not used in here in order to keep the header slim)
+		uint32_t mIndexSizeInBytes;			///< Number of bytes of an index
 
 
 	};

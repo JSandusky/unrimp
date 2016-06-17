@@ -1159,7 +1159,7 @@ namespace OpenGLES2Renderer
 				// OpenGL ES 2 has no "GL_EXT_draw_range_elements" equivalent, so, we can't support "minimumIndex" & "numberOfVertices" in here
 
 				// Draw
-				glDrawElements(mOpenGLES2PrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLES2Type(), reinterpret_cast<const GLvoid*>(startIndexLocation * sizeof(int)));
+				glDrawElements(mOpenGLES2PrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLES2Type(), reinterpret_cast<const GLvoid*>(startIndexLocation * indexBuffer->getIndexSizeInBytes()));
 			}
 		}
 	}

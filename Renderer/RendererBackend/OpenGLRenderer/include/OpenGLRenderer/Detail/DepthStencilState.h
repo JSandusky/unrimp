@@ -76,7 +76,16 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~DepthStencilState();
+		inline virtual ~DepthStencilState();
+
+		/**
+		*  @brief
+		*    Return the depth stencil state
+		*
+		*  @return
+		*    The depth stencil state
+		*/
+		inline const Renderer::DepthStencilState &getDepthStencilState() const;
 
 		/**
 		*  @brief
@@ -99,3 +108,9 @@ namespace OpenGLRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "OpenGLRenderer/Detail/DepthStencilState.inl"

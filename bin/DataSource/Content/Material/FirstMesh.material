@@ -14,7 +14,7 @@
 		"Properties":
 		{
 			"Lighting": "TRUE",
-			"DiffuseColor": "1.0 1.0 1.0 1.0",
+			"DiffuseColor": "1.0 1.0 1.0",
 			"DiffuseMap": "4",
 			"EmissiveMap": "5",
 			"NormalMap": "6",

@@ -284,7 +284,7 @@ namespace OpenGLRenderer
 	{
 		static const GLuint MAPPING[] =
 		{
-			GL_ALPHA,									// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "alpha"
+			GL_RED,										// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "alpha" (please note that "GL_ALPHA" is no valid OpenGL internal format)
 			GL_RGB8,									// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			GL_RGBA8,									// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			GL_RGBA16F_ARB,								// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
@@ -305,7 +305,7 @@ namespace OpenGLRenderer
 	{
 		static const GLuint MAPPING[] =
 		{
-			GL_ALPHA,	// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "alpha"
+			GL_RED,		// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits "alpha" (please note that "GL_ALPHA" is no valid OpenGL format)
 			GL_RGB,		// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			GL_RGBA,	// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			GL_RGBA,	// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)

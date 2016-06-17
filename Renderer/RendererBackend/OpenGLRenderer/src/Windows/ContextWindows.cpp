@@ -37,6 +37,61 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ContextWindows::ContextWindows(handle nativeWindowHandle, const ContextWindows* shareContextWindows) :
+		ContextWindows(nullptr, nativeWindowHandle, shareContextWindows)
+	{
+		// Nothing here
+	}
+
+	ContextWindows::~ContextWindows()
+	{
+		// Release the device context of the OpenGL window
+		if (NULL_HANDLE != mWindowDeviceContext)
+		{
+			// Is the device context of the OpenGL window is the currently active OpenGL device context?
+			if (wglGetCurrentDC() == mWindowDeviceContext)
+			{
+				wglMakeCurrent(nullptr, nullptr);
+			}
+
+			// Destroy the render context of the OpenGL window
+			if (NULL_HANDLE != mWindowRenderContext && mOwnsRenderContext)
+			{
+				wglDeleteContext(mWindowRenderContext);
+			}
+
+			// Release the device context of the OpenGL window
+			if (NULL_HANDLE != mNativeWindowHandle)
+			{
+				::ReleaseDC(reinterpret_cast<HWND>(mNativeWindowHandle), mWindowDeviceContext);
+			}
+		}
+
+		// Destroy the OpenGL dummy window, in case there's one
+		if (NULL_HANDLE != mDummyWindow)
+		{
+			// Destroy the OpenGL dummy window
+			::DestroyWindow(reinterpret_cast<HWND>(mDummyWindow));
+
+			// Unregister the window class for the OpenGL dummy window
+			::UnregisterClass(TEXT("OpenGLDummyWindow"), ::GetModuleHandle(nullptr));
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual OpenGLRenderer::IContext methods       ]
+	//[-------------------------------------------------------]
+	void ContextWindows::makeCurrent() const
+	{
+		wglMakeCurrent(mWindowDeviceContext, mWindowRenderContext);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	ContextWindows::ContextWindows(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, const ContextWindows* shareContextWindows) :
+		IContext(openGLRuntimeLinking),
 		mNativeWindowHandle(nativeWindowHandle),
 		mDummyWindow(NULL_HANDLE),
 		mWindowDeviceContext(NULL_HANDLE),
@@ -127,19 +182,27 @@ namespace OpenGLRenderer
 							// Make the legacy OpenGL render context to the current one
 							wglMakeCurrent(mWindowDeviceContext, legacyRenderContext);
 
-							// Create the render context of the OpenGL window
-							mWindowRenderContext = createOpenGLContext(nullptr);
-
-							// Destroy the legacy OpenGL render context
-							wglMakeCurrent(nullptr, nullptr);
-							wglDeleteContext(legacyRenderContext);
-
-							// If there's an OpenGL context, do some final initialization steps
-							if (NULL_HANDLE != mWindowRenderContext)
+							// Load the >= OpenGL 3.0 entry points
+							if (loadOpenGL3EntryPoints())
 							{
-								// Make the OpenGL context to the current one
-								// TODO(co) Review this, might cause issues when creating a context while a program is running
-								wglMakeCurrent(mWindowDeviceContext, mWindowRenderContext);
+								// Create the render context of the OpenGL window
+								mWindowRenderContext = createOpenGLContext(nullptr);
+
+								// Destroy the legacy OpenGL render context
+								wglMakeCurrent(nullptr, nullptr);
+								wglDeleteContext(legacyRenderContext);
+
+								// If there's an OpenGL context, do some final initialization steps
+								if (NULL_HANDLE != mWindowRenderContext)
+								{
+									// Make the OpenGL context to the current one
+									// TODO(co) Review this, might cause issues when creating a context while a program is running
+									wglMakeCurrent(mWindowDeviceContext, mWindowRenderContext);
+								}
+							}
+							else
+							{
+								// Error, failed to load >= OpenGL 3 entry points!
 							}
 						}
 						else
@@ -164,54 +227,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	ContextWindows::~ContextWindows()
-	{
-		// Release the device context of the OpenGL window
-		if (NULL_HANDLE != mWindowDeviceContext)
-		{
-			// Is the device context of the OpenGL window is the currently active OpenGL device context?
-			if (wglGetCurrentDC() == mWindowDeviceContext)
-			{
-				wglMakeCurrent(nullptr, nullptr);
-			}
-
-			// Destroy the render context of the OpenGL window
-			if (NULL_HANDLE != mWindowRenderContext && mOwnsRenderContext)
-			{
-				wglDeleteContext(mWindowRenderContext);
-			}
-
-			// Release the device context of the OpenGL window
-			if (NULL_HANDLE != mNativeWindowHandle)
-			{
-				::ReleaseDC(reinterpret_cast<HWND>(mNativeWindowHandle), mWindowDeviceContext);
-			}
-		}
-
-		// Destroy the OpenGL dummy window, in case there's one
-		if (NULL_HANDLE != mDummyWindow)
-		{
-			// Destroy the OpenGL dummy window
-			::DestroyWindow(reinterpret_cast<HWND>(mDummyWindow));
-
-			// Unregister the window class for the OpenGL dummy window
-			::UnregisterClass(TEXT("OpenGLDummyWindow"), ::GetModuleHandle(nullptr));
-		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLRenderer::IContext methods       ]
-	//[-------------------------------------------------------]
-	void ContextWindows::makeCurrent() const
-	{
-		wglMakeCurrent(mWindowDeviceContext, mWindowRenderContext);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
 	HGLRC ContextWindows::createOpenGLContext(const ContextWindows* shareContextWindows)
 	{
 		// Disable the following warning, we can't do anything to resolve this warning
@@ -232,12 +247,12 @@ namespace OpenGLRenderer
 				PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = reinterpret_cast<PFNWGLCREATECONTEXTATTRIBSARBPROC>(wglGetProcAddress("wglCreateContextAttribsARB"));
 				if (nullptr != wglCreateContextAttribsARB)
 				{
-					// OpenGL 3.1 - required for "gl_InstanceID" within shaders
 					// Create the OpenGL context
+					// -> OpenGL 4.1 (the best OpenGL version Mac OS X 10.11 supports, so lowest version we have to support)
 					static const int ATTRIBUTES[] =
 					{
 						// We want an OpenGL context
-						WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
+						WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
 						WGL_CONTEXT_MINOR_VERSION_ARB, 1,
 						// -> "WGL_CONTEXT_DEBUG_BIT_ARB" comes from the "GL_ARB_debug_output"-extension
 						// TODO(co) Make it possible to activate "WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB" from the outside

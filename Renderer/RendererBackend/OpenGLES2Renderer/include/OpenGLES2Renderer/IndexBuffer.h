@@ -104,6 +104,15 @@ namespace OpenGLES2Renderer
 		*/
 		inline uint32_t getOpenGLES2Type() const;
 
+		/**
+		*  @brief
+		*    Return the number of bytes of an index
+		*
+		*  @return
+		*    The number of bytes of an index
+		*/
+		inline uint32_t getIndexSizeInBytes() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
@@ -111,6 +120,7 @@ namespace OpenGLES2Renderer
 	private:
 		uint32_t mOpenGLES2ElementArrayBuffer;	///< OpenGL ES 2 element array buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t mOpenGLES2Type;				///< OpenGL ES 2 element array buffer data type (type "GLenum" not used in here in order to keep the header slim)
+		uint32_t mIndexSizeInBytes;				///< Number of bytes of an index
 
 
 	};

@@ -55,6 +55,20 @@ namespace
 			const RendererRuntime::MaterialResources& materialResources = rendererRuntime.getMaterialResourceManager().getMaterialResources();
 			const RendererRuntime::MaterialBlueprintResources& materialBlueprintResources = rendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources();
 
+			// TODO(co) We could do this just once, not on each draw request
+			// Gather renderer shader properties
+			// -> Write the renderer name as well as the shader language name into the shader properties so shaders can perform renderer specific handling if required
+			// -> We really need both, usually shader language name is sufficient, but if more fine granular information is required it's accessible
+			RendererRuntime::ShaderProperties rendererShaderProperties;
+			{
+				rendererShaderProperties.setPropertyValue(RendererRuntime::StringId(renderer.getName()), 1);
+				const Renderer::IShaderLanguage* shaderLanguage = renderer.getShaderLanguage();
+				if (nullptr != shaderLanguage)
+				{
+					rendererShaderProperties.setPropertyValue(RendererRuntime::StringId(shaderLanguage->getShaderLanguageName()), 1);
+				}
+			}
+
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
@@ -103,6 +117,7 @@ namespace
 											{
 												// TODO(co) Pass shader properties
 												RendererRuntime::ShaderProperties shaderProperties;
+												shaderProperties.setPropertyValues(rendererShaderProperties);
 
 												Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateObjectPtr(shaderProperties, materialResource->getMaterialProperties());
 												if (nullptr != pipelineStatePtr)

@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace OpenGLRenderer
+{
+	class OpenGLRuntimeLinking;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -91,9 +100,12 @@ namespace OpenGLRenderer
 	protected:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] openGLRuntimeLinking
+		*    OpenGL runtime linking instance, if null pointer this isn't a primary context
 		*/
-		IContext();
+		explicit IContext(OpenGLRuntimeLinking* openGLRuntimeLinking);
 
 		/**
 		*  @brief
@@ -115,6 +127,28 @@ namespace OpenGLRenderer
 		*    Reference to this instance
 		*/
 		IContext &operator =(const IContext &source);
+
+		/**
+		*  @brief
+		*    Load the >= OpenGL 3.0 entry points
+		*
+		*  @return
+		*    "true" if all went fine, else "false"
+		*
+		*  @return
+		*    "true" if all went fine, else "false"
+		*
+		*  @note
+		*    - This method is only allowed to be called after an >= OpenGL context has been created and set
+		*/
+		bool loadOpenGL3EntryPoints() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		OpenGLRuntimeLinking* mOpenGLRuntimeLinking;	///< OpenGL runtime linking instance, if null pointer this isn't a primary context
 
 
 	};

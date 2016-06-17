@@ -18,8 +18,8 @@
 			"DiffuseColor":
 			{
 				"Usage": "SHADER_UNIFORM",
-				"ValueType": "FLOAT_4",
-				"Value": "1.0 1.0 1.0 1.0",
+				"ValueType": "FLOAT_3",
+				"Value": "1.0 1.0 1.0",
 				"Description": "Material diffuse color"
 			},
 			"DiffuseMap":
@@ -371,7 +371,7 @@
 						"DiffuseColor":
 						{
 							"Usage": "MATERIAL_REFERENCE",
-							"ValueType": "FLOAT_4",
+							"ValueType": "FLOAT_3",
 							"Value": "@DiffuseColor"
 						},
 						"StaticPropertyTest":

@@ -121,8 +121,8 @@ void FirstMesh::onInitialization()
 					// Data destination
 					Renderer::VertexAttributeFormat::SHORT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 					"QTangent",									// name[32] (char)
-					"NORMAL",									// semanticName[32] (char)
-					0,											// semanticIndex (uint32_t)
+					"TEXCOORD",									// semanticName[32] (char)
+					1,											// semanticIndex (uint32_t)
 					// Data source
 					0,											// inputSlot (uint32_t)
 					sizeof(float) * 3 + sizeof(short) * 2,		// alignedByteOffset (uint32_t)

@@ -41,11 +41,6 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	DepthStencilState::~DepthStencilState()
-	{
-		// Nothing to do in here
-	}
-
 	void DepthStencilState::setOpenGLDepthStencilStates() const
 	{
 		// Renderer::DepthStencilState::depthEnable

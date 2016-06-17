@@ -47,6 +47,58 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Macros                                                ]
+	//[-------------------------------------------------------]
+	// Define a helper macro
+	#ifdef WIN32
+		#define IMPORT_FUNC(funcName)																																			\
+			if (result)																																							\
+			{																																									\
+				void *symbol = ::GetProcAddress(static_cast<HMODULE>(mOpenGLSharedLibrary), #funcName);																			\
+				if (nullptr == symbol)																																			\
+				{																																								\
+					symbol = wglGetProcAddress(#funcName);																														\
+				}																																								\
+				if (nullptr != symbol)																																			\
+				{																																								\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
+				}																																								\
+				else																																							\
+				{																																								\
+					wchar_t moduleFilename[MAX_PATH];																															\
+					moduleFilename[0] = '\0';																																	\
+					::GetModuleFileNameW(static_cast<HMODULE>(mOpenGLSharedLibrary), moduleFilename, MAX_PATH);																	\
+					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: Failed to locate the entry point \"%s\" within the OpenGL shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																				\
+				}																																								\
+			}
+	#elif defined LINUX
+		#define IMPORT_FUNC(funcName)																																			\
+			if (result)																																							\
+			{																																									\
+				void *symbol = ::dlsym(mOpenGLSharedLibrary, #funcName);																										\
+				if (nullptr != symbol)																																			\
+				{																																								\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
+				}																																								\
+				else																																							\
+				{																																								\
+					link_map *linkMap = nullptr;																																\
+					const char* libraryName = "unknown";																														\
+					if (dlinfo(mOpenGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																								\
+					{																																							\
+						libraryName = linkMap->l_name;																															\
+					}																																							\
+					std::cout << "OpenGL error: Failed to locate the entry point \"" << #funcName << "\" within the OpenGL shared library \"" << libraryName << "\"\n";		/* TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead*/ \
+					result = false;																																				\
+				}																																								\
+			}
+	#else
+		#error "Unsupported platform"
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	OpenGLRuntimeLinking::OpenGLRuntimeLinking() :
@@ -126,50 +178,6 @@ namespace OpenGLRenderer
 	{
 		bool result = true;	// Success by default
 
-		// Define a helper macro
-		#ifdef WIN32
-			#define IMPORT_FUNC(funcName)																																			\
-				if (result)																																							\
-				{																																									\
-					void *symbol = ::GetProcAddress(static_cast<HMODULE>(mOpenGLSharedLibrary), #funcName);																			\
-					if (nullptr != symbol)																																			\
-					{																																								\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
-					}																																								\
-					else																																							\
-					{																																								\
-						wchar_t moduleFilename[MAX_PATH];																															\
-						moduleFilename[0] = '\0';																																	\
-						::GetModuleFileNameW(static_cast<HMODULE>(mOpenGLSharedLibrary), moduleFilename, MAX_PATH);																	\
-						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: Failed to locate the entry point \"%s\" within the OpenGL shared library \"%s\"", #funcName, moduleFilename)	\
-						result = false;																																				\
-					}																																								\
-				}
-		#elif defined LINUX
-			#define IMPORT_FUNC(funcName)																																			\
-				if (result)																																							\
-				{																																									\
-					void *symbol = ::dlsym(mOpenGLSharedLibrary, #funcName);																										\
-					if (nullptr != symbol)																																			\
-					{																																								\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
-					}																																								\
-					else																																							\
-					{																																								\
-						link_map *linkMap = nullptr;																																\
-						const char* libraryName = "unknown";																														\
-						if (dlinfo(mOpenGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																								\
-						{																																							\
-							libraryName = linkMap->l_name;																															\
-						}																																							\
-						std::cout << "OpenGL error: Failed to locate the entry point \"" << #funcName << "\" within the OpenGL shared library \"" << libraryName << "\"\n";		/* TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead*/ \
-						result = false;																																				\
-					}																																								\
-				}
-		#else
-			#error "Unsupported platform"
-		#endif
-
 		// Load the entry points
 		IMPORT_FUNC(glGetString);
 		IMPORT_FUNC(glGetIntegerv);
@@ -218,8 +226,16 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glXGetClientString);
 		#endif
 
-		// Undefine the helper macro
-		#undef IMPORT_FUNC
+		// Done
+		return result;
+	}
+
+	bool OpenGLRuntimeLinking::loadOpenGL3EntryPoints()
+	{
+		bool result = true;	// Success by default
+
+		// Load the entry points
+		IMPORT_FUNC(glGetStringi);
 
 		// Done
 		return result;

@@ -44,11 +44,6 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	BlendState::~BlendState()
-	{
-		// Nothing to do in here
-	}
-
 	void BlendState::setOpenGLBlendStates() const
 	{
 		// TODO(co) Add support for blend state per render target

@@ -26,37 +26,47 @@
 
 
 //[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
 //[ Input / output                                        ]
 //[-------------------------------------------------------]
 // Attribute input / output
-struct VS_INPUT
-{
-	float3 Position : POSITION;		// Object space vertex position
-	int2   TexCoord : TEXCOORD0;	// 16 bit texture coordinate
-	int4   QTangent : NORMAL;		// 16 bit QTangent
-};
-struct VS_OUTPUT
-{
-	float4   Position     : SV_POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
-	float2   TexCoord     : TEXCOORD0;		// Texture coordinate
-	float3x3 TangentFrame : TEXCOORD1;		// Tangent frame
-};
+INPUT_BEGIN
+	INPUT_VERTEX_POSITION(float3, Position)				// Object space vertex position
+	@property(HLSL)
+		INPUT_TEXTURE_COORDINATE(int2, TexCoord, 0)		// 16 bit texture coordinate
+		INPUT_TEXTURE_COORDINATE(int4, QTangent, 1)		// 16 bit QTangent
+	@end
+	@property(GLSL)
+		INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)	// 16 bit texture coordinate
+		INPUT_TEXTURE_COORDINATE(float4, QTangent, 1)	// 16 bit QTangent
+	@end
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)		// Texture coordinate
+	OUTPUT_TEXTURE_COORDINATE(float3, TangentFrame0VS, 1)	// Tangent frame
+	OUTPUT_TEXTURE_COORDINATE(float3, TangentFrame1VS, 2)	// Tangent frame
+	OUTPUT_TEXTURE_COORDINATE(float3, TangentFrame2VS, 3)	// Tangent frame
+	OUTPUT_POSITION											// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+OUTPUT_END
 
 // Uniform buffers
-cbuffer PassUniformBuffer : register(b0)
-{
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	float4x4 WorldSpaceToViewSpaceMatrix;
 	float4x4 WorldSpaceToClipSpaceMatrix;
 	float3	 ViewSpaceSunLightDirection;
-	float3	 SunLightColor;
 	float	 Wetness;
+	float3	 SunLightColor;
 	float	 StaticPropertyTest;
-}
-cbuffer InstanceUniformBuffer : register(b2)
-{
+UNIFORM_BUFFER_END
+UNIFORM_BUFFER_BEGIN(InstanceUniformBuffer, 2)
 	float4x4 ObjectSpaceToWorldSpaceMatrix;
 	int		 MaterialIndex;
-}
+UNIFORM_BUFFER_END
 
 
 //[-------------------------------------------------------]
@@ -68,26 +78,23 @@ cbuffer InstanceUniformBuffer : register(b2)
 //[-------------------------------------------------------]
 //[ Main                                                  ]
 //[-------------------------------------------------------]
-VS_OUTPUT main(VS_INPUT input)
-{
-	VS_OUTPUT output;
-
+MAIN_BEGIN
 	// Calculate the world space vertex position
-	float4 worldSpacePosition = mul(ObjectSpaceToWorldSpaceMatrix, float4(input.Position * StaticPropertyTest, 1.0f));
+	float4 worldSpacePosition = MATRIX_MUL(ObjectSpaceToWorldSpaceMatrix, float4(MAIN_INPUT(Position) * StaticPropertyTest, 1.0f));
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	output.Position = mul(WorldSpaceToClipSpaceMatrix, worldSpacePosition);
+	MAIN_OUTPUT_POSITION = MATRIX_MUL(WorldSpaceToClipSpaceMatrix, worldSpacePosition);
 
 	// Pass through the decoded 16 bit texture coordinate
-	output.TexCoord = input.TexCoord / 32767.0f;
+	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(TexCoord) / 32767.0f;
 
 	// Calculate the tangent space to view space tangent, binormal and normal
 	// - 16 bit QTangent basing on http://dev.theomader.com/qtangents/ "QTangents" which is basing on
 	//   http://www.crytek.com/cryengine/presentations/spherical-skinning-with-dual-quaternions-and-qtangents "Spherical Skinning with Dual-Quaternions and QTangents"
 	// TODO(co) float3x3
-	float4x4 objectSpaceToViewSpaceMatrix = mul(WorldSpaceToViewSpaceMatrix, ObjectSpaceToWorldSpaceMatrix);
-	output.TangentFrame = GetTangentFrame((float3x3)objectSpaceToViewSpaceMatrix, input.QTangent / 32767.0f);
-
-	// Done
-	return output;
-}
+	float4x4 objectSpaceToViewSpaceMatrix = MATRIX_MUL(WorldSpaceToViewSpaceMatrix, ObjectSpaceToWorldSpaceMatrix);
+	float3x3 tangentFrame = GetTangentFrame(CAST_TO(objectSpaceToViewSpaceMatrix, float3x3), MAIN_INPUT(QTangent) / 32767.0f);
+	MAIN_OUTPUT(TangentFrame0VS) = tangentFrame[0];
+	MAIN_OUTPUT(TangentFrame1VS) = tangentFrame[1];
+	MAIN_OUTPUT(TangentFrame2VS) = tangentFrame[2];
+MAIN_END

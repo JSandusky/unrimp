@@ -53,7 +53,7 @@ uniform mat4 ObjectSpaceToClipSpaceMatrix;
 void main()
 {
 	// Calculate the clip space vertex position, lower/left is (-1,-1) and upper/right is (1,1)
-	gl_Position = ObjectSpaceToClipSpaceMatrix * vec4(Position, 0.0f, 1.0f);
+	gl_Position = ObjectSpaceToClipSpaceMatrix * vec4(Position, 0.0, 1.0);
 
 	// Pass through the vertex texture coordinate
 	TexCoordVs = TexCoord;
@@ -82,7 +82,7 @@ uniform sampler2D GlyphMap;	// Glyph atlas texture map
 void main()
 {
 	// Fetch the texel at the given texture coordinate and return it's color
-	gl_FragColor = ColorVs * texture2D(GlyphMap, TexCoordVs).aaaa;
+	gl_FragColor = ColorVs * texture2D(GlyphMap, TexCoordVs).rrrr;
 }
 );	// STRINGIFY
 

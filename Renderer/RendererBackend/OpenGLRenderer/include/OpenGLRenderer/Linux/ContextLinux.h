@@ -52,6 +52,12 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class OpenGLRenderer;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -64,7 +70,7 @@ namespace OpenGLRenderer
 		*  @param[in] useExternalContext
 		*    When true an own OpenGL context won't be created
 		*/
-		explicit ContextLinux(handle nativeWindowHandle, bool useExternalContext);
+		ContextLinux(handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
@@ -103,6 +109,19 @@ namespace OpenGLRenderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		/**
+		*  @brief
+		*    Constructor for primary context
+		*
+		*  @param[in] openGLRuntimeLinking
+		*    OpenGL runtime linking instance, if null pointer this isn't a primary context
+		*  @param[in] nativeWindowHandle
+		*    Optional native main window handle, can be a null handle
+		*  @param[in] useExternalContext
+		*    When true an own OpenGL context won't be created
+		*/
+		ContextLinux(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, bool useExternalContext);
+
 		/**
 		*  @brief
 		*    Create a OpenGL context

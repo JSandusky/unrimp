@@ -50,7 +50,8 @@ namespace OpenGLRenderer
 	IndexBuffer::IndexBuffer(OpenGLRenderer &openGLRenderer, Renderer::IndexBufferFormat::Enum indexBufferFormat) :
 		IIndexBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLElementArrayBuffer(0),
-		mOpenGLType(GL_UNSIGNED_SHORT)
+		mOpenGLType(GL_UNSIGNED_SHORT),
+		mIndexSizeInBytes(Renderer::IndexBufferFormat::getNumberOfBytesPerElement(indexBufferFormat))
 	{
 		// Create the OpenGL element array buffer
 		glGenBuffersARB(1, &mOpenGLElementArrayBuffer);

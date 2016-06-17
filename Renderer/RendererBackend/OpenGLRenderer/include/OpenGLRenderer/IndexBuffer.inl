@@ -38,6 +38,11 @@ namespace OpenGLRenderer
 		return mOpenGLType;
 	}
 
+	inline uint32_t IndexBuffer::getIndexSizeInBytes() const
+	{
+		return mIndexSizeInBytes;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

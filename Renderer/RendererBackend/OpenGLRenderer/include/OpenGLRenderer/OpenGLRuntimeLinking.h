@@ -47,6 +47,15 @@
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
 {
+	class IContext;	// Don't delete this forward declaration, required on Windows since Windows headers define a struct-type with this name
+}
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace OpenGLRenderer
+{
 
 
 	//[-------------------------------------------------------]
@@ -58,6 +67,12 @@ namespace OpenGLRenderer
 	*/
 	class OpenGLRuntimeLinking
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class IContext;
 
 
 	//[-------------------------------------------------------]
@@ -108,6 +123,18 @@ namespace OpenGLRenderer
 		*/
 		bool loadOpenGLEntryPoints();
 
+		/**
+		*  @brief
+		*    Load the >= OpenGL 3.0 entry points
+		*
+		*  @return
+		*    "true" if all went fine, else "false"
+		*
+		*  @note
+		*    - This method is only allowed to be called after an >= OpenGL context has been created and set
+		*/
+		bool loadOpenGL3EntryPoints();
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
@@ -156,6 +183,11 @@ namespace OpenGLRenderer
 	FNDEF_GL(void,		glScissor,			(GLint, GLint, GLsizei, GLsizei));
 	FNDEF_GL(void,		glFlush,			(void));
 	FNDEF_GL(void,		glFinish,			(void));
+
+	// >= OpenGL 3.0
+	FNDEF_GL(GLubyte *,	glGetStringi,	(GLenum, GLuint));
+
+	// Platform specific
 	#ifdef WIN32
 		FNDEF_GL(HDC,	wglGetCurrentDC,	(VOID));
 		FNDEF_GL(PROC,	wglGetProcAddress,	(LPCSTR));
@@ -214,6 +246,11 @@ namespace OpenGLRenderer
 	#define glScissor			FNPTR(glScissor)
 	#define glFlush				FNPTR(glFlush)
 	#define glFinish			FNPTR(glFinish)
+
+	// >= OpenGL 3.0
+	#define glGetStringi FNPTR(glGetStringi)
+
+	// Platform specific
 	#ifdef WIN32
 		#define wglGetCurrentDC		FNPTR(wglGetCurrentDC)
 		#define wglGetProcAddress	FNPTR(wglGetProcAddress)

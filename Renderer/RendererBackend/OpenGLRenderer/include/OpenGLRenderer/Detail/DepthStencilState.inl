@@ -21,40 +21,25 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace OpenGLRenderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ShaderProperties::ShaderProperties()
+	inline DepthStencilState::~DepthStencilState()
 	{
-		// Nothing here
+		// Nothing to do in here
 	}
 
-	inline ShaderProperties::~ShaderProperties()
+	inline const Renderer::DepthStencilState &DepthStencilState::getDepthStencilState() const
 	{
-		// Nothing here
-	}
-
-	inline const ShaderProperties::SortedPropertyVector& ShaderProperties::getSortedPropertyVector() const
-	{
-		return mSortedPropertyVector;
-	}
-
-	inline ShaderProperties::SortedPropertyVector& ShaderProperties::getSortedPropertyVector()
-	{
-		return mSortedPropertyVector;
-	}
-
-	inline void ShaderProperties::clear()
-	{
-		mSortedPropertyVector.clear();
+		return mDepthStencilState;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+} // OpenGLRenderer

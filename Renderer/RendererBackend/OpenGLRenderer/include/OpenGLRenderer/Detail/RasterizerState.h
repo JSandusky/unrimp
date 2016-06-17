@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~RasterizerState();
+		inline virtual ~RasterizerState();
 
 		/**
 		*  @brief

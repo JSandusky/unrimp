@@ -192,16 +192,16 @@ namespace OpenGLRenderer
 			// but under Linux there are two additional functions for this
 			#ifdef WIN32
 				// "glGetString()" & "wglGetExtensionsStringARB()"
-				const int loopMax = 2;
+				const int numberOfLoops = 2;
 			#elif APPLE
 				// On Mac OS X, only "glGetString(GL_EXTENSIONS)" is required
-				const int loopMax = 1;
+				const int numberOfLoops = 1;
 			#elif LINUX
 				// "glGetString()" & "glXQueryExtensionsString()" & "glXGetClientString()"
-				const int loopMax = 3;
+				const int numberOfLoops = 3;
 			#endif
 			const char *extensions = nullptr;
-			for (int i = 0; i < loopMax; ++i)
+			for (int loopIndex = 0; loopIndex < numberOfLoops; ++loopIndex)
 			{
 				// Extension names should not have spaces
 				const char *where = strchr(extension, ' ');
@@ -212,7 +212,7 @@ namespace OpenGLRenderer
 
 				// Advanced extensions
 				// TODO(sw) Move the query for advanced extensions (via platform specific methods) to the context?
-				if (i > 0)
+				if (loopIndex > 0)
 				{
 					#ifdef WIN32
 						// WGL extensions
@@ -229,7 +229,7 @@ namespace OpenGLRenderer
 						Display *display = static_cast<ContextLinux&>(*mContext).getDisplay();
 						if (nullptr != display)
 						{
-							if (2 == i)
+							if (2 == loopIndex)
 							{
 								extensions = static_cast<const char*>(glXQueryExtensionsString(display, XDefaultScreen(display)));
 							}
@@ -245,27 +245,39 @@ namespace OpenGLRenderer
 				else
 				{
 					extensions = reinterpret_cast<const char*>(glGetString(GL_EXTENSIONS));
-				}
-				if (nullptr == extensions)
-				{
-					return false; // Extension not found
-				}
-
-				// It takes a bit of care to be fool-proof about parsing the
-				// OpenGL extensions string. Don't be fooled by substrings,
-				// etc:
-				const char *start = extensions;
-				where = strstr(start, extension);
-				while (nullptr != where)
-				{
-					const char *terminator = where + strlen(extension);
-					if (where == start || ' ' == *(where - 1) || ' ' == *terminator || '\0' == *terminator)
+					if (nullptr == extensions)
 					{
-						// Extension found
-						return true;
+						// "glGetString(GL_EXTENSIONS)" is not available in core profiles, we have to use "glGetStringi()" 
+						int numberOfExtensions = 0;
+						glGetIntegerv(GL_NUM_EXTENSIONS, &numberOfExtensions);
+						for (GLuint extensionIndex = 0; extensionIndex < static_cast<GLuint>(numberOfExtensions); ++extensionIndex)
+						{
+							if (0 == strcmp(extension, reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, extensionIndex))))
+							{
+								// Extension found
+								return true;
+							}
+						}
 					}
-					start = terminator;
+				}
+				if (nullptr != extensions)
+				{
+					// It takes a bit of care to be fool-proof about parsing the
+					// OpenGL extensions string. Don't be fooled by substrings,
+					// etc:
+					const char *start = extensions;
 					where = strstr(start, extension);
+					while (nullptr != where)
+					{
+						const char *terminator = where + strlen(extension);
+						if (where == start || ' ' == *(where - 1) || ' ' == *terminator || '\0' == *terminator)
+						{
+							// Extension found
+							return true;
+						}
+						start = terminator;
+						where = strstr(start, extension);
+					}
 				}
 			}
 		}
@@ -924,6 +936,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glGetActiveUniformBlockiv)
 			IMPORT_FUNC(glGetActiveUniformBlockName)
 			IMPORT_FUNC(glUniformBlockBinding)
+			IMPORT_FUNC(glBindBufferBase)
 			mGL_ARB_uniform_buffer_object = result;
 		}
 

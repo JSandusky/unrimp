@@ -18,10 +18,6 @@
 \*********************************************************/
 
 
-// TODO(co) Define this outside
-@piece(MaximumNumberOfMaterials)2@end
-
-
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
@@ -29,49 +25,62 @@
 
 
 //[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Define pieces                                         ]
+//[-------------------------------------------------------]
+// TODO(co) Define this outside
+@piece(MaximumNumberOfMaterials)2@end
+
+
+//[-------------------------------------------------------]
 //[ Input / output                                        ]
 //[-------------------------------------------------------]
-// Attribute output
-struct VS_OUTPUT
-{
-	float4   Position     : SV_POSITION;	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
-	float2   TexCoord     : TEXCOORD0;		// Texture coordinate
-	float3x3 TangentFrame : TEXCOORD1;		// Tangent frame
-};
+// Attribute input / output
+INPUT_BEGIN
+	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)			// Texture coordinate
+	INPUT_TEXTURE_COORDINATE(float3, TangentFrame0VS, 1)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE(float3, TangentFrame1VS, 2)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE(float3, TangentFrame2VS, 3)	// Tangent frame
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_COLOR(0)
+OUTPUT_END
 
 // Uniform buffers
-cbuffer PassUniformBuffer : register(b0)
-{
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 	float4x4 WorldSpaceToViewSpaceMatrix;
 	float4x4 WorldSpaceToClipSpaceMatrix;
 	float3	 ViewSpaceSunLightDirection;
-	float3	 SunLightColor;
 	float	 Wetness;
+	float3	 SunLightColor;
 	float	 StaticPropertyTest;
-}
+UNIFORM_BUFFER_END
 struct Material
 {
-	float4 DiffuseColor;
+	float3 DiffuseColor;
 	float  StaticPropertyTest;
 };
-cbuffer MaterialUniformBuffer : register(b1)
-{
+UNIFORM_BUFFER_BEGIN(MaterialUniformBuffer, 1)
 	Material Materials[@insertpiece(MaximumNumberOfMaterials)];
-}
-cbuffer InstanceUniformBuffer : register(b2)
-{
+UNIFORM_BUFFER_END
+UNIFORM_BUFFER_BEGIN(InstanceUniformBuffer, 2)
 	float4x4 ObjectSpaceToWorldSpaceMatrix;
 	int		 MaterialIndex;
-}
+UNIFORM_BUFFER_END
 
 // Samplers
-SamplerState SamplerLinear : register(s0);
+SAMPLER_STATE(SamplerLinear, 0)
 
 // Textures
-Texture2D DiffuseMap  : register(t0);
-Texture2D EmissiveMap : register(t1);
-Texture2D NormalMap   : register(t2);	// Tangent space normal map
-Texture2D SpecularMap : register(t3);
+TEXTURE_2D(DiffuseMap, 0)
+TEXTURE_2D(EmissiveMap, 1)
+TEXTURE_2D(NormalMap, 2)	// Tangent space normal map
+TEXTURE_2D(SpecularMap, 3)
 
 
 //[-------------------------------------------------------]
@@ -102,8 +111,7 @@ Texture2D SpecularMap : register(t3);
 //[-------------------------------------------------------]
 //[ Main                                                  ]
 //[-------------------------------------------------------]
-float4 main(VS_OUTPUT input) : SV_TARGET
-{
+MAIN_BEGIN
 	// Get the used material
 	Material material = Materials[MaterialIndex];
 
@@ -111,22 +119,22 @@ float4 main(VS_OUTPUT input) : SV_TARGET
 	float3 ViewSpaceViewVector = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
 
 	// Get the per fragment normal [0..1] by using a tangent space normal map
-	float3 normal = NormalMap.Sample(SamplerLinear, input.TexCoord).rgb;
+	float3 normal = SAMPLE_2D(NormalMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
 
 	// Transform the normal from [0..1] to [-1..1]
 	normal = (normal - 0.5f) * 2.0f;
 
 	// Transform the tangent space normal into view space
-	normal = normalize(mul(normal, input.TangentFrame));
+	normal = normalize(normal.x * MAIN_INPUT(TangentFrame0VS) + normal.y * MAIN_INPUT(TangentFrame1VS) + normal.z * MAIN_INPUT(TangentFrame2VS));
 
 	// Calculate lighting
 	@insertpiece(CalculateLighting)
 
 	// Calculate the fragment color
-	float3 color = diffuseLightColor * material.DiffuseColor * DiffuseMap.Sample(SamplerLinear, input.TexCoord);	// Diffuse term
-	color += specularLightColor * SpecularMap.Sample(SamplerLinear, input.TexCoord).rgb;							// Specular term
-	color += EmissiveMap.Sample(SamplerLinear, input.TexCoord).rgb;													// Emissive term
+	float3 color = diffuseLightColor * material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;	// Diffuse term
+	color += specularLightColor * SAMPLE_2D(SpecularMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;								// Specular term
+	color += SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;													// Emissive term
 
 	// Done
-	return min(float4(color * material.StaticPropertyTest, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));
-}
+	MAIN_OUTPUT_COLOR(0) = min(float4(color * material.StaticPropertyTest, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));
+MAIN_END

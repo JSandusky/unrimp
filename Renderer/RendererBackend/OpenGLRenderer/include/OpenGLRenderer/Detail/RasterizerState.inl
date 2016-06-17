@@ -28,6 +28,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline RasterizerState::~RasterizerState()
+	{
+		// Nothing to do in here
+	}
+
 	inline const Renderer::RasterizerState &RasterizerState::getRasterizerState() const
 	{
 		return mRasterizerState;

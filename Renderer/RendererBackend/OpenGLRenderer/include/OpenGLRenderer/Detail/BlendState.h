@@ -76,7 +76,16 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~BlendState();
+		inline virtual ~BlendState();
+
+		/**
+		*  @brief
+		*    Return the blend state
+		*
+		*  @return
+		*    The blend state
+		*/
+		inline const Renderer::BlendState &getBlendState() const;
 
 		/**
 		*  @brief
@@ -101,3 +110,9 @@ namespace OpenGLRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "OpenGLRenderer/Detail/BlendState.inl"

@@ -41,11 +41,6 @@ namespace OpenGLRenderer
 		// Nothing to do in here
 	}
 
-	RasterizerState::~RasterizerState()
-	{
-		// Nothing to do in here
-	}
-
 	void RasterizerState::setOpenGLRasterizerStates() const
 	{
 		// Renderer::RasterizerState::fillMode
@@ -111,7 +106,7 @@ namespace OpenGLRenderer
 		// RasterizerState::multisampleEnable
 
 		// RasterizerState::antialiasedLineEnable
-		if (mRasterizerState.scissorEnable)
+		if (mRasterizerState.antialiasedLineEnable)
 		{
 			glEnable(GL_LINE_SMOOTH);
 		}

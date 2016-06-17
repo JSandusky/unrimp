@@ -39,6 +39,61 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ContextLinux::ContextLinux(handle nativeWindowHandle, bool useExternalContext) :
+		ContextLinux(nullptr, nativeWindowHandle, useExternalContext)
+	{
+		// Nothing here
+	}
+
+	ContextLinux::~ContextLinux()
+	{
+		// Release the device context of the OpenGL window
+		if (nullptr != mDisplay)
+		{
+			// Is the device context of the OpenGL window is the currently active OpenGL device context?
+			if (glXGetCurrentContext() == mWindowRenderContext)
+			{
+				glXMakeCurrent(mDisplay, None, nullptr);
+			}
+
+			// Destroy the render context of the OpenGL window
+			if (NULL_HANDLE != mWindowRenderContext)
+			{
+				glXDestroyContext(mDisplay, mWindowRenderContext);
+			}
+		}
+
+		// Destroy the OpenGL dummy window, in case there's one
+		if (NULL_HANDLE != mDummyWindow)
+		{
+			// Destroy the OpenGL dummy window
+			::XDestroyWindow(mDisplay, mDummyWindow);
+		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual OpenGLRenderer::IContext methods       ]
+	//[-------------------------------------------------------]
+	void ContextLinux::makeCurrent() const
+	{
+		glXMakeCurrent(getDisplay(), mNativeWindowHandle, getRenderContext());
+	}
+
+
+	// TODO(co) Cleanup
+	static bool ctxErrorOccurred = false;
+	static int ctxErrorHandler(Display *, XErrorEvent *)
+	{
+		ctxErrorOccurred = true;
+		return 0;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	ContextLinux::ContextLinux(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, bool useExternalContext) :
+		IContext(openGLRuntimeLinking),
 		mNativeWindowHandle(nativeWindowHandle),
 		mDummyWindow(NULL_HANDLE),
 		mDisplay(nullptr),
@@ -91,20 +146,28 @@ namespace OpenGLRenderer
 					const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, legacyRenderContext);
 					std::cout<<"Make legacy context current: "<<result<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
 
-					// Create the render context of the OpenGL window
-					mWindowRenderContext = createOpenGLContext();
-
-					// Destroy the legacy OpenGL render context
-					glXMakeCurrent(mDisplay, None, nullptr);
-					glXDestroyContext(mDisplay, legacyRenderContext);
-
-					// If there's an OpenGL context, do some final initialization steps
-					if (NULL_HANDLE != mWindowRenderContext)
+					// Load the >= OpenGL 3.0 entry points
+					if (loadOpenGL3EntryPoints())
 					{
-						// Make the OpenGL context to the current one
-						const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, mWindowRenderContext);
-						std::cout<<"Make new context current: "<<result<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
-						std::cout<<"Supported extensions: "<<glGetString(GL_EXTENSIONS)<<"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+						// Create the render context of the OpenGL window
+						mWindowRenderContext = createOpenGLContext();
+
+						// Destroy the legacy OpenGL render context
+						glXMakeCurrent(mDisplay, None, nullptr);
+						glXDestroyContext(mDisplay, legacyRenderContext);
+
+						// If there's an OpenGL context, do some final initialization steps
+						if (NULL_HANDLE != mWindowRenderContext)
+						{
+							// Make the OpenGL context to the current one
+							const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, mWindowRenderContext);
+							std::cout << "Make new context current: " << result << "\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+							std::cout << "Supported extensions: " << glGetString(GL_EXTENSIONS) << "\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+						}
+					}
+					else
+					{
+						// Error, failed to load >= OpenGL 3 entry points!
 					}
 				}
 				else
@@ -123,54 +186,6 @@ namespace OpenGLRenderer
 		}
 	}
 
-	ContextLinux::~ContextLinux()
-	{
-		// Release the device context of the OpenGL window
-		if (nullptr != mDisplay)
-		{
-			// Is the device context of the OpenGL window is the currently active OpenGL device context?
-			if (glXGetCurrentContext() == mWindowRenderContext)
-			{
-				glXMakeCurrent(mDisplay, None, nullptr);
-			}
-
-			// Destroy the render context of the OpenGL window
-			if (NULL_HANDLE != mWindowRenderContext)
-			{
-				glXDestroyContext(mDisplay, mWindowRenderContext);
-			}
-		}
-
-		// Destroy the OpenGL dummy window, in case there's one
-		if (NULL_HANDLE != mDummyWindow)
-		{
-			// Destroy the OpenGL dummy window
-			::XDestroyWindow(mDisplay, mDummyWindow);
-		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLRenderer::IContext methods       ]
-	//[-------------------------------------------------------]
-	void ContextLinux::makeCurrent() const
-	{
-		glXMakeCurrent(getDisplay(), mNativeWindowHandle, getRenderContext());
-	}
-
-
-	// TODO(co) Cleanup
-	static bool ctxErrorOccurred = false;
-	static int ctxErrorHandler(Display *, XErrorEvent *)
-	{
-		ctxErrorOccurred = true;
-		return 0;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
 	GLXContext ContextLinux::createOpenGLContext()
 	{
 		#define GLX_CONTEXT_MAJOR_VERSION_ARB	0x2091
@@ -191,12 +206,12 @@ namespace OpenGLRenderer
 				ctxErrorOccurred = false;
 				int (*oldHandler)(Display*, XErrorEvent*) = XSetErrorHandler(&ctxErrorHandler);
 
-				// OpenGL 3.1 - required for "gl_InstanceID" within shaders
 				// Create the OpenGL context
+				// -> OpenGL 4.1 (the best OpenGL version Mac OS X 10.11 supports, so lowest version we have to support)
 				int ATTRIBUTES[] =
 				{
 					// We want an OpenGL context
-					GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
+					GLX_CONTEXT_MAJOR_VERSION_ARB, 4,
 					GLX_CONTEXT_MINOR_VERSION_ARB, 1,
 					// -> "GLX_CONTEXT_DEBUG_BIT_ARB" comes from the "GL_ARB_debug_output"-extension
 					// TODO(co) Make it possible to activate "GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB" from the outside

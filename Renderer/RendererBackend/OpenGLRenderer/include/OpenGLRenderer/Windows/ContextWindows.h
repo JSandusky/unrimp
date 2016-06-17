@@ -52,6 +52,12 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class OpenGLRenderer;
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -64,7 +70,7 @@ namespace OpenGLRenderer
 		*  @param[in] shareContextWindows
 		*    Optional share context, can be a null pointer
 		*/
-		explicit ContextWindows(handle nativeWindowHandle, const ContextWindows* shareContextWindows = nullptr);
+		ContextWindows(handle nativeWindowHandle, const ContextWindows* shareContextWindows = nullptr);
 
 		/**
 		*  @brief
@@ -103,6 +109,19 @@ namespace OpenGLRenderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		/**
+		*  @brief
+		*    Constructor for primary context
+		*
+		*  @param[in] openGLRuntimeLinking
+		*    OpenGL runtime linking instance, if null pointer this isn't a primary context
+		*  @param[in] nativeWindowHandle
+		*    Optional native main window handle, can be a null handle
+		*  @param[in] shareContextWindows
+		*    Optional share context, can be a null pointer
+		*/
+		ContextWindows(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, const ContextWindows* shareContextWindows = nullptr);
+
 		/**
 		*  @brief
 		*    Create a OpenGL context

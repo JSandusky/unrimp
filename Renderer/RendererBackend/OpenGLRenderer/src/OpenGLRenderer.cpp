@@ -102,6 +102,7 @@ namespace OpenGLRenderer
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
+		mPipelineState(nullptr),
 		mVertexArray(nullptr),
 		mOpenGLPrimitiveTopology(0xFFFF),	// Unknown default setting
 		mMainSwapChain(nullptr),
@@ -113,9 +114,9 @@ namespace OpenGLRenderer
 		{
 			#ifdef WIN32
 				// TODO(co) Add external context support
-				mContext = new ContextWindows(nativeWindowHandle);
+				mContext = new ContextWindows(mOpenGLRuntimeLinking, nativeWindowHandle);
 			#elif defined LINUX
-				mContext = new ContextLinux(nativeWindowHandle, useExternalContext);
+				mContext = new ContextLinux(mOpenGLRuntimeLinking, nativeWindowHandle, useExternalContext);
 			#else
 				#error "Unsupported platform"
 			#endif
@@ -172,6 +173,12 @@ namespace OpenGLRenderer
 
 	OpenGLRenderer::~OpenGLRenderer()
 	{
+		// Set no pipeline state reference, in case we have one
+		if (nullptr != mPipelineState)
+		{
+			setPipelineState(nullptr);
+		}
+
 		// Set no vertex array reference, in case we have one
 		if (nullptr != mVertexArray)
 		{
@@ -249,7 +256,7 @@ namespace OpenGLRenderer
 	bool OpenGLRenderer::isInitialized() const
 	{
 		// Is the context initialized?
-		return mContext->isInitialized();
+		return (nullptr != mContext && mContext->isInitialized());
 	}
 
 	Renderer::ISwapChain *OpenGLRenderer::getMainSwapChain() const
@@ -947,7 +954,7 @@ namespace OpenGLRenderer
 						// Attach the buffer to the given UBO binding point
 						// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 						// -> Direct3D 10 and Direct3D 11 have explicit binding points
-						glBindBufferBaseEXT(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<UniformBufferGlsl*>(resource)->getOpenGLUniformBuffer());
+						glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<UniformBufferGlsl*>(resource)->getOpenGLUniformBuffer());
 					}
 					break;
 
@@ -1175,17 +1182,30 @@ namespace OpenGLRenderer
 
 	void OpenGLRenderer::setPipelineState(Renderer::IPipelineState* pipelineState)
 	{
-		if (nullptr != pipelineState)
+		if (mPipelineState != pipelineState)
 		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
+			if (nullptr != pipelineState)
+			{
+				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+				OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
-			// Set pipeline state
-			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
-		}
-		else
-		{
-			// TODO(co) Handle this situation?
+				// Set new pipeline state and add a reference to it
+				if (nullptr != mPipelineState)
+				{
+					mPipelineState->release();
+				}
+				mPipelineState = static_cast<PipelineState*>(pipelineState);
+				mPipelineState->addReference();
+
+				// Set pipeline state
+				mPipelineState->bindPipelineState();
+			}
+			else if (nullptr != mPipelineState)
+			{
+				// TODO(co) Handle this situation by resetting OpenGL states?
+				mPipelineState->release();
+				mPipelineState = nullptr;
+			}
 		}
 	}
 
@@ -1474,6 +1494,10 @@ namespace OpenGLRenderer
 			if (flags & Renderer::ClearFlag::DEPTH)
 			{
 				glClearDepth(z);
+				if (nullptr != mPipelineState && Renderer::DepthWriteMask::ALL != mPipelineState->getDepthStencilState().depthWriteMask)
+				{
+					glDepthMask(GL_TRUE);
+				}
 			}
 			if (flags & Renderer::ClearFlag::STENCIL)
 			{
@@ -1484,8 +1508,7 @@ namespace OpenGLRenderer
 			// -> We have to compensate the OpenGL behaviour in here
 
 			// Disable OpenGL scissor test, in case it's not disabled, yet
-			// TODO(co) Pipeline state update
-			//if (mRasterizerState->getRasterizerState().scissorEnable)
+			if (nullptr != mPipelineState && mPipelineState->getRasterizerState().scissorEnable)
 			{
 				glDisable(GL_SCISSOR_TEST);
 			}
@@ -1493,11 +1516,14 @@ namespace OpenGLRenderer
 			// Clear
 			glClear(flagsApi);
 
-			// Restore the previously set OpenGL viewport
-			// TODO(co) Pipeline state update
-			// if (mRasterizerState->getRasterizerState().scissorEnable)
+			// Restore the previously set OpenGL states
+			if (nullptr != mPipelineState && mPipelineState->getRasterizerState().scissorEnable)
 			{
 				glEnable(GL_SCISSOR_TEST);
+			}
+			if ((flags & Renderer::ClearFlag::DEPTH) && nullptr != mPipelineState && Renderer::DepthWriteMask::ALL != mPipelineState->getDepthStencilState().depthWriteMask)
+			{
+				glDepthMask(GL_FALSE);
 			}
 		}
 	}
@@ -1567,7 +1593,7 @@ namespace OpenGLRenderer
 					if (mExtensions->isGL_ARB_draw_elements_base_vertex())
 					{
 						// Draw with base vertex location
-						glDrawElementsBaseVertex(mOpenGLPrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(startIndexLocation * sizeof(int)), static_cast<GLint>(baseVertexLocation));
+						glDrawElementsBaseVertex(mOpenGLPrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(startIndexLocation * indexBuffer->getIndexSizeInBytes()), static_cast<GLint>(baseVertexLocation));
 					}
 					else
 					{
@@ -1577,7 +1603,7 @@ namespace OpenGLRenderer
 				else
 				{
 					// Draw without base vertex location
-					glDrawElements(mOpenGLPrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(startIndexLocation * sizeof(int)));
+					glDrawElements(mOpenGLPrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(startIndexLocation * indexBuffer->getIndexSizeInBytes()));
 				}
 			}
 		}
@@ -1603,7 +1629,7 @@ namespace OpenGLRenderer
 					if (mExtensions->isGL_ARB_draw_elements_base_vertex())
 					{
 						// Draw with base vertex location
-						glDrawElementsInstancedBaseVertex(mOpenGLPrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(startIndexLocation * sizeof(int)), static_cast<GLsizei>(numberOfInstances), static_cast<GLint>(baseVertexLocation));
+						glDrawElementsInstancedBaseVertex(mOpenGLPrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(startIndexLocation * indexBuffer->getIndexSizeInBytes()), static_cast<GLsizei>(numberOfInstances), static_cast<GLint>(baseVertexLocation));
 					}
 					else
 					{
@@ -1613,7 +1639,7 @@ namespace OpenGLRenderer
 				else
 				{
 					// Draw without base vertex location
-					glDrawElementsInstancedARB(mOpenGLPrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(startIndexLocation * sizeof(int)), static_cast<GLsizei>(numberOfInstances));
+					glDrawElementsInstancedARB(mOpenGLPrimitiveTopology, static_cast<GLsizei>(numberOfIndices), indexBuffer->getOpenGLType(), reinterpret_cast<const GLvoid*>(startIndexLocation * indexBuffer->getIndexSizeInBytes()), static_cast<GLsizei>(numberOfInstances));
 				}
 			}
 		}

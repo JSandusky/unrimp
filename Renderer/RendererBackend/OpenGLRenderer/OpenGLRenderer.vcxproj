@@ -140,6 +140,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\OpenGLRenderer\Detail\BlendState.inl" />
+    <None Include="include\OpenGLRenderer\Detail\DepthStencilState.inl" />
     <None Include="include\OpenGLRenderer\Detail\IState.inl" />
     <None Include="include\OpenGLRenderer\Detail\RasterizerState.inl" />
     <None Include="include\OpenGLRenderer\Framebuffer.inl" />

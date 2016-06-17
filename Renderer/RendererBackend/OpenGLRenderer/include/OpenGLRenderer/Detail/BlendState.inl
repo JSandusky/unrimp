@@ -21,40 +21,25 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
+namespace OpenGLRenderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ShaderProperties::ShaderProperties()
+	inline BlendState::~BlendState()
 	{
-		// Nothing here
+		// Nothing to do in here
 	}
 
-	inline ShaderProperties::~ShaderProperties()
+	inline const Renderer::BlendState &BlendState::getBlendState() const
 	{
-		// Nothing here
-	}
-
-	inline const ShaderProperties::SortedPropertyVector& ShaderProperties::getSortedPropertyVector() const
-	{
-		return mSortedPropertyVector;
-	}
-
-	inline ShaderProperties::SortedPropertyVector& ShaderProperties::getSortedPropertyVector()
-	{
-		return mSortedPropertyVector;
-	}
-
-	inline void ShaderProperties::clear()
-	{
-		mSortedPropertyVector.clear();
+		return mBlendState;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // RendererRuntime
+} // OpenGLRenderer
