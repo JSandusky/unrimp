@@ -127,12 +127,18 @@ namespace RendererRuntime
 		inline static MaterialPropertyValue fromBoolean(bool value);
 		inline static MaterialPropertyValue fromInteger(int value);
 		inline static MaterialPropertyValue fromInteger2(int value0, int value1);
+		inline static MaterialPropertyValue fromInteger2(int value[2]);	// It's your responsibility to take care that there are at least two integers
 		inline static MaterialPropertyValue fromInteger3(int value0, int value1, int value2);
+		inline static MaterialPropertyValue fromInteger3(int value[3]);	// It's your responsibility to take care that there are at least three integers
 		inline static MaterialPropertyValue fromInteger4(int value0, int value1, int value2, int value3);
+		inline static MaterialPropertyValue fromInteger4(int value[4]);	// It's your responsibility to take care that there are at least four integers
 		inline static MaterialPropertyValue fromFloat(float value);
 		inline static MaterialPropertyValue fromFloat2(float value0, float value1);
+		inline static MaterialPropertyValue fromFloat2(float value[2]);	// It's your responsibility to take care that there are at least two floats
 		inline static MaterialPropertyValue fromFloat3(float value0, float value1, float value2);
+		inline static MaterialPropertyValue fromFloat3(float value[3]);	// It's your responsibility to take care that there are at least three floats
 		inline static MaterialPropertyValue fromFloat4(float value0, float value1, float value2, float value3);
+		inline static MaterialPropertyValue fromFloat4(float value[4]);	// It's your responsibility to take care that there are at least four floats
 		inline static MaterialPropertyValue fromFloat3_3();	// Declaration property only
 		inline static MaterialPropertyValue fromFloat4_4();	// Declaration property only
 		// For pipeline rasterizer state property usage

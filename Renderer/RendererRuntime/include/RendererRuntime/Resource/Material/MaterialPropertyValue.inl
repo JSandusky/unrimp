@@ -66,6 +66,15 @@ namespace RendererRuntime
 		return materialPropertyValue;
 	}
 
+	inline MaterialPropertyValue MaterialPropertyValue::fromInteger2(int value[2])
+	{
+		MaterialPropertyValue materialPropertyValue;
+		materialPropertyValue.mValueType		 = ValueType::INTEGER_2;
+		materialPropertyValue.mValue.Integer2[0] = value[0];
+		materialPropertyValue.mValue.Integer2[1] = value[1];
+		return materialPropertyValue;
+	}
+
 	inline MaterialPropertyValue MaterialPropertyValue::fromInteger3(int value0, int value1, int value2)
 	{
 		MaterialPropertyValue materialPropertyValue;
@@ -73,6 +82,16 @@ namespace RendererRuntime
 		materialPropertyValue.mValue.Integer3[0] = value0;
 		materialPropertyValue.mValue.Integer3[1] = value1;
 		materialPropertyValue.mValue.Integer3[2] = value2;
+		return materialPropertyValue;
+	}
+
+	inline MaterialPropertyValue MaterialPropertyValue::fromInteger3(int value[3])
+	{
+		MaterialPropertyValue materialPropertyValue;
+		materialPropertyValue.mValueType		 = ValueType::INTEGER_3;
+		materialPropertyValue.mValue.Integer3[0] = value[0];
+		materialPropertyValue.mValue.Integer3[1] = value[1];
+		materialPropertyValue.mValue.Integer3[2] = value[2];
 		return materialPropertyValue;
 	}
 
@@ -84,6 +103,17 @@ namespace RendererRuntime
 		materialPropertyValue.mValue.Integer4[1] = value1;
 		materialPropertyValue.mValue.Integer4[2] = value2;
 		materialPropertyValue.mValue.Integer4[3] = value3;
+		return materialPropertyValue;
+	}
+
+	inline MaterialPropertyValue MaterialPropertyValue::fromInteger4(int value[4])
+	{
+		MaterialPropertyValue materialPropertyValue;
+		materialPropertyValue.mValueType		 = ValueType::INTEGER_4;
+		materialPropertyValue.mValue.Integer4[0] = value[0];
+		materialPropertyValue.mValue.Integer4[1] = value[1];
+		materialPropertyValue.mValue.Integer4[2] = value[2];
+		materialPropertyValue.mValue.Integer4[3] = value[3];
 		return materialPropertyValue;
 	}
 
@@ -104,6 +134,15 @@ namespace RendererRuntime
 		return materialPropertyValue;
 	}
 
+	inline MaterialPropertyValue MaterialPropertyValue::fromFloat2(float value[2])
+	{
+		MaterialPropertyValue materialPropertyValue;
+		materialPropertyValue.mValueType	   = ValueType::FLOAT_2;
+		materialPropertyValue.mValue.Float2[0] = value[0];
+		materialPropertyValue.mValue.Float2[1] = value[1];
+		return materialPropertyValue;
+	}
+
 	inline MaterialPropertyValue MaterialPropertyValue::fromFloat3(float value0, float value1, float value2)
 	{
 		MaterialPropertyValue materialPropertyValue;
@@ -111,6 +150,16 @@ namespace RendererRuntime
 		materialPropertyValue.mValue.Float3[0] = value0;
 		materialPropertyValue.mValue.Float3[1] = value1;
 		materialPropertyValue.mValue.Float3[2] = value2;
+		return materialPropertyValue;
+	}
+
+	inline MaterialPropertyValue MaterialPropertyValue::fromFloat3(float value[3])
+	{
+		MaterialPropertyValue materialPropertyValue;
+		materialPropertyValue.mValueType	   = ValueType::FLOAT_3;
+		materialPropertyValue.mValue.Float3[0] = value[0];
+		materialPropertyValue.mValue.Float3[1] = value[1];
+		materialPropertyValue.mValue.Float3[2] = value[2];
 		return materialPropertyValue;
 	}
 
@@ -122,6 +171,17 @@ namespace RendererRuntime
 		materialPropertyValue.mValue.Float4[1] = value1;
 		materialPropertyValue.mValue.Float4[2] = value2;
 		materialPropertyValue.mValue.Float4[3] = value3;
+		return materialPropertyValue;
+	}
+
+	inline MaterialPropertyValue MaterialPropertyValue::fromFloat4(float value[4])
+	{
+		MaterialPropertyValue materialPropertyValue;
+		materialPropertyValue.mValueType	   = ValueType::FLOAT_4;
+		materialPropertyValue.mValue.Float4[0] = value[0];
+		materialPropertyValue.mValue.Float4[1] = value[1];
+		materialPropertyValue.mValue.Float4[2] = value[2];
+		materialPropertyValue.mValue.Float4[3] = value[3];
 		return materialPropertyValue;
 	}
 
