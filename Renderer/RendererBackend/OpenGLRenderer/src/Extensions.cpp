@@ -270,7 +270,7 @@ namespace OpenGLRenderer
 					while (nullptr != where)
 					{
 						const char *terminator = where + strlen(extension);
-						if (where == start || ' ' == *(where - 1) || ' ' == *terminator || '\0' == *terminator)
+						if ((where == start || ' ' == *(where - 1)) && (' ' == *terminator || '\0' == *terminator))
 						{
 							// Extension found
 							return true;
