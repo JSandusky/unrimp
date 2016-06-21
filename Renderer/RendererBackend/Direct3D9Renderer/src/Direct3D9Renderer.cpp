@@ -731,7 +731,7 @@ namespace Direct3D9Renderer
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
 					// Unlike Direct3D >=10, Direct3D 9 directly attaches the sampler settings to texture stages
-					mGraphicsRootSignature->setSamplerState(descriptorRange->samplerRootParameterIndex, static_cast<SamplerState*>(resource));
+					mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
 					break;
 				}
 
