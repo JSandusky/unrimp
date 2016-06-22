@@ -255,7 +255,7 @@ namespace RendererRuntime
 		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager->getGlobalMaterialProperties();
 
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager->getMaterialBlueprintResourceListener();
-		materialBlueprintResourceListener.beginFillPass(mPassUniformBuffer->uniformBufferPtr->getRenderer(), worldSpaceToViewSpaceTransform);
+		materialBlueprintResourceListener.beginFillPass(mMaterialBlueprintResourceManager->getRendererRuntime(), worldSpaceToViewSpaceTransform);
 
 		// Update the scratch buffer
 		ScratchBuffer& scratchBuffer = mPassUniformBuffer->scratchBuffer;

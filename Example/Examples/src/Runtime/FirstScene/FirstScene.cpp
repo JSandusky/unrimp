@@ -24,6 +24,7 @@
 #include "PrecompiledHeader.h"
 #include "Runtime/FirstScene/FirstScene.h"
 
+#include <RendererRuntime/Vr/VrManager.h>
 #include <RendererRuntime/Core/Math/Transform.h>
 #include <RendererRuntime/DebugGui/DebugGuiManager.h>
 #include <RendererRuntime/Resource/Scene/ISceneResource.h>
@@ -74,16 +75,19 @@ void FirstScene::onInitialization()
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
-		{ // Create the compositor instance
-			Renderer::ISwapChain* swapChain = getRenderer()->getMainSwapChain();
-			if (nullptr != swapChain)
-			{
-				mCompositorInstance = new RendererRuntime::CompositorInstance(*rendererRuntime, "Example/Compositor/Default/FirstScene", *swapChain);
-			}
-		}
+		// Create the compositor instance
+		mCompositorInstance = new RendererRuntime::CompositorInstance(*rendererRuntime, "Example/Compositor/Default/FirstScene");
 
 		// Create the scene resource
 		mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId("Example/Scene/Default/FirstScene", this);
+	}
+
+	{ // Startup the VR-manager
+		RendererRuntime::VrManager& vrManager = rendererRuntime->getVrManager();
+		if (vrManager.isHmdPresent())
+		{
+			vrManager.startup();
+		}
 	}
 }
 
@@ -131,12 +135,36 @@ void FirstScene::onUpdate()
 
 void FirstScene::onDrawRequest()
 {
-	createDebugGui();
-
-	// Execute the compositor instance
-	if (nullptr != mCompositorInstance && nullptr != mSceneResource && mSceneResource->getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
+	Renderer::IRenderer* renderer = getRenderer();
+	if (nullptr != renderer)
 	{
-		mCompositorInstance->execute(mCameraSceneItem);
+		Renderer::ISwapChain* swapChain = renderer->getMainSwapChain();
+		if (nullptr != swapChain)
+		{
+			// Execute the compositor instance
+			if (nullptr != mCompositorInstance)
+			{
+				// Decide whether or not the VR-manager is used for rendering
+				RendererRuntime::VrManager& vrManager = mCompositorInstance->getRendererRuntime().getVrManager();
+				if (vrManager.isRunning())
+				{
+					// No debug GUI in VR-mode for now
+
+					// Update the VR-manager just before rendering
+					vrManager.updateHmdMatrixPose();
+
+					// Execute the compositor instance
+					vrManager.executeCompositorInstance(*mCompositorInstance, *swapChain, mCameraSceneItem);
+				}
+				else
+				{
+					createDebugGui(*swapChain);
+
+					// Execute the compositor instance
+					mCompositorInstance->execute(*swapChain, mCameraSceneItem);
+				}
+			}
+		}
 	}
 }
 
@@ -184,11 +212,11 @@ void FirstScene::onLoadingStateChange(RendererRuntime::IResource::LoadingState l
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-void FirstScene::createDebugGui()
+void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
 {
 	if (nullptr != mCompositorInstance && nullptr != mSceneResource)
 	{
-		mSceneResource->getRendererRuntime().getDebugGuiManager().newFrame(mCompositorInstance->getRenderTarget());
+		mSceneResource->getRendererRuntime().getDebugGuiManager().newFrame(renderTarget);
 		ImGui::Begin("Options");
 			ImGui::SliderFloat("Rotation Speed", &mRotationSpeed, 0.0f, 2.0f, "%.3f");
 			ImGui::ColorEdit3("Sun Light Color", mSunLightColor);

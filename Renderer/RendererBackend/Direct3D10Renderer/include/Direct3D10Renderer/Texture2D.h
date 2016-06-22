@@ -34,6 +34,7 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+struct ID3D10Texture2D;
 struct ID3D10ShaderResourceView;
 namespace Direct3D10Renderer
 {
@@ -92,6 +93,15 @@ namespace Direct3D10Renderer
 
 		/**
 		*  @brief
+		*    Return the Direct3D texture 2D resource instance
+		*
+		*  @return
+		*    The Direct3D texture 2D resource instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*/
+		inline ID3D10Texture2D *getD3D10Texture2D() const;
+
+		/**
+		*  @brief
 		*    Return the Direct3D shader resource view instance
 		*
 		*  @return
@@ -109,12 +119,14 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	public:
 		virtual void setDebugName(const char *name) override;
+		virtual void* getInternalResourceHandle() const override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		ID3D10Texture2D			 *mD3D10Texture2D;					///< Direct3D 10 texture 2D resource, can be a null pointer
 		ID3D10ShaderResourceView *mD3D10ShaderResourceViewTexture;	///< Direct3D 10 shader resource view, can be a null pointer
 
 

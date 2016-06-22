@@ -173,6 +173,7 @@ Standalone renderer examples.
 	- "FirstScene" demonstrates:
 		- Compositor
 		- Scene
+		- Virtual reality (VR)
 
 
 == Preprocessor Definitions ==

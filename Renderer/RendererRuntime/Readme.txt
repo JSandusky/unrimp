@@ -25,6 +25,7 @@ Renderer runtime.
 == Dependencies ==
 - GLM (header only library)
 - ImGui (directly compiled and linked in)
+- OpenVR (header with dynamic runtime linking)
 - crunch (header only part of the library, doesn't depend on crn compression library)
 
 

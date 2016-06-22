@@ -44,6 +44,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class VrManager;
 	class AssetManager;
 	class ThreadManager;
 	class DebugGuiManager;
@@ -145,6 +146,10 @@ namespace RendererRuntime
 		{
 			return *mDebugGuiManager;
 		}
+		inline VrManager& getVrManager() const
+		{
+			return *mVrManager;
+		}
 	public:
 		virtual void reloadResourceByAssetId(AssetId assetId) const = 0;
 		virtual void update() const = 0;
@@ -168,6 +173,7 @@ namespace RendererRuntime
 		CompositorResourceManager*			mCompositorResourceManager;
 		ResourceManagers					mResourceManagers;
 		DebugGuiManager*					mDebugGuiManager;
+		VrManager*							mVrManager;
 	};
 	typedef Renderer::SmartRefCount<IRendererRuntime> IRendererRuntimePtr;
 

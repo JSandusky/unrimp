@@ -24,6 +24,8 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Core/Math/Transform.h"
+#include "RendererRuntime/Vr/VrManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 #include <Renderer/Public/Renderer.h>
 
@@ -73,7 +75,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
 	//[-------------------------------------------------------]
-	void MaterialBlueprintResourceListener::beginFillPass(Renderer::IRenderer& renderer, const Transform& worldSpaceToViewSpaceTransform)
+	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform)
 	{
 		// Get the aspect ratio
 		float aspectRatio = 4.0f / 3.0f;
@@ -81,7 +83,7 @@ namespace RendererRuntime
 			// Get the render target with and height
 			uint32_t width  = 1;
 			uint32_t height = 1;
-			Renderer::IRenderTarget *renderTarget = renderer.omGetRenderTarget();
+			Renderer::IRenderTarget *renderTarget = rendererRuntime.getRenderer().omGetRenderTarget();
 			if (nullptr != renderTarget)
 			{
 				renderTarget->getWidthAndHeight(width, height);
@@ -91,11 +93,31 @@ namespace RendererRuntime
 			}
 		}
 
-		// TODO(co) Tiny optimization for later on: Calculate only the matrices required
-		mViewSpaceToClipSpaceMatrix	 = glm::perspective(45.0f, aspectRatio, 0.1f, 100.0f);	// TODO(co) Use dynamic values
-		mViewTranslateMatrix		 = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position);
-		mWorldSpaceToViewSpaceMatrix = mViewTranslateMatrix * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
-		mWorldSpaceToClipSpaceMatrix = mViewSpaceToClipSpaceMatrix * mWorldSpaceToViewSpaceMatrix;
+		// TODO(co) Use dynamic values
+		float fovY = 45.0f;
+		float nearZ = 0.1f;
+		float farZ = 100.0f;
+
+		// Calculate required matrices basing whether or not the VR-manager is currently running
+		glm::mat4 viewSpaceToClipSpaceMatrix;
+		glm::mat4 viewTranslateMatrix;
+		{
+			const VrManager& vrManager = rendererRuntime.getVrManager();
+			if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye())
+			{
+				const vr::Hmd_Eye vrHmdEye = static_cast<vr::Hmd_Eye>(getCurrentRenderedVrEye());
+				viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrHmdEye, nearZ, farZ);
+				viewTranslateMatrix = vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrHmdEye) * vrManager.getHmdPoseMatrix();
+			}
+			else
+			{
+				viewSpaceToClipSpaceMatrix = glm::perspective(fovY, aspectRatio, nearZ, farZ);
+			}
+		}
+
+		// Calculate the final matrices
+		mWorldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
+		mWorldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * viewTranslateMatrix * mWorldSpaceToViewSpaceMatrix;
 	}
 
 	bool MaterialBlueprintResourceListener::fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes)

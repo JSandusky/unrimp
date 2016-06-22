@@ -73,11 +73,11 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId, Renderer::IRenderTarget& renderTarget);
+		RENDERERRUNTIME_API_EXPORT CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId);
 		RENDERERRUNTIME_API_EXPORT virtual ~CompositorInstance();
 		RENDERERRUNTIME_API_EXPORT const IRendererRuntime& getRendererRuntime() const;
-		RENDERERRUNTIME_API_EXPORT Renderer::IRenderTarget& getRenderTarget() const;
-		RENDERERRUNTIME_API_EXPORT void execute(CameraSceneItem* cameraSceneItem);
+		RENDERERRUNTIME_API_EXPORT void execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem);
+		RENDERERRUNTIME_API_EXPORT Renderer::IRenderTarget* getExecutionRenderTarget() const;	// Only valid during compositor instance execution
 
 
 	//[-------------------------------------------------------]
@@ -109,7 +109,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime&		 mRendererRuntime;
-		Renderer::IRenderTarget& mRenderTarget;
+		Renderer::IRenderTarget* mExecutionRenderTarget;	///< Only valid during compositor instance execution
 		CompositorResourceId	 mCompositorResourceId;
 		CompositorInstanceNodes	 mSequentialCompositorInstanceNodes;
 

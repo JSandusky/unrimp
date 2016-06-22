@@ -42,6 +42,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	Texture2D::Texture2D(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture2D(direct3D10Renderer, width, height),
+		mD3D10Texture2D(nullptr),
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{
 		// Begin debug event
@@ -67,31 +68,38 @@ namespace Direct3D10Renderer
 		d3d10Texture2DDesc.MiscFlags		  = 0;
 
 		// Use this texture as render target?
+		const bool isDepthFormat = Renderer::TextureFormat::isDepth(textureFormat);
 		if (flags & Renderer::TextureFlag::RENDER_TARGET)
 		{
-			d3d10Texture2DDesc.BindFlags |= D3D10_BIND_RENDER_TARGET;
+			if (isDepthFormat)
+			{
+				d3d10Texture2DDesc.BindFlags = D3D10_BIND_DEPTH_STENCIL;
+			}
+			else
+			{
+				d3d10Texture2DDesc.BindFlags |= D3D10_BIND_RENDER_TARGET;
+			}
 		}
 
 		// Create the Direct3D 10 2D texture instance
 		// Did the user provided us with any texture data?
-		ID3D10Texture2D *d3d10Texture2D = nullptr;
 		if (nullptr != data)
 		{
 			if (generateMipmaps)
 			{
 				// Let Direct3D 10 generate the mipmaps for us automatically
 				// -> Sadly, it's impossible to use initialization data in this use-case
-				direct3D10Renderer.getD3D10Device()->CreateTexture2D(&d3d10Texture2DDesc, nullptr, &d3d10Texture2D);
-				if (nullptr != d3d10Texture2D)
+				direct3D10Renderer.getD3D10Device()->CreateTexture2D(&d3d10Texture2DDesc, nullptr, &mD3D10Texture2D);
+				if (nullptr != mD3D10Texture2D)
 				{
 					{ // Update Direct3D 10 subresource data of the base-map
 						const uint32_t bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
 						const uint32_t bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
-						direct3D10Renderer.getD3D10Device()->UpdateSubresource(d3d10Texture2D, 0, nullptr, data, bytesPerRow, bytesPerSlice);
+						direct3D10Renderer.getD3D10Device()->UpdateSubresource(mD3D10Texture2D, 0, nullptr, data, bytesPerRow, bytesPerSlice);
 					}
 
 					// Let Direct3D 10 generate the mipmaps for us automatically
-					D3DX10FilterTexture(d3d10Texture2D, 0, D3DX10_DEFAULT);
+					D3DX10FilterTexture(mD3D10Texture2D, 0, D3DX10_DEFAULT);
 				}
 			}
 			else
@@ -126,17 +134,17 @@ namespace Direct3D10Renderer
 					d3d10SubresourceData->SysMemPitch	   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
 					d3d10SubresourceData->SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
 				}
-				direct3D10Renderer.getD3D10Device()->CreateTexture2D(&d3d10Texture2DDesc, d3d10SubresourceData, &d3d10Texture2D);
+				direct3D10Renderer.getD3D10Device()->CreateTexture2D(&d3d10Texture2DDesc, d3d10SubresourceData, &mD3D10Texture2D);
 			}
 		}
 		else
 		{
 			// The user did not provide us with texture data
-			direct3D10Renderer.getD3D10Device()->CreateTexture2D(&d3d10Texture2DDesc, nullptr, &d3d10Texture2D);
+			direct3D10Renderer.getD3D10Device()->CreateTexture2D(&d3d10Texture2DDesc, nullptr, &mD3D10Texture2D);
 		}
 
 		// Create the Direct3D 10 shader resource view instance
-		if (nullptr != d3d10Texture2D)
+		if (nullptr != mD3D10Texture2D && !isDepthFormat)
 		{
 			// Direct3D 10 shader resource view description
 			D3D10_SHADER_RESOURCE_VIEW_DESC d3d10ShaderResourceViewDesc;
@@ -147,10 +155,7 @@ namespace Direct3D10Renderer
 			d3d10ShaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
 
 			// Create the Direct3D 10 shader resource view instance
-			direct3D10Renderer.getD3D10Device()->CreateShaderResourceView(d3d10Texture2D, &d3d10ShaderResourceViewDesc, &mD3D10ShaderResourceViewTexture);
-
-			// Release the Direct3D 10 2D texture instance
-			d3d10Texture2D->Release();
+			direct3D10Renderer.getD3D10Device()->CreateShaderResourceView(mD3D10Texture2D, &d3d10ShaderResourceViewDesc, &mD3D10ShaderResourceViewTexture);
 		}
 
 		// Assign a default name to the resource for debugging purposes
@@ -167,6 +172,10 @@ namespace Direct3D10Renderer
 		if (nullptr != mD3D10ShaderResourceViewTexture)
 		{
 			mD3D10ShaderResourceViewTexture->Release();
+		}
+		if (nullptr != mD3D10Texture2D)
+		{
+			mD3D10Texture2D->Release();
 		}
 	}
 
@@ -186,23 +195,20 @@ namespace Direct3D10Renderer
 				mD3D10ShaderResourceViewTexture->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 
 				// Do also set the given debug name to the Direct3D 10 resource referenced by the Direct3D resource view
-				// -> In our use case, this resource is tightly coupled with the view
-				// -> In principle the user can assign another resource to the view, but our interface documentation
-				//    asks the user to not do so, so we ignore this situation when assigning the name
-				ID3D10Resource *d3d10Resource = nullptr;
-				mD3D10ShaderResourceViewTexture->GetResource(&d3d10Resource);
-				if (nullptr != d3d10Resource)
+				if (nullptr != mD3D10Texture2D)
 				{
 					// Set the debug name
 					// -> First: Ensure that there's no previous private data, else we might get slapped with a warning!
-					d3d10Resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-					d3d10Resource->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
-
-					// Release the Direct3D 10 resource instance
-					d3d10Resource->Release();
+					mD3D10Texture2D->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+					mD3D10Texture2D->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
 				}
 			}
 		#endif
+	}
+
+	void* Texture2D::getInternalResourceHandle() const
+	{
+		return mD3D10Texture2D;
 	}
 
 

@@ -48,20 +48,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorInstance::CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId, Renderer::IRenderTarget& renderTarget) :
+	CompositorInstance::CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId) :
 		mRendererRuntime(rendererRuntime),
-		mRenderTarget(renderTarget),
+		mExecutionRenderTarget(nullptr),
 		mCompositorResourceId(rendererRuntime.getCompositorResourceManager().loadCompositorResourceByAssetId(compositorAssetId, false, this))
 	{
-		// Add reference to the render target
-		mRenderTarget.addReference();
+		// Nothing here
 	}
 
 	CompositorInstance::~CompositorInstance()
 	{
-		// Release reference from the render target
-		mRenderTarget.release();
-
 		// Cleanup
 		destroySequentialCompositorInstanceNodes();
 	}
@@ -71,36 +67,34 @@ namespace RendererRuntime
 		return mRendererRuntime;
 	}
 
-	Renderer::IRenderTarget& CompositorInstance::getRenderTarget() const
-	{
-		return mRenderTarget;
-	}
-
-	void CompositorInstance::execute(CameraSceneItem* cameraSceneItem)
+	void CompositorInstance::execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem)
 	{
 		// Is the compositor resource ready?
 		const CompositorResource* compositorResource = mRendererRuntime.getCompositorResourceManager().getCompositorResources().tryGetElementById(mCompositorResourceId);
 		if (nullptr != compositorResource && compositorResource->getLoadingState() == IResource::LoadingState::LOADED)
 		{
-			Renderer::IRenderer& renderer = mRenderTarget.getRenderer();
+			// Add reference to the render target
+			renderTarget.addReference();
+			mExecutionRenderTarget = &renderTarget;
 
 			// Begin scene rendering
 			// -> Required for Direct3D 9 and Direct3D 12
 			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			Renderer::IRenderer& renderer = renderTarget.getRenderer();
 			if (renderer.beginScene())
 			{
 				// Begin debug event
 				RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
 				// Make the main swap chain to the current render target
-				renderer.omSetRenderTarget(&mRenderTarget);
+				renderer.omSetRenderTarget(&renderTarget);
 
 				{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle
 					// must be set in every draw call to work with all supported renderer APIs
 					// Get the window size
 					uint32_t width  = 0;
 					uint32_t height = 0;
-					mRenderTarget.getWidthAndHeight(width, height);
+					renderTarget.getWidthAndHeight(width, height);
 
 					// Set the viewport and scissor rectangle
 					renderer.rsSetViewportAndScissorRectangle(0, 0, width, height);
@@ -125,11 +119,20 @@ namespace RendererRuntime
 			RENDERER_END_DEBUG_EVENT(&renderer)
 
 			// In case the render target is a swap chain, present the content of the current back buffer
-			if (mRenderTarget.getResourceType() == Renderer::ResourceType::SWAP_CHAIN)
+			if (renderTarget.getResourceType() == Renderer::ResourceType::SWAP_CHAIN)
 			{
-				static_cast<Renderer::ISwapChain&>(mRenderTarget).present();
+				static_cast<Renderer::ISwapChain&>(renderTarget).present();
 			}
+
+			// Release reference from the render target
+			mExecutionRenderTarget = nullptr;
+			renderTarget.release();
 		}
+	}
+
+	Renderer::IRenderTarget* CompositorInstance::getExecutionRenderTarget() const
+	{
+		return mExecutionRenderTarget;
 	}
 
 

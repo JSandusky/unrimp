@@ -162,8 +162,7 @@ namespace Direct3D11Renderer
 					}
 
 					// Get the Direct3D 11 resource
-					ID3D11Resource *d3d11Resource = nullptr;
-					texture2D->getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+					ID3D11Resource *d3d11Resource = texture2D->getD3D11Texture2D();
 
 					// Get the DXGI format of the 2D texture
 					D3D11_TEXTURE2D_DESC d3d11Texture2DDesc;
@@ -175,9 +174,6 @@ namespace Direct3D11Renderer
 					d3d11DepthStencilViewDesc.ViewDimension		 = D3D11_DSV_DIMENSION_TEXTURE2D;
 					d3d11DepthStencilViewDesc.Texture2D.MipSlice = 0;
 					direct3D11Renderer.getD3D11Device()->CreateDepthStencilView(d3d11Resource, &d3d11DepthStencilViewDesc, &mD3D11DepthStencilView);
-
-					// Release our Direct3D 11 resource reference
-					d3d11Resource->Release();
 					break;
 				}
 

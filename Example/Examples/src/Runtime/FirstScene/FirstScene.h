@@ -56,6 +56,7 @@ namespace RendererRuntime
 *    Demonstrates:
 *    - Compositor
 *    - Scene
+*    - Virtual reality (VR)
 */
 class FirstScene : public IApplicationRendererRuntime, public RendererRuntime::IResourceListener
 {
@@ -105,7 +106,7 @@ protected:
 private:
 	FirstScene(const FirstScene&) = delete;
 	FirstScene& operator=(const FirstScene&) = delete;
-	void createDebugGui();
+	void createDebugGui(Renderer::IRenderTarget& renderTarget);
 
 
 //[-------------------------------------------------------]

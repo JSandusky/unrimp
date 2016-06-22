@@ -764,6 +764,26 @@ namespace Renderer
 				};
 				return MAPPING[textureFormat];
 			}
+			inline static bool isDepth(Enum textureFormat)
+			{
+				static bool MAPPING[] =
+				{
+					false,
+					false,
+					false,
+					false,
+					false,
+					false,
+					false,
+					false,
+					false,
+					false,
+					false,
+					true,
+					false
+				};
+				return MAPPING[textureFormat];
+			}
 			inline static uint32_t getNumberOfBytesPerElement(Enum textureFormat)
 			{
 				static const uint32_t MAPPING[] =
@@ -1822,6 +1842,7 @@ namespace Renderer
 			}
 		public:
 			virtual void setDebugName(const char* name) = 0;
+			virtual void* getInternalResourceHandle() const = 0;
 		protected:
 			IResource(ResourceType resourceType, IRenderer& renderer);
 			explicit IResource(const IResource& source);

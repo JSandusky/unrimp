@@ -106,6 +106,21 @@ namespace Renderer
 		*/
 		inline virtual void setDebugName(const char *name);
 
+		//[-------------------------------------------------------]
+		//[ Internal                                              ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the renderer backend specific resource handle (e.g. native Direct3D texture pointer or OpenGL texture ID)
+		*
+		*  @return
+		*    The renderer backend specific resource handle, can be a null pointer
+		*
+		*  @note
+		*    - Don't use this renderer backend specific method if you don't have to
+		*/
+		inline virtual void* getInternalResourceHandle() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
@@ -149,7 +164,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	private:
 		ResourceType  mResourceType;	///< The resource type
-		IRenderer		   *mRenderer;		///< The owner renderer instance, always valid
+		IRenderer	 *mRenderer;		///< The owner renderer instance, always valid
 
 
 	};

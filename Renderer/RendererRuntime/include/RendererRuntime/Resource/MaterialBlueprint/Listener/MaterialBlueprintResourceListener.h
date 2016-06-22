@@ -86,7 +86,7 @@ namespace RendererRuntime
 	private:
 		inline virtual void beginFillUnknown() override;
 		inline virtual bool fillUnknownValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
-		virtual void beginFillPass(Renderer::IRenderer& renderer, const Transform& worldSpaceToViewSpaceTransform) override;
+		virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform) override;
 		virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
 		inline virtual void beginFillMaterial() override;
 		inline virtual bool fillMaterialValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
@@ -99,8 +99,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		// Pass
-		glm::mat4 mViewSpaceToClipSpaceMatrix;
-		glm::mat4 mViewTranslateMatrix;
 		glm::mat4 mWorldSpaceToViewSpaceMatrix;
 		glm::mat4 mWorldSpaceToClipSpaceMatrix;
 

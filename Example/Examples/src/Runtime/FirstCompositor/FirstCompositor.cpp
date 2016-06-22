@@ -91,16 +91,11 @@ void FirstCompositor::onInitialization()
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
-		// Get the main swap chain and ensure there's one
-		Renderer::ISwapChain* swapChain = getRenderer()->getMainSwapChain();
-		if (nullptr != swapChain)
-		{
-			// Set our custom compositor pass factory
-			rendererRuntime->getCompositorResourceManager().setCompositorPassFactory(&::detail::compositorPassFactoryFirst);
+		// Set our custom compositor pass factory
+		rendererRuntime->getCompositorResourceManager().setCompositorPassFactory(&::detail::compositorPassFactoryFirst);
 
-			// Create the compositor instance
-			mCompositorInstance = new RendererRuntime::CompositorInstance(*rendererRuntime, "Example/Compositor/Default/FirstCompositor", *swapChain);
-		}
+		// Create the compositor instance
+		mCompositorInstance = new RendererRuntime::CompositorInstance(*rendererRuntime, "Example/Compositor/Default/FirstCompositor");
 	}
 }
 
@@ -126,8 +121,13 @@ void FirstCompositor::onDrawRequest()
 	// Is there a compositor instance?
 	if (nullptr != mCompositorInstance)
 	{
-		// Execute the compositor instance
-		mCompositorInstance->execute(nullptr);
+		// Get the main swap chain and ensure there's one
+		Renderer::ISwapChain* swapChain = getRenderer()->getMainSwapChain();
+		if (nullptr != swapChain)
+		{
+			// Execute the compositor instance
+			mCompositorInstance->execute(*swapChain, nullptr);
+		}
 	}
 }
 

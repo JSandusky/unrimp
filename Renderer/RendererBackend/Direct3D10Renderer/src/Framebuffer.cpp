@@ -162,8 +162,7 @@ namespace Direct3D10Renderer
 					}
 
 					// Get the Direct3D 10 resource
-					ID3D10Resource *d3d10Resource = nullptr;
-					texture2D->getD3D10ShaderResourceView()->GetResource(&d3d10Resource);
+					ID3D10Resource *d3d10Resource = texture2D->getD3D10Texture2D();
 
 					// Get the DXGI format of the 2D texture
 					D3D10_TEXTURE2D_DESC d3d10Texture2DDesc;
@@ -175,9 +174,6 @@ namespace Direct3D10Renderer
 					d3d10DepthStencilViewDesc.ViewDimension		 = D3D10_DSV_DIMENSION_TEXTURE2D;
 					d3d10DepthStencilViewDesc.Texture2D.MipSlice = 0;
 					direct3D10Renderer.getD3D10Device()->CreateDepthStencilView(d3d10Resource, &d3d10DepthStencilViewDesc, &mD3D10DepthStencilView);
-
-					// Release our Direct3D 10 resource reference
-					d3d10Resource->Release();
 					break;
 				}
 

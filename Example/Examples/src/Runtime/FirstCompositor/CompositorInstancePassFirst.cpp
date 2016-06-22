@@ -50,7 +50,7 @@ void CompositorInstancePassFirst::execute(RendererRuntime::CameraSceneItem*)
 	// Well right now I'm not that creative and the purpose of this example is to show how to add custom compositor passes, so, draw a simple text
 	const RendererRuntime::CompositorInstance& compositorInstance = getCompositorInstanceNode().getCompositorInstance();
 	RendererRuntime::DebugGuiManager& debugGuiManager = compositorInstance.getRendererRuntime().getDebugGuiManager();
-	debugGuiManager.newFrame(compositorInstance.getRenderTarget());
+	debugGuiManager.newFrame(*compositorInstance.getExecutionRenderTarget());	// We know that the render target must be valid if we're in here
 	debugGuiManager.drawText("42", 100.0f, 100.0f);
 	debugGuiManager.renderFrame();
 }

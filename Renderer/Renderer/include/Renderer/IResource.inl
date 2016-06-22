@@ -52,6 +52,11 @@ namespace Renderer
 		// Nothing to do by default
 	}
 
+	inline void* IResource::getInternalResourceHandle() const
+	{
+		return nullptr;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]

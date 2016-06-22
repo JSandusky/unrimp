@@ -143,6 +143,12 @@
     <Filter Include="Source Files\Resource\Compositor\Pass\DebugGui">
       <UniqueIdentifier>{ec0eea0d-8368-4625-b9d8-c8cdd9dbb726}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Vr">
+      <UniqueIdentifier>{f07b5ef0-54ee-49d5-b8e4-650898ff418c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Vr\Detail">
+      <UniqueIdentifier>{3990136f-0ac9-484a-b177-73110d2b627e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -338,6 +344,9 @@
     </None>
     <None Include="include\RendererRuntime\Core\Thread\ThreadManager.inl">
       <Filter>Source Files\Core\Thread</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Vr\VrManager.inl">
+      <Filter>Source Files\Vr</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -717,6 +726,12 @@
     <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerWindows.h">
       <Filter>Source Files\DebugGui\Detail</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Vr\VrManager.h">
+      <Filter>Source Files\Vr</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Vr\Detail\OpenVRRuntimeLinking.h">
+      <Filter>Source Files\Vr\Detail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -985,6 +1000,12 @@
     </ClCompile>
     <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerWindows.cpp">
       <Filter>Source Files\DebugGui\Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vr\VrManager.cpp">
+      <Filter>Source Files\Vr</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vr\Detail\OpenVRRuntimeLinking.cpp">
+      <Filter>Source Files\Vr\Detail</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -26,9 +26,24 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline IMaterialBlueprintResourceListener::VrEye IMaterialBlueprintResourceListener::getCurrentRenderedVrEye() const
+	{
+		return mCurrentRenderedVrEye;
+	}
+
+	inline void IMaterialBlueprintResourceListener::setCurrentRenderedVrEye(VrEye vrEye)
+	{
+		mCurrentRenderedVrEye = vrEye;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IMaterialBlueprintResourceListener::IMaterialBlueprintResourceListener()
+	inline IMaterialBlueprintResourceListener::IMaterialBlueprintResourceListener() :
+		mCurrentRenderedVrEye(VrEye::UNKNOWN)
 	{
 		// Nothing here
 	}

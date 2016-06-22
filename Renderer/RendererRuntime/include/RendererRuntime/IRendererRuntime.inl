@@ -108,6 +108,11 @@ namespace RendererRuntime
 		return *mDebugGuiManager;
 	}
 
+	inline VrManager& IRendererRuntime::getVrManager() const
+	{
+		return *mVrManager;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
@@ -128,8 +133,9 @@ namespace RendererRuntime
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
 		mCompositorResourceManager(nullptr),
-		// Debug
-		mDebugGuiManager(nullptr)
+		// Optional
+		mDebugGuiManager(nullptr),
+		mVrManager(nullptr)
 	{
 		// Nothing to do in here
 	}
@@ -150,7 +156,8 @@ namespace RendererRuntime
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
 		mCompositorResourceManager(nullptr),
-		mDebugGuiManager(nullptr)
+		mDebugGuiManager(nullptr),
+		mVrManager(nullptr)
 	{
 		// Not supported
 	}

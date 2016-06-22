@@ -35,6 +35,7 @@
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResourceManager.h"
 #include "RendererRuntime/DebugGui/Detail/DebugGuiManagerWindows.h"
+#include "RendererRuntime/Vr/VrManager.h"
 
 #include <glm/detail/setup.hpp>	// For "glm::countof()"
 
@@ -134,17 +135,19 @@ namespace RendererRuntime
 		mResourceManagers.push_back(mSceneResourceManager);
 		mResourceManagers.push_back(mCompositorResourceManager);
 
-		// Create the debug manager instances
+		// Create the optional manager instances
 		#ifdef WIN32
 			mDebugGuiManager = new DebugGuiManagerWindows(*this);
 		#else
 			#error "Unsupported platform"
 		#endif
+		mVrManager = new VrManager(*this);
 	}
 
 	RendererRuntimeImpl::~RendererRuntimeImpl()
 	{
-		// Destroy the debug manager instances
+		// Destroy the optional manager instances
+		delete mVrManager;
 		delete mDebugGuiManager;
 
 		{ // Destroy the resource manager instances in reverse order

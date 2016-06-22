@@ -77,6 +77,18 @@ namespace Renderer
 
 		/**
 		*  @brief
+		*    Return whether or not the given "Renderer::TextureFormat" is a depth format
+		*
+		*  @param[in] textureFormat
+		*    "Renderer::TextureFormat" to check
+		*
+		*  @return
+		*    "true" if the given "Renderer::TextureFormat" is a depth format, else "false"
+		*/
+		inline static bool isDepth(Enum textureFormat);
+
+		/**
+		*  @brief
 		*    "Renderer::TextureFormat" to number of bytes per element
 		*
 		*  @param[in] textureFormat

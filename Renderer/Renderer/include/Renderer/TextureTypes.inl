@@ -49,6 +49,27 @@ namespace Renderer
 		return MAPPING[textureFormat];
 	}
 
+	inline bool TextureFormat::isDepth(Enum textureFormat)
+	{
+		static bool MAPPING[] =
+		{
+			false,	// Renderer::TextureFormat::A8            - 8-bit pixel format, all bits alpha
+			false,	// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
+			false,	// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
+			false,	// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
+			false,	// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
+			false,	// Renderer::TextureFormat::BC1           - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block) - when being uncompressed
+			false,	// Renderer::TextureFormat::BC2           - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed
+			false,	// Renderer::TextureFormat::BC3           - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block) - when being uncompressed
+			false,	// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block) - when being uncompressed
+			false,	// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block) - when being uncompressed
+			false,	// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices
+			true,	// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
+			false	// Renderer::TextureFormat::UNKNOWN       - Unknown
+		};
+		return MAPPING[textureFormat];
+	}
+
 	inline uint32_t TextureFormat::getNumberOfBytesPerElement(Enum textureFormat)
 	{
 		static const uint32_t MAPPING[] =

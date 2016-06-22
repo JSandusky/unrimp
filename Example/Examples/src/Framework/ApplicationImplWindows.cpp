@@ -179,7 +179,7 @@ LRESULT CALLBACK ApplicationImplWindows::wndProc(HWND hWnd, UINT message, WPARAM
 	if (nullptr != applicationImplWindows)
 	{
 		// TODO(co) Evil cast ahead. Maybe simplify the example application framework? After all, it's just an example framework for Unrimp and nothing too generic.
-		const IApplicationRendererRuntime* applicationRendererRuntime = static_cast<IApplicationRendererRuntime*>(&applicationImplWindows->getApplication());
+		const IApplicationRendererRuntime* applicationRendererRuntime = dynamic_cast<IApplicationRendererRuntime*>(&applicationImplWindows->getApplication());
 		if (nullptr != applicationRendererRuntime)
 		{
 			const RendererRuntime::IRendererRuntime* rendererRuntime = applicationRendererRuntime->getRendererRuntime();
