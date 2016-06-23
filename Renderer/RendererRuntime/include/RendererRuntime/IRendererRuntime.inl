@@ -108,7 +108,7 @@ namespace RendererRuntime
 		return *mDebugGuiManager;
 	}
 
-	inline VrManager& IRendererRuntime::getVrManager() const
+	inline IVrManager& IRendererRuntime::getVrManager() const
 	{
 		return *mVrManager;
 	}

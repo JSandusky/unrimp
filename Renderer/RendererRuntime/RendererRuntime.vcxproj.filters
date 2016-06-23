@@ -146,7 +146,7 @@
     <Filter Include="Source Files\Vr">
       <UniqueIdentifier>{f07b5ef0-54ee-49d5-b8e4-650898ff418c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Vr\Detail">
+    <Filter Include="Source Files\Vr\OpenVR">
       <UniqueIdentifier>{3990136f-0ac9-484a-b177-73110d2b627e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -345,7 +345,10 @@
     <None Include="include\RendererRuntime\Core\Thread\ThreadManager.inl">
       <Filter>Source Files\Core\Thread</Filter>
     </None>
-    <None Include="include\RendererRuntime\Vr\VrManager.inl">
+    <None Include="include\RendererRuntime\Vr\OpenVR\VrManagerOpenVR.inl">
+      <Filter>Source Files\Vr\OpenVR</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Vr\IVrManager.inl">
       <Filter>Source Files\Vr</Filter>
     </None>
   </ItemGroup>
@@ -726,11 +729,14 @@
     <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerWindows.h">
       <Filter>Source Files\DebugGui\Detail</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Vr\VrManager.h">
-      <Filter>Source Files\Vr</Filter>
+    <ClInclude Include="include\RendererRuntime\Vr\OpenVR\OpenVRRuntimeLinking.h">
+      <Filter>Source Files\Vr\OpenVR</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Vr\Detail\OpenVRRuntimeLinking.h">
-      <Filter>Source Files\Vr\Detail</Filter>
+    <ClInclude Include="include\RendererRuntime\Vr\OpenVR\VrManagerOpenVR.h">
+      <Filter>Source Files\Vr\OpenVR</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Vr\IVrManager.h">
+      <Filter>Source Files\Vr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1001,11 +1007,11 @@
     <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerWindows.cpp">
       <Filter>Source Files\DebugGui\Detail</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vr\VrManager.cpp">
-      <Filter>Source Files\Vr</Filter>
+    <ClCompile Include="src\Vr\OpenVR\OpenVRRuntimeLinking.cpp">
+      <Filter>Source Files\Vr\OpenVR</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vr\Detail\OpenVRRuntimeLinking.cpp">
-      <Filter>Source Files\Vr\Detail</Filter>
+    <ClCompile Include="src\Vr\OpenVR\VrManagerOpenVR.cpp">
+      <Filter>Source Files\Vr\OpenVR</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

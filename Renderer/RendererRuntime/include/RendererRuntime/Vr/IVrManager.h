@@ -27,12 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/Manager.h"
-
-#include <Renderer/Public/Renderer.h>
-
-#include <openvr/openvr.h>
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -45,12 +40,14 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class IRenderTarget;
+}
 namespace RendererRuntime
 {
 	class CameraSceneItem;
-	class IRendererRuntime;
 	class CompositorInstance;
-	class OpenVRRuntimeLinking;
 }
 
 
@@ -64,7 +61,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class VrManager : private Manager
+	class IVrManager : private Manager
 	{
 
 
@@ -75,7 +72,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		enum class VrEye : int8_t
+		{
+			LEFT  =  0,
+			RIGHT =  1
+		};
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IVrManager methods    ]
 	//[-------------------------------------------------------]
 	public:
 		/**
@@ -90,55 +98,37 @@ namespace RendererRuntime
 		*      can be loaded ("openvr_api.dll" under MS Windows, "libopenvr_api.so" under Linux)
 		*    - Method can also be used when the VR manager is not running
 		*/
-		RENDERERRUNTIME_API_EXPORT bool isHmdPresent() const;
+		virtual bool isHmdPresent() const = 0;
 
 		//[-------------------------------------------------------]
 		//[ Lifecycle                                             ]
 		//[-------------------------------------------------------]
-		RENDERERRUNTIME_API_EXPORT bool startup();
-		inline bool isRunning() const;
-		RENDERERRUNTIME_API_EXPORT void shutdown();
+		virtual bool startup() = 0;
+		virtual bool isRunning() const = 0;
+		virtual void shutdown() = 0;
 
 		//[-------------------------------------------------------]
 		//[ Transform (only valid if manager is running)          ]
 		//[-------------------------------------------------------]
-		RENDERERRUNTIME_API_EXPORT void updateHmdMatrixPose();
-		RENDERERRUNTIME_API_EXPORT glm::mat4 getHmdViewSpaceToClipSpaceMatrix(vr::Hmd_Eye vrHmdEye, float nearZ, float farZ) const;
-		RENDERERRUNTIME_API_EXPORT glm::mat4 getHmdEyeSpaceToHeadSpaceMatrix(vr::Hmd_Eye vrHmdEye) const;
-		inline const glm::mat4& getHmdPoseMatrix() const;
+		virtual void updateHmdMatrixPose() = 0;
+		virtual glm::mat4 getHmdViewSpaceToClipSpaceMatrix(VrEye vrEye, float nearZ, float farZ) const = 0;
+		virtual glm::mat4 getHmdEyeSpaceToHeadSpaceMatrix(VrEye vrEye) const = 0;
+		virtual const glm::mat4& getHmdPoseMatrix() const = 0;
 
 		//[-------------------------------------------------------]
-		//[ Render                                                ]
+		//[ Render (only valid if manager is running)             ]
 		//[-------------------------------------------------------]
-		RENDERERRUNTIME_API_EXPORT void executeCompositorInstance(CompositorInstance& compositorInstance, Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem);
+		virtual void executeCompositorInstance(CompositorInstance& compositorInstance, Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem) = 0;
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		explicit VrManager(IRendererRuntime& rendererRuntime);
-		virtual ~VrManager();
-		VrManager(const VrManager&) = delete;
-		VrManager& operator=(const VrManager&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		IRendererRuntime&		   mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
-		OpenVRRuntimeLinking*	   mOpenVRRuntimeLinking;
-		vr::EGraphicsAPIConvention mVrGraphicsAPIConvention;
-		vr::IVRSystem*			   mVrSystem;
-		// Transform
-		vr::TrackedDevicePose_t	mVrTrackedDevicePose[vr::k_unMaxTrackedDeviceCount];
-		glm::mat4				mDevicePoseMatrix[vr::k_unMaxTrackedDeviceCount];
-		uint32_t				mNumberOfValidDevicePoses;
-		glm::mat4				mHmdPoseMatrix;
-		// Renderer resources
-		Renderer::ITexture2DPtr	  mColorTexture2D;	///< Color 2D texture, can be a null pointer
-		Renderer::IFramebufferPtr mFramebuffer;		///< Framebuffer object (FBO), can be a null pointer
+		inline IVrManager();
+		inline virtual ~IVrManager();
+		IVrManager(const IVrManager&) = delete;
+		IVrManager& operator=(const IVrManager&) = delete;
 
 
 	};
@@ -153,4 +143,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Vr/VrManager.inl"
+#include "RendererRuntime/Vr/IVrManager.inl"

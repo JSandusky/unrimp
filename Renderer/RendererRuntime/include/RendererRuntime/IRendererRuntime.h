@@ -43,7 +43,7 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
-	class VrManager;
+	class IVrManager;
 	class AssetManager;
 	class ThreadManager;
 	class DebugGuiManager;
@@ -254,7 +254,7 @@ namespace RendererRuntime
 		*  @return
 		*    The VR manager instance, do not release the returned instance
 		*/
-		inline VrManager& getVrManager() const;
+		inline IVrManager& getVrManager() const;
 
 
 	//[-------------------------------------------------------]
@@ -337,7 +337,7 @@ namespace RendererRuntime
 		ResourceManagers					mResourceManagers;
 		// Optional
 		DebugGuiManager* mDebugGuiManager;
-		VrManager*		 mVrManager;
+		IVrManager*		 mVrManager;
 
 
 	};

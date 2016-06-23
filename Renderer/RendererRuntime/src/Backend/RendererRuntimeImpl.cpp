@@ -35,7 +35,7 @@
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResourceManager.h"
 #include "RendererRuntime/DebugGui/Detail/DebugGuiManagerWindows.h"
-#include "RendererRuntime/Vr/VrManager.h"
+#include "RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h"
 
 #include <glm/detail/setup.hpp>	// For "glm::countof()"
 
@@ -141,7 +141,7 @@ namespace RendererRuntime
 		#else
 			#error "Unsupported platform"
 		#endif
-		mVrManager = new VrManager(*this);
+		mVrManager = new VrManagerOpenVR(*this);
 	}
 
 	RendererRuntimeImpl::~RendererRuntimeImpl()

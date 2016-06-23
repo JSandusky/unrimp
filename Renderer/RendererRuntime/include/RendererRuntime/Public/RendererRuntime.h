@@ -44,7 +44,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class VrManager;
+	class IVrManager;
 	class AssetManager;
 	class ThreadManager;
 	class DebugGuiManager;
@@ -146,7 +146,7 @@ namespace RendererRuntime
 		{
 			return *mDebugGuiManager;
 		}
-		inline VrManager& getVrManager() const
+		inline IVrManager& getVrManager() const
 		{
 			return *mVrManager;
 		}
@@ -173,7 +173,7 @@ namespace RendererRuntime
 		CompositorResourceManager*			mCompositorResourceManager;
 		ResourceManagers					mResourceManagers;
 		DebugGuiManager*					mDebugGuiManager;
-		VrManager*							mVrManager;
+		IVrManager*							mVrManager;
 	};
 	typedef Renderer::SmartRefCount<IRendererRuntime> IRendererRuntimePtr;
 

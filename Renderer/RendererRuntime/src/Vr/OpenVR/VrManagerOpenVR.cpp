@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Vr/VrManager.h"
-#include "RendererRuntime/Vr/Detail/OpenVRRuntimeLinking.h"
+#include "RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h"
+#include "RendererRuntime/Vr/OpenVR/OpenVRRuntimeLinking.h"
 #include "RendererRuntime/Resource/Compositor/CompositorInstance.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
@@ -79,14 +79,14 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public virtual RendererRuntime::IVrManager methods    ]
 	//[-------------------------------------------------------]
-	bool VrManager::isHmdPresent() const
+	bool VrManagerOpenVR::isHmdPresent() const
 	{
 		return (mOpenVRRuntimeLinking->isOpenVRAvaiable() && vr::VR_IsRuntimeInstalled() && vr::VR_IsHmdPresent());
 	}
 
-	bool VrManager::startup()
+	bool VrManagerOpenVR::startup()
 	{
 		assert(nullptr == mVrSystem);
 		if (nullptr == mVrSystem)
@@ -130,7 +130,7 @@ namespace RendererRuntime
 		return true;
 	}
 
-	void VrManager::shutdown()
+	void VrManagerOpenVR::shutdown()
 	{
 		if (nullptr != mVrSystem)
 		{
@@ -145,7 +145,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void VrManager::updateHmdMatrixPose()
+	void VrManagerOpenVR::updateHmdMatrixPose()
 	{
 		assert(nullptr != mVrSystem);
 
@@ -178,20 +178,22 @@ namespace RendererRuntime
 		}
 	}
 
-	glm::mat4 VrManager::getHmdViewSpaceToClipSpaceMatrix(vr::Hmd_Eye vrHmdEye, float nearZ, float farZ) const
+	glm::mat4 VrManagerOpenVR::getHmdViewSpaceToClipSpaceMatrix(VrEye vrEye, float nearZ, float farZ) const
 	{
 		assert(nullptr != mVrSystem);
-		return ::detail::convertOpenVrMatrixToGlmMat4(mVrSystem->GetProjectionMatrix(vrHmdEye, nearZ, farZ, vr::API_DirectX));
+		return ::detail::convertOpenVrMatrixToGlmMat4(mVrSystem->GetProjectionMatrix(static_cast<vr::Hmd_Eye>(vrEye), nearZ, farZ, vr::API_DirectX));
 	}
 
-	glm::mat4 VrManager::getHmdEyeSpaceToHeadSpaceMatrix(vr::Hmd_Eye vrHmdEye) const
+	glm::mat4 VrManagerOpenVR::getHmdEyeSpaceToHeadSpaceMatrix(VrEye vrEye) const
 	{
 		assert(nullptr != mVrSystem);
-		return glm::inverse(::detail::convertOpenVrMatrixToGlmMat4(mVrSystem->GetEyeToHeadTransform(vrHmdEye)));
+		return glm::inverse(::detail::convertOpenVrMatrixToGlmMat4(mVrSystem->GetEyeToHeadTransform(static_cast<vr::Hmd_Eye>(vrEye))));
 	}
 
-	void VrManager::executeCompositorInstance(CompositorInstance& compositorInstance, Renderer::IRenderTarget&, CameraSceneItem* cameraSceneItem)
+	void VrManagerOpenVR::executeCompositorInstance(CompositorInstance& compositorInstance, Renderer::IRenderTarget&, CameraSceneItem* cameraSceneItem)
 	{
+		assert(nullptr != mVrSystem);
+
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mRendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResourceListener();
 		for (int8_t eyeIndex = 0; eyeIndex < 2; ++eyeIndex)
 		{
@@ -212,7 +214,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	VrManager::VrManager(IRendererRuntime& rendererRuntime) :
+	VrManagerOpenVR::VrManagerOpenVR(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
 		mOpenVRRuntimeLinking(new OpenVRRuntimeLinking()),
 		mVrGraphicsAPIConvention(vr::API_OpenGL),
@@ -222,7 +224,7 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	VrManager::~VrManager()
+	VrManagerOpenVR::~VrManagerOpenVR()
 	{
 		shutdown();
 		delete mOpenVRRuntimeLinking;

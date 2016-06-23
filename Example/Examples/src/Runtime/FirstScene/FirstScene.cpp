@@ -24,7 +24,7 @@
 #include "PrecompiledHeader.h"
 #include "Runtime/FirstScene/FirstScene.h"
 
-#include <RendererRuntime/Vr/VrManager.h>
+#include <RendererRuntime/Vr/IVrManager.h>
 #include <RendererRuntime/Core/Math/Transform.h>
 #include <RendererRuntime/DebugGui/DebugGuiManager.h>
 #include <RendererRuntime/Resource/Scene/ISceneResource.h>
@@ -83,7 +83,7 @@ void FirstScene::onInitialization()
 	}
 
 	{ // Startup the VR-manager
-		RendererRuntime::VrManager& vrManager = rendererRuntime->getVrManager();
+		RendererRuntime::IVrManager& vrManager = rendererRuntime->getVrManager();
 		if (vrManager.isHmdPresent())
 		{
 			vrManager.startup();
@@ -145,7 +145,7 @@ void FirstScene::onDrawRequest()
 			if (nullptr != mCompositorInstance)
 			{
 				// Decide whether or not the VR-manager is used for rendering
-				RendererRuntime::VrManager& vrManager = mCompositorInstance->getRendererRuntime().getVrManager();
+				RendererRuntime::IVrManager& vrManager = mCompositorInstance->getRendererRuntime().getVrManager();
 				if (vrManager.isRunning())
 				{
 					// No debug GUI in VR-mode for now

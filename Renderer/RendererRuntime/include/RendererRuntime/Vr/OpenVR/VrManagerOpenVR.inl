@@ -26,14 +26,14 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public virtual RendererRuntime::IVrManager methods    ]
 	//[-------------------------------------------------------]
-	inline bool VrManager::isRunning() const
+	inline bool VrManagerOpenVR::isRunning() const
 	{
 		return (nullptr != mVrSystem);
 	}
 
-	inline const glm::mat4& VrManager::getHmdPoseMatrix() const
+	inline const glm::mat4& VrManagerOpenVR::getHmdPoseMatrix() const
 	{
 		return mHmdPoseMatrix;
 	}

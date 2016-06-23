@@ -24,7 +24,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Core/Math/Transform.h"
-#include "RendererRuntime/Vr/VrManager.h"
+#include "RendererRuntime/Vr/IVrManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <Renderer/Public/Renderer.h>
@@ -102,12 +102,12 @@ namespace RendererRuntime
 		glm::mat4 viewSpaceToClipSpaceMatrix;
 		glm::mat4 viewTranslateMatrix;
 		{
-			const VrManager& vrManager = rendererRuntime.getVrManager();
+			const IVrManager& vrManager = rendererRuntime.getVrManager();
 			if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye())
 			{
-				const vr::Hmd_Eye vrHmdEye = static_cast<vr::Hmd_Eye>(getCurrentRenderedVrEye());
-				viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrHmdEye, nearZ, farZ);
-				viewTranslateMatrix = vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrHmdEye) * vrManager.getHmdPoseMatrix();
+				const IVrManager::VrEye vrEye = static_cast<IVrManager::VrEye>(getCurrentRenderedVrEye());
+				viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, nearZ, farZ);
+				viewTranslateMatrix = vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrEye) * vrManager.getHmdPoseMatrix();
 			}
 			else
 			{

@@ -27,7 +27,21 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Vr/IVrManager.h"
+
+#include <Renderer/Public/Renderer.h>
+
 #include <openvr/openvr.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+	class OpenVRRuntimeLinking;
+}
 
 
 //[-------------------------------------------------------]
@@ -40,71 +54,57 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    OpenVR runtime linking
-	*/
-	class OpenVRRuntimeLinking
+	class VrManagerOpenVR : private IVrManager
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class VrManager;
+		friend class RendererRuntimeImpl;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IVrManager methods    ]
+	//[-------------------------------------------------------]
+	public:
+		virtual bool isHmdPresent() const override;
+		virtual bool startup() override;
+		inline virtual bool isRunning() const override;
+		virtual void shutdown() override;
+		virtual void updateHmdMatrixPose() override;
+		virtual glm::mat4 getHmdViewSpaceToClipSpaceMatrix(VrEye vrEye, float nearZ, float farZ) const override;
+		virtual glm::mat4 getHmdEyeSpaceToHeadSpaceMatrix(VrEye vrEye) const override;
+		inline virtual const glm::mat4& getHmdPoseMatrix() const override;
+		virtual void executeCompositorInstance(CompositorInstance& compositorInstance, Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
-		OpenVRRuntimeLinking();
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		~OpenVRRuntimeLinking();
-
-		/**
-		*  @brief
-		*    Return whether or not OpenVR is available
-		*
-		*  @return
-		*    "true" if OpenVR is available, else "false"
-		*/
-		bool isOpenVRAvaiable();
-
-		/**
-		*  @brief
-		*    Load the shared libraries
-		*
-		*  @return
-		*    "true" if all went fine, else "false"
-		*/
-		bool loadSharedLibraries();
-
-		/**
-		*  @brief
-		*    Load the OpenVR entry points
-		*
-		*  @return
-		*    "true" if all went fine, else "false"
-		*/
-		bool loadOpenVREntryPoints();
+		explicit VrManagerOpenVR(IRendererRuntime& rendererRuntime);
+		virtual ~VrManagerOpenVR();
+		VrManagerOpenVR(const VrManagerOpenVR&) = delete;
+		VrManagerOpenVR& operator=(const VrManagerOpenVR&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void* mOpenVRSharedLibrary;		///< OpenVR shared library, can be a null pointer
-		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
-		bool  mInitialized;				///< Already initialized?
+		IRendererRuntime&		   mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
+		OpenVRRuntimeLinking*	   mOpenVRRuntimeLinking;
+		vr::EGraphicsAPIConvention mVrGraphicsAPIConvention;
+		vr::IVRSystem*			   mVrSystem;
+		// Transform
+		vr::TrackedDevicePose_t	mVrTrackedDevicePose[vr::k_unMaxTrackedDeviceCount];
+		glm::mat4				mDevicePoseMatrix[vr::k_unMaxTrackedDeviceCount];
+		uint32_t				mNumberOfValidDevicePoses;
+		glm::mat4				mHmdPoseMatrix;
+		// Renderer resources
+		Renderer::ITexture2DPtr	  mColorTexture2D;	///< Color 2D texture, can be a null pointer
+		Renderer::IFramebufferPtr mFramebuffer;		///< Framebuffer object (FBO), can be a null pointer
 
 
 	};
@@ -114,3 +114,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Vr/OpenVR/VrManagerOpenVR.inl"
