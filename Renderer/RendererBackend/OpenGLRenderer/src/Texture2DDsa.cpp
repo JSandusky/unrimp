@@ -39,7 +39,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DDsa::Texture2DDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags) :
+	Texture2DDsa::Texture2DDsa(OpenGLRenderer &openGLRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
 		Texture2D(openGLRenderer, width, height)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
@@ -69,7 +69,7 @@ namespace OpenGLRenderer
 					glCompressedTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, numberOfBytesPerSlice, data);
 
 					// Move on to the next mipmap
-					data = static_cast<uint8_t*>(data) + numberOfBytesPerSlice;
+					data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
 					width = std::max(width >> 1, 1u);	// /= 2
 					height = std::max(height >> 1, 1u);	// /= 2
 				}
@@ -101,7 +101,7 @@ namespace OpenGLRenderer
 					glTextureImage2DEXT(mOpenGLTexture, GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, format, type, data);
 
 					// Move on to the next mipmap
-					data = static_cast<uint8_t*>(data) + numberOfBytesPerSlice;
+					data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
 					width = std::max(width >> 1, 1u);	// /= 2
 					height = std::max(height >> 1, 1u);	// /= 2
 				}

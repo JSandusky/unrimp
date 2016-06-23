@@ -117,6 +117,18 @@ namespace RendererRuntime
 		*/
 		inline const MaterialProperties& getMaterialProperties() const;
 
+		/**
+		*  @brief
+		*    Return the material properties
+		*
+		*  @return
+		*    The material properties
+		*
+		*  @notes
+		*    - Contains all properties of all material blueprints referenced by this material (material property inheritance is handled elsewhere)
+		*/
+		inline MaterialProperties& getMaterialProperties();
+
 		// TODO(co)
 		void releaseTextures();
 

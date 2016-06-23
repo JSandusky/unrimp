@@ -42,7 +42,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D12Renderer& direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void* data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue) :
+	Texture2D::Texture2D(Direct3D12Renderer& direct3D12Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue) :
 		ITexture2D(direct3D12Renderer, width, height),
 		mDxgiFormat(Mapping::getDirect3D12Format(textureFormat)),
 		mD3D12Resource(nullptr),
@@ -123,7 +123,7 @@ namespace Direct3D12Renderer
 							mD3D12Resource->WriteToSubresource(mipmap, nullptr, data, bytesPerRow, bytesPerSlice);
 
 							// Move on to the next mipmap
-							data = static_cast<uint8_t*>(data) + bytesPerSlice;
+							data = static_cast<const uint8_t*>(data) + bytesPerSlice;
 							width = std::max(width >> 1, 1u);	// /= 2
 							height = std::max(height >> 1, 1u);	// /= 2
 						}

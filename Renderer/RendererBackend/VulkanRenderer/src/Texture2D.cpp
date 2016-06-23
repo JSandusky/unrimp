@@ -35,7 +35,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(VulkanRenderer &vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, void*, uint32_t) :
+	Texture2D::Texture2D(VulkanRenderer &vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void*, uint32_t) :
 		ITexture2D(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer), width, height)
 	{
 		// TODO(co) Implement me

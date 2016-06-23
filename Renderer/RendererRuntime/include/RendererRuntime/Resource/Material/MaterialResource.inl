@@ -38,6 +38,11 @@ namespace RendererRuntime
 		return mMaterialProperties;
 	}
 
+	inline MaterialProperties& MaterialResource::getMaterialProperties()
+	{
+		return mMaterialProperties;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

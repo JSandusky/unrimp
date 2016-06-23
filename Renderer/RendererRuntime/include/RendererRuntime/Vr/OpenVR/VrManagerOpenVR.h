@@ -39,6 +39,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class ISceneNode;
 	class IRendererRuntime;
 	class OpenVRRuntimeLinking;
 }
@@ -69,6 +70,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		virtual bool isHmdPresent() const override;
+		virtual void setSceneResource(ISceneResource* sceneResource) override;
 		virtual bool startup() override;
 		inline virtual bool isRunning() const override;
 		virtual void shutdown() override;
@@ -87,16 +89,20 @@ namespace RendererRuntime
 		virtual ~VrManagerOpenVR();
 		VrManagerOpenVR(const VrManagerOpenVR&) = delete;
 		VrManagerOpenVR& operator=(const VrManagerOpenVR&) = delete;
+		void setupRenderModelForTrackedDevice(vr::TrackedDeviceIndex_t unTrackedDeviceIndex);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		   mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
+		IRendererRuntime&		   mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
+		ISceneResource*			   mSceneResource;			// TODO(co) No crazy raw-pointers
+		ISceneNode*				   mSceneNodes[vr::k_unMaxTrackedDeviceCount];	// TODO(co) No crazy raw-pointers
 		OpenVRRuntimeLinking*	   mOpenVRRuntimeLinking;
 		vr::EGraphicsAPIConvention mVrGraphicsAPIConvention;
 		vr::IVRSystem*			   mVrSystem;
+		vr::IVRRenderModels*	   mVrRenderModels;
 		// Transform
 		vr::TrackedDevicePose_t	mVrTrackedDevicePose[vr::k_unMaxTrackedDeviceCount];
 		glm::mat4				mDevicePoseMatrix[vr::k_unMaxTrackedDeviceCount];

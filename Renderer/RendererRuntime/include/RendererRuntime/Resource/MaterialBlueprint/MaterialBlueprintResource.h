@@ -82,7 +82,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 		friend class MaterialBlueprintResourceLoader;
 		friend class MaterialBlueprintResourceManager;
-		friend class MaterialResourceLoader;			// TODO(co) Decent material resource list management inside the material blueprint resource (link, unlink etc.) - remove this
+		friend class MaterialResourceLoader;	// TODO(co) Decent material resource list management inside the material blueprint resource (link, unlink etc.) - remove this
+		friend class MaterialResourceManager;	// TODO(co) Remove
 		friend class PackedElementManager<MaterialBlueprintResource, MaterialBlueprintResourceId>;
 
 

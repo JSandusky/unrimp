@@ -90,9 +90,13 @@ namespace RendererRuntime
 		//[ Data                                                  ]
 		//[-------------------------------------------------------]
 		inline uint32_t getNumberOfVertices() const;
+		inline void setNumberOfVertices(uint32_t numberOfVertices);
 		inline uint32_t getNumberOfIndices() const;
+		inline void setNumberOfIndices(uint32_t numberOfIndices);
 		inline Renderer::IVertexArrayPtr getVertexArrayPtr() const;
+		inline void setVertexArray(Renderer::IVertexArray* vertexArray);
 		inline const SubMeshes& getSubMeshes() const;
+		inline SubMeshes& getSubMeshes();
 
 
 	//[-------------------------------------------------------]

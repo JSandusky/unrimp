@@ -84,7 +84,10 @@ namespace RendererRuntime
 		//[ Transform                                             ]
 		//[-------------------------------------------------------]
 		inline const Transform& getTransform() const;
+		inline void setTransform(const Transform& transform);
+		inline void setPosition(const glm::vec3& position);
 		inline void setRotation(const glm::quat& rotation);
+		inline void setPositionRotation(const glm::vec3& position, const glm::quat& rotation);
 
 		//[-------------------------------------------------------]
 		//[ Attached scene items                                  ]

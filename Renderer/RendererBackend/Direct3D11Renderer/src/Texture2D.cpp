@@ -40,7 +40,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D11Renderer &direct3D11Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
+	Texture2D::Texture2D(Direct3D11Renderer &direct3D11Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture2D(direct3D11Renderer, width, height),
 		mD3D11Texture2D(nullptr),
 		mD3D11ShaderResourceViewTexture(nullptr)
@@ -122,7 +122,7 @@ namespace Direct3D11Renderer
 						currentD3d11SubresourceData.SysMemSlicePitch = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
 
 						// Move on to the next mipmap
-						data = static_cast<uint8_t*>(data) + currentD3d11SubresourceData.SysMemSlicePitch;
+						data = static_cast<const uint8_t*>(data) + currentD3d11SubresourceData.SysMemSlicePitch;
 						width = std::max(width >> 1, 1u);	// /= 2
 						height = std::max(height >> 1, 1u);	// /= 2
 					}

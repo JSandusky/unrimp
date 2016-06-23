@@ -66,6 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline SubMesh();
+		inline SubMesh(MaterialResourceId materialResourceId, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices);
 		inline ~SubMesh();
 		inline SubMesh(const SubMesh& subMesh);
 		inline SubMesh& operator=(const SubMesh& subMesh);

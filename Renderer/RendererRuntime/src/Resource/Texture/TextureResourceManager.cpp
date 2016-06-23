@@ -45,67 +45,81 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, bool reload)
 	{
-		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
-		if (nullptr != asset)
+		TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
+
+		// Get or create the instance
+		TextureResource* textureResource = nullptr;
 		{
-			// Get or create the instance
-			TextureResource* textureResource = nullptr;
+			const uint32_t numberOfElements = mTextureResources.getNumberOfElements();
+			for (uint32_t i = 0; i < numberOfElements; ++i)
 			{
-				const uint32_t numberOfElements = mTextureResources.getNumberOfElements();
-				for (uint32_t i = 0; i < numberOfElements; ++i)
+				TextureResource& currentTextureResource = mTextureResources.getElementByIndex(i);
+				if (currentTextureResource.getAssetId() == assetId)
 				{
-					TextureResource& currentTextureResource = mTextureResources.getElementByIndex(i);
-					if (currentTextureResource.getAssetId() == assetId)
-					{
-						textureResource = &currentTextureResource;
+					textureResource = &currentTextureResource;
 
-						// Get us out of the loop
-						i = numberOfElements;
-					}
+					// Get us out of the loop
+					i = numberOfElements;
 				}
 			}
-
-			// Create the resource instance
-			bool load = reload;
-			if (nullptr == textureResource)
-			{
-				textureResource = &mTextureResources.addElement();
-				textureResource->setAssetId(assetId);
-				load = true;
-			}
-
-			// Load the resource, if required
-			if (load)
-			{
-				// Prepare the resource loader
-				// -> The totally primitive texture resource loader type detection is sufficient for now
-				const char* filenameExtension = strrchr(&asset->assetFilename[0], '.');
-				if (nullptr != filenameExtension)
-				{
-					ITextureResourceLoader* textureResourceLoader = static_cast<ITextureResourceLoader*>(acquireResourceLoaderInstance(StringId(filenameExtension + 1)));
-					if (nullptr != textureResourceLoader)
-					{
-						textureResourceLoader->initialize(*asset, *textureResource);
-
-						// Commit resource streamer asset load request
-						ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-						resourceStreamerLoadRequest.resource = textureResource;
-						resourceStreamerLoadRequest.resourceLoader = textureResourceLoader;
-						mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
-					}
-				}
-				else
-				{
-					// TODO(co) Error handling
-				}
-			}
-
-			// Done
-			return textureResource->getId();
 		}
 
-		// Error!
-		return getUninitialized<TextureResourceId>();
+		// Create the resource instance
+		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
+		bool load = (reload && nullptr != asset);
+		if (nullptr == textureResource && nullptr != asset)
+		{
+			textureResource = &mTextureResources.addElement();
+			textureResource->setAssetId(assetId);
+			load = true;
+		}
+		if (nullptr != textureResource)
+		{
+			textureResourceId = textureResource->getId();
+		}
+
+		// Load the resource, if required
+		if (load)
+		{
+			// Prepare the resource loader
+			// -> The totally primitive texture resource loader type detection is sufficient for now
+			const char* filenameExtension = strrchr(&asset->assetFilename[0], '.');
+			if (nullptr != filenameExtension)
+			{
+				ITextureResourceLoader* textureResourceLoader = static_cast<ITextureResourceLoader*>(acquireResourceLoaderInstance(StringId(filenameExtension + 1)));
+				if (nullptr != textureResourceLoader)
+				{
+					textureResourceLoader->initialize(*asset, *textureResource);
+
+					// Commit resource streamer asset load request
+					ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+					resourceStreamerLoadRequest.resource = textureResource;
+					resourceStreamerLoadRequest.resourceLoader = textureResourceLoader;
+					mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+				}
+			}
+			else
+			{
+				// TODO(co) Error handling
+			}
+		}
+
+		// Done
+		return textureResourceId;
+	}
+
+	TextureResourceId TextureResourceManager::createTextureResourceByAssetId(AssetId assetId, Renderer::ITexture& texture)
+	{
+		// Texture resource is not allowed to exist, yet
+		assert(isUninitialized(loadTextureResourceByAssetId(assetId)));
+
+		// Create the texture resource instance
+		TextureResource* textureResource = &mTextureResources.addElement();
+		textureResource->setAssetId(assetId);
+		textureResource->mTexture = &texture;
+
+		// Done
+		return textureResource->getId();
 	}
 
 

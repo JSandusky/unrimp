@@ -74,6 +74,7 @@ namespace RendererRuntime
 	public:
 		inline const MaterialResources& getMaterialResources() const;
 		RENDERERRUNTIME_API_EXPORT MaterialResourceId loadMaterialResourceByAssetId(AssetId assetId, bool reload = false);
+		RENDERERRUNTIME_API_EXPORT MaterialResourceId createMaterialResourceByAssetId(AssetId assetId, MaterialBlueprintResourceId materialBlueprintResourceId);	// Material resource is not allowed to exist, yet
 
 
 	//[-------------------------------------------------------]

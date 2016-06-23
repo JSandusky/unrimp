@@ -43,6 +43,15 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline SubMesh::SubMesh(MaterialResourceId materialResourceId, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices) :
+		mMaterialResourceId(materialResourceId),
+		mPrimitiveTopology(primitiveTopology),
+		mStartIndexLocation(startIndexLocation),
+		mNumberOfIndices(numberOfIndices)
+	{
+		// Nothing here
+	}
+
 	inline SubMesh::~SubMesh()
 	{
 		// Nothing here

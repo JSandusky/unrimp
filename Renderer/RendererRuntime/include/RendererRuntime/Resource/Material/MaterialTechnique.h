@@ -76,6 +76,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 		friend class MaterialResource;			// TODO(co) Remove
 		friend class MaterialResourceLoader;	// TODO(co) Remove
+		friend class MaterialResourceManager;	// TODO(co) Remove
 		friend class MaterialBlueprintResource;	///< Sets "RendererRuntime::MaterialTechnique::mMaterialUniformBufferIndex"
 
 

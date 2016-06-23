@@ -284,12 +284,12 @@ namespace NullRenderer
 		return new TextureBuffer(*this);
 	}
 
-	Renderer::ITexture2D *NullRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITexture2D *NullRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)
 	{
 		return new Texture2D(*this, width, height);
 	}
 
-	Renderer::ITexture2DArray *NullRenderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage)
+	Renderer::ITexture2DArray *NullRenderer::createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
 	{
 		return new Texture2DArray(*this, width, height, numberOfSlices);
 	}

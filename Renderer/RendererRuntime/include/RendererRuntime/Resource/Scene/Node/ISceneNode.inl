@@ -33,8 +33,24 @@ namespace RendererRuntime
 		return mTransform;
 	}
 
+	inline void ISceneNode::setTransform(const Transform& transform)
+	{
+		mTransform = transform;
+	}
+
+	inline void ISceneNode::setPosition(const glm::vec3& position)
+	{
+		mTransform.position = position;
+	}
+
 	inline void ISceneNode::setRotation(const glm::quat& rotation)
 	{
+		mTransform.rotation = rotation;
+	}
+
+	inline void ISceneNode::setPositionRotation(const glm::vec3& position, const glm::quat& rotation)
+	{
+		mTransform.position = position;
 		mTransform.rotation = rotation;
 	}
 

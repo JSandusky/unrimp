@@ -75,6 +75,7 @@ namespace RendererRuntime
 	public:
 		inline const TextureResources& getTextureResources() const;
 		RENDERERRUNTIME_API_EXPORT TextureResourceId loadTextureResourceByAssetId(AssetId assetId, bool reload = false);
+		RENDERERRUNTIME_API_EXPORT TextureResourceId createTextureResourceByAssetId(AssetId assetId, Renderer::ITexture& texture);	// Texture resource is not allowed to exist, yet
 
 
 	//[-------------------------------------------------------]

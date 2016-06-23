@@ -46,6 +46,7 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
+	class ISceneResource;
 	class CameraSceneItem;
 	class CompositorInstance;
 }
@@ -103,6 +104,7 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Lifecycle                                             ]
 		//[-------------------------------------------------------]
+		virtual void setSceneResource(ISceneResource* sceneResource) = 0;
 		virtual bool startup() = 0;
 		virtual bool isRunning() const = 0;
 		virtual void shutdown() = 0;

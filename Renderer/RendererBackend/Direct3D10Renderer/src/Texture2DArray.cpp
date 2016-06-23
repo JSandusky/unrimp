@@ -38,7 +38,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DArray::Texture2DArray(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
+	Texture2DArray::Texture2DArray(Direct3D10Renderer &direct3D10Renderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture2DArray(direct3D10Renderer, width, height, numberOfSlices),
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{
@@ -83,7 +83,7 @@ namespace Direct3D10Renderer
 				{ // Update Direct3D 10 subresource data of the base-map
 					const uint32_t  bytesPerRow   = Renderer::TextureFormat::getNumberOfBytesPerRow(textureFormat, width);
 					const uint32_t  bytesPerSlice = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
-					const uint8_t  *dataCurrent   = static_cast<uint8_t*>(data);
+					const uint8_t  *dataCurrent   = static_cast<const uint8_t*>(data);
 					for (uint32_t arraySlice = 0; arraySlice < numberOfSlices; ++arraySlice, dataCurrent += bytesPerSlice)
 					{
 						direct3D10Renderer.getD3D10Device()->UpdateSubresource(d3d10Texture2D, D3D10CalcSubresource(0, arraySlice, numberOfMipmaps), nullptr, dataCurrent, bytesPerRow, bytesPerSlice);

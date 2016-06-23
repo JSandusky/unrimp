@@ -43,55 +43,68 @@ namespace RendererRuntime
 	// TODO(co) Work-in-progress
 	MeshResourceId MeshResourceManager::loadMeshResourceByAssetId(AssetId assetId, bool reload)
 	{
-		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
-		if (nullptr != asset)
-		{
-			// Get or create the instance
-			MeshResource* meshResource = nullptr;
-			{
-				const uint32_t numberOfElements = mMeshResources.getNumberOfElements();
-				for (uint32_t i = 0; i < numberOfElements; ++i)
-				{
-					MeshResource& currentMeshResource = mMeshResources.getElementByIndex(i);
-					if (currentMeshResource.getAssetId() == assetId)
-					{
-						meshResource = &currentMeshResource;
+		MeshResourceId meshResourceId = getUninitialized<MeshResourceId>();
 
-						// Get us out of the loop
-						i = numberOfElements;
-					}
+		// Get or create the instance
+		MeshResource* meshResource = nullptr;
+		{
+			const uint32_t numberOfElements = mMeshResources.getNumberOfElements();
+			for (uint32_t i = 0; i < numberOfElements; ++i)
+			{
+				MeshResource& currentMeshResource = mMeshResources.getElementByIndex(i);
+				if (currentMeshResource.getAssetId() == assetId)
+				{
+					meshResource = &currentMeshResource;
+
+					// Get us out of the loop
+					i = numberOfElements;
 				}
 			}
-
-			// Create the resource instance
-			bool load = reload;
-			if (nullptr == meshResource)
-			{
-				meshResource = &mMeshResources.addElement();
-				meshResource->setAssetId(assetId);
-				load = true;
-			}
-
-			// Load the resource, if required
-			if (load)
-			{
-				// Prepare the resource loader
-				MeshResourceLoader* meshResourceLoader = static_cast<MeshResourceLoader*>(acquireResourceLoaderInstance(MeshResourceLoader::TYPE_ID));
-				meshResourceLoader->initialize(*asset, *meshResource, mRendererRuntime.getRenderer());
-
-				// Commit resource streamer asset load request
-				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-				resourceStreamerLoadRequest.resource = meshResource;
-				resourceStreamerLoadRequest.resourceLoader = meshResourceLoader;
-				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
-			}
-
-			// Done
-			return meshResource->getId();
 		}
 
-		// Error!
-		return getUninitialized<MeshResourceId>();
+		// Create the resource instance
+		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
+		bool load = (reload && nullptr != asset);
+		if (nullptr == meshResource && nullptr != asset)
+		{
+			meshResource = &mMeshResources.addElement();
+			meshResource->setAssetId(assetId);
+			load = true;
+		}
+		if (nullptr != meshResource)
+		{
+			meshResourceId = meshResource->getId();
+		}
+
+		// Load the resource, if required
+		if (load)
+		{
+			// Prepare the resource loader
+			MeshResourceLoader* meshResourceLoader = static_cast<MeshResourceLoader*>(acquireResourceLoaderInstance(MeshResourceLoader::TYPE_ID));
+			meshResourceLoader->initialize(*asset, *meshResource, mRendererRuntime.getRenderer());
+
+			// Commit resource streamer asset load request
+			ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+			resourceStreamerLoadRequest.resource = meshResource;
+			resourceStreamerLoadRequest.resourceLoader = meshResourceLoader;
+			mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+		}
+
+		// Done
+		return meshResourceId;
+	}
+
+	MeshResourceId MeshResourceManager::createEmptyMeshResourceByAssetId(AssetId assetId)
+	{
+		// Mesh resource is not allowed to exist, yet
+		assert(isUninitialized(loadMeshResourceByAssetId(assetId)));
+
+		// Create the mesh resource instance
+		MeshResource* meshResource = &mMeshResources.addElement();
+		meshResource->setAssetId(assetId);
+
+		// Done
+		return meshResource->getId();
 	}
 
 

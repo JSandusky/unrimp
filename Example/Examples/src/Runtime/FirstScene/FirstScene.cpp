@@ -86,6 +86,7 @@ void FirstScene::onInitialization()
 		RendererRuntime::IVrManager& vrManager = rendererRuntime->getVrManager();
 		if (vrManager.isHmdPresent())
 		{
+			vrManager.setSceneResource(mSceneResource);
 			vrManager.startup();
 		}
 	}

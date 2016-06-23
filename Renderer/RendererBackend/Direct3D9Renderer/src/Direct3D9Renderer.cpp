@@ -334,7 +334,7 @@ namespace Direct3D9Renderer
 		return nullptr;
 	}
 
-	Renderer::ITexture2D *Direct3D9Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage textureUsage, const Renderer::OptimizedTextureClearValue*)
+	Renderer::ITexture2D *Direct3D9Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, const Renderer::OptimizedTextureClearValue*)
 	{
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
@@ -347,7 +347,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	Renderer::ITexture2DArray *Direct3D9Renderer::createTexture2DArray(uint32_t, uint32_t, uint32_t, Renderer::TextureFormat::Enum, void *, uint32_t, Renderer::TextureUsage)
+	Renderer::ITexture2DArray *Direct3D9Renderer::createTexture2DArray(uint32_t, uint32_t, uint32_t, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage)
 	{
 		// Direct3D 9 has no 2D texture arrays
 		return nullptr;

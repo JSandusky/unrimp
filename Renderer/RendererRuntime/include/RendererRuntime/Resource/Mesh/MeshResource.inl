@@ -33,9 +33,19 @@ namespace RendererRuntime
 		return mNumberOfVertices;
 	}
 
+	inline void MeshResource::setNumberOfVertices(uint32_t numberOfVertices)
+	{
+		mNumberOfVertices = numberOfVertices;
+	}
+
 	inline uint32_t MeshResource::getNumberOfIndices() const
 	{
 		return mNumberOfIndices;
+	}
+
+	inline void MeshResource::setNumberOfIndices(uint32_t numberOfIndices)
+	{
+		mNumberOfIndices = numberOfIndices;
 	}
 
 	inline Renderer::IVertexArrayPtr MeshResource::getVertexArrayPtr() const
@@ -43,7 +53,17 @@ namespace RendererRuntime
 		return mVertexArray;
 	}
 
+	inline void MeshResource::setVertexArray(Renderer::IVertexArray* vertexArray)
+	{
+		mVertexArray = vertexArray;
+	}
+
 	inline const SubMeshes& MeshResource::getSubMeshes() const
+	{
+		return mSubMeshes;
+	}
+
+	inline SubMeshes& MeshResource::getSubMeshes()
 	{
 		return mSubMeshes;
 	}

@@ -38,7 +38,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(Direct3D9Renderer &direct3D9Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
+	Texture2D::Texture2D(Direct3D9Renderer &direct3D9Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		ITexture2D(direct3D9Renderer, width, height),
 		mDirect3DTexture9(nullptr)
 	{
@@ -101,7 +101,7 @@ namespace Direct3D9Renderer
 					}
 
 					// Move on to the next mipmap
-					data = static_cast<uint8_t*>(data) + Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
+					data = static_cast<const uint8_t*>(data) + Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height);
 					width = std::max(width >> 1, 1u);	// /= 2
 					height = std::max(height >> 1, 1u);	// /= 2
 				}

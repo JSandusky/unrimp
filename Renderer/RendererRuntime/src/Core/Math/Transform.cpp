@@ -33,6 +33,7 @@
 #pragma warning(push)
 	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
 	#include <glm/gtc/matrix_transform.hpp>
+	#include <glm/gtx/matrix_decompose.hpp>
 #pragma warning(pop)
 
 
@@ -57,6 +58,13 @@ namespace RendererRuntime
 		// TODO(co) Optimize
 		static const glm::mat4x4 IDENTITY_MATRIX;	// TODO(co) Does GLM offer such a constant?
 		objectSpaceToWorldSpace = glm::translate(IDENTITY_MATRIX, position) * glm::mat4_cast(rotation) * glm::scale(IDENTITY_MATRIX, scale);
+	}
+
+	void Transform::setByMatrix(const glm::mat4& transformMatrix)
+	{
+		glm::vec3 skew;
+		glm::vec4 perspective;
+		glm::decompose(transformMatrix, scale, rotation, position, skew, perspective);
 	}
 
 

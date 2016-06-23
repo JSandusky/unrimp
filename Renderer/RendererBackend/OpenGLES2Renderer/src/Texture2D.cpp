@@ -37,7 +37,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(OpenGLES2Renderer &openGLES2Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, void *data, uint32_t flags) :
+	Texture2D::Texture2D(OpenGLES2Renderer &openGLES2Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags) :
 		ITexture2D(openGLES2Renderer, width, height),
 		mOpenGLES2Texture(0)
 	{
@@ -78,7 +78,7 @@ namespace OpenGLES2Renderer
 					glCompressedTexImage2D(GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, numberOfBytesPerSlice, data);
 
 					// Move on to the next mipmap
-					data = static_cast<uint8_t*>(data) + numberOfBytesPerSlice;
+					data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
 					width = std::max(width >> 1, 1u);	// /= 2
 					height = std::max(height >> 1, 1u);	// /= 2
 				}
@@ -110,7 +110,7 @@ namespace OpenGLES2Renderer
 					glTexImage2D(GL_TEXTURE_2D, static_cast<GLint>(mipmap), internalFormat, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, format, type, data);
 
 					// Move on to the next mipmap
-					data = static_cast<uint8_t*>(data) + numberOfBytesPerSlice;
+					data = static_cast<const uint8_t*>(data) + numberOfBytesPerSlice;
 					width = std::max(width >> 1, 1u);	// /= 2
 					height = std::max(height >> 1, 1u);	// /= 2
 				}

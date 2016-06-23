@@ -44,6 +44,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline Transform::Transform(const glm::mat4& transformMatrix)
+	{
+		setByMatrix(transformMatrix);
+	}
+
 	inline Transform::Transform(const glm::vec3& _position, const glm::quat& _rotation) :
 		position(_position),
 		rotation(_rotation),

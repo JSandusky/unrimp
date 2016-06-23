@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Material/Loader/MaterialResourceLoader.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -41,55 +42,84 @@ namespace RendererRuntime
 	// TODO(co) Work-in-progress
 	MaterialResourceId MaterialResourceManager::loadMaterialResourceByAssetId(AssetId assetId, bool reload)
 	{
-		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
-		if (nullptr != asset)
-		{
-			// Get or create the instance
-			MaterialResource* materialResource = nullptr;
-			{
-				const uint32_t numberOfElements = mMaterialResources.getNumberOfElements();
-				for (uint32_t i = 0; i < numberOfElements; ++i)
-				{
-					MaterialResource& currentMaterialResource = mMaterialResources.getElementByIndex(i);
-					if (currentMaterialResource.getAssetId() == assetId)
-					{
-						materialResource = &currentMaterialResource;
+		MaterialResourceId materialResourceId = getUninitialized<MaterialResourceId>();
 
-						// Get us out of the loop
-						i = numberOfElements;
-					}
+		// Get or create the instance
+		MaterialResource* materialResource = nullptr;
+		{
+			const uint32_t numberOfElements = mMaterialResources.getNumberOfElements();
+			for (uint32_t i = 0; i < numberOfElements; ++i)
+			{
+				MaterialResource& currentMaterialResource = mMaterialResources.getElementByIndex(i);
+				if (currentMaterialResource.getAssetId() == assetId)
+				{
+					materialResource = &currentMaterialResource;
+
+					// Get us out of the loop
+					i = numberOfElements;
 				}
 			}
-
-			// Create the resource instance
-			bool load = reload;
-			if (nullptr == materialResource)
-			{
-				materialResource = &mMaterialResources.addElement();
-				materialResource->setAssetId(assetId);
-				load = true;
-			}
-
-			// Load the resource, if required
-			if (load)
-			{
-				// Prepare the resource loader
-				MaterialResourceLoader* materialResourceLoader = static_cast<MaterialResourceLoader*>(acquireResourceLoaderInstance(MaterialResourceLoader::TYPE_ID));
-				materialResourceLoader->initialize(*asset, *materialResource);
-
-				// Commit resource streamer asset load request
-				ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
-				resourceStreamerLoadRequest.resource = materialResource;
-				resourceStreamerLoadRequest.resourceLoader = materialResourceLoader;
-				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
-			}
-
-			// Done
-			return materialResource->getId();
 		}
 
-		// Error!
-		return getUninitialized<MaterialResourceId>();
+		// Create the resource instance
+		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
+		bool load = (reload && nullptr != asset);
+		if (nullptr == materialResource && nullptr != asset)
+		{
+			materialResource = &mMaterialResources.addElement();
+			materialResource->setAssetId(assetId);
+			load = true;
+		}
+		if (nullptr != materialResource)
+		{
+			materialResourceId = materialResource->getId();
+		}
+
+		// Load the resource, if required
+		if (load)
+		{
+			// Prepare the resource loader
+			MaterialResourceLoader* materialResourceLoader = static_cast<MaterialResourceLoader*>(acquireResourceLoaderInstance(MaterialResourceLoader::TYPE_ID));
+			materialResourceLoader->initialize(*asset, *materialResource);
+
+			// Commit resource streamer asset load request
+			ResourceStreamer::LoadRequest resourceStreamerLoadRequest;
+			resourceStreamerLoadRequest.resource = materialResource;
+			resourceStreamerLoadRequest.resourceLoader = materialResourceLoader;
+			mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+		}
+
+		// Done
+		return materialResourceId;
+	}
+
+	MaterialResourceId MaterialResourceManager::createMaterialResourceByAssetId(AssetId assetId, MaterialBlueprintResourceId materialBlueprintResourceId)
+	{
+		// Material resource is not allowed to exist, yet
+		assert(isUninitialized(loadMaterialResourceByAssetId(assetId)));
+
+		// Create the material resource instance
+		MaterialResource* materialResource = &mMaterialResources.addElement();
+		materialResource->setAssetId(assetId);
+
+		// TODO(co) Simplify
+		{ // Create the default material technique
+			MaterialResource::SortedMaterialTechniqueVector& sortedMaterialTechniqueVector = materialResource->mSortedMaterialTechniqueVector;
+			sortedMaterialTechniqueVector.emplace_back(MaterialTechnique("Default", *materialResource));
+			MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[0];
+			MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
+			materialTechnique.mMaterialBlueprintResourceId = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(materialBlueprintResourceId);
+			// TODO(co) Get rid of the evil const-cast
+			MaterialBlueprintResource* materialBlueprintResource = const_cast<MaterialBlueprintResource*>(materialBlueprintResourceManager.getMaterialBlueprintResources().tryGetElementById(materialTechnique.mMaterialBlueprintResourceId));
+			if (nullptr != materialBlueprintResource)
+			{
+				materialResource->mMaterialProperties = materialBlueprintResource->mMaterialProperties;
+				materialBlueprintResource->linkMaterialTechnique(materialTechnique);
+			}
+		}
+
+		// Done
+		return materialResource->getId();
 	}
 
 

@@ -35,7 +35,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DArray::Texture2DArray(VulkanRenderer &vulkanRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum, void*, uint32_t) :
+	Texture2DArray::Texture2DArray(VulkanRenderer &vulkanRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum, const void*, uint32_t) :
 		ITexture2DArray(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer), width, height, numberOfSlices)
 	{
 		// TODO(co) Implement me
