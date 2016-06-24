@@ -189,6 +189,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\RenderQueue.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_internal.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\preprocessor\Preprocessor.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderBuilder.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderCache.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderCacheManager.h" />
@@ -293,6 +296,10 @@
     <ClCompile Include="src\Resource\Scene\RenderQueue.cpp" />
     <ClCompile Include="src\Resource\Scene\SceneResource.cpp" />
     <ClCompile Include="src\Resource\Scene\SceneResourceManager.cpp" />
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_common.cpp" />
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_lexer.cpp" />
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_preprocessor.cpp" />
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\Preprocessor.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderBuilder.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderCache.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderCacheManager.cpp" />

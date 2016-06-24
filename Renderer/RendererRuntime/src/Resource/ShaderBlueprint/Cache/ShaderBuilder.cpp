@@ -54,6 +54,7 @@ THE SOFTWARE.
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/Preprocessor/Preprocessor.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 
@@ -117,7 +118,7 @@ namespace
 			size_t		length;
 
 			int (*opFunc)(int, int);
-			
+
 			Operation(const char* _name, size_t len, int (*_opFunc)(int, int)) :
 				opName(_name),
 				length(len),
@@ -826,9 +827,13 @@ namespace RendererRuntime
 				syntaxError |= insertPieces(inString, outString);
 			}
 			syntaxError |= parseCounter(outString, inString);
-			outString.swap(inString);
+			// outString.swap(inString);	// Not required due to C-processor destination below
 		}
 
+		// Apply a C-preprocessor
+		Preprocessor::preprocess(inString, outString);
+
+		// Done
 		return outString;
 	}
 
@@ -971,13 +976,8 @@ namespace RendererRuntime
 				int count = strtol(argValues[0].c_str(), &endPtr, 10);
 				if (argValues[0].c_str() == endPtr)
 				{
-					// This isn't a number. Let's try if it's a property.
-					if (!mShaderProperties.getPropertyValue(StringId(argValues[0].c_str()), count))
-					{
-						printf("Invalid parameter at line %lu (@foreach). '%s' is not a number nor a variable\n", static_cast<unsigned long>(calculateLineCount(blockSubString)), argValues[0].c_str());
-						syntaxError = true;
-						count = 0;
-					}
+					// This isn't a number. Let's try if it's a property. If it's no property default to 0 (property might have been optimized out).
+					mShaderProperties.getPropertyValue(StringId(argValues[0].c_str()), count);
 				}
 
 				std::string counterVar;

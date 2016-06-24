@@ -149,6 +149,9 @@
     <Filter Include="Source Files\Vr\OpenVR">
       <UniqueIdentifier>{3990136f-0ac9-484a-b177-73110d2b627e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\ShaderBlueprint\Cache\Preprocessor">
+      <UniqueIdentifier>{9962d6cb-31e3-4502-89cc-4802e95dfb14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -738,6 +741,15 @@
     <ClInclude Include="include\RendererRuntime\Vr\IVrManager.h">
       <Filter>Source Files\Vr</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\preprocessor\Preprocessor.h">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache\Preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader.h">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache\Preprocessor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_internal.h">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache\Preprocessor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -1012,6 +1024,18 @@
     </ClCompile>
     <ClCompile Include="src\Vr\OpenVR\VrManagerOpenVR.cpp">
       <Filter>Source Files\Vr\OpenVR</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_lexer.cpp">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache\Preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_preprocessor.cpp">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache\Preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\Preprocessor.cpp">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache\Preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_common.cpp">
+      <Filter>Source Files\Resource\ShaderBlueprint\Cache\Preprocessor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

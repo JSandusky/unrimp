@@ -24,8 +24,8 @@
 #define OPENVR_DEFINERUNTIMELINKING
 
 #include "RendererRuntime/Vr/OpenVR/OpenVRRuntimeLinking.h"
+#include "RendererRuntime/Core/Platform/PlatformTypes.h"	// For "RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF()"
 
-#include <RendererRuntime/Core/Platform/PlatformTypes.h>	// For "RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF()"
 #ifdef WIN32
 	#include <Renderer/WindowsHeader.h>
 #elif defined LINUX
