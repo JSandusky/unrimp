@@ -59,6 +59,11 @@ namespace RendererRuntime
 		return mPipelineState;
 	}
 
+	inline const ShaderBlueprintResourceId MaterialBlueprintResource::getShaderBlueprintResourceId(ShaderType shaderType) const
+	{
+		return mShaderBlueprintResourceId[static_cast<uint8_t>(shaderType)];
+	}
+
 	inline const MaterialBlueprintResource::UniformBuffers& MaterialBlueprintResource::getUniformBuffers() const
 	{
 		return mUniformBuffers;

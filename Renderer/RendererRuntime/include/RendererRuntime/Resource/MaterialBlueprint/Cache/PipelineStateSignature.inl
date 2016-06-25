@@ -21,14 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/Math/Transform.h"
-
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
-	#include <glm/gtc/matrix_transform.hpp>
-	#include <glm/gtx/matrix_decompose.hpp>
-#pragma warning(pop)
+#include "RendererRuntime/Core/GetUninitialized.h"
 
 
 //[-------------------------------------------------------]
@@ -39,26 +32,44 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	const Transform Transform::IDENTITY;
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void Transform::getAsMatrix(glm::mat4& objectSpaceToWorldSpace) const
+	inline PipelineStateSignature::PipelineStateSignature() :
+		mMaterialBlueprintResourceId(getUninitialized<MaterialBlueprintResourceId>()),
+		mPipelineStateSignatureId(getUninitialized<PipelineStateSignatureId>()),
+		mShaderCombinationId{getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>()}
 	{
-		// TODO(co) Optimize
-		static const glm::mat4x4 IDENTITY_MATRIX;	// TODO(co) Does GLM offer such a constant?
-		objectSpaceToWorldSpace = glm::translate(IDENTITY_MATRIX, position) * glm::mat4_cast(rotation) * glm::scale(IDENTITY_MATRIX, scale);
+		// Nothing here
 	}
 
-	void Transform::setByMatrix(const glm::mat4& transformMatrix)
+	inline PipelineStateSignature::~PipelineStateSignature()
 	{
-		glm::vec3 skew;
-		glm::vec4 perspective;
-		glm::decompose(transformMatrix, scale, rotation, position, skew, perspective);
+		// Nothing here
+	}
+
+	inline MaterialBlueprintResourceId PipelineStateSignature::getMaterialBlueprintResourceId() const
+	{
+		return mMaterialBlueprintResourceId;
+	}
+
+	inline const ShaderProperties& PipelineStateSignature::getShaderProperties() const
+	{
+		return mShaderProperties;
+	}
+
+	inline const DynamicShaderPieces& PipelineStateSignature::getDynamicShaderPieces(ShaderType shaderType) const
+	{
+		return mDynamicShaderPieces[static_cast<uint8_t>(shaderType)];
+	}
+
+	inline PipelineStateSignatureId PipelineStateSignature::getPipelineStateSignatureId() const
+	{
+		return mPipelineStateSignatureId;
+	}
+
+	inline ShaderCombinationId PipelineStateSignature::getShaderCombinationId(ShaderType shaderType) const
+	{
+		return mShaderCombinationId[static_cast<uint8_t>(shaderType)];
 	}
 
 

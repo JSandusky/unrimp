@@ -116,15 +116,8 @@ namespace RendererRuntime
 			}
 
 			{ // Read in the pipeline state
-				{ // Read in the shader blueprints
-					v1MaterialBlueprint::ShaderBlueprints shaderBlueprints;
-					inputFileStream.read(reinterpret_cast<char*>(&shaderBlueprints), sizeof(v1MaterialBlueprint::ShaderBlueprints));
-					mVertexShaderBlueprintAssetId				  = shaderBlueprints.vertexShaderBlueprintAssetId;
-					mTessellationControlShaderBlueprintAssetId	  = shaderBlueprints.tessellationControlShaderBlueprintAssetId;
-					mTessellationEvaluationShaderBlueprintAssetId = shaderBlueprints.tessellationEvaluationShaderBlueprintAssetId;
-					mGeometryShaderBlueprintAssetId				  = shaderBlueprints.geometryShaderBlueprintAssetId;
-					mFragmentShaderBlueprintAssetId				  = shaderBlueprints.fragmentShaderBlueprintAssetId;
-				}
+				// Read in the shader blueprints
+				inputFileStream.read(reinterpret_cast<char*>(&mShaderBlueprintAssetId), sizeof(AssetId) * NUMBER_OF_SHADER_TYPES);
 
 				// TODO(co) The first few bytes are unused and there are probably byte alignment issues which can come up. On the other hand, this solution is wonderful simple.
 				// Read in the pipeline state
@@ -205,11 +198,10 @@ namespace RendererRuntime
 
 		{ // Get the used shader blueprint resources
 			ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
-			mMaterialBlueprintResource->mVertexShaderBlueprintId				 = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mVertexShaderBlueprintAssetId);
-			mMaterialBlueprintResource->mTessellationControlShaderBlueprintId    = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mTessellationControlShaderBlueprintAssetId);
-			mMaterialBlueprintResource->mTessellationEvaluationShaderBlueprintId = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mTessellationEvaluationShaderBlueprintAssetId);
-			mMaterialBlueprintResource->mGeometryShaderBlueprintId				 = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mGeometryShaderBlueprintAssetId);
-			mMaterialBlueprintResource->mFragmentShaderBlueprintId				 = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mFragmentShaderBlueprintAssetId);
+			for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
+			{
+				mMaterialBlueprintResource->mShaderBlueprintResourceId[i] = shaderBlueprintResourceManager.loadShaderBlueprintResourceByAssetId(mShaderBlueprintAssetId[i]);
+			}
 		}
 
 		{ // Create the uniform buffer renderer resources

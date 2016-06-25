@@ -43,6 +43,7 @@
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateSignature.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCache.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCacheManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Listener\IMaterialBlueprintResourceListener.inl" />
@@ -105,6 +106,7 @@
     <ClInclude Include="include\RendererRuntime\Command\Material.h" />
     <ClInclude Include="include\RendererRuntime\Core\GetUninitialized.h" />
     <ClInclude Include="include\RendererRuntime\Core\Manager.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Math\Math.h" />
     <ClInclude Include="include\RendererRuntime\Core\Math\Quaternion.h" />
     <ClInclude Include="include\RendererRuntime\Core\Math\Transform.h" />
     <ClInclude Include="include\RendererRuntime\Core\Math\Vector3.h" />
@@ -152,6 +154,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateSignature.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCache.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCacheManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Listener\IMaterialBlueprintResourceListener.h" />
@@ -200,6 +203,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderType.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.h" />
@@ -231,6 +235,7 @@
     <ClCompile Include="src\Backend\RendererBackendManager.cpp" />
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp" />
     <ClCompile Include="src\Command\CommandBucket.cpp" />
+    <ClCompile Include="src\Core\Math\Math.cpp" />
     <ClCompile Include="src\Core\Math\Quaternion.cpp" />
     <ClCompile Include="src\Core\Math\Transform.cpp" />
     <ClCompile Include="src\Core\Math\Vector3.cpp" />
@@ -264,6 +269,7 @@
     <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCache.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.cpp" />
+    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateSignature.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\ProgramCache.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\ProgramCacheManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Listener\MaterialBlueprintResourceListener.cpp" />

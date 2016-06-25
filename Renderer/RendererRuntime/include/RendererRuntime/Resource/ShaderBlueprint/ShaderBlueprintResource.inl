@@ -33,6 +33,11 @@ namespace RendererRuntime
 		return mIncludeShaderPieceResourceIds;
 	}
 
+	inline const ShaderProperties& ShaderBlueprintResource::getReferencedShaderProperties() const
+	{
+		return mReferencedShaderProperties;
+	}
+
 	inline const std::string& ShaderBlueprintResource::getShaderSourceCode() const
 	{
 		return mShaderSourceCode;

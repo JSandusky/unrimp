@@ -21,14 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/Math/Transform.h"
-
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
-	#include <glm/gtc/matrix_transform.hpp>
-	#include <glm/gtx/matrix_decompose.hpp>
-#pragma warning(pop)
+#include "RendererRuntime/Core/Math/Math.h"
 
 
 //[-------------------------------------------------------]
@@ -39,26 +32,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	const Transform Transform::IDENTITY;
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	void Transform::getAsMatrix(glm::mat4& objectSpaceToWorldSpace) const
+	uint32_t Math::calculateFNV1a(const uint8_t* content, uint32_t numberOfBytes, uint32_t hash)
 	{
-		// TODO(co) Optimize
-		static const glm::mat4x4 IDENTITY_MATRIX;	// TODO(co) Does GLM offer such a constant?
-		objectSpaceToWorldSpace = glm::translate(IDENTITY_MATRIX, position) * glm::mat4_cast(rotation) * glm::scale(IDENTITY_MATRIX, scale);
-	}
-
-	void Transform::setByMatrix(const glm::mat4& transformMatrix)
-	{
-		glm::vec3 skew;
-		glm::vec4 perspective;
-		glm::decompose(transformMatrix, scale, rotation, position, skew, perspective);
+		// 32-bit FNV-1a implementation basing on http://de.wikipedia.org/wiki/FNV_%28Informatik%29
+		static const uint32_t MAGIC_PRIME = 2166136261u;
+		const uint8_t* end = content + numberOfBytes;
+		for ( ; content < end; ++content)
+		{
+			hash = (hash ^ *content) * MAGIC_PRIME;
+		}
+		return hash;
 	}
 
 

@@ -61,6 +61,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	bool ShaderProperties::hasPropertyValue(ShaderPropertyId shaderPropertyId) const
+	{
+		const Property property(shaderPropertyId, 0);
+		SortedPropertyVector::const_iterator iterator = std::lower_bound(mSortedPropertyVector.begin(), mSortedPropertyVector.end(), property, ::detail::orderPropertyByShaderPropertyId);
+		return (iterator != mSortedPropertyVector.end() && iterator->shaderPropertyId == property.shaderPropertyId);
+	}
+
 	bool ShaderProperties::getPropertyValue(ShaderPropertyId shaderPropertyId, int32_t& value, int32_t defaultValue) const
 	{
 		const Property property(shaderPropertyId, 0);

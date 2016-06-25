@@ -58,19 +58,36 @@ namespace RendererRuntime
 	*    Pipeline state cache manager
 	*
 	*  @remarks
-	*    The pipeline state cache is the top of the shader related cache hierarchy and maps to Direct3D 12, AMD Mantle,
-	*    Apple Metal and other rendering APIs using pipeline state objects (PSO). The next cache hierarchy level
-	*    is the program cache which maps to linked monolithic OpenGL programs and is also nice as a collection
-	*    of shader compiler results which are fed into pipeline states. The lowest cache hierarchy level is the
-	*    shader cache (vertex shader, fragment shader etc.) which handles the binary results of the shader compiler.
+	*    The pipeline state cache is the top of the shader related cache hierarchy and maps to Vulkan, Direct3D 12,
+	*    Apple Metal and other rendering APIs using pipeline state objects (PSO). The next cache hierarchy
+	*    level is the program cache which maps to linked monolithic OpenGL programs and is also nice as a collection
+	*    of shader compiler results which are fed into pipeline states. The next lowest cache hierarchy level is the
+	*    shader cache (vertex shader, pixel shader etc.) which handles the binary results of the shader compiler.
+	*    As of January 2016, although claimed to fulfill the OpenGL 4.1 specification, Apples OpenGL implementation used
+	*    on Mac OS X lacks the feature of receiving the program binary in order to reuse it for the next time instead of
+	*    fully compiling a program. Hence, at the lowest cache hierarchy, there's a shader source code cache for the build
+	*    shader source codes so at least this doesn't need to be performed during each program execution.
 	*
 	*    Sum up of the cache hierarchy:
-	*    - Pipeline state cache: Maps to Direct3D 12, AMD Mantle, Apple Metal etc.
-	*    - Program cache: Maps to linked monolithic OpenGL programs
-	*    - Shader cache: Maps to Direct3D 9 - 11, separate OpenGL shader objects and is still required for Direct3D 12
-	*      and other similar designed APIs because the binary shaders are required when creating pipeline state objects
+	*    - 0: "RendererRuntime::PipelineStateCacheManager": Maps to Vulkan, Direct3D 12, Apple Metal etc.; managed by material blueprint
+	*    - 1: "RendererRuntime::ProgramCacheManager": Maps to linked monolithic OpenGL programs; managed by shader blueprint manager
+	*    - 2: "RendererRuntime::ShaderCacheManager": Maps to Direct3D 9 - 11, separate OpenGL shader objects and is still required for Direct3D 12
+	*      and other similar designed APIs because the binary shaders are required when creating pipeline state objects;
+	*      managed by shader blueprint manager
+	*    - 3: "RendererRuntime::ShaderSourceCodeCacheManager": Shader source code cache for the build shader source codes, used for e.g. Apples
+	*      OpenGL implementation lacking of binary program support; managed by shader blueprint manager   TODO(co) "RendererRuntime::ShaderSourceCodeCacheManager" doesn't exist, yet
+	*
+	*    The pipeline state cache has two types of IDs:
+	*    - "RendererRuntime::PipelineStateSignatureId" -> Result of hashing the material blueprint ID and the shader combination generating shader properties and dynamic shader pieces
+	*    - "RendererRuntime::PipelineStateCacheId" -> Includes the hashing the build shader source code
+	*    Those two types of IDs are required because it's possible that different "RendererRuntime::PipelineStateSignatureId" result in one and the
+	*    same build shader source code of references shaders.
+	*
+	*  @note
+	*    - One pipeline state cache manager per material blueprint instance
 	*
 	*  @todo
+	*    - TODO(co) For Vulkan, DirectX 12 and Apple Metal the pipeline state object instance will be managed in here (OGRE currently has no pipeline state support)
 	*    - TODO(co) Direct3D 12: Pipeline state object: Add support for "GetCachedBlob" (super efficient material cache), see https://github.com/Microsoft/DirectX-Graphics-Samples/blob/master/Samples/D3D12PipelineStateCache/src/PSOLibrary.cpp
 	*/
 	class PipelineStateCacheManager : private Manager

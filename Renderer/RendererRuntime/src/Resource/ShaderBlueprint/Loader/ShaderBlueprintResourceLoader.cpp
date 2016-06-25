@@ -83,6 +83,12 @@ namespace RendererRuntime
 			inputFileStream.read(reinterpret_cast<char*>(mIncludeShaderPieceAssetIds), sizeof(AssetId) * shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
 			mShaderBlueprintResource->mIncludeShaderPieceResourceIds.resize(shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds);
 
+			{ // Read the referenced shader properties
+				ShaderProperties::SortedPropertyVector& sortedPropertyVector = mShaderBlueprintResource->mReferencedShaderProperties.getSortedPropertyVector();
+				sortedPropertyVector.resize(shaderBlueprintHeader.numberReferencedShaderProperties);
+				inputFileStream.read(reinterpret_cast<char*>(sortedPropertyVector.data()), sizeof(ShaderProperties::Property) * shaderBlueprintHeader.numberReferencedShaderProperties);
+			}
+
 			// Read the shader blueprint ASCII source code
 			inputFileStream.read(mShaderSourceCode, shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
 			mShaderBlueprintResource->mShaderSourceCode.assign(mShaderSourceCode, mShaderSourceCode + shaderBlueprintHeader.numberOfShaderSourceCodeBytes);
@@ -112,6 +118,7 @@ namespace RendererRuntime
 		}
 
 		{ // TODO(co) Cleanup: Get all influenced material blueprint resources
+			const ShaderBlueprintResourceId shaderBlueprintResourceId = mShaderBlueprintResource->getId();
 			typedef std::unordered_set<MaterialBlueprintResource*> MaterialBlueprintResourcePointers;
 			MaterialBlueprintResourcePointers materialBlueprintResourcePointers;
 			const MaterialBlueprintResources& materialBlueprintResources = mRendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources();
@@ -120,9 +127,13 @@ namespace RendererRuntime
 			{
 				// TODO(co) Get rid of the evil const-cast
 				MaterialBlueprintResource& materialBlueprintResource = const_cast<MaterialBlueprintResource&>(materialBlueprintResources.getElementByIndex(i));
-				if (materialBlueprintResource.mVertexShaderBlueprintId == mShaderBlueprintResource->getId() || materialBlueprintResource.mFragmentShaderBlueprintId == mShaderBlueprintResource->getId())
+				for (uint8_t shaderType = 0; shaderType < NUMBER_OF_SHADER_TYPES; ++shaderType)
 				{
-					materialBlueprintResourcePointers.insert(&materialBlueprintResource);
+					if (materialBlueprintResource.getShaderBlueprintResourceId(static_cast<ShaderType>(shaderType)) == shaderBlueprintResourceId)
+					{
+						materialBlueprintResourcePointers.insert(&materialBlueprintResource);
+						break;
+					}
 				}
 			}
 			for (MaterialBlueprintResource* materialBlueprintResource : materialBlueprintResourcePointers)

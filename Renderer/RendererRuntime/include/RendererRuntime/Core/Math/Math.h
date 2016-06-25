@@ -19,16 +19,17 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/Math/Transform.h"
+#include "RendererRuntime/Export.h"
 
-// Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
-	#include <glm/gtc/matrix_transform.hpp>
-	#include <glm/gtx/matrix_decompose.hpp>
-#pragma warning(pop)
+#include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
 //[-------------------------------------------------------]
@@ -39,27 +40,31 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	class Math
+	{
+
+
+	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const Transform Transform::IDENTITY;
+	public:
+		static const uint32_t FNV1a_INITIAL_HASH = 0xcbf29ce4;
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	void Transform::getAsMatrix(glm::mat4& objectSpaceToWorldSpace) const
-	{
-		// TODO(co) Optimize
-		static const glm::mat4x4 IDENTITY_MATRIX;	// TODO(co) Does GLM offer such a constant?
-		objectSpaceToWorldSpace = glm::translate(IDENTITY_MATRIX, position) * glm::mat4_cast(rotation) * glm::scale(IDENTITY_MATRIX, scale);
-	}
+	public:
+		//[-------------------------------------------------------]
+		//[ Hash                                                  ]
+		//[-------------------------------------------------------]
+		RENDERERRUNTIME_API_EXPORT static uint32_t calculateFNV1a(const uint8_t* content, uint32_t numberOfBytes, uint32_t hash = FNV1a_INITIAL_HASH);
 
-	void Transform::setByMatrix(const glm::mat4& transformMatrix)
-	{
-		glm::vec3 skew;
-		glm::vec4 perspective;
-		glm::decompose(transformMatrix, scale, rotation, position, skew, perspective);
-	}
+
+
+	};
 
 
 //[-------------------------------------------------------]

@@ -85,11 +85,35 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	void StringHelper::splitString(const std::string& stringToSplit, char separator, std::vector<std::string>& elements)
 	{
+		// Implementation from http://stackoverflow.com/a/236803
 		std::stringstream stringStream(stringToSplit);
 		std::string item;
 		while (std::getline(stringStream, item, separator))
 		{
 			elements.push_back(item);
+		}
+	}
+
+	void StringHelper::splitString(const std::string& stringToSplit, const std::string& separators, std::vector<std::string>& elements)
+	{
+		// Implementation from http://oopweb.com/CPP/Documents/CPPHOWTO/Volume/C++Programming-HOWTO-7.html - "7.3 A string tokenizer"
+
+		// Skip separators at beginning
+		std::string::size_type lastPosition = stringToSplit.find_first_not_of(separators, 0);
+
+		// Find first "non-delimiter"
+		std::string::size_type position = stringToSplit.find_first_of(separators, lastPosition);
+
+		while (std::string::npos != position || std::string::npos != lastPosition)
+		{
+			// Found a token, add it to the vector
+			elements.push_back(stringToSplit.substr(lastPosition, position - lastPosition));
+
+			// Skip separators; note the "not_of"
+			lastPosition = stringToSplit.find_first_not_of(separators, position);
+
+			// Find next "non-delimiter"
+			position = stringToSplit.find_first_of(separators, lastPosition);
 		}
 	}
 

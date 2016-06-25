@@ -77,15 +77,6 @@ namespace RendererRuntime
 				uint32_t flags;
 			};
 
-			struct ShaderBlueprints
-			{
-				AssetId vertexShaderBlueprintAssetId;
-				AssetId tessellationControlShaderBlueprintAssetId;
-				AssetId tessellationEvaluationShaderBlueprintAssetId;
-				AssetId geometryShaderBlueprintAssetId;
-				AssetId fragmentShaderBlueprintAssetId;
-			};
-
 			struct UniformBufferHeader
 			{
 				uint32_t									  rootParameterIndex;

@@ -25,6 +25,7 @@
 #include "RendererToolkit/Helper/StringHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h>
 #include <RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintFileFormat.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -39,6 +40,92 @@
 
 #include <memory>
 #include <fstream>
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void gatherReferencedShaderProperties(const std::string& sourceString, const std::string& instructionName, RendererRuntime::ShaderProperties& referencedShaderProperties)
+		{
+			const size_t instructionNameLength = instructionName.length();
+			const size_t endPosition = sourceString.length();
+			size_t currentPosition = 0;
+
+			// Till the end...
+			while (currentPosition < endPosition)
+			{
+				const size_t index = sourceString.find(instructionName, currentPosition);
+				if (std::string::npos != index)
+				{
+					currentPosition = index + instructionNameLength;
+
+					// Find the end of the logical property expression
+					size_t expressionEndPosition = sourceString.find("(", currentPosition);
+					if (std::string::npos != expressionEndPosition)
+					{
+						// Skip '('
+						++expressionEndPosition;
+
+						// Find the end of the logical property expression
+						int numberOfOpeningBrackets = 1;
+						int numberOfClosingBrackets = 0;
+						for (; (expressionEndPosition < endPosition) && (numberOfOpeningBrackets != numberOfClosingBrackets); ++expressionEndPosition)
+						{
+							const char currentCharacter = sourceString[expressionEndPosition];
+							if ('(' == currentCharacter)
+							{
+								++numberOfOpeningBrackets;
+							}
+							else if (')' == currentCharacter)
+							{
+								++numberOfClosingBrackets;
+							}
+						}
+
+						// TODO(co) I'm sure we can optimize this, but to have something to start with stick to a simple to implement solution
+						static std::vector<std::string> stringParts;	// Optimization: To avoid constant allocations/deallocations, use a static instance (not multi-threading safe, of course)
+						stringParts.clear();
+						RendererToolkit::StringHelper::splitString(sourceString.substr(currentPosition, expressionEndPosition - currentPosition), " 	()!,", stringParts);
+						for (const std::string& stringPart : stringParts)
+						{
+							if (stringPart != "&&" && stringPart != "||")
+							{
+								referencedShaderProperties.setPropertyValue(RendererRuntime::StringId(stringPart.c_str()), 1);
+							}
+						}
+
+						// Next, please
+						currentPosition = expressionEndPosition;
+					}
+					else
+					{
+						// We're done, end-of-file
+						break;
+					}
+				}
+				else
+				{
+					// We're done, end-of-file
+					break;
+				}
+			}
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -148,11 +235,18 @@ namespace RendererToolkit
 				}
 			}
 
+			// Gather IDs of shader properties known to the shader blueprint resource
+			// -> Directly use "RendererRuntime::ShaderProperties" to keep things simple, although we don't need a shader property value
+			RendererRuntime::ShaderProperties referencedShaderProperties;
+			::detail::gatherReferencedShaderProperties(sourceCode, "@property", referencedShaderProperties);
+			::detail::gatherReferencedShaderProperties(sourceCode, "@foreach", referencedShaderProperties);
+
 			{ // Shader blueprint header
 				RendererRuntime::v1ShaderBlueprint::Header shaderBlueprintHeader;
 				shaderBlueprintHeader.formatType						 = RendererRuntime::v1ShaderBlueprint::FORMAT_TYPE;
 				shaderBlueprintHeader.formatVersion						 = RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION;
-				shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds = includeShaderPieceAssetIds.size();
+				shaderBlueprintHeader.numberOfIncludeShaderPieceAssetIds = static_cast<uint16_t>(includeShaderPieceAssetIds.size());
+				shaderBlueprintHeader.numberReferencedShaderProperties   = static_cast<uint16_t>(referencedShaderProperties.getSortedPropertyVector().size());
 				shaderBlueprintHeader.numberOfShaderSourceCodeBytes		 = static_cast<uint32_t>(numberOfBytes);
 
 				// Write down the shader blueprint header
@@ -161,6 +255,9 @@ namespace RendererToolkit
 
 			// Write down the asset IDs of the shader pieces to include
 			outputFileStream.write(reinterpret_cast<char*>(includeShaderPieceAssetIds.data()), sizeof(RendererRuntime::AssetId) * includeShaderPieceAssetIds.size());
+
+			// Write down the referenced shader properties
+			outputFileStream.write(reinterpret_cast<char*>(referencedShaderProperties.getSortedPropertyVector().data()), sizeof(RendererRuntime::ShaderProperties::Property) * referencedShaderProperties.getSortedPropertyVector().size());
 
 			// Dump the unchanged content into the output file stream
 			outputFileStream.write(sourceCode.c_str(), numberOfBytes);

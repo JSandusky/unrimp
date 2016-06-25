@@ -782,6 +782,7 @@ namespace RendererRuntime
 		std::string outString;
 
 		mShaderProperties = shaderProperties;
+		mDynamicShaderPieces.clear();
 
 		{ // Process the shader piece resources to include
 			const ShaderBlueprintResource::IncludeShaderPieceResourceIds& includeShaderPieceResourceIds = shaderBlueprintResource.getIncludeShaderPieceResourceIds();
@@ -1087,8 +1088,8 @@ namespace RendererRuntime
 			else
 			{
 				const StringId pieceName(argValues[0].c_str());
-				PiecesMap::const_iterator it = mPieces.find(pieceName);
-				if (it != mPieces.end())
+				DynamicShaderPieces::const_iterator it = mDynamicShaderPieces.find(pieceName);
+				if (it != mDynamicShaderPieces.end())
 				{
 					syntaxError = true;
 					printf("Error at line %lu: @piece '%s' already defined", static_cast<unsigned long>(calculateLineCount(subString)), argValues[0].c_str());
@@ -1100,7 +1101,7 @@ namespace RendererRuntime
 
 					std::string tempBuffer;
 					::detail::copy(tempBuffer, blockSubString, blockSubString.getSize());
-					mPieces[pieceName] = tempBuffer;
+					mDynamicShaderPieces[pieceName] = tempBuffer;
 
 					subString.setStart(blockSubString.getEnd() + sizeof("@end"));
 				}
@@ -1142,8 +1143,8 @@ namespace RendererRuntime
 			else
 			{
 				const StringId pieceName(argValues[0].c_str());
-				PiecesMap::const_iterator it = mPieces.find(pieceName);
-				if (it != mPieces.end())
+				DynamicShaderPieces::const_iterator it = mDynamicShaderPieces.find(pieceName);
+				if (it != mDynamicShaderPieces.end())
 				{
 					outBuffer += it->second;
 				}

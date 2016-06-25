@@ -354,6 +354,9 @@
     <None Include="include\RendererRuntime\Vr\IVrManager.inl">
       <Filter>Source Files\Vr</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateSignature.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -750,6 +753,15 @@
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_internal.h">
       <Filter>Source Files\Resource\ShaderBlueprint\Cache\Preprocessor</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateSignature.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Math\Math.h">
+      <Filter>Source Files\Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderType.h">
+      <Filter>Source Files\Resource\ShaderBlueprint</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -1036,6 +1048,12 @@
     </ClCompile>
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_common.cpp">
       <Filter>Source Files\Resource\ShaderBlueprint\Cache\Preprocessor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateSignature.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Math\Math.cpp">
+      <Filter>Source Files\Core\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

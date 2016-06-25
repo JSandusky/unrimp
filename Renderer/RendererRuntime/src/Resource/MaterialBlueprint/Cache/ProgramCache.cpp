@@ -62,7 +62,7 @@ namespace RendererRuntime
 			// Create the vertex shader
 			Renderer::IVertexShader* vertexShader = nullptr;
 			{
-				const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.mVertexShaderBlueprintId);
+				const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.getShaderBlueprintResourceId(ShaderType::Vertex));
 				if (nullptr != shaderBlueprintResource)
 				{
 					ShaderBuilder shaderBuilder;
@@ -78,7 +78,7 @@ namespace RendererRuntime
 			// Create the fragment shader
 			Renderer::IFragmentShader* fragmentShader = nullptr;
 			{
-				const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.mFragmentShaderBlueprintId);
+				const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.getShaderBlueprintResourceId(ShaderType::Fragment));
 				if (nullptr != shaderBlueprintResource)
 				{
 					ShaderBuilder shaderBuilder;

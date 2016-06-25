@@ -52,6 +52,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef std::map<StringId, std::string>	DynamicShaderPieces;	// TODO(co) Unordered map might perform better
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
@@ -99,13 +105,6 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::map<StringId, std::string> PiecesMap;	// TODO(co) Unordered map might perform better
-
-
-	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
@@ -124,8 +123,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ShaderProperties mShaderProperties;
-		PiecesMap		 mPieces;
+		ShaderProperties	mShaderProperties;
+		DynamicShaderPieces	mDynamicShaderPieces;
 
 
 	};

@@ -157,7 +157,8 @@ namespace RendererRuntime
 		const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = getMaterialBlueprintResourceManager().getRendererRuntime().getShaderBlueprintResourceManager();
 
 		// Check the rest
-		return (IResource::LoadingState::LOADED == getLoadingState() && nullptr != mRootSignaturePtr && ::detail::isFullyLoaded(shaderPieceResourceManager, shaderBlueprintResourceManager, mVertexShaderBlueprintId) && ::detail::isFullyLoaded(shaderPieceResourceManager, shaderBlueprintResourceManager, mFragmentShaderBlueprintId));
+		// TODO(co) Handle the other shader types
+		return (IResource::LoadingState::LOADED == getLoadingState() && nullptr != mRootSignaturePtr && ::detail::isFullyLoaded(shaderPieceResourceManager, shaderBlueprintResourceManager, mShaderBlueprintResourceId[static_cast<uint8_t>(ShaderType::Vertex)]) && ::detail::isFullyLoaded(shaderPieceResourceManager, shaderBlueprintResourceManager, mShaderBlueprintResourceId[static_cast<uint8_t>(ShaderType::Fragment)]));
 	}
 
 	void MaterialBlueprintResource::fillUnknownUniformBuffers()
@@ -542,14 +543,9 @@ namespace RendererRuntime
 		mMaterialBlueprintResourceManager(nullptr),
 		mPipelineStateCacheManager(*this),
 		mVertexAttributes(glm::countof(::detail::vertexAttributesLayout), ::detail::vertexAttributesLayout),
-		mPipelineState(Renderer::PipelineStateBuilder()),
-		mVertexShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
-		mTessellationControlShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
-		mTessellationEvaluationShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
-		mGeometryShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
-		mFragmentShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>())
+		mPipelineState(Renderer::PipelineStateBuilder())
 	{
-		// Nothing here
+		memset(mShaderBlueprintResourceId, static_cast<int>(getUninitialized<ShaderBlueprintResourceId>()), sizeof(ShaderBlueprintResourceId) * NUMBER_OF_SHADER_TYPES);
 	}
 
 	MaterialBlueprintResource::MaterialBlueprintResource(MaterialBlueprintResourceId materialBlueprintResourceId) :
@@ -557,14 +553,9 @@ namespace RendererRuntime
 		mMaterialBlueprintResourceManager(nullptr),
 		mPipelineStateCacheManager(*this),
 		mVertexAttributes(glm::countof(::detail::vertexAttributesLayout), ::detail::vertexAttributesLayout),
-		mPipelineState(Renderer::PipelineStateBuilder()),
-		mVertexShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
-		mTessellationControlShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
-		mTessellationEvaluationShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
-		mGeometryShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>()),
-		mFragmentShaderBlueprintId(getUninitialized<ShaderBlueprintResourceId>())
+		mPipelineState(Renderer::PipelineStateBuilder())
 	{
-		// Nothing here
+		memset(mShaderBlueprintResourceId, static_cast<int>(getUninitialized<ShaderBlueprintResourceId>()), sizeof(ShaderBlueprintResourceId) * NUMBER_OF_SHADER_TYPES);
 	}
 
 	void MaterialBlueprintResource::linkMaterialTechnique(MaterialTechnique& materialTechnique)

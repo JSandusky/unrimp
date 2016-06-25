@@ -36,7 +36,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	namespace detail
 	{
-		namespace StringHashTemplate
+		namespace StringIdTemplate
 		{
 			/**
 			*  @brief
@@ -134,7 +134,7 @@ namespace RendererRuntime
 
 	template <uint32_t N>
 	FORCEINLINE StringId::StringId(const char (&string)[N]) :
-		mId(detail::StringHashTemplate::FnvHash<N, N>::hash(string))
+		mId(detail::StringIdTemplate::FnvHash<N, N>::hash(string))
 	{
 		// Nothing here
 	}

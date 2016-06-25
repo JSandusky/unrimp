@@ -124,7 +124,19 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the value of a property
+		*    Return whether or not a shader property exists
+		*
+		*  @param[in] shaderPropertyId
+		*    ID of the shader property to check for
+		*
+		*  @return
+		*    "true" if the requested shader property exists, else "false" if the requested shader property doesn't exist
+		*/
+		RENDERERRUNTIME_API_EXPORT bool hasPropertyValue(ShaderPropertyId shaderPropertyId) const;
+
+		/**
+		*  @brief
+		*    Return the value of a shader property
 		*
 		*  @param[in] shaderPropertyId
 		*    ID of the shader property to return the value from
@@ -140,7 +152,7 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the value of a property
+		*    Return the value of a shader property
 		*
 		*  @param[in] shaderPropertyId
 		*    ID of the shader property to return the value from
@@ -157,7 +169,7 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Set the value of a property
+		*    Set the value of a shader property
 		*
 		*  @param[in] shaderPropertyId
 		*    ID of the shader property to set the value of

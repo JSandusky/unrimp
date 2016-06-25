@@ -27,10 +27,11 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResource.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 
-#include <string>
+#include <map>
 
 
 //[-------------------------------------------------------]
@@ -38,7 +39,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
+	class MaterialBlueprintResource;
 }
 
 
@@ -52,8 +53,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t ShaderPieceResourceId;		///< POD shader piece resource identifier
-	typedef uint32_t ShaderBlueprintResourceId;	///< POD shader blueprint resource identifier
+	typedef std::map<StringId, std::string>	DynamicShaderPieces;			// TODO(co) Unordered map might perform better
+	typedef uint32_t						MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
+	typedef uint32_t						PipelineStateSignatureId;		///< Pipeline state signature identifier, result of hashing the referenced shaders as well as other pipeline state properties
+	typedef uint32_t						ShaderCombinationId;			///< Shader combination identifier, result of hashing the shader combination generating shader blueprint resource, shader properties and dynamic shader pieces
 
 
 	//[-------------------------------------------------------]
@@ -61,25 +64,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Shader blueprint resource
+	*    Pipeline state signature
+	*
+	*  @see
+	*    - See "RendererRuntime::PipelineStateCacheManager" for additional information
 	*/
-	class ShaderBlueprintResource : public IResource
+	class PipelineStateSignature : private NonCopyable
 	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class ShaderBlueprintResourceLoader;
-		friend class ShaderBlueprintResourceManager;
-		friend class PackedElementManager<ShaderBlueprintResource, ShaderBlueprintResourceId>;
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		typedef std::vector<ShaderPieceResourceId> IncludeShaderPieceResourceIds;
 
 
 	//[-------------------------------------------------------]
@@ -88,68 +79,69 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
-		*    Return the IDs of the shader piece resources to include
-		*
-		*  @return
-		*    The IDs of the shader piece resources to include
-		*/
-		inline const IncludeShaderPieceResourceIds& getIncludeShaderPieceResourceIds() const;
-
-		/**
-		*  @brief
-		*    Return the referenced shader properties
-		*
-		*  @return
-		*    The referenced shader properties
-		*/
-		inline const ShaderProperties& getReferencedShaderProperties() const;
-
-		/**
-		*  @brief
-		*    Return the shader source code
-		*
-		*  @return
-		*    The shader ASCII source code
-		*/
-		inline const std::string& getShaderSourceCode() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		/**
-		*  @brief
 		*    Default constructor
 		*/
-		inline ShaderBlueprintResource();
+		inline PipelineStateSignature();
 
 		/**
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] shaderBlueprintResourceId
-		*    Shader blueprint resource ID
+		*  @param[in] materialBlueprintResource
+		*    Material blueprint resource to use
+		*  @param[in] shaderProperties
+		*    Shader properties to use
+		*  @param[in] dynamicShaderPieces
+		*    Dynamic via C++ generated shader pieces to use
 		*/
-		inline explicit ShaderBlueprintResource(ShaderBlueprintResourceId shaderBlueprintResourceId);
+		PipelineStateSignature(const MaterialBlueprintResource& materialBlueprintResource, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES]);
+
+		/**
+		*  @brief
+		*    Copy constructor
+		*
+		*  @param[in] pipelineStateSignature
+		*    Pipeline state signature to copy from
+		*/
+		explicit PipelineStateSignature(const PipelineStateSignature& pipelineStateSignature);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~ShaderBlueprintResource();
+		inline ~PipelineStateSignature();
 
-		ShaderBlueprintResource(const ShaderBlueprintResource&) = delete;
-		ShaderBlueprintResource& operator=(const ShaderBlueprintResource&) = delete;
+		/**
+		*  @brief
+		*    Copy operator
+		*/
+		PipelineStateSignature& operator=(const PipelineStateSignature& pipelineStateSignature);
+
+		//[-------------------------------------------------------]
+		//[ Getter for input data                                 ]
+		//[-------------------------------------------------------]
+		inline MaterialBlueprintResourceId getMaterialBlueprintResourceId() const;
+		inline const ShaderProperties& getShaderProperties() const;
+		inline const DynamicShaderPieces& getDynamicShaderPieces(ShaderType shaderType) const;
+
+		//[-------------------------------------------------------]
+		//[ Getter for derived data                               ]
+		//[-------------------------------------------------------]
+		inline PipelineStateSignatureId getPipelineStateSignatureId() const;
+		inline ShaderCombinationId getShaderCombinationId(ShaderType shaderType) const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IncludeShaderPieceResourceIds mIncludeShaderPieceResourceIds;
-		ShaderProperties			  mReferencedShaderProperties;	// Directly use "RendererRuntime::ShaderProperties" to keep things simple, although we don't need a shader property value
-		std::string					  mShaderSourceCode;
+		// Input data
+		MaterialBlueprintResourceId mMaterialBlueprintResourceId;
+		ShaderProperties			mShaderProperties;
+		DynamicShaderPieces			mDynamicShaderPieces[NUMBER_OF_SHADER_TYPES];
+		// Derived data
+		PipelineStateSignatureId mPipelineStateSignatureId;
+		ShaderCombinationId		 mShaderCombinationId[NUMBER_OF_SHADER_TYPES];
 
 
 	};
@@ -164,4 +156,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.inl"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateSignature.inl"

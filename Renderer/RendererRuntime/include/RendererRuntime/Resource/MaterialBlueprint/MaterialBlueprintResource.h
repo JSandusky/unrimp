@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Detail/IResource.h"
 #include "RendererRuntime/Resource/Material/MaterialProperties.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCacheManager.h"
 
 #include <Renderer/Public/Renderer.h>
@@ -204,6 +205,15 @@ namespace RendererRuntime
 		*/
 		inline const Renderer::PipelineState& getPipelineState() const;
 
+		/**
+		*  @brief
+		*    Return a shader blueprint resource ID
+		*
+		*  @return
+		*    The requested shader blueprint resource ID, can be uninitialized
+		*/
+		inline const ShaderBlueprintResourceId getShaderBlueprintResourceId(ShaderType shaderType) const;
+
 		//[-------------------------------------------------------]
 		//[ Resource                                              ]
 		//[-------------------------------------------------------]
@@ -329,6 +339,7 @@ namespace RendererRuntime
 		Renderer::VertexAttributes		  mVertexAttributes;
 		Renderer::IRootSignaturePtr		  mRootSignaturePtr;					///< Root signature, can be a null pointer
 		Renderer::PipelineState			  mPipelineState;
+		ShaderBlueprintResourceId		  mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
 		// Resource
 		UniformBuffers mUniformBuffers;
 		SamplerStates  mSamplerStates;
@@ -339,15 +350,6 @@ namespace RendererRuntime
 		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 
 		LinkedMaterialTechniques mLinkedMaterialTechniques;	// TODO(co) Decent material technique list management inside the material blueprint resource (link, unlink etc.)
-
-
-	// TODO(co) Make this private
-	public:
-		ShaderBlueprintResourceId  mVertexShaderBlueprintId;
-		ShaderBlueprintResourceId  mTessellationControlShaderBlueprintId;
-		ShaderBlueprintResourceId  mTessellationEvaluationShaderBlueprintId;
-		ShaderBlueprintResourceId  mGeometryShaderBlueprintId;
-		ShaderBlueprintResourceId  mFragmentShaderBlueprintId;
 
 
 	};

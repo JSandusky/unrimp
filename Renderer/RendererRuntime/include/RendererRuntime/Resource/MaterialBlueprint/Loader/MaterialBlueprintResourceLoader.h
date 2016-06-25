@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
 #include "RendererRuntime/Asset/Asset.h"
 
@@ -114,11 +115,7 @@ namespace RendererRuntime
 		Renderer::RootSignature	   mRootSignature;
 
 		// Temporary data: Shader blueprints
-		AssetId mVertexShaderBlueprintAssetId;
-		AssetId mTessellationControlShaderBlueprintAssetId;
-		AssetId mTessellationEvaluationShaderBlueprintAssetId;
-		AssetId mGeometryShaderBlueprintAssetId;
-		AssetId mFragmentShaderBlueprintAssetId;
+		AssetId mShaderBlueprintAssetId[NUMBER_OF_SHADER_TYPES];
 
 		// Temporary data: Sampler states
 		uint32_t						   mMaximumNumberOfMaterialBlueprintSamplerStates;
