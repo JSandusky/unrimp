@@ -34,6 +34,7 @@
 	#pragma warning(disable: 4619)	// warning C4619: #pragma warning: there is no warning number '4351'
 	#pragma warning(disable: 4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
 	#pragma warning(disable: 4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
+	#pragma warning(disable: 4770)	// warning C4770: partially validated enum 'type' used as index"
 	#include <rapidjson/document.h>
 #pragma warning(pop)
 
