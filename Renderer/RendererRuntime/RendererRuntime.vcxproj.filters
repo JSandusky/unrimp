@@ -357,6 +357,9 @@
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateSignature.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCompiler.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -762,6 +765,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderType.h">
       <Filter>Source Files\Resource\ShaderBlueprint</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCompiler.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -959,13 +965,7 @@
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\ProgramCacheManager.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCache.cpp">
-      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.cpp">
-      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\ProgramCache.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Material\MaterialProperties.cpp">
@@ -1054,6 +1054,9 @@
     </ClCompile>
     <ClCompile Include="src\Core\Math\Math.cpp">
       <Filter>Source Files\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCompiler.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

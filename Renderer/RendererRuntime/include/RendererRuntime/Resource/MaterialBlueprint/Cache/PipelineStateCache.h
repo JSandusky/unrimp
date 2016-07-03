@@ -27,9 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
-#include "RendererRuntime/Resource/Material/MaterialProperties.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateSignature.h"
 
 #include <Renderer/Public/Renderer.h>
 
@@ -60,6 +58,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
+		friend class PipelineStateCompiler;		///< Needs to be able to set "mPipelineStateObjectPtr"
 		friend class PipelineStateCacheManager;	///< Is creating and managing pipeline state cache instances
 
 
@@ -69,6 +68,15 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
+		*    Return the pipeline state signature of the cache
+		*
+		*  @return
+		*    The pipeline state signature of the cache
+		*/
+		inline const PipelineStateSignature& getPipelineStateSignature() const;
+
+		/**
+		*  @brief
 		*    Return pipeline state object
 		*
 		*  @return
@@ -76,12 +84,21 @@ namespace RendererRuntime
 		*/
 		inline Renderer::IPipelineStatePtr getPipelineStateObjectPtr() const;
 
+		/**
+		*  @brief
+		*    Return whether or not the pipeline state cache is currently using fallback data due to asynchronous compilation
+		*
+		*  @return
+		*    If "true", this pipeline state cache is currently using fallback data because it's in asynchronous compilation
+		*/
+		inline bool isUsingFallback() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		PipelineStateCache(PipelineStateCacheManager& pipelineStateCacheManager, const ShaderProperties& shaderProperties, const MaterialProperties& materialProperties);
+		inline explicit PipelineStateCache(const PipelineStateSignature& pipelineStateSignature);
 		inline ~PipelineStateCache();
 		PipelineStateCache(const PipelineStateCache&) = delete;
 		PipelineStateCache& operator=(const PipelineStateCache&) = delete;
@@ -91,11 +108,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		PipelineStateCacheManager&	mPipelineStateCacheManager;	///< Owner pipeline state cache manager
-		ShaderProperties			mShaderProperties;			///< Shader properties which ended up in this pipeline state
-		MaterialProperties			mMaterialProperties;		///< Material properties which ended up in this pipeline state
-		Renderer::PipelineState		mPipelineState;
+		PipelineStateSignature		mPipelineStateSignature;
 		Renderer::IPipelineStatePtr	mPipelineStateObjectPtr;
+		bool						mIsUsingFallback;			///< If "true", this pipeline state cache is currently using fallback data because it's in asynchronous compilation
 
 
 	};

@@ -28,15 +28,32 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline const PipelineStateSignature& PipelineStateCache::getPipelineStateSignature() const
+	{
+		return mPipelineStateSignature;
+	}
+
 	inline Renderer::IPipelineStatePtr PipelineStateCache::getPipelineStateObjectPtr() const
 	{
 		return mPipelineStateObjectPtr;
+	}
+
+	inline bool PipelineStateCache::isUsingFallback() const
+	{
+		return mIsUsingFallback;
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
+	inline PipelineStateCache::PipelineStateCache(const PipelineStateSignature& pipelineStateSignature) :
+		mPipelineStateSignature(pipelineStateSignature),
+		mIsUsingFallback(false)
+	{
+		// Nothing here
+	}
+
 	inline PipelineStateCache::~PipelineStateCache()
 	{
 		// Nothing here

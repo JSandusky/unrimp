@@ -53,6 +53,7 @@ namespace RendererRuntime
 	class IResourceManager;
 	class MeshResourceManager;
 	class SceneResourceManager;
+	class PipelineStateCompiler;
 	class TextureResourceManager;
 	class SkeletonResourceManager;
 	class MaterialResourceManager;
@@ -97,6 +98,10 @@ namespace RendererRuntime
 		inline AssetManager& getAssetManager() const
 		{
 			return *mAssetManager;
+		}
+		inline PipelineStateCompiler& getPipelineStateCompiler() const
+		{
+			return *mPipelineStateCompiler;
 		}
 		inline ResourceStreamer& getResourceStreamer() const
 		{
@@ -161,6 +166,7 @@ namespace RendererRuntime
 		Renderer::IRenderer*				mRenderer;
 		ThreadManager*						mThreadManager;
 		AssetManager*						mAssetManager;
+		PipelineStateCompiler*				mPipelineStateCompiler;
 		ResourceStreamer*					mResourceStreamer;
 		TextureResourceManager*				mTextureResourceManager;
 		ShaderPieceResourceManager*			mShaderPieceResourceManager;

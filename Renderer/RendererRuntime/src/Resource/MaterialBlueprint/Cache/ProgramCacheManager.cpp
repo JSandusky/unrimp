@@ -22,7 +22,13 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCacheManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateSignature.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCache.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
+#include "RendererRuntime/Core/Math/Math.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -35,25 +41,92 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramCache* ProgramCacheManager::getProgramCache(const ShaderProperties& shaderProperties)
+	ProgramCache* ProgramCacheManager::getProgramCacheByPipelineStateSignature(const PipelineStateSignature& pipelineStateSignature)
 	{
-		// TODO(co) Program cache management
-		if (nullptr == mProgramCache)
+		// Generate the program cache ID
+		ProgramCacheId programCacheId = Math::FNV1a_INITIAL_HASH;
+		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 		{
-			mProgramCache = new ProgramCache(*this, shaderProperties);
+			const ShaderCombinationId shaderCombinationId = pipelineStateSignature.getShaderCombinationId(static_cast<ShaderType>(i));
+			if (isInitialized(shaderCombinationId))
+			{
+				programCacheId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&shaderCombinationId), sizeof(ShaderCombinationId), programCacheId);
+			}
+		}
+
+		{ // Does the program cache already exist?
+			ProgramCacheById::const_iterator iterator = mProgramCacheById.find(programCacheId);
+			if (iterator != mProgramCacheById.cend())
+			{
+				return iterator->second;
+			}
+		}
+
+		// Create the new program cache instance
+		ProgramCache* programCache = new ProgramCache(programCacheId);
+		mProgramCacheById.insert(std::make_pair(programCacheId, programCache));
+
+		// Create the renderer program: Decide which shader language should be used (for example "GLSL" or "HLSL")
+		const MaterialBlueprintResource& materialBlueprintResource = mPipelineStateCacheManager.getMaterialBlueprintResource();
+		const Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
+		Renderer::IRenderer& renderer = rootSignaturePtr->getRenderer();
+		Renderer::IShaderLanguagePtr shaderLanguage(renderer.getShaderLanguage());
+		if (nullptr != shaderLanguage)
+		{
+			// TODO(co) Use shader cache
+
+			// Get the required resource manager instances
+			const IRendererRuntime& rendererRuntime = mPipelineStateCacheManager.getMaterialBlueprintResource().getMaterialBlueprintResourceManager().getRendererRuntime();
+			const ShaderPieceResourceManager& shaderPieceResourceManager = rendererRuntime.getShaderPieceResourceManager();
+			const ShaderBlueprintResources& shaderBlueprintResources = rendererRuntime.getShaderBlueprintResourceManager().getShaderBlueprintResources();
+
+			// Create the vertex shader
+			Renderer::IVertexShader* vertexShader = nullptr;
+			{
+				const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.getShaderBlueprintResourceId(ShaderType::Vertex));
+				if (nullptr != shaderBlueprintResource)
+				{
+					ShaderBuilder shaderBuilder;
+					vertexShader = shaderLanguage->createVertexShaderFromSourceCode(shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, pipelineStateSignature.getShaderProperties()).c_str());
+				}
+				else
+				{
+					// TODO(co) Error handling
+					assert(false);
+				}
+			}
+
+			// Create the fragment shader
+			Renderer::IFragmentShader* fragmentShader = nullptr;
+			{
+				const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.getShaderBlueprintResourceId(ShaderType::Fragment));
+				if (nullptr != shaderBlueprintResource)
+				{
+					ShaderBuilder shaderBuilder;
+					fragmentShader = shaderLanguage->createFragmentShaderFromSourceCode(shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, pipelineStateSignature.getShaderProperties()).c_str());
+				}
+				else
+				{
+					// TODO(co) Error handling
+					assert(false);
+				}
+			}
+
+			// Create the program
+			programCache->mProgramPtr = shaderLanguage->createProgram(*rootSignaturePtr, materialBlueprintResource.getVertexAttributes(), vertexShader, fragmentShader);
 		}
 
 		// Done
-		return mProgramCache;
+		return programCache;
 	}
 
 	void ProgramCacheManager::clearCache()
 	{
-		if (nullptr != mProgramCache)
+		for (auto& programCacheElement : mProgramCacheById)
 		{
-			delete mProgramCache;
-			mProgramCache = nullptr;
+			delete programCacheElement.second;
 		}
+		mProgramCacheById.clear();
 	}
 
 

@@ -43,6 +43,7 @@
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCompiler.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateSignature.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCache.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCacheManager.inl" />
@@ -154,6 +155,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCompiler.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateSignature.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCache.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\ProgramCacheManager.h" />
@@ -267,10 +269,9 @@
     <ClCompile Include="src\Resource\Detail\IResource.cpp" />
     <ClCompile Include="src\Resource\Detail\IResourceManager.cpp" />
     <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp" />
-    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCache.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.cpp" />
+    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCompiler.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateSignature.cpp" />
-    <ClCompile Include="src\Resource\MaterialBlueprint\Cache\ProgramCache.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\ProgramCacheManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Listener\MaterialBlueprintResourceListener.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.cpp" />

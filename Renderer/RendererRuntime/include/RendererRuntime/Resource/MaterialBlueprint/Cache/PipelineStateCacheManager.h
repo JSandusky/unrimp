@@ -28,8 +28,14 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCacheManager.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
+#include "RendererRuntime/Core/StringId.h"
 
 #include <Renderer/Public/Renderer.h>
+
+#include <map>
+#include <string>
+#include <unordered_map>
 
 
 //[-------------------------------------------------------]
@@ -38,8 +44,8 @@
 namespace RendererRuntime
 {
 	class ShaderProperties;
-	class MaterialProperties;
 	class PipelineStateCache;
+	class MaterialBlueprintResource;
 }
 
 
@@ -48,6 +54,13 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef std::map<StringId, std::string>	DynamicShaderPieces;		// TODO(co) Unordered map might perform better
+	typedef uint32_t						PipelineStateSignatureId;	///< Pipeline state signature identifier, result of hashing the referenced shaders as well as other pipeline state properties
 
 
 	//[-------------------------------------------------------]
@@ -122,8 +135,26 @@ namespace RendererRuntime
 		*/
 		inline ProgramCacheManager& getProgramCacheManager();
 
-		// TODO(co)
-		Renderer::IPipelineStatePtr getPipelineStateObjectPtr(const ShaderProperties& shaderProperties, const MaterialProperties& materialProperties);
+		/**
+		*  @brief
+		*    Request a pipeline state cache instance by combination
+		*
+		*  @param[in] shaderProperties
+		*    Shader properties to use
+		*  @param[in] dynamicShaderPieces
+		*    Dynamic via C++ generated shader pieces to use
+		*  @param[in] allowEmergencySynchronousCompilation
+		*    Allow emergency synchronous compilation if no fallback could be found? This will result in a runtime hiccup instead of graphics artifacts.
+		*
+		*  @return
+		*    The requested pipeline state cache instance, null pointer on error, do not destroy the instance
+		*/
+		Renderer::IPipelineStatePtr getPipelineStateCacheByCombination(const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES], bool allowEmergencySynchronousCompilation);
+
+		/**
+		*  @brief
+		*    Clear the pipeline state cache manager
+		*/
 		void clearCache();
 
 
@@ -131,21 +162,26 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit PipelineStateCacheManager(MaterialBlueprintResource& materialBlueprintResource);
+		inline explicit PipelineStateCacheManager(MaterialBlueprintResource& materialBlueprintResource);
 		inline ~PipelineStateCacheManager();
 		PipelineStateCacheManager(const PipelineStateCacheManager&) = delete;
 		PipelineStateCacheManager& operator=(const PipelineStateCacheManager&) = delete;
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::unordered_map<PipelineStateSignatureId, PipelineStateCache*> PipelineStateCacheByPipelineStateSignatureId;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialBlueprintResource& mMaterialBlueprintResource;	///< Owner material blueprint resource
-		ProgramCacheManager		   mProgramCacheManager;
-
-		// TODO(co) Pipeline state cache management
-		PipelineStateCache* mPipelineStateCache;
+		MaterialBlueprintResource&					 mMaterialBlueprintResource;	///< Owner material blueprint resource
+		ProgramCacheManager							 mProgramCacheManager;
+		PipelineStateCacheByPipelineStateSignatureId mPipelineStateCacheByPipelineStateSignatureId;
 
 
 	};

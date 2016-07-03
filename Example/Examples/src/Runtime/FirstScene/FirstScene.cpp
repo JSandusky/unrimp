@@ -35,6 +35,7 @@
 #include <RendererRuntime/Resource/Compositor/CompositorInstance.h>
 #include <RendererRuntime/Resource/Compositor/CompositorResourceManager.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h>
+#include <RendererRuntime/Resource/Material/MaterialResourceManager.h>
 
 #include <imgui/imgui.h>
 
@@ -51,7 +52,11 @@ FirstScene::FirstScene(const char *rendererName) :
 	mGlobalTimer(0.0f),
 	mRotationSpeed(1.0f),
 	mSunLightColor{1.0f, 1.0f, 1.0f},
-	mWetness(1.0f)
+	mWetness(1.0f),
+	mUseDiffuseMap(true),
+	mUseEmissiveMap(true),
+	mUseNormalMap(true),
+	mUseSpecularMap(true)
 {
 	// Nothing to do in here
 }
@@ -219,9 +224,37 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
 	{
 		mSceneResource->getRendererRuntime().getDebugGuiManager().newFrame(renderTarget);
 		ImGui::Begin("Options");
+			// Scene
 			ImGui::SliderFloat("Rotation Speed", &mRotationSpeed, 0.0f, 2.0f, "%.3f");
+
+			// Global material properties
 			ImGui::ColorEdit3("Sun Light Color", mSunLightColor);
 			ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
+
+			{ // Material properties
+				ImGui::Checkbox("Use Diffuse Map", &mUseDiffuseMap);
+				ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
+				ImGui::Checkbox("Use Normal Map", &mUseNormalMap);
+				ImGui::Checkbox("Use Specular Map", &mUseSpecularMap);
+
+				// Tell the material resource instance
+				RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+				if (nullptr != rendererRuntime)
+				{
+					RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
+					const RendererRuntime::MaterialResourceId materialResourceId = materialResourceManager.loadMaterialResourceByAssetId("Example/Material/Character/FirstMesh");
+					const RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResources().tryGetElementById(materialResourceId);
+					if (nullptr != materialResource)
+					{
+						// TODO(co) Get rid of the evil const-cast
+						RendererRuntime::MaterialProperties& materialProperties = const_cast<RendererRuntime::MaterialProperties&>(materialResource->getMaterialProperties());
+						materialProperties.setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));
+						materialProperties.setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
+						materialProperties.setPropertyById("UseNormalMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseNormalMap));
+						materialProperties.setPropertyById("UseSpecularMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseSpecularMap));
+					}
+				}
+			}
 		ImGui::End();
 	}
 }

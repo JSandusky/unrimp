@@ -28,18 +28,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 
 #include <Renderer/Public/Renderer.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class ProgramCacheManager;
-}
 
 
 //[-------------------------------------------------------]
@@ -47,6 +37,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t ProgramCacheId;	///< Program cache identifier, result of hashing the shader cache IDs of the referenced shaders
 
 
 	//[-------------------------------------------------------]
@@ -68,6 +64,15 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
+		*    Return the program cache ID
+		*
+		*  @return
+		*    The program cache ID
+		*/
+		inline ProgramCacheId getProgramCacheId() const;
+
+		/**
+		*  @brief
 		*    Return program
 		*
 		*  @return
@@ -80,7 +85,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		ProgramCache(ProgramCacheManager& programCacheManager, const ShaderProperties& shaderProperties);
+		inline explicit ProgramCache(ProgramCacheId programCacheId);
 		inline ~ProgramCache();
 		ProgramCache(const ProgramCache&) = delete;
 		ProgramCache& operator=(const ProgramCache&) = delete;
@@ -90,8 +95,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ProgramCacheManager&  mProgramCacheManager;	///< Owner program cache manager
-		ShaderProperties	  mShaderProperties;	///< Shader properties which ended up in this program
+		ProgramCacheId		  mProgramCacheId;
 		Renderer::IProgramPtr mProgramPtr;
 
 

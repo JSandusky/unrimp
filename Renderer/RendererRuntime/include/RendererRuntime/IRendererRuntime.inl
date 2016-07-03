@@ -48,6 +48,11 @@ namespace RendererRuntime
 		return *mAssetManager;
 	}
 
+	inline PipelineStateCompiler& IRendererRuntime::getPipelineStateCompiler() const
+	{
+		return *mPipelineStateCompiler;
+	}
+
 	inline ResourceStreamer& IRendererRuntime::getResourceStreamer() const
 	{
 		return *mResourceStreamer;
@@ -122,6 +127,7 @@ namespace RendererRuntime
 		mRenderer(nullptr),
 		mThreadManager(nullptr),
 		mAssetManager(nullptr),
+		mPipelineStateCompiler(nullptr),
 		// Resource
 		mResourceStreamer(nullptr),
 		mTextureResourceManager(nullptr),
@@ -145,6 +151,7 @@ namespace RendererRuntime
 		mRenderer(nullptr),
 		mThreadManager(nullptr),
 		mAssetManager(nullptr),
+		mPipelineStateCompiler(nullptr),
 		// Resource
 		mResourceStreamer(nullptr),
 		mTextureResourceManager(nullptr),

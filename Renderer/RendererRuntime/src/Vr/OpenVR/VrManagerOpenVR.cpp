@@ -42,6 +42,8 @@
 #pragma warning(pop)
 
 #include <string>
+#include <chrono>
+#include <thread>
 #include <cassert>
 
 
@@ -139,15 +141,6 @@ namespace
 				);
 		}
 
-		void threadSleep(unsigned long nMilliseconds)
-		{
-			#if defined(_WIN32)
-				::Sleep(nMilliseconds);
-			#elif defined(POSIX)
-				usleep(nMilliseconds * 1000);
-			#endif
-		}
-
 		// TODO(co) Awful quick'n'dirty implementation. Implement asynchronous render texture loading.
 		RendererRuntime::AssetId setupRenderModelDiffuseTexture(RendererRuntime::IRendererRuntime& rendererRuntime, const std::string& renderModelName, const vr::RenderModel_t& vrRenderModel)
 		{
@@ -169,7 +162,8 @@ namespace
 					vrRenderModelError = vrRenderModels->LoadTexture_Async(vrRenderModel.diffuseTextureId, &vrRenderModelTextureMap);
 					if (vrRenderModelError == vr::VRRenderModelError_Loading)
 					{
-						threadSleep(1);
+						using namespace std::chrono_literals;
+						std::this_thread::sleep_for(1ms);
 					}
 				}
 				if (vr::VRRenderModelError_None != vrRenderModelError)
@@ -214,7 +208,9 @@ namespace
 					if (nullptr != materialResource)
 					{
 						// TODO(co) It must be possible to set the property name from the outside
-						materialResource->getMaterialProperties().setPropertyById("DiffuseMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(diffuseTextureAssetId));
+						RendererRuntime::MaterialProperties& materialProperties = materialResource->getMaterialProperties();
+						materialProperties.setPropertyById("DiffuseMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(diffuseTextureAssetId));
+						materialProperties.setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(true));
 					}
 				}
 			}
@@ -236,7 +232,8 @@ namespace
 				vrRenderModelError = vrRenderModels->LoadRenderModel_Async(renderModelName.c_str(), &vrRenderModel);
 				if (vrRenderModelError == vr::VRRenderModelError_Loading)
 				{
-					threadSleep(1);
+					using namespace std::chrono_literals;
+					std::this_thread::sleep_for(1ms);
 				}
 			}
 			if (vr::VRRenderModelError_None != vrRenderModelError)

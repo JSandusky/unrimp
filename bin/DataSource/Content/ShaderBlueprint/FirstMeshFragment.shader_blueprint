@@ -77,10 +77,18 @@ UNIFORM_BUFFER_END
 SAMPLER_STATE(SamplerLinear, 0)
 
 // Textures
-TEXTURE_2D(DiffuseMap, 0)
-TEXTURE_2D(EmissiveMap, 1)
-TEXTURE_2D(NormalMap, 2)	// Tangent space normal map
-TEXTURE_2D(SpecularMap, 3)
+@property(UseDiffuseMap)
+	TEXTURE_2D(DiffuseMap, 0)
+@end
+@property(UseEmissiveMap)
+	TEXTURE_2D(EmissiveMap, 1)
+@end
+@property(UseNormalMap)
+	TEXTURE_2D(NormalMap, 2)	// Tangent space normal map
+@end
+@property(UseSpecularMap)
+	TEXTURE_2D(SpecularMap, 3)
+@end
 
 
 //[-------------------------------------------------------]
@@ -119,7 +127,12 @@ MAIN_BEGIN
 	float3 ViewSpaceViewVector = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis
 
 	// Get the per fragment normal [0..1] by using a tangent space normal map
-	float3 normal = SAMPLE_2D(NormalMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+	@property(UseNormalMap)
+		float3 normal = SAMPLE_2D(NormalMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+	@end
+	@property(!UseNormalMap)
+		float3 normal = float3(0.0f, 0.0f, 1.0f);
+	@end
 
 	// Transform the normal from [0..1] to [-1..1]
 	normal = (normal - 0.5f) * 2.0f;
@@ -130,10 +143,26 @@ MAIN_BEGIN
 	// Calculate lighting
 	@insertpiece(CalculateLighting)
 
-	// Calculate the fragment color
-	float3 color = diffuseLightColor * material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;	// Diffuse term
-	color += specularLightColor * SAMPLE_2D(SpecularMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;								// Specular term
-	color += SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;													// Emissive term
+	// Diffuse term
+	@property(UseDiffuseMap)
+		float3 color = diffuseLightColor * material.DiffuseColor * SAMPLE_2D(DiffuseMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+	@end
+	@property(!UseDiffuseMap)
+		float3 color = diffuseLightColor * material.DiffuseColor;
+	@end
+
+	// Specular term
+	@property(UseSpecularMap)
+		color += specularLightColor * SAMPLE_2D(SpecularMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+	@end
+	@property(!UseSpecularMap)
+		color += specularLightColor;
+	@end
+
+	// Emissive term
+	@property(UseEmissiveMap)
+		color += SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb;
+	@end
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = min(float4(color * material.StaticPropertyTest, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));

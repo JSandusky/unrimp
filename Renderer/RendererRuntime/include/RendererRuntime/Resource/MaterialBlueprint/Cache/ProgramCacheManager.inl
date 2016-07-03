@@ -38,8 +38,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline ProgramCacheManager::ProgramCacheManager(PipelineStateCacheManager& pipelineStateCacheManager) :
-		mPipelineStateCacheManager(pipelineStateCacheManager),
-		mProgramCache(nullptr)
+		mPipelineStateCacheManager(pipelineStateCacheManager)
 	{
 		// Nothing here
 	}

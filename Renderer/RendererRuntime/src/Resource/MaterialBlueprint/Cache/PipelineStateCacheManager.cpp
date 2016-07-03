@@ -22,15 +22,13 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCacheManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateSignature.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCompiler.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCache.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 #include <assert.h>
-
-
-// Disable warnings
-// TODO(co) See "RendererRuntime::PipelineStateCacheManager::PipelineStateCacheManager()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)
-#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
 
 
 //[-------------------------------------------------------]
@@ -43,41 +41,140 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Renderer::IPipelineStatePtr PipelineStateCacheManager::getPipelineStateObjectPtr(const ShaderProperties& shaderProperties, const MaterialProperties& materialProperties)
+	Renderer::IPipelineStatePtr PipelineStateCacheManager::getPipelineStateCacheByCombination(const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES], bool allowEmergencySynchronousCompilation)
 	{
 		// TODO(co) Asserts whether or not e.g. the material resource is using the owning material resource blueprint
 		assert(mMaterialBlueprintResource.isFullyLoaded());
 
-		// TODO(co) Pipeline state cache management
-		if (nullptr == mPipelineStateCache)
+		// Generate the pipeline state signature
+		const PipelineStateSignature pipelineStateSignature(mMaterialBlueprintResource, shaderProperties, dynamicShaderPieces);	// TODO(co) Optimization: There are allocations for vector and map involved in here, we might want to get rid of those
 		{
-			mPipelineStateCache = new PipelineStateCache(*this, shaderProperties, materialProperties);
+			PipelineStateCacheByPipelineStateSignatureId::const_iterator iterator = mPipelineStateCacheByPipelineStateSignatureId.find(pipelineStateSignature.getPipelineStateSignatureId());
+			if (iterator != mPipelineStateCacheByPipelineStateSignatureId.cend())
+			{
+				// There's already a pipeline state cache for the pipeline state signature ID
+				// -> We don't care whether or not the pipeline state cache is currently using fallback data due to asynchronous complication
+				return iterator->second->getPipelineStateObjectPtr();
+			}
+		}
+
+		// TODO(co) We need to be DirectX 12 ready: Rasterizer state, depth stencil state and blend state are not considered yet. So, for now pipeline state cache = program cache.
+
+		// Performance: Cached direct reference to the pipeline state compiler instance to use, since this instance doesn't change during runtime we can do so without mercy
+		static PipelineStateCompiler& pipelineStateCompiler = mMaterialBlueprintResource.getMaterialBlueprintResourceManager().getRendererRuntime().getPipelineStateCompiler();
+
+		// Fallback: OK, the pipeline state signature is unknown and we now have to perform more complex and time consuming work. So first, check whether or not this work
+		// should be performed asynchronous (usually the case). If asynchronous, we need to return a fallback pipeline state cache while the pipeline state compiler is working.
+		PipelineStateCache* fallbackPipelineStateCache = nullptr;
+		if (pipelineStateCompiler.isAsynchronousCompilationEnabled())
+		{
+			// Asynchronous
+
+			// Look for a suitable already available pipeline state cache which content we can use as fallback while the pipeline state compiler is working. We
+			// do this by reducing the shader properties set until we find something, hopefully. In case no fallback can be found we have to switch to synchronous processing.
+
+			// Start with the full shader properties and then clear one shader property after another
+			ShaderProperties fallbackShaderProperties(shaderProperties);	// TODO(co) Optimization: There are allocations for vector involved in here, we might want to get rid of this
+			ShaderProperties::SortedPropertyVector& sortedFallbackPropertyVector = fallbackShaderProperties.getSortedPropertyVector();
+			while (nullptr == fallbackPipelineStateCache && !sortedFallbackPropertyVector.empty())
+			{
+				{ // Remove a fallback shader property
+					// Find the most useless shader property, we're going to sacrifice it
+					ShaderProperties::SortedPropertyVector::iterator worstHitShaderPropertyIterator = sortedFallbackPropertyVector.end();
+					int worstHitVisualImportanceOfShaderProperty = getUninitialized<int>();
+					ShaderProperties::SortedPropertyVector::iterator iterator = sortedFallbackPropertyVector.begin();
+					while (iterator != sortedFallbackPropertyVector.end())
+					{
+						// Do not remove mandatory shader combination shader properties, at least not inside this pass
+						const int visualImportanceOfShaderProperty = mMaterialBlueprintResource.getVisualImportanceOfShaderProperty(iterator->shaderPropertyId);
+						if (MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY != visualImportanceOfShaderProperty)
+						{
+							if (isInitialized(worstHitVisualImportanceOfShaderProperty))
+							{
+								// Lower visual importance value = lower probability that someone will miss the shader property
+								if (worstHitVisualImportanceOfShaderProperty > visualImportanceOfShaderProperty)
+								{
+									worstHitVisualImportanceOfShaderProperty = visualImportanceOfShaderProperty;
+									worstHitShaderPropertyIterator = iterator;
+								}
+							}
+							else
+							{
+								worstHitShaderPropertyIterator = iterator;
+								worstHitVisualImportanceOfShaderProperty = visualImportanceOfShaderProperty;
+							}
+						}
+
+						// Next shader property on the to-kill-list, please
+						++iterator;
+					}
+
+					// Sacrifice our victim
+					if (sortedFallbackPropertyVector.end() == worstHitShaderPropertyIterator)
+					{
+						// No chance, no goats left
+						break;
+					}
+					sortedFallbackPropertyVector.erase(worstHitShaderPropertyIterator);
+				}
+
+				// Generate the current fallback pipeline state signature
+				PipelineStateSignature fallbackPipelineStateSignature(mMaterialBlueprintResource, fallbackShaderProperties, dynamicShaderPieces);	// TODO(co) Optimization: There are allocations for vector and map involved in here, we might want to get rid of those
+				PipelineStateCacheByPipelineStateSignatureId::const_iterator iterator = mPipelineStateCacheByPipelineStateSignatureId.find(fallbackPipelineStateSignature.getPipelineStateSignatureId());
+				if (iterator != mPipelineStateCacheByPipelineStateSignatureId.cend())
+				{
+					// We don't care whether or not the pipeline state cache is currently using fallback data due to asynchronous complication
+					fallbackPipelineStateCache = iterator->second;
+				}
+			}
+
+			// If we're here and still not having any fallback pipeline state cache we'll end up with a runtime hiccup, we don't want that
+			// -> Kids, don't try this at home: We'll trade the runtime hiccup against a nasty major graphics artifact. If we're in luck no one
+			//    will notice it, depends on the situation. A runtime hiccup on the other hand will always be notable. So this trade in here
+			//    might not involve our first born.
+			if (!allowEmergencySynchronousCompilation && nullptr == fallbackPipelineStateCache)
+			{
+				// TODO(co) Optimization: There are allocations for vector and map involved in here, we might want to get rid of those
+				fallbackShaderProperties.clear();
+				PipelineStateCacheByPipelineStateSignatureId::const_iterator iterator = mPipelineStateCacheByPipelineStateSignatureId.find(PipelineStateSignature(mMaterialBlueprintResource, fallbackShaderProperties, dynamicShaderPieces).getPipelineStateSignatureId());
+				if (iterator != mPipelineStateCacheByPipelineStateSignatureId.cend())
+				{
+					// We don't care whether or not the pipeline state cache is currently using fallback data due to asynchronous complication
+					fallbackPipelineStateCache = iterator->second;
+				}
+			}
+		}
+
+		// Create the new pipeline state cache instance
+		PipelineStateCache* pipelineStateCache = new PipelineStateCache(pipelineStateSignature);
+		mPipelineStateCacheByPipelineStateSignatureId.insert(std::make_pair(pipelineStateSignature.getPipelineStateSignatureId(), pipelineStateCache));
+
+		// If we've got a fallback pipeline state cache then commit the asynchronous pipeline state compiler request now, else we must proceed synchronous (risk of notable runtime hiccups)
+		if (nullptr != fallbackPipelineStateCache)
+		{
+			// Asynchronous, the light side
+			pipelineStateCache->mPipelineStateObjectPtr = fallbackPipelineStateCache->mPipelineStateObjectPtr;
+			pipelineStateCache->mIsUsingFallback = true;
+			pipelineStateCompiler.addAsynchronousCompilerRequest(*pipelineStateCache);
+		}
+		else
+		{
+			// Synchronous, the dark side
+			pipelineStateCompiler.instantSynchronousCompilerRequest(mMaterialBlueprintResource, *pipelineStateCache);
 		}
 
 		// Done
-		return mPipelineStateCache->getPipelineStateObjectPtr();
+		// TODO(co) Mark material cache as dirty
+		return pipelineStateCache->getPipelineStateObjectPtr();
 	}
 
 	void PipelineStateCacheManager::clearCache()
 	{
-		// TODO(co) Pipeline state cache management
-		if (nullptr != mPipelineStateCache)
+		for (auto& pipelineStateCacheElement : mPipelineStateCacheByPipelineStateSignatureId)
 		{
-			delete mPipelineStateCache;
-			mPipelineStateCache = nullptr;
+			delete pipelineStateCacheElement.second;
 		}
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	PipelineStateCacheManager::PipelineStateCacheManager(MaterialBlueprintResource& materialBlueprintResource) :
-		mMaterialBlueprintResource(materialBlueprintResource),
-		mProgramCacheManager(*this),
-		mPipelineStateCache(nullptr)
-	{
-		// Nothing here
+		mPipelineStateCacheByPipelineStateSignatureId.clear();
 	}
 
 

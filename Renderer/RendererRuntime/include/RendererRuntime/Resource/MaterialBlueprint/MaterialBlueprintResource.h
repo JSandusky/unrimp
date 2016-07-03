@@ -61,6 +61,7 @@ namespace RendererRuntime
 	typedef uint32_t TextureResourceId;				///< POD texture resource identifier
 	typedef uint32_t ShaderBlueprintResourceId;		///< POD shader blueprint resource identifier
 	typedef uint32_t MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
+	typedef StringId ShaderPropertyId;				///< Shader property identifier, internally just a POD "uint32_t", result of hashing the property name
 
 
 	//[-------------------------------------------------------]
@@ -92,6 +93,8 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
+		static const int MANDATORY_SHADER_PROPERTY;	///< Visual importance value for mandatory shader properties (such properties are not removed when finding a fallback pipeline state)
+
 		/**
 		*  @brief
 		*    Uniform buffer usage
@@ -177,6 +180,16 @@ namespace RendererRuntime
 		*    The material blueprint properties
 		*/
 		inline const MaterialProperties& getMaterialProperties() const;
+
+		/**
+		*  @brief
+		*    Return the visual importance of a requested shader property
+		*
+		*  @return
+		*    The visual importance of the requested shader property, lower visual importance value = lower probability that someone will miss the shader property,
+		*    can be "RendererRuntime::MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY" for mandatory shader properties (such properties are not removed when finding a fallback pipeline state)
+		*/
+		int getVisualImportanceOfShaderProperty(ShaderPropertyId shaderPropertyId) const;
 
 		/**
 		*  @brief
@@ -320,26 +333,29 @@ namespace RendererRuntime
 		MaterialBlueprintResource(const MaterialBlueprintResource&) = delete;
 		MaterialBlueprintResource& operator=(const MaterialBlueprintResource&) = delete;
 		void linkMaterialTechnique(MaterialTechnique& materialTechnique);
+		void unlinkMaterialTechnique(MaterialTechnique& materialTechnique);
 
 
 	//[-------------------------------------------------------]
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		typedef std::vector<MaterialTechnique*> LinkedMaterialTechniques;
+		typedef std::unordered_map<uint32_t, int> VisualImportanceOfShaderProperties;	// TODO(co) Key should be "ShaderPropertyId"
+		typedef std::vector<MaterialTechnique*>   LinkedMaterialTechniques;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialBlueprintResourceManager* mMaterialBlueprintResourceManager;	///< Owner material blueprint resource manager, pointer considered to be always valid
-		PipelineStateCacheManager		  mPipelineStateCacheManager;
-		MaterialProperties				  mMaterialProperties;
-		Renderer::VertexAttributes		  mVertexAttributes;
-		Renderer::IRootSignaturePtr		  mRootSignaturePtr;					///< Root signature, can be a null pointer
-		Renderer::PipelineState			  mPipelineState;
-		ShaderBlueprintResourceId		  mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
+		MaterialBlueprintResourceManager*			mMaterialBlueprintResourceManager;	///< Owner material blueprint resource manager, pointer considered to be always valid
+		PipelineStateCacheManager					mPipelineStateCacheManager;
+		MaterialProperties							mMaterialProperties;
+		VisualImportanceOfShaderProperties			mVisualImportanceOfShaderProperties;
+		Renderer::VertexAttributes					mVertexAttributes;
+		Renderer::IRootSignaturePtr					mRootSignaturePtr;					///< Root signature, can be a null pointer
+		Renderer::PipelineState						mPipelineState;
+		ShaderBlueprintResourceId					mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
 		// Resource
 		UniformBuffers mUniformBuffers;
 		SamplerStates  mSamplerStates;

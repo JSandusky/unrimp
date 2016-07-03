@@ -13,7 +13,8 @@
 				"Usage": "SHADER_COMBINATION",
 				"ValueType": "BOOLEAN",
 				"Value": "TRUE",
-				"Description": "Perform lighting on the material?"
+				"Description": "Perform lighting on the material?",
+				"VisualImportance": "MANDATORY"
 			},
 			"DiffuseColor":
 			{
@@ -22,12 +23,28 @@
 				"Value": "1.0 1.0 1.0",
 				"Description": "Material diffuse color"
 			},
+			"UseDiffuseMap":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use diffuse map?",
+				"VisualImportance": "100"
+			},
 			"DiffuseMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "4",
 				"Description": "Material diffuse map"
+			},
+			"UseEmissiveMap":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use emissive map?",
+				"VisualImportance": "30"
 			},
 			"EmissiveMap":
 			{
@@ -36,6 +53,14 @@
 				"Value": "5",
 				"Description": "Material emissive map"
 			},
+			"UseNormalMap":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use normal map?",
+				"VisualImportance": "20"
+			},
 			"NormalMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
@@ -43,12 +68,20 @@
 				"Value": "6",
 				"Description": "Material normal map"
 			},
+			"UseSpecularMap":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use specular map?"
+			},
 			"SpecularMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "7",
-				"Description": "Material specular map"
+				"Description": "Material specular map",
+				"VisualImportance": "10"
 			}
 		},
 		"RootSignature":

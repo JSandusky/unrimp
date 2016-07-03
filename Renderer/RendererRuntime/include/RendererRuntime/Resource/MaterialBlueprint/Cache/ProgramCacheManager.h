@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
 
+#include <unordered_map>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -36,7 +38,7 @@
 namespace RendererRuntime
 {
 	class ProgramCache;
-	class ShaderProperties;
+	class PipelineStateSignature;
 	class PipelineStateCacheManager;
 }
 
@@ -46,6 +48,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t ProgramCacheId;	///< Program cache identifier, result of hashing the shader cache IDs of the referenced shaders
 
 
 	//[-------------------------------------------------------]
@@ -83,17 +91,20 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Get/create program cache by using the owner material blueprint resource and shader properties
+		*    Get program cache by pipeline state signature
 		*
-		*  @param[in] shaderProperties
-		*    Shader properties to use
+		*  @param[in] pipelineStateSignature
+		*    Pipeline state signature to use
 		*
 		*  @return
 		*    The program cache, null pointer on error
 		*/
-		ProgramCache* getProgramCache(const ShaderProperties& shaderProperties);
+		ProgramCache* getProgramCacheByPipelineStateSignature(const PipelineStateSignature& pipelineStateSignature);
 
-		// TODO(co)
+		/**
+		*  @brief
+		*    Clear the program cache manager
+		*/
 		void clearCache();
 
 
@@ -108,13 +119,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::unordered_map<ProgramCacheId, ProgramCache*> ProgramCacheById;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
 		PipelineStateCacheManager& mPipelineStateCacheManager;	///< Owner pipeline state cache manager
-
-		// TODO(co) Program cache management
-		ProgramCache* mProgramCache;
+		ProgramCacheById		   mProgramCacheById;
 
 
 	};

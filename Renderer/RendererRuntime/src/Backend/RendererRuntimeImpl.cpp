@@ -31,6 +31,7 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCompiler.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResourceManager.h"
@@ -111,6 +112,7 @@ namespace RendererRuntime
 		// Create the core manager instances
 		mThreadManager = new ThreadManager();
 		mAssetManager = new AssetManager(*this);
+		mPipelineStateCompiler = new PipelineStateCompiler(*this);
 
 		// Create the resource manager instances
 		mResourceStreamer = new ResourceStreamer(*this);
@@ -159,6 +161,7 @@ namespace RendererRuntime
 		}
 
 		// Destroy the core manager instances
+		delete mPipelineStateCompiler;
 		delete mAssetManager;
 		delete mThreadManager;
 
@@ -196,7 +199,8 @@ namespace RendererRuntime
 			}
 		}
 
-		// Resource streamer update
+		// Pipeline state compiler and resource streamer update
+		mPipelineStateCompiler->rendererBackendDispatch();
 		mResourceStreamer->rendererBackendDispatch();
 
 		// Inform the individual resource manager instances

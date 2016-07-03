@@ -141,8 +141,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	const int MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY = std::numeric_limits<int>::max();
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	int MaterialBlueprintResource::getVisualImportanceOfShaderProperty(ShaderPropertyId shaderPropertyId) const
+	{
+		VisualImportanceOfShaderProperties::const_iterator iterator = mVisualImportanceOfShaderProperties.find(shaderPropertyId);
+		return (iterator != mVisualImportanceOfShaderProperties.end()) ? iterator->second : 0;
+	}
+
 	bool MaterialBlueprintResource::isFullyLoaded() const
 	{
 		// Check uniform buffers
@@ -565,6 +577,15 @@ namespace RendererRuntime
 		{
 			materialTechnique.mMaterialUniformBufferIndex = mLinkedMaterialTechniques.size();
 			mLinkedMaterialTechniques.push_back(&materialTechnique);
+		}
+	}
+
+	void MaterialBlueprintResource::unlinkMaterialTechnique(MaterialTechnique& materialTechnique)
+	{
+		LinkedMaterialTechniques::const_iterator iterator = std::find(mLinkedMaterialTechniques.cbegin(), mLinkedMaterialTechniques.cend(), &materialTechnique);
+		if (mLinkedMaterialTechniques.cend() != iterator)
+		{
+			mLinkedMaterialTechniques.erase(iterator);
 		}
 	}
 

@@ -54,7 +54,7 @@ namespace RendererRuntime
 		else
 		{
 			// Just update the material property value
-			*iterator = materialProperty;
+			*iterator = MaterialProperty(materialPropertyId, iterator->getUsage(), materialPropertyValue);
 		}
 	}
 

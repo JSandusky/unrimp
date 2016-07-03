@@ -125,6 +125,10 @@ private:
 	float mRotationSpeed;
 	float mSunLightColor[3];
 	float mWetness;
+	bool  mUseDiffuseMap;
+	bool  mUseEmissiveMap;
+	bool  mUseNormalMap;
+	bool  mUseSpecularMap;
 
 
 };

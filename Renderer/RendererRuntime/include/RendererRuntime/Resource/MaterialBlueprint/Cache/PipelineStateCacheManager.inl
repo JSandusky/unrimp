@@ -18,6 +18,12 @@
 \*********************************************************/
 
 
+// Disable warnings
+// TODO(co) See "RendererRuntime::PipelineStateCacheManager::PipelineStateCacheManager()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)
+#pragma warning(push)
+#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
@@ -42,6 +48,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
+	inline PipelineStateCacheManager::PipelineStateCacheManager(MaterialBlueprintResource& materialBlueprintResource) :
+		mMaterialBlueprintResource(materialBlueprintResource),
+		mProgramCacheManager(*this)
+	{
+		// Nothing here
+	}
+
 	inline PipelineStateCacheManager::~PipelineStateCacheManager()
 	{
 		clearCache();
@@ -52,3 +65,7 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+// Reset warning manipulations we did above
+#pragma warning(pop)

@@ -103,6 +103,23 @@ namespace RendererRuntime
 		{ // Create the material techniques (list is already sorted)
 			MaterialResource::SortedMaterialTechniqueVector& sortedMaterialTechniqueVector = mMaterialResource->mSortedMaterialTechniqueVector;
 			MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
+			const MaterialBlueprintResources& materialBlueprintResources = materialBlueprintResourceManager.getMaterialBlueprintResources();
+
+			// TODO(co) Cleanup
+			// Unlink previous material techniques
+			for (size_t i = 0; i < sortedMaterialTechniqueVector.size(); ++i)
+			{
+				MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[i];
+
+				// TODO(co) Get rid of the evil const-cast
+				MaterialBlueprintResource* materialBlueprintResource = const_cast<MaterialBlueprintResource*>(materialBlueprintResources.tryGetElementById(materialTechnique.mMaterialBlueprintResourceId));
+				if (nullptr != materialBlueprintResource)
+				{
+					materialBlueprintResource->unlinkMaterialTechnique(materialTechnique);
+				}
+			}
+			sortedMaterialTechniqueVector.clear();
+
 			{
 				const v1Material::Technique* v1MaterialTechnique = mMaterialTechniques;
 				for (size_t i = 0; i < mNumberOfTechniques; ++i, ++v1MaterialTechnique)
@@ -114,18 +131,16 @@ namespace RendererRuntime
 				}
 			}
 
-			{ // Link when done and the memory addresses stay stable
-				const MaterialBlueprintResources& materialBlueprintResources = materialBlueprintResourceManager.getMaterialBlueprintResources();
-				for (size_t i = 0; i < mNumberOfTechniques; ++i)
-				{
-					MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[i];
+			// Link when done and the memory addresses stay stable
+			for (size_t i = 0; i < mNumberOfTechniques; ++i)
+			{
+				MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[i];
 
-					// TODO(co) Get rid of the evil const-cast
-					MaterialBlueprintResource* materialBlueprintResource = const_cast<MaterialBlueprintResource*>(materialBlueprintResources.tryGetElementById(materialTechnique.mMaterialBlueprintResourceId));
-					if (nullptr != materialBlueprintResource)
-					{
-						materialBlueprintResource->linkMaterialTechnique(materialTechnique);
-					}
+				// TODO(co) Get rid of the evil const-cast
+				MaterialBlueprintResource* materialBlueprintResource = const_cast<MaterialBlueprintResource*>(materialBlueprintResources.tryGetElementById(materialTechnique.mMaterialBlueprintResourceId));
+				if (nullptr != materialBlueprintResource)
+				{
+					materialBlueprintResource->linkMaterialTechnique(materialTechnique);
 				}
 			}
 		}

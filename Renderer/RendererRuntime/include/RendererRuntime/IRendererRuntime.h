@@ -52,6 +52,7 @@ namespace RendererRuntime
 	class IResourceManager;
 	class MeshResourceManager;
 	class SceneResourceManager;
+	class PipelineStateCompiler;
 	class TextureResourceManager;
 	class MaterialResourceManager;
 	class SkeletonResourceManager;
@@ -132,6 +133,15 @@ namespace RendererRuntime
 		*    The asset manager instance, do not release the returned instance
 		*/
 		inline AssetManager& getAssetManager() const;
+
+		/**
+		*  @brief
+		*    Return the pipeline state compiler instance
+		*
+		*  @return
+		*    The pipeline state compiler instance, do not release the returned instance
+		*/
+		inline PipelineStateCompiler& getPipelineStateCompiler() const;
 
 		//[-------------------------------------------------------]
 		//[ Resource                                              ]
@@ -320,9 +330,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		// Core
-		Renderer::IRenderer* mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
-		ThreadManager*		 mThreadManager;
-		AssetManager*		 mAssetManager;
+		Renderer::IRenderer*   mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
+		ThreadManager*		   mThreadManager;
+		AssetManager*		   mAssetManager;
+		PipelineStateCompiler* mPipelineStateCompiler;
 		// Resource
 		ResourceStreamer*					mResourceStreamer;
 		TextureResourceManager*				mTextureResourceManager;

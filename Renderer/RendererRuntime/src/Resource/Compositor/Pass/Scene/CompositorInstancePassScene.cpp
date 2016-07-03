@@ -115,11 +115,26 @@ namespace
 											RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = const_cast<RendererRuntime::MaterialBlueprintResource*>(materialBlueprintResources.tryGetElementById(materialTechnique->getMaterialBlueprintResourceId()));
 											if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
 											{
-												// TODO(co) Pass shader properties
+												// TODO(co) Pass shader properties (later on we cache as much as possible of this work inside the renderable)
 												RendererRuntime::ShaderProperties shaderProperties;
+												RendererRuntime::DynamicShaderPieces dynamicShaderPieces[RendererRuntime::NUMBER_OF_SHADER_TYPES];
 												shaderProperties.setPropertyValues(rendererShaderProperties);
+												{ // Gather shader properties from static material properties generating shader combinations
+													const RendererRuntime::MaterialProperties& materialProperties = materialResource->getMaterialProperties();
+													const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialProperties.getSortedPropertyVector();
+													const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
+													for (size_t i = 0; i < numberOfMaterialProperties; ++i)
+													{
+														const RendererRuntime::MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
+														if (materialProperty.getUsage() == RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION)
+														{
+															shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
+														}
+													}
+												}
 
-												Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateObjectPtr(shaderProperties, materialResource->getMaterialProperties());
+
+												Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(shaderProperties, dynamicShaderPieces, false);
 												if (nullptr != pipelineStatePtr)
 												{
 													// Fill the unknown uniform buffers

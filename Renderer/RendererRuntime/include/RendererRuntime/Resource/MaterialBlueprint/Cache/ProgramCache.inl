@@ -28,6 +28,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline ProgramCacheId ProgramCache::getProgramCacheId() const
+	{
+		return mProgramCacheId;
+	}
+
 	inline Renderer::IProgramPtr ProgramCache::getProgramPtr() const
 	{
 		return mProgramPtr;
@@ -37,6 +42,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
+	inline ProgramCache::ProgramCache(ProgramCacheId programCacheId) :
+		mProgramCacheId(programCacheId)
+	{
+		// Nothing here
+	}
+
 	inline ProgramCache::~ProgramCache()
 	{
 		// Nothing here
