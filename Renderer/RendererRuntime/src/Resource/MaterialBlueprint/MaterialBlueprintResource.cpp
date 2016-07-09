@@ -143,18 +143,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const int MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY = std::numeric_limits<int>::max();
+	const int32_t MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY = std::numeric_limits<int32_t>::max();
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	int MaterialBlueprintResource::getVisualImportanceOfShaderProperty(ShaderPropertyId shaderPropertyId) const
-	{
-		VisualImportanceOfShaderProperties::const_iterator iterator = mVisualImportanceOfShaderProperties.find(shaderPropertyId);
-		return (iterator != mVisualImportanceOfShaderProperties.end()) ? iterator->second : 0;
-	}
-
 	bool MaterialBlueprintResource::isFullyLoaded() const
 	{
 		// Check uniform buffers

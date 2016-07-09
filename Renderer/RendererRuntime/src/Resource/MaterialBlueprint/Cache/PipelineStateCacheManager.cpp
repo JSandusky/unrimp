@@ -81,12 +81,12 @@ namespace RendererRuntime
 				{ // Remove a fallback shader property
 					// Find the most useless shader property, we're going to sacrifice it
 					ShaderProperties::SortedPropertyVector::iterator worstHitShaderPropertyIterator = sortedFallbackPropertyVector.end();
-					int worstHitVisualImportanceOfShaderProperty = getUninitialized<int>();
+					int32_t worstHitVisualImportanceOfShaderProperty = getUninitialized<int32_t>();
 					ShaderProperties::SortedPropertyVector::iterator iterator = sortedFallbackPropertyVector.begin();
 					while (iterator != sortedFallbackPropertyVector.end())
 					{
 						// Do not remove mandatory shader combination shader properties, at least not inside this pass
-						const int visualImportanceOfShaderProperty = mMaterialBlueprintResource.getVisualImportanceOfShaderProperty(iterator->shaderPropertyId);
+						const int32_t visualImportanceOfShaderProperty = mMaterialBlueprintResource.getVisualImportanceOfShaderProperty(iterator->shaderPropertyId);
 						if (MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY != visualImportanceOfShaderProperty)
 						{
 							if (isInitialized(worstHitVisualImportanceOfShaderProperty))

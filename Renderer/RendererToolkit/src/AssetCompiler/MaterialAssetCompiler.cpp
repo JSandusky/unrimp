@@ -28,6 +28,7 @@
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Resource/Material/MaterialTechnique.h>
 #include <RendererRuntime/Resource/Material/Loader/MaterialFileFormat.h>
+#include <RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h>
 
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
@@ -177,7 +178,8 @@ namespace RendererToolkit
 				rapidjson::Document rapidJsonDocumentMaterialBlueprint;
 				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocumentMaterialBlueprint, materialBlueprintInputFileStream, absoluteMaterialBlueprintFilename, "MaterialBlueprintAsset", "1");
 				RendererRuntime::MaterialProperties::SortedPropertyVector newSortedMaterialPropertyVector;
-				JsonMaterialBlueprintHelper::readProperties(input, rapidJsonDocumentMaterialBlueprint["MaterialBlueprintAsset"]["Properties"], newSortedMaterialPropertyVector);
+				RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
+				JsonMaterialBlueprintHelper::readProperties(input, rapidJsonDocumentMaterialBlueprint["MaterialBlueprintAsset"]["Properties"], newSortedMaterialPropertyVector, visualImportanceOfShaderProperties);
 
 				// Add properties and avoid duplicates while doing so
 				for (const RendererRuntime::MaterialProperty& materialProperty : newSortedMaterialPropertyVector)

@@ -44,6 +44,11 @@ namespace RendererRuntime
 		return mMaterialProperties;
 	}
 
+	inline int32_t MaterialBlueprintResource::getVisualImportanceOfShaderProperty(ShaderPropertyId shaderPropertyId) const
+	{
+		return mVisualImportanceOfShaderProperties.getPropertyValueUnsafe(shaderPropertyId);
+	}
+
 	inline const Renderer::VertexAttributes& MaterialBlueprintResource::getVertexAttributes() const
 	{
 		return mVertexAttributes;

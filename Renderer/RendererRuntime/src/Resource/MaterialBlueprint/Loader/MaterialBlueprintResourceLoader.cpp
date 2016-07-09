@@ -69,6 +69,13 @@ namespace RendererRuntime
 				inputFileStream.read(reinterpret_cast<char*>(sortedPropertyVector.data()), sizeof(MaterialProperty) * materialBlueprintHeader.numberOfProperties);
 			}
 
+			{ // Read visual importance of shader properties
+				// TODO(co) Get rid of the evil const-cast
+				ShaderProperties::SortedPropertyVector& sortedPropertyVector = const_cast<ShaderProperties::SortedPropertyVector&>(mMaterialBlueprintResource->mVisualImportanceOfShaderProperties.getSortedPropertyVector());
+				sortedPropertyVector.resize(materialBlueprintHeader.numberOfShaderCombinationProperties);
+				inputFileStream.read(reinterpret_cast<char*>(sortedPropertyVector.data()), sizeof(ShaderProperties::Property) * materialBlueprintHeader.numberOfShaderCombinationProperties);
+			}
+
 			{ // Read in the root signature
 				// Read in the root signature header
 				v1MaterialBlueprint::RootSignatureHeader rootSignatureHeader;

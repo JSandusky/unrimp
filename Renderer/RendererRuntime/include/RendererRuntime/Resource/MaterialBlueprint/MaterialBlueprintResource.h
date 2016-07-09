@@ -30,6 +30,7 @@
 #include "RendererRuntime/Resource/Detail/IResource.h"
 #include "RendererRuntime/Resource/Material/MaterialProperties.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCacheManager.h"
 
 #include <Renderer/Public/Renderer.h>
@@ -93,7 +94,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const int MANDATORY_SHADER_PROPERTY;	///< Visual importance value for mandatory shader properties (such properties are not removed when finding a fallback pipeline state)
+		RENDERERRUNTIME_API_EXPORT static const int32_t MANDATORY_SHADER_PROPERTY;	///< Visual importance value for mandatory shader properties (such properties are not removed when finding a fallback pipeline state)
 
 		/**
 		*  @brief
@@ -189,7 +190,7 @@ namespace RendererRuntime
 		*    The visual importance of the requested shader property, lower visual importance value = lower probability that someone will miss the shader property,
 		*    can be "RendererRuntime::MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY" for mandatory shader properties (such properties are not removed when finding a fallback pipeline state)
 		*/
-		int getVisualImportanceOfShaderProperty(ShaderPropertyId shaderPropertyId) const;
+		inline int32_t getVisualImportanceOfShaderProperty(ShaderPropertyId shaderPropertyId) const;
 
 		/**
 		*  @brief
@@ -340,8 +341,7 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		typedef std::unordered_map<uint32_t, int> VisualImportanceOfShaderProperties;	// TODO(co) Key should be "ShaderPropertyId"
-		typedef std::vector<MaterialTechnique*>   LinkedMaterialTechniques;
+		typedef std::vector<MaterialTechnique*> LinkedMaterialTechniques;
 
 
 	//[-------------------------------------------------------]
@@ -351,7 +351,7 @@ namespace RendererRuntime
 		MaterialBlueprintResourceManager*			mMaterialBlueprintResourceManager;	///< Owner material blueprint resource manager, pointer considered to be always valid
 		PipelineStateCacheManager					mPipelineStateCacheManager;
 		MaterialProperties							mMaterialProperties;
-		VisualImportanceOfShaderProperties			mVisualImportanceOfShaderProperties;
+		ShaderProperties							mVisualImportanceOfShaderProperties;
 		Renderer::VertexAttributes					mVertexAttributes;
 		Renderer::IRootSignaturePtr					mRootSignaturePtr;					///< Root signature, can be a null pointer
 		Renderer::PipelineState						mPipelineState;

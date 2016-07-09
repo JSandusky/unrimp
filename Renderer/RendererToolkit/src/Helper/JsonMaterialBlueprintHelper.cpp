@@ -570,7 +570,7 @@ namespace RendererToolkit
 		outputFileStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), sizeof(Renderer::DescriptorRange) * descriptorRanges.size());
 	}
 
-	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, bool sort)
+	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, RendererRuntime::ShaderProperties& visualImportanceOfShaderProperties, bool sort)
 	{
 		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIterator = rapidJsonValueProperties.MemberBegin(); rapidJsonMemberIterator != rapidJsonValueProperties.MemberEnd(); ++rapidJsonMemberIterator)
 		{
@@ -606,6 +606,19 @@ namespace RendererToolkit
 			{
 				// Write down the material property
 				sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, mandatoryMaterialPropertyValue(input, rapidJsonValueProperty, "Value", valueType)));
+			}
+
+			// Optional visual importance of shader property
+			if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage && rapidJsonValueProperty.HasMember("VisualImportance"))
+			{
+				const rapidjson::Value& rapidJsonValueVisualImportance = rapidJsonValueProperty["VisualImportance"];
+				const char* valueAsString = rapidJsonValueVisualImportance.GetString();
+				int32_t visualImportanceOfShaderProperty = RendererRuntime::MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY;
+				if (strncmp(valueAsString, "MANDATORY", 9) != 0)
+				{
+					visualImportanceOfShaderProperty = std::atoi(valueAsString);
+				}
+				visualImportanceOfShaderProperties.setPropertyValue(materialPropertyId, visualImportanceOfShaderProperty);	// We're using the same string hashing for material property ID and shader property ID
 			}
 		}
 
@@ -748,7 +761,8 @@ namespace RendererToolkit
 
 			// Gather all element properties, don't sort because the user defined order is important in here (data layout in memory)
 			RendererRuntime::MaterialProperties::SortedPropertyVector elementProperties;
-			readProperties(input, rapidJsonValueElementProperties, elementProperties, false);
+			RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
+			readProperties(input, rapidJsonValueElementProperties, elementProperties, visualImportanceOfShaderProperties, false);
 
 			// Calculate the uniform buffer size, including handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
 			// -> Sum up the number of bytes required by all uniform buffer element properties

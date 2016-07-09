@@ -40,6 +40,7 @@ namespace RendererRuntime
 	// -> Material blueprint file format content:
 	//    - Material blueprint header
 	//    - Material blueprint properties
+	//    - Visual importance of shader properties
 	//    - Root signature
 	//    - Pipeline state object (PSO)
 	//      - Shader blueprints, rasterization state etc.
@@ -64,6 +65,7 @@ namespace RendererRuntime
 				uint32_t formatType;
 				uint16_t formatVersion;
 				uint32_t numberOfProperties;
+				uint32_t numberOfShaderCombinationProperties;
 				uint32_t numberOfUniformBuffers;
 				uint32_t numberOfSamplerStates;
 				uint32_t numberOfTextures;
