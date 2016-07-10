@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/PackedElementManager.h"
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
@@ -40,6 +39,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	class IResourceListener;
 }
 
 
@@ -79,7 +79,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline const ShaderBlueprintResources& getShaderBlueprintResources() const;
-		RENDERERRUNTIME_API_EXPORT ShaderBlueprintResourceId loadShaderBlueprintResourceByAssetId(AssetId assetId, bool reload = false);
+		RENDERERRUNTIME_API_EXPORT ShaderBlueprintResourceId loadShaderBlueprintResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 
 		/**
 		*  @brief

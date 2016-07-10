@@ -57,7 +57,6 @@ namespace RendererRuntime
 			if (nullptr != materialBlueprintResource)
 			{
 				TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
-				const MaterialProperties& materialProperties = mMaterialResource->getMaterialProperties();
 				const MaterialBlueprintResource::Textures& textures = materialBlueprintResource->getTextures();
 				const size_t numberOfTextures = textures.size();
 				for (size_t i = 0; i < numberOfTextures; ++i)
@@ -75,7 +74,7 @@ namespace RendererRuntime
 					if (isInitialized(materialPropertyId))
 					{
 						// Figure out the material property value
-						const MaterialProperty* materialProperty = materialProperties.getPropertyById(materialPropertyId);
+						const MaterialProperty* materialProperty = mMaterialResource->getPropertyById(materialPropertyId);
 						if (nullptr != materialProperty)
 						{
 							// TODO(co) Error handling: Usage mismatch etc.

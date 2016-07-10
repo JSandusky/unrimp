@@ -91,9 +91,12 @@ namespace RendererRuntime
 				assert(nullptr != mSceneFactory);
 				sceneResource = mSceneFactory->createSceneResource(SceneResource::TYPE_ID, mRendererRuntime, assetId);
 				sceneResource->setAssetId(assetId);
-				sceneResource->setResourceListener(resourceListener);
 				mSceneResources.push_back(sceneResource);
 				load = true;
+			}
+			if (nullptr != sceneResource && nullptr != resourceListener)
+			{
+				sceneResource->addResourceListener(*resourceListener);
 			}
 
 			// Load the resource, if required

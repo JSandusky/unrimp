@@ -214,6 +214,12 @@ namespace RendererRuntime
 		inline AssetId getTextureAssetIdValue() const;
 		inline const CompositorTextureReference& getCompositorTextureReference() const;
 
+		//[-------------------------------------------------------]
+		//[ Comparison operator                                   ]
+		//[-------------------------------------------------------]
+		RENDERERRUNTIME_API_EXPORT bool operator ==(const MaterialPropertyValue& materialPropertyValue) const;
+		inline bool operator !=(const MaterialPropertyValue& materialPropertyValue) const;
+
 
 	//[-------------------------------------------------------]
 	//[ Protected data                                        ]

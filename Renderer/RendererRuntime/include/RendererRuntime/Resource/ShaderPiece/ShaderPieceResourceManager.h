@@ -39,6 +39,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	class IResourceListener;
 }
 
 
@@ -78,7 +79,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline const ShaderPieceResources& getShaderPieceResources() const;
-		RENDERERRUNTIME_API_EXPORT ShaderPieceResourceId loadShaderPieceResourceByAssetId(AssetId assetId, bool reload = false);
+		RENDERERRUNTIME_API_EXPORT ShaderPieceResourceId loadShaderPieceResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 
 
 	//[-------------------------------------------------------]

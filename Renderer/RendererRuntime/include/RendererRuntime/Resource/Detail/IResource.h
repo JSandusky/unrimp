@@ -27,8 +27,11 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 #include "RendererRuntime/Core/StringId.h"
+
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -87,6 +90,8 @@ namespace RendererRuntime
 		inline ResourceId getId() const;
 		inline AssetId getAssetId() const;
 		inline LoadingState getLoadingState() const;
+		RENDERERRUNTIME_API_EXPORT void addResourceListener(IResourceListener& resourceListener);	// No guaranteed resource listener caller order
+		RENDERERRUNTIME_API_EXPORT void removeResourceListener(IResourceListener& resourceListener);
 
 
 	//[-------------------------------------------------------]
@@ -99,17 +104,23 @@ namespace RendererRuntime
 		IResource& operator=(const IResource&) = delete;
 		inline void setAssetId(AssetId assetId);
 		void setLoadingState(LoadingState loadingState);
-		inline void setResourceListener(IResourceListener* resourceListener);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ResourceId		   mResourceId;			///< Unique resource ID inside the resource manager
-		AssetId			   mAssetId;			///< In case the resource is an instance of an asset, this is the ID of this asset
-		LoadingState	   mLoadingState;
-		IResourceListener* mResourceListener;
+		typedef std::vector<IResourceListener*> SortedResourceListeners;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		ResourceId				mResourceId;		///< Unique resource ID inside the resource manager
+		AssetId					mAssetId;			///< In case the resource is an instance of an asset, this is the ID of this asset
+		LoadingState			mLoadingState;
+		SortedResourceListeners mSortedResourceListeners;
 
 
 	};

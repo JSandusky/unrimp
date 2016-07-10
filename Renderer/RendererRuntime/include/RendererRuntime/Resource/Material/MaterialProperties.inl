@@ -43,7 +43,7 @@ namespace RendererRuntime
 		return mSortedPropertyVector;
 	}
 
-	inline void MaterialProperties::clear()
+	inline void MaterialProperties::removeAllProperties()
 	{
 		mSortedPropertyVector.clear();
 	}

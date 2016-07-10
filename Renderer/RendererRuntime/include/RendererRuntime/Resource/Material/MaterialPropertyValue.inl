@@ -442,6 +442,11 @@ namespace RendererRuntime
 		return mValue.CompositorTextureReference;
 	}
 
+	inline bool MaterialPropertyValue::operator !=(const MaterialPropertyValue& materialPropertyValue) const
+	{
+		return !(*this == materialPropertyValue);
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

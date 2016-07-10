@@ -46,6 +46,15 @@ namespace RendererRuntime
 
 
 //[-------------------------------------------------------]
+//[ Global definitions                                    ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
+}
+
+
+//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 /**
@@ -97,7 +106,7 @@ public:
 //[ Protected virtual RendererRuntime::IResourceListener methods ]
 //[-------------------------------------------------------]
 protected:
-	virtual void onLoadingStateChange(RendererRuntime::IResource::LoadingState loadingState) override;
+	virtual void onLoadingStateChange(const RendererRuntime::IResource& resource) override;
 
 
 //[-------------------------------------------------------]
@@ -107,6 +116,7 @@ private:
 	FirstScene(const FirstScene&) = delete;
 	FirstScene& operator=(const FirstScene&) = delete;
 	void createDebugGui(Renderer::IRenderTarget& renderTarget);
+	void trySetCustomMaterialResource();
 
 
 //[-------------------------------------------------------]
@@ -115,6 +125,8 @@ private:
 private:
 	RendererRuntime::CompositorInstance* mCompositorInstance;
 	RendererRuntime::ISceneResource*	 mSceneResource;
+	RendererRuntime::MaterialResourceId  mMaterialResourceId;
+	RendererRuntime::MaterialResourceId  mCloneMaterialResourceId;
 	// Crazy raw-pointers to point-of-interest scene stuff
 	RendererRuntime::CameraSceneItem*	 mCameraSceneItem;
 	RendererRuntime::ISceneNode*		 mSceneNode;
@@ -125,6 +137,7 @@ private:
 	float mRotationSpeed;
 	float mSunLightColor[3];
 	float mWetness;
+	bool  mPerformLighting;
 	bool  mUseDiffuseMap;
 	bool  mUseEmissiveMap;
 	bool  mUseNormalMap;

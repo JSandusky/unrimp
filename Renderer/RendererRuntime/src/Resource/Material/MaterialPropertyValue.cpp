@@ -116,6 +116,115 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	bool MaterialPropertyValue::operator ==(const MaterialPropertyValue& materialPropertyValue) const
+	{
+		// Check value type
+		if (mValueType != materialPropertyValue.getValueType())
+		{
+			// Not identical due to value type mismatch
+			return false;
+		}
+
+		// Check value type
+		switch (mValueType)
+		{
+			case ValueType::UNKNOWN:
+				return true;
+
+			case ValueType::BOOLEAN:
+				return (mValue.Boolean == materialPropertyValue.mValue.Boolean);
+
+			case ValueType::INTEGER:
+				return (mValue.Integer == materialPropertyValue.mValue.Integer);
+
+			case ValueType::INTEGER_2:
+				return (mValue.Integer2[0] == materialPropertyValue.mValue.Integer2[0] &&
+						mValue.Integer2[1] == materialPropertyValue.mValue.Integer2[1]);
+
+			case ValueType::INTEGER_3:
+				return (mValue.Integer3[0] == materialPropertyValue.mValue.Integer3[0] &&
+						mValue.Integer3[1] == materialPropertyValue.mValue.Integer3[1] &&
+						mValue.Integer3[2] == materialPropertyValue.mValue.Integer3[2]);
+
+			case ValueType::INTEGER_4:
+				return (mValue.Integer4[0] == materialPropertyValue.mValue.Integer4[0] &&
+						mValue.Integer4[1] == materialPropertyValue.mValue.Integer4[1] &&
+						mValue.Integer4[2] == materialPropertyValue.mValue.Integer4[2] &&
+						mValue.Integer4[3] == materialPropertyValue.mValue.Integer4[3]);
+
+			case ValueType::FLOAT:
+				return (mValue.Float == materialPropertyValue.mValue.Float);
+
+			case ValueType::FLOAT_2:
+				return (mValue.Float2[0] == materialPropertyValue.mValue.Float2[0] &&
+						mValue.Float2[1] == materialPropertyValue.mValue.Float2[1]);
+
+			case ValueType::FLOAT_3:
+				return (mValue.Float3[0] == materialPropertyValue.mValue.Float3[0] &&
+						mValue.Float3[1] == materialPropertyValue.mValue.Float3[1] &&
+						mValue.Float3[2] == materialPropertyValue.mValue.Float3[2]);
+
+			case ValueType::FLOAT_4:
+				return (mValue.Float4[0] == materialPropertyValue.mValue.Float4[0] &&
+						mValue.Float4[1] == materialPropertyValue.mValue.Float4[1] &&
+						mValue.Float4[2] == materialPropertyValue.mValue.Float4[2] &&
+						mValue.Float4[3] == materialPropertyValue.mValue.Float4[3]);
+
+			case ValueType::FLOAT_3_3:
+				// Declaration property only
+				return true;
+
+			case ValueType::FLOAT_4_4:
+				// Declaration property only
+				return true;
+
+			case ValueType::FILL_MODE:
+				return (mValue.FillMode == materialPropertyValue.mValue.FillMode);
+
+			case ValueType::CULL_MODE:
+				return (mValue.CullMode == materialPropertyValue.mValue.CullMode);
+
+			case ValueType::CONSERVATIVE_RASTERIZATION_MODE:
+				return (mValue.ConservativeRasterizationMode == materialPropertyValue.mValue.ConservativeRasterizationMode);
+
+			case ValueType::DEPTH_WRITE_MASK:
+				return (mValue.DepthWriteMask == materialPropertyValue.mValue.DepthWriteMask);
+
+			case ValueType::STENCIL_OP:
+				return (mValue.StencilOp == materialPropertyValue.mValue.StencilOp);
+
+			case ValueType::COMPARISON_FUNC:
+				return (mValue.ComparisonFunc == materialPropertyValue.mValue.ComparisonFunc);
+
+			case ValueType::BLEND:
+				return (mValue.Blend == materialPropertyValue.mValue.Blend);
+
+			case ValueType::BLEND_OP:
+				return (mValue.BlendOp == materialPropertyValue.mValue.BlendOp);
+
+			case ValueType::FILTER_MODE:
+				return (mValue.FilterMode == materialPropertyValue.mValue.FilterMode);
+
+			case ValueType::TEXTURE_ADDRESS_MODE:
+				return (mValue.TextureAddressMode == materialPropertyValue.mValue.TextureAddressMode);
+
+			case ValueType::TEXTURE_ASSET_ID:
+				return (mValue.TextureAssetId == materialPropertyValue.mValue.TextureAssetId);
+
+			case ValueType::COMPOSITOR_TEXTURE_REFERENCE:
+				return (mValue.CompositorTextureReference.compositorTextureId == materialPropertyValue.mValue.CompositorTextureReference.compositorTextureId &&
+						mValue.CompositorTextureReference.mrtIndex == materialPropertyValue.mValue.CompositorTextureReference.mrtIndex);
+		}
+
+		// Not identical
+		assert(false);
+		return false;
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

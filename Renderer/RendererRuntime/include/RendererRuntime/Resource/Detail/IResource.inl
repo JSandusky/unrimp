@@ -56,8 +56,7 @@ namespace RendererRuntime
 	inline IResource::IResource(ResourceId resourceId) :
 		mResourceId(resourceId),
 		mAssetId(getUninitialized<AssetId>()),
-		mLoadingState(LoadingState::UNLOADED),
-		mResourceListener(nullptr)
+		mLoadingState(LoadingState::UNLOADED)
 	{
 		// Nothing here
 	}
@@ -70,11 +69,6 @@ namespace RendererRuntime
 	inline void IResource::setAssetId(AssetId assetId)
 	{
 		mAssetId = assetId;
-	}
-
-	inline void IResource::setResourceListener(IResourceListener* resourceListener)
-	{
-		mResourceListener = resourceListener;
 	}
 
 

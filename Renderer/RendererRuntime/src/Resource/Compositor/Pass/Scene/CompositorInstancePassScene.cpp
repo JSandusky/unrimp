@@ -102,10 +102,11 @@ namespace
 
 								// Loop through all sub-meshes
 								const RendererRuntime::SubMeshes& subMeshes = meshResource->getSubMeshes();
-								for (const RendererRuntime::SubMesh& subMesh : subMeshes)
+								const uint32_t numberOfSubMeshes = meshSceneItem->getNumberOfSubMeshes();
+								for (uint32_t subMeshIndex = 0; subMeshIndex < numberOfSubMeshes; ++subMeshIndex)
 								{
 									// Material resource
-									const RendererRuntime::MaterialResource* materialResource = materialResources.tryGetElementById(subMesh.getMaterialResourceId());
+									const RendererRuntime::MaterialResource* materialResource = materialResources.tryGetElementById(meshSceneItem->getMaterialResourceIdOfSubMesh(subMeshIndex));
 									if (nullptr != materialResource)
 									{
 										RendererRuntime::MaterialTechnique* materialTechnique = materialResource->getMaterialTechniqueById("Default");
@@ -120,8 +121,7 @@ namespace
 												RendererRuntime::DynamicShaderPieces dynamicShaderPieces[RendererRuntime::NUMBER_OF_SHADER_TYPES];
 												shaderProperties.setPropertyValues(rendererShaderProperties);
 												{ // Gather shader properties from static material properties generating shader combinations
-													const RendererRuntime::MaterialProperties& materialProperties = materialResource->getMaterialProperties();
-													const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialProperties.getSortedPropertyVector();
+													const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialResource->getSortedPropertyVector();
 													const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
 													for (size_t i = 0; i < numberOfMaterialProperties; ++i)
 													{
@@ -161,6 +161,7 @@ namespace
 													materialBlueprintResource->fillInstanceUniformBuffer(transform, *materialTechnique);
 
 													// Setup input assembly (IA): Set the primitive topology used for draw calls
+													const RendererRuntime::SubMesh& subMesh = subMeshes[subMeshIndex];
 													renderer.iaSetPrimitiveTopology(subMesh.getPrimitiveTopology());
 
 													// Render the specified geometric primitive, based on indexing into an array of vertices

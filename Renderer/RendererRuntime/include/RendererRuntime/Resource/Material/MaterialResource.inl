@@ -28,6 +28,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline MaterialResourceId MaterialResource::getParentMaterialResourceId() const
+	{
+		return mParentMaterialResourceId;
+	}
+
 	inline const MaterialResource::SortedMaterialTechniqueVector& MaterialResource::getSortedMaterialTechniqueVector() const
 	{
 		return mSortedMaterialTechniqueVector;
@@ -38,9 +43,24 @@ namespace RendererRuntime
 		return mMaterialProperties;
 	}
 
-	inline MaterialProperties& MaterialResource::getMaterialProperties()
+	inline const MaterialProperties::SortedPropertyVector& MaterialResource::getSortedPropertyVector() const
 	{
-		return mMaterialProperties;
+		return mMaterialProperties.getSortedPropertyVector();
+	}
+
+	inline void MaterialResource::removeAllProperties()
+	{
+		return mMaterialProperties.removeAllProperties();
+	}
+
+	inline const MaterialProperty* MaterialResource::getPropertyById(MaterialPropertyId materialPropertyId) const
+	{
+		return mMaterialProperties.getPropertyById(materialPropertyId);
+	}
+
+	inline bool MaterialResource::setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage)
+	{
+		return setPropertyByIdInternal(materialPropertyId, materialPropertyValue, materialPropertyUsage, true);
 	}
 
 
@@ -48,18 +68,15 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline MaterialResource::MaterialResource() :
-		IResource(getUninitialized<MaterialResourceId>())
+		IResource(getUninitialized<MaterialResourceId>()),
+		mMaterialResourceManager(nullptr),
+		mParentMaterialResourceId(getUninitialized<MaterialResourceId>())
 	{
 		// Nothing here
 	}
 
 	inline MaterialResource::MaterialResource(MaterialResourceId materialResourceId) :
 		IResource(materialResourceId)
-	{
-		// Nothing here
-	}
-
-	inline MaterialResource::~MaterialResource()
 	{
 		// Nothing here
 	}

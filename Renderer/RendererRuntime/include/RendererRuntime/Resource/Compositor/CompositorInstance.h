@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Resource/IResourceListener.h"
 
 #include <vector>
@@ -84,7 +85,7 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::IResourceListener methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void onLoadingStateChange(IResource::LoadingState loadingState) override;
+		virtual void onLoadingStateChange(const IResource& resource) override;
 
 
 	//[-------------------------------------------------------]

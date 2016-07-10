@@ -42,20 +42,37 @@ namespace RendererRuntime
 		return (iterator != mSortedPropertyVector.end() && iterator._Ptr->getMaterialPropertyId() == materialPropertyId) ? iterator._Ptr : nullptr;
 	}
 
-	void MaterialProperties::setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage)
+	MaterialProperty* MaterialProperties::setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage, bool changeOverwrittenState)
 	{
-		const MaterialProperty materialProperty(materialPropertyId, materialPropertyUsage, materialPropertyValue);
+		// Check whether or not this is a new property or a property value change
 		SortedPropertyVector::iterator iterator = std::lower_bound(mSortedPropertyVector.begin(), mSortedPropertyVector.end(), materialPropertyId, detail::OrderByMaterialPropertyId());
 		if (iterator == mSortedPropertyVector.end() || iterator->getMaterialPropertyId() != materialPropertyId)
 		{
 			// Add new material property
-			mSortedPropertyVector.insert(iterator, materialProperty);
+			iterator = mSortedPropertyVector.insert(iterator, MaterialProperty(materialPropertyId, materialPropertyUsage, materialPropertyValue));
+			return &*iterator;
 		}
-		else
+
+		// Update the material property value, in case there's a material property value change
+		else if (*iterator != materialPropertyValue)
 		{
-			// Just update the material property value
 			*iterator = MaterialProperty(materialPropertyId, iterator->getUsage(), materialPropertyValue);
+
+			// Material property change detected
+			if (changeOverwrittenState)
+			{
+				MaterialProperty* materialProperty = &*iterator;
+				materialProperty->mOverwritten = true;
+				return materialProperty;
+			}
+			else
+			{
+				return &*iterator;
+			}
 		}
+
+		// No material property change detected
+		return nullptr;
 	}
 
 

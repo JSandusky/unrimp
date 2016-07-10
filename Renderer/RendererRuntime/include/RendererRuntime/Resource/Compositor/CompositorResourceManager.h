@@ -75,7 +75,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline const CompositorResources& getCompositorResources() const;
-		RENDERERRUNTIME_API_EXPORT CompositorResourceId loadCompositorResourceByAssetId(AssetId assetId, bool reload = false, IResourceListener* resourceListener = nullptr);
+		RENDERERRUNTIME_API_EXPORT CompositorResourceId loadCompositorResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 
 		inline const ICompositorPassFactory& getCompositorPassFactory() const;
 		RENDERERRUNTIME_API_EXPORT void setCompositorPassFactory(const ICompositorPassFactory* compositorPassFactory);

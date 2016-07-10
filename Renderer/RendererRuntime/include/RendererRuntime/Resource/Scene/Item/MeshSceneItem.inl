@@ -39,9 +39,19 @@ namespace RendererRuntime
 		return mMeshResourceId;
 	}
 
-	inline void MeshSceneItem::setMeshResourceId(MeshResourceId meshResourceId)
+	inline uint32_t MeshSceneItem::getNumberOfSubMeshes() const
 	{
-		mMeshResourceId = meshResourceId;
+		return static_cast<uint32_t>(mMaterialResourceIds.size());
+	}
+
+	inline MaterialResourceId MeshSceneItem::getMaterialResourceIdOfSubMesh(uint32_t subMeshIndex) const
+	{
+		return mMaterialResourceIds[subMeshIndex];
+	}
+
+	inline void MeshSceneItem::setMaterialResourceIdOfSubMesh(uint32_t subMeshIndex, MaterialResourceId materialResourceId)
+	{
+		mMaterialResourceIds[subMeshIndex] = materialResourceId;
 	}
 
 

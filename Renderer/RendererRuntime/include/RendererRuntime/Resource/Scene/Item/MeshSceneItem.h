@@ -29,6 +29,9 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
+#include "RendererRuntime/Resource/IResourceListener.h"
+
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -41,14 +44,15 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;			///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
-	typedef uint32_t MeshResourceId;	///< POD mesh resource identifier
+	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef uint32_t MeshResourceId;		///< POD mesh resource identifier
+	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
 
 
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MeshSceneItem : public ISceneItem
+	class MeshSceneItem : public ISceneItem, public IResourceListener
 	{
 
 
@@ -70,8 +74,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline MeshResourceId getMeshResourceId() const;
-		inline void setMeshResourceId(MeshResourceId meshResourceId);
+		RENDERERRUNTIME_API_EXPORT void setMeshResourceId(MeshResourceId meshResourceId);
 		RENDERERRUNTIME_API_EXPORT void setMeshResourceIdByAssetId(AssetId meshAssetId);
+		inline uint32_t getNumberOfSubMeshes() const;
+		inline MaterialResourceId getMaterialResourceIdOfSubMesh(uint32_t subMeshIndex) const;
+		inline void setMaterialResourceIdOfSubMesh(uint32_t subMeshIndex, MaterialResourceId materialResourceId);
 
 
 	//[-------------------------------------------------------]
@@ -93,10 +100,25 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void onLoadingStateChange(const IResource& resource) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<MaterialResourceId> MaterialResourceIds;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MeshResourceId mMeshResourceId;	///< Mesh resource ID, can be set to uninitialized value
+		MeshResourceId		mMeshResourceId;		///< Mesh resource ID, can be set to uninitialized value
+		MaterialResourceIds mMaterialResourceIds;	///< Material resource ID of each sub-mesh
 
 
 	};

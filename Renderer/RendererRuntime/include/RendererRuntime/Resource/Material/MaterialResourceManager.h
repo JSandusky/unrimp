@@ -38,6 +38,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	class IResourceListener;
 }
 
 
@@ -73,8 +74,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline const MaterialResources& getMaterialResources() const;
-		RENDERERRUNTIME_API_EXPORT MaterialResourceId loadMaterialResourceByAssetId(AssetId assetId, bool reload = false);
+		RENDERERRUNTIME_API_EXPORT MaterialResourceId loadMaterialResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 		RENDERERRUNTIME_API_EXPORT MaterialResourceId createMaterialResourceByAssetId(AssetId assetId, MaterialBlueprintResourceId materialBlueprintResourceId);	// Material resource is not allowed to exist, yet
+		RENDERERRUNTIME_API_EXPORT MaterialResourceId createMaterialResourceByCloning(MaterialResourceId parentMaterialResourceId);	// Parent material resource must be fully loaded
 
 
 	//[-------------------------------------------------------]

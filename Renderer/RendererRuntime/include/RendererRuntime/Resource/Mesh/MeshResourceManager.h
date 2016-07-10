@@ -38,6 +38,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	class IResourceListener;
 }
 
 
@@ -73,7 +74,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline const MeshResources& getMeshResources() const;
-		RENDERERRUNTIME_API_EXPORT MeshResourceId loadMeshResourceByAssetId(AssetId assetId, bool reload = false);
+		RENDERERRUNTIME_API_EXPORT MeshResourceId loadMeshResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 		RENDERERRUNTIME_API_EXPORT MeshResourceId createEmptyMeshResourceByAssetId(AssetId assetId);	// Mesh resource is not allowed to exist, yet
 
 

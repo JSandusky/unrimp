@@ -41,18 +41,43 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		static const RendererRuntime::AssetId MaterialAssetId("Example/Material/Character/FirstMesh");
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FirstScene::FirstScene(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
 	mCompositorInstance(nullptr),
 	mSceneResource(nullptr),
+	mMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
+	mCloneMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
 	mCameraSceneItem(nullptr),
 	mSceneNode(nullptr),
 	mGlobalTimer(0.0f),
 	mRotationSpeed(1.0f),
 	mSunLightColor{1.0f, 1.0f, 1.0f},
 	mWetness(1.0f),
+	mPerformLighting(true),
 	mUseDiffuseMap(true),
 	mUseEmissiveMap(true),
 	mUseNormalMap(true),
@@ -85,6 +110,9 @@ void FirstScene::onInitialization()
 
 		// Create the scene resource
 		mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId("Example/Scene/Default/FirstScene", this);
+
+		// Load the material resource we're going to clone
+		mMaterialResourceId = rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::MaterialAssetId, this);
 	}
 
 	{ // Startup the VR-manager
@@ -137,6 +165,9 @@ void FirstScene::onUpdate()
 
 	// Start the stopwatch
 	mStopwatch.start();
+
+	// TODO(co) We need to get informed when the mesh scene item received the mesh resource loading finished signal
+	trySetCustomMaterialResource();
 }
 
 void FirstScene::onDrawRequest()
@@ -178,39 +209,54 @@ void FirstScene::onDrawRequest()
 //[-------------------------------------------------------]
 //[ Protected virtual RendererRuntime::IResourceListener methods ]
 //[-------------------------------------------------------]
-void FirstScene::onLoadingStateChange(RendererRuntime::IResource::LoadingState loadingState)
+void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource)
 {
-	if (RendererRuntime::IResource::LoadingState::LOADED == loadingState)
+	const RendererRuntime::IResource::LoadingState loadingState = resource.getLoadingState();
+	if (&resource == mSceneResource)
 	{
-		// Loop through all scene nodes and grab the first found camera and mesh
-		for (RendererRuntime::ISceneNode* sceneNode : mSceneResource->getSceneNodes())
+		if (RendererRuntime::IResource::LoadingState::LOADED == loadingState)
 		{
-			// Loop through all scene items attached to the current scene node
-			for (RendererRuntime::ISceneItem* sceneItem : sceneNode->getAttachedSceneItems())
+			// Loop through all scene nodes and grab the first found camera and mesh
+			for (RendererRuntime::ISceneNode* sceneNode : mSceneResource->getSceneNodes())
 			{
-				if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
+				// Loop through all scene items attached to the current scene node
+				for (RendererRuntime::ISceneItem* sceneItem : sceneNode->getAttachedSceneItems())
 				{
-					// Grab the first found mesh scene item scene node
-					if (nullptr == mSceneNode)
+					if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
 					{
-						mSceneNode = sceneNode;
+						// Grab the first found mesh scene item scene node
+						if (nullptr == mSceneNode)
+						{
+							mSceneNode = sceneNode;
+							trySetCustomMaterialResource();
+						}
 					}
-				}
-				else if (sceneItem->getSceneItemTypeId() == RendererRuntime::CameraSceneItem::TYPE_ID)
-				{
-					// Grab the first found camera scene item
-					if (nullptr == mCameraSceneItem)
+					else if (sceneItem->getSceneItemTypeId() == RendererRuntime::CameraSceneItem::TYPE_ID)
 					{
-						mCameraSceneItem = static_cast<RendererRuntime::CameraSceneItem*>(sceneItem);
+						// Grab the first found camera scene item
+						if (nullptr == mCameraSceneItem)
+						{
+							mCameraSceneItem = static_cast<RendererRuntime::CameraSceneItem*>(sceneItem);
+						}
 					}
 				}
 			}
 		}
+		else
+		{
+			mCameraSceneItem = nullptr;
+			mSceneNode = nullptr;
+		}
 	}
-	else
+	else if (RendererRuntime::IResource::LoadingState::LOADED == loadingState && resource.getAssetId() == ::detail::MaterialAssetId)
 	{
-		mCameraSceneItem = nullptr;
-		mSceneNode = nullptr;
+		// Create our material resource clone
+		RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+		if (nullptr != rendererRuntime)
+		{
+			mCloneMaterialResourceId = rendererRuntime->getMaterialResourceManager().createMaterialResourceByCloning(resource.getId());
+			trySetCustomMaterialResource();
+		}
 	}
 }
 
@@ -232,6 +278,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
 			ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
 
 			{ // Material properties
+				ImGui::Checkbox("Perform Lighting", &mPerformLighting);
 				ImGui::Checkbox("Use Diffuse Map", &mUseDiffuseMap);
 				ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
 				ImGui::Checkbox("Use Normal Map", &mUseNormalMap);
@@ -241,20 +288,43 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
 				RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 				if (nullptr != rendererRuntime)
 				{
-					RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
-					const RendererRuntime::MaterialResourceId materialResourceId = materialResourceManager.loadMaterialResourceByAssetId("Example/Material/Character/FirstMesh");
-					const RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResources().tryGetElementById(materialResourceId);
+					const RendererRuntime::MaterialResources& materialResources = rendererRuntime->getMaterialResourceManager().getMaterialResources();
+
+					// TODO(co) Get rid of the evil const-cast
+					RendererRuntime::MaterialResource* materialResource = const_cast<RendererRuntime::MaterialResource*>(materialResources.tryGetElementById(mMaterialResourceId));
 					if (nullptr != materialResource)
 					{
-						// TODO(co) Get rid of the evil const-cast
-						RendererRuntime::MaterialProperties& materialProperties = const_cast<RendererRuntime::MaterialProperties&>(materialResource->getMaterialProperties());
-						materialProperties.setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));
-						materialProperties.setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
-						materialProperties.setPropertyById("UseNormalMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseNormalMap));
-						materialProperties.setPropertyById("UseSpecularMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseSpecularMap));
+						materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
+					}
+					materialResource = const_cast<RendererRuntime::MaterialResource*>(materialResources.tryGetElementById(mCloneMaterialResourceId));
+					if (nullptr != materialResource)
+					{
+						materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));
+						materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
+						materialResource->setPropertyById("UseNormalMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseNormalMap));
+						materialResource->setPropertyById("UseSpecularMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseSpecularMap));
 					}
 				}
 			}
 		ImGui::End();
+	}
+}
+
+void FirstScene::trySetCustomMaterialResource()
+{
+	if (nullptr != mSceneNode && RendererRuntime::isInitialized(mCloneMaterialResourceId))
+	{
+		for (RendererRuntime::ISceneItem* sceneItem : mSceneNode->getAttachedSceneItems())
+		{
+			if (sceneItem->getSceneItemTypeId() == RendererRuntime::MeshSceneItem::TYPE_ID)
+			{
+				// Tell the mesh scene item about our custom material resource
+				RendererRuntime::MeshSceneItem* meshSceneItem = static_cast<RendererRuntime::MeshSceneItem*>(sceneItem);
+				for (uint32_t subMeshIndex = 0; subMeshIndex < meshSceneItem->getNumberOfSubMeshes(); ++subMeshIndex)
+				{
+					meshSceneItem->setMaterialResourceIdOfSubMesh(subMeshIndex, mCloneMaterialResourceId);
+				}
+			}
+		}
 	}
 }

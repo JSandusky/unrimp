@@ -38,6 +38,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	class IResourceListener;
 	class IMaterialBlueprintResourceListener;
 }
 
@@ -75,7 +76,7 @@ namespace RendererRuntime
 	public:
 		inline IRendererRuntime& getRendererRuntime() const;
 		inline const MaterialBlueprintResources& getMaterialBlueprintResources() const;
-		RENDERERRUNTIME_API_EXPORT MaterialBlueprintResourceId loadMaterialBlueprintResourceByAssetId(AssetId assetId, bool reload = false);
+		RENDERERRUNTIME_API_EXPORT MaterialBlueprintResourceId loadMaterialBlueprintResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 
 		inline IMaterialBlueprintResourceListener& getMaterialBlueprintResourceListener() const;
 		RENDERERRUNTIME_API_EXPORT void setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener);

@@ -208,9 +208,8 @@ namespace
 					if (nullptr != materialResource)
 					{
 						// TODO(co) It must be possible to set the property name from the outside
-						RendererRuntime::MaterialProperties& materialProperties = materialResource->getMaterialProperties();
-						materialProperties.setPropertyById("DiffuseMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(diffuseTextureAssetId));
-						materialProperties.setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(true));
+						materialResource->setPropertyById("DiffuseMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(diffuseTextureAssetId));
+						materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(true));
 					}
 				}
 			}

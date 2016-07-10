@@ -51,7 +51,7 @@ namespace RendererRuntime
 	CompositorInstance::CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId) :
 		mRendererRuntime(rendererRuntime),
 		mExecutionRenderTarget(nullptr),
-		mCompositorResourceId(rendererRuntime.getCompositorResourceManager().loadCompositorResourceByAssetId(compositorAssetId, false, this))
+		mCompositorResourceId(rendererRuntime.getCompositorResourceManager().loadCompositorResourceByAssetId(compositorAssetId, this))
 	{
 		// Nothing here
 	}
@@ -139,9 +139,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::IResourceListener methods ]
 	//[-------------------------------------------------------]
-	void CompositorInstance::onLoadingStateChange(IResource::LoadingState loadingState)
+	void CompositorInstance::onLoadingStateChange(const IResource& resource)
 	{
-		if (loadingState == IResource::LoadingState::LOADED)
+		if (resource.getLoadingState() == IResource::LoadingState::LOADED)
 		{
 			// TODO(co) Just a first test
 			const ICompositorPassFactory& compositorPassFactory = mRendererRuntime.getCompositorResourceManager().getCompositorPassFactory();
@@ -149,41 +149,37 @@ namespace RendererRuntime
 			destroySequentialCompositorInstanceNodes();
 
 			// Compositor resource nodes
-			const CompositorResource* compositorResource = mRendererRuntime.getCompositorResourceManager().getCompositorResources().tryGetElementById(mCompositorResourceId);
-			if (nullptr != compositorResource)
+			const CompositorResource::CompositorResourceNodes& compositorResourceNodes = static_cast<const CompositorResource&>(resource).getCompositorResourceNodes();
+			const size_t numberOfCompositorResourceNodes = compositorResourceNodes.size();
+			for (size_t nodeIndex = 0; nodeIndex < numberOfCompositorResourceNodes; ++nodeIndex)
 			{
-				const CompositorResource::CompositorResourceNodes& compositorResourceNodes = compositorResource->getCompositorResourceNodes();
-				const size_t numberOfCompositorResourceNodes = compositorResourceNodes.size();
-				for (size_t nodeIndex = 0; nodeIndex < numberOfCompositorResourceNodes; ++nodeIndex)
-				{
-					// Get the compositor resource node instance
-					const CompositorResourceNode* compositorResourceNode = compositorResourceNodes[nodeIndex];
+				// Get the compositor resource node instance
+				const CompositorResourceNode* compositorResourceNode = compositorResourceNodes[nodeIndex];
 
-					// Create the compositor instance node instance
-					CompositorInstanceNode* compositorInstanceNode = new CompositorInstanceNode(*compositorResourceNode, *this);
-					mSequentialCompositorInstanceNodes.push_back(compositorInstanceNode);
+				// Create the compositor instance node instance
+				CompositorInstanceNode* compositorInstanceNode = new CompositorInstanceNode(*compositorResourceNode, *this);
+				mSequentialCompositorInstanceNodes.push_back(compositorInstanceNode);
 
-					{ // Compositor resource node targets
-						const CompositorResourceNode::CompositorResourceTargets& compositorResourceTargets = compositorResourceNode->getCompositorResourceTargets();
-						const size_t numberOfCompositorResourceTargets = compositorResourceTargets.size();
-						for (size_t targetIndex = 0; targetIndex < numberOfCompositorResourceTargets; ++targetIndex)
-						{
-							// Get the compositor resource target instance
-							const CompositorResourceTarget& compositorResourceTarget = compositorResourceTargets[targetIndex];
+				{ // Compositor resource node targets
+					const CompositorResourceNode::CompositorResourceTargets& compositorResourceTargets = compositorResourceNode->getCompositorResourceTargets();
+					const size_t numberOfCompositorResourceTargets = compositorResourceTargets.size();
+					for (size_t targetIndex = 0; targetIndex < numberOfCompositorResourceTargets; ++targetIndex)
+					{
+						// Get the compositor resource target instance
+						const CompositorResourceTarget& compositorResourceTarget = compositorResourceTargets[targetIndex];
 
-							{ // Compositor resource node target passes
-								const CompositorResourceTarget::CompositorResourcePasses& compositorResourcePasses = compositorResourceTarget.getCompositorResourcePasses();
-								const size_t numberOfCompositorResourcePasses = compositorResourcePasses.size();
-								for (size_t passIndex = 0; passIndex < numberOfCompositorResourcePasses; ++passIndex)
+						{ // Compositor resource node target passes
+							const CompositorResourceTarget::CompositorResourcePasses& compositorResourcePasses = compositorResourceTarget.getCompositorResourcePasses();
+							const size_t numberOfCompositorResourcePasses = compositorResourcePasses.size();
+							for (size_t passIndex = 0; passIndex < numberOfCompositorResourcePasses; ++passIndex)
+							{
+								// Get the compositor resource target instance
+								const ICompositorResourcePass* compositorResourcePass = compositorResourcePasses[passIndex];
+
+								// Create the compositor instance pass
+								if (nullptr != compositorResourcePass)
 								{
-									// Get the compositor resource target instance
-									const ICompositorResourcePass* compositorResourcePass = compositorResourcePasses[passIndex];
-
-									// Create the compositor instance pass
-									if (nullptr != compositorResourcePass)
-									{
-										compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory.createCompositorInstancePass(*compositorResourcePass, *compositorInstanceNode));
-									}
+									compositorInstanceNode->mCompositorInstancePasses.push_back(compositorPassFactory.createCompositorInstancePass(*compositorResourcePass, *compositorInstanceNode));
 								}
 							}
 						}

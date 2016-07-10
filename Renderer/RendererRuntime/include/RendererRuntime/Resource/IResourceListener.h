@@ -27,7 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Detail/IResource.h"
+#include "RendererRuntime/Core/NonCopyable.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IResource;
+}
 
 
 //[-------------------------------------------------------]
@@ -54,7 +63,7 @@ namespace RendererRuntime
 	//[ Protected virtual RendererRuntime::IResourceListener methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void onLoadingStateChange(IResource::LoadingState loadingState) = 0;
+		virtual void onLoadingStateChange(const IResource& resource) = 0;
 
 
 	//[-------------------------------------------------------]

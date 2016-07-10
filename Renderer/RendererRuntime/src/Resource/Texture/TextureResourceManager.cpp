@@ -43,7 +43,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, bool reload)
+	TextureResourceId TextureResourceManager::loadTextureResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
 
@@ -75,6 +75,10 @@ namespace RendererRuntime
 		}
 		if (nullptr != textureResource)
 		{
+			if (nullptr != resourceListener)
+			{
+				textureResource->addResourceListener(*resourceListener);
+			}
 			textureResourceId = textureResource->getId();
 		}
 
@@ -114,12 +118,12 @@ namespace RendererRuntime
 		assert(isUninitialized(loadTextureResourceByAssetId(assetId)));
 
 		// Create the texture resource instance
-		TextureResource* textureResource = &mTextureResources.addElement();
-		textureResource->setAssetId(assetId);
-		textureResource->mTexture = &texture;
+		TextureResource& textureResource = mTextureResources.addElement();
+		textureResource.setAssetId(assetId);
+		textureResource.mTexture = &texture;
 
 		// Done
-		return textureResource->getId();
+		return textureResource.getId();
 	}
 
 
@@ -134,7 +138,7 @@ namespace RendererRuntime
 		{
 			if (mTextureResources.getElementByIndex(i).getAssetId() == assetId)
 			{
-				loadTextureResourceByAssetId(assetId, true);
+				loadTextureResourceByAssetId(assetId, nullptr, true);
 				break;
 			}
 		}

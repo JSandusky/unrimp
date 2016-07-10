@@ -355,7 +355,7 @@ namespace RendererRuntime
 				const MaterialTechnique* materialTechnique = mLinkedMaterialTechniques[materialIndex];
 				assert(materialTechnique->getMaterialUniformBufferIndex() == materialIndex);
 
-				const MaterialProperties& materialProperties = materialTechnique->getMaterialResource().getMaterialProperties();
+				const MaterialResource& materialResource = materialTechnique->getMaterialResource();
 				uint8_t* scratchBufferPointer = scratchBuffer.data() + numberOfBytesPerElement * materialIndex;
 
 				for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
@@ -379,7 +379,7 @@ namespace RendererRuntime
 					if (MaterialProperty::Usage::MATERIAL_REFERENCE == usage)	// Most likely the case, so check this first
 					{
 						// Figure out the material property value
-						const MaterialProperty* materialProperty = materialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
+						const MaterialProperty* materialProperty = materialResource.getPropertyById(uniformBufferElementProperty.getReferenceValue());
 						if (nullptr != materialProperty)
 						{
 							// TODO(co) Error handling: Usage mismatch, value type mismatch etc.

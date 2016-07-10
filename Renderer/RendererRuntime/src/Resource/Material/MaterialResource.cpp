@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 
 #include <algorithm>
 
@@ -38,6 +39,14 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Structures                                            ]
 		//[-------------------------------------------------------]
+		struct OrderByMaterialResourceId
+		{
+			inline bool operator()(RendererRuntime::MaterialResourceId left, RendererRuntime::MaterialResourceId right) const
+			{
+				return (left < right);
+			}
+		};
+
 		struct OrderByMaterialTechniqueId
 		{
 			inline bool operator()(const RendererRuntime::MaterialTechnique& left, RendererRuntime::MaterialTechniqueId right) const
@@ -69,6 +78,52 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	void MaterialResource::setParentMaterialResourceId(MaterialResourceId parentMaterialResourceId)
+	{
+		if (mParentMaterialResourceId != parentMaterialResourceId)
+		{
+			const MaterialResourceId materialResourceId = getId();
+
+			// Unregister from previous parent material resource
+			if (isInitialized(mParentMaterialResourceId))
+			{
+				// TODO(co) Get rid of const-cast
+				MaterialResource& parentMaterialResource = const_cast<MaterialResource&>(mMaterialResourceManager->getMaterialResources().getElementById(mParentMaterialResourceId));
+				SortedChildMaterialResourceIds::const_iterator iterator = std::lower_bound(parentMaterialResource.mSortedChildMaterialResourceIds.cbegin(), parentMaterialResource.mSortedChildMaterialResourceIds.cend(), materialResourceId, ::detail::OrderByMaterialResourceId());
+				assert(iterator != parentMaterialResource.mSortedChildMaterialResourceIds.end() && *iterator == materialResourceId);
+				parentMaterialResource.mSortedChildMaterialResourceIds.erase(iterator);
+			}
+
+			// Set new parent material resource ID
+			mParentMaterialResourceId = parentMaterialResourceId;
+			if (isInitialized(mParentMaterialResourceId))
+			{
+				// Register to new parent material resource
+				assert(mMaterialResourceManager->getMaterialResources().isElementIdValid(mParentMaterialResourceId));
+				MaterialResource& parentMaterialResource = const_cast<MaterialResource&>(mMaterialResourceManager->getMaterialResources().getElementById(mParentMaterialResourceId));
+				assert(parentMaterialResource.getLoadingState() == IResource::LoadingState::LOADED);
+				SortedChildMaterialResourceIds::const_iterator iterator = std::lower_bound(parentMaterialResource.mSortedChildMaterialResourceIds.cbegin(), parentMaterialResource.mSortedChildMaterialResourceIds.cend(), materialResourceId, ::detail::OrderByMaterialResourceId());
+				assert(iterator == parentMaterialResource.mSortedChildMaterialResourceIds.end() || *iterator != materialResourceId);
+				parentMaterialResource.mSortedChildMaterialResourceIds.insert(iterator, materialResourceId);
+
+				// Setup material resource
+				setAssetId(parentMaterialResource.getAssetId());
+				mSortedMaterialTechniqueVector = parentMaterialResource.mSortedMaterialTechniqueVector;
+				for (MaterialTechnique& materialTechnique : mSortedMaterialTechniqueVector)
+				{
+					materialTechnique.mMaterialResource = this;
+				}
+				mMaterialProperties = parentMaterialResource.mMaterialProperties;
+			}
+			else
+			{
+				// Don't touch the child material resources, but reset everything else
+				mSortedMaterialTechniqueVector.clear();
+				mMaterialProperties.removeAllProperties();
+			}
+		}
+	}
+
 	MaterialTechnique* MaterialResource::getMaterialTechniqueById(MaterialTechniqueId materialTechniqueId) const
 	{
 		SortedMaterialTechniqueVector::const_iterator iterator = std::lower_bound(mSortedMaterialTechniqueVector.cbegin(), mSortedMaterialTechniqueVector.cend(), materialTechniqueId, ::detail::OrderByMaterialTechniqueId());
@@ -82,6 +137,87 @@ namespace RendererRuntime
 		{
 			materialTechnique.mTextures.clear();
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	MaterialResource::~MaterialResource()
+	{
+		setParentMaterialResourceId(getUninitialized<MaterialResourceId>());
+
+		// Inform child material resources, if required
+		const MaterialResources& materialResources = mMaterialResourceManager->getMaterialResources();
+		for (MaterialResourceId materialResourceId : mSortedChildMaterialResourceIds)
+		{
+			assert(materialResources.isElementIdValid(materialResourceId));
+			// TODO(co) Get rid of const-cast
+			const_cast<MaterialResource&>(materialResources.getElementById(materialResourceId)).setParentMaterialResourceId(getUninitialized<MaterialResourceId>());
+		}
+	}
+
+	bool MaterialResource::setPropertyByIdInternal(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage, bool changeOverwrittenState)
+	{
+		// Call the base implementation
+		MaterialProperty* materialProperty = mMaterialProperties.setPropertyById(materialPropertyId, materialPropertyValue, materialPropertyUsage, changeOverwrittenState);
+		if (nullptr != materialProperty)
+		{
+			// Perform derived work, if required to do so
+			// TODO(co) "RendererRuntime::MaterialResource::setPropertyByIdInternal()": Implement the other "RendererRuntime::MaterialProperty::Usage" if required
+			switch (materialProperty->getUsage())
+			{
+				case MaterialProperty::Usage::SHADER_UNIFORM:
+					// TODO(co)
+					break;
+
+				case MaterialProperty::Usage::SHADER_COMBINATION:
+					// TODO(co)
+					break;
+
+				case MaterialProperty::Usage::RASTERIZER_STATE:
+				case MaterialProperty::Usage::DEPTH_STENCIL_STATE:
+					// TODO(co)
+					break;
+
+				case MaterialProperty::Usage::BLEND_STATE:
+					// TODO(co)
+					break;
+
+				case MaterialProperty::Usage::TEXTURE_REFERENCE:
+					// TODO(co)
+					break;
+
+				case MaterialProperty::Usage::UNKNOWN:
+				case MaterialProperty::Usage::STATIC:
+				case MaterialProperty::Usage::SAMPLER_STATE:
+				case MaterialProperty::Usage::COMPOSITOR_TEXTURE_REFERENCE:
+				case MaterialProperty::Usage::SHADOW_TEXTURE_REFERENCE:
+				case MaterialProperty::Usage::GLOBAL_REFERENCE:
+				case MaterialProperty::Usage::UNKNOWN_REFERENCE:
+				case MaterialProperty::Usage::PASS_REFERENCE:
+				case MaterialProperty::Usage::MATERIAL_REFERENCE:
+				case MaterialProperty::Usage::INSTANCE_REFERENCE:
+				default:
+					// Nothing here
+					break;
+			}
+
+			// Inform child material resources, if required
+			const MaterialResources& materialResources = mMaterialResourceManager->getMaterialResources();
+			for (MaterialResourceId materialResourceId : mSortedChildMaterialResourceIds)
+			{
+				assert(materialResources.isElementIdValid(materialResourceId));
+				// TODO(co) Get rid of const-cast
+				const_cast<MaterialResource&>(materialResources.getElementById(materialResourceId)).setPropertyByIdInternal(materialPropertyId, materialPropertyValue, materialPropertyUsage, false);
+			}
+
+			// Material property change detected
+			return true;
+		}
+
+		// No material property change detected
+		return false;
 	}
 
 

@@ -37,6 +37,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class MaterialResourceManager;
 	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
 }
 
@@ -86,6 +87,28 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
+		*    Return the parent material resource ID
+		*
+		*  @return
+		*    The parent material resource ID, uninitialized if there's no parent
+		*/
+		inline MaterialResourceId getParentMaterialResourceId() const;
+
+		/**
+		*  @brief
+		*    Set the parent material resource ID
+		*
+		*  @param[in] parentMaterialResourceId
+		*    Parent material resource ID, can be uninitialized
+		*
+		*  @note
+		*    - Parent material resource must be fully loaded
+		*    - All property values will be reset
+		*/
+		RENDERERRUNTIME_API_EXPORT void setParentMaterialResourceId(MaterialResourceId parentMaterialResourceId);
+
+		/**
+		*  @brief
 		*    Return the sorted material technique vector
 		*
 		*  @return
@@ -103,32 +126,66 @@ namespace RendererRuntime
 		*  @return
 		*    The requested material technique, null pointer on error, don't destroy the returned instance
 		*/
-		MaterialTechnique* getMaterialTechniqueById(MaterialTechniqueId materialTechniqueId) const;
+		RENDERERRUNTIME_API_EXPORT MaterialTechnique* getMaterialTechniqueById(MaterialTechniqueId materialTechniqueId) const;
 
+		//[-------------------------------------------------------]
+		//[ Property                                              ]
+		//[-------------------------------------------------------]
 		/**
 		*  @brief
 		*    Return the material properties
 		*
 		*  @return
 		*    The material properties
-		*
-		*  @notes
-		*    - Contains all properties of all material blueprints referenced by this material (material property inheritance is handled elsewhere)
 		*/
 		inline const MaterialProperties& getMaterialProperties() const;
 
 		/**
 		*  @brief
-		*    Return the material properties
+		*    Return the material properties as sorted vector
 		*
 		*  @return
-		*    The material properties
-		*
-		*  @notes
-		*    - Contains all properties of all material blueprints referenced by this material (material property inheritance is handled elsewhere)
+		*    The material properties as sorted vector
 		*/
-		inline MaterialProperties& getMaterialProperties();
+		inline const MaterialProperties::SortedPropertyVector& getSortedPropertyVector() const;
 
+		/**
+		*  @brief
+		*    Remove all material properties
+		*/
+		inline void removeAllProperties();
+
+		/**
+		*  @brief
+		*    Return a material property by its ID
+		*
+		*  @param[in] materialPropertyId
+		*    ID of the material property to return
+		*
+		*  @return
+		*    The requested material property, null pointer on error, don't destroy the returned instance
+		*/
+		inline const MaterialProperty* getPropertyById(MaterialPropertyId materialPropertyId) const;
+
+		/**
+		*  @brief
+		*    Set a material property value by its ID
+		*
+		*  @param[in] materialPropertyId
+		*    ID of the material property to set the value from
+		*  @param[in] materialPropertyValue
+		*    The material property value to set
+		*  @param[in] usage
+		*    The material property usage
+		*
+		*  @return
+		*    "true" if a material property change has been detected, else "false"
+		*/
+		inline bool setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage = MaterialProperty::Usage::UNKNOWN);
+
+		//[-------------------------------------------------------]
+		//[ Internal                                              ]
+		//[-------------------------------------------------------]
 		// TODO(co)
 		void releaseTextures();
 
@@ -156,18 +213,46 @@ namespace RendererRuntime
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~MaterialResource();
+		virtual ~MaterialResource();
+
+		/**
+		*  @brief
+		*    Set a material property value by its ID
+		*
+		*  @param[in] materialPropertyId
+		*    ID of the material property to set the value from
+		*  @param[in] materialPropertyValue
+		*    The material property value to set
+		*  @param[in] materialPropertyUsage
+		*    The material property usage
+		*  @param[in] changeOverwrittenState
+		*    Change overwritten state?
+		*
+		*  @return
+		*    Pointer to the added or changed property, null pointer if no material property change has been detected, don't destroy the returned instance
+		*/
+		RENDERERRUNTIME_API_EXPORT bool setPropertyByIdInternal(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage, bool changeOverwrittenState);
 
 		MaterialResource(const MaterialResource&) = delete;
 		MaterialResource& operator=(const MaterialResource&) = delete;
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<MaterialResourceId> SortedChildMaterialResourceIds;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		SortedMaterialTechniqueVector mSortedMaterialTechniqueVector;
-		MaterialProperties			  mMaterialProperties;
+		MaterialResourceManager*	   mMaterialResourceManager;	///< Owner material resource manager, pointer considered to be always valid
+		MaterialResourceId			   mParentMaterialResourceId;
+		SortedChildMaterialResourceIds mSortedChildMaterialResourceIds;
+		SortedMaterialTechniqueVector  mSortedMaterialTechniqueVector;
+		MaterialProperties			   mMaterialProperties;
 
 
 	};

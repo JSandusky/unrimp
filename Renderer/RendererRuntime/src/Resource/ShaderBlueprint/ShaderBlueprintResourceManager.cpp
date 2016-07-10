@@ -42,7 +42,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	ShaderBlueprintResourceId ShaderBlueprintResourceManager::loadShaderBlueprintResourceByAssetId(AssetId assetId, bool reload)
+	ShaderBlueprintResourceId ShaderBlueprintResourceManager::loadShaderBlueprintResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
@@ -71,6 +71,10 @@ namespace RendererRuntime
 				shaderBlueprintResource = &mShaderBlueprintResources.addElement();
 				shaderBlueprintResource->setAssetId(assetId);
 				load = true;
+			}
+			if (nullptr != shaderBlueprintResource && nullptr != resourceListener)
+			{
+				shaderBlueprintResource->addResourceListener(*resourceListener);
 			}
 
 			// Load the resource, if required
@@ -107,7 +111,7 @@ namespace RendererRuntime
 		{
 			if (mShaderBlueprintResources.getElementByIndex(i).getAssetId() == assetId)
 			{
-				loadShaderBlueprintResourceByAssetId(assetId, true);
+				loadShaderBlueprintResourceByAssetId(assetId, nullptr, true);
 				break;
 			}
 		}

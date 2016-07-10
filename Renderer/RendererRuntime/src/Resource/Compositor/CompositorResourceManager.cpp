@@ -64,7 +64,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorResourceId CompositorResourceManager::loadCompositorResourceByAssetId(AssetId assetId, bool reload, IResourceListener* resourceListener)
+	CompositorResourceId CompositorResourceManager::loadCompositorResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
@@ -92,8 +92,11 @@ namespace RendererRuntime
 			{
 				compositorResource = &mCompositorResources.addElement();
 				compositorResource->setAssetId(assetId);
-				compositorResource->setResourceListener(resourceListener);
 				load = true;
+			}
+			if (nullptr != compositorResource && nullptr != resourceListener)
+			{
+				compositorResource->addResourceListener(*resourceListener);
 			}
 
 			// Load the resource, if required
@@ -136,7 +139,7 @@ namespace RendererRuntime
 		{
 			if (mCompositorResources.getElementByIndex(i).getAssetId() == assetId)
 			{
-				loadCompositorResourceByAssetId(assetId, true);
+				loadCompositorResourceByAssetId(assetId, nullptr, true);
 				break;
 			}
 		}

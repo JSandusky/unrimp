@@ -41,7 +41,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	MeshResourceId MeshResourceManager::loadMeshResourceByAssetId(AssetId assetId, bool reload)
+	MeshResourceId MeshResourceManager::loadMeshResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		MeshResourceId meshResourceId = getUninitialized<MeshResourceId>();
 
@@ -73,6 +73,10 @@ namespace RendererRuntime
 		}
 		if (nullptr != meshResource)
 		{
+			if (nullptr != resourceListener)
+			{
+				meshResource->addResourceListener(*resourceListener);
+			}
 			meshResourceId = meshResource->getId();
 		}
 
@@ -100,11 +104,11 @@ namespace RendererRuntime
 		assert(isUninitialized(loadMeshResourceByAssetId(assetId)));
 
 		// Create the mesh resource instance
-		MeshResource* meshResource = &mMeshResources.addElement();
-		meshResource->setAssetId(assetId);
+		MeshResource& meshResource = mMeshResources.addElement();
+		meshResource.setAssetId(assetId);
 
 		// Done
-		return meshResource->getId();
+		return meshResource.getId();
 	}
 
 
@@ -119,7 +123,7 @@ namespace RendererRuntime
 		{
 			if (mMeshResources.getElementByIndex(i).getAssetId() == assetId)
 			{
-				loadMeshResourceByAssetId(assetId, true);
+				loadMeshResourceByAssetId(assetId, nullptr, true);
 				break;
 			}
 		}

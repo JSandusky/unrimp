@@ -40,7 +40,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	MaterialResourceId MaterialResourceManager::loadMaterialResourceByAssetId(AssetId assetId, bool reload)
+	MaterialResourceId MaterialResourceManager::loadMaterialResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		MaterialResourceId materialResourceId = getUninitialized<MaterialResourceId>();
 
@@ -67,11 +67,16 @@ namespace RendererRuntime
 		if (nullptr == materialResource && nullptr != asset)
 		{
 			materialResource = &mMaterialResources.addElement();
+			materialResource->mMaterialResourceManager = this;
 			materialResource->setAssetId(assetId);
 			load = true;
 		}
 		if (nullptr != materialResource)
 		{
+			if (nullptr != resourceListener)
+			{
+				materialResource->addResourceListener(*resourceListener);
+			}
 			materialResourceId = materialResource->getId();
 		}
 
@@ -99,13 +104,14 @@ namespace RendererRuntime
 		assert(isUninitialized(loadMaterialResourceByAssetId(assetId)));
 
 		// Create the material resource instance
-		MaterialResource* materialResource = &mMaterialResources.addElement();
-		materialResource->setAssetId(assetId);
+		MaterialResource& materialResource = mMaterialResources.addElement();
+		materialResource.mMaterialResourceManager = this;
+		materialResource.setAssetId(assetId);
 
 		// TODO(co) Simplify
 		{ // Create the default material technique
-			MaterialResource::SortedMaterialTechniqueVector& sortedMaterialTechniqueVector = materialResource->mSortedMaterialTechniqueVector;
-			sortedMaterialTechniqueVector.emplace_back(MaterialTechnique("Default", *materialResource));
+			MaterialResource::SortedMaterialTechniqueVector& sortedMaterialTechniqueVector = materialResource.mSortedMaterialTechniqueVector;
+			sortedMaterialTechniqueVector.emplace_back(MaterialTechnique("Default", materialResource));
 			MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[0];
 			MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
 			materialTechnique.mMaterialBlueprintResourceId = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(materialBlueprintResourceId);
@@ -113,13 +119,27 @@ namespace RendererRuntime
 			MaterialBlueprintResource* materialBlueprintResource = const_cast<MaterialBlueprintResource*>(materialBlueprintResourceManager.getMaterialBlueprintResources().tryGetElementById(materialTechnique.mMaterialBlueprintResourceId));
 			if (nullptr != materialBlueprintResource)
 			{
-				materialResource->mMaterialProperties = materialBlueprintResource->mMaterialProperties;
+				materialResource.mMaterialProperties = materialBlueprintResource->mMaterialProperties;
 				materialBlueprintResource->linkMaterialTechnique(materialTechnique);
 			}
 		}
 
 		// Done
-		return materialResource->getId();
+		return materialResource.getId();
+	}
+
+	MaterialResourceId MaterialResourceManager::createMaterialResourceByCloning(MaterialResourceId parentMaterialResourceId)
+	{
+		assert(mMaterialResources.isElementIdValid(parentMaterialResourceId));
+		assert(mMaterialResources.getElementById(parentMaterialResourceId).getLoadingState() == IResource::LoadingState::LOADED);
+
+		// Create the material resource instance
+		MaterialResource& materialResource = mMaterialResources.addElement();
+		materialResource.mMaterialResourceManager = this;
+		materialResource.setParentMaterialResourceId(parentMaterialResourceId);
+
+		// Done
+		return materialResource.getId();
 	}
 
 
@@ -134,7 +154,7 @@ namespace RendererRuntime
 		{
 			if (mMaterialResources.getElementByIndex(i).getAssetId() == assetId)
 			{
-				loadMaterialResourceByAssetId(assetId, true);
+				loadMaterialResourceByAssetId(assetId, nullptr, true);
 				break;
 			}
 		}

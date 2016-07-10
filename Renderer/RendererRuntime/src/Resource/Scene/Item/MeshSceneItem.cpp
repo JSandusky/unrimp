@@ -44,15 +44,41 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	void MeshSceneItem::setMeshResourceId(MeshResourceId meshResourceId)
+	{
+		mMeshResourceId = meshResourceId;
+		// TODO(co) Get rid of the evil const-cast
+		const_cast<MeshResource&>(getSceneResource().getRendererRuntime().getMeshResourceManager().getMeshResources().getElementById(meshResourceId)).addResourceListener(*this);
+	}
+
 	void MeshSceneItem::setMeshResourceIdByAssetId(AssetId meshAssetId)
 	{
-		setMeshResourceId(getSceneResource().getRendererRuntime().getMeshResourceManager().loadMeshResourceByAssetId(meshAssetId));
+		mMeshResourceId = getSceneResource().getRendererRuntime().getMeshResourceManager().loadMeshResourceByAssetId(meshAssetId, this);
 	}
 
 	void MeshSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t* data)
 	{
 		assert(sizeof(v1Scene::MeshItem) == numberOfBytes);
 		setMeshResourceIdByAssetId(reinterpret_cast<const v1Scene::MeshItem*>(data)->meshAssetId);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	void MeshSceneItem::onLoadingStateChange(const IResource& resource)
+	{
+		if (resource.getLoadingState() == IResource::LoadingState::LOADED)
+		{
+			// Set material resource ID of each sub-mesh
+			const SubMeshes& subMeshes = static_cast<const MeshResource&>(resource).getSubMeshes();
+			const size_t numberOfSubMeshes = subMeshes.size();
+			mMaterialResourceIds.resize(numberOfSubMeshes);
+			for (size_t subMeshIndex = 0; subMeshIndex < numberOfSubMeshes; ++subMeshIndex)
+			{
+				mMaterialResourceIds[subMeshIndex] = subMeshes[subMeshIndex].getMaterialResourceId();
+			}
+		}
 	}
 
 

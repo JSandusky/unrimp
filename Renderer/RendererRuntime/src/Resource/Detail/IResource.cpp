@@ -24,6 +24,33 @@
 #include "RendererRuntime/Resource/Detail/IResource.h"
 #include "RendererRuntime/Resource/IResourceListener.h"
 
+#include <algorithm>
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		inline bool orderByResourceListener(RendererRuntime::IResourceListener* left, RendererRuntime::IResourceListener* right)
+		{
+			return (left < right);
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -33,14 +60,37 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	void IResource::addResourceListener(IResourceListener& resourceListener)
+	{
+		SortedResourceListeners::iterator iterator = std::lower_bound(mSortedResourceListeners.begin(), mSortedResourceListeners.end(), &resourceListener, ::detail::orderByResourceListener);
+		if (iterator == mSortedResourceListeners.end() || *iterator != &resourceListener)
+		{
+			mSortedResourceListeners.insert(iterator, &resourceListener);
+			resourceListener.onLoadingStateChange(*this);
+		}
+	}
+
+	void IResource::removeResourceListener(IResourceListener& resourceListener)
+	{
+		SortedResourceListeners::iterator iterator = std::lower_bound(mSortedResourceListeners.begin(), mSortedResourceListeners.end(), &resourceListener, ::detail::orderByResourceListener);
+		if (iterator != mSortedResourceListeners.end() && *iterator == &resourceListener)
+		{
+			mSortedResourceListeners.erase(iterator);
+		}
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	void IResource::setLoadingState(LoadingState loadingState)
 	{
 		mLoadingState = loadingState;
-		if (nullptr != mResourceListener)
+		for (IResourceListener* resourceListener : mSortedResourceListeners)
 		{
-			mResourceListener->onLoadingStateChange(loadingState);
+			resourceListener->onLoadingStateChange(*this);
 		}
 	}
 

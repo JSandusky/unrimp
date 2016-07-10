@@ -65,7 +65,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	// TODO(co) Work-in-progress
-	MaterialResourceId MaterialBlueprintResourceManager::loadMaterialBlueprintResourceByAssetId(AssetId assetId, bool reload)
+	MaterialResourceId MaterialBlueprintResourceManager::loadMaterialBlueprintResourceByAssetId(AssetId assetId, IResourceListener* resourceListener, bool reload)
 	{
 		const Asset* asset = mRendererRuntime.getAssetManager().getAssetByAssetId(assetId);
 		if (nullptr != asset)
@@ -95,6 +95,10 @@ namespace RendererRuntime
 				materialBlueprintResource->mMaterialBlueprintResourceManager = this;
 				materialBlueprintResource->setAssetId(assetId);
 				load = true;
+			}
+			if (nullptr != materialBlueprintResource && nullptr != resourceListener)
+			{
+				materialBlueprintResource->addResourceListener(*resourceListener);
 			}
 
 			// Load the resource, if required
@@ -138,7 +142,7 @@ namespace RendererRuntime
 			MaterialBlueprintResource& materialBlueprintResource = mMaterialBlueprintResources.getElementByIndex(i);
 			if (materialBlueprintResource.getAssetId() == assetId)
 			{
-				loadMaterialBlueprintResourceByAssetId(assetId, true);
+				loadMaterialBlueprintResourceByAssetId(assetId, nullptr, true);
 
 				// TODO(co) Cleanup: Update all influenced material resources, probably also other material stuff has to be updated
 				materialBlueprintResource.getPipelineStateCacheManager().clearCache();

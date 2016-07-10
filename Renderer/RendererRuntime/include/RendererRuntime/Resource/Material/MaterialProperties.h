@@ -86,7 +86,7 @@ namespace RendererRuntime
 		*  @brief
 		*    Remove all material properties
 		*/
-		inline void clear();
+		inline void removeAllProperties();
 
 		/**
 		*  @brief
@@ -110,8 +110,13 @@ namespace RendererRuntime
 		*    The material property value to set
 		*  @param[in] materialPropertyUsage
 		*    The material property usage
+		*  @param[in] changeOverwrittenState
+		*    Change overwritten state?
+		*
+		*  @return
+		*    Pointer to the added or changed property, null pointer if no material property change has been detected, don't destroy the returned instance
 		*/
-		RENDERERRUNTIME_API_EXPORT void setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage = MaterialProperty::Usage::SHADER_UNIFORM);
+		RENDERERRUNTIME_API_EXPORT MaterialProperty* setPropertyById(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage = MaterialProperty::Usage::UNKNOWN, bool changeOverwrittenState = false);
 
 
 	//[-------------------------------------------------------]
