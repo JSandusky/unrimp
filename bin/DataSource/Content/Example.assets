@@ -21,7 +21,7 @@
 		"13": "ShaderBlueprint/MeshForwardLightingFragment.asset",
 		"14": "MaterialBlueprint/MeshForwardLighting.asset",
 		"15": "ShaderPiece/Core.asset",
-		"16": "ShaderPiece/MeshForwardLighting.asset",
+		"16": "ShaderPiece/TangentFrame.asset",
 		"17": "ShaderBlueprint/DepthOnlyVertex.asset",
 		"18": "ShaderBlueprint/DepthOnlyFragment.asset"
 	}

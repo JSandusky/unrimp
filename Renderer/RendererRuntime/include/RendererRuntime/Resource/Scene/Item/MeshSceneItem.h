@@ -27,11 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
 #include "RendererRuntime/Resource/IResourceListener.h"
-
-#include <vector>
 
 
 //[-------------------------------------------------------]

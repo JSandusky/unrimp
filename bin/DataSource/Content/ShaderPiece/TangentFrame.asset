@@ -11,13 +11,13 @@
 			"AssetId": "16",
 			"AssetType": "ShaderPiece",
 			"AssetCategory": "Default",
-			"AssetName": "MeshForwardLighting",
-			"FileDependencies": [ "MeshForwardLighting.shader_piece" ],
+			"AssetName": "TangentFrame",
+			"FileDependencies": [ "TangentFrame.shader_piece" ],
 			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
 		},
 		"ShaderPieceAssetCompiler":
 		{
-			"InputFile": "MeshForwardLighting.shader_piece"
+			"InputFile": "TangentFrame.shader_piece"
 		}
 	}
 }
