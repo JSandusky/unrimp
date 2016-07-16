@@ -8,17 +8,17 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "5",
+			"AssetId": "6",
 			"AssetType": "Texture",
 			"AssetCategory": "Character",
-			"AssetName": "Imrod_Illumination",
-			"FileDependencies": [ "Imrod_Illumination.tga" ],
+			"AssetName": "ImrodNormalMap",
+			"FileDependencies": [ "ImrodNormalMap.tga" ],
 			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/gallery/imrod_dw.html ) by Dmitry Parkin: http://www.parkparkin.com"
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "Imrod_Illumination.tga",
-			"TextureSemantic": "EmissiveMap"
+			"InputFile": "ImrodNormalMap.tga",
+			"TextureSemantic": "NormalMap"
 		}
 	}
 }

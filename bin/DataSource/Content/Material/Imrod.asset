@@ -11,14 +11,14 @@
 			"AssetId": "1",
 			"AssetType": "Material",
 			"AssetCategory": "Character",
-			"AssetName": "FirstMesh",
+			"AssetName": "Imrod",
 			"AssetDependencies": [ "0", "4", "5", "6", "7", "14" ],
-			"FileDependencies": [ "FirstMesh.material" ],
+			"FileDependencies": [ "Imrod.material" ],
 			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
 		},
 		"MaterialAssetCompiler":
 		{
-			"InputFile": "FirstMesh.material"
+			"InputFile": "Imrod.material"
 		}
 	}
 }

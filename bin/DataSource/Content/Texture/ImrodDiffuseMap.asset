@@ -11,13 +11,13 @@
 			"AssetId": "4",
 			"AssetType": "Texture",
 			"AssetCategory": "Character",
-			"AssetName": "Imrod_Diffuse",
-			"FileDependencies": [ "Imrod_Diffuse.tga" ],
+			"AssetName": "ImrodDiffuseMap",
+			"FileDependencies": [ "ImrodDiffuseMap.tga" ],
 			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/gallery/imrod_dw.html ) by Dmitry Parkin: http://www.parkparkin.com"
 		},
 		"TextureAssetCompiler":
 		{
-			"InputFile": "Imrod_Diffuse.tga",
+			"InputFile": "ImrodDiffuseMap.tga",
 			"TextureSemantic": "DiffuseMap"
 		}
 	}

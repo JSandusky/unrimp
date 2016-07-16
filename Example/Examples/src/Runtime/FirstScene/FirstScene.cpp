@@ -52,7 +52,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
-		static const RendererRuntime::AssetId MaterialAssetId("Example/Material/Character/FirstMesh");
+		static const RendererRuntime::AssetId MaterialAssetId("Example/Material/Character/Imrod");
 
 
 //[-------------------------------------------------------]

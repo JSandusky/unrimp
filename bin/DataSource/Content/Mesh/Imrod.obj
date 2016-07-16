@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib ImrodLowPoly.mtl
+mtllib Imrod.mtl
 
 g default
 v -8.675563 4.404946 0.658908
@@ -961,7 +961,7 @@ vn -0.940442 -0.030840 0.338552
 vn -0.807149 0.390370 0.442856
 vn -0.002444 0.999987 -0.004433
 s 1
-g ImrodLowPoly_3_:polySurface7
+g Imrod_3_:polySurface7
 usemtl 1
 f 1/1/1 2/2/2 3/3/3
 f 3/3/3 2/2/2 4/4/4

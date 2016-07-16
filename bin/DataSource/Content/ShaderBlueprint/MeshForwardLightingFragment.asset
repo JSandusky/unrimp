@@ -8,17 +8,17 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "12",
+			"AssetId": "13",
 			"AssetType": "ShaderBlueprint",
 			"AssetCategory": "Default",
-			"AssetName": "FirstMeshVertex",
-			"AssetDependencies": [ "15", "16" ],
-			"FileDependencies": [ "FirstMeshVertex.shader_blueprint" ],
+			"AssetName": "MeshForwardLightingFragment",
+			"AssetDependencies": [ "15" ],
+			"FileDependencies": [ "MeshForwardLightingFragment.shader_blueprint" ],
 			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
 		},
 		"ShaderBlueprintAssetCompiler":
 		{
-			"InputFile": "FirstMeshVertex.shader_blueprint"
+			"InputFile": "MeshForwardLightingFragment.shader_blueprint"
 		}
 	}
 }

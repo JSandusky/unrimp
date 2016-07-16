@@ -200,7 +200,7 @@ namespace
 			if (RendererRuntime::isUninitialized(materialResourceId))
 			{
 				// We need to generate the runtime material asset right now
-				materialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialAssetId, RendererRuntime::StringId("Example/MaterialBlueprint/Default/FirstMesh"));	// TODO(co) It must be possible to set the material blueprint ID from the outside
+				materialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialAssetId, RendererRuntime::StringId("Example/MaterialBlueprint/Default/MeshForwardLighting"));	// TODO(co) It must be possible to set the material blueprint ID from the outside
 				if (RendererRuntime::isInitialized(materialResourceId))
 				{
 					// TODO(co) Get rid of the evil const-cast

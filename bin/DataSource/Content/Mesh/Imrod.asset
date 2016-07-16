@@ -8,17 +8,17 @@
 	{
 		"AssetMetadata":
 		{
-			"AssetId": "7",
-			"AssetType": "Texture",
+			"AssetId": "2",
+			"AssetType": "Mesh",
 			"AssetCategory": "Character",
-			"AssetName": "Imrod_spec",
-			"FileDependencies": [ "Imrod_spec.tga" ],
+			"AssetName": "Imrod",
+			"AssetDependencies": [ "1" ],
+			"FileDependencies": [ "Imrod.obj", "Imrod.mtl" ],
 			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/gallery/imrod_dw.html ) by Dmitry Parkin: http://www.parkparkin.com"
 		},
-		"TextureAssetCompiler":
+		"MeshAssetCompiler":
 		{
-			"InputFile": "Imrod_spec.tga",
-			"TextureSemantic": "SpecularMap"
+			"InputFile": "Imrod.obj"
 		}
 	}
 }

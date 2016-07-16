@@ -11,13 +11,13 @@
 			"AssetId": "16",
 			"AssetType": "ShaderPiece",
 			"AssetCategory": "Default",
-			"AssetName": "FirstMesh",
-			"FileDependencies": [ "FirstMesh.shader_piece" ],
+			"AssetName": "MeshForwardLighting",
+			"FileDependencies": [ "MeshForwardLighting.shader_piece" ],
 			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
 		},
 		"ShaderPieceAssetCompiler":
 		{
-			"InputFile": "FirstMesh.shader_piece"
+			"InputFile": "MeshForwardLighting.shader_piece"
 		}
 	}
 }

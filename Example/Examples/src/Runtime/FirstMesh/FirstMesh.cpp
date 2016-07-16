@@ -194,16 +194,16 @@ void FirstMesh::onInitialization()
 			}
 
 			// Create mesh instance
-			mMeshResourceId = rendererRuntime->getMeshResourceManager().loadMeshResourceByAssetId("Example/Mesh/Character/ImrodLowPoly");
+			mMeshResourceId = rendererRuntime->getMeshResourceManager().loadMeshResourceByAssetId("Example/Mesh/Character/Imrod");
 
 			{ // Load in the diffuse, emissive, normal and specular texture
 			  // -> The tangent space normal map is stored with three components, two would be enough to recalculate the third component within the fragment shader
 			  // -> The specular map could be put into the alpha channel of the diffuse map instead of storing it as an individual texture
 				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
-				mDiffuseTextureResourceId  = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_Diffuse");
-				mNormalTextureResourceId   = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_Illumination");
-				mSpecularTextureResourceId = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_norm");
-				mEmissiveTextureResourceId = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_spec");
+				mDiffuseTextureResourceId  = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodDiffuseMap");
+				mNormalTextureResourceId   = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodEmissiveMap");
+				mSpecularTextureResourceId = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodNormalMap");
+				mEmissiveTextureResourceId = textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/ImrodSpecularMap");
 			}
 
 			{ // Create sampler state
