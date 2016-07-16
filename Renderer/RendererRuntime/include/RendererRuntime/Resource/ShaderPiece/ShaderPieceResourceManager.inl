@@ -35,6 +35,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	inline IResource& ShaderPieceResourceManager::getResourceByResourceId(ResourceId resourceId)
+	{
+		return mShaderPieceResources.getElementById(resourceId);
+	}
+
+	inline IResource* ShaderPieceResourceManager::tryGetResourceByResourceId(ResourceId resourceId)
+	{
+		return mShaderPieceResources.tryGetElementById(resourceId);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline ShaderPieceResourceManager::ShaderPieceResourceManager(IRendererRuntime& rendererRuntime) :

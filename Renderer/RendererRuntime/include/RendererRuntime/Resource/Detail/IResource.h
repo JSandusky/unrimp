@@ -39,6 +39,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class IResourceManager;
 	class IResourceListener;
 }
 
@@ -87,27 +88,30 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		inline IResourceManager& getResourceManager() const;
+		template <typename T> T& getResourceManager() const;
 		inline ResourceId getId() const;
 		inline AssetId getAssetId() const;
 		inline LoadingState getLoadingState() const;
-		RENDERERRUNTIME_API_EXPORT void addResourceListener(IResourceListener& resourceListener);	// No guaranteed resource listener caller order
-		RENDERERRUNTIME_API_EXPORT void removeResourceListener(IResourceListener& resourceListener);
+		RENDERERRUNTIME_API_EXPORT void connectResourceListener(IResourceListener& resourceListener);	// No guaranteed resource listener caller order
+		RENDERERRUNTIME_API_EXPORT void disconnectResourceListener(IResourceListener& resourceListener);
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit IResource(ResourceId resourceId);
-		inline virtual ~IResource();
+		inline IResource(ResourceId resourceId);
+		RENDERERRUNTIME_API_EXPORT virtual ~IResource();
 		IResource(const IResource&) = delete;
 		IResource& operator=(const IResource&) = delete;
+		inline void setResourceManager(IResourceManager* resourceManager);
 		inline void setAssetId(AssetId assetId);
 		void setLoadingState(LoadingState loadingState);
 
 
 	//[-------------------------------------------------------]
-	//[ Private data                                          ]
+	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
 		typedef std::vector<IResourceListener*> SortedResourceListeners;
@@ -117,6 +121,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		IResourceManager*		mResourceManager;	///< Owner resource manager, always valid
 		ResourceId				mResourceId;		///< Unique resource ID inside the resource manager
 		AssetId					mAssetId;			///< In case the resource is an instance of an asset, this is the ID of this asset
 		LoadingState			mLoadingState;

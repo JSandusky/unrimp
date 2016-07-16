@@ -68,6 +68,7 @@ namespace RendererRuntime
 		if (nullptr == meshResource && nullptr != asset)
 		{
 			meshResource = &mMeshResources.addElement();
+			meshResource->setResourceManager(this);
 			meshResource->setAssetId(assetId);
 			load = true;
 		}
@@ -75,7 +76,7 @@ namespace RendererRuntime
 		{
 			if (nullptr != resourceListener)
 			{
-				meshResource->addResourceListener(*resourceListener);
+				meshResource->connectResourceListener(*resourceListener);
 			}
 			meshResourceId = meshResource->getId();
 		}
@@ -105,6 +106,7 @@ namespace RendererRuntime
 
 		// Create the mesh resource instance
 		MeshResource& meshResource = mMeshResources.addElement();
+		meshResource.setResourceManager(this);
 		meshResource.setAssetId(assetId);
 
 		// Done

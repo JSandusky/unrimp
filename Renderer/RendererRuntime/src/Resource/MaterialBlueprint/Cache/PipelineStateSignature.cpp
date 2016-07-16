@@ -113,7 +113,7 @@ namespace RendererRuntime
 
 		// TODO(co) We need to be DirectX 12 ready: Rasterizer state, depth stencil state and blend state are not considered yet. So, for now pipeline state cache = program cache.
 		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mMaterialBlueprintResourceId), sizeof(uint32_t), mPipelineStateSignatureId);
-		const ShaderBlueprintResources& shaderBlueprintResources = materialBlueprintResource.getMaterialBlueprintResourceManager().getRendererRuntime().getShaderBlueprintResourceManager().getShaderBlueprintResources();
+		const ShaderBlueprintResources& shaderBlueprintResources = materialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getShaderBlueprintResourceManager().getShaderBlueprintResources();
 		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 		{
 			const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.getShaderBlueprintResourceId(static_cast<ShaderType>(i)));

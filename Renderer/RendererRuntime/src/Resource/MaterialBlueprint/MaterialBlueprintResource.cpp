@@ -159,8 +159,9 @@ namespace RendererRuntime
 		}
 
 		// Get the shader piece resource manager instance
-		const ShaderPieceResourceManager& shaderPieceResourceManager = getMaterialBlueprintResourceManager().getRendererRuntime().getShaderPieceResourceManager();
-		const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = getMaterialBlueprintResourceManager().getRendererRuntime().getShaderBlueprintResourceManager();
+		const IRendererRuntime& rendererRuntime = getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime();
+		const ShaderPieceResourceManager& shaderPieceResourceManager = rendererRuntime.getShaderPieceResourceManager();
+		const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = rendererRuntime.getShaderBlueprintResourceManager();
 
 		// Check the rest
 		// TODO(co) Handle the other shader types
@@ -169,10 +170,10 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResource::fillUnknownUniformBuffers()
 	{
-		assert(nullptr != mMaterialBlueprintResourceManager);
-		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager->getGlobalMaterialProperties();
+		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = getResourceManager<MaterialBlueprintResourceManager>();
+		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
 
-		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager->getMaterialBlueprintResourceListener();
+		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = materialBlueprintResourceManager.getMaterialBlueprintResourceListener();
 		materialBlueprintResourceListener.beginFillUnknown();
 
 		const size_t numberOfUniformBuffers = mUniformBuffers.size();
@@ -255,14 +256,14 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResource::fillPassUniformBuffer(const Transform& worldSpaceToViewSpaceTransform)
 	{
-		assert(nullptr != mMaterialBlueprintResourceManager);
 		assert(nullptr != mPassUniformBuffer);
 		assert(1 == mPassUniformBuffer->numberOfElements);
 
-		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager->getGlobalMaterialProperties();
+		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = getResourceManager<MaterialBlueprintResourceManager>();
+		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
 
-		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager->getMaterialBlueprintResourceListener();
-		materialBlueprintResourceListener.beginFillPass(mMaterialBlueprintResourceManager->getRendererRuntime(), worldSpaceToViewSpaceTransform);
+		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = materialBlueprintResourceManager.getMaterialBlueprintResourceListener();
+		materialBlueprintResourceListener.beginFillPass(materialBlueprintResourceManager.getRendererRuntime(), worldSpaceToViewSpaceTransform);
 
 		// Update the scratch buffer
 		ScratchBuffer& scratchBuffer = mPassUniformBuffer->scratchBuffer;
@@ -333,12 +334,12 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResource::fillMaterialUniformBuffer()
 	{
-		assert(nullptr != mMaterialBlueprintResourceManager);
 		assert(nullptr != mMaterialUniformBuffer);
 
-		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager->getGlobalMaterialProperties();
+		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = getResourceManager<MaterialBlueprintResourceManager>();
+		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
 
-		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager->getMaterialBlueprintResourceListener();
+		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = materialBlueprintResourceManager.getMaterialBlueprintResourceListener();
 		materialBlueprintResourceListener.beginFillMaterial();
 
 		// TODO(co) Optimization: Do only update changed materials
@@ -433,14 +434,14 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResource::fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique)
 	{
-		assert(nullptr != mMaterialBlueprintResourceManager);
 		assert(getId() == materialTechnique.getMaterialBlueprintResourceId());
 		assert(nullptr != mInstanceUniformBuffer);
 		assert(1 == mInstanceUniformBuffer->numberOfElements);	// TODO(co) Implement automatic instancing
 
-		const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager->getGlobalMaterialProperties();
+		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = getResourceManager<MaterialBlueprintResourceManager>();
+		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
 
-		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mMaterialBlueprintResourceManager->getMaterialBlueprintResourceListener();
+		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = materialBlueprintResourceManager.getMaterialBlueprintResourceListener();
 		materialBlueprintResourceListener.beginFillInstance(objectSpaceToWorldSpaceTransform, materialTechnique);
 
 		// Update the scratch buffer
@@ -546,7 +547,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MaterialBlueprintResource::MaterialBlueprintResource() :
 		IResource(getUninitialized<MaterialBlueprintResourceId>()),
-		mMaterialBlueprintResourceManager(nullptr),
 		mPipelineStateCacheManager(*this),
 		mVertexAttributes(glm::countof(::detail::vertexAttributesLayout), ::detail::vertexAttributesLayout),
 		mPipelineState(Renderer::PipelineStateBuilder())
@@ -556,7 +556,6 @@ namespace RendererRuntime
 
 	MaterialBlueprintResource::MaterialBlueprintResource(MaterialBlueprintResourceId materialBlueprintResourceId) :
 		IResource(materialBlueprintResourceId),
-		mMaterialBlueprintResourceManager(nullptr),
 		mPipelineStateCacheManager(*this),
 		mVertexAttributes(glm::countof(::detail::vertexAttributesLayout), ::detail::vertexAttributesLayout),
 		mPipelineState(Renderer::PipelineStateBuilder())

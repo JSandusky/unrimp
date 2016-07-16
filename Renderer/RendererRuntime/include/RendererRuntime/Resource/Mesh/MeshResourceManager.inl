@@ -35,6 +35,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	inline IResource& MeshResourceManager::getResourceByResourceId(ResourceId resourceId)
+	{
+		return mMeshResources.getElementById(resourceId);
+	}
+
+	inline IResource* MeshResourceManager::tryGetResourceByResourceId(ResourceId resourceId)
+	{
+		return mMeshResources.tryGetElementById(resourceId);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline MeshResourceManager::MeshResourceManager(IRendererRuntime& rendererRuntime) :

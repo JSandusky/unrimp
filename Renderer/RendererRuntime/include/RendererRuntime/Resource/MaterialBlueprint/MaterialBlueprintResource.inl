@@ -28,12 +28,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialBlueprintResourceManager& MaterialBlueprintResource::getMaterialBlueprintResourceManager() const
-	{
-		assert(nullptr != mMaterialBlueprintResourceManager);
-		return *mMaterialBlueprintResourceManager;
-	}
-
 	inline PipelineStateCacheManager& MaterialBlueprintResource::getPipelineStateCacheManager()
 	{
 		return mPipelineStateCacheManager;

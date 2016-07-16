@@ -67,7 +67,7 @@ namespace RendererRuntime
 		if (nullptr == materialResource && nullptr != asset)
 		{
 			materialResource = &mMaterialResources.addElement();
-			materialResource->mMaterialResourceManager = this;
+			materialResource->setResourceManager(this);
 			materialResource->setAssetId(assetId);
 			load = true;
 		}
@@ -75,7 +75,7 @@ namespace RendererRuntime
 		{
 			if (nullptr != resourceListener)
 			{
-				materialResource->addResourceListener(*resourceListener);
+				materialResource->connectResourceListener(*resourceListener);
 			}
 			materialResourceId = materialResource->getId();
 		}
@@ -105,7 +105,7 @@ namespace RendererRuntime
 
 		// Create the material resource instance
 		MaterialResource& materialResource = mMaterialResources.addElement();
-		materialResource.mMaterialResourceManager = this;
+		materialResource.setResourceManager(this);
 		materialResource.setAssetId(assetId);
 
 		// TODO(co) Simplify
@@ -135,7 +135,7 @@ namespace RendererRuntime
 
 		// Create the material resource instance
 		MaterialResource& materialResource = mMaterialResources.addElement();
-		materialResource.mMaterialResourceManager = this;
+		materialResource.setResourceManager(this);
 		materialResource.setParentMaterialResourceId(parentMaterialResourceId);
 
 		// Done

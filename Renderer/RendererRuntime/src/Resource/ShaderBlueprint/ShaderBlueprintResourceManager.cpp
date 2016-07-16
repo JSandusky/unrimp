@@ -69,12 +69,13 @@ namespace RendererRuntime
 			if (nullptr == shaderBlueprintResource)
 			{
 				shaderBlueprintResource = &mShaderBlueprintResources.addElement();
+				shaderBlueprintResource->setResourceManager(this);
 				shaderBlueprintResource->setAssetId(assetId);
 				load = true;
 			}
 			if (nullptr != shaderBlueprintResource && nullptr != resourceListener)
 			{
-				shaderBlueprintResource->addResourceListener(*resourceListener);
+				shaderBlueprintResource->connectResourceListener(*resourceListener);
 			}
 
 			// Load the resource, if required

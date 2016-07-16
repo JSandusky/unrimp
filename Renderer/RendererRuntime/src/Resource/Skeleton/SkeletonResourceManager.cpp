@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
 
+#include <cassert>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -34,6 +36,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
+	IResource& SkeletonResourceManager::getResourceByResourceId(ResourceId resourceId)
+	{
+		IResource* resource = tryGetResourceByResourceId(resourceId);
+		assert(nullptr != resource);
+		return *resource;
+	}
+
+	IResource* SkeletonResourceManager::tryGetResourceByResourceId(ResourceId)
+	{
+		// TODO(co) Implement me
+		return nullptr;
+	}
+
 	void SkeletonResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Implement me

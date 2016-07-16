@@ -46,13 +46,15 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void MeshSceneItem::setMeshResourceId(MeshResourceId meshResourceId)
 	{
+		disconnectFromAllResources();
 		mMeshResourceId = meshResourceId;
 		// TODO(co) Get rid of the evil const-cast
-		const_cast<MeshResource&>(getSceneResource().getRendererRuntime().getMeshResourceManager().getMeshResources().getElementById(meshResourceId)).addResourceListener(*this);
+		const_cast<MeshResource&>(getSceneResource().getRendererRuntime().getMeshResourceManager().getMeshResources().getElementById(meshResourceId)).connectResourceListener(*this);
 	}
 
 	void MeshSceneItem::setMeshResourceIdByAssetId(AssetId meshAssetId)
 	{
+		disconnectFromAllResources();
 		mMeshResourceId = getSceneResource().getRendererRuntime().getMeshResourceManager().loadMeshResourceByAssetId(meshAssetId, this);
 	}
 

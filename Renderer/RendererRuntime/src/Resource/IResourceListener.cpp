@@ -21,9 +21,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/GetUninitialized.h"
-
-#include <cassert>
+#include "RendererRuntime/Resource/IResourceListener.h"
+#include "RendererRuntime/Resource/Detail/IResourceManager.h"
+#include "RendererRuntime/Resource/Detail/IResource.h"
 
 
 //[-------------------------------------------------------]
@@ -36,54 +36,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IResourceManager& IResource::getResourceManager() const
+	void IResourceListener::disconnectFromAllResources()
 	{
-		assert(nullptr != mResourceManager);
-		return *mResourceManager;
-	}
-
-	template <typename T> T& IResource::getResourceManager() const
-	{
-		assert(nullptr != mResourceManager);
-		return *static_cast<T*>(mResourceManager);
-	}
-
-	inline ResourceId IResource::getId() const
-	{
-		return mResourceId;
-	}
-
-	inline AssetId IResource::getAssetId() const
-	{
-		return mAssetId;
-	}
-
-	inline IResource::LoadingState IResource::getLoadingState() const
-	{
-		return mLoadingState;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	inline IResource::IResource(ResourceId resourceId) :
-		mResourceManager(nullptr),
-		mResourceId(resourceId),
-		mAssetId(getUninitialized<AssetId>()),
-		mLoadingState(LoadingState::UNLOADED)
-	{
-		// Nothing here
-	}
-
-	inline void IResource::setResourceManager(IResourceManager* resourceManager)
-	{
-		mResourceManager = resourceManager;
-	}
-
-	inline void IResource::setAssetId(AssetId assetId)
-	{
-		mAssetId = assetId;
+		// Disconnect all resource connections
+		while (!mResourceConnections.empty())
+		{
+			const ResourceConnection& resourceConnection = mResourceConnections[0];
+			resourceConnection.resourceManager->getResourceByResourceId(resourceConnection.resourceId).disconnectResourceListener(*this);
+		}
 	}
 
 

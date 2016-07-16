@@ -27,7 +27,11 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/NonCopyable.h"
+
+#include <inttypes.h>	// For uint32_t, uint64_t etc.
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -36,6 +40,7 @@
 namespace RendererRuntime
 {
 	class IResource;
+	class IResourceManager;
 }
 
 
@@ -47,8 +52,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t ResourceId;	///< POD resource identifier
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Abstract resource listener interface
+	*/
 	class IResourceListener : protected NonCopyable
 	{
 
@@ -57,6 +72,30 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class IResource;
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		struct ResourceConnection
+		{
+			IResourceManager* resourceManager;	///< Owner resource manager, always valid
+			ResourceId		  resourceId;		///< Unique resource ID inside the resource manager
+			ResourceConnection(IResourceManager* _resourceManager, ResourceId _resourceId) :
+				resourceManager(_resourceManager),
+				resourceId(_resourceId)
+			{ }
+		};
+		typedef std::vector<ResourceConnection> ResourceConnections;
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		inline const ResourceConnections& getResourceConnections() const;
+		RENDERERRUNTIME_API_EXPORT void disconnectFromAllResources();
 
 
 	//[-------------------------------------------------------]
@@ -74,6 +113,13 @@ namespace RendererRuntime
 		inline virtual ~IResourceListener();
 		IResourceListener(const IResourceListener&) = delete;
 		IResourceListener& operator=(const IResourceListener&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		ResourceConnections mResourceConnections;
 
 
 	};

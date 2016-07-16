@@ -41,6 +41,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	inline IResource& CompositorResourceManager::getResourceByResourceId(ResourceId resourceId)
+	{
+		return mCompositorResources.getElementById(resourceId);
+	}
+
+	inline IResource* CompositorResourceManager::tryGetResourceByResourceId(ResourceId resourceId)
+	{
+		return mCompositorResources.tryGetElementById(resourceId);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline CompositorResourceManager::~CompositorResourceManager()

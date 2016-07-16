@@ -56,6 +56,20 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	inline IResource& MaterialBlueprintResourceManager::getResourceByResourceId(ResourceId resourceId)
+	{
+		return mMaterialBlueprintResources.getElementById(resourceId);
+	}
+
+	inline IResource* MaterialBlueprintResourceManager::tryGetResourceByResourceId(ResourceId resourceId)
+	{
+		return mMaterialBlueprintResources.tryGetElementById(resourceId);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

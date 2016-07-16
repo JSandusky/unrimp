@@ -91,12 +91,13 @@ namespace RendererRuntime
 			if (nullptr == compositorResource)
 			{
 				compositorResource = &mCompositorResources.addElement();
+				compositorResource->setResourceManager(this);
 				compositorResource->setAssetId(assetId);
 				load = true;
 			}
 			if (nullptr != compositorResource && nullptr != resourceListener)
 			{
-				compositorResource->addResourceListener(*resourceListener);
+				compositorResource->connectResourceListener(*resourceListener);
 			}
 
 			// Load the resource, if required

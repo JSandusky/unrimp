@@ -269,6 +269,7 @@
     <ClCompile Include="src\Resource\Detail\IResource.cpp" />
     <ClCompile Include="src\Resource\Detail\IResourceManager.cpp" />
     <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp" />
+    <ClCompile Include="src\Resource\IResourceListener.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCompiler.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateSignature.cpp" />

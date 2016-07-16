@@ -1058,5 +1058,8 @@
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCompiler.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
     </ClCompile>
+    <ClCompile Include="src\Resource\IResourceListener.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

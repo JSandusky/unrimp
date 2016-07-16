@@ -90,13 +90,14 @@ namespace RendererRuntime
 			{
 				assert(nullptr != mSceneFactory);
 				sceneResource = mSceneFactory->createSceneResource(SceneResource::TYPE_ID, mRendererRuntime, assetId);
+				sceneResource->setResourceManager(this);
 				sceneResource->setAssetId(assetId);
 				mSceneResources.push_back(sceneResource);
 				load = true;
 			}
 			if (nullptr != sceneResource && nullptr != resourceListener)
 			{
-				sceneResource->addResourceListener(*resourceListener);
+				sceneResource->connectResourceListener(*resourceListener);
 			}
 
 			// Load the resource, if required
@@ -138,6 +139,27 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
+	IResource& SceneResourceManager::getResourceByResourceId(ResourceId resourceId)
+	{
+		IResource* resource = tryGetResourceByResourceId(resourceId);
+		assert(nullptr != resource);
+		return *resource;
+	}
+
+	IResource* SceneResourceManager::tryGetResourceByResourceId(ResourceId resourceId)
+	{
+		const size_t numberOfSceneResources = mSceneResources.size();
+		for (size_t i = 0; i < numberOfSceneResources; ++i)
+		{
+			ISceneResource* sceneResource = mSceneResources[i];
+			if (sceneResource->getId() == resourceId)
+			{
+				return sceneResource;
+			}
+		}
+		return nullptr;
+	}
+
 	void SceneResourceManager::reloadResourceByAssetId(AssetId assetId)
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)

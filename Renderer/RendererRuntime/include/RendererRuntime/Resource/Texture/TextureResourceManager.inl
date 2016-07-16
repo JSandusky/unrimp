@@ -35,6 +35,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	inline IResource& TextureResourceManager::getResourceByResourceId(ResourceId resourceId)
+	{
+		return mTextureResources.getElementById(resourceId);
+	}
+
+	inline IResource* TextureResourceManager::tryGetResourceByResourceId(ResourceId resourceId)
+	{
+		return mTextureResources.tryGetElementById(resourceId);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :

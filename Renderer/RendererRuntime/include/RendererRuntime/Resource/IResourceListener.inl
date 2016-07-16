@@ -25,6 +25,15 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline const IResourceListener::ResourceConnections& IResourceListener::getResourceConnections() const
+	{
+		return mResourceConnections;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline IResourceListener::IResourceListener()
@@ -34,7 +43,7 @@ namespace RendererRuntime
 
 	inline IResourceListener::~IResourceListener()
 	{
-		// Nothing here
+		disconnectFromAllResources();
 	}
 
 

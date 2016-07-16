@@ -46,6 +46,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[-------------------------------------------------------]
+	inline IResource& ShaderBlueprintResourceManager::getResourceByResourceId(ResourceId resourceId)
+	{
+		return mShaderBlueprintResources.getElementById(resourceId);
+	}
+
+	inline IResource* ShaderBlueprintResourceManager::tryGetResourceByResourceId(ResourceId resourceId)
+	{
+		return mShaderBlueprintResources.tryGetElementById(resourceId);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline ShaderBlueprintResourceManager::ShaderBlueprintResourceManager(IRendererRuntime& rendererRuntime) :

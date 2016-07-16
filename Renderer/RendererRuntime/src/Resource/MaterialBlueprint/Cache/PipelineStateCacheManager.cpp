@@ -61,7 +61,7 @@ namespace RendererRuntime
 		// TODO(co) We need to be DirectX 12 ready: Rasterizer state, depth stencil state and blend state are not considered yet. So, for now pipeline state cache = program cache.
 
 		// Performance: Cached direct reference to the pipeline state compiler instance to use, since this instance doesn't change during runtime we can do so without mercy
-		static PipelineStateCompiler& pipelineStateCompiler = mMaterialBlueprintResource.getMaterialBlueprintResourceManager().getRendererRuntime().getPipelineStateCompiler();
+		static PipelineStateCompiler& pipelineStateCompiler = mMaterialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getPipelineStateCompiler();
 
 		// Fallback: OK, the pipeline state signature is unknown and we now have to perform more complex and time consuming work. So first, check whether or not this work
 		// should be performed asynchronous (usually the case). If asynchronous, we need to return a fallback pipeline state cache while the pipeline state compiler is working.

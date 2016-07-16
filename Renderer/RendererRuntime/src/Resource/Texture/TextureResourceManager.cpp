@@ -70,6 +70,7 @@ namespace RendererRuntime
 		if (nullptr == textureResource && nullptr != asset)
 		{
 			textureResource = &mTextureResources.addElement();
+			textureResource->setResourceManager(this);
 			textureResource->setAssetId(assetId);
 			load = true;
 		}
@@ -77,7 +78,7 @@ namespace RendererRuntime
 		{
 			if (nullptr != resourceListener)
 			{
-				textureResource->addResourceListener(*resourceListener);
+				textureResource->connectResourceListener(*resourceListener);
 			}
 			textureResourceId = textureResource->getId();
 		}
@@ -119,6 +120,7 @@ namespace RendererRuntime
 
 		// Create the texture resource instance
 		TextureResource& textureResource = mTextureResources.addElement();
+		textureResource.setResourceManager(this);
 		textureResource.setAssetId(assetId);
 		textureResource.mTexture = &texture;
 

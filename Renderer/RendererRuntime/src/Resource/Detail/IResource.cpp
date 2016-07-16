@@ -62,21 +62,30 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void IResource::addResourceListener(IResourceListener& resourceListener)
+	void IResource::connectResourceListener(IResourceListener& resourceListener)
 	{
 		SortedResourceListeners::iterator iterator = std::lower_bound(mSortedResourceListeners.begin(), mSortedResourceListeners.end(), &resourceListener, ::detail::orderByResourceListener);
 		if (iterator == mSortedResourceListeners.end() || *iterator != &resourceListener)
 		{
 			mSortedResourceListeners.insert(iterator, &resourceListener);
+			resourceListener.mResourceConnections.emplace_back(IResourceListener::ResourceConnection(mResourceManager, mResourceId));
 			resourceListener.onLoadingStateChange(*this);
 		}
 	}
 
-	void IResource::removeResourceListener(IResourceListener& resourceListener)
+	void IResource::disconnectResourceListener(IResourceListener& resourceListener)
 	{
 		SortedResourceListeners::iterator iterator = std::lower_bound(mSortedResourceListeners.begin(), mSortedResourceListeners.end(), &resourceListener, ::detail::orderByResourceListener);
 		if (iterator != mSortedResourceListeners.end() && *iterator == &resourceListener)
 		{
+			{ // TODO(co) If this turns out to be a performance problem, we might want to use e.g. a sorted vector
+				const IResourceListener::ResourceConnection resourceConnection(mResourceManager, mResourceId);
+				IResourceListener::ResourceConnections::iterator connectionIterator = std::find_if(resourceListener.mResourceConnections.begin(), resourceListener.mResourceConnections.end(),
+					[resourceConnection](const IResourceListener::ResourceConnection& currentResourceConnection) { return (currentResourceConnection.resourceManager == resourceConnection.resourceManager && currentResourceConnection.resourceId == resourceConnection.resourceId); }
+					);
+				assert(connectionIterator != resourceListener.mResourceConnections.end());
+				resourceListener.mResourceConnections.erase(connectionIterator);
+			}
 			mSortedResourceListeners.erase(iterator);
 		}
 	}
@@ -85,6 +94,21 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
+	IResource::~IResource()
+	{
+		// Disconnect all resource listeners
+		const IResourceListener::ResourceConnection resourceConnection(mResourceManager, mResourceId);
+		for (IResourceListener* resourceListener : mSortedResourceListeners)
+		{
+			// TODO(co) If this turns out to be a performance problem, we might want to use e.g. a sorted vector
+			IResourceListener::ResourceConnections::iterator connectionIterator = std::find_if(resourceListener->mResourceConnections.begin(), resourceListener->mResourceConnections.end(),
+				[resourceConnection](const IResourceListener::ResourceConnection& currentResourceConnection) { return (currentResourceConnection.resourceManager == resourceConnection.resourceManager && currentResourceConnection.resourceId == resourceConnection.resourceId); }
+				);
+			assert(connectionIterator != resourceListener->mResourceConnections.end());
+			resourceListener->mResourceConnections.erase(connectionIterator);
+		}
+	}
+
 	void IResource::setLoadingState(LoadingState loadingState)
 	{
 		mLoadingState = loadingState;

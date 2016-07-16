@@ -78,6 +78,8 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
+		virtual IResource& getResourceByResourceId(ResourceId resourceId) override;
+		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) override;
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;
 

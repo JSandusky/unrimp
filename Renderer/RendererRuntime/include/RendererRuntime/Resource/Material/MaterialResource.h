@@ -37,7 +37,6 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class MaterialResourceManager;
 	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
 }
 
@@ -248,7 +247,6 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialResourceManager*	   mMaterialResourceManager;	///< Owner material resource manager, pointer considered to be always valid
 		MaterialResourceId			   mParentMaterialResourceId;
 		SortedChildMaterialResourceIds mSortedChildMaterialResourceIds;
 		SortedMaterialTechniqueVector  mSortedMaterialTechniqueVector;

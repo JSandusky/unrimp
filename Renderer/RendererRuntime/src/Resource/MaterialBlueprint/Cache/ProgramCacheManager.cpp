@@ -76,7 +76,7 @@ namespace RendererRuntime
 			// TODO(co) Use shader cache
 
 			// Get the required resource manager instances
-			const IRendererRuntime& rendererRuntime = mPipelineStateCacheManager.getMaterialBlueprintResource().getMaterialBlueprintResourceManager().getRendererRuntime();
+			const IRendererRuntime& rendererRuntime = mPipelineStateCacheManager.getMaterialBlueprintResource().getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime();
 			const ShaderPieceResourceManager& shaderPieceResourceManager = rendererRuntime.getShaderPieceResourceManager();
 			const ShaderBlueprintResources& shaderBlueprintResources = rendererRuntime.getShaderBlueprintResourceManager().getShaderBlueprintResources();
 

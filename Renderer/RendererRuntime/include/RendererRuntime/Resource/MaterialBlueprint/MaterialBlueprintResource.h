@@ -43,7 +43,6 @@ namespace RendererRuntime
 {
 	class Transform;
 	class MaterialTechnique;
-	class MaterialBlueprintResourceManager;
 	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
 }
 
@@ -155,15 +154,6 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Return the owner material blueprint resource manager
-		*
-		*  @return
-		*    The owner material blueprint resource manager
-		*/
-		inline MaterialBlueprintResourceManager& getMaterialBlueprintResourceManager() const;
-
 		/**
 		*  @brief
 		*    Return the pipeline state cache manager
@@ -348,14 +338,13 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialBlueprintResourceManager*			mMaterialBlueprintResourceManager;	///< Owner material blueprint resource manager, pointer considered to be always valid
-		PipelineStateCacheManager					mPipelineStateCacheManager;
-		MaterialProperties							mMaterialProperties;
-		ShaderProperties							mVisualImportanceOfShaderProperties;
-		Renderer::VertexAttributes					mVertexAttributes;
-		Renderer::IRootSignaturePtr					mRootSignaturePtr;					///< Root signature, can be a null pointer
-		Renderer::PipelineState						mPipelineState;
-		ShaderBlueprintResourceId					mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
+		PipelineStateCacheManager	mPipelineStateCacheManager;
+		MaterialProperties			mMaterialProperties;
+		ShaderProperties			mVisualImportanceOfShaderProperties;
+		Renderer::VertexAttributes	mVertexAttributes;
+		Renderer::IRootSignaturePtr	mRootSignaturePtr;					///< Root signature, can be a null pointer
+		Renderer::PipelineState		mPipelineState;
+		ShaderBlueprintResourceId	mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
 		// Resource
 		UniformBuffers mUniformBuffers;
 		SamplerStates  mSamplerStates;

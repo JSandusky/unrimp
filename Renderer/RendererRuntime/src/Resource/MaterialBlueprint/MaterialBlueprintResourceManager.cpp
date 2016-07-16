@@ -92,13 +92,13 @@ namespace RendererRuntime
 			if (nullptr == materialBlueprintResource)
 			{
 				materialBlueprintResource = &mMaterialBlueprintResources.addElement();
-				materialBlueprintResource->mMaterialBlueprintResourceManager = this;
+				materialBlueprintResource->setResourceManager(this);
 				materialBlueprintResource->setAssetId(assetId);
 				load = true;
 			}
 			if (nullptr != materialBlueprintResource && nullptr != resourceListener)
 			{
-				materialBlueprintResource->addResourceListener(*resourceListener);
+				materialBlueprintResource->connectResourceListener(*resourceListener);
 			}
 
 			// Load the resource, if required

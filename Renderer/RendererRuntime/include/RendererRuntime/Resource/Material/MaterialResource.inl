@@ -69,14 +69,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline MaterialResource::MaterialResource() :
 		IResource(getUninitialized<MaterialResourceId>()),
-		mMaterialResourceManager(nullptr),
 		mParentMaterialResourceId(getUninitialized<MaterialResourceId>())
 	{
 		// Nothing here
 	}
 
 	inline MaterialResource::MaterialResource(MaterialResourceId materialResourceId) :
-		IResource(materialResourceId)
+		IResource(materialResourceId),
+		mParentMaterialResourceId(getUninitialized<MaterialResourceId>())
 	{
 		// Nothing here
 	}
