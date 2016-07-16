@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -68,8 +74,12 @@ namespace RendererRuntime
 	template <class ELEMENT_TYPE, typename ID_TYPE>
 	inline bool PackedElementManager<ELEMENT_TYPE, ID_TYPE>::isElementIdValid(ID_TYPE id) const
 	{
-		const Index& index = mIndices[id & INDEX_MASK];
-		return (index.id == id && index.index != USHRT_MAX);
+		if (isInitialized(id))
+		{
+			const Index& index = mIndices[id & INDEX_MASK];
+			return (index.id == id && index.index != USHRT_MAX);
+		}
+		return false;
 	}
 
 	template <class ELEMENT_TYPE, typename ID_TYPE>
@@ -87,8 +97,12 @@ namespace RendererRuntime
 	template <class ELEMENT_TYPE, typename ID_TYPE>
 	inline ELEMENT_TYPE* PackedElementManager<ELEMENT_TYPE, ID_TYPE>::tryGetElementById(ID_TYPE id)
 	{
-		const Index& index = mIndices[id & INDEX_MASK];
-		return (index.id == id && index.index != USHRT_MAX) ? &mElements[index.index] : nullptr;
+		if (isInitialized(id))
+		{
+			const Index& index = mIndices[id & INDEX_MASK];
+			return (index.id == id && index.index != USHRT_MAX) ? &mElements[index.index] : nullptr;
+		}
+		return nullptr;
 	}
 
 	template <class ELEMENT_TYPE, typename ID_TYPE>
