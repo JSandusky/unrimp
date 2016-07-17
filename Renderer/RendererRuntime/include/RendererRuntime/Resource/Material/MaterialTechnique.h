@@ -39,6 +39,7 @@ namespace RendererRuntime
 {
 	class IRendererRuntime;
 	class MaterialResource;
+	class MaterialResourceManager;
 	class MaterialBlueprintResource;
 }
 
@@ -57,6 +58,7 @@ namespace RendererRuntime
 	typedef uint32_t TextureResourceId;				///< POD texture resource identifier
 	typedef StringId MaterialPropertyId;			///< Material property identifier, internally just a POD "uint32_t", result of hashing the property name
 	typedef StringId MaterialTechniqueId;			///< Material technique identifier, internally just a POD "uint32_t", result of hashing the property name
+	typedef uint32_t MaterialResourceId;			///< POD material resource identifier
 	typedef uint32_t MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
 
 
@@ -104,9 +106,9 @@ namespace RendererRuntime
 		*  @param[in] materialTechniqueId
 		*    Material technique ID
 		*  @param[in] materialResource
-		*    Owner material resource
+		*    Owner material resource, only material resource manager and material resource ID will internally be stored
 		*/
-		inline MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource);
+		MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource);
 
 		/**
 		*  @brief
@@ -125,12 +127,33 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the owner material resource
+		*    Return the owner material resource manager
 		*
 		*  @return
-		*    The owner material resource
+		*    The owner material resource manager
 		*/
-		inline MaterialResource& getMaterialResource() const;
+		inline MaterialResourceManager& getMaterialResourceManager() const;
+
+		/**
+		*  @brief
+		*    Return the owner material resource ID
+		*
+		*  @return
+		*    The owner material resource ID
+		*/
+		inline MaterialResourceId getMaterialResourceId() const;
+
+		/**
+		*  @brief
+		*    Return the owner material resource instance
+		*
+		*  @return
+		*    The owner material resource instance
+		*
+		*  @note
+		*    - Ease of use method
+		*/
+		const MaterialResource& getMaterialResource() const;
 
 		/**
 		*  @brief
@@ -159,7 +182,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		MaterialTechniqueId			mMaterialTechniqueId;			///< Material technique ID
-		MaterialResource*			mMaterialResource;				///< Owner material resource, always valid
+		MaterialResourceManager*	mMaterialResourceManager;		///< Owner material resource manager, always valid
+		MaterialResourceId			mMaterialResourceId;			///< Owner material resource ID, always valid
 		MaterialBlueprintResourceId	mMaterialBlueprintResourceId;	///< Material blueprint resource ID, can be set to uninitialized value
 		uint32_t					mMaterialUniformBufferIndex;	///< Material uniform buffer index inside the used material blueprint, can be set to uninitialized value
 		Textures					mTextures;

@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
-#include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
@@ -43,6 +43,21 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	MaterialTechnique::MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource) :
+		mMaterialTechniqueId(materialTechniqueId),
+		mMaterialResourceManager(&materialResource.getResourceManager<MaterialResourceManager>()),
+		mMaterialResourceId(materialResource.getId()),
+		mMaterialBlueprintResourceId(getUninitialized<MaterialBlueprintResourceId>()),
+		mMaterialUniformBufferIndex(getUninitialized<uint32_t>())
+	{
+		// Nothing here
+	}
+
+	const MaterialResource& MaterialTechnique::getMaterialResource() const
+	{
+		return mMaterialResourceManager->getMaterialResources().getElementById(mMaterialResourceId);
+	}
+
 	void MaterialTechnique::bindToRenderer(const IRendererRuntime& rendererRuntime)
 	{
 		assert(isInitialized(mMaterialBlueprintResourceId));
@@ -56,6 +71,7 @@ namespace RendererRuntime
 			const MaterialBlueprintResource* materialBlueprintResource = rendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources().tryGetElementById(mMaterialBlueprintResourceId);
 			if (nullptr != materialBlueprintResource)
 			{
+				const MaterialResource& materialResource = getMaterialResource();
 				TextureResourceManager& textureResourceManager = rendererRuntime.getTextureResourceManager();
 				const MaterialBlueprintResource::Textures& textures = materialBlueprintResource->getTextures();
 				const size_t numberOfTextures = textures.size();
@@ -74,7 +90,7 @@ namespace RendererRuntime
 					if (isInitialized(materialPropertyId))
 					{
 						// Figure out the material property value
-						const MaterialProperty* materialProperty = mMaterialResource->getPropertyById(materialPropertyId);
+						const MaterialProperty* materialProperty = materialResource.getPropertyById(materialPropertyId);
 						if (nullptr != materialProperty)
 						{
 							// TODO(co) Error handling: Usage mismatch etc.

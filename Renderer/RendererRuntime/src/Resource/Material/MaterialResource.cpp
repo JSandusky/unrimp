@@ -85,11 +85,11 @@ namespace RendererRuntime
 			const MaterialResourceId materialResourceId = getId();
 
 			// Unregister from previous parent material resource
-			MaterialResourceManager& materialResourceManager = getResourceManager<MaterialResourceManager>();
+			const MaterialResources& materialResources = getResourceManager<MaterialResourceManager>().getMaterialResources();
 			if (isInitialized(mParentMaterialResourceId))
 			{
 				// TODO(co) Get rid of const-cast
-				MaterialResource& parentMaterialResource = const_cast<MaterialResource&>(materialResourceManager.getMaterialResources().getElementById(mParentMaterialResourceId));
+				MaterialResource& parentMaterialResource = const_cast<MaterialResource&>(materialResources.getElementById(mParentMaterialResourceId));
 				SortedChildMaterialResourceIds::const_iterator iterator = std::lower_bound(parentMaterialResource.mSortedChildMaterialResourceIds.cbegin(), parentMaterialResource.mSortedChildMaterialResourceIds.cend(), materialResourceId, ::detail::OrderByMaterialResourceId());
 				assert(iterator != parentMaterialResource.mSortedChildMaterialResourceIds.end() && *iterator == materialResourceId);
 				parentMaterialResource.mSortedChildMaterialResourceIds.erase(iterator);
@@ -100,8 +100,8 @@ namespace RendererRuntime
 			if (isInitialized(mParentMaterialResourceId))
 			{
 				// Register to new parent material resource
-				assert(materialResourceManager.getMaterialResources().isElementIdValid(mParentMaterialResourceId));
-				MaterialResource& parentMaterialResource = const_cast<MaterialResource&>(materialResourceManager.getMaterialResources().getElementById(mParentMaterialResourceId));
+				assert(materialResources.isElementIdValid(mParentMaterialResourceId));
+				MaterialResource& parentMaterialResource = const_cast<MaterialResource&>(materialResources.getElementById(mParentMaterialResourceId));
 				assert(parentMaterialResource.getLoadingState() == IResource::LoadingState::LOADED);
 				SortedChildMaterialResourceIds::const_iterator iterator = std::lower_bound(parentMaterialResource.mSortedChildMaterialResourceIds.cbegin(), parentMaterialResource.mSortedChildMaterialResourceIds.cend(), materialResourceId, ::detail::OrderByMaterialResourceId());
 				assert(iterator == parentMaterialResource.mSortedChildMaterialResourceIds.end() || *iterator != materialResourceId);
@@ -112,7 +112,7 @@ namespace RendererRuntime
 				mSortedMaterialTechniqueVector = parentMaterialResource.mSortedMaterialTechniqueVector;
 				for (MaterialTechnique& materialTechnique : mSortedMaterialTechniqueVector)
 				{
-					materialTechnique.mMaterialResource = this;
+					materialTechnique.mMaterialResourceId = getId();
 				}
 				mMaterialProperties = parentMaterialResource.mMaterialProperties;
 			}

@@ -26,7 +26,6 @@
 #include "RendererToolkit/Helper/JsonHelper.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
-#include <RendererRuntime/Resource/Material/MaterialTechnique.h>
 #include <RendererRuntime/Resource/Material/Loader/MaterialFileFormat.h>
 #include <RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h>
 

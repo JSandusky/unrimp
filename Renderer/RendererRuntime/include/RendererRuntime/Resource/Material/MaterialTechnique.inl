@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/GetUninitialized.h"
 
+#include <cassert>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -34,15 +36,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialTechnique::MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource) :
-		mMaterialTechniqueId(materialTechniqueId),
-		mMaterialResource(&materialResource),
-		mMaterialBlueprintResourceId(getUninitialized<MaterialBlueprintResourceId>()),
-		mMaterialUniformBufferIndex(getUninitialized<uint32_t>())
-	{
-		// Nothing here
-	}
-
 	inline MaterialTechnique::~MaterialTechnique()
 	{
 		// Nothing here
@@ -53,9 +46,15 @@ namespace RendererRuntime
 		return mMaterialTechniqueId;
 	}
 
-	inline MaterialResource& MaterialTechnique::getMaterialResource() const
+	inline MaterialResourceManager& MaterialTechnique::getMaterialResourceManager() const
 	{
-		return *mMaterialResource;
+		assert(nullptr != mMaterialResourceManager);
+		return *mMaterialResourceManager;
+	}
+
+	inline MaterialResourceId MaterialTechnique::getMaterialResourceId() const
+	{
+		return mMaterialResourceId;
 	}
 
 	inline MaterialBlueprintResourceId MaterialTechnique::getMaterialBlueprintResourceId() const

@@ -331,7 +331,7 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		typedef std::vector<MaterialTechnique*> LinkedMaterialTechniques;
+		typedef std::vector<MaterialTechnique*> LinkedMaterialTechniques;	// TODO(co) It's not allowed to store direct material resource instance memory addresses (manager might internally reallocate later on)
 
 
 	//[-------------------------------------------------------]
