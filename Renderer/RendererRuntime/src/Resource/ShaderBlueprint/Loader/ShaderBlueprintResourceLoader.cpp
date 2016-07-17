@@ -125,8 +125,7 @@ namespace RendererRuntime
 			const uint32_t numberOfElements = materialBlueprintResources.getNumberOfElements();
 			for (uint32_t i = 0; i < numberOfElements; ++i)
 			{
-				// TODO(co) Get rid of the evil const-cast
-				MaterialBlueprintResource& materialBlueprintResource = const_cast<MaterialBlueprintResource&>(materialBlueprintResources.getElementByIndex(i));
+				MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResources.getElementByIndex(i);
 				for (uint8_t shaderType = 0; shaderType < NUMBER_OF_SHADER_TYPES; ++shaderType)
 				{
 					if (materialBlueprintResource.getShaderBlueprintResourceId(static_cast<ShaderType>(shaderType)) == shaderBlueprintResourceId)

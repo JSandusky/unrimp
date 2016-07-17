@@ -53,7 +53,7 @@ namespace
 			Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
 			const RendererRuntime::MeshResources& meshResources = rendererRuntime.getMeshResourceManager().getMeshResources();
 			const RendererRuntime::MaterialResources& materialResources = rendererRuntime.getMaterialResourceManager().getMaterialResources();
-			const RendererRuntime::MaterialBlueprintResources& materialBlueprintResources = rendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources();
+			const RendererRuntime::MaterialBlueprintResourceManager& materialBlueprintResourceManager = rendererRuntime.getMaterialBlueprintResourceManager();
 
 			// TODO(co) We could do this just once, not on each draw request
 			// Gather renderer shader properties
@@ -112,8 +112,7 @@ namespace
 										RendererRuntime::MaterialTechnique* materialTechnique = materialResource->getMaterialTechniqueById("Default");
 										if (nullptr != materialTechnique)
 										{
-											// TODO(co) Get rid of the evil const-cast
-											RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = const_cast<RendererRuntime::MaterialBlueprintResource*>(materialBlueprintResources.tryGetElementById(materialTechnique->getMaterialBlueprintResourceId()));
+											RendererRuntime::MaterialBlueprintResource* materialBlueprintResource = static_cast<RendererRuntime::MaterialBlueprintResource*>(materialBlueprintResourceManager.tryGetResourceByResourceId(materialTechnique->getMaterialBlueprintResourceId()));
 											if (nullptr != materialBlueprintResource && materialBlueprintResource->isFullyLoaded())
 											{
 												// TODO(co) Pass shader properties (later on we cache as much as possible of this work inside the renderable)

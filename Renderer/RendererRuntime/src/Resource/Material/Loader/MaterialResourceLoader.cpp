@@ -110,9 +110,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < sortedMaterialTechniqueVector.size(); ++i)
 			{
 				MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[i];
-
-				// TODO(co) Get rid of the evil const-cast
-				MaterialBlueprintResource* materialBlueprintResource = const_cast<MaterialBlueprintResource*>(materialBlueprintResources.tryGetElementById(materialTechnique.mMaterialBlueprintResourceId));
+				MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResources.tryGetElementById(materialTechnique.mMaterialBlueprintResourceId);
 				if (nullptr != materialBlueprintResource)
 				{
 					materialBlueprintResource->unlinkMaterialTechnique(materialTechnique);
@@ -135,9 +133,7 @@ namespace RendererRuntime
 			for (size_t i = 0; i < mNumberOfTechniques; ++i)
 			{
 				MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[i];
-
-				// TODO(co) Get rid of the evil const-cast
-				MaterialBlueprintResource* materialBlueprintResource = const_cast<MaterialBlueprintResource*>(materialBlueprintResources.tryGetElementById(materialTechnique.mMaterialBlueprintResourceId));
+				MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResources.tryGetElementById(materialTechnique.mMaterialBlueprintResourceId);
 				if (nullptr != materialBlueprintResource)
 				{
 					materialBlueprintResource->linkMaterialTechnique(materialTechnique);

@@ -36,14 +36,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	IResource& SkeletonResourceManager::getResourceByResourceId(ResourceId resourceId)
+	IResource& SkeletonResourceManager::getResourceByResourceId(ResourceId resourceId) const
 	{
 		IResource* resource = tryGetResourceByResourceId(resourceId);
 		assert(nullptr != resource);
 		return *resource;
 	}
 
-	IResource* SkeletonResourceManager::tryGetResourceByResourceId(ResourceId)
+	IResource* SkeletonResourceManager::tryGetResourceByResourceId(ResourceId) const
 	{
 		// TODO(co) Implement me
 		return nullptr;

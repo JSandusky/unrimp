@@ -48,12 +48,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	inline IResource& ShaderBlueprintResourceManager::getResourceByResourceId(ResourceId resourceId)
+	inline IResource& ShaderBlueprintResourceManager::getResourceByResourceId(ResourceId resourceId) const
 	{
 		return mShaderBlueprintResources.getElementById(resourceId);
 	}
 
-	inline IResource* ShaderBlueprintResourceManager::tryGetResourceByResourceId(ResourceId resourceId)
+	inline IResource* ShaderBlueprintResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
 	{
 		return mShaderBlueprintResources.tryGetElementById(resourceId);
 	}

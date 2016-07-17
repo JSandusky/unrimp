@@ -37,12 +37,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	inline IResource& MeshResourceManager::getResourceByResourceId(ResourceId resourceId)
+	inline IResource& MeshResourceManager::getResourceByResourceId(ResourceId resourceId) const
 	{
 		return mMeshResources.getElementById(resourceId);
 	}
 
-	inline IResource* MeshResourceManager::tryGetResourceByResourceId(ResourceId resourceId)
+	inline IResource* MeshResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
 	{
 		return mMeshResources.tryGetElementById(resourceId);
 	}

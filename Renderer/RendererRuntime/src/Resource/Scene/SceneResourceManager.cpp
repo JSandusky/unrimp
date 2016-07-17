@@ -139,14 +139,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	IResource& SceneResourceManager::getResourceByResourceId(ResourceId resourceId)
+	IResource& SceneResourceManager::getResourceByResourceId(ResourceId resourceId) const
 	{
 		IResource* resource = tryGetResourceByResourceId(resourceId);
 		assert(nullptr != resource);
 		return *resource;
 	}
 
-	IResource* SceneResourceManager::tryGetResourceByResourceId(ResourceId resourceId)
+	IResource* SceneResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
 	{
 		const size_t numberOfSceneResources = mSceneResources.size();
 		for (size_t i = 0; i < numberOfSceneResources; ++i)

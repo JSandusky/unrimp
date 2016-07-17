@@ -80,8 +80,8 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual IResource& getResourceByResourceId(ResourceId resourceId) = 0;
-		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) = 0;
+		virtual IResource& getResourceByResourceId(ResourceId resourceId) const = 0;
+		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const = 0;
 		virtual void reloadResourceByAssetId(AssetId assetId) = 0;
 		virtual void update() = 0;	// TODO(co) Remove this method if not required
 

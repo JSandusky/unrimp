@@ -151,12 +151,11 @@ namespace RendererRuntime
 				const uint32_t numberOfMaterialResources = materialResources.getNumberOfElements();
 				for (uint32_t elementIndex = 0; elementIndex < numberOfMaterialResources; ++elementIndex)
 				{
-					const MaterialResource& materialResource = materialResources.getElementByIndex(elementIndex);
+					MaterialResource& materialResource = materialResources.getElementByIndex(elementIndex);
 					// TODO(co)
 				//	if (materialResource->getMaterialBlueprintResource() == materialBlueprintResource)
 					{
-						// TODO(co) Get rid of const-cast
-						const_cast<MaterialResource&>(materialResource).releaseTextures();
+						materialResource.releaseTextures();
 					}
 				}
 

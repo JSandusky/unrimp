@@ -50,8 +50,7 @@ namespace RendererRuntime
 		mMeshResourceId = meshResourceId;
 		if (isInitialized(meshResourceId))
 		{
-			// TODO(co) Get rid of the evil const-cast
-			const_cast<MeshResource&>(getSceneResource().getRendererRuntime().getMeshResourceManager().getMeshResources().getElementById(meshResourceId)).connectResourceListener(*this);
+			getSceneResource().getRendererRuntime().getMeshResourceManager().getMeshResources().getElementById(meshResourceId).connectResourceListener(*this);
 		}
 	}
 

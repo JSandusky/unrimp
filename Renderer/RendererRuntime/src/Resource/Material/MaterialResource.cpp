@@ -88,8 +88,7 @@ namespace RendererRuntime
 			const MaterialResources& materialResources = getResourceManager<MaterialResourceManager>().getMaterialResources();
 			if (isInitialized(mParentMaterialResourceId))
 			{
-				// TODO(co) Get rid of const-cast
-				MaterialResource& parentMaterialResource = const_cast<MaterialResource&>(materialResources.getElementById(mParentMaterialResourceId));
+				MaterialResource& parentMaterialResource = materialResources.getElementById(mParentMaterialResourceId);
 				SortedChildMaterialResourceIds::const_iterator iterator = std::lower_bound(parentMaterialResource.mSortedChildMaterialResourceIds.cbegin(), parentMaterialResource.mSortedChildMaterialResourceIds.cend(), materialResourceId, ::detail::OrderByMaterialResourceId());
 				assert(iterator != parentMaterialResource.mSortedChildMaterialResourceIds.end() && *iterator == materialResourceId);
 				parentMaterialResource.mSortedChildMaterialResourceIds.erase(iterator);
@@ -155,8 +154,7 @@ namespace RendererRuntime
 			for (MaterialResourceId materialResourceId : mSortedChildMaterialResourceIds)
 			{
 				assert(materialResources.isElementIdValid(materialResourceId));
-				// TODO(co) Get rid of const-cast
-				const_cast<MaterialResource&>(materialResources.getElementById(materialResourceId)).setParentMaterialResourceId(getUninitialized<MaterialResourceId>());
+				materialResources.getElementById(materialResourceId).setParentMaterialResourceId(getUninitialized<MaterialResourceId>());
 			}
 		}
 	}
@@ -212,8 +210,7 @@ namespace RendererRuntime
 			for (MaterialResourceId materialResourceId : mSortedChildMaterialResourceIds)
 			{
 				assert(materialResources.isElementIdValid(materialResourceId));
-				// TODO(co) Get rid of const-cast
-				const_cast<MaterialResource&>(materialResources.getElementById(materialResourceId)).setPropertyByIdInternal(materialPropertyId, materialPropertyValue, materialPropertyUsage, false);
+				materialResources.getElementById(materialResourceId).setPropertyByIdInternal(materialPropertyId, materialPropertyValue, materialPropertyUsage, false);
 			}
 
 			// Material property change detected

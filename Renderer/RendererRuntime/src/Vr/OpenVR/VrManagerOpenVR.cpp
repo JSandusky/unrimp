@@ -203,8 +203,7 @@ namespace
 				materialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialAssetId, RendererRuntime::StringId("Example/MaterialBlueprint/Default/MeshForwardLighting"));	// TODO(co) It must be possible to set the material blueprint ID from the outside
 				if (RendererRuntime::isInitialized(materialResourceId))
 				{
-					// TODO(co) Get rid of the evil const-cast
-					RendererRuntime::MaterialResource* materialResource = const_cast<RendererRuntime::MaterialResource*>(materialResourceManager.getMaterialResources().tryGetElementById(materialResourceId));
+					RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResources().tryGetElementById(materialResourceId);
 					if (nullptr != materialResource)
 					{
 						// TODO(co) It must be possible to set the property name from the outside
@@ -567,11 +566,10 @@ namespace RendererRuntime
 			meshResourceId = meshResourceManager.createEmptyMeshResourceByAssetId(assetId);
 			if (isInitialized(meshResourceId))
 			{
-				const MeshResource* meshResource = meshResourceManager.getMeshResources().tryGetElementById(meshResourceId);
+				MeshResource* meshResource = meshResourceManager.getMeshResources().tryGetElementById(meshResourceId);
 				if (nullptr != meshResource)
 				{
-					// TODO(co) Get rid of the evil const-cast
-					::detail::setupRenderModel(mRendererRuntime, renderModelName, *const_cast<MeshResource*>(meshResource));
+					::detail::setupRenderModel(mRendererRuntime, renderModelName, *meshResource);
 				}
 			}
 		}

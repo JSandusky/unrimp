@@ -289,14 +289,12 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
 				if (nullptr != rendererRuntime)
 				{
 					const RendererRuntime::MaterialResources& materialResources = rendererRuntime->getMaterialResourceManager().getMaterialResources();
-
-					// TODO(co) Get rid of the evil const-cast
-					RendererRuntime::MaterialResource* materialResource = const_cast<RendererRuntime::MaterialResource*>(materialResources.tryGetElementById(mMaterialResourceId));
+					RendererRuntime::MaterialResource* materialResource = materialResources.tryGetElementById(mMaterialResourceId);
 					if (nullptr != materialResource)
 					{
 						materialResource->setPropertyById("Lighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformLighting));
 					}
-					materialResource = const_cast<RendererRuntime::MaterialResource*>(materialResources.tryGetElementById(mCloneMaterialResourceId));
+					materialResource = materialResources.tryGetElementById(mCloneMaterialResourceId);
 					if (nullptr != materialResource)
 					{
 						materialResource->setPropertyById("UseDiffuseMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseDiffuseMap));

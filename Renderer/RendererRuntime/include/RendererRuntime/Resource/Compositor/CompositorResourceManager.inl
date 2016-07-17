@@ -43,12 +43,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
 	//[-------------------------------------------------------]
-	inline IResource& CompositorResourceManager::getResourceByResourceId(ResourceId resourceId)
+	inline IResource& CompositorResourceManager::getResourceByResourceId(ResourceId resourceId) const
 	{
 		return mCompositorResources.getElementById(resourceId);
 	}
 
-	inline IResource* CompositorResourceManager::tryGetResourceByResourceId(ResourceId resourceId)
+	inline IResource* CompositorResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
 	{
 		return mCompositorResources.tryGetElementById(resourceId);
 	}

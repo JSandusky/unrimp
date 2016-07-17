@@ -115,8 +115,7 @@ namespace RendererRuntime
 			MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[0];
 			MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
 			materialTechnique.mMaterialBlueprintResourceId = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(materialBlueprintResourceId);
-			// TODO(co) Get rid of the evil const-cast
-			MaterialBlueprintResource* materialBlueprintResource = const_cast<MaterialBlueprintResource*>(materialBlueprintResourceManager.getMaterialBlueprintResources().tryGetElementById(materialTechnique.mMaterialBlueprintResourceId));
+			MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResourceManager.getMaterialBlueprintResources().tryGetElementById(materialTechnique.mMaterialBlueprintResourceId);
 			if (nullptr != materialBlueprintResource)
 			{
 				materialResource.mMaterialProperties = materialBlueprintResource->mMaterialProperties;

@@ -68,13 +68,10 @@ namespace RendererRuntime
 		inline PackedElementManager();
 		inline ~PackedElementManager();
 		inline uint32_t getNumberOfElements() const;
-		inline ELEMENT_TYPE& getElementByIndex(uint32_t index);
-		inline const ELEMENT_TYPE& getElementByIndex(uint32_t index) const;
+		inline ELEMENT_TYPE& getElementByIndex(uint32_t index) const;
 		inline bool isElementIdValid(ID_TYPE id) const;
-		inline ELEMENT_TYPE& getElementById(ID_TYPE id);
-		inline const ELEMENT_TYPE& getElementById(ID_TYPE id) const;
-		inline ELEMENT_TYPE* tryGetElementById(ID_TYPE id);
-		inline const ELEMENT_TYPE* tryGetElementById(ID_TYPE id) const;
+		inline ELEMENT_TYPE& getElementById(ID_TYPE id) const;
+		inline ELEMENT_TYPE* tryGetElementById(ID_TYPE id) const;
 		inline ELEMENT_TYPE& addElement();
 		inline void removeElement(ID_TYPE id);
 
@@ -107,11 +104,11 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t	 mNumberOfElements;
-		ELEMENT_TYPE mElements[MAXIMUM_NUMBER_OF_OBJECTS];
-		Index		 mIndices[MAXIMUM_NUMBER_OF_OBJECTS];
-		uint16_t	 mFreeListEnqueue;
-		uint16_t	 mFreeListDequeue;
+		uint32_t			 mNumberOfElements;
+		mutable ELEMENT_TYPE mElements[MAXIMUM_NUMBER_OF_OBJECTS];
+		Index				 mIndices[MAXIMUM_NUMBER_OF_OBJECTS];
+		uint16_t			 mFreeListEnqueue;
+		uint16_t			 mFreeListDequeue;
 
 
 	};
