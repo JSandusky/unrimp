@@ -31,7 +31,7 @@
 #include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -54,20 +54,7 @@ namespace
 			const RendererRuntime::MeshResources& meshResources = rendererRuntime.getMeshResourceManager().getMeshResources();
 			const RendererRuntime::MaterialResources& materialResources = rendererRuntime.getMaterialResourceManager().getMaterialResources();
 			const RendererRuntime::MaterialBlueprintResourceManager& materialBlueprintResourceManager = rendererRuntime.getMaterialBlueprintResourceManager();
-
-			// TODO(co) We could do this just once, not on each draw request
-			// Gather renderer shader properties
-			// -> Write the renderer name as well as the shader language name into the shader properties so shaders can perform renderer specific handling if required
-			// -> We really need both, usually shader language name is sufficient, but if more fine granular information is required it's accessible
-			RendererRuntime::ShaderProperties rendererShaderProperties;
-			{
-				rendererShaderProperties.setPropertyValue(RendererRuntime::StringId(renderer.getName()), 1);
-				const Renderer::IShaderLanguage* shaderLanguage = renderer.getShaderLanguage();
-				if (nullptr != shaderLanguage)
-				{
-					rendererShaderProperties.setPropertyValue(RendererRuntime::StringId(shaderLanguage->getShaderLanguageName()), 1);
-				}
-			}
+			const RendererRuntime::ShaderProperties& rendererShaderProperties = rendererRuntime.getShaderBlueprintResourceManager().getRendererShaderProperties();
 
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)

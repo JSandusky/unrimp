@@ -78,6 +78,15 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		/**
+		*  @brief
+		*    Return the renderer shader properties
+		*
+		*  @return
+		*    The renderer shader properties (depending on the current renderer backend, contains e.g. "OpenGL", "GLSL" etc.)
+		*/
+		inline const ShaderProperties& getRendererShaderProperties() const;
+
 		inline const ShaderBlueprintResources& getShaderBlueprintResources() const;
 		RENDERERRUNTIME_API_EXPORT ShaderBlueprintResourceId loadShaderBlueprintResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
 
@@ -105,7 +114,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline explicit ShaderBlueprintResourceManager(IRendererRuntime& rendererRuntime);
+		explicit ShaderBlueprintResourceManager(IRendererRuntime& rendererRuntime);
 		inline virtual ~ShaderBlueprintResourceManager();
 		ShaderBlueprintResourceManager(const ShaderBlueprintResourceManager&) = delete;
 		ShaderBlueprintResourceManager& operator=(const ShaderBlueprintResourceManager&) = delete;
@@ -117,6 +126,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime&		 mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
+		ShaderProperties		 mRendererShaderProperties;
 		ShaderBlueprintResources mShaderBlueprintResources;
 		ShaderCacheManager		 mShaderCacheManager;
 

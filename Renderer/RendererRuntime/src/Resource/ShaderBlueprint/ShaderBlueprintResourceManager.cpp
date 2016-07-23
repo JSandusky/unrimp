@@ -31,6 +31,11 @@
 #include <assert.h>
 
 
+// Disable warnings
+// TODO(co) See "RendererRuntime::ShaderBlueprintResourceManager::ShaderBlueprintResourceManager()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)
+#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
@@ -127,6 +132,22 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
+	ShaderBlueprintResourceManager::ShaderBlueprintResourceManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime),
+		mShaderCacheManager(*this)
+	{
+		// Gather renderer shader properties
+		// -> Write the renderer name as well as the shader language name into the shader properties so shaders can perform renderer specific handling if required
+		// -> We really need both, usually shader language name is sufficient, but if more fine granular information is required it's accessible
+		Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
+		mRendererShaderProperties.setPropertyValue(StringId(renderer.getName()), 1);
+		const Renderer::IShaderLanguage* shaderLanguage = renderer.getShaderLanguage();
+		if (nullptr != shaderLanguage)
+		{
+			mRendererShaderProperties.setPropertyValue(StringId(shaderLanguage->getShaderLanguageName()), 1);
+		}
+	}
+
 	IResourceLoader* ShaderBlueprintResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Can we recycle an already existing resource loader instance?

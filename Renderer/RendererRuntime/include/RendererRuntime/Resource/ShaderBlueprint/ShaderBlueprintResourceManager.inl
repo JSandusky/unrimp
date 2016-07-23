@@ -18,12 +18,6 @@
 \*********************************************************/
 
 
-// Disable warnings
-// TODO(co) See "RendererRuntime::ShaderBlueprintResourceManager::ShaderBlueprintResourceManager()": How the heck should we avoid such a situation without using complicated solutions like a pointer to an instance? (= more individual allocations/deallocations)
-#pragma warning(push)
-#pragma warning(disable: 4355)	// warning C4355: 'this': used in base member initializer list
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
@@ -34,6 +28,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline const ShaderProperties& ShaderBlueprintResourceManager::getRendererShaderProperties() const
+	{
+		return mRendererShaderProperties;
+	}
+
 	inline const ShaderBlueprintResources& ShaderBlueprintResourceManager::getShaderBlueprintResources() const
 	{
 		return mShaderBlueprintResources;
@@ -62,13 +61,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline ShaderBlueprintResourceManager::ShaderBlueprintResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime),
-		mShaderCacheManager(*this)
-	{
-		// Nothing in here
-	}
-
 	inline ShaderBlueprintResourceManager::~ShaderBlueprintResourceManager()
 	{
 		// Nothing in here
@@ -79,7 +71,3 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-// Reset warning manipulations we did above
-#pragma warning(pop)
