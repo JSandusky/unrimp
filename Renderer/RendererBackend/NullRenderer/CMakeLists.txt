@@ -52,13 +52,13 @@ set(SOURCE_CODES
 	src/TextureBuffer.cpp
 	src/VertexArray.cpp
 	src/VertexBuffer.cpp
+	src/UniformBuffer.cpp
 	src/Shader/FragmentShader.cpp
 	src/Shader/GeometryShader.cpp
 	src/Shader/Program.cpp
 	src/Shader/ShaderLanguage.cpp
 	src/Shader/TessellationControlShader.cpp
 	src/Shader/TessellationEvaluationShader.cpp
-	src/Shader/UniformBuffer.cpp
 	src/Shader/VertexShader.cpp
 )
 

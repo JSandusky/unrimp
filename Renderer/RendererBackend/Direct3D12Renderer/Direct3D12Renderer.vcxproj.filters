@@ -21,9 +21,6 @@
     <None Include="include\Direct3D12Renderer\Shader\TessellationEvaluationShaderHlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D12Renderer\Shader\UniformBuffer.inl">
-      <Filter>Source Files\Shader</Filter>
-    </None>
     <None Include="include\Direct3D12Renderer\Shader\VertexShaderHlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
@@ -66,6 +63,9 @@
     <None Include="include\Direct3D12Renderer\RootSignature.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\Direct3D12Renderer\UniformBuffer.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D12Renderer\Shader\ShaderLanguageHlsl.h">
@@ -75,9 +75,6 @@
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D12Renderer\Shader\TessellationEvaluationShaderHlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D12Renderer\Shader\UniformBuffer.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D12Renderer\Shader\VertexShaderHlsl.h">
@@ -146,6 +143,9 @@
     <ClInclude Include="include\Direct3D12Renderer\RootSignature.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D12Renderer\UniformBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\ProgramHlsl.cpp">
@@ -158,9 +158,6 @@
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\TessellationEvaluationShaderHlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\UniformBuffer.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\VertexShaderHlsl.cpp">
@@ -215,6 +212,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UniformBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

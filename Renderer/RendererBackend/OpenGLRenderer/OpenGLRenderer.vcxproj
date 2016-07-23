@@ -49,9 +49,6 @@
     <ClInclude Include="include\OpenGLRenderer\Shader\ShaderLanguageGlsl.h" />
     <ClInclude Include="include\OpenGLRenderer\Shader\TessellationControlShaderGlsl.h" />
     <ClInclude Include="include\OpenGLRenderer\Shader\TessellationEvaluationShaderGlsl.h" />
-    <ClInclude Include="include\OpenGLRenderer\Shader\UniformBufferGlsl.h" />
-    <ClInclude Include="include\OpenGLRenderer\Shader\UniformBufferGlslBind.h" />
-    <ClInclude Include="include\OpenGLRenderer\Shader\UniformBufferGlslDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\Shader\VertexShaderGlsl.h" />
     <ClInclude Include="include\OpenGLRenderer\SwapChain.h" />
     <ClInclude Include="include\OpenGLRenderer\Texture2D.h" />
@@ -63,6 +60,9 @@
     <ClInclude Include="include\OpenGLRenderer\TextureBuffer.h" />
     <ClInclude Include="include\OpenGLRenderer\TextureBufferBind.h" />
     <ClInclude Include="include\OpenGLRenderer\TextureBufferDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\UniformBuffer.h" />
+    <ClInclude Include="include\OpenGLRenderer\UniformBufferBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\UniformBufferDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\VertexArray.h" />
     <ClInclude Include="include\OpenGLRenderer\VertexArrayNoVao.h" />
     <ClInclude Include="include\OpenGLRenderer\VertexArrayVao.h" />
@@ -113,9 +113,6 @@
     <ClCompile Include="src\Shader\ShaderLanguageGlsl.cpp" />
     <ClCompile Include="src\Shader\TessellationControlShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp" />
-    <ClCompile Include="src\Shader\UniformBufferGlsl.cpp" />
-    <ClCompile Include="src\Shader\UniformBufferGlslBind.cpp" />
-    <ClCompile Include="src\Shader\UniformBufferGlslDsa.cpp" />
     <ClCompile Include="src\Shader\VertexShaderGlsl.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
@@ -127,6 +124,9 @@
     <ClCompile Include="src\TextureBuffer.cpp" />
     <ClCompile Include="src\TextureBufferBind.cpp" />
     <ClCompile Include="src\TextureBufferDsa.cpp" />
+    <ClCompile Include="src\UniformBuffer.cpp" />
+    <ClCompile Include="src\UniformBufferBind.cpp" />
+    <ClCompile Include="src\UniformBufferDsa.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\VertexArrayNoVao.cpp" />
     <ClCompile Include="src\VertexArrayVao.cpp" />
@@ -156,12 +156,12 @@
     <None Include="include\OpenGLRenderer\Shader\ProgramGlsl.inl" />
     <None Include="include\OpenGLRenderer\Shader\TessellationControlShaderGlsl.inl" />
     <None Include="include\OpenGLRenderer\Shader\TessellationEvaluationShaderGlsl.inl" />
-    <None Include="include\OpenGLRenderer\Shader\UniformBufferGlsl.inl" />
     <None Include="include\OpenGLRenderer\Shader\VertexShaderGlsl.inl" />
     <None Include="include\OpenGLRenderer\SwapChain.inl" />
     <None Include="include\OpenGLRenderer\Texture2D.inl" />
     <None Include="include\OpenGLRenderer\Texture2DArray.inl" />
     <None Include="include\OpenGLRenderer\TextureBuffer.inl" />
+    <None Include="include\OpenGLRenderer\UniformBuffer.inl" />
     <None Include="include\OpenGLRenderer\VertexArray.inl" />
     <None Include="include\OpenGLRenderer\VertexArrayVao.inl" />
     <None Include="include\OpenGLRenderer\VertexBuffer.inl" />

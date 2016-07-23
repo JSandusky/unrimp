@@ -219,32 +219,27 @@ namespace RendererRuntime
 		}
 
 		{ // Create the uniform buffer renderer resources
-			// Decide which shader language should be used (for example "GLSL" or "HLSL")
-			Renderer::IShaderLanguagePtr shaderLanguage(renderer.getShaderLanguage());
-			if (nullptr != shaderLanguage)
+			MaterialBlueprintResource::UniformBuffers& uniformBuffers = mMaterialBlueprintResource->mUniformBuffers;
+			const size_t numberOfUniformBuffers = uniformBuffers.size();
+			for (size_t i = 0; i < numberOfUniformBuffers; ++i)
 			{
-				MaterialBlueprintResource::UniformBuffers& uniformBuffers = mMaterialBlueprintResource->mUniformBuffers;
-				const size_t numberOfUniformBuffers = uniformBuffers.size();
-				for (size_t i = 0; i < numberOfUniformBuffers; ++i)
-				{
-					// Create the uniform buffer renderer resource (GPU alignment is handled by the renderer backend)
-					MaterialBlueprintResource::UniformBuffer& uniformBuffer = uniformBuffers[i];
-					uniformBuffer.scratchBuffer.resize(uniformBuffer.uniformBufferNumberOfBytes);
-					uniformBuffer.uniformBufferPtr = shaderLanguage->createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+				// Create the uniform buffer renderer resource (GPU alignment is handled by the renderer backend)
+				MaterialBlueprintResource::UniformBuffer& uniformBuffer = uniformBuffers[i];
+				uniformBuffer.scratchBuffer.resize(uniformBuffer.uniformBufferNumberOfBytes);
+				uniformBuffer.uniformBufferPtr = renderer.createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 
-					// Ease-of-use direct access
-					if (MaterialBlueprintResource::UniformBufferUsage::PASS == uniformBuffer.uniformBufferUsage)
-					{
-						mMaterialBlueprintResource->mPassUniformBuffer = &uniformBuffer;
-					}
-					else if (MaterialBlueprintResource::UniformBufferUsage::MATERIAL == uniformBuffer.uniformBufferUsage)
-					{
-						mMaterialBlueprintResource->mMaterialUniformBuffer = &uniformBuffer;
-					}
-					else if (MaterialBlueprintResource::UniformBufferUsage::INSTANCE == uniformBuffer.uniformBufferUsage)
-					{
-						mMaterialBlueprintResource->mInstanceUniformBuffer = &uniformBuffer;
-					}
+				// Ease-of-use direct access
+				if (MaterialBlueprintResource::UniformBufferUsage::PASS == uniformBuffer.uniformBufferUsage)
+				{
+					mMaterialBlueprintResource->mPassUniformBuffer = &uniformBuffer;
+				}
+				else if (MaterialBlueprintResource::UniformBufferUsage::MATERIAL == uniformBuffer.uniformBufferUsage)
+				{
+					mMaterialBlueprintResource->mMaterialUniformBuffer = &uniformBuffer;
+				}
+				else if (MaterialBlueprintResource::UniformBufferUsage::INSTANCE == uniformBuffer.uniformBufferUsage)
+				{
+					mMaterialBlueprintResource->mInstanceUniformBuffer = &uniformBuffer;
 				}
 			}
 		}

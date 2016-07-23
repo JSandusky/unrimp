@@ -19,10 +19,24 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/Shader/UniformBufferGlsl.h"
-#include "VulkanRenderer/Extensions.h"
+#include <Renderer/IUniformBuffer.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace VulkanRenderer
+{
+	class VulkanRenderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -33,30 +47,66 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Vulkan uniform buffer object (UBO, "constant buffer" in Direct3D terminology) interface
+	*/
+	class UniformBuffer : public Renderer::IUniformBuffer
+	{
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBufferGlsl::UniformBufferGlsl(VulkanRenderer &vulkanRenderer, uint32_t, const void*, Renderer::BufferUsage) :
-		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
-	{
-		// TODO(co) Implement me
-	}
+	public:
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] vulkanRenderer
+		*    Owner Vulkan renderer instance
+		*  @param[in] numberOfBytes
+		*    Number of bytes within the uniform buffer, must be valid
+		*  @param[in] data
+		*    Uniform buffer data, can be a null pointer (empty buffer)
+		*  @param[in] bufferUsage
+		*    Indication of the buffer usage
+		*/
+		UniformBuffer(VulkanRenderer &vulkanRenderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
-	UniformBufferGlsl::~UniformBufferGlsl()
-	{
-		// TODO(co) Implement me
-	}
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		virtual ~UniformBuffer();
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBufferGlsl::copyDataFrom(uint32_t, const void*)
-	{
+	public:
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
 		// TODO(co) Implement me
-	}
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // VulkanRenderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "VulkanRenderer/UniformBuffer.inl"

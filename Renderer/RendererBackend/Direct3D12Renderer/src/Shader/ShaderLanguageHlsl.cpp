@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Shader/ShaderLanguageHlsl.h"
 #include "Direct3D12Renderer/Shader/ProgramHlsl.h"
-#include "Direct3D12Renderer/Shader/UniformBuffer.h"
 #include "Direct3D12Renderer/Shader/VertexShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/GeometryShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/FragmentShaderHlsl.h"
@@ -248,11 +247,6 @@ namespace Direct3D12Renderer
 
 		// Error!
 		return nullptr;
-	}
-
-	Renderer::IUniformBuffer *ShaderLanguageHlsl::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		return new UniformBuffer(static_cast<Direct3D12Renderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 	}
 
 

@@ -328,6 +328,12 @@ namespace Direct3D9Renderer
 		return new VertexArray(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 	}
 
+	Renderer::IUniformBuffer *Direct3D9Renderer::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage)
+	{
+		// Error! Direct3D 9 has no uniform buffer support.
+		return nullptr;
+	}
+
 	Renderer::ITextureBuffer *Direct3D9Renderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage)
 	{
 		// Direct3D 9 has no texture buffer support

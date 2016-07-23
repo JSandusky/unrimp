@@ -43,15 +43,6 @@
     <ClInclude Include="include\OpenGLRenderer\Shader\TessellationEvaluationShaderGlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Shader\UniformBufferGlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Shader\UniformBufferGlslBind.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Shader\UniformBufferGlslDsa.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Shader\VertexShaderGlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
@@ -178,6 +169,15 @@
     <ClInclude Include="include\OpenGLRenderer\Detail\IState.h">
       <Filter>Source Files\Detail</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\UniformBufferBind.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\UniformBufferDsa.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\UniformBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -205,15 +205,6 @@
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\UniformBufferGlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\UniformBufferGlslBind.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\UniformBufferGlslDsa.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\VertexShaderGlsl.cpp">
@@ -339,6 +330,15 @@
     <ClCompile Include="src\Detail\BlendState.cpp">
       <Filter>Source Files\Detail</Filter>
     </ClCompile>
+    <ClCompile Include="src\UniformBufferBind.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UniformBufferDsa.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UniformBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -359,9 +359,6 @@
       <Filter>Source Files\Shader</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Shader\TessellationEvaluationShaderGlsl.inl">
-      <Filter>Source Files\Shader</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\Shader\UniformBufferGlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Shader\VertexShaderGlsl.inl">
@@ -420,6 +417,9 @@
     </None>
     <None Include="include\OpenGLRenderer\Detail\DepthStencilState.inl">
       <Filter>Source Files\Detail</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\UniformBuffer.inl">
+      <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
 </Project>

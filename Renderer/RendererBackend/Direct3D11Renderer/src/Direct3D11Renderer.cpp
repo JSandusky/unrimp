@@ -37,9 +37,9 @@
 #include "Direct3D11Renderer/PipelineState.h"
 #include "Direct3D11Renderer/TextureBuffer.h"
 #include "Direct3D11Renderer/Texture2DArray.h"
+#include "Direct3D11Renderer/UniformBuffer.h"
 #include "Direct3D11Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D11Renderer/Shader/ShaderLanguageHlsl.h"
-#include "Direct3D11Renderer/Shader/UniformBuffer.h"
 #include "Direct3D11Renderer/Shader/VertexShaderHlsl.h"
 #include "Direct3D11Renderer/Shader/GeometryShaderHlsl.h"
 #include "Direct3D11Renderer/Shader/FragmentShaderHlsl.h"
@@ -370,6 +370,11 @@ namespace Direct3D11Renderer
 	{
 		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 		return new VertexArray(*this, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+	}
+
+	Renderer::IUniformBuffer *Direct3D11Renderer::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
+	{
+		return new UniformBuffer(static_cast<Direct3D11Renderer&>(*this), numberOfBytes, data, bufferUsage);
 	}
 
 	Renderer::ITextureBuffer *Direct3D11Renderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)

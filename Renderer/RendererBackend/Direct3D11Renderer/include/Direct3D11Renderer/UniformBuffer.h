@@ -27,15 +27,24 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/UniformBufferGlsl.h"
-
 #include <Renderer/BufferTypes.h>
+#include <Renderer/IUniformBuffer.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+struct ID3D11Buffer;
+namespace Direct3D11Renderer
+{
+	class Direct3D11Renderer;
+}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace Direct3D11Renderer
 {
 
 
@@ -44,9 +53,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    GLSL uniform buffer object (UBO, "constant buffer" in Direct3D terminology) class, traditional bind version
+	*    Direct3D 11 uniform buffer object (UBO, "constant buffer" in Direct3D terminology) interface
 	*/
-	class UniformBufferGlslBind : public UniformBufferGlsl
+	class UniformBuffer : public Renderer::IUniformBuffer
 	{
 
 
@@ -58,8 +67,8 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
+		*  @param[in] direct3D11Renderer
+		*    Owner Direct3D 11 renderer instance
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the uniform buffer, must be valid
 		*  @param[in] data
@@ -67,13 +76,29 @@ namespace OpenGLRenderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		UniformBufferGlslBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		UniformBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~UniformBufferGlslBind();
+		virtual ~UniformBuffer();
+
+		/**
+		*  @brief
+		*    Return the Direct3D 11 constant buffer instance
+		*
+		*  @return
+		*    The Direct3D 11 constant buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*/
+		inline ID3D11Buffer *getD3D11Buffer() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void setDebugName(const char *name) override;
 
 
 	//[-------------------------------------------------------]
@@ -83,10 +108,23 @@ namespace OpenGLRenderer
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		ID3D11Buffer *mD3D11Buffer;	///< Direct3D 11 constant buffer instance, can be a null pointer
+
+
 	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // Direct3D11Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "Direct3D11Renderer/UniformBuffer.inl"

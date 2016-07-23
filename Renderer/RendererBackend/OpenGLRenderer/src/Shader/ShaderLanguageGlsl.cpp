@@ -25,8 +25,6 @@
 #include "OpenGLRenderer/Shader/ProgramGlsl.h"
 #include "OpenGLRenderer/Shader/ProgramGlslDsa.h"
 #include "OpenGLRenderer/Shader/VertexShaderGlsl.h"
-#include "OpenGLRenderer/Shader/UniformBufferGlslDsa.h"
-#include "OpenGLRenderer/Shader/UniformBufferGlslBind.h"
 #include "OpenGLRenderer/Shader/GeometryShaderGlsl.h"
 #include "OpenGLRenderer/Shader/FragmentShaderGlsl.h"
 #include "OpenGLRenderer/Shader/TessellationControlShaderGlsl.h"
@@ -356,31 +354,6 @@ namespace OpenGLRenderer
 
 		// Error!
 		return nullptr;
-	}
-
-	Renderer::IUniformBuffer *ShaderLanguageGlsl::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		// "GL_ARB_uniform_buffer_object" required
-		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-		if (openGLRenderer.getExtensions().isGL_ARB_uniform_buffer_object())
-		{
-			// Is "GL_EXT_direct_state_access" there?
-			if (openGLRenderer.getExtensions().isGL_EXT_direct_state_access())
-			{
-				// Effective direct state access (DSA)
-				return new UniformBufferGlslDsa(openGLRenderer, numberOfBytes, data, bufferUsage);
-			}
-			else
-			{
-				// Traditional bind version
-				return new UniformBufferGlslBind(openGLRenderer, numberOfBytes, data, bufferUsage);
-			}
-		}
-		else
-		{
-			// Error!
-			return nullptr;
-		}
 	}
 
 

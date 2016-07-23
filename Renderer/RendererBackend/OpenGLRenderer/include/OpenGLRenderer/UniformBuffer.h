@@ -51,9 +51,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract GLSL uniform buffer object (UBO, "constant buffer" in Direct3D terminology) interface
+	*    Abstract OpenGL uniform buffer object (UBO, "constant buffer" in Direct3D terminology) interface
 	*/
-	class UniformBufferGlsl : public Renderer::IUniformBuffer
+	class UniformBuffer : public Renderer::IUniformBuffer
 	{
 
 
@@ -65,7 +65,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~UniformBufferGlsl();
+		virtual ~UniformBuffer();
 
 		/**
 		*  @brief
@@ -88,7 +88,7 @@ namespace OpenGLRenderer
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
 		*/
-		explicit UniformBufferGlsl(OpenGLRenderer &openGLRenderer);
+		explicit UniformBuffer(OpenGLRenderer &openGLRenderer);
 
 
 	//[-------------------------------------------------------]
@@ -110,4 +110,4 @@ namespace OpenGLRenderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/UniformBufferGlsl.inl"
+#include "OpenGLRenderer/UniformBuffer.inl"

@@ -30,6 +30,7 @@
     <ClInclude Include="include\VulkanRenderer\IndexBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Linux\ContextLinux.h" />
     <ClInclude Include="include\VulkanRenderer\Mapping.h" />
+    <ClInclude Include="include\VulkanRenderer\UniformBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanDebug.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanRenderer.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanRuntimeLinking.h" />
@@ -42,7 +43,6 @@
     <ClInclude Include="include\VulkanRenderer\Shader\ShaderLanguageGlsl.h" />
     <ClInclude Include="include\VulkanRenderer\Shader\TessellationControlShaderGlsl.h" />
     <ClInclude Include="include\VulkanRenderer\Shader\TessellationEvaluationShaderGlsl.h" />
-    <ClInclude Include="include\VulkanRenderer\Shader\UniformBufferGlsl.h" />
     <ClInclude Include="include\VulkanRenderer\Shader\VertexShaderGlsl.h" />
     <ClInclude Include="include\VulkanRenderer\SwapChain.h" />
     <ClInclude Include="include\VulkanRenderer\Texture2D.h" />
@@ -74,6 +74,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp" />
+    <ClCompile Include="src\UniformBuffer.cpp" />
     <ClCompile Include="src\VulkanRenderer.cpp" />
     <ClCompile Include="src\VulkanRuntimeLinking.cpp" />
     <ClCompile Include="src\PipelineState.cpp" />
@@ -85,7 +86,6 @@
     <ClCompile Include="src\Shader\ShaderLanguageGlsl.cpp" />
     <ClCompile Include="src\Shader\TessellationControlShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp" />
-    <ClCompile Include="src\Shader\UniformBufferGlsl.cpp" />
     <ClCompile Include="src\Shader\VertexShaderGlsl.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
@@ -104,6 +104,7 @@
     <None Include="include\VulkanRenderer\IContext.inl" />
     <None Include="include\VulkanRenderer\IndexBuffer.inl" />
     <None Include="include\VulkanRenderer\Linux\ContextLinux.inl" />
+    <None Include="include\VulkanRenderer\UniformBuffer.inl" />
     <None Include="include\VulkanRenderer\VulkanRenderer.inl" />
     <None Include="include\VulkanRenderer\PipelineState.inl" />
     <None Include="include\VulkanRenderer\RootSignature.inl" />
@@ -112,7 +113,6 @@
     <None Include="include\VulkanRenderer\Shader\ProgramGlsl.inl" />
     <None Include="include\VulkanRenderer\Shader\TessellationControlShaderGlsl.inl" />
     <None Include="include\VulkanRenderer\Shader\TessellationEvaluationShaderGlsl.inl" />
-    <None Include="include\VulkanRenderer\Shader\UniformBufferGlsl.inl" />
     <None Include="include\VulkanRenderer\Shader\VertexShaderGlsl.inl" />
     <None Include="include\VulkanRenderer\SwapChain.inl" />
     <None Include="include\VulkanRenderer\Texture2D.inl" />

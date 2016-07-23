@@ -19,6 +19,13 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "OpenGLRenderer/UniformBuffer.h"
+#include "OpenGLRenderer/Extensions.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -28,9 +35,23 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t UniformBufferGlsl::getOpenGLUniformBuffer() const
+	UniformBuffer::~UniformBuffer()
 	{
-		return mOpenGLUniformBuffer;
+		// Destroy the OpenGL uniform buffer
+		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
+		glDeleteBuffersARB(1, &mOpenGLUniformBuffer);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	UniformBuffer::UniformBuffer(OpenGLRenderer &openGLRenderer) :
+		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mOpenGLUniformBuffer(0)
+	{
+		// Create the OpenGL uniform buffer
+		glGenBuffersARB(1, &mOpenGLUniformBuffer);
 	}
 
 

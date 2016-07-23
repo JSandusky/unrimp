@@ -278,6 +278,12 @@ namespace OpenGLES2Renderer
 		}
 	}
 
+	Renderer::IUniformBuffer *OpenGLES2Renderer::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage)
+	{
+		// Error! OpenGL ES 2 has no uniform buffer support.
+		return nullptr;
+	}
+
 	Renderer::ITextureBuffer *OpenGLES2Renderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage)
 	{
 		// OpenGL ES 2 has no texture buffer support

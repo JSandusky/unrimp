@@ -130,4 +130,4 @@ namespace Direct3D12Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Direct3D12Renderer/Shader/UniformBuffer.inl"
+#include "Direct3D12Renderer/UniformBuffer.inl"

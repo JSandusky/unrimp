@@ -19,10 +19,17 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/UniformBufferGlsl.h"
-#include "OpenGLRenderer/Extensions.h"
+#include "OpenGLRenderer/UniformBuffer.h"
+
+#include <Renderer/BufferTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -33,26 +40,50 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    OpenGL uniform buffer object (UBO, "constant buffer" in Direct3D terminology) class, traditional bind version
+	*/
+	class UniformBufferBind : public UniformBuffer
+	{
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBufferGlsl::~UniformBufferGlsl()
-	{
-		// Destroy the OpenGL uniform buffer
-		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteBuffersARB(1, &mOpenGLUniformBuffer);
-	}
+	public:
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] openGLRenderer
+		*    Owner OpenGL renderer instance
+		*  @param[in] numberOfBytes
+		*    Number of bytes within the uniform buffer, must be valid
+		*  @param[in] data
+		*    Uniform buffer data, can be a null pointer (empty buffer)
+		*  @param[in] bufferUsage
+		*    Indication of the buffer usage
+		*/
+		UniformBufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		virtual ~UniformBufferBind();
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	UniformBufferGlsl::UniformBufferGlsl(OpenGLRenderer &openGLRenderer) :
-		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLUniformBuffer(0)
-	{
-		// Create the OpenGL uniform buffer
-		glGenBuffersARB(1, &mOpenGLUniformBuffer);
-	}
+	public:
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+
+
+	};
 
 
 //[-------------------------------------------------------]

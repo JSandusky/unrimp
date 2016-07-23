@@ -278,47 +278,45 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 		mVertexArray = mRenderer->createVertexArray(detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
 	}
 
-	// Decide which shader language should be used (for example "GLSL" or "HLSL")
+	// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
+	// -> If they are there, we really want to use them (performance and ease of use)
+	if (mRenderer->getCapabilities().uniformBuffer)
+	{
+		{ // Create and set constant program uniform buffer at once
+			// TODO(co) Ugly fixed hacked in model-view-projection matrix
+			// TODO(co) OpenGL matrix, Direct3D has minor differences within the projection matrix we have to compensate
+			static const float MVP[] =
+			{
+				 1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
+				 0.0f,			 1.9776078f,	-0.57472473f,	-0.573576453f,
+				-1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
+				 0.0f,			 0.0f,			 9.8198195f,	 10.0f
+			};
+			mUniformBufferStaticVs = mRenderer->createUniformBuffer(sizeof(MVP), MVP, Renderer::BufferUsage::STATIC_DRAW);
+		}
+
+		// Create dynamic uniform buffers
+		mUniformBufferDynamicVs = mRenderer->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		mUniformBufferDynamicFs = mRenderer->createUniformBuffer(sizeof(float) * 3, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+	}
+
+	// Create the program: Decide which shader language should be used (for example "GLSL" or "HLSL")
 	Renderer::IShaderLanguagePtr shaderLanguage(mRenderer->getShaderLanguage());
 	if (nullptr != shaderLanguage)
 	{
-		// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
-		// -> If they are there, we really want to use them (performance and ease of use)
-		if (mRenderer->getCapabilities().uniformBuffer)
-		{
-			{ // Create and set constant program uniform buffer at once
-				// TODO(co) Ugly fixed hacked in model-view-projection matrix
-				// TODO(co) OpenGL matrix, Direct3D has minor differences within the projection matrix we have to compensate
-				static const float MVP[] =
-				{
-					 1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
-					 0.0f,			 1.9776078f,	-0.57472473f,	-0.573576453f,
-					-1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
-					 0.0f,			 0.0f,			 9.8198195f,	 10.0f
-				};
-				mUniformBufferStaticVs = shaderLanguage->createUniformBuffer(sizeof(MVP), MVP, Renderer::BufferUsage::STATIC_DRAW);
-			}
+		// Get the shader source code (outsourced to keep an overview)
+		const char *vertexShaderSourceCode = nullptr;
+		const char *fragmentShaderSourceCode = nullptr;
+		#include "CubeRendererDrawInstanced_GLSL_140.h"
+		#include "CubeRendererDrawInstanced_HLSL_D3D10_D3D11_D3D12.h"
+		#include "CubeRendererDrawInstanced_Null.h"
 
-			// Create dynamic uniform buffers
-			mUniformBufferDynamicVs = shaderLanguage->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-			mUniformBufferDynamicFs = shaderLanguage->createUniformBuffer(sizeof(float) * 3, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-		}
-
-		{ // Create the program
-			// Get the shader source code (outsourced to keep an overview)
-			const char *vertexShaderSourceCode = nullptr;
-			const char *fragmentShaderSourceCode = nullptr;
-			#include "CubeRendererDrawInstanced_GLSL_140.h"
-			#include "CubeRendererDrawInstanced_HLSL_D3D10_D3D11_D3D12.h"
-			#include "CubeRendererDrawInstanced_Null.h"
-
-			// Create the program
-			mProgram = shaderLanguage->createProgram(
-				*mRootSignature,
-				detail::VertexAttributes,
-				shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
-				shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
-		}
+		// Create the program
+		mProgram = shaderLanguage->createProgram(
+			*mRootSignature,
+			detail::VertexAttributes,
+			shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+			shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 	}
 
 	// End debug event

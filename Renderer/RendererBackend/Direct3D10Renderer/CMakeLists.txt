@@ -58,6 +58,7 @@ set(SOURCE_CODES
 	src/TextureBuffer.cpp
 	src/VertexArray.cpp
 	src/VertexBuffer.cpp
+	src/UniformBuffer.cpp
 	src/Detail/BlendState.cpp
 	src/Detail/DepthStencilState.cpp
 	src/Detail/RasterizerState.cpp
@@ -69,7 +70,6 @@ set(SOURCE_CODES
 	src/Shader/ProgramHlsl.cpp
 	src/Shader/ShaderLanguage.cpp
 	src/Shader/ShaderLanguageHlsl.cpp
-	src/Shader/UniformBuffer.cpp
 	src/Shader/VertexShader.cpp
 	src/Shader/VertexShaderHlsl.cpp
 )

@@ -37,9 +37,9 @@
 #include "VulkanRenderer/TextureBuffer.h"
 #include "VulkanRenderer/Texture2DArray.h"
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
+#include "VulkanRenderer/UniformBuffer.h"
 #include "VulkanRenderer/Shader/ShaderLanguageGlsl.h"
 #include "VulkanRenderer/Shader/ProgramGlsl.h"
-#include "VulkanRenderer/Shader/UniformBufferGlsl.h"
 #ifdef WIN32
 	#include "VulkanRenderer/Windows/ContextWindows.h"
 #elif defined LINUX
@@ -299,6 +299,11 @@ namespace VulkanRenderer
 	Renderer::IVertexArray *VulkanRenderer::createVertexArray(const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
 	{
 		return new VertexArray(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+	}
+
+	Renderer::IUniformBuffer *VulkanRenderer::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
+	{
+		return new UniformBuffer(static_cast<VulkanRenderer&>(*this), numberOfBytes, data, bufferUsage);
 	}
 
 	Renderer::ITextureBuffer *VulkanRenderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)

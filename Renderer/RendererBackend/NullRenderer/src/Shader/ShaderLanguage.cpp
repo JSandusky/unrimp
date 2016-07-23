@@ -24,7 +24,6 @@
 #include "NullRenderer/Shader/ShaderLanguage.h"
 #include "NullRenderer/Shader/Program.h"
 #include "NullRenderer/Shader/VertexShader.h"
-#include "NullRenderer/Shader/UniformBuffer.h"
 #include "NullRenderer/Shader/GeometryShader.h"
 #include "NullRenderer/Shader/FragmentShader.h"
 #include "NullRenderer/Shader/TessellationControlShader.h"
@@ -188,11 +187,6 @@ namespace NullRenderer
 
 		// Error!
 		return nullptr;
-	}
-
-	Renderer::IUniformBuffer *ShaderLanguage::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage)
-	{
-		return new UniformBuffer(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
 

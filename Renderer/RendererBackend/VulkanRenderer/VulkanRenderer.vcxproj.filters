@@ -40,9 +40,6 @@
     <ClInclude Include="include\VulkanRenderer\Shader\TessellationEvaluationShaderGlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\Shader\UniformBufferGlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Shader\VertexShaderGlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
@@ -115,6 +112,9 @@
     <ClInclude Include="include\VulkanRenderer\Helper.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\UniformBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -139,9 +139,6 @@
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\UniformBufferGlsl.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\VertexShaderGlsl.cpp">
@@ -213,6 +210,9 @@
     <ClCompile Include="src\Helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\UniformBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -233,9 +233,6 @@
       <Filter>Source Files\Shader</Filter>
     </None>
     <None Include="include\VulkanRenderer\Shader\TessellationEvaluationShaderGlsl.inl">
-      <Filter>Source Files\Shader</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\Shader\UniformBufferGlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
     <None Include="include\VulkanRenderer\Shader\VertexShaderGlsl.inl">
@@ -287,6 +284,9 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\VulkanRenderer\IContext.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\UniformBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

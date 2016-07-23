@@ -21,31 +21,26 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/UniformBufferGlslDsa.h"
-#include "OpenGLRenderer/Extensions.h"
+#include "NullRenderer/UniformBuffer.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace NullRenderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBufferGlslDsa::UniformBufferGlslDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage) :
-		UniformBufferGlsl(openGLRenderer)
+	UniformBuffer::UniformBuffer(NullRenderer &nullRenderer) :
+		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// TODO(co) Review OpenGL uniform buffer alignment topic
-
-		// Upload the data
-		// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
-		glNamedBufferDataEXT(mOpenGLUniformBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
+		// Nothing to do in here
 	}
 
-	UniformBufferGlslDsa::~UniformBufferGlslDsa()
+	UniformBuffer::~UniformBuffer()
 	{
 		// Nothing to do in here
 	}
@@ -54,15 +49,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBufferGlslDsa::copyDataFrom(uint32_t numberOfBytes, const void *data)
+	void UniformBuffer::copyDataFrom(uint32_t, const void *)
 	{
-		// Upload the data
-		// -> Subdata is quite optimized for uniform buffers, see http://on-demand.gputechconf.com/siggraph/2014/presentation/SG4117-OpenGL-Scene-Rendering-Techniques.pdf
-		glNamedBufferSubDataEXT(mOpenGLUniformBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
+		// Nothing to do in here
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // NullRenderer

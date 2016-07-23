@@ -79,6 +79,10 @@ set(SOURCE_CODES
 	src/VertexBuffer.cpp
 	src/VertexBufferBind.cpp
 	src/VertexBufferDsa.cpp
+	src/UniformBuffer.cpp
+	src/UniformBufferGlsl.cpp
+	src/UniformBufferGlslBind.cpp
+	src/UniformBufferGlslDsa.cpp
 	src/Detail/BlendState.cpp
 	src/Detail/DepthStencilState.cpp
 	src/Detail/RasterizerState.cpp
@@ -95,10 +99,6 @@ set(SOURCE_CODES
 	src/Shader/TessellationControlShaderGlsl.cpp
 	src/Shader/TessellationEvaluationShader.cpp
 	src/Shader/TessellationEvaluationShaderGlsl.cpp
-	src/Shader/UniformBuffer.cpp
-	src/Shader/UniformBufferGlsl.cpp
-	src/Shader/UniformBufferGlslBind.cpp
-	src/Shader/UniformBufferGlslDsa.cpp
 	src/Shader/VertexShader.cpp
 	src/Shader/VertexShaderGlsl.cpp
 )

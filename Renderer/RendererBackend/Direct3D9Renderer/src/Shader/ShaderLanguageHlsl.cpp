@@ -202,12 +202,6 @@ namespace Direct3D9Renderer
 		return nullptr;
 	}
 
-	Renderer::IUniformBuffer *ShaderLanguageHlsl::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage)
-	{
-		// Error! Direct3D 9 has no uniform buffer support.
-		return nullptr;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

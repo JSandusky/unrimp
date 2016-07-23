@@ -148,6 +148,14 @@ void FirstCommandBucket::onInitialization()
 			mRootSignature = renderer->createRootSignature(rootSignature);
 		}
 
+		// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
+		// -> If they are there, we really want to use them (performance and ease of use)
+		if (renderer->getCapabilities().uniformBuffer)
+		{
+			// Create dynamic uniform buffer
+			mUniformBufferDynamicVs = renderer->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		}
+
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
@@ -176,14 +184,6 @@ void FirstCommandBucket::onInitialization()
 				// Create the program
 				program = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, fragmentShader);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(program, "Triangle program")
-			}
-
-			// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
-			// -> If they are there, we really want to use them (performance and ease of use)
-			if (renderer->getCapabilities().uniformBuffer)
-			{
-				// Create dynamic uniform buffer
-				mUniformBufferDynamicVs = shaderLanguage->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 			}
 
 			// Create solid material

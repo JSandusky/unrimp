@@ -75,20 +75,20 @@ void FirstMesh::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
+		// Create uniform buffers
+		// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
+		// -> Direct3D 10, 11 and 12 do not support individual uniforms
+		// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
+		if ((0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11") || 0 == strcmp(renderer->getName(), "Direct3D12")))
+		{
+			// Allocate enough memory for two 4x4 floating point matrices
+			mUniformBuffer = renderer->createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		}
+
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			// Create uniform buffers
-			// -> Direct3D 9 and OpenGL ES 2 do not support uniform buffers
-			// -> Direct3D 10, 11 and 12 do not support individual uniforms
-			// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
-			if ((0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11") || 0 == strcmp(renderer->getName(), "Direct3D12")))
-			{
-				// Allocate enough memory for two 4x4 floating point matrices
-				mUniformBuffer = shaderLanguage->createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-			}
-
 			// TODO(co) We need a central vertex input layout management
 			// Vertex input layout
 			const Renderer::VertexAttribute vertexAttributesLayout[] =

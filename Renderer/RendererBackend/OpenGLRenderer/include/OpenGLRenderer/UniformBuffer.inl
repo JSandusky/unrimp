@@ -19,20 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/UniformBufferGlsl.h"
-
-#include <Renderer/BufferTypes.h>
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -40,50 +26,12 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    GLSL uniform buffer object (UBO, "constant buffer" in Direct3D terminology) class, effective direct state access (DSA)
-	*/
-	class UniformBufferGlslDsa : public UniformBufferGlsl
-	{
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
-		*  @param[in] numberOfBytes
-		*    Number of bytes within the uniform buffer, must be valid
-		*  @param[in] data
-		*    Uniform buffer data, can be a null pointer (empty buffer)
-		*  @param[in] bufferUsage
-		*    Indication of the buffer usage
-		*/
-		UniformBufferGlslDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~UniformBufferGlslDsa();
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IUniformBuffer methods       ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
-
-
-	};
+	inline uint32_t UniformBuffer::getOpenGLUniformBuffer() const
+	{
+		return mOpenGLUniformBuffer;
+	}
 
 
 //[-------------------------------------------------------]

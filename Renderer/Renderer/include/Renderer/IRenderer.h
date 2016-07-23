@@ -348,6 +348,25 @@ namespace Renderer
 
 		/**
 		*  @brief
+		*    Create an uniform buffer object (UBO, "constant buffer" in Direct3D terminology) instance
+		*
+		*  @param[in] numberOfBytes
+		*    Number of bytes within the uniform buffer, must be valid
+		*  @param[in] data
+		*    Uniform buffer data, can be a null pointer (empty buffer), the data is internally copied and you have to free your memory if you no longer need it
+		*  @param[in] bufferUsage
+		*    Indication of the buffer usage
+		*
+		*  @return
+		*    The created UBO instance, null pointer on error. Release the returned instance if you no longer need it.
+		*
+		*  @note
+		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
+		*/
+		virtual IUniformBuffer *createUniformBuffer(uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
+
+		/**
+		*  @brief
 		*    Create an texture buffer object (TBO) instance
 		*
 		*  @param[in] numberOfBytes

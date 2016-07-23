@@ -172,41 +172,41 @@ void IcosahedronTessellation::onInitialization()
 			mVertexArray = renderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
 		}
 
+		// Create uniform buffers and fill the static buffers at once
+		mUniformBufferDynamicTcs = renderer->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		{	// "ObjectSpaceToClipSpaceMatrix"
+			// TODO(co) Cleanup, correct aspect ratio
+			glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
+			glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
+			glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.001f, 1000.0f);
+			glm::mat4 MVP = Projection * View; 
+//				glm::mat4 MVP = Projection * View * Model; 
+			mUniformBufferStaticTes = renderer->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(MVP), Renderer::BufferUsage::STATIC_DRAW);
+			{	// "NormalMatrix"
+
+				View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+				Model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
+				Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.001f, 1000.0f);
+				MVP = Projection * View; 
+				glm::mat3 nMVP(MVP);
+				glm::mat4 tMVP(nMVP);
+				mUniformBufferStaticGs = renderer->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(tMVP), Renderer::BufferUsage::STATIC_DRAW);
+			}
+		}
+		{ // Light and material
+			static const float LIGHT_AND_MATERIAL[] =
+			{
+				0.25f, 0.25f, 1.0f,  1.0,	// "LightPosition"
+				 0.0f, 0.75f, 0.75f, 1.0, 	// "DiffuseMaterial"
+				0.04f, 0.04f, 0.04f, 1.0,	// "AmbientMaterial"
+			};
+			mUniformBufferStaticFs = renderer->createUniformBuffer(sizeof(LIGHT_AND_MATERIAL), LIGHT_AND_MATERIAL, Renderer::BufferUsage::STATIC_DRAW);
+		}
+
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
-			// Create uniform buffers and fill the static buffers at once
-			mUniformBufferDynamicTcs = shaderLanguage->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-			{	// "ObjectSpaceToClipSpaceMatrix"
-				// TODO(co) Cleanup, correct aspect ratio
-				glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
-				glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
-				glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.001f, 1000.0f);
-				glm::mat4 MVP = Projection * View; 
-//				glm::mat4 MVP = Projection * View * Model; 
-				mUniformBufferStaticTes = shaderLanguage->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(MVP), Renderer::BufferUsage::STATIC_DRAW);
-				{	// "NormalMatrix"
-
-					View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-					Model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
-					Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.001f, 1000.0f);
-					MVP = Projection * View; 
-					glm::mat3 nMVP(MVP);
-					glm::mat4 tMVP(nMVP);
-					mUniformBufferStaticGs = shaderLanguage->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(tMVP), Renderer::BufferUsage::STATIC_DRAW);
-				}
-			}
-			{ // Light and material
-				static const float LIGHT_AND_MATERIAL[] =
-				{
-					0.25f, 0.25f, 1.0f, 1.0,	// "LightPosition"
-					 0.0f, 0.75f, 0.75f,1.0, 	// "DiffuseMaterial"
-					0.04f, 0.04f, 0.04f,1.0,	// "AmbientMaterial"
-				};
-				mUniformBufferStaticFs = shaderLanguage->createUniformBuffer(sizeof(LIGHT_AND_MATERIAL), LIGHT_AND_MATERIAL, Renderer::BufferUsage::STATIC_DRAW);
-			}
-
 			// Create the program
 			Renderer::IProgramPtr program;
 			{

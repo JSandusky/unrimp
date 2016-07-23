@@ -35,12 +35,12 @@
     <None Include="include\Direct3D11Renderer\Shader\ProgramHlsl.inl" />
     <None Include="include\Direct3D11Renderer\Shader\TessellationControlShaderHlsl.inl" />
     <None Include="include\Direct3D11Renderer\Shader\TessellationEvaluationShaderHlsl.inl" />
-    <None Include="include\Direct3D11Renderer\Shader\UniformBuffer.inl" />
     <None Include="include\Direct3D11Renderer\Shader\VertexShaderHlsl.inl" />
     <None Include="include\Direct3D11Renderer\SwapChain.inl" />
     <None Include="include\Direct3D11Renderer\Texture2D.inl" />
     <None Include="include\Direct3D11Renderer\Texture2DArray.inl" />
     <None Include="include\Direct3D11Renderer\TextureBuffer.inl" />
+    <None Include="include\Direct3D11Renderer\UniformBuffer.inl" />
     <None Include="include\Direct3D11Renderer\VertexBuffer.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
@@ -67,12 +67,12 @@
     <ClInclude Include="include\Direct3D11Renderer\Shader\ShaderLanguageHlsl.h" />
     <ClInclude Include="include\Direct3D11Renderer\Shader\TessellationControlShaderHlsl.h" />
     <ClInclude Include="include\Direct3D11Renderer\Shader\TessellationEvaluationShaderHlsl.h" />
-    <ClInclude Include="include\Direct3D11Renderer\Shader\UniformBuffer.h" />
     <ClInclude Include="include\Direct3D11Renderer\Shader\VertexShaderHlsl.h" />
     <ClInclude Include="include\Direct3D11Renderer\SwapChain.h" />
     <ClInclude Include="include\Direct3D11Renderer\Texture2D.h" />
     <ClInclude Include="include\Direct3D11Renderer\Texture2DArray.h" />
     <ClInclude Include="include\Direct3D11Renderer\TextureBuffer.h" />
+    <ClInclude Include="include\Direct3D11Renderer\UniformBuffer.h" />
     <ClInclude Include="include\Direct3D11Renderer\VertexArray.h" />
     <ClInclude Include="include\Direct3D11Renderer\VertexBuffer.h" />
   </ItemGroup>
@@ -96,12 +96,12 @@
     <ClCompile Include="src\Shader\ShaderLanguageHlsl.cpp" />
     <ClCompile Include="src\Shader\TessellationControlShaderHlsl.cpp" />
     <ClCompile Include="src\Shader\TessellationEvaluationShaderHlsl.cpp" />
-    <ClCompile Include="src\Shader\UniformBuffer.cpp" />
     <ClCompile Include="src\Shader\VertexShaderHlsl.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
     <ClCompile Include="src\Texture2DArray.cpp" />
     <ClCompile Include="src\TextureBuffer.cpp" />
+    <ClCompile Include="src\UniformBuffer.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>

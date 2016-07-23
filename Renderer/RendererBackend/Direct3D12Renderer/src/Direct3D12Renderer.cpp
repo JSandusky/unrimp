@@ -37,8 +37,8 @@
 #include "Direct3D12Renderer/RootSignature.h"
 #include "Direct3D12Renderer/PipelineState.h"
 #include "Direct3D12Renderer/Texture2DArray.h"
+#include "Direct3D12Renderer/UniformBuffer.h"
 #include "Direct3D12Renderer/Shader/ProgramHlsl.h"
-#include "Direct3D12Renderer/Shader/UniformBuffer.h"
 #include "Direct3D12Renderer/Shader/VertexShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/ShaderLanguageHlsl.h"
 #include "Direct3D12Renderer/Shader/GeometryShaderHlsl.h"
@@ -377,6 +377,11 @@ namespace Direct3D12Renderer
 	{
 		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 		return new VertexArray(*this, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+	}
+
+	Renderer::IUniformBuffer *Direct3D12Renderer::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
+	{
+		return new UniformBuffer(static_cast<Direct3D12Renderer&>(*this), numberOfBytes, data, bufferUsage);
 	}
 
 	Renderer::ITextureBuffer *Direct3D12Renderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)

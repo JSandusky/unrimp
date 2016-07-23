@@ -38,9 +38,6 @@
     <ClInclude Include="include\NullRenderer\Shader\TessellationEvaluationShader.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\NullRenderer\Shader\UniformBuffer.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="include\NullRenderer\Shader\VertexShader.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
@@ -86,6 +83,9 @@
     <ClInclude Include="include\NullRenderer\RootSignature.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\NullRenderer\UniformBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\GeometryShader.cpp">
@@ -101,9 +101,6 @@
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\TessellationEvaluationShader.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\UniformBuffer.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\VertexShader.cpp">
@@ -146,6 +143,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UniformBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

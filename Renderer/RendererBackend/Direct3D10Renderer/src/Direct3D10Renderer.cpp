@@ -37,8 +37,8 @@
 #include "Direct3D10Renderer/PipelineState.h"
 #include "Direct3D10Renderer/TextureBuffer.h"
 #include "Direct3D10Renderer/Texture2DArray.h"
+#include "Direct3D10Renderer/UniformBuffer.h"
 #include "Direct3D10Renderer/Shader/ProgramHlsl.h"
-#include "Direct3D10Renderer/Shader/UniformBuffer.h"
 #include "Direct3D10Renderer/Shader/VertexShaderHlsl.h"
 #include "Direct3D10Renderer/Shader/ShaderLanguageHlsl.h"
 #include "Direct3D10Renderer/Shader/GeometryShaderHlsl.h"
@@ -352,6 +352,11 @@ namespace Direct3D10Renderer
 	{
 		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 		return new VertexArray(*this, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+	}
+
+	Renderer::IUniformBuffer *Direct3D10Renderer::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
+	{
+		return new UniformBuffer(static_cast<Direct3D10Renderer&>(*this), numberOfBytes, data, bufferUsage);
 	}
 
 	Renderer::ITextureBuffer *Direct3D10Renderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)

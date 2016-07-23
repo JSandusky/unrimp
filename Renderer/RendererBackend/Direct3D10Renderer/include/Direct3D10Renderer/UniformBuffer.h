@@ -34,17 +34,17 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D11Buffer;
-namespace Direct3D11Renderer
+struct ID3D10Buffer;
+namespace Direct3D10Renderer
 {
-	class Direct3D11Renderer;
+	class Direct3D10Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Direct3D11Renderer
+namespace Direct3D10Renderer
 {
 
 
@@ -53,7 +53,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Direct3D 11 uniform buffer object (UBO, "constant buffer" in Direct3D terminology) interface
+	*    Direct3D 10 uniform buffer object (UBO, "constant buffer" in Direct3D terminology) interface
 	*/
 	class UniformBuffer : public Renderer::IUniformBuffer
 	{
@@ -67,8 +67,8 @@ namespace Direct3D11Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] direct3D11Renderer
-		*    Owner Direct3D 11 renderer instance
+		*  @param[in] direct3D10Renderer
+		*    Owner Direct3D 10 renderer instance
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the uniform buffer, must be valid
 		*  @param[in] data
@@ -76,7 +76,7 @@ namespace Direct3D11Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		UniformBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		UniformBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -86,12 +86,12 @@ namespace Direct3D11Renderer
 
 		/**
 		*  @brief
-		*    Return the Direct3D 11 constant buffer instance
+		*    Return the Direct3D 10 constant buffer instance
 		*
 		*  @return
-		*    The Direct3D 11 constant buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*    The Direct3D 10 constant buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D11Buffer *getD3D11Buffer() const;
+		inline ID3D10Buffer *getD3D10Buffer() const;
 
 
 	//[-------------------------------------------------------]
@@ -112,7 +112,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D11Buffer *mD3D11Buffer;	///< Direct3D 11 constant buffer instance, can be a null pointer
+		ID3D10Buffer *mD3D10Buffer;	///< Direct3D 10 constant buffer instance, can be a null pointer
 
 
 	};
@@ -121,10 +121,10 @@ namespace Direct3D11Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Direct3D11Renderer
+} // Direct3D10Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Direct3D11Renderer/Shader/UniformBuffer.inl"
+#include "Direct3D10Renderer/UniformBuffer.inl"

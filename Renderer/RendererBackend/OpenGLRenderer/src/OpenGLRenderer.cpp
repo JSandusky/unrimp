@@ -47,9 +47,10 @@
 #include "OpenGLRenderer/Texture2DArrayDsa.h"
 #include "OpenGLRenderer/Texture2DArrayBind.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/UniformBufferDsa.h"
+#include "OpenGLRenderer/UniformBufferBind.h"
 #include "OpenGLRenderer/Shader/ShaderLanguageGlsl.h"
 #include "OpenGLRenderer/Shader/ProgramGlsl.h"
-#include "OpenGLRenderer/Shader/UniformBufferGlsl.h"
 #ifdef WIN32
 	#include "OpenGLRenderer/Windows/ContextWindows.h"
 #elif defined LINUX
@@ -449,6 +450,30 @@ namespace OpenGLRenderer
 			// Traditional version
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 			return new VertexArrayNoVao(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+		}
+	}
+
+	Renderer::IUniformBuffer *OpenGLRenderer::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
+	{
+		// "GL_ARB_uniform_buffer_object" required
+		if (mExtensions->isGL_ARB_uniform_buffer_object())
+		{
+			// Is "GL_EXT_direct_state_access" there?
+			if (mExtensions->isGL_EXT_direct_state_access())
+			{
+				// Effective direct state access (DSA)
+				return new UniformBufferDsa(*this, numberOfBytes, data, bufferUsage);
+			}
+			else
+			{
+				// Traditional bind version
+				return new UniformBufferBind(*this, numberOfBytes, data, bufferUsage);
+			}
+		}
+		else
+		{
+			// Error!
+			return nullptr;
 		}
 	}
 
@@ -954,7 +979,7 @@ namespace OpenGLRenderer
 						// Attach the buffer to the given UBO binding point
 						// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 						// -> Direct3D 10 and Direct3D 11 have explicit binding points
-						glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<UniformBufferGlsl*>(resource)->getOpenGLUniformBuffer());
+						glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<UniformBuffer*>(resource)->getOpenGLUniformBuffer());
 					}
 					break;
 

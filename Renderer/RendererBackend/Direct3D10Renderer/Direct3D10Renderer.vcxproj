@@ -33,12 +33,12 @@
     <None Include="include\Direct3D10Renderer\Shader\FragmentShaderHlsl.inl" />
     <None Include="include\Direct3D10Renderer\Shader\GeometryShaderHlsl.inl" />
     <None Include="include\Direct3D10Renderer\Shader\ProgramHlsl.inl" />
-    <None Include="include\Direct3D10Renderer\Shader\UniformBuffer.inl" />
     <None Include="include\Direct3D10Renderer\Shader\VertexShaderHlsl.inl" />
     <None Include="include\Direct3D10Renderer\SwapChain.inl" />
     <None Include="include\Direct3D10Renderer\Texture2D.inl" />
     <None Include="include\Direct3D10Renderer\Texture2DArray.inl" />
     <None Include="include\Direct3D10Renderer\TextureBuffer.inl" />
+    <None Include="include\Direct3D10Renderer\UniformBuffer.inl" />
     <None Include="include\Direct3D10Renderer\VertexBuffer.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
@@ -64,12 +64,12 @@
     <ClInclude Include="include\Direct3D10Renderer\Shader\GeometryShaderHlsl.h" />
     <ClInclude Include="include\Direct3D10Renderer\Shader\ProgramHlsl.h" />
     <ClInclude Include="include\Direct3D10Renderer\Shader\ShaderLanguageHlsl.h" />
-    <ClInclude Include="include\Direct3D10Renderer\Shader\UniformBuffer.h" />
     <ClInclude Include="include\Direct3D10Renderer\Shader\VertexShaderHlsl.h" />
     <ClInclude Include="include\Direct3D10Renderer\SwapChain.h" />
     <ClInclude Include="include\Direct3D10Renderer\Texture2D.h" />
     <ClInclude Include="include\Direct3D10Renderer\Texture2DArray.h" />
     <ClInclude Include="include\Direct3D10Renderer\TextureBuffer.h" />
+    <ClInclude Include="include\Direct3D10Renderer\UniformBuffer.h" />
     <ClInclude Include="include\Direct3D10Renderer\VertexArray.h" />
     <ClInclude Include="include\Direct3D10Renderer\VertexBuffer.h" />
   </ItemGroup>
@@ -91,12 +91,12 @@
     <ClCompile Include="src\Shader\GeometryShaderHlsl.cpp" />
     <ClCompile Include="src\Shader\ProgramHlsl.cpp" />
     <ClCompile Include="src\Shader\ShaderLanguageHlsl.cpp" />
-    <ClCompile Include="src\Shader\UniformBuffer.cpp" />
     <ClCompile Include="src\Shader\VertexShaderHlsl.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
     <ClCompile Include="src\Texture2DArray.cpp" />
     <ClCompile Include="src\TextureBuffer.cpp" />
+    <ClCompile Include="src\UniformBuffer.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>

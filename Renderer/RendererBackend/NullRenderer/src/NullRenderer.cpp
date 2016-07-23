@@ -34,9 +34,9 @@
 #include "NullRenderer/PipelineState.h"
 #include "NullRenderer/SwapChain.h"
 #include "NullRenderer/Framebuffer.h"
+#include "NullRenderer/UniformBuffer.h"
 #include "NullRenderer/Shader/Program.h"
 #include "NullRenderer/Shader/ShaderLanguage.h"
-#include "NullRenderer/Shader/UniformBuffer.h"
 
 #include <string.h>
 
@@ -277,6 +277,11 @@ namespace NullRenderer
 
 		// Create the vertex array instance
 		return new VertexArray(*this);
+	}
+
+	Renderer::IUniformBuffer *NullRenderer::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage)
+	{
+		return new UniformBuffer(reinterpret_cast<NullRenderer&>(*this));
 	}
 
 	Renderer::ITextureBuffer *NullRenderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage)

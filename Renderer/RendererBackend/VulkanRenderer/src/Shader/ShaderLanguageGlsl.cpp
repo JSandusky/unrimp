@@ -28,7 +28,6 @@
 #include "VulkanRenderer/Shader/FragmentShaderGlsl.h"
 #include "VulkanRenderer/Shader/TessellationControlShaderGlsl.h"
 #include "VulkanRenderer/Shader/TessellationEvaluationShaderGlsl.h"
-#include "VulkanRenderer/Shader/UniformBufferGlsl.h"
 #include "VulkanRenderer/IContext.h"
 #include "VulkanRenderer/Extensions.h"
 #include "VulkanRenderer/VulkanRenderer.h"
@@ -193,11 +192,6 @@ namespace VulkanRenderer
 
 		// Error!
 		return nullptr;
-	}
-
-	Renderer::IUniformBuffer *ShaderLanguageGlsl::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		return new UniformBufferGlsl(static_cast<VulkanRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 	}
 
 

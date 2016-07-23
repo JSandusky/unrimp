@@ -229,12 +229,6 @@ namespace OpenGLES2Renderer
 		return nullptr;
 	}
 
-	Renderer::IUniformBuffer *ShaderLanguageGlsl::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage)
-	{
-		// Error! OpenGL ES 2 has no uniform buffer support.
-		return nullptr;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
