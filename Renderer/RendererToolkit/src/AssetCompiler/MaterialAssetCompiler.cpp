@@ -178,7 +178,8 @@ namespace RendererToolkit
 				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocumentMaterialBlueprint, materialBlueprintInputFileStream, absoluteMaterialBlueprintFilename, "MaterialBlueprintAsset", "1");
 				RendererRuntime::MaterialProperties::SortedPropertyVector newSortedMaterialPropertyVector;
 				RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
-				JsonMaterialBlueprintHelper::readProperties(input, rapidJsonDocumentMaterialBlueprint["MaterialBlueprintAsset"]["Properties"], newSortedMaterialPropertyVector, visualImportanceOfShaderProperties);
+				RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
+				JsonMaterialBlueprintHelper::readProperties(input, rapidJsonDocumentMaterialBlueprint["MaterialBlueprintAsset"]["Properties"], newSortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties);
 
 				// Add properties and avoid duplicates while doing so
 				for (const RendererRuntime::MaterialProperty& materialProperty : newSortedMaterialPropertyVector)

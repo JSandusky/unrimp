@@ -184,6 +184,15 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the maximum integer value of a shader property
+		*
+		*  @return
+		*    The maximum integer value of the requested shader property
+		*/
+		inline int32_t getMaximumIntegerValueOfShaderProperty(ShaderPropertyId shaderPropertyId) const;
+
+		/**
+		*  @brief
 		*    Return the vertex attributes
 		*
 		*  @return
@@ -251,8 +260,9 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Misc                                                  ]
 		//[-------------------------------------------------------]
-		// TODO(co) Asynchronous loading completion
-		bool isFullyLoaded() const;
+		// TODO(co) Asynchronous loading completion, we might want to move this into "RendererRuntime::IResource"
+		RENDERERRUNTIME_API_EXPORT bool isFullyLoaded() const;
+		RENDERERRUNTIME_API_EXPORT void enforceFullyLoaded();
 
 		/**
 		*  @brief
@@ -261,7 +271,7 @@ namespace RendererRuntime
 		*  @notes
 		*    - Stick to pass, material and instance uniform buffers and avoid unknown uniform buffers whenever possible
 		*/
-		void fillUnknownUniformBuffers();
+		RENDERERRUNTIME_API_EXPORT void fillUnknownUniformBuffers();
 
 		/**
 		*  @brief
@@ -270,13 +280,13 @@ namespace RendererRuntime
 		*  @param[in] worldSpaceToViewSpaceTransform
 		*    World space to view space transform
 		*/
-		void fillPassUniformBuffer(const Transform& worldSpaceToViewSpaceTransform);
+		RENDERERRUNTIME_API_EXPORT void fillPassUniformBuffer(const Transform& worldSpaceToViewSpaceTransform);
 
 		/**
 		*  @brief
 		*    Fill the material uniform buffer
 		*/
-		void fillMaterialUniformBuffer();
+		RENDERERRUNTIME_API_EXPORT void fillMaterialUniformBuffer();
 
 		/**
 		*  @brief
@@ -287,13 +297,38 @@ namespace RendererRuntime
 		*  @param[in] materialTechnique
 		*    Used material technique
 		*/
-		void fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique);
+		RENDERERRUNTIME_API_EXPORT void fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique);
 
 		/**
 		*  @brief
 		*    Bind the material blueprint resource to the used renderer
 		*/
-		void bindToRenderer() const;
+		RENDERERRUNTIME_API_EXPORT void bindToRenderer() const;
+
+		/**
+		*  @brief
+		*    Create pipeline state cache instances for this material blueprint
+		*
+		*  @param[in] mandatoryOnly
+		*    Do only create mandatory combinations?
+		*
+		*  @remarks
+		*    Use mandatory only to ensure that for every material blueprint there's a pipeline state cache for the most basic pipeline state signature
+		*    -> With this in place, a fallback pipeline state signature can always be found for pipeline state cache misses
+		*    -> Without this, we'll end up with runtime hiccups for pipeline state cache misses
+		*    In order to reduce visual artifacts, a material blueprint can define a set of shader combination properties for which pipeline
+		*    state caches must also be created. Inside the JSON material blueprint files, those properties are marked by
+		*    "VisualImportance": "MANDATORY". Good examples for such shader properties are diffuse map or GPU skinning. It's the responsibility
+		*    of the material blueprint author to keep the number of such shader properties to a bare minimum.
+		*
+		*    When setting mandatory only to "false", all possible combinations will be created. This might take a while, depending on the number of
+		*    combinations. The creation of all possible combinations is usually done at tool-time before shipping a product. Runtime pipeline state
+		*    compilation should only be the last resort for performance reasons, even if it's asynchronous.
+		*
+		*  @notes
+		*    - The material blueprint resource must be fully loaded for this to work
+		*/
+		RENDERERRUNTIME_API_EXPORT void createPipelineStateCaches(bool mandatoryOnly);
 
 
 	//[-------------------------------------------------------]
@@ -338,13 +373,14 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		PipelineStateCacheManager	mPipelineStateCacheManager;
-		MaterialProperties			mMaterialProperties;
-		ShaderProperties			mVisualImportanceOfShaderProperties;
-		Renderer::VertexAttributes	mVertexAttributes;
-		Renderer::IRootSignaturePtr	mRootSignaturePtr;					///< Root signature, can be a null pointer
-		Renderer::PipelineState		mPipelineState;
-		ShaderBlueprintResourceId	mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
+		PipelineStateCacheManager			 mPipelineStateCacheManager;
+		MaterialProperties					 mMaterialProperties;
+		ShaderProperties					 mVisualImportanceOfShaderProperties;
+		ShaderProperties					 mMaximumIntegerValueOfShaderProperties;
+		Renderer::VertexAttributes			 mVertexAttributes;
+		Renderer::IRootSignaturePtr			 mRootSignaturePtr;	///< Root signature, can be a null pointer
+		Renderer::PipelineState				 mPipelineState;
+		ShaderBlueprintResourceId			 mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
 		// Resource
 		UniformBuffers mUniformBuffers;
 		SamplerStates  mSamplerStates;

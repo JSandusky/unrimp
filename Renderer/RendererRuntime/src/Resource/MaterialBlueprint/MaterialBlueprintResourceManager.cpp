@@ -113,6 +113,14 @@ namespace RendererRuntime
 				resourceStreamerLoadRequest.resource = materialBlueprintResource;
 				resourceStreamerLoadRequest.resourceLoader = materialBlueprintResourceLoader;
 				mRendererRuntime.getResourceStreamer().commitLoadRequest(resourceStreamerLoadRequest);
+
+				// TODO(co) The following doesn't feel right, but is sufficient for now. Review it later on.
+				// Create default pipeline state caches
+				// -> Material blueprints should be loaded by a cache manager upfront so that the following expensive call doesn't cause runtime hiccups
+				// -> Runtime hiccups would also be there without fallback pipeline state caches, so there's no real way around
+				// -> We must enforce fully loaded material blueprint resource state for this
+				materialBlueprintResource->enforceFullyLoaded();
+				materialBlueprintResource->createPipelineStateCaches(true);
 			}
 
 			// Done

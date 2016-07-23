@@ -73,15 +73,15 @@
 				"Usage": "SHADER_COMBINATION",
 				"ValueType": "BOOLEAN",
 				"Value": "FALSE",
-				"Description": "Use specular map?"
+				"Description": "Use specular map?",
+				"VisualImportance": "10"
 			},
 			"SpecularMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "7",
-				"Description": "Material specular map",
-				"VisualImportance": "10"
+				"Description": "Material specular map"
 			}
 		},
 		"RootSignature":

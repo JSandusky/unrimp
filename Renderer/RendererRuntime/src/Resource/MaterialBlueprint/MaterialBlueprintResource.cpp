@@ -28,9 +28,13 @@
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
+#include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <glm/detail/setup.hpp>	// For "glm::countof()"
+
+#include <chrono>
+#include <thread>
 
 
 // Disable warnings
@@ -90,6 +94,85 @@ namespace
 				// Data source, instancing part
 				0											// instancesPerElement (uint32_t)
 			}
+		};
+
+
+		//[-------------------------------------------------------]
+		//[ Classes                                               ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Internal helper class to iterate through all shader combinations
+		*/
+		class ShaderCombinationIterator
+		{
+		public:
+			ShaderCombinationIterator()
+			{
+				mNumberOfPropertyValuesByPropertyIndex.reserve(32);
+			}
+
+			void clear()
+			{
+				mNumberOfPropertyValuesByPropertyIndex.clear();
+				mCurrentCombination.clear();
+			}
+
+			void addBoolProperty()
+			{
+				addIntegerProperty(2);
+			}
+
+			void addIntegerProperty(uint32_t numberOfIntegerValues)
+			{
+				mNumberOfPropertyValuesByPropertyIndex.push_back(numberOfIntegerValues);
+			}
+
+			bool getCurrentCombinationBoolProperty(size_t index) const
+			{
+				return (getCurrentCombinationIntegerProperty(index) > 0);
+			}
+
+			uint32_t getCurrentCombinationIntegerProperty(size_t index) const
+			{
+				assert(index < mCurrentCombination.size());
+				return mCurrentCombination[index];
+			}
+
+			void startIterate()
+			{
+				// Start with every property value set to zero
+				mCurrentCombination.resize(mNumberOfPropertyValuesByPropertyIndex.size());
+				memset(mCurrentCombination.data(), 0, sizeof(uint32_t) * mNumberOfPropertyValuesByPropertyIndex.size());
+			}
+
+			bool iterate()
+			{
+				// Just a sanity check, in case someone forgot to start iterating first
+				assert(mCurrentCombination.size() == mNumberOfPropertyValuesByPropertyIndex.size());
+
+				for (size_t index = 0; index < mCurrentCombination.size(); ++index)
+				{
+					uint32_t& propertyValue = mCurrentCombination[index];
+					++propertyValue;
+					if (propertyValue < mNumberOfPropertyValuesByPropertyIndex[index])
+					{
+						// Went up by one, result is valid, so everything is fine
+						return true;
+					}
+					else
+					{
+						// We have to go to the next property now and increase that one; but first reset this one here to zero again
+						propertyValue = 0;
+					}
+				}
+
+				// We're done with iterating, every property is at its maximum
+				return false;
+			}
+		private:
+			std::vector<uint32_t> mNumberOfPropertyValuesByPropertyIndex;
+			std::vector<uint32_t> mCurrentCombination;
 		};
 
 
@@ -166,6 +249,18 @@ namespace RendererRuntime
 		// Check the rest
 		// TODO(co) Handle the other shader types
 		return (IResource::LoadingState::LOADED == getLoadingState() && nullptr != mRootSignaturePtr && ::detail::isFullyLoaded(shaderPieceResourceManager, shaderBlueprintResourceManager, mShaderBlueprintResourceId[static_cast<uint8_t>(ShaderType::Vertex)]) && ::detail::isFullyLoaded(shaderPieceResourceManager, shaderBlueprintResourceManager, mShaderBlueprintResourceId[static_cast<uint8_t>(ShaderType::Fragment)]));
+	}
+
+	void MaterialBlueprintResource::enforceFullyLoaded()
+	{
+		// TODO(co) Implement more efficient solution: We need to extend "Runtime::ResourceStreamer" to request emergency immediate processing of requested resources
+		ResourceStreamer& resourceStreamer = getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getResourceStreamer();
+		while (!isFullyLoaded())
+		{
+			using namespace std::chrono_literals;
+			std::this_thread::sleep_for(1ms);
+			resourceStreamer.rendererBackendDispatch();
+		}
 	}
 
 	void MaterialBlueprintResource::fillUnknownUniformBuffers()
@@ -538,6 +633,97 @@ namespace RendererRuntime
 				const SamplerState& samplerState = mSamplerStates[i];
 				renderer.setGraphicsRootDescriptorTable(samplerState.rootParameterIndex, samplerState.samplerStatePtr);
 			}
+		}
+	}
+
+	void MaterialBlueprintResource::createPipelineStateCaches(bool mandatoryOnly)
+	{
+		// Material blueprint resource must be fully loaded, meaning also all referenced shader resources
+		assert(isFullyLoaded());
+
+		// TODO(co) Fill dynamic shader pieces
+		DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES];
+
+		// Optimization: To avoid constant allocations/deallocations, use a static instance (not multi-threading safe, of course)
+		static ::detail::ShaderCombinationIterator shaderCombinationIterator;
+		shaderCombinationIterator.clear();
+		static std::vector<ShaderPropertyId> shaderPropertyIds;
+		shaderPropertyIds.clear();
+
+		{ // Gather all mandatory shader combination properties
+			const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = mMaterialProperties.getSortedPropertyVector();
+			for (const MaterialProperty& materialProperty : sortedMaterialPropertyVector)
+			{
+				const MaterialPropertyId materialPropertyId = materialProperty.getMaterialPropertyId();
+				if (materialProperty.getUsage() == MaterialProperty::Usage::SHADER_COMBINATION && (!mandatoryOnly || mVisualImportanceOfShaderProperties.getPropertyValueUnsafe(materialPropertyId) == MANDATORY_SHADER_PROPERTY))
+				{
+					switch (materialProperty.getValueType())
+					{
+						case MaterialProperty::ValueType::BOOLEAN:
+							shaderPropertyIds.push_back(materialProperty.getMaterialPropertyId());	// Shader property ID and material property ID are identical, so this is valid
+							shaderCombinationIterator.addBoolProperty();
+							break;
+
+						case MaterialProperty::ValueType::INTEGER:
+							shaderPropertyIds.push_back(materialProperty.getMaterialPropertyId());	// Shader property ID and material property ID are identical, so this is valid
+							shaderCombinationIterator.addIntegerProperty(static_cast<uint32_t>(getMaximumIntegerValueOfShaderProperty(materialPropertyId)));
+							break;
+
+						case MaterialProperty::ValueType::UNKNOWN:
+						case MaterialProperty::ValueType::INTEGER_2:
+						case MaterialProperty::ValueType::INTEGER_3:
+						case MaterialProperty::ValueType::INTEGER_4:
+						case MaterialProperty::ValueType::FLOAT:
+						case MaterialProperty::ValueType::FLOAT_2:
+						case MaterialProperty::ValueType::FLOAT_3:
+						case MaterialProperty::ValueType::FLOAT_4:
+						case MaterialProperty::ValueType::FLOAT_3_3:
+						case MaterialProperty::ValueType::FLOAT_4_4:
+						case MaterialProperty::ValueType::FILL_MODE:
+						case MaterialProperty::ValueType::CULL_MODE:
+						case MaterialProperty::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
+						case MaterialProperty::ValueType::DEPTH_WRITE_MASK:
+						case MaterialProperty::ValueType::STENCIL_OP:
+						case MaterialProperty::ValueType::COMPARISON_FUNC:
+						case MaterialProperty::ValueType::BLEND:
+						case MaterialProperty::ValueType::BLEND_OP:
+						case MaterialProperty::ValueType::FILTER_MODE:
+						case MaterialProperty::ValueType::TEXTURE_ADDRESS_MODE:
+						case MaterialProperty::ValueType::TEXTURE_ASSET_ID:
+						case MaterialProperty::ValueType::COMPOSITOR_TEXTURE_REFERENCE:
+						default:
+							// Unsupported shader combination material property value type
+							assert(false);
+							break;
+					}
+				}
+			}
+		}
+
+		{ // Create the pipeline state caches
+			const uint32_t numberOfShaderProperties = static_cast<uint32_t>(shaderPropertyIds.size());
+			static ShaderProperties shaderProperties;	// Optimization: To avoid constant allocations/deallocations, use a static instance (not multi-threading safe, of course)
+
+			shaderCombinationIterator.startIterate();
+			do
+			{
+				// Set the current shader properties combination
+				// -> The value always starts with 0 and has no holes in enumeration
+				shaderProperties.clear();
+				for (uint32_t i = 0; i < numberOfShaderProperties; ++i)
+				{
+					const uint32_t value = shaderCombinationIterator.getCurrentCombinationIntegerProperty(i);
+					if (value != 0)
+					{
+						shaderProperties.setPropertyValue(shaderPropertyIds[i], static_cast<int32_t>(value));
+					}
+				}
+
+				// Create the current pipeline state cache instances for the material blueprint
+				const Renderer::IPipelineStatePtr pipelineStatePtr = mPipelineStateCacheManager.getPipelineStateCacheByCombination(shaderProperties, dynamicShaderPieces, true);
+				assert(nullptr != pipelineStatePtr);	// TODO(co) Decent error handling
+			}
+			while (shaderCombinationIterator.iterate());
 		}
 	}
 

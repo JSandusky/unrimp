@@ -121,18 +121,21 @@ namespace RendererToolkit
 			// Gather all material properties
 			RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
 			RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
+			RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
 			const RendererRuntime::ShaderProperties::SortedPropertyVector& visualImportanceOfShaderPropertiesVector = visualImportanceOfShaderProperties.getSortedPropertyVector();
-			JsonMaterialBlueprintHelper::readProperties(input, rapidJsonValueProperties, sortedMaterialPropertyVector, visualImportanceOfShaderProperties);
+			const RendererRuntime::ShaderProperties::SortedPropertyVector& maximumIntegerValueOfShaderPropertiesVector = maximumIntegerValueOfShaderProperties.getSortedPropertyVector();
+			JsonMaterialBlueprintHelper::readProperties(input, rapidJsonValueProperties, sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties);
 
 			{ // Material blueprint header
 				RendererRuntime::v1MaterialBlueprint::Header materialBlueprintHeader;
-				materialBlueprintHeader.formatType							= RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE;
-				materialBlueprintHeader.formatVersion						= RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION;
-				materialBlueprintHeader.numberOfProperties					= rapidJsonValueProperties.MemberCount();
-				materialBlueprintHeader.numberOfShaderCombinationProperties	= static_cast<uint32_t>(visualImportanceOfShaderPropertiesVector.size());
-				materialBlueprintHeader.numberOfUniformBuffers				= rapidJsonValueUniformBuffers.MemberCount();
-				materialBlueprintHeader.numberOfSamplerStates				= rapidJsonValueSamplerStates.MemberCount();
-				materialBlueprintHeader.numberOfTextures					= rapidJsonValueTextures.MemberCount();
+				materialBlueprintHeader.formatType									= RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE;
+				materialBlueprintHeader.formatVersion								= RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION;
+				materialBlueprintHeader.numberOfProperties							= rapidJsonValueProperties.MemberCount();
+				materialBlueprintHeader.numberOfShaderCombinationProperties			= static_cast<uint32_t>(visualImportanceOfShaderPropertiesVector.size());
+				materialBlueprintHeader.numberOfIntegerShaderCombinationProperties	= static_cast<uint32_t>(maximumIntegerValueOfShaderPropertiesVector.size());	// Each integer shader combination property must have a defined maximum value
+				materialBlueprintHeader.numberOfUniformBuffers						= rapidJsonValueUniformBuffers.MemberCount();
+				materialBlueprintHeader.numberOfSamplerStates						= rapidJsonValueSamplerStates.MemberCount();
+				materialBlueprintHeader.numberOfTextures							= rapidJsonValueTextures.MemberCount();
 
 				// Write down the material blueprint header
 				outputFileStream.write(reinterpret_cast<const char*>(&materialBlueprintHeader), sizeof(RendererRuntime::v1MaterialBlueprint::Header));
@@ -143,6 +146,9 @@ namespace RendererToolkit
 
 			// Write down visual importance of shader properties
 			outputFileStream.write(reinterpret_cast<const char*>(visualImportanceOfShaderPropertiesVector.data()), sizeof(RendererRuntime::ShaderProperties::Property) * visualImportanceOfShaderPropertiesVector.size());
+
+			// Write down maximum integer value of shader properties
+			outputFileStream.write(reinterpret_cast<const char*>(maximumIntegerValueOfShaderPropertiesVector.data()), sizeof(RendererRuntime::ShaderProperties::Property) * maximumIntegerValueOfShaderPropertiesVector.size());
 
 			// Root signature
 			RendererRuntime::ShaderProperties shaderProperties;

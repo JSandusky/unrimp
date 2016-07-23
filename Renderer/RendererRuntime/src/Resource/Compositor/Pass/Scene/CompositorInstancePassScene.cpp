@@ -127,11 +127,45 @@ namespace
 														const RendererRuntime::MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
 														if (materialProperty.getUsage() == RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION)
 														{
-															shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
+															switch (materialProperty.getValueType())
+															{
+																case RendererRuntime::MaterialPropertyValue::ValueType::BOOLEAN:
+																	shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
+																	break;
+
+																case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER:
+																	shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getIntegerValue());
+																	break;
+
+																case RendererRuntime::MaterialPropertyValue::ValueType::UNKNOWN:
+																case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_2:
+																case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_3:
+																case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_4:
+																case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT:
+																case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_2:
+																case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3:
+																case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4:
+																case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3_3:
+																case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4_4:
+																case RendererRuntime::MaterialPropertyValue::ValueType::FILL_MODE:
+																case RendererRuntime::MaterialPropertyValue::ValueType::CULL_MODE:
+																case RendererRuntime::MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
+																case RendererRuntime::MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
+																case RendererRuntime::MaterialPropertyValue::ValueType::STENCIL_OP:
+																case RendererRuntime::MaterialPropertyValue::ValueType::COMPARISON_FUNC:
+																case RendererRuntime::MaterialPropertyValue::ValueType::BLEND:
+																case RendererRuntime::MaterialPropertyValue::ValueType::BLEND_OP:
+																case RendererRuntime::MaterialPropertyValue::ValueType::FILTER_MODE:
+																case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
+																case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
+																case RendererRuntime::MaterialPropertyValue::ValueType::COMPOSITOR_TEXTURE_REFERENCE:
+																default:
+																	assert(false);	// TODO(co) Error handling
+																	break;
+															}
 														}
 													}
 												}
-
 
 												Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(shaderProperties, dynamicShaderPieces, false);
 												if (nullptr != pipelineStatePtr)

@@ -66,6 +66,7 @@ namespace RendererRuntime
 				uint16_t formatVersion;
 				uint32_t numberOfProperties;
 				uint32_t numberOfShaderCombinationProperties;
+				uint32_t numberOfIntegerShaderCombinationProperties;
 				uint32_t numberOfUniformBuffers;
 				uint32_t numberOfSamplerStates;
 				uint32_t numberOfTextures;

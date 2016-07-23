@@ -570,7 +570,7 @@ namespace RendererToolkit
 		outputFileStream.write(reinterpret_cast<const char*>(descriptorRanges.data()), sizeof(Renderer::DescriptorRange) * descriptorRanges.size());
 	}
 
-	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, RendererRuntime::ShaderProperties& visualImportanceOfShaderProperties, bool sort)
+	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, RendererRuntime::ShaderProperties& visualImportanceOfShaderProperties, RendererRuntime::ShaderProperties& maximumIntegerValueOfShaderProperties, bool sort)
 	{
 		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIterator = rapidJsonValueProperties.MemberBegin(); rapidJsonMemberIterator != rapidJsonValueProperties.MemberEnd(); ++rapidJsonMemberIterator)
 		{
@@ -609,16 +609,36 @@ namespace RendererToolkit
 			}
 
 			// Optional visual importance of shader property
-			if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage && rapidJsonValueProperty.HasMember("VisualImportance"))
+			if (rapidJsonValueProperty.HasMember("VisualImportance"))
 			{
-				const rapidjson::Value& rapidJsonValueVisualImportance = rapidJsonValueProperty["VisualImportance"];
-				const char* valueAsString = rapidJsonValueVisualImportance.GetString();
-				int32_t visualImportanceOfShaderProperty = RendererRuntime::MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY;
-				if (strncmp(valueAsString, "MANDATORY", 9) != 0)
+				// Sanity check: "VisualImportance" is only valid for shader combination properties
+				// TODO(co) Error handling
+				assert(RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage);
+				if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage)
 				{
-					visualImportanceOfShaderProperty = std::atoi(valueAsString);
+					const rapidjson::Value& rapidJsonValueVisualImportance = rapidJsonValueProperty["VisualImportance"];
+					const char* valueAsString = rapidJsonValueVisualImportance.GetString();
+					int32_t visualImportanceOfShaderProperty = RendererRuntime::MaterialBlueprintResource::MANDATORY_SHADER_PROPERTY;
+					if (strncmp(valueAsString, "MANDATORY", 9) != 0)
+					{
+						visualImportanceOfShaderProperty = std::atoi(valueAsString);
+					}
+					visualImportanceOfShaderProperties.setPropertyValue(materialPropertyId, visualImportanceOfShaderProperty);	// We're using the same string hashing for material property ID and shader property ID
 				}
-				visualImportanceOfShaderProperties.setPropertyValue(materialPropertyId, visualImportanceOfShaderProperty);	// We're using the same string hashing for material property ID and shader property ID
+			}
+
+			// Mandatory maximum value for integer type shader combination properties to be able to keep the total number of shader combinations manageable
+			if (RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION == usage && RendererRuntime::MaterialProperty::ValueType::INTEGER == valueType)
+			{
+				// TODO(co) Error handling
+				const bool hasMaximumIntegerValue = rapidJsonValueProperty.HasMember("MaximumIntegerValue");
+				assert(hasMaximumIntegerValue);
+				if (hasMaximumIntegerValue)
+				{
+					const int maximumIntegerValue = std::atoi(rapidJsonValueProperty["MaximumIntegerValue"].GetString());
+					assert(maximumIntegerValue > 0);
+					maximumIntegerValueOfShaderProperties.setPropertyValue(materialPropertyId, maximumIntegerValue);	// We're using the same string hashing for material property ID and shader property ID
+				}
 			}
 		}
 
@@ -762,7 +782,8 @@ namespace RendererToolkit
 			// Gather all element properties, don't sort because the user defined order is important in here (data layout in memory)
 			RendererRuntime::MaterialProperties::SortedPropertyVector elementProperties;
 			RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
-			readProperties(input, rapidJsonValueElementProperties, elementProperties, visualImportanceOfShaderProperties, false);
+			RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
+			readProperties(input, rapidJsonValueElementProperties, elementProperties, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, false);
 
 			// Calculate the uniform buffer size, including handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
 			// -> Sum up the number of bytes required by all uniform buffer element properties
