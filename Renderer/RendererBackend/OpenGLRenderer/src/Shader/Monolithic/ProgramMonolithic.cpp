@@ -21,12 +21,12 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/ProgramGlsl.h"
-#include "OpenGLRenderer/Shader/VertexShaderGlsl.h"
-#include "OpenGLRenderer/Shader/GeometryShaderGlsl.h"
-#include "OpenGLRenderer/Shader/FragmentShaderGlsl.h"
-#include "OpenGLRenderer/Shader/TessellationControlShaderGlsl.h"
-#include "OpenGLRenderer/Shader/TessellationEvaluationShaderGlsl.h"
+#include "OpenGLRenderer/Shader/Monolithic/ProgramMonolithic.h"
+#include "OpenGLRenderer/Shader/Monolithic/VertexShaderMonolithic.h"
+#include "OpenGLRenderer/Shader/Monolithic/GeometryShaderMonolithic.h"
+#include "OpenGLRenderer/Shader/Monolithic/FragmentShaderMonolithic.h"
+#include "OpenGLRenderer/Shader/Monolithic/TessellationControlShaderMonolithic.h"
+#include "OpenGLRenderer/Shader/Monolithic/TessellationEvaluationShaderMonolithic.h"
 #include "OpenGLRenderer/IContext.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/RootSignature.h"
@@ -45,7 +45,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramGlsl::ProgramGlsl(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
+	ProgramMonolithic::ProgramMonolithic(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderMonolithic *vertexShaderMonolithic, TessellationControlShaderMonolithic *tessellationControlShaderMonolithic, TessellationEvaluationShaderMonolithic *tessellationEvaluationShaderMonolithic, GeometryShaderMonolithic *geometryShaderMonolithic, FragmentShaderMonolithic *fragmentShaderMonolithic) :
 		IProgram(openGLRenderer),
 		mOpenGLProgram(glCreateProgramObjectARB()),
 		mNumberOfRootSignatureParameters(0),
@@ -61,31 +61,31 @@ namespace OpenGLRenderer
 
 		// Attach the shaders to the program
 		// -> We don't need to keep a reference to the shader, to add and release at once to ensure a nice behaviour
-		if (nullptr != vertexShaderGlsl)
+		if (nullptr != vertexShaderMonolithic)
 		{
-			vertexShaderGlsl->addReference();
-			glAttachObjectARB(mOpenGLProgram, vertexShaderGlsl->getOpenGLShader());
-			vertexShaderGlsl->release();
+			vertexShaderMonolithic->addReference();
+			glAttachObjectARB(mOpenGLProgram, vertexShaderMonolithic->getOpenGLShader());
+			vertexShaderMonolithic->release();
 		}
-		if (nullptr != tessellationControlShaderGlsl)
+		if (nullptr != tessellationControlShaderMonolithic)
 		{
-			tessellationControlShaderGlsl->addReference();
-			glAttachObjectARB(mOpenGLProgram, tessellationControlShaderGlsl->getOpenGLShader());
-			tessellationControlShaderGlsl->release();
+			tessellationControlShaderMonolithic->addReference();
+			glAttachObjectARB(mOpenGLProgram, tessellationControlShaderMonolithic->getOpenGLShader());
+			tessellationControlShaderMonolithic->release();
 		}
-		if (nullptr != tessellationEvaluationShaderGlsl)
+		if (nullptr != tessellationEvaluationShaderMonolithic)
 		{
-			tessellationEvaluationShaderGlsl->addReference();
-			glAttachObjectARB(mOpenGLProgram, tessellationEvaluationShaderGlsl->getOpenGLShader());
-			tessellationEvaluationShaderGlsl->release();
+			tessellationEvaluationShaderMonolithic->addReference();
+			glAttachObjectARB(mOpenGLProgram, tessellationEvaluationShaderMonolithic->getOpenGLShader());
+			tessellationEvaluationShaderMonolithic->release();
 		}
-		if (nullptr != geometryShaderGlsl)
+		if (nullptr != geometryShaderMonolithic)
 		{
 			// Add a reference to the shader
-			geometryShaderGlsl->addReference();
+			geometryShaderMonolithic->addReference();
 
-			// Attach the GLSL shader to the GLSL program
-			glAttachObjectARB(mOpenGLProgram, geometryShaderGlsl->getOpenGLShader());
+			// Attach the monolithic shader to the monolithic program
+			glAttachObjectARB(mOpenGLProgram, geometryShaderMonolithic->getOpenGLShader());
 
 			// In modern GLSL, "geometry shader input primitive topology" & "geometry shader output primitive topology" & "number of output vertices" can be directly set within GLSL by writing e.g.
 			//   "layout(triangles) in;"
@@ -93,22 +93,22 @@ namespace OpenGLRenderer
 			// -> To be able to support older GLSL versions, we have to provide this information also via OpenGL API functions
 
 			// Set the OpenGL geometry shader input primitive topology
-			glProgramParameteriARB(mOpenGLProgram, GL_GEOMETRY_INPUT_TYPE_ARB, geometryShaderGlsl->getOpenGLGsInputPrimitiveTopology());
+			glProgramParameteriARB(mOpenGLProgram, GL_GEOMETRY_INPUT_TYPE_ARB, geometryShaderMonolithic->getOpenGLGsInputPrimitiveTopology());
 
 			// Set the OpenGL geometry shader output primitive topology
-			glProgramParameteriARB(mOpenGLProgram, GL_GEOMETRY_OUTPUT_TYPE_ARB, geometryShaderGlsl->getOpenGLGsOutputPrimitiveTopology());
+			glProgramParameteriARB(mOpenGLProgram, GL_GEOMETRY_OUTPUT_TYPE_ARB, geometryShaderMonolithic->getOpenGLGsOutputPrimitiveTopology());
 
 			// Set the number of output vertices
-			glProgramParameteriARB(mOpenGLProgram, GL_GEOMETRY_VERTICES_OUT_ARB, static_cast<GLint>(geometryShaderGlsl->getNumberOfOutputVertices()));
+			glProgramParameteriARB(mOpenGLProgram, GL_GEOMETRY_VERTICES_OUT_ARB, static_cast<GLint>(geometryShaderMonolithic->getNumberOfOutputVertices()));
 
 			// Release the shader
-			geometryShaderGlsl->release();
+			geometryShaderMonolithic->release();
 		}
-		if (nullptr != fragmentShaderGlsl)
+		if (nullptr != fragmentShaderMonolithic)
 		{
-			fragmentShaderGlsl->addReference();
-			glAttachObjectARB(mOpenGLProgram, fragmentShaderGlsl->getOpenGLShader());
-			fragmentShaderGlsl->release();
+			fragmentShaderMonolithic->addReference();
+			glAttachObjectARB(mOpenGLProgram, fragmentShaderMonolithic->getOpenGLShader());
+			fragmentShaderMonolithic->release();
 		}
 
 		// Link the program
@@ -232,7 +232,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	ProgramGlsl::~ProgramGlsl()
+	ProgramMonolithic::~ProgramMonolithic()
 	{
 		// Destroy the OpenGL program
 		// -> A value of 0 for program will be silently ignored
@@ -249,12 +249,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
-	handle ProgramGlsl::getUniformHandle(const char *uniformName)
+	handle ProgramMonolithic::getUniformHandle(const char *uniformName)
 	{
 		return static_cast<handle>(glGetUniformLocationARB(mOpenGLProgram, uniformName));
 	}
 
-	void ProgramGlsl::setUniform1i(handle uniformHandle, int value)
+	void ProgramMonolithic::setUniform1i(handle uniformHandle, int value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
@@ -280,7 +280,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramGlsl::setUniform1f(handle uniformHandle, float value)
+	void ProgramMonolithic::setUniform1f(handle uniformHandle, float value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
@@ -306,7 +306,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramGlsl::setUniform2fv(handle uniformHandle, const float *value)
+	void ProgramMonolithic::setUniform2fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
@@ -332,7 +332,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramGlsl::setUniform3fv(handle uniformHandle, const float *value)
+	void ProgramMonolithic::setUniform3fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
@@ -358,7 +358,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramGlsl::setUniform4fv(handle uniformHandle, const float *value)
+	void ProgramMonolithic::setUniform4fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
@@ -384,7 +384,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramGlsl::setUniformMatrix3fv(handle uniformHandle, const float *value)
+	void ProgramMonolithic::setUniformMatrix3fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
@@ -410,7 +410,7 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	void ProgramGlsl::setUniformMatrix4fv(handle uniformHandle, const float *value)
+	void ProgramMonolithic::setUniformMatrix4fv(handle uniformHandle, const float *value)
 	{
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program

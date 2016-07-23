@@ -89,21 +89,14 @@ set(SOURCE_CODES
 	src/Detail/BlendState.cpp
 	src/Detail/DepthStencilState.cpp
 	src/Detail/RasterizerState.cpp
-	src/Shader/FragmentShader.cpp
-	src/Shader/FragmentShaderGlsl.cpp
-	src/Shader/GeometryShader.cpp
-	src/Shader/GeometryShaderGlsl.cpp
-	src/Shader/Program.cpp
-	src/Shader/ProgramGlsl.cpp
-	src/Shader/ProgramGlslDsa.cpp
-	src/Shader/ShaderLanguage.cpp
-	src/Shader/ShaderLanguageGlsl.cpp
-	src/Shader/TessellationControlShader.cpp
-	src/Shader/TessellationControlShaderGlsl.cpp
-	src/Shader/TessellationEvaluationShader.cpp
-	src/Shader/TessellationEvaluationShaderGlsl.cpp
-	src/Shader/VertexShader.cpp
-	src/Shader/VertexShaderGlsl.cpp
+	src/Shader/Monolithic/FragmentShaderMonolithic.cpp
+	src/Shader/Monolithic/GeometryShaderMonolithic.cpp
+	src/Shader/Monolithic/ProgramMonolithic.cpp
+	src/Shader/Monolithic/ProgramMonolithicDsa.cpp
+	src/Shader/Monolithic/ShaderLanguageMonolithic.cpp
+	src/Shader/Monolithic/TessellationControlShaderMonolithic.cpp
+	src/Shader/Monolithic/TessellationEvaluationShaderMonolithic.cpp
+	src/Shader/Monolithic/VertexShaderMonolithic.cpp
 )
 if(WIN32)
 	# Windows source codes

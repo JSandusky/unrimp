@@ -279,7 +279,7 @@ namespace OpenGLRenderer
 		OpenGLRuntimeLinking	  *mOpenGLRuntimeLinking;	///< OpenGL runtime linking instance, always valid
 		IContext				  *mContext;				///< OpenGL context instance, always valid
 		Extensions				  *mExtensions;				///< Extensions instance, always valid
-		Renderer::IShaderLanguage *mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
+		Renderer::IShaderLanguage *mShaderLanguage;			///< Shader language instance (we keep a reference to it), can be a null pointer
 		RootSignature			  *mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState	  *mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		//[-------------------------------------------------------]

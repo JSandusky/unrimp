@@ -51,9 +51,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    GLSL tessellation evaluation shader ("domain shader" in Direct3D terminology) class
+	*    Monolithic tessellation evaluation shader ("domain shader" in Direct3D terminology) class
 	*/
-	class TessellationEvaluationShaderGlsl : public Renderer::ITessellationEvaluationShader
+	class TessellationEvaluationShaderMonolithic : public Renderer::ITessellationEvaluationShader
 	{
 
 
@@ -72,7 +72,7 @@ namespace OpenGLRenderer
 		*  @param[in] numberOfBytes
 		*    Number of bytes in the bytecode
 		*/
-		TessellationEvaluationShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		TessellationEvaluationShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes);
 
 		/**
 		*  @brief
@@ -83,13 +83,13 @@ namespace OpenGLRenderer
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		TessellationEvaluationShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode);
+		TessellationEvaluationShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TessellationEvaluationShaderGlsl();
+		virtual ~TessellationEvaluationShaderMonolithic();
 
 		/**
 		*  @brief
@@ -127,4 +127,4 @@ namespace OpenGLRenderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/TessellationEvaluationShaderGlsl.inl"
+#include "OpenGLRenderer/Shader/Monolithic/TessellationEvaluationShaderMonolithic.inl"

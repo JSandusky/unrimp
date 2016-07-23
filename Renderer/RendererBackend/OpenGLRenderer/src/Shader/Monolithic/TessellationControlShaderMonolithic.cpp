@@ -21,7 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/ProgramGlslDsa.h"
+#include "OpenGLRenderer/Shader/Monolithic/TessellationControlShaderMonolithic.h"
+#include "OpenGLRenderer/Shader/Monolithic/ShaderLanguageMonolithic.h"
 #include "OpenGLRenderer/Extensions.h"
 
 
@@ -35,49 +36,34 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramGlslDsa::ProgramGlslDsa(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
-		ProgramGlsl(openGLRenderer, rootSignature, vertexAttributes, vertexShaderGlsl, tessellationControlShaderGlsl, tessellationEvaluationShaderGlsl, geometryShaderGlsl, fragmentShaderGlsl)
+	TessellationControlShaderMonolithic::TessellationControlShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
+		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mOpenGLShader(0)
 	{
 		// Nothing to do in here
 	}
 
-	ProgramGlslDsa::~ProgramGlslDsa()
+	TessellationControlShaderMonolithic::TessellationControlShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
+		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mOpenGLShader(ShaderLanguageMonolithic::loadShader(GL_TESS_CONTROL_SHADER, sourceCode))
 	{
 		// Nothing to do in here
 	}
 
+	TessellationControlShaderMonolithic::~TessellationControlShaderMonolithic()
+	{
+		// Destroy the OpenGL shader
+		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
+		glDeleteObjectARB(mOpenGLShader);
+	}
+
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IProgram methods             ]
+	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	void ProgramGlslDsa::setUniform1f(handle uniformHandle, float value)
+	const char *TessellationControlShaderMonolithic::getShaderLanguageName() const
 	{
-		glProgramUniform1fEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), value);
-	}
-
-	void ProgramGlslDsa::setUniform2fv(handle uniformHandle, const float *value)
-	{
-		glProgramUniform2fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
-	}
-
-	void ProgramGlslDsa::setUniform3fv(handle uniformHandle, const float *value)
-	{
-		glProgramUniform3fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
-	}
-
-	void ProgramGlslDsa::setUniform4fv(handle uniformHandle, const float *value)
-	{
-		glProgramUniform4fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
-	}
-
-	void ProgramGlslDsa::setUniformMatrix3fv(handle uniformHandle, const float *value)
-	{
-		glProgramUniformMatrix3fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
-	}
-
-	void ProgramGlslDsa::setUniformMatrix4fv(handle uniformHandle, const float *value)
-	{
-		glProgramUniformMatrix4fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+		return ShaderLanguageMonolithic::NAME;
 	}
 
 

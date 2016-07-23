@@ -52,9 +52,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    GLSL geometry shader class
+	*    Monolithic geometry shader class
 	*/
-	class GeometryShaderGlsl : public Renderer::IGeometryShader
+	class GeometryShaderMonolithic : public Renderer::IGeometryShader
 	{
 
 
@@ -79,7 +79,7 @@ namespace OpenGLRenderer
 		*  @param[in] numberOfOutputVertices
 		*    Number of output vertices
 		*/
-		GeometryShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
+		GeometryShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
 
 		/**
 		*  @brief
@@ -96,13 +96,13 @@ namespace OpenGLRenderer
 		*  @param[in] numberOfOutputVertices
 		*    Number of output vertices
 		*/
-		GeometryShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
+		GeometryShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~GeometryShaderGlsl();
+		virtual ~GeometryShaderMonolithic();
 
 		/**
 		*  @brief
@@ -170,4 +170,4 @@ namespace OpenGLRenderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/GeometryShaderGlsl.inl"
+#include "OpenGLRenderer/Shader/Monolithic/GeometryShaderMonolithic.inl"

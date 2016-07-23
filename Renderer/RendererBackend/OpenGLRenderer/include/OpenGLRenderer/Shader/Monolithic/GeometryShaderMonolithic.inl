@@ -28,9 +28,24 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t TessellationControlShaderGlsl::getOpenGLShader() const
+	inline uint32_t GeometryShaderMonolithic::getOpenGLShader() const
 	{
 		return mOpenGLShader;
+	}
+
+	int GeometryShaderMonolithic::getOpenGLGsInputPrimitiveTopology() const
+	{
+		return mOpenGLGsInputPrimitiveTopology;
+	}
+
+	int GeometryShaderMonolithic::getOpenGLGsOutputPrimitiveTopology() const
+	{
+		return mOpenGLGsOutputPrimitiveTopology;
+	}
+
+	uint32_t GeometryShaderMonolithic::getNumberOfOutputVertices() const
+	{
+		return mNumberOfOutputVertices;
 	}
 
 

@@ -19,14 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/VertexShaderGlsl.h"
-#include "OpenGLRenderer/Shader/ShaderLanguageGlsl.h"
-#include "OpenGLRenderer/Extensions.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -36,35 +28,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderGlsl::VertexShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
-		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(0)
+	inline uint32_t TessellationControlShaderMonolithic::getOpenGLShader() const
 	{
-		// TODO(co) Implement me
-		// Nothing to do in here
-	}
-
-	VertexShaderGlsl::VertexShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
-		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_VERTEX_SHADER_ARB, sourceCode))
-	{
-		// Nothing to do in here
-	}
-
-	VertexShaderGlsl::~VertexShaderGlsl()
-	{
-		// Destroy the OpenGL shader
-		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteObjectARB(mOpenGLShader);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IShader methods              ]
-	//[-------------------------------------------------------]
-	const char *VertexShaderGlsl::getShaderLanguageName() const
-	{
-		return ShaderLanguageGlsl::NAME;
+		return mOpenGLShader;
 	}
 
 

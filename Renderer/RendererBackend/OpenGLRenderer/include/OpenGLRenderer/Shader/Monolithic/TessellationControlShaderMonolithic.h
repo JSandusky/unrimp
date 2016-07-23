@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IVertexShader.h>
+#include <Renderer/ITessellationControlShader.h>
 
 
 //[-------------------------------------------------------]
@@ -51,9 +51,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    GLSL vertex shader class
+	*    Monolithic tessellation control shader ("hull shader" in Direct3D terminology) class
 	*/
-	class VertexShaderGlsl : public Renderer::IVertexShader
+	class TessellationControlShaderMonolithic : public Renderer::ITessellationControlShader
 	{
 
 
@@ -63,7 +63,7 @@ namespace OpenGLRenderer
 	public:
 		/**
 		*  @brief
-		*    Constructor for creating a vertex shader from shader bytecode
+		*    Constructor for creating a tessellation control shader ("hull shader" in Direct3D terminology) shader from shader bytecode
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
@@ -72,24 +72,24 @@ namespace OpenGLRenderer
 		*  @param[in] numberOfBytes
 		*    Number of bytes in the bytecode
 		*/
-		VertexShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		TessellationControlShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes);
 
 		/**
 		*  @brief
-		*    Constructor for creating a vertex shader from shader source code
+		*    Constructor for creating a tessellation control shader ("hull shader" in Direct3D terminology) shader from shader source code
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		VertexShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode);
+		TessellationControlShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~VertexShaderGlsl();
+		virtual ~TessellationControlShaderMonolithic();
 
 		/**
 		*  @brief
@@ -127,4 +127,4 @@ namespace OpenGLRenderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/VertexShaderGlsl.inl"
+#include "OpenGLRenderer/Shader/Monolithic/TessellationControlShaderMonolithic.inl"

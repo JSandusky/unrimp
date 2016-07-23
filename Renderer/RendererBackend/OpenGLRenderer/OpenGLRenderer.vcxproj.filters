@@ -17,6 +17,9 @@
     <Filter Include="Source Files\Detail">
       <UniqueIdentifier>{6794a761-5f92-4fb7-87d1-21e6a12ba69b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shader\Monolithic">
+      <UniqueIdentifier>{f95480a2-1ca6-41dd-8d65-52d064532a18}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h">
@@ -24,30 +27,6 @@
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Linux\ContextLinux.h">
       <Filter>Source Files\Linux</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Shader\GeometryShaderGlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Shader\ProgramGlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Shader\ProgramGlslDsa.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Shader\ShaderLanguageGlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Shader\TessellationControlShaderGlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Shader\TessellationEvaluationShaderGlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Shader\VertexShaderGlsl.h">
-      <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Shader\FragmentShaderGlsl.h">
-      <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Texture2DArray.h">
       <Filter>Source Files</Filter>
@@ -178,6 +157,30 @@
     <ClInclude Include="include\OpenGLRenderer\UniformBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\ProgramMonolithicDsa.h">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\ShaderLanguageMonolithic.h">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\TessellationControlShaderMonolithic.h">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\TessellationEvaluationShaderMonolithic.h">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\VertexShaderMonolithic.h">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\FragmentShaderMonolithic.h">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\GeometryShaderMonolithic.h">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\ProgramMonolithic.h">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -191,30 +194,6 @@
     </ClCompile>
     <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
       <Filter>Source Files\Linux</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\ProgramGlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\ProgramGlslDsa.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\ShaderLanguageGlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\TessellationControlShaderGlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\VertexShaderGlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\FragmentShaderGlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader\GeometryShaderGlsl.cpp">
-      <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\SamplerState.cpp">
       <Filter>Source Files</Filter>
@@ -339,6 +318,30 @@
     <ClCompile Include="src\UniformBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Shader\Monolithic\ProgramMonolithic.cpp">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Monolithic\ProgramMonolithicDsa.cpp">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Monolithic\ShaderLanguageMonolithic.cpp">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Monolithic\TessellationControlShaderMonolithic.cpp">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Monolithic\TessellationEvaluationShaderMonolithic.cpp">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Monolithic\VertexShaderMonolithic.cpp">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Monolithic\FragmentShaderMonolithic.cpp">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Monolithic\GeometryShaderMonolithic.cpp">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -348,24 +351,6 @@
     </None>
     <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl">
       <Filter>Source Files\Linux</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\Shader\GeometryShaderGlsl.inl">
-      <Filter>Source Files\Shader</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\Shader\ProgramGlsl.inl">
-      <Filter>Source Files\Shader</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\Shader\TessellationControlShaderGlsl.inl">
-      <Filter>Source Files\Shader</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\Shader\TessellationEvaluationShaderGlsl.inl">
-      <Filter>Source Files\Shader</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\Shader\VertexShaderGlsl.inl">
-      <Filter>Source Files\Shader</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\Shader\FragmentShaderGlsl.inl">
-      <Filter>Source Files\Shader</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Texture2DArray.inl">
       <Filter>Source Files</Filter>
@@ -420,6 +405,24 @@
     </None>
     <None Include="include\OpenGLRenderer\UniformBuffer.inl">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Shader\Monolithic\ProgramMonolithic.inl">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Shader\Monolithic\TessellationControlShaderMonolithic.inl">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Shader\Monolithic\TessellationEvaluationShaderMonolithic.inl">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Shader\Monolithic\VertexShaderMonolithic.inl">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Shader\Monolithic\FragmentShaderMonolithic.inl">
+      <Filter>Source Files\Shader\Monolithic</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Shader\Monolithic\GeometryShaderMonolithic.inl">
+      <Filter>Source Files\Shader\Monolithic</Filter>
     </None>
   </ItemGroup>
 </Project>

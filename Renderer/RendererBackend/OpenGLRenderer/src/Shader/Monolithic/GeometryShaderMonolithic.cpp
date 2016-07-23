@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/TessellationEvaluationShaderGlsl.h"
-#include "OpenGLRenderer/Shader/ShaderLanguageGlsl.h"
+#include "OpenGLRenderer/Shader/Monolithic/GeometryShaderMonolithic.h"
+#include "OpenGLRenderer/Shader/Monolithic/ShaderLanguageMonolithic.h"
 #include "OpenGLRenderer/Extensions.h"
 
 
@@ -36,22 +36,27 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t):
-		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(0)
-	{
-		// TODO(co) Implement me
-		// Nothing to do in here
-	}
-
-	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
-		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_TESS_EVALUATION_SHADER, sourceCode))
+	GeometryShaderMonolithic::GeometryShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) :
+		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mOpenGLShader(0),
+		mOpenGLGsInputPrimitiveTopology(static_cast<int>(gsInputPrimitiveTopology)),	// The "Renderer::GsInputPrimitiveTopology" values directly map to OpenGL constants, do not change them
+		mOpenGLGsOutputPrimitiveTopology(static_cast<int>(gsOutputPrimitiveTopology)),	// The "Renderer::GsOutputPrimitiveTopology" values directly map to OpenGL constants, do not change them
+		mNumberOfOutputVertices(numberOfOutputVertices)
 	{
 		// Nothing to do in here
 	}
 
-	TessellationEvaluationShaderGlsl::~TessellationEvaluationShaderGlsl()
+	GeometryShaderMonolithic::GeometryShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) :
+		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mOpenGLShader(ShaderLanguageMonolithic::loadShader(GL_GEOMETRY_SHADER_ARB, sourceCode)),
+		mOpenGLGsInputPrimitiveTopology(static_cast<int>(gsInputPrimitiveTopology)),	// The "Renderer::GsInputPrimitiveTopology" values directly map to OpenGL constants, do not change them
+		mOpenGLGsOutputPrimitiveTopology(static_cast<int>(gsOutputPrimitiveTopology)),	// The "Renderer::GsOutputPrimitiveTopology" values directly map to OpenGL constants, do not change them
+		mNumberOfOutputVertices(numberOfOutputVertices)
+	{
+		// Nothing to do in here
+	}
+
+	GeometryShaderMonolithic::~GeometryShaderMonolithic()
 	{
 		// Destroy the OpenGL shader
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
@@ -62,9 +67,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
-	const char *TessellationEvaluationShaderGlsl::getShaderLanguageName() const
+	const char *GeometryShaderMonolithic::getShaderLanguageName() const
 	{
-		return ShaderLanguageGlsl::NAME;
+		return ShaderLanguageMonolithic::NAME;
 	}
 
 

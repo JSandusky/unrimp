@@ -19,6 +19,14 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "OpenGLRenderer/Shader/Monolithic/VertexShaderMonolithic.h"
+#include "OpenGLRenderer/Shader/Monolithic/ShaderLanguageMonolithic.h"
+#include "OpenGLRenderer/Extensions.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -28,9 +36,34 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t ProgramGlsl::getOpenGLProgram() const
+	VertexShaderMonolithic::VertexShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
+		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mOpenGLShader(0)
 	{
-		return mOpenGLProgram;
+		// Nothing to do in here
+	}
+
+	VertexShaderMonolithic::VertexShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
+		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mOpenGLShader(ShaderLanguageMonolithic::loadShader(GL_VERTEX_SHADER_ARB, sourceCode))
+	{
+		// Nothing to do in here
+	}
+
+	VertexShaderMonolithic::~VertexShaderMonolithic()
+	{
+		// Destroy the OpenGL shader
+		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
+		glDeleteObjectARB(mOpenGLShader);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IShader methods              ]
+	//[-------------------------------------------------------]
+	const char *VertexShaderMonolithic::getShaderLanguageName() const
+	{
+		return ShaderLanguageMonolithic::NAME;
 	}
 
 

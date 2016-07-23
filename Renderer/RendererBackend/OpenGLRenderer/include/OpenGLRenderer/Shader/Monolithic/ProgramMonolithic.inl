@@ -19,14 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/FragmentShaderGlsl.h"
-#include "OpenGLRenderer/Shader/ShaderLanguageGlsl.h"
-#include "OpenGLRenderer/Extensions.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -36,35 +28,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
-		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(0)
+	inline uint32_t ProgramMonolithic::getOpenGLProgram() const
 	{
-		// TODO(co) Implement me
-		// Nothing to do in here
-	}
-
-	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
-		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(ShaderLanguageGlsl::loadShader(GL_FRAGMENT_SHADER_ARB, sourceCode))
-	{
-		// Nothing to do in here
-	}
-
-	FragmentShaderGlsl::~FragmentShaderGlsl()
-	{
-		// Destroy the OpenGL shader
-		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteObjectARB(mOpenGLShader);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IShader methods              ]
-	//[-------------------------------------------------------]
-	const char *FragmentShaderGlsl::getShaderLanguageName() const
-	{
-		return ShaderLanguageGlsl::NAME;
+		return mOpenGLProgram;
 	}
 
 

@@ -49,8 +49,8 @@
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #include "OpenGLRenderer/UniformBufferDsa.h"
 #include "OpenGLRenderer/UniformBufferBind.h"
-#include "OpenGLRenderer/Shader/ShaderLanguageGlsl.h"
-#include "OpenGLRenderer/Shader/ProgramGlsl.h"
+#include "OpenGLRenderer/Shader/Monolithic/ShaderLanguageMonolithic.h"
+#include "OpenGLRenderer/Shader/Monolithic/ProgramMonolithic.h"
 #ifdef WIN32
 	#include "OpenGLRenderer/Windows/ContextWindows.h"
 #elif defined LINUX
@@ -100,7 +100,7 @@ namespace OpenGLRenderer
 		mOpenGLRuntimeLinking(new OpenGLRuntimeLinking()),
 		mContext(nullptr),
 		mExtensions(nullptr),
-		mShaderLanguageGlsl(nullptr),
+		mShaderLanguage(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
 		mPipelineState(nullptr),
@@ -229,10 +229,10 @@ namespace OpenGLRenderer
 			}
 		}
 
-		// Release the GLSL shader language instance, in case we have one
-		if (nullptr != mShaderLanguageGlsl)
+		// Release the shader language instance, in case we have one
+		if (nullptr != mShaderLanguage)
 		{
-			mShaderLanguageGlsl->release();
+			mShaderLanguage->release();
 		}
 
 		// Destroy the extensions instance
@@ -294,7 +294,7 @@ namespace OpenGLRenderer
 			// GLSL supported
 			if (currentIndex == index)
 			{
-				return ShaderLanguageGlsl::NAME;
+				return ShaderLanguageMonolithic::NAME;
 			}
 			++currentIndex;
 		}
@@ -312,27 +312,27 @@ namespace OpenGLRenderer
 			if (nullptr != shaderLanguageName)
 			{
 				// Optimization: Check for shader language name pointer match, first
-				if (shaderLanguageName == ShaderLanguageGlsl::NAME || !stricmp(shaderLanguageName, ShaderLanguageGlsl::NAME))
+				if (shaderLanguageName == ShaderLanguageMonolithic::NAME || !stricmp(shaderLanguageName, ShaderLanguageMonolithic::NAME))
 				{
 					// "GL_ARB_shader_objects" required
 					if (mExtensions->isGL_ARB_shader_objects())
 					{
-						// If required, create the GLSL shader language instance right now
-						if (nullptr == mShaderLanguageGlsl)
+						// If required, create the monolithic shader language instance right now
+						if (nullptr == mShaderLanguage)
 						{
-							mShaderLanguageGlsl = new ShaderLanguageGlsl(*this);
-							mShaderLanguageGlsl->addReference();	// Internal renderer reference
+							mShaderLanguage = new ShaderLanguageMonolithic(*this);
+							mShaderLanguage->addReference();	// Internal renderer reference
 						}
 
 						// Return the shader language instance
-						return mShaderLanguageGlsl;
+						return mShaderLanguage;
 					}
 				}
 			}
 			else
 			{
-				// Return the GLSL shader language instance as default
-				return getShaderLanguage(ShaderLanguageGlsl::NAME);
+				// Return the shader language instance as default
+				return getShaderLanguage(ShaderLanguageMonolithic::NAME);
 			}
 		}
 
@@ -1953,7 +1953,7 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_ARB_shader_objects())
 			{
 				// Backup OpenGL program identifier
-				mOpenGLProgram = static_cast<ProgramGlsl*>(program)->getOpenGLProgram();
+				mOpenGLProgram = static_cast<ProgramMonolithic*>(program)->getOpenGLProgram();
 
 				// Bind the program
 				glUseProgramObjectARB(mOpenGLProgram);

@@ -27,7 +27,26 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/ProgramGlsl.h"
+#include <Renderer/IProgram.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class IRootSignature;
+	struct VertexAttributes;
+}
+namespace OpenGLRenderer
+{
+	class OpenGLRenderer;
+	class VertexShaderMonolithic;
+	class GeometryShaderMonolithic;
+	class FragmentShaderMonolithic;
+	class TessellationControlShaderMonolithic;
+	class TessellationEvaluationShaderMonolithic;
+}
 
 
 //[-------------------------------------------------------]
@@ -42,9 +61,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    GLSL program class, effective direct state access (DSA)
+	*    Monolithic program class
 	*/
-	class ProgramGlslDsa : public ProgramGlsl
+	class ProgramMonolithic : public Renderer::IProgram
 	{
 
 
@@ -62,39 +81,65 @@ namespace OpenGLRenderer
 		*    Root signature
 		*  @param[in] vertexAttributes
 		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
-		*  @param[in] vertexShaderGlsl
+		*  @param[in] vertexShaderMonolithic
 		*    Vertex shader the program is using, can be a null pointer
-		*  @param[in] tessellationControlShaderGlsl
+		*  @param[in] tessellationControlShaderMonolithic
 		*    Tessellation control shader the program is using, can be a null pointer
-		*  @param[in] tessellationEvaluationShaderGlsl
+		*  @param[in] tessellationEvaluationShaderMonolithic
 		*    Tessellation evaluation shader the program is using, can be a null pointer
-		*  @param[in] geometryShaderGlsl
+		*  @param[in] geometryShaderMonolithic
 		*    Geometry shader the program is using, can be a null pointer
-		*  @param[in] fragmentShaderGlsl
+		*  @param[in] fragmentShaderMonolithic
 		*    Fragment shader the program is using, can be a null pointer
 		*
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramGlslDsa(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl);
+		ProgramMonolithic(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderMonolithic *vertexShaderMonolithic, TessellationControlShaderMonolithic *tessellationControlShaderMonolithic, TessellationEvaluationShaderMonolithic *tessellationEvaluationShaderMonolithic, GeometryShaderMonolithic *geometryShaderMonolithic, FragmentShaderMonolithic *fragmentShaderMonolithic);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ProgramGlslDsa();
+		virtual ~ProgramMonolithic();
+
+		/**
+		*  @brief
+		*    Return the OpenGL program
+		*
+		*  @return
+		*    The OpenGL program, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*/
+		inline uint32_t getOpenGLProgram() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	public:
+		virtual handle getUniformHandle(const char *uniformName) override;
+		virtual void setUniform1i(handle uniformHandle, int value) override;
 		virtual void setUniform1f(handle uniformHandle, float value) override;
 		virtual void setUniform2fv(handle uniformHandle, const float *value) override;
 		virtual void setUniform3fv(handle uniformHandle, const float *value) override;
 		virtual void setUniform4fv(handle uniformHandle, const float *value) override;
 		virtual void setUniformMatrix3fv(handle uniformHandle, const float *value) override;
 		virtual void setUniformMatrix4fv(handle uniformHandle, const float *value) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected data                                        ]
+	//[-------------------------------------------------------]
+	protected:
+		uint32_t mOpenGLProgram;	///< OpenGL program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		uint32_t mNumberOfRootSignatureParameters;				///< Number of root signature parameters
+		int32_t* mRootSignatureParameterIndexToUniformLocation;	///< Root signature parameter index to OpenGL uniform location mapping, can be a null pointer (type "GLint" not used in here in order to keep the header slim)
 
 
 	};
@@ -104,3 +149,9 @@ namespace OpenGLRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "OpenGLRenderer/Shader/Monolithic/ProgramMonolithic.inl"

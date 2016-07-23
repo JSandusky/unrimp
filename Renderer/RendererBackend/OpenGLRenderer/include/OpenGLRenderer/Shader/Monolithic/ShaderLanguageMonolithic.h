@@ -53,9 +53,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    GLSL shader language class
+	*    Monolithic shader language class
 	*/
-	class ShaderLanguageGlsl : public Renderer::IShaderLanguage
+	class ShaderLanguageMonolithic : public Renderer::IShaderLanguage
 	{
 
 
@@ -96,13 +96,13 @@ namespace OpenGLRenderer
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
 		*/
-		explicit ShaderLanguageGlsl(OpenGLRenderer &openGLRenderer);
+		explicit ShaderLanguageMonolithic(OpenGLRenderer &openGLRenderer);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ShaderLanguageGlsl();
+		virtual ~ShaderLanguageMonolithic();
 
 
 	//[-------------------------------------------------------]

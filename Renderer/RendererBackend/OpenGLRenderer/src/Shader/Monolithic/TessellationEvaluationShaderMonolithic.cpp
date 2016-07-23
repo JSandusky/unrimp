@@ -19,6 +19,14 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "OpenGLRenderer/Shader/Monolithic/TessellationEvaluationShaderMonolithic.h"
+#include "OpenGLRenderer/Shader/Monolithic/ShaderLanguageMonolithic.h"
+#include "OpenGLRenderer/Extensions.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -28,9 +36,34 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t FragmentShaderGlsl::getOpenGLShader() const
+	TessellationEvaluationShaderMonolithic::TessellationEvaluationShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t):
+		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mOpenGLShader(0)
 	{
-		return mOpenGLShader;
+		// Nothing to do in here
+	}
+
+	TessellationEvaluationShaderMonolithic::TessellationEvaluationShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
+		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mOpenGLShader(ShaderLanguageMonolithic::loadShader(GL_TESS_EVALUATION_SHADER, sourceCode))
+	{
+		// Nothing to do in here
+	}
+
+	TessellationEvaluationShaderMonolithic::~TessellationEvaluationShaderMonolithic()
+	{
+		// Destroy the OpenGL shader
+		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
+		glDeleteObjectARB(mOpenGLShader);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IShader methods              ]
+	//[-------------------------------------------------------]
+	const char *TessellationEvaluationShaderMonolithic::getShaderLanguageName() const
+	{
+		return ShaderLanguageMonolithic::NAME;
 	}
 
 

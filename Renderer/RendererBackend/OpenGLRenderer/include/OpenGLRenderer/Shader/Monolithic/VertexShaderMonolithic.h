@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IFragmentShader.h>
+#include <Renderer/IVertexShader.h>
 
 
 //[-------------------------------------------------------]
@@ -51,9 +51,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    GLSL fragment shader ("pixel shader" in Direct3D terminology) class
+	*    Monolithic vertex shader class
 	*/
-	class FragmentShaderGlsl : public Renderer::IFragmentShader
+	class VertexShaderMonolithic : public Renderer::IVertexShader
 	{
 
 
@@ -63,7 +63,7 @@ namespace OpenGLRenderer
 	public:
 		/**
 		*  @brief
-		*    Constructor for creating a fragment shader from shader bytecode
+		*    Constructor for creating a vertex shader from shader bytecode
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
@@ -72,24 +72,24 @@ namespace OpenGLRenderer
 		*  @param[in] numberOfBytes
 		*    Number of bytes in the bytecode
 		*/
-		FragmentShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		VertexShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes);
 
 		/**
 		*  @brief
-		*    Constructor for creating a fragment shader from shader source code
+		*    Constructor for creating a vertex shader from shader source code
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		FragmentShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode);
+		VertexShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~FragmentShaderGlsl();
+		virtual ~VertexShaderMonolithic();
 
 		/**
 		*  @brief
@@ -127,4 +127,4 @@ namespace OpenGLRenderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/FragmentShaderGlsl.inl"
+#include "OpenGLRenderer/Shader/Monolithic/VertexShaderMonolithic.inl"

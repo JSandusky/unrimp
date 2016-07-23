@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/ITessellationControlShader.h>
+#include <Renderer/IFragmentShader.h>
 
 
 //[-------------------------------------------------------]
@@ -51,9 +51,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    GLSL tessellation control shader ("hull shader" in Direct3D terminology) class
+	*    Monolithic fragment shader ("pixel shader" in Direct3D terminology) class
 	*/
-	class TessellationControlShaderGlsl : public Renderer::ITessellationControlShader
+	class FragmentShaderMonolithic : public Renderer::IFragmentShader
 	{
 
 
@@ -63,7 +63,7 @@ namespace OpenGLRenderer
 	public:
 		/**
 		*  @brief
-		*    Constructor for creating a tessellation control shader ("hull shader" in Direct3D terminology) shader from shader bytecode
+		*    Constructor for creating a fragment shader from shader bytecode
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
@@ -72,24 +72,24 @@ namespace OpenGLRenderer
 		*  @param[in] numberOfBytes
 		*    Number of bytes in the bytecode
 		*/
-		TessellationControlShaderGlsl(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		FragmentShaderMonolithic(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes);
 
 		/**
 		*  @brief
-		*    Constructor for creating a tessellation control shader ("hull shader" in Direct3D terminology) shader from shader source code
+		*    Constructor for creating a fragment shader from shader source code
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		TessellationControlShaderGlsl(OpenGLRenderer &openGLRenderer, const char *sourceCode);
+		FragmentShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TessellationControlShaderGlsl();
+		virtual ~FragmentShaderMonolithic();
 
 		/**
 		*  @brief
@@ -127,4 +127,4 @@ namespace OpenGLRenderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Shader/TessellationControlShaderGlsl.inl"
+#include "OpenGLRenderer/Shader/Monolithic/FragmentShaderMonolithic.inl"
