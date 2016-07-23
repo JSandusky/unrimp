@@ -224,7 +224,7 @@ void FirstGpgpu::onInitialization()
 			const char *vertexShaderSourceCode = nullptr;
 			const char *fragmentShaderSourceCode_ContentGeneration = nullptr;
 			const char *fragmentShaderSourceCode_ContentProcessing = nullptr;
-			#include "FirstGpgpu_GLSL_110.h"
+			#include "FirstGpgpu_GLSL_130.h"
 			#include "FirstGpgpu_GLSL_ES2.h"
 			#include "FirstGpgpu_HLSL_D3D9.h"
 			#include "FirstGpgpu_HLSL_D3D10_D3D11_D3D12.h"

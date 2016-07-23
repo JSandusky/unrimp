@@ -37,16 +37,23 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
 // Attribute input/output
-attribute vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+in  vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+out vec2 TexCoord;	// Normalized texture coordinate as output
 
 // Programs
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	gl_Position = vec4(Position, 0.0, 1.0);
+
+	// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
+	// -> In OpenGL, the texture origin is left/bottom which maps well to clip space coordinates
+	// -> (-1,-1) -> (0,0)
+	// -> (1,1) -> (1,1)
+	TexCoord = Position.xy * 0.5 + 0.5;
 }
 );	// STRINGIFY
 
@@ -55,14 +62,19 @@ void main()
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
-STRINGIFY(
+fragmentShaderSourceCode_Definitions = "#version 130\n#define FXAA_GLSL_130 1\n#define FXAA_PRESET 5\n";	// For "Fxaa_PostProcessing.h", OpenGL 3.0
+fragmentShaderSourceCode = STRINGIFY(
+// Attribute input/output
+in vec2 TexCoord;	// Normalized texture coordinate as input
+
+// Uniforms
+uniform sampler2D DiffuseMap;
+
 // Programs
 void main()
 {
-	// Return white
-	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+	// Call the FXAA shader, lucky us that we don't have to write an own implementation
+	gl_FragColor = vec4(FxaaPixelShader(TexCoord, DiffuseMap, RCPFRAME), 1.0);
 }
 );	// STRINGIFY
 

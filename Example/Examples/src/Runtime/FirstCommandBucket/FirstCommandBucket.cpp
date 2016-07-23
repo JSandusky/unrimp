@@ -166,7 +166,7 @@ void FirstCommandBucket::onInitialization()
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "FirstCommandBucket_GLSL_110.h"
+				#include "FirstCommandBucket_GLSL_130.h"
 				#include "FirstCommandBucket_GLSL_140.h"
 				#include "FirstCommandBucket_GLSL_ES2.h"
 				#include "FirstCommandBucket_HLSL_D3D9.h"

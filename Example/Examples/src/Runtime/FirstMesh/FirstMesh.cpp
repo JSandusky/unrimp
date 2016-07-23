@@ -165,7 +165,7 @@ void FirstMesh::onInitialization()
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderProfile = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "FirstMesh_GLSL_110.h"
+				#include "FirstMesh_GLSL_130.h"
 				#include "FirstMesh_GLSL_ES2.h"
 				#include "FirstMesh_HLSL_D3D9.h"
 				#include "FirstMesh_HLSL_D3D10_D3D11_D3D12.h"

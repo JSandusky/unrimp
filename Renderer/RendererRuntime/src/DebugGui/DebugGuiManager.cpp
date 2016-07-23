@@ -329,7 +329,7 @@ namespace RendererRuntime
 					const char *fragmentShaderSourceCode = nullptr;
 					#pragma warning(push)
 						#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
-						#include "Detail/Shader/DebugGui_GLSL_110.h"
+						#include "Detail/Shader/DebugGui_GLSL_130.h"
 						#include "Detail/Shader/DebugGui_GLSL_ES2.h"
 						#include "Detail/Shader/DebugGui_HLSL_D3D9.h"
 						#include "Detail/Shader/DebugGui_HLSL_D3D10_D3D11_D3D12.h"

@@ -37,11 +37,11 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
 // Attribute input/output
-attribute vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
-varying vec2 TexCoord;		// Normalized texture coordinate as output
+in  vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+out vec2 TexCoord;	// Normalized texture coordinate as output
 
 // Programs
 void main()
@@ -58,10 +58,10 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
 // Attribute input/output
-varying vec2 TexCoord;	// Normalized texture coordinate as input
+in vec2 TexCoord;	// Normalized texture coordinate as input
 
 // Uniforms
 uniform sampler2D DiffuseMap;

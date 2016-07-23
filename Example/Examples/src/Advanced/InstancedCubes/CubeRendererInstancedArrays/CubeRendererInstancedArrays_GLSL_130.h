@@ -37,23 +37,23 @@ if (0 == strcmp(mRenderer->getName(), "OpenGL") && !mRenderer->getCapabilities()
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
 // Attribute input - Mesh data
-attribute vec3 Position;	// Object space vertex position input
-attribute vec2 TexCoord;
-attribute vec3 Normal;
+in vec3 Position;	// Object space vertex position input
+in vec2 TexCoord;
+in vec3 Normal;
 
 // Attribute input - Per-instance data
-attribute vec4 PerInstancePositionTexture;	// Position: xyz=Position, w=Slice of the 2D texture array to use
-attribute vec4 PerInstanceRotationScale;	// Rotation: Rotation quaternion (xyz) and scale (w)
-											// -> We don't need to store the w component of the quaternion. It's normalized and storing
-											//    three components while recomputing the fourths component is be sufficient.
+in vec4 PerInstancePositionTexture;	// Position: xyz=Position, w=Slice of the 2D texture array to use
+in vec4 PerInstanceRotationScale;	// Rotation: Rotation quaternion (xyz) and scale (w)
+									// -> We don't need to store the w component of the quaternion. It's normalized and storing
+									//    three components while recomputing the fourths component is be sufficient.
 
 // Attribute output
-varying vec3 WorldPositionVs;
-varying vec2 TexCoordVs;
-varying vec3 NormalVs;
+out vec3 WorldPositionVs;
+out vec2 TexCoordVs;
+out vec3 NormalVs;
 
 // Uniforms
 uniform mat4 MVP;
@@ -162,12 +162,12 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
 // Attribute input/output
-varying vec3 WorldPositionVs;
-varying vec2 TexCoordVs;
-varying vec3 NormalVs;
+in vec3 WorldPositionVs;
+in vec2 TexCoordVs;
+in vec3 NormalVs;
 
 // Uniforms
 uniform sampler2D DiffuseMap;		// Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension

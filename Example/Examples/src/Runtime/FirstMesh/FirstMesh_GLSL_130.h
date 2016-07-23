@@ -37,16 +37,16 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
 // Attribute input/output
-attribute vec3 Position;	// Object space vertex position
-attribute vec2 TexCoord;	// 16 bit texture coordinate
-varying   vec2 TexCoordVs;	// Texture coordinate
-attribute vec4 QTangent;	// 16 bit QTangent
-varying   vec3 TangentVs;	// Tangent space to view space, x-axis
-varying   vec3 BinormalVs;	// Tangent space to view space, y-axis
-varying   vec3 NormalVs;	// Tangent space to view space, z-axis
+in  vec3 Position;		// Object space vertex position
+in  vec2 TexCoord;		// 16 bit texture coordinate
+out vec2 TexCoordVs;	// Texture coordinate
+in  vec4 QTangent;		// 16 bit QTangent
+out vec3 TangentVs;		// Tangent space to view space, x-axis
+out vec3 BinormalVs;	// Tangent space to view space, y-axis
+out vec3 NormalVs;		// Tangent space to view space, z-axis
 
 // Uniforms
 uniform mat4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
@@ -94,13 +94,13 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
 // Attribute input/output
-varying vec2 TexCoordVs;	// Texture coordinate
-varying vec3 TangentVs;		// Tangent space to view space, x-axis
-varying vec3 BinormalVs;	// Tangent space to view space, y-axis
-varying vec3 NormalVs;		// Tangent space to view space, z-axis
+in vec2 TexCoordVs;	// Texture coordinate
+in vec3 TangentVs;	// Tangent space to view space, x-axis
+in vec3 BinormalVs;	// Tangent space to view space, y-axis
+in vec3 NormalVs;	// Tangent space to view space, z-axis
 
 // Uniforms
 uniform sampler2D DiffuseMap;

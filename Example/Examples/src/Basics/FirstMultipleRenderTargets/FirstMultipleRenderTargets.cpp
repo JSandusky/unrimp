@@ -159,7 +159,7 @@ void FirstMultipleRenderTargets::onInitialization()
 					const char *vertexShaderSourceCode = nullptr;
 					const char *fragmentShaderSourceCode_MultipleRenderTargets = nullptr;
 					const char *fragmentShaderSourceCode = nullptr;
-					#include "FirstMultipleRenderTargets_GLSL_110.h"
+					#include "FirstMultipleRenderTargets_GLSL_130.h"
 					#include "FirstMultipleRenderTargets_GLSL_ES2.h"
 					#include "FirstMultipleRenderTargets_HLSL_D3D9.h"
 					#include "FirstMultipleRenderTargets_HLSL_D3D10_D3D11_D3D12.h"

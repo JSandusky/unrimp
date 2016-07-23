@@ -153,9 +153,6 @@
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_Null.h">
       <Filter>Basics\FirstInstancing</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_110.h">
-      <Filter>Basics\FirstInstancing</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_Null.h">
       <Filter>Basics\FirstInstancing</Filter>
     </ClInclude>
@@ -177,9 +174,6 @@
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets.h">
       <Filter>Basics\FirstMultipleRenderTargets</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_110.h">
-      <Filter>Basics\FirstMultipleRenderTargets</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_ES2.h">
       <Filter>Basics\FirstMultipleSwapChains</Filter>
     </ClInclude>
@@ -188,12 +182,6 @@
     </ClInclude>
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains.h">
       <Filter>Basics\FirstMultipleSwapChains</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_110.h">
-      <Filter>Basics\FirstMultipleSwapChains</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_110.h">
-      <Filter>Basics\FirstRenderToTexture</Filter>
     </ClInclude>
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_ES2.h">
       <Filter>Basics\FirstRenderToTexture</Filter>
@@ -216,9 +204,6 @@
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_Null.h">
       <Filter>Basics\FirstTessellation</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_GLSL_110.h">
-      <Filter>Basics\FirstTexture</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstTexture\FirstTexture_GLSL_ES2.h">
       <Filter>Basics\FirstTexture</Filter>
     </ClInclude>
@@ -239,12 +224,6 @@
     </ClInclude>
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle.h">
       <Filter>Basics\FirstTriangle</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_110.h">
-      <Filter>Basics\FirstTriangle</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_110.h">
-      <Filter>Basics\VertexBuffer</Filter>
     </ClInclude>
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_ES2.h">
       <Filter>Basics\VertexBuffer</Filter>
@@ -267,12 +246,6 @@
     <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu.h">
       <Filter>Advanced\FirstGpgpu</Filter>
     </ClInclude>
-    <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_GLSL_110.h">
-      <Filter>Advanced\FirstGpgpu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_GLSL_110.h">
-      <Filter>Advanced\FirstPostProcessing</Filter>
-    </ClInclude>
     <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_GLSL_ES2.h">
       <Filter>Advanced\FirstPostProcessing</Filter>
     </ClInclude>
@@ -294,9 +267,6 @@
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_Null.h">
       <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_120.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_ES2.h">
       <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
@@ -307,9 +277,6 @@
       <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_GLSL_120.h">
       <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
     <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_GLSL_400.h">
@@ -332,9 +299,6 @@
     </ClInclude>
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\BatchDrawInstanced.h">
       <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_110.h">
-      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
     </ClInclude>
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_140.h">
       <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
@@ -372,13 +336,7 @@
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_Null.h">
       <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_110.h">
-      <Filter>Runtime\FirstCommandBucket</Filter>
-    </ClInclude>
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_HLSL_D3D9.h">
-      <Filter>Runtime\FirstCommandBucket</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_140.h">
       <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_ES2.h">
@@ -391,9 +349,6 @@
       <Filter>Runtime\FirstMesh</Filter>
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh.h">
-      <Filter>Runtime\FirstMesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_110.h">
       <Filter>Runtime\FirstMesh</Filter>
     </ClInclude>
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_HLSL_D3D9_D3D10_D3D11_D3D12.h">
@@ -464,6 +419,51 @@
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.h">
       <Filter>Runtime\FirstCompositor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_130.h">
+      <Filter>Basics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_130.h">
+      <Filter>Basics\FirstTriangle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_GLSL_130.h">
+      <Filter>Basics\FirstTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_130.h">
+      <Filter>Runtime\FirstMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_130.h">
+      <Filter>Runtime\FirstCommandBucket</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_140.h">
+      <Filter>Runtime\FirstCommandBucket</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_GLSL_130.h">
+      <Filter>Advanced\FirstGpgpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_GLSL_130.h">
+      <Filter>Advanced\FirstPostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_130.h">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_130.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_130.h">
+      <Filter>Basics\FirstMultipleSwapChains</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_130.h">
+      <Filter>Basics\FirstRenderToTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_130.h">
+      <Filter>Basics\FirstMultipleRenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_GLSL_130.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_130.h">
+      <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

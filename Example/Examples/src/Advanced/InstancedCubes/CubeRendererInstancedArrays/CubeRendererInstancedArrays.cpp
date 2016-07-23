@@ -249,7 +249,7 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 		// Get the shader source code (outsourced to keep an overview)
 		const char *vertexShaderSourceCode = nullptr;
 		const char *fragmentShaderSourceCode = nullptr;
-		#include "CubeRendererInstancedArrays_GLSL_110.h"
+		#include "CubeRendererInstancedArrays_GLSL_130.h"
 		#include "CubeRendererInstancedArrays_GLSL_140.h"
 		#include "CubeRendererInstancedArrays_HLSL_D3D10_D3D11_D3D12.h"
 		#include "CubeRendererInstancedArrays_HLSL_D3D9.h"

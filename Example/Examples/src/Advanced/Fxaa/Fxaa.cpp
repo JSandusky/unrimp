@@ -134,7 +134,7 @@ void Fxaa::onInitialization()
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "Fxaa_SceneRendering_GLSL_120.h"
+				#include "Fxaa_SceneRendering_GLSL_130.h"
 				#include "Fxaa_SceneRendering_GLSL_ES2.h"
 				#include "Fxaa_SceneRendering_HLSL_D3D9_D3D10_D3D11_D3D12.h"
 				#include "Fxaa_SceneRendering_Null.h"
@@ -334,7 +334,7 @@ void Fxaa::recreatePostProcessingProgram()
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode_Definitions = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "Fxaa_PostProcessing_GLSL_120.h"
+				#include "Fxaa_PostProcessing_GLSL_130.h"
 				#include "Fxaa_PostProcessing_GLSL_ES2.h"
 				#include "Fxaa_PostProcessing_HLSL_D3D9.h"
 				#include "Fxaa_PostProcessing_HLSL_D3D10_D3D11_D3D12.h"

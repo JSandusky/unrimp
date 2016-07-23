@@ -171,7 +171,7 @@ void FirstInstancing::onInitialization()
 					// Get the shader source code (outsourced to keep an overview)
 					const char *vertexShaderSourceCode = nullptr;
 					const char *fragmentShaderSourceCode = nullptr;
-					#include "FirstInstancing_InstancedArrays_GLSL_110.h"
+					#include "FirstInstancing_InstancedArrays_GLSL_130.h"
 					#include "FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11_D3D12.h"
 					#include "FirstInstancing_InstancedArrays_Null.h"
 

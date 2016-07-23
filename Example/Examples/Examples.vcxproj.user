@@ -4,7 +4,7 @@
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)d_dynamic\ExamplesD.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)\bin\$(PlatformTarget)d_dynamic\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>FirstScene -r Direct3D11</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>Fxaa -r OpenGL</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)_static\ExamplesStatic.exe</LocalDebuggerCommand>
@@ -16,7 +16,7 @@
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)_dynamic\Examples.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)\bin\$(PlatformTarget)_dynamic\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>FirstCompositor -r OpenGLES2</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>FirstScene -r Direct3D11</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
     <LocalDebuggerCommand>$(SolutionDir)\bin\$(PlatformTarget)d_static\ExamplesStaticD.exe</LocalDebuggerCommand>

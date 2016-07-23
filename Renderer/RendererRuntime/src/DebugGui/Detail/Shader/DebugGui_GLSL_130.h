@@ -37,14 +37,14 @@ if (0 == strcmp(renderer.getName(), "OpenGL"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
 // Attribute input/output
-attribute vec2 Position;	// Object space vertex position as input, left/bottom is (0,0) and right/top is (1,1)
-attribute vec2 TexCoord;	// Normalized texture coordinate as input
-varying   vec2 TexCoordVs;	// Normalized texture coordinate as output
-attribute vec4 Color;		// Color as input
-varying   vec4 ColorVs;		// Color as output
+in  vec2 Position;		// Object space vertex position as input, left/bottom is (0,0) and right/top is (1,1)
+in  vec2 TexCoord;		// Normalized texture coordinate as input
+out vec2 TexCoordVs;	// Normalized texture coordinate as output
+in  vec4 Color;			// Color as input
+out vec4 ColorVs;		// Color as output
 
 // Uniforms
 uniform mat4 ObjectSpaceToClipSpaceMatrix;
@@ -69,11 +69,11 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
 // Attribute input/output
-varying vec2 TexCoordVs;	// Normalized texture coordinate as input
-varying vec4 ColorVs;
+in vec2 TexCoordVs;	// Normalized texture coordinate as input
+in vec4 ColorVs;
 
 // Uniforms
 uniform sampler2D GlyphMap;	// Glyph atlas texture map

@@ -37,16 +37,21 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 120\n"	// OpenGL 2.1
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
 // Attribute input/output
-attribute vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+in  vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+in  vec3 Color;		// RGB color as input
+out vec3 ColorVS;	// RGB color as output
 
 // Programs
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	gl_Position = vec4(Position, 0.0, 1.0);
+
+	// Pass through the color
+	ColorVS = Color;
 }
 );	// STRINGIFY
 
@@ -56,13 +61,16 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 120\n"	// OpenGL 2.1
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
+// Attribute input/output
+in vec3 ColorVS;	// RGB color as input
+
 // Programs
 void main()
 {
-	// Return the color white
-	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+	// Return white
+	gl_FragColor = vec4(ColorVS, 1.0);
 }
 );	// STRINGIFY
 

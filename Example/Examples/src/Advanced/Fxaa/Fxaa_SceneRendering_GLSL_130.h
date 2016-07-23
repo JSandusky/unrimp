@@ -37,18 +37,16 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
 // Attribute input/output
-attribute vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
-varying vec2 TexCoord;		// Normalized texture coordinate as output
+in vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
 
 // Programs
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	gl_Position = vec4(Position, 0.0, 1.0);
-	TexCoord = Position.xy;
 }
 );	// STRINGIFY
 
@@ -58,19 +56,13 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 110\n"	// OpenGL 2.0
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
-// Attribute input/output
-varying vec2 TexCoord;	// Normalized texture coordinate as input
-
-// Uniforms
-uniform sampler2D DiffuseMap;
-
 // Programs
 void main()
 {
-	// Fetch the texel at the given texture coordinate and return it's color
-	gl_FragColor = texture2D(DiffuseMap, TexCoord);
+	// Return the color white
+	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
 );	// STRINGIFY
 

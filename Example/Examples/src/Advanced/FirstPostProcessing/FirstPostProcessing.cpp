@@ -170,7 +170,7 @@ void FirstPostProcessing::onInitialization()
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode_SceneRendering = nullptr;
 				const char *fragmentShaderSourceCode_PostProcessing = nullptr;
-				#include "FirstPostProcessing_GLSL_110.h"
+				#include "FirstPostProcessing_GLSL_130.h"
 				#include "FirstPostProcessing_GLSL_ES2.h"
 				#include "FirstPostProcessing_HLSL_D3D9.h"
 				#include "FirstPostProcessing_HLSL_D3D10_D3D11_D3D12.h"

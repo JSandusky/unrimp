@@ -37,23 +37,19 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 120\n"	// OpenGL 2.1
+"#version 130\n"	// OpenGL 3.0
 STRINGIFY(
-// Attribute input/output
-attribute vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
-varying vec2 TexCoord;		// Normalized texture coordinate as output
+// Attribute input - Mesh data
+in vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+
+// Attribute input - Per-instance data
+in float InstanceID;	// Simple instance ID in order to keep it similar to the "draw instanced" version on the right side (blue)
 
 // Programs
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(Position, 0.0, 1.0);
-
-	// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
-	// -> In OpenGL, the texture origin is left/bottom which maps well to clip space coordinates
-	// -> (-1,-1) -> (0,0)
-	// -> (1,1) -> (1,1)
-	TexCoord = Position.xy * 0.5 + 0.5;
+	gl_Position = vec4(Position.x, Position.y - InstanceID, 0.0, 1.0);
 }
 );	// STRINGIFY
 
@@ -62,19 +58,14 @@ void main()
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode_Definitions = "#version 120\n#define FXAA_GLSL_120 1\n#define FXAA_PRESET 5\n";	// For "Fxaa_PostProcessing.h", OpenGL 2.1
-fragmentShaderSourceCode = STRINGIFY(
-// Attribute input/output
-varying vec2 TexCoord;	// Normalized texture coordinate as input
-
-// Uniforms
-uniform sampler2D DiffuseMap;
-
+fragmentShaderSourceCode =
+"#version 130\n"	// OpenGL 3.0
+STRINGIFY(
 // Programs
 void main()
 {
-	// Call the FXAA shader, lucky us that we don't have to write an own implementation
-	gl_FragColor = vec4(FxaaPixelShader(TexCoord, DiffuseMap, RCPFRAME), 1.0);
+	// Return green
+	gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
 }
 );	// STRINGIFY
 
