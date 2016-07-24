@@ -62,11 +62,11 @@ namespace RendererRuntime
 		MOJOSHADER_freePreprocessData(preprocessData);
 
 		{ // TODO(co) The spaces all added over the place by the MojoShader c-preprocessor don't make things easier. Horrible hack, which is good enough for now (no time to implement a real solution).
-			size_t pos = result.find("# version 410");
+			size_t pos = result.find("# version 410 core");
 			if (pos != std::string::npos)
 			{
-				static const size_t numberOfCharacters = strlen("# version 410\n");
-				result.replace(pos, numberOfCharacters, "#version  410\n");	// Performance: Don't change the length of the string
+				static const size_t numberOfCharacters = strlen("# version 410 core\n");
+				result.replace(pos, numberOfCharacters, "#version  410 core\n");	// Performance: Don't change the length of the string
 			}
 		}
 		{ // TODO(co) The MojoShader spaces make it really nasty, e.g. "sampleOffsets[15]" will become "sampleOffsets [ 15 ]" breaking GLSL shaders

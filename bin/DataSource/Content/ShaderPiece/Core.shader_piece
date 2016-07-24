@@ -106,7 +106,7 @@
 	// - https://msdn.microsoft.com/en-us/library/windows/apps/dn166865.aspx
 	// for a shader language mapping
 	@piece(SetCrossPlatformSettings)
-		#version 410	// This is what Mac OS X 10.11 and similar support, no fancy 420, no "#extension GL_ARB_shading_language_420pack : enable" and hence no "layout(binding)" usage possible (no problem, we're using material blueprints with a root signature)
+		#version 410 core	// This is what Mac OS X 10.11 and similar support, no fancy 420, no "#extension GL_ARB_shading_language_420pack : enable" and hence no "layout(binding)" usage possible (no problem, we're using material blueprints with a root signature)
 
 		// Shader attribute input
 		#define INPUT_BEGIN

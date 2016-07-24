@@ -254,13 +254,10 @@ namespace OpenGLRenderer
 						// We want an OpenGL context
 						WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
 						WGL_CONTEXT_MINOR_VERSION_ARB, 1,
+						WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
 						// -> "WGL_CONTEXT_DEBUG_BIT_ARB" comes from the "GL_ARB_debug_output"-extension
-						// TODO(co) Make it possible to activate "WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB" from the outside
 						#ifdef RENDERER_OUTPUT_DEBUG
 							WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
-						//	WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,	// Error messages like "Implicit version number 110 not supported by GL3 forward compatible context" might occur
-						#else
-						//	WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,	// Error messages like "Implicit version number 110 not supported by GL3 forward compatible context" might occur
 						#endif
 						// Done
 						0
