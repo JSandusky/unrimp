@@ -38,23 +38,23 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	FragmentShaderSeparate::FragmentShaderSeparate(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(0)
+		mOpenGLShaderProgram(0)
 	{
 		// Nothing to do in here
 	}
 
 	FragmentShaderSeparate::FragmentShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(ShaderLanguageSeparate::loadShader(GL_FRAGMENT_SHADER_ARB, sourceCode))
+		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShader(GL_FRAGMENT_SHADER_ARB, sourceCode))
 	{
 		// Nothing to do in here
 	}
 
 	FragmentShaderSeparate::~FragmentShaderSeparate()
 	{
-		// Destroy the OpenGL shader
+		// Destroy the OpenGL shader program
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteObjectARB(mOpenGLShader);
+		glDeleteProgram(mOpenGLShaderProgram);
 	}
 
 

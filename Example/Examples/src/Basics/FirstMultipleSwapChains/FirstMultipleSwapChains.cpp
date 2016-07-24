@@ -204,7 +204,7 @@ void FirstMultipleSwapChains::onInitialization()
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "FirstMultipleSwapChains_GLSL_130.h"
+				#include "FirstMultipleSwapChains_GLSL_410.h"
 				#include "FirstMultipleSwapChains_GLSL_ES2.h"
 				#include "FirstMultipleSwapChains_HLSL_D3D9_D3D10_D3D11_D3D12.h"
 				#include "FirstMultipleSwapChains_Null.h"

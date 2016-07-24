@@ -910,7 +910,18 @@ namespace OpenGLRenderer
 		{
 			// Load the entry points
 			bool result = true;	// Success by default
+			IMPORT_FUNC(glCreateShaderProgramv)
+			IMPORT_FUNC(glDeleteProgram)
+			IMPORT_FUNC(glGenProgramPipelines)
+			IMPORT_FUNC(glDeleteProgramPipelines)
+			IMPORT_FUNC(glBindProgramPipeline)
+			IMPORT_FUNC(glUseProgramStages)
+			IMPORT_FUNC(glValidateProgramPipeline)
+			IMPORT_FUNC(glGetProgramPipelineiv)
+			IMPORT_FUNC(glGetProgramPipelineInfoLog)
 			mGL_ARB_separate_shader_objects = result;
+
+			mGL_ARB_separate_shader_objects = false; // TODO(co) "GL_ARB_separate_shader_objects" support is work in progress
 		}
 
 		// GL_ARB_get_programinary

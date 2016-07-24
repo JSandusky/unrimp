@@ -36,31 +36,31 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) :
+	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(0),
-		mOpenGLGsInputPrimitiveTopology(static_cast<int>(gsInputPrimitiveTopology)),	// The "Renderer::GsInputPrimitiveTopology" values directly map to OpenGL constants, do not change them
-		mOpenGLGsOutputPrimitiveTopology(static_cast<int>(gsOutputPrimitiveTopology)),	// The "Renderer::GsOutputPrimitiveTopology" values directly map to OpenGL constants, do not change them
-		mNumberOfOutputVertices(numberOfOutputVertices)
+		mOpenGLShaderProgram(0)
 	{
 		// Nothing to do in here
 	}
 
 	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(ShaderLanguageSeparate::loadShader(GL_GEOMETRY_SHADER_ARB, sourceCode)),
-		mOpenGLGsInputPrimitiveTopology(static_cast<int>(gsInputPrimitiveTopology)),	// The "Renderer::GsInputPrimitiveTopology" values directly map to OpenGL constants, do not change them
-		mOpenGLGsOutputPrimitiveTopology(static_cast<int>(gsOutputPrimitiveTopology)),	// The "Renderer::GsOutputPrimitiveTopology" values directly map to OpenGL constants, do not change them
-		mNumberOfOutputVertices(numberOfOutputVertices)
+		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShader(GL_GEOMETRY_SHADER_ARB, sourceCode))
 	{
-		// Nothing to do in here
+		// In modern GLSL, "geometry shader input primitive topology" & "geometry shader output primitive topology" & "number of output vertices" can be directly set within GLSL by writing e.g.
+		//   "layout(triangles) in;"
+		//   "layout(triangle_strip, max_vertices = 3) out;"
+		// -> To be able to support older GLSL versions, we have to provide this information also via OpenGL API functions
+		glProgramParameteriARB(mOpenGLShaderProgram, GL_GEOMETRY_INPUT_TYPE_ARB, static_cast<int>(gsInputPrimitiveTopology));	// The "Renderer::GsInputPrimitiveTopology" values directly map to OpenGL constants, do not change them
+		glProgramParameteriARB(mOpenGLShaderProgram, GL_GEOMETRY_OUTPUT_TYPE_ARB, static_cast<int>(gsOutputPrimitiveTopology));	// The "Renderer::GsOutputPrimitiveTopology" values directly map to OpenGL constants, do not change them
+		glProgramParameteriARB(mOpenGLShaderProgram, GL_GEOMETRY_VERTICES_OUT_ARB, static_cast<GLint>(numberOfOutputVertices));
 	}
 
 	GeometryShaderSeparate::~GeometryShaderSeparate()
 	{
-		// Destroy the OpenGL shader
+		// Destroy the OpenGL shader program
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteObjectARB(mOpenGLShader);
+		glDeleteProgram(mOpenGLShaderProgram);
 	}
 
 

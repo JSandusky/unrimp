@@ -35,44 +35,86 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
-// One vertex shader invocation per vertex
+// One vertex shader invocation per control point of the patch
 vertexShaderSourceCode =
-"#version 130\n"	// OpenGL 3.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
-in  vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
-out vec2 TexCoord;	// Normalized texture coordinate as output
+in  vec2 Position;	// Clip space control point position of the patch as input, left/bottom is (-1,-1) and right/top is (1,1)
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
+out vec2 vPosition;	// Clip space control point position of the patch as output, left/bottom is (-1,-1) and right/top is (1,1)
 
 // Programs
 void main()
 {
-	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(Position, 0.0, 1.0);
-
-	// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
-	// -> In OpenGL, the texture origin is left/bottom which maps well to clip space coordinates
-	// -> (-1,-1) -> (0,0)
-	// -> (1,1) -> (1,1)
-	TexCoord = Position.xy * 0.5 + 0.5;
+	// Pass through the clip space control point position of the patch, left/bottom is (-1,-1) and right/top is (1,1)
+	vPosition = Position;
 }
 );	// STRINGIFY
 
 
 //[-------------------------------------------------------]
-//[ Fragment shader source code                           ]
+//[ Tessellation control shader source code               ]
 //[-------------------------------------------------------]
-// One fragment shader invocation per fragment
-fragmentShaderSourceCode_MultipleRenderTargets =
-"#version 130\n"	// OpenGL 3.0
+// One tessellation control shader invocation per patch control point (with super-vision)
+tessellationControlShaderSourceCode =
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
-in vec2 TexCoord;	// Normalized texture coordinate as input
+layout(vertices = 3) out;
+in  vec2 vPosition[];	// Clip space control point position of the patch we received from the vertex shader (VS) as input
+out vec2 tcPosition[];	// Clip space control point position of the patch as output
 
 // Programs
 void main()
 {
-	gl_FragData[0] = vec4(1.0f, 0.0f, 0.0f, 0.0f);	// Red
-	gl_FragData[1] = vec4(0.0f, 0.0f, 1.0f, 0.0f);	// Blue
+	// Pass through the clip space control point position of the patch
+	tcPosition[gl_InvocationID] = vPosition[gl_InvocationID];
+
+	// If this is the first control point of the patch, inform the tessellator about the desired tessellation level
+	if (0 == gl_InvocationID)
+	{
+		gl_TessLevelOuter[0] = 1.0;
+		gl_TessLevelOuter[1] = 2.0;
+		gl_TessLevelOuter[2] = 3.0;
+		gl_TessLevelInner[0] = 4.0;
+	}
+}
+);	// STRINGIFY
+
+
+//[-------------------------------------------------------]
+//[ Tessellation evaluation shader source code            ]
+//[-------------------------------------------------------]
+// One tessellation evaluation shader invocation per point from tessellator
+tessellationEvaluationShaderSourceCode =
+"#version 410 core\n"	// OpenGL 4.1
+STRINGIFY(
+// Attribute input/output
+layout(triangles, equal_spacing, ccw) in;
+in vec2 tcPosition[];	// Clip space control point position of the patch we received from the tessellation control shader (TCS) as input
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
+
+// Programs
+void main()
+{
+	// The barycentric coordinate "gl_TessCoord" we received from the tessellator defines a location
+	// inside a triangle as a combination of the weight of the three control points of the patch
+
+	// Calculate the vertex clip space position inside the patch by using the barycentric coordinate
+	// we received from the tessellator and the three clip  space control points of the patch
+	vec2 p0 = gl_TessCoord.x*tcPosition[0];
+	vec2 p1 = gl_TessCoord.y*tcPosition[1];
+	vec2 p2 = gl_TessCoord.z*tcPosition[2];
+
+	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
+	gl_Position = vec4(p0 + p1 + p2, 0.0f, 1.0);
 }
 );	// STRINGIFY
 
@@ -82,27 +124,16 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 130\n"	// OpenGL 3.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
-in vec2 TexCoord;	// Normalized texture coordinate as input
-
-// Uniforms
-uniform sampler2D DiffuseMap0;
-uniform sampler2D DiffuseMap1;
+layout(location = 0, index = 0) out vec4 Color0;
 
 // Programs
 void main()
 {
-	// Fetch the texel at the given texture coordinate from render target 0 (which should contain a red triangle)
-	vec4 color0 = texture2D(DiffuseMap0, TexCoord);
-
-	// Fetch the texel at the given texture coordinate from render target 1 (which should contain a blue triangle)
-	vec4 color1 = texture2D(DiffuseMap1, TexCoord);
-
-	// Calculate the final color by subtracting the colors of the both render targets from white
-	// -> The result should be white or green
-	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0) - color0 - color1;
+	// Return white
+	Color0 = vec4(1.0, 1.0, 1.0, 1.0);
 }
 );	// STRINGIFY
 

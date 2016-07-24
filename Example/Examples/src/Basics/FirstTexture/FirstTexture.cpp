@@ -186,7 +186,7 @@ void FirstTexture::onInitialization()
 				// Get the shader source code (outsourced to keep an overview)
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "FirstTexture_GLSL_130.h"
+				#include "FirstTexture_GLSL_410.h"
 				#include "FirstTexture_GLSL_ES2.h"
 				#include "FirstTexture_HLSL_D3D9.h"
 				#include "FirstTexture_HLSL_D3D10_D3D11_D3D12.h"

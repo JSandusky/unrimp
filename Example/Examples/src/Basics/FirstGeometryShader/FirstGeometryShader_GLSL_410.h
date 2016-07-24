@@ -35,78 +35,63 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
-// One vertex shader invocation per control point of the patch
+// One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 400 core\n"	// OpenGL 4.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
-in  vec2 Position;	// Clip space control point position of the patch as input, left/bottom is (-1,-1) and right/top is (1,1)
-out vec2 vPosition;	// Clip space control point position of the patch as output, left/bottom is (-1,-1) and right/top is (1,1)
+in  float Position;	// Dummy
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
 
 // Programs
 void main()
 {
-	// Pass through the clip space control point position of the patch, left/bottom is (-1,-1) and right/top is (1,1)
-	vPosition = Position;
+	// Pass through the dummy
+	gl_Position = vec4(Position, 0.0, 0.0, 1.0);
 }
 );	// STRINGIFY
 
 
 //[-------------------------------------------------------]
-//[ Tessellation control shader source code               ]
+//[ Geometry shader source code                           ]
 //[-------------------------------------------------------]
-// One tessellation control shader invocation per patch control point (with super-vision)
-tessellationControlShaderSourceCode =
-"#version 400 core\n"	// OpenGL 4.0
+// One geometry shader invocation per primitive
+geometryShaderSourceCode =
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
-layout(vertices = 3) out;
-in  vec2 vPosition[];	// Clip space control point position of the patch we received from the vertex shader (VS) as input
-out vec2 tcPosition[];	// Clip space control point position of the patch as output
+layout(points) in;
+layout(triangle_strip, max_vertices = 3) out;
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
 
 // Programs
 void main()
 {
-	// Pass through the clip space control point position of the patch
-	tcPosition[gl_InvocationID] = vPosition[gl_InvocationID];
+	//				Vertex ID	Triangle on screen
+	//  0.0f, 1.0f,	// 0			0
+	//  1.0f, 0.0f,	// 1		   .   .
+	// -0.5f, 0.0f	// 2		  2.......1
 
-	// If this is the first control point of the patch, inform the tessellator about the desired tessellation level
-	if (0 == gl_InvocationID)
-	{
-		gl_TessLevelOuter[0] = 1.0;
-		gl_TessLevelOuter[1] = 2.0;
-		gl_TessLevelOuter[2] = 3.0;
-		gl_TessLevelInner[0] = 4.0;
-	}
-}
-);	// STRINGIFY
+	// Emit vertex 0 clip space position, left/bottom is (-1,-1) and right/top is (1,1)
+	gl_Position = vec4(0.0, 1.0, 0.0, 1.0);
+	EmitVertex();
 
+	// Emit vertex 1 clip space position, left/bottom is (-1,-1) and right/top is (1,1)
+	gl_Position = vec4(1.0, 0.0, 0.0, 1.0);
+	EmitVertex();
 
-//[-------------------------------------------------------]
-//[ Tessellation evaluation shader source code            ]
-//[-------------------------------------------------------]
-// One tessellation evaluation shader invocation per point from tessellator
-tessellationEvaluationShaderSourceCode =
-"#version 400 core\n"	// OpenGL 4.0
-STRINGIFY(
-// Attribute input/output
-layout(triangles, equal_spacing, ccw) in;
-in vec2 tcPosition[];	// Clip space control point position of the patch we received from the tessellation control shader (TCS) as input
+	// Emit vertex 2 clip space position, left/bottom is (-1,-1) and right/top is (1,1)
+	gl_Position = vec4(-0.5, 0.0, 0.0, 1.0);
+	EmitVertex();
 
-// Programs
-void main()
-{
-	// The barycentric coordinate "gl_TessCoord" we received from the tessellator defines a location
-	// inside a triangle as a combination of the weight of the three control points of the patch
-
-	// Calculate the vertex clip space position inside the patch by using the barycentric coordinate
-	// we received from the tessellator and the three clip  space control points of the patch
-	vec2 p0 = gl_TessCoord.x*tcPosition[0];
-	vec2 p1 = gl_TessCoord.y*tcPosition[1];
-	vec2 p2 = gl_TessCoord.z*tcPosition[2];
-
-	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(p0 + p1 + p2, 0.0f, 1.0);
+	// Done
+	EndPrimitive();
 }
 );	// STRINGIFY
 
@@ -116,7 +101,7 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 400 core\n"	// OpenGL 4.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
 layout(location = 0, index = 0) out vec4 Color0;

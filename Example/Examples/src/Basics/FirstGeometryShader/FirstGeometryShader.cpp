@@ -122,7 +122,7 @@ void FirstGeometryShader::onInitialization()
 				const char *vertexShaderSourceCode = nullptr;
 				const char *geometryShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "FirstGeometryShader_GLSL_330.h"
+				#include "FirstGeometryShader_GLSL_410.h"
 				#include "FirstGeometryShader_HLSL_D3D10_D3D11_D3D12.h"
 				#include "FirstGeometryShader_Null.h"
 
@@ -136,11 +136,7 @@ void FirstGeometryShader::onInitialization()
 			}
 
 			// Create the pipeline state object (PSO)
-			// TODO(co) Attribute less rendering (aka "drawing without data") possible with OpenGL? For me it appears not to work, I see nothing and also get no error...
-			// -> Tested with: "Radeon HD 6970M", driver "catalyst_12-7_beta_windows7_20120629.exe"
-			// -> According to http://renderingpipeline.com/2012/03/are-vertex-shaders-obsolete/ it should work
-			// -> Apparently there are currently some issues when using this approach: http://www.opengl.org/discussion_boards/showthread.php/177372-Rendering-simple-shapes-without-passing-vertices
-			if (nullptr != program && 0 != strcmp(renderer->getName(), "OpenGL"))
+			if (nullptr != program)
 			{
 				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes);
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::POINT;

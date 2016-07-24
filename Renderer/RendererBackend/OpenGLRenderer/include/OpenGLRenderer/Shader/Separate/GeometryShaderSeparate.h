@@ -106,39 +106,12 @@ namespace OpenGLRenderer
 
 		/**
 		*  @brief
-		*    Return the OpenGL shader
+		*    Return the OpenGL shader program
 		*
 		*  @return
-		*    The OpenGL shader, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*    The OpenGL shader program, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline uint32_t getOpenGLShader() const;
-
-		/**
-		*  @brief
-		*    Return the OpenGL geometry shader input primitive topology
-		*
-		*  @return
-		*    The OpenGL geometry shader input primitive topology (type "GLint" not used in here in order to keep the header slim)
-		*/
-		inline int getOpenGLGsInputPrimitiveTopology() const;
-
-		/**
-		*  @brief
-		*    Return the OpenGL geometry shader output primitive topology
-		*
-		*  @return
-		*    The OpenGL geometry shader output primitive topology (type "GLint" not used in here in order to keep the header slim)
-		*/
-		inline int getOpenGLGsOutputPrimitiveTopology() const;
-
-		/**
-		*  @brief
-		*    Return the number of output vertices
-		*
-		*  @return
-		*    The number of output vertices
-		*/
-		inline uint32_t getNumberOfOutputVertices() const;
+		inline uint32_t getOpenGLShaderProgram() const;
 
 
 	//[-------------------------------------------------------]
@@ -152,10 +125,7 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t mOpenGLShader;						///< OpenGL shader, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		int		 mOpenGLGsInputPrimitiveTopology;	///< OpenGL geometry shader input primitive topology (type "GLint" not used in here in order to keep the header slim)
-		int		 mOpenGLGsOutputPrimitiveTopology;	///< OpenGL geometry shader output primitive topology (type "GLint" not used in here in order to keep the header slim)
-		uint32_t mNumberOfOutputVertices;			///< Number of output vertices
+		uint32_t mOpenGLShaderProgram;	///< OpenGL shader program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

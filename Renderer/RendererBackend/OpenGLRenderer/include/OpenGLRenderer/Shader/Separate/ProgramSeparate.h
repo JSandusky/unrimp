@@ -105,12 +105,12 @@ namespace OpenGLRenderer
 
 		/**
 		*  @brief
-		*    Return the OpenGL program
+		*    Return the OpenGL program pipeline
 		*
 		*  @return
-		*    The OpenGL program, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*    The OpenGL program pipeline, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		inline uint32_t getOpenGLProgram() const;
+		inline uint32_t getOpenGLProgramPipeline() const;
 
 
 	//[-------------------------------------------------------]
@@ -131,15 +131,21 @@ namespace OpenGLRenderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		uint32_t mOpenGLProgram;	///< OpenGL program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLProgram;			///< OpenGL program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)	// TODO(co) Remove this
+		uint32_t mOpenGLProgramPipeline;	///< OpenGL program pipeline ("container" object, not shared between OpenGL contexts), can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t mNumberOfRootSignatureParameters;				///< Number of root signature parameters
-		int32_t* mRootSignatureParameterIndexToUniformLocation;	///< Root signature parameter index to OpenGL uniform location mapping, can be a null pointer (type "GLint" not used in here in order to keep the header slim)
+		VertexShaderSeparate				 *mVertexShaderSeparate;							///< Vertex shader the program is using (we keep a reference to it), can be a null pointer
+		TessellationControlShaderSeparate	 *mTessellationControlShaderSeparate;				///< Tessellation control shader the program is using (we keep a reference to it), can be a null pointer
+		TessellationEvaluationShaderSeparate *mTessellationEvaluationShaderSeparate;			///< Tessellation evaluation shader the program is using (we keep a reference to it), can be a null pointer
+		GeometryShaderSeparate				 *mGeometryShaderSeparate;							///< Geometry shader the program is using (we keep a reference to it), can be a null pointer
+		FragmentShaderSeparate				 *mFragmentShaderSeparate;							///< Fragment shader the program is using (we keep a reference to it), can be a null pointer
+		uint32_t							  mNumberOfRootSignatureParameters;					///< Number of root signature parameters
+		int32_t*							  mRootSignatureParameterIndexToUniformLocation;	///< Root signature parameter index to OpenGL uniform location mapping, can be a null pointer (type "GLint" not used in here in order to keep the header slim)
 
 
 	};

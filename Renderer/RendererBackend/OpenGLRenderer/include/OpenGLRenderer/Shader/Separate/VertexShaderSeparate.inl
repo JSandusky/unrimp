@@ -28,9 +28,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t VertexShaderSeparate::getOpenGLShader() const
+	inline uint32_t VertexShaderSeparate::getOpenGLShaderProgram() const
 	{
-		return mOpenGLShader;
+		return mOpenGLShaderProgram;
 	}
 
 

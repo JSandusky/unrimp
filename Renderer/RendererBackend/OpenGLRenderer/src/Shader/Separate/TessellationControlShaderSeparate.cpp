@@ -38,23 +38,23 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(0)
+		mOpenGLShaderProgram(0)
 	{
 		// Nothing to do in here
 	}
 
 	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(ShaderLanguageSeparate::loadShader(GL_TESS_CONTROL_SHADER, sourceCode))
+		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShader(GL_TESS_CONTROL_SHADER, sourceCode))
 	{
 		// Nothing to do in here
 	}
 
 	TessellationControlShaderSeparate::~TessellationControlShaderSeparate()
 	{
-		// Destroy the OpenGL shader
+		// Destroy the OpenGL shader program
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteObjectARB(mOpenGLShader);
+		glDeleteProgram(mOpenGLShaderProgram);
 	}
 
 

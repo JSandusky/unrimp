@@ -28,9 +28,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t ProgramSeparate::getOpenGLProgram() const
+	inline uint32_t ProgramSeparate::getOpenGLProgramPipeline() const
 	{
-		return mOpenGLProgram;
+		return mOpenGLProgramPipeline;
 	}
 
 

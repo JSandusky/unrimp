@@ -27,6 +27,7 @@
 #include "OpenGLRenderer/Shader/Separate/FragmentShaderSeparate.h"
 #include "OpenGLRenderer/Shader/Separate/TessellationControlShaderSeparate.h"
 #include "OpenGLRenderer/Shader/Separate/TessellationEvaluationShaderSeparate.h"
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #include "OpenGLRenderer/IContext.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/RootSignature.h"
@@ -47,77 +48,67 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	ProgramSeparate::ProgramSeparate(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderSeparate *vertexShaderSeparate, TessellationControlShaderSeparate *tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate *tessellationEvaluationShaderSeparate, GeometryShaderSeparate *geometryShaderSeparate, FragmentShaderSeparate *fragmentShaderSeparate) :
 		IProgram(openGLRenderer),
-		mOpenGLProgram(glCreateProgramObjectARB()),
+		mOpenGLProgram(0),
+		mOpenGLProgramPipeline(0),
+		mVertexShaderSeparate(vertexShaderSeparate),
+		mTessellationControlShaderSeparate(tessellationControlShaderSeparate),
+		mTessellationEvaluationShaderSeparate(tessellationEvaluationShaderSeparate),
+		mGeometryShaderSeparate(geometryShaderSeparate),
+		mFragmentShaderSeparate(fragmentShaderSeparate),
 		mNumberOfRootSignatureParameters(0),
 		mRootSignatureParameterIndexToUniformLocation(nullptr)
 	{
-		{ // Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 & 12 terminology)
-			const uint32_t numberOfVertexAttributes = vertexAttributes.numberOfAttributes;
-			for (uint32_t vertexAttribute = 0; vertexAttribute < numberOfVertexAttributes; ++vertexAttribute)
-			{
-				glBindAttribLocationARB(mOpenGLProgram, vertexAttribute, vertexAttributes.attributes[vertexAttribute].name);
+		// Create the OpenGL program pipeline
+		glGenProgramPipelines(1, &mOpenGLProgramPipeline);
+		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+			// Backup the currently used OpenGL program pipeline
+			GLint openGLProgramPipelineBackup = 0;
+			glGetIntegerv(GL_PROGRAM_PIPELINE_BINDING, &openGLProgramPipelineBackup);
+		#endif
+		glBindProgramPipeline(mOpenGLProgramPipeline);
+
+		// Add references to the provided shaders
+		if (nullptr != mVertexShaderSeparate)
+		{
+			mVertexShaderSeparate->addReference();
+			glUseProgramStages(mOpenGLProgramPipeline, GL_VERTEX_SHADER_BIT, mVertexShaderSeparate->getOpenGLShaderProgram());
+
+			// TODO(co) Should be done only once inside "VertexShaderSeparate"
+			{ // Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 & 12 terminology)
+				const GLuint openGLShaderProgram = mVertexShaderSeparate->getOpenGLShaderProgram();
+				const uint32_t numberOfVertexAttributes = vertexAttributes.numberOfAttributes;
+				for (uint32_t vertexAttribute = 0; vertexAttribute < numberOfVertexAttributes; ++vertexAttribute)
+				{
+					glBindAttribLocationARB(openGLShaderProgram, vertexAttribute, vertexAttributes.attributes[vertexAttribute].name);
+				}
 			}
 		}
-
-		// Attach the shaders to the program
-		// -> We don't need to keep a reference to the shader, to add and release at once to ensure a nice behaviour
-		if (nullptr != vertexShaderSeparate)
+		if (nullptr != mTessellationControlShaderSeparate)
 		{
-			vertexShaderSeparate->addReference();
-			glAttachObjectARB(mOpenGLProgram, vertexShaderSeparate->getOpenGLShader());
-			vertexShaderSeparate->release();
+			mTessellationControlShaderSeparate->addReference();
+			glUseProgramStages(mOpenGLProgramPipeline, GL_TESS_CONTROL_SHADER_BIT, mTessellationControlShaderSeparate->getOpenGLShaderProgram());
 		}
-		if (nullptr != tessellationControlShaderSeparate)
+		if (nullptr != mTessellationEvaluationShaderSeparate)
 		{
-			tessellationControlShaderSeparate->addReference();
-			glAttachObjectARB(mOpenGLProgram, tessellationControlShaderSeparate->getOpenGLShader());
-			tessellationControlShaderSeparate->release();
+			mTessellationEvaluationShaderSeparate->addReference();
+			glUseProgramStages(mOpenGLProgramPipeline, GL_TESS_EVALUATION_SHADER_BIT, mTessellationEvaluationShaderSeparate->getOpenGLShaderProgram());
 		}
-		if (nullptr != tessellationEvaluationShaderSeparate)
+		if (nullptr != mGeometryShaderSeparate)
 		{
-			tessellationEvaluationShaderSeparate->addReference();
-			glAttachObjectARB(mOpenGLProgram, tessellationEvaluationShaderSeparate->getOpenGLShader());
-			tessellationEvaluationShaderSeparate->release();
+			mGeometryShaderSeparate->addReference();
+			glUseProgramStages(mOpenGLProgramPipeline, GL_GEOMETRY_SHADER_BIT, mGeometryShaderSeparate->getOpenGLShaderProgram());
 		}
-		if (nullptr != geometryShaderSeparate)
+		if (nullptr != mFragmentShaderSeparate)
 		{
-			// Add a reference to the shader
-			geometryShaderSeparate->addReference();
-
-			// Attach the separate shader to the separate program
-			glAttachObjectARB(mOpenGLProgram, geometryShaderSeparate->getOpenGLShader());
-
-			// In modern GLSL, "geometry shader input primitive topology" & "geometry shader output primitive topology" & "number of output vertices" can be directly set within GLSL by writing e.g.
-			//   "layout(triangles) in;"
-			//   "layout(triangle_strip, max_vertices = 3) out;"
-			// -> To be able to support older GLSL versions, we have to provide this information also via OpenGL API functions
-
-			// Set the OpenGL geometry shader input primitive topology
-			glProgramParameteriARB(mOpenGLProgram, GL_GEOMETRY_INPUT_TYPE_ARB, geometryShaderSeparate->getOpenGLGsInputPrimitiveTopology());
-
-			// Set the OpenGL geometry shader output primitive topology
-			glProgramParameteriARB(mOpenGLProgram, GL_GEOMETRY_OUTPUT_TYPE_ARB, geometryShaderSeparate->getOpenGLGsOutputPrimitiveTopology());
-
-			// Set the number of output vertices
-			glProgramParameteriARB(mOpenGLProgram, GL_GEOMETRY_VERTICES_OUT_ARB, static_cast<GLint>(geometryShaderSeparate->getNumberOfOutputVertices()));
-
-			// Release the shader
-			geometryShaderSeparate->release();
-		}
-		if (nullptr != fragmentShaderSeparate)
-		{
-			fragmentShaderSeparate->addReference();
-			glAttachObjectARB(mOpenGLProgram, fragmentShaderSeparate->getOpenGLShader());
-			fragmentShaderSeparate->release();
+			mFragmentShaderSeparate->addReference();
+			glUseProgramStages(mOpenGLProgramPipeline, GL_FRAGMENT_SHADER_BIT, mFragmentShaderSeparate->getOpenGLShaderProgram());
 		}
 
-		// Link the program
-		glLinkProgramARB(mOpenGLProgram);
-
-		// Check the link status
-		GLint linked = GL_FALSE;
-		glGetObjectParameterivARB(mOpenGLProgram, GL_OBJECT_LINK_STATUS_ARB, &linked);
-		if (GL_TRUE == linked)
+		// Validate program pipeline
+		glValidateProgramPipeline(mOpenGLProgramPipeline);
+		GLint validateStatus = 0;
+		glGetProgramPipelineiv(mOpenGLProgramPipeline, GL_VALIDATE_STATUS, &validateStatus);
+		if (GL_TRUE == validateStatus)
 		{
 			// We're not using "glBindFragDataLocation()", else the user would have to provide us with additional OpenGL-only specific information
 			// -> Use modern GLSL:
@@ -152,6 +143,8 @@ namespace OpenGLRenderer
 							// Ignore sampler range types in here (OpenGL handles samplers in a different way then Direct3D 10>=)
 							if (Renderer::DescriptorRangeType::UBV == descriptorRange->rangeType)
 							{
+								// TODO(co) Bindings
+								/*
 								// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
 								// for backward compatibility, ask for the uniform block index
 								const GLuint uniformBlockIndex = glGetUniformBlockIndex(mOpenGLProgram, descriptorRange->baseShaderRegisterName);
@@ -162,9 +155,12 @@ namespace OpenGLRenderer
 									// Associate the uniform block with the given binding point
 									glUniformBlockBinding(mOpenGLProgram, uniformBlockIndex, parameterIndex);
 								}
+								*/
 							}
 							else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
 							{
+								// TODO(co) Bindings
+								/*
 								const GLint uniformLocation = glGetUniformLocationARB(mOpenGLProgram, descriptorRange->baseShaderRegisterName);
 								if (uniformLocation >= 0)
 								{
@@ -201,6 +197,7 @@ namespace OpenGLRenderer
 										glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
 									#endif
 								}
+								*/
 							}
 						}
 					}
@@ -209,18 +206,18 @@ namespace OpenGLRenderer
 		}
 		else
 		{
-			// Error, program link failed!
+			// Error, program pipeline validation failed!
 			#ifdef RENDERER_OUTPUT_DEBUG
 				// Get the length of the information (including a null termination)
 				GLint informationLength = 0;
-				glGetObjectParameterivARB(mOpenGLProgram, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
+				glGetProgramPipelineiv(mOpenGLProgramPipeline, GL_INFO_LOG_LENGTH, &informationLength);
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
 					char *informationLog = new char[static_cast<uint32_t>(informationLength)];
 
 					// Get the information
-					glGetInfoLogARB(mOpenGLProgram, informationLength, nullptr, informationLog);
+					glGetProgramPipelineInfoLog(mOpenGLProgramPipeline, informationLength, nullptr, informationLog);
 
 					// Output the debug string
 					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
@@ -230,13 +227,39 @@ namespace OpenGLRenderer
 				}
 			#endif
 		}
+
+		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+			// Be polite and restore the previous used OpenGL program pipeline
+			glBindProgramPipeline(static_cast<GLuint>(openGLProgramPipelineBackup));
+		#endif
 	}
 
 	ProgramSeparate::~ProgramSeparate()
 	{
-		// Destroy the OpenGL program
-		// -> A value of 0 for program will be silently ignored
-		glDeleteObjectARB(mOpenGLProgram);
+		// Destroy the OpenGL program pipeline
+		glDeleteProgramPipelines(1, &mOpenGLProgramPipeline);
+
+		// Release the shader references
+		if (nullptr != mVertexShaderSeparate)
+		{
+			mVertexShaderSeparate->release();
+		}
+		if (nullptr != mTessellationControlShaderSeparate)
+		{
+			mTessellationControlShaderSeparate->release();
+		}
+		if (nullptr != mTessellationEvaluationShaderSeparate)
+		{
+			mTessellationEvaluationShaderSeparate->release();
+		}
+		if (nullptr != mGeometryShaderSeparate)
+		{
+			mGeometryShaderSeparate->release();
+		}
+		if (nullptr != mFragmentShaderSeparate)
+		{
+			mFragmentShaderSeparate->release();
+		}
 
 		// Destroy root signature parameter index to OpenGL uniform location mapping, if required
 		if (nullptr != mRootSignatureParameterIndexToUniformLocation)

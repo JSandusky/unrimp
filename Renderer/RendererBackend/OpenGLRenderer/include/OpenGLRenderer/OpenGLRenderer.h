@@ -296,10 +296,6 @@ namespace OpenGLRenderer
 		//[-------------------------------------------------------]
 		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "OpenGLRenderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget *mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
-		//[-------------------------------------------------------]
-		//[ States                                                ]
-		//[-------------------------------------------------------]
-		uint32_t mOpenGLProgram;	///< Currently set OpenGL program, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};

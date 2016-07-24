@@ -52,37 +52,32 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	uint32_t ShaderLanguageSeparate::loadShader(uint32_t shaderType, const char *sourceCode)
 	{
-		// Create the shader object
-		const GLuint openGLShader = glCreateShaderObjectARB(shaderType);
+		// Create the shader program
+		const GLuint openGLProgram = glCreateShaderProgramv(shaderType, 1, &sourceCode);
 
-		// Load the shader source
-		glShaderSourceARB(openGLShader, 1, &sourceCode, nullptr);
-
-		// Compile the shader
-		glCompileShaderARB(openGLShader);
-
-		// Check the compile status
-		GLint compiled = GL_FALSE;
-		glGetObjectParameterivARB(openGLShader, GL_OBJECT_COMPILE_STATUS_ARB, &compiled);
-		if (GL_TRUE == compiled)
+		// Check the link status
+		GLint linked = GL_FALSE;
+		glGetObjectParameterivARB(openGLProgram, GL_LINK_STATUS, &linked);
+		if (GL_TRUE == linked)
 		{
-			// All went fine, return the shader
-			return openGLShader;
+			// All went fine, return the program
+			return openGLProgram;
 		}
 		else
 		{
 			// Error, failed to compile the shader!
 			#ifdef RENDERER_OUTPUT_DEBUG
+			{
 				// Get the length of the information
 				GLint informationLength = 0;
-				glGetObjectParameterivARB(openGLShader, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
+				glGetObjectParameterivARB(openGLProgram, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
 					GLchar *informationLog = new GLchar[static_cast<uint32_t>(informationLength)];
 
 					// Get the information
-					glGetInfoLogARB(openGLShader, informationLength, nullptr, informationLog);
+					glGetInfoLogARB(openGLProgram, informationLength, nullptr, informationLog);
 
 					// Output the debug string
 					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
@@ -90,11 +85,12 @@ namespace OpenGLRenderer
 					// Cleanup information memory
 					delete [] informationLog;
 				}
+			}
 			#endif
 
-			// Destroy the shader
+			// Destroy the program
 			// -> A value of 0 for shader will be silently ignored
-			glDeleteObjectARB(openGLShader);
+			glDeleteProgram(openGLProgram);
 
 			// Error!
 			return 0;

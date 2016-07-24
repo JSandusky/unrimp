@@ -38,23 +38,23 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(0)
+		mOpenGLShaderProgram(0)
 	{
 		// Nothing to do in here
 	}
 
 	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(ShaderLanguageSeparate::loadShader(GL_VERTEX_SHADER_ARB, sourceCode))
+		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShader(GL_VERTEX_SHADER_ARB, sourceCode))
 	{
 		// Nothing to do in here
 	}
 
 	VertexShaderSeparate::~VertexShaderSeparate()
 	{
-		// Destroy the OpenGL shader
+		// Destroy the OpenGL shader program
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteObjectARB(mOpenGLShader);
+		glDeleteProgram(mOpenGLShaderProgram);
 	}
 
 

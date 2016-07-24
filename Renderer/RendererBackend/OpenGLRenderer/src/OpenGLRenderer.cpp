@@ -110,8 +110,7 @@ namespace OpenGLRenderer
 		mVertexArray(nullptr),
 		mOpenGLPrimitiveTopology(0xFFFF),	// Unknown default setting
 		mMainSwapChain(nullptr),
-		mRenderTarget(nullptr),
-		mOpenGLProgram(0)
+		mRenderTarget(nullptr)
 	{
 		// Is OpenGL available?
 		if (mOpenGLRuntimeLinking->isOpenGLAvaiable())
@@ -1965,24 +1964,16 @@ namespace OpenGLRenderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
 
-			// TODO(co) GLSL buffer settings, unset previous program
-
 			// Prefer "GL_ARB_separate_shader_objects" over "GL_ARB_shader_objects"
 			if (mExtensions->isGL_ARB_separate_shader_objects())
 			{
-				// Backup OpenGL program identifier
-				mOpenGLProgram = static_cast<ProgramSeparate*>(program)->getOpenGLProgram();
-
-				// Bind the program
-				glUseProgramObjectARB(mOpenGLProgram);
+				// Bind the program pipeline
+				glBindProgramPipeline(static_cast<ProgramSeparate*>(program)->getOpenGLProgramPipeline());
 			}
 			else if (mExtensions->isGL_ARB_shader_objects())
 			{
-				// Backup OpenGL program identifier
-				mOpenGLProgram = static_cast<ProgramMonolithic*>(program)->getOpenGLProgram();
-
 				// Bind the program
-				glUseProgramObjectARB(mOpenGLProgram);
+				glUseProgramObjectARB(static_cast<ProgramMonolithic*>(program)->getOpenGLProgram());
 			}
 		}
 		else
@@ -1992,17 +1983,14 @@ namespace OpenGLRenderer
 			// Prefer "GL_ARB_separate_shader_objects" over "GL_ARB_shader_objects"
 			if (mExtensions->isGL_ARB_separate_shader_objects())
 			{
-				// Unbind the program
-				glUseProgramObjectARB(0);
+				// Unbind the program pipeline
+				glBindProgramPipeline(0);
 			}
 			else if (mExtensions->isGL_ARB_shader_objects())
 			{
 				// Unbind the program
 				glUseProgramObjectARB(0);
 			}
-
-			// Reset OpenGL program identifier
-			mOpenGLProgram = 0;
 		}
 	}
 

@@ -144,9 +144,6 @@
     <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader.h">
       <Filter>Basics\FirstGeometryShader</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_GLSL_330.h">
-      <Filter>Basics\FirstGeometryShader</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_Null.h">
       <Filter>Basics\FirstGeometryShader</Filter>
     </ClInclude>
@@ -196,9 +193,6 @@
       <Filter>Basics\FirstRenderToTexture</Filter>
     </ClInclude>
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation.h">
-      <Filter>Basics\FirstTessellation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_GLSL_400.h">
       <Filter>Basics\FirstTessellation</Filter>
     </ClInclude>
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_Null.h">
@@ -420,15 +414,6 @@
     <ClInclude Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.h">
       <Filter>Runtime\FirstCompositor</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_130.h">
-      <Filter>Basics\VertexBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_130.h">
-      <Filter>Basics\FirstTriangle</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_GLSL_130.h">
-      <Filter>Basics\FirstTexture</Filter>
-    </ClInclude>
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_130.h">
       <Filter>Runtime\FirstMesh</Filter>
     </ClInclude>
@@ -450,20 +435,35 @@
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_130.h">
       <Filter>Basics\FirstInstancing</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_130.h">
-      <Filter>Basics\FirstMultipleSwapChains</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_130.h">
-      <Filter>Basics\FirstRenderToTexture</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_130.h">
-      <Filter>Basics\FirstMultipleRenderTargets</Filter>
-    </ClInclude>
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_GLSL_130.h">
       <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_130.h">
       <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_410.h">
+      <Filter>Basics\FirstTriangle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_GLSL_410.h">
+      <Filter>Basics\FirstTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_410.h">
+      <Filter>Basics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_410.h">
+      <Filter>Basics\FirstRenderToTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_410.h">
+      <Filter>Basics\FirstMultipleSwapChains</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_410.h">
+      <Filter>Basics\FirstMultipleRenderTargets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_GLSL_410.h">
+      <Filter>Basics\FirstGeometryShader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_GLSL_410.h">
+      <Filter>Basics\FirstTessellation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
