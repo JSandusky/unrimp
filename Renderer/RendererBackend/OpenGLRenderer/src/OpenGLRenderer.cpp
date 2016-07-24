@@ -51,6 +51,9 @@
 #include "OpenGLRenderer/UniformBufferBind.h"
 #include "OpenGLRenderer/Shader/Monolithic/ShaderLanguageMonolithic.h"
 #include "OpenGLRenderer/Shader/Monolithic/ProgramMonolithic.h"
+#include "OpenGLRenderer/Shader/Separate/ShaderLanguageSeparate.h"
+#include "OpenGLRenderer/Shader/Separate/ProgramSeparate.h"
+
 #ifdef WIN32
 	#include "OpenGLRenderer/Windows/ContextWindows.h"
 #elif defined LINUX
@@ -273,8 +276,8 @@ namespace OpenGLRenderer
 	{
 		uint32_t numberOfShaderLanguages = 0;
 
-		// "GL_ARB_shader_objects" required
-		if (mExtensions->isGL_ARB_shader_objects())
+		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
+		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
 		{
 			// GLSL supported
 			++numberOfShaderLanguages;
@@ -288,13 +291,13 @@ namespace OpenGLRenderer
 	{
 		uint32_t currentIndex = 0;
 
-		// "GL_ARB_shader_objects" required
-		if (mExtensions->isGL_ARB_shader_objects())
+		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
+		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
 		{
 			// GLSL supported
 			if (currentIndex == index)
 			{
-				return ShaderLanguageMonolithic::NAME;
+				return ShaderLanguageMonolithic::NAME;	// "ShaderLanguageSeparate::NAME" has the same value
 			}
 			++currentIndex;
 		}
@@ -305,17 +308,30 @@ namespace OpenGLRenderer
 
 	Renderer::IShaderLanguage *OpenGLRenderer::getShaderLanguage(const char *shaderLanguageName)
 	{
-		// "GL_ARB_shader_objects" required
-		if (mExtensions->isGL_ARB_shader_objects())
+		// "GL_ARB_shader_objects" or "GL_ARB_separate_shader_objects" required
+		if (mExtensions->isGL_ARB_shader_objects() || mExtensions->isGL_ARB_separate_shader_objects())
 		{
 			// In case "shaderLanguage" is a null pointer, use the default shader language
 			if (nullptr != shaderLanguageName)
 			{
 				// Optimization: Check for shader language name pointer match, first
+				// -> "ShaderLanguageSeparate::NAME" has the same value
 				if (shaderLanguageName == ShaderLanguageMonolithic::NAME || !stricmp(shaderLanguageName, ShaderLanguageMonolithic::NAME))
 				{
-					// "GL_ARB_shader_objects" required
-					if (mExtensions->isGL_ARB_shader_objects())
+					// Prefer "GL_ARB_separate_shader_objects" over "GL_ARB_shader_objects"
+					if (mExtensions->isGL_ARB_separate_shader_objects())
+					{
+						// If required, create the separate shader language instance right now
+						if (nullptr == mShaderLanguage)
+						{
+							mShaderLanguage = new ShaderLanguageSeparate(*this);
+							mShaderLanguage->addReference();	// Internal renderer reference
+						}
+
+						// Return the shader language instance
+						return mShaderLanguage;
+					}
+					else if (mExtensions->isGL_ARB_shader_objects())
 					{
 						// If required, create the monolithic shader language instance right now
 						if (nullptr == mShaderLanguage)
@@ -1951,8 +1967,16 @@ namespace OpenGLRenderer
 
 			// TODO(co) GLSL buffer settings, unset previous program
 
-			// "GL_ARB_shader_objects" required
-			if (mExtensions->isGL_ARB_shader_objects())
+			// Prefer "GL_ARB_separate_shader_objects" over "GL_ARB_shader_objects"
+			if (mExtensions->isGL_ARB_separate_shader_objects())
+			{
+				// Backup OpenGL program identifier
+				mOpenGLProgram = static_cast<ProgramSeparate*>(program)->getOpenGLProgram();
+
+				// Bind the program
+				glUseProgramObjectARB(mOpenGLProgram);
+			}
+			else if (mExtensions->isGL_ARB_shader_objects())
 			{
 				// Backup OpenGL program identifier
 				mOpenGLProgram = static_cast<ProgramMonolithic*>(program)->getOpenGLProgram();
@@ -1964,8 +1988,14 @@ namespace OpenGLRenderer
 		else
 		{
 			// TODO(co) GLSL buffer settings
-			// "GL_ARB_shader_objects" required
-			if (mExtensions->isGL_ARB_shader_objects())
+
+			// Prefer "GL_ARB_separate_shader_objects" over "GL_ARB_shader_objects"
+			if (mExtensions->isGL_ARB_separate_shader_objects())
+			{
+				// Unbind the program
+				glUseProgramObjectARB(0);
+			}
+			else if (mExtensions->isGL_ARB_shader_objects())
 			{
 				// Unbind the program
 				glUseProgramObjectARB(0);

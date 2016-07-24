@@ -174,6 +174,7 @@ namespace OpenGLRenderer
 		bool isGL_ARB_fragment_program() const;
 		bool isGL_ARB_draw_buffers() const;
 		bool isGL_ARB_shader_objects() const;
+		bool isGL_ARB_separate_shader_objects() const;
 		bool isGL_ARB_get_program_binary() const;
 		bool isGL_ARB_texture_non_power_of_two() const;
 		bool isGL_ARB_texture_rectangle() const;
@@ -342,6 +343,7 @@ namespace OpenGLRenderer
 		bool mGL_ARB_fragment_program;
 		bool mGL_ARB_draw_buffers;
 		bool mGL_ARB_shader_objects;
+		bool mGL_ARB_separate_shader_objects;
 		bool mGL_ARB_get_program_binary;
 		bool mGL_ARB_texture_non_power_of_two;
 		bool mGL_ARB_texture_rectangle;
@@ -663,6 +665,8 @@ namespace OpenGLRenderer
 	FNDEF_EX(glGetUniformfvARB,			PFNGLGETUNIFORMFVARBPROC);
 	FNDEF_EX(glGetUniformivARB,			PFNGLGETUNIFORMIVARBPROC);
 	FNDEF_EX(glGetShaderSourceARB,		PFNGLGETSHADERSOURCEARBPROC);
+
+	// GL_ARB_separate_shader_objects
 
 	// GL_ARB_get_program_binary
 	FNDEF_EX(glGetProgramBinary,	PFNGLGETPROGRAMBINARYPROC);

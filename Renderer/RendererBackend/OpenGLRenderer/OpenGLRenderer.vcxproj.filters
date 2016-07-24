@@ -20,6 +20,9 @@
     <Filter Include="Source Files\Shader\Monolithic">
       <UniqueIdentifier>{f95480a2-1ca6-41dd-8d65-52d064532a18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shader\Separate">
+      <UniqueIdentifier>{1a52a0d8-8c3c-4f1c-b721-11bccd3a198c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h">
@@ -180,6 +183,30 @@
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\ProgramMonolithic.h">
       <Filter>Source Files\Shader\Monolithic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Separate\ProgramSeparate.h">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Separate\ProgramSeparateDsa.h">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Separate\ShaderLanguageSeparate.h">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Separate\TessellationControlShaderSeparate.h">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Separate\TessellationEvaluationShaderSeparate.h">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Separate\VertexShaderSeparate.h">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Separate\FragmentShaderSeparate.h">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Shader\Separate\GeometryShaderSeparate.h">
+      <Filter>Source Files\Shader\Separate</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -342,6 +369,30 @@
     <ClCompile Include="src\Shader\Monolithic\GeometryShaderMonolithic.cpp">
       <Filter>Source Files\Shader\Monolithic</Filter>
     </ClCompile>
+    <ClCompile Include="src\Shader\Separate\ProgramSeparate.cpp">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Separate\ProgramSeparateDsa.cpp">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Separate\ShaderLanguageSeparate.cpp">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Separate\TessellationControlShaderSeparate.cpp">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Separate\TessellationEvaluationShaderSeparate.cpp">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Separate\VertexShaderSeparate.cpp">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Separate\FragmentShaderSeparate.cpp">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader\Separate\GeometryShaderSeparate.cpp">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -423,6 +474,24 @@
     </None>
     <None Include="include\OpenGLRenderer\Shader\Monolithic\GeometryShaderMonolithic.inl">
       <Filter>Source Files\Shader\Monolithic</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Shader\Separate\ProgramSeparate.inl">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Shader\Separate\TessellationControlShaderSeparate.inl">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Shader\Separate\TessellationEvaluationShaderSeparate.inl">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Shader\Separate\VertexShaderSeparate.inl">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Shader\Separate\FragmentShaderSeparate.inl">
+      <Filter>Source Files\Shader\Separate</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Shader\Separate\GeometryShaderSeparate.inl">
+      <Filter>Source Files\Shader\Separate</Filter>
     </None>
   </ItemGroup>
 </Project>

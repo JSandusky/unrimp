@@ -119,6 +119,7 @@ namespace OpenGLRenderer
 	bool Extensions::isGL_ARB_fragment_program()			const { return mGL_ARB_fragment_program;			}
 	bool Extensions::isGL_ARB_draw_buffers()				const { return mGL_ARB_draw_buffers;				}
 	bool Extensions::isGL_ARB_shader_objects()				const { return mGL_ARB_shader_objects;				}
+	bool Extensions::isGL_ARB_separate_shader_objects()		const { return mGL_ARB_separate_shader_objects;		}
 	bool Extensions::isGL_ARB_get_program_binary()			const { return mGL_ARB_get_program_binary;			}
 	bool Extensions::isGL_ARB_texture_non_power_of_two()	const { return mGL_ARB_texture_non_power_of_two;	}
 	bool Extensions::isGL_ARB_texture_rectangle()			const { return mGL_ARB_texture_rectangle;			}
@@ -346,6 +347,7 @@ namespace OpenGLRenderer
 		mGL_ARB_fragment_program			= false;
 		mGL_ARB_draw_buffers				= false;
 		mGL_ARB_shader_objects				= false;
+		mGL_ARB_separate_shader_objects		= false;
 		mGL_ARB_get_program_binary			= false;
 		mGL_ARB_texture_non_power_of_two	= false;
 		mGL_ARB_texture_rectangle			= false;
@@ -900,6 +902,15 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glGetUniformivARB)
 			IMPORT_FUNC(glGetShaderSourceARB)
 			mGL_ARB_shader_objects = result;
+		}
+
+		// GL_ARB_separate_shader_objects
+		mGL_ARB_separate_shader_objects = isSupported("GL_ARB_separate_shader_objects");
+		if (mGL_ARB_separate_shader_objects)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			mGL_ARB_separate_shader_objects = result;
 		}
 
 		// GL_ARB_get_programinary
