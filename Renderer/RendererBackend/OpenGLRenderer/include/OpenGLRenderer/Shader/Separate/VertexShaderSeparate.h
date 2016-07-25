@@ -67,12 +67,14 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
+		*  @param[in] vertexAttributes
+		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] bytecode
 		*    Shader bytecode, must be valid
 		*  @param[in] numberOfBytes
 		*    Number of bytes in the bytecode
 		*/
-		VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const uint8_t *bytecode, uint32_t numberOfBytes);
+		VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const uint8_t *bytecode, uint32_t numberOfBytes);
 
 		/**
 		*  @brief
@@ -80,10 +82,12 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
+		*  @param[in] vertexAttributes
+		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be valid
 		*/
-		VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode);
+		VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode);
 
 		/**
 		*  @brief

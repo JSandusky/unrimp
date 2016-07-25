@@ -259,7 +259,7 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 		mProgram = shaderLanguage->createProgram(
 			*mRootSignature,
 			detail::VertexAttributes,
-			shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+			shaderLanguage->createVertexShaderFromSourceCode(detail::VertexAttributes, vertexShaderSourceCode),
 			shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 	}
 

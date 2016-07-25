@@ -57,7 +57,7 @@ namespace RendererRuntime
 			Renderer::IVertexShader* vertexShader = nullptr;
 			{
 				ShaderBuilder shaderBuilder;
-				vertexShader = shaderLanguage->createVertexShaderFromSourceCode(shaderBuilder.createSourceCode(*materialBlueprintResource.mVertexShaderBlueprint, shaderProperties).c_str());
+				vertexShader = shaderLanguage->createVertexShaderFromSourceCode(materialBlueprintResource.getVertexAttributes(), shaderBuilder.createSourceCode(*materialBlueprintResource.mVertexShaderBlueprint, shaderProperties).c_str());
 			}
 
 			// Create the fragment shader

@@ -187,6 +187,8 @@ namespace Renderer
 		*  @brief
 		*    Create a vertex shader from shader bytecode
 		*
+		*  @param[in] vertexAttributes
+		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] bytecode
 		*    Shader bytecode, if null pointer or empty string a null pointer will be returned
 		*  @param[in] numberOfBytes
@@ -199,12 +201,14 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::vertexShader" is "true"
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*/
-		virtual IVertexShader *createVertexShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes) = 0;
+		virtual IVertexShader *createVertexShaderFromBytecode(const Renderer::VertexAttributes& vertexAttributes, const uint8_t *bytecode, uint32_t numberOfBytes) = 0;
 
 		/**
 		*  @brief
 		*    Create a vertex shader from shader source code
 		*
+		*  @param[in] vertexAttributes
+		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] sourceCode
 		*    Shader ASCII source code, if null pointer or empty string a null pointer will be returned
 		*  @param[in] profile
@@ -264,7 +268,7 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::vertexShader" is "true"
 		*    - The data the given pointers are pointing to is internally copied and you have to free your memory if you no longer need it
 		*/
-		virtual IVertexShader *createVertexShaderFromSourceCode(const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
+		virtual IVertexShader *createVertexShaderFromSourceCode(const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode, const char *profile = nullptr, const char *arguments = nullptr, const char *entry = nullptr) = 0;
 
 		/**
 		*  @brief

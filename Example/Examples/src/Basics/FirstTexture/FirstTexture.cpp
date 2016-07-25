@@ -196,7 +196,7 @@ void FirstTexture::onInitialization()
 				program = shaderLanguage->createProgram(
 					*mRootSignature,
 					vertexAttributes,
-					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 			}
 

@@ -86,7 +86,7 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 410\n"	// OpenGL 4.1
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
 in vec2 TexCoord;	// Normalized texture coordinate as input

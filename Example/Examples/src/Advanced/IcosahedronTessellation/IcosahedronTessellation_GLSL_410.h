@@ -40,7 +40,7 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per control point of the patch
 vertexShaderSourceCode =
-"#version 400 core\n"	// OpenGL 4.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
 in  vec3 Position;	// Object space control point position of the patch we received from the input assembly (IA) as input
@@ -60,7 +60,7 @@ void main()
 //[-------------------------------------------------------]
 // One tessellation control shader invocation per patch control point (with super-vision)
 tessellationControlShaderSourceCode =
-"#version 400 core\n"	// OpenGL 4.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
 layout(vertices = 3) out;
@@ -97,11 +97,15 @@ void main()
 //[-------------------------------------------------------]
 // One tessellation evaluation shader invocation per point from tessellator
 tessellationEvaluationShaderSourceCode =
-"#version 400 core\n"	// OpenGL 4.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
 layout(triangles, equal_spacing, cw) in;
 in  vec3 tcPosition[];		// Object space control point position of the patch we received from the tessellation control shader (TCS) as input
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
 out vec3 tePosition;		// Interpolated object space vertex position inside the patch as output
 out vec3 tePatchDistance;	// The barycentric coordinate inside the patch we received from the tessellator as output
 
@@ -138,13 +142,21 @@ void main()
 //[-------------------------------------------------------]
 // One geometry shader invocation per primitive
 geometryShaderSourceCode =
-"#version 400 core\n"	// OpenGL 4.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
+in gl_PerVertex
+{
+	vec4 gl_Position;
+} gl_in[gl_MaxPatchVertices];
 in  vec3 tePosition[3];			// Interpolated object space vertex position inside the patch we received from the tessellation evaluation shader (TES) as input
 in  vec3 tePatchDistance[3];	// The barycentric coordinate inside the patch from the tessellator we received from the tessellation evaluation shader (TES) as input
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
 out vec3 gFacetNormal;			// Normalized normal of the primitive as output
 out vec3 gPatchDistance;		// The barycentric coordinate inside the patch from the tessellator as output
 out vec3 gTriDistance;			// Local triangle vertex position as output
@@ -192,7 +204,7 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 400 core\n"	// OpenGL 4.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attributes
 layout(location = 0) out vec4 OutFragmentColor;

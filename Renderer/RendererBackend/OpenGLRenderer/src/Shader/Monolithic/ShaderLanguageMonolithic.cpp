@@ -125,7 +125,7 @@ namespace OpenGLRenderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageMonolithic::createVertexShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::IVertexShader *ShaderLanguageMonolithic::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const uint8_t *bytecode, uint32_t numberOfBytes)
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
@@ -140,7 +140,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IVertexShader *ShaderLanguageMonolithic::createVertexShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguageMonolithic::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const char *sourceCode, const char *, const char *, const char *)
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());

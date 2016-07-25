@@ -22,7 +22,7 @@
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
 #ifndef RENDERER_NO_OPENGL
-if (0 == strcmp(mRenderer->getName(), "OpenGL"))
+if (0 == strcmp(renderer->getName(), "OpenGL"))
 {
 
 
@@ -37,65 +37,36 @@ if (0 == strcmp(mRenderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 130\n"	// OpenGL 3.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
 in  vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
-out vec2 TexCoord;	// Normalized texture coordinate as output
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
 
 // Programs
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	gl_Position = vec4(Position, 0.0, 1.0);
-
-	// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
-	// -> In OpenGL, the texture origin is left/bottom which maps well to clip space coordinates
-	// -> (-1,-1) -> (0,0)
-	// -> (1,1) -> (1,1)
-	TexCoord = Position.xy * 0.5 + 0.5;
 }
 );	// STRINGIFY
 
 
 //[-------------------------------------------------------]
-//[ Fragment shader source code - Content generation      ]
+//[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode_ContentGeneration =
-"#version 130\n"	// OpenGL 3.0
+fragmentShaderSourceCode =
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
-// Attribute input/output
-in vec2 TexCoord;	// Normalized texture coordinate as input
-
 // Programs
 void main()
 {
-	// Return the color green
-	gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
-}
-);	// STRINGIFY
-
-
-//[-------------------------------------------------------]
-//[ Fragment shader source code - Content processing      ]
-//[-------------------------------------------------------]
-// One fragment shader invocation per fragment
-fragmentShaderSourceCode_ContentProcessing =
-"#version 130\n"	// OpenGL 3.0
-STRINGIFY(
-// Attribute input/output
-varying vec2 TexCoord;	// Normalized texture coordinate as input
-
-// Uniforms
-uniform sampler2D ContentMap;
-
-// Programs
-void main()
-{
-	// Fetch the texel at the given texture coordinate and return it's color
-	// -> Apply a simple wobble to the texture coordinate so we can see that content processing is up and running
-	gl_FragColor = texture2D(ContentMap, vec2(TexCoord.x + sin(TexCoord.x * 100.0) * 0.01, TexCoord.y + cos(TexCoord.y * 100.0) * 0.01));
+	// Return the color white
+	gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
 );	// STRINGIFY
 

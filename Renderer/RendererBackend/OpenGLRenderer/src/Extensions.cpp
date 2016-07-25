@@ -919,9 +919,8 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glValidateProgramPipeline)
 			IMPORT_FUNC(glGetProgramPipelineiv)
 			IMPORT_FUNC(glGetProgramPipelineInfoLog)
+			IMPORT_FUNC(glActiveShaderProgram)
 			mGL_ARB_separate_shader_objects = result;
-
-			mGL_ARB_separate_shader_objects = false; // TODO(co) "GL_ARB_separate_shader_objects" support is work in progress
 		}
 
 		// GL_ARB_get_programinary

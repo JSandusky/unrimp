@@ -135,7 +135,7 @@ void FirstTessellation::onInitialization()
 				program = shaderLanguage->createProgram(
 					*mRootSignature,
 					vertexAttributes,
-					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode),
 					shaderLanguage->createTessellationControlShaderFromSourceCode(tessellationControlShaderSourceCode),
 					shaderLanguage->createTessellationEvaluationShaderFromSourceCode(tessellationEvaluationShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));

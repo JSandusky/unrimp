@@ -210,7 +210,7 @@ void VertexBuffer::onInitialization()
 				program = shaderLanguage->createProgram(
 					*mRootSignature,
 					vertexAttributesVBO,
-					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createVertexShaderFromSourceCode(vertexAttributesVBO, vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 
 				// Create the pipeline state objects (PSO)
@@ -226,7 +226,7 @@ void VertexBuffer::onInitialization()
 				program = shaderLanguage->createProgram(
 					*mRootSignature,
 					vertexAttributesVBOs,
-					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createVertexShaderFromSourceCode(vertexAttributesVBOs, vertexShaderSourceCode),
 					shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 
 				// Create the pipeline state objects (PSO)

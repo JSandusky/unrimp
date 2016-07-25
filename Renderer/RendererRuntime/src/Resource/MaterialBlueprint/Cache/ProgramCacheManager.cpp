@@ -87,7 +87,7 @@ namespace RendererRuntime
 				if (nullptr != shaderBlueprintResource)
 				{
 					ShaderBuilder shaderBuilder;
-					vertexShader = shaderLanguage->createVertexShaderFromSourceCode(shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, pipelineStateSignature.getShaderProperties()).c_str());
+					vertexShader = shaderLanguage->createVertexShaderFromSourceCode(materialBlueprintResource.getVertexAttributes(), shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, pipelineStateSignature.getShaderProperties()).c_str());
 				}
 				else
 				{

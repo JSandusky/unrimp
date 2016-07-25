@@ -224,7 +224,7 @@ void FirstGpgpu::onInitialization()
 			const char *vertexShaderSourceCode = nullptr;
 			const char *fragmentShaderSourceCode_ContentGeneration = nullptr;
 			const char *fragmentShaderSourceCode_ContentProcessing = nullptr;
-			#include "FirstGpgpu_GLSL_130.h"
+			#include "FirstGpgpu_GLSL_410.h"
 			#include "FirstGpgpu_GLSL_ES2.h"
 			#include "FirstGpgpu_HLSL_D3D9.h"
 			#include "FirstGpgpu_HLSL_D3D10_D3D11_D3D12.h"
@@ -234,7 +234,7 @@ void FirstGpgpu::onInitialization()
 			// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
 			//    the unused texture coordinate might get optimized out
 			// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-			Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
+			Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode));
 			programContentGeneration = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentGeneration));
 			programContentProcessing = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_ContentProcessing));
 		}

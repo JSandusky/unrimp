@@ -23,7 +23,107 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Shader/Separate/VertexShaderSeparate.h"
 #include "OpenGLRenderer/Shader/Separate/ShaderLanguageSeparate.h"
+#include "OpenGLRenderer/Shader/Monolithic/ShaderLanguageMonolithic.h"
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #include "OpenGLRenderer/Extensions.h"
+
+#include <Renderer/VertexArrayTypes.h>
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		// Basing on the implementation from https://www.opengl.org/registry/specs/ARB/separate_shader_objects.txt
+		GLuint CreateOpenGLShaderProgram(const Renderer::VertexAttributes& vertexAttributes, GLenum type, const char* sourceCode)
+		{
+			// Create the OpenGL shader
+			const GLuint openGLShader = OpenGLRenderer::ShaderLanguageMonolithic::loadShader(type, sourceCode);
+			if (openGLShader > 0)
+			{
+				// Create the OpenGL program
+				const GLuint openGLProgram = OpenGLRenderer::glCreateProgramObjectARB();
+				if (openGLProgram > 0)
+				{
+					OpenGLRenderer::glProgramParameteri(openGLProgram, GL_PROGRAM_SEPARABLE, GL_TRUE);
+
+					// Attach the shader to the program
+					OpenGLRenderer::glAttachObjectARB(openGLProgram, openGLShader);
+
+					// Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 & 12 terminology)
+					// -> Crucial code that glCreateShaderProgram doesn't do
+					{
+						const uint32_t numberOfVertexAttributes = vertexAttributes.numberOfAttributes;
+						for (uint32_t vertexAttribute = 0; vertexAttribute < numberOfVertexAttributes; ++vertexAttribute)
+						{
+							OpenGLRenderer::glBindAttribLocationARB(openGLProgram, vertexAttribute, vertexAttributes.attributes[vertexAttribute].name);
+						}
+					}
+
+					// Link the program
+					OpenGLRenderer::glLinkProgramARB(openGLProgram);
+
+					// Detach the shader from the program
+					OpenGLRenderer::glDetachObjectARB(openGLProgram, openGLShader);
+				}
+
+				// Destroy the OpenGL shader
+				OpenGLRenderer::glDeleteObjectARB(openGLShader);
+
+				// Check the link status
+				if (openGLProgram > 0)
+				{
+					GLint linked = GL_FALSE;
+					OpenGLRenderer::glGetObjectParameterivARB(openGLProgram, GL_OBJECT_LINK_STATUS_ARB, &linked);
+					if (GL_TRUE == linked)
+					{
+						// Done
+						return openGLProgram;
+					}
+					else
+					{
+						// Error, program link failed!
+						#ifdef RENDERER_OUTPUT_DEBUG
+							// Get the length of the information (including a null termination)
+							GLint informationLength = 0;
+							OpenGLRenderer::glGetObjectParameterivARB(openGLProgram, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
+							if (informationLength > 1)
+							{
+								// Allocate memory for the information
+								char *informationLog = new char[static_cast<uint32_t>(informationLength)];
+
+								// Get the information
+								OpenGLRenderer::glGetInfoLogARB(openGLProgram, informationLength, nullptr, informationLog);
+
+								// Output the debug string
+								RENDERER_OUTPUT_DEBUG_STRING(informationLog)
+
+								// Cleanup information memory
+								delete [] informationLog;
+							}
+						#endif
+					}
+				}
+			}
+
+			// Error!
+			return 0;
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -36,16 +136,16 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const uint8_t *, uint32_t) :
+	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes&, const uint8_t *, uint32_t) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(0)
 	{
 		// Nothing to do in here
 	}
 
-	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
+	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer &openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShader(GL_VERTEX_SHADER_ARB, sourceCode))
+		mOpenGLShaderProgram(::detail::CreateOpenGLShaderProgram(vertexAttributes, GL_VERTEX_SHADER_ARB, sourceCode))
 	{
 		// Nothing to do in here
 	}

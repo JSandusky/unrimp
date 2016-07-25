@@ -307,7 +307,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 		// Get the shader source code (outsourced to keep an overview)
 		const char *vertexShaderSourceCode = nullptr;
 		const char *fragmentShaderSourceCode = nullptr;
-		#include "CubeRendererDrawInstanced_GLSL_140.h"
+		#include "CubeRendererDrawInstanced_GLSL_410.h"
 		#include "CubeRendererDrawInstanced_HLSL_D3D10_D3D11_D3D12.h"
 		#include "CubeRendererDrawInstanced_Null.h"
 
@@ -315,7 +315,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 		mProgram = shaderLanguage->createProgram(
 			*mRootSignature,
 			detail::VertexAttributes,
-			shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+			shaderLanguage->createVertexShaderFromSourceCode(detail::VertexAttributes, vertexShaderSourceCode),
 			shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 	}
 

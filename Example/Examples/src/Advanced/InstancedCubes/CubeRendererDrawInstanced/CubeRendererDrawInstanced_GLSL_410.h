@@ -37,18 +37,22 @@ if (0 == strcmp(mRenderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 140\n"	// OpenGL 3.1 - required for gl_InstanceID
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
 in  vec3 Position;	// Object space vertex position input
 in  vec2 TexCoord;
 in  vec3 Normal;
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
 out vec3 WorldPositionVs;
 out vec3 TexCoordVs;	// z component = texture ID
 out vec3 NormalVs;
 
 // Uniforms
-uniform samplerBuffer PerInstanceDataMap;	// Texture buffer with per instanc data (used via vertex texture fetch) - Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform samplerBuffer PerInstanceDataMap;	// Texture buffer with per instance data (used via vertex texture fetch) - Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 											// -> Layout: [Position][Rotation][Position][Rotation]...
 											//    - Position: xyz=Position, w=Slice of the 2D texture array to use
 											//    - Rotation: Rotation quaternion (xyz) and scale (w)
@@ -165,18 +169,22 @@ void main()
 // One vertex shader invocation per vertex
 if (mRenderer->getCapabilities().uniformBuffer)
 vertexShaderSourceCode =
-"#version 140\n"	// OpenGL 3.1 - required for gl_InstanceID
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
 in vec3 Position;		// Object space vertex position input
 in vec2 TexCoord;
 in vec3 Normal;
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
 out vec3 WorldPositionVs;
 out vec3 TexCoordVs;	// z component = texture ID
 out vec3 NormalVs;
 
 // Uniforms
-uniform samplerBuffer PerInstanceDataMap;	// Texture buffer with per instanc data (used via vertex texture fetch) - Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform samplerBuffer PerInstanceDataMap;	// Texture buffer with per instance data (used via vertex texture fetch) - Usage of "layout(binding = 1)" would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 											// -> Layout: [Position][Rotation][Position][Rotation]...
 											//    - Position: xyz=Position, w=Slice of the 2D texture array to use
 											//    - Rotation: Rotation quaternion (xyz) and scale (w)
@@ -301,7 +309,7 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 140\n"										// OpenGL 3.1 - required for gl_InstanceID
+"#version 410 core\n"									// OpenGL 4.1
 "#extension GL_EXT_texture_array : enable\n"
 "#extension GL_ARB_explicit_attrib_location : enable\n"	// Required for "layout(location = 0)" etc.
 STRINGIFY(
@@ -330,7 +338,7 @@ void main()
 // Uniform buffer version (Direct3D 10 and Direct3D 11 only support uniform buffers and no individual uniform access)
 if (mRenderer->getCapabilities().uniformBuffer)
 fragmentShaderSourceCode =
-"#version 140\n"										// OpenGL 3.1 - required for gl_InstanceID
+"#version 410 core\n"									// OpenGL 4.1
 "#extension GL_EXT_texture_array : enable\n"
 "#extension GL_ARB_explicit_attrib_location : enable\n"	// Required for "layout(location = 0)" etc.
 STRINGIFY(

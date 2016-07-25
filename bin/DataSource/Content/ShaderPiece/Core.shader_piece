@@ -123,7 +123,7 @@
 
 		// Shader attribute output
 		#define OUTPUT_BEGIN
-			#define OUTPUT_POSITION
+			#define OUTPUT_POSITION out gl_PerVertex { vec4 gl_Position; };
 			#define OUTPUT_COLOR(index) layout(location = ##index) out vec4 OutputColor##index;
 			#define OUTPUT_TEXTURE_COORDINATE(type, name, index) out type name;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(type, name, index) flat out type name;

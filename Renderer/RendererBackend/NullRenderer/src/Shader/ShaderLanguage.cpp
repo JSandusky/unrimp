@@ -66,13 +66,13 @@ namespace NullRenderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguage::createVertexShaderFromBytecode(const uint8_t *, uint32_t)
+	Renderer::IVertexShader *ShaderLanguage::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const uint8_t *, uint32_t)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		return new VertexShader(reinterpret_cast<NullRenderer&>(getRenderer()));
 	}
 
-	Renderer::IVertexShader *ShaderLanguage::createVertexShaderFromSourceCode(const char *, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguage::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const char *, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		return new VertexShader(reinterpret_cast<NullRenderer&>(getRenderer()));

@@ -36,7 +36,6 @@
 namespace Renderer
 {
 	class IRootSignature;
-	struct VertexAttributes;
 }
 namespace OpenGLRenderer
 {
@@ -79,8 +78,6 @@ namespace OpenGLRenderer
 		*    Owner OpenGL renderer instance
 		*  @param[in] rootSignature
 		*    Root signature
-		*  @param[in] vertexAttributes
-		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] vertexShaderSeparate
 		*    Vertex shader the program is using, can be a null pointer
 		*  @param[in] tessellationControlShaderSeparate
@@ -95,7 +92,7 @@ namespace OpenGLRenderer
 		*  @note
 		*    - The program keeps a reference to the provided shaders and releases it when no longer required
 		*/
-		ProgramSeparate(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderSeparate *vertexShaderSeparate, TessellationControlShaderSeparate *tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate *tessellationEvaluationShaderSeparate, GeometryShaderSeparate *geometryShaderSeparate, FragmentShaderSeparate *fragmentShaderSeparate);
+		ProgramSeparate(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, VertexShaderSeparate *vertexShaderSeparate, TessellationControlShaderSeparate *tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate *tessellationEvaluationShaderSeparate, GeometryShaderSeparate *geometryShaderSeparate, FragmentShaderSeparate *fragmentShaderSeparate);
 
 		/**
 		*  @brief
@@ -131,21 +128,12 @@ namespace OpenGLRenderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		uint32_t mOpenGLProgram;			///< OpenGL program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)	// TODO(co) Remove this
-		uint32_t mOpenGLProgramPipeline;	///< OpenGL program pipeline ("container" object, not shared between OpenGL contexts), can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		VertexShaderSeparate				 *mVertexShaderSeparate;							///< Vertex shader the program is using (we keep a reference to it), can be a null pointer
-		TessellationControlShaderSeparate	 *mTessellationControlShaderSeparate;				///< Tessellation control shader the program is using (we keep a reference to it), can be a null pointer
-		TessellationEvaluationShaderSeparate *mTessellationEvaluationShaderSeparate;			///< Tessellation evaluation shader the program is using (we keep a reference to it), can be a null pointer
-		GeometryShaderSeparate				 *mGeometryShaderSeparate;							///< Geometry shader the program is using (we keep a reference to it), can be a null pointer
-		FragmentShaderSeparate				 *mFragmentShaderSeparate;							///< Fragment shader the program is using (we keep a reference to it), can be a null pointer
-		uint32_t							  mNumberOfRootSignatureParameters;					///< Number of root signature parameters
-		int32_t*							  mRootSignatureParameterIndexToUniformLocation;	///< Root signature parameter index to OpenGL uniform location mapping, can be a null pointer (type "GLint" not used in here in order to keep the header slim)
+		uint32_t							  mOpenGLProgramPipeline;					///< OpenGL program pipeline ("container" object, not shared between OpenGL contexts), can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		VertexShaderSeparate				 *mVertexShaderSeparate;					///< Vertex shader the program is using (we keep a reference to it), can be a null pointer
+		TessellationControlShaderSeparate	 *mTessellationControlShaderSeparate;		///< Tessellation control shader the program is using (we keep a reference to it), can be a null pointer
+		TessellationEvaluationShaderSeparate *mTessellationEvaluationShaderSeparate;	///< Tessellation evaluation shader the program is using (we keep a reference to it), can be a null pointer
+		GeometryShaderSeparate				 *mGeometryShaderSeparate;					///< Geometry shader the program is using (we keep a reference to it), can be a null pointer
+		FragmentShaderSeparate				 *mFragmentShaderSeparate;					///< Fragment shader the program is using (we keep a reference to it), can be a null pointer
 
 
 	};

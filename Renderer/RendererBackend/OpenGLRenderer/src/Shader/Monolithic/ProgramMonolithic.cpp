@@ -47,18 +47,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	ProgramMonolithic::ProgramMonolithic(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderMonolithic *vertexShaderMonolithic, TessellationControlShaderMonolithic *tessellationControlShaderMonolithic, TessellationEvaluationShaderMonolithic *tessellationEvaluationShaderMonolithic, GeometryShaderMonolithic *geometryShaderMonolithic, FragmentShaderMonolithic *fragmentShaderMonolithic) :
 		IProgram(openGLRenderer),
-		mOpenGLProgram(glCreateProgramObjectARB()),
-		mNumberOfRootSignatureParameters(0),
-		mRootSignatureParameterIndexToUniformLocation(nullptr)
+		mOpenGLProgram(glCreateProgramObjectARB())
 	{
-		{ // Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 & 12 terminology)
-			const uint32_t numberOfVertexAttributes = vertexAttributes.numberOfAttributes;
-			for (uint32_t vertexAttribute = 0; vertexAttribute < numberOfVertexAttributes; ++vertexAttribute)
-			{
-				glBindAttribLocationARB(mOpenGLProgram, vertexAttribute, vertexAttributes.attributes[vertexAttribute].name);
-			}
-		}
-
 		// Attach the shaders to the program
 		// -> We don't need to keep a reference to the shader, to add and release at once to ensure a nice behaviour
 		if (nullptr != vertexShaderMonolithic)
@@ -111,6 +101,14 @@ namespace OpenGLRenderer
 			fragmentShaderMonolithic->release();
 		}
 
+		{ // Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 & 12 terminology)
+			const uint32_t numberOfVertexAttributes = vertexAttributes.numberOfAttributes;
+			for (uint32_t vertexAttribute = 0; vertexAttribute < numberOfVertexAttributes; ++vertexAttribute)
+			{
+				glBindAttribLocationARB(mOpenGLProgram, vertexAttribute, vertexAttributes.attributes[vertexAttribute].name);
+			}
+		}
+
 		// Link the program
 		glLinkProgramARB(mOpenGLProgram);
 
@@ -131,76 +129,67 @@ namespace OpenGLRenderer
 			// -> So we have to build a root signature parameter index -> uniform location mapping here
 			const Renderer::RootSignature& rootSignatureData = static_cast<const RootSignature&>(rootSignature).getRootSignature();
 			const uint32_t numberOfParameters = rootSignatureData.numberOfParameters;
-			if (numberOfParameters > 0)
+			for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
 			{
-				mRootSignatureParameterIndexToUniformLocation = new int32_t[numberOfParameters];
-				memset(mRootSignatureParameterIndexToUniformLocation, -1, sizeof(int32_t) * numberOfParameters);
-				for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
+				const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[parameterIndex];
+				if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 				{
-					const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[parameterIndex];
-					if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
+					// TODO(co) For now, we only support a single descriptor range
+					if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 					{
-						// TODO(co) For now, we only support a single descriptor range
-						if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
-						{
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Only a single descriptor range is supported")
-						}
-						else
-						{
-							const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
+						RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Only a single descriptor range is supported")
+					}
+					else
+					{
+						const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
 
-							// Ignore sampler range types in here (OpenGL handles samplers in a different way then Direct3D 10>=)
-							if (Renderer::DescriptorRangeType::UBV == descriptorRange->rangeType)
+						// Ignore sampler range types in here (OpenGL handles samplers in a different way then Direct3D 10>=)
+						if (Renderer::DescriptorRangeType::UBV == descriptorRange->rangeType)
+						{
+							// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
+							// for backward compatibility, ask for the uniform block index
+							const GLuint uniformBlockIndex = glGetUniformBlockIndex(mOpenGLProgram, descriptorRange->baseShaderRegisterName);
+							if (GL_INVALID_INDEX != uniformBlockIndex)
 							{
-								// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
-								// for backward compatibility, ask for the uniform block index
-								const GLuint uniformBlockIndex = glGetUniformBlockIndex(mOpenGLProgram, descriptorRange->baseShaderRegisterName);
-								if (GL_INVALID_INDEX != uniformBlockIndex)
-								{
-									mRootSignatureParameterIndexToUniformLocation[parameterIndex] = static_cast<int32_t>(uniformBlockIndex);
-
-									// Associate the uniform block with the given binding point
-									glUniformBlockBinding(mOpenGLProgram, uniformBlockIndex, parameterIndex);
-								}
+								// Associate the uniform block with the given binding point
+								glUniformBlockBinding(mOpenGLProgram, uniformBlockIndex, parameterIndex);
 							}
-							else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
+						}
+						else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
+						{
+							const GLint uniformLocation = glGetUniformLocationARB(mOpenGLProgram, descriptorRange->baseShaderRegisterName);
+							if (uniformLocation >= 0)
 							{
-								const GLint uniformLocation = glGetUniformLocationARB(mOpenGLProgram, descriptorRange->baseShaderRegisterName);
-								if (uniformLocation >= 0)
-								{
-									mRootSignatureParameterIndexToUniformLocation[parameterIndex] = uniformLocation;
-
-									// OpenGL/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
-									// -> When using OpenGL or OpenGL ES 2 this is required
-									// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
-									//    in GLSL shader) , for backward compatibility we don't use it in here
-									// -> When using Direct3D 9, 10, 11 or 12, the texture unit
-									//    to use is usually defined directly within the shader by using the "register"-keyword
-									// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
-									#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-										// Backup the currently used OpenGL program
-										GLint openGLProgramBackup = 0;
-										glGetIntegerv(GL_CURRENT_PROGRAM, &openGLProgramBackup);
-										if (openGLProgramBackup == mOpenGLProgram)
-										{
-											// Set uniform, please note that for this our program must be the currently used one
-											glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-										}
-										else
-										{
-											// Set uniform, please note that for this our program must be the currently used one
-											glUseProgramObjectARB(mOpenGLProgram);
-											glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-
-											// Be polite and restore the previous used OpenGL program
-											glUseProgramObjectARB(openGLProgramBackup);
-										}
-									#else
+								// OpenGL/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
+								// -> When using OpenGL or OpenGL ES 2 this is required
+								// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
+								//    in GLSL shader) , for backward compatibility we don't use it in here
+								// -> When using Direct3D 9, 10, 11 or 12, the texture unit
+								//    to use is usually defined directly within the shader by using the "register"-keyword
+								// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
+								#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+									// Backup the currently used OpenGL program
+									GLint openGLProgramBackup = 0;
+									glGetIntegerv(GL_CURRENT_PROGRAM, &openGLProgramBackup);
+									if (openGLProgramBackup == mOpenGLProgram)
+									{
+										// Set uniform, please note that for this our program must be the currently used one
+										glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+									}
+									else
+									{
 										// Set uniform, please note that for this our program must be the currently used one
 										glUseProgramObjectARB(mOpenGLProgram);
 										glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-									#endif
-								}
+
+										// Be polite and restore the previous used OpenGL program
+										glUseProgramObjectARB(openGLProgramBackup);
+									}
+								#else
+									// Set uniform, please note that for this our program must be the currently used one
+									glUseProgramObjectARB(mOpenGLProgram);
+									glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+								#endif
 							}
 						}
 					}
@@ -237,12 +226,6 @@ namespace OpenGLRenderer
 		// Destroy the OpenGL program
 		// -> A value of 0 for program will be silently ignored
 		glDeleteObjectARB(mOpenGLProgram);
-
-		// Destroy root signature parameter index to OpenGL uniform location mapping, if required
-		if (nullptr != mRootSignatureParameterIndexToUniformLocation)
-		{
-			delete [] mRootSignatureParameterIndexToUniformLocation;
-		}
 	}
 
 

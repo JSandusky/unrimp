@@ -170,7 +170,7 @@ void FirstPostProcessing::onInitialization()
 				const char *vertexShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode_SceneRendering = nullptr;
 				const char *fragmentShaderSourceCode_PostProcessing = nullptr;
-				#include "FirstPostProcessing_GLSL_130.h"
+				#include "FirstPostProcessing_GLSL_410.h"
 				#include "FirstPostProcessing_GLSL_ES2.h"
 				#include "FirstPostProcessing_HLSL_D3D9.h"
 				#include "FirstPostProcessing_HLSL_D3D10_D3D11_D3D12.h"
@@ -180,7 +180,7 @@ void FirstPostProcessing::onInitialization()
 				// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
 				//    the unused texture coordinate might get optimized out
 				// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-				Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
+				Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode));
 				programSceneRendering = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_SceneRendering));
 				programPostProcessing = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_PostProcessing));
 			}

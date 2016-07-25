@@ -79,12 +79,12 @@ namespace VulkanRenderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const uint8_t *bytecode, uint32_t numberOfBytes)
 	{
 		return new VertexShaderGlsl(static_cast<VulkanRenderer&>(getRenderer()), bytecode, numberOfBytes);
 	}
 
-	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguageGlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const char *sourceCode, const char *, const char *, const char *)
 	{
 		return new VertexShaderGlsl(static_cast<VulkanRenderer&>(getRenderer()), sourceCode);
 	}

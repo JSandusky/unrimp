@@ -121,13 +121,13 @@ namespace OpenGLRenderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageSeparate::createVertexShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::IVertexShader *ShaderLanguageSeparate::createVertexShaderFromBytecode(const Renderer::VertexAttributes& vertexAttributes, const uint8_t *bytecode, uint32_t numberOfBytes)
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_vertex_shader())
 		{
-			return new VertexShaderSeparate(openGLRenderer, bytecode, numberOfBytes);
+			return new VertexShaderSeparate(openGLRenderer, vertexAttributes, bytecode, numberOfBytes);
 		}
 		else
 		{
@@ -136,13 +136,13 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IVertexShader *ShaderLanguageSeparate::createVertexShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguageSeparate::createVertexShaderFromSourceCode(const Renderer::VertexAttributes& vertexAttributes, const char *sourceCode, const char *, const char *, const char *)
 	{
 		// Check whether or not there's vertex shader support
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_vertex_shader())
 		{
-			return new VertexShaderSeparate(openGLRenderer, sourceCode);
+			return new VertexShaderSeparate(openGLRenderer, vertexAttributes, sourceCode);
 		}
 		else
 		{
@@ -279,7 +279,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IProgram *ShaderLanguageSeparate::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)
+	Renderer::IProgram *ShaderLanguageSeparate::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes&, Renderer::IVertexShader *vertexShader, Renderer::ITessellationControlShader *tessellationControlShader, Renderer::ITessellationEvaluationShader *tessellationEvaluationShader, Renderer::IGeometryShader *geometryShader, Renderer::IFragmentShader *fragmentShader)
 	{
 		OpenGLRenderer &openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 
@@ -312,12 +312,12 @@ namespace OpenGLRenderer
 		else if (openGLRenderer.getExtensions().isGL_EXT_direct_state_access())
 		{
 			// Effective direct state access (DSA)
-			return new ProgramSeparateDsa(openGLRenderer, rootSignature, vertexAttributes, static_cast<VertexShaderSeparate*>(vertexShader), static_cast<TessellationControlShaderSeparate*>(tessellationControlShader), static_cast<TessellationEvaluationShaderSeparate*>(tessellationEvaluationShader), static_cast<GeometryShaderSeparate*>(geometryShader), static_cast<FragmentShaderSeparate*>(fragmentShader));
+			return new ProgramSeparateDsa(openGLRenderer, rootSignature, static_cast<VertexShaderSeparate*>(vertexShader), static_cast<TessellationControlShaderSeparate*>(tessellationControlShader), static_cast<TessellationEvaluationShaderSeparate*>(tessellationEvaluationShader), static_cast<GeometryShaderSeparate*>(geometryShader), static_cast<FragmentShaderSeparate*>(fragmentShader));
 		}
 		else
 		{
 			// Traditional bind version
-			return new ProgramSeparate(openGLRenderer, rootSignature, vertexAttributes, static_cast<VertexShaderSeparate*>(vertexShader), static_cast<TessellationControlShaderSeparate*>(tessellationControlShader), static_cast<TessellationEvaluationShaderSeparate*>(tessellationEvaluationShader), static_cast<GeometryShaderSeparate*>(geometryShader), static_cast<FragmentShaderSeparate*>(fragmentShader));
+			return new ProgramSeparate(openGLRenderer, rootSignature, static_cast<VertexShaderSeparate*>(vertexShader), static_cast<TessellationControlShaderSeparate*>(tessellationControlShader), static_cast<TessellationEvaluationShaderSeparate*>(tessellationEvaluationShader), static_cast<GeometryShaderSeparate*>(geometryShader), static_cast<FragmentShaderSeparate*>(fragmentShader));
 		}
 
 		// Error! Shader language mismatch!

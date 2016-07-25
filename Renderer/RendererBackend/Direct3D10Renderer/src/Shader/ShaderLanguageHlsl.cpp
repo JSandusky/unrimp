@@ -102,13 +102,13 @@ namespace Direct3D10Renderer
 		return NAME;
 	}
 
-	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromBytecode(const uint8_t *bytecode, uint32_t numberOfBytes)
+	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const uint8_t *bytecode, uint32_t numberOfBytes)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		return new VertexShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), bytecode, numberOfBytes);
 	}
 
-	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromSourceCode(const char *sourceCode, const char *, const char *, const char *)
+	Renderer::IVertexShader *ShaderLanguageHlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const char *sourceCode, const char *, const char *, const char *)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		return new VertexShaderHlsl(static_cast<Direct3D10Renderer&>(getRenderer()), sourceCode);

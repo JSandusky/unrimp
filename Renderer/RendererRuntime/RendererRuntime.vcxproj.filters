@@ -765,7 +765,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCompiler.h">
       <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
     </ClInclude>
-    <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_130.h">
+    <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_410.h">
       <Filter>Source Files\DebugGui\Detail\Shader</Filter>
     </ClInclude>
   </ItemGroup>

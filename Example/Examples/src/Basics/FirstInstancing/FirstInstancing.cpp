@@ -171,7 +171,7 @@ void FirstInstancing::onInitialization()
 					// Get the shader source code (outsourced to keep an overview)
 					const char *vertexShaderSourceCode = nullptr;
 					const char *fragmentShaderSourceCode = nullptr;
-					#include "FirstInstancing_InstancedArrays_GLSL_130.h"
+					#include "FirstInstancing_InstancedArrays_GLSL_410.h"
 					#include "FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11_D3D12.h"
 					#include "FirstInstancing_InstancedArrays_Null.h"
 
@@ -179,7 +179,7 @@ void FirstInstancing::onInitialization()
 					program = shaderLanguage->createProgram(
 						*mRootSignature,
 						vertexAttributes,
-						shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+						shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode),
 						shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 				}
 
@@ -244,7 +244,7 @@ void FirstInstancing::onInitialization()
 					// Get the shader source code (outsourced to keep an overview)
 					const char *vertexShaderSourceCode = nullptr;
 					const char *fragmentShaderSourceCode = nullptr;
-					#include "FirstInstancing_DrawInstanced_GLSL_140.h"
+					#include "FirstInstancing_DrawInstanced_GLSL_410.h"
 					#include "FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11_D3D12.h"
 					#include "FirstInstancing_DrawInstanced_Null.h"
 
@@ -252,7 +252,7 @@ void FirstInstancing::onInitialization()
 					program = shaderLanguage->createProgram(
 						*mRootSignature,
 						vertexAttributes,
-						shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+						shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode),
 						shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 				}
 

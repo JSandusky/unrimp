@@ -37,10 +37,14 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 130\n"	// OpenGL 3.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
 in  vec3 Position;		// Object space vertex position
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
 in  vec2 TexCoord;		// 16 bit texture coordinate
 out vec2 TexCoordVs;	// Texture coordinate
 in  vec4 QTangent;		// 16 bit QTangent
@@ -94,7 +98,7 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode =
-"#version 130\n"	// OpenGL 3.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
 in vec2 TexCoordVs;	// Texture coordinate

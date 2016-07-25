@@ -156,9 +156,6 @@
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing.h">
       <Filter>Basics\FirstInstancing</Filter>
     </ClInclude>
-    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_140.h">
-      <Filter>Basics\FirstInstancing</Filter>
-    </ClInclude>
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_ES2.h">
       <Filter>Basics\FirstMultipleRenderTargets</Filter>
     </ClInclude>
@@ -273,9 +270,6 @@
     <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing.h">
       <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
-    <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_GLSL_400.h">
-      <Filter>Advanced\IcosahedronTessellation</Filter>
-    </ClInclude>
     <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_Null.h">
       <Filter>Advanced\IcosahedronTessellation</Filter>
     </ClInclude>
@@ -283,9 +277,6 @@
       <Filter>Advanced\IcosahedronTessellation</Filter>
     </ClInclude>
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced.h">
-      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_GLSL_140.h">
       <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
     </ClInclude>
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_Null.h">
@@ -414,32 +405,14 @@
     <ClInclude Include="src\Runtime\FirstCompositor\CompositorPassFactoryFirst.h">
       <Filter>Runtime\FirstCompositor</Filter>
     </ClInclude>
-    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_130.h">
-      <Filter>Runtime\FirstMesh</Filter>
-    </ClInclude>
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_130.h">
       <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
     <ClInclude Include="src\Runtime\FirstCommandBucket\FirstCommandBucket_GLSL_140.h">
       <Filter>Runtime\FirstCommandBucket</Filter>
     </ClInclude>
-    <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_GLSL_130.h">
-      <Filter>Advanced\FirstGpgpu</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_GLSL_130.h">
-      <Filter>Advanced\FirstPostProcessing</Filter>
-    </ClInclude>
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_130.h">
       <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_130.h">
-      <Filter>Basics\FirstInstancing</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_GLSL_130.h">
-      <Filter>Advanced\Fxaa</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_130.h">
-      <Filter>Advanced\Fxaa</Filter>
     </ClInclude>
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_410.h">
       <Filter>Basics\FirstTriangle</Filter>
@@ -464,6 +437,33 @@
     </ClInclude>
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_GLSL_410.h">
       <Filter>Basics\FirstTessellation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_GLSL_410.h">
+      <Filter>Advanced\FirstGpgpu</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\FirstPostProcessing\FirstPostProcessing_GLSL_410.h">
+      <Filter>Advanced\FirstPostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_SceneRendering_GLSL_410.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\Fxaa\Fxaa_PostProcessing_GLSL_410.h">
+      <Filter>Advanced\Fxaa</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_410.h">
+      <Filter>Runtime\FirstMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_410.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_410.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_GLSL_410.h">
+      <Filter>Advanced\IcosahedronTessellation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_GLSL_410.h">
+      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

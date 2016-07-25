@@ -22,6 +22,11 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Shader/Separate/ProgramSeparateDsa.h"
+#include "OpenGLRenderer/Shader/Separate/VertexShaderSeparate.h"
+#include "OpenGLRenderer/Shader/Separate/GeometryShaderSeparate.h"
+#include "OpenGLRenderer/Shader/Separate/FragmentShaderSeparate.h"
+#include "OpenGLRenderer/Shader/Separate/TessellationControlShaderSeparate.h"
+#include "OpenGLRenderer/Shader/Separate/TessellationEvaluationShaderSeparate.h"
 #include "OpenGLRenderer/Extensions.h"
 
 
@@ -35,8 +40,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramSeparateDsa::ProgramSeparateDsa(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderSeparate *vertexShaderSeparate, TessellationControlShaderSeparate *tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate *tessellationEvaluationShaderSeparate, GeometryShaderSeparate *geometryShaderSeparate, FragmentShaderSeparate *fragmentShaderSeparate) :
-		ProgramSeparate(openGLRenderer, rootSignature, vertexAttributes, vertexShaderSeparate, tessellationControlShaderSeparate, tessellationEvaluationShaderSeparate, geometryShaderSeparate, fragmentShaderSeparate)
+	ProgramSeparateDsa::ProgramSeparateDsa(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, VertexShaderSeparate *vertexShaderSeparate, TessellationControlShaderSeparate *tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate *tessellationEvaluationShaderSeparate, GeometryShaderSeparate *geometryShaderSeparate, FragmentShaderSeparate *fragmentShaderSeparate) :
+		ProgramSeparate(openGLRenderer, rootSignature, vertexShaderSeparate, tessellationControlShaderSeparate, tessellationEvaluationShaderSeparate, geometryShaderSeparate, fragmentShaderSeparate)
 	{
 		// Nothing to do in here
 	}
@@ -52,32 +57,32 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	void ProgramSeparateDsa::setUniform1f(handle uniformHandle, float value)
 	{
-		glProgramUniform1fEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), value);
+		glProgramUniform1fEXT(mVertexShaderSeparate->getOpenGLShaderProgram(), static_cast<GLint>(uniformHandle), value);
 	}
 
 	void ProgramSeparateDsa::setUniform2fv(handle uniformHandle, const float *value)
 	{
-		glProgramUniform2fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
+		glProgramUniform2fvEXT(mVertexShaderSeparate->getOpenGLShaderProgram(), static_cast<GLint>(uniformHandle), 1, value);
 	}
 
 	void ProgramSeparateDsa::setUniform3fv(handle uniformHandle, const float *value)
 	{
-		glProgramUniform3fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
+		glProgramUniform3fvEXT(mVertexShaderSeparate->getOpenGLShaderProgram(), static_cast<GLint>(uniformHandle), 1, value);
 	}
 
 	void ProgramSeparateDsa::setUniform4fv(handle uniformHandle, const float *value)
 	{
-		glProgramUniform4fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, value);
+		glProgramUniform4fvEXT(mVertexShaderSeparate->getOpenGLShaderProgram(), static_cast<GLint>(uniformHandle), 1, value);
 	}
 
 	void ProgramSeparateDsa::setUniformMatrix3fv(handle uniformHandle, const float *value)
 	{
-		glProgramUniformMatrix3fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+		glProgramUniformMatrix3fvEXT(mVertexShaderSeparate->getOpenGLShaderProgram(), static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
 	}
 
 	void ProgramSeparateDsa::setUniformMatrix4fv(handle uniformHandle, const float *value)
 	{
-		glProgramUniformMatrix4fvEXT(mOpenGLProgram, static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
+		glProgramUniformMatrix4fvEXT(mVertexShaderSeparate->getOpenGLShaderProgram(), static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
 	}
 
 

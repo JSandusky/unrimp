@@ -169,7 +169,7 @@ void FirstMultipleRenderTargets::onInitialization()
 					// -> Depending on the used graphics API and whether or not the shader compiler & linker is clever,
 					//    the unused texture coordinate might get optimized out
 					// -> In a real world application you shouldn't rely on shader compiler & linker behaviour assumptions
-					Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode));
+					Renderer::IVertexShaderPtr vertexShader(shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode));
 					programMultipleRenderTargets = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode_MultipleRenderTargets));
 					program = shaderLanguage->createProgram(*mRootSignature, vertexAttributes, vertexShader, shaderLanguage->createFragmentShaderFromSourceCode(fragmentShaderSourceCode));
 				}

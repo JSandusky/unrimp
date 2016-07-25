@@ -33,7 +33,75 @@
 #include "OpenGLRenderer/RootSignature.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
-#include <Renderer/VertexArrayTypes.h>
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void bindUniformBlock(const Renderer::DescriptorRange& descriptorRange, uint32_t parameterIndex, uint32_t openGLProgram)
+		{
+			// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
+			// for backward compatibility, ask for the uniform block index
+			const GLuint uniformBlockIndex = OpenGLRenderer::glGetUniformBlockIndex(openGLProgram, descriptorRange.baseShaderRegisterName);
+			if (GL_INVALID_INDEX != uniformBlockIndex)
+			{
+				// Associate the uniform block with the given binding point
+				OpenGLRenderer::glUniformBlockBinding(openGLProgram, uniformBlockIndex, parameterIndex);
+			}
+		}
+
+		void bindUniformLocation(const Renderer::DescriptorRange& descriptorRange, uint32_t openGLProgramPipeline, uint32_t openGLProgram)
+		{
+			const GLint uniformLocation = OpenGLRenderer::glGetUniformLocationARB(openGLProgram, descriptorRange.baseShaderRegisterName);
+			if (uniformLocation >= 0)
+			{
+				// OpenGL/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
+				// -> When using OpenGL or OpenGL ES 2 this is required
+				// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
+				//    in GLSL shader) , for backward compatibility we don't use it in here
+				// -> When using Direct3D 9, 10, 11 or 12, the texture unit
+				//    to use is usually defined directly within the shader by using the "register"-keyword
+				// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
+				#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+					// Backup the currently used OpenGL program
+					GLint openGLProgramBackup = 0;
+					OpenGLRenderer::glGetProgramPipelineiv(openGLProgramPipeline, GL_ACTIVE_PROGRAM, &openGLProgramBackup);
+					if (static_cast<uint32_t>(openGLProgramBackup) == openGLProgram)
+					{
+						// Set uniform, please note that for this our program must be the currently used one
+						OpenGLRenderer::glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
+					}
+					else
+					{
+						// Set uniform, please note that for this our program must be the currently used one
+						OpenGLRenderer::glActiveShaderProgram(openGLProgramPipeline, openGLProgram);
+						OpenGLRenderer::glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
+
+						// Be polite and restore the previous used OpenGL program
+						OpenGLRenderer::glActiveShaderProgram(openGLProgramPipeline, static_cast<GLuint>(openGLProgramBackup));
+					}
+				#else
+					// Set uniform, please note that for this our program must be the currently used one
+					OpenGLRenderer::glActiveShaderProgram(openGLProgramPipeline, openGLProgram);
+					OpenGLRenderer::glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
+				#endif
+			}
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -46,17 +114,14 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProgramSeparate::ProgramSeparate(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderSeparate *vertexShaderSeparate, TessellationControlShaderSeparate *tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate *tessellationEvaluationShaderSeparate, GeometryShaderSeparate *geometryShaderSeparate, FragmentShaderSeparate *fragmentShaderSeparate) :
+	ProgramSeparate::ProgramSeparate(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, VertexShaderSeparate *vertexShaderSeparate, TessellationControlShaderSeparate *tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate *tessellationEvaluationShaderSeparate, GeometryShaderSeparate *geometryShaderSeparate, FragmentShaderSeparate *fragmentShaderSeparate) :
 		IProgram(openGLRenderer),
-		mOpenGLProgram(0),
 		mOpenGLProgramPipeline(0),
 		mVertexShaderSeparate(vertexShaderSeparate),
 		mTessellationControlShaderSeparate(tessellationControlShaderSeparate),
 		mTessellationEvaluationShaderSeparate(tessellationEvaluationShaderSeparate),
 		mGeometryShaderSeparate(geometryShaderSeparate),
-		mFragmentShaderSeparate(fragmentShaderSeparate),
-		mNumberOfRootSignatureParameters(0),
-		mRootSignatureParameterIndexToUniformLocation(nullptr)
+		mFragmentShaderSeparate(fragmentShaderSeparate)
 	{
 		// Create the OpenGL program pipeline
 		glGenProgramPipelines(1, &mOpenGLProgramPipeline);
@@ -68,41 +133,13 @@ namespace OpenGLRenderer
 		glBindProgramPipeline(mOpenGLProgramPipeline);
 
 		// Add references to the provided shaders
-		if (nullptr != mVertexShaderSeparate)
-		{
-			mVertexShaderSeparate->addReference();
-			glUseProgramStages(mOpenGLProgramPipeline, GL_VERTEX_SHADER_BIT, mVertexShaderSeparate->getOpenGLShaderProgram());
-
-			// TODO(co) Should be done only once inside "VertexShaderSeparate"
-			{ // Define the vertex array attribute binding locations ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 & 12 terminology)
-				const GLuint openGLShaderProgram = mVertexShaderSeparate->getOpenGLShaderProgram();
-				const uint32_t numberOfVertexAttributes = vertexAttributes.numberOfAttributes;
-				for (uint32_t vertexAttribute = 0; vertexAttribute < numberOfVertexAttributes; ++vertexAttribute)
-				{
-					glBindAttribLocationARB(openGLShaderProgram, vertexAttribute, vertexAttributes.attributes[vertexAttribute].name);
-				}
-			}
-		}
-		if (nullptr != mTessellationControlShaderSeparate)
-		{
-			mTessellationControlShaderSeparate->addReference();
-			glUseProgramStages(mOpenGLProgramPipeline, GL_TESS_CONTROL_SHADER_BIT, mTessellationControlShaderSeparate->getOpenGLShaderProgram());
-		}
-		if (nullptr != mTessellationEvaluationShaderSeparate)
-		{
-			mTessellationEvaluationShaderSeparate->addReference();
-			glUseProgramStages(mOpenGLProgramPipeline, GL_TESS_EVALUATION_SHADER_BIT, mTessellationEvaluationShaderSeparate->getOpenGLShaderProgram());
-		}
-		if (nullptr != mGeometryShaderSeparate)
-		{
-			mGeometryShaderSeparate->addReference();
-			glUseProgramStages(mOpenGLProgramPipeline, GL_GEOMETRY_SHADER_BIT, mGeometryShaderSeparate->getOpenGLShaderProgram());
-		}
-		if (nullptr != mFragmentShaderSeparate)
-		{
-			mFragmentShaderSeparate->addReference();
-			glUseProgramStages(mOpenGLProgramPipeline, GL_FRAGMENT_SHADER_BIT, mFragmentShaderSeparate->getOpenGLShaderProgram());
-		}
+		#define USE_PROGRAM_STAGES(ShaderBit, ShaderSeparate) if (nullptr != ShaderSeparate) { ShaderSeparate->addReference(); glUseProgramStages(mOpenGLProgramPipeline, ShaderBit, ShaderSeparate->getOpenGLShaderProgram()); }
+		USE_PROGRAM_STAGES(GL_VERTEX_SHADER_BIT,		  mVertexShaderSeparate)
+		USE_PROGRAM_STAGES(GL_TESS_CONTROL_SHADER_BIT,	  mTessellationControlShaderSeparate)
+		USE_PROGRAM_STAGES(GL_TESS_EVALUATION_SHADER_BIT, mTessellationEvaluationShaderSeparate)
+		USE_PROGRAM_STAGES(GL_GEOMETRY_SHADER_BIT,		  mGeometryShaderSeparate)
+		USE_PROGRAM_STAGES(GL_FRAGMENT_SHADER_BIT,		  mFragmentShaderSeparate)
+		#undef USE_PROGRAM_STAGES
 
 		// Validate program pipeline
 		glValidateProgramPipeline(mOpenGLProgramPipeline);
@@ -122,83 +159,90 @@ namespace OpenGLRenderer
 			// -> So we have to build a root signature parameter index -> uniform location mapping here
 			const Renderer::RootSignature& rootSignatureData = static_cast<const RootSignature&>(rootSignature).getRootSignature();
 			const uint32_t numberOfParameters = rootSignatureData.numberOfParameters;
-			if (numberOfParameters > 0)
+			for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
 			{
-				mRootSignatureParameterIndexToUniformLocation = new int32_t[numberOfParameters];
-				memset(mRootSignatureParameterIndexToUniformLocation, -1, sizeof(int32_t) * numberOfParameters);
-				for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
+				const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[parameterIndex];
+				if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 				{
-					const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[parameterIndex];
-					if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
+					// TODO(co) For now, we only support a single descriptor range
+					if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 					{
-						// TODO(co) For now, we only support a single descriptor range
-						if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
+						RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Only a single descriptor range is supported")
+					}
+					else
+					{
+						const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
+
+						// Ignore sampler range types in here (OpenGL handles samplers in a different way then Direct3D 10>=)
+						if (Renderer::DescriptorRangeType::UBV == descriptorRange->rangeType)
 						{
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Only a single descriptor range is supported")
+							#define BIND_UNIFORM_BLOCK(ShaderSeparate) if (nullptr != ShaderSeparate) ::detail::bindUniformBlock(*descriptorRange, parameterIndex, ShaderSeparate->getOpenGLShaderProgram());
+							switch (rootParameter.shaderVisibility)
+							{
+								case Renderer::ShaderVisibility::ALL:
+									BIND_UNIFORM_BLOCK(mVertexShaderSeparate)
+									BIND_UNIFORM_BLOCK(mTessellationControlShaderSeparate)
+									BIND_UNIFORM_BLOCK(mTessellationEvaluationShaderSeparate)
+									BIND_UNIFORM_BLOCK(mGeometryShaderSeparate)
+									BIND_UNIFORM_BLOCK(mFragmentShaderSeparate)
+									break;
+
+								case Renderer::ShaderVisibility::VERTEX:
+									BIND_UNIFORM_BLOCK(mVertexShaderSeparate)
+									break;
+
+								case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+									BIND_UNIFORM_BLOCK(mTessellationControlShaderSeparate)
+									break;
+
+								case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+									BIND_UNIFORM_BLOCK(mTessellationEvaluationShaderSeparate)
+									break;
+
+								case Renderer::ShaderVisibility::GEOMETRY:
+									BIND_UNIFORM_BLOCK(mGeometryShaderSeparate)
+									break;
+
+								case Renderer::ShaderVisibility::FRAGMENT:
+									BIND_UNIFORM_BLOCK(mFragmentShaderSeparate)
+									break;
+							}
+							#undef BIND_UNIFORM_BLOCK
 						}
-						else
+						else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
 						{
-							const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
-
-							// Ignore sampler range types in here (OpenGL handles samplers in a different way then Direct3D 10>=)
-							if (Renderer::DescriptorRangeType::UBV == descriptorRange->rangeType)
+							#define BIND_UNIFORM_LOCATION(ShaderSeparate) if (nullptr != ShaderSeparate) ::detail::bindUniformLocation(*descriptorRange, mOpenGLProgramPipeline, ShaderSeparate->getOpenGLShaderProgram());
+							switch (rootParameter.shaderVisibility)
 							{
-								// TODO(co) Bindings
-								/*
-								// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
-								// for backward compatibility, ask for the uniform block index
-								const GLuint uniformBlockIndex = glGetUniformBlockIndex(mOpenGLProgram, descriptorRange->baseShaderRegisterName);
-								if (GL_INVALID_INDEX != uniformBlockIndex)
-								{
-									mRootSignatureParameterIndexToUniformLocation[parameterIndex] = static_cast<int32_t>(uniformBlockIndex);
+								case Renderer::ShaderVisibility::ALL:
+									BIND_UNIFORM_LOCATION(mVertexShaderSeparate)
+									BIND_UNIFORM_LOCATION(mTessellationControlShaderSeparate)
+									BIND_UNIFORM_LOCATION(mTessellationEvaluationShaderSeparate)
+									BIND_UNIFORM_LOCATION(mGeometryShaderSeparate)
+									BIND_UNIFORM_LOCATION(mFragmentShaderSeparate)
+									break;
 
-									// Associate the uniform block with the given binding point
-									glUniformBlockBinding(mOpenGLProgram, uniformBlockIndex, parameterIndex);
-								}
-								*/
+								case Renderer::ShaderVisibility::VERTEX:
+									BIND_UNIFORM_LOCATION(mVertexShaderSeparate)
+									break;
+
+								case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+									BIND_UNIFORM_LOCATION(mTessellationControlShaderSeparate)
+									break;
+
+								case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+									BIND_UNIFORM_LOCATION(mTessellationEvaluationShaderSeparate)
+									break;
+
+								case Renderer::ShaderVisibility::GEOMETRY:
+									BIND_UNIFORM_LOCATION(mGeometryShaderSeparate)
+									break;
+
+								case Renderer::ShaderVisibility::FRAGMENT:
+									BIND_UNIFORM_LOCATION(mFragmentShaderSeparate)
+									break;
 							}
-							else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
-							{
-								// TODO(co) Bindings
-								/*
-								const GLint uniformLocation = glGetUniformLocationARB(mOpenGLProgram, descriptorRange->baseShaderRegisterName);
-								if (uniformLocation >= 0)
-								{
-									mRootSignatureParameterIndexToUniformLocation[parameterIndex] = uniformLocation;
-
-									// OpenGL/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
-									// -> When using OpenGL or OpenGL ES 2 this is required
-									// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
-									//    in GLSL shader) , for backward compatibility we don't use it in here
-									// -> When using Direct3D 9, 10, 11 or 12, the texture unit
-									//    to use is usually defined directly within the shader by using the "register"-keyword
-									// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
-									#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-										// Backup the currently used OpenGL program
-										GLint openGLProgramBackup = 0;
-										glGetIntegerv(GL_CURRENT_PROGRAM, &openGLProgramBackup);
-										if (openGLProgramBackup == mOpenGLProgram)
-										{
-											// Set uniform, please note that for this our program must be the currently used one
-											glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-										}
-										else
-										{
-											// Set uniform, please note that for this our program must be the currently used one
-											glUseProgramObjectARB(mOpenGLProgram);
-											glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-
-											// Be polite and restore the previous used OpenGL program
-											glUseProgramObjectARB(openGLProgramBackup);
-										}
-									#else
-										// Set uniform, please note that for this our program must be the currently used one
-										glUseProgramObjectARB(mOpenGLProgram);
-										glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
-									#endif
-								}
-								*/
-							}
+							#undef BIND_UNIFORM_LOCATION
 						}
 					}
 				}
@@ -260,12 +304,6 @@ namespace OpenGLRenderer
 		{
 			mFragmentShaderSeparate->release();
 		}
-
-		// Destroy root signature parameter index to OpenGL uniform location mapping, if required
-		if (nullptr != mRootSignatureParameterIndexToUniformLocation)
-		{
-			delete [] mRootSignatureParameterIndexToUniformLocation;
-		}
 	}
 
 
@@ -274,7 +312,15 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	handle ProgramSeparate::getUniformHandle(const char *uniformName)
 	{
-		return static_cast<handle>(glGetUniformLocationARB(mOpenGLProgram, uniformName));
+		GLint uniformLocation = -1;
+		#define GET_UNIFORM_LOCATION(ShaderSeparate) if (uniformLocation < 0 && nullptr != ShaderSeparate) uniformLocation = glGetUniformLocationARB(ShaderSeparate->getOpenGLShaderProgram(), uniformName);
+		GET_UNIFORM_LOCATION(mVertexShaderSeparate)
+		GET_UNIFORM_LOCATION(mTessellationControlShaderSeparate)
+		GET_UNIFORM_LOCATION(mTessellationEvaluationShaderSeparate)
+		GET_UNIFORM_LOCATION(mGeometryShaderSeparate)
+		GET_UNIFORM_LOCATION(mFragmentShaderSeparate)
+		#undef GET_UNIFORM_LOCATION
+		return static_cast<handle>(uniformLocation);
 	}
 
 	void ProgramSeparate::setUniform1i(handle uniformHandle, int value)
@@ -282,7 +328,7 @@ namespace OpenGLRenderer
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
 			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mOpenGLProgram)
+			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniform1iARB(static_cast<GLint>(uniformHandle), value);
@@ -290,7 +336,7 @@ namespace OpenGLRenderer
 			else
 			{
 				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mOpenGLProgram);
+				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 				glUniform1iARB(static_cast<GLint>(uniformHandle), value);
 
 				// Be polite and restore the previous used OpenGL program
@@ -298,7 +344,7 @@ namespace OpenGLRenderer
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mOpenGLProgram);
+			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniform1iARB(static_cast<GLint>(uniformHandle), value);
 		#endif
 	}
@@ -308,7 +354,7 @@ namespace OpenGLRenderer
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
 			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mOpenGLProgram)
+			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniform1fARB(static_cast<GLint>(uniformHandle), value);
@@ -316,7 +362,7 @@ namespace OpenGLRenderer
 			else
 			{
 				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mOpenGLProgram);
+				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 				glUniform1fARB(static_cast<GLint>(uniformHandle), value);
 
 				// Be polite and restore the previous used OpenGL program
@@ -324,7 +370,7 @@ namespace OpenGLRenderer
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mOpenGLProgram);
+			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniform1fARB(static_cast<GLint>(uniformHandle), value);
 		#endif
 	}
@@ -334,7 +380,7 @@ namespace OpenGLRenderer
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
 			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mOpenGLProgram)
+			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniform2fvARB(static_cast<GLint>(uniformHandle), 1, value);
@@ -342,7 +388,7 @@ namespace OpenGLRenderer
 			else
 			{
 				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mOpenGLProgram);
+				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 				glUniform2fvARB(static_cast<GLint>(uniformHandle), 1, value);
 
 				// Be polite and restore the previous used OpenGL program
@@ -350,7 +396,7 @@ namespace OpenGLRenderer
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mOpenGLProgram);
+			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniform2fvARB(static_cast<GLint>(uniformHandle), 1, value);
 		#endif
 	}
@@ -360,7 +406,7 @@ namespace OpenGLRenderer
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
 			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mOpenGLProgram)
+			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniform3fvARB(static_cast<GLint>(uniformHandle), 1, value);
@@ -368,7 +414,7 @@ namespace OpenGLRenderer
 			else
 			{
 				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mOpenGLProgram);
+				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 				glUniform3fvARB(static_cast<GLint>(uniformHandle), 1, value);
 
 				// Be polite and restore the previous used OpenGL program
@@ -376,7 +422,7 @@ namespace OpenGLRenderer
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mOpenGLProgram);
+			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniform3fvARB(static_cast<GLint>(uniformHandle), 1, value);
 		#endif
 	}
@@ -386,7 +432,7 @@ namespace OpenGLRenderer
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
 			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mOpenGLProgram)
+			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniform4fvARB(static_cast<GLint>(uniformHandle), 1, value);
@@ -394,7 +440,7 @@ namespace OpenGLRenderer
 			else
 			{
 				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mOpenGLProgram);
+				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 				glUniform4fvARB(static_cast<GLint>(uniformHandle), 1, value);
 
 				// Be polite and restore the previous used OpenGL program
@@ -402,7 +448,7 @@ namespace OpenGLRenderer
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mOpenGLProgram);
+			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniform4fvARB(static_cast<GLint>(uniformHandle), 1, value);
 		#endif
 	}
@@ -412,7 +458,7 @@ namespace OpenGLRenderer
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
 			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mOpenGLProgram)
+			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniformMatrix3fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
@@ -420,7 +466,7 @@ namespace OpenGLRenderer
 			else
 			{
 				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mOpenGLProgram);
+				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 				glUniformMatrix3fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
 
 				// Be polite and restore the previous used OpenGL program
@@ -428,7 +474,7 @@ namespace OpenGLRenderer
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mOpenGLProgram);
+			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniformMatrix3fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
 		#endif
 	}
@@ -438,7 +484,7 @@ namespace OpenGLRenderer
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently used OpenGL program
 			const GLint openGLProgramBackup = glGetHandleARB(GL_PROGRAM_OBJECT_ARB);
-			if (openGLProgramBackup == mOpenGLProgram)
+			if (openGLProgramBackup == mVertexShaderSeparate->getOpenGLShaderProgram())
 			{
 				// Set uniform, please note that for this our program must be the currently used one
 				glUniformMatrix4fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
@@ -446,7 +492,7 @@ namespace OpenGLRenderer
 			else
 			{
 				// Set uniform, please note that for this our program must be the currently used one
-				glUseProgramObjectARB(mOpenGLProgram);
+				glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 				glUniformMatrix4fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
 
 				// Be polite and restore the previous used OpenGL program
@@ -454,7 +500,7 @@ namespace OpenGLRenderer
 			}
 		#else
 			// Set uniform, please note that for this our program must be the currently used one
-			glUseProgramObjectARB(mOpenGLProgram);
+			glUseProgramObjectARB(mVertexShaderSeparate->getOpenGLShaderProgram());
 			glUniformMatrix4fvARB(static_cast<GLint>(uniformHandle), 1, GL_FALSE, value);
 		#endif
 	}

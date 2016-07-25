@@ -1804,8 +1804,8 @@ namespace Renderer
 			}
 		public:
 			virtual const char* getShaderLanguageName() const = 0;
-			virtual IVertexShader* createVertexShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
-			virtual IVertexShader* createVertexShaderFromSourceCode(const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
+			virtual IVertexShader* createVertexShaderFromBytecode(const Renderer::VertexAttributes& vertexAttributes, const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
+			virtual IVertexShader* createVertexShaderFromSourceCode(const Renderer::VertexAttributes& vertexAttributes, const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
 			virtual ITessellationControlShader* createTessellationControlShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes) = 0;
 			virtual ITessellationControlShader* createTessellationControlShaderFromSourceCode(const char* sourceCode, const char* profile = nullptr, const char* arguments = nullptr, const char* entry = nullptr) = 0;
 			virtual ITessellationEvaluationShader* createTessellationEvaluationShaderFromBytecode(const uint8_t* bytecode, uint32_t numberOfBytes) = 0;

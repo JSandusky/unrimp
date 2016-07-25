@@ -41,10 +41,6 @@ vertexShaderSourceCode =
 STRINGIFY(
 // Attribute input/output
 in  vec2 Position;	// Clip space control point position of the patch as input, left/bottom is (-1,-1) and right/top is (1,1)
-out gl_PerVertex
-{
-	vec4 gl_Position;
-};
 out vec2 vPosition;	// Clip space control point position of the patch as output, left/bottom is (-1,-1) and right/top is (1,1)
 
 // Programs

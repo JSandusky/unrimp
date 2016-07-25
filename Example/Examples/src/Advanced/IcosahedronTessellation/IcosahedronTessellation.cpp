@@ -216,7 +216,7 @@ void IcosahedronTessellation::onInitialization()
 				const char *tessellationEvaluationShaderSourceCode = nullptr;
 				const char *geometryShaderSourceCode = nullptr;
 				const char *fragmentShaderSourceCode = nullptr;
-				#include "IcosahedronTessellation_GLSL_400.h"
+				#include "IcosahedronTessellation_GLSL_410.h"
 				#include "IcosahedronTessellation_HLSL_D3D11_D3D12.h"
 				#include "IcosahedronTessellation_Null.h"
 
@@ -224,7 +224,7 @@ void IcosahedronTessellation::onInitialization()
 				program = shaderLanguage->createProgram(
 					*mRootSignature,
 					vertexAttributes,
-					shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode),
+					shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode),
 					shaderLanguage->createTessellationControlShaderFromSourceCode(tessellationControlShaderSourceCode),
 					shaderLanguage->createTessellationEvaluationShaderFromSourceCode(tessellationEvaluationShaderSourceCode),
 					shaderLanguage->createGeometryShaderFromSourceCode(geometryShaderSourceCode, Renderer::GsInputPrimitiveTopology::TRIANGLES, Renderer::GsOutputPrimitiveTopology::TRIANGLE_STRIP, 3),

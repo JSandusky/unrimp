@@ -37,10 +37,14 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode =
-"#version 130\n"	// OpenGL 3.0
+"#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
 // Attribute input/output
 in  vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
 out vec2 TexCoord;	// Normalized texture coordinate as output
 
 // Programs
@@ -62,7 +66,7 @@ void main()
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode_Definitions = "#version 130\n#define FXAA_GLSL_130 1\n#define FXAA_PRESET 5\n";	// For "Fxaa_PostProcessing.h", OpenGL 3.0
+fragmentShaderSourceCode_Definitions = "#version 410 core\n#define FXAA_GLSL_130 1\n#define FXAA_PRESET 5\n";	// For "Fxaa_PostProcessing.h", OpenGL 4.1
 fragmentShaderSourceCode = STRINGIFY(
 // Attribute input/output
 in vec2 TexCoord;	// Normalized texture coordinate as input

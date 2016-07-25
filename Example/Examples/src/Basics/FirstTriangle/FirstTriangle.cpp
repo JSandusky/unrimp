@@ -131,7 +131,7 @@ void FirstTriangle::onInitialization()
 				#include "FirstTriangle_Null.h"
 
 				// Create the vertex shader
-				Renderer::IVertexShader *vertexShader = shaderLanguage->createVertexShaderFromSourceCode(vertexShaderSourceCode);
+				Renderer::IVertexShader *vertexShader = shaderLanguage->createVertexShaderFromSourceCode(vertexAttributes, vertexShaderSourceCode);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(vertexShader, "Triangle VS")
 
 				// Create the fragment shader
