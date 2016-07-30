@@ -38,15 +38,14 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline ShaderCacheManager::ShaderCacheManager(ShaderBlueprintResourceManager& shaderBlueprintResourceManager) :
-		mShaderBlueprintResourceManager(shaderBlueprintResourceManager),
-		mShaderCache(nullptr)
+		mShaderBlueprintResourceManager(shaderBlueprintResourceManager)
 	{
 		// Nothing here
 	}
 
 	inline ShaderCacheManager::~ShaderCacheManager()
 	{
-		// Nothing here
+		clearCache();
 	}
 
 

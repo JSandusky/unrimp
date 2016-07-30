@@ -28,15 +28,23 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
+
+#include <unordered_map>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class IShaderLanguage;
+}
 namespace RendererRuntime
 {
 	class ShaderCache;
-	class ShaderProperties;
+	class PipelineStateSignature;
+	class MaterialBlueprintResource;
 	class ShaderBlueprintResourceManager;
 }
 
@@ -46,6 +54,13 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t ShaderCacheId;			///< Shader cache identifier, often but not always identical to the shader combination ID
+	typedef uint32_t ShaderSourceCodeId;	///< Shader source code identifier, result of hashing the build shader source code
 
 
 	//[-------------------------------------------------------]
@@ -83,15 +98,27 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Get/create shader cache by using the given shader properties
+		*    Get shader cache by pipeline state signature and shader type
 		*
-		*  @param[in] shaderProperties
-		*    Shader properties to use
+		*  @param[in] pipelineStateSignature
+		*    Pipeline state signature to use
+		*  @param[in] materialBlueprintResource
+		*    Material blueprint resource
+		*  @param[in] shaderLanguage
+		*    Shader language
+		*  @param[in] shaderType
+		*    Shader type
 		*
 		*  @return
 		*    The shader cache, null pointer on error
 		*/
-		ShaderCache* getShaderCache(const ShaderProperties& shaderProperties);
+		ShaderCache* getShaderCache(const PipelineStateSignature& pipelineStateSignature, const MaterialBlueprintResource& materialBlueprintResource, Renderer::IShaderLanguage& shaderLanguage, ShaderType shaderType);
+
+		/**
+		*  @brief
+		*    Clear the shader cache manager
+		*/
+		void clearCache();
 
 
 	//[-------------------------------------------------------]
@@ -105,13 +132,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::unordered_map<ShaderCacheId, ShaderCache*>		 ShaderCacheByShaderCacheId;
+		typedef std::unordered_map<ShaderSourceCodeId, ShaderCache*> ShaderCacheByShaderSourceCodeId;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
 		ShaderBlueprintResourceManager& mShaderBlueprintResourceManager;	///< Owner shader blueprint resource manager
-
-		// TODO(co) Shader cache management
-		ShaderCache* mShaderCache;
+		ShaderCacheByShaderCacheId		mShaderCacheByShaderCacheId;		///< Manages the shader cache instances
+		ShaderCacheByShaderSourceCodeId	mShaderCacheByShaderSourceCodeId;	///< Just references shader cache instances, doesn't own the instances
 
 
 	};

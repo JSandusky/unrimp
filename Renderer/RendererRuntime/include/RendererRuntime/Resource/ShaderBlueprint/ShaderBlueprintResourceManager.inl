@@ -28,6 +28,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline IRendererRuntime& ShaderBlueprintResourceManager::getRendererRuntime() const
+	{
+		return mRendererRuntime;
+	}
+
 	inline const ShaderProperties& ShaderBlueprintResourceManager::getRendererShaderProperties() const
 	{
 		return mRendererShaderProperties;

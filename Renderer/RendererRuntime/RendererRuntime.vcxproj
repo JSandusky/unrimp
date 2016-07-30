@@ -309,7 +309,6 @@
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_preprocessor.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\Preprocessor.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderBuilder.cpp" />
-    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderCache.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderCacheManager.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderProperties.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.cpp" />

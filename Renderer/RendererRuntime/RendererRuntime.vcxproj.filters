@@ -977,9 +977,6 @@
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderCacheManager.cpp">
       <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderCache.cpp">
-      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderBuilder.cpp">
       <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
     </ClCompile>

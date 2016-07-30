@@ -78,6 +78,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		inline IRendererRuntime& getRendererRuntime() const;
+
 		/**
 		*  @brief
 		*    Return the renderer shader properties

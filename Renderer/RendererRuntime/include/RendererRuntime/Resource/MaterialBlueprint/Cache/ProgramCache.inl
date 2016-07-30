@@ -42,8 +42,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline ProgramCache::ProgramCache(ProgramCacheId programCacheId) :
-		mProgramCacheId(programCacheId)
+	inline ProgramCache::ProgramCache(ProgramCacheId programCacheId, Renderer::IProgram& program) :
+		mProgramCacheId(programCacheId),
+		mProgramPtr(&program)
 	{
 		// Nothing here
 	}

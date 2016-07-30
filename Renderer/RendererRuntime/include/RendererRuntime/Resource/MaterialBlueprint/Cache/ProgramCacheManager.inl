@@ -43,6 +43,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline ProgramCacheManager::~ProgramCacheManager()
+	{
+		clearCache();
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

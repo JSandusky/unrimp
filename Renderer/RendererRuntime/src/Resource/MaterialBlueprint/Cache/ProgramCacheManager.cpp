@@ -25,7 +25,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateSignature.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCache.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCache.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -54,74 +54,57 @@ namespace RendererRuntime
 			}
 		}
 
-		{ // Does the program cache already exist?
-			ProgramCacheById::const_iterator iterator = mProgramCacheById.find(programCacheId);
-			if (iterator != mProgramCacheById.cend())
-			{
-				return iterator->second;
-			}
-		}
-
-		// Create the new program cache instance
-		ProgramCache* programCache = new ProgramCache(programCacheId);
-		mProgramCacheById.insert(std::make_pair(programCacheId, programCache));
-
-		// Create the renderer program: Decide which shader language should be used (for example "GLSL" or "HLSL")
-		const MaterialBlueprintResource& materialBlueprintResource = mPipelineStateCacheManager.getMaterialBlueprintResource();
-		const Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
-		Renderer::IRenderer& renderer = rootSignaturePtr->getRenderer();
-		Renderer::IShaderLanguagePtr shaderLanguage(renderer.getShaderLanguage());
-		if (nullptr != shaderLanguage)
+		// Does the program cache already exist?
+		ProgramCache* programCache = nullptr;
+		ProgramCacheById::const_iterator iterator = mProgramCacheById.find(programCacheId);
+		if (iterator != mProgramCacheById.cend())
 		{
-			// TODO(co) Use shader cache
-
-			// Get the required resource manager instances
-			const IRendererRuntime& rendererRuntime = mPipelineStateCacheManager.getMaterialBlueprintResource().getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime();
-			const ShaderPieceResourceManager& shaderPieceResourceManager = rendererRuntime.getShaderPieceResourceManager();
-			const ShaderBlueprintResources& shaderBlueprintResources = rendererRuntime.getShaderBlueprintResourceManager().getShaderBlueprintResources();
-
-			// Create the shaders
-			Renderer::IShader* shader[NUMBER_OF_SHADER_TYPES] = {};
-			for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
+			programCache = iterator->second;
+		}
+		else
+		{
+			// Create the renderer program: Decide which shader language should be used (for example "GLSL" or "HLSL")
+			const MaterialBlueprintResource& materialBlueprintResource = mPipelineStateCacheManager.getMaterialBlueprintResource();
+			const Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
+			Renderer::IShaderLanguagePtr shaderLanguage(rootSignaturePtr->getRenderer().getShaderLanguage());
+			if (nullptr != shaderLanguage)
 			{
-				const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.getShaderBlueprintResourceId(static_cast<ShaderType>(i)));
-				if (nullptr != shaderBlueprintResource)
+				// Create the shaders
+				ShaderCacheManager& shaderCacheManager = materialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getShaderBlueprintResourceManager().getShaderCacheManager();
+				Renderer::IShader* shader[NUMBER_OF_SHADER_TYPES] = {};
+				for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 				{
-					ShaderBuilder shaderBuilder;
-					const std::string sourceCode = shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, pipelineStateSignature.getShaderProperties());
-					switch (static_cast<ShaderType>(i))
+					ShaderCache* shaderCache = shaderCacheManager.getShaderCache(pipelineStateSignature, materialBlueprintResource, *shaderLanguage, static_cast<ShaderType>(i));
+					if (nullptr != shaderCache)
 					{
-						case ShaderType::Vertex:
-							shader[i] = shaderLanguage->createVertexShaderFromSourceCode(materialBlueprintResource.getVertexAttributes(), sourceCode.c_str());
-							break;
-
-						case ShaderType::TessellationControl:
-							shader[i] = shaderLanguage->createTessellationControlShaderFromSourceCode(sourceCode.c_str());
-							break;
-
-						case ShaderType::TessellationEvaluation:
-							shader[i] = shaderLanguage->createTessellationEvaluationShaderFromSourceCode(sourceCode.c_str());
-							break;
-
-						case ShaderType::Geometry:
-							// TODO(co) "RendererRuntime::ProgramCacheManager::getProgramCacheByPipelineStateSignature()" needs to provide additional geometry shader information
-							// shader[i] = shaderLanguage->createGeometryShaderFromSourceCode(sourceCode.c_str());
-							break;
-
-						case ShaderType::Fragment:
-							shader[i] = shaderLanguage->createFragmentShaderFromSourceCode(sourceCode.c_str());
-							break;
+						shader[i] = shaderCache->getShaderPtr();
+					}
+					else
+					{
+						// No error, just means there's no shader cache because e.g. there's no shader of the requested type
 					}
 				}
-			}
 
-			// Create the program
-			programCache->mProgramPtr = shaderLanguage->createProgram(*rootSignaturePtr, materialBlueprintResource.getVertexAttributes(),
-				static_cast<Renderer::IVertexShader*>(shader[static_cast<int>(ShaderType::Vertex)]),
-				static_cast<Renderer::ITessellationControlShader*>(shader[static_cast<int>(ShaderType::TessellationControl)]),
-				static_cast<Renderer::ITessellationEvaluationShader*>(shader[static_cast<int>(ShaderType::TessellationEvaluation)]),
-				static_cast<Renderer::IGeometryShader*>(shader[static_cast<int>(ShaderType::Geometry)]),
-				static_cast<Renderer::IFragmentShader*>(shader[static_cast<int>(ShaderType::Fragment)]));
+				// Create the program
+				Renderer::IProgram* program = shaderLanguage->createProgram(*rootSignaturePtr, materialBlueprintResource.getVertexAttributes(),
+					static_cast<Renderer::IVertexShader*>(shader[static_cast<int>(ShaderType::Vertex)]),
+					static_cast<Renderer::ITessellationControlShader*>(shader[static_cast<int>(ShaderType::TessellationControl)]),
+					static_cast<Renderer::ITessellationEvaluationShader*>(shader[static_cast<int>(ShaderType::TessellationEvaluation)]),
+					static_cast<Renderer::IGeometryShader*>(shader[static_cast<int>(ShaderType::Geometry)]),
+					static_cast<Renderer::IFragmentShader*>(shader[static_cast<int>(ShaderType::Fragment)]));
+
+				// Create the new program cache instance
+				if (nullptr != program)
+				{
+					programCache = new ProgramCache(programCacheId, *program);
+					mProgramCacheById.emplace(programCacheId, programCache);
+				}
+				else
+				{
+					// TODO(co) Error handling
+					assert(false);
+				}
+			}
 		}
 
 		// Done
@@ -135,15 +118,6 @@ namespace RendererRuntime
 			delete programCacheElement.second;
 		}
 		mProgramCacheById.clear();
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	ProgramCacheManager::~ProgramCacheManager()
-	{
-		clearCache();
 	}
 
 

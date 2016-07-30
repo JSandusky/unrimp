@@ -147,7 +147,7 @@ namespace RendererRuntime
 
 		// Create the new pipeline state cache instance
 		PipelineStateCache* pipelineStateCache = new PipelineStateCache(pipelineStateSignature);
-		mPipelineStateCacheByPipelineStateSignatureId.insert(std::make_pair(pipelineStateSignature.getPipelineStateSignatureId(), pipelineStateCache));
+		mPipelineStateCacheByPipelineStateSignatureId.emplace(pipelineStateSignature.getPipelineStateSignatureId(), pipelineStateCache);
 
 		// If we've got a fallback pipeline state cache then commit the asynchronous pipeline state compiler request now, else we must proceed synchronous (risk of notable runtime hiccups)
 		if (nullptr != fallbackPipelineStateCache)

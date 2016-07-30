@@ -53,7 +53,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t ProgramCacheId;	///< Program cache identifier, result of hashing the shader cache IDs of the referenced shaders
+	typedef uint32_t ProgramCacheId;	///< Program cache identifier, result of hashing the shader combination IDs of the referenced shaders
 
 
 	//[-------------------------------------------------------]
@@ -113,7 +113,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline explicit ProgramCacheManager(PipelineStateCacheManager& pipelineStateCacheManager);
-		~ProgramCacheManager();
+		inline ~ProgramCacheManager();
 		ProgramCacheManager(const ProgramCacheManager&) = delete;
 		ProgramCacheManager& operator=(const ProgramCacheManager&) = delete;
 

@@ -408,8 +408,8 @@ namespace RendererToolkit
 			const std::string compiledAssetIdAsString = mProjectName + '/' + assetType + '/' + assetCategory + '/' + assetName;
 
 			// Hash the asset ID and put it into the map
-			mSourceAssetIdToCompiledAssetId.insert(std::make_pair(asset.assetId, RendererRuntime::StringId(compiledAssetIdAsString.c_str())));
-			mSourceAssetIdToAbsoluteFilename.insert(std::make_pair(asset.assetId, mProjectDirectory + asset.assetFilename));
+			mSourceAssetIdToCompiledAssetId.emplace(asset.assetId, RendererRuntime::StringId(compiledAssetIdAsString.c_str()));
+			mSourceAssetIdToAbsoluteFilename.emplace(asset.assetId, mProjectDirectory + asset.assetFilename);
 		}
 	}
 

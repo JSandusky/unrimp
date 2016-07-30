@@ -28,18 +28,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h"
 
 #include <Renderer/Public/Renderer.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class ShaderCacheManager;
-}
 
 
 //[-------------------------------------------------------]
@@ -47,6 +37,12 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef uint32_t ShaderCacheId;	///< Shader cache identifier, identical to the shader combination ID
 
 
 	//[-------------------------------------------------------]
@@ -68,6 +64,15 @@ namespace RendererRuntime
 	public:
 		/**
 		*  @brief
+		*    Return the shader cache ID
+		*
+		*  @return
+		*    The shader cache ID
+		*/
+		inline ShaderCacheId getShaderCacheId() const;
+
+		/**
+		*  @brief
 		*    Return shader
 		*
 		*  @return
@@ -80,7 +85,7 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		ShaderCache(ShaderCacheManager& shaderCacheManager, const ShaderProperties& shaderProperties);
+		inline ShaderCache(ShaderCacheId shaderCacheId, Renderer::IShader& shader, ShaderCache* masterShaderCache = nullptr);
 		inline ~ShaderCache();
 		ShaderCache(const ShaderCache&) = delete;
 		ShaderCache& operator=(const ShaderCache&) = delete;
@@ -90,9 +95,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ShaderCacheManager&  mShaderCacheManager;	///< Owner shader cache manager
-		ShaderProperties	 mShaderProperties;		///< Shader properties which ended up in this shader
+		ShaderCacheId		 mShaderCacheId;
 		Renderer::IShaderPtr mShaderPtr;
+		ShaderCache*		 mMasterShaderCache;	///< If there's a master shader cache instance, we don't own the references shader but only redirect to it (multiple shader combinations resulting in same shader source code topic), don't destroy the instance
 
 
 	};
