@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "Renderer/PlatformTypes.h"
 
+#include <atomic>	// For "std::atomic<>"
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -59,47 +61,47 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		//[ Resources                                             ]
 		//[-------------------------------------------------------]
-		uint32_t currentNumberOfRootSignatures;					///< Current number of root signature instances
-		uint32_t numberOfCreatedRootSignatures;					///< Number of created root signature instances
-		uint32_t currentNumberOfPrograms;						///< Current number of program instances
-		uint32_t numberOfCreatedPrograms;						///< Number of created program instances
-		uint32_t currentNumberOfVertexArrays;					///< Current number of vertex array object (VAO, input-assembler (IA) stage) instances
-		uint32_t numberOfCreatedVertexArrays;					///< Number of created vertex array object (VAO, input-assembler (IA) stage) instances
+		std::atomic<uint32_t> currentNumberOfRootSignatures;				///< Current number of root signature instances
+		std::atomic<uint32_t> numberOfCreatedRootSignatures;				///< Number of created root signature instances
+		std::atomic<uint32_t> currentNumberOfPrograms;						///< Current number of program instances
+		std::atomic<uint32_t> numberOfCreatedPrograms;						///< Number of created program instances
+		std::atomic<uint32_t> currentNumberOfVertexArrays;					///< Current number of vertex array object (VAO, input-assembler (IA) stage) instances
+		std::atomic<uint32_t> numberOfCreatedVertexArrays;					///< Number of created vertex array object (VAO, input-assembler (IA) stage) instances
 		// IRenderTarget
-		uint32_t currentNumberOfSwapChains;						///< Current number of swap chain instances
-		uint32_t numberOfCreatedSwapChains;						///< Number of created swap chain instances
-		uint32_t currentNumberOfFramebuffers;					///< Current number of framebuffer object (FBO) instances
-		uint32_t numberOfCreatedFramebuffers;					///< Number of created framebuffer object (FBO) instances
+		std::atomic<uint32_t> currentNumberOfSwapChains;					///< Current number of swap chain instances
+		std::atomic<uint32_t> numberOfCreatedSwapChains;					///< Number of created swap chain instances
+		std::atomic<uint32_t> currentNumberOfFramebuffers;					///< Current number of framebuffer object (FBO) instances
+		std::atomic<uint32_t> numberOfCreatedFramebuffers;					///< Number of created framebuffer object (FBO) instances
 		// IBuffer
-		uint32_t currentNumberOfIndexBuffers;					///< Current number of index buffer object (IBO, input-assembler (IA) stage) instances
-		uint32_t numberOfCreatedIndexBuffers;					///< Number of created index buffer object (IBO, input-assembler (IA) stage) instances
-		uint32_t currentNumberOfVertexBuffers;					///< Current number of vertex buffer object (VBO, input-assembler (IA) stage) instances
-		uint32_t numberOfCreatedVertexBuffers;					///< Number of created vertex buffer object (VBO, input-assembler (IA) stage) instances
-		uint32_t currentNumberOfUniformBuffers;					///< Current number of uniform buffer object (UBO, "constant buffer" in Direct3D terminology) instances
-		uint32_t numberOfCreatedUniformBuffers;					///< Number of created uniform buffer object (UBO, "constant buffer" in Direct3D terminology) instances
+		std::atomic<uint32_t> currentNumberOfIndexBuffers;					///< Current number of index buffer object (IBO, input-assembler (IA) stage) instances
+		std::atomic<uint32_t> numberOfCreatedIndexBuffers;					///< Number of created index buffer object (IBO, input-assembler (IA) stage) instances
+		std::atomic<uint32_t> currentNumberOfVertexBuffers;					///< Current number of vertex buffer object (VBO, input-assembler (IA) stage) instances
+		std::atomic<uint32_t> numberOfCreatedVertexBuffers;					///< Number of created vertex buffer object (VBO, input-assembler (IA) stage) instances
+		std::atomic<uint32_t> currentNumberOfUniformBuffers;				///< Current number of uniform buffer object (UBO, "constant buffer" in Direct3D terminology) instances
+		std::atomic<uint32_t> numberOfCreatedUniformBuffers;				///< Number of created uniform buffer object (UBO, "constant buffer" in Direct3D terminology) instances
 		// ITexture
-		uint32_t currentNumberOfTextureBuffers;					///< Current number of texture buffer object (TBO) instances
-		uint32_t numberOfCreatedTextureBuffers;					///< Number of created texture buffer object (TBO) instances
-		uint32_t currentNumberOfTexture2Ds;						///< Current number of texture 2D instances
-		uint32_t numberOfCreatedTexture2Ds;						///< Number of created texture 2D instances
-		uint32_t currentNumberOfTexture2DArrays;				///< Current number of texture 2D array instances
-		uint32_t numberOfCreatedTexture2DArrays;				///< Number of created texture 2D array instances
+		std::atomic<uint32_t> currentNumberOfTextureBuffers;				///< Current number of texture buffer object (TBO) instances
+		std::atomic<uint32_t> numberOfCreatedTextureBuffers;				///< Number of created texture buffer object (TBO) instances
+		std::atomic<uint32_t> currentNumberOfTexture2Ds;					///< Current number of texture 2D instances
+		std::atomic<uint32_t> numberOfCreatedTexture2Ds;					///< Number of created texture 2D instances
+		std::atomic<uint32_t> currentNumberOfTexture2DArrays;				///< Current number of texture 2D array instances
+		std::atomic<uint32_t> numberOfCreatedTexture2DArrays;				///< Number of created texture 2D array instances
 		// IState
-		uint32_t currentNumberOfPipelineStates;					///< Current number of pipeline state (PSO) instances
-		uint32_t numberOfCreatedPipelineStates;					///< Number of created pipeline state (PSO) instances
-		uint32_t currentNumberOfSamplerStates;					///< Current number of sampler state instances
-		uint32_t numberOfCreatedSamplerStates;					///< Number of created sampler state instances
+		std::atomic<uint32_t> currentNumberOfPipelineStates;				///< Current number of pipeline state (PSO) instances
+		std::atomic<uint32_t> numberOfCreatedPipelineStates;				///< Number of created pipeline state (PSO) instances
+		std::atomic<uint32_t> currentNumberOfSamplerStates;					///< Current number of sampler state instances
+		std::atomic<uint32_t> numberOfCreatedSamplerStates;					///< Number of created sampler state instances
 		// IShader
-		uint32_t currentNumberOfVertexShaders;					///< Current number of vertex shader (VS) instances
-		uint32_t numberOfCreatedVertexShaders;					///< Number of created vertex shader (VS) instances
-		uint32_t currentNumberOfTessellationControlShaders;		///< Current number of tessellation control shader (TCS, "hull shader" in Direct3D terminology) instances
-		uint32_t numberOfCreatedTessellationControlShaders;		///< Number of created tessellation control shader (TCS, "hull shader" in Direct3D terminology) instances
-		uint32_t currentNumberOfTessellationEvaluationShaders;	///< Current number of tessellation evaluation shader (TES, "domain shader" in Direct3D terminology) instances
-		uint32_t numberOfCreatedTessellationEvaluationShaders;	///< Number of created tessellation evaluation shader (TES, "domain shader" in Direct3D terminology) instances
-		uint32_t currentNumberOfGeometryShaders;				///< Current number of geometry shader (GS) instances
-		uint32_t numberOfCreatedGeometryShaders;				///< Number of created geometry shader (GS) instances
-		uint32_t currentNumberOfFragmentShaders;				///< Current number of fragment shader (FS, "pixel shader" in Direct3D terminology) instances
-		uint32_t numberOfCreatedFragmentShaders;				///< Number of created fragment shader (FS, "pixel shader" in Direct3D terminology) instances
+		std::atomic<uint32_t> currentNumberOfVertexShaders;					///< Current number of vertex shader (VS) instances
+		std::atomic<uint32_t> numberOfCreatedVertexShaders;					///< Number of created vertex shader (VS) instances
+		std::atomic<uint32_t> currentNumberOfTessellationControlShaders;	///< Current number of tessellation control shader (TCS, "hull shader" in Direct3D terminology) instances
+		std::atomic<uint32_t> numberOfCreatedTessellationControlShaders;	///< Number of created tessellation control shader (TCS, "hull shader" in Direct3D terminology) instances
+		std::atomic<uint32_t> currentNumberOfTessellationEvaluationShaders;	///< Current number of tessellation evaluation shader (TES, "domain shader" in Direct3D terminology) instances
+		std::atomic<uint32_t> numberOfCreatedTessellationEvaluationShaders;	///< Number of created tessellation evaluation shader (TES, "domain shader" in Direct3D terminology) instances
+		std::atomic<uint32_t> currentNumberOfGeometryShaders;				///< Current number of geometry shader (GS) instances
+		std::atomic<uint32_t> numberOfCreatedGeometryShaders;				///< Number of created geometry shader (GS) instances
+		std::atomic<uint32_t> currentNumberOfFragmentShaders;				///< Current number of fragment shader (FS, "pixel shader" in Direct3D terminology) instances
+		std::atomic<uint32_t> numberOfCreatedFragmentShaders;				///< Number of created fragment shader (FS, "pixel shader" in Direct3D terminology) instances
 
 
 	//[-------------------------------------------------------]

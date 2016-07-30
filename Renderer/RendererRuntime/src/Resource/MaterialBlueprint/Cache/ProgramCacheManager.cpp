@@ -80,40 +80,48 @@ namespace RendererRuntime
 			const ShaderPieceResourceManager& shaderPieceResourceManager = rendererRuntime.getShaderPieceResourceManager();
 			const ShaderBlueprintResources& shaderBlueprintResources = rendererRuntime.getShaderBlueprintResourceManager().getShaderBlueprintResources();
 
-			// Create the vertex shader
-			Renderer::IVertexShader* vertexShader = nullptr;
+			// Create the shaders
+			Renderer::IShader* shader[NUMBER_OF_SHADER_TYPES] = {};
+			for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 			{
-				const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.getShaderBlueprintResourceId(ShaderType::Vertex));
+				const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.getShaderBlueprintResourceId(static_cast<ShaderType>(i)));
 				if (nullptr != shaderBlueprintResource)
 				{
 					ShaderBuilder shaderBuilder;
-					vertexShader = shaderLanguage->createVertexShaderFromSourceCode(materialBlueprintResource.getVertexAttributes(), shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, pipelineStateSignature.getShaderProperties()).c_str());
-				}
-				else
-				{
-					// TODO(co) Error handling
-					assert(false);
-				}
-			}
+					const std::string sourceCode = shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, pipelineStateSignature.getShaderProperties());
+					switch (static_cast<ShaderType>(i))
+					{
+						case ShaderType::Vertex:
+							shader[i] = shaderLanguage->createVertexShaderFromSourceCode(materialBlueprintResource.getVertexAttributes(), sourceCode.c_str());
+							break;
 
-			// Create the fragment shader
-			Renderer::IFragmentShader* fragmentShader = nullptr;
-			{
-				const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(materialBlueprintResource.getShaderBlueprintResourceId(ShaderType::Fragment));
-				if (nullptr != shaderBlueprintResource)
-				{
-					ShaderBuilder shaderBuilder;
-					fragmentShader = shaderLanguage->createFragmentShaderFromSourceCode(shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, pipelineStateSignature.getShaderProperties()).c_str());
-				}
-				else
-				{
-					// TODO(co) Error handling
-					assert(false);
+						case ShaderType::TessellationControl:
+							shader[i] = shaderLanguage->createTessellationControlShaderFromSourceCode(sourceCode.c_str());
+							break;
+
+						case ShaderType::TessellationEvaluation:
+							shader[i] = shaderLanguage->createTessellationEvaluationShaderFromSourceCode(sourceCode.c_str());
+							break;
+
+						case ShaderType::Geometry:
+							// TODO(co) "RendererRuntime::ProgramCacheManager::getProgramCacheByPipelineStateSignature()" needs to provide additional geometry shader information
+							// shader[i] = shaderLanguage->createGeometryShaderFromSourceCode(sourceCode.c_str());
+							break;
+
+						case ShaderType::Fragment:
+							shader[i] = shaderLanguage->createFragmentShaderFromSourceCode(sourceCode.c_str());
+							break;
+					}
 				}
 			}
 
 			// Create the program
-			programCache->mProgramPtr = shaderLanguage->createProgram(*rootSignaturePtr, materialBlueprintResource.getVertexAttributes(), vertexShader, fragmentShader);
+			programCache->mProgramPtr = shaderLanguage->createProgram(*rootSignaturePtr, materialBlueprintResource.getVertexAttributes(),
+				static_cast<Renderer::IVertexShader*>(shader[static_cast<int>(ShaderType::Vertex)]),
+				static_cast<Renderer::ITessellationControlShader*>(shader[static_cast<int>(ShaderType::TessellationControl)]),
+				static_cast<Renderer::ITessellationEvaluationShader*>(shader[static_cast<int>(ShaderType::TessellationEvaluation)]),
+				static_cast<Renderer::IGeometryShader*>(shader[static_cast<int>(ShaderType::Geometry)]),
+				static_cast<Renderer::IFragmentShader*>(shader[static_cast<int>(ShaderType::Fragment)]));
 		}
 
 		// Done

@@ -193,6 +193,23 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Optimize the given shader properties
+		*
+		*  @param[in] shaderProperties
+		*    Shader properties to optimize
+		*
+		*  @remarks
+		*    Performed optimizations:
+		*    - Removes all shader properties which have a zero value
+		*    - Removes all shader properties which are unknown to the material blueprint
+		*
+		*  @note
+		*    - This method should only be used at high level to reduce the shader properties to a bare minimum as soon as possible
+		*/
+		RENDERERRUNTIME_API_EXPORT void optimizeShaderProperties(ShaderProperties& shaderProperties) const;
+
+		/**
+		*  @brief
 		*    Return the vertex attributes
 		*
 		*  @return
@@ -375,10 +392,10 @@ namespace RendererRuntime
 	private:
 		PipelineStateCacheManager			 mPipelineStateCacheManager;
 		MaterialProperties					 mMaterialProperties;
-		ShaderProperties					 mVisualImportanceOfShaderProperties;
+		ShaderProperties					 mVisualImportanceOfShaderProperties;	///< Every shader property known to the material blueprint has a visual importance entry in here
 		ShaderProperties					 mMaximumIntegerValueOfShaderProperties;
 		Renderer::VertexAttributes			 mVertexAttributes;
-		Renderer::IRootSignaturePtr			 mRootSignaturePtr;	///< Root signature, can be a null pointer
+		Renderer::IRootSignaturePtr			 mRootSignaturePtr;						///< Root signature, can be a null pointer
 		Renderer::PipelineState				 mPipelineState;
 		ShaderBlueprintResourceId			 mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
 		// Resource

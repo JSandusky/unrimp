@@ -54,7 +54,6 @@ namespace
 			const RendererRuntime::MeshResources& meshResources = rendererRuntime.getMeshResourceManager().getMeshResources();
 			const RendererRuntime::MaterialResources& materialResources = rendererRuntime.getMaterialResourceManager().getMaterialResources();
 			const RendererRuntime::MaterialBlueprintResourceManager& materialBlueprintResourceManager = rendererRuntime.getMaterialBlueprintResourceManager();
-			const RendererRuntime::ShaderProperties& rendererShaderProperties = rendererRuntime.getShaderBlueprintResourceManager().getRendererShaderProperties();
 
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
@@ -105,7 +104,6 @@ namespace
 												// TODO(co) Pass shader properties (later on we cache as much as possible of this work inside the renderable)
 												RendererRuntime::ShaderProperties shaderProperties;
 												RendererRuntime::DynamicShaderPieces dynamicShaderPieces[RendererRuntime::NUMBER_OF_SHADER_TYPES];
-												shaderProperties.setPropertyValues(rendererShaderProperties);
 												{ // Gather shader properties from static material properties generating shader combinations
 													const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialResource->getSortedPropertyVector();
 													const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
@@ -153,6 +151,7 @@ namespace
 														}
 													}
 												}
+												materialBlueprintResource->optimizeShaderProperties(shaderProperties);
 
 												Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(shaderProperties, dynamicShaderPieces, false);
 												if (nullptr != pipelineStatePtr)

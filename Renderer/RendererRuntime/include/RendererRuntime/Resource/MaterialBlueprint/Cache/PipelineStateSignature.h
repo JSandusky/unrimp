@@ -90,7 +90,7 @@ namespace RendererRuntime
 		*  @param[in] materialBlueprintResource
 		*    Material blueprint resource to use
 		*  @param[in] shaderProperties
-		*    Shader properties to use
+		*    Shader properties to use, you should ensure that this shader properties are already optimized by using e.g. "RendererRuntime::MaterialBlueprintResource::optimizeShaderProperties()"
 		*  @param[in] dynamicShaderPieces
 		*    Dynamic via C++ generated shader pieces to use
 		*/

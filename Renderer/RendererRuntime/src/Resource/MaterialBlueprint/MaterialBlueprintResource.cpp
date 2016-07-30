@@ -232,6 +232,25 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	void MaterialBlueprintResource::optimizeShaderProperties(ShaderProperties& shaderProperties) const
+	{
+		// Optimization: To avoid constant allocations/deallocations, use a static instance (not multi-threading safe, of course)
+		static ShaderProperties optimizedShaderProperties;
+		optimizedShaderProperties.clear();
+
+		// Gather relevant shader properties
+		for (const ShaderProperties::Property& property : shaderProperties.getSortedPropertyVector())
+		{
+			if (0 != property.value && mVisualImportanceOfShaderProperties.hasPropertyValue(property.shaderPropertyId))
+			{
+				optimizedShaderProperties.setPropertyValue(property.shaderPropertyId, property.value);
+			}
+		}
+
+		// Done
+		shaderProperties = optimizedShaderProperties;
+	}
+
 	bool MaterialBlueprintResource::isFullyLoaded() const
 	{
 		// Check uniform buffers
@@ -703,7 +722,6 @@ namespace RendererRuntime
 		{ // Create the pipeline state caches
 			const uint32_t numberOfShaderProperties = static_cast<uint32_t>(shaderPropertyIds.size());
 			static ShaderProperties shaderProperties;	// Optimization: To avoid constant allocations/deallocations, use a static instance (not multi-threading safe, of course)
-			const ShaderProperties& rendererShaderProperties = getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getShaderBlueprintResourceManager().getRendererShaderProperties();
 
 			shaderCombinationIterator.startIterate();
 			do
@@ -711,7 +729,6 @@ namespace RendererRuntime
 				// Set the current shader properties combination
 				// -> The value always starts with 0 and has no holes in enumeration
 				shaderProperties.clear();
-				shaderProperties.setPropertyValues(rendererShaderProperties);
 				for (uint32_t i = 0; i < numberOfShaderProperties; ++i)
 				{
 					const uint32_t value = shaderCombinationIterator.getCurrentCombinationIntegerProperty(i);

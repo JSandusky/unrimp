@@ -32,6 +32,9 @@
 //[-------------------------------------------------------]
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 #include <string.h>		// For strcpy
+#ifndef RENDERER_NO_STATISTICS
+	#include <atomic>	// For "std::atomic<>"
+#endif
 
 
 //[-------------------------------------------------------]
@@ -1548,135 +1551,137 @@ namespace Renderer
 	#endif
 
 	// Renderer/Statistics.h
-	#ifndef __RENDERER_STATISTICS_H__
-	#define __RENDERER_STATISTICS_H__
-	class Statistics
-	{
-	public:
-		uint32_t currentNumberOfRootSignatures;
-		uint32_t numberOfCreatedRootSignatures;
-		uint32_t currentNumberOfPrograms;
-		uint32_t numberOfCreatedPrograms;
-		uint32_t currentNumberOfVertexArrays;
-		uint32_t numberOfCreatedVertexArrays;
-		uint32_t currentNumberOfSwapChains;
-		uint32_t numberOfCreatedSwapChains;
-		uint32_t currentNumberOfFramebuffers;
-		uint32_t numberOfCreatedFramebuffers;
-		uint32_t currentNumberOfIndexBuffers;
-		uint32_t numberOfCreatedIndexBuffers;
-		uint32_t currentNumberOfVertexBuffers;
-		uint32_t numberOfCreatedVertexBuffers;
-		uint32_t currentNumberOfUniformBuffers;
-		uint32_t numberOfCreatedUniformBuffers;
-		uint32_t currentNumberOfTextureBuffers;
-		uint32_t numberOfCreatedTextureBuffers;
-		uint32_t currentNumberOfTexture2Ds;
-		uint32_t numberOfCreatedTexture2Ds;
-		uint32_t currentNumberOfTexture2DArrays;
-		uint32_t numberOfCreatedTexture2DArrays;
-		uint32_t currentNumberOfPipelineStates;
-		uint32_t numberOfCreatedPipelineStates;
-		uint32_t currentNumberOfSamplerStates;
-		uint32_t numberOfCreatedSamplerStates;
-		uint32_t currentNumberOfVertexShaders;
-		uint32_t numberOfCreatedVertexShaders;
-		uint32_t currentNumberOfTessellationControlShaders;
-		uint32_t numberOfCreatedTessellationControlShaders;
-		uint32_t currentNumberOfTessellationEvaluationShaders;
-		uint32_t numberOfCreatedTessellationEvaluationShaders;
-		uint32_t currentNumberOfGeometryShaders;
-		uint32_t numberOfCreatedGeometryShaders;
-		uint32_t currentNumberOfFragmentShaders;
-		uint32_t numberOfCreatedFragmentShaders;
-	public:
-		inline Statistics() :
-			currentNumberOfRootSignatures(0),
-			numberOfCreatedRootSignatures(0),
-			currentNumberOfPrograms(0),
-			numberOfCreatedPrograms(0),
-			currentNumberOfVertexArrays(0),
-			numberOfCreatedVertexArrays(0),
-			currentNumberOfSwapChains(0),
-			numberOfCreatedSwapChains(0),
-			currentNumberOfFramebuffers(0),
-			numberOfCreatedFramebuffers(0),
-			currentNumberOfIndexBuffers(0),
-			numberOfCreatedIndexBuffers(0),
-			currentNumberOfVertexBuffers(0),
-			numberOfCreatedVertexBuffers(0),
-			currentNumberOfUniformBuffers(0),
-			numberOfCreatedUniformBuffers(0),
-			currentNumberOfTextureBuffers(0),
-			numberOfCreatedTextureBuffers(0),
-			currentNumberOfTexture2Ds(0),
-			numberOfCreatedTexture2Ds(0),
-			currentNumberOfTexture2DArrays(0),
-			numberOfCreatedTexture2DArrays(0),
-			currentNumberOfPipelineStates(0),
-			numberOfCreatedPipelineStates(0),
-			currentNumberOfSamplerStates(0),
-			numberOfCreatedSamplerStates(0),
-			currentNumberOfVertexShaders(0),
-			numberOfCreatedVertexShaders(0),
-			currentNumberOfTessellationControlShaders(0),
-			numberOfCreatedTessellationControlShaders(0),
-			currentNumberOfTessellationEvaluationShaders(0),
-			numberOfCreatedTessellationEvaluationShaders(0),
-			currentNumberOfGeometryShaders(0),
-			numberOfCreatedGeometryShaders(0),
-			currentNumberOfFragmentShaders(0),
-			numberOfCreatedFragmentShaders(0)
+	#ifndef RENDERER_NO_STATISTICS
+		#ifndef __RENDERER_STATISTICS_H__
+		#define __RENDERER_STATISTICS_H__
+		class Statistics
 		{
-		}
-		inline ~Statistics()
-		{
-		}
-	private:
-		inline explicit Statistics(const Statistics&) :
-			currentNumberOfRootSignatures(0),
-			numberOfCreatedRootSignatures(0),
-			currentNumberOfPrograms(0),
-			numberOfCreatedPrograms(0),
-			currentNumberOfVertexArrays(0),
-			numberOfCreatedVertexArrays(0),
-			currentNumberOfSwapChains(0),
-			numberOfCreatedSwapChains(0),
-			currentNumberOfFramebuffers(0),
-			numberOfCreatedFramebuffers(0),
-			currentNumberOfIndexBuffers(0),
-			numberOfCreatedIndexBuffers(0),
-			currentNumberOfVertexBuffers(0),
-			numberOfCreatedVertexBuffers(0),
-			currentNumberOfUniformBuffers(0),
-			numberOfCreatedUniformBuffers(0),
-			currentNumberOfTextureBuffers(0),
-			numberOfCreatedTextureBuffers(0),
-			currentNumberOfTexture2Ds(0),
-			numberOfCreatedTexture2Ds(0),
-			currentNumberOfTexture2DArrays(0),
-			numberOfCreatedTexture2DArrays(0),
-			currentNumberOfPipelineStates(0),
-			numberOfCreatedPipelineStates(0),
-			currentNumberOfSamplerStates(0),
-			numberOfCreatedSamplerStates(0),
-			currentNumberOfVertexShaders(0),
-			numberOfCreatedVertexShaders(0),
-			currentNumberOfTessellationControlShaders(0),
-			numberOfCreatedTessellationControlShaders(0),
-			currentNumberOfTessellationEvaluationShaders(0),
-			numberOfCreatedTessellationEvaluationShaders(0),
-			currentNumberOfGeometryShaders(0),
-			numberOfCreatedGeometryShaders(0),
-			currentNumberOfFragmentShaders(0),
-			numberOfCreatedFragmentShaders(0)
-		{
-		}
-		inline Statistics& operator =(const Statistics&)
-		{
-			return *this;
-		}
-	};
+		public:
+			std::atomic<uint32_t> currentNumberOfRootSignatures;
+			std::atomic<uint32_t> numberOfCreatedRootSignatures;
+			std::atomic<uint32_t> currentNumberOfPrograms;
+			std::atomic<uint32_t> numberOfCreatedPrograms;
+			std::atomic<uint32_t> currentNumberOfVertexArrays;
+			std::atomic<uint32_t> numberOfCreatedVertexArrays;
+			std::atomic<uint32_t> currentNumberOfSwapChains;
+			std::atomic<uint32_t> numberOfCreatedSwapChains;
+			std::atomic<uint32_t> currentNumberOfFramebuffers;
+			std::atomic<uint32_t> numberOfCreatedFramebuffers;
+			std::atomic<uint32_t> currentNumberOfIndexBuffers;
+			std::atomic<uint32_t> numberOfCreatedIndexBuffers;
+			std::atomic<uint32_t> currentNumberOfVertexBuffers;
+			std::atomic<uint32_t> numberOfCreatedVertexBuffers;
+			std::atomic<uint32_t> currentNumberOfUniformBuffers;
+			std::atomic<uint32_t> numberOfCreatedUniformBuffers;
+			std::atomic<uint32_t> currentNumberOfTextureBuffers;
+			std::atomic<uint32_t> numberOfCreatedTextureBuffers;
+			std::atomic<uint32_t> currentNumberOfTexture2Ds;
+			std::atomic<uint32_t> numberOfCreatedTexture2Ds;
+			std::atomic<uint32_t> currentNumberOfTexture2DArrays;
+			std::atomic<uint32_t> numberOfCreatedTexture2DArrays;
+			std::atomic<uint32_t> currentNumberOfPipelineStates;
+			std::atomic<uint32_t> numberOfCreatedPipelineStates;
+			std::atomic<uint32_t> currentNumberOfSamplerStates;
+			std::atomic<uint32_t> numberOfCreatedSamplerStates;
+			std::atomic<uint32_t> currentNumberOfVertexShaders;
+			std::atomic<uint32_t> numberOfCreatedVertexShaders;
+			std::atomic<uint32_t> currentNumberOfTessellationControlShaders;
+			std::atomic<uint32_t> numberOfCreatedTessellationControlShaders;
+			std::atomic<uint32_t> currentNumberOfTessellationEvaluationShaders;
+			std::atomic<uint32_t> numberOfCreatedTessellationEvaluationShaders;
+			std::atomic<uint32_t> currentNumberOfGeometryShaders;
+			std::atomic<uint32_t> numberOfCreatedGeometryShaders;
+			std::atomic<uint32_t> currentNumberOfFragmentShaders;
+			std::atomic<uint32_t> numberOfCreatedFragmentShaders;
+		public:
+			inline Statistics() :
+				currentNumberOfRootSignatures(0),
+				numberOfCreatedRootSignatures(0),
+				currentNumberOfPrograms(0),
+				numberOfCreatedPrograms(0),
+				currentNumberOfVertexArrays(0),
+				numberOfCreatedVertexArrays(0),
+				currentNumberOfSwapChains(0),
+				numberOfCreatedSwapChains(0),
+				currentNumberOfFramebuffers(0),
+				numberOfCreatedFramebuffers(0),
+				currentNumberOfIndexBuffers(0),
+				numberOfCreatedIndexBuffers(0),
+				currentNumberOfVertexBuffers(0),
+				numberOfCreatedVertexBuffers(0),
+				currentNumberOfUniformBuffers(0),
+				numberOfCreatedUniformBuffers(0),
+				currentNumberOfTextureBuffers(0),
+				numberOfCreatedTextureBuffers(0),
+				currentNumberOfTexture2Ds(0),
+				numberOfCreatedTexture2Ds(0),
+				currentNumberOfTexture2DArrays(0),
+				numberOfCreatedTexture2DArrays(0),
+				currentNumberOfPipelineStates(0),
+				numberOfCreatedPipelineStates(0),
+				currentNumberOfSamplerStates(0),
+				numberOfCreatedSamplerStates(0),
+				currentNumberOfVertexShaders(0),
+				numberOfCreatedVertexShaders(0),
+				currentNumberOfTessellationControlShaders(0),
+				numberOfCreatedTessellationControlShaders(0),
+				currentNumberOfTessellationEvaluationShaders(0),
+				numberOfCreatedTessellationEvaluationShaders(0),
+				currentNumberOfGeometryShaders(0),
+				numberOfCreatedGeometryShaders(0),
+				currentNumberOfFragmentShaders(0),
+				numberOfCreatedFragmentShaders(0)
+			{
+			}
+			inline ~Statistics()
+			{
+			}
+		private:
+			inline explicit Statistics(const Statistics&) :
+				currentNumberOfRootSignatures(0),
+				numberOfCreatedRootSignatures(0),
+				currentNumberOfPrograms(0),
+				numberOfCreatedPrograms(0),
+				currentNumberOfVertexArrays(0),
+				numberOfCreatedVertexArrays(0),
+				currentNumberOfSwapChains(0),
+				numberOfCreatedSwapChains(0),
+				currentNumberOfFramebuffers(0),
+				numberOfCreatedFramebuffers(0),
+				currentNumberOfIndexBuffers(0),
+				numberOfCreatedIndexBuffers(0),
+				currentNumberOfVertexBuffers(0),
+				numberOfCreatedVertexBuffers(0),
+				currentNumberOfUniformBuffers(0),
+				numberOfCreatedUniformBuffers(0),
+				currentNumberOfTextureBuffers(0),
+				numberOfCreatedTextureBuffers(0),
+				currentNumberOfTexture2Ds(0),
+				numberOfCreatedTexture2Ds(0),
+				currentNumberOfTexture2DArrays(0),
+				numberOfCreatedTexture2DArrays(0),
+				currentNumberOfPipelineStates(0),
+				numberOfCreatedPipelineStates(0),
+				currentNumberOfSamplerStates(0),
+				numberOfCreatedSamplerStates(0),
+				currentNumberOfVertexShaders(0),
+				numberOfCreatedVertexShaders(0),
+				currentNumberOfTessellationControlShaders(0),
+				numberOfCreatedTessellationControlShaders(0),
+				currentNumberOfTessellationEvaluationShaders(0),
+				numberOfCreatedTessellationEvaluationShaders(0),
+				currentNumberOfGeometryShaders(0),
+				numberOfCreatedGeometryShaders(0),
+				currentNumberOfFragmentShaders(0),
+				numberOfCreatedFragmentShaders(0)
+			{
+			}
+			inline Statistics& operator =(const Statistics&)
+			{
+				return *this;
+			}
+		};
+		#endif
 	#endif
 
 
@@ -1694,10 +1699,12 @@ namespace Renderer
 			{
 				return mCapabilities;
 			}
-			inline const Statistics& getStatistics() const
-			{
-				return mStatistics;
-			}
+			#ifndef RENDERER_NO_STATISTICS
+				inline const Statistics& getStatistics() const
+				{
+					return mStatistics;
+				}
+			#endif
 			inline void rsSetViewportAndScissorRectangle(uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height)
 			{
 				{ // Set the viewport
@@ -1773,8 +1780,10 @@ namespace Renderer
 			IRenderer& operator =(const IRenderer& source);
 		protected:
 			Capabilities mCapabilities;
-		private:
-			Statistics mStatistics;
+		#ifndef RENDERER_NO_STATISTICS
+			private:
+				Statistics mStatistics;
+		#endif
 		};
 		typedef SmartRefCount<IRenderer> IRendererPtr;
 	#endif

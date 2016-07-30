@@ -27,7 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/Statistics.h"
+#ifndef RENDERER_NO_STATISTICS
+	#include "Renderer/Statistics.h"
+#endif
 #include "Renderer/BufferTypes.h"
 #include "Renderer/Capabilities.h"
 #include "Renderer/TextureTypes.h"
@@ -879,18 +881,20 @@ namespace Renderer
 		*/
 		inline IRenderer &operator =(const IRenderer &source);
 
-		/**
-		*  @brief
-		*    Return the statistics of the renderer instance
-		*
-		*  @return
-		*    The statistics of the renderer instance
-		*
-		*  @note
-		*    - Do not free the memory the returned reference is pointing to
-		*    - It's possible that the statistics or part of it are disabled, e.g. due to hight performance constrains
-		*/
-		inline Statistics &getStatistics();
+		#ifndef RENDERER_NO_STATISTICS
+			/**
+			*  @brief
+			*    Return the statistics of the renderer instance
+			*
+			*  @return
+			*    The statistics of the renderer instance
+			*
+			*  @note
+			*    - Do not free the memory the returned reference is pointing to
+			*    - It's possible that the statistics or part of it are disabled, e.g. due to hight performance constrains
+			*/
+			inline Statistics &getStatistics();
+		#endif
 
 
 	//[-------------------------------------------------------]
@@ -900,11 +904,13 @@ namespace Renderer
 		Capabilities mCapabilities;	///< Capabilities
 
 
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		Statistics mStatistics;	///< Statistics
+	#ifndef RENDERER_NO_STATISTICS
+		//[-------------------------------------------------------]
+		//[ Private data                                          ]
+		//[-------------------------------------------------------]
+		private:
+			Statistics mStatistics;	///< Statistics
+	#endif
 
 
 	};

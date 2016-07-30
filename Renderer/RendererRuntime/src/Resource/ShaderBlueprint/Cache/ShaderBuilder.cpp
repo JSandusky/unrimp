@@ -55,7 +55,7 @@ THE SOFTWARE.
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/Preprocessor/Preprocessor.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 
 #include <algorithm>
@@ -782,6 +782,7 @@ namespace RendererRuntime
 		std::string outString;
 
 		mShaderProperties = shaderProperties;
+		mShaderProperties.setPropertyValues(static_cast<const ShaderBlueprintResourceManager&>(shaderBlueprintResource.getResourceManager()).getRendererShaderProperties());
 		mDynamicShaderPieces.clear();
 
 		{ // Process the shader piece resources to include
@@ -828,7 +829,6 @@ namespace RendererRuntime
 				syntaxError |= insertPieces(inString, outString);
 			}
 			syntaxError |= parseCounter(outString, inString);
-			// outString.swap(inString);	// Not required due to C-processor destination below
 		}
 
 		// Apply a C-preprocessor
