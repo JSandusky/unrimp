@@ -112,7 +112,6 @@ namespace RendererRuntime
 		// Create the core manager instances
 		mThreadManager = new ThreadManager();
 		mAssetManager = new AssetManager(*this);
-		mPipelineStateCompiler = new PipelineStateCompiler(*this);
 
 		// Create the resource manager instances
 		mResourceStreamer = new ResourceStreamer(*this);
@@ -137,6 +136,9 @@ namespace RendererRuntime
 		mResourceManagers.push_back(mSceneResourceManager);
 		mResourceManagers.push_back(mCompositorResourceManager);
 
+		// Misc
+		mPipelineStateCompiler = new PipelineStateCompiler(*this);
+
 		// Create the optional manager instances
 		#ifdef WIN32
 			mDebugGuiManager = new DebugGuiManagerWindows(*this);
@@ -152,6 +154,9 @@ namespace RendererRuntime
 		delete mVrManager;
 		delete mDebugGuiManager;
 
+		// Destroy misc
+		delete mPipelineStateCompiler;
+
 		{ // Destroy the resource manager instances in reverse order
 			const int numberOfResourceManagers = static_cast<int>(mResourceManagers.size());
 			for (int i = numberOfResourceManagers - 1; i >= 0; --i)
@@ -161,7 +166,6 @@ namespace RendererRuntime
 		}
 
 		// Destroy the core manager instances
-		delete mPipelineStateCompiler;
 		delete mAssetManager;
 		delete mThreadManager;
 

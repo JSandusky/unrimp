@@ -134,15 +134,6 @@ namespace RendererRuntime
 		*/
 		inline AssetManager& getAssetManager() const;
 
-		/**
-		*  @brief
-		*    Return the pipeline state compiler instance
-		*
-		*  @return
-		*    The pipeline state compiler instance, do not release the returned instance
-		*/
-		inline PipelineStateCompiler& getPipelineStateCompiler() const;
-
 		//[-------------------------------------------------------]
 		//[ Resource                                              ]
 		//[-------------------------------------------------------]
@@ -246,6 +237,18 @@ namespace RendererRuntime
 		inline const ResourceManagers& getResourceManagers() const;
 
 		//[-------------------------------------------------------]
+		//[ Misc                                                  ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the pipeline state compiler instance
+		*
+		*  @return
+		*    The pipeline state compiler instance, do not release the returned instance
+		*/
+		inline PipelineStateCompiler& getPipelineStateCompiler() const;
+
+		//[-------------------------------------------------------]
 		//[ Optional                                              ]
 		//[-------------------------------------------------------]
 		/**
@@ -330,10 +333,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		// Core
-		Renderer::IRenderer*   mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
-		ThreadManager*		   mThreadManager;
-		AssetManager*		   mAssetManager;
-		PipelineStateCompiler* mPipelineStateCompiler;
+		Renderer::IRenderer* mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
+		ThreadManager*		 mThreadManager;
+		AssetManager*		 mAssetManager;
 		// Resource
 		ResourceStreamer*					mResourceStreamer;
 		TextureResourceManager*				mTextureResourceManager;
@@ -346,6 +348,8 @@ namespace RendererRuntime
 		SceneResourceManager*				mSceneResourceManager;
 		CompositorResourceManager*			mCompositorResourceManager;
 		ResourceManagers					mResourceManagers;
+		// Misc
+		PipelineStateCompiler* mPipelineStateCompiler;
 		// Optional
 		DebugGuiManager* mDebugGuiManager;
 		IVrManager*		 mVrManager;

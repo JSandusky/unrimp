@@ -33,18 +33,37 @@ namespace RendererRuntime
 		return mShaderCacheId;
 	}
 
+	inline ShaderCache* ShaderCache::getMasterShaderCache() const
+	{
+		return mMasterShaderCache;
+	}
+
 	inline Renderer::IShaderPtr ShaderCache::getShaderPtr() const
 	{
-		return mShaderPtr;
+		return (nullptr != mMasterShaderCache) ? mMasterShaderCache->mShaderPtr : mShaderPtr;
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline ShaderCache::ShaderCache(ShaderCacheId shaderCacheId, Renderer::IShader& shader, ShaderCache* masterShaderCache) :
+	inline ShaderCache::ShaderCache(ShaderCacheId shaderCacheId) :
 		mShaderCacheId(shaderCacheId),
-		mShaderPtr(&shader),
+		mMasterShaderCache(nullptr)
+	{
+		// Nothing here
+	}
+
+	inline ShaderCache::ShaderCache(ShaderCacheId shaderCacheId, Renderer::IShader& shader) :
+		mShaderCacheId(shaderCacheId),
+		mMasterShaderCache(nullptr),
+		mShaderPtr(&shader)
+	{
+		// Nothing here
+	}
+
+	inline ShaderCache::ShaderCache(ShaderCacheId shaderCacheId, ShaderCache* masterShaderCache) :
+		mShaderCacheId(shaderCacheId),
 		mMasterShaderCache(masterShaderCache)
 	{
 		// Nothing here

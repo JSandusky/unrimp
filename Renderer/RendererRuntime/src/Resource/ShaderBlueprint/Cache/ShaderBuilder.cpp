@@ -776,11 +776,8 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	std::string ShaderBuilder::createSourceCode(const ShaderPieceResourceManager& shaderPieceResourceManager, const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties)
+	const std::string& ShaderBuilder::createSourceCode(const ShaderPieceResourceManager& shaderPieceResourceManager, const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties)
 	{
-		std::string inString;
-		std::string outString;
-
 		mShaderProperties = shaderProperties;
 		mShaderProperties.setPropertyValues(static_cast<const ShaderBlueprintResourceManager&>(shaderBlueprintResource.getResourceManager()).getRendererShaderProperties());
 		mDynamicShaderPieces.clear();
@@ -795,15 +792,15 @@ namespace RendererRuntime
 				if (nullptr != shaderPieceResource)
 				{
 					// Initialize
-					inString = shaderPieceResource->getShaderSourceCode();
-					outString.clear();
+					mInString = shaderPieceResource->getShaderSourceCode();
+					mOutString.clear();
 
 					// Process
-					parseMath(inString, outString);
-					parseForEach(outString, inString);
-					parseProperties(inString, outString);
-					collectPieces(outString, inString);
-					parseCounter(inString, outString);
+					parseMath(mInString, mOutString);
+					parseForEach(mOutString, mInString);
+					parseProperties(mInString, mOutString);
+					collectPieces(mOutString, mInString);
+					parseCounter(mInString, mOutString);
 				}
 				else
 				{
@@ -815,27 +812,27 @@ namespace RendererRuntime
 
 		{ // Process the shader blueprint resource
 			// Initialize
-			inString = shaderBlueprintResource.getShaderSourceCode();
-			outString.clear();
+			mInString = shaderBlueprintResource.getShaderSourceCode();
+			mOutString.clear();
 
 			// Process
 			bool syntaxError = false;
-			syntaxError |= parseMath(inString, outString);
-			syntaxError |= parseForEach(outString, inString);
-			syntaxError |= parseProperties(inString, outString);
-			while (!syntaxError && (outString.find("@piece") != std::string::npos || outString.find("@insertpiece") != std::string::npos))
+			syntaxError |= parseMath(mInString, mOutString);
+			syntaxError |= parseForEach(mOutString, mInString);
+			syntaxError |= parseProperties(mInString, mOutString);
+			while (!syntaxError && (mOutString.find("@piece") != std::string::npos || mOutString.find("@insertpiece") != std::string::npos))
 			{
-				syntaxError |= collectPieces(outString, inString);
-				syntaxError |= insertPieces(inString, outString);
+				syntaxError |= collectPieces(mOutString, mInString);
+				syntaxError |= insertPieces(mInString, mOutString);
 			}
-			syntaxError |= parseCounter(outString, inString);
+			syntaxError |= parseCounter(mOutString, mInString);
 		}
 
 		// Apply a C-preprocessor
-		Preprocessor::preprocess(inString, outString);
+		Preprocessor::preprocess(mInString, mOutString);
 
 		// Done
-		return outString;
+		return mOutString;
 	}
 
 

@@ -101,7 +101,7 @@ namespace RendererRuntime
 		*  @return
 		*    The created shader source code
 		*/
-		std::string createSourceCode(const ShaderPieceResourceManager& shaderPieceResourceManager, const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties);
+		const std::string& createSourceCode(const ShaderPieceResourceManager& shaderPieceResourceManager, const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties);
 
 
 	//[-------------------------------------------------------]
@@ -125,6 +125,8 @@ namespace RendererRuntime
 	private:
 		ShaderProperties	mShaderProperties;
 		DynamicShaderPieces	mDynamicShaderPieces;
+		std::string			mInString;	///< Could be a local variable, but when making it to a member we reduce memory allocations
+		std::string			mOutString;	///< Could be a local variable, but when making it to a member we reduce memory allocations
 
 
 	};

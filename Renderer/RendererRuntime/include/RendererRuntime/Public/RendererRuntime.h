@@ -99,10 +99,6 @@ namespace RendererRuntime
 		{
 			return *mAssetManager;
 		}
-		inline PipelineStateCompiler& getPipelineStateCompiler() const
-		{
-			return *mPipelineStateCompiler;
-		}
 		inline ResourceStreamer& getResourceStreamer() const
 		{
 			return *mResourceStreamer;
@@ -147,6 +143,10 @@ namespace RendererRuntime
 		{
 			return mResourceManagers;
 		}
+		inline PipelineStateCompiler& getPipelineStateCompiler() const
+		{
+			return *mPipelineStateCompiler;
+		}
 		inline DebugGuiManager& getDebugGuiManager() const
 		{
 			return *mDebugGuiManager;
@@ -166,7 +166,6 @@ namespace RendererRuntime
 		Renderer::IRenderer*				mRenderer;
 		ThreadManager*						mThreadManager;
 		AssetManager*						mAssetManager;
-		PipelineStateCompiler*				mPipelineStateCompiler;
 		ResourceStreamer*					mResourceStreamer;
 		TextureResourceManager*				mTextureResourceManager;
 		ShaderPieceResourceManager*			mShaderPieceResourceManager;
@@ -178,6 +177,7 @@ namespace RendererRuntime
 		SceneResourceManager*				mSceneResourceManager;
 		CompositorResourceManager*			mCompositorResourceManager;
 		ResourceManagers					mResourceManagers;
+		PipelineStateCompiler*				mPipelineStateCompiler;
 		DebugGuiManager*					mDebugGuiManager;
 		IVrManager*							mVrManager;
 	};

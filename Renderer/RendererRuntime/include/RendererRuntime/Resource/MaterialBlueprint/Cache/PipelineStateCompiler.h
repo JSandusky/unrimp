@@ -28,8 +28,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
 
 #include <deque>
+#include <string>
 #include <vector>
 #include <atomic>
 #include <thread>
@@ -44,8 +46,13 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class IPipelineState;
+}
 namespace RendererRuntime
 {
+	class ShaderCache;
 	class IRendererRuntime;
 	class PipelineStateCache;
 	class MaterialBlueprintResource;
@@ -122,17 +129,31 @@ namespace RendererRuntime
 	private:
 		struct CompilerRequest : private NonCopyable
 		{
+			// Input
 			PipelineStateCache& pipelineStateCache;
+			// Internal
+			ShaderCache*			  shaderCache[NUMBER_OF_SHADER_TYPES];
+			std::string				  shaderSourceCode[NUMBER_OF_SHADER_TYPES];
+			Renderer::IPipelineState* pipelineStateObject;
 
 			explicit CompilerRequest(PipelineStateCache& _pipelineStateCache) :
-				pipelineStateCache(_pipelineStateCache)
+				pipelineStateCache(_pipelineStateCache),
+				pipelineStateObject(nullptr)
 			{
-				// Nothing here
+				for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
+				{
+					shaderCache[i] = nullptr;
+				}
 			}
 			explicit CompilerRequest(const CompilerRequest& compilerRequest) :
-				pipelineStateCache(compilerRequest.pipelineStateCache)
+				pipelineStateCache(compilerRequest.pipelineStateCache),
+				pipelineStateObject(compilerRequest.pipelineStateObject)
 			{
-				// Nothing here
+				for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
+				{
+					shaderCache[i]		= compilerRequest.shaderCache[i];
+					shaderSourceCode[i] = compilerRequest.shaderSourceCode[i];
+				}
 			}
 			CompilerRequest& operator=(const CompilerRequest&) = delete;
 		};

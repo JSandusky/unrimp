@@ -81,6 +81,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class ShaderBlueprintResourceManager;	///< Is creating and using a shader cache manager instance
+		friend class PipelineStateCompiler;				///< Is tightly interacting with the shader cache manager
 
 
 	//[-------------------------------------------------------]

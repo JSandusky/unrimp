@@ -48,11 +48,6 @@ namespace RendererRuntime
 		return *mAssetManager;
 	}
 
-	inline PipelineStateCompiler& IRendererRuntime::getPipelineStateCompiler() const
-	{
-		return *mPipelineStateCompiler;
-	}
-
 	inline ResourceStreamer& IRendererRuntime::getResourceStreamer() const
 	{
 		return *mResourceStreamer;
@@ -108,6 +103,11 @@ namespace RendererRuntime
 		return mResourceManagers;
 	}
 
+	inline PipelineStateCompiler& IRendererRuntime::getPipelineStateCompiler() const
+	{
+		return *mPipelineStateCompiler;
+	}
+
 	inline DebugGuiManager& IRendererRuntime::getDebugGuiManager() const
 	{
 		return *mDebugGuiManager;
@@ -127,7 +127,6 @@ namespace RendererRuntime
 		mRenderer(nullptr),
 		mThreadManager(nullptr),
 		mAssetManager(nullptr),
-		mPipelineStateCompiler(nullptr),
 		// Resource
 		mResourceStreamer(nullptr),
 		mTextureResourceManager(nullptr),
@@ -139,6 +138,8 @@ namespace RendererRuntime
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
 		mCompositorResourceManager(nullptr),
+		// Misc
+		mPipelineStateCompiler(nullptr),
 		// Optional
 		mDebugGuiManager(nullptr),
 		mVrManager(nullptr)
@@ -151,7 +152,6 @@ namespace RendererRuntime
 		mRenderer(nullptr),
 		mThreadManager(nullptr),
 		mAssetManager(nullptr),
-		mPipelineStateCompiler(nullptr),
 		// Resource
 		mResourceStreamer(nullptr),
 		mTextureResourceManager(nullptr),
@@ -163,6 +163,9 @@ namespace RendererRuntime
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
 		mCompositorResourceManager(nullptr),
+		// Misc
+		mPipelineStateCompiler(nullptr),
+		// Optional
 		mDebugGuiManager(nullptr),
 		mVrManager(nullptr)
 	{

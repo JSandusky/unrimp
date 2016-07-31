@@ -71,13 +71,13 @@ namespace RendererRuntime
 			{
 				// Create the shaders
 				ShaderCacheManager& shaderCacheManager = materialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getShaderBlueprintResourceManager().getShaderCacheManager();
-				Renderer::IShader* shader[NUMBER_OF_SHADER_TYPES] = {};
+				Renderer::IShader* shaders[NUMBER_OF_SHADER_TYPES] = {};
 				for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 				{
 					ShaderCache* shaderCache = shaderCacheManager.getShaderCache(pipelineStateSignature, materialBlueprintResource, *shaderLanguage, static_cast<ShaderType>(i));
 					if (nullptr != shaderCache)
 					{
-						shader[i] = shaderCache->getShaderPtr();
+						shaders[i] = shaderCache->getShaderPtr();
 					}
 					else
 					{
@@ -87,11 +87,11 @@ namespace RendererRuntime
 
 				// Create the program
 				Renderer::IProgram* program = shaderLanguage->createProgram(*rootSignaturePtr, materialBlueprintResource.getVertexAttributes(),
-					static_cast<Renderer::IVertexShader*>(shader[static_cast<int>(ShaderType::Vertex)]),
-					static_cast<Renderer::ITessellationControlShader*>(shader[static_cast<int>(ShaderType::TessellationControl)]),
-					static_cast<Renderer::ITessellationEvaluationShader*>(shader[static_cast<int>(ShaderType::TessellationEvaluation)]),
-					static_cast<Renderer::IGeometryShader*>(shader[static_cast<int>(ShaderType::Geometry)]),
-					static_cast<Renderer::IFragmentShader*>(shader[static_cast<int>(ShaderType::Fragment)]));
+					static_cast<Renderer::IVertexShader*>(shaders[static_cast<int>(ShaderType::Vertex)]),
+					static_cast<Renderer::ITessellationControlShader*>(shaders[static_cast<int>(ShaderType::TessellationControl)]),
+					static_cast<Renderer::ITessellationEvaluationShader*>(shaders[static_cast<int>(ShaderType::TessellationEvaluation)]),
+					static_cast<Renderer::IGeometryShader*>(shaders[static_cast<int>(ShaderType::Geometry)]),
+					static_cast<Renderer::IFragmentShader*>(shaders[static_cast<int>(ShaderType::Fragment)]));
 
 				// Create the new program cache instance
 				if (nullptr != program)

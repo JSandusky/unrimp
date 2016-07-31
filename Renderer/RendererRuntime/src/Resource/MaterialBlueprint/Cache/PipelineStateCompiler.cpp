@@ -25,9 +25,12 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCache.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/ProgramCache.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCache.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Core/Platform/PlatformManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Core/Math/Math.h"
 
 #include <cassert>
 
@@ -98,8 +101,10 @@ namespace RendererRuntime
 			CompilerRequest compilerRequest(mDispatchQueue.back());
 			mDispatchQueue.pop_back();
 
-			// TODO(co)
-			//PipelineStateCache& pipelineStateCache = compilerRequest.pipelineStateCache;
+			// Tell the pipeline state cache about the real compiled pipeline state object
+			PipelineStateCache& pipelineStateCache = compilerRequest.pipelineStateCache;
+			pipelineStateCache.mPipelineStateObjectPtr = compilerRequest.pipelineStateObject;
+			pipelineStateCache.mIsUsingFallback = false;
 		}
 	}
 
@@ -187,6 +192,14 @@ namespace RendererRuntime
 
 	void PipelineStateCompiler::builderThreadWorker()
 	{
+		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
+		const MaterialBlueprintResources& materialBlueprintResources = materialBlueprintResourceManager.getMaterialBlueprintResources();
+		ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
+		const ShaderBlueprintResources& shaderBlueprintResources = shaderBlueprintResourceManager.getShaderBlueprintResources();
+		ShaderCacheManager& shaderCacheManager = shaderBlueprintResourceManager.getShaderCacheManager();
+		const ShaderPieceResourceManager& shaderPieceResourceManager = mRendererRuntime.getShaderPieceResourceManager();
+		ShaderBuilder shaderBuilder;
+
 		PlatformManager::setCurrentThreadName("Renderer runtime: Pipeline state compiler stage: 1. Asynchronous shader building");
 		while (!mShutdownBuilderThread)
 		{
@@ -200,27 +213,81 @@ namespace RendererRuntime
 				mBuilderQueue.pop_back();
 				builderMutexLock.unlock();
 
-				// Do the work: Building the shader source code for the required combination
-				bool compilationRequired = false;
-				for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
-				{
-					// TODO(co)
+				{ // Do the work: Building the shader source code for the required combination
+					const PipelineStateSignature& pipelineStateSignature = compilerRequest.pipelineStateCache.getPipelineStateSignature();
+					const MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResources.getElementById(pipelineStateSignature.getMaterialBlueprintResourceId());
+
+					// TODO(co) Add shader cache manager mutex
+					for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
+					{
+						// Get the shader blueprint resource ID
+						const ShaderType shaderType = static_cast<ShaderType>(i);
+						const ShaderBlueprintResourceId shaderBlueprintResourceId = materialBlueprintResource.getShaderBlueprintResourceId(shaderType);
+						if (isInitialized(shaderBlueprintResourceId))
+						{
+							// Get the shader cache identifier, often but not always identical to the shader combination ID
+							const ShaderCacheId shaderCacheId = pipelineStateSignature.getShaderCombinationId(shaderType);
+
+							// Does the shader cache already exist?
+							ShaderCache* shaderCache = nullptr;
+							ShaderCacheManager::ShaderCacheByShaderCacheId::const_iterator shaderCacheIdIterator = shaderCacheManager.mShaderCacheByShaderCacheId.find(shaderCacheId);
+							if (shaderCacheIdIterator != shaderCacheManager.mShaderCacheByShaderCacheId.cend())
+							{
+								shaderCache = shaderCacheIdIterator->second;
+							}
+							else
+							{
+								// Try to create the new program cache instance
+								const ShaderBlueprintResource* shaderBlueprintResource = shaderBlueprintResources.tryGetElementById(shaderBlueprintResourceId);
+								if (nullptr != shaderBlueprintResource)
+								{
+									// Build the shader source code
+									const std::string& sourceCode = shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, pipelineStateSignature.getShaderProperties());
+									if (sourceCode.empty())
+									{
+										// TODO(co) Error handling
+										assert(false);
+									}
+									else
+									{
+										// Generate the shader source code ID
+										// -> Especially in complex shaders, there are situations where different shader combinations result in one and the same shader source code
+										// -> Shader compilation is considered to be expensive, so we need to be pretty sure that we really need to perform this heavy work
+										const ShaderSourceCodeId shaderSourceCodeId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(sourceCode.c_str()), sourceCode.size());
+										ShaderCacheManager::ShaderCacheByShaderSourceCodeId::const_iterator shaderSourceCodeIdIterator = shaderCacheManager.mShaderCacheByShaderSourceCodeId.find(shaderSourceCodeId);
+										if (shaderSourceCodeIdIterator != shaderCacheManager.mShaderCacheByShaderSourceCodeId.cend() && nullptr != shaderSourceCodeIdIterator->second->getShaderPtr().getPointer())
+										{
+											// Reuse already existing shader instance
+											// -> We still have to create a shader cache instance so we don't need to build the shader source code again next time
+											shaderCache = new ShaderCache(shaderCacheId, shaderSourceCodeIdIterator->second);
+											shaderCacheManager.mShaderCacheByShaderCacheId.emplace(shaderCacheId, shaderCache);
+										}
+										else
+										{
+											// Create the new shader cache instance
+											shaderCache = new ShaderCache(shaderCacheId);
+											shaderCacheManager.mShaderCacheByShaderCacheId.emplace(shaderCacheId, shaderCache);
+											shaderCacheManager.mShaderCacheByShaderSourceCodeId.emplace(shaderSourceCodeId, shaderCache);
+											compilerRequest.shaderSourceCode[i] = sourceCode;
+										}
+									}
+								}
+								else
+								{
+									// TODO(co) Error handling
+									assert(false);
+								}
+							}
+							compilerRequest.shaderCache[i] = shaderCache;
+						}
+					}
 				}
 
-				// Do we need to compile at least one shader of the request?
-				if (compilationRequired)
-				{
-					// Push the compiler request into the queue of the asynchronous shader compilation
+				{ // Push the compiler request into the queue of the asynchronous shader compilation
 					std::unique_lock<std::mutex> compilerMutexLock(mCompilerMutex);
 					mCompilerQueue.emplace_back(compilerRequest);
 					compilerMutexLock.unlock();
 					mCompilerConditionVariable.notify_one();
-				}
-				else
-				{
-					// Push the compiler request into the queue of the synchronous shader dispatch
-					std::lock_guard<std::mutex> dispatchMutexLock(mDispatchMutex);
-					mDispatchQueue.emplace_back(compilerRequest);
 				}
 
 				// We're ready for the next round
@@ -231,33 +298,122 @@ namespace RendererRuntime
 
 	void PipelineStateCompiler::compilerThreadWorker()
 	{
-		PlatformManager::setCurrentThreadName("Renderer runtime: Pipeline state compiler stage: 2. Asynchronous shader compilation");
-		while (!mShutdownCompilerThread)
+		Renderer::IShaderLanguagePtr shaderLanguage(mRendererRuntime.getRenderer().getShaderLanguage());
+		if (nullptr != shaderLanguage)
 		{
-			// Continue as long as there's a compiler request left inside the queue, if it's empty go to sleep
-			std::unique_lock<std::mutex> compilerMutexLock(mCompilerMutex);
-			mCompilerConditionVariable.wait(compilerMutexLock);
-			while (!mCompilerQueue.empty() && !mShutdownCompilerThread)
+			const MaterialBlueprintResources& materialBlueprintResources = mRendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResources();
+			PlatformManager::setCurrentThreadName("Renderer runtime: Pipeline state compiler stage: 2. Asynchronous shader compilation");
+			while (!mShutdownCompilerThread)
 			{
-				// Get the compiler request
-				CompilerRequest compilerRequest(mCompilerQueue.back());
-				mCompilerQueue.pop_back();
-				compilerMutexLock.unlock();
-
-				// Do the work: Compiling the shader source code it in order to get the shader microcode
-				for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
+				// Continue as long as there's a compiler request left inside the queue, if it's empty go to sleep
+				std::unique_lock<std::mutex> compilerMutexLock(mCompilerMutex);
+				mCompilerConditionVariable.wait(compilerMutexLock);
+				while (!mCompilerQueue.empty() && !mShutdownCompilerThread)
 				{
-					// TODO(co)
-				}
+					// Get the compiler request
+					CompilerRequest compilerRequest(mCompilerQueue.back());
+					mCompilerQueue.pop_back();
+					compilerMutexLock.unlock();
 
-				{ // Push the compiler request into the queue of the synchronous shader dispatch
-					std::lock_guard<std::mutex> dispatchMutexLock(mDispatchMutex);
-					mDispatchQueue.emplace_back(compilerRequest);
-				}
+					// Do the work: Compiling the shader source code it in order to get the shader microcode
+					bool needToWaitForShaderCache = false;
+					Renderer::IShader* shaders[NUMBER_OF_SHADER_TYPES] = {};
+					for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES && !needToWaitForShaderCache; ++i)
+					{
+						ShaderCache* shaderCache = compilerRequest.shaderCache[i];
+						if (nullptr != shaderCache)
+						{
+							shaders[i] = shaderCache->getShaderPtr();
+							if (nullptr == shaders[i])
+							{
+								// The shader instance is not ready, do we need to compile it right now or is this the job of a shader cache master?
+								const std::string& shaderSourceCode = compilerRequest.shaderSourceCode[i];
+								if (shaderSourceCode.empty())
+								{
+									// We're not aware of any shader source code but we need a shader cache, so, there must be a shader cache master we need to wait for
+									assert(nullptr != shaderCache->getMasterShaderCache());
+									needToWaitForShaderCache = true;
+								}
+								else
+								{
+									// Create the shader instance
+									Renderer::IShader* shader = nullptr;
+									switch (static_cast<ShaderType>(i))
+									{
+										case ShaderType::Vertex:
+											shader = shaderLanguage->createVertexShaderFromSourceCode(materialBlueprintResources.getElementById(compilerRequest.pipelineStateCache.getPipelineStateSignature().getMaterialBlueprintResourceId()).getVertexAttributes(), shaderSourceCode.c_str());
+											break;
 
-				// We're ready for the next round
-				compilerMutexLock.lock();
+										case ShaderType::TessellationControl:
+											shader = shaderLanguage->createTessellationControlShaderFromSourceCode(shaderSourceCode.c_str());
+											break;
+
+										case ShaderType::TessellationEvaluation:
+											shader = shaderLanguage->createTessellationEvaluationShaderFromSourceCode(shaderSourceCode.c_str());
+											break;
+
+										case ShaderType::Geometry:
+											// TODO(co) "RendererRuntime::ShaderCacheManager::getShaderCache()" needs to provide additional geometry shader information
+											// shader = shaderLanguage->createGeometryShaderFromSourceCode(shaderSourceCode.c_str());
+											break;
+
+										case ShaderType::Fragment:
+											shader = shaderLanguage->createFragmentShaderFromSourceCode(shaderSourceCode.c_str());
+											break;
+									}
+									assert(nullptr != shader);	// TODO(co) Error handling
+									shaderCache->mShaderPtr = shaders[i] = shader;
+								}
+							}
+						}
+					}
+
+					// Are all required shader caches ready for rumble?
+					if (!needToWaitForShaderCache)
+					{
+						// TODO(co) Program cache entry handling
+						// Create the program
+						const MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResources.getElementById(compilerRequest.pipelineStateCache.getPipelineStateSignature().getMaterialBlueprintResourceId());
+						Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
+						Renderer::IProgram* program = shaderLanguage->createProgram(*rootSignaturePtr, materialBlueprintResource.getVertexAttributes(),
+							static_cast<Renderer::IVertexShader*>(shaders[static_cast<int>(ShaderType::Vertex)]),
+							static_cast<Renderer::ITessellationControlShader*>(shaders[static_cast<int>(ShaderType::TessellationControl)]),
+							static_cast<Renderer::ITessellationEvaluationShader*>(shaders[static_cast<int>(ShaderType::TessellationEvaluation)]),
+							static_cast<Renderer::IGeometryShader*>(shaders[static_cast<int>(ShaderType::Geometry)]),
+							static_cast<Renderer::IFragmentShader*>(shaders[static_cast<int>(ShaderType::Fragment)]));
+
+						{ // Create the pipeline state object (PSO)
+							// Start with the pipeline state of the material blueprint resource
+							Renderer::PipelineState pipelineState = materialBlueprintResource.getPipelineState();
+
+							// Setup the dynamic part of the pipeline state
+							pipelineState.rootSignature	   = rootSignaturePtr;
+							pipelineState.program		   = program;
+							pipelineState.vertexAttributes = materialBlueprintResource.getVertexAttributes();
+
+							// Create the pipeline state object (PSO)
+							compilerRequest.pipelineStateObject = rootSignaturePtr->getRenderer().createPipelineState(pipelineState);
+						}
+
+						// Push the compiler request into the queue of the synchronous shader dispatch
+						std::lock_guard<std::mutex> dispatchMutexLock(mDispatchMutex);
+						mDispatchQueue.emplace_back(compilerRequest);
+					}
+
+					// We're ready for the next round
+					compilerMutexLock.lock();
+					if (needToWaitForShaderCache)
+					{
+						// At least one shader cache instance we need is referencing a master shader cache which hasn't finished processing yet, so we need to wait a while before we can continue with our request
+						mCompilerQueue.emplace_front(compilerRequest);
+					}
+				}
 			}
+		}
+		else
+		{
+			// TODO(co) Error handling
+			assert(false);
 		}
 	}
 

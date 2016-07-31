@@ -66,8 +66,13 @@ namespace RendererRuntime
 				{
 					// Build the shader source code
 					ShaderBuilder shaderBuilder;
-					const std::string sourceCode = shaderBuilder.createSourceCode(mShaderBlueprintResourceManager.getRendererRuntime().getShaderPieceResourceManager(), *shaderBlueprintResource, pipelineStateSignature.getShaderProperties());
-					if (!sourceCode.empty())
+					const std::string& sourceCode = shaderBuilder.createSourceCode(mShaderBlueprintResourceManager.getRendererRuntime().getShaderPieceResourceManager(), *shaderBlueprintResource, pipelineStateSignature.getShaderProperties());
+					if (sourceCode.empty())
+					{
+						// TODO(co) Error handling
+						assert(false);
+					}
+					else
 					{
 						// Generate the shader source code ID
 						// -> Especially in complex shaders, there are situations where different shader combinations result in one and the same shader source code
@@ -78,7 +83,7 @@ namespace RendererRuntime
 						{
 							// Reuse already existing shader instance
 							// -> We still have to create a shader cache instance so we don't need to build the shader source code again next time
-							shaderCache = new ShaderCache(shaderCacheId, *shaderSourceCodeIdIterator->second->getShaderPtr(), shaderSourceCodeIdIterator->second);
+							shaderCache = new ShaderCache(shaderCacheId, shaderSourceCodeIdIterator->second);
 							mShaderCacheByShaderCacheId.emplace(shaderCacheId, shaderCache);
 						}
 						else
@@ -122,11 +127,6 @@ namespace RendererRuntime
 								assert(false);
 							}
 						}
-					}
-					else
-					{
-						// TODO(co) Error handling
-						assert(false);
 					}
 				}
 				else
