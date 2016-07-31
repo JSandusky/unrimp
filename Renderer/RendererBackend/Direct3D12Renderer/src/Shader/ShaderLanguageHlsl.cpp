@@ -46,9 +46,20 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public static methods                                 ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ID3DBlob *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint)
+	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D12Renderer &direct3D12Renderer) :
+		IShaderLanguage(direct3D12Renderer)
+	{
+		// Nothing to do in here
+	}
+
+	ShaderLanguageHlsl::~ShaderLanguageHlsl()
+	{
+		// Nothing to do in here
+	}
+
+	ID3DBlob *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint) const
 	{
 		assert(nullptr != shaderModel);
 		assert(nullptr != shaderSource);
@@ -58,19 +69,44 @@ namespace Direct3D12Renderer
 	
 		HRESULT hr = S_OK;
 
-		DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-	#if defined( DEBUG ) || defined( _DEBUG )
-		// Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-		// Setting this flag improves the shader debugging experience, but still allows 
-		// the shaders to be optimized and to run exactly the way they will run in 
-		// the release configuration of this program.
-		shaderFlags |= D3DCOMPILE_DEBUG;
-	#endif
+		// Get compile flags
+		UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+		switch (getOptimizationLevel())
+		{
+			case OptimizationLevel::Debug:
+				compileFlags |= D3DCOMPILE_DEBUG;
+				compileFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+				break;
+
+			case OptimizationLevel::None:
+				compileFlags |= D3DCOMPILE_SKIP_VALIDATION;
+				compileFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+				break;
+
+			case OptimizationLevel::Low:
+				compileFlags |= D3DCOMPILE_SKIP_VALIDATION;
+				compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL0;
+				break;
+
+			case OptimizationLevel::Medium:
+				compileFlags |= D3DCOMPILE_SKIP_VALIDATION;
+				compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL1;
+				break;
+
+			case OptimizationLevel::High:
+				compileFlags |= D3DCOMPILE_SKIP_VALIDATION;
+				compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL2;
+				break;
+
+			case OptimizationLevel::Ultra:
+				compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
+				break;
+		}
 
 		// TODO(co) Direct3D 12 version?
 		ID3DBlob *errorBlob;
 		hr = D3DX11CompileFromMemory(shaderSource, strlen(shaderSource), nullptr, nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, 
-			shaderFlags, 0, nullptr, &d3dBlob, &errorBlob, nullptr );
+			compileFlags, 0, nullptr, &d3dBlob, &errorBlob, nullptr );
 
 		if (FAILED(hr))
 		{
@@ -83,21 +119,6 @@ namespace Direct3D12Renderer
 
 		// Done
 		return d3dBlob;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D12Renderer &direct3D12Renderer) :
-		IShaderLanguage(direct3D12Renderer)
-	{
-		// Nothing to do in here
-	}
-
-	ShaderLanguageHlsl::~ShaderLanguageHlsl()
-	{
-		// Nothing to do in here
 	}
 
 

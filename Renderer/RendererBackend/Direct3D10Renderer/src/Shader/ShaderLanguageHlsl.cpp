@@ -44,21 +44,58 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public static methods                                 ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ID3DBlob *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint)
+	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D10Renderer &direct3D10Renderer) :
+		IShaderLanguage(direct3D10Renderer)
 	{
-		DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-		#if defined(DEBUG) || defined(_DEBUG)
-			// Set the "D3DCOMPILE_DEBUG" flag to embed debug information in the shaders.
-			// Setting this flag improves the shader debugging experience, but still allows
-			// the shaders to be optimized and to run exactly the way they will run in
-			// the release configuration of this program.
-			shaderFlags |= D3DCOMPILE_DEBUG;
-		#endif
+		// Nothing to do in here
+	}
+
+	ShaderLanguageHlsl::~ShaderLanguageHlsl()
+	{
+		// Nothing to do in here
+	}
+
+	ID3DBlob *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint) const
+	{
+		// Get compile flags
+		UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+		switch (getOptimizationLevel())
+		{
+			case OptimizationLevel::Debug:
+				compileFlags |= D3DCOMPILE_DEBUG;
+				compileFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+				break;
+
+			case OptimizationLevel::None:
+				compileFlags |= D3DCOMPILE_SKIP_VALIDATION;
+				compileFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+				break;
+
+			case OptimizationLevel::Low:
+				compileFlags |= D3DCOMPILE_SKIP_VALIDATION;
+				compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL0;
+				break;
+
+			case OptimizationLevel::Medium:
+				compileFlags |= D3DCOMPILE_SKIP_VALIDATION;
+				compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL1;
+				break;
+
+			case OptimizationLevel::High:
+				compileFlags |= D3DCOMPILE_SKIP_VALIDATION;
+				compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL2;
+				break;
+
+			case OptimizationLevel::Ultra:
+				compileFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
+				break;
+		}
+
 		ID3DBlob *d3dBlob = nullptr;
 		ID3DBlob *errorBlob = nullptr;
-		if (FAILED(D3DX10CompileFromMemory(shaderSource, strlen(shaderSource), nullptr, nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, shaderFlags, 0, nullptr, &d3dBlob, &errorBlob, nullptr)))
+		if (FAILED(D3DX10CompileFromMemory(shaderSource, strlen(shaderSource), nullptr, nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, compileFlags, 0, nullptr, &d3dBlob, &errorBlob, nullptr)))
 		{
 			if (nullptr != errorBlob)
 			{
@@ -76,21 +113,6 @@ namespace Direct3D10Renderer
 
 		// Done
 		return d3dBlob;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D10Renderer &direct3D10Renderer) :
-		IShaderLanguage(direct3D10Renderer)
-	{
-		// Nothing to do in here
-	}
-
-	ShaderLanguageHlsl::~ShaderLanguageHlsl()
-	{
-		// Nothing to do in here
 	}
 
 

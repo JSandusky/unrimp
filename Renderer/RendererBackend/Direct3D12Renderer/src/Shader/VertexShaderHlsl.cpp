@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Shader/VertexShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/ShaderLanguageHlsl.h"
+#include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 
 
@@ -37,7 +38,7 @@ namespace Direct3D12Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
+		IVertexShader(direct3D12Renderer),
 		mD3DBlobVertexShader(nullptr)
 	{
 		// Backup the vertex shader bytecode
@@ -46,11 +47,11 @@ namespace Direct3D12Renderer
 	}
 
 	VertexShaderHlsl::VertexShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
+		IVertexShader(direct3D12Renderer),
 		mD3DBlobVertexShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the vertex shader
-		mD3DBlobVertexShader = ShaderLanguageHlsl::loadShader("vs_5_0", sourceCode, nullptr);
+		mD3DBlobVertexShader = static_cast<ShaderLanguageHlsl*>(direct3D12Renderer.getShaderLanguage())->loadShader("vs_5_0", sourceCode, nullptr);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
 	}

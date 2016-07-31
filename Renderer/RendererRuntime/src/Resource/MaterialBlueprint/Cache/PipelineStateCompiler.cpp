@@ -149,7 +149,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	PipelineStateCompiler::PipelineStateCompiler(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mOptimization(Optimization::Level2),
 		mAsynchronousCompilationEnabled(false),
 		mNumberOfCompilerThreads(0),
 		mShutdownBuilderThread(false),

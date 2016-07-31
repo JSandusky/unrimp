@@ -53,7 +53,7 @@ namespace Direct3D11Renderer
 		mD3D11DomainShader(nullptr)
 	{
 		// Create the Direct3D 11 binary large object for the domain shader
-		ID3DBlob *d3dBlob = ShaderLanguageHlsl::loadShader("ds_5_0", sourceCode, nullptr);
+		ID3DBlob *d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D11Renderer.getShaderLanguage())->loadShader("ds_5_0", sourceCode, nullptr);
 		if (nullptr != d3dBlob)
 		{
 			// Create the Direct3D 11 domain shader

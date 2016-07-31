@@ -67,27 +67,6 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public static methods                                 ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Creates, loads and compiles a shader
-		*
-		*  @param[in] shaderModel
-		*    ASCII shader model (for example "vs_4_0", "gs_4_0", "ps_4_0"), must be a valid pointer
-		*  @param[in] shaderSource
-		*    ASCII shader ASCII source code, must be a valid pointer
-		*  @param[in] entryPoint
-		*    Optional ASCII entry point, if null pointer "main" is used
-		*
-		*  @return
-		*    The loaded and compiled shader, can be a null pointer, release the instance if you no longer need it
-		*/
-		static ID3DBlob *loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint);
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -105,6 +84,22 @@ namespace Direct3D11Renderer
 		*    Destructor
 		*/
 		virtual ~ShaderLanguageHlsl();
+
+		/**
+		*  @brief
+		*    Creates, loads and compiles a shader
+		*
+		*  @param[in] shaderModel
+		*    ASCII shader model (for example "vs_4_0", "gs_4_0", "ps_4_0"), must be a valid pointer
+		*  @param[in] shaderSource
+		*    ASCII shader ASCII source code, must be a valid pointer
+		*  @param[in] entryPoint
+		*    Optional ASCII entry point, if null pointer "main" is used
+		*
+		*  @return
+		*    The loaded and compiled shader, can be a null pointer, release the instance if you no longer need it
+		*/
+		ID3DBlob *loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint) const;
 
 
 	//[-------------------------------------------------------]

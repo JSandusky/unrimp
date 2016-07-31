@@ -60,7 +60,7 @@ namespace Direct3D10Renderer
 		mD3D10VertexShader(nullptr)
 	{
 		// Create the Direct3D 10 binary large object for the vertex shader
-		mD3DBlobVertexShader = ShaderLanguageHlsl::loadShader("vs_4_0", sourceCode, nullptr);
+		mD3DBlobVertexShader = static_cast<ShaderLanguageHlsl*>(direct3D10Renderer.getShaderLanguage())->loadShader("vs_4_0", sourceCode, nullptr);
 		if (nullptr != mD3DBlobVertexShader)
 		{
 			// Create the Direct3D 10 vertex shader

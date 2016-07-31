@@ -28,16 +28,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline PipelineStateCompiler::Optimization PipelineStateCompiler::getOptimization() const
-	{
-		return mOptimization;
-	}
-
-	inline void PipelineStateCompiler::setOptimization(Optimization optimization)
-	{
-		mOptimization = optimization;
-	}
-
 	inline bool PipelineStateCompiler::isAsynchronousCompilationEnabled() const
 	{
 		return mAsynchronousCompilationEnabled;

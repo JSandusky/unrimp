@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Shader/GeometryShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/ShaderLanguageHlsl.h"
+#include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 
 
@@ -37,7 +38,7 @@ namespace Direct3D12Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
+		IGeometryShader(direct3D12Renderer),
 		mD3DBlobGeometryShader(nullptr)
 	{
 		// Backup the geometry shader bytecode
@@ -46,11 +47,11 @@ namespace Direct3D12Renderer
 	}
 
 	GeometryShaderHlsl::GeometryShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
+		IGeometryShader(direct3D12Renderer),
 		mD3DBlobGeometryShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the geometry shader
-		mD3DBlobGeometryShader = ShaderLanguageHlsl::loadShader("gs_5_0", sourceCode, nullptr);
+		mD3DBlobGeometryShader = static_cast<ShaderLanguageHlsl*>(direct3D12Renderer.getShaderLanguage())->loadShader("gs_5_0", sourceCode, nullptr);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
 	}

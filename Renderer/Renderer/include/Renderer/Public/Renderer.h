@@ -1794,10 +1794,28 @@ namespace Renderer
 		class IShaderLanguage : public RefCount<IShaderLanguage>
 		{
 		public:
+			enum class OptimizationLevel
+			{
+				Debug = 0,
+				None,
+				Low,
+				Medium,
+				High,
+				Ultra
+			};
+		public:
 			virtual ~IShaderLanguage();
 			inline IRenderer& getRenderer() const
 			{
 				return *mRenderer;
+			}
+			inline OptimizationLevel getOptimizationLevel() const
+			{
+				return mOptimizationLevel;
+			}
+			inline void setOptimizationLevel(OptimizationLevel optimizationLevel)
+			{
+				mOptimizationLevel = optimizationLevel;
 			}
 			inline IProgram* createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader* vertexShader, IFragmentShader* fragmentShader)
 			{
@@ -1829,7 +1847,8 @@ namespace Renderer
 			explicit IShaderLanguage(const IShaderLanguage& source);
 			IShaderLanguage& operator =(const IShaderLanguage& source);
 		private:
-			IRenderer* mRenderer;
+			IRenderer*		  mRenderer;
+			OptimizationLevel mOptimizationLevel;
 		};
 		typedef SmartRefCount<IShaderLanguage> IShaderLanguagePtr;
 	#endif

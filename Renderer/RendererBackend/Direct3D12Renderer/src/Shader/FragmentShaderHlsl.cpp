@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Shader/FragmentShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/ShaderLanguageHlsl.h"
+#include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 
 
@@ -37,7 +38,7 @@ namespace Direct3D12Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
+		IFragmentShader(direct3D12Renderer),
 		mD3DBlobFragmentShader(nullptr)
 	{
 		// Backup the fragment shader bytecode
@@ -46,11 +47,11 @@ namespace Direct3D12Renderer
 	}
 
 	FragmentShaderHlsl::FragmentShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
+		IFragmentShader(direct3D12Renderer),
 		mD3DBlobFragmentShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the fragment shader
-		mD3DBlobFragmentShader = ShaderLanguageHlsl::loadShader("ps_5_0", sourceCode, nullptr);
+		mD3DBlobFragmentShader = static_cast<ShaderLanguageHlsl*>(direct3D12Renderer.getShaderLanguage())->loadShader("ps_5_0", sourceCode, nullptr);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
 	}

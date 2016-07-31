@@ -53,7 +53,7 @@ namespace Direct3D10Renderer
 		mD3D10GeometryShader(nullptr)
 	{
 		// Create the Direct3D 10 binary large object for the geometry shader
-		ID3DBlob *d3dBlob = ShaderLanguageHlsl::loadShader("gs_4_0", sourceCode, nullptr);
+		ID3DBlob *d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D10Renderer.getShaderLanguage())->loadShader("gs_4_0", sourceCode, nullptr);
 		if (nullptr != d3dBlob)
 		{
 			// Create the Direct3D 10 geometry shader

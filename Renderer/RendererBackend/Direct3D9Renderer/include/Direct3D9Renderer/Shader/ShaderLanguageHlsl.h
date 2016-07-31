@@ -67,29 +67,6 @@ namespace Direct3D9Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public static methods                                 ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Creates, loads and compiles a shader
-		*
-		*  @param[in]  shaderModel
-		*    ASCII shader model (for example "vs_3_0", "ps_3_0")
-		*  @param[in] shaderSource
-		*    Shader ASCII source code, must be a valid pointer
-		*  @param[in]  entryPoint
-		*    Optional ASCII entry point, if null pointer "main" is used
-		*  @param[out] d3dXConstantTable
-		*    Optional constant table, can be a null pointer
-		*
-		*  @return
-		*    The loaded and compiled shader, can be a null pointer, release the instance if you no longer need it
-		*/
-		static ID3DXBuffer *loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint, ID3DXConstantTable **d3dXConstantTable);
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -107,6 +84,24 @@ namespace Direct3D9Renderer
 		*    Destructor
 		*/
 		virtual ~ShaderLanguageHlsl();
+
+		/**
+		*  @brief
+		*    Creates, loads and compiles a shader
+		*
+		*  @param[in]  shaderModel
+		*    ASCII shader model (for example "vs_3_0", "ps_3_0")
+		*  @param[in] shaderSource
+		*    Shader ASCII source code, must be a valid pointer
+		*  @param[in]  entryPoint
+		*    Optional ASCII entry point, if null pointer "main" is used
+		*  @param[out] d3dXConstantTable
+		*    Optional constant table, can be a null pointer
+		*
+		*  @return
+		*    The loaded and compiled shader, can be a null pointer, release the instance if you no longer need it
+		*/
+		ID3DXBuffer *loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint, ID3DXConstantTable **d3dXConstantTable) const;
 
 
 	//[-------------------------------------------------------]

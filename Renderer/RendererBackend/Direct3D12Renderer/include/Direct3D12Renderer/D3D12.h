@@ -439,7 +439,13 @@ typedef ID3D10Blob ID3DBlob;
 
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "d3dcompiler.h"
 #define D3DCOMPILE_DEBUG				(1 << 0)
+#define D3DCOMPILE_SKIP_VALIDATION		(1 << 1)
+#define D3DCOMPILE_SKIP_OPTIMIZATION	(1 << 2)
 #define D3DCOMPILE_ENABLE_STRICTNESS	(1 << 11)
+#define D3DCOMPILE_OPTIMIZATION_LEVEL0	(1 << 14)
+#define D3DCOMPILE_OPTIMIZATION_LEVEL1	0
+#define D3DCOMPILE_OPTIMIZATION_LEVEL2	((1 << 14) | (1 << 15))
+#define D3DCOMPILE_OPTIMIZATION_LEVEL3	(1 << 15)
 
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "D3D12.h"
 typedef struct D3D12_VIEWPORT

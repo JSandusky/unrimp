@@ -94,25 +94,9 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		enum class Optimization
-		{
-			Skip = 0,	///< No optimization, usually only used for debugging
-			Level0,		///< Low optimization
-			Level1,		///< Medium optimization
-			Level2,		///< High optimization
-			Level3		///< Ultra optimization
-		};
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline Optimization getOptimization() const;
-		inline void setOptimization(Optimization optimization);
 		inline bool isAsynchronousCompilationEnabled() const;
 		void setAsynchronousCompilationEnabled(bool enabled);
 		inline uint32_t getNumberOfCompilerThreads() const;
@@ -181,10 +165,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&		  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		std::atomic<Optimization> mOptimization;
-		bool					  mAsynchronousCompilationEnabled;
-		uint32_t				  mNumberOfCompilerThreads;
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		bool			  mAsynchronousCompilationEnabled;
+		uint32_t		  mNumberOfCompilerThreads;
 
 		// Asynchronous building (moderate cost)
 		std::atomic<bool>		mShutdownBuilderThread;

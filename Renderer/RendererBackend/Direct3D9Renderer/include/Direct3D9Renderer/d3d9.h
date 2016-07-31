@@ -140,7 +140,14 @@ typedef DWORD D3DCOLOR;
 #define D3DX_FILTER_NONE	(1 << 0)
 
 // "Microsoft Direct3D SDK (June 2010)" -> "d3dx9shader.h"
-#define D3DXSHADER_DEBUG	(1 << 0)
+#define D3DXSHADER_DEBUG				(1 << 0)
+#define D3DXSHADER_SKIPVALIDATION		(1 << 1)
+#define D3DXSHADER_SKIPOPTIMIZATION		(1 << 2)
+#define D3DXSHADER_IEEE_STRICTNESS		(1 << 13)
+#define D3DXSHADER_OPTIMIZATION_LEVEL0	(1 << 14)
+#define D3DXSHADER_OPTIMIZATION_LEVEL1	0
+#define D3DXSHADER_OPTIMIZATION_LEVEL2	((1 << 14) | (1 << 15))
+#define D3DXSHADER_OPTIMIZATION_LEVEL3	(1 << 15)
 
 // "Microsoft Direct3D SDK (June 2010)" -> "d3d9types.h"
 enum D3DDEVTYPE

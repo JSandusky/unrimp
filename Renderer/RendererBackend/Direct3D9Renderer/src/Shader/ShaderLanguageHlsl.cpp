@@ -43,33 +43,6 @@ namespace Direct3D9Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public static methods                                 ]
-	//[-------------------------------------------------------]
-	ID3DXBuffer *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint, ID3DXConstantTable **d3dXConstantTable)
-	{
-		// TODO(co) Error handling
-		DWORD shaderFlags = 0;
-		#ifdef _DEBUG
-			// Set the D3DXSHADER_DEBUG flag to embed debug information in the shaders.
-			// Setting this flag improves the shader debugging experience, but still allows 
-			// the shaders to be optimized and to run exactly the way they will run in 
-			// the release configuration of this program.
-			shaderFlags |= D3DXSHADER_DEBUG;
-		#endif
-		ID3DXBuffer *d3dXBuffer = nullptr;
-		ID3DXBuffer *d3dXBufferErrorMessages = nullptr;
-		if (D3D_OK != D3DXCompileShader(shaderSource, strlen(shaderSource), nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, shaderFlags, &d3dXBuffer, &d3dXBufferErrorMessages, d3dXConstantTable))
-		{
-			OutputDebugStringA(static_cast<char*>(d3dXBufferErrorMessages->GetBufferPointer()));
-			d3dXBufferErrorMessages->Release();
-		}
-
-		// Done
-		return d3dXBuffer;
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D9Renderer &direct3D9Renderer) :
@@ -82,6 +55,56 @@ namespace Direct3D9Renderer
 	ShaderLanguageHlsl::~ShaderLanguageHlsl()
 	{
 		// Nothing to do in here
+	}
+
+	ID3DXBuffer *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint, ID3DXConstantTable **d3dXConstantTable) const
+	{
+		// TODO(co) Error handling
+
+		// Get compile flags
+		UINT compileFlags = D3DXSHADER_IEEE_STRICTNESS;
+		switch (getOptimizationLevel())
+		{
+			case OptimizationLevel::Debug:
+				compileFlags |= D3DXSHADER_DEBUG;
+				compileFlags |= D3DXSHADER_SKIPOPTIMIZATION;
+				break;
+
+			case OptimizationLevel::None:
+				compileFlags |= D3DXSHADER_SKIPVALIDATION;
+				compileFlags |= D3DXSHADER_SKIPOPTIMIZATION;
+				break;
+
+			case OptimizationLevel::Low:
+				compileFlags |= D3DXSHADER_SKIPVALIDATION;
+				compileFlags |= D3DXSHADER_OPTIMIZATION_LEVEL0;
+				break;
+
+			case OptimizationLevel::Medium:
+				compileFlags |= D3DXSHADER_SKIPVALIDATION;
+				compileFlags |= D3DXSHADER_OPTIMIZATION_LEVEL1;
+				break;
+
+			case OptimizationLevel::High:
+				compileFlags |= D3DXSHADER_SKIPVALIDATION;
+				compileFlags |= D3DXSHADER_OPTIMIZATION_LEVEL2;
+				break;
+
+			case OptimizationLevel::Ultra:
+				compileFlags |= D3DXSHADER_OPTIMIZATION_LEVEL3;
+				break;
+		}
+
+		ID3DXBuffer *d3dXBuffer = nullptr;
+		ID3DXBuffer *d3dXBufferErrorMessages = nullptr;
+		if (D3D_OK != D3DXCompileShader(shaderSource, strlen(shaderSource), nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, compileFlags, &d3dXBuffer, &d3dXBufferErrorMessages, d3dXConstantTable))
+		{
+			OutputDebugStringA(static_cast<char*>(d3dXBufferErrorMessages->GetBufferPointer()));
+			d3dXBufferErrorMessages->Release();
+		}
+
+		// Done
+		return d3dXBuffer;
 	}
 
 

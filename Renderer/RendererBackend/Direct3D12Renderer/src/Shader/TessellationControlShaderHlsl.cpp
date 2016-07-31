@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Shader/TessellationControlShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/ShaderLanguageHlsl.h"
+#include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 
 
@@ -37,7 +38,7 @@ namespace Direct3D12Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const uint8_t *bytecode, uint32_t numberOfBytes) :
-		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
+		ITessellationControlShader(direct3D12Renderer),
 		mD3DBlobHullShader(nullptr)
 	{
 		// Backup the hull shader bytecode
@@ -46,11 +47,11 @@ namespace Direct3D12Renderer
 	}
 
 	TessellationControlShaderHlsl::TessellationControlShaderHlsl(Direct3D12Renderer &direct3D12Renderer, const char *sourceCode) :
-		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(direct3D12Renderer)),
+		ITessellationControlShader(direct3D12Renderer),
 		mD3DBlobHullShader(nullptr)
 	{
 		// Create the Direct3D 12 binary large object for the hull shader
-		mD3DBlobHullShader = ShaderLanguageHlsl::loadShader("hs_5_0", sourceCode, nullptr);
+		mD3DBlobHullShader = static_cast<ShaderLanguageHlsl*>(direct3D12Renderer.getShaderLanguage())->loadShader("hs_5_0", sourceCode, nullptr);
 
 		// Don't assign a default name to the resource for debugging purposes, Direct3D 12 automatically sets a decent default name
 	}

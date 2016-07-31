@@ -70,6 +70,25 @@ namespace Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Optimization level
+		*/
+		enum class OptimizationLevel
+		{
+			Debug = 0,	///< No optimization and debug features enabled, usually only used for debugging
+			None,		///< No optimization, usually only used for debugging
+			Low,		///< Low optimization
+			Medium,		///< Medium optimization
+			High,		///< High optimization
+			Ultra		///< Ultra optimization
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -87,6 +106,24 @@ namespace Renderer
 		*    The owner renderer instance, do not release the returned instance unless you added an own reference to it
 		*/
 		inline IRenderer &getRenderer() const;
+
+		/**
+		*  @brief
+		*    Return the optimization level
+		*
+		*  @return
+		*    The optimization level
+		*/
+		inline OptimizationLevel getOptimizationLevel() const;
+
+		/**
+		*  @brief
+		*    Set the optimization level
+		*
+		*  @param[in] optimizationLevel
+		*    The optimization level
+		*/
+		inline void setOptimizationLevel(OptimizationLevel optimizationLevel);
 
 		/**
 		*  @brief
@@ -534,7 +571,8 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRenderer *mRenderer;	///< The owner renderer instance, always valid
+		IRenderer*		  mRenderer;			///< The owner renderer instance, always valid
+		OptimizationLevel mOptimizationLevel;	///< Optimization level
 
 
 	};

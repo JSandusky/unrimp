@@ -54,7 +54,7 @@ namespace Direct3D9Renderer
 		mD3DXConstantTable(nullptr)
 	{
 		// Create the Direct3D 9 buffer object for the pixel shader
-		ID3DXBuffer *d3dXBuffer = ShaderLanguageHlsl::loadShader("ps_2_0", sourceCode, nullptr, &mD3DXConstantTable);
+		ID3DXBuffer *d3dXBuffer = static_cast<ShaderLanguageHlsl*>(direct3D9Renderer.getShaderLanguage())->loadShader("ps_2_0", sourceCode, nullptr, &mD3DXConstantTable);
 		if (nullptr != d3dXBuffer)
 		{
 			// Create the Direct3D 9 pixel shader

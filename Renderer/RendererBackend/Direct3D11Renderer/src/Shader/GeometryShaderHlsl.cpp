@@ -53,7 +53,7 @@ namespace Direct3D11Renderer
 		mD3D11GeometryShader(nullptr)
 	{
 		// Create the Direct3D 11 binary large object for the geometry shader
-		ID3DBlob *d3dBlob = ShaderLanguageHlsl::loadShader("gs_5_0", sourceCode, nullptr);
+		ID3DBlob *d3dBlob = static_cast<ShaderLanguageHlsl*>(direct3D11Renderer.getShaderLanguage())->loadShader("gs_5_0", sourceCode, nullptr);
 		if (nullptr != d3dBlob)
 		{
 			// Create the Direct3D 11 geometry shader

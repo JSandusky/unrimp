@@ -38,6 +38,16 @@ namespace Renderer
 		return *mRenderer;
 	}
 
+	inline IShaderLanguage::OptimizationLevel IShaderLanguage::getOptimizationLevel() const
+	{
+		return mOptimizationLevel;
+	}
+
+	inline void IShaderLanguage::setOptimizationLevel(OptimizationLevel optimizationLevel)
+	{
+		mOptimizationLevel = optimizationLevel;
+	}
+
 	inline IProgram *IShaderLanguage::createProgram(const IRootSignature& rootSignature, const VertexAttributes& vertexAttributes, IVertexShader *vertexShader, IFragmentShader *fragmentShader)
 	{
 		return createProgram(rootSignature, vertexAttributes, vertexShader, nullptr, nullptr, nullptr, fragmentShader);
@@ -58,13 +68,15 @@ namespace Renderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline IShaderLanguage::IShaderLanguage(IRenderer &renderer) :
-		mRenderer(&renderer)
+		mRenderer(&renderer),
+		mOptimizationLevel(OptimizationLevel::Ultra)
 	{
 		// Nothing to do in here
 	}
 
 	inline IShaderLanguage::IShaderLanguage(const IShaderLanguage &source) :
-		mRenderer(&source.getRenderer())
+		mRenderer(&source.getRenderer()),
+		mOptimizationLevel(OptimizationLevel::Ultra)
 	{
 		// Not supported
 	}
