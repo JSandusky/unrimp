@@ -41,6 +41,41 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		Renderer::IPipelineState* createPipelineState(const RendererRuntime::MaterialBlueprintResource& materialBlueprintResource, Renderer::IProgram& program)
+		{
+			// Start with the pipeline state of the material blueprint resource
+			Renderer::PipelineState pipelineState = materialBlueprintResource.getPipelineState();
+
+			// Setup the dynamic part of the pipeline state
+			Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
+			pipelineState.rootSignature	   = rootSignaturePtr;
+			pipelineState.program		   = &program;
+			pipelineState.vertexAttributes = materialBlueprintResource.getVertexAttributes();
+
+			// Create the pipeline state object (PSO)
+			return rootSignaturePtr->getRenderer().createPipelineState(pipelineState);
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -147,25 +182,14 @@ namespace RendererRuntime
 
 	void PipelineStateCompiler::instantSynchronousCompilerRequest(MaterialBlueprintResource& materialBlueprintResource, PipelineStateCache& pipelineStateCache)
 	{
-		// Get the program cache
+		// Get the program cache; synchronous processing
 		const ProgramCache* programCache = materialBlueprintResource.getPipelineStateCacheManager().getProgramCacheManager().getProgramCacheByPipelineStateSignature(pipelineStateCache.getPipelineStateSignature());
 		if (nullptr != programCache)
 		{
 			Renderer::IProgramPtr programPtr = programCache->getProgramPtr();
 			if (nullptr != programPtr)
 			{
-				Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
-
-				// Start with the pipeline state of the material blueprint resource
-				Renderer::PipelineState pipelineState = materialBlueprintResource.getPipelineState();
-
-				// Setup the dynamic part of the pipeline state
-				pipelineState.rootSignature	   = rootSignaturePtr;
-				pipelineState.program		   = programPtr;
-				pipelineState.vertexAttributes = materialBlueprintResource.getVertexAttributes();
-
-				// Create the pipeline state object (PSO)
-				pipelineStateCache.mPipelineStateObjectPtr = rootSignaturePtr->getRenderer().createPipelineState(pipelineState);
+				pipelineStateCache.mPipelineStateObjectPtr = ::detail::createPipelineState(materialBlueprintResource, *programPtr);
 			}
 		}
 	}
@@ -217,7 +241,6 @@ namespace RendererRuntime
 					const PipelineStateSignature& pipelineStateSignature = compilerRequest.pipelineStateCache.getPipelineStateSignature();
 					const MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResources.getElementById(pipelineStateSignature.getMaterialBlueprintResourceId());
 
-					// TODO(co) Add shader cache manager mutex
 					for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 					{
 						// Get the shader blueprint resource ID
@@ -230,6 +253,7 @@ namespace RendererRuntime
 
 							// Does the shader cache already exist?
 							ShaderCache* shaderCache = nullptr;
+							std::unique_lock<std::mutex> shaderCacheManagerMutexLock(shaderCacheManager.mMutex);
 							ShaderCacheManager::ShaderCacheByShaderCacheId::const_iterator shaderCacheIdIterator = shaderCacheManager.mShaderCacheByShaderCacheId.find(shaderCacheId);
 							if (shaderCacheIdIterator != shaderCacheManager.mShaderCacheByShaderCacheId.cend())
 							{
@@ -371,28 +395,28 @@ namespace RendererRuntime
 					// Are all required shader caches ready for rumble?
 					if (!needToWaitForShaderCache)
 					{
-						// TODO(co) Program cache entry handling
-						// Create the program
-						const MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResources.getElementById(compilerRequest.pipelineStateCache.getPipelineStateSignature().getMaterialBlueprintResourceId());
-						Renderer::IRootSignaturePtr rootSignaturePtr = materialBlueprintResource.getRootSignaturePtr();
-						Renderer::IProgram* program = shaderLanguage->createProgram(*rootSignaturePtr, materialBlueprintResource.getVertexAttributes(),
-							static_cast<Renderer::IVertexShader*>(shaders[static_cast<int>(ShaderType::Vertex)]),
-							static_cast<Renderer::ITessellationControlShader*>(shaders[static_cast<int>(ShaderType::TessellationControl)]),
-							static_cast<Renderer::ITessellationEvaluationShader*>(shaders[static_cast<int>(ShaderType::TessellationEvaluation)]),
-							static_cast<Renderer::IGeometryShader*>(shaders[static_cast<int>(ShaderType::Geometry)]),
-							static_cast<Renderer::IFragmentShader*>(shaders[static_cast<int>(ShaderType::Fragment)]));
-
 						{ // Create the pipeline state object (PSO)
-							// Start with the pipeline state of the material blueprint resource
-							Renderer::PipelineState pipelineState = materialBlueprintResource.getPipelineState();
+							const PipelineStateSignature& pipelineStateSignature = compilerRequest.pipelineStateCache.getPipelineStateSignature();
+							MaterialBlueprintResource& materialBlueprintResource = materialBlueprintResources.getElementById(pipelineStateSignature.getMaterialBlueprintResourceId());
 
-							// Setup the dynamic part of the pipeline state
-							pipelineState.rootSignature	   = rootSignaturePtr;
-							pipelineState.program		   = program;
-							pipelineState.vertexAttributes = materialBlueprintResource.getVertexAttributes();
+							// Create the program
+							Renderer::IProgram* program = shaderLanguage->createProgram(*materialBlueprintResource.getRootSignaturePtr(), materialBlueprintResource.getVertexAttributes(),
+								static_cast<Renderer::IVertexShader*>(shaders[static_cast<int>(ShaderType::Vertex)]),
+								static_cast<Renderer::ITessellationControlShader*>(shaders[static_cast<int>(ShaderType::TessellationControl)]),
+								static_cast<Renderer::ITessellationEvaluationShader*>(shaders[static_cast<int>(ShaderType::TessellationEvaluation)]),
+								static_cast<Renderer::IGeometryShader*>(shaders[static_cast<int>(ShaderType::Geometry)]),
+								static_cast<Renderer::IFragmentShader*>(shaders[static_cast<int>(ShaderType::Fragment)]));
 
 							// Create the pipeline state object (PSO)
-							compilerRequest.pipelineStateObject = rootSignaturePtr->getRenderer().createPipelineState(pipelineState);
+							compilerRequest.pipelineStateObject = ::detail::createPipelineState(materialBlueprintResource, *program);
+
+							{ // Program cache entry
+								ProgramCacheManager& programCacheManager = materialBlueprintResource.getPipelineStateCacheManager().getProgramCacheManager();
+								const ProgramCacheId programCacheId = ProgramCacheManager::generateProgramCacheId(pipelineStateSignature);
+								std::unique_lock<std::mutex> mutexLock(programCacheManager.mMutex);
+								assert(programCacheManager.mProgramCacheById.find(programCacheId) == programCacheManager.mProgramCacheById.cend());	// TODO(co) Error handling
+								programCacheManager.mProgramCacheById.emplace(programCacheId, new ProgramCache(programCacheId, *program));
+							}
 						}
 
 						// Push the compiler request into the queue of the synchronous shader dispatch

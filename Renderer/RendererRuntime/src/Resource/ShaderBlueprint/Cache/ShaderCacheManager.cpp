@@ -53,6 +53,7 @@ namespace RendererRuntime
 			const ShaderCacheId shaderCacheId = pipelineStateSignature.getShaderCombinationId(shaderType);
 
 			// Does the shader cache already exist?
+			std::unique_lock<std::mutex> mutexLock(mMutex);
 			ShaderCacheByShaderCacheId::const_iterator shaderCacheIdIterator = mShaderCacheByShaderCacheId.find(shaderCacheId);
 			if (shaderCacheIdIterator != mShaderCacheByShaderCacheId.cend())
 			{
@@ -143,6 +144,7 @@ namespace RendererRuntime
 
 	void ShaderCacheManager::clearCache()
 	{
+		std::unique_lock<std::mutex> mutexLock(mMutex);
 		for (auto& shaderCacheElement : mShaderCacheByShaderCacheId)
 		{
 			delete shaderCacheElement.second;

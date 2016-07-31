@@ -29,6 +29,11 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	#include <mutex>
+#pragma warning(pop)
 #include <unordered_map>
 
 
@@ -74,6 +79,24 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class PipelineStateCacheManager;	///< Is creating and using a program cache manager instance
+		friend class PipelineStateCompiler;		///< Is tightly interacting with the program cache manager
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Generate a program cache ID by using a provided pipeline state signature
+		*
+		*  @param[in] pipelineStateSignature
+		*    Pipeline state signature to use
+		*
+		*  @return
+		*    The program cache ID
+		*/
+		static ProgramCacheId generateProgramCacheId(const PipelineStateSignature& pipelineStateSignature);
 
 
 	//[-------------------------------------------------------]
@@ -91,7 +114,7 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Get program cache by pipeline state signature
+		*    Get program cache by pipeline state signature; synchronous processing
 		*
 		*  @param[in] pipelineStateSignature
 		*    Pipeline state signature to use
@@ -131,6 +154,7 @@ namespace RendererRuntime
 	private:
 		PipelineStateCacheManager& mPipelineStateCacheManager;	///< Owner pipeline state cache manager
 		ProgramCacheById		   mProgramCacheById;
+		std::mutex				   mMutex;						///< Mutex due to "RendererRuntime::PipelineStateCompiler" interaction, no too fine granular lock/unlock required because usually it's only asynchronous or synchronous processing, not both at one and the same time
 
 
 	};

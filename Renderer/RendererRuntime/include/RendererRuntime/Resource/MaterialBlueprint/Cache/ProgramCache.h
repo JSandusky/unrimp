@@ -56,6 +56,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class ProgramCacheManager;	///< Is creating and managing program cache instances
+		friend class PipelineStateCompiler;	///< Is creating program cache instances
 
 
 	//[-------------------------------------------------------]

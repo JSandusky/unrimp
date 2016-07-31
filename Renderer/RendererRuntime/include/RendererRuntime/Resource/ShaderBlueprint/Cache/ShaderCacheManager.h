@@ -30,6 +30,11 @@
 #include "RendererRuntime/Core/Manager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
 
+// Disable warnings in external headers, we can't fix them
+#pragma warning(push)
+	#pragma warning(disable: 4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	#include <mutex>
+#pragma warning(pop)
 #include <unordered_map>
 
 
@@ -99,7 +104,7 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Get shader cache by pipeline state signature and shader type
+		*    Get shader cache by pipeline state signature and shader type; synchronous processing
 		*
 		*  @param[in] pipelineStateSignature
 		*    Pipeline state signature to use
@@ -147,6 +152,7 @@ namespace RendererRuntime
 		ShaderBlueprintResourceManager& mShaderBlueprintResourceManager;	///< Owner shader blueprint resource manager
 		ShaderCacheByShaderCacheId		mShaderCacheByShaderCacheId;		///< Manages the shader cache instances
 		ShaderCacheByShaderSourceCodeId	mShaderCacheByShaderSourceCodeId;	///< Just references shader cache instances, doesn't own the instances
+		std::mutex						mMutex;								///< Mutex due to "RendererRuntime::PipelineStateCompiler" interaction, no too fine granular lock/unlock required because usually it's only asynchronous or synchronous processing, not both at one and the same time
 
 
 	};

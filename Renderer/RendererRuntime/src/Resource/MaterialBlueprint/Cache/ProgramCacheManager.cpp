@@ -39,11 +39,10 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	ProgramCache* ProgramCacheManager::getProgramCacheByPipelineStateSignature(const PipelineStateSignature& pipelineStateSignature)
+	ProgramCacheId ProgramCacheManager::generateProgramCacheId(const PipelineStateSignature& pipelineStateSignature)
 	{
-		// Generate the program cache ID
 		ProgramCacheId programCacheId = Math::FNV1a_INITIAL_HASH;
 		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 		{
@@ -54,8 +53,20 @@ namespace RendererRuntime
 			}
 		}
 
+		// Done
+		return programCacheId;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	ProgramCache* ProgramCacheManager::getProgramCacheByPipelineStateSignature(const PipelineStateSignature& pipelineStateSignature)
+	{
 		// Does the program cache already exist?
 		ProgramCache* programCache = nullptr;
+		const ProgramCacheId programCacheId = generateProgramCacheId(pipelineStateSignature);
+		std::unique_lock<std::mutex> mutexLock(mMutex);
 		ProgramCacheById::const_iterator iterator = mProgramCacheById.find(programCacheId);
 		if (iterator != mProgramCacheById.cend())
 		{
@@ -113,6 +124,7 @@ namespace RendererRuntime
 
 	void ProgramCacheManager::clearCache()
 	{
+		std::unique_lock<std::mutex> mutexLock(mMutex);
 		for (auto& programCacheElement : mProgramCacheById)
 		{
 			delete programCacheElement.second;
