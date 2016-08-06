@@ -80,7 +80,14 @@ int programEntryPoint(CmdLineArgs &args);
 			int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		#endif
 			{
-				int result;
+				// For memory leak detection
+				#ifdef _DEBUG
+					// "_CrtDumpMemoryLeaks()" reports false positive memory leak with static variables, so use a memory difference instead
+					_CrtMemState crtMemState = { 0 };
+					_CrtMemCheckpoint(&crtMemState);
+				#endif
+
+				int result = 0;
 				{
 					// Uses internally GetCommandline to fetch the command line arguments
 					CmdLineArgs arguments;
@@ -91,7 +98,7 @@ int programEntryPoint(CmdLineArgs &args);
 
 				// For memory leak detection
 				#ifdef _DEBUG
-					_CrtDumpMemoryLeaks();
+					_CrtMemDumpAllObjectsSince(&crtMemState);
 				#endif
 
 				// Done
