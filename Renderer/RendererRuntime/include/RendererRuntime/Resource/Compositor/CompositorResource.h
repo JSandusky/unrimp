@@ -37,8 +37,9 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class CompositorResource;
 	class CompositorResourceNode;
-	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 }
 
 
@@ -52,8 +53,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t CompositorResourceId;		///< POD compositor resource identifier
-	typedef StringId CompositorResourceNodeId;	///< Compositor resource node identifier, internally just a POD "uint32_t"
+	typedef uint32_t														   CompositorResourceId;		///< POD compositor resource identifier
+	typedef StringId														   CompositorResourceNodeId;	///< Compositor resource node identifier, internally just a POD "uint32_t"
+	typedef PackedElementManager<CompositorResource, CompositorResourceId, 32> CompositorResources;
 
 
 	//[-------------------------------------------------------]
@@ -66,9 +68,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
+		friend typedef CompositorResources;
 		friend class CompositorResourceLoader;
 		friend class CompositorResourceManager;
-		friend class PackedElementManager<CompositorResource, CompositorResourceId>;
 
 
 	//[-------------------------------------------------------]

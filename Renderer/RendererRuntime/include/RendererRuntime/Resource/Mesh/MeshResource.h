@@ -38,7 +38,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
+	class MeshResource;
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 }
 
 
@@ -52,8 +53,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef std::vector<SubMesh> SubMeshes;
-	typedef uint32_t			 MeshResourceId;	///< POD mesh resource identifier
+	typedef std::vector<SubMesh>									 SubMeshes;
+	typedef uint32_t												 MeshResourceId;	///< POD mesh resource identifier
+	typedef PackedElementManager<MeshResource, MeshResourceId, 4096> MeshResources;
 
 
 	//[-------------------------------------------------------]
@@ -70,9 +72,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
+		friend typedef MeshResources;
 		friend class MeshResourceLoader;
 		friend class MeshResourceManager;
-		friend class PackedElementManager<MeshResource, MeshResourceId>;
 
 
 	//[-------------------------------------------------------]

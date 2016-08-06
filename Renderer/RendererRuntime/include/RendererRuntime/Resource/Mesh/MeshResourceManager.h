@@ -52,8 +52,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t										   MeshResourceId;	///< POD mesh resource identifier
-	typedef PackedElementManager<MeshResource, MeshResourceId> MeshResources;
+	typedef uint32_t												 MeshResourceId;	///< POD mesh resource identifier
+	typedef PackedElementManager<MeshResource, MeshResourceId, 4096> MeshResources;
 
 
 	//[-------------------------------------------------------]

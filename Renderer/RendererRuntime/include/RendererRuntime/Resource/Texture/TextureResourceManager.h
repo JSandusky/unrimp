@@ -53,8 +53,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t												 TextureResourceId;	///< POD texture resource identifier
-	typedef PackedElementManager<TextureResource, TextureResourceId> TextureResources;
+	typedef uint32_t													   TextureResourceId;	///< POD texture resource identifier
+	typedef PackedElementManager<TextureResource, TextureResourceId, 2048> TextureResources;
 
 
 	//[-------------------------------------------------------]

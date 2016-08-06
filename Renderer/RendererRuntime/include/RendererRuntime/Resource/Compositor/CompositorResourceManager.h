@@ -53,8 +53,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t													   CompositorResourceId;	///< POD compositor resource identifier
-	typedef PackedElementManager<CompositorResource, CompositorResourceId> CompositorResources;
+	typedef uint32_t														   CompositorResourceId;	///< POD compositor resource identifier
+	typedef PackedElementManager<CompositorResource, CompositorResourceId, 32> CompositorResources;
 
 
 	//[-------------------------------------------------------]

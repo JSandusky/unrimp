@@ -52,8 +52,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t												   MaterialResourceId;	///< POD material resource identifier
-	typedef PackedElementManager<MaterialResource, MaterialResourceId> MaterialResources;
+	typedef uint32_t														 MaterialResourceId;	///< POD material resource identifier
+	typedef PackedElementManager<MaterialResource, MaterialResourceId, 4096> MaterialResources;
 
 
 	//[-------------------------------------------------------]

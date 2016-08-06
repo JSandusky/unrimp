@@ -37,7 +37,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 }
 
 
@@ -51,7 +51,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
+	typedef uint32_t														 MaterialResourceId;	///< POD material resource identifier
+	typedef PackedElementManager<MaterialResource, MaterialResourceId, 4096> MaterialResources;
 
 
 	//[-------------------------------------------------------]
@@ -68,9 +69,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
+		friend typedef MaterialResources;
 		friend class MaterialResourceLoader;
 		friend class MaterialResourceManager;
-		friend class PackedElementManager<MaterialResource, MaterialResourceId>;
 
 
 	//[-------------------------------------------------------]

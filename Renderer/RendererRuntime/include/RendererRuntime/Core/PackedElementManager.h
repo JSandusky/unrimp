@@ -56,7 +56,7 @@ namespace RendererRuntime
 	*    - Basing on "Managing Decoupling Part 4 -- The ID Lookup Table" https://github.com/niklasfrykholm/blog/blob/master/2011/managing-decoupling-4.md by Niklas Frykholm ( http://www.frykholm.se/ )
 	*    - Lookout, destructors of the managed elements can get called twice
 	*/
-	template <class ELEMENT_TYPE, typename ID_TYPE>
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
 	class PackedElementManager : private Manager
 	{
 
@@ -88,9 +88,8 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		static const uint32_t MAXIMUM_NUMBER_OF_OBJECTS = 16 * 1024;
-		static const uint32_t INDEX_MASK				= 0xffff;
-		static const uint32_t NEW_OBJECT_ID_ADD			= 0x10000;
+		static const uint32_t INDEX_MASK		= 0xffff;
+		static const uint32_t NEW_OBJECT_ID_ADD	= 0x10000;
 
 		struct Index
 		{
@@ -105,8 +104,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		uint32_t			 mNumberOfElements;
-		mutable ELEMENT_TYPE mElements[MAXIMUM_NUMBER_OF_OBJECTS];
-		Index				 mIndices[MAXIMUM_NUMBER_OF_OBJECTS];
+		mutable ELEMENT_TYPE mElements[MAXIMUM_NUMBER_OF_ELEMENTS];
+		Index				 mIndices[MAXIMUM_NUMBER_OF_ELEMENTS];
 		uint16_t			 mFreeListEnqueue;
 		uint16_t			 mFreeListDequeue;
 

@@ -34,39 +34,39 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	template <class ELEMENT_TYPE, typename ID_TYPE>
-	inline PackedElementManager<ELEMENT_TYPE, ID_TYPE>::PackedElementManager() :
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
+	inline PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::PackedElementManager() :
 		mNumberOfElements(0),
 		mFreeListDequeue(0),
-		mFreeListEnqueue(MAXIMUM_NUMBER_OF_OBJECTS - 1)
+		mFreeListEnqueue(MAXIMUM_NUMBER_OF_ELEMENTS - 1)
 	{
-		for (uint32_t i = 0; i < MAXIMUM_NUMBER_OF_OBJECTS; ++i)
+		for (uint32_t i = 0; i < MAXIMUM_NUMBER_OF_ELEMENTS; ++i)
 		{
 			mIndices[i].id = i;
 			mIndices[i].next = static_cast<uint16_t>(i + 1);
 		}
 	}
 
-	template <class ELEMENT_TYPE, typename ID_TYPE>
-	inline PackedElementManager<ELEMENT_TYPE, ID_TYPE>::~PackedElementManager()
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
+	inline PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::~PackedElementManager()
 	{
 		// Nothing here
 	}
 
-	template <class ELEMENT_TYPE, typename ID_TYPE>
-	inline uint32_t PackedElementManager<ELEMENT_TYPE, ID_TYPE>::getNumberOfElements() const
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
+	inline uint32_t PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::getNumberOfElements() const
 	{
 		return mNumberOfElements;
 	}
 
-	template <class ELEMENT_TYPE, typename ID_TYPE>
-	inline ELEMENT_TYPE& PackedElementManager<ELEMENT_TYPE, ID_TYPE>::getElementByIndex(uint32_t index) const
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
+	inline ELEMENT_TYPE& PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::getElementByIndex(uint32_t index) const
 	{
 		return mElements[index];
 	}
 
-	template <class ELEMENT_TYPE, typename ID_TYPE>
-	inline bool PackedElementManager<ELEMENT_TYPE, ID_TYPE>::isElementIdValid(ID_TYPE id) const
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
+	inline bool PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::isElementIdValid(ID_TYPE id) const
 	{
 		if (isInitialized(id))
 		{
@@ -76,14 +76,14 @@ namespace RendererRuntime
 		return false;
 	}
 
-	template <class ELEMENT_TYPE, typename ID_TYPE>
-	inline ELEMENT_TYPE& PackedElementManager<ELEMENT_TYPE, ID_TYPE>::getElementById(ID_TYPE id) const
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
+	inline ELEMENT_TYPE& PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::getElementById(ID_TYPE id) const
 	{
 		return mElements[mIndices[id & INDEX_MASK].index];
 	}
 
-	template <class ELEMENT_TYPE, typename ID_TYPE>
-	inline ELEMENT_TYPE* PackedElementManager<ELEMENT_TYPE, ID_TYPE>::tryGetElementById(ID_TYPE id) const
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
+	inline ELEMENT_TYPE* PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::tryGetElementById(ID_TYPE id) const
 	{
 		if (isInitialized(id))
 		{
@@ -93,8 +93,8 @@ namespace RendererRuntime
 		return nullptr;
 	}
 
-	template <class ELEMENT_TYPE, typename ID_TYPE>
-	inline ELEMENT_TYPE& PackedElementManager<ELEMENT_TYPE, ID_TYPE>::addElement()
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
+	inline ELEMENT_TYPE& PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::addElement()
 	{
 		Index& index = mIndices[mFreeListDequeue];
 		mFreeListDequeue = index.next;
@@ -109,8 +109,8 @@ namespace RendererRuntime
 		return element;
 	}
 
-	template <class ELEMENT_TYPE, typename ID_TYPE>
-	inline void PackedElementManager<ELEMENT_TYPE, ID_TYPE>::removeElement(ID_TYPE id)
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
+	inline void PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::removeElement(ID_TYPE id)
 	{
 		Index& index = mIndices[id & INDEX_MASK];
 		ELEMENT_TYPE& element = mElements[index.index];

@@ -53,8 +53,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t														 ShaderPieceResourceId;	///< POD shader piece resource identifier
-	typedef PackedElementManager<ShaderPieceResource, ShaderPieceResourceId> ShaderPieceResources;
+	typedef uint32_t															 ShaderPieceResourceId;	///< POD shader piece resource identifier
+	typedef PackedElementManager<ShaderPieceResource, ShaderPieceResourceId, 64> ShaderPieceResources;
 
 
 	//[-------------------------------------------------------]

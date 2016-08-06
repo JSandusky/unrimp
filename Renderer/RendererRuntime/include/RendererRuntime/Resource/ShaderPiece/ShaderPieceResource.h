@@ -37,7 +37,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
+	class ShaderPieceResource;
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 }
 
 
@@ -51,7 +52,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t ShaderPieceResourceId;	///< POD shader piece resource identifier
+	typedef uint32_t															 ShaderPieceResourceId;	///< POD shader piece resource identifier
+	typedef PackedElementManager<ShaderPieceResource, ShaderPieceResourceId, 64> ShaderPieceResources;
 
 
 	//[-------------------------------------------------------]
@@ -68,9 +70,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
+		friend typedef ShaderPieceResources;
 		friend class ShaderPieceResourceLoader;
 		friend class ShaderPieceResourceManager;
-		friend class PackedElementManager<ShaderPieceResource, ShaderPieceResourceId>;
 
 
 	//[-------------------------------------------------------]

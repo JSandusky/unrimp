@@ -37,7 +37,8 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	template <class ELEMENT_TYPE, typename ID_TYPE> class PackedElementManager;
+	class TextureResource;
+	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 }
 
 
@@ -51,7 +52,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t TextureResourceId;	///< POD texture resource identifier
+	typedef uint32_t													   TextureResourceId;	///< POD texture resource identifier
+	typedef PackedElementManager<TextureResource, TextureResourceId, 2048> TextureResources;
 
 
 	//[-------------------------------------------------------]
@@ -68,12 +70,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
+		friend typedef TextureResources;
 		friend class TextureResourceLoader;
 		friend class TextureResourceManager;
 		friend class CrnTextureResourceLoader;	// TODO(co) Get rid of this
 		friend class KtxTextureResourceLoader;	// TODO(co) Get rid of this
 		friend class DdsTextureResourceLoader;	// TODO(co) Get rid of this
-		friend class PackedElementManager<TextureResource, TextureResourceId>;
 
 
 	//[-------------------------------------------------------]
