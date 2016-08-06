@@ -58,15 +58,17 @@ namespace RendererRuntime
 
 	CompositorInstanceNode::~CompositorInstanceNode()
 	{
-		// Nothing here
+		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)
+		{
+			delete compositorInstancePass;
+		}
 	}
 
 	void CompositorInstanceNode::execute(CameraSceneItem* cameraSceneItem)
 	{
-		const size_t numberOfCompositorInstancePasses = mCompositorInstancePasses.size();
-		for (size_t i = 0; i < numberOfCompositorInstancePasses; ++i)
+		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)
 		{
-			mCompositorInstancePasses[i]->execute(cameraSceneItem);
+			compositorInstancePass->execute(cameraSceneItem);
 		}
 	}
 

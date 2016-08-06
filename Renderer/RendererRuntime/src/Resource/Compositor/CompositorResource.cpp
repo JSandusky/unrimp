@@ -44,6 +44,18 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	CompositorResource::~CompositorResource()
+	{
+		for (CompositorResourceNode* compositorResourceNode : mCompositorResourceNodes)
+		{
+			delete compositorResourceNode;
+		}
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

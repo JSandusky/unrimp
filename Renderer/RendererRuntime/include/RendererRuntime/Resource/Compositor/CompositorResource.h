@@ -110,7 +110,7 @@ namespace RendererRuntime
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~CompositorResource();
+		virtual ~CompositorResource();
 
 		CompositorResource(const CompositorResource&) = delete;
 		CompositorResource& operator=(const CompositorResource&) = delete;
@@ -120,7 +120,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		CompositorResourceNodes mCompositorResourceNodes;
+		CompositorResourceNodes mCompositorResourceNodes;	///< Owns the compositor resource nodes and has to destroy them if no longer needed
 
 
 	};

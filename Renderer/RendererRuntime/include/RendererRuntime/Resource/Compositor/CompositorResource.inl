@@ -54,11 +54,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline CompositorResource::~CompositorResource()
-	{
-		// Nothing here
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

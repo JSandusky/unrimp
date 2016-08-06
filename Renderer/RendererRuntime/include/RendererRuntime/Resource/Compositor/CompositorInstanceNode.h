@@ -97,7 +97,7 @@ namespace RendererRuntime
 	private:
 		const CompositorResourceNode& mCompositorResourceNode;
 		const CompositorInstance&	  mCompositorInstance;
-		CompositorInstancePasses	  mCompositorInstancePasses;
+		CompositorInstancePasses	  mCompositorInstancePasses;	///< Owns the compositor instance passes and has to destroy them if no longer needed
 
 
 	};
