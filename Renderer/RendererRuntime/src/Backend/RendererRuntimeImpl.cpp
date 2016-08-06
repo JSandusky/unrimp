@@ -150,6 +150,9 @@ namespace RendererRuntime
 
 	RendererRuntimeImpl::~RendererRuntimeImpl()
 	{
+		// Before doing anything else, ensure the resource streamer has no more work to do
+		mResourceStreamer->flushAllQueues();
+
 		// Destroy the optional manager instances
 		delete mVrManager;
 		delete mDebugGuiManager;
@@ -164,6 +167,7 @@ namespace RendererRuntime
 				delete mResourceManagers[static_cast<size_t>(i)];
 			}
 		}
+		delete mResourceStreamer;
 
 		// Destroy the core manager instances
 		delete mAssetManager;

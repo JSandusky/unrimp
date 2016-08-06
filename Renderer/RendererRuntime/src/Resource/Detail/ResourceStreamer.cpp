@@ -54,6 +54,42 @@ namespace RendererRuntime
 		mDeserializationConditionVariable.notify_one();
 	}
 
+	void ResourceStreamer::flushAllQueues()
+	{
+		bool everythingFlushed = false;
+		do
+		{
+			{ // Process
+				{ // Resource streamer stage: 1. Asynchronous deserialization
+					std::lock_guard<std::mutex> deserializationMutexLock(mDeserializationMutex);
+					everythingFlushed = mDeserializationQueue.empty();
+				}
+
+				// Resource streamer stage: 2. Asynchronous processing
+				if (everythingFlushed)
+				{
+					std::lock_guard<std::mutex> processingMutexLock(mProcessingMutex);
+					everythingFlushed = mProcessingQueue.empty();
+				}
+
+				// Resource streamer stage: 3. Synchronous renderer backend dispatch
+				if (everythingFlushed)
+				{
+					std::lock_guard<std::mutex> rendererBackendDispatchMutexLock(mRendererBackendDispatchMutex);
+					everythingFlushed = mRendererBackendDispatchQueue.empty();
+				}
+			}
+			rendererBackendDispatch();
+
+			// Wait for a moment to not totally pollute the CPU
+			if (!everythingFlushed)
+			{
+				using namespace std::chrono_literals;
+				std::this_thread::sleep_for(1ms);
+			}
+		} while (!everythingFlushed);
+	}
+
 	void ResourceStreamer::rendererBackendDispatch()
 	{
 		// Resource streamer stage: 3. Synchronous renderer backend dispatch

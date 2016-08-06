@@ -104,6 +104,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		void commitLoadRequest(const LoadRequest& loadRequest);
+		void flushAllQueues();
 
 		/**
 		*  @brief
