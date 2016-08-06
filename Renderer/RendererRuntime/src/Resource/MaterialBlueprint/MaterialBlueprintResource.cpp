@@ -754,7 +754,10 @@ namespace RendererRuntime
 		IResource(getUninitialized<MaterialBlueprintResourceId>()),
 		mPipelineStateCacheManager(*this),
 		mVertexAttributes(glm::countof(::detail::vertexAttributesLayout), ::detail::vertexAttributesLayout),
-		mPipelineState(Renderer::PipelineStateBuilder())
+		mPipelineState(Renderer::PipelineStateBuilder()),
+		mPassUniformBuffer(nullptr),
+		mMaterialUniformBuffer(nullptr),
+		mInstanceUniformBuffer(nullptr)
 	{
 		memset(mShaderBlueprintResourceId, static_cast<int>(getUninitialized<ShaderBlueprintResourceId>()), sizeof(ShaderBlueprintResourceId) * NUMBER_OF_SHADER_TYPES);
 	}
@@ -763,7 +766,10 @@ namespace RendererRuntime
 		IResource(materialBlueprintResourceId),
 		mPipelineStateCacheManager(*this),
 		mVertexAttributes(glm::countof(::detail::vertexAttributesLayout), ::detail::vertexAttributesLayout),
-		mPipelineState(Renderer::PipelineStateBuilder())
+		mPipelineState(Renderer::PipelineStateBuilder()),
+		mPassUniformBuffer(nullptr),
+		mMaterialUniformBuffer(nullptr),
+		mInstanceUniformBuffer(nullptr)
 	{
 		memset(mShaderBlueprintResourceId, static_cast<int>(getUninitialized<ShaderBlueprintResourceId>()), sizeof(ShaderBlueprintResourceId) * NUMBER_OF_SHADER_TYPES);
 	}
