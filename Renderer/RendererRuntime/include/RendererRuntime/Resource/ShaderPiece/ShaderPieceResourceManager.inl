@@ -59,7 +59,7 @@ namespace RendererRuntime
 
 	inline ShaderPieceResourceManager::~ShaderPieceResourceManager()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 

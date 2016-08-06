@@ -47,12 +47,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	CompositorResource::~CompositorResource()
+	void CompositorResource::deinitializeElement()
 	{
 		for (CompositorResourceNode* compositorResourceNode : mCompositorResourceNodes)
 		{
 			delete compositorResourceNode;
 		}
+		mCompositorResourceNodes.clear();
+
+		// Call base implementation
+		IResource::deinitializeElement();
 	}
 
 

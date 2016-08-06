@@ -194,26 +194,16 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
 		inline MaterialResource();
+		inline virtual ~MaterialResource();
+		MaterialResource(const MaterialResource&) = delete;
+		MaterialResource& operator=(const MaterialResource&) = delete;
 
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] materialResourceId
-		*    Material resource ID
-		*/
-		inline explicit MaterialResource(MaterialResourceId materialResourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~MaterialResource();
+		//[-------------------------------------------------------]
+		//[ "RendererRuntime::PackedElementManager" management    ]
+		//[-------------------------------------------------------]
+		inline void initializeElement(MaterialResourceId materialResourceId);
+		void deinitializeElement();
 
 		/**
 		*  @brief
@@ -232,9 +222,6 @@ namespace RendererRuntime
 		*    Pointer to the added or changed property, null pointer if no material property change has been detected, don't destroy the returned instance
 		*/
 		RENDERERRUNTIME_API_EXPORT bool setPropertyByIdInternal(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage, bool changeOverwrittenState);
-
-		MaterialResource(const MaterialResource&) = delete;
-		MaterialResource& operator=(const MaterialResource&) = delete;
 
 
 	//[-------------------------------------------------------]

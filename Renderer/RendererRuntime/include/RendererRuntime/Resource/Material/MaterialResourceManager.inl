@@ -59,7 +59,7 @@ namespace RendererRuntime
 
 	inline MaterialResourceManager::~MaterialResourceManager()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 

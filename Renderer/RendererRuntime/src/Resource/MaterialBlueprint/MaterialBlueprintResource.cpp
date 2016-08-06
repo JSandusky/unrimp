@@ -751,7 +751,6 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	MaterialBlueprintResource::MaterialBlueprintResource() :
-		IResource(getUninitialized<MaterialBlueprintResourceId>()),
 		mPipelineStateCacheManager(*this),
 		mVertexAttributes(glm::countof(::detail::vertexAttributesLayout), ::detail::vertexAttributesLayout),
 		mPipelineState(Renderer::PipelineStateBuilder()),
@@ -762,16 +761,47 @@ namespace RendererRuntime
 		memset(mShaderBlueprintResourceId, static_cast<int>(getUninitialized<ShaderBlueprintResourceId>()), sizeof(ShaderBlueprintResourceId) * NUMBER_OF_SHADER_TYPES);
 	}
 
-	MaterialBlueprintResource::MaterialBlueprintResource(MaterialBlueprintResourceId materialBlueprintResourceId) :
-		IResource(materialBlueprintResourceId),
-		mPipelineStateCacheManager(*this),
-		mVertexAttributes(glm::countof(::detail::vertexAttributesLayout), ::detail::vertexAttributesLayout),
-		mPipelineState(Renderer::PipelineStateBuilder()),
-		mPassUniformBuffer(nullptr),
-		mMaterialUniformBuffer(nullptr),
-		mInstanceUniformBuffer(nullptr)
+	MaterialBlueprintResource::~MaterialBlueprintResource()
 	{
+		// Nothing here
+		// TODO(co) Sanity checks
+		/*
+		PipelineStateCacheManager			 mPipelineStateCacheManager;
+		MaterialProperties					 mMaterialProperties;
+		ShaderProperties					 mVisualImportanceOfShaderProperties;	///< Every shader property known to the material blueprint has a visual importance entry in here
+		ShaderProperties					 mMaximumIntegerValueOfShaderProperties;
+		Renderer::VertexAttributes			 mVertexAttributes;
+		Renderer::IRootSignaturePtr			 mRootSignaturePtr;						///< Root signature, can be a null pointer
+		Renderer::PipelineState				 mPipelineState;
+		ShaderBlueprintResourceId			 mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
+		// Resource
+		UniformBuffers mUniformBuffers;
+		SamplerStates  mSamplerStates;
+		Textures	   mTextures;
+		// Ease-of-use direct access
+		UniformBuffer* mPassUniformBuffer;		///< Can be a null pointer, don't destroy the instance
+		UniformBuffer* mMaterialUniformBuffer;	///< Can be a null pointer, don't destroy the instance
+		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
+
+		LinkedMaterialTechniques mLinkedMaterialTechniques;	// TODO(co) Decent material technique list management inside the material blueprint resource (link, unlink etc.)
+		*/
+	}
+
+	void MaterialBlueprintResource::initializeElement(MaterialBlueprintResourceId materialBlueprintResourceId)
+	{
+		// TODO(co) Sanity checks
+
+		// Call base implementation
+		IResource::initializeElement(materialBlueprintResourceId);
+	}
+
+	void MaterialBlueprintResource::deinitializeElement()
+	{
+		// TODO(co) Reset everything
 		memset(mShaderBlueprintResourceId, static_cast<int>(getUninitialized<ShaderBlueprintResourceId>()), sizeof(ShaderBlueprintResourceId) * NUMBER_OF_SHADER_TYPES);
+
+		// Call base implementation
+		IResource::deinitializeElement();
 	}
 
 	void MaterialBlueprintResource::linkMaterialTechnique(MaterialTechnique& materialTechnique)

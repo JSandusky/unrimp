@@ -59,7 +59,7 @@ namespace RendererRuntime
 
 	inline TextureResourceManager::~TextureResourceManager()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 

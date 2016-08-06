@@ -43,6 +43,7 @@ namespace RendererRuntime
 	{
 		// Destroy all scene nodes and scene instances
 		destroyAllSceneNodesAndItems();
+		deinitializeElement();
 	}
 
 	ISceneNode* ISceneResource::createSceneNode(const Transform& transform)
@@ -122,11 +123,10 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	ISceneResource::ISceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
-		IResource(resourceId),
 		mRendererRuntime(rendererRuntime),
 		mSceneFactory(&mRendererRuntime.getSceneResourceManager().getSceneFactory())
 	{
-		// Nothing in here
+		initializeElement(resourceId);
 	}
 
 

@@ -188,11 +188,6 @@ namespace RendererRuntime
 		// Nothing in here
 	}
 
-	MaterialBlueprintResourceManager::~MaterialBlueprintResourceManager()
-	{
-		// Nothing in here
-	}
-
 	IResourceLoader* MaterialBlueprintResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)
 	{
 		// Can we recycle an already existing resource loader instance?

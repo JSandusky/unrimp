@@ -54,7 +54,6 @@ namespace RendererRuntime
 	*
 	*  @note
 	*    - Basing on "Managing Decoupling Part 4 -- The ID Lookup Table" https://github.com/niklasfrykholm/blog/blob/master/2011/managing-decoupling-4.md by Niklas Frykholm ( http://www.frykholm.se/ )
-	*    - Lookout, destructors of the managed elements can get called twice
 	*/
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
 	class PackedElementManager : private Manager

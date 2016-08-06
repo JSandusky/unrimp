@@ -93,29 +93,16 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
 		inline CompositorResource();
-
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] compositorResourceId
-		*    Compositor resource ID
-		*/
-		inline explicit CompositorResource(CompositorResourceId compositorResourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~CompositorResource();
-
+		inline virtual ~CompositorResource();
 		CompositorResource(const CompositorResource&) = delete;
 		CompositorResource& operator=(const CompositorResource&) = delete;
+
+		//[-------------------------------------------------------]
+		//[ "RendererRuntime::PackedElementManager" management    ]
+		//[-------------------------------------------------------]
+		inline void initializeElement(CompositorResourceId compositorResourceId);
+		void deinitializeElement();
 
 
 	//[-------------------------------------------------------]

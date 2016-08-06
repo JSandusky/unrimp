@@ -101,13 +101,19 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline IResource(ResourceId resourceId);
-		RENDERERRUNTIME_API_EXPORT virtual ~IResource();
+		inline IResource();
+		inline virtual ~IResource();
 		IResource(const IResource&) = delete;
 		IResource& operator=(const IResource&) = delete;
 		inline void setResourceManager(IResourceManager* resourceManager);
 		inline void setAssetId(AssetId assetId);
 		void setLoadingState(LoadingState loadingState);
+
+		//[-------------------------------------------------------]
+		//[ "RendererRuntime::PackedElementManager" management    ]
+		//[-------------------------------------------------------]
+		inline void initializeElement(ResourceId resourceId);
+		RENDERERRUNTIME_API_EXPORT void deinitializeElement();
 
 
 	//[-------------------------------------------------------]

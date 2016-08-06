@@ -73,15 +73,6 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline MeshResource::MeshResource() :
-		IResource(getUninitialized<MeshResourceId>()),
-		mNumberOfVertices(0),
-		mNumberOfIndices(0)
-	{
-		// Nothing here
-	}
-
-	inline MeshResource::MeshResource(MeshResourceId meshResourceId) :
-		IResource(meshResourceId),
 		mNumberOfVertices(0),
 		mNumberOfIndices(0)
 	{
@@ -90,7 +81,35 @@ namespace RendererRuntime
 
 	inline MeshResource::~MeshResource()
 	{
-		// Nothing here
+		// Sanity checks
+		assert(0 == mNumberOfVertices);
+		assert(0 == mNumberOfIndices);
+		assert(nullptr == mVertexArray.getPointer());
+		assert(mSubMeshes.empty());
+	}
+
+	inline void MeshResource::initializeElement(MeshResourceId meshResourceId)
+	{
+		// Sanity checks
+		assert(0 == mNumberOfVertices);
+		assert(0 == mNumberOfIndices);
+		assert(nullptr == mVertexArray.getPointer());
+		assert(mSubMeshes.empty());
+
+		// Call base implementation
+		IResource::initializeElement(meshResourceId);
+	}
+
+	inline void MeshResource::deinitializeElement()
+	{
+		// Reset everything
+		mNumberOfVertices = 0;
+		mNumberOfIndices = 0;
+		mVertexArray = nullptr;
+		mSubMeshes.clear();
+
+		// Call base implementation
+		IResource::deinitializeElement();
 	}
 
 

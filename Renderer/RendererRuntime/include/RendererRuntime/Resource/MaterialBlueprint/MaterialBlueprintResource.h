@@ -353,29 +353,17 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
 		MaterialBlueprintResource();
-
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] materialBlueprintResourceId
-		*    Material blueprint resource ID
-		*/
-		explicit MaterialBlueprintResource(MaterialBlueprintResourceId materialBlueprintResourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~MaterialBlueprintResource();
-
+		virtual ~MaterialBlueprintResource();
 		MaterialBlueprintResource(const MaterialBlueprintResource&) = delete;
 		MaterialBlueprintResource& operator=(const MaterialBlueprintResource&) = delete;
+
+		//[-------------------------------------------------------]
+		//[ "RendererRuntime::PackedElementManager" management    ]
+		//[-------------------------------------------------------]
+		void initializeElement(MaterialBlueprintResourceId materialBlueprintResourceId);
+		void deinitializeElement();
+
 		void linkMaterialTechnique(MaterialTechnique& materialTechnique);
 		void unlinkMaterialTechnique(MaterialTechnique& materialTechnique);
 

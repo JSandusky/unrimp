@@ -37,21 +37,33 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline ShaderPieceResource::ShaderPieceResource() :
-		IResource(getUninitialized<ShaderPieceResourceId>())
-	{
-		// Nothing here
-	}
-
-	inline ShaderPieceResource::ShaderPieceResource(ShaderPieceResourceId shaderPieceResourceId) :
-		IResource(shaderPieceResourceId)
+	inline ShaderPieceResource::ShaderPieceResource()
 	{
 		// Nothing here
 	}
 
 	inline ShaderPieceResource::~ShaderPieceResource()
 	{
-		// Nothing here
+		// Sanity checks
+		assert(mShaderSourceCode.empty());
+	}
+
+	inline void ShaderPieceResource::initializeElement(ShaderPieceResourceId shaderPieceResourceId)
+	{
+		// Sanity checks
+		assert(mShaderSourceCode.empty());
+
+		// Call base implementation
+		IResource::initializeElement(shaderPieceResourceId);
+	}
+
+	inline void ShaderPieceResource::deinitializeElement()
+	{
+		// Reset everything
+		mShaderSourceCode.clear();
+
+		// Call base implementation
+		IResource::deinitializeElement();
 	}
 
 

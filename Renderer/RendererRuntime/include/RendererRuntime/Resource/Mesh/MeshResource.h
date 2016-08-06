@@ -104,29 +104,16 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
 		inline MeshResource();
-
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] meshResourceId
-		*    Mesh resource ID
-		*/
-		inline explicit MeshResource(MeshResourceId meshResourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
 		inline virtual ~MeshResource();
-
 		MeshResource(const MeshResource&) = delete;
 		MeshResource& operator=(const MeshResource&) = delete;
+
+		//[-------------------------------------------------------]
+		//[ "RendererRuntime::PackedElementManager" management    ]
+		//[-------------------------------------------------------]
+		inline void initializeElement(MeshResourceId meshResourceId);
+		inline void deinitializeElement();
 
 
 	//[-------------------------------------------------------]

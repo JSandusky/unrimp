@@ -312,16 +312,13 @@
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderCacheManager.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderProperties.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.cpp" />
-    <ClCompile Include="src\Resource\ShaderBlueprint\ShaderBlueprintResource.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.cpp" />
     <ClCompile Include="src\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.cpp" />
-    <ClCompile Include="src\Resource\ShaderPiece\ShaderPieceResource.cpp" />
     <ClCompile Include="src\Resource\ShaderPiece\ShaderPieceResourceManager.cpp" />
     <ClCompile Include="src\Resource\Skeleton\SkeletonResourceManager.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\DdsTextureResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Texture\Loader\KtxTextureResourceLoader.cpp" />
-    <ClCompile Include="src\Resource\Texture\TextureResource.cpp" />
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp" />
     <ClCompile Include="src\Vr\OpenVR\OpenVRRuntimeLinking.cpp" />
     <ClCompile Include="src\Vr\OpenVR\VrManagerOpenVR.cpp" />

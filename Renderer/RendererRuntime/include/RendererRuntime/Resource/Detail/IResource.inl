@@ -67,13 +67,23 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IResource::IResource(ResourceId resourceId) :
+	inline IResource::IResource() :
 		mResourceManager(nullptr),
-		mResourceId(resourceId),
+		mResourceId(getUninitialized<ResourceId>()),
 		mAssetId(getUninitialized<AssetId>()),
 		mLoadingState(LoadingState::UNLOADED)
 	{
 		// Nothing here
+	}
+
+	inline IResource::~IResource()
+	{
+		// Sanity checks
+		assert(nullptr == mResourceManager);
+		assert(isUninitialized(mResourceId));
+		assert(isUninitialized(mAssetId));
+		assert(LoadingState::UNLOADED == mLoadingState);
+		assert(mSortedResourceListeners.empty());
 	}
 
 	inline void IResource::setResourceManager(IResourceManager* resourceManager)
@@ -84,6 +94,19 @@ namespace RendererRuntime
 	inline void IResource::setAssetId(AssetId assetId)
 	{
 		mAssetId = assetId;
+	}
+
+	inline void IResource::initializeElement(ResourceId resourceId)
+	{
+		// Sanity checks
+		assert(nullptr == mResourceManager);
+		assert(isUninitialized(mResourceId));
+		assert(isUninitialized(mAssetId));
+		assert(LoadingState::UNLOADED == mLoadingState);
+		assert(mSortedResourceListeners.empty());
+
+		// Set data
+		mResourceId = resourceId;
 	}
 
 

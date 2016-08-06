@@ -94,7 +94,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	IResource::~IResource()
+	void IResource::setLoadingState(LoadingState loadingState)
+	{
+		mLoadingState = loadingState;
+		for (IResourceListener* resourceListener : mSortedResourceListeners)
+		{
+			resourceListener->onLoadingStateChange(*this);
+		}
+	}
+
+	void IResource::deinitializeElement()
 	{
 		// Disconnect all resource listeners
 		const IResourceListener::ResourceConnection resourceConnection(mResourceManager, mResourceId);
@@ -107,15 +116,13 @@ namespace RendererRuntime
 			assert(connectionIterator != resourceListener->mResourceConnections.end());
 			resourceListener->mResourceConnections.erase(connectionIterator);
 		}
-	}
 
-	void IResource::setLoadingState(LoadingState loadingState)
-	{
-		mLoadingState = loadingState;
-		for (IResourceListener* resourceListener : mSortedResourceListeners)
-		{
-			resourceListener->onLoadingStateChange(*this);
-		}
+		// Reset everything
+		mResourceManager = nullptr;
+		setUninitialized(mResourceId);
+		setUninitialized(mAssetId);
+		mLoadingState = LoadingState::UNLOADED;
+		mSortedResourceListeners.clear();
 	}
 
 

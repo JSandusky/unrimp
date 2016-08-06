@@ -50,7 +50,11 @@ namespace RendererRuntime
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
 	inline PackedElementManager<ELEMENT_TYPE, ID_TYPE, MAXIMUM_NUMBER_OF_ELEMENTS>::~PackedElementManager()
 	{
-		// Nothing here
+		// If there are any elements left alive, smash them
+		for (size_t i = 0; i < mNumberOfElements; ++i)
+		{
+			mElements[i].deinitializeElement();
+		}
 	}
 
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
@@ -101,9 +105,10 @@ namespace RendererRuntime
 		index.id += NEW_OBJECT_ID_ADD;
 		index.index = static_cast<uint16_t>(mNumberOfElements++);
 
-		// Call the constructor of the added element
+		// Initialize the added element
+		// -> "placement new" ("new (static_cast<void*>(&element)) ELEMENT_TYPE(index.id);") is not used by intent to avoid some nasty STL issues
 		ELEMENT_TYPE& element = mElements[index.index];
-		new (static_cast<void*>(&element)) ELEMENT_TYPE(index.id);
+		element.initializeElement(index.id);
 
 		// Return the added element
 		return element;
@@ -115,8 +120,9 @@ namespace RendererRuntime
 		Index& index = mIndices[id & INDEX_MASK];
 		ELEMENT_TYPE& element = mElements[index.index];
 
-		// Call the destructor of the removed element
-		element.~ELEMENT_TYPE();
+		// Deinitialize the removed element
+		// -> Calling the destructor ("element.~ELEMENT_TYPE();") is not used by intent to avoid some nasty STL issues
+		element.deinitializeElement();
 
 		element = mElements[--mNumberOfElements];
 		mIndices[element.id & INDEX_MASK].index = index.index;

@@ -89,29 +89,16 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
 		inline TextureResource();
-
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] textureResourceId
-		*    Texture resource ID
-		*/
-		inline explicit TextureResource(TextureResourceId textureResourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
 		inline virtual ~TextureResource();
-
 		TextureResource(const TextureResource&) = delete;
 		TextureResource& operator=(const TextureResource&) = delete;
+
+		//[-------------------------------------------------------]
+		//[ "RendererRuntime::PackedElementManager" management    ]
+		//[-------------------------------------------------------]
+		inline void initializeElement(TextureResourceId textureResourceId);
+		inline void deinitializeElement();
 
 
 	//[-------------------------------------------------------]

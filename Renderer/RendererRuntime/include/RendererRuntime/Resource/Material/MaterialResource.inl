@@ -68,17 +68,30 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline MaterialResource::MaterialResource() :
-		IResource(getUninitialized<MaterialResourceId>()),
 		mParentMaterialResourceId(getUninitialized<MaterialResourceId>())
 	{
 		// Nothing here
 	}
 
-	inline MaterialResource::MaterialResource(MaterialResourceId materialResourceId) :
-		IResource(materialResourceId),
-		mParentMaterialResourceId(getUninitialized<MaterialResourceId>())
+	inline MaterialResource::~MaterialResource()
 	{
-		// Nothing here
+		// Sanity checks
+		assert(isUninitialized(mParentMaterialResourceId));
+		assert(mSortedChildMaterialResourceIds.empty());
+		assert(mSortedMaterialTechniqueVector.empty());
+		assert(mMaterialProperties.getSortedPropertyVector().empty());
+	}
+
+	inline void MaterialResource::initializeElement(MaterialResourceId materialResourceId)
+	{
+		// Sanity checks
+		assert(isUninitialized(mParentMaterialResourceId));
+		assert(mSortedChildMaterialResourceIds.empty());
+		assert(mSortedMaterialTechniqueVector.empty());
+		assert(mMaterialProperties.getSortedPropertyVector().empty());
+
+		// Call base implementation
+		IResource::initializeElement(materialResourceId);
 	}
 
 

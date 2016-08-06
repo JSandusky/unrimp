@@ -47,21 +47,39 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline ShaderBlueprintResource::ShaderBlueprintResource() :
-		IResource(getUninitialized<ShaderBlueprintResourceId>())
-	{
-		// Nothing here
-	}
-
-	inline ShaderBlueprintResource::ShaderBlueprintResource(ShaderBlueprintResourceId shaderBlueprintResourceId) :
-		IResource(shaderBlueprintResourceId)
+	inline ShaderBlueprintResource::ShaderBlueprintResource()
 	{
 		// Nothing here
 	}
 
 	inline ShaderBlueprintResource::~ShaderBlueprintResource()
 	{
-		// Nothing here
+		// Sanity checks
+		assert(mIncludeShaderPieceResourceIds.empty());
+		assert(mReferencedShaderProperties.getSortedPropertyVector().empty());
+		assert(mShaderSourceCode.empty());
+	}
+
+	inline void ShaderBlueprintResource::initializeElement(ShaderBlueprintResourceId shaderBlueprintResourceId)
+	{
+		// Sanity checks
+		assert(mIncludeShaderPieceResourceIds.empty());
+		assert(mReferencedShaderProperties.getSortedPropertyVector().empty());
+		assert(mShaderSourceCode.empty());
+
+		// Call base implementation
+		IResource::initializeElement(shaderBlueprintResourceId);
+	}
+
+	inline void ShaderBlueprintResource::deinitializeElement()
+	{
+		// Reset everything
+		mIncludeShaderPieceResourceIds.clear();
+		mReferencedShaderProperties.clear();
+		mShaderSourceCode.clear();
+
+		// Call base implementation
+		IResource::deinitializeElement();
 	}
 
 

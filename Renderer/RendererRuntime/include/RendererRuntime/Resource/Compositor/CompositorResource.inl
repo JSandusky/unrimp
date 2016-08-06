@@ -42,16 +42,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline CompositorResource::CompositorResource() :
-		IResource(getUninitialized<CompositorResourceId>())
+	inline CompositorResource::CompositorResource()
 	{
 		// Nothing here
 	}
 
-	inline CompositorResource::CompositorResource(CompositorResourceId compositorResourceId) :
-		IResource(compositorResourceId)
+	inline CompositorResource::~CompositorResource()
 	{
-		// Nothing here
+		// Sanity checks
+		assert(mCompositorResourceNodes.empty());
+	}
+
+	inline void CompositorResource::initializeElement(CompositorResourceId compositorResourceId)
+	{
+		// Sanity checks
+		assert(mCompositorResourceNodes.empty());
+
+		// Call base implementation
+		IResource::initializeElement(compositorResourceId);
 	}
 
 

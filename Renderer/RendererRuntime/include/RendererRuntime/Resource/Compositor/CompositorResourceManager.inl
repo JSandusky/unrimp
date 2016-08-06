@@ -59,7 +59,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline CompositorResourceManager::~CompositorResourceManager()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 

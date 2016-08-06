@@ -143,7 +143,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	MaterialResource::~MaterialResource()
+	void MaterialResource::deinitializeElement()
 	{
 		setParentMaterialResourceId(getUninitialized<MaterialResourceId>());
 
@@ -151,12 +151,21 @@ namespace RendererRuntime
 		if (!mSortedChildMaterialResourceIds.empty())
 		{
 			const MaterialResources& materialResources = static_cast<MaterialResourceManager&>(getResourceManager()).getMaterialResources();
-			for (MaterialResourceId materialResourceId : mSortedChildMaterialResourceIds)
+			while (!mSortedChildMaterialResourceIds.empty())
 			{
+				const MaterialResourceId materialResourceId = mSortedChildMaterialResourceIds.front();
 				assert(materialResources.isElementIdValid(materialResourceId));
 				materialResources.getElementById(materialResourceId).setParentMaterialResourceId(getUninitialized<MaterialResourceId>());
 			}
+			mSortedChildMaterialResourceIds.clear();
 		}
+
+		// Sanity checks
+		mSortedMaterialTechniqueVector.clear();
+		mMaterialProperties.removeAllProperties();
+
+		// Call base implementation
+		IResource::deinitializeElement();
 	}
 
 	bool MaterialResource::setPropertyByIdInternal(MaterialPropertyId materialPropertyId, const MaterialPropertyValue& materialPropertyValue, MaterialProperty::Usage materialPropertyUsage, bool changeOverwrittenState)

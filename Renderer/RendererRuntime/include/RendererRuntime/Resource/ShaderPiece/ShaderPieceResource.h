@@ -93,29 +93,16 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
 		inline ShaderPieceResource();
-
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] shaderPieceResourceId
-		*    Shader piece resource ID
-		*/
-		inline explicit ShaderPieceResource(ShaderPieceResourceId shaderPieceResourceId);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
 		inline virtual ~ShaderPieceResource();
-
 		ShaderPieceResource(const ShaderPieceResource&) = delete;
 		ShaderPieceResource& operator=(const ShaderPieceResource&) = delete;
+
+		//[-------------------------------------------------------]
+		//[ "RendererRuntime::PackedElementManager" management    ]
+		//[-------------------------------------------------------]
+		inline void initializeElement(ShaderPieceResourceId shaderPieceResourceId);
+		inline void deinitializeElement();
 
 
 	//[-------------------------------------------------------]

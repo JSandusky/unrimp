@@ -37,22 +37,33 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline TextureResource::TextureResource() :
-		IResource(getUninitialized<TextureResourceId>())
-	{
-		// Nothing here
-	}
-
-	inline TextureResource::TextureResource(TextureResourceId textureResourceId) :
-		IResource(textureResourceId)
+	inline TextureResource::TextureResource()
 	{
 		// Nothing here
 	}
 
 	inline TextureResource::~TextureResource()
 	{
-		// The renderer resource pointers are released automatically
-		// Nothing to do in here
+		// Sanity checks
+		assert(nullptr == mTexture.getPointer());
+	}
+
+	inline void TextureResource::initializeElement(TextureResourceId textureResourceId)
+	{
+		// Sanity checks
+		assert(nullptr == mTexture.getPointer());
+
+		// Call base implementation
+		IResource::initializeElement(textureResourceId);
+	}
+
+	inline void TextureResource::deinitializeElement()
+	{
+		// Reset everything
+		mTexture = nullptr;
+
+		// Call base implementation
+		IResource::deinitializeElement();
 	}
 
 

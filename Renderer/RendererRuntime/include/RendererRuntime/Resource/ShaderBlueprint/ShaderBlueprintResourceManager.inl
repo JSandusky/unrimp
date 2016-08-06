@@ -68,7 +68,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline ShaderBlueprintResourceManager::~ShaderBlueprintResourceManager()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 
