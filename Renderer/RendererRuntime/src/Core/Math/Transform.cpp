@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Core/Math/Transform.h"
 
 // Disable warnings in external headers, we can't fix them

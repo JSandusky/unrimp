@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResource.h"
 #include "RendererRuntime/Resource/Compositor/CompositorResourceNode.h"
 

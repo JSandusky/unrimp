@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Core/Platform/PlatformManager.h"
 #ifdef WIN32
 	#include "RendererRuntime/Core/Platform/WindowsHeader.h"

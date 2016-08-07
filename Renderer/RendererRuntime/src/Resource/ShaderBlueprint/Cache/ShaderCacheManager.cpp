@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCacheManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderCache.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderBuilder.h"

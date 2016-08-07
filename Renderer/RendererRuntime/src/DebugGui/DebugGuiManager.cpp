@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/DebugGui/DebugGuiManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 

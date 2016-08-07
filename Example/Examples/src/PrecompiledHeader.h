@@ -27,7 +27,9 @@
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
-#pragma once
+// We can't use pragma once here since precompiled headers get a special treatment on Mac OS X that is incompatible with #pragma once
+#ifndef _RENDERER_RUNTIME_PRECOMPILED_HEADER_H_
+#define _RENDERER_RUNTIME_PRECOMPILED_HEADER_H_
 
 
 //[-------------------------------------------------------]
@@ -51,3 +53,9 @@
 #include <float.h>
 #include <stdlib.h>
 #include <limits.h>
+
+
+//[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#endif // _RENDERER_RUNTIME_PRECOMPILED_HEADER_H_

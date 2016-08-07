@@ -147,6 +147,7 @@
     <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerWindows.h" />
     <ClInclude Include="include\RendererRuntime\Export.h" />
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
+    <ClInclude Include="include\RendererRuntime\PrecompiledHeader.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorInstance.h" />
@@ -251,8 +252,34 @@
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_Null.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\External\ImGui\src\imgui.cpp" />
-    <ClCompile Include="..\..\External\ImGui\src\imgui_draw.cpp" />
+    <ClCompile Include="..\..\External\ImGui\src\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\External\ImGui\src\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\Asset\AssetManager.cpp" />
     <ClCompile Include="src\Asset\AssetPackage.cpp" />
     <ClCompile Include="src\Asset\Serializer\AssetPackageSerializer.cpp" />
@@ -266,6 +293,16 @@
     <ClCompile Include="src\Core\String.cpp" />
     <ClCompile Include="src\DebugGui\DebugGuiManager.cpp" />
     <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerWindows.cpp" />
+    <ClCompile Include="src\PrecompiledHeader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\Resource\Compositor\CompositorInstance.cpp" />
     <ClCompile Include="src\Resource\Compositor\CompositorInstanceNode.cpp" />
     <ClCompile Include="src\Resource\Compositor\CompositorResource.cpp" />
@@ -310,10 +347,62 @@
     <ClCompile Include="src\Resource\Scene\Node\SceneNode.cpp" />
     <ClCompile Include="src\Resource\Scene\SceneResource.cpp" />
     <ClCompile Include="src\Resource\Scene\SceneResourceManager.cpp" />
-    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_common.cpp" />
-    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_lexer.cpp" />
-    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_preprocessor.cpp" />
-    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\Preprocessor.cpp" />
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_common.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_lexer.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\mojoshader_preprocessor.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Resource\ShaderBlueprint\Cache\preprocessor\Preprocessor.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderBuilder.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderCacheManager.cpp" />
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderProperties.cpp" />
@@ -408,6 +497,8 @@
       <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -439,6 +530,8 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -480,6 +573,8 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -524,6 +619,8 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>RendererRuntime/PrecompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

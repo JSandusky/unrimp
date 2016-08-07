@@ -834,6 +834,9 @@
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_410.h">
       <Filter>Source Files\DebugGui\Detail\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\PrecompiledHeader.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -1066,6 +1069,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\IResourceListener.cpp">
       <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PrecompiledHeader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

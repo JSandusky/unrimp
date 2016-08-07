@@ -21,6 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Asset/Serializer/AssetPackageSerializer.h"
 #include "RendererRuntime/Asset/AssetPackage.h"
 

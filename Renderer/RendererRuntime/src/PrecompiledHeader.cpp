@@ -18,27 +18,10 @@
 \*********************************************************/
 
 
+// This cpp-file creates the optional precompiled header, all other cpp-files are just using it
+
+
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Scene/SceneResource.h"
-
-
-//[-------------------------------------------------------]
-//[ Namespace                                             ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	const SceneResourceTypeId SceneResource::TYPE_ID("SceneResource");
-
-
-//[-------------------------------------------------------]
-//[ Namespace                                             ]
-//[-------------------------------------------------------]
-} // RendererRuntime
