@@ -395,7 +395,7 @@ namespace RendererRuntime
 		UniformBuffer* mPassUniformBuffer;		///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mMaterialUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
-
+		// Misc
 		LinkedMaterialTechniques mLinkedMaterialTechniques;	// TODO(co) Decent material technique list management inside the material blueprint resource (link, unlink etc.)
 
 

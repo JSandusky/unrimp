@@ -53,6 +53,12 @@ namespace
 
 
 		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		typedef std::vector<RendererRuntime::ShaderPropertyId> ShaderPropertyIds;
+
+
+		//[-------------------------------------------------------]
 		//[ Global variables                                      ]
 		//[-------------------------------------------------------]
 		// TODO(co) We need a central vertex input layout management
@@ -108,9 +114,10 @@ namespace
 		class ShaderCombinationIterator
 		{
 		public:
-			ShaderCombinationIterator()
+			explicit ShaderCombinationIterator(size_t reserveSize)
 			{
-				mNumberOfPropertyValuesByPropertyIndex.reserve(32);
+				mNumberOfPropertyValuesByPropertyIndex.reserve(reserveSize);
+				mCurrentCombination.reserve(reserveSize);
 			}
 
 			void clear()
@@ -210,6 +217,15 @@ namespace
 		}
 
 
+		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
+		// Optimization: To avoid constant allocations/deallocations, use a static instance (not multi-threading safe, of course)
+		static RendererRuntime::ShaderProperties g_ShaderPropertiesScratchBuffer(128);
+		static ShaderCombinationIterator		 g_ShaderCombinationIterator(128);
+		static ShaderPropertyIds				 g_ShaderPropertyIds(128);
+
+
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
@@ -236,7 +252,7 @@ namespace RendererRuntime
 	void MaterialBlueprintResource::optimizeShaderProperties(ShaderProperties& shaderProperties) const
 	{
 		// Optimization: To avoid constant allocations/deallocations, use a static instance (not multi-threading safe, of course)
-		static ShaderProperties optimizedShaderProperties;
+		ShaderProperties& optimizedShaderProperties = ::detail::g_ShaderPropertiesScratchBuffer;
 		optimizedShaderProperties.clear();
 
 		// Gather relevant shader properties
@@ -665,9 +681,10 @@ namespace RendererRuntime
 		DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES];
 
 		// Optimization: To avoid constant allocations/deallocations, use a static instance (not multi-threading safe, of course)
-		static ::detail::ShaderCombinationIterator shaderCombinationIterator;
+		::detail::ShaderCombinationIterator& shaderCombinationIterator = ::detail::g_ShaderCombinationIterator;
+		ShaderProperties& shaderProperties = ::detail::g_ShaderPropertiesScratchBuffer;
+		::detail::ShaderPropertyIds& shaderPropertyIds = ::detail::g_ShaderPropertyIds;
 		shaderCombinationIterator.clear();
-		static std::vector<ShaderPropertyId> shaderPropertyIds;
 		shaderPropertyIds.clear();
 
 		{ // Gather all mandatory shader combination properties
@@ -722,8 +739,6 @@ namespace RendererRuntime
 
 		{ // Create the pipeline state caches
 			const uint32_t numberOfShaderProperties = static_cast<uint32_t>(shaderPropertyIds.size());
-			static ShaderProperties shaderProperties;	// Optimization: To avoid constant allocations/deallocations, use a static instance (not multi-threading safe, of course)
-
 			shaderCombinationIterator.startIterate();
 			do
 			{

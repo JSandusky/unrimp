@@ -33,6 +33,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline ShaderProperties::ShaderProperties(size_t numberOfPropertiesToReserve)
+	{
+		mSortedPropertyVector.reserve(numberOfPropertiesToReserve);
+	}
+
 	inline ShaderProperties::~ShaderProperties()
 	{
 		// Nothing here

@@ -102,6 +102,15 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Constructor with memory reserve (doesn't add properties, property set is still initially empty)
+		*
+		*  @param[in] numberOfPropertiesToReserve
+		*    Number of properties to reserve
+		*/
+		inline explicit ShaderProperties(size_t numberOfPropertiesToReserve);
+
+		/**
+		*  @brief
 		*    Destructor
 		*/
 		inline ~ShaderProperties();
