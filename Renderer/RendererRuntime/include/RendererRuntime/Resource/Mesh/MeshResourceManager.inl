@@ -54,7 +54,7 @@ namespace RendererRuntime
 	inline MeshResourceManager::MeshResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	inline MeshResourceManager::~MeshResourceManager()

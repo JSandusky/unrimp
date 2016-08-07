@@ -60,12 +60,12 @@ namespace RendererRuntime
 	CameraSceneItem::CameraSceneItem(ISceneResource& sceneResource) :
 		ISceneItem(sceneResource)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	CameraSceneItem::~CameraSceneItem()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 

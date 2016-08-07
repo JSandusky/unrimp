@@ -54,7 +54,7 @@ namespace RendererRuntime
 	inline ShaderPieceResourceManager::ShaderPieceResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	inline ShaderPieceResourceManager::~ShaderPieceResourceManager()

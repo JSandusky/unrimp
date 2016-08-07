@@ -1256,7 +1256,7 @@ struct ID3D11DeviceContext : public ID3D11DeviceChild
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
 struct ID3D11InputLayout : public ID3D11DeviceChild
 {
-	// Nothing in here
+	// Nothing here
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
@@ -1290,31 +1290,31 @@ struct ID3D11DepthStencilState : public ID3D11DeviceChild
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
 struct ID3D11VertexShader : public ID3D11DeviceChild
 {
-	// Nothing in here
+	// Nothing here
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
 struct ID3D11HullShader : public ID3D11DeviceChild
 {
-	// Nothing in here
+	// Nothing here
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
 struct ID3D11DomainShader : public ID3D11DeviceChild
 {
-	// Nothing in here
+	// Nothing here
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
 struct ID3D11GeometryShader : public ID3D11DeviceChild
 {
-	// Nothing in here
+	// Nothing here
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"
 struct ID3D11PixelShader : public ID3D11DeviceChild
 {
-	// Nothing in here
+	// Nothing here
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"

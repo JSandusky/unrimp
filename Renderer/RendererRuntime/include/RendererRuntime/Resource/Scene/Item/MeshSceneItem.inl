@@ -71,12 +71,12 @@ namespace RendererRuntime
 		ISceneItem(sceneResource),
 		mMeshResourceId(getUninitialized<MeshResourceId>())
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	inline MeshSceneItem::~MeshSceneItem()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 

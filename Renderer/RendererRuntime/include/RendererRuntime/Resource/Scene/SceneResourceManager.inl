@@ -40,7 +40,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline SceneResourceManager::~SceneResourceManager()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 

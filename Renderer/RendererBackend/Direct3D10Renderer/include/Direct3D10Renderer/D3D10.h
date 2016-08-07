@@ -1055,7 +1055,7 @@ struct ID3D10DeviceChild : public IUnknown
 // "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"
 struct ID3D10InputLayout : public ID3D10DeviceChild
 {
-	// Nothing in here
+	// Nothing here
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"
@@ -1135,19 +1135,19 @@ struct ID3D10DepthStencilState : public ID3D10DeviceChild
 // "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"
 struct ID3D10VertexShader : public ID3D10DeviceChild
 {
-	// Nothing in here
+	// Nothing here
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"
 struct ID3D10GeometryShader : public ID3D10DeviceChild
 {
-	// Nothing in here
+	// Nothing here
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"
 struct ID3D10PixelShader : public ID3D10DeviceChild
 {
-	// Nothing in here
+	// Nothing here
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D10.h"

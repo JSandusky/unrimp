@@ -54,7 +54,7 @@ namespace RendererRuntime
 	inline TextureResourceManager::TextureResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	inline TextureResourceManager::~TextureResourceManager()

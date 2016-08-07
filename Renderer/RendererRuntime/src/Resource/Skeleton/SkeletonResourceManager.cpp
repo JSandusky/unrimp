@@ -67,12 +67,12 @@ namespace RendererRuntime
 	SkeletonResourceManager::SkeletonResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	SkeletonResourceManager::~SkeletonResourceManager()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 

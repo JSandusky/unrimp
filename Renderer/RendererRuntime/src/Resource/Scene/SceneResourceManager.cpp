@@ -189,7 +189,7 @@ namespace RendererRuntime
 		mRendererRuntime(rendererRuntime),
 		mSceneFactory(&::detail::defaultSceneFactory)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	IResourceLoader* SceneResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)

@@ -37,12 +37,12 @@ namespace RendererRuntime
 	ISceneItem::ISceneItem(ISceneResource& sceneResource) :
 		mSceneResource(sceneResource)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	ISceneItem::~ISceneItem()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 

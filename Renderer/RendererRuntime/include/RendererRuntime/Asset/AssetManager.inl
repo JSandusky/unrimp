@@ -41,7 +41,7 @@ namespace RendererRuntime
 	inline AssetManager::AssetManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	inline AssetManager::~AssetManager()

@@ -37,12 +37,12 @@ namespace RendererRuntime
 	ISceneNode::ISceneNode(const Transform& transform) :
 		mTransform(transform)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	ISceneNode::~ISceneNode()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 

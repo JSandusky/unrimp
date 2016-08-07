@@ -52,12 +52,12 @@ namespace RendererRuntime
 	SceneNode::SceneNode(const Transform& transform) :
 		ISceneNode(transform)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	SceneNode::~SceneNode()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 

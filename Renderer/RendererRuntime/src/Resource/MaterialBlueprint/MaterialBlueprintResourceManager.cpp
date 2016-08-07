@@ -185,7 +185,7 @@ namespace RendererRuntime
 		mRendererRuntime(rendererRuntime),
 		mMaterialBlueprintResourceListener(&::detail::defaultMaterialBlueprintResourceListener)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	IResourceLoader* MaterialBlueprintResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)

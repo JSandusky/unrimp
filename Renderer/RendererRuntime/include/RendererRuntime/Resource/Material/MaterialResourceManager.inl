@@ -54,7 +54,7 @@ namespace RendererRuntime
 	inline MaterialResourceManager::MaterialResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	inline MaterialResourceManager::~MaterialResourceManager()

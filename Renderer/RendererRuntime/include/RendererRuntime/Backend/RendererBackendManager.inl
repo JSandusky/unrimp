@@ -31,12 +31,12 @@ namespace RendererRuntime
 	inline RendererBackendManager::RendererBackendManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	inline RendererBackendManager::~RendererBackendManager()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 

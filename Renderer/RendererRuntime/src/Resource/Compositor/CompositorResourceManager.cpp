@@ -159,7 +159,7 @@ namespace RendererRuntime
 		mRendererRuntime(rendererRuntime),
 		mCompositorPassFactory(&::detail::defaultCompositorPassFactory)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 	IResourceLoader* CompositorResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)

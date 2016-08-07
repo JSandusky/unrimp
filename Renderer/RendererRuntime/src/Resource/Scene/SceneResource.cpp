@@ -42,7 +42,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	SceneResource::~SceneResource()
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 
@@ -61,7 +61,7 @@ namespace RendererRuntime
 	SceneResource::SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
 		ISceneResource(rendererRuntime, resourceId)
 	{
-		// Nothing in here
+		// Nothing here
 	}
 
 
