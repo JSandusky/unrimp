@@ -25,7 +25,7 @@
 #include "RendererRuntime/Resource/Detail/IResourceManager.h"
 #include "RendererRuntime/Resource/Detail/IResourceLoader.h"
 
-#include <assert.h>
+#include <cassert>
 
 
 //[-------------------------------------------------------]

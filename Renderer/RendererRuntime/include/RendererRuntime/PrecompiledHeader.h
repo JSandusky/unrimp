@@ -59,10 +59,9 @@
 #pragma warning(pop)
 
 // C++ standard headers
-#include <cassert>
-#include <assert.h>
-#include <limits>
 #include <inttypes.h>
+#include <cassert>
+#include <limits>
 #include <cstring>
 #include <queue>
 #include <deque>

@@ -47,8 +47,8 @@
 	#include <rapidjson/document.h>
 #pragma warning(pop)
 
-#include <fstream>
 #include <cassert>
+#include <fstream>
 #include <algorithm>
 #include <filesystem>
 

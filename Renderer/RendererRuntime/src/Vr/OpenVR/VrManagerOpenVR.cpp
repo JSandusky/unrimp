@@ -42,10 +42,10 @@
 	#include <glm/gtx/matrix_decompose.hpp>
 #pragma warning(pop)
 
+#include <cassert>
 #include <string>
 #include <chrono>
 #include <thread>
-#include <cassert>
 
 
 //[-------------------------------------------------------]

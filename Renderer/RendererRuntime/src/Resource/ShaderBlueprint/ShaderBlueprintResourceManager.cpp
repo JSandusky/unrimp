@@ -29,7 +29,7 @@
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-#include <assert.h>
+#include <cassert>
 
 
 // Disable warnings

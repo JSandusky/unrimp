@@ -30,8 +30,7 @@
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <algorithm>
-
-#include <assert.h>
+#include <cassert>
 
 
 //[-------------------------------------------------------]
