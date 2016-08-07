@@ -36,20 +36,6 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	SceneFactory::SceneFactory()
-	{
-		// Nothing here
-	}
-
-	SceneFactory::~SceneFactory()
-	{
-		// Nothing here
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ISceneFactory methods ]
 	//[-------------------------------------------------------]
 	ISceneResource* SceneFactory::createSceneResource(SceneResourceTypeId sceneResourceTypeId, IRendererRuntime& rendererRuntime, ResourceId resourceId) const

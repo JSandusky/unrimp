@@ -25,7 +25,29 @@ namespace RendererRuntime
 {
 
 
-	// TODO(co)
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline const CompositorResourceNode& CompositorInstanceNode::getCompositorResourceNode() const
+	{
+		return mCompositorResourceNode;
+	}
+
+	inline const CompositorInstance& CompositorInstanceNode::getCompositorInstance() const
+	{
+		return mCompositorInstance;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline CompositorInstanceNode::CompositorInstanceNode(const CompositorResourceNode& compositorResourceNode, const CompositorInstance& compositorInstance) :
+		mCompositorResourceNode(compositorResourceNode),
+		mCompositorInstance(compositorInstance)
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]

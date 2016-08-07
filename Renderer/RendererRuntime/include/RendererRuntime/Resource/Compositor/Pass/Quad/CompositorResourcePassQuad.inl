@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorInstanceChannel.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,14 +26,23 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
-	CompositorInstanceChannel::CompositorInstanceChannel()
+	inline CompositorPassTypeId CompositorResourcePassQuad::getTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline CompositorResourcePassQuad::CompositorResourcePassQuad()
 	{
 		// Nothing here
 	}
 
-	CompositorInstanceChannel::~CompositorInstanceChannel()
+	inline CompositorResourcePassQuad::~CompositorResourcePassQuad()
 	{
 		// Nothing here
 	}

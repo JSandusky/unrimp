@@ -48,11 +48,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	ResourceLoaderTypeId MeshResourceLoader::getResourceLoaderTypeId() const
-	{
-		return TYPE_ID;
-	}
-
 	void MeshResourceLoader::onDeserialization()
 	{
 		// TODO(co) Error handling
@@ -113,11 +108,6 @@ namespace RendererRuntime
 		{
 			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load mesh asset %d: %s", mAsset.assetId, e.what());
 		}
-	}
-
-	void MeshResourceLoader::onProcessing()
-	{
-		// Nothing here
 	}
 
 	void MeshResourceLoader::onRendererBackendDispatch()

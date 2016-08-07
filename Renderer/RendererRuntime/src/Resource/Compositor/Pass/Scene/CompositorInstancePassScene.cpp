@@ -237,11 +237,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	CompositorInstancePassScene::~CompositorInstancePassScene()
-	{
-		// Nothing here
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

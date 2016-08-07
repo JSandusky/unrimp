@@ -37,34 +37,6 @@ namespace RendererRuntime
 	const SceneResourceTypeId SceneResource::TYPE_ID("SceneResource");
 
 
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	SceneResource::~SceneResource()
-	{
-		// Nothing here
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneResource methods        ]
-	//[-------------------------------------------------------]
-	SceneResourceTypeId SceneResource::getSceneResourceTypeId() const
-	{
-		return TYPE_ID;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	SceneResource::SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
-		ISceneResource(rendererRuntime, resourceId)
-	{
-		// Nothing here
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,15 +26,14 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ISceneNode::ISceneNode(const Transform& transform) :
-		mTransform(transform)
+	inline CompositorPassFactory::CompositorPassFactory()
 	{
 		// Nothing here
 	}
 
-	ISceneNode::~ISceneNode()
+	inline CompositorPassFactory::~CompositorPassFactory()
 	{
 		// Nothing here
 	}

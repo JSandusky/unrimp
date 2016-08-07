@@ -49,11 +49,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	ResourceLoaderTypeId ShaderBlueprintResourceLoader::getResourceLoaderTypeId() const
-	{
-		return TYPE_ID;
-	}
-
 	void ShaderBlueprintResourceLoader::onDeserialization()
 	{
 		// TODO(co) Error handling
@@ -97,11 +92,6 @@ namespace RendererRuntime
 		{
 			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load shader blueprint asset %d: %s", mAsset.assetId, e.what());
 		}
-	}
-
-	void ShaderBlueprintResourceLoader::onProcessing()
-	{
-		// Nothing here
 	}
 
 	void ShaderBlueprintResourceLoader::onRendererBackendDispatch()

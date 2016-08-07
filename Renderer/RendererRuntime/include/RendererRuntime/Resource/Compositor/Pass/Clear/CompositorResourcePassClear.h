@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.h"
 
 
@@ -61,14 +62,14 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		const float* getClearColor() const;
+		inline const float* getClearColor() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual CompositorPassTypeId getTypeId() const override;
+		inline virtual CompositorPassTypeId getTypeId() const override;
 		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
 
 
@@ -77,7 +78,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		CompositorResourcePassClear();
-		virtual ~CompositorResourcePassClear();
+		inline virtual ~CompositorResourcePassClear();
 		CompositorResourcePassClear(const CompositorResourcePassClear&) = delete;
 		CompositorResourcePassClear& operator=(const CompositorResourcePassClear&) = delete;
 
@@ -96,3 +97,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/Pass/Clear/CompositorResourcePassClear.inl"

@@ -26,6 +26,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	inline ResourceLoaderTypeId MaterialResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+	inline void MaterialResourceLoader::onProcessing()
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline MaterialResourceLoader::MaterialResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :

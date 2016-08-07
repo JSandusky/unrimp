@@ -48,8 +48,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		CompositorInstanceChannel();
-		~CompositorInstanceChannel();
+		inline CompositorInstanceChannel();
+		inline ~CompositorInstanceChannel();
 		CompositorInstanceChannel(const CompositorInstanceChannel&) = delete;
 		CompositorInstanceChannel& operator=(const CompositorInstanceChannel&) = delete;
 
@@ -61,3 +61,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/CompositorInstanceChannel.inl"

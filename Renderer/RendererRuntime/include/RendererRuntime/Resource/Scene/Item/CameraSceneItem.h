@@ -62,7 +62,7 @@ namespace RendererRuntime
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual SceneItemTypeId getSceneItemTypeId() const override;
+		inline virtual SceneItemTypeId getSceneItemTypeId() const override;
 		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
 
 
@@ -70,8 +70,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		explicit CameraSceneItem(ISceneResource& sceneResource);
-		virtual ~CameraSceneItem();
+		inline explicit CameraSceneItem(ISceneResource& sceneResource);
+		inline virtual ~CameraSceneItem();
 		CameraSceneItem(const CameraSceneItem&) = delete;
 		CameraSceneItem& operator=(const CameraSceneItem&) = delete;
 
@@ -83,3 +83,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/Item/CameraSceneItem.inl"

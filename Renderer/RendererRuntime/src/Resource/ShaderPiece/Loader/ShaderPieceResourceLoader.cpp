@@ -44,11 +44,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	ResourceLoaderTypeId ShaderPieceResourceLoader::getResourceLoaderTypeId() const
-	{
-		return TYPE_ID;
-	}
-
 	void ShaderPieceResourceLoader::onDeserialization()
 	{
 		// TODO(co) Error handling
@@ -76,16 +71,6 @@ namespace RendererRuntime
 		{
 			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load shader piece asset %d: %s", mAsset.assetId, e.what());
 		}
-	}
-
-	void ShaderPieceResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
-	void ShaderPieceResourceLoader::onRendererBackendDispatch()
-	{
-		// Nothing here
 	}
 
 

@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/Scene/Factory/ISceneFactory.h"
 
 
@@ -48,8 +49,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT SceneFactory();
-		RENDERERRUNTIME_API_EXPORT virtual ~SceneFactory();
+		inline SceneFactory();
+		inline virtual ~SceneFactory();
 
 
 	//[-------------------------------------------------------]
@@ -76,3 +77,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/Factory/SceneFactory.inl"

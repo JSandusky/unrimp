@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Memory/SceneItemMemoryManager.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -34,12 +28,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	SceneItemMemoryManager::SceneItemMemoryManager()
+	inline CompositorInstanceChannel::CompositorInstanceChannel()
 	{
 		// Nothing here
 	}
 
-	SceneItemMemoryManager::~SceneItemMemoryManager()
+	inline CompositorInstanceChannel::~CompositorInstanceChannel()
 	{
 		// Nothing here
 	}

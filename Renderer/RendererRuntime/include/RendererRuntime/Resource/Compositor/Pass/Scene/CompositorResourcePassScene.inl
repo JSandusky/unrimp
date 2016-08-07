@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Memory/SceneNodeMemoryManager.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,14 +26,23 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
-	SceneNodeMemoryManager::SceneNodeMemoryManager()
+	inline CompositorPassTypeId CompositorResourcePassScene::getTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline CompositorResourcePassScene::CompositorResourcePassScene()
 	{
 		// Nothing here
 	}
 
-	SceneNodeMemoryManager::~SceneNodeMemoryManager()
+	inline CompositorResourcePassScene::~CompositorResourcePassScene()
 	{
 		// Nothing here
 	}

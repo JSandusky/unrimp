@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/Compositor/Pass/ICompositorPassFactory.h"
 
 
@@ -48,8 +49,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT CompositorPassFactory();
-		RENDERERRUNTIME_API_EXPORT virtual ~CompositorPassFactory();
+		inline CompositorPassFactory();
+		inline virtual ~CompositorPassFactory();
 
 
 	//[-------------------------------------------------------]
@@ -75,3 +76,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/Pass/CompositorPassFactory.inl"

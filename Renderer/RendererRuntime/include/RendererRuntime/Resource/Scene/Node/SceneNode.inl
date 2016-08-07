@@ -25,7 +25,28 @@ namespace RendererRuntime
 {
 
 
-	// TODO(co) Remove if not required
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneNode methods            ]
+	//[-------------------------------------------------------]
+	inline SceneNodeTypeId SceneNode::getSceneNodeTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline SceneNode::SceneNode(const Transform& transform) :
+		ISceneNode(transform)
+	{
+		// Nothing here
+	}
+
+	inline SceneNode::~SceneNode()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]

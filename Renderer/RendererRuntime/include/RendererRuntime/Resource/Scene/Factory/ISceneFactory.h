@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 
@@ -89,8 +88,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		RENDERERRUNTIME_API_EXPORT ISceneFactory();
-		RENDERERRUNTIME_API_EXPORT virtual ~ISceneFactory();
+		inline ISceneFactory();
+		inline virtual ~ISceneFactory();
 		ISceneFactory(const ISceneFactory&) = delete;
 		ISceneFactory& operator=(const ISceneFactory&) = delete;
 
@@ -102,3 +101,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/Factory/ISceneFactory.inl"

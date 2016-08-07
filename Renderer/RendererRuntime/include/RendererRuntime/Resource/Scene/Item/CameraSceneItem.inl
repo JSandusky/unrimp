@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,15 +26,24 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneItem methods            ]
+	//[-------------------------------------------------------]
+	inline SceneItemTypeId CameraSceneItem::getSceneItemTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	ISceneItem::ISceneItem(ISceneResource& sceneResource) :
-		mSceneResource(sceneResource)
+	inline CameraSceneItem::CameraSceneItem(ISceneResource& sceneResource) :
+		ISceneItem(sceneResource)
 	{
 		// Nothing here
 	}
 
-	ISceneItem::~ISceneItem()
+	inline CameraSceneItem::~CameraSceneItem()
 	{
 		// Nothing here
 	}

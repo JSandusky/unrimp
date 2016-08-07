@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 
@@ -82,8 +81,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		RENDERERRUNTIME_API_EXPORT ICompositorPassFactory();
-		RENDERERRUNTIME_API_EXPORT virtual ~ICompositorPassFactory();
+		inline ICompositorPassFactory();
+		inline virtual ~ICompositorPassFactory();
 		ICompositorPassFactory(const ICompositorPassFactory&) = delete;
 		ICompositorPassFactory& operator=(const ICompositorPassFactory&) = delete;
 
@@ -95,3 +94,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/Pass/ICompositorPassFactory.inl"

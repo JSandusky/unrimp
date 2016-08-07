@@ -26,6 +26,27 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	inline ResourceLoaderTypeId CompositorResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+	inline void CompositorResourceLoader::onProcessing()
+	{
+		// Nothing here
+	}
+
+	inline void CompositorResourceLoader::onRendererBackendDispatch()
+	{
+		// Nothing here
+
+		// TODO(co) Create compositor textures in here?
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline CompositorResourceLoader::CompositorResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :

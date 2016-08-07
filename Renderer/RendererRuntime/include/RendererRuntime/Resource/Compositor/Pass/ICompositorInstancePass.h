@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 
 
@@ -66,8 +65,8 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT const ICompositorResourcePass& getCompositorResourcePass() const;
-		RENDERERRUNTIME_API_EXPORT const CompositorInstanceNode& getCompositorInstanceNode() const;
+		inline const ICompositorResourcePass& getCompositorResourcePass() const;
+		inline const CompositorInstanceNode& getCompositorInstanceNode() const;
 
 
 	//[-------------------------------------------------------]
@@ -81,8 +80,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		RENDERERRUNTIME_API_EXPORT ICompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorInstanceNode& compositorInstanceNode);
-		RENDERERRUNTIME_API_EXPORT virtual ~ICompositorInstancePass();
+		inline ICompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorInstanceNode& compositorInstanceNode);
+		inline virtual ~ICompositorInstancePass();
 		ICompositorInstancePass(const ICompositorInstancePass&) = delete;
 		ICompositorInstancePass& operator=(const ICompositorInstancePass&) = delete;
 
@@ -102,3 +101,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/Pass/ICompositorInstancePass.inl"

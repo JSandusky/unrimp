@@ -65,6 +65,21 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline ISceneNode::ISceneNode(const Transform& transform) :
+		mTransform(transform)
+	{
+		// Nothing here
+	}
+
+	inline ISceneNode::~ISceneNode()
+	{
+		// Nothing here
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

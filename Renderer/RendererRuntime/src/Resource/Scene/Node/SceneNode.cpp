@@ -37,30 +37,6 @@ namespace RendererRuntime
 	const SceneNodeTypeId SceneNode::TYPE_ID("SceneNode");
 
 
-	//[-------------------------------------------------------]
-	//[ Public RendererRuntime::ISceneNode methods            ]
-	//[-------------------------------------------------------]
-	SceneNodeTypeId SceneNode::getSceneNodeTypeId() const
-	{
-		return TYPE_ID;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	SceneNode::SceneNode(const Transform& transform) :
-		ISceneNode(transform)
-	{
-		// Nothing here
-	}
-
-	SceneNode::~SceneNode()
-	{
-		// Nothing here
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

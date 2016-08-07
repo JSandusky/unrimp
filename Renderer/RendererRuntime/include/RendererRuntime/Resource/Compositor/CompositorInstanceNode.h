@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 
 #include <vector>
@@ -69,15 +68,15 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		RENDERERRUNTIME_API_EXPORT const CompositorResourceNode& getCompositorResourceNode() const;
-		RENDERERRUNTIME_API_EXPORT const CompositorInstance& getCompositorInstance() const;
+		inline const CompositorResourceNode& getCompositorResourceNode() const;
+		inline const CompositorInstance& getCompositorInstance() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorInstanceNode(const CompositorResourceNode& compositorResourceNode, const CompositorInstance& compositorInstance);
+		inline CompositorInstanceNode(const CompositorResourceNode& compositorResourceNode, const CompositorInstance& compositorInstance);
 		virtual ~CompositorInstanceNode();
 		CompositorInstanceNode(const CompositorInstanceNode&) = delete;
 		CompositorInstanceNode& operator=(const CompositorInstanceNode&) = delete;
@@ -107,3 +106,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/CompositorInstanceNode.inl"

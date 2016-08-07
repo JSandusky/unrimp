@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/RenderQueue.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,14 +26,9 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	RenderQueue::RenderQueue()
-	{
-		// Nothing here
-	}
-
-	RenderQueue::~RenderQueue()
+	inline CompositorInstancePassDebugGui::~CompositorInstancePassDebugGui()
 	{
 		// Nothing here
 	}

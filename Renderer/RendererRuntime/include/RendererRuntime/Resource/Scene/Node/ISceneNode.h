@@ -107,8 +107,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		explicit ISceneNode(const Transform& transform);
-		virtual ~ISceneNode();
+		inline explicit ISceneNode(const Transform& transform);
+		inline virtual ~ISceneNode();
 		ISceneNode(const ISceneNode&) = delete;
 		ISceneNode& operator=(const ISceneNode&) = delete;
 

@@ -61,21 +61,21 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual ~SceneResource();
+		inline virtual ~SceneResource();
 
 
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneResource methods        ]
 	//[-------------------------------------------------------]
 	public:
-		virtual SceneResourceTypeId getSceneResourceTypeId() const override;
+		inline virtual SceneResourceTypeId getSceneResourceTypeId() const override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId);
+		inline SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId);
 		SceneResource(const SceneResource&) = delete;
 		SceneResource& operator=(const SceneResource&) = delete;
 
@@ -87,3 +87,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/SceneResource.inl"

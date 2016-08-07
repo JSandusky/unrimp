@@ -56,17 +56,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	CompositorInstance::~CompositorInstance()
-	{
-		// Cleanup
-		destroySequentialCompositorInstanceNodes();
-	}
-
-	const IRendererRuntime& CompositorInstance::getRendererRuntime() const
-	{
-		return mRendererRuntime;
-	}
-
 	void CompositorInstance::execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem)
 	{
 		// Is the compositor resource ready?
@@ -128,11 +117,6 @@ namespace RendererRuntime
 			mExecutionRenderTarget = nullptr;
 			renderTarget.release();
 		}
-	}
-
-	Renderer::IRenderTarget* CompositorInstance::getExecutionRenderTarget() const
-	{
-		return mExecutionRenderTarget;
 	}
 
 

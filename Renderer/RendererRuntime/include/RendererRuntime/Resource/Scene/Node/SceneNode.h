@@ -62,15 +62,15 @@ namespace RendererRuntime
 	//[ Public RendererRuntime::ISceneNode methods            ]
 	//[-------------------------------------------------------]
 	public:
-		virtual SceneNodeTypeId getSceneNodeTypeId() const override;
+		inline virtual SceneNodeTypeId getSceneNodeTypeId() const override;
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		explicit SceneNode(const Transform& transform);
-		virtual ~SceneNode();
+		inline explicit SceneNode(const Transform& transform);
+		inline virtual ~SceneNode();
 		SceneNode(const SceneNode&) = delete;
 		SceneNode& operator=(const SceneNode&) = delete;
 

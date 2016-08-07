@@ -133,11 +133,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	ResourceLoaderTypeId DdsTextureResourceLoader::getResourceLoaderTypeId() const
-	{
-		return TYPE_ID;
-	}
-
 	void DdsTextureResourceLoader::onDeserialization()
 	{
 		// TODO(co) Error handling
@@ -637,11 +632,6 @@ namespace RendererRuntime
 		{
 			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load texture asset %d: %s", mAsset.assetId, e.what());
 		}
-	}
-
-	void DdsTextureResourceLoader::onProcessing()
-	{
-		// Nothing here
 	}
 
 	void DdsTextureResourceLoader::onRendererBackendDispatch()

@@ -48,8 +48,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		Renderable();
-		virtual ~Renderable();
+		inline Renderable();
+		inline virtual ~Renderable();
 		Renderable(const Renderable&) = delete;
 		Renderable& operator=(const Renderable&) = delete;
 
@@ -61,3 +61,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/Renderable.inl"

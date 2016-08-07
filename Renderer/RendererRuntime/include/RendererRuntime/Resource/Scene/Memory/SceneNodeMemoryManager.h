@@ -48,8 +48,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		SceneNodeMemoryManager();
-		~SceneNodeMemoryManager();
+		inline SceneNodeMemoryManager();
+		inline ~SceneNodeMemoryManager();
 		SceneNodeMemoryManager(const SceneNodeMemoryManager&) = delete;
 		SceneNodeMemoryManager& operator=(const SceneNodeMemoryManager&) = delete;
 
@@ -61,3 +61,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/Memory/SceneNodeMemoryManager.inl"

@@ -43,30 +43,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
-	CompositorPassTypeId CompositorResourcePassScene::getTypeId() const
-	{
-		return TYPE_ID;
-	}
-
 	void CompositorResourcePassScene::deserialize(uint32_t numberOfBytes, const uint8_t*)
 	{
 		assert(sizeof(v1Compositor::PassScene) == numberOfBytes);
 
 		// TODO(co)
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	CompositorResourcePassScene::CompositorResourcePassScene()
-	{
-		// Nothing here
-	}
-
-	CompositorResourcePassScene::~CompositorResourcePassScene()
-	{
-		// Nothing here
 	}
 
 

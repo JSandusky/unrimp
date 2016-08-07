@@ -26,6 +26,25 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	inline ResourceLoaderTypeId ShaderPieceResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+	inline void ShaderPieceResourceLoader::onProcessing()
+	{
+		// Nothing here
+	}
+
+	inline void ShaderPieceResourceLoader::onRendererBackendDispatch()
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline ShaderPieceResourceLoader::ShaderPieceResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :

@@ -71,7 +71,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		CompositorInstancePassScene(const CompositorResourcePassScene& compositorResourcePassScene, const CompositorInstanceNode& compositorInstanceNode);
-		virtual ~CompositorInstancePassScene();
+		inline virtual ~CompositorInstancePassScene();
 		CompositorInstancePassScene(const CompositorInstancePassScene&) = delete;
 		CompositorInstancePassScene& operator=(const CompositorInstancePassScene&) = delete;
 
@@ -83,3 +83,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/Pass/Scene/CompositorInstancePassScene.inl"

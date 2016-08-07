@@ -26,6 +26,15 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	inline ResourceLoaderTypeId CrnTextureResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline CrnTextureResourceLoader::CrnTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :

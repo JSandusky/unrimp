@@ -81,6 +81,21 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline CompositorResourceNode::CompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId) :
+		mCompositorResourceNodeId(compositorResourceNodeId)
+	{
+		// Nothing here
+	}
+
+	inline CompositorResourceNode::~CompositorResourceNode()
+	{
+		// Nothing here
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

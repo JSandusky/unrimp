@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/ICompositorInstancePass.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,30 +26,14 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	const ICompositorResourcePass& ICompositorInstancePass::getCompositorResourcePass() const
-	{
-		return mCompositorResourcePass;
-	}
-
-	const CompositorInstanceNode& ICompositorInstancePass::getCompositorInstanceNode() const
-	{
-		return mCompositorInstanceNode;
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	ICompositorInstancePass::ICompositorInstancePass(const ICompositorResourcePass& compositorResourcePass, const CompositorInstanceNode& compositorInstanceNode) :
-		mCompositorResourcePass(compositorResourcePass),
-		mCompositorInstanceNode(compositorInstanceNode)
+	inline ISceneFactory::ISceneFactory()
 	{
 		// Nothing here
 	}
 
-	ICompositorInstancePass::~ICompositorInstancePass()
+	inline ISceneFactory::~ISceneFactory()
 	{
 		// Nothing here
 	}

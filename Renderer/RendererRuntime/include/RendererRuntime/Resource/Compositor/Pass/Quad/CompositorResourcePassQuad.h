@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.h"
 
 
@@ -61,7 +62,7 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual CompositorPassTypeId getTypeId() const override;
+		inline virtual CompositorPassTypeId getTypeId() const override;
 		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
 
 
@@ -69,8 +70,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		CompositorResourcePassQuad();
-		virtual ~CompositorResourcePassQuad();
+		inline CompositorResourcePassQuad();
+		inline virtual ~CompositorResourcePassQuad();
 		CompositorResourcePassQuad(const CompositorResourcePassQuad&) = delete;
 		CompositorResourcePassQuad& operator=(const CompositorResourcePassQuad&) = delete;
 
@@ -82,3 +83,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/Pass/Quad/CompositorResourcePassQuad.inl"

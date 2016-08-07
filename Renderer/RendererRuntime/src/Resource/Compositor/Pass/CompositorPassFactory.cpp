@@ -40,20 +40,6 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	CompositorPassFactory::CompositorPassFactory()
-	{
-		// Nothing here
-	}
-
-	CompositorPassFactory::~CompositorPassFactory()
-	{
-		// Nothing here
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::ICompositorPassFactory methods ]
 	//[-------------------------------------------------------]
 	ICompositorResourcePass* CompositorPassFactory::createCompositorResourcePass(CompositorPassTypeId compositorPassTypeId) const

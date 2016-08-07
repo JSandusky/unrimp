@@ -71,7 +71,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		CompositorInstancePassDebugGui(const CompositorResourcePassDebugGui& compositorResourcePassDebugGui, const CompositorInstanceNode& compositorInstanceNode);
-		virtual ~CompositorInstancePassDebugGui();
+		inline virtual ~CompositorInstancePassDebugGui();
 		CompositorInstancePassDebugGui(const CompositorInstancePassDebugGui&) = delete;
 		CompositorInstancePassDebugGui& operator=(const CompositorInstancePassDebugGui&) = delete;
 
@@ -83,3 +83,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/Pass/DebugGui/CompositorInstancePassDebugGui.inl"

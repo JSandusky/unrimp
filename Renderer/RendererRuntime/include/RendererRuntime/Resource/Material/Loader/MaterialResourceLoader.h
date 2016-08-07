@@ -76,9 +76,9 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
 	public:
-		virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
+		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization() override;
-		virtual void onProcessing() override;
+		inline virtual void onProcessing() override;
 		virtual void onRendererBackendDispatch() override;
 
 

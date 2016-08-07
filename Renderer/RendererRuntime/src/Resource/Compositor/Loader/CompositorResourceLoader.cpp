@@ -166,11 +166,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	ResourceLoaderTypeId CompositorResourceLoader::getResourceLoaderTypeId() const
-	{
-		return TYPE_ID;
-	}
-
 	void CompositorResourceLoader::onDeserialization()
 	{
 		const ICompositorPassFactory& compositorPassFactory = static_cast<CompositorResourceManager&>(getResourceManager()).getCompositorPassFactory();
@@ -189,18 +184,6 @@ namespace RendererRuntime
 		{
 			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load compositor asset %d: %s", mAsset.assetId, e.what());
 		}
-	}
-
-	void CompositorResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
-	void CompositorResourceLoader::onRendererBackendDispatch()
-	{
-		// Nothing here
-
-		// TODO(co) Create compositor textures in here?
 	}
 
 

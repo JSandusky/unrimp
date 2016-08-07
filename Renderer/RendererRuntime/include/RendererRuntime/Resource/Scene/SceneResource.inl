@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/CompositorResourceNode.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,15 +26,28 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CompositorResourceNode::CompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId) :
-		mCompositorResourceNodeId(compositorResourceNodeId)
+	inline SceneResource::~SceneResource()
 	{
 		// Nothing here
 	}
 
-	CompositorResourceNode::~CompositorResourceNode()
+
+	//[-------------------------------------------------------]
+	//[ Public RendererRuntime::ISceneResource methods        ]
+	//[-------------------------------------------------------]
+	inline SceneResourceTypeId SceneResource::getSceneResourceTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline SceneResource::SceneResource(IRendererRuntime& rendererRuntime, ResourceId resourceId) :
+		ISceneResource(rendererRuntime, resourceId)
 	{
 		// Nothing here
 	}

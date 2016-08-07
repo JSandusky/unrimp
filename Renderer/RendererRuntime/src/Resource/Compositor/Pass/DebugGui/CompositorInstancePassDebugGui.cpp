@@ -54,11 +54,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	CompositorInstancePassDebugGui::~CompositorInstancePassDebugGui()
-	{
-		// Nothing here
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

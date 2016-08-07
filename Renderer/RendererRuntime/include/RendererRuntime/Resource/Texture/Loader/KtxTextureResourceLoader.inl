@@ -26,6 +26,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	inline ResourceLoaderTypeId KtxTextureResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+	inline void KtxTextureResourceLoader::onProcessing()
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline KtxTextureResourceLoader::KtxTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :

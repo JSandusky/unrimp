@@ -33,29 +33,8 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	const CompositorResourceNode& CompositorInstanceNode::getCompositorResourceNode() const
-	{
-		return mCompositorResourceNode;
-	}
-
-	const CompositorInstance& CompositorInstanceNode::getCompositorInstance() const
-	{
-		return mCompositorInstance;
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	CompositorInstanceNode::CompositorInstanceNode(const CompositorResourceNode& compositorResourceNode, const CompositorInstance& compositorInstance) :
-		mCompositorResourceNode(compositorResourceNode),
-		mCompositorInstance(compositorInstance)
-	{
-		// Nothing here
-	}
-
 	CompositorInstanceNode::~CompositorInstanceNode()
 	{
 		for (ICompositorInstancePass* compositorInstancePass : mCompositorInstancePasses)

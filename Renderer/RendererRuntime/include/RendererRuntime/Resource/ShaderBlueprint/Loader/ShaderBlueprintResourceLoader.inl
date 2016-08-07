@@ -26,6 +26,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	inline ResourceLoaderTypeId ShaderBlueprintResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+	inline void ShaderBlueprintResourceLoader::onProcessing()
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline ShaderBlueprintResourceLoader::ShaderBlueprintResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :

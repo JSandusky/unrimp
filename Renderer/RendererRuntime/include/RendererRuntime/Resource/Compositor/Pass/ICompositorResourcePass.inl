@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Factory/ISceneFactory.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -34,12 +28,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	ISceneFactory::ISceneFactory()
+	inline ICompositorResourcePass::ICompositorResourcePass()
 	{
 		// Nothing here
 	}
 
-	ISceneFactory::~ISceneFactory()
+	inline ICompositorResourcePass::~ICompositorResourcePass()
 	{
 		// Nothing here
 	}

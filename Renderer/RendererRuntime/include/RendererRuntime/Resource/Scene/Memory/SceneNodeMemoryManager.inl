@@ -19,19 +19,24 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/Thread/ThreadManager.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
 
 
-	// TODO(co) Remove if not required
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline SceneNodeMemoryManager::SceneNodeMemoryManager()
+	{
+		// Nothing here
+	}
+
+	inline SceneNodeMemoryManager::~SceneNodeMemoryManager()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]

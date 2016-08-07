@@ -43,28 +43,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
 	//[-------------------------------------------------------]
-	CompositorPassTypeId CompositorResourcePassDebugGui::getTypeId() const
-	{
-		return TYPE_ID;
-	}
-
 	void CompositorResourcePassDebugGui::deserialize(uint32_t numberOfBytes, const uint8_t*)
 	{
 		assert(sizeof(v1Compositor::PassDebugGui) == numberOfBytes);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	CompositorResourcePassDebugGui::CompositorResourcePassDebugGui()
-	{
-		// Nothing here
-	}
-
-	CompositorResourcePassDebugGui::~CompositorResourcePassDebugGui()
-	{
-		// Nothing here
 	}
 
 

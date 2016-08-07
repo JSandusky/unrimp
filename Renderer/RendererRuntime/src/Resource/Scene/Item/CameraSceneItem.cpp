@@ -43,29 +43,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	SceneItemTypeId CameraSceneItem::getSceneItemTypeId() const
-	{
-		return TYPE_ID;
-	}
-
 	void CameraSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t*)
 	{
 		assert(sizeof(v1Scene::CameraItem) == numberOfBytes);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	CameraSceneItem::CameraSceneItem(ISceneResource& sceneResource) :
-		ISceneItem(sceneResource)
-	{
-		// Nothing here
-	}
-
-	CameraSceneItem::~CameraSceneItem()
-	{
-		// Nothing here
 	}
 
 

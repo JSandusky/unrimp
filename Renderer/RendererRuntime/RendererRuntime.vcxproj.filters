@@ -300,9 +300,6 @@
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.inl">
       <Filter>Source Files\Resource\ShaderBlueprint</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderBuilder.inl">
-      <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\Cache\ShaderProperties.inl">
       <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
     </None>
@@ -359,6 +356,75 @@
     </None>
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCompiler.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorInstancePassClear.inl">
+      <Filter>Source Files\Resource\Compositor\Pass\Clear</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorResourcePassClear.inl">
+      <Filter>Source Files\Resource\Compositor\Pass\Clear</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Pass\DebugGui\CompositorResourcePassDebugGui.inl">
+      <Filter>Source Files\Resource\Compositor\Pass\DebugGui</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Pass\DebugGui\CompositorInstancePassDebugGui.inl">
+      <Filter>Source Files\Resource\Compositor\Pass\DebugGui</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Pass\Quad\CompositorInstancePassQuad.inl">
+      <Filter>Source Files\Resource\Compositor\Pass\Quad</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Pass\Quad\CompositorResourcePassQuad.inl">
+      <Filter>Source Files\Resource\Compositor\Pass\Quad</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Pass\Scene\CompositorInstancePassScene.inl">
+      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Pass\Scene\CompositorResourcePassScene.inl">
+      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Pass\CompositorPassFactory.inl">
+      <Filter>Source Files\Resource\Compositor\Pass</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorInstancePass.inl">
+      <Filter>Source Files\Resource\Compositor\Pass</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorPassFactory.inl">
+      <Filter>Source Files\Resource\Compositor\Pass</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorResourcePass.inl">
+      <Filter>Source Files\Resource\Compositor\Pass</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\CompositorInstance.inl">
+      <Filter>Source Files\Resource\Compositor</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\CompositorInstanceChannel.inl">
+      <Filter>Source Files\Resource\Compositor</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Compositor\CompositorInstanceNode.inl">
+      <Filter>Source Files\Resource\Compositor</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Factory\ISceneFactory.inl">
+      <Filter>Source Files\Resource\Scene\Factory</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Factory\SceneFactory.inl">
+      <Filter>Source Files\Resource\Scene\Factory</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\CameraSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Memory\SceneItemMemoryManager.inl">
+      <Filter>Source Files\Resource\Scene\Memory</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Memory\SceneNodeMemoryManager.inl">
+      <Filter>Source Files\Resource\Scene\Memory</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Renderable.inl">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\RenderQueue.inl">
+      <Filter>Source Files\Resource\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\SceneResource.inl">
+      <Filter>Source Files\Resource\Scene</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -776,9 +842,6 @@
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
       <Filter>Source Files\Backend</Filter>
     </ClCompile>
-    <ClCompile Include="src\Backend\RendererBackendManager.cpp">
-      <Filter>Source Files\Backend</Filter>
-    </ClCompile>
     <ClCompile Include="src\Core\String.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -802,18 +865,6 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Mesh\Loader\MeshResourceLoader.cpp">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Renderable.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\RenderQueue.cpp">
-      <Filter>Source Files\Resource\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Memory\SceneNodeMemoryManager.cpp">
-      <Filter>Source Files\Resource\Scene\Memory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Memory\SceneItemMemoryManager.cpp">
-      <Filter>Source Files\Resource\Scene\Memory</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Texture\TextureResourceManager.cpp">
       <Filter>Source Files\Resource\Texture</Filter>
@@ -848,9 +899,6 @@
     <ClCompile Include="src\Resource\Compositor\CompositorInstance.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\CompositorResourceNode.cpp">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Compositor\CompositorInstanceNode.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
     </ClCompile>
@@ -872,26 +920,11 @@
     <ClCompile Include="src\Resource\Compositor\Pass\Scene\CompositorResourcePassScene.cpp">
       <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\CompositorInstanceChannel.cpp">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Compositor\Pass\CompositorPassFactory.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\ICompositorPassFactory.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\ICompositorResourcePass.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\ICompositorInstancePass.cpp">
       <Filter>Source Files\Resource\Compositor\Pass</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Compositor\CompositorResourceTarget.cpp">
       <Filter>Source Files\Resource\Compositor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Item\ISceneItem.cpp">
-      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\MeshSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item</Filter>
@@ -899,16 +932,10 @@
     <ClCompile Include="src\Resource\Scene\Item\CameraSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Node\ISceneNode.cpp">
-      <Filter>Source Files\Resource\Scene\Node</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Scene\Node\SceneNode.cpp">
       <Filter>Source Files\Resource\Scene\Node</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Factory\SceneFactory.cpp">
-      <Filter>Source Files\Resource\Scene\Factory</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Factory\ISceneFactory.cpp">
       <Filter>Source Files\Resource\Scene\Factory</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\ISceneResource.cpp">
@@ -934,9 +961,6 @@
     </ClCompile>
     <ClCompile Include="src\Resource\MaterialBlueprint\Loader\MaterialBlueprintResourceLoader.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\Loader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Material\MaterialProperty.cpp">
-      <Filter>Source Files\Resource\Material</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\ShaderBlueprint\Loader\ShaderBlueprintResourceLoader.cpp">
       <Filter>Source Files\Resource\ShaderBlueprint\Loader</Filter>
@@ -974,9 +998,6 @@
     <ClCompile Include="src\Resource\ShaderBlueprint\Cache\ShaderProperties.cpp">
       <Filter>Source Files\Resource\ShaderBlueprint\Cache</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Mesh\Detail\SubMesh.cpp">
-      <Filter>Source Files\Resource\Mesh\Detail</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Detail\IResource.cpp">
       <Filter>Source Files\Resource\Detail</Filter>
     </ClCompile>
@@ -997,9 +1018,6 @@
     </ClCompile>
     <ClCompile Include="src\Core\Platform\PlatformManager.cpp">
       <Filter>Source Files\Core\Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Thread\ThreadManager.cpp">
-      <Filter>Source Files\Core\Thread</Filter>
     </ClCompile>
     <ClCompile Include="src\DebugGui\DebugGuiManager.cpp">
       <Filter>Source Files\DebugGui</Filter>

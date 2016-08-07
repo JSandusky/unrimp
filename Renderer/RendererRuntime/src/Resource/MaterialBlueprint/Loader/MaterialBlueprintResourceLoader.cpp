@@ -46,11 +46,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	ResourceLoaderTypeId MaterialBlueprintResourceLoader::getResourceLoaderTypeId() const
-	{
-		return TYPE_ID;
-	}
-
 	void MaterialBlueprintResourceLoader::onDeserialization()
 	{
 		// TODO(co) Error handling
@@ -196,11 +191,6 @@ namespace RendererRuntime
 		{
 			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load material blueprint asset %d: %s", mAsset.assetId, e.what());
 		}
-	}
-
-	void MaterialBlueprintResourceLoader::onProcessing()
-	{
-		// Nothing here
 	}
 
 	void MaterialBlueprintResourceLoader::onRendererBackendDispatch()

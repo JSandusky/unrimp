@@ -57,11 +57,6 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	CompositorInstancePassClear::~CompositorInstancePassClear()
-	{
-		// Nothing here
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

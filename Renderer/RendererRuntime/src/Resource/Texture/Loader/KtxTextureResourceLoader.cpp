@@ -45,11 +45,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	ResourceLoaderTypeId KtxTextureResourceLoader::getResourceLoaderTypeId() const
-	{
-		return TYPE_ID;
-	}
-
 	void KtxTextureResourceLoader::onDeserialization()
 	{
 		// TODO(co) Error handling
@@ -124,11 +119,6 @@ namespace RendererRuntime
 		{
 			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load texture asset %d: %s", mAsset.assetId, e.what());
 		}
-	}
-
-	void KtxTextureResourceLoader::onProcessing()
-	{
-		// Nothing here
 	}
 
 	void KtxTextureResourceLoader::onRendererBackendDispatch()

@@ -72,10 +72,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT CompositorInstance(IRendererRuntime& rendererRuntime, AssetId compositorAssetId);
-		RENDERERRUNTIME_API_EXPORT virtual ~CompositorInstance();
-		RENDERERRUNTIME_API_EXPORT const IRendererRuntime& getRendererRuntime() const;
+		inline virtual ~CompositorInstance();
+		inline const IRendererRuntime& getRendererRuntime() const;
 		RENDERERRUNTIME_API_EXPORT void execute(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem);
-		RENDERERRUNTIME_API_EXPORT Renderer::IRenderTarget* getExecutionRenderTarget() const;	// Only valid during compositor instance execution
+		inline Renderer::IRenderTarget* getExecutionRenderTarget() const;	// Only valid during compositor instance execution
 
 
 	//[-------------------------------------------------------]
@@ -119,3 +119,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/CompositorInstance.inl"

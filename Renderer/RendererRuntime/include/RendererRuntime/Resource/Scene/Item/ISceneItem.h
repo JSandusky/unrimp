@@ -85,8 +85,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		explicit ISceneItem(ISceneResource& sceneResource);
-		virtual ~ISceneItem();
+		inline explicit ISceneItem(ISceneResource& sceneResource);
+		inline virtual ~ISceneItem();
 		ISceneItem(const ISceneItem&) = delete;
 		ISceneItem& operator=(const ISceneItem&) = delete;
 

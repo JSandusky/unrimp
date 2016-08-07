@@ -26,12 +26,36 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::IResourceLoader methods ]
+	//[-------------------------------------------------------]
+	inline ResourceLoaderTypeId SceneResourceLoader::getResourceLoaderTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+	inline void SceneResourceLoader::onProcessing()
+	{
+		// Nothing here
+	}
+
+	inline void SceneResourceLoader::onRendererBackendDispatch()
+	{
+		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline SceneResourceLoader::SceneResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
 		IResourceLoader(resourceManager),
 		mRendererRuntime(rendererRuntime),
 		mSceneResource(nullptr)
+	{
+		// Nothing here
+	}
+
+	inline SceneResourceLoader::~SceneResourceLoader()
 	{
 		// Nothing here
 	}

@@ -132,11 +132,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceLoader methods ]
 	//[-------------------------------------------------------]
-	ResourceLoaderTypeId SceneResourceLoader::getResourceLoaderTypeId() const
-	{
-		return TYPE_ID;
-	}
-
 	void SceneResourceLoader::onDeserialization()
 	{
 		// TODO(co) Error handling
@@ -155,25 +150,6 @@ namespace RendererRuntime
 		{
 			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Renderer runtime failed to load scene asset %d: %s", mAsset.assetId, e.what());
 		}
-	}
-
-	void SceneResourceLoader::onProcessing()
-	{
-		// Nothing here
-	}
-
-	void SceneResourceLoader::onRendererBackendDispatch()
-	{
-		// Nothing here
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	SceneResourceLoader::~SceneResourceLoader()
-	{
-		// Nothing here
 	}
 
 

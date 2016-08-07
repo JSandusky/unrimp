@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -32,16 +26,22 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ICompositorResourcePass::ICompositorResourcePass()
+	inline CompositorInstance::~CompositorInstance()
 	{
-		// Nothing here
+		// Cleanup
+		destroySequentialCompositorInstanceNodes();
 	}
 
-	ICompositorResourcePass::~ICompositorResourcePass()
+	inline const IRendererRuntime& CompositorInstance::getRendererRuntime() const
 	{
-		// Nothing here
+		return mRendererRuntime;
+	}
+
+	inline Renderer::IRenderTarget* CompositorInstance::getExecutionRenderTarget() const
+	{
+		return mExecutionRenderTarget;
 	}
 
 

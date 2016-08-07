@@ -19,19 +19,37 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Material/MaterialProperty.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
 
 
-	// TODO(co)
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline const float* CompositorResourcePassClear::getClearColor() const
+	{
+		return mColor;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererRuntime::ICompositorResourcePass methods ]
+	//[-------------------------------------------------------]
+	inline CompositorPassTypeId CompositorResourcePassClear::getTypeId() const
+	{
+		return TYPE_ID;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline CompositorResourcePassClear::~CompositorResourcePassClear()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]

@@ -48,8 +48,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		RenderQueue();
-		virtual ~RenderQueue();
+		inline RenderQueue();
+		inline virtual ~RenderQueue();
 		RenderQueue(const RenderQueue&) = delete;
 		RenderQueue& operator=(const RenderQueue&) = delete;
 
@@ -61,3 +61,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Scene/RenderQueue.inl"

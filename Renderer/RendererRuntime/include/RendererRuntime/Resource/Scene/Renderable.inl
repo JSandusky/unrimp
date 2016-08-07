@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Renderable.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -34,12 +28,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	Renderable::Renderable()
+	inline Renderable::Renderable()
 	{
 		// Nothing here
 	}
 
-	Renderable::~Renderable()
+	inline Renderable::~Renderable()
 	{
 		// Nothing here
 	}

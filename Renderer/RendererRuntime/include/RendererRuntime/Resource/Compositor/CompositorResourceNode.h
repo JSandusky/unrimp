@@ -97,8 +97,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		explicit CompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId);
-		virtual ~CompositorResourceNode();
+		inline explicit CompositorResourceNode(CompositorResourceNodeId compositorResourceNodeId);
+		inline virtual ~CompositorResourceNode();
 		CompositorResourceNode(const CompositorResourceNode&) = delete;
 		CompositorResourceNode& operator=(const CompositorResourceNode&) = delete;
 

@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 
@@ -70,8 +69,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		RENDERERRUNTIME_API_EXPORT ICompositorResourcePass();
-		RENDERERRUNTIME_API_EXPORT virtual ~ICompositorResourcePass();
+		inline ICompositorResourcePass();
+		inline virtual ~ICompositorResourcePass();
 		ICompositorResourcePass(const ICompositorResourcePass&) = delete;
 		ICompositorResourcePass& operator=(const ICompositorResourcePass&) = delete;
 
@@ -83,3 +82,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.inl"
