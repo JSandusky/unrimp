@@ -1,0 +1,39 @@
+{
+	"Format":
+	{
+		"Type": "CompositorNodeAsset",
+		"Version": "1"
+	},
+	"CompositorNodeAsset":
+	{
+		"InputChannels":
+		{
+			"0": "InputRenderTarget",
+			"1": "OutputRenderTarget"
+		},
+		"Targets":
+		{
+			"OutputRenderTarget":
+			{
+				"Passes":
+				{
+					"Clear":
+					{
+						"Color": "0.5 0.5 0.5 1.0"
+					},
+					"Scene":
+					{
+					},
+					"DebugGui":
+					{
+					}
+				}
+			}
+		},
+		"OutputChannels":
+		{
+			"0": "OutputRenderTarget",
+			"1": "InputRenderTarget"
+		}
+	}
+}

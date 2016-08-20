@@ -44,29 +44,11 @@
     <Filter Include="Source Files\Resource\Texture\Loader">
       <UniqueIdentifier>{1911f465-6b59-4225-b286-7cfab58a3417}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resource\Compositor">
-      <UniqueIdentifier>{c3bbe211-b18d-44ad-b298-2b1ad55c5f5f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Resource\Compositor\Pass">
-      <UniqueIdentifier>{f1cf82ad-dfc3-489c-a506-610fc4374678}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Resource\Compositor\Pass\Clear">
-      <UniqueIdentifier>{36795d3c-9e3c-469e-b44c-78ac2644b7a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Resource\Compositor\Pass\Scene">
-      <UniqueIdentifier>{67a66c2e-1bef-4c0d-ba34-06fe8b837226}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Resource\Compositor\Pass\Quad">
-      <UniqueIdentifier>{d4d38ae2-9fa6-49f7-8254-bf182fed6f43}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Resource\Scene">
       <UniqueIdentifier>{24f1c7dd-750e-4781-a457-544a935b5720}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Resource\Scene\Memory">
       <UniqueIdentifier>{95ea971e-e627-43a8-9e26-3a88a526443a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Resource\Compositor\Loader">
-      <UniqueIdentifier>{7062a97d-d5d8-499e-933c-fd3a54a9a481}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Resource\Scene\Loader">
       <UniqueIdentifier>{6711877d-d37a-4be7-b23b-b6854c62b396}</UniqueIdentifier>
@@ -140,9 +122,6 @@
     <Filter Include="Source Files\DebugGui\Detail\Shader">
       <UniqueIdentifier>{f3df438e-432f-4d54-b7a3-d286ebd1175e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resource\Compositor\Pass\DebugGui">
-      <UniqueIdentifier>{ec0eea0d-8368-4625-b9d8-c8cdd9dbb726}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Vr">
       <UniqueIdentifier>{f07b5ef0-54ee-49d5-b8e4-650898ff418c}</UniqueIdentifier>
     </Filter>
@@ -151,6 +130,33 @@
     </Filter>
     <Filter Include="Source Files\Resource\ShaderBlueprint\Cache\Preprocessor">
       <UniqueIdentifier>{9962d6cb-31e3-4502-89cc-4802e95dfb14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\CompositorNode">
+      <UniqueIdentifier>{4d42162b-2dbb-43ab-9928-df0a55bffac3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\CompositorWorkspace">
+      <UniqueIdentifier>{473dfa50-896b-4929-9406-79ac0450cdba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\CompositorWorkspace\Loader">
+      <UniqueIdentifier>{d9b5e114-f565-41e3-990a-f861fba0c76e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\CompositorNode\Pass">
+      <UniqueIdentifier>{5b280c0d-3b02-4de9-9138-974605312beb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\CompositorNode\Loader">
+      <UniqueIdentifier>{faf519ab-e12c-4bb8-9908-1db7bbbb4e1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\CompositorNode\Pass\Clear">
+      <UniqueIdentifier>{faee5c2a-c685-4043-a067-55a343c80bff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\CompositorNode\Pass\DebugGui">
+      <UniqueIdentifier>{95be9789-75c5-465d-a595-94eb9ef730d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\CompositorNode\Pass\Quad">
+      <UniqueIdentifier>{668e1c84-e8bd-4ceb-a9d4-d09a3937fb64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource\CompositorNode\Pass\Scene">
+      <UniqueIdentifier>{2f77b235-bf28-4271-8f78-2d9feb12c4f7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -195,26 +201,11 @@
     <None Include="include\RendererRuntime\Resource\Texture\Loader\CrnTextureResourceLoader.inl">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.inl">
-      <Filter>Source Files\Resource\Compositor\Loader</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.inl">
       <Filter>Source Files\Resource\Scene\Loader</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl">
       <Filter>Source Files\Resource</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\CompositorResourceNode.inl">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\CompositorResource.inl">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\CompositorResourceTarget.inl">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\CompositorResourceManager.inl">
-      <Filter>Source Files\Resource\Compositor</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Scene\Item\ISceneItem.inl">
       <Filter>Source Files\Resource\Scene\Item</Filter>
@@ -357,51 +348,6 @@
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCompiler.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\Cache</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorInstancePassClear.inl">
-      <Filter>Source Files\Resource\Compositor\Pass\Clear</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorResourcePassClear.inl">
-      <Filter>Source Files\Resource\Compositor\Pass\Clear</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Pass\DebugGui\CompositorResourcePassDebugGui.inl">
-      <Filter>Source Files\Resource\Compositor\Pass\DebugGui</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Pass\DebugGui\CompositorInstancePassDebugGui.inl">
-      <Filter>Source Files\Resource\Compositor\Pass\DebugGui</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Pass\Quad\CompositorInstancePassQuad.inl">
-      <Filter>Source Files\Resource\Compositor\Pass\Quad</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Pass\Quad\CompositorResourcePassQuad.inl">
-      <Filter>Source Files\Resource\Compositor\Pass\Quad</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Pass\Scene\CompositorInstancePassScene.inl">
-      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Pass\Scene\CompositorResourcePassScene.inl">
-      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Pass\CompositorPassFactory.inl">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorInstancePass.inl">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorPassFactory.inl">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorResourcePass.inl">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\CompositorInstance.inl">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\CompositorInstanceChannel.inl">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Compositor\CompositorInstanceNode.inl">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\Scene\Factory\ISceneFactory.inl">
       <Filter>Source Files\Resource\Scene\Factory</Filter>
     </None>
@@ -425,6 +371,72 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Scene\SceneResource.inl">
       <Filter>Source Files\Resource\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorWorkspace\Loader\CompositorWorkspaceResourceLoader.inl">
+      <Filter>Source Files\Resource\CompositorWorkspace\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceResource.inl">
+      <Filter>Source Files\Resource\CompositorWorkspace</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceResourceManager.inl">
+      <Filter>Source Files\Resource\CompositorWorkspace</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceInstance.inl">
+      <Filter>Source Files\Resource\CompositorWorkspace</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\CompositorPassFactory.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ICompositorInstancePass.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ICompositorPassFactory.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\ICompositorResourcePass.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Clear\CompositorInstancePassClear.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Clear</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Clear\CompositorResourcePassClear.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Clear</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\DebugGui\CompositorInstancePassDebugGui.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\DebugGui</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\DebugGui\CompositorResourcePassDebugGui.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\DebugGui</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Quad\CompositorInstancePassQuad.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Quad</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Quad\CompositorResourcePassQuad.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Quad</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Scene\CompositorInstancePassScene.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Pass\Scene\CompositorResourcePassScene.inl">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Scene</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\Loader\CompositorNodeResourceLoader.inl">
+      <Filter>Source Files\Resource\CompositorNode\Loader</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeResource.inl">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeResourceManager.inl">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeInstance.inl">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorTarget.inl">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorChannel.inl">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -525,15 +537,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\DdsTextureResourceLoader.h">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceManager.h">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResource.h">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorResourceLoader.h">
-      <Filter>Source Files\Resource\Compositor\Loader</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\SceneResourceManager.h">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClInclude>
@@ -543,62 +546,14 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.h">
       <Filter>Source Files\Resource\Scene\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorInstance.h">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h">
       <Filter>Source Files\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceNode.h">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorInstanceNode.h">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Scene\CompositorInstancePassScene.h">
-      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Scene\CompositorResourcePassScene.h">
-      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Quad\CompositorResourcePassQuad.h">
-      <Filter>Source Files\Resource\Compositor\Pass\Quad</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Quad\CompositorInstancePassQuad.h">
-      <Filter>Source Files\Resource\Compositor\Pass\Quad</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorResourcePassClear.h">
-      <Filter>Source Files\Resource\Compositor\Pass\Clear</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\Clear\CompositorInstancePassClear.h">
-      <Filter>Source Files\Resource\Compositor\Pass\Clear</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorInstanceChannel.h">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorPassFactory.h">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\CompositorPassFactory.h">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorInstancePass.h">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\ICompositorResourcePass.h">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshFileFormat.h">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Loader\CompositorFileFormat.h">
-      <Filter>Source Files\Resource\Compositor\Loader</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneFileFormat.h">
       <Filter>Source Files\Resource\Scene\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\CompositorResourceTarget.h">
-      <Filter>Source Files\Resource\Compositor</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\MeshSceneItem.h">
       <Filter>Source Files\Resource\Scene\Item</Filter>
@@ -792,12 +747,6 @@
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_HLSL_D3D9.h">
       <Filter>Source Files\DebugGui\Detail\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\DebugGui\CompositorInstancePassDebugGui.h">
-      <Filter>Source Files\Resource\Compositor\Pass\DebugGui</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Compositor\Pass\DebugGui\CompositorResourcePassDebugGui.h">
-      <Filter>Source Files\Resource\Compositor\Pass\DebugGui</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerWindows.h">
       <Filter>Source Files\DebugGui\Detail</Filter>
     </ClInclude>
@@ -836,6 +785,78 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\PrecompiledHeader.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\Loader\CompositorWorkspaceResourceLoader.h">
+      <Filter>Source Files\Resource\CompositorWorkspace\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\Loader\CompositorWorkspaceFileFormat.h">
+      <Filter>Source Files\Resource\CompositorWorkspace\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceResource.h">
+      <Filter>Source Files\Resource\CompositorWorkspace</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceResourceManager.h">
+      <Filter>Source Files\Resource\CompositorWorkspace</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorWorkspace\CompositorWorkspaceInstance.h">
+      <Filter>Source Files\Resource\CompositorWorkspace</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ICompositorInstancePass.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ICompositorPassFactory.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\ICompositorResourcePass.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\CompositorPassFactory.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Clear\CompositorResourcePassClear.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Clear</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Clear\CompositorInstancePassClear.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Clear</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\DebugGui\CompositorResourcePassDebugGui.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\DebugGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\DebugGui\CompositorInstancePassDebugGui.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\DebugGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Quad\CompositorResourcePassQuad.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Quad</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Quad\CompositorInstancePassQuad.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Quad</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Scene\CompositorResourcePassScene.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Pass\Scene\CompositorInstancePassScene.h">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Loader\CompositorNodeFileFormat.h">
+      <Filter>Source Files\Resource\CompositorNode\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\Loader\CompositorNodeResourceLoader.h">
+      <Filter>Source Files\Resource\CompositorNode\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeResource.h">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeResourceManager.h">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeInstance.h">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorTarget.h">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorChannel.h">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -881,15 +902,6 @@
     <ClCompile Include="src\Resource\Texture\Loader\CrnTextureResourceLoader.cpp">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\CompositorResource.cpp">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\CompositorResourceManager.cpp">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Loader\CompositorResourceLoader.cpp">
-      <Filter>Source Files\Resource\Compositor\Loader</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Scene\SceneResourceManager.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
     </ClCompile>
@@ -898,36 +910,6 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\SceneResource.cpp">
       <Filter>Source Files\Resource\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\CompositorInstance.cpp">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\CompositorInstanceNode.cpp">
-      <Filter>Source Files\Resource\Compositor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\Clear\CompositorInstancePassClear.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass\Clear</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\Clear\CompositorResourcePassClear.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass\Clear</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\Quad\CompositorResourcePassQuad.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass\Quad</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\Quad\CompositorInstancePassQuad.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass\Quad</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\Scene\CompositorInstancePassScene.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\Scene\CompositorResourcePassScene.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\CompositorPassFactory.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\CompositorResourceTarget.cpp">
-      <Filter>Source Files\Resource\Compositor</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\MeshSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item</Filter>
@@ -1031,12 +1013,6 @@
     <ClCompile Include="..\..\External\ImGui\src\imgui.cpp">
       <Filter>Source Files\DebugGui\Detail\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\DebugGui\CompositorInstancePassDebugGui.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass\DebugGui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Resource\Compositor\Pass\DebugGui\CompositorResourcePassDebugGui.cpp">
-      <Filter>Source Files\Resource\Compositor\Pass\DebugGui</Filter>
-    </ClCompile>
     <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerWindows.cpp">
       <Filter>Source Files\DebugGui\Detail</Filter>
     </ClCompile>
@@ -1072,6 +1048,57 @@
     </ClCompile>
     <ClCompile Include="src\PrecompiledHeader.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorWorkspace\Loader\CompositorWorkspaceResourceLoader.cpp">
+      <Filter>Source Files\Resource\CompositorWorkspace\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorWorkspace\CompositorWorkspaceInstance.cpp">
+      <Filter>Source Files\Resource\CompositorWorkspace</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorWorkspace\CompositorWorkspaceResourceManager.cpp">
+      <Filter>Source Files\Resource\CompositorWorkspace</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\CompositorNodeInstance.cpp">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\CompositorNodeResource.cpp">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\CompositorNodeResourceManager.cpp">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Loader\CompositorNodeResourceLoader.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\CompositorPassFactory.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\Clear\CompositorResourcePassClear.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Clear</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\Clear\CompositorInstancePassClear.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Clear</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\DebugGui\CompositorInstancePassDebugGui.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\DebugGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\DebugGui\CompositorResourcePassDebugGui.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\DebugGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\Quad\CompositorResourcePassQuad.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Quad</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\Quad\CompositorInstancePassQuad.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Quad</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\Scene\CompositorResourcePassScene.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\Pass\Scene\CompositorInstancePassScene.cpp">
+      <Filter>Source Files\Resource\CompositorNode\Pass\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\CompositorNode\CompositorTarget.cpp">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

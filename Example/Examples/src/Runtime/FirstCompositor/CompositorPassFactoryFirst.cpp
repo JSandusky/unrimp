@@ -72,15 +72,15 @@ RendererRuntime::ICompositorResourcePass* CompositorPassFactoryFirst::createComp
 	return compositorResourcePass;
 }
 
-RendererRuntime::ICompositorInstancePass* CompositorPassFactoryFirst::createCompositorInstancePass(const RendererRuntime::ICompositorResourcePass& compositorResourcePass, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode) const
+RendererRuntime::ICompositorInstancePass* CompositorPassFactoryFirst::createCompositorInstancePass(const RendererRuntime::ICompositorResourcePass& compositorResourcePass, const RendererRuntime::CompositorNodeInstance& compositorNodeInstance) const
 {
 	// First, let the base implementation try to create an instance
-	RendererRuntime::ICompositorInstancePass* compositorInstancePass = CompositorPassFactory::createCompositorInstancePass(compositorResourcePass, compositorInstanceNode);
+	RendererRuntime::ICompositorInstancePass* compositorInstancePass = CompositorPassFactory::createCompositorInstancePass(compositorResourcePass, compositorNodeInstance);
 
 	// Evaluate the compositor pass type
 	if (nullptr == compositorInstancePass && compositorResourcePass.getTypeId() == CompositorResourcePassFirst::TYPE_ID)
 	{
-		compositorInstancePass = new CompositorInstancePassFirst(static_cast<const CompositorResourcePassFirst&>(compositorResourcePass), compositorInstanceNode);
+		compositorInstancePass = new CompositorInstancePassFirst(static_cast<const CompositorResourcePassFirst&>(compositorResourcePass), compositorNodeInstance);
 	}
 
 	// Done

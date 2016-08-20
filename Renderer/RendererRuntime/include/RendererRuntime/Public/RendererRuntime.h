@@ -57,10 +57,11 @@ namespace RendererRuntime
 	class TextureResourceManager;
 	class SkeletonResourceManager;
 	class MaterialResourceManager;
-	class CompositorResourceManager;
 	class ShaderPieceResourceManager;
+	class CompositorNodeResourceManager;
 	class ShaderBlueprintResourceManager;
 	class MaterialBlueprintResourceManager;
+	class CompositorWorkspaceResourceManager;
 }
 
 
@@ -135,9 +136,13 @@ namespace RendererRuntime
 		{
 			return *mSceneResourceManager;
 		}
-		inline CompositorResourceManager& getCompositorResourceManager() const
+		inline CompositorNodeResourceManager& getCompositorNodeResourceManager() const
 		{
-			return *mCompositorResourceManager;
+			return *mCompositorNodeResourceManager;
+		}
+		inline CompositorWorkspaceResourceManager& getCompositorWorkspaceResourceManager() const
+		{
+			return *mCompositorWorkspaceResourceManager;
 		}
 		inline const ResourceManagers& getResourceManagers() const
 		{
@@ -175,7 +180,8 @@ namespace RendererRuntime
 		SkeletonResourceManager*			mSkeletonResourceManager;
 		MeshResourceManager*				mMeshResourceManager;
 		SceneResourceManager*				mSceneResourceManager;
-		CompositorResourceManager*			mCompositorResourceManager;
+		CompositorNodeResourceManager*		mCompositorNodeResourceManager;
+		CompositorWorkspaceResourceManager*	mCompositorWorkspaceResourceManager;
 		ResourceManagers					mResourceManagers;
 		PipelineStateCompiler*				mPipelineStateCompiler;
 		DebugGuiManager*					mDebugGuiManager;

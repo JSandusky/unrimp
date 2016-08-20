@@ -35,7 +35,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class CompositorInstance;
+	class CompositorWorkspaceInstance;
 }
 
 
@@ -88,7 +88,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::CompositorInstance* mCompositorInstance;
+	RendererRuntime::CompositorWorkspaceInstance* mCompositorWorkspaceInstance;
 
 
 };

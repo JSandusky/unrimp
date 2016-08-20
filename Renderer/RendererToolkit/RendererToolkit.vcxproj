@@ -33,7 +33,8 @@
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherLinux.h" />
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherOSX.h" />
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherWin32.h" />
-    <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorNodeAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorWorkspaceAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\IAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\MaterialBlueprintAssetCompiler.h" />
@@ -72,7 +73,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherWin32.cpp" />
-    <ClCompile Include="src\AssetCompiler\CompositorAssetCompiler.cpp" />
+    <ClCompile Include="src\AssetCompiler\CompositorNodeAssetCompiler.cpp" />
+    <ClCompile Include="src\AssetCompiler\CompositorWorkspaceAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MaterialAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MaterialBlueprintAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\MeshAssetCompiler.cpp" />

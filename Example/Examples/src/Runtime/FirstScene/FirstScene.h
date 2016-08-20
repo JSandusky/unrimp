@@ -41,7 +41,7 @@ namespace RendererRuntime
 	class ISceneNode;
 	class ISceneResource;
 	class CameraSceneItem;
-	class CompositorInstance;
+	class CompositorWorkspaceInstance;
 }
 
 
@@ -123,13 +123,13 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	RendererRuntime::CompositorInstance* mCompositorInstance;
-	RendererRuntime::ISceneResource*	 mSceneResource;
-	RendererRuntime::MaterialResourceId  mMaterialResourceId;
-	RendererRuntime::MaterialResourceId  mCloneMaterialResourceId;
+	RendererRuntime::CompositorWorkspaceInstance* mCompositorWorkspaceInstance;
+	RendererRuntime::ISceneResource*			  mSceneResource;
+	RendererRuntime::MaterialResourceId			  mMaterialResourceId;
+	RendererRuntime::MaterialResourceId			  mCloneMaterialResourceId;
 	// Crazy raw-pointers to point-of-interest scene stuff
-	RendererRuntime::CameraSceneItem*	 mCameraSceneItem;
-	RendererRuntime::ISceneNode*		 mSceneNode;
+	RendererRuntime::CameraSceneItem* mCameraSceneItem;
+	RendererRuntime::ISceneNode*	  mSceneNode;
 	// Timing
 	Stopwatch mStopwatch;	///< Stopwatch instance
 	float	  mGlobalTimer;	///< Global timer

@@ -38,8 +38,8 @@
 
 #include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/DebugGui/DebugGuiManager.h>
-#include <RendererRuntime/Resource/Compositor/CompositorInstance.h>
-#include <RendererRuntime/Resource/Compositor/CompositorInstanceNode.h>
+#include <RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h>
+#include <RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h>
 
 
 //[-------------------------------------------------------]
@@ -48,9 +48,9 @@
 void CompositorInstancePassFirst::execute(RendererRuntime::CameraSceneItem*)
 {
 	// Well right now I'm not that creative and the purpose of this example is to show how to add custom compositor passes, so, draw a simple text
-	const RendererRuntime::CompositorInstance& compositorInstance = getCompositorInstanceNode().getCompositorInstance();
-	RendererRuntime::DebugGuiManager& debugGuiManager = compositorInstance.getRendererRuntime().getDebugGuiManager();
-	debugGuiManager.newFrame(*compositorInstance.getExecutionRenderTarget());	// We know that the render target must be valid if we're in here
+	const RendererRuntime::CompositorWorkspaceInstance& compositorWorkspaceInstance = getCompositorNodeInstance().getCompositorWorkspaceInstance();
+	RendererRuntime::DebugGuiManager& debugGuiManager = compositorWorkspaceInstance.getRendererRuntime().getDebugGuiManager();
+	debugGuiManager.newFrame(*compositorWorkspaceInstance.getExecutionRenderTarget());	// We know that the render target must be valid if we're in here
 	debugGuiManager.drawText("42", 100.0f, 100.0f);
 	debugGuiManager.renderFrame();
 }
@@ -59,8 +59,8 @@ void CompositorInstancePassFirst::execute(RendererRuntime::CameraSceneItem*)
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-CompositorInstancePassFirst::CompositorInstancePassFirst(const CompositorResourcePassFirst& compositorResourcePassFirst, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode) :
-	ICompositorInstancePass(compositorResourcePassFirst, compositorInstanceNode)
+CompositorInstancePassFirst::CompositorInstancePassFirst(const CompositorResourcePassFirst& compositorResourcePassFirst, const RendererRuntime::CompositorNodeInstance& compositorNodeInstance) :
+	ICompositorInstancePass(compositorResourcePassFirst, compositorNodeInstance)
 {
 	// Nothing here
 }

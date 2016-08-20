@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <RendererRuntime/Resource/Compositor/Pass/ICompositorResourcePass.h>
+#include <RendererRuntime/Resource/CompositorNode/Pass/ICompositorResourcePass.h>
 
 
 //[-------------------------------------------------------]

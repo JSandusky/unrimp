@@ -28,7 +28,7 @@
 #include "RendererRuntime/Resource/Scene/Node/ISceneNode.h"
 #include "RendererRuntime/Resource/Scene/Item/MeshSceneItem.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
-#include "RendererRuntime/Resource/Compositor/CompositorInstance.h"
+#include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
@@ -508,16 +508,16 @@ namespace RendererRuntime
 		return glm::inverse(::detail::convertOpenVrMatrixToGlmMat4(mVrSystem->GetEyeToHeadTransform(static_cast<vr::Hmd_Eye>(vrEye))));
 	}
 
-	void VrManagerOpenVR::executeCompositorInstance(CompositorInstance& compositorInstance, Renderer::IRenderTarget&, CameraSceneItem* cameraSceneItem)
+	void VrManagerOpenVR::executeCompositorWorkspaceInstance(CompositorWorkspaceInstance& compositorWorkspaceInstance, Renderer::IRenderTarget&, CameraSceneItem* cameraSceneItem)
 	{
 		assert(nullptr != mVrSystem);
 
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mRendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResourceListener();
 		for (int8_t eyeIndex = 0; eyeIndex < 2; ++eyeIndex)
 		{
-			// Execute the compositor instance
+			// Execute the compositor workspace instance
 			materialBlueprintResourceListener.setCurrentRenderedVrEye(static_cast<IMaterialBlueprintResourceListener::VrEye>(eyeIndex));
-			compositorInstance.execute(*mFramebuffer, cameraSceneItem);
+			compositorWorkspaceInstance.execute(*mFramebuffer, cameraSceneItem);
 
 			// Submit the rendered texture to the OpenVR compositor
 			const vr::Texture_t vrTexture = { mColorTexture2D->getInternalResourceHandle(), mVrGraphicsAPIConvention, vr::ColorSpace_Auto };

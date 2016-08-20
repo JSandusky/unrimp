@@ -32,8 +32,7 @@
 #include <RendererRuntime/Resource/Scene/Node/ISceneNode.h>
 #include <RendererRuntime/Resource/Scene/Item/MeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/CameraSceneItem.h>
-#include <RendererRuntime/Resource/Compositor/CompositorInstance.h>
-#include <RendererRuntime/Resource/Compositor/CompositorResourceManager.h>
+#include <RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h>
 #include <RendererRuntime/Resource/Material/MaterialResourceManager.h>
 
@@ -67,7 +66,7 @@ namespace
 //[-------------------------------------------------------]
 FirstScene::FirstScene(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mCompositorInstance(nullptr),
+	mCompositorWorkspaceInstance(nullptr),
 	mSceneResource(nullptr),
 	mMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
 	mCloneMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
@@ -105,8 +104,8 @@ void FirstScene::onInitialization()
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
-		// Create the compositor instance
-		mCompositorInstance = new RendererRuntime::CompositorInstance(*rendererRuntime, "Example/Compositor/Default/FirstScene");
+		// Create the compositor workspace instance
+		mCompositorWorkspaceInstance = new RendererRuntime::CompositorWorkspaceInstance(*rendererRuntime, "Example/CompositorWorkspace/Default/FirstScene");
 
 		// Create the scene resource
 		mSceneResource = rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId("Example/Scene/Default/FirstScene", this);
@@ -128,8 +127,8 @@ void FirstScene::onInitialization()
 void FirstScene::onDeinitialization()
 {
 	// Release the used resources
-	delete mCompositorInstance;
-	mCompositorInstance = nullptr;
+	delete mCompositorWorkspaceInstance;
+	mCompositorWorkspaceInstance = nullptr;
 	delete mSceneResource;
 
 	// Call the base implementation
@@ -178,11 +177,11 @@ void FirstScene::onDrawRequest()
 		Renderer::ISwapChain* swapChain = renderer->getMainSwapChain();
 		if (nullptr != swapChain)
 		{
-			// Execute the compositor instance
-			if (nullptr != mCompositorInstance)
+			// Execute the compositor workspace instance
+			if (nullptr != mCompositorWorkspaceInstance)
 			{
 				// Decide whether or not the VR-manager is used for rendering
-				RendererRuntime::IVrManager& vrManager = mCompositorInstance->getRendererRuntime().getVrManager();
+				RendererRuntime::IVrManager& vrManager = mCompositorWorkspaceInstance->getRendererRuntime().getVrManager();
 				if (vrManager.isRunning())
 				{
 					// No debug GUI in VR-mode for now
@@ -190,15 +189,15 @@ void FirstScene::onDrawRequest()
 					// Update the VR-manager just before rendering
 					vrManager.updateHmdMatrixPose();
 
-					// Execute the compositor instance
-					vrManager.executeCompositorInstance(*mCompositorInstance, *swapChain, mCameraSceneItem);
+					// Execute the compositor workspace instance
+					vrManager.executeCompositorWorkspaceInstance(*mCompositorWorkspaceInstance, *swapChain, mCameraSceneItem);
 				}
 				else
 				{
 					createDebugGui(*swapChain);
 
-					// Execute the compositor instance
-					mCompositorInstance->execute(*swapChain, mCameraSceneItem);
+					// Execute the compositor workspace instance
+					mCompositorWorkspaceInstance->execute(*swapChain, mCameraSceneItem);
 				}
 			}
 		}
@@ -266,7 +265,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 //[-------------------------------------------------------]
 void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
 {
-	if (nullptr != mCompositorInstance && nullptr != mSceneResource)
+	if (nullptr != mCompositorWorkspaceInstance && nullptr != mSceneResource)
 	{
 		mSceneResource->getRendererRuntime().getDebugGuiManager().newFrame(renderTarget);
 		ImGui::Begin("Options");

@@ -98,9 +98,6 @@
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherImpl.h">
       <Filter>External\SimpleFileWatcher</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorAssetCompiler.h">
-      <Filter>Source Files\AssetCompiler</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SceneAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
@@ -127,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="include\RendererToolkit\Helper\StringHelper.h">
       <Filter>Source Files\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorWorkspaceAssetCompiler.h">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorNodeAssetCompiler.h">
+      <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -160,9 +163,6 @@
     <ClCompile Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcher.cpp">
       <Filter>External\SimpleFileWatcher</Filter>
     </ClCompile>
-    <ClCompile Include="src\AssetCompiler\CompositorAssetCompiler.cpp">
-      <Filter>Source Files\AssetCompiler</Filter>
-    </ClCompile>
     <ClCompile Include="src\AssetCompiler\SceneAssetCompiler.cpp">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
@@ -189,6 +189,12 @@
     </ClCompile>
     <ClCompile Include="src\Helper\StringHelper.cpp">
       <Filter>Source Files\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetCompiler\CompositorWorkspaceAssetCompiler.cpp">
+      <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetCompiler\CompositorNodeAssetCompiler.cpp">
+      <Filter>Source Files\AssetCompiler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

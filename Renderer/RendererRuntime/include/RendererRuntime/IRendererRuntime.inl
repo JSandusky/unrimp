@@ -93,9 +93,14 @@ namespace RendererRuntime
 		return *mSceneResourceManager;
 	}
 
-	inline CompositorResourceManager& IRendererRuntime::getCompositorResourceManager() const
+	inline CompositorNodeResourceManager& IRendererRuntime::getCompositorNodeResourceManager() const
 	{
-		return *mCompositorResourceManager;
+		return *mCompositorNodeResourceManager;
+	}
+
+	inline CompositorWorkspaceResourceManager& IRendererRuntime::getCompositorWorkspaceResourceManager() const
+	{
+		return *mCompositorWorkspaceResourceManager;
 	}
 
 	inline const IRendererRuntime::ResourceManagers& IRendererRuntime::getResourceManagers() const
@@ -137,7 +142,8 @@ namespace RendererRuntime
 		mSkeletonResourceManager(nullptr),
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
-		mCompositorResourceManager(nullptr),
+		mCompositorNodeResourceManager(nullptr),
+		mCompositorWorkspaceResourceManager(nullptr),
 		// Misc
 		mPipelineStateCompiler(nullptr),
 		// Optional
@@ -162,7 +168,8 @@ namespace RendererRuntime
 		mSkeletonResourceManager(nullptr),
 		mMeshResourceManager(nullptr),
 		mSceneResourceManager(nullptr),
-		mCompositorResourceManager(nullptr),
+		mCompositorNodeResourceManager(nullptr),
+		mCompositorWorkspaceResourceManager(nullptr),
 		// Misc
 		mPipelineStateCompiler(nullptr),
 		// Optional

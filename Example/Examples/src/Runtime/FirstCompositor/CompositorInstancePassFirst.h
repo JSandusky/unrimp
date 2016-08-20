@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <RendererRuntime/Resource/Compositor/Pass/ICompositorInstancePass.h>
+#include <RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h>
 
 
 //[-------------------------------------------------------]
@@ -60,7 +60,7 @@ protected:
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
 protected:
-	CompositorInstancePassFirst(const CompositorResourcePassFirst& compositorResourcePassFirst, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode);
+	CompositorInstancePassFirst(const CompositorResourcePassFirst& compositorResourcePassFirst, const RendererRuntime::CompositorNodeInstance& compositorNodeInstance);
 	virtual ~CompositorInstancePassFirst();
 	CompositorInstancePassFirst(const CompositorInstancePassFirst&) = delete;
 	CompositorInstancePassFirst& operator=(const CompositorInstancePassFirst&) = delete;

@@ -56,10 +56,11 @@ namespace RendererRuntime
 	class TextureResourceManager;
 	class MaterialResourceManager;
 	class SkeletonResourceManager;
-	class CompositorResourceManager;
 	class ShaderPieceResourceManager;
+	class CompositorNodeResourceManager;
 	class ShaderBlueprintResourceManager;
 	class MaterialBlueprintResourceManager;
+	class CompositorWorkspaceResourceManager;
 }
 
 
@@ -220,12 +221,21 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the compositor resource manager instance
+		*    Return the compositor node resource manager instance
 		*
 		*  @return
-		*    The compositor resource manager instance, do not release the returned instance
+		*    The compositor node resource manager instance, do not release the returned instance
 		*/
-		inline CompositorResourceManager& getCompositorResourceManager() const;
+		inline CompositorNodeResourceManager& getCompositorNodeResourceManager() const;
+
+		/**
+		*  @brief
+		*    Return the compositor workspace resource manager instance
+		*
+		*  @return
+		*    The compositor workspace resource manager instance, do not release the returned instance
+		*/
+		inline CompositorWorkspaceResourceManager& getCompositorWorkspaceResourceManager() const;
 
 		/**
 		*  @brief
@@ -346,7 +356,8 @@ namespace RendererRuntime
 		SkeletonResourceManager*			mSkeletonResourceManager;
 		MeshResourceManager*				mMeshResourceManager;
 		SceneResourceManager*				mSceneResourceManager;
-		CompositorResourceManager*			mCompositorResourceManager;
+		CompositorNodeResourceManager*		mCompositorNodeResourceManager;
+		CompositorWorkspaceResourceManager*	mCompositorWorkspaceResourceManager;
 		ResourceManagers					mResourceManagers;
 		// Misc
 		PipelineStateCompiler* mPipelineStateCompiler;

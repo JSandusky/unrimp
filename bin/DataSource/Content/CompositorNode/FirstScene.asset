@@ -1,0 +1,23 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "19",
+			"AssetType": "CompositorNode",
+			"AssetCategory": "Default",
+			"AssetName": "FirstScene",
+			"FileDependencies": [ "FirstScene.compositor_node" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"CompositorNodeAssetCompiler":
+		{
+			"InputFile": "FirstScene.compositor_node"
+		}
+	}
+}

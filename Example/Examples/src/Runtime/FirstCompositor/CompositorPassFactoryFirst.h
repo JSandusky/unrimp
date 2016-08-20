@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <RendererRuntime/Resource/Compositor/Pass/CompositorPassFactory.h>
+#include <RendererRuntime/Resource/CompositorNode/Pass/CompositorPassFactory.h>
 
 
 //[-------------------------------------------------------]
@@ -50,7 +50,7 @@ public:
 //[-------------------------------------------------------]
 protected:
 	virtual RendererRuntime::ICompositorResourcePass* createCompositorResourcePass(RendererRuntime::CompositorPassTypeId compositorPassTypeId) const override;
-	virtual RendererRuntime::ICompositorInstancePass* createCompositorInstancePass(const RendererRuntime::ICompositorResourcePass& compositorResourcePass, const RendererRuntime::CompositorInstanceNode& compositorInstanceNode) const override;
+	virtual RendererRuntime::ICompositorInstancePass* createCompositorInstancePass(const RendererRuntime::ICompositorResourcePass& compositorResourcePass, const RendererRuntime::CompositorNodeInstance& compositorNodeInstance) const override;
 
 
 //[-------------------------------------------------------]

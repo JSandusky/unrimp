@@ -78,7 +78,7 @@ namespace RendererRuntime
 		virtual glm::mat4 getHmdViewSpaceToClipSpaceMatrix(VrEye vrEye, float nearZ, float farZ) const override;
 		virtual glm::mat4 getHmdEyeSpaceToHeadSpaceMatrix(VrEye vrEye) const override;
 		inline virtual const glm::mat4& getHmdPoseMatrix() const override;
-		virtual void executeCompositorInstance(CompositorInstance& compositorInstance, Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem) override;
+		virtual void executeCompositorWorkspaceInstance(CompositorWorkspaceInstance& compositorWorkspaceInstance, Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem) override;
 
 
 	//[-------------------------------------------------------]

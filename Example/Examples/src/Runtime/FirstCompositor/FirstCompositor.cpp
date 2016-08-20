@@ -36,8 +36,8 @@
 #include "Runtime/FirstCompositor/FirstCompositor.h"
 #include "Runtime/FirstCompositor/CompositorPassFactoryFirst.h"
 
-#include <RendererRuntime/Resource/Compositor/CompositorInstance.h>
-#include <RendererRuntime/Resource/Compositor/CompositorResourceManager.h>
+#include <RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h>
+#include <RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h>
 
 
 //[-------------------------------------------------------]
@@ -67,7 +67,7 @@ namespace
 //[-------------------------------------------------------]
 FirstCompositor::FirstCompositor(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
-	mCompositorInstance(nullptr)
+	mCompositorWorkspaceInstance(nullptr)
 {
 	// Nothing to do in here
 }
@@ -92,24 +92,24 @@ void FirstCompositor::onInitialization()
 	if (nullptr != rendererRuntime)
 	{
 		// Set our custom compositor pass factory
-		rendererRuntime->getCompositorResourceManager().setCompositorPassFactory(&::detail::compositorPassFactoryFirst);
+		rendererRuntime->getCompositorNodeResourceManager().setCompositorPassFactory(&::detail::compositorPassFactoryFirst);
 
-		// Create the compositor instance
-		mCompositorInstance = new RendererRuntime::CompositorInstance(*rendererRuntime, "Example/Compositor/Default/FirstCompositor");
+		// Create the compositor workspace instance
+		mCompositorWorkspaceInstance = new RendererRuntime::CompositorWorkspaceInstance(*rendererRuntime, "Example/CompositorWorkspace/Default/First");
 	}
 }
 
 void FirstCompositor::onDeinitialization()
 {
 	// TODO(co) Implement decent resource handling
-	delete mCompositorInstance;
-	mCompositorInstance = nullptr;
+	delete mCompositorWorkspaceInstance;
+	mCompositorWorkspaceInstance = nullptr;
 
 	// Be polite and unset our custom compositor pass factory
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
-		rendererRuntime->getCompositorResourceManager().setCompositorPassFactory(nullptr);
+		rendererRuntime->getCompositorNodeResourceManager().setCompositorPassFactory(nullptr);
 	}
 
 	// Call the base implementation
@@ -118,15 +118,15 @@ void FirstCompositor::onDeinitialization()
 
 void FirstCompositor::onDrawRequest()
 {
-	// Is there a compositor instance?
-	if (nullptr != mCompositorInstance)
+	// Is there a compositor workspace instance?
+	if (nullptr != mCompositorWorkspaceInstance)
 	{
 		// Get the main swap chain and ensure there's one
 		Renderer::ISwapChain* swapChain = getRenderer()->getMainSwapChain();
 		if (nullptr != swapChain)
 		{
-			// Execute the compositor instance
-			mCompositorInstance->execute(*swapChain, nullptr);
+			// Execute the compositor workspace instance
+			mCompositorWorkspaceInstance->execute(*swapChain, nullptr);
 		}
 	}
 }

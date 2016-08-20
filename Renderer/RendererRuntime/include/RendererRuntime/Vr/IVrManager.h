@@ -48,7 +48,7 @@ namespace RendererRuntime
 {
 	class ISceneResource;
 	class CameraSceneItem;
-	class CompositorInstance;
+	class CompositorWorkspaceInstance;
 }
 
 
@@ -120,7 +120,7 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Render (only valid if manager is running)             ]
 		//[-------------------------------------------------------]
-		virtual void executeCompositorInstance(CompositorInstance& compositorInstance, Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem) = 0;
+		virtual void executeCompositorWorkspaceInstance(CompositorWorkspaceInstance& compositorWorkspaceInstance, Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem) = 0;
 
 
 	//[-------------------------------------------------------]

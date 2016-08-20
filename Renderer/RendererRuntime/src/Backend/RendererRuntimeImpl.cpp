@@ -35,7 +35,8 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCompiler.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
-#include "RendererRuntime/Resource/Compositor/CompositorResourceManager.h"
+#include "RendererRuntime/Resource/CompositorNode/CompositorNodeResourceManager.h"
+#include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.h"
 #include "RendererRuntime/DebugGui/Detail/DebugGuiManagerWindows.h"
 #include "RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h"
 
@@ -124,7 +125,8 @@ namespace RendererRuntime
 		mSkeletonResourceManager = new SkeletonResourceManager(*this);
 		mMeshResourceManager = new MeshResourceManager(*this);
 		mSceneResourceManager = new SceneResourceManager(*this);
-		mCompositorResourceManager = new CompositorResourceManager(*this);
+		mCompositorNodeResourceManager = new CompositorNodeResourceManager(*this);
+		mCompositorWorkspaceResourceManager = new CompositorWorkspaceResourceManager(*this);
 
 		// Register the resource managers inside the resource managers list
 		mResourceManagers.push_back(mTextureResourceManager);
@@ -135,7 +137,8 @@ namespace RendererRuntime
 		mResourceManagers.push_back(mSkeletonResourceManager);
 		mResourceManagers.push_back(mMeshResourceManager);
 		mResourceManagers.push_back(mSceneResourceManager);
-		mResourceManagers.push_back(mCompositorResourceManager);
+		mResourceManagers.push_back(mCompositorNodeResourceManager);
+		mResourceManagers.push_back(mCompositorWorkspaceResourceManager);
 
 		// Misc
 		mPipelineStateCompiler = new PipelineStateCompiler(*this);

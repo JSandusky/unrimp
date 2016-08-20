@@ -29,10 +29,11 @@
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MaterialAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/SkeletonAssetCompiler.h"
-#include "RendererToolkit/AssetCompiler/CompositorAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/ShaderPieceAssetCompiler.h"
+#include "RendererToolkit/AssetCompiler/CompositorNodeAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/ShaderBlueprintAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
+#include "RendererToolkit/AssetCompiler/CompositorWorkspaceAssetCompiler.h"
 
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
 
@@ -191,9 +192,13 @@ namespace RendererToolkit
 		{
 			SceneAssetCompiler().compile(input, configuration, output);
 		}
-		else if (CompositorAssetCompiler::TYPE_ID == assetCompilerTypeId)
+		else if (CompositorNodeAssetCompiler::TYPE_ID == assetCompilerTypeId)
 		{
-			CompositorAssetCompiler().compile(input, configuration, output);
+			CompositorNodeAssetCompiler().compile(input, configuration, output);
+		}
+		else if (CompositorWorkspaceAssetCompiler::TYPE_ID == assetCompilerTypeId)
+		{
+			CompositorWorkspaceAssetCompiler().compile(input, configuration, output);
 		}
 		else
 		{

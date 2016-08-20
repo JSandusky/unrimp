@@ -1,0 +1,23 @@
+{
+	"Format":
+	{
+		"Type": "Asset",
+		"Version": "1"
+	},
+	"Asset":
+	{
+		"AssetMetadata":
+		{
+			"AssetId": "9",
+			"AssetType": "CompositorNode",
+			"AssetCategory": "Default",
+			"AssetName": "First",
+			"FileDependencies": [ "First.compositor_node" ],
+			"Copyright": "Copyright (c) 2012-2016 Christian Ofenberg"
+		},
+		"CompositorNodeAssetCompiler":
+		{
+			"InputFile": "First.compositor_node"
+		}
+	}
+}
