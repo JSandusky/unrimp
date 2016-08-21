@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/StringId.h"
+#include "RendererRuntime/Core/Renderer/FramebufferSignature.h"
 
 
 //[-------------------------------------------------------]
@@ -40,8 +41,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId CompositorChannelId;	///< Compositor channel identifier, internally just a POD "uint32_t"
-	typedef StringId CompositorPassTypeId;	///< Compositor pass type identifier, internally just a POD "uint32_t"
+	typedef StringId CompositorChannelId;		///< Compositor channel identifier, internally just a POD "uint32_t"
+	typedef StringId CompositorFramebufferId;	///< Compositor framebuffer identifier, internally just a POD "uint32_t"
+	typedef StringId CompositorPassTypeId;		///< Compositor pass type identifier, internally just a POD "uint32_t"
 
 
 	// -> Compositor node file format content:
@@ -63,6 +65,7 @@ namespace RendererRuntime
 				uint32_t formatType;
 				uint16_t formatVersion;
 				uint32_t numberOfInputChannels;
+				uint32_t numberOfFramebuffers;
 				uint32_t numberOfTargets;
 				uint32_t numberOfOutputChannels;
 			};
@@ -72,15 +75,22 @@ namespace RendererRuntime
 				CompositorChannelId id;
 			};
 
+			struct Framebuffer
+			{
+				CompositorFramebufferId compositorFramebufferId;
+				FramebufferSignature	framebufferSignature;
+			};
+
 			struct Target
 			{
-				CompositorChannelId channelId;
-				uint32_t			numberOfPasses;
+				CompositorChannelId		compositorChannelId;
+				CompositorFramebufferId compositorFramebufferId;
+				uint32_t				numberOfPasses;
 			};
 
 			struct PassHeader
 			{
-				CompositorPassTypeId typeId;
+				CompositorPassTypeId compositorPassTypeId;
 				uint32_t			 numberOfBytes;
 			};
 

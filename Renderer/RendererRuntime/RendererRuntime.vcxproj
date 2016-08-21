@@ -34,6 +34,7 @@
     <None Include="include\RendererRuntime\Core\Thread\ThreadPool.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorChannel.inl" />
+    <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorFramebuffer.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeInstance.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeResource.inl" />
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeResourceManager.inl" />
@@ -157,6 +158,7 @@
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\Public\RendererRuntimeInstance.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorChannel.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorFramebuffer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeInstance.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorNodeResourceManager.h" />

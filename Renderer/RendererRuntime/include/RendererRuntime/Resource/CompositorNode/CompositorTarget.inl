@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/GetUninitialized.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -28,14 +34,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline CompositorTarget::CompositorTarget(CompositorChannelId compositorChannelId) :
-		mCompositorChannelId(compositorChannelId)
+	inline CompositorTarget::CompositorTarget(CompositorChannelId compositorChannelId, CompositorFramebufferId compositorFramebufferId) :
+		mCompositorChannelId(compositorChannelId),
+		mCompositorFramebufferId(compositorFramebufferId)
 	{
 		// Nothing here
 	}
 
 	inline CompositorTarget::CompositorTarget(const CompositorTarget& compositorTarget) :
-		mCompositorChannelId(compositorTarget.mCompositorChannelId)
+		mCompositorChannelId(compositorTarget.mCompositorChannelId),
+		mCompositorFramebufferId(compositorTarget.mCompositorFramebufferId)
 	{
 		// Nothing here
 	}
@@ -48,6 +56,11 @@ namespace RendererRuntime
 	inline CompositorChannelId CompositorTarget::getCompositorChannelId() const
 	{
 		return mCompositorChannelId;
+	}
+
+	inline CompositorFramebufferId CompositorTarget::getCompositorFramebufferId() const
+	{
+		return mCompositorFramebufferId;
 	}
 
 	inline void CompositorTarget::setNumberOfCompositorResourcePasses(uint32_t compositorResourcePasses)

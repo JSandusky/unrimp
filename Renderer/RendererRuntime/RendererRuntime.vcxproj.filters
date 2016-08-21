@@ -447,6 +447,9 @@
     <None Include="include\RendererRuntime\Core\Renderer\FramebufferSignature.inl">
       <Filter>Source Files\Core\Renderer</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorFramebuffer.inl">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -872,6 +875,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Core\Renderer\FramebufferSignature.h">
       <Filter>Source Files\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorFramebuffer.h">
+      <Filter>Source Files\Resource\CompositorNode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

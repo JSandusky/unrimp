@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/GetUninitialized.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -34,57 +28,40 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline FramebufferSignature::FramebufferSignature() :
-		mWidth(getUninitialized<uint32_t>()),
-		mHeight(getUninitialized<uint32_t>()),
-		mTextureFormat(Renderer::TextureFormat::UNKNOWN)
+	inline CompositorFramebuffer::CompositorFramebuffer(CompositorFramebufferId compositorFramebufferId, const FramebufferSignature& framebufferSignature) :
+		mCompositorFramebufferId(compositorFramebufferId),
+		mFramebufferSignature(framebufferSignature)
 	{
 		// Nothing here
 	}
 
-	inline FramebufferSignature::FramebufferSignature(const FramebufferSignature& framebufferSignature) :
-		mWidth(framebufferSignature.mWidth),
-		mHeight(framebufferSignature.mHeight),
-		mTextureFormat(framebufferSignature.mTextureFormat),
-		mFramebufferSignatureId(framebufferSignature.mFramebufferSignatureId)
+	inline CompositorFramebuffer::CompositorFramebuffer(const CompositorFramebuffer& compositorFramebuffer) :
+		mCompositorFramebufferId(compositorFramebuffer.mCompositorFramebufferId),
+		mFramebufferSignature(compositorFramebuffer.mFramebufferSignature)
 	{
 		// Nothing here
 	}
 
-	inline FramebufferSignature::~FramebufferSignature()
+	inline CompositorFramebuffer::~CompositorFramebuffer()
 	{
 		// Nothing here
 	}
 
-	inline FramebufferSignature& FramebufferSignature::operator=(const FramebufferSignature& framebufferSignature)
+	inline CompositorFramebuffer& CompositorFramebuffer::operator=(const CompositorFramebuffer& compositorFramebuffer)
 	{
-		mWidth					= framebufferSignature.mWidth;
-		mHeight					= framebufferSignature.mHeight;
-		mTextureFormat			= framebufferSignature.mTextureFormat;
-		mFramebufferSignatureId	= framebufferSignature.mFramebufferSignatureId;
-
-		// Done
+		mCompositorFramebufferId = compositorFramebuffer.mCompositorFramebufferId;
+		mFramebufferSignature	 = compositorFramebuffer.mFramebufferSignature;
 		return *this;
 	}
 
-	inline uint32_t FramebufferSignature::getWidth() const
+	inline CompositorFramebufferId CompositorFramebuffer::getCompositorFramebufferId() const
 	{
-		return mWidth;
+		return mCompositorFramebufferId;
 	}
 
-	inline uint32_t FramebufferSignature::getHeight() const
+	inline const FramebufferSignature& CompositorFramebuffer::getFramebufferSignature() const
 	{
-		return mHeight;
-	}
-
-	inline Renderer::TextureFormat::Enum FramebufferSignature::getTextureFormat() const
-	{
-		return mTextureFormat;
-	}
-
-	inline FramebufferSignatureId FramebufferSignature::getFramebufferSignatureId() const
-	{
-		return mFramebufferSignatureId;
+		return mFramebufferSignature;
 	}
 
 

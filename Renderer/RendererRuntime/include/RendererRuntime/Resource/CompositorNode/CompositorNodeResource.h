@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Detail/IResource.h"
 #include "RendererRuntime/Resource/CompositorNode/CompositorTarget.h"
+#include "RendererRuntime/Resource/CompositorNode/CompositorFramebuffer.h"
 
 
 //[-------------------------------------------------------]
@@ -74,8 +75,9 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::vector<CompositorChannelId> CompositorChannels;	// TODO(co) Get rid of "std::vector" and dynamic memory handling in here? (need to introduce a maximum number of input channels for this)
-		typedef std::vector<CompositorTarget>	 CompositorTargets;
+		typedef std::vector<CompositorChannelId>   CompositorChannels;	// TODO(co) Get rid of "std::vector" and dynamic memory handling in here? (need to introduce a maximum number of input channels for this)
+		typedef std::vector<CompositorFramebuffer> CompositorFramebuffers;
+		typedef std::vector<CompositorTarget>	   CompositorTargets;
 
 
 	//[-------------------------------------------------------]
@@ -93,10 +95,17 @@ namespace RendererRuntime
 		inline const CompositorChannels& getInputChannels() const;
 
 		//[-------------------------------------------------------]
+		//[ Framebuffers                                          ]
+		//[-------------------------------------------------------]
+		inline void reserveFramebuffers(uint32_t numberOfFramebuffers);
+		inline void addFramebuffer(CompositorFramebufferId compositorFramebufferId, const FramebufferSignature& framebufferSignature);
+		inline const CompositorFramebuffers& getFramebuffers() const;
+
+		//[-------------------------------------------------------]
 		//[ Targets                                               ]
 		//[-------------------------------------------------------]
 		inline void reserveCompositorTargets(uint32_t numberOfCompositorTargets);
-		inline CompositorTarget& addCompositorTarget(CompositorChannelId compositorChannelId);
+		inline CompositorTarget& addCompositorTarget(CompositorChannelId compositorChannelId, CompositorFramebufferId compositorFramebufferId);
 		inline const CompositorTargets& getCompositorTargets() const;
 
 		//[-------------------------------------------------------]
@@ -127,9 +136,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		CompositorChannels mInputChannels;
-		CompositorTargets  mCompositorTargets;
-		CompositorChannels mOutputChannels;
+		CompositorChannels		mInputChannels;
+		CompositorFramebuffers	mCompositorFramebuffers;
+		CompositorTargets		mCompositorTargets;
+		CompositorChannels		mOutputChannels;
 
 
 	};

@@ -43,15 +43,29 @@ namespace RendererRuntime
 		return mInputChannels;
 	}
 
+	inline void CompositorNodeResource::reserveFramebuffers(uint32_t numberOfFramebuffers)
+	{
+		mCompositorFramebuffers.reserve(numberOfFramebuffers);
+	}
+
+	inline void CompositorNodeResource::addFramebuffer(CompositorFramebufferId compositorFramebufferId, const FramebufferSignature& framebufferSignature)
+	{
+		mCompositorFramebuffers.emplace_back(compositorFramebufferId, framebufferSignature);
+	}
+
+	inline const CompositorNodeResource::CompositorFramebuffers& CompositorNodeResource::getFramebuffers() const
+	{
+		return mCompositorFramebuffers;
+	}
+
 	inline void CompositorNodeResource::reserveCompositorTargets(uint32_t numberOfCompositorTargets)
 	{
 		mCompositorTargets.reserve(numberOfCompositorTargets);
 	}
 
-	inline CompositorTarget& CompositorNodeResource::addCompositorTarget(CompositorChannelId compositorChannelId)
+	inline CompositorTarget& CompositorNodeResource::addCompositorTarget(CompositorChannelId compositorChannelId, CompositorFramebufferId compositorFramebufferId)
 	{
-		// TODO(co) Ensure move copy constructor is used
-		mCompositorTargets.push_back(CompositorTarget(compositorChannelId));
+		mCompositorTargets.emplace_back(compositorChannelId, compositorFramebufferId);
 		return mCompositorTargets.back();
 	}
 
@@ -88,6 +102,7 @@ namespace RendererRuntime
 	{
 		// Sanity checks
 		assert(mInputChannels.empty());
+		assert(mCompositorFramebuffers.empty());
 		assert(mCompositorTargets.empty());
 		assert(mOutputChannels.empty());
 	}
@@ -96,6 +111,7 @@ namespace RendererRuntime
 	{
 		// Sanity checks
 		assert(mInputChannels.empty());
+		assert(mCompositorFramebuffers.empty());
 		assert(mCompositorTargets.empty());
 		assert(mOutputChannels.empty());
 

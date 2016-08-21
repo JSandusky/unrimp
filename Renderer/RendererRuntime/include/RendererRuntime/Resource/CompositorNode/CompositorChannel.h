@@ -42,7 +42,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Compositor node resource channel
+	*    Compositor node resource channel; used for data transport between compositor workspace and nodes
 	*
 	*  @note
 	*    - Named in short just compositor channel because there's no instance variant

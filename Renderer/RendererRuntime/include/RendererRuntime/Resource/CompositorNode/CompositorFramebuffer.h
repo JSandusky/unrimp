@@ -28,19 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/StringId.h"
-#include "RendererRuntime/Core/NonCopyable.h"
-
-#include <vector>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class ICompositorPassFactory;
-	class ICompositorResourcePass;
-}
+#include "RendererRuntime/Core/Renderer/FramebufferSignature.h"
 
 
 //[-------------------------------------------------------]
@@ -53,9 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId CompositorChannelId;		///< Compositor channel identifier, internally just a POD "uint32_t"
 	typedef StringId CompositorFramebufferId;	///< Compositor framebuffer identifier, internally just a POD "uint32_t"
-	typedef StringId CompositorPassTypeId;		///< Compositor pass type identifier, internally just a POD "uint32_t"
 
 
 	//[-------------------------------------------------------]
@@ -63,57 +49,30 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Compositor node resource target
-	*
-	*  @note
-	*    - Named in short just compositor target because there's no instance variant
-	*    - Render target might be compositor channel (external interconnection) or compositor framebuffer (node internal processing)
+	*    Compositor framebuffer; used for compositor workspace and nodes intermediate rendering results
 	*/
-	class CompositorTarget : protected NonCopyable
+	class CompositorFramebuffer : protected NonCopyable
 	{
-
-
-	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		typedef std::vector<ICompositorResourcePass*> CompositorResourcePasses;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline explicit CompositorTarget(CompositorChannelId compositorChannelId, CompositorFramebufferId compositorFramebufferId);
-		inline explicit CompositorTarget(const CompositorTarget& compositorTarget);
-		inline ~CompositorTarget();
-
-		inline CompositorChannelId getCompositorChannelId() const;
+		inline CompositorFramebuffer(CompositorFramebufferId compositorFramebufferId, const FramebufferSignature& framebufferSignature);
+		inline explicit CompositorFramebuffer(const CompositorFramebuffer& compositorFramebuffer);
+		inline ~CompositorFramebuffer();
+		inline CompositorFramebuffer& operator=(const CompositorFramebuffer& compositorFramebuffer);
 		inline CompositorFramebufferId getCompositorFramebufferId() const;
-
-		//[-------------------------------------------------------]
-		//[ Passes                                                ]
-		//[-------------------------------------------------------]
-		inline void setNumberOfCompositorResourcePasses(uint32_t numberOfCompositorResourcePasses);
-		ICompositorResourcePass* addCompositorResourcePass(const ICompositorPassFactory& compositorPassFactory, CompositorPassTypeId compositorPassTypeId);
-		inline const CompositorResourcePasses& getCompositorResourcePasses() const;
-		void removeAllCompositorResourcePasses();
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		CompositorTarget& operator=(const CompositorTarget&) = delete;
+		inline const FramebufferSignature& getFramebufferSignature() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		CompositorChannelId		 mCompositorChannelId;
-		CompositorFramebufferId	 mCompositorFramebufferId;
-		CompositorResourcePasses mCompositorResourcePasses;	///< We're responsible for destroying the instances if we no longer need them
+		CompositorFramebufferId mCompositorFramebufferId;
+		FramebufferSignature	mFramebufferSignature;
 
 
 	};
@@ -128,4 +87,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/CompositorNode/CompositorTarget.inl"
+#include "RendererRuntime/Resource/CompositorNode/CompositorFramebuffer.inl"

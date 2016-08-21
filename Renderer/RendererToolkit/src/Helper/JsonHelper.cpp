@@ -227,6 +227,41 @@ namespace RendererToolkit
 		return input.getCompiledAssetIdBySourceAssetId(static_cast<uint32_t>(std::atoi(rapidJsonValue[propertyName].GetString())));
 	}
 
+	Renderer::TextureFormat::Enum JsonHelper::mandatoryTextureFormat(const rapidjson::Value& rapidJsonValue)
+	{
+		const rapidjson::Value& rapidJsonValueUsage = rapidJsonValue["TextureFormat"];
+		const char* valueAsString = rapidJsonValueUsage.GetString();
+		const rapidjson::SizeType valueStringLength = rapidJsonValueUsage.GetStringLength();
+
+		// Define helper macros
+		#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) return Renderer::TextureFormat::name;
+		#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) return Renderer::TextureFormat::name;
+
+		// Evaluate value
+		IF_VALUE(A8)
+		ELSE_IF_VALUE(R8G8B8)
+		ELSE_IF_VALUE(R8G8B8A8)
+		ELSE_IF_VALUE(R16G16B16A16F)
+		ELSE_IF_VALUE(R32G32B32A32F)
+		ELSE_IF_VALUE(BC1)
+		ELSE_IF_VALUE(BC2)
+		ELSE_IF_VALUE(BC3)
+		ELSE_IF_VALUE(BC4)
+		ELSE_IF_VALUE(BC5)
+		ELSE_IF_VALUE(ETC1)
+		ELSE_IF_VALUE(D32_FLOAT)
+		ELSE_IF_VALUE(UNKNOWN)
+		else
+		{
+			// TODO(co) Error handling
+			return Renderer::TextureFormat::UNKNOWN;
+		}
+
+		// Undefine helper macros
+		#undef IF_VALUE
+		#undef ELSE_IF_VALUE
+	}
+
 	std::string JsonHelper::getAbsoluteAssetFilename(const IAssetCompiler::Input& input, uint32_t sourceAssetId)
 	{
 		SourceAssetIdToAbsoluteFilename::const_iterator iterator = input.sourceAssetIdToAbsoluteFilename.find(sourceAssetId);

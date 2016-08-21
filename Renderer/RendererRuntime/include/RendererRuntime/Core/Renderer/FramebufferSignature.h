@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/NonCopyable.h"
 
 #include <Renderer/Public/Renderer.h>
@@ -77,7 +78,7 @@ namespace RendererRuntime
 		*  @param[in] textureFormat
 		*    Texture format
 		*/
-		FramebufferSignature(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat);
+		RENDERERRUNTIME_API_EXPORT FramebufferSignature(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat);
 
 		/**
 		*  @brief
@@ -86,7 +87,7 @@ namespace RendererRuntime
 		*  @param[in] framebufferSignature
 		*    Framebuffer signature to copy from
 		*/
-		explicit FramebufferSignature(const FramebufferSignature& framebufferSignature);
+		inline explicit FramebufferSignature(const FramebufferSignature& framebufferSignature);
 
 		/**
 		*  @brief
@@ -98,7 +99,7 @@ namespace RendererRuntime
 		*  @brief
 		*    Copy operator
 		*/
-		FramebufferSignature& operator=(const FramebufferSignature& framebufferSignature);
+		inline FramebufferSignature& operator=(const FramebufferSignature& framebufferSignature);
 
 		//[-------------------------------------------------------]
 		//[ Getter for input data                                 ]

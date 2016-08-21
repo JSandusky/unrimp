@@ -11,6 +11,15 @@
 			"0": "InputRenderTarget",
 			"1": "OutputRenderTarget"
 		},
+		"Framebuffers":
+		{
+			"FramebufferRenderTarget0":
+			{
+				"Width": "TARGET_WIDTH",
+				"Height": "TARGET_HEIGHT",
+				"TextureFormat": "R8G8B8A8"
+			}
+		},
 		"Targets":
 		{
 			"OutputRenderTarget":

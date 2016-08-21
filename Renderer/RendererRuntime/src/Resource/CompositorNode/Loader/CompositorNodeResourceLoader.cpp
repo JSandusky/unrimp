@@ -55,7 +55,7 @@ namespace
 			inputStream.read(reinterpret_cast<char*>(&target), sizeof(RendererRuntime::v1CompositorNode::Target));
 
 			// Create the compositor node resource target instance
-			RendererRuntime::CompositorTarget& compositorTarget = compositorNodeResource.addCompositorTarget(target.channelId);
+			RendererRuntime::CompositorTarget& compositorTarget = compositorNodeResource.addCompositorTarget(target.compositorChannelId, target.compositorFramebufferId);
 
 			// Read in the compositor resource node target passes
 			compositorTarget.setNumberOfCompositorResourcePasses(target.numberOfPasses);
@@ -66,7 +66,7 @@ namespace
 				inputStream.read(reinterpret_cast<char*>(&passHeader), sizeof(RendererRuntime::v1CompositorNode::PassHeader));
 
 				// Create the compositor resource pass
-				RendererRuntime::ICompositorResourcePass* compositorResourcePass = compositorTarget.addCompositorResourcePass(compositorPassFactory, passHeader.typeId);
+				RendererRuntime::ICompositorResourcePass* compositorResourcePass = compositorTarget.addCompositorResourcePass(compositorPassFactory, passHeader.compositorPassTypeId);
 
 				// Deserialize the compositor resource pass
 				if (nullptr != compositorResourcePass && 0 != passHeader.numberOfBytes)
@@ -99,6 +99,15 @@ namespace
 				RendererRuntime::CompositorChannelId channelId;
 				inputStream.read(reinterpret_cast<char*>(&channelId), sizeof(RendererRuntime::CompositorChannelId));
 				compositorNodeResource.addInputChannel(channelId);
+			}
+
+			// TODO(co) Read all framebuffers in a single burst?
+			compositorNodeResource.reserveFramebuffers(compositorNodeHeader.numberOfFramebuffers);
+			for (uint32_t i = 0; i < compositorNodeHeader.numberOfFramebuffers; ++i)
+			{
+				RendererRuntime::v1CompositorNode::Framebuffer framebuffer;
+				inputStream.read(reinterpret_cast<char*>(&framebuffer), sizeof(RendererRuntime::v1CompositorNode::Framebuffer));
+				compositorNodeResource.addFramebuffer(framebuffer.compositorFramebufferId, framebuffer.framebufferSignature);
 			}
 
 			// Read in the compositor node resource targets

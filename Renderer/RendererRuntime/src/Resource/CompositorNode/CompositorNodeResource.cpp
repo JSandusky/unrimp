@@ -57,6 +57,7 @@ namespace RendererRuntime
 	void CompositorNodeResource::deinitializeElement()
 	{
 		mInputChannels.clear();
+		mCompositorFramebuffers.clear();
 		mCompositorTargets.clear();
 		mOutputChannels.clear();
 

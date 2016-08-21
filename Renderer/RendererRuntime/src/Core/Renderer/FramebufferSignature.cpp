@@ -47,26 +47,6 @@ namespace RendererRuntime
 		mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mTextureFormat), sizeof(Renderer::TextureFormat::Enum), mFramebufferSignatureId);
 	}
 
-	FramebufferSignature::FramebufferSignature(const FramebufferSignature& framebufferSignature) :
-		mWidth(framebufferSignature.mWidth),
-		mHeight(framebufferSignature.mHeight),
-		mTextureFormat(framebufferSignature.mTextureFormat),
-		mFramebufferSignatureId(framebufferSignature.mFramebufferSignatureId)
-	{
-		// Nothing here
-	}
-
-	FramebufferSignature& FramebufferSignature::operator=(const FramebufferSignature& framebufferSignature)
-	{
-		mWidth					= framebufferSignature.mWidth;
-		mHeight					= framebufferSignature.mHeight;
-		mTextureFormat			= framebufferSignature.mTextureFormat;
-		mFramebufferSignatureId	= framebufferSignature.mFramebufferSignatureId;
-
-		// Done
-		return *this;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

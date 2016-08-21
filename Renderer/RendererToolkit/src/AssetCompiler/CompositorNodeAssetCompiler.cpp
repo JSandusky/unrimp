@@ -43,6 +43,7 @@
 #pragma warning(pop)
 
 #include <fstream>
+#include <unordered_set>
 
 
 //[-------------------------------------------------------]
@@ -122,17 +123,64 @@ namespace RendererToolkit
 				compositorNodeHeader.formatType			   = RendererRuntime::v1CompositorNode::FORMAT_TYPE;
 				compositorNodeHeader.formatVersion		   = RendererRuntime::v1CompositorNode::FORMAT_VERSION;
 				compositorNodeHeader.numberOfInputChannels = rapidJsonValueInputChannels.MemberCount();
+				compositorNodeHeader.numberOfFramebuffers  = rapidJsonValueCompositorNodeAsset.HasMember("Framebuffers") ? rapidJsonValueCompositorNodeAsset["Framebuffers"].MemberCount() : 0;
 				compositorNodeHeader.numberOfTargets	   = rapidJsonValueTargets.MemberCount();
 				compositorNodeHeader.numberOfOutputChannels	= rapidJsonValueOutputChannels.MemberCount();
 				outputFileStream.write(reinterpret_cast<const char*>(&compositorNodeHeader), sizeof(RendererRuntime::v1CompositorNode::Header));
 			}
 
 			// Write down the compositor resource node input channels
+			std::unordered_set<uint32_t> compositorChannelIds;	// "RendererRuntime::CompositorChannelId"-type
 			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorInputChannels = rapidJsonValueInputChannels.MemberBegin(); rapidJsonMemberIteratorInputChannels != rapidJsonValueInputChannels.MemberEnd(); ++rapidJsonMemberIteratorInputChannels)
 			{
 				RendererRuntime::v1CompositorNode::Channel channel;
-				channel.id = RendererRuntime::StringId(rapidJsonMemberIteratorInputChannels->name.GetString());
+				channel.id = RendererRuntime::StringId(rapidJsonMemberIteratorInputChannels->value.GetString());
 				outputFileStream.write(reinterpret_cast<const char*>(&channel), sizeof(RendererRuntime::v1CompositorNode::Channel));
+
+				// Remember that there's a compositor channel with this ID
+				compositorChannelIds.insert(channel.id);
+			}
+
+			// Write down the compositor framebuffers
+			std::unordered_set<uint32_t> compositorFramebufferIds;	// "RendererRuntime::CompositorFramebufferId"-type
+			if (rapidJsonValueCompositorNodeAsset.HasMember("Framebuffers"))
+			{
+				const rapidjson::Value& rapidJsonValueFramebuffers = rapidJsonValueCompositorNodeAsset["Framebuffers"];
+				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorFramebuffers = rapidJsonValueFramebuffers.MemberBegin(); rapidJsonMemberIteratorFramebuffers != rapidJsonValueFramebuffers.MemberEnd(); ++rapidJsonMemberIteratorFramebuffers)
+				{
+					RendererRuntime::v1CompositorNode::Framebuffer framebuffer;
+					framebuffer.compositorFramebufferId = RendererRuntime::StringId(rapidJsonMemberIteratorFramebuffers->name.GetString());
+					{ // Framebuffer signature
+						const rapidjson::Value& rapidJsonValueFramebuffer = rapidJsonMemberIteratorFramebuffers->value;
+
+						// Width
+						uint32_t width = RendererRuntime::getUninitialized<uint32_t>();
+						const char* valueAsString = rapidJsonValueFramebuffer["Width"].GetString();
+						if (strcmp(valueAsString, "TARGET_WIDTH") != 0)
+						{
+							width = static_cast<uint32_t>(std::atoi(valueAsString));
+						}
+
+						// Height
+						uint32_t height = RendererRuntime::getUninitialized<uint32_t>();
+						valueAsString = rapidJsonValueFramebuffer["Height"].GetString();
+						if (strcmp(valueAsString, "TARGET_HEIGHT") != 0)
+						{
+							height = static_cast<uint32_t>(std::atoi(valueAsString));
+						}
+
+						// Texture format
+						const Renderer::TextureFormat::Enum textureFormat = JsonHelper::mandatoryTextureFormat(rapidJsonValueFramebuffer);
+
+						// Write framebuffer signature
+						// TODO(co) Add sanity checks to be able to detect editing errors (compressed formats are not supported nor unknown formats, check for name conflicts with channels, unused framebuffers etc.)
+						framebuffer.framebufferSignature = RendererRuntime::FramebufferSignature(width, height, textureFormat);
+					}
+					outputFileStream.write(reinterpret_cast<const char*>(&framebuffer), sizeof(RendererRuntime::v1CompositorNode::Framebuffer));
+
+					// Remember that there's a compositor framebuffer with this ID
+					compositorFramebufferIds.insert(framebuffer.compositorFramebufferId);
+				}
 			}
 
 			// Write down the compositor resource node targets
@@ -142,9 +190,12 @@ namespace RendererToolkit
 				const rapidjson::Value& rapidJsonValuePasses = rapidJsonValueTarget["Passes"];
 
 				{ // Write down the compositor resource node target
+				  // -> Render target might be compositor channel (external interconnection) or compositor framebuffer (node internal processing)
+					const uint32_t id = RendererRuntime::StringId(rapidJsonMemberIteratorTargets->name.GetString());
 					RendererRuntime::v1CompositorNode::Target target;
-					target.channelId	  = RendererRuntime::StringId(rapidJsonMemberIteratorTargets->name.GetString());
-					target.numberOfPasses = rapidJsonValuePasses.MemberCount();
+					target.compositorChannelId	   = (compositorChannelIds.find(id) != compositorChannelIds.end()) ? id : RendererRuntime::getUninitialized<uint32_t>();
+					target.compositorFramebufferId = (compositorFramebufferIds.find(id) != compositorFramebufferIds.end()) ? id : RendererRuntime::getUninitialized<uint32_t>();
+					target.numberOfPasses		   = rapidJsonValuePasses.MemberCount();
 					outputFileStream.write(reinterpret_cast<const char*>(&target), sizeof(RendererRuntime::v1CompositorNode::Target));
 				}
 
@@ -152,55 +203,55 @@ namespace RendererToolkit
 				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorPasses = rapidJsonValuePasses.MemberBegin(); rapidJsonMemberIteratorPasses != rapidJsonValuePasses.MemberEnd(); ++rapidJsonMemberIteratorPasses)
 				{
 					const rapidjson::Value& rapidJsonValuePass = rapidJsonMemberIteratorPasses->value;
-					const RendererRuntime::CompositorPassTypeId typeId = RendererRuntime::StringId(rapidJsonMemberIteratorPasses->name.GetString());
+					const RendererRuntime::CompositorPassTypeId compositorPassTypeId = RendererRuntime::StringId(rapidJsonMemberIteratorPasses->name.GetString());
 
 					// Get the compositor resource node target pass type specific data number of bytes
 					// TODO(co) Make this more generic via compositor pass factory
 					uint32_t numberOfBytes = 0;
-					if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == typeId)
+					if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == compositorPassTypeId)
 					{
 						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassClear);
 					}
-					else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == typeId)
+					else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 					{
 						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassQuad);
 					}
-					else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == typeId)
+					else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == compositorPassTypeId)
 					{
 						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassScene);
 					}
-					else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == typeId)
+					else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == compositorPassTypeId)
 					{
 						numberOfBytes = sizeof(RendererRuntime::v1CompositorNode::PassDebugGui);
 					}
 
 					{ // Write down the compositor resource node target pass header
 						RendererRuntime::v1CompositorNode::PassHeader passHeader;
-						passHeader.typeId		 = typeId;
-						passHeader.numberOfBytes = numberOfBytes;
+						passHeader.compositorPassTypeId = compositorPassTypeId;
+						passHeader.numberOfBytes		= numberOfBytes;
 						outputFileStream.write(reinterpret_cast<const char*>(&passHeader), sizeof(RendererRuntime::v1CompositorNode::PassHeader));
 					}
 
 					// Write down the compositor resource node target pass type specific data, if there is any
 					if (0 != numberOfBytes)
 					{
-						if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == typeId)
+						if (RendererRuntime::CompositorResourcePassClear::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassClear passClear;
 							JsonHelper::optionalFloatNProperty(rapidJsonValuePass, "Color", passClear.color, 4);
 							outputFileStream.write(reinterpret_cast<const char*>(&passClear), sizeof(RendererRuntime::v1CompositorNode::PassClear));
 						}
-						else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == typeId)
+						else if (RendererRuntime::CompositorResourcePassQuad::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassQuad passQuad;
 							outputFileStream.write(reinterpret_cast<const char*>(&passQuad), sizeof(RendererRuntime::v1CompositorNode::PassQuad));
 						}
-						else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == typeId)
+						else if (RendererRuntime::CompositorResourcePassScene::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassScene passScene;
 							outputFileStream.write(reinterpret_cast<const char*>(&passScene), sizeof(RendererRuntime::v1CompositorNode::PassScene));
 						}
-						else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == typeId)
+						else if (RendererRuntime::CompositorResourcePassDebugGui::TYPE_ID == compositorPassTypeId)
 						{
 							RendererRuntime::v1CompositorNode::PassDebugGui passDebugGui;
 							outputFileStream.write(reinterpret_cast<const char*>(&passDebugGui), sizeof(RendererRuntime::v1CompositorNode::PassDebugGui));
