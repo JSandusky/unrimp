@@ -25,10 +25,9 @@
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/Loader/CompositorWorkspaceResourceLoader.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
+#include "RendererRuntime/Core/Renderer/FramebufferManager.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
-
-#include <cassert>
 
 
 //[-------------------------------------------------------]
@@ -127,9 +126,15 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	CompositorWorkspaceResourceManager::CompositorWorkspaceResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+		mRendererRuntime(rendererRuntime),
+		mFramebufferManager(new FramebufferManager(mRendererRuntime.getRenderer()))
 	{
 		// Nothing here
+	}
+
+	CompositorWorkspaceResourceManager::~CompositorWorkspaceResourceManager()
+	{
+		delete mFramebufferManager;
 	}
 
 	IResourceLoader* CompositorWorkspaceResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)

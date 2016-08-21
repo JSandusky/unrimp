@@ -38,6 +38,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	class FramebufferManager;
 	class ICompositorPassFactory;
 }
 
@@ -81,6 +82,8 @@ namespace RendererRuntime
 		inline const ICompositorPassFactory& getCompositorPassFactory() const;
 		RENDERERRUNTIME_API_EXPORT void setCompositorPassFactory(const ICompositorPassFactory* compositorPassFactory);
 
+		inline FramebufferManager& getFramebufferManager();
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
@@ -97,7 +100,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit CompositorNodeResourceManager(IRendererRuntime& rendererRuntime);
-		inline ~CompositorNodeResourceManager();
+		virtual ~CompositorNodeResourceManager();
 		CompositorNodeResourceManager(const CompositorNodeResourceManager&) = delete;
 		CompositorNodeResourceManager& operator=(const CompositorNodeResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
@@ -110,6 +113,7 @@ namespace RendererRuntime
 		IRendererRuntime&			  mRendererRuntime;			///< Renderer runtime instance, do not destroy the instance
 		CompositorNodeResources		  mCompositorNodeResources;
 		const ICompositorPassFactory* mCompositorPassFactory;	///< Compositor pass factory, always valid, do not destroy the instance
+		FramebufferManager*			  mFramebufferManager;		///< Framebuffer manager, always valid, we're responsible for destroying it if we no longer need it
 
 
 	};

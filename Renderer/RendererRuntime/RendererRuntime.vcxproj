@@ -27,6 +27,8 @@
     <None Include="include\RendererRuntime\Backend\RendererRuntimeImpl.inl" />
     <None Include="include\RendererRuntime\Core\Math\Transform.inl" />
     <None Include="include\RendererRuntime\Core\PackedElementManager.inl" />
+    <None Include="include\RendererRuntime\Core\Renderer\FramebufferManager.inl" />
+    <None Include="include\RendererRuntime\Core\Renderer\FramebufferSignature.inl" />
     <None Include="include\RendererRuntime\Core\StringId.inl" />
     <None Include="include\RendererRuntime\Core\Thread\ThreadManager.inl" />
     <None Include="include\RendererRuntime\Core\Thread\ThreadPool.inl" />
@@ -140,6 +142,8 @@
     <ClInclude Include="include\RendererRuntime\Core\Platform\PlatformManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Platform\PlatformTypes.h" />
     <ClInclude Include="include\RendererRuntime\Core\Platform\WindowsHeader.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Renderer\FramebufferManager.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Renderer\FramebufferSignature.h" />
     <ClInclude Include="include\RendererRuntime\Core\Serializer.h" />
     <ClInclude Include="include\RendererRuntime\Core\String.h" />
     <ClInclude Include="include\RendererRuntime\Core\StringId.h" />
@@ -295,6 +299,8 @@
     <ClCompile Include="src\Core\Math\Transform.cpp" />
     <ClCompile Include="src\Core\Math\Vector3.cpp" />
     <ClCompile Include="src\Core\Platform\PlatformManager.cpp" />
+    <ClCompile Include="src\Core\Renderer\FramebufferManager.cpp" />
+    <ClCompile Include="src\Core\Renderer\FramebufferSignature.cpp" />
     <ClCompile Include="src\Core\String.cpp" />
     <ClCompile Include="src\DebugGui\DebugGuiManager.cpp" />
     <ClCompile Include="src\DebugGui\Detail\DebugGuiManagerWindows.cpp" />

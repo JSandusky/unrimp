@@ -158,6 +158,9 @@
     <Filter Include="Source Files\Resource\CompositorNode\Pass\Scene">
       <UniqueIdentifier>{2f77b235-bf28-4271-8f78-2d9feb12c4f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core\Renderer">
+      <UniqueIdentifier>{af28d1ea-7b90-4933-8b35-5f32286baca7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -437,6 +440,12 @@
     </None>
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorChannel.inl">
       <Filter>Source Files\Resource\CompositorNode</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Core\Renderer\FramebufferManager.inl">
+      <Filter>Source Files\Core\Renderer</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Core\Renderer\FramebufferSignature.inl">
+      <Filter>Source Files\Core\Renderer</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -858,6 +867,12 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorChannel.h">
       <Filter>Source Files\Resource\CompositorNode</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Renderer\FramebufferManager.h">
+      <Filter>Source Files\Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Renderer\FramebufferSignature.h">
+      <Filter>Source Files\Core\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -1099,6 +1114,12 @@
     </ClCompile>
     <ClCompile Include="src\Resource\CompositorNode\CompositorTarget.cpp">
       <Filter>Source Files\Resource\CompositorNode</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Renderer\FramebufferManager.cpp">
+      <Filter>Source Files\Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Renderer\FramebufferSignature.cpp">
+      <Filter>Source Files\Core\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

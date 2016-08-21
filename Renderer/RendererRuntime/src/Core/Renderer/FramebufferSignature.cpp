@@ -21,7 +21,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <cassert>
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Core/Renderer/FramebufferSignature.h"
+#include "RendererRuntime/Core/Math/Math.h"
 
 
 //[-------------------------------------------------------]
@@ -34,29 +36,35 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const CompositorWorkspaceResources& CompositorWorkspaceResourceManager::getCompositorWorkspaceResources() const
+	FramebufferSignature::FramebufferSignature(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat) :
+		mWidth(width),
+		mHeight(height),
+		mTextureFormat(textureFormat),
+		mFramebufferSignatureId(Math::FNV1a_INITIAL_HASH)
 	{
-		return mCompositorWorkspaceResources;
+		mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mWidth), sizeof(uint32_t), mFramebufferSignatureId);
+		mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mHeight), sizeof(uint32_t), mFramebufferSignatureId);
+		mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mTextureFormat), sizeof(Renderer::TextureFormat::Enum), mFramebufferSignatureId);
 	}
 
-	inline FramebufferManager& CompositorWorkspaceResourceManager::getFramebufferManager()
+	FramebufferSignature::FramebufferSignature(const FramebufferSignature& framebufferSignature) :
+		mWidth(framebufferSignature.mWidth),
+		mHeight(framebufferSignature.mHeight),
+		mTextureFormat(framebufferSignature.mTextureFormat),
+		mFramebufferSignatureId(framebufferSignature.mFramebufferSignatureId)
 	{
-		assert(nullptr != mFramebufferManager);
-		return *mFramebufferManager;
+		// Nothing here
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	inline IResource& CompositorWorkspaceResourceManager::getResourceByResourceId(ResourceId resourceId) const
+	FramebufferSignature& FramebufferSignature::operator=(const FramebufferSignature& framebufferSignature)
 	{
-		return mCompositorWorkspaceResources.getElementById(resourceId);
-	}
+		mWidth					= framebufferSignature.mWidth;
+		mHeight					= framebufferSignature.mHeight;
+		mTextureFormat			= framebufferSignature.mTextureFormat;
+		mFramebufferSignatureId	= framebufferSignature.mFramebufferSignatureId;
 
-	inline IResource* CompositorWorkspaceResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
-	{
-		return mCompositorWorkspaceResources.tryGetElementById(resourceId);
+		// Done
+		return *this;
 	}
 
 

@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <cassert>
+#include "RendererRuntime/Core/GetUninitialized.h"
 
 
 //[-------------------------------------------------------]
@@ -34,29 +34,37 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const CompositorWorkspaceResources& CompositorWorkspaceResourceManager::getCompositorWorkspaceResources() const
+	inline FramebufferSignature::FramebufferSignature() :
+		mWidth(getUninitialized<uint32_t>()),
+		mHeight(getUninitialized<uint32_t>()),
+		mTextureFormat(Renderer::TextureFormat::UNKNOWN)
 	{
-		return mCompositorWorkspaceResources;
+		// Nothing here
 	}
 
-	inline FramebufferManager& CompositorWorkspaceResourceManager::getFramebufferManager()
+	inline FramebufferSignature::~FramebufferSignature()
 	{
-		assert(nullptr != mFramebufferManager);
-		return *mFramebufferManager;
+		// Nothing here
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	inline IResource& CompositorWorkspaceResourceManager::getResourceByResourceId(ResourceId resourceId) const
+	inline uint32_t FramebufferSignature::getWidth() const
 	{
-		return mCompositorWorkspaceResources.getElementById(resourceId);
+		return mWidth;
 	}
 
-	inline IResource* CompositorWorkspaceResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
+	inline uint32_t FramebufferSignature::getHeight() const
 	{
-		return mCompositorWorkspaceResources.tryGetElementById(resourceId);
+		return mHeight;
+	}
+
+	inline Renderer::TextureFormat::Enum FramebufferSignature::getTextureFormat() const
+	{
+		return mTextureFormat;
+	}
+
+	inline FramebufferSignatureId FramebufferSignature::getFramebufferSignatureId() const
+	{
+		return mFramebufferSignatureId;
 	}
 
 

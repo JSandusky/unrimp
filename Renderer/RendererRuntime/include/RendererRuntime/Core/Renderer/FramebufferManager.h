@@ -27,19 +27,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/PackedElementManager.h"
-#include "RendererRuntime/Resource/Detail/IResourceManager.h"
-#include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResource.h"
+#include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Core/Renderer/FramebufferSignature.h"
 
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class IRendererRuntime;
-	class FramebufferManager;
-}
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -50,62 +41,72 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef uint32_t																			 CompositorWorkspaceResourceId;	///< POD compositor workspace resource identifier
-	typedef PackedElementManager<CompositorWorkspaceResource, CompositorWorkspaceResourceId, 32> CompositorWorkspaceResources;
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorWorkspaceResourceManager : private IResourceManager
+	class FramebufferManager : private Manager
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-		friend class RendererRuntimeImpl;
+	public:
+		struct FramebufferElement
+		{
+			FramebufferSignature    framebufferSignature;
+			Renderer::IFramebuffer* framebuffer;		///< Always valid for valid elements, no "Renderer::IFramebufferPtr" to not have overhead when internally reallocating
+			uint32_t				numberOfReferences;	///< Number of framebuffer references (don't misuse the renderer framebuffer reference counter for this)
+
+			inline FramebufferElement() :
+				framebuffer(nullptr),
+				numberOfReferences(0)
+			{
+				// Nothing here
+			}
+
+			inline explicit FramebufferElement(const FramebufferSignature& _framebufferSignature) :
+				framebufferSignature(_framebufferSignature),
+				framebuffer(nullptr),
+				numberOfReferences(0)
+			{
+				// Nothing here
+			}
+
+			inline FramebufferElement(const FramebufferSignature& _framebufferSignature, Renderer::IFramebuffer& _framebuffer) :
+				framebufferSignature(_framebufferSignature),
+				framebuffer(&_framebuffer),
+				numberOfReferences(0)
+			{
+				// Nothing here
+			}
+		};
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline const CompositorWorkspaceResources& getCompositorWorkspaceResources() const;
-		RENDERERRUNTIME_API_EXPORT CompositorWorkspaceResourceId loadCompositorWorkspaceResourceByAssetId(AssetId assetId, IResourceListener* resourceListener = nullptr, bool reload = false);	// Asynchronous
-		inline FramebufferManager& getFramebufferManager();
+		inline explicit FramebufferManager(Renderer::IRenderer& renderer);
+		inline ~FramebufferManager();
+		FramebufferManager(const FramebufferManager&) = delete;
+		FramebufferManager& operator=(const FramebufferManager&) = delete;
+		Renderer::IFramebufferPtr addFramebufferBySignature(const FramebufferSignature& framebufferSignature);
+		void releaseFramebufferBySignature(const FramebufferSignature& framebufferSignature);
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	public:
-		inline virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
-		inline virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
-		virtual void reloadResourceByAssetId(AssetId assetId) override;
-		virtual void update() override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		explicit CompositorWorkspaceResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~CompositorWorkspaceResourceManager();
-		CompositorWorkspaceResourceManager(const CompositorWorkspaceResourceManager&) = delete;
-		CompositorWorkspaceResourceManager& operator=(const CompositorWorkspaceResourceManager&) = delete;
-		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
+		typedef std::vector<FramebufferElement> SortedFramebufferVector;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&			 mRendererRuntime;				///< Renderer runtime instance, do not destroy the instance
-		CompositorWorkspaceResources mCompositorWorkspaceResources;
-		FramebufferManager*			 mFramebufferManager;			///< Framebuffer manager, always valid, we're responsible for destroying it if we no longer need it
+		Renderer::IRenderer&	mRenderer;
+		SortedFramebufferVector mSortedFramebufferVector;
 
 
 	};
@@ -120,4 +121,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.inl"
+#include "RendererRuntime/Core/Renderer/FramebufferManager.inl"

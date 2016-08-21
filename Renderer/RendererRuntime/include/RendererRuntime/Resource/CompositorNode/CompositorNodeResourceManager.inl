@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <cassert>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -44,6 +50,12 @@ namespace RendererRuntime
 		return *mCompositorPassFactory;
 	}
 
+	inline FramebufferManager& CompositorNodeResourceManager::getFramebufferManager()
+	{
+		assert(nullptr != mFramebufferManager);
+		return *mFramebufferManager;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
@@ -56,15 +68,6 @@ namespace RendererRuntime
 	inline IResource* CompositorNodeResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
 	{
 		return mCompositorNodeResources.tryGetElementById(resourceId);
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	inline CompositorNodeResourceManager::~CompositorNodeResourceManager()
-	{
-		// Nothing here
 	}
 
 
