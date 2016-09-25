@@ -42,6 +42,7 @@
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
 	#pragma warning(disable: 4464)	// warning C4464: relative include path contains '..'
+	#pragma warning(disable: 4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
 	#include <glm/glm.hpp>
 	#include <glm/gtc/type_ptr.hpp>
 	#include <glm/gtc/matrix_transform.hpp>
