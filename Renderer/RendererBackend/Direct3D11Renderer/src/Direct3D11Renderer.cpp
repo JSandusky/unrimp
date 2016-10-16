@@ -26,9 +26,9 @@
 #include "Direct3D11Renderer/Direct3D11Debug.h"	// For "DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D11Renderer/Direct3D9RuntimeLinking.h"	//  For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
-#include "Direct3D11Renderer/SwapChain.h"
-#include "Direct3D11Renderer/Framebuffer.h"
 #include "Direct3D11Renderer/RootSignature.h"
+#include "Direct3D11Renderer/RenderTarget/SwapChain.h"
+#include "Direct3D11Renderer/RenderTarget/Framebuffer.h"
 #include "Direct3D11Renderer/Buffer/VertexArray.h"
 #include "Direct3D11Renderer/Buffer/IndexBuffer.h"
 #include "Direct3D11Renderer/Buffer/VertexBuffer.h"

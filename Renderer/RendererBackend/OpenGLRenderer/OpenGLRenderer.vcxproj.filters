@@ -29,6 +29,9 @@
     <Filter Include="Source Files\Buffer">
       <UniqueIdentifier>{d3be2eff-a36d-468c-ab06-7f47731d1622}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RenderTarget">
+      <UniqueIdentifier>{1d093e24-e748-4b56-aaa0-38025506da9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h">
@@ -38,15 +41,6 @@
       <Filter>Source Files\Linux</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Extensions.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Framebuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\FramebufferBind.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\FramebufferDsa.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\IContext.h">
@@ -62,9 +56,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\OpenGLRuntimeLinking.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\SwapChain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\RootSignature.h">
@@ -214,6 +205,18 @@
     <ClInclude Include="include\OpenGLRenderer\Buffer\VertexArray.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\RenderTarget\Framebuffer.h">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\RenderTarget\FramebufferBind.h">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\RenderTarget\FramebufferDsa.h">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\RenderTarget\SwapChain.h">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -228,19 +231,7 @@
     <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
       <Filter>Source Files\Linux</Filter>
     </ClCompile>
-    <ClCompile Include="src\SwapChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Extensions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Framebuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FramebufferBind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FramebufferDsa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\IContext.cpp">
@@ -399,6 +390,18 @@
     <ClCompile Include="src\Buffer\VertexArrayNoVao.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderTarget\FramebufferDsa.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTarget\SwapChain.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTarget\Framebuffer.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTarget\FramebufferBind.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -409,13 +412,7 @@
     <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl">
       <Filter>Source Files\Linux</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\Framebuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\SwapChain.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\RootSignature.inl">
@@ -498,6 +495,12 @@
     </None>
     <None Include="include\OpenGLRenderer\Buffer\VertexArrayVao.inl">
       <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\RenderTarget\Framebuffer.inl">
+      <Filter>Source Files\RenderTarget</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\RenderTarget\SwapChain.inl">
+      <Filter>Source Files\RenderTarget</Filter>
     </None>
   </ItemGroup>
 </Project>

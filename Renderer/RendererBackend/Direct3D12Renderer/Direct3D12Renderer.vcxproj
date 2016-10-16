@@ -24,8 +24,9 @@
     <None Include="include\Direct3D12Renderer\Buffer\UniformBuffer.inl" />
     <None Include="include\Direct3D12Renderer\Buffer\VertexBuffer.inl" />
     <None Include="include\Direct3D12Renderer\Direct3D12Renderer.inl" />
-    <None Include="include\Direct3D12Renderer\Framebuffer.inl" />
     <None Include="include\Direct3D12Renderer\PipelineState\PipelineState.inl" />
+    <None Include="include\Direct3D12Renderer\RenderTarget\Framebuffer.inl" />
+    <None Include="include\Direct3D12Renderer\RenderTarget\SwapChain.inl" />
     <None Include="include\Direct3D12Renderer\RootSignature.inl" />
     <None Include="include\Direct3D12Renderer\Shader\FragmentShaderHlsl.inl" />
     <None Include="include\Direct3D12Renderer\Shader\GeometryShaderHlsl.inl" />
@@ -33,7 +34,6 @@
     <None Include="include\Direct3D12Renderer\Shader\TessellationControlShaderHlsl.inl" />
     <None Include="include\Direct3D12Renderer\Shader\TessellationEvaluationShaderHlsl.inl" />
     <None Include="include\Direct3D12Renderer\Shader\VertexShaderHlsl.inl" />
-    <None Include="include\Direct3D12Renderer\SwapChain.inl" />
     <None Include="include\Direct3D12Renderer\Texture\SamplerState.inl" />
     <None Include="include\Direct3D12Renderer\Texture\Texture2D.inl" />
     <None Include="include\Direct3D12Renderer\Texture\Texture2DArray.inl" />
@@ -50,10 +50,11 @@
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12Debug.h" />
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12Renderer.h" />
     <ClInclude Include="include\Direct3D12Renderer\Direct3D12RuntimeLinking.h" />
-    <ClInclude Include="include\Direct3D12Renderer\Framebuffer.h" />
     <ClInclude Include="include\Direct3D12Renderer\Guid.h" />
     <ClInclude Include="include\Direct3D12Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D12Renderer\PipelineState\PipelineState.h" />
+    <ClInclude Include="include\Direct3D12Renderer\RenderTarget\Framebuffer.h" />
+    <ClInclude Include="include\Direct3D12Renderer\RenderTarget\SwapChain.h" />
     <ClInclude Include="include\Direct3D12Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D12Renderer\Shader\FragmentShaderHlsl.h" />
     <ClInclude Include="include\Direct3D12Renderer\Shader\GeometryShaderHlsl.h" />
@@ -62,7 +63,6 @@
     <ClInclude Include="include\Direct3D12Renderer\Shader\TessellationControlShaderHlsl.h" />
     <ClInclude Include="include\Direct3D12Renderer\Shader\TessellationEvaluationShaderHlsl.h" />
     <ClInclude Include="include\Direct3D12Renderer\Shader\VertexShaderHlsl.h" />
-    <ClInclude Include="include\Direct3D12Renderer\SwapChain.h" />
     <ClInclude Include="include\Direct3D12Renderer\Texture\SamplerState.h" />
     <ClInclude Include="include\Direct3D12Renderer\Texture\Texture2D.h" />
     <ClInclude Include="include\Direct3D12Renderer\Texture\Texture2DArray.h" />
@@ -75,10 +75,11 @@
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
     <ClCompile Include="src\Direct3D12Renderer.cpp" />
     <ClCompile Include="src\Direct3D12RuntimeLinking.cpp" />
-    <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\Guid.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\PipelineState\PipelineState.cpp" />
+    <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
+    <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp" />
     <ClCompile Include="src\Shader\GeometryShaderHlsl.cpp" />
@@ -87,7 +88,6 @@
     <ClCompile Include="src\Shader\TessellationControlShaderHlsl.cpp" />
     <ClCompile Include="src\Shader\TessellationEvaluationShaderHlsl.cpp" />
     <ClCompile Include="src\Shader\VertexShaderHlsl.cpp" />
-    <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Texture\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />

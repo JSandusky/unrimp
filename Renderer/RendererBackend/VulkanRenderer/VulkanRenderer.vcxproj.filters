@@ -23,6 +23,9 @@
     <Filter Include="Source Files\Buffer">
       <UniqueIdentifier>{db328687-f375-4f27-98f4-9a6a2492db1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RenderTarget">
+      <UniqueIdentifier>{3c908043-6347-4220-8ca7-b2c1ea4436e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\VulkanRenderer\Windows\ContextWindows.h">
@@ -55,9 +58,6 @@
     <ClInclude Include="include\VulkanRenderer\Extensions.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\Framebuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\VulkanRenderer\IContext.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -71,9 +71,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\VulkanRuntimeLinking.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\SwapChain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\RootSignature.h">
@@ -121,6 +118,12 @@
     <ClInclude Include="include\VulkanRenderer\Buffer\VertexArray.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\RenderTarget\SwapChain.h">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\RenderTarget\Framebuffer.h">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -156,13 +159,7 @@
     <ClCompile Include="src\Shader\GeometryShaderGlsl.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\SwapChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Extensions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Framebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\IContext.cpp">
@@ -219,6 +216,12 @@
     <ClCompile Include="src\Buffer\VertexArray.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderTarget\Framebuffer.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTarget\SwapChain.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -247,13 +250,7 @@
     <None Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\VulkanRenderer\Framebuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\VulkanRenderer\VulkanRenderer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\SwapChain.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\VulkanRenderer\RootSignature.inl">
@@ -294,6 +291,12 @@
     </None>
     <None Include="include\VulkanRenderer\Buffer\VertexArray.inl">
       <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\RenderTarget\Framebuffer.inl">
+      <Filter>Source Files\RenderTarget</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\RenderTarget\SwapChain.inl">
+      <Filter>Source Files\RenderTarget</Filter>
     </None>
   </ItemGroup>
 </Project>

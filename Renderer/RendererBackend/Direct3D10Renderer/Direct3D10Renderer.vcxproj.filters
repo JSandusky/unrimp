@@ -17,6 +17,9 @@
     <Filter Include="Source Files\Buffer">
       <UniqueIdentifier>{06028340-a2fe-403b-b13c-73e6917b5127}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RenderTarget">
+      <UniqueIdentifier>{527d29d1-b472-4ea7-8a23-6a15b07945df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -33,13 +36,7 @@
     <None Include="include\Direct3D10Renderer\Shader\FragmentShaderHlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D10Renderer\SwapChain.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D10Renderer\Direct3D10Renderer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D10Renderer\Framebuffer.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D10Renderer\RootSignature.inl">
@@ -81,6 +78,12 @@
     <None Include="include\Direct3D10Renderer\Buffer\IndexBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
+    <None Include="include\Direct3D10Renderer\RenderTarget\Framebuffer.inl">
+      <Filter>Source Files\RenderTarget</Filter>
+    </None>
+    <None Include="include\Direct3D10Renderer\RenderTarget\SwapChain.inl">
+      <Filter>Source Files\RenderTarget</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D10Renderer\Shader\GeometryShaderHlsl.h">
@@ -98,9 +101,6 @@
     <ClInclude Include="include\Direct3D10Renderer\Shader\FragmentShaderHlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D10Renderer\SwapChain.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D10Renderer\D3D10.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -117,9 +117,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D10Renderer\Direct3D10RuntimeLinking.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D10Renderer\Framebuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D10Renderer\Guid.h">
@@ -170,6 +167,12 @@
     <ClInclude Include="include\Direct3D10Renderer\Buffer\VertexArray.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\RenderTarget\SwapChain.h">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\RenderTarget\Framebuffer.h">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\GeometryShaderHlsl.cpp">
@@ -196,16 +199,10 @@
     <ClCompile Include="src\Direct3D10RuntimeLinking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Framebuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Guid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
@@ -246,6 +243,12 @@
     </ClCompile>
     <ClCompile Include="src\Buffer\VertexArray.cpp">
       <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTarget\SwapChain.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTarget\Framebuffer.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

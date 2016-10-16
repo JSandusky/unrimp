@@ -34,9 +34,6 @@
     <ClInclude Include="include\OpenGLRenderer\Buffer\VertexBufferBind.h" />
     <ClInclude Include="include\OpenGLRenderer\Buffer\VertexBufferDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\Extensions.h" />
-    <ClInclude Include="include\OpenGLRenderer\Framebuffer.h" />
-    <ClInclude Include="include\OpenGLRenderer\FramebufferBind.h" />
-    <ClInclude Include="include\OpenGLRenderer\FramebufferDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\IContext.h" />
     <ClInclude Include="include\OpenGLRenderer\Linux\ContextLinux.h" />
     <ClInclude Include="include\OpenGLRenderer\Mapping.h" />
@@ -48,6 +45,10 @@
     <ClInclude Include="include\OpenGLRenderer\PipelineState\IState.h" />
     <ClInclude Include="include\OpenGLRenderer\PipelineState\PipelineState.h" />
     <ClInclude Include="include\OpenGLRenderer\PipelineState\RasterizerState.h" />
+    <ClInclude Include="include\OpenGLRenderer\RenderTarget\Framebuffer.h" />
+    <ClInclude Include="include\OpenGLRenderer\RenderTarget\FramebufferBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\RenderTarget\FramebufferDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\RenderTarget\SwapChain.h" />
     <ClInclude Include="include\OpenGLRenderer\RootSignature.h" />
     <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\FragmentShaderMonolithic.h" />
     <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\GeometryShaderMonolithic.h" />
@@ -65,7 +66,6 @@
     <ClInclude Include="include\OpenGLRenderer\Shader\Separate\TessellationControlShaderSeparate.h" />
     <ClInclude Include="include\OpenGLRenderer\Shader\Separate\TessellationEvaluationShaderSeparate.h" />
     <ClInclude Include="include\OpenGLRenderer\Shader\Separate\VertexShaderSeparate.h" />
-    <ClInclude Include="include\OpenGLRenderer\SwapChain.h" />
     <ClInclude Include="include\OpenGLRenderer\Texture\SamplerState.h" />
     <ClInclude Include="include\OpenGLRenderer\Texture\SamplerStateBind.h" />
     <ClInclude Include="include\OpenGLRenderer\Texture\SamplerStateDsa.h" />
@@ -97,9 +97,6 @@
     <ClCompile Include="src\Buffer\VertexBufferBind.cpp" />
     <ClCompile Include="src\Buffer\VertexBufferDsa.cpp" />
     <ClCompile Include="src\Extensions.cpp" />
-    <ClCompile Include="src\Framebuffer.cpp" />
-    <ClCompile Include="src\FramebufferBind.cpp" />
-    <ClCompile Include="src\FramebufferDsa.cpp" />
     <ClCompile Include="src\IContext.cpp" />
     <ClCompile Include="src\Linux\ContextLinux.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
@@ -120,6 +117,10 @@
     <ClCompile Include="src\PipelineState\DepthStencilState.cpp" />
     <ClCompile Include="src\PipelineState\PipelineState.cpp" />
     <ClCompile Include="src\PipelineState\RasterizerState.cpp" />
+    <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
+    <ClCompile Include="src\RenderTarget\FramebufferBind.cpp" />
+    <ClCompile Include="src\RenderTarget\FramebufferDsa.cpp" />
+    <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader\Monolithic\FragmentShaderMonolithic.cpp" />
     <ClCompile Include="src\Shader\Monolithic\GeometryShaderMonolithic.cpp" />
@@ -137,7 +138,6 @@
     <ClCompile Include="src\Shader\Separate\TessellationControlShaderSeparate.cpp" />
     <ClCompile Include="src\Shader\Separate\TessellationEvaluationShaderSeparate.cpp" />
     <ClCompile Include="src\Shader\Separate\VertexShaderSeparate.cpp" />
-    <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Texture\SamplerState.cpp" />
     <ClCompile Include="src\Texture\SamplerStateBind.cpp" />
     <ClCompile Include="src\Texture\SamplerStateDsa.cpp" />
@@ -161,7 +161,6 @@
     <None Include="include\OpenGLRenderer\Buffer\VertexArray.inl" />
     <None Include="include\OpenGLRenderer\Buffer\VertexArrayVao.inl" />
     <None Include="include\OpenGLRenderer\Buffer\VertexBuffer.inl" />
-    <None Include="include\OpenGLRenderer\Framebuffer.inl" />
     <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl" />
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl" />
     <None Include="include\OpenGLRenderer\PipelineState\BlendState.inl" />
@@ -169,6 +168,8 @@
     <None Include="include\OpenGLRenderer\PipelineState\IState.inl" />
     <None Include="include\OpenGLRenderer\PipelineState\PipelineState.inl" />
     <None Include="include\OpenGLRenderer\PipelineState\RasterizerState.inl" />
+    <None Include="include\OpenGLRenderer\RenderTarget\Framebuffer.inl" />
+    <None Include="include\OpenGLRenderer\RenderTarget\SwapChain.inl" />
     <None Include="include\OpenGLRenderer\RootSignature.inl" />
     <None Include="include\OpenGLRenderer\Shader\Monolithic\FragmentShaderMonolithic.inl" />
     <None Include="include\OpenGLRenderer\Shader\Monolithic\GeometryShaderMonolithic.inl" />
@@ -182,7 +183,6 @@
     <None Include="include\OpenGLRenderer\Shader\Separate\TessellationControlShaderSeparate.inl" />
     <None Include="include\OpenGLRenderer\Shader\Separate\TessellationEvaluationShaderSeparate.inl" />
     <None Include="include\OpenGLRenderer\Shader\Separate\VertexShaderSeparate.inl" />
-    <None Include="include\OpenGLRenderer\SwapChain.inl" />
     <None Include="include\OpenGLRenderer\Texture\SamplerStateSo.inl" />
     <None Include="include\OpenGLRenderer\Texture\Texture2D.inl" />
     <None Include="include\OpenGLRenderer\Texture\Texture2DArray.inl" />

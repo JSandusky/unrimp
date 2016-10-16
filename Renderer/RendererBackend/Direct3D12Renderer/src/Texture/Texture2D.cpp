@@ -22,12 +22,12 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Texture/Texture2D.h"
+#include "Direct3D12Renderer/RenderTarget/SwapChain.h"	// TODO(co) Remove this
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D12Renderer/D3D12X.h"
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
-#include "Direct3D12Renderer/SwapChain.h"	// TODO(co) Remove this
 
 #include <cassert>
 

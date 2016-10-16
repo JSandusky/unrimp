@@ -17,6 +17,9 @@
     <Filter Include="Source Files\Buffer">
       <UniqueIdentifier>{94b68e4c-0dea-4824-9043-57a0b0f0c01b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RenderTarget">
+      <UniqueIdentifier>{b183ad49-0fa2-4d12-8fc4-b11bfbae3d55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -31,12 +34,6 @@
       <Filter>Source Files\Shader</Filter>
     </None>
     <None Include="include\Direct3D9Renderer\Direct3D9Renderer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D9Renderer\Framebuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D9Renderer\SwapChain.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D9Renderer\RootSignature.inl">
@@ -56,6 +53,12 @@
     </None>
     <None Include="include\Direct3D9Renderer\Buffer\VertexBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\Direct3D9Renderer\RenderTarget\Framebuffer.inl">
+      <Filter>Source Files\RenderTarget</Filter>
+    </None>
+    <None Include="include\Direct3D9Renderer\RenderTarget\SwapChain.inl">
+      <Filter>Source Files\RenderTarget</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -77,16 +80,10 @@
     <ClInclude Include="include\Direct3D9Renderer\Direct3D9RuntimeLinking.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\Framebuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\Guid.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\Mapping.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\SwapChain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\d3d9.h">
@@ -131,6 +128,12 @@
     <ClInclude Include="include\Direct3D9Renderer\Buffer\VertexArray.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D9Renderer\RenderTarget\SwapChain.h">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D9Renderer\RenderTarget\Framebuffer.h">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\ProgramHlsl.cpp">
@@ -151,16 +154,10 @@
     <ClCompile Include="src\Direct3D9RuntimeLinking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Framebuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Guid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
@@ -192,6 +189,12 @@
     </ClCompile>
     <ClCompile Include="src\Buffer\VertexArray.cpp">
       <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTarget\SwapChain.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTarget\Framebuffer.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

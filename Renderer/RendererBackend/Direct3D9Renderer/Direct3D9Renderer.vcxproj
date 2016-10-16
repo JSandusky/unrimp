@@ -23,14 +23,14 @@
     <None Include="include\Direct3D9Renderer\Buffer\IndexBuffer.inl" />
     <None Include="include\Direct3D9Renderer\Buffer\VertexBuffer.inl" />
     <None Include="include\Direct3D9Renderer\Direct3D9Renderer.inl" />
-    <None Include="include\Direct3D9Renderer\Framebuffer.inl" />
     <None Include="include\Direct3D9Renderer\PipelineState\IState.inl" />
     <None Include="include\Direct3D9Renderer\PipelineState\PipelineState.inl" />
+    <None Include="include\Direct3D9Renderer\RenderTarget\Framebuffer.inl" />
+    <None Include="include\Direct3D9Renderer\RenderTarget\SwapChain.inl" />
     <None Include="include\Direct3D9Renderer\RootSignature.inl" />
     <None Include="include\Direct3D9Renderer\Shader\FragmentShaderHlsl.inl" />
     <None Include="include\Direct3D9Renderer\Shader\ProgramHlsl.inl" />
     <None Include="include\Direct3D9Renderer\Shader\VertexShaderHlsl.inl" />
-    <None Include="include\Direct3D9Renderer\SwapChain.inl" />
     <None Include="include\Direct3D9Renderer\Texture\Texture2D.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
@@ -43,7 +43,6 @@
     <ClInclude Include="include\Direct3D9Renderer\Direct3D9Debug.h" />
     <ClInclude Include="include\Direct3D9Renderer\Direct3D9Renderer.h" />
     <ClInclude Include="include\Direct3D9Renderer\Direct3D9RuntimeLinking.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Framebuffer.h" />
     <ClInclude Include="include\Direct3D9Renderer\Guid.h" />
     <ClInclude Include="include\Direct3D9Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D9Renderer\PipelineState\BlendState.h" />
@@ -51,12 +50,13 @@
     <ClInclude Include="include\Direct3D9Renderer\PipelineState\IState.h" />
     <ClInclude Include="include\Direct3D9Renderer\PipelineState\PipelineState.h" />
     <ClInclude Include="include\Direct3D9Renderer\PipelineState\RasterizerState.h" />
+    <ClInclude Include="include\Direct3D9Renderer\RenderTarget\Framebuffer.h" />
+    <ClInclude Include="include\Direct3D9Renderer\RenderTarget\SwapChain.h" />
     <ClInclude Include="include\Direct3D9Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D9Renderer\Shader\FragmentShaderHlsl.h" />
     <ClInclude Include="include\Direct3D9Renderer\Shader\ProgramHlsl.h" />
     <ClInclude Include="include\Direct3D9Renderer\Shader\ShaderLanguageHlsl.h" />
     <ClInclude Include="include\Direct3D9Renderer\Shader\VertexShaderHlsl.h" />
-    <ClInclude Include="include\Direct3D9Renderer\SwapChain.h" />
     <ClInclude Include="include\Direct3D9Renderer\Texture\SamplerState.h" />
     <ClInclude Include="include\Direct3D9Renderer\Texture\Texture2D.h" />
   </ItemGroup>
@@ -66,19 +66,19 @@
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
     <ClCompile Include="src\Direct3D9Renderer.cpp" />
     <ClCompile Include="src\Direct3D9RuntimeLinking.cpp" />
-    <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\Guid.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\PipelineState\BlendState.cpp" />
     <ClCompile Include="src\PipelineState\DepthStencilState.cpp" />
     <ClCompile Include="src\PipelineState\PipelineState.cpp" />
     <ClCompile Include="src\PipelineState\RasterizerState.cpp" />
+    <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
+    <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp" />
     <ClCompile Include="src\Shader\ProgramHlsl.cpp" />
     <ClCompile Include="src\Shader\ShaderLanguageHlsl.cpp" />
     <ClCompile Include="src\Shader\VertexShaderHlsl.cpp" />
-    <ClCompile Include="src\SwapChain.cpp" />
     <ClCompile Include="src\Texture\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
   </ItemGroup>

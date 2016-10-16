@@ -1921,7 +1921,7 @@ namespace Renderer
 		typedef SmartRefCount<IProgram> IProgramPtr;
 	#endif
 
-	// Renderer/IRenderTarget.h
+	// Renderer/RenderTarget/IRenderTarget.h
 	#ifndef __RENDERER_IRENDERTARGET_H__
 	#define __RENDERER_IRENDERTARGET_H__
 		class IRenderTarget : public IResource
@@ -1938,7 +1938,7 @@ namespace Renderer
 		typedef SmartRefCount<IRenderTarget> IRenderTargetPtr;
 	#endif
 
-	// Renderer/ISwapChain.h
+	// Renderer/RenderTarget/ISwapChain.h
 	#ifndef __RENDERER_ISWAPCHAIN_H__
 	#define __RENDERER_ISWAPCHAIN_H__
 		class ISwapChain : public IRenderTarget
@@ -1959,7 +1959,7 @@ namespace Renderer
 		typedef SmartRefCount<ISwapChain> ISwapChainPtr;
 	#endif
 
-	// Renderer/IFramebuffer.h
+	// Renderer/RenderTarget/IFramebuffer.h
 	#ifndef __RENDERER_IFRAMEBUFFER_H__
 	#define __RENDERER_IFRAMEBUFFER_H__
 		class IFramebuffer : public IRenderTarget

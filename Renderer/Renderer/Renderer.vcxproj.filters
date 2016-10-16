@@ -20,6 +20,9 @@
     <Filter Include="Header Files\Buffer">
       <UniqueIdentifier>{a53f6316-f7e6-4adf-a658-40fca9c575ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\RenderTarget">
+      <UniqueIdentifier>{311bc9a0-9c8a-48f0-8554-fac96bbb970c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Renderer\IRenderer.h">
@@ -53,15 +56,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\WindowsHeader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IFramebuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\ISwapChain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IRenderTarget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\Public\Renderer.h">
@@ -163,6 +157,15 @@
     <ClInclude Include="include\Renderer\Buffer\VertexArrayTypes.h">
       <Filter>Header Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\RenderTarget\ISwapChain.h">
+      <Filter>Header Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\RenderTarget\IFramebuffer.h">
+      <Filter>Header Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\RenderTarget\IRenderTarget.h">
+      <Filter>Header Files\RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -188,15 +191,6 @@
     </None>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\Renderer\IFramebuffer.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\ISwapChain.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IRenderTarget.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="include\Renderer\IRootSignature.inl">
       <Filter>Header Files</Filter>
     </None>
@@ -274,6 +268,15 @@
     </None>
     <None Include="include\Renderer\Buffer\IVertexArray.inl">
       <Filter>Header Files\Buffer</Filter>
+    </None>
+    <None Include="include\Renderer\RenderTarget\IRenderTarget.inl">
+      <Filter>Header Files\RenderTarget</Filter>
+    </None>
+    <None Include="include\Renderer\RenderTarget\ISwapChain.inl">
+      <Filter>Header Files\RenderTarget</Filter>
+    </None>
+    <None Include="include\Renderer\RenderTarget\IFramebuffer.inl">
+      <Filter>Header Files\RenderTarget</Filter>
     </None>
   </ItemGroup>
 </Project>
