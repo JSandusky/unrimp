@@ -20,9 +20,6 @@
     <Filter Include="Source Files\Shader\Separate">
       <UniqueIdentifier>{1a52a0d8-8c3c-4f1c-b721-11bccd3a198c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\PipelineState">
-      <UniqueIdentifier>{6794a761-5f92-4fb7-87d1-21e6a12ba69b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{96cf9a96-9584-4e36-92ce-520e261fa76f}</UniqueIdentifier>
     </Filter>
@@ -31,6 +28,9 @@
     </Filter>
     <Filter Include="Source Files\RenderTarget">
       <UniqueIdentifier>{1d093e24-e748-4b56-aaa0-38025506da9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\State">
+      <UniqueIdentifier>{6794a761-5f92-4fb7-87d1-21e6a12ba69b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -109,21 +109,6 @@
     <ClInclude Include="include\OpenGLRenderer\Shader\Separate\GeometryShaderSeparate.h">
       <Filter>Source Files\Shader\Separate</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\PipelineState\DepthStencilState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\PipelineState\IState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\PipelineState\RasterizerState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\PipelineState\BlendState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\PipelineState\PipelineState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Texture\Texture2D.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
@@ -149,18 +134,6 @@
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Texture\TextureBufferDsa.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture\SamplerState.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture\SamplerStateBind.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture\SamplerStateDsa.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture\SamplerStateSo.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBufferDsa.h">
@@ -216,6 +189,33 @@
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\RenderTarget\SwapChain.h">
       <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\State\IState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\State\PipelineState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\State\RasterizerState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\State\BlendState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\State\DepthStencilState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\State\SamplerStateDsa.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\State\SamplerStateSo.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\State\SamplerState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\State\SamplerStateBind.h">
+      <Filter>Source Files\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -297,21 +297,6 @@
     <ClCompile Include="src\Shader\Separate\GeometryShaderSeparate.cpp">
       <Filter>Source Files\Shader\Separate</Filter>
     </ClCompile>
-    <ClCompile Include="src\PipelineState\DepthStencilState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState\RasterizerState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState\BlendState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState\PipelineState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture\SamplerStateSo.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="src\Texture\Texture2D.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
@@ -337,15 +322,6 @@
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Texture\TextureBufferDsa.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture\SamplerState.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture\SamplerStateBind.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture\SamplerStateDsa.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffer\UniformBufferBind.cpp">
@@ -402,6 +378,30 @@
     <ClCompile Include="src\RenderTarget\FramebufferBind.cpp">
       <Filter>Source Files\RenderTarget</Filter>
     </ClCompile>
+    <ClCompile Include="src\State\DepthStencilState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\PipelineState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\RasterizerState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\BlendState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\SamplerStateBind.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\SamplerStateDsa.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\SamplerStateSo.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\SamplerState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -454,21 +454,6 @@
     <None Include="include\OpenGLRenderer\Shader\Separate\GeometryShaderSeparate.inl">
       <Filter>Source Files\Shader\Separate</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\PipelineState\DepthStencilState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\PipelineState\IState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\PipelineState\RasterizerState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\PipelineState\BlendState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\PipelineState\PipelineState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\Texture\Texture2D.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
@@ -476,9 +461,6 @@
       <Filter>Source Files\Texture</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Texture\TextureBuffer.inl">
-      <Filter>Source Files\Texture</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\Texture\SamplerStateSo.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Buffer\UniformBuffer.inl">
@@ -501,6 +483,24 @@
     </None>
     <None Include="include\OpenGLRenderer\RenderTarget\SwapChain.inl">
       <Filter>Source Files\RenderTarget</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\State\IState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\State\PipelineState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\State\RasterizerState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\State\BlendState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\State\DepthStencilState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\State\SamplerStateSo.inl">
+      <Filter>Source Files\State</Filter>
     </None>
   </ItemGroup>
 </Project>

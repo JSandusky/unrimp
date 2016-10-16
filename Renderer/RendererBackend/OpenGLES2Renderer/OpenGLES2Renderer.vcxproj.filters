@@ -24,15 +24,6 @@
     <None Include="include\OpenGLES2Renderer\Shader\ProgramGlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\PipelineState\IState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\PipelineState\RasterizerState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\PipelineState\PipelineState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
     <None Include="include\OpenGLES2Renderer\Texture\Texture2D.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
@@ -57,6 +48,15 @@
     <None Include="include\OpenGLES2Renderer\RenderTarget\Framebuffer.inl">
       <Filter>Source Files\RenderTarget</Filter>
     </None>
+    <None Include="include\OpenGLES2Renderer\State\PipelineState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\State\RasterizerState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\State\IState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -64,9 +64,6 @@
     </Filter>
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{7bb8b8f4-503c-4f55-ba5d-fb493a23cf0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\PipelineState">
-      <UniqueIdentifier>{f5f05164-10f4-4eaf-a925-81f2fd00a245}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{181485a1-0707-4844-9aeb-26d4f2ce0f3d}</UniqueIdentifier>
@@ -76,6 +73,9 @@
     </Filter>
     <Filter Include="Source Files\RenderTarget">
       <UniqueIdentifier>{28fcb3a2-0126-41c3-a14d-4f429a538d5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\State">
+      <UniqueIdentifier>{f5f05164-10f4-4eaf-a925-81f2fd00a245}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -115,25 +115,7 @@
     <ClInclude Include="include\OpenGLES2Renderer\RootSignature.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\IState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\RasterizerState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\BlendState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\DepthStencilState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\PipelineState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\Texture\Texture2DArray.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Texture\SamplerState.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\Texture\Texture2D.h">
@@ -159,6 +141,24 @@
     </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\RenderTarget\Framebuffer.h">
       <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\State\PipelineState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\State\RasterizerState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\State\BlendState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\State\DepthStencilState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\State\IState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\State\SamplerState.h">
+      <Filter>Source Files\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -195,21 +195,6 @@
     <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\PipelineState\DepthStencilState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState\RasterizerState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState\BlendState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState\PipelineState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture\SamplerState.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="src\Texture\Texture2D.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
@@ -236,6 +221,21 @@
     </ClCompile>
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp">
       <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\DepthStencilState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\PipelineState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\RasterizerState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\BlendState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\SamplerState.cpp">
+      <Filter>Source Files\State</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

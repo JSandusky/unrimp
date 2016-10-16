@@ -14,9 +14,6 @@
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{ff27bada-b551-4241-993e-5bd1a3d26246}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\PipelineState">
-      <UniqueIdentifier>{6794a761-5f92-4fb7-87d1-21e6a12ba69b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{692001cc-162e-4a3a-b7bf-53608e86a0ff}</UniqueIdentifier>
     </Filter>
@@ -25,6 +22,9 @@
     </Filter>
     <Filter Include="Source Files\RenderTarget">
       <UniqueIdentifier>{3c908043-6347-4220-8ca7-b2c1ea4436e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\State">
+      <UniqueIdentifier>{6794a761-5f92-4fb7-87d1-21e6a12ba69b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -79,28 +79,10 @@
     <ClInclude Include="include\VulkanRenderer\Helper.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\PipelineState\BlendState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\PipelineState\DepthStencilState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\PipelineState\IState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\PipelineState\RasterizerState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\PipelineState\PipelineState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2DArray.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Texture\TextureBuffer.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\Texture\SamplerState.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2D.h">
@@ -123,6 +105,24 @@
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\RenderTarget\Framebuffer.h">
       <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\State\DepthStencilState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\State\IState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\State\PipelineState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\State\RasterizerState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\State\BlendState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\State\SamplerState.h">
+      <Filter>Source Files\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -180,18 +180,6 @@
     <ClCompile Include="src\Helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\PipelineState\BlendState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState\DepthStencilState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState\RasterizerState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState\PipelineState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
     <ClCompile Include="src\Texture\Texture2D.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
@@ -199,9 +187,6 @@
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Texture\TextureBuffer.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture\SamplerState.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffer\UniformBuffer.cpp">
@@ -221,6 +206,21 @@
     </ClCompile>
     <ClCompile Include="src\RenderTarget\SwapChain.cpp">
       <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\DepthStencilState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\PipelineState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\RasterizerState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\BlendState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\SamplerState.cpp">
+      <Filter>Source Files\State</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -262,15 +262,6 @@
     <None Include="include\VulkanRenderer\IContext.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\VulkanRenderer\PipelineState\IState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\PipelineState\RasterizerState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\PipelineState\PipelineState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
     <None Include="include\VulkanRenderer\Texture\Texture2DArray.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
@@ -297,6 +288,15 @@
     </None>
     <None Include="include\VulkanRenderer\RenderTarget\SwapChain.inl">
       <Filter>Source Files\RenderTarget</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\State\IState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\State\PipelineState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\State\RasterizerState.inl">
+      <Filter>Source Files\State</Filter>
     </None>
   </ItemGroup>
 </Project>

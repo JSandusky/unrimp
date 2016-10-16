@@ -8,9 +8,6 @@
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{6bf0747f-a0d7-4efa-a55b-9b36aa25d0bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\PipelineState">
-      <UniqueIdentifier>{54e1d0d4-4b27-4571-9fef-23de03419593}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{3c083418-afdf-4b27-8d0c-8a6d57e8a299}</UniqueIdentifier>
     </Filter>
@@ -20,6 +17,9 @@
     <Filter Include="Source Files\RenderTarget">
       <UniqueIdentifier>{cc9db7bc-0d37-40af-8d55-f4eb2db34651}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\State">
+      <UniqueIdentifier>{54e1d0d4-4b27-4571-9fef-23de03419593}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -27,11 +27,11 @@
     <None Include="include\NullRenderer\RootSignature.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\NullRenderer\PipelineState\PipelineState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
     <None Include="include\NullRenderer\RenderTarget\SwapChain.inl">
       <Filter>Source Files\RenderTarget</Filter>
+    </None>
+    <None Include="include\NullRenderer\State\PipelineState.inl">
+      <Filter>Source Files\State</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -65,9 +65,6 @@
     <ClInclude Include="include\NullRenderer\RootSignature.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\NullRenderer\PipelineState\PipelineState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
     <ClInclude Include="include\NullRenderer\Texture\Texture2D.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
@@ -75,9 +72,6 @@
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
     <ClInclude Include="include\NullRenderer\Texture\TextureBuffer.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\NullRenderer\Texture\SamplerState.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
     <ClInclude Include="include\NullRenderer\Buffer\UniformBuffer.h">
@@ -97,6 +91,12 @@
     </ClInclude>
     <ClInclude Include="include\NullRenderer\RenderTarget\SwapChain.h">
       <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NullRenderer\State\PipelineState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NullRenderer\State\SamplerState.h">
+      <Filter>Source Files\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -127,9 +127,6 @@
     <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\PipelineState\PipelineState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
     <ClCompile Include="src\Texture\Texture2D.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
@@ -137,9 +134,6 @@
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Texture\TextureBuffer.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture\SamplerState.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffer\IndexBuffer.cpp">
@@ -159,6 +153,12 @@
     </ClCompile>
     <ClCompile Include="src\RenderTarget\SwapChain.cpp">
       <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\PipelineState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\SamplerState.cpp">
+      <Filter>Source Files\State</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

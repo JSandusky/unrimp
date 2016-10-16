@@ -31,10 +31,10 @@
 #include "NullRenderer/Buffer/VertexBuffer.h"
 #include "NullRenderer/Buffer/UniformBuffer.h"
 #include "NullRenderer/Texture/Texture2D.h"
-#include "NullRenderer/Texture/SamplerState.h"
 #include "NullRenderer/Texture/TextureBuffer.h"
 #include "NullRenderer/Texture/Texture2DArray.h"
-#include "NullRenderer/PipelineState/PipelineState.h"
+#include "NullRenderer/State/SamplerState.h"
+#include "NullRenderer/State/PipelineState.h"
 #include "NullRenderer/Shader/Program.h"
 #include "NullRenderer/Shader/ShaderLanguage.h"
 

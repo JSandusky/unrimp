@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/RootSignature.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
-#include "OpenGLRenderer/Texture/SamplerState.h"
+#include "OpenGLRenderer/State/SamplerState.h"
 
 #include <memory.h>
 

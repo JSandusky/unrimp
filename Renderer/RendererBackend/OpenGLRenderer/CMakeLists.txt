@@ -86,9 +86,9 @@ set(SOURCE_CODES
 	src/UniformBuffer.cpp
 	src/UniformBufferBind.cpp
 	src/UniformBufferDsa.cpp
-	src/PipelineState/BlendState.cpp
-	src/PipelineState/DepthStencilState.cpp
-	src/PipelineState/RasterizerState.cpp
+	src/State/BlendState.cpp
+	src/State/DepthStencilState.cpp
+	src/State/RasterizerState.cpp
 	src/Shader/Monolithic/FragmentShaderMonolithic.cpp
 	src/Shader/Monolithic/GeometryShaderMonolithic.cpp
 	src/Shader/Monolithic/ProgramMonolithic.cpp

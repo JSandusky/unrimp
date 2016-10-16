@@ -8,9 +8,6 @@
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{ebcd93d1-1f68-41ad-a8df-ee6c4e0b4000}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\PipelineState">
-      <UniqueIdentifier>{8e3ca793-4003-46a2-ae93-daa7ac48ec75}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{8552b7e7-308a-409e-9821-806a0b605b19}</UniqueIdentifier>
     </Filter>
@@ -19,6 +16,9 @@
     </Filter>
     <Filter Include="Source Files\RenderTarget">
       <UniqueIdentifier>{b183ad49-0fa2-4d12-8fc4-b11bfbae3d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\State">
+      <UniqueIdentifier>{8e3ca793-4003-46a2-ae93-daa7ac48ec75}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,12 +39,6 @@
     <None Include="include\Direct3D9Renderer\RootSignature.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D9Renderer\PipelineState\IState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
-    <None Include="include\Direct3D9Renderer\PipelineState\PipelineState.inl">
-      <Filter>Source Files\PipelineState</Filter>
-    </None>
     <None Include="include\Direct3D9Renderer\Texture\Texture2D.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
@@ -59,6 +53,12 @@
     </None>
     <None Include="include\Direct3D9Renderer\RenderTarget\SwapChain.inl">
       <Filter>Source Files\RenderTarget</Filter>
+    </None>
+    <None Include="include\Direct3D9Renderer\State\IState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\Direct3D9Renderer\State\PipelineState.inl">
+      <Filter>Source Files\State</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -98,25 +98,7 @@
     <ClInclude Include="include\Direct3D9Renderer\RootSignature.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\PipelineState\RasterizerState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\PipelineState\BlendState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\PipelineState\DepthStencilState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\PipelineState\IState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\PipelineState\PipelineState.h">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\Texture\Texture2D.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\Texture\SamplerState.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\Buffer\VertexBuffer.h">
@@ -133,6 +115,24 @@
     </ClInclude>
     <ClInclude Include="include\Direct3D9Renderer\RenderTarget\Framebuffer.h">
       <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D9Renderer\State\DepthStencilState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D9Renderer\State\IState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D9Renderer\State\PipelineState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D9Renderer\State\RasterizerState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D9Renderer\State\BlendState.h">
+      <Filter>Source Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D9Renderer\State\SamplerState.h">
+      <Filter>Source Files\State</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -163,21 +163,6 @@
     <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\PipelineState\DepthStencilState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState\RasterizerState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState\BlendState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState\PipelineState.cpp">
-      <Filter>Source Files\PipelineState</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture\SamplerState.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="src\Texture\Texture2D.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
@@ -195,6 +180,21 @@
     </ClCompile>
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp">
       <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\DepthStencilState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\PipelineState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\RasterizerState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\BlendState.cpp">
+      <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\State\SamplerState.cpp">
+      <Filter>Source Files\State</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -41,8 +41,8 @@ namespace Renderer
 	enum class ResourceType
 	{
 		ROOT_SIGNATURE				   = 0,		///< Root signature
-		PROGRAM						   = 1,		///< Program
-		VERTEX_ARRAY				   = 2,		///< Vertex array object (VAO, input-assembler (IA) stage)
+		PROGRAM						   = 1,		///< Program, "Renderer::IShader"-related
+		VERTEX_ARRAY				   = 2,		///< Vertex array object (VAO, input-assembler (IA) stage), "Renderer::IBuffer"-related
 		// IRenderTarget
 		SWAP_CHAIN					   = 3,		///< Swap chain
 		FRAMEBUFFER					   = 4,		///< Framebuffer object (FBO)

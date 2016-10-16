@@ -11,9 +11,6 @@
     <Filter Include="Header Files\Shader">
       <UniqueIdentifier>{7c63a2a7-3326-4c7a-b824-dc858d5e29bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\PipelineState">
-      <UniqueIdentifier>{cb8820ba-3175-4acd-aec2-231d4b613ab7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Texture">
       <UniqueIdentifier>{b2ad6167-e41d-43a8-a4ef-af72c7942452}</UniqueIdentifier>
     </Filter>
@@ -23,15 +20,15 @@
     <Filter Include="Header Files\RenderTarget">
       <UniqueIdentifier>{311bc9a0-9c8a-48f0-8554-fac96bbb970c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\State">
+      <UniqueIdentifier>{cb8820ba-3175-4acd-aec2-231d4b613ab7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Renderer\IRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\IResource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\Capabilities.h">
@@ -97,21 +94,6 @@
     <ClInclude Include="include\Renderer\Shader\IGeometryShader.h">
       <Filter>Header Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\PipelineState\IPipelineState.h">
-      <Filter>Header Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\PipelineState\PipelineStateTypes.h">
-      <Filter>Header Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\PipelineState\RasterizerStateTypes.h">
-      <Filter>Header Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\PipelineState\BlendStateTypes.h">
-      <Filter>Header Files\PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\PipelineState\DepthStencilStateTypes.h">
-      <Filter>Header Files\PipelineState</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\Texture\ITexture2D.h">
       <Filter>Header Files\Texture</Filter>
     </ClInclude>
@@ -125,12 +107,6 @@
       <Filter>Header Files\Texture</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\Texture\TextureTypes.h">
-      <Filter>Header Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\Texture\ISamplerState.h">
-      <Filter>Header Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\Texture\SamplerStateTypes.h">
       <Filter>Header Files\Texture</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\Buffer\IIndexBuffer.h">
@@ -166,6 +142,30 @@
     <ClInclude Include="include\Renderer\RenderTarget\IRenderTarget.h">
       <Filter>Header Files\RenderTarget</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\State\IPipelineState.h">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\State\PipelineStateTypes.h">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\State\RasterizerStateTypes.h">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\State\BlendStateTypes.h">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\State\DepthStencilStateTypes.h">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\State\IState.h">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\State\ISamplerState.h">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\State\SamplerStateTypes.h">
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -181,9 +181,6 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\SmartRefCount.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IState.inl">
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\Statistics.inl">
@@ -218,21 +215,6 @@
     <None Include="include\Renderer\Shader\IGeometryShader.inl">
       <Filter>Header Files\Shader</Filter>
     </None>
-    <None Include="include\Renderer\PipelineState\DepthStencilStateTypes.inl">
-      <Filter>Header Files\PipelineState</Filter>
-    </None>
-    <None Include="include\Renderer\PipelineState\IPipelineState.inl">
-      <Filter>Header Files\PipelineState</Filter>
-    </None>
-    <None Include="include\Renderer\PipelineState\PipelineStateTypes.inl">
-      <Filter>Header Files\PipelineState</Filter>
-    </None>
-    <None Include="include\Renderer\PipelineState\RasterizerStateTypes.inl">
-      <Filter>Header Files\PipelineState</Filter>
-    </None>
-    <None Include="include\Renderer\PipelineState\BlendStateTypes.inl">
-      <Filter>Header Files\PipelineState</Filter>
-    </None>
     <None Include="include\Renderer\Texture\ITexture2D.inl">
       <Filter>Header Files\Texture</Filter>
     </None>
@@ -246,9 +228,6 @@
       <Filter>Header Files\Texture</Filter>
     </None>
     <None Include="include\Renderer\Texture\TextureTypes.inl">
-      <Filter>Header Files\Texture</Filter>
-    </None>
-    <None Include="include\Renderer\Texture\ISamplerState.inl">
       <Filter>Header Files\Texture</Filter>
     </None>
     <None Include="include\Renderer\Buffer\IBuffer.inl">
@@ -277,6 +256,27 @@
     </None>
     <None Include="include\Renderer\RenderTarget\IFramebuffer.inl">
       <Filter>Header Files\RenderTarget</Filter>
+    </None>
+    <None Include="include\Renderer\State\DepthStencilStateTypes.inl">
+      <Filter>Header Files\State</Filter>
+    </None>
+    <None Include="include\Renderer\State\IPipelineState.inl">
+      <Filter>Header Files\State</Filter>
+    </None>
+    <None Include="include\Renderer\State\PipelineStateTypes.inl">
+      <Filter>Header Files\State</Filter>
+    </None>
+    <None Include="include\Renderer\State\RasterizerStateTypes.inl">
+      <Filter>Header Files\State</Filter>
+    </None>
+    <None Include="include\Renderer\State\BlendStateTypes.inl">
+      <Filter>Header Files\State</Filter>
+    </None>
+    <None Include="include\Renderer\State\IState.inl">
+      <Filter>Header Files\State</Filter>
+    </None>
+    <None Include="include\Renderer\State\ISamplerState.inl">
+      <Filter>Header Files\State</Filter>
     </None>
   </ItemGroup>
 </Project>

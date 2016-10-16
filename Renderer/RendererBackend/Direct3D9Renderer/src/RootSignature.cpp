@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "Direct3D9Renderer/RootSignature.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
-#include "Direct3D9Renderer/Texture/SamplerState.h"
+#include "Direct3D9Renderer/State/SamplerState.h"
 
 #include <memory.h>
 

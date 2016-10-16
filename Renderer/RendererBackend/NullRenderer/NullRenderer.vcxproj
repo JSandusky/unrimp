@@ -20,9 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\NullRenderer\PipelineState\PipelineState.inl" />
     <None Include="include\NullRenderer\RenderTarget\SwapChain.inl" />
     <None Include="include\NullRenderer\RootSignature.inl" />
+    <None Include="include\NullRenderer\State\PipelineState.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -32,7 +32,6 @@
     <ClInclude Include="include\NullRenderer\Buffer\VertexBuffer.h" />
     <ClInclude Include="include\NullRenderer\NullDebug.h" />
     <ClInclude Include="include\NullRenderer\NullRenderer.h" />
-    <ClInclude Include="include\NullRenderer\PipelineState\PipelineState.h" />
     <ClInclude Include="include\NullRenderer\RenderTarget\Framebuffer.h" />
     <ClInclude Include="include\NullRenderer\RenderTarget\SwapChain.h" />
     <ClInclude Include="include\NullRenderer\RootSignature.h" />
@@ -43,7 +42,8 @@
     <ClInclude Include="include\NullRenderer\Shader\TessellationControlShader.h" />
     <ClInclude Include="include\NullRenderer\Shader\TessellationEvaluationShader.h" />
     <ClInclude Include="include\NullRenderer\Shader\VertexShader.h" />
-    <ClInclude Include="include\NullRenderer\Texture\SamplerState.h" />
+    <ClInclude Include="include\NullRenderer\State\PipelineState.h" />
+    <ClInclude Include="include\NullRenderer\State\SamplerState.h" />
     <ClInclude Include="include\NullRenderer\Texture\Texture2D.h" />
     <ClInclude Include="include\NullRenderer\Texture\Texture2DArray.h" />
     <ClInclude Include="include\NullRenderer\Texture\TextureBuffer.h" />
@@ -54,7 +54,6 @@
     <ClCompile Include="src\Buffer\VertexArray.cpp" />
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
     <ClCompile Include="src\NullRenderer.cpp" />
-    <ClCompile Include="src\PipelineState\PipelineState.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
@@ -65,7 +64,8 @@
     <ClCompile Include="src\Shader\TessellationControlShader.cpp" />
     <ClCompile Include="src\Shader\TessellationEvaluationShader.cpp" />
     <ClCompile Include="src\Shader\VertexShader.cpp" />
-    <ClCompile Include="src\Texture\SamplerState.cpp" />
+    <ClCompile Include="src\State\PipelineState.cpp" />
+    <ClCompile Include="src\State\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
     <ClCompile Include="src\Texture\TextureBuffer.cpp" />

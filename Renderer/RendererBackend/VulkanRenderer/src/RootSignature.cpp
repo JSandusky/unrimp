@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "VulkanRenderer/RootSignature.h"
 #include "VulkanRenderer/VulkanRenderer.h"
-#include "VulkanRenderer/Texture/SamplerState.h"
+#include "VulkanRenderer/State/SamplerState.h"
 
 #include <memory.h>
 

@@ -34,9 +34,9 @@
 #include "OpenGLES2Renderer/Buffer/VertexArrayVao.h"
 #include "OpenGLES2Renderer/Buffer/VertexArrayNoVao.h"
 #include "OpenGLES2Renderer/Texture/Texture2D.h"
-#include "OpenGLES2Renderer/Texture/SamplerState.h"
 #include "OpenGLES2Renderer/Texture/Texture2DArray.h"
-#include "OpenGLES2Renderer/PipelineState/PipelineState.h"
+#include "OpenGLES2Renderer/State/SamplerState.h"
+#include "OpenGLES2Renderer/State/PipelineState.h"
 #include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
 #include "OpenGLES2Renderer/Shader/ShaderLanguageGlsl.h"
 

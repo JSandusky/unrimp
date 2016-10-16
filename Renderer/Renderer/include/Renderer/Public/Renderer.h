@@ -267,7 +267,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/Texture/SamplerStateTypes.h
+	// Renderer/State/SamplerStateTypes.h
 	#ifndef __RENDERER_SAMPLERSTATE_TYPES_H__
 	#define __RENDERER_SAMPLERSTATE_TYPES_H__
 		enum class FilterMode
@@ -892,7 +892,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/PipelineState/BlendStateTypes.h
+	// Renderer/State/BlendStateTypes.h
 	#ifndef __RENDERER_BLENDSTATE_TYPES_H__
 	#define __RENDERER_BLENDSTATE_TYPES_H__
 		enum class Blend
@@ -1124,7 +1124,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/PipelineState/RasterizerStateTypes.h
+	// Renderer/State/RasterizerStateTypes.h
 	#ifndef __RENDERER_RASTERIZERSTATE_TYPES_H__
 	#define __RENDERER_RASTERIZERSTATE_TYPES_H__
 		enum class FillMode
@@ -1182,7 +1182,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/PipelineState/DepthStencilStateTypes.h
+	// Renderer/State/DepthStencilStateTypes.h
 	#ifndef __RENDERER_DEPTHSTENCILSTATE_TYPES_H__
 	#define __RENDERER_DEPTHSTENCILSTATE_TYPES_H__
 		enum class DepthWriteMask
@@ -1249,7 +1249,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/PipelineState/PipelineStateTypes.h
+	// Renderer/State/PipelineStateTypes.h
 	#ifndef __RENDERER_PIPELINESTATE_TYPES_H__
 	#define __RENDERER_PIPELINESTATE_TYPES_H__
 		enum class PrimitiveTopologyType
@@ -2140,7 +2140,7 @@ namespace Renderer
 		typedef SmartRefCount<ITexture2DArray> ITexture2DArrayPtr;
 	#endif
 
-	// Renderer/IState.h
+	// Renderer/State/IState.h
 	#ifndef __RENDERER_ISTATE_H__
 	#define __RENDERER_ISTATE_H__
 		class IState : public IResource
@@ -2155,7 +2155,7 @@ namespace Renderer
 		typedef SmartRefCount<IState> IStatePtr;
 	#endif
 
-	// Renderer/PipelineState/IPipelineState.h
+	// Renderer/State/IPipelineState.h
 	#ifndef __RENDERER_IPIPELINESTATE_H__
 	#define __RENDERER_IPIPELINESTATE_H__
 		class IPipelineState : public IState
@@ -2170,7 +2170,7 @@ namespace Renderer
 		typedef SmartRefCount<IPipelineState> IPipelineStatePtr;
 	#endif
 
-	// Renderer/Texture/ISamplerState.h
+	// Renderer/State/ISamplerState.h
 	#ifndef __RENDERER_ISAMPLERSTATE_H__
 	#define __RENDERER_ISAMPLERSTATE_H__
 		class ISamplerState : public IState

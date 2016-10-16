@@ -28,14 +28,14 @@
     <ClInclude Include="include\VulkanRenderer\IContext.h" />
     <ClInclude Include="include\VulkanRenderer\Linux\ContextLinux.h" />
     <ClInclude Include="include\VulkanRenderer\Mapping.h" />
-    <ClInclude Include="include\VulkanRenderer\PipelineState\BlendState.h" />
-    <ClInclude Include="include\VulkanRenderer\PipelineState\DepthStencilState.h" />
-    <ClInclude Include="include\VulkanRenderer\PipelineState\IState.h" />
-    <ClInclude Include="include\VulkanRenderer\PipelineState\PipelineState.h" />
-    <ClInclude Include="include\VulkanRenderer\PipelineState\RasterizerState.h" />
     <ClInclude Include="include\VulkanRenderer\RenderTarget\Framebuffer.h" />
     <ClInclude Include="include\VulkanRenderer\RenderTarget\SwapChain.h" />
-    <ClInclude Include="include\VulkanRenderer\Texture\SamplerState.h" />
+    <ClInclude Include="include\VulkanRenderer\State\BlendState.h" />
+    <ClInclude Include="include\VulkanRenderer\State\DepthStencilState.h" />
+    <ClInclude Include="include\VulkanRenderer\State\IState.h" />
+    <ClInclude Include="include\VulkanRenderer\State\PipelineState.h" />
+    <ClInclude Include="include\VulkanRenderer\State\RasterizerState.h" />
+    <ClInclude Include="include\VulkanRenderer\State\SamplerState.h" />
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2D.h" />
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2DArray.h" />
     <ClInclude Include="include\VulkanRenderer\Texture\TextureBuffer.h" />
@@ -73,13 +73,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp" />
-    <ClCompile Include="src\PipelineState\BlendState.cpp" />
-    <ClCompile Include="src\PipelineState\DepthStencilState.cpp" />
-    <ClCompile Include="src\PipelineState\PipelineState.cpp" />
-    <ClCompile Include="src\PipelineState\RasterizerState.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
-    <ClCompile Include="src\Texture\SamplerState.cpp" />
+    <ClCompile Include="src\State\BlendState.cpp" />
+    <ClCompile Include="src\State\DepthStencilState.cpp" />
+    <ClCompile Include="src\State\PipelineState.cpp" />
+    <ClCompile Include="src\State\RasterizerState.cpp" />
+    <ClCompile Include="src\State\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
     <ClCompile Include="src\Texture\TextureBuffer.cpp" />
@@ -104,11 +104,11 @@
     <None Include="include\VulkanRenderer\Buffer\VertexBuffer.inl" />
     <None Include="include\VulkanRenderer\IContext.inl" />
     <None Include="include\VulkanRenderer\Linux\ContextLinux.inl" />
-    <None Include="include\VulkanRenderer\PipelineState\IState.inl" />
-    <None Include="include\VulkanRenderer\PipelineState\PipelineState.inl" />
-    <None Include="include\VulkanRenderer\PipelineState\RasterizerState.inl" />
     <None Include="include\VulkanRenderer\RenderTarget\Framebuffer.inl" />
     <None Include="include\VulkanRenderer\RenderTarget\SwapChain.inl" />
+    <None Include="include\VulkanRenderer\State\IState.inl" />
+    <None Include="include\VulkanRenderer\State\PipelineState.inl" />
+    <None Include="include\VulkanRenderer\State\RasterizerState.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture2D.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture2DArray.inl" />
     <None Include="include\VulkanRenderer\Texture\TextureBuffer.inl" />

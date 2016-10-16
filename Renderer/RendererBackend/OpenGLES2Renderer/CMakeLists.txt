@@ -65,9 +65,9 @@ set(SOURCE_CODES
 	src/VertexArrayNoVao.cpp
 	src/VertexArrayVao.cpp
 	src/VertexBuffer.cpp
-	src/PipelineState/BlendState.cpp
-	src/PipelineState/DepthStencilState.cpp
-	src/PipelineState/RasterizerState.cpp
+	src/State/BlendState.cpp
+	src/State/DepthStencilState.cpp
+	src/State/RasterizerState.cpp
 	src/Shader/FragmentShader.cpp
 	src/Shader/FragmentShaderGlsl.cpp
 	src/Shader/Program.cpp

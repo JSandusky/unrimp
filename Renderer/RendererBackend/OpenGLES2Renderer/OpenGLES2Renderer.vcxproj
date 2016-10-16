@@ -27,15 +27,15 @@
     <None Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.inl" />
     <None Include="include\OpenGLES2Renderer\IContext.inl" />
     <None Include="include\OpenGLES2Renderer\OpenGLES2Renderer.inl" />
-    <None Include="include\OpenGLES2Renderer\PipelineState\IState.inl" />
-    <None Include="include\OpenGLES2Renderer\PipelineState\PipelineState.inl" />
-    <None Include="include\OpenGLES2Renderer\PipelineState\RasterizerState.inl" />
     <None Include="include\OpenGLES2Renderer\RenderTarget\Framebuffer.inl" />
     <None Include="include\OpenGLES2Renderer\RenderTarget\SwapChain.inl" />
     <None Include="include\OpenGLES2Renderer\RootSignature.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\FragmentShaderGlsl.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\ProgramGlsl.inl" />
     <None Include="include\OpenGLES2Renderer\Shader\VertexShaderGlsl.inl" />
+    <None Include="include\OpenGLES2Renderer\State\IState.inl" />
+    <None Include="include\OpenGLES2Renderer\State\PipelineState.inl" />
+    <None Include="include\OpenGLES2Renderer\State\RasterizerState.inl" />
     <None Include="include\OpenGLES2Renderer\Texture\Texture2D.inl" />
     <None Include="include\OpenGLES2Renderer\Texture\Texture2DArray.inl" />
     <None Include="Readme.txt" />
@@ -53,11 +53,6 @@
     <ClInclude Include="include\OpenGLES2Renderer\Mapping.h" />
     <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Debug.h" />
     <ClInclude Include="include\OpenGLES2Renderer\OpenGLES2Renderer.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\BlendState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\DepthStencilState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\IState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\PipelineState.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\RasterizerState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\RenderTarget\Framebuffer.h" />
     <ClInclude Include="include\OpenGLES2Renderer\RenderTarget\SwapChain.h" />
     <ClInclude Include="include\OpenGLES2Renderer\RootSignature.h" />
@@ -65,7 +60,12 @@
     <ClInclude Include="include\OpenGLES2Renderer\Shader\ProgramGlsl.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Shader\ShaderLanguageGlsl.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Shader\VertexShaderGlsl.h" />
-    <ClInclude Include="include\OpenGLES2Renderer\Texture\SamplerState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\State\BlendState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\State\DepthStencilState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\State\IState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\State\PipelineState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\State\RasterizerState.h" />
+    <ClInclude Include="include\OpenGLES2Renderer\State\SamplerState.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Texture\Texture2D.h" />
     <ClInclude Include="include\OpenGLES2Renderer\Texture\Texture2DArray.h" />
   </ItemGroup>
@@ -81,10 +81,6 @@
     <ClCompile Include="src\IExtensions.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\OpenGLES2Renderer.cpp" />
-    <ClCompile Include="src\PipelineState\BlendState.cpp" />
-    <ClCompile Include="src\PipelineState\DepthStencilState.cpp" />
-    <ClCompile Include="src\PipelineState\PipelineState.cpp" />
-    <ClCompile Include="src\PipelineState\RasterizerState.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
@@ -92,7 +88,11 @@
     <ClCompile Include="src\Shader\ProgramGlsl.cpp" />
     <ClCompile Include="src\Shader\ShaderLanguageGlsl.cpp" />
     <ClCompile Include="src\Shader\VertexShaderGlsl.cpp" />
-    <ClCompile Include="src\Texture\SamplerState.cpp" />
+    <ClCompile Include="src\State\BlendState.cpp" />
+    <ClCompile Include="src\State\DepthStencilState.cpp" />
+    <ClCompile Include="src\State\PipelineState.cpp" />
+    <ClCompile Include="src\State\RasterizerState.cpp" />
+    <ClCompile Include="src\State\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
   </ItemGroup>

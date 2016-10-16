@@ -32,7 +32,7 @@
 #include <Renderer/Buffer/BufferTypes.h>
 #include <Renderer/Buffer/IndexBufferTypes.h>
 #include <Renderer/Texture/TextureTypes.h>
-#include <Renderer/Texture/SamplerStateTypes.h>
+#include <Renderer/State/SamplerStateTypes.h>
 
 
 //[-------------------------------------------------------]

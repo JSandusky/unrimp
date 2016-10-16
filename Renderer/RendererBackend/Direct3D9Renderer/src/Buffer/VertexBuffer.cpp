@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D9Renderer/VertexBuffer.h"
+#include "Direct3D9Renderer/Buffer/VertexBuffer.h"
 #include "Direct3D9Renderer/d3d9.h"
 #include "Direct3D9Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D9Renderer/Mapping.h"

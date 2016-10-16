@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/RootSignature.h"
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
-#include "OpenGLES2Renderer/Texture/SamplerState.h"
+#include "OpenGLES2Renderer/State/SamplerState.h"
 
 #include <memory.h>
 

@@ -39,6 +39,7 @@
 #pragma warning(push)
 	#pragma warning(disable: 4668)	// Warning	C4668	'<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 	#include <vulkan\vulkan.h>
+	#undef max	// Get rid of nasty OS macro
 #pragma warning(pop)
 
 

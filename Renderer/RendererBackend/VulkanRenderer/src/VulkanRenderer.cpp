@@ -34,10 +34,10 @@
 #include "VulkanRenderer/Buffer/VertexBuffer.h"
 #include "VulkanRenderer/Buffer/UniformBuffer.h"
 #include "VulkanRenderer/Texture/Texture2D.h"
-#include "VulkanRenderer/Texture/SamplerState.h"
 #include "VulkanRenderer/Texture/TextureBuffer.h"
 #include "VulkanRenderer/Texture/Texture2DArray.h"
-#include "VulkanRenderer/PipelineState/PipelineState.h"
+#include "VulkanRenderer/State/SamplerState.h"
+#include "VulkanRenderer/State/PipelineState.h"
 #include "VulkanRenderer/Shader/ShaderLanguageGlsl.h"
 #include "VulkanRenderer/Shader/ProgramGlsl.h"
 #ifdef WIN32
