@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/IShader.h"
+#include "Renderer/Shader/IShader.h"
 
 
 //[-------------------------------------------------------]
@@ -42,9 +42,9 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract geometry shader (GS) interface
+	*    Abstract tessellation control shader (TCS, "hull shader" in Direct3D terminology) interface
 	*/
-	class IGeometryShader : public IShader
+	class ITessellationControlShader : public IShader
 	{
 
 
@@ -56,7 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IGeometryShader();
+		inline virtual ~ITessellationControlShader();
 
 
 	//[-------------------------------------------------------]
@@ -70,7 +70,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IGeometryShader(IRenderer &renderer);
+		inline explicit ITessellationControlShader(IRenderer &renderer);
 
 		/**
 		*  @brief
@@ -79,7 +79,7 @@ namespace Renderer
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		inline explicit IGeometryShader(const IGeometryShader &source);
+		inline explicit ITessellationControlShader(const ITessellationControlShader &source);
 
 		/**
 		*  @brief
@@ -91,7 +91,7 @@ namespace Renderer
 		*  @return
 		*    Reference to this instance
 		*/
-		inline IGeometryShader &operator =(const IGeometryShader &source);
+		inline ITessellationControlShader &operator =(const ITessellationControlShader &source);
 
 
 	};
@@ -100,7 +100,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Type definitions                                      ]
 	//[-------------------------------------------------------]
-	typedef SmartRefCount<IGeometryShader> IGeometryShaderPtr;
+	typedef SmartRefCount<ITessellationControlShader> ITessellationControlShaderPtr;
 
 
 //[-------------------------------------------------------]
@@ -112,4 +112,4 @@ namespace Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Renderer/IGeometryShader.inl"
+#include "Renderer/Shader/ITessellationControlShader.inl"

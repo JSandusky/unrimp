@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include "Renderer/BufferTypes.h"
 #include "Renderer/SmartRefCount.h"
-#include "Renderer/GeometryShaderTypes.h"
+#include "Renderer/Shader/GeometryShaderTypes.h"
 
 
 //[-------------------------------------------------------]
@@ -593,4 +593,4 @@ namespace Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Renderer/IShaderLanguage.inl"
+#include "Renderer/Shader/IShaderLanguage.inl"

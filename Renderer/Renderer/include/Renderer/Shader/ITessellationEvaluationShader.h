@@ -27,20 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/PlatformTypes.h"	// For "handle"
-#include "Renderer/IResource.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class IVertexArray;
-	class IIndexBuffer;
-	struct VertexAttribute;
-	struct VertexArrayVertexBuffer;
-}
+#include "Renderer/Shader/IShader.h"
 
 
 //[-------------------------------------------------------]
@@ -55,9 +42,9 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract program interface
+	*    Abstract tessellation evaluation shader (TES, "domain shader" in Direct3D terminology) interface
 	*/
-	class IProgram : public IResource
+	class ITessellationEvaluationShader : public IShader
 	{
 
 
@@ -69,22 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IProgram();
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual IProgram methods                       ]
-	//[-------------------------------------------------------]
-	public:
-		// TODO(co) Cleanup
-		inline virtual handle getUniformHandle(const char *uniformName);
-		inline virtual void setUniform1i(handle uniformHandle, int value);
-		inline virtual void setUniform1f(handle uniformHandle, float value);
-		inline virtual void setUniform2fv(handle uniformHandle, const float *value);
-		inline virtual void setUniform3fv(handle uniformHandle, const float *value);
-		inline virtual void setUniform4fv(handle uniformHandle, const float *value);
-		inline virtual void setUniformMatrix3fv(handle uniformHandle, const float *value);
-		inline virtual void setUniformMatrix4fv(handle uniformHandle, const float *value);
+		inline virtual ~ITessellationEvaluationShader();
 
 
 	//[-------------------------------------------------------]
@@ -98,7 +70,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IProgram(IRenderer &renderer);
+		inline explicit ITessellationEvaluationShader(IRenderer &renderer);
 
 		/**
 		*  @brief
@@ -107,7 +79,7 @@ namespace Renderer
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		inline explicit IProgram(const IProgram &source);
+		inline explicit ITessellationEvaluationShader(const ITessellationEvaluationShader &source);
 
 		/**
 		*  @brief
@@ -119,7 +91,7 @@ namespace Renderer
 		*  @return
 		*    Reference to this instance
 		*/
-		inline IProgram &operator =(const IProgram &source);
+		inline ITessellationEvaluationShader &operator =(const ITessellationEvaluationShader &source);
 
 
 	};
@@ -128,7 +100,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Type definitions                                      ]
 	//[-------------------------------------------------------]
-	typedef SmartRefCount<IProgram> IProgramPtr;
+	typedef SmartRefCount<ITessellationEvaluationShader> ITessellationEvaluationShaderPtr;
 
 
 //[-------------------------------------------------------]
@@ -140,4 +112,4 @@ namespace Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Renderer/IProgram.inl"
+#include "Renderer/Shader/ITessellationEvaluationShader.inl"

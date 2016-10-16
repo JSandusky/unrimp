@@ -27,7 +27,20 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/IShader.h"
+#include "Renderer/PlatformTypes.h"	// For "handle"
+#include "Renderer/IResource.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class IVertexArray;
+	class IIndexBuffer;
+	struct VertexAttribute;
+	struct VertexArrayVertexBuffer;
+}
 
 
 //[-------------------------------------------------------]
@@ -42,9 +55,9 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract fragment shader (FS, "pixel shader" in Direct3D terminology) interface
+	*    Abstract program interface
 	*/
-	class IFragmentShader : public IShader
+	class IProgram : public IResource
 	{
 
 
@@ -56,7 +69,22 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IFragmentShader();
+		inline virtual ~IProgram();
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual IProgram methods                       ]
+	//[-------------------------------------------------------]
+	public:
+		// TODO(co) Cleanup
+		inline virtual handle getUniformHandle(const char *uniformName);
+		inline virtual void setUniform1i(handle uniformHandle, int value);
+		inline virtual void setUniform1f(handle uniformHandle, float value);
+		inline virtual void setUniform2fv(handle uniformHandle, const float *value);
+		inline virtual void setUniform3fv(handle uniformHandle, const float *value);
+		inline virtual void setUniform4fv(handle uniformHandle, const float *value);
+		inline virtual void setUniformMatrix3fv(handle uniformHandle, const float *value);
+		inline virtual void setUniformMatrix4fv(handle uniformHandle, const float *value);
 
 
 	//[-------------------------------------------------------]
@@ -70,7 +98,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit IFragmentShader(IRenderer &renderer);
+		inline explicit IProgram(IRenderer &renderer);
 
 		/**
 		*  @brief
@@ -79,7 +107,7 @@ namespace Renderer
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		inline explicit IFragmentShader(const IFragmentShader &source);
+		inline explicit IProgram(const IProgram &source);
 
 		/**
 		*  @brief
@@ -91,7 +119,7 @@ namespace Renderer
 		*  @return
 		*    Reference to this instance
 		*/
-		inline IFragmentShader &operator =(const IFragmentShader &source);
+		inline IProgram &operator =(const IProgram &source);
 
 
 	};
@@ -100,7 +128,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Type definitions                                      ]
 	//[-------------------------------------------------------]
-	typedef SmartRefCount<IFragmentShader> IFragmentShaderPtr;
+	typedef SmartRefCount<IProgram> IProgramPtr;
 
 
 //[-------------------------------------------------------]
@@ -112,4 +140,4 @@ namespace Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Renderer/IFragmentShader.inl"
+#include "Renderer/Shader/IProgram.inl"

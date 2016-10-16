@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/IShader.h"
+#include "Renderer/Shader/IShader.h"
 
 
 //[-------------------------------------------------------]
@@ -42,9 +42,9 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract tessellation evaluation shader (TES, "domain shader" in Direct3D terminology) interface
+	*    Abstract geometry shader (GS) interface
 	*/
-	class ITessellationEvaluationShader : public IShader
+	class IGeometryShader : public IShader
 	{
 
 
@@ -56,7 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~ITessellationEvaluationShader();
+		inline virtual ~IGeometryShader();
 
 
 	//[-------------------------------------------------------]
@@ -70,7 +70,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit ITessellationEvaluationShader(IRenderer &renderer);
+		inline explicit IGeometryShader(IRenderer &renderer);
 
 		/**
 		*  @brief
@@ -79,7 +79,7 @@ namespace Renderer
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		inline explicit ITessellationEvaluationShader(const ITessellationEvaluationShader &source);
+		inline explicit IGeometryShader(const IGeometryShader &source);
 
 		/**
 		*  @brief
@@ -91,7 +91,7 @@ namespace Renderer
 		*  @return
 		*    Reference to this instance
 		*/
-		inline ITessellationEvaluationShader &operator =(const ITessellationEvaluationShader &source);
+		inline IGeometryShader &operator =(const IGeometryShader &source);
 
 
 	};
@@ -100,7 +100,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Type definitions                                      ]
 	//[-------------------------------------------------------]
-	typedef SmartRefCount<ITessellationEvaluationShader> ITessellationEvaluationShaderPtr;
+	typedef SmartRefCount<IGeometryShader> IGeometryShaderPtr;
 
 
 //[-------------------------------------------------------]
@@ -112,4 +112,4 @@ namespace Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Renderer/ITessellationEvaluationShader.inl"
+#include "Renderer/Shader/IGeometryShader.inl"

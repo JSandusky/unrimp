@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/IShader.h"
+#include "Renderer/IResource.h"
 
 
 //[-------------------------------------------------------]
@@ -42,9 +42,9 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract tessellation control shader (TCS, "hull shader" in Direct3D terminology) interface
+	*    Abstract shader interface
 	*/
-	class ITessellationControlShader : public IShader
+	class IShader : public IResource
 	{
 
 
@@ -56,7 +56,76 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~ITessellationControlShader();
+		inline virtual ~IShader();
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual IShader methods                        ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return the name of the shader language the shader is using
+		*
+		*  @return
+		*    The ASCII name of the shader language the shader is using (for example "GLSL" or "HLSL"), always valid
+		*
+		*  @note
+		*    - Do not free the memory the returned pointer is pointing to
+		*/
+		virtual const char *getShaderLanguageName() const = 0;
+
+		/**
+		*  @brief
+		*    Return the shader source code
+		*
+		*  @return
+		*    The shader ASCII source code, always valid
+		*
+		*  @note
+		*    - Do not free the memory the returned pointer is pointing to
+		*/
+		// TODO(co) Think about it: Provide such methods in here?
+		//virtual const char *getSourceCode() const = 0;
+
+		/**
+		*  @brief
+		*    Return the name of the shader profile the shader is using
+		*
+		*  @return
+		*    The ASCII name of the shader profile the shader is using (for example "arbvp1"), always valid
+		*
+		*  @note
+		*    - Do not free the memory the returned pointer is pointing to
+		*/
+		// TODO(co) Think about it: Provide such methods in here?
+		//virtual const char *getProfile() const = 0;
+
+		/**
+		*  @brief
+		*    Return the optional shader compiler arguments the shader is using
+		*
+		*  @return
+		*    The optional shader compiler ASCII arguments the shader is using, always valid
+		*
+		*  @note
+		*    - Do not free the memory the returned pointer is pointing to
+		*/
+		// TODO(co) Think about it: Provide such methods in here?
+		//virtual const char *getArguments() const = 0;
+
+		/**
+		*  @brief
+		*    Return the name of the shader entry point the shader is using
+		*
+		*  @return
+		*    The ASCII name of the shader entry point the shader is using (for example "main"), always valid
+		*
+		*  @note
+		*    - Do not free the memory the returned pointer is pointing to
+		*/
+		// TODO(co) Think about it: Provide such methods in here?
+		//virtual const char *getEntry() const = 0;
 
 
 	//[-------------------------------------------------------]
@@ -67,10 +136,12 @@ namespace Renderer
 		*  @brief
 		*    Constructor
 		*
+		*  @param[in] resourceType
+		*    Resource type
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline explicit ITessellationControlShader(IRenderer &renderer);
+		inline IShader(ResourceType resourceType, IRenderer &renderer);
 
 		/**
 		*  @brief
@@ -79,7 +150,7 @@ namespace Renderer
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		inline explicit ITessellationControlShader(const ITessellationControlShader &source);
+		inline explicit IShader(const IShader &source);
 
 		/**
 		*  @brief
@@ -91,7 +162,7 @@ namespace Renderer
 		*  @return
 		*    Reference to this instance
 		*/
-		inline ITessellationControlShader &operator =(const ITessellationControlShader &source);
+		inline IShader &operator =(const IShader &source);
 
 
 	};
@@ -100,7 +171,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Type definitions                                      ]
 	//[-------------------------------------------------------]
-	typedef SmartRefCount<ITessellationControlShader> ITessellationControlShaderPtr;
+	typedef SmartRefCount<IShader> IShaderPtr;
 
 
 //[-------------------------------------------------------]
@@ -112,4 +183,4 @@ namespace Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Renderer/ITessellationControlShader.inl"
+#include "Renderer/Shader/IShader.inl"

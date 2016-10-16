@@ -1319,7 +1319,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/GeometryShaderTypes.h
+	// Renderer/Shader/GeometryShaderTypes.h
 	#ifndef __RENDERER_GEOMETRYSHADER_TYPES_H__
 	#define __RENDERER_GEOMETRYSHADER_TYPES_H__
 		enum class GsInputPrimitiveTopology
@@ -1788,7 +1788,7 @@ namespace Renderer
 		typedef SmartRefCount<IRenderer> IRendererPtr;
 	#endif
 
-	// Renderer/IShaderLanguage.h
+	// Renderer/Shader/IShaderLanguage.h
 	#ifndef __RENDERER_ISHADERLANGUAGE_H__
 	#define __RENDERER_ISHADERLANGUAGE_H__
 		class IShaderLanguage : public RefCount<IShaderLanguage>
@@ -1897,7 +1897,7 @@ namespace Renderer
 		typedef SmartRefCount<IRootSignature> IRootSignaturePtr;
 	#endif
 
-	// Renderer/IProgram.h
+	// Renderer/Shader/IProgram.h
 	#ifndef __RENDERER_IPROGRAM_H__
 	#define __RENDERER_IPROGRAM_H__
 		class IProgram : public IResource
@@ -2208,7 +2208,7 @@ namespace Renderer
 		typedef SmartRefCount<ISamplerState> ISamplerStatePtr;
 	#endif
 
-	// Renderer/IShader.h
+	// Renderer/Shader/IShader.h
 	#ifndef __RENDERER_ISHADER_H__
 	#define __RENDERER_ISHADER_H__
 		class IShader : public IResource
@@ -2225,7 +2225,7 @@ namespace Renderer
 		typedef SmartRefCount<IShader> IShaderPtr;
 	#endif
 
-	// Renderer/IVertexShader.h
+	// Renderer/Shader/IVertexShader.h
 	#ifndef __RENDERER_IVERTEXSHADER_H__
 	#define __RENDERER_IVERTEXSHADER_H__
 		class IVertexShader : public IShader
@@ -2240,7 +2240,7 @@ namespace Renderer
 		typedef SmartRefCount<IVertexShader> IVertexShaderPtr;
 	#endif
 
-	// Renderer/ITessellationControlShader.h
+	// Renderer/Shader/ITessellationControlShader.h
 	#ifndef __RENDERER_ITESSELLATIONCONTROLSHADER_H__
 	#define __RENDERER_ITESSELLATIONCONTROLSHADER_H__
 		class ITessellationControlShader : public IShader
@@ -2255,7 +2255,7 @@ namespace Renderer
 		typedef SmartRefCount<ITessellationControlShader> ITessellationControlShaderPtr;
 	#endif
 
-	// Renderer/ITessellationEvaluationShader.h
+	// Renderer/Shader/ITessellationEvaluationShader.h
 	#ifndef __RENDERER_ITESSELATIONEVALUATIONSHADER_H__
 	#define __RENDERER_ITESSELATIONEVALUATIONSHADER_H__
 		class ITessellationEvaluationShader : public IShader
@@ -2270,7 +2270,7 @@ namespace Renderer
 		typedef SmartRefCount<ITessellationEvaluationShader> ITessellationEvaluationShaderPtr;
 	#endif
 
-	// Renderer/IGeometryShader.h
+	// Renderer/Shader/IGeometryShader.h
 	#ifndef __RENDERER_IGEOMETRYSHADER_H__
 	#define __RENDERER_IGEOMETRYSHADER_H__
 		class IGeometryShader : public IShader
@@ -2285,7 +2285,7 @@ namespace Renderer
 		typedef SmartRefCount<IGeometryShader> IGeometryShaderPtr;
 	#endif
 
-	// Renderer/IFragmentShader.h
+	// Renderer/Shader/IFragmentShader.h
 	#ifndef __RENDERER_IFRAGMENTSHADER_H__
 	#define __RENDERER_IFRAGMENTSHADER_H__
 		class IFragmentShader : public IShader

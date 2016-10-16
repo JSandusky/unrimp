@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/IResource.h"
+#include "Renderer/Shader/IShader.h"
 
 
 //[-------------------------------------------------------]
@@ -42,9 +42,9 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract shader interface
+	*    Abstract fragment shader (FS, "pixel shader" in Direct3D terminology) interface
 	*/
-	class IShader : public IResource
+	class IFragmentShader : public IShader
 	{
 
 
@@ -56,76 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IShader();
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual IShader methods                        ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Return the name of the shader language the shader is using
-		*
-		*  @return
-		*    The ASCII name of the shader language the shader is using (for example "GLSL" or "HLSL"), always valid
-		*
-		*  @note
-		*    - Do not free the memory the returned pointer is pointing to
-		*/
-		virtual const char *getShaderLanguageName() const = 0;
-
-		/**
-		*  @brief
-		*    Return the shader source code
-		*
-		*  @return
-		*    The shader ASCII source code, always valid
-		*
-		*  @note
-		*    - Do not free the memory the returned pointer is pointing to
-		*/
-		// TODO(co) Think about it: Provide such methods in here?
-		//virtual const char *getSourceCode() const = 0;
-
-		/**
-		*  @brief
-		*    Return the name of the shader profile the shader is using
-		*
-		*  @return
-		*    The ASCII name of the shader profile the shader is using (for example "arbvp1"), always valid
-		*
-		*  @note
-		*    - Do not free the memory the returned pointer is pointing to
-		*/
-		// TODO(co) Think about it: Provide such methods in here?
-		//virtual const char *getProfile() const = 0;
-
-		/**
-		*  @brief
-		*    Return the optional shader compiler arguments the shader is using
-		*
-		*  @return
-		*    The optional shader compiler ASCII arguments the shader is using, always valid
-		*
-		*  @note
-		*    - Do not free the memory the returned pointer is pointing to
-		*/
-		// TODO(co) Think about it: Provide such methods in here?
-		//virtual const char *getArguments() const = 0;
-
-		/**
-		*  @brief
-		*    Return the name of the shader entry point the shader is using
-		*
-		*  @return
-		*    The ASCII name of the shader entry point the shader is using (for example "main"), always valid
-		*
-		*  @note
-		*    - Do not free the memory the returned pointer is pointing to
-		*/
-		// TODO(co) Think about it: Provide such methods in here?
-		//virtual const char *getEntry() const = 0;
+		inline virtual ~IFragmentShader();
 
 
 	//[-------------------------------------------------------]
@@ -136,12 +67,10 @@ namespace Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] resourceType
-		*    Resource type
 		*  @param[in] renderer
 		*    Owner renderer instance
 		*/
-		inline IShader(ResourceType resourceType, IRenderer &renderer);
+		inline explicit IFragmentShader(IRenderer &renderer);
 
 		/**
 		*  @brief
@@ -150,7 +79,7 @@ namespace Renderer
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		inline explicit IShader(const IShader &source);
+		inline explicit IFragmentShader(const IFragmentShader &source);
 
 		/**
 		*  @brief
@@ -162,7 +91,7 @@ namespace Renderer
 		*  @return
 		*    Reference to this instance
 		*/
-		inline IShader &operator =(const IShader &source);
+		inline IFragmentShader &operator =(const IFragmentShader &source);
 
 
 	};
@@ -171,7 +100,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Type definitions                                      ]
 	//[-------------------------------------------------------]
-	typedef SmartRefCount<IShader> IShaderPtr;
+	typedef SmartRefCount<IFragmentShader> IFragmentShaderPtr;
 
 
 //[-------------------------------------------------------]
@@ -183,4 +112,4 @@ namespace Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Renderer/IShader.inl"
+#include "Renderer/Shader/IFragmentShader.inl"

@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/ITessellationControlShader.h>
+#include <Renderer/Shader/ITessellationControlShader.h>
 
 
 //[-------------------------------------------------------]

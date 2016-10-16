@@ -8,6 +8,9 @@
     <Filter Include="Header Files\Public">
       <UniqueIdentifier>{b60356dc-c211-4543-b17c-55fb2368fa2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Shader">
+      <UniqueIdentifier>{7c63a2a7-3326-4c7a-b824-dc858d5e29bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Renderer\IRenderer.h">
@@ -28,9 +31,6 @@
     <ClInclude Include="include\Renderer\IVertexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\IProgram.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\ITexture2DArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -44,27 +44,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\IBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IShaderLanguage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\ITessellationControlShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\ITessellationEvaluationShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IVertexShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IFragmentShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IGeometryShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\ITextureBuffer.h">
@@ -112,9 +91,6 @@
     <ClInclude Include="include\Renderer\RendererTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\GeometryShaderTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\ResourceTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -151,6 +127,33 @@
     <ClInclude Include="include\Renderer\IRootSignature.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\Shader\IProgram.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Shader\IShader.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Shader\IShaderLanguage.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Shader\ITessellationControlShader.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Shader\ITessellationEvaluationShader.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Shader\IVertexShader.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Shader\GeometryShaderTypes.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Shader\IFragmentShader.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Shader\IGeometryShader.h">
+      <Filter>Header Files\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -162,31 +165,10 @@
     <None Include="include\Renderer\IRenderer.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="include\Renderer\IShaderLanguage.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="include\Renderer\RefCount.inl">
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\SmartRefCount.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IFragmentShader.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IVertexShader.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IGeometryShader.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\ITessellationControlShader.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\ITessellationEvaluationShader.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IShader.inl">
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\ISamplerState.inl">
@@ -220,9 +202,6 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\IVertexArray.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IProgram.inl">
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\Statistics.inl">
@@ -262,6 +241,30 @@
     </None>
     <None Include="include\Renderer\PipelineStateTypes.inl">
       <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\Shader\IProgram.inl">
+      <Filter>Header Files\Shader</Filter>
+    </None>
+    <None Include="include\Renderer\Shader\IShader.inl">
+      <Filter>Header Files\Shader</Filter>
+    </None>
+    <None Include="include\Renderer\Shader\IShaderLanguage.inl">
+      <Filter>Header Files\Shader</Filter>
+    </None>
+    <None Include="include\Renderer\Shader\ITessellationControlShader.inl">
+      <Filter>Header Files\Shader</Filter>
+    </None>
+    <None Include="include\Renderer\Shader\ITessellationEvaluationShader.inl">
+      <Filter>Header Files\Shader</Filter>
+    </None>
+    <None Include="include\Renderer\Shader\IVertexShader.inl">
+      <Filter>Header Files\Shader</Filter>
+    </None>
+    <None Include="include\Renderer\Shader\IFragmentShader.inl">
+      <Filter>Header Files\Shader</Filter>
+    </None>
+    <None Include="include\Renderer\Shader\IGeometryShader.inl">
+      <Filter>Header Files\Shader</Filter>
     </None>
   </ItemGroup>
 </Project>

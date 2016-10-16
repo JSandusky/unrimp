@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/IShader.h"
+#include "Renderer/Shader/IShader.h"
 
 
 //[-------------------------------------------------------]
@@ -112,4 +112,4 @@ namespace Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Renderer/IVertexShader.inl"
+#include "Renderer/Shader/IVertexShader.inl"

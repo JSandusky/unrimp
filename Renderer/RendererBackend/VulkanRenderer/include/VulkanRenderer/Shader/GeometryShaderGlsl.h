@@ -27,8 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/IGeometryShader.h>
-#include <Renderer/GeometryShaderTypes.h>
+#include <Renderer/Shader/IGeometryShader.h>
+#include <Renderer/Shader/GeometryShaderTypes.h>
 
 
 //[-------------------------------------------------------]
