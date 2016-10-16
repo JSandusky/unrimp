@@ -59,9 +59,9 @@ set(SOURCE_CODES
 	src/VertexArray.cpp
 	src/VertexBuffer.cpp
 	src/UniformBuffer.cpp
-	src/Detail/BlendState.cpp
-	src/Detail/DepthStencilState.cpp
-	src/Detail/RasterizerState.cpp
+	src/PipelineState/BlendState.cpp
+	src/PipelineState/DepthStencilState.cpp
+	src/PipelineState/RasterizerState.cpp
 	src/Shader/FragmentShader.cpp
 	src/Shader/FragmentShaderHlsl.cpp
 	src/Shader/GeometryShader.cpp

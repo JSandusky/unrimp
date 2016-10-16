@@ -8,6 +8,9 @@
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{ff9233a4-a020-4607-a9c1-2e5d5851f689}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\PipelineState">
+      <UniqueIdentifier>{e1912ab4-12ea-44e6-8690-4d47211c2191}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -36,9 +39,6 @@
     <None Include="include\Direct3D12Renderer\IndexBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D12Renderer\PipelineState.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D12Renderer\SamplerState.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -65,6 +65,9 @@
     </None>
     <None Include="include\Direct3D12Renderer\UniformBuffer.inl">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\Direct3D12Renderer\PipelineState\PipelineState.inl">
+      <Filter>Source Files\PipelineState</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -99,9 +102,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D12Renderer\Mapping.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D12Renderer\PipelineState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D12Renderer\SamplerState.h">
@@ -146,6 +146,9 @@
     <ClInclude Include="include\Direct3D12Renderer\UniformBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D12Renderer\PipelineState\PipelineState.h">
+      <Filter>Source Files\PipelineState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\ProgramHlsl.cpp">
@@ -181,9 +184,6 @@
     <ClCompile Include="src\Mapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\PipelineState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SamplerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -216,6 +216,9 @@
     </ClCompile>
     <ClCompile Include="src\UniformBuffer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PipelineState\PipelineState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

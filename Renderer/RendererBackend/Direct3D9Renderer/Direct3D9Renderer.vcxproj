@@ -20,11 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\Direct3D9Renderer\Detail\IState.inl" />
     <None Include="include\Direct3D9Renderer\Direct3D9Renderer.inl" />
     <None Include="include\Direct3D9Renderer\Framebuffer.inl" />
     <None Include="include\Direct3D9Renderer\IndexBuffer.inl" />
     <None Include="include\Direct3D9Renderer\PipelineState.inl" />
+    <None Include="include\Direct3D9Renderer\PipelineState\IState.inl" />
     <None Include="include\Direct3D9Renderer\RootSignature.inl" />
     <None Include="include\Direct3D9Renderer\Shader\FragmentShaderHlsl.inl" />
     <None Include="include\Direct3D9Renderer\Shader\ProgramHlsl.inl" />
@@ -37,10 +37,6 @@
   <ItemGroup>
     <ClInclude Include="include\Direct3D9Renderer\d3d9.h" />
     <ClInclude Include="include\Direct3D9Renderer\d3dx9.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Detail\BlendState.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Detail\DepthStencilState.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Detail\IState.h" />
-    <ClInclude Include="include\Direct3D9Renderer\Detail\RasterizerState.h" />
     <ClInclude Include="include\Direct3D9Renderer\Direct3D9Debug.h" />
     <ClInclude Include="include\Direct3D9Renderer\Direct3D9Renderer.h" />
     <ClInclude Include="include\Direct3D9Renderer\Direct3D9RuntimeLinking.h" />
@@ -49,6 +45,10 @@
     <ClInclude Include="include\Direct3D9Renderer\IndexBuffer.h" />
     <ClInclude Include="include\Direct3D9Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D9Renderer\PipelineState.h" />
+    <ClInclude Include="include\Direct3D9Renderer\PipelineState\BlendState.h" />
+    <ClInclude Include="include\Direct3D9Renderer\PipelineState\DepthStencilState.h" />
+    <ClInclude Include="include\Direct3D9Renderer\PipelineState\IState.h" />
+    <ClInclude Include="include\Direct3D9Renderer\PipelineState\RasterizerState.h" />
     <ClInclude Include="include\Direct3D9Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D9Renderer\SamplerState.h" />
     <ClInclude Include="include\Direct3D9Renderer\Shader\FragmentShaderHlsl.h" />
@@ -61,9 +61,6 @@
     <ClInclude Include="include\Direct3D9Renderer\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Detail\BlendState.cpp" />
-    <ClCompile Include="src\Detail\DepthStencilState.cpp" />
-    <ClCompile Include="src\Detail\RasterizerState.cpp" />
     <ClCompile Include="src\Direct3D9Renderer.cpp" />
     <ClCompile Include="src\Direct3D9RuntimeLinking.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
@@ -71,6 +68,9 @@
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\PipelineState.cpp" />
+    <ClCompile Include="src\PipelineState\BlendState.cpp" />
+    <ClCompile Include="src\PipelineState\DepthStencilState.cpp" />
+    <ClCompile Include="src\PipelineState\RasterizerState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp" />

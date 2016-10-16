@@ -19,10 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\VulkanRenderer\Detail\BlendState.h" />
-    <ClInclude Include="include\VulkanRenderer\Detail\DepthStencilState.h" />
-    <ClInclude Include="include\VulkanRenderer\Detail\IState.h" />
-    <ClInclude Include="include\VulkanRenderer\Detail\RasterizerState.h" />
     <ClInclude Include="include\VulkanRenderer\Extensions.h" />
     <ClInclude Include="include\VulkanRenderer\Framebuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Helper.h" />
@@ -30,6 +26,10 @@
     <ClInclude Include="include\VulkanRenderer\IndexBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Linux\ContextLinux.h" />
     <ClInclude Include="include\VulkanRenderer\Mapping.h" />
+    <ClInclude Include="include\VulkanRenderer\PipelineState\BlendState.h" />
+    <ClInclude Include="include\VulkanRenderer\PipelineState\DepthStencilState.h" />
+    <ClInclude Include="include\VulkanRenderer\PipelineState\IState.h" />
+    <ClInclude Include="include\VulkanRenderer\PipelineState\RasterizerState.h" />
     <ClInclude Include="include\VulkanRenderer\UniformBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanDebug.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanRenderer.h" />
@@ -53,9 +53,6 @@
     <ClInclude Include="include\VulkanRenderer\Windows\ContextWindows.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Detail\BlendState.cpp" />
-    <ClCompile Include="src\Detail\DepthStencilState.cpp" />
-    <ClCompile Include="src\Detail\RasterizerState.cpp" />
     <ClCompile Include="src\Extensions.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\Helper.cpp" />
@@ -74,6 +71,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp" />
+    <ClCompile Include="src\PipelineState\BlendState.cpp" />
+    <ClCompile Include="src\PipelineState\DepthStencilState.cpp" />
+    <ClCompile Include="src\PipelineState\RasterizerState.cpp" />
     <ClCompile Include="src\UniformBuffer.cpp" />
     <ClCompile Include="src\VulkanRenderer.cpp" />
     <ClCompile Include="src\VulkanRuntimeLinking.cpp" />
@@ -98,12 +98,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\VulkanRenderer\Detail\IState.inl" />
-    <None Include="include\VulkanRenderer\Detail\RasterizerState.inl" />
     <None Include="include\VulkanRenderer\Framebuffer.inl" />
     <None Include="include\VulkanRenderer\IContext.inl" />
     <None Include="include\VulkanRenderer\IndexBuffer.inl" />
     <None Include="include\VulkanRenderer\Linux\ContextLinux.inl" />
+    <None Include="include\VulkanRenderer\PipelineState\IState.inl" />
+    <None Include="include\VulkanRenderer\PipelineState\RasterizerState.inl" />
     <None Include="include\VulkanRenderer\UniformBuffer.inl" />
     <None Include="include\VulkanRenderer\VulkanRenderer.inl" />
     <None Include="include\VulkanRenderer\PipelineState.inl" />

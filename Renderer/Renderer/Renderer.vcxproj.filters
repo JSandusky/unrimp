@@ -11,6 +11,9 @@
     <Filter Include="Header Files\Shader">
       <UniqueIdentifier>{7c63a2a7-3326-4c7a-b824-dc858d5e29bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\PipelineState">
+      <UniqueIdentifier>{cb8820ba-3175-4acd-aec2-231d4b613ab7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Renderer\IRenderer.h">
@@ -67,15 +70,6 @@
     <ClInclude Include="include\Renderer\SamplerStateTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\BlendStateTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\DepthStencilStateTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\RasterizerStateTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\TextureTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -115,12 +109,6 @@
     <ClInclude Include="include\Renderer\Public\RendererInstance.h">
       <Filter>Header Files\Public</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\PipelineStateTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IPipelineState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\RootSignatureTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -153,6 +141,21 @@
     </ClInclude>
     <ClInclude Include="include\Renderer\Shader\IGeometryShader.h">
       <Filter>Header Files\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\PipelineState\IPipelineState.h">
+      <Filter>Header Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\PipelineState\PipelineStateTypes.h">
+      <Filter>Header Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\PipelineState\RasterizerStateTypes.h">
+      <Filter>Header Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\PipelineState\BlendStateTypes.h">
+      <Filter>Header Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\PipelineState\DepthStencilStateTypes.h">
+      <Filter>Header Files\PipelineState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -224,22 +227,7 @@
     <None Include="include\Renderer\IndexBufferTypes.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="include\Renderer\IPipelineState.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="include\Renderer\IRootSignature.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\RasterizerStateTypes.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\BlendStateTypes.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\DepthStencilStateTypes.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\PipelineStateTypes.inl">
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\Shader\IProgram.inl">
@@ -265,6 +253,21 @@
     </None>
     <None Include="include\Renderer\Shader\IGeometryShader.inl">
       <Filter>Header Files\Shader</Filter>
+    </None>
+    <None Include="include\Renderer\PipelineState\DepthStencilStateTypes.inl">
+      <Filter>Header Files\PipelineState</Filter>
+    </None>
+    <None Include="include\Renderer\PipelineState\IPipelineState.inl">
+      <Filter>Header Files\PipelineState</Filter>
+    </None>
+    <None Include="include\Renderer\PipelineState\PipelineStateTypes.inl">
+      <Filter>Header Files\PipelineState</Filter>
+    </None>
+    <None Include="include\Renderer\PipelineState\RasterizerStateTypes.inl">
+      <Filter>Header Files\PipelineState</Filter>
+    </None>
+    <None Include="include\Renderer\PipelineState\BlendStateTypes.inl">
+      <Filter>Header Files\PipelineState</Filter>
     </None>
   </ItemGroup>
 </Project>

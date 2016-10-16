@@ -30,10 +30,10 @@
 #include <Renderer/BufferTypes.h>
 #include <Renderer/TextureTypes.h>
 #include <Renderer/RendererTypes.h>
-#include <Renderer/BlendStateTypes.h>
 #include <Renderer/IndexBufferTypes.h>
 #include <Renderer/VertexArrayTypes.h>
 #include <Renderer/SamplerStateTypes.h>
+#include <Renderer/PipelineState/BlendStateTypes.h>
 
 
 //[-------------------------------------------------------]

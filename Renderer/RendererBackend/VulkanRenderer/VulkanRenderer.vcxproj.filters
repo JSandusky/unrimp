@@ -14,7 +14,7 @@
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{ff27bada-b551-4241-993e-5bd1a3d26246}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Detail">
+    <Filter Include="Source Files\PipelineState">
       <UniqueIdentifier>{6794a761-5f92-4fb7-87d1-21e6a12ba69b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -97,23 +97,23 @@
     <ClInclude Include="include\VulkanRenderer\RootSignature.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\Detail\RasterizerState.h">
-      <Filter>Source Files\Detail</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\Detail\BlendState.h">
-      <Filter>Source Files\Detail</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\Detail\DepthStencilState.h">
-      <Filter>Source Files\Detail</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\Detail\IState.h">
-      <Filter>Source Files\Detail</Filter>
-    </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Helper.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\UniformBuffer.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\PipelineState\BlendState.h">
+      <Filter>Source Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\PipelineState\DepthStencilState.h">
+      <Filter>Source Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\PipelineState\IState.h">
+      <Filter>Source Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\PipelineState\RasterizerState.h">
+      <Filter>Source Files\PipelineState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -198,20 +198,20 @@
     <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Detail\DepthStencilState.cpp">
-      <Filter>Source Files\Detail</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Detail\RasterizerState.cpp">
-      <Filter>Source Files\Detail</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Detail\BlendState.cpp">
-      <Filter>Source Files\Detail</Filter>
-    </ClCompile>
     <ClCompile Include="src\Helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\UniformBuffer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PipelineState\BlendState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PipelineState\DepthStencilState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PipelineState\RasterizerState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -274,12 +274,6 @@
     <None Include="include\VulkanRenderer\RootSignature.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\VulkanRenderer\Detail\RasterizerState.inl">
-      <Filter>Source Files\Detail</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\Detail\IState.inl">
-      <Filter>Source Files\Detail</Filter>
-    </None>
     <None Include="include\VulkanRenderer\VulkanRuntimeLinking.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -288,6 +282,12 @@
     </None>
     <None Include="include\VulkanRenderer\UniformBuffer.inl">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\PipelineState\IState.inl">
+      <Filter>Source Files\PipelineState</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\PipelineState\RasterizerState.inl">
+      <Filter>Source Files\PipelineState</Filter>
     </None>
   </ItemGroup>
 </Project>

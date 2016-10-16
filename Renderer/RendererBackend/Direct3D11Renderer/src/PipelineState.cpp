@@ -26,11 +26,11 @@
 #include "Direct3D11Renderer/D3D11.h"
 #include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
-#include "Direct3D11Renderer/Detail/BlendState.h"
-#include "Direct3D11Renderer/Detail/RasterizerState.h"
-#include "Direct3D11Renderer/Detail/DepthStencilState.h"
 #include "Direct3D11Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D11Renderer/Shader/VertexShaderHlsl.h"
+#include "Direct3D11Renderer/PipelineState/BlendState.h"
+#include "Direct3D11Renderer/PipelineState/RasterizerState.h"
+#include "Direct3D11Renderer/PipelineState/DepthStencilState.h"
 
 
 //[-------------------------------------------------------]

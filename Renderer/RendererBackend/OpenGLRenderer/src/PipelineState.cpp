@@ -23,10 +23,10 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/PipelineState.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
-#include "OpenGLRenderer/Detail/BlendState.h"
-#include "OpenGLRenderer/Detail/RasterizerState.h"
-#include "OpenGLRenderer/Detail/DepthStencilState.h"
 #include "OpenGLRenderer/Shader/Monolithic/ProgramMonolithic.h"
+#include "OpenGLRenderer/PipelineState/BlendState.h"
+#include "OpenGLRenderer/PipelineState/RasterizerState.h"
+#include "OpenGLRenderer/PipelineState/DepthStencilState.h"
 
 
 //[-------------------------------------------------------]

@@ -8,6 +8,9 @@
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{6bf0747f-a0d7-4efa-a55b-9b36aa25d0bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\PipelineState">
+      <UniqueIdentifier>{54e1d0d4-4b27-4571-9fef-23de03419593}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -15,11 +18,11 @@
     <None Include="include\NullRenderer\SwapChain.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\NullRenderer\PipelineState.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\NullRenderer\RootSignature.inl">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\NullRenderer\PipelineState\PipelineState.inl">
+      <Filter>Source Files\PipelineState</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -77,14 +80,14 @@
     <ClInclude Include="include\NullRenderer\VertexBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\NullRenderer\PipelineState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\NullRenderer\RootSignature.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\NullRenderer\UniformBuffer.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NullRenderer\PipelineState\PipelineState.h">
+      <Filter>Source Files\PipelineState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -139,14 +142,14 @@
     <ClCompile Include="src\VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\PipelineState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\UniformBuffer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PipelineState\PipelineState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

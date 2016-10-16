@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\NullRenderer\PipelineState.inl" />
+    <None Include="include\NullRenderer\PipelineState\PipelineState.inl" />
     <None Include="include\NullRenderer\RootSignature.inl" />
     <None Include="include\NullRenderer\SwapChain.inl" />
     <None Include="Readme.txt" />
@@ -30,7 +30,7 @@
     <ClInclude Include="include\NullRenderer\IndexBuffer.h" />
     <ClInclude Include="include\NullRenderer\NullDebug.h" />
     <ClInclude Include="include\NullRenderer\NullRenderer.h" />
-    <ClInclude Include="include\NullRenderer\PipelineState.h" />
+    <ClInclude Include="include\NullRenderer\PipelineState\PipelineState.h" />
     <ClInclude Include="include\NullRenderer\RootSignature.h" />
     <ClInclude Include="include\NullRenderer\SamplerState.h" />
     <ClInclude Include="include\NullRenderer\Shader\FragmentShader.h" />
@@ -52,7 +52,7 @@
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\NullRenderer.cpp" />
-    <ClCompile Include="src\PipelineState.cpp" />
+    <ClCompile Include="src\PipelineState\PipelineState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\Shader\FragmentShader.cpp" />

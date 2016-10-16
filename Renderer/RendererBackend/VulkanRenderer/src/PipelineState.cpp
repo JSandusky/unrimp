@@ -23,10 +23,10 @@
 //[-------------------------------------------------------]
 #include "VulkanRenderer/PipelineState.h"
 #include "VulkanRenderer/VulkanRenderer.h"
-#include "VulkanRenderer/Detail/BlendState.h"
-#include "VulkanRenderer/Detail/RasterizerState.h"
-#include "VulkanRenderer/Detail/DepthStencilState.h"
 #include "VulkanRenderer/Shader/ProgramGlsl.h"
+#include "VulkanRenderer/PipelineState/BlendState.h"
+#include "VulkanRenderer/PipelineState/RasterizerState.h"
+#include "VulkanRenderer/PipelineState/DepthStencilState.h"
 
 
 //[-------------------------------------------------------]

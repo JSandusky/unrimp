@@ -20,14 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\Direct3D10Renderer\Detail\BlendState.inl" />
-    <None Include="include\Direct3D10Renderer\Detail\DepthStencilState.inl" />
-    <None Include="include\Direct3D10Renderer\Detail\IState.inl" />
-    <None Include="include\Direct3D10Renderer\Detail\RasterizerState.inl" />
     <None Include="include\Direct3D10Renderer\Direct3D10Renderer.inl" />
     <None Include="include\Direct3D10Renderer\Framebuffer.inl" />
     <None Include="include\Direct3D10Renderer\IndexBuffer.inl" />
     <None Include="include\Direct3D10Renderer\PipelineState.inl" />
+    <None Include="include\Direct3D10Renderer\PipelineState\BlendState.inl" />
+    <None Include="include\Direct3D10Renderer\PipelineState\DepthStencilState.inl" />
+    <None Include="include\Direct3D10Renderer\PipelineState\IState.inl" />
+    <None Include="include\Direct3D10Renderer\PipelineState\RasterizerState.inl" />
     <None Include="include\Direct3D10Renderer\RootSignature.inl" />
     <None Include="include\Direct3D10Renderer\SamplerState.inl" />
     <None Include="include\Direct3D10Renderer\Shader\FragmentShaderHlsl.inl" />
@@ -45,10 +45,6 @@
   <ItemGroup>
     <ClInclude Include="include\Direct3D10Renderer\D3D10.h" />
     <ClInclude Include="include\Direct3D10Renderer\D3D10_1.h" />
-    <ClInclude Include="include\Direct3D10Renderer\Detail\BlendState.h" />
-    <ClInclude Include="include\Direct3D10Renderer\Detail\DepthStencilState.h" />
-    <ClInclude Include="include\Direct3D10Renderer\Detail\IState.h" />
-    <ClInclude Include="include\Direct3D10Renderer\Detail\RasterizerState.h" />
     <ClInclude Include="include\Direct3D10Renderer\Direct3D10Debug.h" />
     <ClInclude Include="include\Direct3D10Renderer\Direct3D10Renderer.h" />
     <ClInclude Include="include\Direct3D10Renderer\Direct3D10RuntimeLinking.h" />
@@ -58,6 +54,10 @@
     <ClInclude Include="include\Direct3D10Renderer\IndexBuffer.h" />
     <ClInclude Include="include\Direct3D10Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D10Renderer\PipelineState.h" />
+    <ClInclude Include="include\Direct3D10Renderer\PipelineState\BlendState.h" />
+    <ClInclude Include="include\Direct3D10Renderer\PipelineState\DepthStencilState.h" />
+    <ClInclude Include="include\Direct3D10Renderer\PipelineState\IState.h" />
+    <ClInclude Include="include\Direct3D10Renderer\PipelineState\RasterizerState.h" />
     <ClInclude Include="include\Direct3D10Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D10Renderer\SamplerState.h" />
     <ClInclude Include="include\Direct3D10Renderer\Shader\FragmentShaderHlsl.h" />
@@ -74,9 +74,6 @@
     <ClInclude Include="include\Direct3D10Renderer\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Detail\BlendState.cpp" />
-    <ClCompile Include="src\Detail\DepthStencilState.cpp" />
-    <ClCompile Include="src\Detail\RasterizerState.cpp" />
     <ClCompile Include="src\Direct3D10Renderer.cpp" />
     <ClCompile Include="src\Direct3D10RuntimeLinking.cpp" />
     <ClCompile Include="src\Direct3D9RuntimeLinking.cpp" />
@@ -85,6 +82,9 @@
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\PipelineState.cpp" />
+    <ClCompile Include="src\PipelineState\BlendState.cpp" />
+    <ClCompile Include="src\PipelineState\DepthStencilState.cpp" />
+    <ClCompile Include="src\PipelineState\RasterizerState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp" />

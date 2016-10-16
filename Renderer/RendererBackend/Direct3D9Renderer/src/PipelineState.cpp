@@ -25,10 +25,10 @@
 #include "Direct3D9Renderer/d3d9.h"
 #include "Direct3D9Renderer/Mapping.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
-#include "Direct3D9Renderer/Detail/BlendState.h"
-#include "Direct3D9Renderer/Detail/RasterizerState.h"
-#include "Direct3D9Renderer/Detail/DepthStencilState.h"
 #include "Direct3D9Renderer/Shader/ProgramHlsl.h"
+#include "Direct3D9Renderer/PipelineState/BlendState.h"
+#include "Direct3D9Renderer/PipelineState/RasterizerState.h"
+#include "Direct3D9Renderer/PipelineState/DepthStencilState.h"
 
 
 //[-------------------------------------------------------]

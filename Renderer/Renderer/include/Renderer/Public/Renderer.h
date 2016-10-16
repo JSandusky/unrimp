@@ -909,7 +909,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/BlendStateTypes.h
+	// Renderer/PipelineState/BlendStateTypes.h
 	#ifndef __RENDERER_BLENDSTATE_TYPES_H__
 	#define __RENDERER_BLENDSTATE_TYPES_H__
 		enum class Blend
@@ -1124,7 +1124,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/RasterizerStateTypes.h
+	// Renderer/PipelineState/RasterizerStateTypes.h
 	#ifndef __RENDERER_RASTERIZERSTATE_TYPES_H__
 	#define __RENDERER_RASTERIZERSTATE_TYPES_H__
 		enum class FillMode
@@ -1182,7 +1182,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/DepthStencilStateTypes.h
+	// Renderer/PipelineState/DepthStencilStateTypes.h
 	#ifndef __RENDERER_DEPTHSTENCILSTATE_TYPES_H__
 	#define __RENDERER_DEPTHSTENCILSTATE_TYPES_H__
 		enum class DepthWriteMask
@@ -1249,7 +1249,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/PipelineStateTypes.h
+	// Renderer/PipelineState/PipelineStateTypes.h
 	#ifndef __RENDERER_PIPELINESTATE_TYPES_H__
 	#define __RENDERER_PIPELINESTATE_TYPES_H__
 		enum class PrimitiveTopologyType
@@ -2155,7 +2155,7 @@ namespace Renderer
 		typedef SmartRefCount<IState> IStatePtr;
 	#endif
 
-	// Renderer/IPipelineState.h
+	// Renderer/PipelineState/IPipelineState.h
 	#ifndef __RENDERER_IPIPELINESTATE_H__
 	#define __RENDERER_IPIPELINESTATE_H__
 		class IPipelineState : public IState

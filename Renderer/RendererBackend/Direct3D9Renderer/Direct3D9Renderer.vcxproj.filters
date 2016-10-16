@@ -8,8 +8,8 @@
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{ebcd93d1-1f68-41ad-a8df-ee6c4e0b4000}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Detail">
-      <UniqueIdentifier>{4a749787-13d7-4c99-94f6-5c19b8601325}</UniqueIdentifier>
+    <Filter Include="Source Files\PipelineState">
+      <UniqueIdentifier>{8e3ca793-4003-46a2-ae93-daa7ac48ec75}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,8 +48,8 @@
     <None Include="include\Direct3D9Renderer\RootSignature.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D9Renderer\Detail\IState.inl">
-      <Filter>Source Files\Detail</Filter>
+    <None Include="include\Direct3D9Renderer\PipelineState\IState.inl">
+      <Filter>Source Files\PipelineState</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -113,17 +113,17 @@
     <ClInclude Include="include\Direct3D9Renderer\RootSignature.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\Detail\DepthStencilState.h">
-      <Filter>Source Files\Detail</Filter>
+    <ClInclude Include="include\Direct3D9Renderer\PipelineState\RasterizerState.h">
+      <Filter>Source Files\PipelineState</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\Detail\RasterizerState.h">
-      <Filter>Source Files\Detail</Filter>
+    <ClInclude Include="include\Direct3D9Renderer\PipelineState\BlendState.h">
+      <Filter>Source Files\PipelineState</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\Detail\BlendState.h">
-      <Filter>Source Files\Detail</Filter>
+    <ClInclude Include="include\Direct3D9Renderer\PipelineState\DepthStencilState.h">
+      <Filter>Source Files\PipelineState</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D9Renderer\Detail\IState.h">
-      <Filter>Source Files\Detail</Filter>
+    <ClInclude Include="include\Direct3D9Renderer\PipelineState\IState.h">
+      <Filter>Source Files\PipelineState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -178,14 +178,14 @@
     <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Detail\BlendState.cpp">
-      <Filter>Source Files\Detail</Filter>
+    <ClCompile Include="src\PipelineState\DepthStencilState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
     </ClCompile>
-    <ClCompile Include="src\Detail\DepthStencilState.cpp">
-      <Filter>Source Files\Detail</Filter>
+    <ClCompile Include="src\PipelineState\RasterizerState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
     </ClCompile>
-    <ClCompile Include="src\Detail\RasterizerState.cpp">
-      <Filter>Source Files\Detail</Filter>
+    <ClCompile Include="src\PipelineState\BlendState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

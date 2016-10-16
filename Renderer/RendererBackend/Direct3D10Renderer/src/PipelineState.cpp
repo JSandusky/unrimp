@@ -26,11 +26,11 @@
 #include "Direct3D10Renderer/D3D10.h"
 #include "Direct3D10Renderer/Mapping.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
-#include "Direct3D10Renderer/Detail/BlendState.h"
-#include "Direct3D10Renderer/Detail/RasterizerState.h"
-#include "Direct3D10Renderer/Detail/DepthStencilState.h"
 #include "Direct3D10Renderer/Shader/ProgramHlsl.h"
 #include "Direct3D10Renderer/Shader/VertexShaderHlsl.h"
+#include "Direct3D10Renderer/PipelineState/BlendState.h"
+#include "Direct3D10Renderer/PipelineState/RasterizerState.h"
+#include "Direct3D10Renderer/PipelineState/DepthStencilState.h"
 
 
 //[-------------------------------------------------------]

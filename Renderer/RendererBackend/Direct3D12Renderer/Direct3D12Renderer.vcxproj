@@ -23,7 +23,7 @@
     <None Include="include\Direct3D12Renderer\Direct3D12Renderer.inl" />
     <None Include="include\Direct3D12Renderer\Framebuffer.inl" />
     <None Include="include\Direct3D12Renderer\IndexBuffer.inl" />
-    <None Include="include\Direct3D12Renderer\PipelineState.inl" />
+    <None Include="include\Direct3D12Renderer\PipelineState\PipelineState.inl" />
     <None Include="include\Direct3D12Renderer\RootSignature.inl" />
     <None Include="include\Direct3D12Renderer\SamplerState.inl" />
     <None Include="include\Direct3D12Renderer\Shader\FragmentShaderHlsl.inl" />
@@ -50,7 +50,7 @@
     <ClInclude Include="include\Direct3D12Renderer\Guid.h" />
     <ClInclude Include="include\Direct3D12Renderer\IndexBuffer.h" />
     <ClInclude Include="include\Direct3D12Renderer\Mapping.h" />
-    <ClInclude Include="include\Direct3D12Renderer\PipelineState.h" />
+    <ClInclude Include="include\Direct3D12Renderer\PipelineState\PipelineState.h" />
     <ClInclude Include="include\Direct3D12Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D12Renderer\SamplerState.h" />
     <ClInclude Include="include\Direct3D12Renderer\Shader\FragmentShaderHlsl.h" />
@@ -75,7 +75,7 @@
     <ClCompile Include="src\Guid.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
-    <ClCompile Include="src\PipelineState.cpp" />
+    <ClCompile Include="src\PipelineState\PipelineState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp" />

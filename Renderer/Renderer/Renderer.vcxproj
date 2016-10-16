@@ -19,15 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Renderer\BlendStateTypes.h" />
     <ClInclude Include="include\Renderer\BufferTypes.h" />
     <ClInclude Include="include\Renderer\Capabilities.h" />
-    <ClInclude Include="include\Renderer\DepthStencilStateTypes.h" />
     <ClInclude Include="include\Renderer\IBuffer.h" />
     <ClInclude Include="include\Renderer\IFramebuffer.h" />
     <ClInclude Include="include\Renderer\IIndexBuffer.h" />
     <ClInclude Include="include\Renderer\IndexBufferTypes.h" />
-    <ClInclude Include="include\Renderer\IPipelineState.h" />
     <ClInclude Include="include\Renderer\IRenderer.h" />
     <ClInclude Include="include\Renderer\IRenderTarget.h" />
     <ClInclude Include="include\Renderer\IResource.h" />
@@ -42,11 +39,14 @@
     <ClInclude Include="include\Renderer\IUniformBuffer.h" />
     <ClInclude Include="include\Renderer\IVertexArray.h" />
     <ClInclude Include="include\Renderer\IVertexBuffer.h" />
-    <ClInclude Include="include\Renderer\PipelineStateTypes.h" />
+    <ClInclude Include="include\Renderer\PipelineState\BlendStateTypes.h" />
+    <ClInclude Include="include\Renderer\PipelineState\DepthStencilStateTypes.h" />
+    <ClInclude Include="include\Renderer\PipelineState\IPipelineState.h" />
+    <ClInclude Include="include\Renderer\PipelineState\PipelineStateTypes.h" />
+    <ClInclude Include="include\Renderer\PipelineState\RasterizerStateTypes.h" />
     <ClInclude Include="include\Renderer\PlatformTypes.h" />
     <ClInclude Include="include\Renderer\Public\Renderer.h" />
     <ClInclude Include="include\Renderer\Public\RendererInstance.h" />
-    <ClInclude Include="include\Renderer\RasterizerStateTypes.h" />
     <ClInclude Include="include\Renderer\RefCount.h" />
     <ClInclude Include="include\Renderer\RendererTypes.h" />
     <ClInclude Include="include\Renderer\ResourceTypes.h" />
@@ -69,14 +69,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
-    <None Include="include\Renderer\BlendStateTypes.inl" />
     <None Include="include\Renderer\Capabilities.inl" />
-    <None Include="include\Renderer\DepthStencilStateTypes.inl" />
     <None Include="include\Renderer\IBuffer.inl" />
     <None Include="include\Renderer\IFramebuffer.inl" />
     <None Include="include\Renderer\IIndexBuffer.inl" />
     <None Include="include\Renderer\IndexBufferTypes.inl" />
-    <None Include="include\Renderer\IPipelineState.inl" />
     <None Include="include\Renderer\IRenderer.inl" />
     <None Include="include\Renderer\IRenderTarget.inl" />
     <None Include="include\Renderer\IResource.inl" />
@@ -91,8 +88,11 @@
     <None Include="include\Renderer\IUniformBuffer.inl" />
     <None Include="include\Renderer\IVertexArray.inl" />
     <None Include="include\Renderer\IVertexBuffer.inl" />
-    <None Include="include\Renderer\PipelineStateTypes.inl" />
-    <None Include="include\Renderer\RasterizerStateTypes.inl" />
+    <None Include="include\Renderer\PipelineState\BlendStateTypes.inl" />
+    <None Include="include\Renderer\PipelineState\DepthStencilStateTypes.inl" />
+    <None Include="include\Renderer\PipelineState\IPipelineState.inl" />
+    <None Include="include\Renderer\PipelineState\PipelineStateTypes.inl" />
+    <None Include="include\Renderer\PipelineState\RasterizerStateTypes.inl" />
     <None Include="include\Renderer\RefCount.inl" />
     <None Include="include\Renderer\Shader\IFragmentShader.inl" />
     <None Include="include\Renderer\Shader\IGeometryShader.inl" />

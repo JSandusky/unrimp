@@ -23,10 +23,10 @@
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/PipelineState.h"
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
-#include "OpenGLES2Renderer/Detail/BlendState.h"
-#include "OpenGLES2Renderer/Detail/RasterizerState.h"
-#include "OpenGLES2Renderer/Detail/DepthStencilState.h"
 #include "OpenGLES2Renderer/Shader/ProgramGlsl.h"
+#include "OpenGLES2Renderer/PipelineState/BlendState.h"
+#include "OpenGLES2Renderer/PipelineState/RasterizerState.h"
+#include "OpenGLES2Renderer/PipelineState/DepthStencilState.h"
 
 
 //[-------------------------------------------------------]

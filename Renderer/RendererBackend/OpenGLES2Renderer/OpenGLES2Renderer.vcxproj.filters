@@ -48,14 +48,14 @@
     <None Include="include\OpenGLES2Renderer\RootSignature.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\Detail\RasterizerState.inl">
-      <Filter>Source Files\Detail</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\Detail\IState.inl">
-      <Filter>Source Files\Detail</Filter>
-    </None>
     <None Include="include\OpenGLES2Renderer\Shader\ProgramGlsl.inl">
       <Filter>Source Files\Shader</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\PipelineState\IState.inl">
+      <Filter>Source Files\PipelineState</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\PipelineState\RasterizerState.inl">
+      <Filter>Source Files\PipelineState</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +65,7 @@
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{7bb8b8f4-503c-4f55-ba5d-fb493a23cf0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Detail">
+    <Filter Include="Source Files\PipelineState">
       <UniqueIdentifier>{f5f05164-10f4-4eaf-a925-81f2fd00a245}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -139,17 +139,17 @@
     <ClInclude Include="include\OpenGLES2Renderer\RootSignature.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Detail\BlendState.h">
-      <Filter>Source Files\Detail</Filter>
+    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\IState.h">
+      <Filter>Source Files\PipelineState</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Detail\DepthStencilState.h">
-      <Filter>Source Files\Detail</Filter>
+    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\RasterizerState.h">
+      <Filter>Source Files\PipelineState</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Detail\RasterizerState.h">
-      <Filter>Source Files\Detail</Filter>
+    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\BlendState.h">
+      <Filter>Source Files\PipelineState</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\Detail\IState.h">
-      <Filter>Source Files\Detail</Filter>
+    <ClInclude Include="include\OpenGLES2Renderer\PipelineState\DepthStencilState.h">
+      <Filter>Source Files\PipelineState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -219,14 +219,14 @@
     <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Detail\RasterizerState.cpp">
-      <Filter>Source Files\Detail</Filter>
+    <ClCompile Include="src\PipelineState\DepthStencilState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
     </ClCompile>
-    <ClCompile Include="src\Detail\BlendState.cpp">
-      <Filter>Source Files\Detail</Filter>
+    <ClCompile Include="src\PipelineState\RasterizerState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
     </ClCompile>
-    <ClCompile Include="src\Detail\DepthStencilState.cpp">
-      <Filter>Source Files\Detail</Filter>
+    <ClCompile Include="src\PipelineState\BlendState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

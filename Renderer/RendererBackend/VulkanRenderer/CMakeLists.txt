@@ -83,9 +83,9 @@ set(SOURCE_CODES
 	src/UniformBufferGlsl.cpp
 	src/UniformBufferGlslBind.cpp
 	src/UniformBufferGlslDsa.cpp
-	src/Detail/BlendState.cpp
-	src/Detail/DepthStencilState.cpp
-	src/Detail/RasterizerState.cpp
+	src/PipelineState/BlendState.cpp
+	src/PipelineState/DepthStencilState.cpp
+	src/PipelineState/RasterizerState.cpp
 	src/Shader/FragmentShader.cpp
 	src/Shader/FragmentShaderGlsl.cpp
 	src/Shader/GeometryShader.cpp
