@@ -22,8 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/RootSignature.h"
-#include "VulkanRenderer/SamplerState.h"
 #include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/Texture/SamplerState.h"
 
 #include <memory.h>
 

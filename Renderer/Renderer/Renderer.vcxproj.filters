@@ -14,15 +14,12 @@
     <Filter Include="Header Files\PipelineState">
       <UniqueIdentifier>{cb8820ba-3175-4acd-aec2-231d4b613ab7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Texture">
+      <UniqueIdentifier>{b2ad6167-e41d-43a8-a4ef-af72c7942452}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Renderer\IRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\ITexture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\ITexture2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\IResource.h">
@@ -32,9 +29,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\IVertexBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\ITexture2DArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\IState.h">
@@ -49,13 +43,7 @@
     <ClInclude Include="include\Renderer\IBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\ITextureBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\IVertexArray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\ISamplerState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\RefCount.h">
@@ -65,12 +53,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\PlatformTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\SamplerStateTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\TextureTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\IndexBufferTypes.h">
@@ -157,6 +139,27 @@
     <ClInclude Include="include\Renderer\PipelineState\DepthStencilStateTypes.h">
       <Filter>Header Files\PipelineState</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\Texture\ITexture2D.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Texture\ITexture2DArray.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Texture\ITextureBuffer.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Texture\ITexture.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Texture\TextureTypes.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Texture\ISamplerState.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Texture\SamplerStateTypes.h">
+      <Filter>Header Files\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -174,22 +177,7 @@
     <None Include="include\Renderer\SmartRefCount.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="include\Renderer\ISamplerState.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="include\Renderer\IState.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\ITextureBuffer.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\ITexture.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\ITexture2D.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\ITexture2DArray.inl">
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\IVertexBuffer.inl">
@@ -219,9 +207,6 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\IRenderTarget.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\TextureTypes.inl">
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\IndexBufferTypes.inl">
@@ -268,6 +253,24 @@
     </None>
     <None Include="include\Renderer\PipelineState\BlendStateTypes.inl">
       <Filter>Header Files\PipelineState</Filter>
+    </None>
+    <None Include="include\Renderer\Texture\ITexture2D.inl">
+      <Filter>Header Files\Texture</Filter>
+    </None>
+    <None Include="include\Renderer\Texture\ITexture2DArray.inl">
+      <Filter>Header Files\Texture</Filter>
+    </None>
+    <None Include="include\Renderer\Texture\ITextureBuffer.inl">
+      <Filter>Header Files\Texture</Filter>
+    </None>
+    <None Include="include\Renderer\Texture\ITexture.inl">
+      <Filter>Header Files\Texture</Filter>
+    </None>
+    <None Include="include\Renderer\Texture\TextureTypes.inl">
+      <Filter>Header Files\Texture</Filter>
+    </None>
+    <None Include="include\Renderer\Texture\ISamplerState.inl">
+      <Filter>Header Files\Texture</Filter>
     </None>
   </ItemGroup>
 </Project>

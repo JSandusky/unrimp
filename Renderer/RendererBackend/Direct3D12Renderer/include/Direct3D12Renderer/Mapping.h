@@ -28,9 +28,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/BufferTypes.h>
-#include <Renderer/TextureTypes.h>
 #include <Renderer/VertexArrayTypes.h>
 #include <Renderer/IndexBufferTypes.h>
+#include <Renderer/Texture/TextureTypes.h>
 
 
 //[-------------------------------------------------------]

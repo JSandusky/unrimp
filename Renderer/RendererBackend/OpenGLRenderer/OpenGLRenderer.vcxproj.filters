@@ -23,6 +23,9 @@
     <Filter Include="Source Files\PipelineState">
       <UniqueIdentifier>{6794a761-5f92-4fb7-87d1-21e6a12ba69b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Texture">
+      <UniqueIdentifier>{96cf9a96-9584-4e36-92ce-520e261fa76f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h">
@@ -30,30 +33,6 @@
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Linux\ContextLinux.h">
       <Filter>Source Files\Linux</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture2DArray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture2DArrayBind.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture2DArrayDsa.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture2DBind.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture2DDsa.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\TextureBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\TextureBufferBind.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\TextureBufferDsa.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\VertexArray.h">
       <Filter>Source Files</Filter>
@@ -115,25 +94,7 @@
     <ClInclude Include="include\OpenGLRenderer\OpenGLRuntimeLinking.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\SamplerState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\SamplerStateBind.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\SamplerStateDsa.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\SamplerStateSo.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\SwapChain.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture2D.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\PipelineState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\RootSignature.h">
@@ -208,6 +169,48 @@
     <ClInclude Include="include\OpenGLRenderer\PipelineState\BlendState.h">
       <Filter>Source Files\PipelineState</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\PipelineState\PipelineState.h">
+      <Filter>Source Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\Texture2D.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\Texture2DArray.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\Texture2DArrayBind.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\Texture2DArrayDsa.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\Texture2DBind.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\Texture2DDsa.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\TextureBuffer.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\TextureBufferBind.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\TextureBufferDsa.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\SamplerState.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\SamplerStateBind.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\SamplerStateDsa.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Texture\SamplerStateSo.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -222,46 +225,7 @@
     <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
       <Filter>Source Files\Linux</Filter>
     </ClCompile>
-    <ClCompile Include="src\SamplerState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SamplerStateBind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SamplerStateDsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SamplerStateSo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2DArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2DArrayBind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2DArrayDsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2DBind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2DDsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureBufferBind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureBufferDsa.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexArray.cpp">
@@ -319,9 +283,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\OpenGLRuntimeLinking.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
@@ -393,6 +354,48 @@
     <ClCompile Include="src\PipelineState\BlendState.cpp">
       <Filter>Source Files\PipelineState</Filter>
     </ClCompile>
+    <ClCompile Include="src\PipelineState\PipelineState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\SamplerStateSo.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture2D.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture2DArray.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture2DArrayBind.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture2DArrayDsa.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture2DBind.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture2DDsa.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\TextureBuffer.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\TextureBufferBind.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\TextureBufferDsa.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\SamplerState.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\SamplerStateBind.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\SamplerStateDsa.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -402,12 +405,6 @@
     </None>
     <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl">
       <Filter>Source Files\Linux</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\Texture2DArray.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\TextureBuffer.inl">
-      <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\VertexArray.inl">
       <Filter>Source Files</Filter>
@@ -427,16 +424,7 @@
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\SamplerStateSo.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\SwapChain.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\Texture2D.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\PipelineState.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\RootSignature.inl">
@@ -492,6 +480,21 @@
     </None>
     <None Include="include\OpenGLRenderer\PipelineState\BlendState.inl">
       <Filter>Source Files\PipelineState</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\PipelineState\PipelineState.inl">
+      <Filter>Source Files\PipelineState</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Texture\Texture2D.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Texture\Texture2DArray.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Texture\TextureBuffer.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Texture\SamplerStateSo.inl">
+      <Filter>Source Files\Texture</Filter>
     </None>
   </ItemGroup>
 </Project>

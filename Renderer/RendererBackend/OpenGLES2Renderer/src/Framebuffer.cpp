@@ -23,8 +23,8 @@
 //[-------------------------------------------------------]
 #include "OpenGLES2Renderer/Framebuffer.h"
 #include "OpenGLES2Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 2 functions
-#include "OpenGLES2Renderer/Texture2D.h"
 #include "OpenGLES2Renderer/OpenGLES2Renderer.h"
+#include "OpenGLES2Renderer/Texture/Texture2D.h"
 
 
 //[-------------------------------------------------------]

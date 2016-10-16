@@ -24,8 +24,8 @@
 #include "Direct3D10Renderer/Framebuffer.h"
 #include "Direct3D10Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D10Renderer/D3D10.h"
-#include "Direct3D10Renderer/Texture2D.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
+#include "Direct3D10Renderer/Texture/Texture2D.h"
 
 #include <stdio.h>	// For "sprintf_s()"
 

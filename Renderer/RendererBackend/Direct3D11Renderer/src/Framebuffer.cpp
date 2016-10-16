@@ -24,8 +24,8 @@
 #include "Direct3D11Renderer/Framebuffer.h"
 #include "Direct3D11Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D11Renderer/D3D11.h"
-#include "Direct3D11Renderer/Texture2D.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
+#include "Direct3D11Renderer/Texture/Texture2D.h"
 
 #include <stdio.h>	// For "sprintf_s()"
 

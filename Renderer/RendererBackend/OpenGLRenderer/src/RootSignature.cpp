@@ -22,8 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/RootSignature.h"
-#include "OpenGLRenderer/SamplerState.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
+#include "OpenGLRenderer/Texture/SamplerState.h"
 
 #include <memory.h>
 

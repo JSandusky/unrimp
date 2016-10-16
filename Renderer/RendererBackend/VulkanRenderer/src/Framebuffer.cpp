@@ -22,8 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Framebuffer.h"
-#include "VulkanRenderer/Texture2D.h"
 #include "VulkanRenderer/Extensions.h"
+#include "VulkanRenderer/Texture/Texture2D.h"
 
 #include <limits.h>	// For "INT_MAX"
 

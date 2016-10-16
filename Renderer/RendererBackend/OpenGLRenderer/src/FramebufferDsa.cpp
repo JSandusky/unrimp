@@ -22,9 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/FramebufferDsa.h"
-#include "OpenGLRenderer/Texture2D.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
+#include "OpenGLRenderer/Texture/Texture2D.h"
 
 
 //[-------------------------------------------------------]

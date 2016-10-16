@@ -29,13 +29,8 @@
     <ClInclude Include="include\Renderer\IRenderTarget.h" />
     <ClInclude Include="include\Renderer\IResource.h" />
     <ClInclude Include="include\Renderer\IRootSignature.h" />
-    <ClInclude Include="include\Renderer\ISamplerState.h" />
     <ClInclude Include="include\Renderer\IState.h" />
     <ClInclude Include="include\Renderer\ISwapChain.h" />
-    <ClInclude Include="include\Renderer\ITexture.h" />
-    <ClInclude Include="include\Renderer\ITexture2D.h" />
-    <ClInclude Include="include\Renderer\ITexture2DArray.h" />
-    <ClInclude Include="include\Renderer\ITextureBuffer.h" />
     <ClInclude Include="include\Renderer\IUniformBuffer.h" />
     <ClInclude Include="include\Renderer\IVertexArray.h" />
     <ClInclude Include="include\Renderer\IVertexBuffer.h" />
@@ -51,7 +46,6 @@
     <ClInclude Include="include\Renderer\RendererTypes.h" />
     <ClInclude Include="include\Renderer\ResourceTypes.h" />
     <ClInclude Include="include\Renderer\RootSignatureTypes.h" />
-    <ClInclude Include="include\Renderer\SamplerStateTypes.h" />
     <ClInclude Include="include\Renderer\Shader\GeometryShaderTypes.h" />
     <ClInclude Include="include\Renderer\Shader\IFragmentShader.h" />
     <ClInclude Include="include\Renderer\Shader\IGeometryShader.h" />
@@ -63,7 +57,13 @@
     <ClInclude Include="include\Renderer\Shader\IVertexShader.h" />
     <ClInclude Include="include\Renderer\SmartRefCount.h" />
     <ClInclude Include="include\Renderer\Statistics.h" />
-    <ClInclude Include="include\Renderer\TextureTypes.h" />
+    <ClInclude Include="include\Renderer\Texture\ISamplerState.h" />
+    <ClInclude Include="include\Renderer\Texture\ITexture.h" />
+    <ClInclude Include="include\Renderer\Texture\ITexture2D.h" />
+    <ClInclude Include="include\Renderer\Texture\ITexture2DArray.h" />
+    <ClInclude Include="include\Renderer\Texture\ITextureBuffer.h" />
+    <ClInclude Include="include\Renderer\Texture\SamplerStateTypes.h" />
+    <ClInclude Include="include\Renderer\Texture\TextureTypes.h" />
     <ClInclude Include="include\Renderer\VertexArrayTypes.h" />
     <ClInclude Include="include\Renderer\WindowsHeader.h" />
   </ItemGroup>
@@ -78,13 +78,8 @@
     <None Include="include\Renderer\IRenderTarget.inl" />
     <None Include="include\Renderer\IResource.inl" />
     <None Include="include\Renderer\IRootSignature.inl" />
-    <None Include="include\Renderer\ISamplerState.inl" />
     <None Include="include\Renderer\IState.inl" />
     <None Include="include\Renderer\ISwapChain.inl" />
-    <None Include="include\Renderer\ITexture.inl" />
-    <None Include="include\Renderer\ITexture2D.inl" />
-    <None Include="include\Renderer\ITexture2DArray.inl" />
-    <None Include="include\Renderer\ITextureBuffer.inl" />
     <None Include="include\Renderer\IUniformBuffer.inl" />
     <None Include="include\Renderer\IVertexArray.inl" />
     <None Include="include\Renderer\IVertexBuffer.inl" />
@@ -104,7 +99,12 @@
     <None Include="include\Renderer\Shader\IVertexShader.inl" />
     <None Include="include\Renderer\SmartRefCount.inl" />
     <None Include="include\Renderer\Statistics.inl" />
-    <None Include="include\Renderer\TextureTypes.inl" />
+    <None Include="include\Renderer\Texture\ISamplerState.inl" />
+    <None Include="include\Renderer\Texture\ITexture.inl" />
+    <None Include="include\Renderer\Texture\ITexture2D.inl" />
+    <None Include="include\Renderer\Texture\ITexture2DArray.inl" />
+    <None Include="include\Renderer\Texture\ITextureBuffer.inl" />
+    <None Include="include\Renderer\Texture\TextureTypes.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

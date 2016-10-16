@@ -27,11 +27,11 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/TextureTypes.h>
 #include <Renderer/RendererTypes.h>
 #include <Renderer/IndexBufferTypes.h>
 #include <Renderer/VertexArrayTypes.h>
-#include <Renderer/SamplerStateTypes.h>
+#include <Renderer/Texture/TextureTypes.h>
+#include <Renderer/Texture/SamplerStateTypes.h>
 #include <Renderer/PipelineState/BlendStateTypes.h>
 
 

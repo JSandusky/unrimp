@@ -32,7 +32,6 @@
     <ClInclude Include="include\NullRenderer\NullRenderer.h" />
     <ClInclude Include="include\NullRenderer\PipelineState\PipelineState.h" />
     <ClInclude Include="include\NullRenderer\RootSignature.h" />
-    <ClInclude Include="include\NullRenderer\SamplerState.h" />
     <ClInclude Include="include\NullRenderer\Shader\FragmentShader.h" />
     <ClInclude Include="include\NullRenderer\Shader\GeometryShader.h" />
     <ClInclude Include="include\NullRenderer\Shader\Program.h" />
@@ -41,9 +40,10 @@
     <ClInclude Include="include\NullRenderer\Shader\TessellationEvaluationShader.h" />
     <ClInclude Include="include\NullRenderer\Shader\VertexShader.h" />
     <ClInclude Include="include\NullRenderer\SwapChain.h" />
-    <ClInclude Include="include\NullRenderer\Texture2D.h" />
-    <ClInclude Include="include\NullRenderer\Texture2DArray.h" />
-    <ClInclude Include="include\NullRenderer\TextureBuffer.h" />
+    <ClInclude Include="include\NullRenderer\Texture\SamplerState.h" />
+    <ClInclude Include="include\NullRenderer\Texture\Texture2D.h" />
+    <ClInclude Include="include\NullRenderer\Texture\Texture2DArray.h" />
+    <ClInclude Include="include\NullRenderer\Texture\TextureBuffer.h" />
     <ClInclude Include="include\NullRenderer\UniformBuffer.h" />
     <ClInclude Include="include\NullRenderer\VertexArray.h" />
     <ClInclude Include="include\NullRenderer\VertexBuffer.h" />
@@ -54,7 +54,6 @@
     <ClCompile Include="src\NullRenderer.cpp" />
     <ClCompile Include="src\PipelineState\PipelineState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
-    <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\Shader\FragmentShader.cpp" />
     <ClCompile Include="src\Shader\GeometryShader.cpp" />
     <ClCompile Include="src\Shader\Program.cpp" />
@@ -63,9 +62,10 @@
     <ClCompile Include="src\Shader\TessellationEvaluationShader.cpp" />
     <ClCompile Include="src\Shader\VertexShader.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
-    <ClCompile Include="src\Texture2D.cpp" />
-    <ClCompile Include="src\Texture2DArray.cpp" />
-    <ClCompile Include="src\TextureBuffer.cpp" />
+    <ClCompile Include="src\Texture\SamplerState.cpp" />
+    <ClCompile Include="src\Texture\Texture2D.cpp" />
+    <ClCompile Include="src\Texture\Texture2DArray.cpp" />
+    <ClCompile Include="src\Texture\TextureBuffer.cpp" />
     <ClCompile Include="src\UniformBuffer.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />

@@ -11,6 +11,9 @@
     <Filter Include="Source Files\PipelineState">
       <UniqueIdentifier>{54e1d0d4-4b27-4571-9fef-23de03419593}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Texture">
+      <UniqueIdentifier>{3c083418-afdf-4b27-8d0c-8a6d57e8a299}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -59,19 +62,7 @@
     <ClInclude Include="include\NullRenderer\NullRenderer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\NullRenderer\SamplerState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\NullRenderer\SwapChain.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\NullRenderer\Texture2D.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\NullRenderer\Texture2DArray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\NullRenderer\TextureBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\NullRenderer\VertexArray.h">
@@ -88,6 +79,18 @@
     </ClInclude>
     <ClInclude Include="include\NullRenderer\PipelineState\PipelineState.h">
       <Filter>Source Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NullRenderer\Texture\Texture2D.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NullRenderer\Texture\Texture2DArray.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NullRenderer\Texture\TextureBuffer.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NullRenderer\Texture\SamplerState.h">
+      <Filter>Source Files\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,19 +124,7 @@
     <ClCompile Include="src\NullRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SamplerState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2DArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexArray.cpp">
@@ -150,6 +141,18 @@
     </ClCompile>
     <ClCompile Include="src\PipelineState\PipelineState.cpp">
       <Filter>Source Files\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture2D.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture2DArray.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\TextureBuffer.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\SamplerState.cpp">
+      <Filter>Source Files\Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

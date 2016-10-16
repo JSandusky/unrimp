@@ -23,8 +23,8 @@
 //[-------------------------------------------------------]
 #include "Direct3D9Renderer/Framebuffer.h"
 #include "Direct3D9Renderer/d3d9.h"
-#include "Direct3D9Renderer/Texture2D.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
+#include "Direct3D9Renderer/Texture/Texture2D.h"
 
 
 //[-------------------------------------------------------]

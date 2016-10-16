@@ -17,6 +17,9 @@
     <Filter Include="Source Files\PipelineState">
       <UniqueIdentifier>{6794a761-5f92-4fb7-87d1-21e6a12ba69b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Texture">
+      <UniqueIdentifier>{692001cc-162e-4a3a-b7bf-53608e86a0ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\VulkanRenderer\Windows\ContextWindows.h">
@@ -45,12 +48,6 @@
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.h">
       <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\Texture2DArray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\TextureBuffer.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\VertexArray.h">
       <Filter>Source Files</Filter>
@@ -82,16 +79,7 @@
     <ClInclude Include="include\VulkanRenderer\VulkanRuntimeLinking.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\SamplerState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\VulkanRenderer\SwapChain.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\Texture2D.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\PipelineState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\RootSignature.h">
@@ -114,6 +102,21 @@
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\PipelineState\RasterizerState.h">
       <Filter>Source Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\PipelineState\PipelineState.h">
+      <Filter>Source Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Texture\Texture2DArray.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Texture\TextureBuffer.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Texture\SamplerState.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Texture\Texture2D.h">
+      <Filter>Source Files\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -150,19 +153,7 @@
     <ClCompile Include="src\Shader\GeometryShaderGlsl.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="src\SamplerState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2DArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexArray.cpp">
@@ -192,9 +183,6 @@
     <ClCompile Include="src\VulkanRuntimeLinking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\PipelineState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -212,6 +200,21 @@
     </ClCompile>
     <ClCompile Include="src\PipelineState\RasterizerState.cpp">
       <Filter>Source Files\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PipelineState\PipelineState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture2D.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture2DArray.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\TextureBuffer.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\SamplerState.cpp">
+      <Filter>Source Files\Texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -241,12 +244,6 @@
     <None Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\VulkanRenderer\Texture2DArray.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\TextureBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\VulkanRenderer\VertexArray.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -263,12 +260,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\VulkanRenderer\SwapChain.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\Texture2D.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\PipelineState.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\VulkanRenderer\RootSignature.inl">
@@ -288,6 +279,18 @@
     </None>
     <None Include="include\VulkanRenderer\PipelineState\RasterizerState.inl">
       <Filter>Source Files\PipelineState</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\PipelineState\PipelineState.inl">
+      <Filter>Source Files\PipelineState</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Texture\Texture2DArray.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Texture\TextureBuffer.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Texture\Texture2D.inl">
+      <Filter>Source Files\Texture</Filter>
     </None>
   </ItemGroup>
 </Project>

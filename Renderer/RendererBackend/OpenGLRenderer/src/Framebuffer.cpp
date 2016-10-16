@@ -22,8 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Framebuffer.h"
-#include "OpenGLRenderer/Texture2D.h"
 #include "OpenGLRenderer/Extensions.h"
+#include "OpenGLRenderer/Texture/Texture2D.h"
 
 #include <limits.h>	// For "INT_MAX"
 

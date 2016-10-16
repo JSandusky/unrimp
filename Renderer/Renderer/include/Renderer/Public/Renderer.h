@@ -267,7 +267,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/SamplerStateTypes.h
+	// Renderer/Texture/SamplerStateTypes.h
 	#ifndef __RENDERER_SAMPLERSTATE_TYPES_H__
 	#define __RENDERER_SAMPLERSTATE_TYPES_H__
 		enum class FilterMode
@@ -726,7 +726,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/TextureTypes.h
+	// Renderer/Texture/TextureTypes.h
 	#ifndef __RENDERER_TEXTURE_TYPES_H__
 	#define __RENDERER_TEXTURE_TYPES_H__
 		struct TextureFormat
@@ -2051,7 +2051,7 @@ namespace Renderer
 		typedef SmartRefCount<IUniformBuffer> IUniformBufferPtr;
 	#endif
 
-	// Renderer/ITexture.h
+	// Renderer/Texture/ITexture.h
 	#ifndef __RENDERER_ITEXTURE_H__
 	#define __RENDERER_ITEXTURE_H__
 		class ITexture : public IResource
@@ -2066,7 +2066,7 @@ namespace Renderer
 		typedef SmartRefCount<ITexture> ITexturePtr;
 	#endif
 
-	// Renderer/ITextureBuffer.h
+	// Renderer/Texture/ITextureBuffer.h
 	#ifndef __RENDERER_ITEXTUREBUFFER_H__
 	#define __RENDERER_ITEXTUREBUFFER_H__
 		class ITextureBuffer : public ITexture
@@ -2083,7 +2083,7 @@ namespace Renderer
 		typedef SmartRefCount<ITextureBuffer> ITextureBufferPtr;
 	#endif
 
-	// Renderer/ITexture2D.h
+	// Renderer/Texture/ITexture2D.h
 	#ifndef __RENDERER_ITEXTURE2D_H__
 	#define __RENDERER_ITEXTURE2D_H__
 		class ITexture2D : public ITexture
@@ -2109,7 +2109,7 @@ namespace Renderer
 		typedef SmartRefCount<ITexture2D> ITexture2DPtr;
 	#endif
 
-	// Renderer/ITexture2DArray.h
+	// Renderer/Texture/ITexture2DArray.h
 	#ifndef __RENDERER_ITEXTURE2DARRAY_H__
 	#define __RENDERER_ITEXTURE2DARRAY_H__
 		class ITexture2DArray : public ITexture
@@ -2170,7 +2170,7 @@ namespace Renderer
 		typedef SmartRefCount<IPipelineState> IPipelineStatePtr;
 	#endif
 
-	// Renderer/ISamplerState.h
+	// Renderer/Texture/ISamplerState.h
 	#ifndef __RENDERER_ISAMPLERSTATE_H__
 	#define __RENDERER_ISAMPLERSTATE_H__
 		class ISamplerState : public IState

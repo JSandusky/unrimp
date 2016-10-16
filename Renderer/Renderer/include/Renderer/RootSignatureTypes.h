@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/SamplerStateTypes.h"
+#include "Renderer/Texture/SamplerStateTypes.h"
 
 #include <string.h>	// For strcpy
 

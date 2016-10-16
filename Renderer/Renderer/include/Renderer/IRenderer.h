@@ -32,10 +32,10 @@
 #endif
 #include "Renderer/BufferTypes.h"
 #include "Renderer/Capabilities.h"
-#include "Renderer/TextureTypes.h"
 #include "Renderer/RendererTypes.h"
 #include "Renderer/SmartRefCount.h"
 #include "Renderer/IndexBufferTypes.h"
+#include "Renderer/Texture/TextureTypes.h"
 
 
 //[-------------------------------------------------------]

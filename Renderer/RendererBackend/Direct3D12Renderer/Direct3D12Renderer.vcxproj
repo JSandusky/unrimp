@@ -25,7 +25,6 @@
     <None Include="include\Direct3D12Renderer\IndexBuffer.inl" />
     <None Include="include\Direct3D12Renderer\PipelineState\PipelineState.inl" />
     <None Include="include\Direct3D12Renderer\RootSignature.inl" />
-    <None Include="include\Direct3D12Renderer\SamplerState.inl" />
     <None Include="include\Direct3D12Renderer\Shader\FragmentShaderHlsl.inl" />
     <None Include="include\Direct3D12Renderer\Shader\GeometryShaderHlsl.inl" />
     <None Include="include\Direct3D12Renderer\Shader\ProgramHlsl.inl" />
@@ -33,9 +32,10 @@
     <None Include="include\Direct3D12Renderer\Shader\TessellationEvaluationShaderHlsl.inl" />
     <None Include="include\Direct3D12Renderer\Shader\VertexShaderHlsl.inl" />
     <None Include="include\Direct3D12Renderer\SwapChain.inl" />
-    <None Include="include\Direct3D12Renderer\Texture2D.inl" />
-    <None Include="include\Direct3D12Renderer\Texture2DArray.inl" />
-    <None Include="include\Direct3D12Renderer\TextureBuffer.inl" />
+    <None Include="include\Direct3D12Renderer\Texture\SamplerState.inl" />
+    <None Include="include\Direct3D12Renderer\Texture\Texture2D.inl" />
+    <None Include="include\Direct3D12Renderer\Texture\Texture2DArray.inl" />
+    <None Include="include\Direct3D12Renderer\Texture\TextureBuffer.inl" />
     <None Include="include\Direct3D12Renderer\UniformBuffer.inl" />
     <None Include="include\Direct3D12Renderer\VertexBuffer.inl" />
     <None Include="Readme.txt" />
@@ -52,7 +52,6 @@
     <ClInclude Include="include\Direct3D12Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D12Renderer\PipelineState\PipelineState.h" />
     <ClInclude Include="include\Direct3D12Renderer\RootSignature.h" />
-    <ClInclude Include="include\Direct3D12Renderer\SamplerState.h" />
     <ClInclude Include="include\Direct3D12Renderer\Shader\FragmentShaderHlsl.h" />
     <ClInclude Include="include\Direct3D12Renderer\Shader\GeometryShaderHlsl.h" />
     <ClInclude Include="include\Direct3D12Renderer\Shader\ProgramHlsl.h" />
@@ -61,9 +60,10 @@
     <ClInclude Include="include\Direct3D12Renderer\Shader\TessellationEvaluationShaderHlsl.h" />
     <ClInclude Include="include\Direct3D12Renderer\Shader\VertexShaderHlsl.h" />
     <ClInclude Include="include\Direct3D12Renderer\SwapChain.h" />
-    <ClInclude Include="include\Direct3D12Renderer\Texture2D.h" />
-    <ClInclude Include="include\Direct3D12Renderer\Texture2DArray.h" />
-    <ClInclude Include="include\Direct3D12Renderer\TextureBuffer.h" />
+    <ClInclude Include="include\Direct3D12Renderer\Texture\SamplerState.h" />
+    <ClInclude Include="include\Direct3D12Renderer\Texture\Texture2D.h" />
+    <ClInclude Include="include\Direct3D12Renderer\Texture\Texture2DArray.h" />
+    <ClInclude Include="include\Direct3D12Renderer\Texture\TextureBuffer.h" />
     <ClInclude Include="include\Direct3D12Renderer\UniformBuffer.h" />
     <ClInclude Include="include\Direct3D12Renderer\VertexArray.h" />
     <ClInclude Include="include\Direct3D12Renderer\VertexBuffer.h" />
@@ -77,7 +77,6 @@
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\PipelineState\PipelineState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
-    <ClCompile Include="src\SamplerState.cpp" />
     <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp" />
     <ClCompile Include="src\Shader\GeometryShaderHlsl.cpp" />
     <ClCompile Include="src\Shader\ProgramHlsl.cpp" />
@@ -86,9 +85,10 @@
     <ClCompile Include="src\Shader\TessellationEvaluationShaderHlsl.cpp" />
     <ClCompile Include="src\Shader\VertexShaderHlsl.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
-    <ClCompile Include="src\Texture2D.cpp" />
-    <ClCompile Include="src\Texture2DArray.cpp" />
-    <ClCompile Include="src\TextureBuffer.cpp" />
+    <ClCompile Include="src\Texture\SamplerState.cpp" />
+    <ClCompile Include="src\Texture\Texture2D.cpp" />
+    <ClCompile Include="src\Texture\Texture2DArray.cpp" />
+    <ClCompile Include="src\Texture\TextureBuffer.cpp" />
     <ClCompile Include="src\UniformBuffer.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />

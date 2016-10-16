@@ -11,6 +11,9 @@
     <Filter Include="Source Files\PipelineState">
       <UniqueIdentifier>{5cf85777-e281-44f4-a5e4-8f08505f0772}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Texture">
+      <UniqueIdentifier>{fd3e5149-a64a-400b-99d0-2c6dd9133b51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -33,19 +36,7 @@
     <None Include="include\Direct3D11Renderer\Shader\GeometryShaderHlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\SamplerState.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D11Renderer\SwapChain.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\Texture2D.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\Texture2DArray.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\TextureBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\VertexBuffer.inl">
@@ -58,9 +49,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\IndexBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\PipelineState.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\RootSignature.inl">
@@ -80,6 +68,21 @@
     </None>
     <None Include="include\Direct3D11Renderer\PipelineState\BlendState.inl">
       <Filter>Source Files\PipelineState</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\PipelineState\PipelineState.inl">
+      <Filter>Source Files\PipelineState</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Texture\Texture2D.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Texture\Texture2DArray.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Texture\TextureBuffer.inl">
+      <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Texture\SamplerState.inl">
+      <Filter>Source Files\Texture</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -107,19 +110,7 @@
     <ClInclude Include="include\Direct3D11Renderer\Mapping.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\SamplerState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\SwapChain.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Texture2D.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Texture2DArray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\TextureBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\VertexArray.h">
@@ -152,9 +143,6 @@
     <ClInclude Include="include\Direct3D11Renderer\IndexBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\PipelineState.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\RootSignature.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -172,6 +160,21 @@
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\PipelineState\BlendState.h">
       <Filter>Source Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\PipelineState\PipelineState.h">
+      <Filter>Source Files\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Texture\Texture2D.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Texture\Texture2DArray.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Texture\TextureBuffer.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Texture\SamplerState.h">
+      <Filter>Source Files\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -217,28 +220,13 @@
     <ClCompile Include="src\Mapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SamplerState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture2DArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PipelineState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
@@ -255,6 +243,21 @@
     </ClCompile>
     <ClCompile Include="src\PipelineState\RasterizerState.cpp">
       <Filter>Source Files\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PipelineState\PipelineState.cpp">
+      <Filter>Source Files\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture2D.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\Texture2DArray.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\TextureBuffer.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture\SamplerState.cpp">
+      <Filter>Source Files\Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
