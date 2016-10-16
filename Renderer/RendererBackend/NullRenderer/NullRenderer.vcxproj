@@ -26,8 +26,11 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\NullRenderer\Buffer\IndexBuffer.h" />
+    <ClInclude Include="include\NullRenderer\Buffer\UniformBuffer.h" />
+    <ClInclude Include="include\NullRenderer\Buffer\VertexArray.h" />
+    <ClInclude Include="include\NullRenderer\Buffer\VertexBuffer.h" />
     <ClInclude Include="include\NullRenderer\Framebuffer.h" />
-    <ClInclude Include="include\NullRenderer\IndexBuffer.h" />
     <ClInclude Include="include\NullRenderer\NullDebug.h" />
     <ClInclude Include="include\NullRenderer\NullRenderer.h" />
     <ClInclude Include="include\NullRenderer\PipelineState\PipelineState.h" />
@@ -44,13 +47,13 @@
     <ClInclude Include="include\NullRenderer\Texture\Texture2D.h" />
     <ClInclude Include="include\NullRenderer\Texture\Texture2DArray.h" />
     <ClInclude Include="include\NullRenderer\Texture\TextureBuffer.h" />
-    <ClInclude Include="include\NullRenderer\UniformBuffer.h" />
-    <ClInclude Include="include\NullRenderer\VertexArray.h" />
-    <ClInclude Include="include\NullRenderer\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
+    <ClCompile Include="src\Buffer\VertexArray.cpp" />
+    <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
-    <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\NullRenderer.cpp" />
     <ClCompile Include="src\PipelineState\PipelineState.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
@@ -66,9 +69,6 @@
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
     <ClCompile Include="src\Texture\TextureBuffer.cpp" />
-    <ClCompile Include="src\UniformBuffer.cpp" />
-    <ClCompile Include="src\VertexArray.cpp" />
-    <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A9AF6BD9-276D-4AC3-82F0-3588799CF3A0}</ProjectGuid>

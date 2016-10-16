@@ -14,6 +14,9 @@
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{3c083418-afdf-4b27-8d0c-8a6d57e8a299}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Buffer">
+      <UniqueIdentifier>{cd555c6b-7bac-4ea5-9e0e-0b470e9eb6a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -53,9 +56,6 @@
     <ClInclude Include="include\NullRenderer\Framebuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\NullRenderer\IndexBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\NullRenderer\NullDebug.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -65,16 +65,7 @@
     <ClInclude Include="include\NullRenderer\SwapChain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\NullRenderer\VertexArray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\NullRenderer\VertexBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\NullRenderer\RootSignature.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\NullRenderer\UniformBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\NullRenderer\PipelineState\PipelineState.h">
@@ -91,6 +82,18 @@
     </ClInclude>
     <ClInclude Include="include\NullRenderer\Texture\SamplerState.h">
       <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NullRenderer\Buffer\UniformBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NullRenderer\Buffer\VertexBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NullRenderer\Buffer\IndexBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NullRenderer\Buffer\VertexArray.h">
+      <Filter>Source Files\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,25 +121,13 @@
     <ClCompile Include="src\Framebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\NullRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\VertexArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UniformBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PipelineState\PipelineState.cpp">
@@ -153,6 +144,18 @@
     </ClCompile>
     <ClCompile Include="src\Texture\SamplerState.cpp">
       <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\IndexBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\UniformBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArray.cpp">
+      <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

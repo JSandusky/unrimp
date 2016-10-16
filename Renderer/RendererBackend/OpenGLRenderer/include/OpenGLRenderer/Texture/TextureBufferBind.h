@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Texture/TextureBuffer.h"
 
-#include <Renderer/BufferTypes.h>
+#include <Renderer/Buffer/BufferTypes.h>
 #include <Renderer/Texture/TextureTypes.h>
 
 

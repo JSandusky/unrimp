@@ -27,7 +27,7 @@
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #include "OpenGLRenderer/Extensions.h"
 
-#include <Renderer/VertexArrayTypes.h>
+#include <Renderer/Buffer/VertexArrayTypes.h>
 
 
 //[-------------------------------------------------------]

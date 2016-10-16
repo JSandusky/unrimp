@@ -30,11 +30,11 @@
 #ifndef RENDERER_NO_STATISTICS
 	#include "Renderer/Statistics.h"
 #endif
-#include "Renderer/BufferTypes.h"
 #include "Renderer/Capabilities.h"
 #include "Renderer/RendererTypes.h"
 #include "Renderer/SmartRefCount.h"
-#include "Renderer/IndexBufferTypes.h"
+#include "Renderer/Buffer/BufferTypes.h"
+#include "Renderer/Buffer/IndexBufferTypes.h"
 #include "Renderer/Texture/TextureTypes.h"
 
 

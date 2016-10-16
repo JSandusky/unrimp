@@ -32,7 +32,7 @@
 #include "OpenGLRenderer/RootSignature.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
-#include <Renderer/VertexArrayTypes.h>
+#include <Renderer/Buffer/VertexArrayTypes.h>
 
 
 //[-------------------------------------------------------]

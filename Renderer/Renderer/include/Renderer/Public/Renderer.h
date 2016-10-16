@@ -709,23 +709,6 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/BufferTypes.h
-	#ifndef __RENDERER_BUFFER_TYPES_H__
-	#define __RENDERER_BUFFER_TYPES_H__
-		enum class BufferUsage
-		{
-			STREAM_DRAW  = 0x88E0,
-			STREAM_READ  = 0x88E1,
-			STREAM_COPY  = 0x88E2,
-			STATIC_DRAW  = 0x88E4,
-			STATIC_READ  = 0x88E5,
-			STATIC_COPY  = 0x88E6,
-			DYNAMIC_DRAW = 0x88E8,
-			DYNAMIC_READ = 0x88E9,
-			DYNAMIC_COPY = 0x88EA
-		};
-	#endif
-
 	// Renderer/Texture/TextureTypes.h
 	#ifndef __RENDERER_TEXTURE_TYPES_H__
 	#define __RENDERER_TEXTURE_TYPES_H__
@@ -1053,7 +1036,24 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/VertexArrayTypes.h
+	// Renderer/Buffer/BufferTypes.h
+	#ifndef __RENDERER_BUFFER_TYPES_H__
+	#define __RENDERER_BUFFER_TYPES_H__
+		enum class BufferUsage
+		{
+			STREAM_DRAW  = 0x88E0,
+			STREAM_READ  = 0x88E1,
+			STREAM_COPY  = 0x88E2,
+			STATIC_DRAW  = 0x88E4,
+			STATIC_READ  = 0x88E5,
+			STATIC_COPY  = 0x88E6,
+			DYNAMIC_DRAW = 0x88E8,
+			DYNAMIC_READ = 0x88E9,
+			DYNAMIC_COPY = 0x88EA
+		};
+	#endif
+
+	// Renderer/Buffer/VertexArrayTypes.h
 	#ifndef __RENDERER_VERTEXARRAY_TYPES_H__
 	#define __RENDERER_VERTEXARRAY_TYPES_H__
 		enum class VertexAttributeFormat
@@ -1100,7 +1100,7 @@ namespace Renderer
 		};
 	#endif
 
-	// Renderer/IndexBufferTypes.h
+	// Renderer/Buffer/IndexBufferTypes.h
 	#ifndef __RENDERER_INDEXBUFFER_TYPES_H__
 	#define __RENDERER_INDEXBUFFER_TYPES_H__
 		struct IndexBufferFormat
@@ -1921,21 +1921,6 @@ namespace Renderer
 		typedef SmartRefCount<IProgram> IProgramPtr;
 	#endif
 
-	// Renderer/IVertexArray.h
-	#ifndef __RENDERER_IVERTEXARRAY_H__
-	#define __RENDERER_IVERTEXARRAY_H__
-		class IVertexArray : public IResource
-		{
-		public:
-			virtual ~IVertexArray();
-		protected:
-			explicit IVertexArray(IRenderer& renderer);
-			explicit IVertexArray(const IVertexArray& source);
-			IVertexArray& operator =(const IVertexArray& source);
-		};
-		typedef SmartRefCount<IVertexArray> IVertexArrayPtr;
-	#endif
-
 	// Renderer/IRenderTarget.h
 	#ifndef __RENDERER_IRENDERTARGET_H__
 	#define __RENDERER_IRENDERTARGET_H__
@@ -1989,7 +1974,22 @@ namespace Renderer
 		typedef SmartRefCount<IFramebuffer> IFramebufferPtr;
 	#endif
 
-	// Renderer/IBuffer.h
+	// Renderer/Buffer/IVertexArray.h
+	#ifndef __RENDERER_IVERTEXARRAY_H__
+	#define __RENDERER_IVERTEXARRAY_H__
+		class IVertexArray : public IResource
+		{
+		public:
+			virtual ~IVertexArray();
+		protected:
+			explicit IVertexArray(IRenderer& renderer);
+			explicit IVertexArray(const IVertexArray& source);
+			IVertexArray& operator =(const IVertexArray& source);
+		};
+		typedef SmartRefCount<IVertexArray> IVertexArrayPtr;
+	#endif
+
+	// Renderer/Buffer/IBuffer.h
 	#ifndef __RENDERER_IBUFFER_H__
 	#define __RENDERER_IBUFFER_H__
 		class IBuffer : public IResource
@@ -2004,7 +2004,7 @@ namespace Renderer
 		typedef SmartRefCount<IBuffer> IBufferPtr;
 	#endif
 
-	// Renderer/IIndexBuffer.h
+	// Renderer/Buffer/IIndexBuffer.h
 	#ifndef __RENDERER_IINDEXBUFFER_H__
 	#define __RENDERER_IINDEXBUFFER_H__
 		class IIndexBuffer : public IBuffer
@@ -2019,7 +2019,7 @@ namespace Renderer
 		typedef SmartRefCount<IIndexBuffer> IIndexBufferPtr;
 	#endif
 
-	// Renderer/IVertexBuffer.h
+	// Renderer/Buffer/IVertexBuffer.h
 	#ifndef __RENDERER_IVERTEXBUFFER_H__
 	#define __RENDERER_IVERTEXBUFFER_H__
 		class IVertexBuffer : public IBuffer
@@ -2034,7 +2034,7 @@ namespace Renderer
 		typedef SmartRefCount<IVertexBuffer> IVertexBufferPtr;
 	#endif
 
-	// Renderer/IUniformBuffer.h
+	// Renderer/Buffer/IUniformBuffer.h
 	#ifndef __RENDERER_IUNIFORMBUFFER_H__
 	#define __RENDERER_IUNIFORMBUFFER_H__
 		class IUniformBuffer : public IBuffer

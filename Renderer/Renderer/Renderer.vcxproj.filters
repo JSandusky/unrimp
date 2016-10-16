@@ -17,6 +17,9 @@
     <Filter Include="Header Files\Texture">
       <UniqueIdentifier>{b2ad6167-e41d-43a8-a4ef-af72c7942452}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Buffer">
+      <UniqueIdentifier>{a53f6316-f7e6-4adf-a658-40fca9c575ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Renderer\IRenderer.h">
@@ -25,25 +28,10 @@
     <ClInclude Include="include\Renderer\IResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\IIndexBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IVertexBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\IState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\IUniformBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\Capabilities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IVertexArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\RefCount.h">
@@ -53,15 +41,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\PlatformTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\IndexBufferTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\BufferTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\VertexArrayTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer\RendererTypes.h">
@@ -160,6 +139,30 @@
     <ClInclude Include="include\Renderer\Texture\SamplerStateTypes.h">
       <Filter>Header Files\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\IIndexBuffer.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\IndexBufferTypes.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\IUniformBuffer.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\IVertexBuffer.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\BufferTypes.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\IBuffer.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\IVertexArray.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\VertexArrayTypes.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -180,21 +183,6 @@
     <None Include="include\Renderer\IState.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="include\Renderer\IVertexBuffer.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IBuffer.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IIndexBuffer.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IUniformBuffer.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IVertexArray.inl">
-      <Filter>Header Files</Filter>
-    </None>
     <None Include="include\Renderer\Statistics.inl">
       <Filter>Header Files</Filter>
     </None>
@@ -207,9 +195,6 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\IRenderTarget.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\IndexBufferTypes.inl">
       <Filter>Header Files</Filter>
     </None>
     <None Include="include\Renderer\IRootSignature.inl">
@@ -271,6 +256,24 @@
     </None>
     <None Include="include\Renderer\Texture\ISamplerState.inl">
       <Filter>Header Files\Texture</Filter>
+    </None>
+    <None Include="include\Renderer\Buffer\IBuffer.inl">
+      <Filter>Header Files\Buffer</Filter>
+    </None>
+    <None Include="include\Renderer\Buffer\IIndexBuffer.inl">
+      <Filter>Header Files\Buffer</Filter>
+    </None>
+    <None Include="include\Renderer\Buffer\IndexBufferTypes.inl">
+      <Filter>Header Files\Buffer</Filter>
+    </None>
+    <None Include="include\Renderer\Buffer\IUniformBuffer.inl">
+      <Filter>Header Files\Buffer</Filter>
+    </None>
+    <None Include="include\Renderer\Buffer\IVertexBuffer.inl">
+      <Filter>Header Files\Buffer</Filter>
+    </None>
+    <None Include="include\Renderer\Buffer\IVertexArray.inl">
+      <Filter>Header Files\Buffer</Filter>
     </None>
   </ItemGroup>
 </Project>

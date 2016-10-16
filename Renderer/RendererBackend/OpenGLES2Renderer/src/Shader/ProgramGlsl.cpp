@@ -28,7 +28,7 @@
 #include "OpenGLES2Renderer/RootSignature.h"
 #include "OpenGLES2Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 2 functions
 
-#include <Renderer/VertexArrayTypes.h>
+#include <Renderer/Buffer/VertexArrayTypes.h>
 
 
 //[-------------------------------------------------------]

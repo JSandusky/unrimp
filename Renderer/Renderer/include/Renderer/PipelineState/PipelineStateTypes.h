@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/VertexArrayTypes.h"
+#include "Renderer/Buffer/VertexArrayTypes.h"
 #include "Renderer/Texture/TextureTypes.h"
 #include "Renderer/PipelineState/BlendStateTypes.h"
 #include "Renderer/PipelineState/RasterizerStateTypes.h"

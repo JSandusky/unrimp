@@ -12,15 +12,6 @@
     <None Include="include\OpenGLES2Renderer\SwapChain.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\OpenGLES2Renderer\VertexArray.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\VertexArrayVao.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\VertexBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\OpenGLES2Renderer\ExtensionsRuntimeLinking.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -28,9 +19,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLES2Renderer\IContext.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLES2Renderer\IndexBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLES2Renderer\OpenGLES2Renderer.inl">
@@ -57,6 +45,18 @@
     <None Include="include\OpenGLES2Renderer\Texture\Texture2DArray.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
+    <None Include="include\OpenGLES2Renderer\Buffer\IndexBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\Buffer\VertexBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\Buffer\VertexArrayVao.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLES2Renderer\Buffer\VertexArray.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -70,6 +70,9 @@
     </Filter>
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{181485a1-0707-4844-9aeb-26d4f2ce0f3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Buffer">
+      <UniqueIdentifier>{ad930410-436a-48e0-b455-9e1e1eb9aa47}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -88,18 +91,6 @@
     <ClInclude Include="include\OpenGLES2Renderer\SwapChain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\VertexArray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\VertexArrayNoVao.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\VertexArrayVao.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\VertexBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\ContextRuntimeLinking.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -113,9 +104,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\IExtensions.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLES2Renderer\IndexBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLES2Renderer\Mapping.h">
@@ -154,6 +142,21 @@
     <ClInclude Include="include\OpenGLES2Renderer\Texture\Texture2D.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\IndexBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArrayNoVao.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArrayVao.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES2Renderer\Buffer\VertexArray.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\ProgramGlsl.cpp">
@@ -180,9 +183,6 @@
     <ClCompile Include="src\IExtensions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Mapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -190,18 +190,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArrayNoVao.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArrayVao.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ContextRuntimeLinking.cpp">
@@ -230,6 +218,21 @@
     </ClCompile>
     <ClCompile Include="src\Texture\Texture2DArray.cpp">
       <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\IndexBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArray.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArrayNoVao.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArrayVao.cpp">
+      <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

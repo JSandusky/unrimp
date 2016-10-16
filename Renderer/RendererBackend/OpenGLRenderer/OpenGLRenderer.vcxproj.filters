@@ -26,6 +26,9 @@
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{96cf9a96-9584-4e36-92ce-520e261fa76f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Buffer">
+      <UniqueIdentifier>{d3be2eff-a36d-468c-ab06-7f47731d1622}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h">
@@ -33,30 +36,6 @@
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Linux\ContextLinux.h">
       <Filter>Source Files\Linux</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\VertexArray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\VertexArrayNoVao.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\VertexArrayVao.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\VertexArrayVaoBind.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\VertexArrayVaoDsa.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\VertexBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\VertexBufferBind.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\VertexBufferDsa.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Extensions.h">
       <Filter>Source Files</Filter>
@@ -71,15 +50,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\IContext.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\IndexBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\IndexBufferBind.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\IndexBufferDsa.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Mapping.h">
@@ -98,15 +68,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\RootSignature.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\UniformBufferBind.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\UniformBufferDsa.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\UniformBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\ProgramMonolithicDsa.h">
@@ -211,6 +172,48 @@
     <ClInclude Include="include\OpenGLRenderer\Texture\SamplerStateSo.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBufferDsa.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\UniformBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\UniformBufferBind.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\UniformBufferDsa.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexBufferBind.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexBufferDsa.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBufferBind.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexArrayNoVao.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexArrayVao.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexArrayVaoBind.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexArrayVaoDsa.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexArray.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -228,30 +231,6 @@
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\VertexArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArrayNoVao.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArrayVao.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArrayVaoBind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexArrayVaoDsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBufferBind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBufferDsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Extensions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -267,15 +246,6 @@
     <ClCompile Include="src\IContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IndexBufferBind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IndexBufferDsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Mapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -286,15 +256,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UniformBufferBind.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UniformBufferDsa.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UniformBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Shader\Monolithic\ProgramMonolithic.cpp">
@@ -396,6 +357,48 @@
     <ClCompile Include="src\Texture\SamplerStateDsa.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="src\Buffer\UniformBufferBind.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\UniformBufferDsa.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexBufferBind.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexBufferDsa.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\IndexBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\IndexBufferBind.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\IndexBufferDsa.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\UniformBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArrayVao.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArrayVaoBind.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArrayVaoDsa.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArray.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArrayNoVao.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -406,19 +409,7 @@
     <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl">
       <Filter>Source Files\Linux</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\VertexArray.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\VertexArrayVao.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\VertexBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\Framebuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\IndexBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl">
@@ -428,9 +419,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\RootSignature.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\UniformBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Shader\Monolithic\ProgramMonolithic.inl">
@@ -495,6 +483,21 @@
     </None>
     <None Include="include\OpenGLRenderer\Texture\SamplerStateSo.inl">
       <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Buffer\UniformBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Buffer\VertexBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Buffer\IndexBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Buffer\VertexArray.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Buffer\VertexArrayVao.inl">
+      <Filter>Source Files\Buffer</Filter>
     </None>
   </ItemGroup>
 </Project>

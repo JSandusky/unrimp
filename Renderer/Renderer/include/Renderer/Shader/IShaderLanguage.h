@@ -27,8 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/BufferTypes.h"
 #include "Renderer/SmartRefCount.h"
+#include "Renderer/Buffer/BufferTypes.h"
 #include "Renderer/Shader/GeometryShaderTypes.h"
 
 

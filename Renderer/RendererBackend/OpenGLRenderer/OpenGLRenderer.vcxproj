@@ -19,14 +19,25 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBuffer.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBufferBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBufferDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\UniformBuffer.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\UniformBufferBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\UniformBufferDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexArray.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexArrayNoVao.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexArrayVao.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexArrayVaoBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexArrayVaoDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexBuffer.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexBufferBind.h" />
+    <ClInclude Include="include\OpenGLRenderer\Buffer\VertexBufferDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\Extensions.h" />
     <ClInclude Include="include\OpenGLRenderer\Framebuffer.h" />
     <ClInclude Include="include\OpenGLRenderer\FramebufferBind.h" />
     <ClInclude Include="include\OpenGLRenderer\FramebufferDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\IContext.h" />
-    <ClInclude Include="include\OpenGLRenderer\IndexBuffer.h" />
-    <ClInclude Include="include\OpenGLRenderer\IndexBufferBind.h" />
-    <ClInclude Include="include\OpenGLRenderer\IndexBufferDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\Linux\ContextLinux.h" />
     <ClInclude Include="include\OpenGLRenderer\Mapping.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLDebug.h" />
@@ -68,28 +79,28 @@
     <ClInclude Include="include\OpenGLRenderer\Texture\TextureBuffer.h" />
     <ClInclude Include="include\OpenGLRenderer\Texture\TextureBufferBind.h" />
     <ClInclude Include="include\OpenGLRenderer\Texture\TextureBufferDsa.h" />
-    <ClInclude Include="include\OpenGLRenderer\UniformBuffer.h" />
-    <ClInclude Include="include\OpenGLRenderer\UniformBufferBind.h" />
-    <ClInclude Include="include\OpenGLRenderer\UniformBufferDsa.h" />
-    <ClInclude Include="include\OpenGLRenderer\VertexArray.h" />
-    <ClInclude Include="include\OpenGLRenderer\VertexArrayNoVao.h" />
-    <ClInclude Include="include\OpenGLRenderer\VertexArrayVao.h" />
-    <ClInclude Include="include\OpenGLRenderer\VertexArrayVaoBind.h" />
-    <ClInclude Include="include\OpenGLRenderer\VertexArrayVaoDsa.h" />
-    <ClInclude Include="include\OpenGLRenderer\VertexBuffer.h" />
-    <ClInclude Include="include\OpenGLRenderer\VertexBufferBind.h" />
-    <ClInclude Include="include\OpenGLRenderer\VertexBufferDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Buffer\IndexBufferBind.cpp" />
+    <ClCompile Include="src\Buffer\IndexBufferDsa.cpp" />
+    <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
+    <ClCompile Include="src\Buffer\UniformBufferBind.cpp" />
+    <ClCompile Include="src\Buffer\UniformBufferDsa.cpp" />
+    <ClCompile Include="src\Buffer\VertexArray.cpp" />
+    <ClCompile Include="src\Buffer\VertexArrayNoVao.cpp" />
+    <ClCompile Include="src\Buffer\VertexArrayVao.cpp" />
+    <ClCompile Include="src\Buffer\VertexArrayVaoBind.cpp" />
+    <ClCompile Include="src\Buffer\VertexArrayVaoDsa.cpp" />
+    <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
+    <ClCompile Include="src\Buffer\VertexBufferBind.cpp" />
+    <ClCompile Include="src\Buffer\VertexBufferDsa.cpp" />
     <ClCompile Include="src\Extensions.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\FramebufferBind.cpp" />
     <ClCompile Include="src\FramebufferDsa.cpp" />
     <ClCompile Include="src\IContext.cpp" />
-    <ClCompile Include="src\IndexBuffer.cpp" />
-    <ClCompile Include="src\IndexBufferBind.cpp" />
-    <ClCompile Include="src\IndexBufferDsa.cpp" />
     <ClCompile Include="src\Linux\ContextLinux.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
@@ -140,24 +151,17 @@
     <ClCompile Include="src\Texture\TextureBuffer.cpp" />
     <ClCompile Include="src\Texture\TextureBufferBind.cpp" />
     <ClCompile Include="src\Texture\TextureBufferDsa.cpp" />
-    <ClCompile Include="src\UniformBuffer.cpp" />
-    <ClCompile Include="src\UniformBufferBind.cpp" />
-    <ClCompile Include="src\UniformBufferDsa.cpp" />
-    <ClCompile Include="src\VertexArray.cpp" />
-    <ClCompile Include="src\VertexArrayNoVao.cpp" />
-    <ClCompile Include="src\VertexArrayVao.cpp" />
-    <ClCompile Include="src\VertexArrayVaoBind.cpp" />
-    <ClCompile Include="src\VertexArrayVaoDsa.cpp" />
-    <ClCompile Include="src\VertexBuffer.cpp" />
-    <ClCompile Include="src\VertexBufferBind.cpp" />
-    <ClCompile Include="src\VertexBufferDsa.cpp" />
     <ClCompile Include="src\Windows\ContextWindows.cpp" />
     <ClCompile Include="src\Windows\ExtensionsWindows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\OpenGLRenderer\Buffer\IndexBuffer.inl" />
+    <None Include="include\OpenGLRenderer\Buffer\UniformBuffer.inl" />
+    <None Include="include\OpenGLRenderer\Buffer\VertexArray.inl" />
+    <None Include="include\OpenGLRenderer\Buffer\VertexArrayVao.inl" />
+    <None Include="include\OpenGLRenderer\Buffer\VertexBuffer.inl" />
     <None Include="include\OpenGLRenderer\Framebuffer.inl" />
-    <None Include="include\OpenGLRenderer\IndexBuffer.inl" />
     <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl" />
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl" />
     <None Include="include\OpenGLRenderer\PipelineState\BlendState.inl" />
@@ -183,10 +187,6 @@
     <None Include="include\OpenGLRenderer\Texture\Texture2D.inl" />
     <None Include="include\OpenGLRenderer\Texture\Texture2DArray.inl" />
     <None Include="include\OpenGLRenderer\Texture\TextureBuffer.inl" />
-    <None Include="include\OpenGLRenderer\UniformBuffer.inl" />
-    <None Include="include\OpenGLRenderer\VertexArray.inl" />
-    <None Include="include\OpenGLRenderer\VertexArrayVao.inl" />
-    <None Include="include\OpenGLRenderer\VertexBuffer.inl" />
     <None Include="include\OpenGLRenderer\Windows\ContextWindows.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>

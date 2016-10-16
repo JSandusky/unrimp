@@ -20,9 +20,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\Direct3D11Renderer\Buffer\IndexBuffer.inl" />
+    <None Include="include\Direct3D11Renderer\Buffer\UniformBuffer.inl" />
+    <None Include="include\Direct3D11Renderer\Buffer\VertexBuffer.inl" />
     <None Include="include\Direct3D11Renderer\Direct3D11Renderer.inl" />
     <None Include="include\Direct3D11Renderer\Framebuffer.inl" />
-    <None Include="include\Direct3D11Renderer\IndexBuffer.inl" />
     <None Include="include\Direct3D11Renderer\PipelineState\BlendState.inl" />
     <None Include="include\Direct3D11Renderer\PipelineState\DepthStencilState.inl" />
     <None Include="include\Direct3D11Renderer\PipelineState\IState.inl" />
@@ -40,11 +42,13 @@
     <None Include="include\Direct3D11Renderer\Texture\Texture2D.inl" />
     <None Include="include\Direct3D11Renderer\Texture\Texture2DArray.inl" />
     <None Include="include\Direct3D11Renderer\Texture\TextureBuffer.inl" />
-    <None Include="include\Direct3D11Renderer\UniformBuffer.inl" />
-    <None Include="include\Direct3D11Renderer\VertexBuffer.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Direct3D11Renderer\Buffer\IndexBuffer.h" />
+    <ClInclude Include="include\Direct3D11Renderer\Buffer\UniformBuffer.h" />
+    <ClInclude Include="include\Direct3D11Renderer\Buffer\VertexArray.h" />
+    <ClInclude Include="include\Direct3D11Renderer\Buffer\VertexBuffer.h" />
     <ClInclude Include="include\Direct3D11Renderer\D3D11.h" />
     <ClInclude Include="include\Direct3D11Renderer\Direct3D11Debug.h" />
     <ClInclude Include="include\Direct3D11Renderer\Direct3D11Renderer.h" />
@@ -52,7 +56,6 @@
     <ClInclude Include="include\Direct3D11Renderer\Direct3D9RuntimeLinking.h" />
     <ClInclude Include="include\Direct3D11Renderer\Framebuffer.h" />
     <ClInclude Include="include\Direct3D11Renderer\Guid.h" />
-    <ClInclude Include="include\Direct3D11Renderer\IndexBuffer.h" />
     <ClInclude Include="include\Direct3D11Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D11Renderer\PipelineState\BlendState.h" />
     <ClInclude Include="include\Direct3D11Renderer\PipelineState\DepthStencilState.h" />
@@ -72,17 +75,17 @@
     <ClInclude Include="include\Direct3D11Renderer\Texture\Texture2D.h" />
     <ClInclude Include="include\Direct3D11Renderer\Texture\Texture2DArray.h" />
     <ClInclude Include="include\Direct3D11Renderer\Texture\TextureBuffer.h" />
-    <ClInclude Include="include\Direct3D11Renderer\UniformBuffer.h" />
-    <ClInclude Include="include\Direct3D11Renderer\VertexArray.h" />
-    <ClInclude Include="include\Direct3D11Renderer\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
+    <ClCompile Include="src\Buffer\VertexArray.cpp" />
+    <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
     <ClCompile Include="src\Direct3D11Renderer.cpp" />
     <ClCompile Include="src\Direct3D11RuntimeLinking.cpp" />
     <ClCompile Include="src\Direct3D9RuntimeLinking.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\Guid.cpp" />
-    <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\PipelineState\BlendState.cpp" />
     <ClCompile Include="src\PipelineState\DepthStencilState.cpp" />
@@ -101,9 +104,6 @@
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
     <ClCompile Include="src\Texture\TextureBuffer.cpp" />
-    <ClCompile Include="src\UniformBuffer.cpp" />
-    <ClCompile Include="src\VertexArray.cpp" />
-    <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0B573645-7F00-43D8-B109-07BFA0E56155}</ProjectGuid>

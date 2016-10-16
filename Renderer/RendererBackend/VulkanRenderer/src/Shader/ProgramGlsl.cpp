@@ -32,7 +32,7 @@
 #include "VulkanRenderer/RootSignature.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 
-#include <Renderer/VertexArrayTypes.h>
+#include <Renderer/Buffer/VertexArrayTypes.h>
 
 
 //[-------------------------------------------------------]

@@ -19,21 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Renderer\BufferTypes.h" />
+    <ClInclude Include="include\Renderer\Buffer\BufferTypes.h" />
+    <ClInclude Include="include\Renderer\Buffer\IBuffer.h" />
+    <ClInclude Include="include\Renderer\Buffer\IIndexBuffer.h" />
+    <ClInclude Include="include\Renderer\Buffer\IndexBufferTypes.h" />
+    <ClInclude Include="include\Renderer\Buffer\IUniformBuffer.h" />
+    <ClInclude Include="include\Renderer\Buffer\IVertexArray.h" />
+    <ClInclude Include="include\Renderer\Buffer\IVertexBuffer.h" />
+    <ClInclude Include="include\Renderer\Buffer\VertexArrayTypes.h" />
     <ClInclude Include="include\Renderer\Capabilities.h" />
-    <ClInclude Include="include\Renderer\IBuffer.h" />
     <ClInclude Include="include\Renderer\IFramebuffer.h" />
-    <ClInclude Include="include\Renderer\IIndexBuffer.h" />
-    <ClInclude Include="include\Renderer\IndexBufferTypes.h" />
     <ClInclude Include="include\Renderer\IRenderer.h" />
     <ClInclude Include="include\Renderer\IRenderTarget.h" />
     <ClInclude Include="include\Renderer\IResource.h" />
     <ClInclude Include="include\Renderer\IRootSignature.h" />
     <ClInclude Include="include\Renderer\IState.h" />
     <ClInclude Include="include\Renderer\ISwapChain.h" />
-    <ClInclude Include="include\Renderer\IUniformBuffer.h" />
-    <ClInclude Include="include\Renderer\IVertexArray.h" />
-    <ClInclude Include="include\Renderer\IVertexBuffer.h" />
     <ClInclude Include="include\Renderer\PipelineState\BlendStateTypes.h" />
     <ClInclude Include="include\Renderer\PipelineState\DepthStencilStateTypes.h" />
     <ClInclude Include="include\Renderer\PipelineState\IPipelineState.h" />
@@ -64,25 +65,24 @@
     <ClInclude Include="include\Renderer\Texture\ITextureBuffer.h" />
     <ClInclude Include="include\Renderer\Texture\SamplerStateTypes.h" />
     <ClInclude Include="include\Renderer\Texture\TextureTypes.h" />
-    <ClInclude Include="include\Renderer\VertexArrayTypes.h" />
     <ClInclude Include="include\Renderer\WindowsHeader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\Renderer\Buffer\IBuffer.inl" />
+    <None Include="include\Renderer\Buffer\IIndexBuffer.inl" />
+    <None Include="include\Renderer\Buffer\IndexBufferTypes.inl" />
+    <None Include="include\Renderer\Buffer\IUniformBuffer.inl" />
+    <None Include="include\Renderer\Buffer\IVertexArray.inl" />
+    <None Include="include\Renderer\Buffer\IVertexBuffer.inl" />
     <None Include="include\Renderer\Capabilities.inl" />
-    <None Include="include\Renderer\IBuffer.inl" />
     <None Include="include\Renderer\IFramebuffer.inl" />
-    <None Include="include\Renderer\IIndexBuffer.inl" />
-    <None Include="include\Renderer\IndexBufferTypes.inl" />
     <None Include="include\Renderer\IRenderer.inl" />
     <None Include="include\Renderer\IRenderTarget.inl" />
     <None Include="include\Renderer\IResource.inl" />
     <None Include="include\Renderer\IRootSignature.inl" />
     <None Include="include\Renderer\IState.inl" />
     <None Include="include\Renderer\ISwapChain.inl" />
-    <None Include="include\Renderer\IUniformBuffer.inl" />
-    <None Include="include\Renderer\IVertexArray.inl" />
-    <None Include="include\Renderer\IVertexBuffer.inl" />
     <None Include="include\Renderer\PipelineState\BlendStateTypes.inl" />
     <None Include="include\Renderer\PipelineState\DepthStencilStateTypes.inl" />
     <None Include="include\Renderer\PipelineState\IPipelineState.inl" />

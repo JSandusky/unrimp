@@ -20,6 +20,9 @@
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{692001cc-162e-4a3a-b7bf-53608e86a0ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Buffer">
+      <UniqueIdentifier>{db328687-f375-4f27-98f4-9a6a2492db1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\VulkanRenderer\Windows\ContextWindows.h">
@@ -49,12 +52,6 @@
     <ClInclude Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\VertexArray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\VertexBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Extensions.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -62,9 +59,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\IContext.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\IndexBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Mapping.h">
@@ -86,9 +80,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Helper.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\UniformBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\PipelineState\BlendState.h">
@@ -117,6 +108,18 @@
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2D.h">
       <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Buffer\VertexBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Buffer\IndexBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Buffer\UniformBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Buffer\VertexArray.h">
+      <Filter>Source Files\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -156,12 +159,6 @@
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\VertexArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Extensions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -169,9 +166,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\IContext.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp">
@@ -187,9 +181,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Helper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UniformBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PipelineState\BlendState.cpp">
@@ -215,6 +206,18 @@
     </ClCompile>
     <ClCompile Include="src\Texture\SamplerState.cpp">
       <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\UniformBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\IndexBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArray.cpp">
+      <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,16 +247,7 @@
     <None Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
-    <None Include="include\VulkanRenderer\VertexArray.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\VertexBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\VulkanRenderer\Framebuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\IndexBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\VulkanRenderer\VulkanRenderer.inl">
@@ -269,9 +263,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\VulkanRenderer\IContext.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\UniformBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\VulkanRenderer\PipelineState\IState.inl">
@@ -291,6 +282,18 @@
     </None>
     <None Include="include\VulkanRenderer\Texture\Texture2D.inl">
       <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Buffer\UniformBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Buffer\VertexBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Buffer\IndexBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Buffer\VertexArray.inl">
+      <Filter>Source Files\Buffer</Filter>
     </None>
   </ItemGroup>
 </Project>

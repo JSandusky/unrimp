@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/BufferTypes.h>
+#include <Renderer/Buffer/BufferTypes.h>
 #include <Renderer/Texture/TextureTypes.h>
 #include <Renderer/Texture/ITextureBuffer.h>
 

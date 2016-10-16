@@ -14,6 +14,9 @@
     <Filter Include="Source Files\Texture">
       <UniqueIdentifier>{fd3e5149-a64a-400b-99d0-2c6dd9133b51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Buffer">
+      <UniqueIdentifier>{c8c877cd-ab63-4a8c-91be-a578dcf9198a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -39,22 +42,13 @@
     <None Include="include\Direct3D11Renderer\SwapChain.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\VertexBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D11Renderer\Direct3D11Renderer.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\Framebuffer.inl">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\IndexBuffer.inl">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="include\Direct3D11Renderer\RootSignature.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\Direct3D11Renderer\UniformBuffer.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\PipelineState\DepthStencilState.inl">
@@ -83,6 +77,15 @@
     </None>
     <None Include="include\Direct3D11Renderer\Texture\SamplerState.inl">
       <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Buffer\IndexBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Buffer\UniformBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Buffer\VertexBuffer.inl">
+      <Filter>Source Files\Buffer</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -113,12 +116,6 @@
     <ClInclude Include="include\Direct3D11Renderer\SwapChain.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\VertexArray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\VertexBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\D3D11.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -140,13 +137,7 @@
     <ClInclude Include="include\Direct3D11Renderer\Guid.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\IndexBuffer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\RootSignature.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\UniformBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\PipelineState\DepthStencilState.h">
@@ -175,6 +166,18 @@
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Texture\SamplerState.h">
       <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Buffer\UniformBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Buffer\VertexBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Buffer\IndexBuffer.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Buffer\VertexArray.h">
+      <Filter>Source Files\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -214,25 +217,13 @@
     <ClCompile Include="src\Guid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Mapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\VertexArray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\RootSignature.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UniformBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PipelineState\BlendState.cpp">
@@ -258,6 +249,18 @@
     </ClCompile>
     <ClCompile Include="src\Texture\SamplerState.cpp">
       <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\IndexBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\UniformBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\VertexArray.cpp">
+      <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

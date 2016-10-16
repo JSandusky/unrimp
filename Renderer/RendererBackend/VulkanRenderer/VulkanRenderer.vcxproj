@@ -19,11 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\VulkanRenderer\Buffer\IndexBuffer.h" />
+    <ClInclude Include="include\VulkanRenderer\Buffer\UniformBuffer.h" />
+    <ClInclude Include="include\VulkanRenderer\Buffer\VertexArray.h" />
+    <ClInclude Include="include\VulkanRenderer\Buffer\VertexBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Extensions.h" />
     <ClInclude Include="include\VulkanRenderer\Framebuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Helper.h" />
     <ClInclude Include="include\VulkanRenderer\IContext.h" />
-    <ClInclude Include="include\VulkanRenderer\IndexBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Linux\ContextLinux.h" />
     <ClInclude Include="include\VulkanRenderer\Mapping.h" />
     <ClInclude Include="include\VulkanRenderer\PipelineState\BlendState.h" />
@@ -35,7 +38,6 @@
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2D.h" />
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2DArray.h" />
     <ClInclude Include="include\VulkanRenderer\Texture\TextureBuffer.h" />
-    <ClInclude Include="include\VulkanRenderer\UniformBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanDebug.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanRenderer.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanRuntimeLinking.h" />
@@ -48,16 +50,17 @@
     <ClInclude Include="include\VulkanRenderer\Shader\TessellationEvaluationShaderGlsl.h" />
     <ClInclude Include="include\VulkanRenderer\Shader\VertexShaderGlsl.h" />
     <ClInclude Include="include\VulkanRenderer\SwapChain.h" />
-    <ClInclude Include="include\VulkanRenderer\VertexArray.h" />
-    <ClInclude Include="include\VulkanRenderer\VertexBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Windows\ContextWindows.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
+    <ClCompile Include="src\Buffer\VertexArray.cpp" />
+    <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
     <ClCompile Include="src\Extensions.cpp" />
     <ClCompile Include="src\Framebuffer.cpp" />
     <ClCompile Include="src\Helper.cpp" />
     <ClCompile Include="src\IContext.cpp" />
-    <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Linux\ContextLinux.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
@@ -79,7 +82,6 @@
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
     <ClCompile Include="src\Texture\TextureBuffer.cpp" />
-    <ClCompile Include="src\UniformBuffer.cpp" />
     <ClCompile Include="src\VulkanRenderer.cpp" />
     <ClCompile Include="src\VulkanRuntimeLinking.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
@@ -91,16 +93,17 @@
     <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\VertexShaderGlsl.cpp" />
     <ClCompile Include="src\SwapChain.cpp" />
-    <ClCompile Include="src\VertexArray.cpp" />
-    <ClCompile Include="src\VertexBuffer.cpp" />
     <ClCompile Include="src\Windows\ContextWindows.cpp" />
     <ClCompile Include="src\Windows\ExtensionsWindows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\VulkanRenderer\Buffer\IndexBuffer.inl" />
+    <None Include="include\VulkanRenderer\Buffer\UniformBuffer.inl" />
+    <None Include="include\VulkanRenderer\Buffer\VertexArray.inl" />
+    <None Include="include\VulkanRenderer\Buffer\VertexBuffer.inl" />
     <None Include="include\VulkanRenderer\Framebuffer.inl" />
     <None Include="include\VulkanRenderer\IContext.inl" />
-    <None Include="include\VulkanRenderer\IndexBuffer.inl" />
     <None Include="include\VulkanRenderer\Linux\ContextLinux.inl" />
     <None Include="include\VulkanRenderer\PipelineState\IState.inl" />
     <None Include="include\VulkanRenderer\PipelineState\PipelineState.inl" />
@@ -108,7 +111,6 @@
     <None Include="include\VulkanRenderer\Texture\Texture2D.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture2DArray.inl" />
     <None Include="include\VulkanRenderer\Texture\TextureBuffer.inl" />
-    <None Include="include\VulkanRenderer\UniformBuffer.inl" />
     <None Include="include\VulkanRenderer\VulkanRenderer.inl" />
     <None Include="include\VulkanRenderer\RootSignature.inl" />
     <None Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.inl" />
@@ -118,8 +120,6 @@
     <None Include="include\VulkanRenderer\Shader\TessellationEvaluationShaderGlsl.inl" />
     <None Include="include\VulkanRenderer\Shader\VertexShaderGlsl.inl" />
     <None Include="include\VulkanRenderer\SwapChain.inl" />
-    <None Include="include\VulkanRenderer\VertexArray.inl" />
-    <None Include="include\VulkanRenderer\VertexBuffer.inl" />
     <None Include="include\VulkanRenderer\VulkanRuntimeLinking.inl" />
     <None Include="include\VulkanRenderer\Windows\ContextWindows.inl" />
     <None Include="Readme.txt" />
