@@ -108,6 +108,9 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
+	// Create the buffer manager
+	mBufferManager = mRenderer->createBufferManager();
+
 	// Check number of textures (limit of this implementation and renderer limit)
 	if (mNumberOfTextures > MAXIMUM_NUMBER_OF_TEXTURES)
 	{
@@ -236,7 +239,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 			-0.5f,  0.5f,  0.5f,		1.0f, 1.0f,		-1.0f, 0.0f, 0.0f,	// 22
 			-0.5f,  0.5f, -0.5f,		0.0f, 1.0f,		-1.0f, 0.0f, 0.0f	// 23
 		};
-		Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+		Renderer::IVertexBufferPtr vertexBuffer(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 		// Create the index buffer object (IBO)
 		static const uint16_t INDICES[] =
@@ -260,7 +263,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 			21, 20, 22,		// 10
 			23, 22, 20		// 11
 		};
-		Renderer::IIndexBuffer *indexBuffer = mRenderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
+		Renderer::IIndexBuffer *indexBuffer = mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
 
 		// Create vertex array object (VAO)
 		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -275,7 +278,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 				sizeof(float) * (3 + 2 + 3)	// strideInBytes (uint32_t)
 			}
 		};
-		mVertexArray = mRenderer->createVertexArray(detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
+		mVertexArray = mBufferManager->createVertexArray(detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
 	}
 
 	// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
@@ -292,12 +295,12 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 				-1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
 				 0.0f,			 0.0f,			 9.8198195f,	 10.0f
 			};
-			mUniformBufferStaticVs = mRenderer->createUniformBuffer(sizeof(MVP), MVP, Renderer::BufferUsage::STATIC_DRAW);
+			mUniformBufferStaticVs = mBufferManager->createUniformBuffer(sizeof(MVP), MVP, Renderer::BufferUsage::STATIC_DRAW);
 		}
 
 		// Create dynamic uniform buffers
-		mUniformBufferDynamicVs = mRenderer->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-		mUniformBufferDynamicFs = mRenderer->createUniformBuffer(sizeof(float) * 3, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		mUniformBufferDynamicVs = mBufferManager->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		mUniformBufferDynamicFs = mBufferManager->createUniformBuffer(sizeof(float) * 3, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 	}
 
 	// Create the program: Decide which shader language should be used (for example "GLSL" or "HLSL")

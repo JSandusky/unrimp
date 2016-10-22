@@ -92,6 +92,7 @@ public:
 //[-------------------------------------------------------]
 private:
 	Renderer::IRendererPtr		  mRenderer;							///< Renderer instance to use, always valid
+	Renderer::IBufferManagerPtr	  mBufferManager;						///< Buffer manager, can be a null pointer
 	uint32_t					  mNumberOfTextures;					///< Number of textures
 	uint32_t					  mSceneRadius;							///< Scene radius
 	uint32_t					  mMaximumNumberOfInstancesPerBatch;	///< Maximum number of instances per batch

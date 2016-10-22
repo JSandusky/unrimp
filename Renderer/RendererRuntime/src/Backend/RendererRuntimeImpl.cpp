@@ -105,11 +105,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	RendererRuntimeImpl::RendererRuntimeImpl(Renderer::IRenderer &renderer)
 	{
-		// Backup the given renderer
+		// Backup the given renderer and add our reference
 		mRenderer = &renderer;
-
-		// Add our renderer reference
 		mRenderer->addReference();
+
+		// Create the buffer manager instance and add our reference
+		mBufferManager = mRenderer->createBufferManager();
+		mBufferManager->addReference();
 
 		// Create the core manager instances
 		mThreadManager = new ThreadManager();
@@ -176,6 +178,9 @@ namespace RendererRuntime
 		// Destroy the core manager instances
 		delete mAssetManager;
 		delete mThreadManager;
+
+		// Release the buffer manager instance
+		mBufferManager->release();
 
 		// Release our renderer reference
 		mRenderer->release();

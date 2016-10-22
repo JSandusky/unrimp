@@ -61,6 +61,9 @@ void FirstTexture::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
+		// Create the buffer manager
+		mBufferManager = renderer->createBufferManager();
+
 		{ // Create the texture
 			static const uint32_t TEXTURE_WIDTH   = 128;
 			static const uint32_t TEXTURE_HEIGHT  = 128;
@@ -158,7 +161,7 @@ void FirstTexture::onInitialization()
 				 1.0f, 0.0f,	// 1			   .   .
 				-0.5f, 0.0f		// 2			  2.......1
 			};
-			Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IVertexBufferPtr vertexBuffer(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -173,7 +176,7 @@ void FirstTexture::onInitialization()
 					sizeof(float) * 2	// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArray = renderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+			mVertexArray = mBufferManager->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 		}
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -223,6 +226,7 @@ void FirstTexture::onDeinitialization()
 	mRootSignature = nullptr;
 	mSamplerState = nullptr;
 	mTexture2D = nullptr;
+	mBufferManager = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())

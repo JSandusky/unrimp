@@ -57,6 +57,7 @@ namespace Renderer
 	struct SamplerState;
 	class IVertexBuffer;
 	class IRenderTarget;
+	class IBufferManager;
 	class IRootSignature;
 	struct RootSignature;
 	class IPipelineState;
@@ -293,79 +294,12 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Create a vertex buffer object (VBO, "array buffer" in OpenGL terminology) instance
-		*
-		*  @param[in] numberOfBytes
-		*    Number of bytes within the vertex buffer, must be valid
-		*  @param[in] data
-		*    Vertex buffer data, can be a null pointer (empty buffer), the data is internally copied and you have to free your memory if you no longer need it
-		*  @param[in] bufferUsage
-		*    Indication of the buffer usage
+		*    Create a buffer manager instance
 		*
 		*  @return
-		*    The created VBO instance, null pointer on error. Release the returned instance if you no longer need it.
+		*    The created buffer manager instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual IVertexBuffer *createVertexBuffer(uint32_t numberOfBytes, const void *data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-
-		/**
-		*  @brief
-		*    Create an index buffer object (IBO, "element array buffer" in OpenGL terminology) instance
-		*
-		*  @param[in] numberOfBytes
-		*    Number of bytes within the index buffer, must be valid
-		*  @param[in] indexBufferFormat
-		*    Index buffer data format
-		*  @param[in] data
-		*    Index buffer data, can be a null pointer (empty buffer), the data is internally copied and you have to free your memory if you no longer need it
-		*  @param[in] bufferUsage
-		*    Indication of the buffer usage
-		*
-		*  @return
-		*    The created IBO instance, null pointer on error. Release the returned instance if you no longer need it.
-		*/
-		virtual IIndexBuffer *createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void *data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-
-		/**
-		*  @brief
-		*    Create a vertex array instance
-		*
-		*  @param[in] vertexAttributes
-		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
-		*  @param[in] numberOfVertexBuffers
-		*    Number of vertex buffers, having zero vertex buffers is valid
-		*  @param[in] vertexBuffers
-		*    At least numberOfVertexBuffers instances of vertex array vertex buffers, can be a null pointer in case there are zero vertex buffers, the data is internally copied and you have to free your memory if you no longer need it
-		*  @param[in] indexBuffer
-		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
-		*
-		*  @return
-		*    The created vertex array instance, null pointer on error. Release the returned instance if you no longer need it.
-		*
-		*  @note
-		*    - The created vertex array instance keeps a reference to the vertex buffers used by the vertex array attributes
-		*    - It's valid that a vertex array implementation is adding a reference and releasing it again at once
-		*      (this means that in the case of not having any more references, a vertex buffer might get destroyed when calling this method)
-		*/
-		virtual IVertexArray *createVertexArray(const VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer *vertexBuffers, IIndexBuffer *indexBuffer = nullptr) = 0;
-
-		/**
-		*  @brief
-		*    Create an uniform buffer object (UBO, "constant buffer" in Direct3D terminology) instance
-		*
-		*  @param[in] numberOfBytes
-		*    Number of bytes within the uniform buffer, must be valid
-		*  @param[in] data
-		*    Uniform buffer data, can be a null pointer (empty buffer), the data is internally copied and you have to free your memory if you no longer need it
-		*  @param[in] bufferUsage
-		*    Indication of the buffer usage
-		*
-		*  @return
-		*    The created UBO instance, null pointer on error. Release the returned instance if you no longer need it.
-		*
-		*  @note
-		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
-		*/
-		virtual IUniformBuffer *createUniformBuffer(uint32_t numberOfBytes, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
+		virtual IBufferManager *createBufferManager() = 0;
 
 		/**
 		*  @brief

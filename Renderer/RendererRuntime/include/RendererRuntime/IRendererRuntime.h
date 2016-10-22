@@ -37,10 +37,6 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderer;
-}
 namespace RendererRuntime
 {
 	class IVrManager;
@@ -116,6 +112,15 @@ namespace RendererRuntime
 		*    The used renderer instance, do not release the returned instance unless you added an own reference to it
 		*/
 		inline Renderer::IRenderer& getRenderer() const;
+
+		/**
+		*  @brief
+		*    Return the used buffer manager instance
+		*
+		*  @return
+		*    The used buffer manager instance, do not release the returned instance unless you added an own reference to it
+		*/
+		inline Renderer::IBufferManager& getBufferManager() const;
 
 		/**
 		*  @brief
@@ -343,9 +348,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		// Core
-		Renderer::IRenderer* mRenderer;	///< The used renderer instance (we keep a reference to it), always valid
-		ThreadManager*		 mThreadManager;
-		AssetManager*		 mAssetManager;
+		Renderer::IRenderer*	  mRenderer;		///< The used renderer instance (we keep a reference to it), always valid
+		Renderer::IBufferManager* mBufferManager;	///< The used buffer manager instance (we keep a reference to it), always valid
+		ThreadManager*			  mThreadManager;
+		AssetManager*			  mAssetManager;
 		// Resource
 		ResourceStreamer*					mResourceStreamer;
 		TextureResourceManager*				mTextureResourceManager;

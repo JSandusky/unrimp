@@ -38,6 +38,11 @@ namespace RendererRuntime
 		return *mRenderer;
 	}
 
+	inline Renderer::IBufferManager& IRendererRuntime::getBufferManager() const
+	{
+		return *mBufferManager;
+	}
+
 	inline ThreadManager& IRendererRuntime::getThreadManager() const
 	{
 		return *mThreadManager;
@@ -130,6 +135,7 @@ namespace RendererRuntime
 	inline IRendererRuntime::IRendererRuntime() :
 		// Core
 		mRenderer(nullptr),
+		mBufferManager(nullptr),
 		mThreadManager(nullptr),
 		mAssetManager(nullptr),
 		// Resource
@@ -156,6 +162,7 @@ namespace RendererRuntime
 	inline IRendererRuntime::IRendererRuntime(const IRendererRuntime &) :
 		// Core
 		mRenderer(nullptr),
+		mBufferManager(nullptr),
 		mThreadManager(nullptr),
 		mAssetManager(nullptr),
 		// Resource

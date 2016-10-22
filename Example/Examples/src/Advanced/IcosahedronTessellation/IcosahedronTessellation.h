@@ -85,6 +85,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	Renderer::IBufferManagerPtr mBufferManager;				///< Buffer manager, can be a null pointer
 	Renderer::IUniformBufferPtr	mUniformBufferDynamicTcs;	///< Dynamic tessellation control shader uniform buffer object (UBO), can be a null pointer
 	Renderer::IUniformBufferPtr	mUniformBufferStaticTes;	///< Static tessellation evaluation shader uniform buffer object (UBO), can be a null pointer
 	Renderer::IUniformBufferPtr	mUniformBufferStaticGs;		///< Static geometry shader uniform buffer object (UBO), can be a null pointer

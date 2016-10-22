@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="include\Renderer\Buffer\BufferTypes.h" />
     <ClInclude Include="include\Renderer\Buffer\IBuffer.h" />
+    <ClInclude Include="include\Renderer\Buffer\IBufferManager.h" />
     <ClInclude Include="include\Renderer\Buffer\IIndexBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IndexBufferTypes.h" />
     <ClInclude Include="include\Renderer\Buffer\IUniformBuffer.h" />
@@ -70,6 +71,7 @@
   <ItemGroup>
     <None Include="CMakeLists.txt" />
     <None Include="include\Renderer\Buffer\IBuffer.inl" />
+    <None Include="include\Renderer\Buffer\IBufferManager.inl" />
     <None Include="include\Renderer\Buffer\IIndexBuffer.inl" />
     <None Include="include\Renderer\Buffer\IndexBufferTypes.inl" />
     <None Include="include\Renderer\Buffer\IUniformBuffer.inl" />

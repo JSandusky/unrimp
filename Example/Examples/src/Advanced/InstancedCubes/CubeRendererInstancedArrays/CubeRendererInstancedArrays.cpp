@@ -135,6 +135,9 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
+	// Create the buffer manager
+	mBufferManager = mRenderer->createBufferManager();
+
 	// Check number of textures (limit of this implementation and renderer limit)
 	if (mNumberOfTextures > MAXIMUM_NUMBER_OF_TEXTURES)
 	{
@@ -234,12 +237,12 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 				-1.2803299f,	-0.97915620f,	-0.58038759f,	-0.57922798f,
 				 0.0f,			 0.0f,			 9.8198195f,	 10.0f
 			};
-			mUniformBufferStaticVs = mRenderer->createUniformBuffer(sizeof(MVP), MVP, Renderer::BufferUsage::STATIC_DRAW);
+			mUniformBufferStaticVs = mBufferManager->createUniformBuffer(sizeof(MVP), MVP, Renderer::BufferUsage::STATIC_DRAW);
 		}
 
 		// Create dynamic uniform buffers
-		mUniformBufferDynamicVs = mRenderer->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-		mUniformBufferDynamicFs = mRenderer->createUniformBuffer(sizeof(float) * 3, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		mUniformBufferDynamicVs = mBufferManager->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		mUniformBufferDynamicFs = mBufferManager->createUniformBuffer(sizeof(float) * 3, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 	}
 
 	// Create the program: Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -298,7 +301,7 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 			-0.5f,  0.5f,  0.5f,		1.0f, 1.0f,		-1.0f, 0.0f, 0.0f,	// 22
 			-0.5f,  0.5f, -0.5f,		0.0f, 1.0f,		-1.0f, 0.0f, 0.0f	// 23
 		};
-		mVertexBuffer = mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW);
+		mVertexBuffer = mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW);
 	}
 
 	{ // Create the index buffer object (IBO)
@@ -323,7 +326,7 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &re
 			21, 20, 22,		// 10
 			23, 22, 20		// 11
 		};
-		mIndexBuffer = mRenderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
+		mIndexBuffer = mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
 	}
 
 	// End debug event
@@ -377,7 +380,7 @@ void CubeRendererInstancedArrays::setNumberOfCubes(uint32_t numberOfCubes)
 	for (int remaningNumberOfCubes = static_cast<int>(numberOfSolidCubes); batch < lastBatch; ++batch, remaningNumberOfCubes -= mMaximumNumberOfInstancesPerBatch)
 	{
 		const uint32_t currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
-		batch->initialize(*mRootSignature, detail::VertexAttributes, *mVertexBuffer, *mIndexBuffer, *mProgram, currentNumberOfCubes, false, mNumberOfTextures, mSceneRadius);
+		batch->initialize(*mBufferManager, *mRootSignature, detail::VertexAttributes, *mVertexBuffer, *mIndexBuffer, *mProgram, currentNumberOfCubes, false, mNumberOfTextures, mSceneRadius);
 	}
 
 	// Initialize the transparent batches
@@ -386,7 +389,7 @@ void CubeRendererInstancedArrays::setNumberOfCubes(uint32_t numberOfCubes)
 	for (int remaningNumberOfCubes = static_cast<int>(numberOfTransparentCubes); batch < lastBatch; ++batch, remaningNumberOfCubes -= mMaximumNumberOfInstancesPerBatch)
 	{
 		const uint32_t currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
-		batch->initialize(*mRootSignature, detail::VertexAttributes, *mVertexBuffer, *mIndexBuffer, *mProgram, currentNumberOfCubes, true, mNumberOfTextures, mSceneRadius);
+		batch->initialize(*mBufferManager, *mRootSignature, detail::VertexAttributes, *mVertexBuffer, *mIndexBuffer, *mProgram, currentNumberOfCubes, true, mNumberOfTextures, mSceneRadius);
 	}
 
 	// End debug event

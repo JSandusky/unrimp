@@ -29,6 +29,7 @@
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
 #include "VulkanRenderer/RenderTarget/SwapChain.h"
 #include "VulkanRenderer/RenderTarget/Framebuffer.h"
+#include "VulkanRenderer/Buffer/BufferManager.h"
 #include "VulkanRenderer/Buffer/VertexArray.h"
 #include "VulkanRenderer/Buffer/IndexBuffer.h"
 #include "VulkanRenderer/Buffer/VertexBuffer.h"
@@ -286,24 +287,9 @@ namespace VulkanRenderer
 		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
 	}
 
-	Renderer::IVertexBuffer *VulkanRenderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
+	Renderer::IBufferManager *VulkanRenderer::createBufferManager()
 	{
-		return new VertexBuffer(*this, numberOfBytes, data, bufferUsage);
-	}
-
-	Renderer::IIndexBuffer *VulkanRenderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		return new IndexBuffer(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
-	}
-
-	Renderer::IVertexArray *VulkanRenderer::createVertexArray(const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
-	{
-		return new VertexArray(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-	}
-
-	Renderer::IUniformBuffer *VulkanRenderer::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		return new UniformBuffer(static_cast<VulkanRenderer&>(*this), numberOfBytes, data, bufferUsage);
+		return new BufferManager(*this);
 	}
 
 	Renderer::ITextureBuffer *VulkanRenderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)

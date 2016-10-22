@@ -76,6 +76,9 @@ void FirstCommandBucket::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
+		// Create the buffer manager
+		mBufferManager = renderer->createBufferManager();
+
 		// Vertex input layout
 		const Renderer::VertexAttribute vertexAttributesLayout[] =
 		{
@@ -103,7 +106,7 @@ void FirstCommandBucket::onInitialization()
 				 1.0f, 0.0f,	// 1			   .   .
 				-0.5f, 0.0f		// 2			  2.......1
 			};
-			Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IVertexBufferPtr vertexBuffer(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Triangle VBO")
 
 			// Create the index buffer object (IBO)
@@ -111,7 +114,7 @@ void FirstCommandBucket::onInitialization()
 			{
 				0, 1, 2
 			};
-			Renderer::IIndexBufferPtr indexBuffer(renderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IIndexBufferPtr indexBuffer(mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -126,9 +129,9 @@ void FirstCommandBucket::onInitialization()
 					sizeof(float) * 2	// strideInBytes (uint32_t)
 				}
 			};
-			mSolidVertexArray = renderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+			mSolidVertexArray = mBufferManager->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 			RENDERER_SET_RESOURCE_DEBUG_NAME(mSolidVertexArray, "Solid triangle VAO")
-			mTransparentVertexArray = renderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
+			mTransparentVertexArray = mBufferManager->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
 			RENDERER_SET_RESOURCE_DEBUG_NAME(mTransparentVertexArray, "Transparent triangle VAO")
 		}
 
@@ -153,7 +156,7 @@ void FirstCommandBucket::onInitialization()
 		if (renderer->getCapabilities().uniformBuffer)
 		{
 			// Create dynamic uniform buffer
-			mUniformBufferDynamicVs = renderer->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+			mUniformBufferDynamicVs = mBufferManager->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 		}
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -215,6 +218,7 @@ void FirstCommandBucket::onDeinitialization()
 	mTransparentVertexArray = nullptr;
 	mSolidMaterial.clear();
 	mTransparentMaterial.clear();
+	mBufferManager = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())

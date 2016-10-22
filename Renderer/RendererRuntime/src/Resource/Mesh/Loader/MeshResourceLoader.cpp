@@ -115,10 +115,10 @@ namespace RendererRuntime
 	{
 		{ // Create vertex array object (VAO)
 			// Create the vertex buffer object (VBO)
-			Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(mNumberOfUsedVertexBufferDataBytes, mVertexBufferData, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IVertexBufferPtr vertexBuffer(mBufferManager.createVertexBuffer(mNumberOfUsedVertexBufferDataBytes, mVertexBufferData, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create the index buffer object (IBO)
-			Renderer::IIndexBuffer *indexBuffer = mRenderer->createIndexBuffer(mNumberOfUsedIndexBufferDataBytes, static_cast<Renderer::IndexBufferFormat::Enum>(mIndexBufferFormat), mIndexBufferData, Renderer::BufferUsage::STATIC_DRAW);
+			Renderer::IIndexBuffer *indexBuffer = mBufferManager.createIndexBuffer(mNumberOfUsedIndexBufferDataBytes, static_cast<Renderer::IndexBufferFormat::Enum>(mIndexBufferFormat), mIndexBufferData, Renderer::BufferUsage::STATIC_DRAW);
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -134,7 +134,7 @@ namespace RendererRuntime
 					(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0	// strideInBytes (uint32_t)
 				}
 			};
-			mMeshResource->mVertexArray = mRenderer->createVertexArray(Renderer::VertexAttributes(mNumberOfUsedVertexAttributes, mVertexAttributes), glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
+			mMeshResource->mVertexArray = mBufferManager.createVertexArray(Renderer::VertexAttributes(mNumberOfUsedVertexAttributes, mVertexAttributes), glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
 		}
 
 		{ // Create sub-meshes
@@ -160,6 +160,28 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
+	MeshResourceLoader::MeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime) :
+		IResourceLoader(resourceManager),
+		mRendererRuntime(rendererRuntime),
+		mBufferManager(rendererRuntime.getBufferManager()),
+		mMeshResource(nullptr),
+		mNumberOfVertexBufferDataBytes(0),
+		mNumberOfUsedVertexBufferDataBytes(0),
+		mVertexBufferData(nullptr),
+		mNumberOfIndexBufferDataBytes(0),
+		mNumberOfUsedIndexBufferDataBytes(0),
+		mIndexBufferData(nullptr),
+		mIndexBufferFormat(0),
+		mNumberOfVertexAttributes(0),
+		mNumberOfUsedVertexAttributes(0),
+		mVertexAttributes(nullptr),
+		mNumberOfSubMeshes(0),
+		mNumberOfUsedSubMeshes(0),
+		mSubMeshes(nullptr)
+	{
+		// Nothing here
+	}
+
 	MeshResourceLoader::~MeshResourceLoader()
 	{
 		delete [] mVertexBufferData;

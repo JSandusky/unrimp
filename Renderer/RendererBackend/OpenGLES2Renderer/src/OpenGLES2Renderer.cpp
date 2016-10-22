@@ -29,6 +29,7 @@
 #include "OpenGLES2Renderer/ContextRuntimeLinking.h"
 #include "OpenGLES2Renderer/RenderTarget/SwapChain.h"
 #include "OpenGLES2Renderer/RenderTarget/Framebuffer.h"
+#include "OpenGLES2Renderer/Buffer/BufferManager.h"
 #include "OpenGLES2Renderer/Buffer/IndexBuffer.h"
 #include "OpenGLES2Renderer/Buffer/VertexBuffer.h"
 #include "OpenGLES2Renderer/Buffer/VertexArrayVao.h"
@@ -251,37 +252,9 @@ namespace OpenGLES2Renderer
 		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
 	}
 
-	Renderer::IVertexBuffer *OpenGLES2Renderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
+	Renderer::IBufferManager *OpenGLES2Renderer::createBufferManager()
 	{
-		return new VertexBuffer(*this, numberOfBytes, data, bufferUsage);
-	}
-
-	Renderer::IIndexBuffer *OpenGLES2Renderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		return new IndexBuffer(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
-	}
-
-	Renderer::IVertexArray *OpenGLES2Renderer::createVertexArray(const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
-	{
-		// Is "GL_OES_vertex_array_object" there?
-		if (mContext->getExtensions().isGL_OES_vertex_array_object())
-		{
-			// Effective vertex array object (VAO)
-			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new VertexArrayVao(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-		}
-		else
-		{
-			// Traditional version
-			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new VertexArrayNoVao(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-		}
-	}
-
-	Renderer::IUniformBuffer *OpenGLES2Renderer::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage)
-	{
-		// Error! OpenGL ES 2 has no uniform buffer support.
-		return nullptr;
+		return new BufferManager(*this);
 	}
 
 	Renderer::ITextureBuffer *OpenGLES2Renderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage)

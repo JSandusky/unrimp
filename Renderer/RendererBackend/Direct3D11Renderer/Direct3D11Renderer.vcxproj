@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\Direct3D11Renderer\Buffer\BufferManager.inl" />
     <None Include="include\Direct3D11Renderer\Buffer\IndexBuffer.inl" />
     <None Include="include\Direct3D11Renderer\Buffer\UniformBuffer.inl" />
     <None Include="include\Direct3D11Renderer\Buffer\VertexBuffer.inl" />
@@ -45,6 +46,7 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Direct3D11Renderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\Direct3D11Renderer\Buffer\IndexBuffer.h" />
     <ClInclude Include="include\Direct3D11Renderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\Direct3D11Renderer\Buffer\VertexArray.h" />
@@ -77,6 +79,7 @@
     <ClInclude Include="include\Direct3D11Renderer\Texture\TextureBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />

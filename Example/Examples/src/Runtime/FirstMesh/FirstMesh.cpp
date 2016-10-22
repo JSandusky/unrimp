@@ -82,7 +82,7 @@ void FirstMesh::onInitialization()
 		if ((0 == strcmp(renderer->getName(), "Direct3D10") || 0 == strcmp(renderer->getName(), "Direct3D11") || 0 == strcmp(renderer->getName(), "Direct3D12")))
 		{
 			// Allocate enough memory for two 4x4 floating point matrices
-			mUniformBuffer = renderer->createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+			mUniformBuffer = rendererRuntime->getBufferManager().createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 		}
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")

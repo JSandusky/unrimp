@@ -33,6 +33,9 @@
     <None Include="include\NullRenderer\State\PipelineState.inl">
       <Filter>Source Files\State</Filter>
     </None>
+    <None Include="include\NullRenderer\Buffer\BufferManager.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\NullRenderer\Shader\GeometryShader.h">
@@ -98,6 +101,9 @@
     <ClInclude Include="include\NullRenderer\State\SamplerState.h">
       <Filter>Source Files\State</Filter>
     </ClInclude>
+    <ClInclude Include="include\NullRenderer\Buffer\BufferManager.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\GeometryShader.cpp">
@@ -159,6 +165,9 @@
     </ClCompile>
     <ClCompile Include="src\State\SamplerState.cpp">
       <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\BufferManager.cpp">
+      <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

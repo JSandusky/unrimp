@@ -28,6 +28,7 @@
 #include "Direct3D9Renderer/RootSignature.h"
 #include "Direct3D9Renderer/RenderTarget/SwapChain.h"
 #include "Direct3D9Renderer/RenderTarget/Framebuffer.h"
+#include "Direct3D9Renderer/Buffer/BufferManager.h"
 #include "Direct3D9Renderer/Buffer/VertexArray.h"
 #include "Direct3D9Renderer/Buffer/IndexBuffer.h"
 #include "Direct3D9Renderer/Buffer/VertexBuffer.h"
@@ -310,28 +311,9 @@ namespace Direct3D9Renderer
 		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
 	}
 
-	Renderer::IVertexBuffer *Direct3D9Renderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
+	Renderer::IBufferManager *Direct3D9Renderer::createBufferManager()
 	{
-		// TODO(co) Security checks
-		return new VertexBuffer(*this, numberOfBytes, data, bufferUsage);
-	}
-
-	Renderer::IIndexBuffer *Direct3D9Renderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		// TODO(co) Security checks
-		return new IndexBuffer(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
-	}
-
-	Renderer::IVertexArray *Direct3D9Renderer::createVertexArray(const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
-	{
-		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-		return new VertexArray(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-	}
-
-	Renderer::IUniformBuffer *Direct3D9Renderer::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage)
-	{
-		// Error! Direct3D 9 has no uniform buffer support.
-		return nullptr;
+		return new BufferManager(*this);
 	}
 
 	Renderer::ITextureBuffer *Direct3D9Renderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage)

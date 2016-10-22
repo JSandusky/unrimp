@@ -86,6 +86,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	Renderer::IBufferManagerPtr mBufferManager;	///< Buffer manager, can be a null pointer
 	Renderer::ITexture2DPtr		mTexture2D;		///< 2D texture, can be a null pointer
 	Renderer::IFramebufferPtr	mFramebuffer;	///< Framebuffer object (FBO), can be a null pointer
 	Renderer::ISamplerStatePtr	mSamplerState;	///< Sampler state, can be a null pointer

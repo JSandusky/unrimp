@@ -92,6 +92,10 @@ namespace RendererRuntime
 		{
 			return *mRenderer;
 		}
+		inline Renderer::IBufferManager& getBufferManager() const
+		{
+			return *mBufferManager;
+		}
 		inline ThreadManager& getThreadManager() const
 		{
 			return *mThreadManager;
@@ -169,6 +173,7 @@ namespace RendererRuntime
 		IRendererRuntime &operator =(const IRendererRuntime &source);
 	private:
 		Renderer::IRenderer*				mRenderer;
+		Renderer::IBufferManager*			mBufferManager;
 		ThreadManager*						mThreadManager;
 		AssetManager*						mAssetManager;
 		ResourceStreamer*					mResourceStreamer;

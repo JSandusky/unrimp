@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\VulkanRenderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\IndexBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\VertexArray.h" />
@@ -53,6 +54,7 @@
     <ClInclude Include="include\VulkanRenderer\Windows\ContextWindows.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />
@@ -98,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\VulkanRenderer\Buffer\BufferManager.inl" />
     <None Include="include\VulkanRenderer\Buffer\IndexBuffer.inl" />
     <None Include="include\VulkanRenderer\Buffer\UniformBuffer.inl" />
     <None Include="include\VulkanRenderer\Buffer\VertexArray.inl" />

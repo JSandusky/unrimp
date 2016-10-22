@@ -44,7 +44,7 @@ BatchInstancedArrays::~BatchInstancedArrays()
 	// The renderer resource pointers are released automatically
 }
 
-void BatchInstancedArrays::initialize(Renderer::IRootSignature &rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
+void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature &rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
 {
 	// Set owner renderer instance
 	mRenderer = &program.getRenderer();
@@ -107,7 +107,7 @@ void BatchInstancedArrays::initialize(Renderer::IRootSignature &rootSignature, c
 		}
 
 		// Create the vertex buffer object (VBO) instance containing the per-instance-data
-		Renderer::IVertexBuffer *vertexBufferPerInstanceData = mRenderer->createVertexBuffer(sizeof(float) * numberOfElements, data, Renderer::BufferUsage::STATIC_DRAW);
+		Renderer::IVertexBuffer *vertexBufferPerInstanceData = bufferManager.createVertexBuffer(sizeof(float) * numberOfElements, data, Renderer::BufferUsage::STATIC_DRAW);
 
 		{ // Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -126,7 +126,7 @@ void BatchInstancedArrays::initialize(Renderer::IRootSignature &rootSignature, c
 					sizeof(float) * 4 * 2			// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArray = mRenderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, &indexBuffer);
+			mVertexArray = bufferManager.createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, &indexBuffer);
 		}
 
 		// Free local per instance data

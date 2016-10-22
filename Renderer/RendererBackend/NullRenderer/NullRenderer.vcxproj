@@ -20,12 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\NullRenderer\Buffer\BufferManager.inl" />
     <None Include="include\NullRenderer\RenderTarget\SwapChain.inl" />
     <None Include="include\NullRenderer\RootSignature.inl" />
     <None Include="include\NullRenderer\State\PipelineState.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\NullRenderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\NullRenderer\Buffer\IndexBuffer.h" />
     <ClInclude Include="include\NullRenderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\NullRenderer\Buffer\VertexArray.h" />
@@ -49,6 +51,7 @@
     <ClInclude Include="include\NullRenderer\Texture\TextureBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />

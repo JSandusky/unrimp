@@ -29,6 +29,7 @@
 #include "Direct3D11Renderer/RootSignature.h"
 #include "Direct3D11Renderer/RenderTarget/SwapChain.h"
 #include "Direct3D11Renderer/RenderTarget/Framebuffer.h"
+#include "Direct3D11Renderer/Buffer/BufferManager.h"
 #include "Direct3D11Renderer/Buffer/VertexArray.h"
 #include "Direct3D11Renderer/Buffer/IndexBuffer.h"
 #include "Direct3D11Renderer/Buffer/VertexBuffer.h"
@@ -356,25 +357,9 @@ namespace Direct3D11Renderer
 		return new Framebuffer(*this, numberOfColorTextures, colorTextures, depthStencilTexture);
 	}
 
-	Renderer::IVertexBuffer *Direct3D11Renderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
+	Renderer::IBufferManager *Direct3D11Renderer::createBufferManager()
 	{
-		return new VertexBuffer(*this, numberOfBytes, data, bufferUsage);
-	}
-
-	Renderer::IIndexBuffer *Direct3D11Renderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		return new IndexBuffer(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
-	}
-
-	Renderer::IVertexArray *Direct3D11Renderer::createVertexArray(const Renderer::VertexAttributes&, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
-	{
-		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-		return new VertexArray(*this, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-	}
-
-	Renderer::IUniformBuffer *Direct3D11Renderer::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		return new UniformBuffer(static_cast<Direct3D11Renderer&>(*this), numberOfBytes, data, bufferUsage);
+		return new BufferManager(*this);
 	}
 
 	Renderer::ITextureBuffer *Direct3D11Renderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)

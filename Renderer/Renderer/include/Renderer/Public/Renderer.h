@@ -51,6 +51,7 @@ namespace Renderer
 		class IRenderTarget;
 			class ISwapChain;
 			class IFramebuffer;
+		class IBufferManager;
 		class IBuffer;
 			class IIndexBuffer;
 			class IVertexBuffer;
@@ -1740,10 +1741,7 @@ namespace Renderer
 			virtual IShaderLanguage* getShaderLanguage(const char* shaderLanguageName = nullptr) = 0;
 			virtual ISwapChain* createSwapChain(handle nativeWindowHandle) = 0;
 			virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorTextures, ITexture** colorTextures, ITexture* depthStencilTexture = nullptr) = 0;
-			virtual IVertexBuffer* createVertexBuffer(uint32_t numberOfBytes, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-			virtual IIndexBuffer* createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
-			virtual IVertexArray* createVertexArray(const VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer* vertexBuffers, IIndexBuffer* indexBuffer = nullptr) = 0;
-			virtual IUniformBuffer* createUniformBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IBufferManager *createBufferManager() = 0;
 			virtual ITextureBuffer* createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
 			virtual ITexture2DArray* createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
@@ -1972,6 +1970,32 @@ namespace Renderer
 			IFramebuffer& operator =(const IFramebuffer& source);
 		};
 		typedef SmartRefCount<IFramebuffer> IFramebufferPtr;
+	#endif
+
+	// Renderer/RenderTarget/IBufferManager.h
+	#ifndef __RENDERER_IBUFFERMANAGER_H__
+	#define __RENDERER_IBUFFERMANAGER_H__
+		class IBufferManager : public RefCount<IBufferManager>
+		{
+		public:
+			inline virtual ~IBufferManager();
+			inline IRenderer& getRenderer() const
+			{
+				return mRenderer;
+			}
+		public:
+			virtual IVertexBuffer* createVertexBuffer(uint32_t numberOfBytes, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IIndexBuffer* createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IVertexArray* createVertexArray(const VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer* vertexBuffers, IIndexBuffer* indexBuffer = nullptr) = 0;
+			virtual IUniformBuffer* createUniformBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
+		protected:
+			inline explicit IBufferManager(IRenderer& renderer);
+			inline explicit IBufferManager(const IBufferManager& source);
+			inline IBufferManager& operator =(const IBufferManager& source);
+		private:
+			IRenderer& mRenderer;
+		};
+		typedef SmartRefCount<IBufferManager> IBufferManagerPtr;
 	#endif
 
 	// Renderer/Buffer/IVertexArray.h

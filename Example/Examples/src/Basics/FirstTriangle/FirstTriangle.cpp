@@ -59,6 +59,9 @@ void FirstTriangle::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
+		// Create the buffer manager
+		mBufferManager = renderer->createBufferManager();
+
 		{ // Create the root signature
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
@@ -95,7 +98,7 @@ void FirstTriangle::onInitialization()
 				 1.0f, 0.0f,	// 1			   .   .
 				-0.5f, 0.0f		// 2			  2.......1
 			};
-			Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IVertexBufferPtr vertexBuffer(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Triangle VBO")
 
 			// Create vertex array object (VAO)
@@ -111,7 +114,7 @@ void FirstTriangle::onInitialization()
 					sizeof(float) * 2	// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArray = renderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+			mVertexArray = mBufferManager->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 			RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexArray, "Triangle VAO")
 		}
 
@@ -165,6 +168,7 @@ void FirstTriangle::onDeinitialization()
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
 	mRootSignature = nullptr;
+	mBufferManager = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())

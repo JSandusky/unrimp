@@ -59,6 +59,9 @@ void FirstInstancing::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
+		// Create the buffer manager
+		mBufferManager = renderer->createBufferManager();
+
 		{ // Create the root signature
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
@@ -125,7 +128,7 @@ void FirstInstancing::onInitialization()
 						 0.0f, 0.0f,	// 1				 .    .
 						-1.0f, 0.0f		// 2			  2.......1
 					};
-					Renderer::IVertexBufferPtr vertexBufferPosition(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+					Renderer::IVertexBufferPtr vertexBufferPosition(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 					// Create the per-instance-data vertex buffer object (VBO)
 					// -> Simple instance ID in order to keep it similar to the "draw instanced" version on the right side (blue)
@@ -133,7 +136,7 @@ void FirstInstancing::onInitialization()
 					{
 							0.0f, 1.0f
 					};
-					Renderer::IVertexBufferPtr vertexBufferInstanceId(renderer->createVertexBuffer(sizeof(INSTANCE_ID), INSTANCE_ID, Renderer::BufferUsage::STATIC_DRAW));
+					Renderer::IVertexBufferPtr vertexBufferInstanceId(mBufferManager->createVertexBuffer(sizeof(INSTANCE_ID), INSTANCE_ID, Renderer::BufferUsage::STATIC_DRAW));
 
 					// Create the index buffer object (IBO)
 					// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
@@ -143,7 +146,7 @@ void FirstInstancing::onInitialization()
 					{
 						0, 1, 2
 					};
-					Renderer::IIndexBuffer *indexBufferInstancedArrays = renderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
+					Renderer::IIndexBuffer *indexBufferInstancedArrays = mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
 
 					// Create vertex array object (VAO)
 					// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -162,7 +165,7 @@ void FirstInstancing::onInitialization()
 							sizeof(float)			// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArrayInstancedArrays = renderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBufferInstancedArrays);
+					mVertexArrayInstancedArrays = mBufferManager->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBufferInstancedArrays);
 				}
 
 				// Create the program
@@ -220,7 +223,7 @@ void FirstInstancing::onInitialization()
 						1.0f, 0.0f,	// 1			  .    .
 						0.0f, 0.0f	// 2			  2.......1
 					};
-					Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+					Renderer::IVertexBufferPtr vertexBuffer(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 					// Create vertex array object (VAO)
 					// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -235,7 +238,7 @@ void FirstInstancing::onInitialization()
 							sizeof(float) * 2	// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArrayDrawInstanced = renderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+					mVertexArrayDrawInstanced = mBufferManager->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 				}
 
 				// Create the program
@@ -280,6 +283,7 @@ void FirstInstancing::onDeinitialization()
 	mVertexArrayInstancedArrays = nullptr;
 	mPipelineStateInstancedArrays = nullptr;
 	mRootSignature = nullptr;
+	mBufferManager = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())

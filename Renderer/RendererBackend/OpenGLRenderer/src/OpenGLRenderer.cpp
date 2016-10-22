@@ -30,6 +30,7 @@
 #include "OpenGLRenderer/RenderTarget/SwapChain.h"
 #include "OpenGLRenderer/RenderTarget/FramebufferDsa.h"
 #include "OpenGLRenderer/RenderTarget/FramebufferBind.h"
+#include "OpenGLRenderer/Buffer/BufferManager.h"
 #include "OpenGLRenderer/Buffer/IndexBufferDsa.h"
 #include "OpenGLRenderer/Buffer/IndexBufferBind.h"
 #include "OpenGLRenderer/Buffer/VertexBufferDsa.h"
@@ -391,105 +392,9 @@ namespace OpenGLRenderer
 		}
 	}
 
-	Renderer::IVertexBuffer *OpenGLRenderer::createVertexBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
+	Renderer::IBufferManager *OpenGLRenderer::createBufferManager()
 	{
-		// "GL_ARB_vertex_buffer_object" required
-		if (mExtensions->isGL_ARB_vertex_buffer_object())
-		{
-			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
-			{
-				// Effective direct state access (DSA)
-				return new VertexBufferDsa(*this, numberOfBytes, data, bufferUsage);
-			}
-			else
-			{
-				// Traditional bind version
-				return new VertexBufferBind(*this, numberOfBytes, data, bufferUsage);
-			}
-		}
-		else
-		{
-			// Error!
-			return nullptr;
-		}
-	}
-
-	Renderer::IIndexBuffer *OpenGLRenderer::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		// "GL_ARB_vertex_buffer_object" required
-		if (mExtensions->isGL_ARB_vertex_buffer_object())
-		{
-			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
-			{
-				// Effective direct state access (DSA)
-				return new IndexBufferDsa(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
-			}
-			else
-			{
-				// Traditional bind version
-				return new IndexBufferBind(*this, numberOfBytes, indexBufferFormat, data, bufferUsage);
-			}
-		}
-		else
-		{
-			// Error!
-			return nullptr;
-		}
-	}
-
-	Renderer::IVertexArray *OpenGLRenderer::createVertexArray(const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
-	{
-		// Is "GL_ARB_vertex_array_object" there?
-		if (mExtensions->isGL_ARB_vertex_array_object())
-		{
-			// Effective vertex array object (VAO)
-
-			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
-			{
-				// Effective direct state access (DSA)
-				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				return new VertexArrayVaoDsa(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-			}
-			else
-			{
-				// Traditional bind version
-				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				return new VertexArrayVaoBind(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-			}
-		}
-		else
-		{
-			// Traditional version
-			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new VertexArrayNoVao(*this, vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
-		}
-	}
-
-	Renderer::IUniformBuffer *OpenGLRenderer::createUniformBuffer(uint32_t numberOfBytes, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		// "GL_ARB_uniform_buffer_object" required
-		if (mExtensions->isGL_ARB_uniform_buffer_object())
-		{
-			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
-			{
-				// Effective direct state access (DSA)
-				return new UniformBufferDsa(*this, numberOfBytes, data, bufferUsage);
-			}
-			else
-			{
-				// Traditional bind version
-				return new UniformBufferBind(*this, numberOfBytes, data, bufferUsage);
-			}
-		}
-		else
-		{
-			// Error!
-			return nullptr;
-		}
+		return new BufferManager(*this);
 	}
 
 	Renderer::ITextureBuffer *OpenGLRenderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)

@@ -102,6 +102,9 @@ void FirstGpgpu::onInitialization()
 	// Begin debug event
 	RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(mRenderer)
 
+	// Create the buffer manager
+	mBufferManager = mRenderer->createBufferManager();
+
 	// Create the 2D texture and framebuffer object (FBO) instances
 	for (int i = 0; i < 2; ++i)
 	{
@@ -166,7 +169,7 @@ void FirstGpgpu::onInitialization()
 			 1.0f, 0.0f,	// 1			   .   .
 			-0.5f, 0.0f		// 2			  2.......1
 		};
-		Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+		Renderer::IVertexBufferPtr vertexBuffer(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 		// Create vertex array object (VAO)
 		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -181,7 +184,7 @@ void FirstGpgpu::onInitialization()
 				sizeof(float) * 2	// strideInBytes (uint32_t)
 			}
 		};
-		mVertexArrayContentGeneration = mRenderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+		mVertexArrayContentGeneration = mBufferManager->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 	}
 
 	{ // Create vertex array object (VAO) for content processing
@@ -194,7 +197,7 @@ void FirstGpgpu::onInitialization()
 			 1.0f, -1.0f,	// 2			  0.......2
 			 1.0f,  1.0f	// 3
 		};
-		Renderer::IVertexBufferPtr vertexBuffer(mRenderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+		Renderer::IVertexBufferPtr vertexBuffer(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 		// Create vertex array object (VAO)
 		// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -209,7 +212,7 @@ void FirstGpgpu::onInitialization()
 				sizeof(float) * 2	// strideInBytes (uint32_t)
 			}
 		};
-		mVertexArrayContentProcessing = mRenderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+		mVertexArrayContentProcessing = mBufferManager->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 	}
 
 	// Create the programs: Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -276,6 +279,7 @@ void FirstGpgpu::onDeinitialization()
 		mFramebuffer[i] = nullptr;
 		mTexture2D[i] = nullptr;
 	}
+	mBufferManager = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(mRenderer)

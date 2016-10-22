@@ -166,6 +166,9 @@
     <ClInclude Include="include\Renderer\State\SamplerStateTypes.h">
       <Filter>Header Files\State</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\IBufferManager.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -277,6 +280,9 @@
     </None>
     <None Include="include\Renderer\State\ISamplerState.inl">
       <Filter>Header Files\State</Filter>
+    </None>
+    <None Include="include\Renderer\Buffer\IBufferManager.inl">
+      <Filter>Header Files\Buffer</Filter>
     </None>
   </ItemGroup>
 </Project>

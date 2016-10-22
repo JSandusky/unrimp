@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\Direct3D9Renderer\Buffer\BufferManager.inl" />
     <None Include="include\Direct3D9Renderer\Buffer\IndexBuffer.inl" />
     <None Include="include\Direct3D9Renderer\Buffer\VertexBuffer.inl" />
     <None Include="include\Direct3D9Renderer\Direct3D9Renderer.inl" />
@@ -35,6 +36,7 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Direct3D9Renderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\Direct3D9Renderer\Buffer\IndexBuffer.h" />
     <ClInclude Include="include\Direct3D9Renderer\Buffer\VertexArray.h" />
     <ClInclude Include="include\Direct3D9Renderer\Buffer\VertexBuffer.h" />
@@ -61,6 +63,7 @@
     <ClInclude Include="include\Direct3D9Renderer\Texture\Texture2D.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />

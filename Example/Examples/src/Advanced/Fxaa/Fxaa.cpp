@@ -98,6 +98,9 @@ void Fxaa::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
+		// Create the buffer manager
+		mBufferManager = renderer->createBufferManager();
+
 		// Create the framebuffer object (FBO) instance by using the current window size
 		recreateFramebuffer();
 
@@ -168,7 +171,7 @@ void Fxaa::onInitialization()
 				 1.0f, 0.0f,	// 1			   .   .
 				-0.5f, 0.0f		// 2			  2.......1
 			};
-			Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IVertexBufferPtr vertexBuffer(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -183,7 +186,7 @@ void Fxaa::onInitialization()
 					sizeof(float) * 2	// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArraySceneRendering = renderer->createVertexArray(detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+			mVertexArraySceneRendering = mBufferManager->createVertexArray(detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 		}
 
 		{ // Create vertex array object (VAO) for post-processing
@@ -196,7 +199,7 @@ void Fxaa::onInitialization()
 				 1.0f, -1.0f,	// 2			  0.......2
 				 1.0f,  1.0f	// 3
 			};
-			Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IVertexBufferPtr vertexBuffer(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -211,7 +214,7 @@ void Fxaa::onInitialization()
 					sizeof(float) * 2	// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArrayPostProcessing = renderer->createVertexArray(detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+			mVertexArrayPostProcessing = mBufferManager->createVertexArray(detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 		}
 
 		// End debug event
@@ -233,6 +236,7 @@ void Fxaa::onDeinitialization()
 	mRootSignature = nullptr;
 	mFramebuffer = nullptr;
 	mTexture2D = nullptr;
+	mBufferManager = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())

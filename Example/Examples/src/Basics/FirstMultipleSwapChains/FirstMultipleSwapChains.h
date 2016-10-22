@@ -102,6 +102,7 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	Renderer::IBufferManagerPtr mBufferManager;	///< Buffer manager, can be a null pointer
 	Renderer::IRootSignaturePtr mRootSignature;	///< Root signature, can be a null pointer
 	Renderer::IPipelineStatePtr mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IVertexArrayPtr   mVertexArray;	///< Vertex array object (VAO), can be a null pointer

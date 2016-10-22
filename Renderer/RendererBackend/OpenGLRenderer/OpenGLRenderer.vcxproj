@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBuffer.h" />
     <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBufferBind.h" />
     <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBufferDsa.h" />
@@ -82,6 +83,7 @@
     <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffer\IndexBufferBind.cpp" />
     <ClCompile Include="src\Buffer\IndexBufferDsa.cpp" />
@@ -156,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\OpenGLRenderer\Buffer\BufferManager.inl" />
     <None Include="include\OpenGLRenderer\Buffer\IndexBuffer.inl" />
     <None Include="include\OpenGLRenderer\Buffer\UniformBuffer.inl" />
     <None Include="include\OpenGLRenderer\Buffer\VertexArray.inl" />

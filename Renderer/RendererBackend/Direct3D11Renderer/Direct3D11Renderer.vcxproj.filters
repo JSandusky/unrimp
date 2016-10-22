@@ -90,6 +90,9 @@
     <None Include="include\Direct3D11Renderer\State\SamplerState.inl">
       <Filter>Source Files\State</Filter>
     </None>
+    <None Include="include\Direct3D11Renderer\Buffer\BufferManager.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D11Renderer\Shader\ShaderLanguageHlsl.h">
@@ -182,6 +185,9 @@
     <ClInclude Include="include\Direct3D11Renderer\State\SamplerState.h">
       <Filter>Source Files\State</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Buffer\BufferManager.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\ShaderLanguageHlsl.cpp">
@@ -264,6 +270,9 @@
     </ClCompile>
     <ClCompile Include="src\State\SamplerState.cpp">
       <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\BufferManager.cpp">
+      <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

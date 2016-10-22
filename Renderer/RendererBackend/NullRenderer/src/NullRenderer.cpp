@@ -26,6 +26,7 @@
 #include "NullRenderer/RootSignature.h"
 #include "NullRenderer/RenderTarget/SwapChain.h"
 #include "NullRenderer/RenderTarget/Framebuffer.h"
+#include "NullRenderer/Buffer/BufferManager.h"
 #include "NullRenderer/Buffer/VertexArray.h"
 #include "NullRenderer/Buffer/IndexBuffer.h"
 #include "NullRenderer/Buffer/VertexBuffer.h"
@@ -246,42 +247,9 @@ namespace NullRenderer
 		return new Framebuffer(*this);
 	}
 
-	Renderer::IVertexBuffer *NullRenderer::createVertexBuffer(uint32_t, const void *, Renderer::BufferUsage)
+	Renderer::IBufferManager *NullRenderer::createBufferManager()
 	{
-		return new VertexBuffer(*this);
-	}
-
-	Renderer::IIndexBuffer *NullRenderer::createIndexBuffer(uint32_t, Renderer::IndexBufferFormat::Enum, const void *, Renderer::BufferUsage)
-	{
-		return new IndexBuffer(*this);
-	}
-
-	Renderer::IVertexArray *NullRenderer::createVertexArray(const Renderer::VertexAttributes&, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer *vertexBuffers, Renderer::IIndexBuffer *indexBuffer)
-	{
-		// We don't keep a reference to the vertex buffers used by the vertex array attributes in here
-		// -> Ensure a correct reference counter behaviour
-		const Renderer::VertexArrayVertexBuffer *vertexBufferEnd = vertexBuffers + numberOfVertexBuffers;
-		for (const Renderer::VertexArrayVertexBuffer *vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer)
-		{
-			vertexBuffer->vertexBuffer->addReference();
-			vertexBuffer->vertexBuffer->release();
-		}
-
-		// We don't keep a reference to the index buffer in here
-		// -> Ensure a correct reference counter behaviour
-		if (nullptr != indexBuffer)
-		{
-			indexBuffer->addReference();
-			indexBuffer->release();
-		}
-
-		// Create the vertex array instance
-		return new VertexArray(*this);
-	}
-
-	Renderer::IUniformBuffer *NullRenderer::createUniformBuffer(uint32_t, const void *, Renderer::BufferUsage)
-	{
-		return new UniformBuffer(reinterpret_cast<NullRenderer&>(*this));
+		return new BufferManager(*this);
 	}
 
 	Renderer::ITextureBuffer *NullRenderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage)

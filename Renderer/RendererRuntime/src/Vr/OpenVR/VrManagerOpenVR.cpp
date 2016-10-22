@@ -257,7 +257,7 @@ namespace
 				meshResource.setNumberOfIndices(numberOfIndices);
 
 				{ // TODO(co) Tell the mesh resource about the vertex array
-					Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
+					Renderer::IBufferManager& bufferManager = rendererRuntime.getBufferManager();
 
 					// Create the vertex buffer
 					Renderer::IVertexBuffer* vertexBuffer = nullptr;
@@ -293,7 +293,7 @@ namespace
 								currentTemp += sizeof(short) * 4;
 							}
 						}
-						vertexBuffer = renderer.createVertexBuffer(numberOfBytes, temp, Renderer::BufferUsage::STATIC_DRAW);
+						vertexBuffer = bufferManager.createVertexBuffer(numberOfBytes, temp, Renderer::BufferUsage::STATIC_DRAW);
 						delete [] temp;
 					}
 
@@ -310,7 +310,7 @@ namespace
 							currentTemp[1] = vrRenderModel->rIndexData[offset + 1];
 							currentTemp[2] = vrRenderModel->rIndexData[offset + 0];
 						}
-						indexBuffer = renderer.createIndexBuffer(numberOfIndices * sizeof(uint16_t), Renderer::IndexBufferFormat::UNSIGNED_SHORT, temp, Renderer::BufferUsage::STATIC_DRAW);
+						indexBuffer = bufferManager.createIndexBuffer(numberOfIndices * sizeof(uint16_t), Renderer::IndexBufferFormat::UNSIGNED_SHORT, temp, Renderer::BufferUsage::STATIC_DRAW);
 						delete [] temp;
 					}
 
@@ -322,7 +322,7 @@ namespace
 							numberOfBytesPerVertex	// strideInBytes (uint32_t)
 						}
 					};
-					meshResource.setVertexArray(renderer.createVertexArray(::detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer));
+					meshResource.setVertexArray(bufferManager.createVertexArray(::detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer));
 				}
 
 				// Tell the mesh resource about the sub-mesh

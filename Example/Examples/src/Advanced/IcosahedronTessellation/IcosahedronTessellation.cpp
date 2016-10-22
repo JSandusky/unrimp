@@ -69,6 +69,9 @@ void IcosahedronTessellation::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
+		// Create the buffer manager
+		mBufferManager = renderer->createBufferManager();
+
 		{ // Create the root signature
 			// Setup
 			Renderer::DescriptorRangeBuilder ranges[4];
@@ -127,7 +130,7 @@ void IcosahedronTessellation::onInitialization()
 				 0.724f, -0.526f, -0.447f,	// 10
 				 0.000f,  0.000f, -1.000f	// 11
 			};
-			Renderer::IVertexBufferPtr vertexBuffer(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IVertexBufferPtr vertexBuffer(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create the index buffer object (IBO)
 			// -> Geometry is from: http://prideout.net/blog/?p=48 (Philip Rideout, "The Little Grasshopper - Graphics Programming Tips")
@@ -154,7 +157,7 @@ void IcosahedronTessellation::onInitialization()
 				5, 10,  9,	// 18
 				1,  6, 10	// 19
 			};
-			Renderer::IIndexBuffer *indexBuffer = renderer->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
+			Renderer::IIndexBuffer *indexBuffer = mBufferManager->createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
 
 			// Create vertex array object (VAO)
 			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
@@ -169,19 +172,19 @@ void IcosahedronTessellation::onInitialization()
 					sizeof(float) * 3	// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArray = renderer->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
+			mVertexArray = mBufferManager->createVertexArray(vertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, indexBuffer);
 		}
 
 		// Create uniform buffers and fill the static buffers at once
-		mUniformBufferDynamicTcs = renderer->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		mUniformBufferDynamicTcs = mBufferManager->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 		{	// "ObjectSpaceToClipSpaceMatrix"
 			// TODO(co) Cleanup, correct aspect ratio
 			glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -3.0f));
 			glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
 			glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.001f, 1000.0f);
 			glm::mat4 MVP = Projection * View; 
-//				glm::mat4 MVP = Projection * View * Model; 
-			mUniformBufferStaticTes = renderer->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(MVP), Renderer::BufferUsage::STATIC_DRAW);
+//				glm::mat4 MVP = Projection * View * Model;
+			mUniformBufferStaticTes = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(MVP), Renderer::BufferUsage::STATIC_DRAW);
 			{	// "NormalMatrix"
 
 				View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -190,7 +193,7 @@ void IcosahedronTessellation::onInitialization()
 				MVP = Projection * View; 
 				glm::mat3 nMVP(MVP);
 				glm::mat4 tMVP(nMVP);
-				mUniformBufferStaticGs = renderer->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(tMVP), Renderer::BufferUsage::STATIC_DRAW);
+				mUniformBufferStaticGs = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(tMVP), Renderer::BufferUsage::STATIC_DRAW);
 			}
 		}
 		{ // Light and material
@@ -200,7 +203,7 @@ void IcosahedronTessellation::onInitialization()
 				 0.0f, 0.75f, 0.75f, 1.0, 	// "DiffuseMaterial"
 				0.04f, 0.04f, 0.04f, 1.0,	// "AmbientMaterial"
 			};
-			mUniformBufferStaticFs = renderer->createUniformBuffer(sizeof(LIGHT_AND_MATERIAL), LIGHT_AND_MATERIAL, Renderer::BufferUsage::STATIC_DRAW);
+			mUniformBufferStaticFs = mBufferManager->createUniformBuffer(sizeof(LIGHT_AND_MATERIAL), LIGHT_AND_MATERIAL, Renderer::BufferUsage::STATIC_DRAW);
 		}
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -258,6 +261,7 @@ void IcosahedronTessellation::onDeinitialization()
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
 	mRootSignature = nullptr;
+	mBufferManager = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())

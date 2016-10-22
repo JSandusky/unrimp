@@ -59,6 +59,9 @@ void VertexBuffer::onInitialization()
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
 
+		// Create the buffer manager
+		mBufferManager = renderer->createBufferManager();
+
 		{ // Create the root signature
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
@@ -143,7 +146,7 @@ void VertexBuffer::onInitialization()
 				 1.0f, 0.0f,	0.0f, 1.0f, 0.0f,	// 1			   .   .
 				-0.5f, 0.0f,	0.0f, 0.0f, 1.0f	// 2			  2.......1
 			};
-			Renderer::IVertexBufferPtr vertexBufferPositionColor(renderer->createVertexBuffer(sizeof(VERTEX_POSITION_COLOR), VERTEX_POSITION_COLOR, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IVertexBufferPtr vertexBufferPositionColor(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION_COLOR), VERTEX_POSITION_COLOR, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create vertex array object (VAO)
 			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
@@ -153,7 +156,7 @@ void VertexBuffer::onInitialization()
 					sizeof(float) * (2 + 3)		// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArrayVBO = renderer->createVertexArray(vertexAttributesVBO, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+			mVertexArrayVBO = mBufferManager->createVertexArray(vertexAttributesVBO, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 		}
 
 		{ // Create vertex array object (VAO) using multiple vertex buffer object (VBO)
@@ -165,7 +168,7 @@ void VertexBuffer::onInitialization()
 				0.0f, 1.0f, 0.0f,	// 1			   .   .
 				0.0f, 0.0f, 1.0f	// 2			  	2
 			};
-			Renderer::IVertexBufferPtr vertexBufferColor(renderer->createVertexBuffer(sizeof(VERTEX_COLOR), VERTEX_COLOR, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IVertexBufferPtr vertexBufferColor(mBufferManager->createVertexBuffer(sizeof(VERTEX_COLOR), VERTEX_COLOR, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create the vertex buffer object (VBO) holding position data
 			// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
@@ -175,7 +178,7 @@ void VertexBuffer::onInitialization()
 				 1.0f,  0.0f,	// 1			   .   .
 				 0.0f, -1.0f	// 2			  	2
 			};
-			Renderer::IVertexBufferPtr vertexBufferPosition(renderer->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
+			Renderer::IVertexBufferPtr vertexBufferPosition(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create vertex array object (VAO)
 			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
@@ -189,7 +192,7 @@ void VertexBuffer::onInitialization()
 					sizeof(float) * 3		// strideInBytes (uint32_t)
 				}
 			};
-			mVertexArrayVBOs = renderer->createVertexArray(vertexAttributesVBOs, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
+			mVertexArrayVBOs = mBufferManager->createVertexArray(vertexAttributesVBOs, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers);
 		}
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -253,6 +256,7 @@ void VertexBuffer::onDeinitialization()
 	mVertexArrayVBO = nullptr;
 	mPipelineStateVBO = nullptr;
 	mRootSignature = nullptr;
+	mBufferManager = nullptr;
 
 	// End debug event
 	RENDERER_END_DEBUG_EVENT(getRenderer())

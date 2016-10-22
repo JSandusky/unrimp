@@ -217,6 +217,9 @@
     <ClInclude Include="include\OpenGLRenderer\State\SamplerStateBind.h">
       <Filter>Source Files\State</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\BufferManager.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ContextWindows.cpp">
@@ -402,6 +405,9 @@
     <ClCompile Include="src\State\SamplerState.cpp">
       <Filter>Source Files\State</Filter>
     </ClCompile>
+    <ClCompile Include="src\Buffer\BufferManager.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -501,6 +507,9 @@
     </None>
     <None Include="include\OpenGLRenderer\State\SamplerStateSo.inl">
       <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Buffer\BufferManager.inl">
+      <Filter>Source Files\Buffer</Filter>
     </None>
   </ItemGroup>
 </Project>

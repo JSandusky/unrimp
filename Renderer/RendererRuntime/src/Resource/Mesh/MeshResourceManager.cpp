@@ -87,7 +87,7 @@ namespace RendererRuntime
 		{
 			// Prepare the resource loader
 			MeshResourceLoader* meshResourceLoader = static_cast<MeshResourceLoader*>(acquireResourceLoaderInstance(MeshResourceLoader::TYPE_ID));
-			meshResourceLoader->initialize(*asset, *meshResource, mRendererRuntime.getRenderer());
+			meshResourceLoader->initialize(*asset, *meshResource);
 
 			// Commit resource streamer asset load request
 			ResourceStreamer::LoadRequest resourceStreamerLoadRequest;

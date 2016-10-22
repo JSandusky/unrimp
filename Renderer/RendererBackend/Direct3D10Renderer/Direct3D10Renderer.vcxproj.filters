@@ -84,6 +84,9 @@
     <None Include="include\Direct3D10Renderer\State\SamplerState.inl">
       <Filter>Source Files\State</Filter>
     </None>
+    <None Include="include\Direct3D10Renderer\Buffer\BufferManager.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D10Renderer\Shader\GeometryShaderHlsl.h">
@@ -173,6 +176,9 @@
     <ClInclude Include="include\Direct3D10Renderer\State\SamplerState.h">
       <Filter>Source Files\State</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\Buffer\BufferManager.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\GeometryShaderHlsl.cpp">
@@ -249,6 +255,9 @@
     </ClCompile>
     <ClCompile Include="src\State\SamplerState.cpp">
       <Filter>Source Files\State</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\BufferManager.cpp">
+      <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -152,6 +152,7 @@ namespace RendererRuntime
 
 			// Begin debug event
 			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
+			Renderer::IBufferManager& bufferManager = mRendererRuntime.getBufferManager();
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
 
 			{ // Vertex and index buffers
@@ -159,13 +160,13 @@ namespace RendererRuntime
 				if (nullptr == mVertexBufferPtr || mNumberOfAllocatedVertices < static_cast<uint32_t>(imDrawData->TotalVtxCount))
 				{
 					mNumberOfAllocatedVertices = static_cast<uint32_t>(imDrawData->TotalVtxCount + 5000);	// Add some reserve to reduce reallocations
-					mVertexBufferPtr = renderer.createVertexBuffer(mNumberOfAllocatedVertices * sizeof(ImDrawVert), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+					mVertexBufferPtr = bufferManager.createVertexBuffer(mNumberOfAllocatedVertices * sizeof(ImDrawVert), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 					mVertexArray = nullptr;
 				}
 				if (nullptr == mIndexBufferPtr || mNumberOfAllocatedIndices < static_cast<uint32_t>(imDrawData->TotalIdxCount))
 				{
 					mNumberOfAllocatedIndices = static_cast<uint32_t>(imDrawData->TotalIdxCount + 10000);	// Add some reserve to reduce reallocations
-					mIndexBufferPtr = renderer.createIndexBuffer(mNumberOfAllocatedIndices * sizeof(ImDrawIdx), Renderer::IndexBufferFormat::UNSIGNED_SHORT, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+					mIndexBufferPtr = bufferManager.createIndexBuffer(mNumberOfAllocatedIndices * sizeof(ImDrawIdx), Renderer::IndexBufferFormat::UNSIGNED_SHORT, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 					mVertexArray = nullptr;
 				}
 				if (nullptr == mVertexArray)
@@ -181,7 +182,7 @@ namespace RendererRuntime
 							sizeof(ImDrawVert)	// strideInBytes (uint32_t)
 						}
 					};
-					mVertexArray = renderer.createVertexArray(::detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, mIndexBufferPtr);
+					mVertexArray = bufferManager.createVertexArray(::detail::VertexAttributes, glm::countof(vertexArrayVertexBuffers), vertexArrayVertexBuffers, mIndexBufferPtr);
 				}
 
 				{ // Copy and convert all vertices and indices into a single contiguous buffer
@@ -365,7 +366,7 @@ namespace RendererRuntime
 		// Create vertex uniform buffer instance
 		if (0 != strcmp(renderer.getName(), "OpenGL") && 0 != strcmp(renderer.getName(), "OpenGLES2"))
 		{
-			mVertexShaderUniformBuffer = renderer.createUniformBuffer(sizeof(float) * 4 * 4, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+			mVertexShaderUniformBuffer = mRendererRuntime.getBufferManager().createUniformBuffer(sizeof(float) * 4 * 4, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 		}
 		else if (nullptr != mProgram)
 		{

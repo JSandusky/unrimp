@@ -210,6 +210,7 @@ namespace RendererRuntime
 		}
 
 		{ // Create the uniform buffer renderer resources
+			Renderer::IBufferManager& bufferManager = mRendererRuntime.getBufferManager();
 			MaterialBlueprintResource::UniformBuffers& uniformBuffers = mMaterialBlueprintResource->mUniformBuffers;
 			const size_t numberOfUniformBuffers = uniformBuffers.size();
 			for (size_t i = 0; i < numberOfUniformBuffers; ++i)
@@ -217,7 +218,7 @@ namespace RendererRuntime
 				// Create the uniform buffer renderer resource (GPU alignment is handled by the renderer backend)
 				MaterialBlueprintResource::UniformBuffer& uniformBuffer = uniformBuffers[i];
 				uniformBuffer.scratchBuffer.resize(uniformBuffer.uniformBufferNumberOfBytes);
-				uniformBuffer.uniformBufferPtr = renderer.createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+				uniformBuffer.uniformBufferPtr = bufferManager.createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 
 				// Ease-of-use direct access
 				if (MaterialBlueprintResource::UniformBufferUsage::PASS == uniformBuffer.uniformBufferUsage)

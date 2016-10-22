@@ -84,6 +84,7 @@ public:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	Renderer::IBufferManagerPtr mBufferManager;	///< Buffer manager, can be a null pointer
 	// Command buckets
 	RendererRuntime::CommandBucket<int> mSolidCommandBucket;
 	RendererRuntime::CommandBucket<int> mTransparentCommandBucket;
