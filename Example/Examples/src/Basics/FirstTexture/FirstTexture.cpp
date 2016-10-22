@@ -101,7 +101,7 @@ void FirstTexture::onInitialization()
 			}
 
 			// Create the texture instance
-			mTexture2D = renderer->createTexture2D(128, 128, Renderer::TextureFormat::R8G8B8A8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
+			mTexture2D = renderer->createTexture2D(TEXTURE_WIDTH, TEXTURE_HEIGHT, Renderer::TextureFormat::R8G8B8A8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
 
 			// Free texture memory
 			delete [] data;
