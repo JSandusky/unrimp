@@ -30,7 +30,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline IState::~IState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -40,7 +40,7 @@ namespace Renderer
 	inline IState::IState(ResourceType resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline IState::IState(const IState &source) :

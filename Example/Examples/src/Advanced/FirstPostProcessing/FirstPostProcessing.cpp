@@ -34,13 +34,13 @@
 FirstPostProcessing::FirstPostProcessing(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 FirstPostProcessing::~FirstPostProcessing()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 

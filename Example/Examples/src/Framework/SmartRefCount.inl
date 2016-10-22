@@ -31,7 +31,7 @@ template <class AType>
 SmartRefCount<AType>::SmartRefCount() :
 	mPtr(nullptr)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 template <class AType>

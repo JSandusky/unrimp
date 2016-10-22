@@ -38,12 +38,12 @@ namespace NullRenderer
 	TessellationEvaluationShader::TessellationEvaluationShader(NullRenderer &nullRenderer) :
 		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	TessellationEvaluationShader::~TessellationEvaluationShader()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

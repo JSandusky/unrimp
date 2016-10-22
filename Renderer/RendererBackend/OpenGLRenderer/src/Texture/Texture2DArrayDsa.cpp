@@ -74,7 +74,7 @@ namespace OpenGLRenderer
 
 	Texture2DArrayDsa::~Texture2DArrayDsa()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

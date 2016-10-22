@@ -38,12 +38,12 @@ namespace NullRenderer
 	TessellationControlShader::TessellationControlShader(NullRenderer &nullRenderer) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	TessellationControlShader::~TessellationControlShader()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

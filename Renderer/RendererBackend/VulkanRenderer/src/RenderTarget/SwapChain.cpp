@@ -372,7 +372,7 @@ namespace VulkanRenderer
 
 	void SwapChain::resizeBuffers()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	bool SwapChain::getFullscreenState() const

@@ -38,12 +38,12 @@ namespace OpenGLRenderer
 	ProgramMonolithicDsa::ProgramMonolithicDsa(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderMonolithic *vertexShaderMonolithic, TessellationControlShaderMonolithic *tessellationControlShaderMonolithic, TessellationEvaluationShaderMonolithic *tessellationEvaluationShaderMonolithic, GeometryShaderMonolithic *geometryShaderMonolithic, FragmentShaderMonolithic *fragmentShaderMonolithic) :
 		ProgramMonolithic(openGLRenderer, rootSignature, vertexAttributes, vertexShaderMonolithic, tessellationControlShaderMonolithic, tessellationEvaluationShaderMonolithic, geometryShaderMonolithic, fragmentShaderMonolithic)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	ProgramMonolithicDsa::~ProgramMonolithicDsa()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

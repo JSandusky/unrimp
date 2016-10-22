@@ -45,7 +45,7 @@ namespace OpenGLRenderer
 
 	IndexBufferDsa::~IndexBufferDsa()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

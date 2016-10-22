@@ -49,7 +49,7 @@ namespace Direct3D10Renderer
 		mEntryPointsRegistered(false),
 		mInitialized(false)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	Direct3D10RuntimeLinking::~Direct3D10RuntimeLinking()

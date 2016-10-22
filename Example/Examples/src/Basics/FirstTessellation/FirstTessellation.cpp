@@ -34,13 +34,13 @@
 FirstTessellation::FirstTessellation(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 FirstTessellation::~FirstTessellation()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 

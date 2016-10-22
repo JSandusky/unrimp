@@ -48,7 +48,7 @@ namespace Direct3D10Renderer
 		mEntryPointsRegistered(false),
 		mInitialized(false)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	Direct3D9RuntimeLinking::~Direct3D9RuntimeLinking()

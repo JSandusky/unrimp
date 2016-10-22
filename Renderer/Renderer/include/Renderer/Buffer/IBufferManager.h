@@ -69,6 +69,7 @@ namespace Renderer
 	*    - Index buffer object ("Renderer::IIndexBuffer")
 	*    - Vertex array object ("Renderer::IVertexArray")
 	*    - Uniform buffer object ("Renderer::IUniformBuffer")
+	*    - Texture buffer object ("Renderer::ITextureBuffer")
 	*
 	*    Implementations are free to implement a naive 1:1 mapping of a resource to an renderer API resource.
 	*    For AZDO ("Almost Zero Driver Overhead") implementations might allocate a few big renderer API resources

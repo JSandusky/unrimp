@@ -30,7 +30,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline IShader::~IShader()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -40,7 +40,7 @@ namespace Renderer
 	inline IShader::IShader(ResourceType resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline IShader::IShader(const IShader &source) :

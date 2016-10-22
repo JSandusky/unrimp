@@ -40,14 +40,14 @@ namespace OpenGLRenderer
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(0)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShader(GL_TESS_CONTROL_SHADER, sourceCode))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	TessellationControlShaderSeparate::~TessellationControlShaderSeparate()

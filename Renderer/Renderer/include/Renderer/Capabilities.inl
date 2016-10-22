@@ -43,12 +43,12 @@ namespace Renderer
 		maximumNumberOfPatchVertices(0),
 		maximumNumberOfGsOutputVertices(0)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline Capabilities::~Capabilities()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

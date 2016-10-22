@@ -85,7 +85,7 @@ namespace Direct3D9Renderer
 
 	RasterizerState::~RasterizerState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void RasterizerState::setDirect3D9RasterizerStates(IDirect3DDevice9 &direct3DDevice9) const

@@ -80,7 +80,7 @@ namespace OpenGLRenderer
 
 	TextureBufferBind::~TextureBufferBind()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

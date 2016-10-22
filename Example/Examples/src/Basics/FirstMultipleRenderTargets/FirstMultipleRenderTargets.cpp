@@ -34,13 +34,13 @@
 FirstMultipleRenderTargets::FirstMultipleRenderTargets(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 FirstMultipleRenderTargets::~FirstMultipleRenderTargets()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 

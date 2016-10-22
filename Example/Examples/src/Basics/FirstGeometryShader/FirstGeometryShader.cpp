@@ -34,13 +34,13 @@
 FirstGeometryShader::FirstGeometryShader(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 FirstGeometryShader::~FirstGeometryShader()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 

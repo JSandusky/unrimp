@@ -30,7 +30,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline IResource::~IResource()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline ResourceType IResource::getResourceType() const
@@ -65,7 +65,7 @@ namespace Renderer
 		mResourceType(resourceType),
 		mRenderer(&renderer)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline IResource::IResource(const IResource &source) :

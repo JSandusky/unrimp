@@ -50,7 +50,7 @@
 //[-------------------------------------------------------]
 IApplicationRendererRuntime::~IApplicationRendererRuntime()
 {
-	// Nothing to do in here
+	// Nothing here
 	// mRendererRuntimeInstance is destroyed within onDeinitialization()
 }
 
@@ -171,7 +171,7 @@ IApplicationRendererRuntime::IApplicationRendererRuntime(const char *rendererNam
 		, mProject(nullptr)
 	#endif
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 

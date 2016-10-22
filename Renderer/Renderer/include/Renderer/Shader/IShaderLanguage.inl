@@ -30,7 +30,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline IShaderLanguage::~IShaderLanguage()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline IRenderer &IShaderLanguage::getRenderer() const
@@ -71,7 +71,7 @@ namespace Renderer
 		mRenderer(&renderer),
 		mOptimizationLevel(OptimizationLevel::Ultra)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline IShaderLanguage::IShaderLanguage(const IShaderLanguage &source) :

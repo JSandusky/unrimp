@@ -38,12 +38,12 @@ namespace NullRenderer
 	GeometryShader::GeometryShader(NullRenderer &nullRenderer) :
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	GeometryShader::~GeometryShader()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

@@ -69,7 +69,7 @@ namespace OpenGLRenderer
 
 	TextureBufferDsa::~TextureBufferDsa()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

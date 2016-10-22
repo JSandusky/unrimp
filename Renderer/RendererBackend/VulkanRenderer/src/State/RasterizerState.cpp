@@ -38,12 +38,12 @@ namespace VulkanRenderer
 	RasterizerState::RasterizerState(const Renderer::RasterizerState &rasterizerState) :
 		mRasterizerState(rasterizerState)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	RasterizerState::~RasterizerState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void RasterizerState::setVulkanRasterizerStates() const

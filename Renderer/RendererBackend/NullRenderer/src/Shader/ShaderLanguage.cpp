@@ -49,12 +49,12 @@ namespace NullRenderer
 	ShaderLanguage::ShaderLanguage(NullRenderer &nullRenderer) :
 		IShaderLanguage(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	ShaderLanguage::~ShaderLanguage()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

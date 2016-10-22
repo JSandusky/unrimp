@@ -108,12 +108,12 @@ namespace OpenGLRenderer
 	ShaderLanguageMonolithic::ShaderLanguageMonolithic(OpenGLRenderer &openGLRenderer) :
 		IShaderLanguage(openGLRenderer)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	ShaderLanguageMonolithic::~ShaderLanguageMonolithic()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

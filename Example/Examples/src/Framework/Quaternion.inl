@@ -27,7 +27,7 @@ inline Quaternion::Quaternion() :
 	y(0.0f),
 	z(0.0f)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 inline Quaternion::Quaternion(float _w, float _x, float _y, float _z) :
@@ -36,7 +36,7 @@ inline Quaternion::Quaternion(float _w, float _x, float _y, float _z) :
 	y(_y),
 	z(_z)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 inline Quaternion::Quaternion(const float q[]) :
@@ -45,7 +45,7 @@ inline Quaternion::Quaternion(const float q[]) :
 	y(q[2]),
 	z(q[3])
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 inline Quaternion::Quaternion(const Quaternion &q) :
@@ -54,12 +54,12 @@ inline Quaternion::Quaternion(const Quaternion &q) :
 	y(q.y),
 	z(q.z)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 inline Quaternion::~Quaternion()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 inline Quaternion &Quaternion::operator *=(const Quaternion &q)

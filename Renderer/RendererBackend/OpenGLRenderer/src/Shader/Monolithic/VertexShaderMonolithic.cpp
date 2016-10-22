@@ -40,14 +40,14 @@ namespace OpenGLRenderer
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(0)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	VertexShaderMonolithic::VertexShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(ShaderLanguageMonolithic::loadShader(GL_VERTEX_SHADER_ARB, sourceCode))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	VertexShaderMonolithic::~VertexShaderMonolithic()

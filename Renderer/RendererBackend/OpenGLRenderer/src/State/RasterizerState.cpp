@@ -38,7 +38,7 @@ namespace OpenGLRenderer
 	RasterizerState::RasterizerState(const Renderer::RasterizerState &rasterizerState) :
 		mRasterizerState(rasterizerState)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void RasterizerState::setOpenGLRasterizerStates() const

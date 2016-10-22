@@ -30,7 +30,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	inline DepthStencilState::~DepthStencilState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline const Renderer::DepthStencilState &DepthStencilState::getDepthStencilState() const

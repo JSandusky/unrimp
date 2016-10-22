@@ -39,12 +39,12 @@ namespace OpenGLES2Renderer
 	RasterizerState::RasterizerState(const Renderer::RasterizerState &rasterizerState) :
 		mRasterizerState(rasterizerState)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	RasterizerState::~RasterizerState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void RasterizerState::setOpenGLES2RasterizerStates() const

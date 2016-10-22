@@ -36,7 +36,7 @@ public:
 	ApplicationWindow(IApplication &application) :
 		mApplication(application)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	virtual bool HandleEvent(XEvent &event)
@@ -101,7 +101,7 @@ ApplicationImplLinux::ApplicationImplLinux(IApplication &application, const char
 
 ApplicationImplLinux::~ApplicationImplLinux()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 

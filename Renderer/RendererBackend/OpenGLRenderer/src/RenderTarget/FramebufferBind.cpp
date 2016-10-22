@@ -153,7 +153,7 @@ namespace OpenGLRenderer
 
 				default:
 				case GL_FRAMEBUFFER_COMPLETE:
-					// Nothing to do in here
+					// Nothing here
 					break;
 			}
 		#endif
@@ -167,7 +167,7 @@ namespace OpenGLRenderer
 	FramebufferBind::~FramebufferBind()
 	{
 		// Texture reference handling is done within the base class "Framebuffer"
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

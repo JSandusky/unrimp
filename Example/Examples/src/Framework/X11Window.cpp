@@ -158,7 +158,7 @@ void X11Window::refresh()
 //[-------------------------------------------------------]
 X11Window::X11Window(const X11Window &)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 X11Window& X11Window::operator=(const X11Window &)

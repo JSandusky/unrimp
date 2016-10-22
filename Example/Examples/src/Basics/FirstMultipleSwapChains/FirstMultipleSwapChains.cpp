@@ -77,7 +77,7 @@
 		SwapChainWindow() :
 			mSwapChain(nullptr)
 		{
-			// Nothing to do in here
+			// Nothing here
 		}
 
 		void setSwapChain(Renderer::ISwapChain *swapChain)
@@ -115,13 +115,13 @@
 FirstMultipleSwapChains::FirstMultipleSwapChains(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 FirstMultipleSwapChains::~FirstMultipleSwapChains()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 

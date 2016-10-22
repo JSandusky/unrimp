@@ -45,7 +45,7 @@ namespace OpenGLRenderer
 
 	VertexBufferDsa::~VertexBufferDsa()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

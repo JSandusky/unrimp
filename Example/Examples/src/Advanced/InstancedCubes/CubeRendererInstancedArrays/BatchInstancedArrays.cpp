@@ -36,7 +36,7 @@
 BatchInstancedArrays::BatchInstancedArrays() :
 	mNumberOfCubeInstances(0)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 BatchInstancedArrays::~BatchInstancedArrays()

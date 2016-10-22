@@ -30,7 +30,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline IBuffer::~IBuffer()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -40,7 +40,7 @@ namespace Renderer
 	inline IBuffer::IBuffer(ResourceType resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline IBuffer::IBuffer(const IBuffer &source) :

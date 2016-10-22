@@ -36,7 +36,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	IExtensions::~IExtensions()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -45,7 +45,7 @@ namespace OpenGLES2Renderer
 	//[-------------------------------------------------------]
 	IExtensions::IExtensions()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	IExtensions::IExtensions(const IExtensions &)

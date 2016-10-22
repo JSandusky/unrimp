@@ -51,7 +51,7 @@ namespace Direct3D12Renderer
 		mEntryPointsRegistered(false),
 		mInitialized(false)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	Direct3D12RuntimeLinking::~Direct3D12RuntimeLinking()

@@ -47,7 +47,7 @@ namespace OpenGLRenderer
 
 	UniformBufferDsa::~UniformBufferDsa()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

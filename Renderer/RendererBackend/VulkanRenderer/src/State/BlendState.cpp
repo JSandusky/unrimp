@@ -38,12 +38,12 @@ namespace VulkanRenderer
 	BlendState::BlendState(const Renderer::BlendState &blendState) :
 		mBlendState(blendState)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	BlendState::~BlendState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void BlendState::setVulkanBlendStates() const

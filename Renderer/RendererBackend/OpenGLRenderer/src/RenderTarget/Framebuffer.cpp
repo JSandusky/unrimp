@@ -142,7 +142,7 @@ namespace OpenGLRenderer
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
 						default:
-							// Nothing to do in here
+							// Nothing here
 							break;
 					}
 				}
@@ -194,7 +194,7 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
 				default:
-					// Nothing to do in here
+					// Nothing here
 					break;
 			}
 		}

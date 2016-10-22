@@ -36,7 +36,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	SamplerState::~SamplerState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	SamplerState::SamplerState(OpenGLRenderer &openGLRenderer) :
 		ISamplerState(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

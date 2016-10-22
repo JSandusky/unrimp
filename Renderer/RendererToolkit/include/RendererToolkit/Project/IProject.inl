@@ -30,7 +30,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	inline IProject::~IProject()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -39,7 +39,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	inline IProject::IProject()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline IProject::IProject(const IProject &)

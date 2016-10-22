@@ -179,7 +179,7 @@ namespace OpenGLES2Renderer
 		mDummyNativeWindow(NULL_HANDLE),
 		mDummySurface(EGL_NO_SURFACE)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	IContext::IContext(const IContext &) :

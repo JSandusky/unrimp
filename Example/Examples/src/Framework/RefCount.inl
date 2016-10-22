@@ -25,13 +25,13 @@ template <class AType>
 RefCount<AType>::RefCount() :
 	mRefCount(0)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 template <class AType>
 RefCount<AType>::~RefCount()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 template <class AType>

@@ -30,7 +30,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	inline BlendState::~BlendState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline const Renderer::BlendState &BlendState::getBlendState() const

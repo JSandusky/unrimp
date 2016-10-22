@@ -37,12 +37,12 @@ namespace VulkanRenderer
 	SamplerState::SamplerState(VulkanRenderer &vulkanRenderer, const Renderer::SamplerState&) :
 		ISamplerState(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	SamplerState::~SamplerState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

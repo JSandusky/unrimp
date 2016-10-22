@@ -40,14 +40,14 @@ namespace OpenGLRenderer
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(0)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	FragmentShaderSeparate::FragmentShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShader(GL_FRAGMENT_SHADER_ARB, sourceCode))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	FragmentShaderSeparate::~FragmentShaderSeparate()

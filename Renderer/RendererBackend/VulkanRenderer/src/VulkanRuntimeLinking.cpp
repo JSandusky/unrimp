@@ -76,7 +76,7 @@ namespace VulkanRenderer
 		mFunctionsRegistered(false),
 		mInitialized(false)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	VulkanRuntimeLinking::~VulkanRuntimeLinking()

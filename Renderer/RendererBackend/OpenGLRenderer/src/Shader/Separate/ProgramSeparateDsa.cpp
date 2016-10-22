@@ -43,12 +43,12 @@ namespace OpenGLRenderer
 	ProgramSeparateDsa::ProgramSeparateDsa(OpenGLRenderer &openGLRenderer, const Renderer::IRootSignature& rootSignature, VertexShaderSeparate *vertexShaderSeparate, TessellationControlShaderSeparate *tessellationControlShaderSeparate, TessellationEvaluationShaderSeparate *tessellationEvaluationShaderSeparate, GeometryShaderSeparate *geometryShaderSeparate, FragmentShaderSeparate *fragmentShaderSeparate) :
 		ProgramSeparate(openGLRenderer, rootSignature, vertexShaderSeparate, tessellationControlShaderSeparate, tessellationEvaluationShaderSeparate, geometryShaderSeparate, fragmentShaderSeparate)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	ProgramSeparateDsa::~ProgramSeparateDsa()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

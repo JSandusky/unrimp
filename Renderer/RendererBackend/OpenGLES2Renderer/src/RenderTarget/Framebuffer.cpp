@@ -198,7 +198,7 @@ namespace OpenGLES2Renderer
 
 				default:
 				case GL_FRAMEBUFFER_COMPLETE:
-					// Nothing to do in here
+					// Nothing here
 					break;
 			}
 		#endif

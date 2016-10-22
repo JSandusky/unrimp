@@ -41,13 +41,13 @@ IcosahedronTessellation::IcosahedronTessellation(const char *rendererName) :
 	mTessellationLevelOuter(2.0f),
 	mTessellationLevelInner(3.0f)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 IcosahedronTessellation::~IcosahedronTessellation()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 

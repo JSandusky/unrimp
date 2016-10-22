@@ -143,7 +143,7 @@ namespace OpenGLRenderer
 
 	Texture2DBind::~Texture2DBind()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

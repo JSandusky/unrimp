@@ -41,7 +41,7 @@ namespace OpenGLRenderer
 		mOpenGLSrcBlend(Mapping::getOpenGLBlendType(mBlendState.renderTarget[0].srcBlend)),
 		mOpenGLDstBlend(Mapping::getOpenGLBlendType(mBlendState.renderTarget[0].destBlend))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void BlendState::setOpenGLBlendStates() const

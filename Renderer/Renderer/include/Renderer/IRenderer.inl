@@ -30,7 +30,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline IRenderer::~IRenderer()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline const Capabilities &IRenderer::getCapabilities() const
@@ -49,7 +49,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline IRenderer::IRenderer()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline IRenderer::IRenderer(const IRenderer &)

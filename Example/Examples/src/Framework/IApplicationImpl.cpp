@@ -30,7 +30,7 @@
 //[-------------------------------------------------------]
 IApplicationImpl::~IApplicationImpl()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 IApplication& IApplicationImpl::getApplication() const
@@ -45,7 +45,7 @@ IApplication& IApplicationImpl::getApplication() const
 IApplicationImpl::IApplicationImpl(IApplication& application) :
 	mApplication(application)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 IApplicationImpl::IApplicationImpl(const IApplicationImpl& applicationImpl) :

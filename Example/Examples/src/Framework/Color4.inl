@@ -27,7 +27,7 @@ inline Color4::Color4() :
 	b(0.0f),
 	a(0.0f)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 inline Color4::Color4(const Color4 &source) :
@@ -36,7 +36,7 @@ inline Color4::Color4(const Color4 &source) :
 	b(source.b),
 	a(source.a)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 inline Color4::Color4(float _r, float _g, float _b, float _a) :
@@ -45,12 +45,12 @@ inline Color4::Color4(float _r, float _g, float _b, float _a) :
 	b(_b),
 	a(_a)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 inline Color4::~Color4()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 inline Color4 &Color4::operator =(const Color4 &source)

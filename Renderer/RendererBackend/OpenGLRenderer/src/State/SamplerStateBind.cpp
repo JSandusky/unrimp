@@ -59,7 +59,7 @@ namespace OpenGLRenderer
 
 	SamplerStateBind::~SamplerStateBind()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void SamplerStateBind::setOpenGLSamplerStates() const

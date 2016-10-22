@@ -77,12 +77,12 @@ namespace Renderer
 		currentNumberOfFragmentShaders(0),
 		numberOfCreatedFragmentShaders(0)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline Statistics::~Statistics()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline uint32_t Statistics::getNumberOfCurrentResources() const

@@ -60,7 +60,7 @@ namespace OpenGLRenderer
 
 	UniformBufferBind::~UniformBufferBind()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

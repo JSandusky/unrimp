@@ -40,14 +40,14 @@ namespace OpenGLRenderer
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(0)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	TessellationControlShaderMonolithic::TessellationControlShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(ShaderLanguageMonolithic::loadShader(GL_TESS_CONTROL_SHADER, sourceCode))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	TessellationControlShaderMonolithic::~TessellationControlShaderMonolithic()

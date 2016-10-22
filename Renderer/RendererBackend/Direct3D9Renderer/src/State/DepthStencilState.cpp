@@ -38,12 +38,12 @@ namespace Direct3D9Renderer
 	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState &depthStencilState) :
 		mDepthStencilState(depthStencilState)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	DepthStencilState::~DepthStencilState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void DepthStencilState::setDirect3D9DepthStencilStates(IDirect3DDevice9 &direct3DDevice9) const

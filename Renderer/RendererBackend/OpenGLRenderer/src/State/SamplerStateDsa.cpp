@@ -38,12 +38,12 @@ namespace OpenGLRenderer
 		SamplerState(openGLRenderer),
 		mSamplerState(samplerState)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	SamplerStateDsa::~SamplerStateDsa()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void SamplerStateDsa::setOpenGLSamplerStates() const

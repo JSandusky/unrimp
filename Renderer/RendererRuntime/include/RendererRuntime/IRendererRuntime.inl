@@ -30,7 +30,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline IRendererRuntime::~IRendererRuntime()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline Renderer::IRenderer& IRendererRuntime::getRenderer() const
@@ -156,7 +156,7 @@ namespace RendererRuntime
 		mDebugGuiManager(nullptr),
 		mVrManager(nullptr)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline IRendererRuntime::IRendererRuntime(const IRendererRuntime &) :

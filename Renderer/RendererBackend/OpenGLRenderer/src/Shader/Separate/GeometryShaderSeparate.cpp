@@ -40,7 +40,7 @@ namespace OpenGLRenderer
 		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(0)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) :

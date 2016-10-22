@@ -50,7 +50,7 @@ namespace Direct3D11Renderer
 		mEntryPointsRegistered(false),
 		mInitialized(false)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	Direct3D11RuntimeLinking::~Direct3D11RuntimeLinking()

@@ -30,7 +30,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	inline RasterizerState::~RasterizerState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline const Renderer::RasterizerState &RasterizerState::getRasterizerState() const

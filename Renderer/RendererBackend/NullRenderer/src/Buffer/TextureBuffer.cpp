@@ -37,12 +37,12 @@ namespace NullRenderer
 	TextureBuffer::TextureBuffer(NullRenderer &nullRenderer) :
 		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	TextureBuffer::~TextureBuffer()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -51,7 +51,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	void TextureBuffer::copyDataFrom(uint32_t, const void *)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

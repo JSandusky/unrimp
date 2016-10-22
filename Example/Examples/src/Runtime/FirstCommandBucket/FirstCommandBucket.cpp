@@ -48,13 +48,13 @@ FirstCommandBucket::FirstCommandBucket(const char *rendererName) :
 	mSolidCommandBucket(4),
 	mTransparentCommandBucket(2)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 FirstCommandBucket::~FirstCommandBucket()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 

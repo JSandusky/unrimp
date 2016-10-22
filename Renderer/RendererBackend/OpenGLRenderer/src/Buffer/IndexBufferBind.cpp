@@ -58,7 +58,7 @@ namespace OpenGLRenderer
 
 	IndexBufferBind::~IndexBufferBind()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

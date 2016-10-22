@@ -66,12 +66,12 @@ namespace OpenGLES2Renderer
 		mGL_ANGLE_framebuffer_blit(false),
 		mGL_ANGLE_framebuffer_multisample(false)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	ExtensionsRuntimeLinking::~ExtensionsRuntimeLinking()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void ExtensionsRuntimeLinking::initialize()

@@ -30,7 +30,7 @@
 //[-------------------------------------------------------]
 ICubeRenderer::~ICubeRenderer()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 
@@ -39,7 +39,7 @@ ICubeRenderer::~ICubeRenderer()
 //[-------------------------------------------------------]
 ICubeRenderer::ICubeRenderer()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 ICubeRenderer::ICubeRenderer(const ICubeRenderer &)

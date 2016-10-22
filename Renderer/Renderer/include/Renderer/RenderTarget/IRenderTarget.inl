@@ -30,7 +30,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline IRenderTarget::~IRenderTarget()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -40,13 +40,13 @@ namespace Renderer
 	inline IRenderTarget::IRenderTarget(ResourceType resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline IRenderTarget::IRenderTarget(const IRenderTarget &source) :
 		IResource(source)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline IRenderTarget &IRenderTarget::operator =(const IRenderTarget &)

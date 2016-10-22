@@ -104,12 +104,12 @@ namespace OpenGLRenderer
 	ShaderLanguageSeparate::ShaderLanguageSeparate(OpenGLRenderer &openGLRenderer) :
 		IShaderLanguage(openGLRenderer)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	ShaderLanguageSeparate::~ShaderLanguageSeparate()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

@@ -51,7 +51,7 @@ FirstGpgpu::FirstGpgpu(const char *rendererName) :
 FirstGpgpu::~FirstGpgpu()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 int FirstGpgpu::run()

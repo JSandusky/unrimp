@@ -106,7 +106,7 @@ namespace OpenGLRenderer
 		mEntryPointsRegistered(false),
 		mInitialized(false)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	OpenGLRuntimeLinking::~OpenGLRuntimeLinking()

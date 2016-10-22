@@ -288,7 +288,7 @@ namespace NullRenderer
 
 	void NullRenderer::unmap(Renderer::IResource &, uint32_t)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -380,7 +380,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	void NullRenderer::iaSetVertexArray(Renderer::IVertexArray *vertexArray)
 	{
-		// Nothing to do in here, the following is just for debugging
+		// Nothing here, the following is just for debugging
 		if (nullptr != vertexArray)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
@@ -390,7 +390,7 @@ namespace NullRenderer
 
 	void NullRenderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -399,12 +399,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	void NullRenderer::rsSetViewports(uint32_t, const Renderer::Viewport *)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void NullRenderer::rsSetScissorRectangles(uint32_t, const Renderer::ScissorRectangle *)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -459,12 +459,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	void NullRenderer::clear(uint32_t, const float [4], float, uint32_t)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	bool NullRenderer::beginScene()
 	{
-		// Nothing to do in here
+		// Nothing here
 
 		// Done
 		return true;
@@ -482,22 +482,22 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	void NullRenderer::draw(uint32_t, uint32_t)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void NullRenderer::drawInstanced(uint32_t, uint32_t, uint32_t)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void NullRenderer::drawIndexed(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void NullRenderer::drawIndexedInstanced(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -506,12 +506,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	void NullRenderer::flush()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void NullRenderer::finish()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -520,7 +520,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	bool NullRenderer::isDebugEnabled()
 	{
-		// Nothing to do in here
+		// Nothing here
 
 		// Debug disabled
 		return false;
@@ -528,17 +528,17 @@ namespace NullRenderer
 
 	void NullRenderer::setDebugMarker(const wchar_t *)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void NullRenderer::beginDebugEvent(const wchar_t *)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void NullRenderer::endDebugEvent()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

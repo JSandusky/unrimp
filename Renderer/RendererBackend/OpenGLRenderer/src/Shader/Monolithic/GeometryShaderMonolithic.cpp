@@ -43,7 +43,7 @@ namespace OpenGLRenderer
 		mOpenGLGsOutputPrimitiveTopology(static_cast<int>(gsOutputPrimitiveTopology)),	// The "Renderer::GsOutputPrimitiveTopology" values directly map to OpenGL constants, do not change them
 		mNumberOfOutputVertices(numberOfOutputVertices)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	GeometryShaderMonolithic::GeometryShaderMonolithic(OpenGLRenderer &openGLRenderer, const char *sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices) :
@@ -53,7 +53,7 @@ namespace OpenGLRenderer
 		mOpenGLGsOutputPrimitiveTopology(static_cast<int>(gsOutputPrimitiveTopology)),	// The "Renderer::GsOutputPrimitiveTopology" values directly map to OpenGL constants, do not change them
 		mNumberOfOutputVertices(numberOfOutputVertices)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	GeometryShaderMonolithic::~GeometryShaderMonolithic()

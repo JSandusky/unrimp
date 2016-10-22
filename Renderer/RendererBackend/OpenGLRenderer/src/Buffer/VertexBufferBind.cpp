@@ -58,7 +58,7 @@ namespace OpenGLRenderer
 
 	VertexBufferBind::~VertexBufferBind()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

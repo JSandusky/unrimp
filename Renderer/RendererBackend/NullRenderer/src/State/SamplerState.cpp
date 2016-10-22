@@ -37,12 +37,12 @@ namespace NullRenderer
 	SamplerState::SamplerState(NullRenderer &nullRenderer) :
 		ISamplerState(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	SamplerState::~SamplerState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

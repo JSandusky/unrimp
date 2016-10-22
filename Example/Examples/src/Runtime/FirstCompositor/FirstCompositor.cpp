@@ -69,13 +69,13 @@ FirstCompositor::FirstCompositor(const char *rendererName) :
 	IApplicationRendererRuntime(rendererName),
 	mCompositorWorkspaceInstance(nullptr)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 FirstCompositor::~FirstCompositor()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 

@@ -50,7 +50,7 @@ ApplicationImplWindows::ApplicationImplWindows(IApplication &application, const 
 
 ApplicationImplWindows::~ApplicationImplWindows()
 {
-	// Nothing to do in here
+	// Nothing here
 	// mNativeWindowHandle is destroyed within onDeinitialization()
 }
 

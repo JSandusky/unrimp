@@ -133,7 +133,7 @@ namespace OpenGLRenderer
 
 	Texture2DDsa::~Texture2DDsa()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

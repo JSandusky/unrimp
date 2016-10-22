@@ -38,7 +38,7 @@ namespace OpenGLRenderer
 	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState &depthStencilState) :
 		mDepthStencilState(depthStencilState)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void DepthStencilState::setOpenGLDepthStencilStates() const

@@ -45,12 +45,12 @@ namespace NullRenderer
 		ISwapChain(nullRenderer),
 		mNativeWindowHandle(nativeWindowHandle)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	SwapChain::~SwapChain()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -128,12 +128,12 @@ namespace NullRenderer
 
 	void SwapChain::present()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void SwapChain::resizeBuffers()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	bool SwapChain::getFullscreenState() const

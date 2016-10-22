@@ -37,12 +37,12 @@ namespace NullRenderer
 	Texture2DArray::Texture2DArray(NullRenderer &nullRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices) :
 		ITexture2DArray(reinterpret_cast<Renderer::IRenderer&>(nullRenderer), width, height, numberOfSlices)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	Texture2DArray::~Texture2DArray()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

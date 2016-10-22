@@ -51,13 +51,13 @@ InstancedCubes::InstancedCubes(const char *rendererName) :
 	mFramesSinceCheck(0),
 	mFramesPerSecond(0.0f)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 InstancedCubes::~InstancedCubes()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 

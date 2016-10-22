@@ -31,7 +31,7 @@ template <class AType>
 SmartPtr<AType>::SmartPtr() :
 	mPtr(nullptr)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 template <class AType>

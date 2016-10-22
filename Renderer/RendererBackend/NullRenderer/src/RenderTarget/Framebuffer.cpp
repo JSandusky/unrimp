@@ -37,12 +37,12 @@ namespace NullRenderer
 	Framebuffer::Framebuffer(NullRenderer &nullRenderer) :
 		IFramebuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	Framebuffer::~Framebuffer()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

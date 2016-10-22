@@ -42,14 +42,14 @@ namespace OpenGLES2Renderer
 		mOpenGLES2Shader(0)
 	{
 		// TODO(co) Implement me
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES2Renderer &openGLES2Renderer, const char *sourceCode) :
 		IFragmentShader(openGLES2Renderer),
 		mOpenGLES2Shader(ShaderLanguageGlsl::loadShader(GL_FRAGMENT_SHADER, sourceCode))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	FragmentShaderGlsl::~FragmentShaderGlsl()

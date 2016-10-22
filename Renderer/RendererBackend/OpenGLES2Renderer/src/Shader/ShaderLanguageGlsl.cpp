@@ -103,12 +103,12 @@ namespace OpenGLES2Renderer
 	ShaderLanguageGlsl::ShaderLanguageGlsl(OpenGLES2Renderer &openGLES2Renderer) :
 		IShaderLanguage(openGLES2Renderer)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	ShaderLanguageGlsl::~ShaderLanguageGlsl()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

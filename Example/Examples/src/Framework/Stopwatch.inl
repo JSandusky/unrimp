@@ -26,7 +26,7 @@ inline Stopwatch::Stopwatch() :
 	mStart(0),
 	mStop(0)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 inline Stopwatch::Stopwatch(bool startAtOnce) :
@@ -42,7 +42,7 @@ inline Stopwatch::Stopwatch(bool startAtOnce) :
 
 inline Stopwatch::~Stopwatch()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 inline void Stopwatch::start()

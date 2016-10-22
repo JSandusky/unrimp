@@ -73,7 +73,7 @@ namespace NullRenderer
 
 	Program::~Program()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

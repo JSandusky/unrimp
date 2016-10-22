@@ -75,7 +75,7 @@ namespace Direct3D9Renderer
 
 	SamplerState::~SamplerState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void SamplerState::setDirect3D9SamplerStates(uint32_t sampler, IDirect3DDevice9 &direct3DDevice9) const

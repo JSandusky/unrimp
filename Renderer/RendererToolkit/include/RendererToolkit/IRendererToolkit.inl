@@ -30,7 +30,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	inline IRendererToolkit::~IRendererToolkit()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -39,7 +39,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	inline IRendererToolkit::IRendererToolkit()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline IRendererToolkit::IRendererToolkit(const IRendererToolkit &)

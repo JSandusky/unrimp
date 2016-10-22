@@ -42,12 +42,12 @@ namespace OpenGLES2Renderer
 		mOpenGLES2SrcBlend(Mapping::getOpenGLES2BlendType(mBlendState.renderTarget[0].srcBlend)),
 		mOpenGLES2DstBlend(Mapping::getOpenGLES2BlendType(mBlendState.renderTarget[0].destBlend))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	BlendState::~BlendState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void BlendState::setOpenGLES2BlendStates() const

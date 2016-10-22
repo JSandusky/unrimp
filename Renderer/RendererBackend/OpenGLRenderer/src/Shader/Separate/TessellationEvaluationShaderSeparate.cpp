@@ -40,14 +40,14 @@ namespace OpenGLRenderer
 		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(0)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	TessellationEvaluationShaderSeparate::TessellationEvaluationShaderSeparate(OpenGLRenderer &openGLRenderer, const char *sourceCode) :
 		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShader(GL_TESS_EVALUATION_SHADER, sourceCode))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	TessellationEvaluationShaderSeparate::~TessellationEvaluationShaderSeparate()

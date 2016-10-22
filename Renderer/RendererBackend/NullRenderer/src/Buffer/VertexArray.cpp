@@ -37,12 +37,12 @@ namespace NullRenderer
 	VertexArray::VertexArray(NullRenderer &nullRenderer) :
 		IVertexArray(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	VertexArray::~VertexArray()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

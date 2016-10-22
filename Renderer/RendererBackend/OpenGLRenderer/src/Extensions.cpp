@@ -53,7 +53,7 @@ namespace OpenGLRenderer
 
 	Extensions::~Extensions()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	bool Extensions::isInitialized() const

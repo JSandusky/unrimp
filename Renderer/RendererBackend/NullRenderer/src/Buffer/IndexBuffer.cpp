@@ -37,12 +37,12 @@ namespace NullRenderer
 	IndexBuffer::IndexBuffer(NullRenderer &nullRenderer) :
 		IIndexBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	IndexBuffer::~IndexBuffer()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

@@ -69,47 +69,47 @@ int IApplication::run()
 //[-------------------------------------------------------]
 void IApplication::onInitialization()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 void IApplication::onDeinitialization()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 void IApplication::onResize()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 void IApplication::onToggleFullscreenState()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 void IApplication::onKeyDown(uint32_t)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 void IApplication::onKeyUp(uint32_t)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 void IApplication::onUpdate()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 void IApplication::onDrawRequest()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 void IApplication::onDraw()
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 

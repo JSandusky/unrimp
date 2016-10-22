@@ -62,12 +62,12 @@ namespace VulkanRenderer
 	ShaderLanguageGlsl::ShaderLanguageGlsl(VulkanRenderer &vulkanRenderer) :
 		IShaderLanguage(vulkanRenderer)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	ShaderLanguageGlsl::~ShaderLanguageGlsl()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

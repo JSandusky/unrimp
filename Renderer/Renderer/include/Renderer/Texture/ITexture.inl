@@ -49,7 +49,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline ITexture::~ITexture()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -59,7 +59,7 @@ namespace Renderer
 	inline ITexture::ITexture(ResourceType resourceType, IRenderer &renderer) :
 		IResource(resourceType, renderer)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	inline ITexture::ITexture(const ITexture &source) :

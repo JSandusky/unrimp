@@ -38,12 +38,12 @@ namespace NullRenderer
 	FragmentShader::FragmentShader(NullRenderer &nullRenderer) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	FragmentShader::~FragmentShader()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

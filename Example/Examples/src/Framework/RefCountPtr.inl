@@ -25,7 +25,7 @@ template <class AType>
 RefCountPtr<AType>::RefCountPtr(AType *pointer) :
 	mPointer(pointer)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 template <class AType>

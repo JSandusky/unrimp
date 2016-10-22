@@ -36,7 +36,7 @@
 BatchDrawInstanced::BatchDrawInstanced() :
 	mNumberOfCubeInstances(0)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 BatchDrawInstanced::~BatchDrawInstanced()

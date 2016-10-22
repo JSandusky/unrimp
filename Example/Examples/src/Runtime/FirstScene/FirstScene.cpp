@@ -82,13 +82,13 @@ FirstScene::FirstScene(const char *rendererName) :
 	mUseNormalMap(true),
 	mUseSpecularMap(true)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 FirstScene::~FirstScene()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 

@@ -113,7 +113,7 @@ namespace OpenGLRenderer
 	VertexArrayVaoBind::~VertexArrayVaoBind()
 	{
 		// Vertex buffer reference handling is done within the base class "VertexArrayVao"
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

@@ -37,12 +37,12 @@ namespace NullRenderer
 	VertexBuffer::VertexBuffer(NullRenderer &nullRenderer) :
 		IVertexBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	VertexBuffer::~VertexBuffer()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

@@ -61,7 +61,7 @@ namespace OpenGLES2Renderer
 
 	SamplerState::~SamplerState()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	void SamplerState::setOpenGLES2SamplerStates() const

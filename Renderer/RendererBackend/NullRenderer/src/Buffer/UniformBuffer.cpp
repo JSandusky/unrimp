@@ -37,12 +37,12 @@ namespace NullRenderer
 	UniformBuffer::UniformBuffer(NullRenderer &nullRenderer) :
 		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	UniformBuffer::~UniformBuffer()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 
@@ -51,7 +51,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	void UniformBuffer::copyDataFrom(uint32_t, const void *)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

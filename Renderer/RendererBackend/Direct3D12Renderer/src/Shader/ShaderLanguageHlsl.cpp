@@ -51,12 +51,12 @@ namespace Direct3D12Renderer
 	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D12Renderer &direct3D12Renderer) :
 		IShaderLanguage(direct3D12Renderer)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	ShaderLanguageHlsl::~ShaderLanguageHlsl()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	ID3DBlob *ShaderLanguageHlsl::loadShader(const char *shaderModel, const char *shaderSource, const char *entryPoint) const

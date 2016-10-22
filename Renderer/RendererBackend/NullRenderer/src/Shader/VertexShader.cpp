@@ -38,12 +38,12 @@ namespace NullRenderer
 	VertexShader::VertexShader(NullRenderer &nullRenderer) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	VertexShader::~VertexShader()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

@@ -37,12 +37,12 @@ namespace NullRenderer
 	Texture2D::Texture2D(NullRenderer &nullRenderer, uint32_t width, uint32_t height) :
 		ITexture2D(reinterpret_cast<Renderer::IRenderer&>(nullRenderer), width, height)
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 	Texture2D::~Texture2D()
 	{
-		// Nothing to do in here
+		// Nothing here
 	}
 
 

@@ -34,13 +34,13 @@
 FirstRenderToTexture::FirstRenderToTexture(const char *rendererName) :
 	IApplicationRenderer(rendererName)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 FirstRenderToTexture::~FirstRenderToTexture()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 

@@ -48,13 +48,13 @@ FirstMesh::FirstMesh(const char *rendererName) :
 	mObjectSpaceToViewSpaceMatrixUniformHandle(NULL_HANDLE),
 	mGlobalTimer(0.0f)
 {
-	// Nothing to do in here
+	// Nothing here
 }
 
 FirstMesh::~FirstMesh()
 {
 	// The resources are released within "onDeinitialization()"
-	// Nothing to do in here
+	// Nothing here
 }
 
 
