@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Texture/TextureBufferBind.h"
+#include "OpenGLRenderer/Buffer/TextureBufferBind.h"
 #include "OpenGLRenderer/Mapping.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"

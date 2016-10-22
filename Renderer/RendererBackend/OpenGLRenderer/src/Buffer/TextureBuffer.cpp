@@ -21,8 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Texture/TextureBufferDsa.h"
-#include "OpenGLRenderer/Mapping.h"
+#include "OpenGLRenderer/Buffer/TextureBuffer.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
@@ -37,49 +36,31 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBufferDsa::TextureBufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage) :
-		TextureBuffer(openGLRenderer)
+	TextureBuffer::~TextureBuffer()
 	{
-		{ // Buffer part
-			// Upload the data
-			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
-			glNamedBufferDataEXT(mOpenGLTextureBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
-		}
+		// Destroy the OpenGL texture instance
+		// -> Silently ignores 0's and names that do not correspond to existing textures
+		glDeleteTextures(1, &mOpenGLTexture);
 
-		{ // Texture part
-			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-				// Backup the currently bound OpenGL texture
-				GLint openGLTextureBackup = 0;
-				glGetIntegerv(GL_TEXTURE_BUFFER_ARB, &openGLTextureBackup);
-			#endif
-
-			// Make this OpenGL texture instance to the currently used one
-			glBindTexture(GL_TEXTURE_BUFFER_ARB, mOpenGLTexture);
-
-			// Attaches the storage for the buffer object to the active buffer texture
-			// -> Sadly, there's no direct state access (DSA) function defined for this in "GL_EXT_direct_state_access"
-			glTexBufferARB(GL_TEXTURE_BUFFER_ARB, Mapping::getOpenGLInternalFormat(textureFormat), mOpenGLTextureBuffer);
-
-			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-				// Be polite and restore the previous bound OpenGL texture
-				glBindTexture(GL_TEXTURE_BUFFER_ARB, openGLTextureBackup);
-			#endif
-		}
-	}
-
-	TextureBufferDsa::~TextureBufferDsa()
-	{
-		// Nothing to do in here
+		// Destroy the OpenGL texture buffer
+		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
+		glDeleteBuffersARB(1, &mOpenGLTextureBuffer);
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITextureBuffer methods       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	void TextureBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void *data)
+	TextureBuffer::TextureBuffer(OpenGLRenderer &openGLRenderer) :
+		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		mOpenGLTextureBuffer(0),
+		mOpenGLTexture(0)
 	{
-		// Upload the data
-		glNamedBufferSubDataEXT(mOpenGLTextureBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
+		// Create the OpenGL texture buffer
+		glGenBuffersARB(1, &mOpenGLTextureBuffer);
+
+		// Create the OpenGL texture instance
+		glGenTextures(1, &mOpenGLTexture);
 	}
 
 

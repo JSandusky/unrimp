@@ -63,7 +63,6 @@ namespace Renderer
 	class IPipelineState;
 	struct PipelineState;
 	class IUniformBuffer;
-	class ITextureBuffer;
 	class IShaderLanguage;
 	class ITexture2DArray;
 	struct RasterizerState;
@@ -300,27 +299,6 @@ namespace Renderer
 		*    The created buffer manager instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
 		virtual IBufferManager *createBufferManager() = 0;
-
-		/**
-		*  @brief
-		*    Create an texture buffer object (TBO) instance
-		*
-		*  @param[in] numberOfBytes
-		*    Number of bytes within the texture buffer, must be valid
-		*  @param[in] textureFormat
-		*    Texture buffer data format
-		*  @param[in] data
-		*    Texture buffer data, can be a null pointer (empty buffer), the data is internally copied and you have to free your memory if you no longer need it
-		*  @param[in] bufferUsage
-		*    Indication of the buffer usage
-		*
-		*  @return
-		*    The created TBO instance, null pointer on error. Release the returned instance if you no longer need it.
-		*
-		*  @note
-		*    - Only supported if "Renderer::Capabilities::maximumTextureBufferSize" is not 0
-		*/
-		virtual ITextureBuffer *createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void *data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 
 		/**
 		*  @brief

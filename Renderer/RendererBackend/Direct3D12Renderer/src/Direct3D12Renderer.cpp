@@ -35,7 +35,6 @@
 #include "Direct3D12Renderer/Buffer/VertexBuffer.h"
 #include "Direct3D12Renderer/Buffer/UniformBuffer.h"
 #include "Direct3D12Renderer/Texture/Texture2D.h"
-#include "Direct3D12Renderer/Texture/TextureBuffer.h"
 #include "Direct3D12Renderer/Texture/Texture2DArray.h"
 #include "Direct3D12Renderer/State/SamplerState.h"
 #include "Direct3D12Renderer/State/PipelineState.h"
@@ -367,11 +366,6 @@ namespace Direct3D12Renderer
 	Renderer::IBufferManager *Direct3D12Renderer::createBufferManager()
 	{
 		return new BufferManager(*this);
-	}
-
-	Renderer::ITextureBuffer *Direct3D12Renderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		return new TextureBuffer(*this, numberOfBytes, textureFormat, data, bufferUsage);
 	}
 
 	Renderer::ITexture2D *Direct3D12Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, const Renderer::OptimizedTextureClearValue* optimizedTextureClearValue)

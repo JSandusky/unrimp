@@ -29,6 +29,7 @@
   <ItemGroup>
     <ClInclude Include="include\NullRenderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\NullRenderer\Buffer\IndexBuffer.h" />
+    <ClInclude Include="include\NullRenderer\Buffer\TextureBuffer.h" />
     <ClInclude Include="include\NullRenderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\NullRenderer\Buffer\VertexArray.h" />
     <ClInclude Include="include\NullRenderer\Buffer\VertexBuffer.h" />
@@ -48,11 +49,11 @@
     <ClInclude Include="include\NullRenderer\State\SamplerState.h" />
     <ClInclude Include="include\NullRenderer\Texture\Texture2D.h" />
     <ClInclude Include="include\NullRenderer\Texture\Texture2DArray.h" />
-    <ClInclude Include="include\NullRenderer\Texture\TextureBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Buffer\TextureBuffer.cpp" />
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
@@ -71,7 +72,6 @@
     <ClCompile Include="src\State\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
-    <ClCompile Include="src\Texture\TextureBuffer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A9AF6BD9-276D-4AC3-82F0-3588799CF3A0}</ProjectGuid>

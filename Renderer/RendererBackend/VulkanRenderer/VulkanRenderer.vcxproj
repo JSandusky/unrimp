@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="include\VulkanRenderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\IndexBuffer.h" />
+    <ClInclude Include="include\VulkanRenderer\Buffer\TextureBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\VertexArray.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\VertexBuffer.h" />
@@ -39,7 +40,6 @@
     <ClInclude Include="include\VulkanRenderer\State\SamplerState.h" />
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2D.h" />
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2DArray.h" />
-    <ClInclude Include="include\VulkanRenderer\Texture\TextureBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanDebug.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanRenderer.h" />
     <ClInclude Include="include\VulkanRenderer\VulkanRuntimeLinking.h" />
@@ -56,6 +56,7 @@
   <ItemGroup>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Buffer\TextureBuffer.cpp" />
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
@@ -84,7 +85,6 @@
     <ClCompile Include="src\State\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
-    <ClCompile Include="src\Texture\TextureBuffer.cpp" />
     <ClCompile Include="src\VulkanRenderer.cpp" />
     <ClCompile Include="src\VulkanRuntimeLinking.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
@@ -102,6 +102,7 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\VulkanRenderer\Buffer\BufferManager.inl" />
     <None Include="include\VulkanRenderer\Buffer\IndexBuffer.inl" />
+    <None Include="include\VulkanRenderer\Buffer\TextureBuffer.inl" />
     <None Include="include\VulkanRenderer\Buffer\UniformBuffer.inl" />
     <None Include="include\VulkanRenderer\Buffer\VertexArray.inl" />
     <None Include="include\VulkanRenderer\Buffer\VertexBuffer.inl" />
@@ -114,7 +115,6 @@
     <None Include="include\VulkanRenderer\State\RasterizerState.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture2D.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture2DArray.inl" />
-    <None Include="include\VulkanRenderer\Texture\TextureBuffer.inl" />
     <None Include="include\VulkanRenderer\VulkanRenderer.inl" />
     <None Include="include\VulkanRenderer\RootSignature.inl" />
     <None Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.inl" />

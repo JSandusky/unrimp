@@ -27,16 +27,26 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Texture/TextureBuffer.h"
-
 #include <Renderer/Buffer/BufferTypes.h>
+#include <Renderer/Buffer/ITextureBuffer.h>
 #include <Renderer/Texture/TextureTypes.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+struct ID3D10Buffer;
+struct ID3D10ShaderResourceView;
+namespace Direct3D10Renderer
+{
+	class Direct3D10Renderer;
+}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace Direct3D10Renderer
 {
 
 
@@ -45,9 +55,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL texture buffer object (UBO, "constant buffer" in Direct3D terminology) class, effective direct state access (DSA)
+	*    Direct3D 10 texture buffer object (TBO) class
 	*/
-	class TextureBufferDsa : public TextureBuffer
+	class TextureBuffer : public Renderer::ITextureBuffer
 	{
 
 
@@ -59,8 +69,8 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
+		*  @param[in] direct3D10Renderer
+		*    Owner Direct3D 10 renderer instance
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the texture buffer, must be valid
 		*  @param[in] textureFormat
@@ -70,13 +80,38 @@ namespace OpenGLRenderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		TextureBufferDsa(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		TextureBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TextureBufferDsa();
+		virtual ~TextureBuffer();
+
+		/**
+		*  @brief
+		*    Return the Direct3D texture buffer instance
+		*
+		*  @return
+		*    The Direct3D texture buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*/
+		inline ID3D10Buffer *getD3D10Buffer() const;
+
+		/**
+		*  @brief
+		*    Return the Direct3D shader resource view instance
+		*
+		*  @return
+		*    The Direct3D shader resource view instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*/
+		inline ID3D10ShaderResourceView *getD3D10ShaderResourceView() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void setDebugName(const char *name) override;
 
 
 	//[-------------------------------------------------------]
@@ -86,10 +121,24 @@ namespace OpenGLRenderer
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
 
 
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		ID3D10Buffer			 *mD3D10Buffer;						///< Direct3D texture buffer instance, can be a null pointer
+		ID3D10ShaderResourceView *mD3D10ShaderResourceViewTexture;	///< Direct3D 10 shader resource view, can be a null pointer
+
+
 	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // Direct3D10Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "Direct3D10Renderer/Buffer/TextureBuffer.inl"

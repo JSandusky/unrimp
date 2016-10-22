@@ -27,22 +27,26 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Texture/ITextureBuffer.h>
+#include <Renderer/Buffer/BufferTypes.h>
+#include <Renderer/Buffer/ITextureBuffer.h>
+#include <Renderer/Texture/TextureTypes.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+struct ID3D11Buffer;
+struct ID3D11ShaderResourceView;
+namespace Direct3D11Renderer
 {
-	class OpenGLRenderer;
+	class Direct3D11Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace Direct3D11Renderer
 {
 
 
@@ -51,7 +55,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract OpenGL texture buffer object (TBO) interface
+	*    Direct3D 11 texture buffer object (TBO) class
 	*/
 	class TextureBuffer : public Renderer::ITextureBuffer
 	{
@@ -63,49 +67,66 @@ namespace OpenGLRenderer
 	public:
 		/**
 		*  @brief
+		*    Constructor
+		*
+		*  @param[in] direct3D11Renderer
+		*    Owner Direct3D 11 renderer instance
+		*  @param[in] numberOfBytes
+		*    Number of bytes within the texture buffer, must be valid
+		*  @param[in] textureFormat
+		*    Texture buffer data format
+		*  @param[in] data
+		*    Texture buffer data, can be a null pointer (empty buffer)
+		*  @param[in] bufferUsage
+		*    Indication of the buffer usage
+		*/
+		TextureBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+
+		/**
+		*  @brief
 		*    Destructor
 		*/
 		virtual ~TextureBuffer();
 
 		/**
 		*  @brief
-		*    Return the OpenGL texture buffer instance
+		*    Return the Direct3D texture buffer instance
 		*
 		*  @return
-		*    The OpenGL texture buffer instance, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*    The Direct3D texture buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline uint32_t getOpenGLTextureBuffer() const;
+		inline ID3D11Buffer *getD3D11Buffer() const;
 
 		/**
 		*  @brief
-		*    Return the OpenGL texture instance
+		*    Return the Direct3D shader resource view instance
 		*
 		*  @return
-		*    The OpenGL texture instance, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		*    The Direct3D shader resource view instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline uint32_t getOpenGLTexture() const;
+		inline ID3D11ShaderResourceView *getD3D11ShaderResourceView() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	protected:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
-		*/
-		explicit TextureBuffer(OpenGLRenderer &openGLRenderer);
+	public:
+		virtual void setDebugName(const char *name) override;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected data                                        ]
+	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
-	protected:
-		uint32_t mOpenGLTextureBuffer;	///< OpenGL texture buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		uint32_t mOpenGLTexture;		///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+	public:
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		ID3D11Buffer			 *mD3D11Buffer;						///< Direct3D texture buffer instance, can be a null pointer
+		ID3D11ShaderResourceView *mD3D11ShaderResourceViewTexture;	///< Direct3D 11 shader resource view, can be a null pointer
 
 
 	};
@@ -114,10 +135,10 @@ namespace OpenGLRenderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // Direct3D11Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Texture/TextureBuffer.inl"
+#include "Direct3D11Renderer/Buffer/TextureBuffer.inl"

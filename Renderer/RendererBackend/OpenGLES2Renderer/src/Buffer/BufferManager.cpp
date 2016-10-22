@@ -85,6 +85,12 @@ namespace OpenGLES2Renderer
 		return nullptr;
 	}
 
+	Renderer::ITextureBuffer* BufferManager::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void*, Renderer::BufferUsage)
+	{
+		// OpenGL ES 2 has no texture buffer support
+		return nullptr;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

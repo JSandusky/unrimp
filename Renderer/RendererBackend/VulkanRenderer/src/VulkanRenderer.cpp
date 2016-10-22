@@ -35,7 +35,6 @@
 #include "VulkanRenderer/Buffer/VertexBuffer.h"
 #include "VulkanRenderer/Buffer/UniformBuffer.h"
 #include "VulkanRenderer/Texture/Texture2D.h"
-#include "VulkanRenderer/Texture/TextureBuffer.h"
 #include "VulkanRenderer/Texture/Texture2DArray.h"
 #include "VulkanRenderer/State/SamplerState.h"
 #include "VulkanRenderer/State/PipelineState.h"
@@ -290,11 +289,6 @@ namespace VulkanRenderer
 	Renderer::IBufferManager *VulkanRenderer::createBufferManager()
 	{
 		return new BufferManager(*this);
-	}
-
-	Renderer::ITextureBuffer *VulkanRenderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		return new TextureBuffer(*this, numberOfBytes, textureFormat, data, bufferUsage);
 	}
 
 	Renderer::ITexture2D *VulkanRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)

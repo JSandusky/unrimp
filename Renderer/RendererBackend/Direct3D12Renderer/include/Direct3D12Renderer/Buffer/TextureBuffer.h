@@ -28,25 +28,26 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/Buffer/BufferTypes.h>
+#include <Renderer/Buffer/ITextureBuffer.h>
 #include <Renderer/Texture/TextureTypes.h>
-#include <Renderer/Texture/ITextureBuffer.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D10Buffer;
-struct ID3D10ShaderResourceView;
-namespace Direct3D10Renderer
+// TODO(co) Direct3D 12 update
+//struct ID3D12Buffer;
+//struct ID3D12ShaderResourceView;
+namespace Direct3D12Renderer
 {
-	class Direct3D10Renderer;
+	class Direct3D12Renderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Direct3D10Renderer
+namespace Direct3D12Renderer
 {
 
 
@@ -55,7 +56,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Direct3D 10 texture buffer object (TBO) class
+	*    Direct3D 12 texture buffer object (TBO) class
 	*/
 	class TextureBuffer : public Renderer::ITextureBuffer
 	{
@@ -69,8 +70,8 @@ namespace Direct3D10Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] direct3D10Renderer
-		*    Owner Direct3D 10 renderer instance
+		*  @param[in] direct3D12Renderer
+		*    Owner Direct3D 12 renderer instance
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the texture buffer, must be valid
 		*  @param[in] textureFormat
@@ -80,7 +81,7 @@ namespace Direct3D10Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		TextureBuffer(Direct3D10Renderer &direct3D10Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		TextureBuffer(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
@@ -95,7 +96,8 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The Direct3D texture buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D10Buffer *getD3D10Buffer() const;
+		// TODO(co) Direct3D 12 update
+		//inline ID3D12Buffer *getD3D12Buffer() const;
 
 		/**
 		*  @brief
@@ -104,7 +106,8 @@ namespace Direct3D10Renderer
 		*  @return
 		*    The Direct3D shader resource view instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D10ShaderResourceView *getD3D10ShaderResourceView() const;
+		// TODO(co) Direct3D 12 update
+		//inline ID3D12ShaderResourceView *getD3D12ShaderResourceView() const;
 
 
 	//[-------------------------------------------------------]
@@ -125,8 +128,9 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ID3D10Buffer			 *mD3D10Buffer;						///< Direct3D texture buffer instance, can be a null pointer
-		ID3D10ShaderResourceView *mD3D10ShaderResourceViewTexture;	///< Direct3D 10 shader resource view, can be a null pointer
+		// TODO(co) Direct3D 12 update
+		//ID3D12Buffer			 *mD3D12Buffer;						///< Direct3D texture buffer instance, can be a null pointer
+		//ID3D12ShaderResourceView *mD3D12ShaderResourceViewTexture;	///< Direct3D 12 shader resource view, can be a null pointer
 
 
 	};
@@ -135,10 +139,10 @@ namespace Direct3D10Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Direct3D10Renderer
+} // Direct3D12Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Direct3D10Renderer/Texture/TextureBuffer.inl"
+#include "Direct3D12Renderer/Buffer/TextureBuffer.inl"

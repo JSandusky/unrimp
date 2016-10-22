@@ -30,6 +30,7 @@
 #include "Renderer/SmartRefCount.h"
 #include "Renderer/Buffer/BufferTypes.h"
 #include "Renderer/Buffer/IndexBufferTypes.h"
+#include "Renderer/Texture/TextureTypes.h"
 
 
 //[-------------------------------------------------------]
@@ -42,6 +43,7 @@ namespace Renderer
 	class IIndexBuffer;
 	class IVertexBuffer;
 	class IUniformBuffer;
+	class ITextureBuffer;
 	struct VertexAttributes;
 	struct VertexArrayVertexBuffer;
 }
@@ -179,6 +181,27 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
 		*/
 		virtual IUniformBuffer* createUniformBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
+
+		/**
+		*  @brief
+		*    Create an texture buffer object (TBO) instance
+		*
+		*  @param[in] numberOfBytes
+		*    Number of bytes within the texture buffer, must be valid
+		*  @param[in] textureFormat
+		*    Texture buffer data format
+		*  @param[in] data
+		*    Texture buffer data, can be a null pointer (empty buffer), the data is internally copied and you have to free your memory if you no longer need it
+		*  @param[in] bufferUsage
+		*    Indication of the buffer usage
+		*
+		*  @return
+		*    The created TBO instance, null pointer on error. Release the returned instance if you no longer need it.
+		*
+		*  @note
+		*    - Only supported if "Renderer::Capabilities::maximumTextureBufferSize" is not 0
+		*/
+		virtual ITextureBuffer* createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 
 
 	//[-------------------------------------------------------]

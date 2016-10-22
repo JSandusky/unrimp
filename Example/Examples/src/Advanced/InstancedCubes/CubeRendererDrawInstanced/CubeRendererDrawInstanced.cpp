@@ -373,7 +373,7 @@ void CubeRendererDrawInstanced::setNumberOfCubes(uint32_t numberOfCubes)
 	for (int remaningNumberOfCubes = static_cast<int>(numberOfSolidCubes); batch < lastBatch; ++batch, remaningNumberOfCubes -= mMaximumNumberOfInstancesPerBatch)
 	{
 		const uint32_t currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
-		batch->initialize(*mRootSignature, detail::VertexAttributes, *mProgram, currentNumberOfCubes, false, mNumberOfTextures, mSceneRadius);
+		batch->initialize(*mBufferManager, *mRootSignature, detail::VertexAttributes, *mProgram, currentNumberOfCubes, false, mNumberOfTextures, mSceneRadius);
 	}
 
 	// Initialize the transparent batches
@@ -382,7 +382,7 @@ void CubeRendererDrawInstanced::setNumberOfCubes(uint32_t numberOfCubes)
 	for (int remaningNumberOfCubes = static_cast<int>(numberOfTransparentCubes); batch < lastBatch; ++batch, remaningNumberOfCubes -= mMaximumNumberOfInstancesPerBatch)
 	{
 		const uint32_t currentNumberOfCubes = (remaningNumberOfCubes > static_cast<int>(mMaximumNumberOfInstancesPerBatch)) ? mMaximumNumberOfInstancesPerBatch : remaningNumberOfCubes;
-		batch->initialize(*mRootSignature, detail::VertexAttributes, *mProgram, currentNumberOfCubes, true, mNumberOfTextures, mSceneRadius);
+		batch->initialize(*mBufferManager, *mRootSignature, detail::VertexAttributes, *mProgram, currentNumberOfCubes, true, mNumberOfTextures, mSceneRadius);
 	}
 
 	// End debug event

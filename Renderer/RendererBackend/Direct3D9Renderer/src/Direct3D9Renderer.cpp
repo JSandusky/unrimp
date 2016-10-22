@@ -316,12 +316,6 @@ namespace Direct3D9Renderer
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITextureBuffer *Direct3D9Renderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage)
-	{
-		// Direct3D 9 has no texture buffer support
-		return nullptr;
-	}
-
 	Renderer::ITexture2D *Direct3D9Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, const Renderer::OptimizedTextureClearValue*)
 	{
 		// Check whether or not the given texture dimension is valid

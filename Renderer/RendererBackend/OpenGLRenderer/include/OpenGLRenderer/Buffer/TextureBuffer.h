@@ -27,22 +27,22 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Texture/ITextureBuffer.h>
+#include <Renderer/Buffer/ITextureBuffer.h>
 
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace NullRenderer
+namespace OpenGLRenderer
 {
-	class NullRenderer;
+	class OpenGLRenderer;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace NullRenderer
+namespace OpenGLRenderer
 {
 
 
@@ -51,7 +51,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Null texture buffer object (TBO) class
+	*    Abstract OpenGL texture buffer object (TBO) interface
 	*/
 	class TextureBuffer : public Renderer::ITextureBuffer
 	{
@@ -63,25 +63,49 @@ namespace NullRenderer
 	public:
 		/**
 		*  @brief
-		*    Constructor
-		*
-		*  @param[in] nullRenderer
-		*    Owner null renderer instance
-		*/
-		explicit TextureBuffer(NullRenderer &nullRenderer);
-
-		/**
-		*  @brief
 		*    Destructor
 		*/
 		virtual ~TextureBuffer();
 
+		/**
+		*  @brief
+		*    Return the OpenGL texture buffer instance
+		*
+		*  @return
+		*    The OpenGL texture buffer instance, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*/
+		inline uint32_t getOpenGLTextureBuffer() const;
+
+		/**
+		*  @brief
+		*    Return the OpenGL texture instance
+		*
+		*  @return
+		*    The OpenGL texture instance, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		*/
+		inline uint32_t getOpenGLTexture() const;
+
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITextureBuffer methods       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	public:
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+	protected:
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] openGLRenderer
+		*    Owner OpenGL renderer instance
+		*/
+		explicit TextureBuffer(OpenGLRenderer &openGLRenderer);
+
+
+	//[-------------------------------------------------------]
+	//[ Protected data                                        ]
+	//[-------------------------------------------------------]
+	protected:
+		uint32_t mOpenGLTextureBuffer;	///< OpenGL texture buffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLTexture;		///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 
 
 	};
@@ -90,4 +114,10 @@ namespace NullRenderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // NullRenderer
+} // OpenGLRenderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "OpenGLRenderer/Buffer/TextureBuffer.inl"

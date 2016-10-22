@@ -72,6 +72,12 @@ namespace Direct3D9Renderer
 		return nullptr;
 	}
 
+	Renderer::ITextureBuffer* BufferManager::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void*, Renderer::BufferUsage)
+	{
+		// Direct3D 9 has no texture buffer support
+		return nullptr;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

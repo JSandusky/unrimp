@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D10Renderer/Texture/TextureBuffer.h"
+#include "Direct3D10Renderer/Buffer/TextureBuffer.h"
 #include "Direct3D10Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D10Renderer/D3D10.h"
 #include "Direct3D10Renderer/Mapping.h"

@@ -24,6 +24,7 @@
     <ClInclude Include="include\Renderer\Buffer\IBufferManager.h" />
     <ClInclude Include="include\Renderer\Buffer\IIndexBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IndexBufferTypes.h" />
+    <ClInclude Include="include\Renderer\Buffer\ITextureBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IUniformBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IVertexArray.h" />
     <ClInclude Include="include\Renderer\Buffer\IVertexBuffer.h" />
@@ -64,7 +65,6 @@
     <ClInclude Include="include\Renderer\Texture\ITexture.h" />
     <ClInclude Include="include\Renderer\Texture\ITexture2D.h" />
     <ClInclude Include="include\Renderer\Texture\ITexture2DArray.h" />
-    <ClInclude Include="include\Renderer\Texture\ITextureBuffer.h" />
     <ClInclude Include="include\Renderer\Texture\TextureTypes.h" />
     <ClInclude Include="include\Renderer\WindowsHeader.h" />
   </ItemGroup>
@@ -74,6 +74,7 @@
     <None Include="include\Renderer\Buffer\IBufferManager.inl" />
     <None Include="include\Renderer\Buffer\IIndexBuffer.inl" />
     <None Include="include\Renderer\Buffer\IndexBufferTypes.inl" />
+    <None Include="include\Renderer\Buffer\ITextureBuffer.inl" />
     <None Include="include\Renderer\Buffer\IUniformBuffer.inl" />
     <None Include="include\Renderer\Buffer\IVertexArray.inl" />
     <None Include="include\Renderer\Buffer\IVertexBuffer.inl" />
@@ -105,7 +106,6 @@
     <None Include="include\Renderer\Texture\ITexture.inl" />
     <None Include="include\Renderer\Texture\ITexture2D.inl" />
     <None Include="include\Renderer\Texture\ITexture2DArray.inl" />
-    <None Include="include\Renderer\Texture\ITextureBuffer.inl" />
     <None Include="include\Renderer\Texture\TextureTypes.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>

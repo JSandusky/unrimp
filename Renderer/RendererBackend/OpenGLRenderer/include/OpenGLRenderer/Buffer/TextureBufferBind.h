@@ -27,26 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "OpenGLRenderer/Buffer/TextureBuffer.h"
+
 #include <Renderer/Buffer/BufferTypes.h>
 #include <Renderer/Texture/TextureTypes.h>
-#include <Renderer/Texture/ITextureBuffer.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-struct ID3D11Buffer;
-struct ID3D11ShaderResourceView;
-namespace Direct3D11Renderer
-{
-	class Direct3D11Renderer;
-}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Direct3D11Renderer
+namespace OpenGLRenderer
 {
 
 
@@ -55,9 +45,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Direct3D 11 texture buffer object (TBO) class
+	*    OpenGL texture buffer object (TBO) class, traditional bind version
 	*/
-	class TextureBuffer : public Renderer::ITextureBuffer
+	class TextureBufferBind : public TextureBuffer
 	{
 
 
@@ -69,8 +59,8 @@ namespace Direct3D11Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] direct3D11Renderer
-		*    Owner Direct3D 11 renderer instance
+		*  @param[in] openGLRenderer
+		*    Owner OpenGL renderer instance
 		*  @param[in] numberOfBytes
 		*    Number of bytes within the texture buffer, must be valid
 		*  @param[in] textureFormat
@@ -80,38 +70,13 @@ namespace Direct3D11Renderer
 		*  @param[in] bufferUsage
 		*    Indication of the buffer usage
 		*/
-		TextureBuffer(Direct3D11Renderer &direct3D11Renderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
+		TextureBufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TextureBuffer();
-
-		/**
-		*  @brief
-		*    Return the Direct3D texture buffer instance
-		*
-		*  @return
-		*    The Direct3D texture buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
-		*/
-		inline ID3D11Buffer *getD3D11Buffer() const;
-
-		/**
-		*  @brief
-		*    Return the Direct3D shader resource view instance
-		*
-		*  @return
-		*    The Direct3D shader resource view instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
-		*/
-		inline ID3D11ShaderResourceView *getD3D11ShaderResourceView() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IResource methods            ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void setDebugName(const char *name) override;
+		virtual ~TextureBufferBind();
 
 
 	//[-------------------------------------------------------]
@@ -121,24 +86,10 @@ namespace Direct3D11Renderer
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
 
 
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		ID3D11Buffer			 *mD3D11Buffer;						///< Direct3D texture buffer instance, can be a null pointer
-		ID3D11ShaderResourceView *mD3D11ShaderResourceViewTexture;	///< Direct3D 11 shader resource view, can be a null pointer
-
-
 	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Direct3D11Renderer
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "Direct3D11Renderer/Texture/TextureBuffer.inl"
+} // OpenGLRenderer

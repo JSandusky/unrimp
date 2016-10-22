@@ -22,6 +22,7 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\Direct3D12Renderer\Buffer\BufferManager.inl" />
     <None Include="include\Direct3D12Renderer\Buffer\IndexBuffer.inl" />
+    <None Include="include\Direct3D12Renderer\Buffer\TextureBuffer.inl" />
     <None Include="include\Direct3D12Renderer\Buffer\UniformBuffer.inl" />
     <None Include="include\Direct3D12Renderer\Buffer\VertexBuffer.inl" />
     <None Include="include\Direct3D12Renderer\Direct3D12Renderer.inl" />
@@ -38,12 +39,12 @@
     <None Include="include\Direct3D12Renderer\State\SamplerState.inl" />
     <None Include="include\Direct3D12Renderer\Texture\Texture2D.inl" />
     <None Include="include\Direct3D12Renderer\Texture\Texture2DArray.inl" />
-    <None Include="include\Direct3D12Renderer\Texture\TextureBuffer.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D12Renderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\Direct3D12Renderer\Buffer\IndexBuffer.h" />
+    <ClInclude Include="include\Direct3D12Renderer\Buffer\TextureBuffer.h" />
     <ClInclude Include="include\Direct3D12Renderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\Direct3D12Renderer\Buffer\VertexArray.h" />
     <ClInclude Include="include\Direct3D12Renderer\Buffer\VertexBuffer.h" />
@@ -68,11 +69,11 @@
     <ClInclude Include="include\Direct3D12Renderer\State\SamplerState.h" />
     <ClInclude Include="include\Direct3D12Renderer\Texture\Texture2D.h" />
     <ClInclude Include="include\Direct3D12Renderer\Texture\Texture2DArray.h" />
-    <ClInclude Include="include\Direct3D12Renderer\Texture\TextureBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Buffer\TextureBuffer.cpp" />
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
@@ -94,7 +95,6 @@
     <ClCompile Include="src\State\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
     <ClCompile Include="src\Texture\Texture2DArray.cpp" />
-    <ClCompile Include="src\Texture\TextureBuffer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F5898A4D-8D1B-468E-8BD7-0C01516CE183}</ProjectGuid>

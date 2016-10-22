@@ -257,12 +257,6 @@ namespace OpenGLES2Renderer
 		return new BufferManager(*this);
 	}
 
-	Renderer::ITextureBuffer *OpenGLES2Renderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage)
-	{
-		// OpenGL ES 2 has no texture buffer support
-		return nullptr;
-	}
-
 	Renderer::ITexture2D *OpenGLES2Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)
 	{
 		// The indication of the texture usage is only relevant for Direct3D, OpenGL ES 2 has no texture usage indication

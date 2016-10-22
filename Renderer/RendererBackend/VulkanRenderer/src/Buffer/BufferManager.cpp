@@ -22,10 +22,11 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Buffer/BufferManager.h"
+#include "VulkanRenderer/Buffer/TextureBuffer.h"
+#include "VulkanRenderer/Buffer/UniformBuffer.h"
+#include "VulkanRenderer/Buffer/VertexBuffer.h"
 #include "VulkanRenderer/Buffer/VertexArray.h"
 #include "VulkanRenderer/Buffer/IndexBuffer.h"
-#include "VulkanRenderer/Buffer/VertexBuffer.h"
-#include "VulkanRenderer/Buffer/UniformBuffer.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 
 
@@ -67,6 +68,11 @@ namespace VulkanRenderer
 	Renderer::IUniformBuffer* BufferManager::createUniformBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage)
 	{
 		return new UniformBuffer(static_cast<VulkanRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+	}
+
+	Renderer::ITextureBuffer* BufferManager::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void* data, Renderer::BufferUsage bufferUsage)
+	{
+		return new TextureBuffer(static_cast<VulkanRenderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
 	}
 
 

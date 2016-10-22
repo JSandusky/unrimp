@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Direct3D12Renderer/Texture/TextureBuffer.h"
+#include "Direct3D12Renderer/Buffer/TextureBuffer.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D12Renderer/D3D12.h"
 #include "Direct3D12Renderer/Mapping.h"

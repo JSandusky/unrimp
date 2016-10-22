@@ -32,7 +32,6 @@
 #include "NullRenderer/Buffer/VertexBuffer.h"
 #include "NullRenderer/Buffer/UniformBuffer.h"
 #include "NullRenderer/Texture/Texture2D.h"
-#include "NullRenderer/Texture/TextureBuffer.h"
 #include "NullRenderer/Texture/Texture2DArray.h"
 #include "NullRenderer/State/SamplerState.h"
 #include "NullRenderer/State/PipelineState.h"
@@ -250,11 +249,6 @@ namespace NullRenderer
 	Renderer::IBufferManager *NullRenderer::createBufferManager()
 	{
 		return new BufferManager(*this);
-	}
-
-	Renderer::ITextureBuffer *NullRenderer::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void *, Renderer::BufferUsage)
-	{
-		return new TextureBuffer(*this);
 	}
 
 	Renderer::ITexture2D *NullRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void *, uint32_t, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)

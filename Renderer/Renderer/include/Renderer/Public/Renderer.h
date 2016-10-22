@@ -56,9 +56,9 @@ namespace Renderer
 			class IIndexBuffer;
 			class IVertexBuffer;
 			class IUniformBuffer;
+			class ITextureBuffer;
 		class ITexture;
 			class ITexture2D;
-			class ITextureBuffer;
 			class ITexture2DArray;
 		class IState;
 			class IPipelineState;
@@ -1742,7 +1742,6 @@ namespace Renderer
 			virtual ISwapChain* createSwapChain(handle nativeWindowHandle) = 0;
 			virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorTextures, ITexture** colorTextures, ITexture* depthStencilTexture = nullptr) = 0;
 			virtual IBufferManager *createBufferManager() = 0;
-			virtual ITextureBuffer* createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual ITexture2D* createTexture2D(uint32_t width, uint32_t height, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT, const OptimizedTextureClearValue* optimizedTextureClearValue = nullptr) = 0;
 			virtual ITexture2DArray* createTexture2DArray(uint32_t width, uint32_t height, uint32_t numberOfSlices, TextureFormat::Enum textureFormat, const void* data = nullptr, uint32_t flags = 0, TextureUsage textureUsage = TextureUsage::DEFAULT) = 0;
 			virtual IRootSignature* createRootSignature(const RootSignature& rootSignature) = 0;
@@ -1988,6 +1987,7 @@ namespace Renderer
 			virtual IIndexBuffer* createIndexBuffer(uint32_t numberOfBytes, IndexBufferFormat::Enum indexBufferFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual IVertexArray* createVertexArray(const VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer* vertexBuffers, IIndexBuffer* indexBuffer = nullptr) = 0;
 			virtual IUniformBuffer* createUniformBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual ITextureBuffer* createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
 		protected:
 			inline explicit IBufferManager(IRenderer& renderer);
 			inline explicit IBufferManager(const IBufferManager& source);
@@ -2075,6 +2075,23 @@ namespace Renderer
 		typedef SmartRefCount<IUniformBuffer> IUniformBufferPtr;
 	#endif
 
+	// Renderer/Buffer/ITextureBuffer.h
+	#ifndef __RENDERER_ITEXTUREBUFFER_H__
+	#define __RENDERER_ITEXTUREBUFFER_H__
+		class ITextureBuffer : public IBuffer
+		{
+		public:
+			virtual ~ITextureBuffer();
+		public:
+			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
+		protected:
+			explicit ITextureBuffer(IRenderer& renderer);
+			explicit ITextureBuffer(const ITextureBuffer& source);
+			ITextureBuffer& operator =(const ITextureBuffer& source);
+		};
+		typedef SmartRefCount<ITextureBuffer> ITextureBufferPtr;
+	#endif
+
 	// Renderer/Texture/ITexture.h
 	#ifndef __RENDERER_ITEXTURE_H__
 	#define __RENDERER_ITEXTURE_H__
@@ -2088,23 +2105,6 @@ namespace Renderer
 			ITexture& operator =(const ITexture& source);
 		};
 		typedef SmartRefCount<ITexture> ITexturePtr;
-	#endif
-
-	// Renderer/Texture/ITextureBuffer.h
-	#ifndef __RENDERER_ITEXTUREBUFFER_H__
-	#define __RENDERER_ITEXTUREBUFFER_H__
-		class ITextureBuffer : public ITexture
-		{
-		public:
-			virtual ~ITextureBuffer();
-		public:
-			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
-		protected:
-			explicit ITextureBuffer(IRenderer& renderer);
-			explicit ITextureBuffer(const ITextureBuffer& source);
-			ITextureBuffer& operator =(const ITextureBuffer& source);
-		};
-		typedef SmartRefCount<ITextureBuffer> ITextureBufferPtr;
 	#endif
 
 	// Renderer/Texture/ITexture2D.h

@@ -21,50 +21,41 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Texture/TextureBuffer.h"
-#include "OpenGLRenderer/Extensions.h"
-#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "NullRenderer/Buffer/TextureBuffer.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace NullRenderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	TextureBuffer::TextureBuffer(NullRenderer &nullRenderer) :
+		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
+	{
+		// Nothing to do in here
+	}
+
 	TextureBuffer::~TextureBuffer()
 	{
-		// Destroy the OpenGL texture instance
-		// -> Silently ignores 0's and names that do not correspond to existing textures
-		glDeleteTextures(1, &mOpenGLTexture);
-
-		// Destroy the OpenGL texture buffer
-		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
-		glDeleteBuffersARB(1, &mOpenGLTextureBuffer);
+		// Nothing to do in here
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(OpenGLRenderer &openGLRenderer) :
-		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLTextureBuffer(0),
-		mOpenGLTexture(0)
+	void TextureBuffer::copyDataFrom(uint32_t, const void *)
 	{
-		// Create the OpenGL texture buffer
-		glGenBuffersARB(1, &mOpenGLTextureBuffer);
-
-		// Create the OpenGL texture instance
-		glGenTextures(1, &mOpenGLTexture);
+		// Nothing to do in here
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // NullRenderer

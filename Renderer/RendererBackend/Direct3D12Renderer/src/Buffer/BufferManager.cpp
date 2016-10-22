@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Buffer/BufferManager.h"
+#include "Direct3D12Renderer/Buffer/TextureBuffer.h"
 #include "Direct3D12Renderer/Buffer/UniformBuffer.h"
 #include "Direct3D12Renderer/Buffer/VertexBuffer.h"
 #include "Direct3D12Renderer/Buffer/VertexArray.h"
@@ -68,6 +69,11 @@ namespace Direct3D12Renderer
 	Renderer::IUniformBuffer* BufferManager::createUniformBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage)
 	{
 		return new UniformBuffer(static_cast<Direct3D12Renderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+	}
+
+	Renderer::ITextureBuffer* BufferManager::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void* data, Renderer::BufferUsage bufferUsage)
+	{
+		return new TextureBuffer(static_cast<Direct3D12Renderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
 	}
 
 

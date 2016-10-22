@@ -19,77 +19,64 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Texture/TextureBuffer.h"
-
-#include <Renderer/Buffer/BufferTypes.h>
-#include <Renderer/Texture/TextureTypes.h>
+#ifndef RENDERER_NO_STATISTICS
+	#include "Renderer/IRenderer.h"
+#endif
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace Renderer
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    OpenGL texture buffer object (TBO) class, traditional bind version
-	*/
-	class TextureBufferBind : public TextureBuffer
-	{
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
-		*  @param[in] numberOfBytes
-		*    Number of bytes within the texture buffer, must be valid
-		*  @param[in] textureFormat
-		*    Texture buffer data format
-		*  @param[in] data
-		*    Texture buffer data, can be a null pointer (empty buffer)
-		*  @param[in] bufferUsage
-		*    Indication of the buffer usage
-		*/
-		TextureBufferBind(OpenGLRenderer &openGLRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~TextureBufferBind();
+	inline ITextureBuffer::~ITextureBuffer()
+	{
+		#ifndef RENDERER_NO_STATISTICS
+			// Update the statistics
+			--getRenderer().getStatistics().currentNumberOfTextureBuffers;
+		#endif
+	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITextureBuffer methods       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	public:
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+	inline ITextureBuffer::ITextureBuffer(IRenderer &renderer) :
+		IBuffer(ResourceType::TEXTURE_BUFFER, renderer)
+	{
+		#ifndef RENDERER_NO_STATISTICS
+			// Update the statistics
+			++getRenderer().getStatistics().numberOfCreatedTextureBuffers;
+			++getRenderer().getStatistics().currentNumberOfTextureBuffers;
+		#endif
+	}
 
+	inline ITextureBuffer::ITextureBuffer(const ITextureBuffer &source) :
+		IBuffer(source)
+	{
+		// Not supported
+		#ifndef RENDERER_NO_STATISTICS
+			// Update the statistics
+			++getRenderer().getStatistics().numberOfCreatedTextureBuffers;
+			++getRenderer().getStatistics().currentNumberOfTextureBuffers;
+		#endif
+	}
 
-	};
+	inline ITextureBuffer &ITextureBuffer::operator =(const ITextureBuffer &)
+	{
+		// Not supported
+		return *this;
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // Renderer

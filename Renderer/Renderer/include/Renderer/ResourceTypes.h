@@ -50,8 +50,8 @@ namespace Renderer
 		INDEX_BUFFER				   = 5,		///< Index buffer object (IBO, input-assembler (IA) stage)
 		VERTEX_BUFFER				   = 6,		///< Vertex buffer object (VBO, input-assembler (IA) stage)
 		UNIFORM_BUFFER				   = 7,		///< Uniform buffer object (UBO, "constant buffer" in Direct3D terminology)
-		// ITexture
 		TEXTURE_BUFFER				   = 8,		///< Texture buffer object (TBO)
+		// ITexture
 		TEXTURE_2D					   = 9,		///< Texture 2D
 		TEXTURE_2D_ARRAY			   = 10,	///< Texture 2D array
 		// IState

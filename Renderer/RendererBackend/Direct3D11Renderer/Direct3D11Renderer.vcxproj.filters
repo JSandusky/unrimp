@@ -54,9 +54,6 @@
     <None Include="include\Direct3D11Renderer\Texture\Texture2DArray.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
-    <None Include="include\Direct3D11Renderer\Texture\TextureBuffer.inl">
-      <Filter>Source Files\Texture</Filter>
-    </None>
     <None Include="include\Direct3D11Renderer\Buffer\IndexBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
@@ -91,6 +88,9 @@
       <Filter>Source Files\State</Filter>
     </None>
     <None Include="include\Direct3D11Renderer\Buffer\BufferManager.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\Direct3D11Renderer\Buffer\TextureBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
   </ItemGroup>
@@ -146,9 +146,6 @@
     <ClInclude Include="include\Direct3D11Renderer\Texture\Texture2DArray.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="include\Direct3D11Renderer\Texture\TextureBuffer.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Buffer\UniformBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
@@ -186,6 +183,9 @@
       <Filter>Source Files\State</Filter>
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\Buffer\BufferManager.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\Buffer\TextureBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
@@ -235,9 +235,6 @@
     <ClCompile Include="src\Texture\Texture2DArray.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="src\Texture\TextureBuffer.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="src\Buffer\IndexBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
@@ -272,6 +269,9 @@
       <Filter>Source Files\State</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffer\BufferManager.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\TextureBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>

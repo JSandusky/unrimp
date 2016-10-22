@@ -82,9 +82,6 @@
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2DArray.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\Texture\TextureBuffer.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2D.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
@@ -125,6 +122,9 @@
       <Filter>Source Files\State</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Buffer\BufferManager.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Buffer\TextureBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
@@ -189,9 +189,6 @@
     <ClCompile Include="src\Texture\Texture2DArray.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="src\Texture\TextureBuffer.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="src\Buffer\UniformBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
@@ -226,6 +223,9 @@
       <Filter>Source Files\State</Filter>
     </ClCompile>
     <ClCompile Include="src\Buffer\BufferManager.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\TextureBuffer.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -271,9 +271,6 @@
     <None Include="include\VulkanRenderer\Texture\Texture2DArray.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
-    <None Include="include\VulkanRenderer\Texture\TextureBuffer.inl">
-      <Filter>Source Files\Texture</Filter>
-    </None>
     <None Include="include\VulkanRenderer\Texture\Texture2D.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
@@ -305,6 +302,9 @@
       <Filter>Source Files\State</Filter>
     </None>
     <None Include="include\VulkanRenderer\Buffer\BufferManager.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Buffer\TextureBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
   </ItemGroup>

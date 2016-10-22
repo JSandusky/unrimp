@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/Texture/ITexture.h"
+#include "Renderer/Buffer/IBuffer.h"
 
 
 //[-------------------------------------------------------]
@@ -58,7 +58,7 @@ namespace Renderer
 	*      - Direct3D version:              10 and 11
 	*      - Shader model:                 4
 	*/
-	class ITextureBuffer : public ITexture
+	class ITextureBuffer : public IBuffer
 	{
 
 
@@ -142,4 +142,4 @@ namespace Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Renderer/Texture/ITextureBuffer.inl"
+#include "Renderer/Buffer/ITextureBuffer.inl"

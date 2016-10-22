@@ -31,6 +31,7 @@
 #include "OpenGLRenderer/RenderTarget/FramebufferDsa.h"
 #include "OpenGLRenderer/RenderTarget/FramebufferBind.h"
 #include "OpenGLRenderer/Buffer/BufferManager.h"
+#include "OpenGLRenderer/Buffer/TextureBuffer.h"
 #include "OpenGLRenderer/Buffer/IndexBufferDsa.h"
 #include "OpenGLRenderer/Buffer/IndexBufferBind.h"
 #include "OpenGLRenderer/Buffer/VertexBufferDsa.h"
@@ -42,8 +43,6 @@
 #include "OpenGLRenderer/Buffer/VertexArrayVaoBind.h"
 #include "OpenGLRenderer/Texture/Texture2DDsa.h"
 #include "OpenGLRenderer/Texture/Texture2DBind.h"
-#include "OpenGLRenderer/Texture/TextureBufferDsa.h"
-#include "OpenGLRenderer/Texture/TextureBufferBind.h"
 #include "OpenGLRenderer/Texture/Texture2DArrayDsa.h"
 #include "OpenGLRenderer/Texture/Texture2DArrayBind.h"
 #include "OpenGLRenderer/State/SamplerStateSo.h"
@@ -395,30 +394,6 @@ namespace OpenGLRenderer
 	Renderer::IBufferManager *OpenGLRenderer::createBufferManager()
 	{
 		return new BufferManager(*this);
-	}
-
-	Renderer::ITextureBuffer *OpenGLRenderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		// "GL_ARB_texture_buffer_object" required
-		if (mExtensions->isGL_ARB_texture_buffer_object())
-		{
-			// Is "GL_EXT_direct_state_access" there?
-			if (mExtensions->isGL_EXT_direct_state_access())
-			{
-				// Effective direct state access (DSA)
-				return new TextureBufferDsa(*this, numberOfBytes, textureFormat, data, bufferUsage);
-			}
-			else
-			{
-				// Traditional bind version
-				return new TextureBufferBind(*this, numberOfBytes, textureFormat, data, bufferUsage);
-			}
-		}
-		else
-		{
-			// Error!
-			return nullptr;
-		}
 	}
 
 	Renderer::ITexture2D *OpenGLRenderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage, const Renderer::OptimizedTextureClearValue*)

@@ -19,11 +19,24 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/Texture/TextureBuffer.h"
-#include "VulkanRenderer/Extensions.h"
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
+#include <Renderer/Buffer/ITextureBuffer.h>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace VulkanRenderer
+{
+	class VulkanRenderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -34,30 +47,68 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Vulkan texture buffer object (TBO) interface
+	*/
+	class TextureBuffer : public Renderer::ITextureBuffer
+	{
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(VulkanRenderer &vulkanRenderer, uint32_t, Renderer::TextureFormat::Enum, const void*, Renderer::BufferUsage) :
-		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
-	{
-		// TODO(co) Implement me
-	}
+	public:
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] vulkanRenderer
+		*    Owner Vulkan renderer instance
+		*  @param[in] numberOfBytes
+		*    Number of bytes within the texture buffer, must be valid
+		*  @param[in] textureFormat
+		*    Texture buffer data format
+		*  @param[in] data
+		*    Texture buffer data, can be a null pointer (empty buffer)
+		*  @param[in] bufferUsage
+		*    Indication of the buffer usage
+		*/
+		TextureBuffer(VulkanRenderer &vulkanRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW);
 
-	TextureBuffer::~TextureBuffer()
-	{
-		// TODO(co) Implement me
-	}
+		/**
+		*  @brief
+		*    Destructor
+		*/
+		virtual ~TextureBuffer();
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
-	void TextureBuffer::copyDataFrom(uint32_t, const void*)
-	{
+	public:
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
 		// TODO(co) Implement me
-	}
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // VulkanRenderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "VulkanRenderer/Buffer/TextureBuffer.inl"

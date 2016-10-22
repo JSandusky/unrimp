@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "NullRenderer/Buffer/BufferManager.h"
+#include "NullRenderer/Buffer/TextureBuffer.h"
 #include "NullRenderer/Buffer/UniformBuffer.h"
 #include "NullRenderer/Buffer/VertexBuffer.h"
 #include "NullRenderer/Buffer/VertexArray.h"
@@ -87,6 +88,11 @@ namespace NullRenderer
 	Renderer::IUniformBuffer* BufferManager::createUniformBuffer(uint32_t, const void*, Renderer::BufferUsage)
 	{
 		return new UniformBuffer(static_cast<NullRenderer&>(getRenderer()));
+	}
+
+	Renderer::ITextureBuffer* BufferManager::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void*, Renderer::BufferUsage)
+	{
+		return new TextureBuffer(static_cast<NullRenderer&>(getRenderer()));
 	}
 
 

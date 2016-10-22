@@ -127,15 +127,6 @@
     <ClInclude Include="include\OpenGLRenderer\Texture\Texture2DDsa.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture\TextureBuffer.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture\TextureBufferBind.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Texture\TextureBufferDsa.h">
-      <Filter>Source Files\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Buffer\IndexBufferDsa.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
@@ -218,6 +209,15 @@
       <Filter>Source Files\State</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Buffer\BufferManager.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\TextureBufferBind.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\TextureBufferDsa.h">
+      <Filter>Source Files\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Buffer\TextureBuffer.h">
       <Filter>Source Files\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
@@ -318,15 +318,6 @@
     <ClCompile Include="src\Texture\Texture2DDsa.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="src\Texture\TextureBuffer.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture\TextureBufferBind.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture\TextureBufferDsa.cpp">
-      <Filter>Source Files\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="src\Buffer\UniformBufferBind.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
@@ -408,6 +399,15 @@
     <ClCompile Include="src\Buffer\BufferManager.cpp">
       <Filter>Source Files\Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Buffer\TextureBufferBind.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\TextureBufferDsa.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Buffer\TextureBuffer.cpp">
+      <Filter>Source Files\Buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -466,9 +466,6 @@
     <None Include="include\OpenGLRenderer\Texture\Texture2DArray.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
-    <None Include="include\OpenGLRenderer\Texture\TextureBuffer.inl">
-      <Filter>Source Files\Texture</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\Buffer\UniformBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
@@ -509,6 +506,9 @@
       <Filter>Source Files\State</Filter>
     </None>
     <None Include="include\OpenGLRenderer\Buffer\BufferManager.inl">
+      <Filter>Source Files\Buffer</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Buffer\TextureBuffer.inl">
       <Filter>Source Files\Buffer</Filter>
     </None>
   </ItemGroup>

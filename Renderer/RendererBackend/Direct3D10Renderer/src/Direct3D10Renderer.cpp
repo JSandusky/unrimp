@@ -34,8 +34,8 @@
 #include "Direct3D10Renderer/Buffer/IndexBuffer.h"
 #include "Direct3D10Renderer/Buffer/VertexBuffer.h"
 #include "Direct3D10Renderer/Buffer/UniformBuffer.h"
+#include "Direct3D10Renderer/Buffer/TextureBuffer.h"
 #include "Direct3D10Renderer/Texture/Texture2D.h"
-#include "Direct3D10Renderer/Texture/TextureBuffer.h"
 #include "Direct3D10Renderer/Texture/Texture2DArray.h"
 #include "Direct3D10Renderer/State/SamplerState.h"
 #include "Direct3D10Renderer/State/PipelineState.h"
@@ -342,11 +342,6 @@ namespace Direct3D10Renderer
 	Renderer::IBufferManager *Direct3D10Renderer::createBufferManager()
 	{
 		return new BufferManager(*this);
-	}
-
-	Renderer::ITextureBuffer *Direct3D10Renderer::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void *data, Renderer::BufferUsage bufferUsage)
-	{
-		return new TextureBuffer(*this, numberOfBytes, textureFormat, data, bufferUsage);
 	}
 
 	Renderer::ITexture2D *Direct3D10Renderer::createTexture2D(uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void *data, uint32_t flags, Renderer::TextureUsage textureUsage, const Renderer::OptimizedTextureClearValue*)

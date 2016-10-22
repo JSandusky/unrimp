@@ -100,9 +100,6 @@
     <ClInclude Include="include\Renderer\Texture\ITexture2DArray.h">
       <Filter>Header Files\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\Texture\ITextureBuffer.h">
-      <Filter>Header Files\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\Texture\ITexture.h">
       <Filter>Header Files\Texture</Filter>
     </ClInclude>
@@ -169,6 +166,9 @@
     <ClInclude Include="include\Renderer\Buffer\IBufferManager.h">
       <Filter>Header Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\ITextureBuffer.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -222,9 +222,6 @@
       <Filter>Header Files\Texture</Filter>
     </None>
     <None Include="include\Renderer\Texture\ITexture2DArray.inl">
-      <Filter>Header Files\Texture</Filter>
-    </None>
-    <None Include="include\Renderer\Texture\ITextureBuffer.inl">
       <Filter>Header Files\Texture</Filter>
     </None>
     <None Include="include\Renderer\Texture\ITexture.inl">
@@ -282,6 +279,9 @@
       <Filter>Header Files\State</Filter>
     </None>
     <None Include="include\Renderer\Buffer\IBufferManager.inl">
+      <Filter>Header Files\Buffer</Filter>
+    </None>
+    <None Include="include\Renderer\Buffer\ITextureBuffer.inl">
       <Filter>Header Files\Buffer</Filter>
     </None>
   </ItemGroup>
