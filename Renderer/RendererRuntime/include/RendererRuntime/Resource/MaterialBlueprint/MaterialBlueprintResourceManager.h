@@ -39,6 +39,7 @@ namespace RendererRuntime
 {
 	class IRendererRuntime;
 	class IResourceListener;
+	class InstanceUniformBufferManager;
 	class IMaterialBlueprintResourceListener;
 }
 
@@ -91,6 +92,8 @@ namespace RendererRuntime
 		inline MaterialProperties& getGlobalMaterialProperties();
 		inline const MaterialProperties& getGlobalMaterialProperties() const;
 
+		inline InstanceUniformBufferManager& getInstanceUniformBufferManager();
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IResourceManager methods ]
@@ -107,7 +110,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit MaterialBlueprintResourceManager(IRendererRuntime& rendererRuntime);
-		inline virtual ~MaterialBlueprintResourceManager();
+		virtual ~MaterialBlueprintResourceManager();
 		MaterialBlueprintResourceManager(const MaterialBlueprintResourceManager&) = delete;
 		MaterialBlueprintResourceManager& operator=(const MaterialBlueprintResourceManager&) = delete;
 		IResourceLoader* acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId);
@@ -121,6 +124,7 @@ namespace RendererRuntime
 		MaterialBlueprintResources			mMaterialBlueprintResources;
 		IMaterialBlueprintResourceListener*	mMaterialBlueprintResourceListener;	///< Material blueprint resource listener, always valid, do not destroy the instance
 		MaterialProperties					mGlobalMaterialProperties;			///< Global material properties
+		InstanceUniformBufferManager*		mInstanceUniformBufferManager;		///< Instance uniform buffer manager, always valid
 
 
 	};

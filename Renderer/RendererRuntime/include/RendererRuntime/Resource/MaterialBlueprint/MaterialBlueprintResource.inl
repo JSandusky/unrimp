@@ -90,17 +90,22 @@ namespace RendererRuntime
 
 	inline MaterialBlueprintResource::UniformBuffer* MaterialBlueprintResource::getMaterialUniformBuffer() const
 	{
-		return mPassUniformBuffer;
+		return mMaterialUniformBuffer;
 	}
 
 	inline MaterialBlueprintResource::UniformBuffer* MaterialBlueprintResource::getInstanceUniformBuffer() const
 	{
-		return mPassUniformBuffer;
+		return mInstanceUniformBuffer;
 	}
 
 	inline PassUniformBufferManager* MaterialBlueprintResource::getPassUniformBufferManager() const
 	{
 		return mPassUniformBufferManager;
+	}
+
+	inline MaterialUniformBufferManager* MaterialBlueprintResource::getMaterialUniformBufferManager() const
+	{
+		return mMaterialUniformBufferManager;
 	}
 
 

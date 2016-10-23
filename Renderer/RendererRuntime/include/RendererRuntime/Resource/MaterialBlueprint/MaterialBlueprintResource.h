@@ -44,6 +44,7 @@ namespace RendererRuntime
 	class Transform;
 	class MaterialTechnique;
 	class PassUniformBufferManager;
+	class MaterialUniformBufferManager;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 }
 
@@ -87,8 +88,9 @@ namespace RendererRuntime
 		friend typedef MaterialBlueprintResources;
 		friend class MaterialBlueprintResourceLoader;
 		friend class MaterialBlueprintResourceManager;
-		friend class MaterialResourceLoader;	// TODO(co) Decent material resource list management inside the material blueprint resource (link, unlink etc.) - remove this
-		friend class MaterialResourceManager;	// TODO(co) Remove
+		friend class MaterialResourceLoader;		// TODO(co) Decent material resource list management inside the material blueprint resource (link, unlink etc.) - remove this
+		friend class MaterialResourceManager;		// TODO(co) Remove
+		friend class MaterialUniformBufferManager;	// TODO(co) Remove. Decent material technique list management inside the material blueprint resource (link, unlink etc.)
 
 
 	//[-------------------------------------------------------]
@@ -318,6 +320,15 @@ namespace RendererRuntime
 		*/
 		inline PassUniformBufferManager* getPassUniformBufferManager() const;
 
+		/**
+		*  @brief
+		*    Return the material uniform buffer manager
+		*
+		*  @return
+		*    The material uniform buffer manager, can be a null pointer, don't destroy the instance
+		*/
+		inline MaterialUniformBufferManager* getMaterialUniformBufferManager() const;
+
 		//[-------------------------------------------------------]
 		//[ Misc                                                  ]
 		//[-------------------------------------------------------]
@@ -336,18 +347,15 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Fill the material uniform buffer
-		*/
-		RENDERERRUNTIME_API_EXPORT void fillMaterialUniformBuffer();
-
-		/**
-		*  @brief
 		*    Fill the instance uniform buffer
 		*
 		*  @param[in] objectSpaceToWorldSpaceTransform
 		*    Object space to world space transform
 		*  @param[in] materialTechnique
 		*    Used material technique
+		*
+		*  @todo
+		*    - TODO(co) This is just a placeholder implementation until "RendererRuntime::InstanceUniformBufferManager" is ready
 		*/
 		RENDERERRUNTIME_API_EXPORT void fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique);
 
@@ -430,7 +438,8 @@ namespace RendererRuntime
 		UniformBuffer* mMaterialUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		// Buffer manager
-		PassUniformBufferManager* mPassUniformBufferManager;	///< Can be a null pointer, destroy the instance if you no longer need it
+		PassUniformBufferManager*	  mPassUniformBufferManager;		///< Pass uniform buffer manager, can be a null pointer, destroy the instance if you no longer need it
+		MaterialUniformBufferManager* mMaterialUniformBufferManager;	///< Materials uniform buffer manager, can be a null pointer, destroy the instance if you no longer need it
 		// Misc
 		LinkedMaterialTechniques mLinkedMaterialTechniques;	// TODO(co) Decent material technique list management inside the material blueprint resource (link, unlink etc.)
 

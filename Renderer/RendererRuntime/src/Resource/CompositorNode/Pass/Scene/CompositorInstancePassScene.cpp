@@ -36,6 +36,7 @@
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassUniformBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -174,7 +175,13 @@ namespace
 													}
 
 													// Fill the material uniform buffer
-													materialBlueprintResource->fillMaterialUniformBuffer();
+													{ // TODO(co) Just a dummy usage for now
+														RendererRuntime::MaterialUniformBufferManager* materialUniformBufferManager = materialBlueprintResource->getMaterialUniformBufferManager();
+														if (nullptr != materialUniformBufferManager)
+														{
+															materialUniformBufferManager->fillMaterialUniformBuffer();
+														}
+													}
 
 													// Bind the material blueprint resource to the used renderer
 													materialBlueprintResource->bindToRenderer();

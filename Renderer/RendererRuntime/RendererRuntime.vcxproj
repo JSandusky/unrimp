@@ -61,6 +61,8 @@
     <None Include="include\RendererRuntime\Resource\Detail\IResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\InstanceUniformBufferManager.inl" />
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassUniformBufferManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.inl" />
@@ -188,6 +190,8 @@
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.h" />
     <ClInclude Include="include\RendererRuntime\Resource\IResourceListener.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\InstanceUniformBufferManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassUniformBufferManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.h" />
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.h" />
@@ -339,6 +343,8 @@
     <ClCompile Include="src\Resource\Detail\IResourceManager.cpp" />
     <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp" />
     <ClCompile Include="src\Resource\IResourceListener.cpp" />
+    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\InstanceUniformBufferManager.cpp" />
+    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\PassUniformBufferManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCacheManager.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\Cache\PipelineStateCompiler.cpp" />

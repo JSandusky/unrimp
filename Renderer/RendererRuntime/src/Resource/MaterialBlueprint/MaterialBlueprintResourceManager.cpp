@@ -25,6 +25,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceUniformBufferManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Asset/AssetManager.h"
@@ -184,9 +185,15 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MaterialBlueprintResourceManager::MaterialBlueprintResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
-		mMaterialBlueprintResourceListener(&::detail::defaultMaterialBlueprintResourceListener)
+		mMaterialBlueprintResourceListener(&::detail::defaultMaterialBlueprintResourceListener),
+		mInstanceUniformBufferManager(new InstanceUniformBufferManager(rendererRuntime))
 	{
 		// Nothing here
+	}
+
+	MaterialBlueprintResourceManager::~MaterialBlueprintResourceManager()
+	{
+		delete mInstanceUniformBufferManager;
 	}
 
 	IResourceLoader* MaterialBlueprintResourceManager::acquireResourceLoaderInstance(ResourceLoaderTypeId resourceLoaderTypeId)

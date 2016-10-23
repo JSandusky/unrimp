@@ -25,6 +25,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassUniformBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -208,6 +209,13 @@ namespace RendererRuntime
 			delete mMaterialBlueprintResource->mPassUniformBufferManager;
 		}
 		mMaterialBlueprintResource->mPassUniformBufferManager = new PassUniformBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
+
+		// Create material uniform buffer manager
+		if (nullptr != mMaterialBlueprintResource->mMaterialUniformBufferManager)
+		{
+			delete mMaterialBlueprintResource->mMaterialUniformBufferManager;
+		}
+		mMaterialBlueprintResource->mMaterialUniformBufferManager = new MaterialUniformBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
 
 		{ // Get the used shader blueprint resources
 			ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();

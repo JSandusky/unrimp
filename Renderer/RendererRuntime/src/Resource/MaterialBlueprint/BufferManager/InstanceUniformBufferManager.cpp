@@ -1,4 +1,4 @@
-/*********************************************************\
+﻿/*********************************************************\
  * Copyright (c) 2012-2016 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -19,6 +19,13 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceUniformBufferManager.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -28,53 +35,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IRendererRuntime& MaterialBlueprintResourceManager::getRendererRuntime() const
-	{
-		return mRendererRuntime;
-	}
-
-	inline const MaterialBlueprintResources& MaterialBlueprintResourceManager::getMaterialBlueprintResources() const
-	{
-		return mMaterialBlueprintResources;
-	}
-
-	inline IMaterialBlueprintResourceListener& MaterialBlueprintResourceManager::getMaterialBlueprintResourceListener() const
-	{
-		// We know this pointer must always be valid
-		assert(nullptr != mMaterialBlueprintResourceListener);
-		return *mMaterialBlueprintResourceListener;
-	}
-
-	inline MaterialProperties& MaterialBlueprintResourceManager::getGlobalMaterialProperties()
-	{
-		return mGlobalMaterialProperties;
-	}
-
-	inline const MaterialProperties& MaterialBlueprintResourceManager::getGlobalMaterialProperties() const
-	{
-		return mGlobalMaterialProperties;
-	}
-
-	inline InstanceUniformBufferManager& MaterialBlueprintResourceManager::getInstanceUniformBufferManager()
-	{
-		// We know this pointer must always be valid
-		assert(nullptr != mInstanceUniformBufferManager);
-		return *mInstanceUniformBufferManager;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	inline IResource& MaterialBlueprintResourceManager::getResourceByResourceId(ResourceId resourceId) const
-	{
-		return mMaterialBlueprintResources.getElementById(resourceId);
-	}
-
-	inline IResource* MaterialBlueprintResourceManager::tryGetResourceByResourceId(ResourceId resourceId) const
-	{
-		return mMaterialBlueprintResources.tryGetElementById(resourceId);
-	}
 
 
 //[-------------------------------------------------------]
