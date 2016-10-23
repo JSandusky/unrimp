@@ -35,6 +35,7 @@
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassUniformBufferManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -163,7 +164,14 @@ namespace
 													// Fill the pass uniform buffer
 													// TODO(co) Camera usage
 													const RendererRuntime::Transform worldSpaceToViewSpaceTransform;
-													materialBlueprintResource->fillPassUniformBuffer(worldSpaceToViewSpaceTransform);
+													{ // TODO(co) Just a dummy usage for now
+														RendererRuntime::PassUniformBufferManager* passUniformBufferManager = materialBlueprintResource->getPassUniformBufferManager();
+														if (nullptr != passUniformBufferManager)
+														{
+															passUniformBufferManager->resetCurrentPassBuffer();
+															passUniformBufferManager->fillBuffer(worldSpaceToViewSpaceTransform);
+														}
+													}
 
 													// Fill the material uniform buffer
 													materialBlueprintResource->fillMaterialUniformBuffer();

@@ -43,6 +43,7 @@ namespace RendererRuntime
 {
 	class Transform;
 	class MaterialTechnique;
+	class PassUniformBufferManager;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 }
 
@@ -119,7 +120,7 @@ namespace RendererRuntime
 			UniformBufferElementProperties uniformBufferElementProperties;
 			uint32_t					   uniformBufferNumberOfBytes;	///< Includes handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
 			ScratchBuffer				   scratchBuffer;
-			Renderer::IUniformBufferPtr	   uniformBufferPtr;
+			Renderer::IUniformBufferPtr	   uniformBufferPtr;	// TODO(co) "uniformBufferPtr" will be removed soon
 		};
 
 		struct SamplerState
@@ -276,6 +277,48 @@ namespace RendererRuntime
 		inline const Textures& getTextures() const;
 
 		//[-------------------------------------------------------]
+		//[ Ease-of-use direct access                             ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the pass uniform buffer
+		*
+		*  @return
+		*    The pass uniform buffer, can be a null pointer, don't destroy the instance
+		*/
+		inline UniformBuffer* getPassUniformBuffer() const;
+
+		/**
+		*  @brief
+		*    Return the material uniform buffer
+		*
+		*  @return
+		*    The material uniform buffer, can be a null pointer, don't destroy the instance
+		*/
+		inline UniformBuffer* getMaterialUniformBuffer() const;
+
+		/**
+		*  @brief
+		*    Return the instance uniform buffer
+		*
+		*  @return
+		*    The instance uniform buffer, can be a null pointer, don't destroy the instance
+		*/
+		inline UniformBuffer* getInstanceUniformBuffer() const;
+
+		//[-------------------------------------------------------]
+		//[ Buffer manager                                        ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the pass uniform buffer manager
+		*
+		*  @return
+		*    The pass uniform buffer manager, can be a null pointer, don't destroy the instance
+		*/
+		inline PassUniformBufferManager* getPassUniformBufferManager() const;
+
+		//[-------------------------------------------------------]
 		//[ Misc                                                  ]
 		//[-------------------------------------------------------]
 		// TODO(co) Asynchronous loading completion, we might want to move this into "RendererRuntime::IResource"
@@ -290,15 +333,6 @@ namespace RendererRuntime
 		*    - Stick to pass, material and instance uniform buffers and avoid unknown uniform buffers whenever possible
 		*/
 		RENDERERRUNTIME_API_EXPORT void fillUnknownUniformBuffers();
-
-		/**
-		*  @brief
-		*    Fill the pass uniform buffer
-		*
-		*  @param[in] worldSpaceToViewSpaceTransform
-		*    World space to view space transform
-		*/
-		RENDERERRUNTIME_API_EXPORT void fillPassUniformBuffer(const Transform& worldSpaceToViewSpaceTransform);
 
 		/**
 		*  @brief
@@ -395,6 +429,8 @@ namespace RendererRuntime
 		UniformBuffer* mPassUniformBuffer;		///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mMaterialUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
+		// Buffer manager
+		PassUniformBufferManager* mPassUniformBufferManager;	///< Can be a null pointer, destroy the instance if you no longer need it
 		// Misc
 		LinkedMaterialTechniques mLinkedMaterialTechniques;	// TODO(co) Decent material technique list management inside the material blueprint resource (link, unlink etc.)
 

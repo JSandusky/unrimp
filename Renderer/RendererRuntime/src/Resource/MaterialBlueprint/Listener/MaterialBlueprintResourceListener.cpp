@@ -77,8 +77,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private virtual RendererRuntime::IMaterialBlueprintResourceListener methods ]
 	//[-------------------------------------------------------]
-	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform)
+	void MaterialBlueprintResourceListener::beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform, PassUniformBufferManager::PassData& passData)
 	{
+		// Remember the pass data memory address of the current scope
+		mPassData = &passData;
+
 		// Get the aspect ratio
 		float aspectRatio = 4.0f / 3.0f;
 		{
@@ -118,8 +121,8 @@ namespace RendererRuntime
 		}
 
 		// Calculate the final matrices
-		mWorldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
-		mWorldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * viewTranslateMatrix * mWorldSpaceToViewSpaceMatrix;
+		mPassData->worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
+		mPassData->worldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix;
 	}
 
 	bool MaterialBlueprintResourceListener::fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes)
@@ -130,11 +133,11 @@ namespace RendererRuntime
 		// TODO(co) Add more of those standard property values
 		if (::detail::WORLD_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
 		{
-			memcpy(buffer, glm::value_ptr(mWorldSpaceToViewSpaceMatrix), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToViewSpaceMatrix), numberOfBytes);
 		}
 		else if (::detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{
-			memcpy(buffer, glm::value_ptr(mWorldSpaceToClipSpaceMatrix), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrix), numberOfBytes);
 		}
 
 		// TODO(co) This is just a test, remove later on

@@ -29,6 +29,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline MaterialBlueprintResourceListener::MaterialBlueprintResourceListener() :
+		mPassData(nullptr),
 		mObjectSpaceToWorldSpaceTransform(nullptr),
 		mMaterialTechnique(nullptr)
 	{

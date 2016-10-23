@@ -161,6 +161,9 @@
     <Filter Include="Source Files\Core\Renderer">
       <UniqueIdentifier>{af28d1ea-7b90-4933-8b35-5f32286baca7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\MaterialBlueprint\BufferManager">
+      <UniqueIdentifier>{71f7c0ec-ef5c-4c4b-8845-6fb04a06e2e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -449,6 +452,9 @@
     </None>
     <None Include="include\RendererRuntime\Resource\CompositorNode\CompositorFramebuffer.inl">
       <Filter>Source Files\Resource\CompositorNode</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassUniformBufferManager.inl">
+      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -879,6 +885,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\CompositorNode\CompositorFramebuffer.h">
       <Filter>Source Files\Resource\CompositorNode</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassUniformBufferManager.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -1126,6 +1135,9 @@
     </ClCompile>
     <ClCompile Include="src\Core\Renderer\FramebufferSignature.cpp">
       <Filter>Source Files\Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\PassUniformBufferManager.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

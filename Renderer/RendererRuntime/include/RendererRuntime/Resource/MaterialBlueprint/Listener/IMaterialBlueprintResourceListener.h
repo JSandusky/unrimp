@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassUniformBufferManager.h"
 
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 
@@ -62,8 +62,9 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Friends methods                                       ]
+	//[ Friends                                               ]
 	//[-------------------------------------------------------]
+		friend class PassUniformBufferManager;	///< Is calling the private interface methods
 		friend class MaterialBlueprintResource;	///< Is calling the private interface methods
 
 
@@ -103,7 +104,7 @@ namespace RendererRuntime
 	private:
 		virtual void beginFillUnknown() = 0;
 		virtual bool fillUnknownValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
-		virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform) = 0;
+		virtual void beginFillPass(IRendererRuntime& rendererRuntime, const Transform& worldSpaceToViewSpaceTransform, PassUniformBufferManager::PassData& passData) = 0;
 		virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
 		virtual void beginFillMaterial() = 0;
 		virtual bool fillMaterialValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;

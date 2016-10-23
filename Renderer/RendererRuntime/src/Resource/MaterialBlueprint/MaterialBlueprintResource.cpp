@@ -385,84 +385,6 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialBlueprintResource::fillPassUniformBuffer(const Transform& worldSpaceToViewSpaceTransform)
-	{
-		assert(nullptr != mPassUniformBuffer);
-		assert(1 == mPassUniformBuffer->numberOfElements);
-
-		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = getResourceManager<MaterialBlueprintResourceManager>();
-		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
-
-		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = materialBlueprintResourceManager.getMaterialBlueprintResourceListener();
-		materialBlueprintResourceListener.beginFillPass(materialBlueprintResourceManager.getRendererRuntime(), worldSpaceToViewSpaceTransform);
-
-		// Update the scratch buffer
-		ScratchBuffer& scratchBuffer = mPassUniformBuffer->scratchBuffer;
-		{
-			uint8_t* scratchBufferPointer = scratchBuffer.data();
-			const UniformBufferElementProperties& uniformBufferElementProperties = mPassUniformBuffer->uniformBufferElementProperties;
-			const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
-			for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
-			{
-				const MaterialProperty& uniformBufferElementProperty = uniformBufferElementProperties[i];
-
-				// Get value type number of bytes
-				const uint32_t valueTypeNumberOfBytes = uniformBufferElementProperty.getValueTypeNumberOfBytes(uniformBufferElementProperty.getValueType());
-
-				// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
-				if (0 != numberOfPackageBytes && numberOfPackageBytes + valueTypeNumberOfBytes > 16)
-				{
-					// Move the scratch buffer pointer to the location of the next aligned package and restart the package bytes counter
-					scratchBufferPointer += 4 * 4 - numberOfPackageBytes;
-					numberOfPackageBytes = 0;
-				}
-				numberOfPackageBytes += valueTypeNumberOfBytes % 16;
-
-				// Copy the property value into the scratch buffer
-				const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
-				if (MaterialProperty::Usage::PASS_REFERENCE == usage)	// Most likely the case, so check this first
-				{
-					if (!materialBlueprintResourceListener.fillPassValue(uniformBufferElementProperty.getReferenceValue(), scratchBufferPointer, valueTypeNumberOfBytes))
-					{
-						// Error, can't resolve reference
-						assert(false);
-					}
-				}
-				else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
-				{
-					// Figure out the global material property value
-					const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
-					if (nullptr != materialProperty)
-					{
-						// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
-						memcpy(scratchBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
-					}
-					else
-					{
-						// Error, can't resolve reference
-						assert(false);
-					}
-				}
-				else if (!uniformBufferElementProperty.isReferenceUsage())	// TODO(co) Performance: Think about such tests, the toolkit should already take care of this so we have well known verified runtime data
-				{
-					// Just copy over the property value
-					memcpy(scratchBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
-				}
-				else
-				{
-					// Error, invalid property
-					assert(false);
-				}
-
-				// Next property
-				scratchBufferPointer += valueTypeNumberOfBytes;
-			}
-		}
-
-		// Update the uniform buffer by using our scratch buffer
-		mPassUniformBuffer->uniformBufferPtr->copyDataFrom(scratchBuffer.size(), scratchBuffer.data());
-	}
-
 	void MaterialBlueprintResource::fillMaterialUniformBuffer()
 	{
 		assert(nullptr != mMaterialUniformBuffer);
@@ -655,6 +577,10 @@ namespace RendererRuntime
 
 		{ // Graphics root descriptor table: Set our uniform buffers
 			const size_t numberOfUniformBuffers = mUniformBuffers.size();
+			if (nullptr != mPassUniformBufferManager)
+			{
+				mPassUniformBufferManager->bindToRenderer();
+			}
 			for (size_t i = 0; i < numberOfUniformBuffers; ++i)
 			{
 				const UniformBuffer& uniformBuffer = mUniformBuffers[i];
@@ -772,14 +698,19 @@ namespace RendererRuntime
 		mPipelineState(Renderer::PipelineStateBuilder()),
 		mPassUniformBuffer(nullptr),
 		mMaterialUniformBuffer(nullptr),
-		mInstanceUniformBuffer(nullptr)
+		mInstanceUniformBuffer(nullptr),
+		mPassUniformBufferManager(nullptr)
 	{
 		memset(mShaderBlueprintResourceId, static_cast<int>(getUninitialized<ShaderBlueprintResourceId>()), sizeof(ShaderBlueprintResourceId) * NUMBER_OF_SHADER_TYPES);
 	}
 
 	MaterialBlueprintResource::~MaterialBlueprintResource()
 	{
-		// Nothing here
+		if (nullptr != mPassUniformBufferManager)
+		{
+			delete mPassUniformBufferManager;
+		}
+
 		// TODO(co) Sanity checks
 		/*
 		PipelineStateCacheManager			 mPipelineStateCacheManager;

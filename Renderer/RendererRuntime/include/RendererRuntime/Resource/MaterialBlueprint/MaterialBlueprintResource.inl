@@ -83,6 +83,26 @@ namespace RendererRuntime
 		return mTextures;
 	}
 
+	inline MaterialBlueprintResource::UniformBuffer* MaterialBlueprintResource::getPassUniformBuffer() const
+	{
+		return mPassUniformBuffer;
+	}
+
+	inline MaterialBlueprintResource::UniformBuffer* MaterialBlueprintResource::getMaterialUniformBuffer() const
+	{
+		return mPassUniformBuffer;
+	}
+
+	inline MaterialBlueprintResource::UniformBuffer* MaterialBlueprintResource::getInstanceUniformBuffer() const
+	{
+		return mPassUniformBuffer;
+	}
+
+	inline PassUniformBufferManager* MaterialBlueprintResource::getPassUniformBufferManager() const
+	{
+		return mPassUniformBufferManager;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

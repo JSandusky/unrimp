@@ -24,6 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintResourceLoader.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Loader/MaterialBlueprintFileFormat.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassUniformBufferManager.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -201,6 +202,13 @@ namespace RendererRuntime
 		// Create the root signature
 		mMaterialBlueprintResource->mRootSignaturePtr = renderer.createRootSignature(mRootSignature);
 
+		// Create pass uniform buffer manager
+		if (nullptr != mMaterialBlueprintResource->mPassUniformBufferManager)
+		{
+			delete mMaterialBlueprintResource->mPassUniformBufferManager;
+		}
+		mMaterialBlueprintResource->mPassUniformBufferManager = new PassUniformBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
+
 		{ // Get the used shader blueprint resources
 			ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
 			for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
@@ -218,7 +226,6 @@ namespace RendererRuntime
 				// Create the uniform buffer renderer resource (GPU alignment is handled by the renderer backend)
 				MaterialBlueprintResource::UniformBuffer& uniformBuffer = uniformBuffers[i];
 				uniformBuffer.scratchBuffer.resize(uniformBuffer.uniformBufferNumberOfBytes);
-				uniformBuffer.uniformBufferPtr = bufferManager.createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 
 				// Ease-of-use direct access
 				if (MaterialBlueprintResource::UniformBufferUsage::PASS == uniformBuffer.uniformBufferUsage)
@@ -228,10 +235,16 @@ namespace RendererRuntime
 				else if (MaterialBlueprintResource::UniformBufferUsage::MATERIAL == uniformBuffer.uniformBufferUsage)
 				{
 					mMaterialBlueprintResource->mMaterialUniformBuffer = &uniformBuffer;
+
+					// TODO(co) "uniformBufferPtr" will be removed soon
+					uniformBuffer.uniformBufferPtr = bufferManager.createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 				}
 				else if (MaterialBlueprintResource::UniformBufferUsage::INSTANCE == uniformBuffer.uniformBufferUsage)
 				{
 					mMaterialBlueprintResource->mInstanceUniformBuffer = &uniformBuffer;
+
+					// TODO(co) "uniformBufferPtr" will be removed soon
+					uniformBuffer.uniformBufferPtr = bufferManager.createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 				}
 			}
 		}
