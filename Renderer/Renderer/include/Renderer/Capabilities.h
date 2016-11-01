@@ -54,7 +54,7 @@ namespace Renderer
 		uint32_t maximumNumberOfSimultaneousRenderTargets;	///< Maximum number of simultaneous render targets (if <1 render to texture is not supported)
 		uint32_t maximumTextureDimension;					///< Maximum texture dimension (usually 2048, 4096, 8192 or 16384)
 		uint32_t maximumNumberOf2DTextureArraySlices;		///< Maximum number of 2D texture array slices (usually 512 up to 8192, in case there's no support for 2D texture arrays it's 0)
-		bool	 uniformBuffer;								///< Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
+		uint32_t maximumUniformBufferSize;					///< Maximum uniform buffer (UBO) size in bytes (usually at least 4096 *16 bytes, in case there's no support for uniform buffer it's 0)
 		uint32_t maximumTextureBufferSize;					///< Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 		bool	 individualUniforms;						///< Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		bool	 instancedArrays;							///< Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)

@@ -64,7 +64,7 @@ void IcosahedronTessellation::onInitialization()
 	// -> Geometry shaders supported?
 	// -> Tessellation control and tessellation evaluation shaders supported?
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && renderer->getCapabilities().uniformBuffer && renderer->getCapabilities().maximumNumberOfGsOutputVertices > 0 && renderer->getCapabilities().maximumNumberOfPatchVertices > 0)
+	if (nullptr != renderer && renderer->getCapabilities().maximumUniformBufferSize > 0 && renderer->getCapabilities().maximumNumberOfGsOutputVertices > 0 && renderer->getCapabilities().maximumNumberOfPatchVertices > 0)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)

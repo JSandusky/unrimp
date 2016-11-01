@@ -1497,7 +1497,7 @@ namespace Renderer
 			uint32_t maximumNumberOfSimultaneousRenderTargets;
 			uint32_t maximumTextureDimension;
 			uint32_t maximumNumberOf2DTextureArraySlices;
-			bool	 uniformBuffer;
+			uint32_t maximumUniformBufferSize;
 			uint32_t maximumTextureBufferSize;
 			bool	 individualUniforms;
 			bool	 instancedArrays;
@@ -1513,7 +1513,7 @@ namespace Renderer
 				maximumNumberOfSimultaneousRenderTargets(0),
 				maximumTextureDimension(0),
 				maximumNumberOf2DTextureArraySlices(0),
-				uniformBuffer(false),
+				maximumUniformBufferSize(0),
 				maximumTextureBufferSize(0),
 				individualUniforms(false),
 				instancedArrays(false),
@@ -1533,7 +1533,7 @@ namespace Renderer
 				maximumNumberOfSimultaneousRenderTargets(0),
 				maximumTextureDimension(0),
 				maximumNumberOf2DTextureArraySlices(0),
-				uniformBuffer(false),
+				maximumUniformBufferSize(0),
 				maximumTextureBufferSize(0),
 				individualUniforms(false),
 				instancedArrays(false),

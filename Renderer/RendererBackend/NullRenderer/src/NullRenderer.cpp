@@ -559,8 +559,10 @@ namespace NullRenderer
 		// Maximum number of 2D texture array slices (usually 512, in case there's no support for 2D texture arrays it's 0)
 		mCapabilities.maximumNumberOf2DTextureArraySlices = 42;
 
-		// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
-		mCapabilities.uniformBuffer = true;
+		// Maximum uniform buffer (UBO) size in bytes (usually at least 4096 * 16 bytes, in case there's no support for uniform buffer it's 0)
+		// -> Let's use the DirectX 11 value: See https://msdn.microsoft.com/en-us/library/windows/desktop/ff819065(v=vs.85).aspx - "Resource Limits (Direct3D 11)" - "Number of elements in a constant buffer D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT (4096)"
+		// -> One element = float4 = 16 bytes
+		mCapabilities.maximumUniformBufferSize = 4096 * 16;
 
 		// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 		mCapabilities.maximumTextureBufferSize = 42;

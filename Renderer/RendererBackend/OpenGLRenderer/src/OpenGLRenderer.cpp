@@ -1736,7 +1736,6 @@ namespace OpenGLRenderer
 		}
 
 		// Maximum texture dimension
-		openGLValue = 0;
 		glGetIntegerv(GL_MAX_TEXTURE_SIZE, &openGLValue);
 		mCapabilities.maximumTextureDimension = static_cast<uint32_t>(openGLValue);
 
@@ -1751,8 +1750,16 @@ namespace OpenGLRenderer
 			mCapabilities.maximumNumberOf2DTextureArraySlices = 0;
 		}
 
-		// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
-		mCapabilities.uniformBuffer = mExtensions->isGL_ARB_uniform_buffer_object();
+		// Maximum uniform buffer (UBO) size in bytes (usually at least 4096 * 16 bytes, in case there's no support for uniform buffer it's 0)
+		if (mExtensions->isGL_ARB_uniform_buffer_object())
+		{
+			glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &openGLValue);
+			mCapabilities.maximumUniformBufferSize = static_cast<uint32_t>(openGLValue);
+		}
+		else
+		{
+			mCapabilities.maximumUniformBufferSize = 0;
+		}
 
 		// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 		if (mExtensions->isGL_ARB_texture_buffer_object())

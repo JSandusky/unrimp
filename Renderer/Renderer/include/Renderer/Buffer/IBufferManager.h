@@ -179,7 +179,7 @@ namespace Renderer
 		*    The created UBO instance, null pointer on error. Release the returned instance if you no longer need it.
 		*
 		*  @note
-		*    - Only supported if "Renderer::Capabilities::uniformBuffer" is true
+		*    - Only supported if "Renderer::Capabilities::maximumUniformBufferSize" is >0
 		*/
 		virtual IUniformBuffer* createUniformBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
 

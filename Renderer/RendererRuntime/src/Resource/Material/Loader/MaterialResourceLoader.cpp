@@ -90,45 +90,15 @@ namespace RendererRuntime
 	{
 		// TODO(co) Material resource update
 		mMaterialResource->releaseTextures();
+		mMaterialResource->destroyAllMaterialTechniques();
 
 		{ // Create the material techniques (list is already sorted)
 			MaterialResource::SortedMaterialTechniqueVector& sortedMaterialTechniqueVector = mMaterialResource->mSortedMaterialTechniqueVector;
 			MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
-			const MaterialBlueprintResources& materialBlueprintResources = materialBlueprintResourceManager.getMaterialBlueprintResources();
-
-			// TODO(co) Cleanup
-			// Unlink previous material techniques
-			for (size_t i = 0; i < sortedMaterialTechniqueVector.size(); ++i)
+			const v1Material::Technique* v1MaterialTechnique = mMaterialTechniques;
+			for (size_t i = 0; i < mNumberOfTechniques; ++i, ++v1MaterialTechnique)
 			{
-				MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[i];
-				MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResources.tryGetElementById(materialTechnique.mMaterialBlueprintResourceId);
-				if (nullptr != materialBlueprintResource)
-				{
-					materialBlueprintResource->unlinkMaterialTechnique(materialTechnique);
-				}
-			}
-			sortedMaterialTechniqueVector.clear();
-
-			{
-				const v1Material::Technique* v1MaterialTechnique = mMaterialTechniques;
-				for (size_t i = 0; i < mNumberOfTechniques; ++i, ++v1MaterialTechnique)
-				{
-					sortedMaterialTechniqueVector.emplace_back(MaterialTechnique(v1MaterialTechnique->materialTechniqueId, *mMaterialResource));
-
-					// Get the used material blueprint resource
-					sortedMaterialTechniqueVector[i].mMaterialBlueprintResourceId = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(v1MaterialTechnique->materialBlueprintAssetId);
-				}
-			}
-
-			// Link when done and the memory addresses stay stable
-			for (size_t i = 0; i < mNumberOfTechniques; ++i)
-			{
-				MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[i];
-				MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResources.tryGetElementById(materialTechnique.mMaterialBlueprintResourceId);
-				if (nullptr != materialBlueprintResource)
-				{
-					materialBlueprintResource->linkMaterialTechnique(materialTechnique);
-				}
+				sortedMaterialTechniqueVector.push_back(new MaterialTechnique(v1MaterialTechnique->materialTechniqueId, *mMaterialResource, materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(v1MaterialTechnique->materialBlueprintAssetId)));
 			}
 		}
 	}

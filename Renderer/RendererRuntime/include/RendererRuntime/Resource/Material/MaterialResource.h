@@ -78,7 +78,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::vector<MaterialTechnique> SortedMaterialTechniqueVector;
+		typedef std::vector<MaterialTechnique*> SortedMaterialTechniqueVector;
 
 
 	//[-------------------------------------------------------]
@@ -127,6 +127,12 @@ namespace RendererRuntime
 		*    The requested material technique, null pointer on error, don't destroy the returned instance
 		*/
 		RENDERERRUNTIME_API_EXPORT MaterialTechnique* getMaterialTechniqueById(MaterialTechniqueId materialTechniqueId) const;
+
+		/**
+		*  @brief
+		*    Destroy all material techniques
+		*/
+		RENDERERRUNTIME_API_EXPORT void destroyAllMaterialTechniques();
 
 		//[-------------------------------------------------------]
 		//[ Property                                              ]

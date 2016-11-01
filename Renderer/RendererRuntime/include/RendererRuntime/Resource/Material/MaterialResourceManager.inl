@@ -28,6 +28,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline IRendererRuntime& MaterialResourceManager::getRendererRuntime() const
+	{
+		return mRendererRuntime;
+	}
+
 	inline const MaterialResources& MaterialResourceManager::getMaterialResources() const
 	{
 		return mMaterialResources;

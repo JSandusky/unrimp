@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <cassert>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -28,16 +34,25 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialUniformBufferManager::MaterialUniformBufferManager(IRendererRuntime& rendererRuntime, const MaterialBlueprintResource& materialBlueprintResource) :
-		mRendererRuntime(rendererRuntime),
-		mMaterialBlueprintResource(materialBlueprintResource)
+	inline MaterialUniformBufferSlot::~MaterialUniformBufferSlot()
 	{
 		// Nothing here
 	}
 
-	inline MaterialUniformBufferManager::~MaterialUniformBufferManager()
+	inline MaterialResourceManager& MaterialUniformBufferSlot::getMaterialResourceManager() const
 	{
-		// Nothing here
+		assert(nullptr != mMaterialResourceManager);
+		return *mMaterialResourceManager;
+	}
+
+	inline MaterialResourceId MaterialUniformBufferSlot::getMaterialResourceId() const
+	{
+		return mMaterialResourceId;
+	}
+
+	inline uint32_t MaterialUniformBufferSlot::getAssignedMaterialSlot() const
+	{
+		return mAssignedMaterialSlot;
 	}
 
 

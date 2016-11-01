@@ -1445,8 +1445,10 @@ namespace Direct3D11Renderer
 
 		// The rest is the same for all feature levels
 
-		// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
-		mCapabilities.uniformBuffer = true;
+		// Maximum uniform buffer (UBO) size in bytes (usually at least 4096 * 16 bytes, in case there's no support for uniform buffer it's 0)
+		// -> See https://msdn.microsoft.com/en-us/library/windows/desktop/ff819065(v=vs.85).aspx - "Resource Limits (Direct3D 11)" - "Number of elements in a constant buffer D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT (4096)"
+		// -> One element = float4 = 16 bytes
+		mCapabilities.maximumUniformBufferSize = 4096 * 16;
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = false;

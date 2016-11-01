@@ -99,7 +99,7 @@ namespace RendererRuntime
 		return materialResourceId;
 	}
 
-	MaterialResourceId MaterialResourceManager::createMaterialResourceByAssetId(AssetId assetId, MaterialBlueprintResourceId materialBlueprintResourceId)
+	MaterialResourceId MaterialResourceManager::createMaterialResourceByAssetId(AssetId assetId, AssetId materialBlueprintAssetId)
 	{
 		// Material resource is not allowed to exist, yet
 		assert(isUninitialized(loadMaterialResourceByAssetId(assetId)));
@@ -109,18 +109,17 @@ namespace RendererRuntime
 		materialResource.setResourceManager(this);
 		materialResource.setAssetId(assetId);
 
-		// TODO(co) Simplify
-		{ // Create the default material technique
-			MaterialResource::SortedMaterialTechniqueVector& sortedMaterialTechniqueVector = materialResource.mSortedMaterialTechniqueVector;
-			sortedMaterialTechniqueVector.emplace_back(MaterialTechnique("Default", materialResource));
-			MaterialTechnique& materialTechnique = sortedMaterialTechniqueVector[0];
+		{ // Setup material resource instance
+			// Copy over the material properties of the material blueprint resource
 			MaterialBlueprintResourceManager& materialBlueprintResourceManager = mRendererRuntime.getMaterialBlueprintResourceManager();
-			materialTechnique.mMaterialBlueprintResourceId = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(materialBlueprintResourceId);
-			MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResourceManager.getMaterialBlueprintResources().tryGetElementById(materialTechnique.mMaterialBlueprintResourceId);
+			const MaterialBlueprintResourceId materialBlueprintResourceId = materialBlueprintResourceManager.loadMaterialBlueprintResourceByAssetId(materialBlueprintAssetId);
+			MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResourceManager.getMaterialBlueprintResources().tryGetElementById(materialBlueprintResourceId);
 			if (nullptr != materialBlueprintResource)
 			{
 				materialResource.mMaterialProperties = materialBlueprintResource->mMaterialProperties;
-				materialBlueprintResource->linkMaterialTechnique(materialTechnique);
+
+				// Create default material technique
+				materialResource.mSortedMaterialTechniqueVector.push_back(new MaterialTechnique("Default", materialResource, materialBlueprintResourceId));
 			}
 		}
 

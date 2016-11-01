@@ -80,7 +80,8 @@ FirstScene::FirstScene(const char *rendererName) :
 	mUseDiffuseMap(true),
 	mUseEmissiveMap(true),
 	mUseNormalMap(true),
-	mUseSpecularMap(true)
+	mUseSpecularMap(true),
+	mDiffuseColor{1.0f, 1.0f, 1.0f}
 {
 	// Nothing here
 }
@@ -282,6 +283,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
 				ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
 				ImGui::Checkbox("Use Normal Map", &mUseNormalMap);
 				ImGui::Checkbox("Use Specular Map", &mUseSpecularMap);
+				ImGui::ColorEdit3("Diffuse Color", mDiffuseColor);
 
 				// Tell the material resource instance
 				RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
@@ -300,6 +302,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& renderTarget)
 						materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
 						materialResource->setPropertyById("UseNormalMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseNormalMap));
 						materialResource->setPropertyById("UseSpecularMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseSpecularMap));
+						materialResource->setPropertyById("DiffuseColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mDiffuseColor));
 					}
 				}
 			}

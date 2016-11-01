@@ -203,20 +203,6 @@ namespace RendererRuntime
 		// Create the root signature
 		mMaterialBlueprintResource->mRootSignaturePtr = renderer.createRootSignature(mRootSignature);
 
-		// Create pass uniform buffer manager
-		if (nullptr != mMaterialBlueprintResource->mPassUniformBufferManager)
-		{
-			delete mMaterialBlueprintResource->mPassUniformBufferManager;
-		}
-		mMaterialBlueprintResource->mPassUniformBufferManager = new PassUniformBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
-
-		// Create material uniform buffer manager
-		if (nullptr != mMaterialBlueprintResource->mMaterialUniformBufferManager)
-		{
-			delete mMaterialBlueprintResource->mMaterialUniformBufferManager;
-		}
-		mMaterialBlueprintResource->mMaterialUniformBufferManager = new MaterialUniformBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
-
 		{ // Get the used shader blueprint resources
 			ShaderBlueprintResourceManager& shaderBlueprintResourceManager = mRendererRuntime.getShaderBlueprintResourceManager();
 			for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
@@ -243,9 +229,6 @@ namespace RendererRuntime
 				else if (MaterialBlueprintResource::UniformBufferUsage::MATERIAL == uniformBuffer.uniformBufferUsage)
 				{
 					mMaterialBlueprintResource->mMaterialUniformBuffer = &uniformBuffer;
-
-					// TODO(co) "uniformBufferPtr" will be removed soon
-					uniformBuffer.uniformBufferPtr = bufferManager.createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 				}
 				else if (MaterialBlueprintResource::UniformBufferUsage::INSTANCE == uniformBuffer.uniformBufferUsage)
 				{
@@ -254,6 +237,27 @@ namespace RendererRuntime
 					// TODO(co) "uniformBufferPtr" will be removed soon
 					uniformBuffer.uniformBufferPtr = bufferManager.createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 				}
+			}
+		}
+
+		// Create pass uniform buffer manager
+		if (nullptr != mMaterialBlueprintResource->mPassUniformBufferManager)
+		{
+			delete mMaterialBlueprintResource->mPassUniformBufferManager;
+		}
+		mMaterialBlueprintResource->mPassUniformBufferManager = new PassUniformBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
+
+		// Create material uniform buffer manager
+		if (nullptr != mMaterialBlueprintResource->mMaterialUniformBufferManager)
+		{
+			delete mMaterialBlueprintResource->mMaterialUniformBufferManager;
+			mMaterialBlueprintResource->mMaterialUniformBufferManager = nullptr;
+		}
+		{ // It's valid if a material blueprint resource doesn't contain a material uniform buffer (usually the case for compositor material blueprint resources)
+			const MaterialBlueprintResource::UniformBuffer* uniformBuffer = mMaterialBlueprintResource->getMaterialUniformBuffer();
+			if (nullptr != uniformBuffer)
+			{
+				mMaterialBlueprintResource->mMaterialUniformBufferManager = new MaterialUniformBufferManager(mRendererRuntime, *mMaterialBlueprintResource);
 			}
 		}
 

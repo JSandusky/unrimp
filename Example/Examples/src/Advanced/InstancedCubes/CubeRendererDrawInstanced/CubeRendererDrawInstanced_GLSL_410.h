@@ -167,7 +167,7 @@ void main()
 
 // Uniform buffer version (Direct3D 10 and Direct3D 11 only support uniform buffers and no individual uniform access)
 // One vertex shader invocation per vertex
-if (mRenderer->getCapabilities().uniformBuffer)
+if (mRenderer->getCapabilities().maximumUniformBufferSize > 0)
 vertexShaderSourceCode =
 "#version 410 core\n"	// OpenGL 4.1
 STRINGIFY(
@@ -336,7 +336,7 @@ void main()
 );	// STRINGIFY
 
 // Uniform buffer version (Direct3D 10 and Direct3D 11 only support uniform buffers and no individual uniform access)
-if (mRenderer->getCapabilities().uniformBuffer)
+if (mRenderer->getCapabilities().maximumUniformBufferSize > 0)
 fragmentShaderSourceCode =
 "#version 410 core\n"									// OpenGL 4.1
 "#extension GL_EXT_texture_array : enable\n"

@@ -56,7 +56,7 @@ void FirstTessellation::onInitialization()
 	// -> Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
 	// -> Tessellation control and tessellation evaluation shaders supported?
 	Renderer::IRendererPtr renderer(getRenderer());
-	if (nullptr != renderer && renderer->getCapabilities().uniformBuffer && renderer->getCapabilities().maximumNumberOfPatchVertices > 0)
+	if (nullptr != renderer && renderer->getCapabilities().maximumUniformBufferSize > 0 && renderer->getCapabilities().maximumNumberOfPatchVertices > 0)
 	{
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)

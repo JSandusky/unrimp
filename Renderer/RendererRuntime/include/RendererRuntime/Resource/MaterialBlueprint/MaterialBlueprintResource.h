@@ -406,16 +406,6 @@ namespace RendererRuntime
 		void initializeElement(MaterialBlueprintResourceId materialBlueprintResourceId);
 		void deinitializeElement();
 
-		void linkMaterialTechnique(MaterialTechnique& materialTechnique);
-		void unlinkMaterialTechnique(MaterialTechnique& materialTechnique);
-
-
-	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef std::vector<MaterialTechnique*> LinkedMaterialTechniques;	// TODO(co) It's not allowed to store direct material resource instance memory addresses (manager might internally reallocate later on)
-
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
@@ -440,8 +430,6 @@ namespace RendererRuntime
 		// Buffer manager
 		PassUniformBufferManager*	  mPassUniformBufferManager;		///< Pass uniform buffer manager, can be a null pointer, destroy the instance if you no longer need it
 		MaterialUniformBufferManager* mMaterialUniformBufferManager;	///< Materials uniform buffer manager, can be a null pointer, destroy the instance if you no longer need it
-		// Misc
-		LinkedMaterialTechniques mLinkedMaterialTechniques;	// TODO(co) Decent material technique list management inside the material blueprint resource (link, unlink etc.)
 
 
 	};

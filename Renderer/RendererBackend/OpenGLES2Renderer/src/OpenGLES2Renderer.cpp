@@ -1222,8 +1222,8 @@ namespace OpenGLES2Renderer
 			mCapabilities.maximumNumberOf2DTextureArraySlices = 0;
 		}
 
-		// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
-		mCapabilities.uniformBuffer = false;
+		// Maximum uniform buffer (UBO) size in bytes (usually at least 4096 * 16 bytes, in case there's no support for uniform buffer it's 0)
+		mCapabilities.maximumUniformBufferSize = 0;
 
 		// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 		mCapabilities.maximumTextureBufferSize = 0;

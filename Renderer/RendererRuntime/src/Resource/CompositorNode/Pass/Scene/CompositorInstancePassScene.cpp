@@ -36,7 +36,6 @@
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassUniformBufferManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -57,6 +56,7 @@ namespace
 			const RendererRuntime::MeshResources& meshResources = rendererRuntime.getMeshResourceManager().getMeshResources();
 			const RendererRuntime::MaterialResources& materialResources = rendererRuntime.getMaterialResourceManager().getMaterialResources();
 			const RendererRuntime::MaterialBlueprintResourceManager& materialBlueprintResourceManager = rendererRuntime.getMaterialBlueprintResourceManager();
+			RendererRuntime::MaterialBlueprintResource* currentlyBoundMaterialBlueprintResource = nullptr;
 
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
@@ -159,34 +159,33 @@ namespace
 												Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(shaderProperties, dynamicShaderPieces, false);
 												if (nullptr != pipelineStatePtr)
 												{
-													// Fill the unknown uniform buffers
-													materialBlueprintResource->fillUnknownUniformBuffers();
+													// Expensive state change: Handle material blueprint resource switches
+													// -> Render queue should be sorted by material blueprint resource first to reduce those expensive state changes
+													if (currentlyBoundMaterialBlueprintResource != materialBlueprintResource)
+													{
+														currentlyBoundMaterialBlueprintResource = materialBlueprintResource;
 
-													// Fill the pass uniform buffer
-													// TODO(co) Camera usage
-													const RendererRuntime::Transform worldSpaceToViewSpaceTransform;
-													{ // TODO(co) Just a dummy usage for now
-														RendererRuntime::PassUniformBufferManager* passUniformBufferManager = materialBlueprintResource->getPassUniformBufferManager();
-														if (nullptr != passUniformBufferManager)
-														{
-															passUniformBufferManager->resetCurrentPassBuffer();
-															passUniformBufferManager->fillBuffer(worldSpaceToViewSpaceTransform);
+														// Fill the unknown uniform buffers
+														materialBlueprintResource->fillUnknownUniformBuffers();
+
+														// Fill the pass uniform buffer
+														{ // TODO(co) Just a dummy usage for now
+															RendererRuntime::PassUniformBufferManager* passUniformBufferManager = materialBlueprintResource->getPassUniformBufferManager();
+															if (nullptr != passUniformBufferManager)
+															{
+																passUniformBufferManager->resetCurrentPassBuffer();
+
+																// TODO(co) Camera usage
+																const RendererRuntime::Transform worldSpaceToViewSpaceTransform;
+																passUniformBufferManager->fillBuffer(worldSpaceToViewSpaceTransform);
+															}
 														}
+
+														// Bind the material blueprint resource to the used renderer
+														materialBlueprintResource->bindToRenderer();
 													}
 
-													// Fill the material uniform buffer
-													{ // TODO(co) Just a dummy usage for now
-														RendererRuntime::MaterialUniformBufferManager* materialUniformBufferManager = materialBlueprintResource->getMaterialUniformBufferManager();
-														if (nullptr != materialUniformBufferManager)
-														{
-															materialUniformBufferManager->fillMaterialUniformBuffer();
-														}
-													}
-
-													// Bind the material blueprint resource to the used renderer
-													materialBlueprintResource->bindToRenderer();
-
-													// Bind the material technique to the used renderer
+													// Cheap state change: Bind the material technique to the used renderer
 													materialTechnique->bindToRenderer(rendererRuntime);
 
 													// Set the used pipeline state object (PSO)

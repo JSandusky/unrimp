@@ -283,7 +283,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer &render
 
 	// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
 	// -> If they are there, we really want to use them (performance and ease of use)
-	if (mRenderer->getCapabilities().uniformBuffer)
+	if (mRenderer->getCapabilities().maximumUniformBufferSize > 0)
 	{
 		{ // Create and set constant program uniform buffer at once
 			// TODO(co) Ugly fixed hacked in model-view-projection matrix

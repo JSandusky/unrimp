@@ -456,10 +456,10 @@
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassUniformBufferManager.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferManager.inl">
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\InstanceUniformBufferManager.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\InstanceUniformBufferManager.inl">
+    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferSlot.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </None>
   </ItemGroup>
@@ -900,6 +900,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferManager.h">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferSlot.h">
+      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Command\CommandBucket.cpp">
@@ -1155,6 +1158,9 @@
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\InstanceUniformBufferManager.cpp">
+      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferSlot.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </ClCompile>
   </ItemGroup>

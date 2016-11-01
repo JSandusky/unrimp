@@ -70,7 +70,7 @@ UNIFORM_BUFFER_BEGIN(MaterialUniformBuffer, 1)
 UNIFORM_BUFFER_END
 UNIFORM_BUFFER_BEGIN(InstanceUniformBuffer, 2)
 	float4x4 ObjectSpaceToWorldSpaceMatrix;
-	int		 MaterialIndex;
+	int		 AssignedMaterialSlot;
 UNIFORM_BUFFER_END
 
 // Samplers
@@ -113,7 +113,7 @@ TEXTURE_2D(SpecularMap, 3)
 //[-------------------------------------------------------]
 MAIN_BEGIN
 	// Get the used material
-	Material material = Materials[MaterialIndex];
+	Material material = Materials[AssignedMaterialSlot];
 
 	// Build in variables
 	float3 ViewSpaceViewVector = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis

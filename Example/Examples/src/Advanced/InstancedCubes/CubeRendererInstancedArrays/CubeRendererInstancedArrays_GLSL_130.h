@@ -22,7 +22,7 @@
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
 #ifndef RENDERER_NO_OPENGL
-if (0 == strcmp(mRenderer->getName(), "OpenGL") && !mRenderer->getCapabilities().uniformBuffer)
+if (0 == strcmp(mRenderer->getName(), "OpenGL") && 0 == mRenderer->getCapabilities().maximumUniformBufferSize)
 {
 
 

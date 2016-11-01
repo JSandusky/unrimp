@@ -50,14 +50,14 @@ namespace
 
 		struct OrderByMaterialTechniqueId
 		{
-			inline bool operator()(const RendererRuntime::MaterialTechnique& left, RendererRuntime::MaterialTechniqueId right) const
+			inline bool operator()(const RendererRuntime::MaterialTechnique* left, RendererRuntime::MaterialTechniqueId right) const
 			{
-				return (left.getMaterialTechniqueId() < right);
+				return (left->getMaterialTechniqueId() < right);
 			}
 
-			inline bool operator()(RendererRuntime::MaterialTechniqueId left, const RendererRuntime::MaterialTechnique& right) const
+			inline bool operator()(RendererRuntime::MaterialTechniqueId left, const RendererRuntime::MaterialTechnique* right) const
 			{
-				return (left < right.getMaterialTechniqueId());
+				return (left < right->getMaterialTechniqueId());
 			}
 		};
 
@@ -85,6 +85,9 @@ namespace RendererRuntime
 		{
 			const MaterialResourceId materialResourceId = getId();
 
+			// Destroy all material techniques
+			destroyAllMaterialTechniques();
+
 			// Unregister from previous parent material resource
 			const MaterialResources& materialResources = getResourceManager<MaterialResourceManager>().getMaterialResources();
 			if (isInitialized(mParentMaterialResourceId))
@@ -109,17 +112,15 @@ namespace RendererRuntime
 
 				// Setup material resource
 				setAssetId(parentMaterialResource.getAssetId());
-				mSortedMaterialTechniqueVector = parentMaterialResource.mSortedMaterialTechniqueVector;
-				for (MaterialTechnique& materialTechnique : mSortedMaterialTechniqueVector)
-				{
-					materialTechnique.mMaterialResourceId = getId();
-				}
 				mMaterialProperties = parentMaterialResource.mMaterialProperties;
+				for (MaterialTechnique* materialTechnique : parentMaterialResource.mSortedMaterialTechniqueVector)
+				{
+					mSortedMaterialTechniqueVector.push_back(new MaterialTechnique(materialTechnique->getMaterialTechniqueId(), *this, materialTechnique->getMaterialBlueprintResourceId()));
+				}
 			}
 			else
 			{
 				// Don't touch the child material resources, but reset everything else
-				mSortedMaterialTechniqueVector.clear();
 				mMaterialProperties.removeAllProperties();
 			}
 		}
@@ -128,15 +129,24 @@ namespace RendererRuntime
 	MaterialTechnique* MaterialResource::getMaterialTechniqueById(MaterialTechniqueId materialTechniqueId) const
 	{
 		SortedMaterialTechniqueVector::const_iterator iterator = std::lower_bound(mSortedMaterialTechniqueVector.cbegin(), mSortedMaterialTechniqueVector.cend(), materialTechniqueId, ::detail::OrderByMaterialTechniqueId());
-		return (iterator != mSortedMaterialTechniqueVector.end() && iterator._Ptr->getMaterialTechniqueId() == materialTechniqueId) ? iterator._Ptr : nullptr;
+		return (iterator != mSortedMaterialTechniqueVector.end() && (*iterator._Ptr)->getMaterialTechniqueId() == materialTechniqueId) ? *iterator._Ptr : nullptr;
+	}
+	
+	void MaterialResource::destroyAllMaterialTechniques()
+	{
+		for (MaterialTechnique* materialTechnique : mSortedMaterialTechniqueVector)
+		{
+			delete materialTechnique;
+		}
+		mSortedMaterialTechniqueVector.clear();
 	}
 
 	void MaterialResource::releaseTextures()
 	{
 		// TODO(co) Cleanup
-		for (MaterialTechnique& materialTechnique : mSortedMaterialTechniqueVector)
+		for (MaterialTechnique* materialTechnique : mSortedMaterialTechniqueVector)
 		{
-			materialTechnique.mTextures.clear();
+			materialTechnique->mTextures.clear();
 		}
 	}
 
@@ -161,8 +171,8 @@ namespace RendererRuntime
 			mSortedChildMaterialResourceIds.clear();
 		}
 
-		// Sanity checks
-		mSortedMaterialTechniqueVector.clear();
+		// Cleanup
+		destroyAllMaterialTechniques();
 		mMaterialProperties.removeAllProperties();
 
 		// Call base implementation
@@ -180,7 +190,10 @@ namespace RendererRuntime
 			switch (materialProperty->getUsage())
 			{
 				case MaterialProperty::Usage::SHADER_UNIFORM:
-					// TODO(co)
+					for (MaterialTechnique* materialTechnique : mSortedMaterialTechniqueVector)
+					{
+						materialTechnique->scheduleForShaderUniformUpdate();
+					}
 					break;
 
 				case MaterialProperty::Usage::SHADER_COMBINATION:

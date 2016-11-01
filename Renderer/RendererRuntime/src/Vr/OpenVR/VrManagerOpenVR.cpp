@@ -190,7 +190,7 @@ namespace
 			return diffuseTextureAssetId;
 		}
 
-		RendererRuntime::MaterialResourceId setupRenderModelMaterial(RendererRuntime::IRendererRuntime& rendererRuntime, vr::TextureID_t vrTextureId, const RendererRuntime::AssetId diffuseTextureAssetId)
+		RendererRuntime::MaterialResourceId setupRenderModelMaterial(RendererRuntime::IRendererRuntime& rendererRuntime, vr::TextureID_t vrTextureId, RendererRuntime::AssetId diffuseTextureAssetId)
 		{
 			// Get the texture name and convert it into an runtime material asset ID
 			const std::string materialName = "OpenVR_" + std::to_string(vrTextureId);

@@ -56,7 +56,7 @@ namespace
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(OBJECT_SPACE_TO_WORLD_SPACE_MATRIX)
-			DEFINE_CONSTANT(MATERIAL_INDEX)
+			DEFINE_CONSTANT(ASSIGNED_MATERIAL_SLOT)
 		#undef DEFINE_CONSTANT
 
 
@@ -168,10 +168,10 @@ namespace RendererRuntime
 			mObjectSpaceToWorldSpaceTransform->getAsMatrix(objectSpaceToWorldSpaceMatrix);
 			memcpy(buffer, glm::value_ptr(objectSpaceToWorldSpaceMatrix), numberOfBytes);
 		}
-		else if (::detail::MATERIAL_INDEX == referenceValue)
+		else if (::detail::ASSIGNED_MATERIAL_SLOT == referenceValue)
 		{
-			const int materialIndex = static_cast<int>(mMaterialTechnique->getMaterialUniformBufferIndex());
-			memcpy(buffer, &materialIndex, numberOfBytes);
+			const int assignedMaterialSlot = static_cast<int>(mMaterialTechnique->getAssignedMaterialSlot());
+			memcpy(buffer, &assignedMaterialSlot, numberOfBytes);
 		}
 		else
 		{

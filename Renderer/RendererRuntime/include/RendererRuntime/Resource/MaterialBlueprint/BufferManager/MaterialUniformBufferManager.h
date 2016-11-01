@@ -29,13 +29,21 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/NonCopyable.h"
 
+#include <vector>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class IUniformBuffer;
+	class IBufferManager;
+}
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	class MaterialUniformBufferSlot;
 	class MaterialBlueprintResource;
 }
 
@@ -54,8 +62,9 @@ namespace RendererRuntime
 	*  @brief
 	*    Material uniform buffer manager
 	*
-	*  @todo
-	*    - TODO(co) Currently just a shell which needs to be implemented
+	*  @note
+	*    - For material batching
+	*    - Concept basing on OGRE 2.1 "Ogre::ConstBufferPool", but more generic and simplified thanks to the material blueprint concept
 	*/
 	class MaterialUniformBufferManager : public NonCopyable
 	{
@@ -74,19 +83,48 @@ namespace RendererRuntime
 		*  @param[in] materialBlueprintResource
 		*    Material blueprint resource
 		*/
-		inline MaterialUniformBufferManager(IRendererRuntime& rendererRuntime, const MaterialBlueprintResource& materialBlueprintResource);
+		MaterialUniformBufferManager(IRendererRuntime& rendererRuntime, const MaterialBlueprintResource& materialBlueprintResource);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		inline ~MaterialUniformBufferManager();
+		~MaterialUniformBufferManager();
 
 		/**
 		*  @brief
-		*    Fill the material uniform buffer
+		*    Request a slot and fill the material slot; automatically schedules for update
 		*/
-		void fillMaterialUniformBuffer();
+		void requestSlot(MaterialUniformBufferSlot& materialUniformBufferSlot);
+
+		/**
+		*  @brief
+		*    Release a slot requested with "RendererRuntime::MaterialUniformBufferManager::requestSlot()"
+		*/
+		void releaseSlot(MaterialUniformBufferSlot& materialUniformBufferSlot);
+
+		/**
+		*  @brief
+		*    Schedule the slot of the given material slot for update
+		*/
+		void scheduleForUpdate(MaterialUniformBufferSlot& materialUniformBufferSlot);
+
+		/**
+		*  @brief
+		*    Reset last bound pool and update the dirty slots
+		*/
+		void resetLastBoundPool();
+
+		/**
+		*  @brief
+		*    Bind slot to renderer
+		*
+		*  @param[in] rendererRuntime
+		*    Renderer runtime to use
+		*  @param[in] materialUniformBufferSlot
+		*    Slot to bind
+		*/
+		void bindToRenderer(const IRendererRuntime& rendererRuntime, MaterialUniformBufferSlot& materialUniformBufferSlot);
 
 
 	//[-------------------------------------------------------]
@@ -95,6 +133,24 @@ namespace RendererRuntime
 	private:
 		MaterialUniformBufferManager(const MaterialUniformBufferManager&) = delete;
 		MaterialUniformBufferManager& operator=(const MaterialUniformBufferManager&) = delete;
+		void uploadDirtySlots();
+
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		struct BufferPool
+		{
+			std::vector<uint32_t>	  freeSlots;
+			Renderer::IUniformBuffer* uniformBuffer;	///< Memory is managed by this buffer pool instance
+
+			BufferPool(size_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager);
+			~BufferPool();
+		};
+
+		typedef std::vector<BufferPool*>				BufferPools;
+		typedef std::vector<MaterialUniformBufferSlot*>	MaterialUniformBufferSlots;
 
 
 	//[-------------------------------------------------------]
@@ -103,6 +159,12 @@ namespace RendererRuntime
 	private:
 		IRendererRuntime&				 mRendererRuntime;
 		const MaterialBlueprintResource& mMaterialBlueprintResource;
+		BufferPools						 mBufferPools;
+		uint32_t						 mSlotsPerPool;
+		size_t							 mBufferSize;
+		MaterialUniformBufferSlots		 mDirtyMaterialUniformBufferSlots;
+		MaterialUniformBufferSlots		 mMaterialUniformBufferSlots;
+		const BufferPool*				 mLastBoundPool;
 
 
 	};
@@ -112,9 +174,3 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferManager.inl"

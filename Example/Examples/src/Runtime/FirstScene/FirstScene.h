@@ -142,6 +142,7 @@ private:
 	bool  mUseEmissiveMap;
 	bool  mUseNormalMap;
 	bool  mUseSpecularMap;
+	float mDiffuseColor[3];
 
 
 };

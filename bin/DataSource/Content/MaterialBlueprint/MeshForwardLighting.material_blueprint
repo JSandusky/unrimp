@@ -428,11 +428,11 @@
 							"ValueType": "FLOAT_4_4",
 							"Value": "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
 						},
-						"MaterialIndex":
+						"AssignedMaterialSlot":
 						{
 							"Usage": "INSTANCE_REFERENCE",
 							"ValueType": "INTEGER",
-							"Value": "@MATERIAL_INDEX"
+							"Value": "@ASSIGNED_MATERIAL_SLOT"
 						}
 					}
 				}

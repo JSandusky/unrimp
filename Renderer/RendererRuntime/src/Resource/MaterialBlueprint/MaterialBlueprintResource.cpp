@@ -26,7 +26,6 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferManager.h"
-#include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
@@ -487,7 +486,10 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfUniformBuffers; ++i)
 			{
 				const UniformBuffer& uniformBuffer = mUniformBuffers[i];
-				renderer.setGraphicsRootDescriptorTable(uniformBuffer.rootParameterIndex, uniformBuffer.uniformBufferPtr);
+				if (uniformBuffer.uniformBufferPtr.getPointer() != nullptr)
+				{
+					renderer.setGraphicsRootDescriptorTable(uniformBuffer.rootParameterIndex, uniformBuffer.uniformBufferPtr);
+				}
 			}
 		}
 
@@ -498,6 +500,12 @@ namespace RendererRuntime
 				const SamplerState& samplerState = mSamplerStates[i];
 				renderer.setGraphicsRootDescriptorTable(samplerState.rootParameterIndex, samplerState.samplerStatePtr);
 			}
+		}
+
+		// It's valid if a material blueprint resource doesn't contain a material uniform buffer (usually the case for compositor material blueprint resources)
+		if (nullptr != mMaterialUniformBufferManager)
+		{
+			mMaterialUniformBufferManager->resetLastBoundPool();
 		}
 	}
 
@@ -637,8 +645,6 @@ namespace RendererRuntime
 		UniformBuffer* mPassUniformBuffer;		///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mMaterialUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
-
-		LinkedMaterialTechniques mLinkedMaterialTechniques;	// TODO(co) Decent material technique list management inside the material blueprint resource (link, unlink etc.)
 		*/
 	}
 
@@ -657,25 +663,6 @@ namespace RendererRuntime
 
 		// Call base implementation
 		IResource::deinitializeElement();
-	}
-
-	void MaterialBlueprintResource::linkMaterialTechnique(MaterialTechnique& materialTechnique)
-	{
-		LinkedMaterialTechniques::const_iterator iterator = std::find(mLinkedMaterialTechniques.cbegin(), mLinkedMaterialTechniques.cend(), &materialTechnique);
-		if (mLinkedMaterialTechniques.cend() == iterator)
-		{
-			materialTechnique.mMaterialUniformBufferIndex = mLinkedMaterialTechniques.size();
-			mLinkedMaterialTechniques.push_back(&materialTechnique);
-		}
-	}
-
-	void MaterialBlueprintResource::unlinkMaterialTechnique(MaterialTechnique& materialTechnique)
-	{
-		LinkedMaterialTechniques::const_iterator iterator = std::find(mLinkedMaterialTechniques.cbegin(), mLinkedMaterialTechniques.cend(), &materialTechnique);
-		if (mLinkedMaterialTechniques.cend() != iterator)
-		{
-			mLinkedMaterialTechniques.erase(iterator);
-		}
 	}
 
 

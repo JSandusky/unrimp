@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Material/MaterialProperty.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferSlot.h"
 
 #include <vector>
 
@@ -38,9 +39,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
-	class MaterialResource;
-	class MaterialResourceManager;
-	class MaterialBlueprintResource;
+	class MaterialUniformBufferManager;
 }
 
 
@@ -54,11 +53,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;						///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
 	typedef uint32_t TextureResourceId;				///< POD texture resource identifier
-	typedef StringId MaterialPropertyId;			///< Material property identifier, internally just a POD "uint32_t", result of hashing the property name
 	typedef StringId MaterialTechniqueId;			///< Material technique identifier, internally just a POD "uint32_t", result of hashing the property name
-	typedef uint32_t MaterialResourceId;			///< POD material resource identifier
 	typedef uint32_t MaterialBlueprintResourceId;	///< POD material blueprint resource identifier
 
 
@@ -69,17 +65,14 @@ namespace RendererRuntime
 	*  @brief
 	*    Material technique
 	*/
-	class MaterialTechnique
+	class MaterialTechnique : public MaterialUniformBufferSlot
 	{
 
 
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class MaterialResource;			// TODO(co) Remove
-		friend class MaterialResourceLoader;	// TODO(co) Remove
-		friend class MaterialResourceManager;	// TODO(co) Remove
-		friend class MaterialBlueprintResource;	///< Sets "RendererRuntime::MaterialTechnique::mMaterialUniformBufferIndex"
+		friend class MaterialResource;	// Material technique owner
 
 
 	//[-------------------------------------------------------]
@@ -107,14 +100,16 @@ namespace RendererRuntime
 		*    Material technique ID
 		*  @param[in] materialResource
 		*    Owner material resource, only material resource manager and material resource ID will internally be stored
+		*  @param[in] materialBlueprintResourceId
+		*    Material blueprint resource ID
 		*/
-		MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource);
+		MaterialTechnique(MaterialTechniqueId materialTechniqueId, MaterialResource& materialResource, MaterialBlueprintResourceId materialBlueprintResourceId);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		inline ~MaterialTechnique();
+		~MaterialTechnique();
 
 		/**
 		*  @brief
@@ -127,36 +122,6 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the owner material resource manager
-		*
-		*  @return
-		*    The owner material resource manager
-		*/
-		inline MaterialResourceManager& getMaterialResourceManager() const;
-
-		/**
-		*  @brief
-		*    Return the owner material resource ID
-		*
-		*  @return
-		*    The owner material resource ID
-		*/
-		inline MaterialResourceId getMaterialResourceId() const;
-
-		/**
-		*  @brief
-		*    Return the owner material resource instance
-		*
-		*  @return
-		*    The owner material resource instance
-		*
-		*  @note
-		*    - Ease of use method
-		*/
-		const MaterialResource& getMaterialResource() const;
-
-		/**
-		*  @brief
 		*    Return the ID of the used material blueprint resource
 		*
 		*  @return
@@ -166,15 +131,27 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the material uniform buffer index inside the used material blueprint
+		*    Bind material technique to renderer
 		*
-		*  @return
-		*    The material uniform buffer index inside the used material blueprint, can be uninitialized value
+		*  @param[in] rendererRuntime
+		*    Renderer runtime to use
 		*/
-		inline uint32_t getMaterialUniformBufferIndex() const;
-
-		// TODO(co)
 		void bindToRenderer(const IRendererRuntime& rendererRuntime);
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		MaterialTechnique(const MaterialTechnique&) = delete;
+		MaterialTechnique& operator=(const MaterialTechnique&) = delete;
+		MaterialUniformBufferManager* getMaterialUniformBufferManager() const;
+
+		/**
+		*  @brief
+		*    Schedule the material slot for shader uniform update
+		*/
+		void scheduleForShaderUniformUpdate();
 
 
 	//[-------------------------------------------------------]
@@ -182,10 +159,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		MaterialTechniqueId			mMaterialTechniqueId;			///< Material technique ID
-		MaterialResourceManager*	mMaterialResourceManager;		///< Owner material resource manager, always valid
-		MaterialResourceId			mMaterialResourceId;			///< Owner material resource ID, always valid
 		MaterialBlueprintResourceId	mMaterialBlueprintResourceId;	///< Material blueprint resource ID, can be set to uninitialized value
-		uint32_t					mMaterialUniformBufferIndex;	///< Material uniform buffer index inside the used material blueprint, can be set to uninitialized value
 		Textures					mTextures;
 
 

@@ -153,7 +153,7 @@ void FirstCommandBucket::onInitialization()
 
 		// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
 		// -> If they are there, we really want to use them (performance and ease of use)
-		if (renderer->getCapabilities().uniformBuffer)
+		if (renderer->getCapabilities().maximumUniformBufferSize > 0)
 		{
 			// Create dynamic uniform buffer
 			mUniformBufferDynamicVs = mBufferManager->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);

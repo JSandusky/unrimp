@@ -65,7 +65,7 @@ UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
 UNIFORM_BUFFER_END
 UNIFORM_BUFFER_BEGIN(InstanceUniformBuffer, 2)
 	float4x4 ObjectSpaceToWorldSpaceMatrix;
-	int		 MaterialIndex;
+	int		 AssignedMaterialSlot;
 UNIFORM_BUFFER_END
 
 

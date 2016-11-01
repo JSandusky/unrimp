@@ -1,4 +1,4 @@
-/*********************************************************\
+﻿/*********************************************************\
  * Copyright (c) 2012-2016 Christian Ofenberg
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -19,6 +19,14 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferSlot.h"
+#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -28,14 +36,20 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline MaterialTechniqueId MaterialTechnique::getMaterialTechniqueId() const
+	MaterialUniformBufferSlot::MaterialUniformBufferSlot(MaterialResource& materialResource) :
+		mMaterialResourceManager(&materialResource.getResourceManager<MaterialResourceManager>()),
+		mMaterialResourceId(materialResource.getId()),
+		mAssignedMaterialPool(nullptr),
+		mAssignedMaterialSlot(getUninitialized<uint32_t>()),
+		mGlobalIndex(getUninitialized<int>()),
+		mDirty(false)
 	{
-		return mMaterialTechniqueId;
+		// Nothing here
 	}
 
-	inline MaterialBlueprintResourceId MaterialTechnique::getMaterialBlueprintResourceId() const
+	const MaterialResource& MaterialUniformBufferSlot::getMaterialResource() const
 	{
-		return mMaterialBlueprintResourceId;
+		return mMaterialResourceManager->getMaterialResources().getElementById(mMaterialResourceId);
 	}
 
 
