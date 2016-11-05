@@ -66,11 +66,11 @@ namespace RendererRuntime
 		materialBlueprintResourceListener.beginFillPass(mRendererRuntime, worldSpaceToViewSpaceTransform, mPassData);
 
 		// Get the pass uniform buffer containing the description of the element properties
-		MaterialBlueprintResource::UniformBuffer* passUniformBuffer = mMaterialBlueprintResource.getPassUniformBuffer();
+		const MaterialBlueprintResource::UniformBuffer* passUniformBuffer = mMaterialBlueprintResource.getPassUniformBuffer();
 		if (nullptr != passUniformBuffer)
 		{
 			// Startup the pass uniform buffer update
-			MaterialBlueprintResource::ScratchBuffer& scratchBuffer = passUniformBuffer->scratchBuffer;
+			MaterialBlueprintResource::ScratchBuffer& scratchBuffer = const_cast<MaterialBlueprintResource::ScratchBuffer&>(passUniformBuffer->scratchBuffer);	// TODO(co) "scratchBuffer" will be removed soon, so evil const-cast is OK for now
 			uint8_t* scratchBufferPointer = scratchBuffer.data();
 
 			{ // Fill the pass uniform buffer by using the material blueprint resource
@@ -166,7 +166,7 @@ namespace RendererRuntime
 	{
 		if (!mUniformBuffers.empty())
 		{
-			MaterialBlueprintResource::UniformBuffer* passUniformBuffer = mMaterialBlueprintResource.getPassUniformBuffer();
+			const MaterialBlueprintResource::UniformBuffer* passUniformBuffer = mMaterialBlueprintResource.getPassUniformBuffer();
 			if (nullptr != passUniformBuffer)
 			{
 				mRendererRuntime.getRenderer().setGraphicsRootDescriptorTable(passUniformBuffer->rootParameterIndex, mUniformBuffers[mCurrentUniformBufferIndex - 1]);

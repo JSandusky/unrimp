@@ -73,6 +73,11 @@ namespace RendererRuntime
 		return mUniformBuffers;
 	}
 
+	inline const MaterialBlueprintResource::TextureBuffers& MaterialBlueprintResource::getTextureBuffers() const
+	{
+		return mTextureBuffers;
+	}
+
 	inline const MaterialBlueprintResource::SamplerStates& MaterialBlueprintResource::getSamplerStates() const
 	{
 		return mSamplerStates;
@@ -83,19 +88,24 @@ namespace RendererRuntime
 		return mTextures;
 	}
 
-	inline MaterialBlueprintResource::UniformBuffer* MaterialBlueprintResource::getPassUniformBuffer() const
+	inline const MaterialBlueprintResource::UniformBuffer* MaterialBlueprintResource::getPassUniformBuffer() const
 	{
 		return mPassUniformBuffer;
 	}
 
-	inline MaterialBlueprintResource::UniformBuffer* MaterialBlueprintResource::getMaterialUniformBuffer() const
+	inline const MaterialBlueprintResource::UniformBuffer* MaterialBlueprintResource::getMaterialUniformBuffer() const
 	{
 		return mMaterialUniformBuffer;
 	}
 
-	inline MaterialBlueprintResource::UniformBuffer* MaterialBlueprintResource::getInstanceUniformBuffer() const
+	inline const MaterialBlueprintResource::UniformBuffer* MaterialBlueprintResource::getInstanceUniformBuffer() const
 	{
 		return mInstanceUniformBuffer;
+	}
+
+	inline const MaterialBlueprintResource::TextureBuffer* MaterialBlueprintResource::getInstanceTextureBuffer() const
+	{
+		return mInstanceTextureBuffer;
 	}
 
 	inline PassUniformBufferManager* MaterialBlueprintResource::getPassUniformBufferManager() const

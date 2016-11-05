@@ -115,6 +115,7 @@ namespace RendererToolkit
 			const rapidjson::Value& rapidJsonValueProperties = rapidJsonValueMaterialBlueprintAsset["Properties"];
 			const rapidjson::Value& rapidJsonValueResources = rapidJsonValueMaterialBlueprintAsset["Resources"];
 			const rapidjson::Value& rapidJsonValueUniformBuffers = rapidJsonValueResources["UniformBuffers"];
+			const rapidjson::Value& rapidJsonValueTextureBuffers = rapidJsonValueResources["TextureBuffers"];
 			const rapidjson::Value& rapidJsonValueSamplerStates = rapidJsonValueResources["SamplerStates"];
 			const rapidjson::Value& rapidJsonValueTextures = rapidJsonValueResources["Textures"];
 
@@ -134,6 +135,7 @@ namespace RendererToolkit
 				materialBlueprintHeader.numberOfShaderCombinationProperties			= static_cast<uint32_t>(visualImportanceOfShaderPropertiesVector.size());
 				materialBlueprintHeader.numberOfIntegerShaderCombinationProperties	= static_cast<uint32_t>(maximumIntegerValueOfShaderPropertiesVector.size());	// Each integer shader combination property must have a defined maximum value
 				materialBlueprintHeader.numberOfUniformBuffers						= rapidJsonValueUniformBuffers.MemberCount();
+				materialBlueprintHeader.numberOfTextureBuffers						= rapidJsonValueTextureBuffers.MemberCount();
 				materialBlueprintHeader.numberOfSamplerStates						= rapidJsonValueSamplerStates.MemberCount();
 				materialBlueprintHeader.numberOfTextures							= rapidJsonValueTextures.MemberCount();
 
@@ -160,6 +162,9 @@ namespace RendererToolkit
 			{ // Resources
 				// Uniform buffers
 				JsonMaterialBlueprintHelper::readUniformBuffers(input, rapidJsonValueUniformBuffers, outputFileStream, shaderProperties);
+
+				// Texture buffers
+				JsonMaterialBlueprintHelper::readTextureBuffers(rapidJsonValueTextureBuffers, outputFileStream, shaderProperties);
 
 				// Sampler states
 				JsonMaterialBlueprintHelper::readSamplerStates(rapidJsonValueSamplerStates, outputFileStream, shaderProperties);

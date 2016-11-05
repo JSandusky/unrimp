@@ -62,7 +62,7 @@ namespace
 			return (left.getMaterialPropertyId() < right.getMaterialPropertyId());
 		}
 
-		void optionalUniformBufferUsageProperty(const rapidjson::Value& rapidJsonValueUniformBuffer, const char* propertyName, RendererRuntime::MaterialBlueprintResource::UniformBufferUsage& value)
+		void optionalBufferUsageProperty(const rapidjson::Value& rapidJsonValueUniformBuffer, const char* propertyName, RendererRuntime::MaterialBlueprintResource::BufferUsage& value)
 		{
 			if (rapidJsonValueUniformBuffer.HasMember(propertyName))
 			{
@@ -71,8 +71,8 @@ namespace
 				const rapidjson::SizeType valueStringLength = rapidJsonValueUsage.GetStringLength();
 
 				// Define helper macros
-				#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = RendererRuntime::MaterialBlueprintResource::UniformBufferUsage::name;
-				#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = RendererRuntime::MaterialBlueprintResource::UniformBufferUsage::name;
+				#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = RendererRuntime::MaterialBlueprintResource::BufferUsage::name;
+				#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = RendererRuntime::MaterialBlueprintResource::BufferUsage::name;
 
 				// Evaluate value
 				IF_VALUE(UNKNOWN)
@@ -838,7 +838,7 @@ namespace RendererToolkit
 			{ // Write down the uniform buffer header
 				RendererRuntime::v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
 				uniformBufferHeader.rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueUniformBuffer["RootParameterIndex"].GetString(), shaderProperties);
-				detail::optionalUniformBufferUsageProperty(rapidJsonValueUniformBuffer, "UniformBufferUsage", uniformBufferHeader.uniformBufferUsage);
+				detail::optionalBufferUsageProperty(rapidJsonValueUniformBuffer, "BufferUsage", uniformBufferHeader.bufferUsage);
 				JsonHelper::optionalIntegerProperty(rapidJsonValueUniformBuffer, "NumberOfElements", uniformBufferHeader.numberOfElements);
 				uniformBufferHeader.numberOfElementProperties = elementProperties.size();
 				uniformBufferHeader.uniformBufferNumberOfBytes = numberOfBytesPerElement * uniformBufferHeader.numberOfElements;
@@ -847,6 +847,34 @@ namespace RendererToolkit
 
 			// Write down the uniform buffer element properties
 			outputFileStream.write(reinterpret_cast<const char*>(elementProperties.data()), sizeof(RendererRuntime::MaterialProperty) * elementProperties.size());
+		}
+	}
+
+	void JsonMaterialBlueprintHelper::readTextureBuffers(const rapidjson::Value& rapidJsonValueTextureBuffers, std::ofstream& outputFileStream, RendererRuntime::ShaderProperties& shaderProperties)
+	{
+		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTextureBuffers = rapidJsonValueTextureBuffers.MemberBegin(); rapidJsonMemberIteratorTextureBuffers != rapidJsonValueTextureBuffers.MemberEnd(); ++rapidJsonMemberIteratorTextureBuffers)
+		{
+			const rapidjson::Value& rapidJsonValueTextureBuffer = rapidJsonMemberIteratorTextureBuffers->value;
+
+			{ // Write down the texture buffer header
+				RendererRuntime::v1MaterialBlueprint::TextureBufferHeader textureBufferHeader;
+				textureBufferHeader.rootParameterIndex = ::detail::getIntegerFromInstructionString(rapidJsonValueTextureBuffer["RootParameterIndex"].GetString(), shaderProperties);
+				detail::optionalBufferUsageProperty(rapidJsonValueTextureBuffer, "BufferUsage", textureBufferHeader.bufferUsage);
+				{ // Value type and value
+					const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValueTextureBuffer);
+
+					// Get the reference value as string
+					static const uint32_t NAME_LENGTH = 128;
+					char referenceAsString[NAME_LENGTH];
+					memset(&referenceAsString[0], 0, sizeof(char) * NAME_LENGTH);
+					JsonHelper::optionalStringProperty(rapidJsonValueTextureBuffer, "Value", referenceAsString, NAME_LENGTH);
+
+					// Construct the material property value
+					const RendererRuntime::StringId referenceAsInteger(&referenceAsString[1]);	// Skip the '@'
+					textureBufferHeader.materialPropertyValue = RendererRuntime::MaterialProperty::materialPropertyValueFromReference(valueType, referenceAsInteger);
+				}
+				outputFileStream.write(reinterpret_cast<const char*>(&textureBufferHeader), sizeof(RendererRuntime::v1MaterialBlueprint::TextureBufferHeader));
+			}
 		}
 	}
 

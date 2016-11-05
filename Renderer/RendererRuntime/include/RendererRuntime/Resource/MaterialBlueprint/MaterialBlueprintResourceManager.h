@@ -92,7 +92,7 @@ namespace RendererRuntime
 		inline MaterialProperties& getGlobalMaterialProperties();
 		inline const MaterialProperties& getGlobalMaterialProperties() const;
 
-		inline InstanceUniformBufferManager& getInstanceUniformBufferManager();
+		inline InstanceUniformBufferManager& getInstanceUniformBufferManager() const;
 
 
 	//[-------------------------------------------------------]

@@ -247,6 +247,31 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	MaterialProperty::Usage MaterialBlueprintResource::getMaterialPropertyUsageFromBufferUsage(BufferUsage bufferUsage)
+	{
+		switch (bufferUsage)
+		{
+			case BufferUsage::UNKNOWN:
+				return MaterialProperty::Usage::UNKNOWN_REFERENCE;
+
+			case BufferUsage::PASS:
+				return MaterialProperty::Usage::PASS_REFERENCE;
+
+			case BufferUsage::MATERIAL:
+				return MaterialProperty::Usage::MATERIAL_REFERENCE;
+
+			case BufferUsage::INSTANCE:
+				return MaterialProperty::Usage::INSTANCE_REFERENCE;
+		}
+
+		// Error, we should never ever end up in here
+		return MaterialProperty::Usage::UNKNOWN_REFERENCE;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	void MaterialBlueprintResource::optimizeShaderProperties(ShaderProperties& shaderProperties) const
@@ -271,7 +296,8 @@ namespace RendererRuntime
 	bool MaterialBlueprintResource::isFullyLoaded() const
 	{
 		// Check uniform buffers
-		if (nullptr == mPassUniformBuffer || nullptr ==  mMaterialUniformBuffer || nullptr ==  mInstanceUniformBuffer)
+		// TODO(co) Has to be handled in another way later on, it's valid that there are no instance buffers
+		if (nullptr == mPassUniformBuffer || nullptr == mMaterialUniformBuffer || nullptr == mInstanceUniformBuffer || nullptr == mInstanceTextureBuffer)
 		{
 			// Not fully loaded
 			return false;
@@ -311,7 +337,7 @@ namespace RendererRuntime
 		for (size_t uniformBufferIndex = 0; uniformBufferIndex < numberOfUniformBuffers; ++uniformBufferIndex)
 		{
 			UniformBuffer& uniformBuffer = mUniformBuffers[uniformBufferIndex];
-			if (uniformBuffer.uniformBufferUsage == UniformBufferUsage::UNKNOWN)
+			if (uniformBuffer.bufferUsage == BufferUsage::UNKNOWN)
 			{
 				assert(1 == uniformBuffer.numberOfElements);
 
@@ -610,6 +636,7 @@ namespace RendererRuntime
 		mPassUniformBuffer(nullptr),
 		mMaterialUniformBuffer(nullptr),
 		mInstanceUniformBuffer(nullptr),
+		mInstanceTextureBuffer(nullptr),
 		mPassUniformBufferManager(nullptr),
 		mMaterialUniformBufferManager(nullptr)
 	{
@@ -645,6 +672,7 @@ namespace RendererRuntime
 		UniformBuffer* mPassUniformBuffer;		///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mMaterialUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
+		TextureBuffer* mInstanceTextureBuffer;	///< Can be a null pointer, don't destroy the instance
 		*/
 	}
 

@@ -147,7 +147,7 @@ namespace RendererRuntime
 					v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
 					inputFileStream.read(reinterpret_cast<char*>(&uniformBufferHeader), sizeof(v1MaterialBlueprint::UniformBufferHeader));
 					uniformBuffer.rootParameterIndex		 = uniformBufferHeader.rootParameterIndex;
-					uniformBuffer.uniformBufferUsage		 = uniformBufferHeader.uniformBufferUsage;
+					uniformBuffer.bufferUsage				 = uniformBufferHeader.bufferUsage;
 					uniformBuffer.numberOfElements			 = uniformBufferHeader.numberOfElements;
 					uniformBuffer.uniformBufferNumberOfBytes = uniformBufferHeader.uniformBufferNumberOfBytes;
 
@@ -155,6 +155,22 @@ namespace RendererRuntime
 					MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = uniformBuffer.uniformBufferElementProperties;
 					uniformBufferElementProperties.resize(uniformBufferHeader.numberOfElementProperties);
 					inputFileStream.read(reinterpret_cast<char*>(uniformBufferElementProperties.data()), sizeof(MaterialProperty) * uniformBufferHeader.numberOfElementProperties);
+				}
+			}
+
+			{ // Read in the texture buffers
+				MaterialBlueprintResource::TextureBuffers& textureBuffers = mMaterialBlueprintResource->mTextureBuffers;
+				textureBuffers.resize(materialBlueprintHeader.numberOfTextureBuffers);
+				for (uint32_t i = 0; i < materialBlueprintHeader.numberOfTextureBuffers; ++i)
+				{
+					MaterialBlueprintResource::TextureBuffer& textureBuffer = textureBuffers[i];
+
+					// Read in the texture buffer header
+					v1MaterialBlueprint::TextureBufferHeader textureBufferHeader;
+					inputFileStream.read(reinterpret_cast<char*>(&textureBufferHeader), sizeof(v1MaterialBlueprint::TextureBufferHeader));
+					textureBuffer.rootParameterIndex		 = textureBufferHeader.rootParameterIndex;
+					textureBuffer.bufferUsage				 = textureBufferHeader.bufferUsage;
+					textureBuffer.materialPropertyValue		 = textureBufferHeader.materialPropertyValue;
 				}
 			}
 
@@ -211,31 +227,41 @@ namespace RendererRuntime
 			}
 		}
 
-		{ // Create the uniform buffer renderer resources
+		{ // Gather ease-of-use direct access to resources
 			Renderer::IBufferManager& bufferManager = mRendererRuntime.getBufferManager();
 			MaterialBlueprintResource::UniformBuffers& uniformBuffers = mMaterialBlueprintResource->mUniformBuffers;
 			const size_t numberOfUniformBuffers = uniformBuffers.size();
 			for (size_t i = 0; i < numberOfUniformBuffers; ++i)
 			{
-				// Create the uniform buffer renderer resource (GPU alignment is handled by the renderer backend)
 				MaterialBlueprintResource::UniformBuffer& uniformBuffer = uniformBuffers[i];
 				uniformBuffer.scratchBuffer.resize(uniformBuffer.uniformBufferNumberOfBytes);
-
-				// Ease-of-use direct access
-				if (MaterialBlueprintResource::UniformBufferUsage::PASS == uniformBuffer.uniformBufferUsage)
+				if (MaterialBlueprintResource::BufferUsage::PASS == uniformBuffer.bufferUsage)
 				{
 					mMaterialBlueprintResource->mPassUniformBuffer = &uniformBuffer;
 				}
-				else if (MaterialBlueprintResource::UniformBufferUsage::MATERIAL == uniformBuffer.uniformBufferUsage)
+				else if (MaterialBlueprintResource::BufferUsage::MATERIAL == uniformBuffer.bufferUsage)
 				{
 					mMaterialBlueprintResource->mMaterialUniformBuffer = &uniformBuffer;
 				}
-				else if (MaterialBlueprintResource::UniformBufferUsage::INSTANCE == uniformBuffer.uniformBufferUsage)
+				else if (MaterialBlueprintResource::BufferUsage::INSTANCE == uniformBuffer.bufferUsage)
 				{
 					mMaterialBlueprintResource->mInstanceUniformBuffer = &uniformBuffer;
 
 					// TODO(co) "uniformBufferPtr" will be removed soon
 					uniformBuffer.uniformBufferPtr = bufferManager.createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+				}
+			}
+		}
+
+		{ // Gather ease-of-use direct access to resources
+			MaterialBlueprintResource::TextureBuffers& textureBuffers = mMaterialBlueprintResource->mTextureBuffers;
+			const size_t numberOfTextureBuffers = textureBuffers.size();
+			for (size_t i = 0; i < numberOfTextureBuffers; ++i)
+			{
+				MaterialBlueprintResource::TextureBuffer& textureBuffer = textureBuffers[i];
+				if (MaterialBlueprintResource::BufferUsage::INSTANCE == textureBuffer.bufferUsage)
+				{
+					mMaterialBlueprintResource->mInstanceTextureBuffer = &textureBuffer;
 				}
 			}
 		}

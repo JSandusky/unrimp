@@ -101,14 +101,14 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Uniform buffer usage
+		*    Uniform/texture buffer usage
 		*/
-		enum class UniformBufferUsage : uint8_t
+		enum class BufferUsage : uint8_t
 		{
-			UNKNOWN = 0,	///< Unknown uniform buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "UNKNOWN_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
-			PASS,			///< Pass uniform buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "PASS_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
-			MATERIAL,		///< Material uniform buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "MATERIAL_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
-			INSTANCE		///< Instance uniform buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "INSTANCE_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
+			UNKNOWN = 0,	///< Unknown buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "UNKNOWN_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
+			PASS,			///< Pass buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "PASS_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
+			MATERIAL,		///< Material buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "MATERIAL_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
+			INSTANCE		///< Instance buffer usage, supports the following "RendererRuntime::MaterialProperty::Usage": "INSTANCE_REFERENCE", "GLOBAL_REFERENCE" as well as properties with simple values
 		};
 
 		typedef std::vector<MaterialProperty> UniformBufferElementProperties;
@@ -117,13 +117,38 @@ namespace RendererRuntime
 		struct UniformBuffer
 		{
 			uint32_t					   rootParameterIndex;
-			UniformBufferUsage			   uniformBufferUsage;
+			BufferUsage					   bufferUsage;
 			uint32_t					   numberOfElements;
 			UniformBufferElementProperties uniformBufferElementProperties;
 			uint32_t					   uniformBufferNumberOfBytes;	///< Includes handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
-			ScratchBuffer				   scratchBuffer;
+			ScratchBuffer				   scratchBuffer;		// TODO(co) "scratchBuffer" will be removed soon
 			Renderer::IUniformBufferPtr	   uniformBufferPtr;	// TODO(co) "uniformBufferPtr" will be removed soon
 		};
+
+		struct TextureBuffer
+		{
+			uint32_t			  rootParameterIndex;
+			BufferUsage			  bufferUsage;
+			MaterialPropertyValue materialPropertyValue;
+
+			TextureBuffer() :
+				rootParameterIndex(getUninitialized<uint32_t>()),
+				bufferUsage(BufferUsage::UNKNOWN),
+				materialPropertyValue(MaterialPropertyValue::fromUnknown())
+			{
+				// Nothing here
+			}
+
+			TextureBuffer(uint32_t rootParameterIndex, BufferUsage bufferUsage, const MaterialPropertyValue& _materialPropertyValue) :
+				rootParameterIndex(rootParameterIndex),
+				bufferUsage(bufferUsage),
+				materialPropertyValue(MaterialProperty(0, getMaterialPropertyUsageFromBufferUsage(bufferUsage), _materialPropertyValue))
+			{
+				// Nothing here
+			}
+
+		};
+		typedef std::vector<TextureBuffer> TextureBuffers;
 
 		struct SamplerState
 		{
@@ -152,6 +177,13 @@ namespace RendererRuntime
 		typedef std::vector<UniformBuffer> UniformBuffers;
 		typedef std::vector<SamplerState>  SamplerStates;
 		typedef std::vector<Texture>	   Textures;
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		static MaterialProperty::Usage getMaterialPropertyUsageFromBufferUsage(BufferUsage bufferUsage);
 
 
 	//[-------------------------------------------------------]
@@ -262,6 +294,15 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Return the texture buffers
+		*
+		*  @return
+		*    The texture buffers
+		*/
+		inline const TextureBuffers& getTextureBuffers() const;
+
+		/**
+		*  @brief
 		*    Return the sampler states
 		*
 		*  @return
@@ -288,7 +329,7 @@ namespace RendererRuntime
 		*  @return
 		*    The pass uniform buffer, can be a null pointer, don't destroy the instance
 		*/
-		inline UniformBuffer* getPassUniformBuffer() const;
+		inline const UniformBuffer* getPassUniformBuffer() const;
 
 		/**
 		*  @brief
@@ -297,7 +338,7 @@ namespace RendererRuntime
 		*  @return
 		*    The material uniform buffer, can be a null pointer, don't destroy the instance
 		*/
-		inline UniformBuffer* getMaterialUniformBuffer() const;
+		inline const UniformBuffer* getMaterialUniformBuffer() const;
 
 		/**
 		*  @brief
@@ -306,7 +347,16 @@ namespace RendererRuntime
 		*  @return
 		*    The instance uniform buffer, can be a null pointer, don't destroy the instance
 		*/
-		inline UniformBuffer* getInstanceUniformBuffer() const;
+		inline const UniformBuffer* getInstanceUniformBuffer() const;
+
+		/**
+		*  @brief
+		*    Return the instance texture buffer
+		*
+		*  @return
+		*    The instance texture buffer, can be a null pointer, don't destroy the instance
+		*/
+		inline const TextureBuffer* getInstanceTextureBuffer() const;
 
 		//[-------------------------------------------------------]
 		//[ Buffer manager                                        ]
@@ -421,12 +471,14 @@ namespace RendererRuntime
 		ShaderBlueprintResourceId			 mShaderBlueprintResourceId[NUMBER_OF_SHADER_TYPES];
 		// Resource
 		UniformBuffers mUniformBuffers;
+		TextureBuffers mTextureBuffers;
 		SamplerStates  mSamplerStates;
 		Textures	   mTextures;
 		// Ease-of-use direct access
 		UniformBuffer* mPassUniformBuffer;		///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mMaterialUniformBuffer;	///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mInstanceUniformBuffer;	///< Can be a null pointer, don't destroy the instance
+		TextureBuffer* mInstanceTextureBuffer;	///< Can be a null pointer, don't destroy the instance
 		// Buffer manager
 		PassUniformBufferManager*	  mPassUniformBufferManager;		///< Pass uniform buffer manager, can be a null pointer, destroy the instance if you no longer need it
 		MaterialUniformBufferManager* mMaterialUniformBufferManager;	///< Materials uniform buffer manager, can be a null pointer, destroy the instance if you no longer need it

@@ -85,7 +85,7 @@ namespace RendererRuntime
 		mBufferSize(0),
 		mLastBoundPool(nullptr)
 	{
-		MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
+		const MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
 		assert(nullptr != materialUniformBuffer);
 
 		// Get the buffer size
@@ -193,7 +193,7 @@ namespace RendererRuntime
 		if (mLastBoundPool != materialUniformBufferSlot.mAssignedMaterialPool)
 		{
 			mLastBoundPool = static_cast<BufferPool*>(materialUniformBufferSlot.mAssignedMaterialPool);
-			MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
+			const MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
 			assert(nullptr != materialUniformBuffer);
 			rendererRuntime.getRenderer().setGraphicsRootDescriptorTable(materialUniformBuffer->rootParameterIndex, mLastBoundPool->uniformBuffer);
 		}
@@ -206,7 +206,7 @@ namespace RendererRuntime
 	void MaterialUniformBufferManager::uploadDirtySlots()
 	{
 		assert(!mDirtyMaterialUniformBufferSlots.empty());
-		MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
+		const MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
 		assert(nullptr != materialUniformBuffer);
 		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = mMaterialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>();
 		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
@@ -215,7 +215,7 @@ namespace RendererRuntime
 
 		// Update the scratch buffer
 		Renderer::IUniformBuffer* uniformBuffer = nullptr;	// TODO(co) Implement proper uniform buffer handling and only update dirty sections
-		MaterialBlueprintResource::ScratchBuffer& scratchBuffer = materialUniformBuffer->scratchBuffer;
+		MaterialBlueprintResource::ScratchBuffer& scratchBuffer = const_cast<MaterialBlueprintResource::ScratchBuffer&>(materialUniformBuffer->scratchBuffer);	// TODO(co) "scratchBuffer" will be removed soon, so evil const-cast is OK for now
 		{
 			const MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = materialUniformBuffer->uniformBufferElementProperties;
 			const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();

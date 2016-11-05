@@ -68,6 +68,7 @@ namespace RendererRuntime
 				uint32_t numberOfShaderCombinationProperties;
 				uint32_t numberOfIntegerShaderCombinationProperties;
 				uint32_t numberOfUniformBuffers;
+				uint32_t numberOfTextureBuffers;
 				uint32_t numberOfSamplerStates;
 				uint32_t numberOfTextures;
 			};
@@ -82,11 +83,26 @@ namespace RendererRuntime
 
 			struct UniformBufferHeader
 			{
-				uint32_t									  rootParameterIndex;
-				MaterialBlueprintResource::UniformBufferUsage uniformBufferUsage;
-				uint32_t									  numberOfElements;
-				uint32_t									  numberOfElementProperties;
-				uint32_t									  uniformBufferNumberOfBytes;	///< Includes handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+				uint32_t							   rootParameterIndex;
+				MaterialBlueprintResource::BufferUsage bufferUsage;
+				uint32_t							   numberOfElements;
+				uint32_t							   numberOfElementProperties;
+				uint32_t							   uniformBufferNumberOfBytes;	///< Includes handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+			};
+
+			struct TextureBufferHeader
+			{
+				uint32_t							   rootParameterIndex;
+				MaterialBlueprintResource::BufferUsage bufferUsage;
+				MaterialPropertyValue				   materialPropertyValue;
+
+				TextureBufferHeader() :
+					rootParameterIndex(getUninitialized<uint32_t>()),
+					bufferUsage(MaterialBlueprintResource::BufferUsage::UNKNOWN),
+					materialPropertyValue(MaterialPropertyValue::fromUnknown())
+				{
+					// Nothing here
+				}
 			};
 
 			struct SamplerState : public Renderer::SamplerState

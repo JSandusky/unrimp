@@ -104,11 +104,12 @@
 					{
 						"0":
 						{
-							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
+							"RangeType": "SRV",
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "InstanceTextureBuffer"
 						}
 					},
-					"ShaderVisibility": "FRAGMENT"
+					"ShaderVisibility": "VERTEX"
 				},
 				"4":
 				{
@@ -117,10 +118,8 @@
 					{
 						"0":
 						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "DiffuseMap",
-							"SamplerRootParameterIndex": "3"
+							"RangeType": "SAMPLER",
+							"BaseShaderRegister": "0"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -133,9 +132,9 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "EmissiveMap",
-							"SamplerRootParameterIndex": "3"
+							"BaseShaderRegister": "0",
+							"BaseShaderRegisterName": "DiffuseMap",
+							"SamplerRootParameterIndex": "4"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -148,9 +147,9 @@
 						"0":
 						{
 							"RangeType": "SRV",
-							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "NormalMap",
-							"SamplerRootParameterIndex": "3"
+							"BaseShaderRegister": "1",
+							"BaseShaderRegisterName": "EmissiveMap",
+							"SamplerRootParameterIndex": "4"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -163,9 +162,24 @@
 						"0":
 						{
 							"RangeType": "SRV",
+							"BaseShaderRegister": "2",
+							"BaseShaderRegisterName": "NormalMap",
+							"SamplerRootParameterIndex": "4"
+						}
+					},
+					"ShaderVisibility": "FRAGMENT"
+				},
+				"8":
+				{
+					"ParameterType": "DESCRIPTOR_TABLE",
+					"DescriptorRanges":
+					{
+						"0":
+						{
+							"RangeType": "SRV",
 							"BaseShaderRegister": "3",
 							"BaseShaderRegisterName": "SpecularMap",
-							"SamplerRootParameterIndex": "3"
+							"SamplerRootParameterIndex": "4"
 						}
 					},
 					"ShaderVisibility": "FRAGMENT"
@@ -319,7 +333,7 @@
 				"PassUniformBuffer":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"UniformBufferUsage": "PASS",
+					"BufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
@@ -364,7 +378,7 @@
 				"MaterialUniformBuffer":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"UniformBufferUsage": "MATERIAL",
+					"BufferUsage": "MATERIAL",
 					"NumberOfElements": "2",
 					"ElementProperties":
 					{
@@ -385,7 +399,7 @@
 				"InstanceUniformBuffer":
 				{
 					"RootParameterIndex": "@counter(RootParameterIndex)",
-					"UniformBufferUsage": "INSTANCE",
+					"BufferUsage": "INSTANCE",
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
@@ -402,6 +416,16 @@
 							"Value": "@ASSIGNED_MATERIAL_SLOT"
 						}
 					}
+				}
+			},
+			"TextureBuffers":
+			{
+				"InstanceTextureBuffer":
+				{
+					"RootParameterIndex": "@counter(RootParameterIndex)",
+					"BufferUsage": "INSTANCE",
+					"ValueType": "FLOAT_4",
+					"Value": "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
 				}
 			},
 			"SamplerStates":

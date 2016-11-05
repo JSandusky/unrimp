@@ -55,7 +55,7 @@ namespace RendererRuntime
 		return mGlobalMaterialProperties;
 	}
 
-	inline InstanceUniformBufferManager& MaterialBlueprintResourceManager::getInstanceUniformBufferManager()
+	inline InstanceUniformBufferManager& MaterialBlueprintResourceManager::getInstanceUniformBufferManager() const
 	{
 		// We know this pointer must always be valid
 		assert(nullptr != mInstanceUniformBufferManager);
