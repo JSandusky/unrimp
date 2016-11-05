@@ -95,7 +95,7 @@
 							"BaseShaderRegisterName": "InstanceUniformBuffer"
 						}
 					},
-					"ShaderVisibility": "ALL"
+					"ShaderVisibility": "VERTEX"
 				},
 				"3":
 				{
@@ -403,17 +403,11 @@
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
-						"ObjectSpaceToWorldSpaceMatrix":
+						"InstanceIndicesArray":
 						{
 							"Usage": "INSTANCE_REFERENCE",
-							"ValueType": "FLOAT_4_4",
-							"Value": "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX"
-						},
-						"AssignedMaterialSlot":
-						{
-							"Usage": "INSTANCE_REFERENCE",
-							"ValueType": "INTEGER",
-							"Value": "@ASSIGNED_MATERIAL_SLOT"
+							"ValueType": "INTEGER_4",
+							"Value": "@INSTANCE_INDICES"
 						}
 					}
 				}

@@ -55,8 +55,8 @@ namespace
 		#define DEFINE_CONSTANT(name) static const RendererRuntime::StringId name(#name);
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
-			DEFINE_CONSTANT(OBJECT_SPACE_TO_WORLD_SPACE_MATRIX)
-			DEFINE_CONSTANT(ASSIGNED_MATERIAL_SLOT)
+			DEFINE_CONSTANT(INSTANCE_INDICES)
+			DEFINE_CONSTANT(WORLD_POSITION_MATERIAL_INDEX)
 		#undef DEFINE_CONSTANT
 
 
@@ -162,16 +162,37 @@ namespace RendererRuntime
 		bool valueFilled = true;
 
 		// Resolve the reference value
-		if (::detail::OBJECT_SPACE_TO_WORLD_SPACE_MATRIX == referenceValue)
+		if (::detail::INSTANCE_INDICES == referenceValue)
 		{
-			glm::mat4 objectSpaceToWorldSpaceMatrix;
-			mObjectSpaceToWorldSpaceTransform->getAsMatrix(objectSpaceToWorldSpaceMatrix);
-			memcpy(buffer, glm::value_ptr(objectSpaceToWorldSpaceMatrix), numberOfBytes);
+			assert(sizeof(uint32_t) * 4 == numberOfBytes);
+			uint32_t* integerBuffer = reinterpret_cast<uint32_t*>(buffer);
+
+			// 0 = x = The instance texture buffer start index
+			integerBuffer[0] = 0;
+
+			// 1 = y = The assigned material slot inside the material uniform buffer
+			integerBuffer[1] = mMaterialTechnique->getAssignedMaterialSlot();
+
+			// 2 = z = The custom parameters start index inside the instance texture buffer
+			integerBuffer[2] = 0;
+
+			// 3 = w = Unused
+			integerBuffer[3] = 0;
 		}
-		else if (::detail::ASSIGNED_MATERIAL_SLOT == referenceValue)
+		else if (::detail::WORLD_POSITION_MATERIAL_INDEX == referenceValue)
 		{
-			const int assignedMaterialSlot = static_cast<int>(mMaterialTechnique->getAssignedMaterialSlot());
-			memcpy(buffer, &assignedMaterialSlot, numberOfBytes);
+			assert(sizeof(uint32_t) * 4 == numberOfBytes);
+			uint32_t* integerBuffer = reinterpret_cast<uint32_t*>(buffer);
+
+			// 0 = World space x position
+			// 1 = World space y position
+			// 2 = World space z position
+			*reinterpret_cast<float*>(integerBuffer)	 = mObjectSpaceToWorldSpaceTransform->position.x;
+			*reinterpret_cast<float*>(integerBuffer + 1) = mObjectSpaceToWorldSpaceTransform->position.y;
+			*reinterpret_cast<float*>(integerBuffer + 2) = mObjectSpaceToWorldSpaceTransform->position.z;
+
+			// 3 = w = The assigned material slot inside the material uniform buffer
+			integerBuffer[3] = mMaterialTechnique->getAssignedMaterialSlot();
 		}
 		else
 		{

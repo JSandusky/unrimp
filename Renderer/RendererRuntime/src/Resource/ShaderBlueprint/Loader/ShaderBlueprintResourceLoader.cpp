@@ -24,7 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintResourceLoader.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Loader/ShaderBlueprintFileFormat.h"
-#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
+#include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
@@ -131,6 +131,9 @@ namespace RendererRuntime
 				materialBlueprintResource->getPipelineStateCacheManager().clearCache();
 				materialBlueprintResource->getPipelineStateCacheManager().getProgramCacheManager().clearCache();
 			}
+
+			// TODO(co) Do only clear the influenced shader cache entries
+			mRendererRuntime.getShaderBlueprintResourceManager().getShaderCacheManager().clearCache();
 		}
 	}
 

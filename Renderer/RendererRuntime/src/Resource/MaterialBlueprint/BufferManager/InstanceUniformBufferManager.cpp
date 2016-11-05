@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
+#include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -42,7 +43,10 @@ namespace
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		static uint32_t DEFAULT_UNIFORM_BUFFER_NUMBER_OF_BYTES = 64 * 1024;		// 64 KiB
-		static uint32_t DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES = 512 * 1024;	// 512 KiB
+
+		// TODO(co) Add support for persistent mapped buffers. For now, the big picture has to be OK so first focus on that.
+		static uint32_t DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES = 64 * 1024;	// 64 KiB
+		// static uint32_t DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES = 512 * 1024;	// 512 KiB
 
 
 //[-------------------------------------------------------]
@@ -67,11 +71,15 @@ namespace RendererRuntime
 		mUniformBuffer(nullptr),
 		mTextureBuffer(nullptr)
 	{
-		// Create uniform and texture buffer instances
 		Renderer::IBufferManager& bufferManager = rendererRuntime.getBufferManager();
-		mScratchBuffer.resize(std::min(rendererRuntime.getRenderer().getCapabilities().maximumUniformBufferSize, ::detail::DEFAULT_UNIFORM_BUFFER_NUMBER_OF_BYTES));
-		mUniformBuffer = bufferManager.createUniformBuffer(mScratchBuffer.size(), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-		mTextureBuffer = bufferManager.createTextureBuffer(std::min(rendererRuntime.getRenderer().getCapabilities().maximumTextureBufferSize, ::detail::DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES), Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+
+		// Create uniform buffer instance
+		mUniformScratchBuffer.resize(std::min(rendererRuntime.getRenderer().getCapabilities().maximumUniformBufferSize, ::detail::DEFAULT_UNIFORM_BUFFER_NUMBER_OF_BYTES));
+		mUniformBuffer = bufferManager.createUniformBuffer(mUniformScratchBuffer.size(), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+
+		// Create texture buffer instance
+		mTextureScratchBuffer.resize(std::min(rendererRuntime.getRenderer().getCapabilities().maximumTextureBufferSize, ::detail::DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES));
+		mTextureBuffer = bufferManager.createTextureBuffer(mTextureScratchBuffer.size(), Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 	}
 
 	InstanceUniformBufferManager::~InstanceUniformBufferManager()
@@ -97,8 +105,8 @@ namespace RendererRuntime
 		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = materialBlueprintResourceManager.getMaterialBlueprintResourceListener();
 		materialBlueprintResourceListener.beginFillInstance(passUniformBufferManager.getPassData(), objectSpaceToWorldSpaceTransform, materialTechnique);
 
-		{ // Update the scratch buffer
-			uint8_t* scratchBufferPointer = mScratchBuffer.data();
+		{ // Update the uniform scratch buffer
+			uint8_t* scratchBufferPointer = mUniformScratchBuffer.data();
 			const MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = instanceUniformBuffer->uniformBufferElementProperties;
 			const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
 			for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
@@ -162,8 +170,18 @@ namespace RendererRuntime
 			}
 		}
 
-		// Update the uniform buffer by using our scratch buffer
-		mUniformBuffer->copyDataFrom(mScratchBuffer.size(), mScratchBuffer.data());
+		{ // Update the texture scratch buffer
+			// TODO(co) Check "InstanceTextureBuffer" value, "@OBJECT_SPACE_TO_WORLD_SPACE_MATRIX" here
+			float* scratchBufferPointer = reinterpret_cast<float*>(mTextureScratchBuffer.data());
+			glm::mat4 objectSpaceToWorldSpaceMatrix;
+			objectSpaceToWorldSpaceTransform.getAsMatrix(objectSpaceToWorldSpaceMatrix);
+			objectSpaceToWorldSpaceMatrix = glm::transpose(objectSpaceToWorldSpaceMatrix);
+			memcpy(scratchBufferPointer, glm::value_ptr(objectSpaceToWorldSpaceMatrix), sizeof(float) * 4 * 4);
+		}
+
+		// Update the uniform and texture buffer by using our scratch buffer
+		mUniformBuffer->copyDataFrom(mUniformScratchBuffer.size(), mUniformScratchBuffer.data());
+		mTextureBuffer->copyDataFrom(mTextureScratchBuffer.size(), mTextureScratchBuffer.data());
 	}
 
 	void InstanceUniformBufferManager::bindToRenderer(const MaterialBlueprintResource& materialBlueprintResource)

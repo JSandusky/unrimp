@@ -129,7 +129,8 @@ namespace RendererRuntime
 		IRendererRuntime&		  mRendererRuntime;	///< Renderer runtime instance to use
 		Renderer::IUniformBuffer* mUniformBuffer;	///< Uniform buffer instance, always valid
 		Renderer::ITextureBuffer* mTextureBuffer;	///< Texture buffer instance, always valid
-		ScratchBuffer			  mScratchBuffer;
+		ScratchBuffer			  mUniformScratchBuffer;
+		ScratchBuffer			  mTextureScratchBuffer;
 
 
 	};

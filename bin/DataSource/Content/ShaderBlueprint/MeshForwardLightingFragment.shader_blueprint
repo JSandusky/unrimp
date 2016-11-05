@@ -42,23 +42,28 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)			// Texture coordinate
-	INPUT_TEXTURE_COORDINATE(float3, TangentFrame0VS, 1)	// Tangent frame
-	INPUT_TEXTURE_COORDINATE(float3, TangentFrame1VS, 2)	// Tangent frame
-	INPUT_TEXTURE_COORDINATE(float3, TangentFrame2VS, 3)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(uint,   AssignedMaterialSlotVS, 0)	// The assigned material slot inside the material uniform buffer
+	INPUT_TEXTURE_COORDINATE				(float2, TexCoordVS,			 1)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame0VS,		 2)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame1VS,		 3)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame2VS,		 4)	// Tangent frame
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
 OUTPUT_END
 
 // Uniform buffers
-UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+struct PassDataStruct
+{
 	float4x4 WorldSpaceToViewSpaceMatrix;
 	float4x4 WorldSpaceToClipSpaceMatrix;
 	float3	 ViewSpaceSunLightDirection;
 	float	 Wetness;
 	float3	 SunLightColor;
 	float	 StaticPropertyTest;
+};
+UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 struct Material
 {
@@ -67,10 +72,6 @@ struct Material
 };
 UNIFORM_BUFFER_BEGIN(MaterialUniformBuffer, 1)
 	Material Materials[@insertpiece(MaximumNumberOfMaterials)];
-UNIFORM_BUFFER_END
-UNIFORM_BUFFER_BEGIN(InstanceUniformBuffer, 2)
-	float4x4 ObjectSpaceToWorldSpaceMatrix;
-	int		 AssignedMaterialSlot;
 UNIFORM_BUFFER_END
 
 // Samplers
@@ -99,13 +100,13 @@ SAMPLER_STATE(SamplerLinear, 0)
 		// Perform standard Blinn-Phong diffuse and specular lighting
 
 		// Calculate the diffuse lighting
-		float diffuseLightFactor = max(dot(normal, ViewSpaceSunLightDirection), 0.0f);
-		float3 diffuseLightColor = SunLightColor * diffuseLightFactor;
+		float diffuseLightFactor = max(dot(normal, PassData.ViewSpaceSunLightDirection), 0.0f);
+		float3 diffuseLightColor = PassData.SunLightColor * diffuseLightFactor;
 
 		// Calculate the specular lighting
-		float3 viewSpaceHalfVector = normalize(ViewSpaceSunLightDirection + ViewSpaceViewVector);
+		float3 viewSpaceHalfVector = normalize(PassData.ViewSpaceSunLightDirection + ViewSpaceViewVector);
 		float specularLightFactor = (diffuseLightFactor > 0.0f) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0f), 128.0f) : 0.0f;
-		float3 specularLightColor = Wetness * SunLightColor * specularLightFactor;
+		float3 specularLightColor = PassData.Wetness * PassData.SunLightColor * specularLightFactor;
 	@end
 @end
 @property(!Lighting)
@@ -121,7 +122,7 @@ SAMPLER_STATE(SamplerLinear, 0)
 //[-------------------------------------------------------]
 MAIN_BEGIN
 	// Get the used material
-	Material material = Materials[AssignedMaterialSlot];
+	Material material = Materials[MAIN_INPUT(AssignedMaterialSlotVS)];
 
 	// Build in variables
 	float3 ViewSpaceViewVector = float3(0.0f, 0.0f, 1.0f);	// In view space, we always look along the positive z-axis

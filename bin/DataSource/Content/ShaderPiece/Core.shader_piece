@@ -26,7 +26,10 @@
 	@piece(SetCrossPlatformSettings)
 		// Shader attribute input
 		#define INPUT_BEGIN struct SHADER_INPUT {
-			#define INPUT_VERTEX_DRAW_ID uint drawId : DRAWID;	// "DRAWID" is a special vertex attribute semantic introduced
+			// TODO(co) Add "DRAWID" semantic
+			#define INPUT_VERTEX_DRAW_ID	// "DRAWID" is a special vertex attribute semantic introduced
+			//#define INPUT_VERTEX_DRAW_ID uint drawId : DRAWID;	// "DRAWID" is a special vertex attribute semantic introduced
+
 			#define INPUT_VERTEX_POSITION(type, name) type name : POSITION;
 			#define INPUT_VERTEX_COLOR(type, name) type name : COLOR;
 			#define INPUT_VERTEX_NORMAL(type, name) type name : NORMAL;
@@ -49,7 +52,11 @@
 		#define MAIN_BEGIN SHADER_OUTPUT main(SHADER_INPUT ShaderInput) { SHADER_OUTPUT shaderOutput;
 		#define MAIN_BEGIN_NO_OUTPUT void main(SHADER_INPUT ShaderInput) {
 			#define MAIN_INPUT(name) ShaderInput.name
-			#define MAIN_INPUT_DRAW_ID ShaderInput.drawId
+
+			// TODO(co) Add "DRAWID" semantic
+			#define MAIN_INPUT_DRAW_ID 0
+			// #define MAIN_INPUT_DRAW_ID ShaderInput.drawId
+
 			#define MAIN_OUTPUT(name) shaderOutput.name
 			#define MAIN_OUTPUT_POSITION shaderOutput.OutputClipSpacePosition
 			#define MAIN_OUTPUT_COLOR(index) shaderOutput.OutputColor##index
@@ -60,8 +67,8 @@
 		// Math
 		#define LERP(a, b, t) lerp(a, b, t)
 		#define SATURATE(a) saturate(a)
-		#define ROW_MATRIX_3x3(r0, r1, r2) mat3(r0, r1, r2)
-		#define ROW_MATRIX_4x4(r0, r1, r2, r3) mat4(r0, r1, r2, r3)
+		#define ROW_MATRIX_3x3(r0, r1, r2) float3x3(r0, r1, r2)
+		#define ROW_MATRIX_4x4(r0, r1, r2, r3) float4x4(r0, r1, r2, r3)
 		#define MATRIX_MUL(m, v) mul(m, v)
 		#define CAST_TO(a, b) (b)(a)
 		#define DDX(x) ddx(x)
