@@ -67,6 +67,7 @@ namespace RendererRuntime
 		friend class PassUniformBufferManager;		///< Is calling the private interface methods
 		friend class MaterialBlueprintResource;		///< Is calling the private interface methods
 		friend class MaterialUniformBufferManager;	///< Is calling the private interface methods
+		friend class InstanceUniformBufferManager;	///< Is calling the private interface methods
 
 
 	//[-------------------------------------------------------]
@@ -111,7 +112,7 @@ namespace RendererRuntime
 		virtual bool fillMaterialValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
 
 		// TODO(co) It might make sense to remove those instance methods from the interface and directly hard-code them for performance reasons. Profiling later on with real world scenes will show.
-		virtual void beginFillInstance(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique) = 0;
+		virtual void beginFillInstance(const PassUniformBufferManager::PassData& passData, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique) = 0;
 		virtual bool fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) = 0;
 
 

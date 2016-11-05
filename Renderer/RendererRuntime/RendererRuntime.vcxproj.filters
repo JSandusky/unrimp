@@ -456,9 +456,6 @@
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassUniformBufferManager.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\InstanceUniformBufferManager.inl">
-      <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferSlot.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </None>

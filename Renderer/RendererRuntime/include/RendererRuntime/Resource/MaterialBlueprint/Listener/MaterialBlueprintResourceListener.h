@@ -91,7 +91,7 @@ namespace RendererRuntime
 		virtual bool fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
 		inline virtual void beginFillMaterial() override;
 		inline virtual bool fillMaterialValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
-		inline virtual void beginFillInstance(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique) override;
+		inline virtual void beginFillInstance(const PassUniformBufferManager::PassData& passData, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique) override;
 		virtual bool fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes) override;
 
 

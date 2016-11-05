@@ -41,8 +41,6 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class Transform;
-	class MaterialTechnique;
 	class PassUniformBufferManager;
 	class MaterialUniformBufferManager;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
@@ -112,7 +110,6 @@ namespace RendererRuntime
 		};
 
 		typedef std::vector<MaterialProperty> UniformBufferElementProperties;
-		typedef std::vector<uint8_t> ScratchBuffer;
 
 		struct UniformBuffer
 		{
@@ -121,8 +118,6 @@ namespace RendererRuntime
 			uint32_t					   numberOfElements;
 			UniformBufferElementProperties uniformBufferElementProperties;
 			uint32_t					   uniformBufferNumberOfBytes;	///< Includes handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
-			ScratchBuffer				   scratchBuffer;		// TODO(co) "scratchBuffer" will be removed soon
-			Renderer::IUniformBufferPtr	   uniformBufferPtr;	// TODO(co) "uniformBufferPtr" will be removed soon
 		};
 
 		struct TextureBuffer
@@ -385,29 +380,6 @@ namespace RendererRuntime
 		// TODO(co) Asynchronous loading completion, we might want to move this into "RendererRuntime::IResource"
 		RENDERERRUNTIME_API_EXPORT bool isFullyLoaded() const;
 		RENDERERRUNTIME_API_EXPORT void enforceFullyLoaded();
-
-		/**
-		*  @brief
-		*    Fill the unknown uniform buffers
-		*
-		*  @notes
-		*    - Stick to pass, material and instance uniform buffers and avoid unknown uniform buffers whenever possible
-		*/
-		RENDERERRUNTIME_API_EXPORT void fillUnknownUniformBuffers();
-
-		/**
-		*  @brief
-		*    Fill the instance uniform buffer
-		*
-		*  @param[in] objectSpaceToWorldSpaceTransform
-		*    Object space to world space transform
-		*  @param[in] materialTechnique
-		*    Used material technique
-		*
-		*  @todo
-		*    - TODO(co) This is just a placeholder implementation until "RendererRuntime::InstanceUniformBufferManager" is ready
-		*/
-		RENDERERRUNTIME_API_EXPORT void fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique);
 
 		/**
 		*  @brief

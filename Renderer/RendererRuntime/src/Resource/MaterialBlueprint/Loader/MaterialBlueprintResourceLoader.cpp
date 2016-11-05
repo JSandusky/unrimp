@@ -228,27 +228,28 @@ namespace RendererRuntime
 		}
 
 		{ // Gather ease-of-use direct access to resources
-			Renderer::IBufferManager& bufferManager = mRendererRuntime.getBufferManager();
 			MaterialBlueprintResource::UniformBuffers& uniformBuffers = mMaterialBlueprintResource->mUniformBuffers;
 			const size_t numberOfUniformBuffers = uniformBuffers.size();
 			for (size_t i = 0; i < numberOfUniformBuffers; ++i)
 			{
 				MaterialBlueprintResource::UniformBuffer& uniformBuffer = uniformBuffers[i];
-				uniformBuffer.scratchBuffer.resize(uniformBuffer.uniformBufferNumberOfBytes);
-				if (MaterialBlueprintResource::BufferUsage::PASS == uniformBuffer.bufferUsage)
+				switch (uniformBuffer.bufferUsage)
 				{
-					mMaterialBlueprintResource->mPassUniformBuffer = &uniformBuffer;
-				}
-				else if (MaterialBlueprintResource::BufferUsage::MATERIAL == uniformBuffer.bufferUsage)
-				{
-					mMaterialBlueprintResource->mMaterialUniformBuffer = &uniformBuffer;
-				}
-				else if (MaterialBlueprintResource::BufferUsage::INSTANCE == uniformBuffer.bufferUsage)
-				{
-					mMaterialBlueprintResource->mInstanceUniformBuffer = &uniformBuffer;
+					case MaterialBlueprintResource::BufferUsage::UNKNOWN:
+						// Nothing here
+						break;
 
-					// TODO(co) "uniformBufferPtr" will be removed soon
-					uniformBuffer.uniformBufferPtr = bufferManager.createUniformBuffer(uniformBuffer.uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+					case MaterialBlueprintResource::BufferUsage::PASS:
+						mMaterialBlueprintResource->mPassUniformBuffer = &uniformBuffer;
+						break;
+
+					case MaterialBlueprintResource::BufferUsage::MATERIAL:
+						mMaterialBlueprintResource->mMaterialUniformBuffer = &uniformBuffer;
+						break;
+
+					case MaterialBlueprintResource::BufferUsage::INSTANCE:
+						mMaterialBlueprintResource->mInstanceUniformBuffer = &uniformBuffer;
+						break;
 				}
 			}
 		}

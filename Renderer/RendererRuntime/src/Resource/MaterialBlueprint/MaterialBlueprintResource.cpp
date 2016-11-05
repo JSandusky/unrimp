@@ -26,7 +26,6 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialUniformBufferManager.h"
-#include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
@@ -325,177 +324,6 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialBlueprintResource::fillUnknownUniformBuffers()
-	{
-		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = getResourceManager<MaterialBlueprintResourceManager>();
-		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
-
-		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = materialBlueprintResourceManager.getMaterialBlueprintResourceListener();
-		materialBlueprintResourceListener.beginFillUnknown();
-
-		const size_t numberOfUniformBuffers = mUniformBuffers.size();
-		for (size_t uniformBufferIndex = 0; uniformBufferIndex < numberOfUniformBuffers; ++uniformBufferIndex)
-		{
-			UniformBuffer& uniformBuffer = mUniformBuffers[uniformBufferIndex];
-			if (uniformBuffer.bufferUsage == BufferUsage::UNKNOWN)
-			{
-				assert(1 == uniformBuffer.numberOfElements);
-
-				// Update the scratch buffer
-				ScratchBuffer& scratchBuffer = uniformBuffer.scratchBuffer;
-				{
-					uint8_t* scratchBufferPointer = scratchBuffer.data();
-					const UniformBufferElementProperties& uniformBufferElementProperties = uniformBuffer.uniformBufferElementProperties;
-					const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
-					for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
-					{
-						const MaterialProperty& uniformBufferElementProperty = uniformBufferElementProperties[i];
-
-						// Get value type number of bytes
-						const uint32_t valueTypeNumberOfBytes = uniformBufferElementProperty.getValueTypeNumberOfBytes(uniformBufferElementProperty.getValueType());
-
-						// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
-						//  -> GLSL is even more restrictive, with aligning e.g. float2 to an offset divisible by 2 * 4 bytes (float2 size) and float3 to an offset divisible by 4 * 4 bytes (float4 size -- yes, there is no actual float3 alignment) -> Such more extensive error checking is handled by the renderer toolkit
-						if (0 != numberOfPackageBytes && numberOfPackageBytes + valueTypeNumberOfBytes > 16)
-						{
-							// Move the scratch buffer pointer to the location of the next aligned package and restart the package bytes counter
-							scratchBufferPointer += 4 * 4 - numberOfPackageBytes;
-							numberOfPackageBytes = 0;
-						}
-						numberOfPackageBytes += valueTypeNumberOfBytes % 16;
-
-						// Copy the property value into the scratch buffer
-						const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
-						if (MaterialProperty::Usage::UNKNOWN_REFERENCE == usage)	// Most likely the case, so check this first
-						{
-							if (!materialBlueprintResourceListener.fillUnknownValue(uniformBufferElementProperty.getReferenceValue(), scratchBufferPointer, valueTypeNumberOfBytes))
-							{
-								// Error, can't resolve reference
-								assert(false);
-							}
-						}
-						else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
-						{
-							// Figure out the global material property value
-							const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
-							if (nullptr != materialProperty)
-							{
-								// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
-								memcpy(scratchBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
-							}
-							else
-							{
-								// Error, can't resolve reference
-								assert(false);
-							}
-						}
-						else if (!uniformBufferElementProperty.isReferenceUsage())	// TODO(co) Performance: Think about such tests, the toolkit should already take care of this so we have well known verified runtime data
-						{
-							// Just copy over the property value
-							memcpy(scratchBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
-						}
-						else
-						{
-							// Error, invalid property
-							assert(false);
-						}
-
-						// Next property
-						scratchBufferPointer += valueTypeNumberOfBytes;
-					}
-				}
-
-				// Update the uniform buffer by using our scratch buffer
-				uniformBuffer.uniformBufferPtr->copyDataFrom(scratchBuffer.size(), scratchBuffer.data());
-			}
-		}
-	}
-
-	void MaterialBlueprintResource::fillInstanceUniformBuffer(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique)
-	{
-		// TODO(co) This is just a placeholder implementation until "RendererRuntime::InstanceUniformBufferManager" is ready
-
-		assert(getId() == materialTechnique.getMaterialBlueprintResourceId());
-		assert(nullptr != mInstanceUniformBuffer);
-		assert(1 == mInstanceUniformBuffer->numberOfElements);	// TODO(co) Implement automatic instancing
-
-		const MaterialBlueprintResourceManager& materialBlueprintResourceManager = getResourceManager<MaterialBlueprintResourceManager>();
-		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
-
-		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = materialBlueprintResourceManager.getMaterialBlueprintResourceListener();
-		materialBlueprintResourceListener.beginFillInstance(objectSpaceToWorldSpaceTransform, materialTechnique);
-
-		// Update the scratch buffer
-		ScratchBuffer& scratchBuffer = mInstanceUniformBuffer->scratchBuffer;
-		{
-			uint8_t* scratchBufferPointer = scratchBuffer.data();
-			const UniformBufferElementProperties& uniformBufferElementProperties = mInstanceUniformBuffer->uniformBufferElementProperties;
-			const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
-			for (size_t i = 0, numberOfPackageBytes = 0; i < numberOfUniformBufferElementProperties; ++i)
-			{
-				const MaterialProperty& uniformBufferElementProperty = uniformBufferElementProperties[i];
-
-				// Get value type number of bytes
-				const uint32_t valueTypeNumberOfBytes = uniformBufferElementProperty.getValueTypeNumberOfBytes(uniformBufferElementProperty.getValueType());
-
-				// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
-				if (0 != numberOfPackageBytes && numberOfPackageBytes + valueTypeNumberOfBytes > 16)
-				{
-					// Move the scratch buffer pointer to the location of the next aligned package and restart the package bytes counter
-					scratchBufferPointer += 4 * 4 - numberOfPackageBytes;
-					numberOfPackageBytes = 0;
-				}
-				numberOfPackageBytes += valueTypeNumberOfBytes % 16;
-
-				// Copy the property value into the scratch buffer
-				const MaterialProperty::Usage usage = uniformBufferElementProperty.getUsage();
-				if (MaterialProperty::Usage::INSTANCE_REFERENCE == usage)	// Most likely the case, so check this first
-				{
-					if (!materialBlueprintResourceListener.fillInstanceValue(uniformBufferElementProperty.getReferenceValue(), scratchBufferPointer, valueTypeNumberOfBytes))
-					{
-						// Error, can't resolve reference
-						assert(false);
-					}
-				}
-				else if (MaterialProperty::Usage::GLOBAL_REFERENCE == usage)
-				{
-					// Referencing a global material property inside an instance uniform buffer doesn't make really sense performance wise, but don't forbid it
-
-					// Figure out the global material property value
-					const MaterialProperty* materialProperty = globalMaterialProperties.getPropertyById(uniformBufferElementProperty.getReferenceValue());
-					if (nullptr != materialProperty)
-					{
-						// TODO(co) Error handling: Usage mismatch, value type mismatch etc.
-						memcpy(scratchBufferPointer, materialProperty->getData(), valueTypeNumberOfBytes);
-					}
-					else
-					{
-						// Error, can't resolve reference
-						assert(false);
-					}
-				}
-				else if (!uniformBufferElementProperty.isReferenceUsage())	// TODO(co) Performance: Think about such tests, the toolkit should already take care of this so we have well known verified runtime data
-				{
-					// Referencing a static uniform buffer element property inside an instance uniform buffer doesn't make really sense performance wise, but don't forbid it
-
-					// Just copy over the property value
-					memcpy(scratchBufferPointer, uniformBufferElementProperty.getData(), valueTypeNumberOfBytes);
-				}
-				else
-				{
-					// Error, invalid property
-					assert(false);
-				}
-
-				// Next property
-				scratchBufferPointer += valueTypeNumberOfBytes;
-			}
-		}
-
-		// Update the uniform buffer by using our scratch buffer
-		mInstanceUniformBuffer->uniformBufferPtr->copyDataFrom(scratchBuffer.size(), scratchBuffer.data());
-	}
-
 	void MaterialBlueprintResource::bindToRenderer() const
 	{
 		Renderer::IRenderer& renderer = mRootSignaturePtr->getRenderer();
@@ -503,20 +331,10 @@ namespace RendererRuntime
 		// Set the used graphics root signature
 		renderer.setGraphicsRootSignature(mRootSignaturePtr);
 
-		{ // Graphics root descriptor table: Set our uniform buffers
-			const size_t numberOfUniformBuffers = mUniformBuffers.size();
-			if (nullptr != mPassUniformBufferManager)
-			{
-				mPassUniformBufferManager->bindToRenderer();
-			}
-			for (size_t i = 0; i < numberOfUniformBuffers; ++i)
-			{
-				const UniformBuffer& uniformBuffer = mUniformBuffers[i];
-				if (uniformBuffer.uniformBufferPtr.getPointer() != nullptr)
-				{
-					renderer.setGraphicsRootDescriptorTable(uniformBuffer.rootParameterIndex, uniformBuffer.uniformBufferPtr);
-				}
-			}
+		// Bind pass uniform buffer manager, if required
+		if (nullptr != mPassUniformBufferManager)
+		{
+			mPassUniformBufferManager->bindToRenderer();
 		}
 
 		{ // Graphics root descriptor table: Set our sampler states

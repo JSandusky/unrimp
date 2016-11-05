@@ -61,7 +61,6 @@
     <None Include="include\RendererRuntime\Resource\Detail\IResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl" />
     <None Include="include\RendererRuntime\Resource\IResourceListener.inl" />
-    <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\InstanceUniformBufferManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\MaterialUniformBufferSlot.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\PassUniformBufferManager.inl" />
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\Cache\PipelineStateCache.inl" />

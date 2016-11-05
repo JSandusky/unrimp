@@ -156,6 +156,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		typedef std::vector<Renderer::IUniformBuffer*> UniformBuffers;
+		typedef std::vector<uint8_t>				   ScratchBuffer;
 
 
 	//[-------------------------------------------------------]
@@ -169,6 +170,7 @@ namespace RendererRuntime
 		PassData								mPassData;
 		UniformBuffers							mUniformBuffers;
 		uint32_t								mCurrentUniformBufferIndex;
+		ScratchBuffer							mScratchBuffer;
 
 
 	};

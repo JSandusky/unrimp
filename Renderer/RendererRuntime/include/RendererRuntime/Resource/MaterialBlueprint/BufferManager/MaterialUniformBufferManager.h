@@ -151,6 +151,7 @@ namespace RendererRuntime
 
 		typedef std::vector<BufferPool*>				BufferPools;
 		typedef std::vector<MaterialUniformBufferSlot*>	MaterialUniformBufferSlots;
+		typedef std::vector<uint8_t>					ScratchBuffer;
 
 
 	//[-------------------------------------------------------]
@@ -165,6 +166,7 @@ namespace RendererRuntime
 		MaterialUniformBufferSlots		 mDirtyMaterialUniformBufferSlots;
 		MaterialUniformBufferSlots		 mMaterialUniformBufferSlots;
 		const BufferPool*				 mLastBoundPool;
+		ScratchBuffer					 mScratchBuffer;
 
 
 	};

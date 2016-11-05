@@ -36,6 +36,7 @@
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/PassUniformBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceUniformBufferManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -57,6 +58,7 @@ namespace
 			const RendererRuntime::MaterialResources& materialResources = rendererRuntime.getMaterialResourceManager().getMaterialResources();
 			const RendererRuntime::MaterialBlueprintResourceManager& materialBlueprintResourceManager = rendererRuntime.getMaterialBlueprintResourceManager();
 			RendererRuntime::MaterialBlueprintResource* currentlyBoundMaterialBlueprintResource = nullptr;
+			RendererRuntime::InstanceUniformBufferManager& instanceUniformBufferManager = materialBlueprintResourceManager.getInstanceUniformBufferManager();
 
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&renderer)
@@ -165,9 +167,6 @@ namespace
 													{
 														currentlyBoundMaterialBlueprintResource = materialBlueprintResource;
 
-														// Fill the unknown uniform buffers
-														materialBlueprintResource->fillUnknownUniformBuffers();
-
 														// Fill the pass uniform buffer
 														{ // TODO(co) Just a dummy usage for now
 															RendererRuntime::PassUniformBufferManager* passUniformBufferManager = materialBlueprintResource->getPassUniformBufferManager();
@@ -181,8 +180,9 @@ namespace
 															}
 														}
 
-														// Bind the material blueprint resource to the used renderer
+														// Bind the material blueprint resource and instance uniform buffer manager to the used renderer
 														materialBlueprintResource->bindToRenderer();
+														instanceUniformBufferManager.bindToRenderer(*materialBlueprintResource);
 													}
 
 													// Cheap state change: Bind the material technique to the used renderer
@@ -191,8 +191,15 @@ namespace
 													// Set the used pipeline state object (PSO)
 													renderer.setPipelineState(pipelineStatePtr);
 
-													// Fill the instance uniform buffer
-													materialBlueprintResource->fillInstanceUniformBuffer(transform, *materialTechnique);
+													{ // Fill the instance uniform buffer
+														RendererRuntime::PassUniformBufferManager* passUniformBufferManager = materialBlueprintResource->getPassUniformBufferManager();
+														if (nullptr != passUniformBufferManager)
+														{
+															const RendererRuntime::MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
+															const RendererRuntime::MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource->getInstanceTextureBuffer();
+															instanceUniformBufferManager.fillBuffer(*passUniformBufferManager, instanceUniformBuffer, instanceTextureBuffer, transform, *materialTechnique);
+														}
+													}
 
 													// Setup input assembly (IA): Set the primitive topology used for draw calls
 													const RendererRuntime::SubMesh& subMesh = subMeshes[subMeshIndex];

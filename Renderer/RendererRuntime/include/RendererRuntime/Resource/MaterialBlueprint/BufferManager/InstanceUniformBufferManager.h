@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Core/NonCopyable.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 
 
 //[-------------------------------------------------------]
@@ -35,7 +35,10 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class Transform;
 	class IRendererRuntime;
+	class MaterialTechnique;
+	class PassUniformBufferManager;
 }
 
 
@@ -52,9 +55,6 @@ namespace RendererRuntime
 	/**
 	*  @brief
 	*    Instance uniform buffer manager
-	*
-	*  @todo
-	*    - TODO(co) Currently just a shell which needs to be implemented
 	*/
 	class InstanceUniformBufferManager : public NonCopyable
 	{
@@ -71,13 +71,40 @@ namespace RendererRuntime
 		*  @param[in] rendererRuntime
 		*    Renderer runtime instance to use
 		*/
-		inline explicit InstanceUniformBufferManager(IRendererRuntime& rendererRuntime);
+		explicit InstanceUniformBufferManager(IRendererRuntime& rendererRuntime);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		inline ~InstanceUniformBufferManager();
+		~InstanceUniformBufferManager();
+
+		/**
+		*  @brief
+		*    Fill the instance buffer
+		*
+		*  @param[in] passUniformBufferManager
+		*    Pass uniform buffer manager instance to use
+		*  @param[in] instanceUniformBuffer
+		*    Instance uniform buffer instance to use, can be a null pointer
+		*  @param[in] instanceTextureBuffer
+		*    Instance texture buffer instance to use, can be a null pointer
+		*  @param[in] objectSpaceToWorldSpaceTransform
+		*    Object space to world space transform
+		*  @param[in] materialTechnique
+		*    Used material technique
+		*/
+		void fillBuffer(PassUniformBufferManager& passUniformBufferManager, const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer,
+						const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique);
+
+		/**
+		*  @brief
+		*    Bind instance uniform buffer manager to renderer
+		*
+		*  @param[in] materialBlueprintResource
+		*    Material blueprint resource
+		*/
+		void bindToRenderer(const MaterialBlueprintResource& materialBlueprintResource);
 
 
 	//[-------------------------------------------------------]
@@ -89,10 +116,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<uint8_t> ScratchBuffer;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;
+		IRendererRuntime&		  mRendererRuntime;	///< Renderer runtime instance to use
+		Renderer::IUniformBuffer* mUniformBuffer;	///< Uniform buffer instance, always valid
+		Renderer::ITextureBuffer* mTextureBuffer;	///< Texture buffer instance, always valid
+		ScratchBuffer			  mScratchBuffer;
 
 
 	};
@@ -102,9 +139,3 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceUniformBufferManager.inl"

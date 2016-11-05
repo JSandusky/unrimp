@@ -45,7 +45,11 @@ namespace RendererRuntime
 		mMaterialBlueprintResourceManager(rendererRuntime.getMaterialBlueprintResourceManager()),
 		mCurrentUniformBufferIndex(0)
 	{
-		// Nothing here
+		const MaterialBlueprintResource::UniformBuffer* passUniformBuffer = mMaterialBlueprintResource.getPassUniformBuffer();
+		if (nullptr != passUniformBuffer)
+		{
+			mScratchBuffer.resize(passUniformBuffer->uniformBufferNumberOfBytes);
+		}
 	}
 
 	PassUniformBufferManager::~PassUniformBufferManager()
@@ -70,8 +74,7 @@ namespace RendererRuntime
 		if (nullptr != passUniformBuffer)
 		{
 			// Startup the pass uniform buffer update
-			MaterialBlueprintResource::ScratchBuffer& scratchBuffer = const_cast<MaterialBlueprintResource::ScratchBuffer&>(passUniformBuffer->scratchBuffer);	// TODO(co) "scratchBuffer" will be removed soon, so evil const-cast is OK for now
-			uint8_t* scratchBufferPointer = scratchBuffer.data();
+			uint8_t* scratchBufferPointer = mScratchBuffer.data();
 
 			{ // Fill the pass uniform buffer by using the material blueprint resource
 				const MaterialProperties& globalMaterialProperties = mMaterialBlueprintResourceManager.getGlobalMaterialProperties();
@@ -152,11 +155,11 @@ namespace RendererRuntime
 			// Update the uniform buffer by using our scratch buffer
 			if (mCurrentUniformBufferIndex >= static_cast<uint32_t>(mUniformBuffers.size()))
 			{
-				mUniformBuffers.push_back(mBufferManager.createUniformBuffer(passUniformBuffer->uniformBufferNumberOfBytes, scratchBuffer.data(), Renderer::BufferUsage::DYNAMIC_DRAW));
+				mUniformBuffers.push_back(mBufferManager.createUniformBuffer(passUniformBuffer->uniformBufferNumberOfBytes, mScratchBuffer.data(), Renderer::BufferUsage::DYNAMIC_DRAW));
 			}
 			else
 			{
-				mUniformBuffers[mCurrentUniformBufferIndex]->copyDataFrom(scratchBuffer.size(), scratchBuffer.data());
+				mUniformBuffers[mCurrentUniformBufferIndex]->copyDataFrom(mScratchBuffer.size(), mScratchBuffer.data());
 			}
 			++mCurrentUniformBufferIndex;
 		}

@@ -90,6 +90,7 @@ namespace RendererRuntime
 
 		// Get the buffer size
 		mBufferSize = std::min<size_t>(rendererRuntime.getRenderer().getCapabilities().maximumUniformBufferSize, 64 * 1024);
+		mScratchBuffer.resize(mBufferSize);
 
 		// Calculate the number of slots per pool
 		const uint32_t numberOfBytesPerElement = materialUniformBuffer->uniformBufferNumberOfBytes / materialUniformBuffer->numberOfElements;
@@ -215,7 +216,6 @@ namespace RendererRuntime
 
 		// Update the scratch buffer
 		Renderer::IUniformBuffer* uniformBuffer = nullptr;	// TODO(co) Implement proper uniform buffer handling and only update dirty sections
-		MaterialBlueprintResource::ScratchBuffer& scratchBuffer = const_cast<MaterialBlueprintResource::ScratchBuffer&>(materialUniformBuffer->scratchBuffer);	// TODO(co) "scratchBuffer" will be removed soon, so evil const-cast is OK for now
 		{
 			const MaterialBlueprintResource::UniformBufferElementProperties& uniformBufferElementProperties = materialUniformBuffer->uniformBufferElementProperties;
 			const size_t numberOfUniformBufferElementProperties = uniformBufferElementProperties.size();
@@ -223,7 +223,7 @@ namespace RendererRuntime
 			for (MaterialUniformBufferSlot* materialUniformBufferSlot : mDirtyMaterialUniformBufferSlots)
 			{
 				const MaterialResource& materialResource = materialUniformBufferSlot->getMaterialResource();
-				uint8_t* scratchBufferPointer = scratchBuffer.data() + numberOfBytesPerElement * materialUniformBufferSlot->mAssignedMaterialSlot;
+				uint8_t* scratchBufferPointer = mScratchBuffer.data() + numberOfBytesPerElement * materialUniformBufferSlot->mAssignedMaterialSlot;
 
 				// TODO(co) Implement proper uniform buffer handling and only update dirty sections
 				uniformBuffer = static_cast<BufferPool*>(materialUniformBufferSlot->mAssignedMaterialPool)->uniformBuffer;
@@ -303,7 +303,7 @@ namespace RendererRuntime
 		// Update the uniform buffer by using our scratch buffer
 		if (nullptr != uniformBuffer)
 		{
-			uniformBuffer->copyDataFrom(scratchBuffer.size(), scratchBuffer.data());
+			uniformBuffer->copyDataFrom(mScratchBuffer.size(), mScratchBuffer.data());
 		}
 
 		// Done

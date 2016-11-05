@@ -71,8 +71,13 @@ namespace RendererRuntime
 		return false;
 	}
 
-	inline void MaterialBlueprintResourceListener::beginFillInstance(const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique)
+	inline void MaterialBlueprintResourceListener::beginFillInstance(const PassUniformBufferManager::PassData& passData, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique)
 	{
+		// Remember the pass data memory address of the current scope
+		// TODO(co) Rethink the evil const-cast on here
+		mPassData = &const_cast<PassUniformBufferManager::PassData&>(passData);
+
+		// Remember the instance data of the current scope
 		mObjectSpaceToWorldSpaceTransform = &objectSpaceToWorldSpaceTransform;
 		mMaterialTechnique				  = &materialTechnique;
 	}
