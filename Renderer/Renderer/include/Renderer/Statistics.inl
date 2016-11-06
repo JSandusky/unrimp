@@ -53,9 +53,11 @@ namespace Renderer
 		numberOfCreatedVertexBuffers(0),
 		currentNumberOfUniformBuffers(0),
 		numberOfCreatedUniformBuffers(0),
-		// ITexture
 		currentNumberOfTextureBuffers(0),
 		numberOfCreatedTextureBuffers(0),
+		currentNumberOfIndirectBuffers(0),
+		numberOfCreatedIndirectBuffers(0),
+		// ITexture
 		currentNumberOfTexture2Ds(0),
 		numberOfCreatedTexture2Ds(0),
 		currentNumberOfTexture2DArrays(0),
@@ -98,8 +100,9 @@ namespace Renderer
 				currentNumberOfIndexBuffers +
 				currentNumberOfVertexBuffers +
 				currentNumberOfUniformBuffers +
-				// ITexture
 				currentNumberOfTextureBuffers +
+				currentNumberOfIndirectBuffers +
+				// ITexture
 				currentNumberOfTexture2Ds +
 				currentNumberOfTexture2DArrays +
 				// IState
@@ -131,9 +134,10 @@ namespace Renderer
 		RENDERER_OUTPUT_DEBUG_PRINTF("Index buffers: %d\n", currentNumberOfIndexBuffers)
 		RENDERER_OUTPUT_DEBUG_PRINTF("Vertex buffers: %d\n", currentNumberOfVertexBuffers)
 		RENDERER_OUTPUT_DEBUG_PRINTF("Uniform buffers: %d\n", currentNumberOfUniformBuffers)
+		RENDERER_OUTPUT_DEBUG_PRINTF("Texture buffers: %d\n", currentNumberOfTextureBuffers)
+		RENDERER_OUTPUT_DEBUG_PRINTF("Indirect buffers: %d\n", currentNumberOfIndirectBuffers)
 
 		// ITexture
-		RENDERER_OUTPUT_DEBUG_PRINTF("Texture buffers: %d\n", currentNumberOfTextureBuffers)
 		RENDERER_OUTPUT_DEBUG_PRINTF("2D textures: %d\n", currentNumberOfTexture2Ds)
 		RENDERER_OUTPUT_DEBUG_PRINTF("2D texture arrays: %d\n", currentNumberOfTexture2DArrays)
 
@@ -175,9 +179,11 @@ namespace Renderer
 		numberOfCreatedVertexBuffers(0),
 		currentNumberOfUniformBuffers(0),
 		numberOfCreatedUniformBuffers(0),
-		// ITexture
 		currentNumberOfTextureBuffers(0),
 		numberOfCreatedTextureBuffers(0),
+		currentNumberOfIndirectBuffers(0),
+		numberOfCreatedIndirectBuffers(0),
+		// ITexture
 		currentNumberOfTexture2Ds(0),
 		numberOfCreatedTexture2Ds(0),
 		currentNumberOfTexture2DArrays(0),

@@ -449,6 +449,7 @@ namespace VulkanRenderer
 				case Renderer::ResourceType::FRAMEBUFFER:
 				case Renderer::ResourceType::INDEX_BUFFER:
 				case Renderer::ResourceType::VERTEX_BUFFER:
+				case Renderer::ResourceType::INDIRECT_BUFFER:
 				case Renderer::ResourceType::PIPELINE_STATE:
 				case Renderer::ResourceType::VERTEX_SHADER:
 				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
@@ -608,6 +609,7 @@ namespace VulkanRenderer
 					case Renderer::ResourceType::VERTEX_BUFFER:
 					case Renderer::ResourceType::UNIFORM_BUFFER:
 					case Renderer::ResourceType::TEXTURE_BUFFER:
+					case Renderer::ResourceType::INDIRECT_BUFFER:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 					case Renderer::ResourceType::PIPELINE_STATE:

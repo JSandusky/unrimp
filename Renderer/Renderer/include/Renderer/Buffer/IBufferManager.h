@@ -44,6 +44,7 @@ namespace Renderer
 	class IVertexBuffer;
 	class IUniformBuffer;
 	class ITextureBuffer;
+	class IIndirectBuffer;
 	struct VertexAttributes;
 	struct VertexArrayVertexBuffer;
 }
@@ -70,6 +71,7 @@ namespace Renderer
 	*    - Vertex array object ("Renderer::IVertexArray")
 	*    - Uniform buffer object ("Renderer::IUniformBuffer")
 	*    - Texture buffer object ("Renderer::ITextureBuffer")
+	*    - Indirect buffer object ("Renderer::IIndirectBuffer")
 	*
 	*    Implementations are free to implement a naive 1:1 mapping of a resource to an renderer API resource.
 	*    For AZDO ("Almost Zero Driver Overhead") implementations might allocate a few big renderer API resources
@@ -203,6 +205,25 @@ namespace Renderer
 		*    - Only supported if "Renderer::Capabilities::maximumTextureBufferSize" is not 0
 		*/
 		virtual ITextureBuffer* createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+
+		/**
+		*  @brief
+		*    Create an indirect buffer object instance
+		*
+		*  @param[in] numberOfBytes
+		*    Number of bytes within the indirect buffer, must be valid
+		*  @param[in] data
+		*    Indirect buffer data, can be a null pointer (empty buffer), the data is internally copied and you have to free your memory if you no longer need it
+		*  @param[in] bufferUsage
+		*    Indication of the buffer usage
+		*
+		*  @return
+		*    The created UBO instance, null pointer on error. Release the returned instance if you no longer need it.
+		*
+		*  @note
+		*    - Only supported if "Renderer::Capabilities::maximumIndirectBufferSize" is >0
+		*/
+		virtual IIndirectBuffer* createIndirectBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
 
 
 	//[-------------------------------------------------------]

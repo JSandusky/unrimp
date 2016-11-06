@@ -23,6 +23,7 @@
     <ClInclude Include="include\Renderer\Buffer\IBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IBufferManager.h" />
     <ClInclude Include="include\Renderer\Buffer\IIndexBuffer.h" />
+    <ClInclude Include="include\Renderer\Buffer\IIndirectBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IndexBufferTypes.h" />
     <ClInclude Include="include\Renderer\Buffer\ITextureBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\IUniformBuffer.h" />
@@ -73,6 +74,7 @@
     <None Include="include\Renderer\Buffer\IBuffer.inl" />
     <None Include="include\Renderer\Buffer\IBufferManager.inl" />
     <None Include="include\Renderer\Buffer\IIndexBuffer.inl" />
+    <None Include="include\Renderer\Buffer\IIndirectBuffer.inl" />
     <None Include="include\Renderer\Buffer\IndexBufferTypes.inl" />
     <None Include="include\Renderer\Buffer\ITextureBuffer.inl" />
     <None Include="include\Renderer\Buffer\IUniformBuffer.inl" />

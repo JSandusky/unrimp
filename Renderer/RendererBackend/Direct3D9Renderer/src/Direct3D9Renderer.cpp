@@ -484,6 +484,7 @@ namespace Direct3D9Renderer
 			case Renderer::ResourceType::FRAMEBUFFER:
 			case Renderer::ResourceType::UNIFORM_BUFFER:
 			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::INDIRECT_BUFFER:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::SAMPLER_STATE:
@@ -527,6 +528,7 @@ namespace Direct3D9Renderer
 			case Renderer::ResourceType::FRAMEBUFFER:
 			case Renderer::ResourceType::UNIFORM_BUFFER:
 			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::INDIRECT_BUFFER:
 			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 			case Renderer::ResourceType::PIPELINE_STATE:
 			case Renderer::ResourceType::SAMPLER_STATE:
@@ -725,6 +727,7 @@ namespace Direct3D9Renderer
 				case Renderer::ResourceType::INDEX_BUFFER:
 				case Renderer::ResourceType::VERTEX_BUFFER:
 				case Renderer::ResourceType::UNIFORM_BUFFER:
+				case Renderer::ResourceType::INDIRECT_BUFFER:
 				case Renderer::ResourceType::PIPELINE_STATE:
 				case Renderer::ResourceType::VERTEX_SHADER:
 				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
@@ -940,6 +943,7 @@ namespace Direct3D9Renderer
 					case Renderer::ResourceType::VERTEX_BUFFER:
 					case Renderer::ResourceType::UNIFORM_BUFFER:
 					case Renderer::ResourceType::TEXTURE_BUFFER:
+					case Renderer::ResourceType::INDIRECT_BUFFER:
 					case Renderer::ResourceType::TEXTURE_2D:
 					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 					case Renderer::ResourceType::PIPELINE_STATE:
@@ -1367,6 +1371,9 @@ namespace Direct3D9Renderer
 
 		// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 		mCapabilities.maximumTextureBufferSize = 0;
+
+		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+		mCapabilities.maximumIndirectBufferSize = 0;
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;

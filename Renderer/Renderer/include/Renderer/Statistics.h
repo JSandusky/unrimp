@@ -79,9 +79,11 @@ namespace Renderer
 		std::atomic<uint32_t> numberOfCreatedVertexBuffers;					///< Number of created vertex buffer object (VBO, input-assembler (IA) stage) instances
 		std::atomic<uint32_t> currentNumberOfUniformBuffers;				///< Current number of uniform buffer object (UBO, "constant buffer" in Direct3D terminology) instances
 		std::atomic<uint32_t> numberOfCreatedUniformBuffers;				///< Number of created uniform buffer object (UBO, "constant buffer" in Direct3D terminology) instances
-		// ITexture
 		std::atomic<uint32_t> currentNumberOfTextureBuffers;				///< Current number of texture buffer object (TBO) instances
 		std::atomic<uint32_t> numberOfCreatedTextureBuffers;				///< Number of created texture buffer object (TBO) instances
+		std::atomic<uint32_t> currentNumberOfIndirectBuffers;				///< Current number of indirect buffer object instances
+		std::atomic<uint32_t> numberOfCreatedIndirectBuffers;				///< Number of created indirect buffer object instances
+		// ITexture
 		std::atomic<uint32_t> currentNumberOfTexture2Ds;					///< Current number of texture 2D instances
 		std::atomic<uint32_t> numberOfCreatedTexture2Ds;					///< Number of created texture 2D instances
 		std::atomic<uint32_t> currentNumberOfTexture2DArrays;				///< Current number of texture 2D array instances

@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "NullRenderer/Buffer/BufferManager.h"
+#include "NullRenderer/Buffer/IndirectBuffer.h"
 #include "NullRenderer/Buffer/TextureBuffer.h"
 #include "NullRenderer/Buffer/UniformBuffer.h"
 #include "NullRenderer/Buffer/VertexBuffer.h"
@@ -93,6 +94,11 @@ namespace NullRenderer
 	Renderer::ITextureBuffer* BufferManager::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void*, Renderer::BufferUsage)
 	{
 		return new TextureBuffer(static_cast<NullRenderer&>(getRenderer()));
+	}
+
+	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t, const void*, Renderer::BufferUsage)
+	{
+		return new IndirectBuffer(static_cast<NullRenderer&>(getRenderer()));
 	}
 
 

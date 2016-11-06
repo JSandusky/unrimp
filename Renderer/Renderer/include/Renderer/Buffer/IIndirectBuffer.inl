@@ -19,9 +19,11 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
+//[ Includes                                              ]
 //[-------------------------------------------------------]
-#pragma once
+#ifndef RENDERER_NO_STATISTICS
+	#include "Renderer/IRenderer.h"
+#endif
 
 
 //[-------------------------------------------------------]
@@ -32,39 +34,46 @@ namespace Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Definitions                                           ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Resource type
-	*/
-	enum class ResourceType
+	inline IIndirectBuffer::~IIndirectBuffer()
 	{
-		ROOT_SIGNATURE				   = 0,		///< Root signature
-		PROGRAM						   = 1,		///< Program, "Renderer::IShader"-related
-		VERTEX_ARRAY				   = 2,		///< Vertex array object (VAO, input-assembler (IA) stage), "Renderer::IBuffer"-related
-		// IRenderTarget
-		SWAP_CHAIN					   = 3,		///< Swap chain
-		FRAMEBUFFER					   = 4,		///< Framebuffer object (FBO)
-		// IBuffer
-		INDEX_BUFFER				   = 5,		///< Index buffer object (IBO, input-assembler (IA) stage)
-		VERTEX_BUFFER				   = 6,		///< Vertex buffer object (VBO, input-assembler (IA) stage)
-		UNIFORM_BUFFER				   = 7,		///< Uniform buffer object (UBO, "constant buffer" in Direct3D terminology)
-		TEXTURE_BUFFER				   = 8,		///< Texture buffer object (TBO)
-		INDIRECT_BUFFER				   = 9,		///< Indirect buffer object
-		// ITexture
-		TEXTURE_2D					   = 10,	///< Texture 2D
-		TEXTURE_2D_ARRAY			   = 11,	///< Texture 2D array
-		// IState
-		PIPELINE_STATE				   = 12,	///< Pipeline state (PSO)
-		SAMPLER_STATE				   = 13,	///< Sampler state
-		// IShader
-		VERTEX_SHADER				   = 14,	///< Vertex shader (VS)
-		TESSELLATION_CONTROL_SHADER	   = 15,	///< Tessellation control shader (TCS, "hull shader" in Direct3D terminology)
-		TESSELLATION_EVALUATION_SHADER = 16,	///< Tessellation evaluation shader (TES, "domain shader" in Direct3D terminology)
-		GEOMETRY_SHADER				   = 17,	///< Geometry shader (GS)
-		FRAGMENT_SHADER				   = 18		///< Fragment shader (FS, "pixel shader" in Direct3D terminology)
-	};
+		#ifndef RENDERER_NO_STATISTICS
+			// Update the statistics
+			--getRenderer().getStatistics().currentNumberOfIndirectBuffers;
+		#endif
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline IIndirectBuffer::IIndirectBuffer(IRenderer &renderer) :
+		IBuffer(ResourceType::INDIRECT_BUFFER, renderer)
+	{
+		#ifndef RENDERER_NO_STATISTICS
+			// Update the statistics
+			++getRenderer().getStatistics().numberOfCreatedIndirectBuffers;
+			++getRenderer().getStatistics().currentNumberOfIndirectBuffers;
+		#endif
+	}
+
+	inline IIndirectBuffer::IIndirectBuffer(const IIndirectBuffer &source) :
+		IBuffer(source)
+	{
+		// Not supported
+		#ifndef RENDERER_NO_STATISTICS
+			// Update the statistics
+			++getRenderer().getStatistics().numberOfCreatedIndirectBuffers;
+			++getRenderer().getStatistics().currentNumberOfIndirectBuffers;
+		#endif
+	}
+
+	inline IIndirectBuffer &IIndirectBuffer::operator =(const IIndirectBuffer &)
+	{
+		// Not supported
+		return *this;
+	}
 
 
 //[-------------------------------------------------------]

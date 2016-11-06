@@ -99,6 +99,7 @@ namespace Direct3D9Renderer
 						case Renderer::ResourceType::VERTEX_BUFFER:
 						case Renderer::ResourceType::UNIFORM_BUFFER:
 						case Renderer::ResourceType::TEXTURE_BUFFER:
+						case Renderer::ResourceType::INDIRECT_BUFFER:
 						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 						case Renderer::ResourceType::PIPELINE_STATE:
 						case Renderer::ResourceType::SAMPLER_STATE:
@@ -156,6 +157,7 @@ namespace Direct3D9Renderer
 				case Renderer::ResourceType::VERTEX_BUFFER:
 				case Renderer::ResourceType::UNIFORM_BUFFER:
 				case Renderer::ResourceType::TEXTURE_BUFFER:
+				case Renderer::ResourceType::INDIRECT_BUFFER:
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::PIPELINE_STATE:
 				case Renderer::ResourceType::SAMPLER_STATE:

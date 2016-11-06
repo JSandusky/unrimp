@@ -29,6 +29,7 @@
   <ItemGroup>
     <ClInclude Include="include\NullRenderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\NullRenderer\Buffer\IndexBuffer.h" />
+    <ClInclude Include="include\NullRenderer\Buffer\IndirectBuffer.h" />
     <ClInclude Include="include\NullRenderer\Buffer\TextureBuffer.h" />
     <ClInclude Include="include\NullRenderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\NullRenderer\Buffer\VertexArray.h" />
@@ -53,6 +54,7 @@
   <ItemGroup>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
+    <ClCompile Include="src\Buffer\IndirectBuffer.cpp" />
     <ClCompile Include="src\Buffer\TextureBuffer.cpp" />
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />

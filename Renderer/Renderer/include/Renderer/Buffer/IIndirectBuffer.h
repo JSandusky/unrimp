@@ -27,22 +27,13 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Buffer/IBufferManager.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace VulkanRenderer
-{
-	class VulkanRenderer;
-}
+#include "Renderer/Buffer/IBuffer.h"
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+namespace Renderer
 {
 
 
@@ -51,9 +42,9 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Vulkan buffer manager interface
+	*    Abstract indirect buffer object interface
 	*/
-	class BufferManager : public Renderer::IBufferManager
+	class IIndirectBuffer : public IBuffer
 	{
 
 
@@ -63,42 +54,78 @@ namespace VulkanRenderer
 	public:
 		/**
 		*  @brief
+		*    Destructor
+		*/
+		inline virtual ~IIndirectBuffer();
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual IIndirectBuffer methods                ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Copy data into the indirect buffer object
+		*
+		*  @param[in] numberOfBytes
+		*    Number of bytes within the indirect buffer, must be valid
+		*  @param[in] data
+		*    Indirect buffer data, can be a null pointer (nothing happens)
+		*/
+		virtual void copyDataFrom(uint32_t numberOfBytes, const void *data) = 0;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		/**
+		*  @brief
 		*    Constructor
 		*
-		*  @param[in] vulkanRenderer
-		*    Owner Vulkan renderer instance
+		*  @param[in] renderer
+		*    Owner renderer instance
 		*/
-		explicit BufferManager(VulkanRenderer& vulkanRenderer);
+		inline explicit IIndirectBuffer(IRenderer &renderer);
 
 		/**
 		*  @brief
-		*    Destructor
+		*    Copy constructor
+		*
+		*  @param[in] source
+		*    Source to copy from
 		*/
-		inline virtual ~BufferManager();
+		inline explicit IIndirectBuffer(const IIndirectBuffer &source);
 
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IBufferManager methods       ]
-	//[-------------------------------------------------------]
-	public:
-		virtual Renderer::IVertexBuffer* createVertexBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
-		virtual Renderer::IIndexBuffer* createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
-		virtual Renderer::IVertexArray* createVertexArray(const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, Renderer::IIndexBuffer* indexBuffer = nullptr) override;
-		virtual Renderer::IUniformBuffer* createUniformBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
-		virtual Renderer::ITextureBuffer* createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
-		virtual Renderer::IIndirectBuffer* createIndirectBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) override;
+		/**
+		*  @brief
+		*    Copy operator
+		*
+		*  @param[in] source
+		*    Source to copy from
+		*
+		*  @return
+		*    Reference to this instance
+		*/
+		inline IIndirectBuffer &operator =(const IIndirectBuffer &source);
 
 
 	};
 
 
+	//[-------------------------------------------------------]
+	//[ Type definitions                                      ]
+	//[-------------------------------------------------------]
+	typedef SmartRefCount<IIndirectBuffer> IIndirectBufferPtr;
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
+} // Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/Buffer/BufferManager.inl"
+#include "Renderer/Buffer/IIndirectBuffer.inl"

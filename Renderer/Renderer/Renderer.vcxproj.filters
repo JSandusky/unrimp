@@ -169,6 +169,9 @@
     <ClInclude Include="include\Renderer\Buffer\ITextureBuffer.h">
       <Filter>Header Files\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\Buffer\IIndirectBuffer.h">
+      <Filter>Header Files\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -282,6 +285,9 @@
       <Filter>Header Files\Buffer</Filter>
     </None>
     <None Include="include\Renderer\Buffer\ITextureBuffer.inl">
+      <Filter>Header Files\Buffer</Filter>
+    </None>
+    <None Include="include\Renderer\Buffer\IIndirectBuffer.inl">
       <Filter>Header Files\Buffer</Filter>
     </None>
   </ItemGroup>

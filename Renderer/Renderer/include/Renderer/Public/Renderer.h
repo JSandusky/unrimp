@@ -57,6 +57,7 @@ namespace Renderer
 			class IVertexBuffer;
 			class IUniformBuffer;
 			class ITextureBuffer;
+			class IIndirectBuffer;
 		class ITexture;
 			class ITexture2D;
 			class ITexture2DArray;
@@ -256,15 +257,16 @@ namespace Renderer
 			VERTEX_BUFFER				   = 6,
 			UNIFORM_BUFFER				   = 7,
 			TEXTURE_BUFFER				   = 8,
-			TEXTURE_2D					   = 9,
-			TEXTURE_2D_ARRAY			   = 10,
-			PIPELINE_STATE				   = 11,
-			SAMPLER_STATE				   = 12,
-			VERTEX_SHADER				   = 13,
-			TESSELLATION_CONTROL_SHADER	   = 14,
-			TESSELLATION_EVALUATION_SHADER = 15,
-			GEOMETRY_SHADER				   = 16,
-			FRAGMENT_SHADER				   = 17
+			INDIRECT_BUFFER				   = 9,
+			TEXTURE_2D					   = 10,
+			TEXTURE_2D_ARRAY			   = 11,
+			PIPELINE_STATE				   = 12,
+			SAMPLER_STATE				   = 13,
+			VERTEX_SHADER				   = 14,
+			TESSELLATION_CONTROL_SHADER	   = 15,
+			TESSELLATION_EVALUATION_SHADER = 16,
+			GEOMETRY_SHADER				   = 17,
+			FRAGMENT_SHADER				   = 18
 		};
 	#endif
 
@@ -273,14 +275,14 @@ namespace Renderer
 	#define __RENDERER_SAMPLERSTATE_TYPES_H__
 		enum class FilterMode
 		{
-			MIN_MAG_MIP_POINT					 	   = 0,
-			MIN_MAG_POINT_MIP_LINEAR			 	   = 0x1,
-			MIN_POINT_MAG_LINEAR_MIP_POINT		 	   = 0x4,
-			MIN_POINT_MAG_MIP_LINEAR			 	   = 0x5,
-			MIN_LINEAR_MAG_MIP_POINT			 	   = 0x10,
-			MIN_LINEAR_MAG_POINT_MIP_LINEAR		 	   = 0x11,
-			MIN_MAG_LINEAR_MIP_POINT			 	   = 0x14,
-			MIN_MAG_MIP_LINEAR					 	   = 0x15,
+			MIN_MAG_MIP_POINT						   = 0,
+			MIN_MAG_POINT_MIP_LINEAR				   = 0x1,
+			MIN_POINT_MAG_LINEAR_MIP_POINT			   = 0x4,
+			MIN_POINT_MAG_MIP_LINEAR				   = 0x5,
+			MIN_LINEAR_MAG_MIP_POINT				   = 0x10,
+			MIN_LINEAR_MAG_POINT_MIP_LINEAR			   = 0x11,
+			MIN_MAG_LINEAR_MIP_POINT				   = 0x14,
+			MIN_MAG_MIP_LINEAR						   = 0x15,
 			ANISOTROPIC								   = 0x55,
 			COMPARISON_MIN_MAG_MIP_POINT			   = 0x80,
 			COMPARISON_MIN_MAG_POINT_MIP_LINEAR		   = 0x81,
@@ -1499,6 +1501,7 @@ namespace Renderer
 			uint32_t maximumNumberOf2DTextureArraySlices;
 			uint32_t maximumUniformBufferSize;
 			uint32_t maximumTextureBufferSize;
+			uint32_t maximumIndirectBufferSize;
 			bool	 individualUniforms;
 			bool	 instancedArrays;
 			bool	 drawInstanced;
@@ -1515,6 +1518,7 @@ namespace Renderer
 				maximumNumberOf2DTextureArraySlices(0),
 				maximumUniformBufferSize(0),
 				maximumTextureBufferSize(0),
+				maximumIndirectBufferSize(0),
 				individualUniforms(false),
 				instancedArrays(false),
 				drawInstanced(false),
@@ -1535,6 +1539,7 @@ namespace Renderer
 				maximumNumberOf2DTextureArraySlices(0),
 				maximumUniformBufferSize(0),
 				maximumTextureBufferSize(0),
+				maximumIndirectBufferSize(0),
 				individualUniforms(false),
 				instancedArrays(false),
 				drawInstanced(false),
@@ -1576,6 +1581,8 @@ namespace Renderer
 			std::atomic<uint32_t> numberOfCreatedUniformBuffers;
 			std::atomic<uint32_t> currentNumberOfTextureBuffers;
 			std::atomic<uint32_t> numberOfCreatedTextureBuffers;
+			std::atomic<uint32_t> currentNumberOfIndirectBuffers;
+			std::atomic<uint32_t> numberOfCreatedIndirectBuffers;
 			std::atomic<uint32_t> currentNumberOfTexture2Ds;
 			std::atomic<uint32_t> numberOfCreatedTexture2Ds;
 			std::atomic<uint32_t> currentNumberOfTexture2DArrays;
@@ -1614,6 +1621,8 @@ namespace Renderer
 				numberOfCreatedUniformBuffers(0),
 				currentNumberOfTextureBuffers(0),
 				numberOfCreatedTextureBuffers(0),
+				currentNumberOfIndirectBuffers(0),
+				numberOfCreatedIndirectBuffers(0),
 				currentNumberOfTexture2Ds(0),
 				numberOfCreatedTexture2Ds(0),
 				currentNumberOfTexture2DArrays(0),
@@ -1657,6 +1666,8 @@ namespace Renderer
 				numberOfCreatedUniformBuffers(0),
 				currentNumberOfTextureBuffers(0),
 				numberOfCreatedTextureBuffers(0),
+				currentNumberOfIndirectBuffers(0),
+				numberOfCreatedIndirectBuffers(0),
 				currentNumberOfTexture2Ds(0),
 				numberOfCreatedTexture2Ds(0),
 				currentNumberOfTexture2DArrays(0),
@@ -1988,6 +1999,7 @@ namespace Renderer
 			virtual IVertexArray* createVertexArray(const VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const VertexArrayVertexBuffer* vertexBuffers, IIndexBuffer* indexBuffer = nullptr) = 0;
 			virtual IUniformBuffer* createUniformBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
 			virtual ITextureBuffer* createTextureBuffer(uint32_t numberOfBytes, TextureFormat::Enum textureFormat, const void* data = nullptr, BufferUsage bufferUsage = BufferUsage::DYNAMIC_DRAW) = 0;
+			virtual IIndirectBuffer* createIndirectBuffer(uint32_t numberOfBytes, const void* data = nullptr, Renderer::BufferUsage bufferUsage = Renderer::BufferUsage::DYNAMIC_DRAW) = 0;
 		protected:
 			inline explicit IBufferManager(IRenderer& renderer);
 			inline explicit IBufferManager(const IBufferManager& source);
@@ -2090,6 +2102,23 @@ namespace Renderer
 			ITextureBuffer& operator =(const ITextureBuffer& source);
 		};
 		typedef SmartRefCount<ITextureBuffer> ITextureBufferPtr;
+	#endif
+
+	// Renderer/Buffer/IIndirectBuffer.h
+	#ifndef __RENDERER_IINDIRECTBUFFER_H__
+	#define __RENDERER_IINDIRECTBUFFER_H__
+		class IIndirectBuffer : public IBuffer
+		{
+		public:
+			virtual ~IIndirectBuffer();
+		public:
+			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
+		protected:
+			explicit IIndirectBuffer(IRenderer& renderer);
+			explicit IIndirectBuffer(const IIndirectBuffer& source);
+			IIndirectBuffer& operator =(const IIndirectBuffer& source);
+		};
+		typedef SmartRefCount<IIndirectBuffer> IIndirectBufferPtr;
 	#endif
 
 	// Renderer/Texture/ITexture.h
